@@ -2,6 +2,7 @@
 import React from 'react';
 import preferencesTabs from '@/routes/preferencesTabs';
 import {Switch, Route, useRouteMatch} from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 export default function PreferencesSubContent({ preferenceTab }) {
   const routes = preferencesTabs[preferenceTab];
@@ -12,7 +13,7 @@ export default function PreferencesSubContent({ preferenceTab }) {
   return (
     <Switch>
       { routes.map((route, index) => (
-        <Route
+        <CompatRoute
           key={index}
           path={`${path}/${route.path}`}
           exact={route.exact}

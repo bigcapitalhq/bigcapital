@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { CompactRouter } from 'react-router-dom-v5-compat';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import '@/services/yup';
@@ -19,7 +20,9 @@ ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        <App />
+        <CompactRouter>
+          <App /> 
+        </CompactRouter>
       </BrowserRouter>
     </PersistGate>
   </Provider>,

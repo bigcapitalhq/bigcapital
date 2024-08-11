@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import { getDashboardRoutes } from '@/routes/dashboard';
 import DashboardPage from './DashboardPage';
@@ -33,9 +34,9 @@ export default function DashboardContentRoute() {
     <Route pathname="/">
       <Switch>
         {routes.map((route, index) => (
-          <Route exact={route.exact} key={index} path={`${route.path}`}>
+          <CompatRoute exact={route.exact} key={index} path={`${route.path}`}>
             <DashboardContentRouteContent route={route} />
-          </Route>
+          </CompatRoute>
         ))}
       </Switch>
     </Route>

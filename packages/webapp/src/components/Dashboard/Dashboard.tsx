@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { Switch, Route } from 'react-router';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import '@/style/pages/Dashboard/Dashboard.scss';
 
@@ -47,8 +48,8 @@ export default function Dashboard() {
   return (
     <DashboardProvider>
       <Switch>
-        <Route path="/preferences" component={DashboardPreferences} />
-        <Route path="/" component={DashboardAnyPage} />
+        <CompatRoute path="/preferences" component={DashboardPreferences} />
+        <CompatRoute path="/" component={DashboardAnyPage} />
       </Switch>
 
       <DashboardSockets />
