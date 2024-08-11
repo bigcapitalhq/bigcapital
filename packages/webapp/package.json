@@ -121,7 +121,7 @@
     "yup": "^0.28.1"
   },
   "scripts": {
-    "dev": "SET PORT=4000 && craco start",
+    "dev": "cross-env PORT=4000 craco start",
     "build": "craco build",
     "test": "node scripts/test.js",
     "storybook": "start-storybook -p 6006"
