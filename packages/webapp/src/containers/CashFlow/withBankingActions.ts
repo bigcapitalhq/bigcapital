@@ -13,6 +13,8 @@ import {
   enableMultipleCategorization,
   addTransactionsToCategorizeSelected,
   removeTransactionsToCategorizeSelected,
+  setCategorizedTransactionsSelected,
+  resetCategorizedTransactionsSelected,
 } from '@/store/banking/banking.reducer';
 
 export interface WithBankingActionsProps {
@@ -35,6 +37,9 @@ export interface WithBankingActionsProps {
   resetTransactionsToCategorizeSelected: () => void;
 
   enableMultipleCategorization: (enable: boolean) => void;
+
+  setCategorizedTransactionsSelected: (ids: Array<string | number>) => void;
+  resetCategorizedTransactionsSelected: () => void;
 }
 
 const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
@@ -120,6 +125,19 @@ const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
    */
   enableMultipleCategorization: (enable: boolean) =>
     dispatch(enableMultipleCategorization({ enable })),
+
+  /**
+   * Sets the selected ids of the categorized transactions.
+   * @param {Array<string | number>} ids
+   */
+  setCategorizedTransactionsSelected: (ids: Array<string | number>) =>
+    dispatch(setCategorizedTransactionsSelected({ ids })),
+
+  /**
+   * Resets the selected categorized transcations.
+   */
+  resetCategorizedTransactionsSelected: () =>
+    dispatch(resetCategorizedTransactionsSelected()),
 });
 
 export const withBankingActions = connect<
