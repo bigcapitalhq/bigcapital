@@ -57,7 +57,7 @@ function UncategorizeBankTransactionsBulkAlert({
     >
       <p>
         Are you sure want to uncategorize the selected bank transactions, this
-        action is not revertable but you can always categorize them again?
+        action is not reversible but you can always categorize them again?
       </p>
     </Alert>
   );

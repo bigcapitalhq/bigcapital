@@ -47,16 +47,17 @@ export function useUncategorizeTransactionsBulkAction(
           t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
         );
         // Invalidate the account transactions.
-        queryClient.invalidateQueries(
-          t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY
-        );
-        // invalidate bank account summary.
+        queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+
+        // Invalidate bank account summary.
         queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
 
         // Invalidate the recognized transactions.
         queryClient.invalidateQueries([
           BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
         ]);
+        // Invalidate the account.
+        queryClient.invalidateQueries(t.ACCOUNT);
       },
       ...options,
     },

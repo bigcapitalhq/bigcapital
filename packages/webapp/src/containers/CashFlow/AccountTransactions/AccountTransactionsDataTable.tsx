@@ -103,9 +103,10 @@ function AccountTransactionsDataTable({
 
   // Handle selected rows change.
   const handleSelectedRowsChange = (selected) => {
-    const selectedIds = selected?.map(
-      (row) => row.original.uncategorized_transaction_id,
-    );
+    const selectedIds = selected
+      ?.filter((row) => row.original.uncategorized_transaction_id)
+      ?.map((row) => row.original.uncategorized_transaction_id);
+
     setCategorizedTransactionsSelected(selectedIds);
   };
 
