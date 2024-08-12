@@ -22,10 +22,11 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
 import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { useUncategorizeTransaction } from '@/hooks/query';
 import { handleCashFlowTransactionType } from './utils';
 
 import { compose } from '@/utils';
-import { useUncategorizeTransaction } from '@/hooks/query';
+import { withBankingActions } from '../withBankingActions';
 
 /**
  * Account transactions data table.
@@ -39,6 +40,9 @@ function AccountTransactionsDataTable({
 
   // #withDrawerActions
   openDrawer,
+
+  // #withBankingActions
+  setCategorizedTransactionsSelected,
 }) {
   // Retrieve table columns.
   const columns = useAccountTransactionsColumns();
@@ -97,6 +101,15 @@ function AccountTransactionsDataTable({
       });
   };
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = (selected) => {
+    const selectedIds = selected
+      ?.filter((row) => row.original.uncategorized_transaction_id)
+      ?.map((row) => row.original.uncategorized_transaction_id);
+
+    setCategorizedTransactionsSelected(selectedIds);
+  };
+
   return (
     <CashflowTransactionsTable
       noInitialFetch={true}
@@ -119,6 +132,8 @@ function AccountTransactionsDataTable({
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
+      selectionColumn={true}
+      onSelectedRowsChange={handleSelectedRowsChange}
       noResults={<T id={'cash_flow.account_transactions.no_results'} />}
       className="table-constrant"
       payload={{
@@ -136,6 +151,7 @@ export default compose(
   })),
   withAlertsActions,
   withDrawerActions,
+  withBankingActions,
 )(AccountTransactionsDataTable);
 
 const DashboardConstrantTable = styled(DataTable)`

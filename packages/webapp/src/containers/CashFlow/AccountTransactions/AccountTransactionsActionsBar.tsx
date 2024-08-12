@@ -64,6 +64,7 @@ function AccountTransactionsActionsBar({
   uncategorizedTransationsIdsSelected,
   excludedTransactionsIdsSelected,
   openMatchingTransactionAside,
+  categorizedTransactionsSelected,
 
   // #withBankingActions
   enableMultipleCategorization,
@@ -194,7 +195,7 @@ function AccountTransactionsActionsBar({
   // Handle multi select transactions for categorization or matching.
   const handleMultipleCategorizingSwitch = (event) => {
     enableMultipleCategorization(event.currentTarget.checked);
-  }
+  };
   // Handle resume bank feeds syncing.
   const handleResumeFeedsSyncing = () => {
     openAlert('resume-feeds-syncing-bank-accounnt', {
@@ -205,6 +206,13 @@ function AccountTransactionsActionsBar({
   const handlePauseFeedsSyncing = () => {
     openAlert('pause-feeds-syncing-bank-accounnt', {
       bankAccountId: accountId,
+    });
+  };
+
+  // Handles uncategorize the categorized transactions in bulk.
+  const handleUncategorizeCategorizedBulkBtnClick = () => {
+    openAlert('uncategorize-transactions-bulk', {
+      uncategorizeTransactionsIds: categorizedTransactionsSelected,
     });
   };
 
@@ -297,6 +305,14 @@ function AccountTransactionsActionsBar({
             disabled={isUnexcludingLoading}
           />
         )}
+        {!isEmpty(categorizedTransactionsSelected) && (
+          <Button
+            text={'Uncategorize'}
+            onClick={handleUncategorizeCategorizedBulkBtnClick}
+            intent={Intent.DANGER}
+            minimal
+          />
+        )}
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
@@ -379,10 +395,12 @@ export default compose(
       uncategorizedTransationsIdsSelected,
       excludedTransactionsIdsSelected,
       openMatchingTransactionAside,
+      categorizedTransactionsSelected,
     }) => ({
       uncategorizedTransationsIdsSelected,
       excludedTransactionsIdsSelected,
       openMatchingTransactionAside,
+      categorizedTransactionsSelected,
     }),
   ),
   withBankingActions,

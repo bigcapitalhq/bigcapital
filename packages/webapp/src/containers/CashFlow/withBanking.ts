@@ -22,6 +22,9 @@ export const withBanking = (mapState) => {
 
       transactionsToCategorizeIdsSelected:
         state.plaid.transactionsToCategorizeSelected,
+
+      categorizedTransactionsSelected:
+        state.plaid.categorizedTransactionsSelected,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

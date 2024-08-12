@@ -9,6 +9,10 @@ const PauseFeedsBankAccountAlert = React.lazy(
   () => import('./PauseFeedsBankAccount'),
 );
 
+const UncategorizeTransactionsBulkAlert = React.lazy(
+  () => import('./UncategorizeBankTransactionsBulkAlert'),
+);
+
 /**
  * Bank account alerts.
  */
@@ -20,5 +24,9 @@ export const BankAccountAlerts = [
   {
     name: 'pause-feeds-syncing-bank-accounnt',
     component: PauseFeedsBankAccountAlert,
+  },
+  {
+    name: 'uncategorize-transactions-bulk',
+    component: UncategorizeTransactionsBulkAlert,
   },
 ];
