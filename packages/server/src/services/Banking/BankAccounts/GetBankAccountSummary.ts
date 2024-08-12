@@ -52,6 +52,9 @@ export class GetBankAccountSummary {
         q.withGraphJoined('matchedBankTransactions');
         q.whereNull('matchedBankTransactions.id');
 
+        // Exclude the pending transactions.
+        q.modify('notPending');
+
         // Count the results.
         q.count('uncategorized_cashflow_transactions.id as total');
         q.first();
@@ -65,6 +68,9 @@ export class GetBankAccountSummary {
         q.withGraphJoined('recognizedTransaction');
         q.whereNotNull('recognizedTransaction.id');
 
+        // Exclude the pending transactions.
+        q.modify('notPending');
+
         // Count the results.
         q.count('uncategorized_cashflow_transactions.id as total');
         q.first();
@@ -74,6 +80,9 @@ export class GetBankAccountSummary {
       await UncategorizedCashflowTransaction.query().onBuild((q) => {
         q.where('accountId', bankAccountId);
         q.modify('excluded');
+
+        // Exclude the pending transactions.
+        q.modify('notPending');
 
         // Count the results.
         q.count('uncategorized_cashflow_transactions.id as total');

@@ -6,6 +6,10 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from './constants';
+import {
+  IPendingTransactionRemovedEventPayload,
+  IPendingTransactionRemovingEventPayload,
+} from '@/interfaces';
 
 @Service()
 export class RemovePendingUncategorizedTransaction {
@@ -42,7 +46,12 @@ export class RemovePendingUncategorizedTransaction {
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       await this.eventPublisher.emitAsync(
         events.bankTransactions.onPendingRemoving,
-        { tenantId, uncategorizedTransactionId, trx }
+        {
+          tenantId,
+          uncategorizedTransactionId,
+          pendingTransaction,
+          trx,
+        } as IPendingTransactionRemovingEventPayload
       );
       // Removes the pending uncategorized transaction.
       await UncategorizedCashflowTransaction.query(trx)
@@ -51,7 +60,12 @@ export class RemovePendingUncategorizedTransaction {
 
       await this.eventPublisher.emitAsync(
         events.bankTransactions.onPendingRemoved,
-        { tenantId, uncategorizedTransactionId, trx }
+        {
+          tenantId,
+          uncategorizedTransactionId,
+          pendingTransaction,
+          trx,
+        } as IPendingTransactionRemovedEventPayload
       );
     });
   }

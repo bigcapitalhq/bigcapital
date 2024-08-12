@@ -285,3 +285,17 @@ export interface IUncategorizedTransactionCreatedEventPayload {
   createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO;
   trx: Knex.Transaction;
 }
+
+export interface IPendingTransactionRemovingEventPayload {
+  tenantId: number;
+  uncategorizedTransactionId: number;
+  pendingTransaction: IUncategorizedCashflowTransaction;
+  trx?: Knex.Transaction;
+}
+
+export interface IPendingTransactionRemovedEventPayload {
+  tenantId: number;
+  uncategorizedTransactionId: number;
+  pendingTransaction: IUncategorizedCashflowTransaction;
+  trx?: Knex.Transaction;
+}

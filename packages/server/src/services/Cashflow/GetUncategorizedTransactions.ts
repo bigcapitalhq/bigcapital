@@ -51,7 +51,9 @@ export class GetUncategorizedTransactions {
         .onBuild((q) => {
           q.where('accountId', accountId);
           q.where('categorized', false);
+
           q.modify('notExcluded');
+          q.modify('notPending');
 
           q.withGraphFetched('account');
           q.withGraphFetched('recognizedTransaction.assignAccount');
