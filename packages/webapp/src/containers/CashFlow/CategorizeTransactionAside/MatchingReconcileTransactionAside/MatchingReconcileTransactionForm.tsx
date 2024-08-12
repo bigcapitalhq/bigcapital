@@ -10,6 +10,7 @@ import {
   Box,
   BranchSelect,
   FDateInput,
+  FeatureCan,
   FFormGroup,
   FInputGroup,
   FMoneyInputGroup,
@@ -30,6 +31,7 @@ import { useAccountTransactionsContext } from '../../AccountTransactions/Account
 import { MatchingReconcileFormSchema } from './MatchingReconcileTransactionForm.schema';
 import { initialValues, transformToReq } from './_utils';
 import { withBanking } from '../../withBanking';
+import { Features } from '@/constants';
 
 interface MatchingReconcileTransactionFormProps {
   onSubmitSuccess?: (values: any) => void;
@@ -205,26 +207,28 @@ function CreateReconcileTransactionContent() {
         <FInputGroup name={'reference_no'} />
       </FFormGroup>
 
-      <FFormGroup
-        name={'branchId'}
-        label={'Branch'}
-        labelInfo={<Tag minimal>Required</Tag>}
-        fastField
-      >
-        <BranchSelect
+      <FeatureCan feature={Features.Branches}>
+        <FFormGroup
           name={'branchId'}
-          branches={branches}
-          popoverProps={{
-            minimal: false,
-            position: Position.LEFT,
-            modifiers: {
-              preventOverflow: { enabled: true },
-            },
-            boundary: 'viewport',
-          }}
+          label={'Branch'}
+          labelInfo={<Tag minimal>Required</Tag>}
           fastField
-        />
-      </FFormGroup>
+        >
+          <BranchSelect
+            name={'branchId'}
+            branches={branches}
+            popoverProps={{
+              minimal: false,
+              position: Position.LEFT,
+              modifiers: {
+                preventOverflow: { enabled: true },
+              },
+              boundary: 'viewport',
+            }}
+            fastField
+          />
+        </FFormGroup>
+      </FeatureCan>
     </Box>
   );
 }
