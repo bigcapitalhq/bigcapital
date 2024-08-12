@@ -35,7 +35,10 @@ export class GetRecognizedTransactionsService {
           q.withGraphFetched('recognizedTransaction.bankRule');
           q.whereNotNull('recognizedTransactionId');
 
+          // Exclude the excluded transactions.
           q.modify('notExcluded');
+
+          // Exclude the pending transactions.
           q.modify('notPending');
 
           if (_filter.accountId) {

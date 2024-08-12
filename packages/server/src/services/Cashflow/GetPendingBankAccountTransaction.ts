@@ -12,8 +12,8 @@ export class GetPendingBankAccountTransactions {
 
   /**
    * Retrieves the given bank accounts pending transaction.
-   * @param {number} tenantId
-   * @param {number} bankAccountId
+   * @param {number} tenantId - Tenant id.
+   * @param {GetPendingTransactionsQuery} filter - Pending transactions query.
    */
   async getPendingTransactions(
     tenantId: number,
