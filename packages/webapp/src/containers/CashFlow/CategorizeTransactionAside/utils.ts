@@ -1,8 +1,8 @@
+import { useMemo } from 'react';
 import { useFormikContext } from 'formik';
+import { round } from 'lodash';
 import { MatchingTransactionFormValues } from './types';
 import { useMatchingTransactionBoot } from './MatchingTransactionBoot';
-import { useCategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
-import { useMemo } from 'react';
 
 export const transformToReq = (
   values: MatchingTransactionFormValues,
@@ -38,7 +38,7 @@ export const useGetPendingAmountMatched = () => {
     );
     const pendingAmount = totalPending - totalMatchedAmount;
 
-    return pendingAmount;
+    return round(pendingAmount, 2);
   }, [totalPending, perfectMatches, possibleMatches, values]);
 };
 
