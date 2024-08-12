@@ -49,6 +49,7 @@ export const TextFieldConditions = [
   { value: 'not_contains', text: 'Not Contains' },
 ];
 export const NumberFieldConditions = [
+  { value: 'equal', text: 'Equal' },
   { value: 'bigger', text: 'Bigger' },
   { value: 'bigger_or_equal', text: 'Bigger or Equal' },
   { value: 'smaller', text: 'Smaller' },

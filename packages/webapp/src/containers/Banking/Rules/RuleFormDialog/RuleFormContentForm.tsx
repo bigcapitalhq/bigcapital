@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useCallback, useMemo } from 'react';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
+import { get } from 'lodash';
 import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import * as R from 'ramda';
 import { CreateRuleFormSchema } from './RuleFormContentForm.schema';
@@ -34,7 +35,6 @@ import {
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
-import { get } from 'lodash';
 
 // Retrieves the add money in button options.
 const MoneyInOptions = getAddMoneyInOptions();

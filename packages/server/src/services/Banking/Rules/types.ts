@@ -65,8 +65,10 @@ export interface IBankRuleConditionDTO {
     | 'contains'
     | 'equals'
     | 'not_contains'
-    | 'smaller'
+    | 'equal'
+    | 'bigger'
     | 'bigger_or_equal'
+    | 'smaller'
     | 'smaller_or_equal';
   value: number;
 }
