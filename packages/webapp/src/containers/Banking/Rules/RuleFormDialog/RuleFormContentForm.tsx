@@ -17,11 +17,12 @@ import {
 } from '@/components';
 import { useCreateBankRule, useEditBankRule } from '@/hooks/query/bank-rules';
 import {
-  FieldCondition,
   Fields,
   RuleFormValues,
   TransactionTypeOptions,
   getAccountRootFromMoneyCategory,
+  getDefaultFieldConditionByFieldKey,
+  getFieldConditionsByFieldKey,
   initialValues,
 } from './_utils';
 import { useRuleFormDialogBoot } from './RuleFormBoot';
@@ -33,6 +34,7 @@ import {
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
+import { get } from 'lodash';
 
 // Retrieves the add money in button options.
 const MoneyInOptions = getAddMoneyInOptions();
@@ -175,6 +177,13 @@ function RuleFormConditions() {
     setFieldValue('conditions', _conditions);
   };
 
+  const handleConditionFieldChange = (item) => {
+    const defaultComparator = getDefaultFieldConditionByFieldKey(item.value);
+    
+    setFieldValue(`conditions[${index}].field`, item.value);
+    setFieldValue(`conditions[${index}].comparator`, defaultComparator);
+  };
+
   return (
     <Box style={{ marginBottom: 15 }}>
       <Stack spacing={15}>
@@ -190,6 +199,7 @@ function RuleFormConditions() {
                 name={`conditions[${index}].field`}
                 items={Fields}
                 popoverProps={{ minimal: true, inline: false }}
+                onItemChange={handleConditionFieldChange}
                 fastField
               />
             </FFormGroup>
@@ -202,8 +212,13 @@ function RuleFormConditions() {
             >
               <FSelect
                 name={`conditions[${index}].comparator`}
-                items={FieldCondition}
+                items={getFieldConditionsByFieldKey(
+                  get(values, `conditions[${index}].field`),
+                )}
                 popoverProps={{ minimal: true, inline: false }}
+                shouldUpdateDeps={{
+                  fieldKey: get(values, `conditions[${index}].field`),
+                }}
                 fastField
               />
             </FFormGroup>

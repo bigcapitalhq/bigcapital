@@ -1,15 +1,20 @@
 import { Knex } from 'knex';
 
 export enum BankRuleConditionField {
-  Amount = 'Amount',
-  Description = 'Description',
-  Payee = 'Payee',
+  Amount = 'amount',
+  Description = 'description',
+  Payee = 'payee',
 }
 
 export enum BankRuleConditionComparator {
   Contains = 'contains',
   Equals = 'equals',
+  Equal = 'equal',
   NotContain = 'not_contain',
+  Bigger = 'bigger',
+  BiggerOrEqual = 'bigger_or_equal',
+  Smaller = 'smaller',
+  SmallerOrEqual = 'smaller_or_equal',
 }
 
 export interface IBankRuleCondition {
@@ -56,7 +61,13 @@ export enum BankRuleAssignCategory {
 export interface IBankRuleConditionDTO {
   id?: number;
   field: string;
-  comparator: string;
+  comparator:
+    | 'contains'
+    | 'equals'
+    | 'not_contains'
+    | 'smaller'
+    | 'bigger_or_equal'
+    | 'smaller_or_equal';
   value: number;
 }
 
