@@ -33,7 +33,16 @@ export class BankingRulesController extends BaseController {
       body('conditions.*.field').exists().isIn(['description', 'amount']),
       body('conditions.*.comparator')
         .exists()
-        .isIn(['equals', 'contains', 'not_contain'])
+        .isIn([
+          'equals',
+          'equal',
+          'contains',
+          'not_contain',
+          'bigger',
+          'bigger_or_equal',
+          'smaller',
+          'smaller_or_equal',
+        ])
         .default('contain')
         .trim(),
       body('conditions.*.value').exists().trim(),

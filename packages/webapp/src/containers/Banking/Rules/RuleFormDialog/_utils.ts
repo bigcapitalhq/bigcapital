@@ -42,11 +42,25 @@ export const Fields = [
   { value: 'amount', text: 'Amount' },
   { value: 'payee', text: 'Payee' },
 ];
-export const FieldCondition = [
+
+export const TextFieldConditions = [
   { value: 'contains', text: 'Contains' },
   { value: 'equals', text: 'Equals' },
   { value: 'not_contains', text: 'Not Contains' },
 ];
+export const NumberFieldConditions = [
+  { value: 'equal', text: 'Equal' },
+  { value: 'bigger', text: 'Bigger' },
+  { value: 'bigger_or_equal', text: 'Bigger or Equal' },
+  { value: 'smaller', text: 'Smaller' },
+  { value: 'smaller_or_equal', text: 'Smaller or Equal' },
+];
+
+export const FieldCondition = [
+  ...TextFieldConditions,
+  ...NumberFieldConditions,
+];
+
 export const AssignTransactionTypeOptions = [
   { value: 'expense', text: 'Expense' },
 ];
@@ -55,4 +69,22 @@ export const getAccountRootFromMoneyCategory = (category: string): string[] => {
   const _category = upperFirst(camelCase(category));
 
   return get(MoneyCategoryPerCreditAccountRootType, _category) || [];
+};
+
+export const getFieldConditionsByFieldKey = (fieldKey?: string) => {
+  switch (fieldKey) {
+    case 'amount':
+      return NumberFieldConditions;
+    default:
+      return TextFieldConditions;
+  }
+};
+
+export const getDefaultFieldConditionByFieldKey = (fieldKey?: string) => {
+  switch (fieldKey) {
+    case 'amount':
+      return 'bigger_or_equal';
+    default:
+      return 'contains';
+  }
 };

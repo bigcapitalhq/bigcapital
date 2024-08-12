@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useCallback, useMemo } from 'react';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
+import { get } from 'lodash';
 import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import * as R from 'ramda';
 import { CreateRuleFormSchema } from './RuleFormContentForm.schema';
@@ -17,11 +18,12 @@ import {
 } from '@/components';
 import { useCreateBankRule, useEditBankRule } from '@/hooks/query/bank-rules';
 import {
-  FieldCondition,
   Fields,
   RuleFormValues,
   TransactionTypeOptions,
   getAccountRootFromMoneyCategory,
+  getDefaultFieldConditionByFieldKey,
+  getFieldConditionsByFieldKey,
   initialValues,
 } from './_utils';
 import { useRuleFormDialogBoot } from './RuleFormBoot';
@@ -175,6 +177,13 @@ function RuleFormConditions() {
     setFieldValue('conditions', _conditions);
   };
 
+  const handleConditionFieldChange = R.curry((index, item) => {
+    const defaultComparator = getDefaultFieldConditionByFieldKey(item.value);
+
+    setFieldValue(`conditions[${index}].field`, item.value);
+    setFieldValue(`conditions[${index}].comparator`, defaultComparator);
+  });
+
   return (
     <Box style={{ marginBottom: 15 }}>
       <Stack spacing={15}>
@@ -190,6 +199,7 @@ function RuleFormConditions() {
                 name={`conditions[${index}].field`}
                 items={Fields}
                 popoverProps={{ minimal: true, inline: false }}
+                onItemChange={handleConditionFieldChange(index)}
                 fastField
               />
             </FFormGroup>
@@ -202,8 +212,13 @@ function RuleFormConditions() {
             >
               <FSelect
                 name={`conditions[${index}].comparator`}
-                items={FieldCondition}
+                items={getFieldConditionsByFieldKey(
+                  get(values, `conditions[${index}].field`),
+                )}
                 popoverProps={{ minimal: true, inline: false }}
+                shouldUpdateDeps={{
+                  fieldKey: get(values, `conditions[${index}].field`),
+                }}
                 fastField
               />
             </FFormGroup>

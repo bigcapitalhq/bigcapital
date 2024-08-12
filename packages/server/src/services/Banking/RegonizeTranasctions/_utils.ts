@@ -33,17 +33,29 @@ const matchNumberCondition = (
   transaction: UncategorizedCashflowTransaction,
   condition: IBankRuleCondition
 ) => {
+  const conditionValue = parseFloat(condition.value);
+  const transactionAmount =
+    condition.field === 'amount'
+      ? Math.abs(transaction[condition.field])
+      : (transaction[condition.field] as unknown as number);
+
   switch (condition.comparator) {
     case BankRuleConditionComparator.Equals:
-      return transaction[condition.field] === condition.value;
-    case BankRuleConditionComparator.Contains:
-      return transaction[condition.field]
-        ?.toString()
-        .includes(condition.value.toString());
-    case BankRuleConditionComparator.NotContain:
-      return !transaction[condition.field]
-        ?.toString()
-        .includes(condition.value.toString());
+    case BankRuleConditionComparator.Equal:
+      return transactionAmount === conditionValue;
+
+    case BankRuleConditionComparator.BiggerOrEqual:
+      return transactionAmount >= conditionValue;
+
+    case BankRuleConditionComparator.Bigger:
+      return transactionAmount > conditionValue;
+
+    case BankRuleConditionComparator.Smaller:
+      return transactionAmount < conditionValue;
+
+    case BankRuleConditionComparator.SmallerOrEqual:
+      return transactionAmount <= conditionValue;
+
     default:
       return false;
   }
@@ -53,18 +65,19 @@ const matchTextCondition = (
   transaction: UncategorizedCashflowTransaction,
   condition: IBankRuleCondition
 ): boolean => {
+  const transactionValue = transaction[condition.field] as string;
+
   switch (condition.comparator) {
     case BankRuleConditionComparator.Equals:
-      return transaction[condition.field] === condition.value;
+    case BankRuleConditionComparator.Equal:
+      return transactionValue === condition.value;
     case BankRuleConditionComparator.Contains:
-      const fieldValue = lowerCase(transaction[condition.field]);
+      const fieldValue = lowerCase(transactionValue);
       const conditionValue = lowerCase(condition.value);
 
       return fieldValue.includes(conditionValue);
     case BankRuleConditionComparator.NotContain:
-      return !transaction[condition.field]?.includes(
-        condition.value.toString()
-      );
+      return !transactionValue?.includes(condition.value.toString());
     default:
       return false;
   }
@@ -101,8 +114,8 @@ const determineFieldType = (field: string): string => {
     case 'amount':
       return 'number';
     case 'description':
-      return 'text';
+    case 'payee':
     default:
-      return 'unknown';
+      return 'text';
   }
 };
