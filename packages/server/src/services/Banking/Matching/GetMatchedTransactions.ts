@@ -64,7 +64,7 @@ export class GetMatchedTransactions {
         .whereIn('id', uncategorizedTransactionIds)
         .throwIfNotFound();
 
-    const totalPending = Math.abs(sumBy(uncategorizedTransactions, 'amount'));
+    const totalPending = sumBy(uncategorizedTransactions, 'amount');
 
     const filtered = filter.transactionType
       ? this.registered.filter((item) => item.type === filter.transactionType)
