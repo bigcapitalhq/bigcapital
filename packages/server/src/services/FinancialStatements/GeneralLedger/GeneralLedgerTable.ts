@@ -67,7 +67,7 @@ export class GeneralLedgerTable extends R.compose(
     return [
       { key: 'date', accessor: 'dateFormatted' },
       { key: 'account_name', accessor: 'account.name' },
-      { key: 'reference_type', accessor: 'referenceTypeFormatted' },
+      { key: 'reference_type', accessor: 'transactionTypeFormatted' },
       { key: 'reference_number', accessor: 'transactionNumber' },
       { key: 'description', accessor: 'note' },
       { key: 'credit', accessor: 'formattedCredit' },

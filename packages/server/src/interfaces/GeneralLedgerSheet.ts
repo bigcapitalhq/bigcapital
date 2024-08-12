@@ -30,7 +30,7 @@ export interface IGeneralLedgerSheetAccountTransaction {
   currencyCode: string;
   note?: string;
 
-  transactionType?: string;
+  transactionTypeFormatted: string;
   transactionNumber: string;
 
   referenceId?: number;
