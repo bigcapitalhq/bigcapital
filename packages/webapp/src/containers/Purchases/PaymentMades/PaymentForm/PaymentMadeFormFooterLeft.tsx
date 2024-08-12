@@ -20,7 +20,8 @@ export function PaymentMadeFormFooterLeft() {
         <FEditableText
           name={'statement'}
           placeholder={intl.get('payment_made.form.internal_note.placeholder')}
-          fastField={true}
+          fastField
+          multiline
         />
       </InternalNoteFormGroup>
     </React.Fragment>

@@ -21,12 +21,15 @@ export default function ReceiptDetailFooter() {
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <If condition={receipt.statement}>
-          <DetailItem label={<T id={'receipt.details.statement'} />}>
+          <DetailItem label={<T id={'receipt.details.statement'} />} multiline>
             {receipt.statement}
           </DetailItem>
         </If>
         <If condition={receipt.receipt_message}>
-          <DetailItem label={<T id={'receipt.details.receipt_message'} />}>
+          <DetailItem
+            label={<T id={'receipt.details.receipt_message'} />}
+            multiline
+          >
             {receipt.receipt_message}
           </DetailItem>
         </If>

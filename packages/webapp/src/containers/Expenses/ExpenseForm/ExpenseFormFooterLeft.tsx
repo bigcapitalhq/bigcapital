@@ -14,6 +14,8 @@ export function ExpenseFormFooterLeft() {
         <FEditableText
           name={'description'}
           placeholder={<T id={'expenses.decscrption.placeholder'} />}
+          multiline
+          fastField
         />
       </DescriptionFormGroup>
     </React.Fragment>

@@ -16,12 +16,15 @@ import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
  */
 export default function PaymentReceiveDetailFooter() {
   const { paymentReceive } = usePaymentReceiveDetailContext();
-  
+
   return (
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <If condition={paymentReceive.statement}>
-          <DetailItem label={<T id={'payment_receive.details.statement'} />}>
+          <DetailItem
+            label={<T id={'payment_receive.details.statement'} />}
+            multiline
+          >
             {paymentReceive.statement}
           </DetailItem>
         </If>

@@ -15,6 +15,8 @@ export function WarehouseTransferFormFooterLeft() {
         <FEditableText
           name={'reason'}
           placeholder={intl.get('warehouse_transfer.form.reason.placeholder')}
+          multiline
+          fastField
         />
       </TermsConditsFormGroup>
     </React.Fragment>

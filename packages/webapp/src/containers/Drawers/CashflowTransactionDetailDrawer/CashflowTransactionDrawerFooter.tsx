@@ -9,7 +9,10 @@ export function CashflowTransactionDrawerFooter() {
   return (
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-        <DetailItem label={<T id={'cash_flow.drawer.label.statement'} />}>
+        <DetailItem
+          label={<T id={'cash_flow.drawer.label.statement'} />}
+          multiline
+        >
           {cashflowTransaction.description}
         </DetailItem>
       </DetailsMenu>

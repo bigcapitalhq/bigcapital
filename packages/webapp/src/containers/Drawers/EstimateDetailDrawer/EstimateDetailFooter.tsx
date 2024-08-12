@@ -16,17 +16,20 @@ import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
  */
 export default function EstimateDetailFooter() {
   const { estimate } = useEstimateDetailDrawerContext();
-  
+
   return (
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <If condition={estimate.terms_conditions}>
-          <DetailItem label={<T id={'estimate.details.terms_conditions'} />}>
+          <DetailItem
+            label={<T id={'estimate.details.terms_conditions'} />}
+            multiline
+          >
             {estimate.terms_conditions}
           </DetailItem>
         </If>
         <If condition={estimate.note}>
-          <DetailItem label={<T id={'estimate.details.note'} />}>
+          <DetailItem label={<T id={'estimate.details.note'} />} multiline>
             {estimate.note}
           </DetailItem>
         </If>

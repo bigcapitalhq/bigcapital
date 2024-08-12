@@ -16,6 +16,8 @@ export function EstimateFormFooterLeft() {
         <FEditableText
           name={'note'}
           placeholder={intl.get('estimate_form.customer_note.placeholder')}
+          multiline
+          fastField
         />
       </EstimateMsgFormGroup>
 
@@ -26,7 +28,11 @@ export function EstimateFormFooterLeft() {
       >
         <FEditableText
           name={'terms_conditions'}
-          placeholder={intl.get('estimate_form.terms_and_conditions.placeholder')}
+          placeholder={intl.get(
+            'estimate_form.terms_and_conditions.placeholder',
+          )}
+          multiline
+          fastField
         />
       </TermsConditsFormGroup>
     </React.Fragment>

@@ -20,7 +20,9 @@ export default function BillDetailFooter() {
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <If condition={bill.note}>
-          <DetailItem label={<T id={'note'} />}>{bill.note}</DetailItem>
+          <DetailItem label={<T id={'note'} />} multiline>
+            {bill.note}
+          </DetailItem>
         </If>
       </DetailsMenu>
     </CommercialDocFooter>
