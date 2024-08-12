@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'classnames';
 
 import '@/style/components/Details.scss';
 
@@ -24,7 +24,7 @@ export function DetailsMenu({
 }) {
   return (
     <div
-      className={classNames(
+      className={clsx(
         'details-menu',
         {
           'details-menu--vertical': direction === DIRECTION.VERTICAL,
@@ -44,16 +44,24 @@ export function DetailsMenu({
 /**
  * Detail item.
  */
-export function DetailItem({ label, children, name, align, className }) {
+export function DetailItem({
+  label,
+  children,
+  name,
+  align,
+  multiline,
+  className,
+}) {
   const { minLabelSize } = useDetailsMenuContext();
 
   return (
     <div
-      className={classNames(
+      className={clsx(
         'detail-item',
         {
           [`detail-item--${name}`]: name,
           [`align-${align}`]: align,
+          [`detail-item--multilines`]: multiline,
         },
         className,
       )}
@@ -66,7 +74,7 @@ export function DetailItem({ label, children, name, align, className }) {
       >
         {label}
       </div>
-      <div>{children}</div>
+      <div className={clsx('detail-item__content')}>{children}</div>
     </div>
   );
 }

@@ -16,6 +16,8 @@ export function ReceiptFormFooterLeft() {
         <FEditableText
           name={'receipt_message'}
           placeholder={intl.get('receipt_form.receipt_message.placeholder')}
+          multiline
+          fastField
         />
       </ReceiptMsgFormGroup>
 
@@ -29,6 +31,8 @@ export function ReceiptFormFooterLeft() {
           placeholder={intl.get(
             'receipt_form.terms_and_conditions.placeholder',
           )}
+          multiline
+          fastField
         />
       </TermsConditsFormGroup>
     </React.Fragment>

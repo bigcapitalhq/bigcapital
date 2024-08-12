@@ -15,6 +15,8 @@ export function BillFormFooterLeft() {
         <FEditableText
           name={'note'}
           placeholder={intl.get('bill_form.label.note.placeholder')}
+          fastField
+          multiline
         />
       </TermsConditsFormGroup>
     </React.Fragment>
