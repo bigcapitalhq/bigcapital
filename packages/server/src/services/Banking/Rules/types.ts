@@ -110,6 +110,8 @@ export interface IBankRuleEventEditingPayload {
 export interface IBankRuleEventEditedPayload {
   tenantId: number;
   ruleId: number;
+  oldBankRule: IBankRule;
+  bankRule: IBankRule;
   editRuleDTO: IEditBankRuleDTO;
   trx?: Knex.Transaction;
 }

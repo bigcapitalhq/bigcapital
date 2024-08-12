@@ -84,6 +84,6 @@ export const getDefaultFieldConditionByFieldKey = (fieldKey?: string) => {
     case 'amount':
       return 'bigger_or_equal';
     default:
-      return 'equals';
+      return 'contains';
   }
 };

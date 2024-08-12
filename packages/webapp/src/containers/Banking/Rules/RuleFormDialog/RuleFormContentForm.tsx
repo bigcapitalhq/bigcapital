@@ -177,12 +177,12 @@ function RuleFormConditions() {
     setFieldValue('conditions', _conditions);
   };
 
-  const handleConditionFieldChange = (item) => {
+  const handleConditionFieldChange = R.curry((index, item) => {
     const defaultComparator = getDefaultFieldConditionByFieldKey(item.value);
-    
+
     setFieldValue(`conditions[${index}].field`, item.value);
     setFieldValue(`conditions[${index}].comparator`, defaultComparator);
-  };
+  });
 
   return (
     <Box style={{ marginBottom: 15 }}>
@@ -199,7 +199,7 @@ function RuleFormConditions() {
                 name={`conditions[${index}].field`}
                 items={Fields}
                 popoverProps={{ minimal: true, inline: false }}
-                onItemChange={handleConditionFieldChange}
+                onItemChange={handleConditionFieldChange(index)}
                 fastField
               />
             </FFormGroup>

@@ -116,6 +116,6 @@ const determineFieldType = (field: string): string => {
     case 'description':
     case 'payee':
     default:
-      return 'unknown';
+      return 'text';
   }
 };
