@@ -1,6 +1,8 @@
-import { useAccounts, useBranches } from '@/hooks/query';
-import { Spinner } from '@blueprintjs/core';
 import React from 'react';
+import { Spinner } from '@blueprintjs/core';
+import { Features } from '@/constants';
+import { useAccounts, useBranches } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
 interface MatchingReconcileTransactionBootProps {
   children: React.ReactNode;
@@ -15,8 +17,17 @@ const MatchingReconcileTransactionBootContext =
 export function MatchingReconcileTransactionBoot({
   children,
 }: MatchingReconcileTransactionBootProps) {
+  // Detarmines whether the feature is enabled.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts({}, {});
-  const { data: branches, isLoading: isBranchesLoading } = useBranches({}, {});
+  const { data: branches, isLoading: isBranchesLoading } = useBranches(
+    {},
+    {
+      enabled: isBranchFeatureCan,
+    },
+  );
 
   const provider = {
     accounts,
