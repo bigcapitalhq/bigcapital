@@ -3,11 +3,11 @@ import {
   Item as PlaidItem,
   Institution as PlaidInstitution,
   AccountBase as PlaidAccount,
+  TransactionBase as PlaidTransactionBase,
 } from 'plaid';
 import {
   CreateUncategorizedTransactionDTO,
   IAccountCreateDTO,
-  PlaidTransaction,
 } from '@/interfaces';
 
 /**
@@ -48,7 +48,7 @@ export const transformPlaidAccountToCreateAccount = R.curry(
 export const transformPlaidTrxsToCashflowCreate = R.curry(
   (
     cashflowAccountId: number,
-    plaidTranasction: PlaidTransaction
+    plaidTranasction: PlaidTransactionBase
   ): CreateUncategorizedTransactionDTO => {
     return {
       date: plaidTranasction.date,
@@ -64,6 +64,8 @@ export const transformPlaidTrxsToCashflowCreate = R.curry(
       accountId: cashflowAccountId,
       referenceNo: plaidTranasction.payment_meta?.reference_number,
       plaidTransactionId: plaidTranasction.transaction_id,
+      pending: plaidTranasction.pending,
+      pendingPlaidTransactionId: plaidTranasction.pending_transaction_id,
     };
   }
 );

@@ -1,4 +1,6 @@
 // @ts-nocheck
+import * as R from 'ramda';
+import { useMemo } from 'react';
 import { useAppQueryString } from '@/hooks';
 import { Group } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
@@ -12,31 +14,49 @@ export function AccountTransactionsUncategorizeFilter() {
     bankAccountMetaSummary?.totalUncategorizedTransactions;
   const totalRecognized = bankAccountMetaSummary?.totalRecognizedTransactions;
 
+  const totalPending = bankAccountMetaSummary?.totalPendingTransactions;
+
   const handleTabsChange = (value) => {
     setLocationQuery({ uncategorizedFilter: value });
   };
 
+  const options = useMemo(
+    () =>
+      R.when(
+        () => totalPending > 0,
+        R.append({
+          value: 'pending',
+          label: (
+            <>
+              Pending <strong>({totalPending})</strong>
+            </>
+          ),
+        }),
+      )([
+        {
+          value: 'all',
+          label: (
+            <>
+              All <strong>({totalUncategorized})</strong>
+            </>
+          ),
+        },
+        {
+          value: 'recognized',
+          label: (
+            <>
+              Recognized <strong>({totalRecognized})</strong>
+            </>
+          ),
+        },
+      ]),
+    [totalPending, totalRecognized, totalUncategorized],
+  );
+
   return (
     <Group position={'apart'}>
       <TagsControl
-        options={[
-          {
-            value: 'all',
-            label: (
-              <>
-                All <strong>({totalUncategorized})</strong>
-              </>
-            ),
-          },
-          {
-            value: 'recognized',
-            label: (
-              <>
-                Recognized <strong>({totalRecognized})</strong>
-              </>
-            ),
-          },
-        ]}
+        options={options}
         value={locationQuery?.uncategorizedFilter || 'all'}
         onValueChange={handleTabsChange}
       />

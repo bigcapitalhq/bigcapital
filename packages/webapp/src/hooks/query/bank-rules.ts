@@ -686,3 +686,34 @@ export function useExcludedBankTransactionsInfinity(
     },
   );
 }
+
+export function usePendingBankTransactionsInfinity(
+  query,
+  infinityProps,
+  axios,
+) {
+  const apiRequest = useApiRequest();
+
+  return useInfiniteQuery(
+    [BANK_QUERY_KEY.PENDING_BANK_ACCOUNT_TRANSACTIONS_INFINITY, query],
+    async ({ pageParam = 1 }) => {
+      const response = await apiRequest.http({
+        ...axios,
+        method: 'get',
+        url: `/api/banking/bank_accounts/pending_transactions`,
+        params: { page: pageParam, ...query },
+      });
+      return response.data;
+    },
+    {
+      getPreviousPageParam: (firstPage) => firstPage.pagination.page - 1,
+      getNextPageParam: (lastPage) => {
+        const { pagination } = lastPage;
+        return pagination.total > pagination.page_size * pagination.page
+          ? lastPage.pagination.page + 1
+          : undefined;
+      },
+      ...infinityProps,
+    },
+  );
+}

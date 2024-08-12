@@ -659,6 +659,9 @@ export default {
 
     onUnexcluding: 'onBankTransactionUnexcluding',
     onUnexcluded: 'onBankTransactionUnexcluded',
+
+    onPendingRemoving: 'onBankTransactionPendingRemoving',
+    onPendingRemoved: 'onBankTransactionPendingRemoved',
   },
 
   bankAccount: {

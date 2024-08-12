@@ -25,6 +25,7 @@ import { Knex } from 'knex';
 import uniqid from 'uniqid';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { RemovePendingUncategorizedTransaction } from '@/services/Cashflow/RemovePendingUncategorizedTransaction';
 
 const CONCURRENCY_ASYNC = 10;
 
@@ -40,7 +41,7 @@ export class PlaidSyncDb {
   private cashflowApp: CashflowApplication;
 
   @Inject()
-  private deleteCashflowTransactionService: DeleteCashflowTransaction;
+  private removePendingTransaction: RemovePendingUncategorizedTransaction;
 
   @Inject()
   private eventPublisher: EventPublisher;
@@ -185,21 +186,22 @@ export class PlaidSyncDb {
     plaidTransactionsIds: string[],
     trx?: Knex.Transaction
   ) {
-    const { CashflowTransaction } = this.tenancy.models(tenantId);
+    const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
-    const cashflowTransactions = await CashflowTransaction.query(trx).whereIn(
-      'plaidTransactionId',
-      plaidTransactionsIds
-    );
-    const cashflowTransactionsIds = cashflowTransactions.map(
+    const uncategorizedTransactions =
+      await UncategorizedCashflowTransaction.query(trx).whereIn(
+        'plaidTransactionId',
+        plaidTransactionsIds
+      );
+    const uncategorizedTransactionsIds = uncategorizedTransactions.map(
       (trans) => trans.id
     );
     await bluebird.map(
-      cashflowTransactionsIds,
-      (transactionId: number) =>
-        this.deleteCashflowTransactionService.deleteCashflowTransaction(
+      uncategorizedTransactionsIds,
+      (uncategorizedTransactionId: number) =>
+        this.removePendingTransaction.removePendingTransaction(
           tenantId,
-          transactionId,
+          uncategorizedTransactionId,
           trx
         ),
       { concurrency: CONCURRENCY_ASYNC }

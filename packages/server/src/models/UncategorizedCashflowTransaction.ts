@@ -21,6 +21,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
   plaidTransactionId!: string;
   recognizedTransactionId!: number;
   excludedAt: Date;
+  pending: boolean;
 
   /**
    * Table name.
@@ -46,7 +47,8 @@ export default class UncategorizedCashflowTransaction extends mixin(
       'isDepositTransaction',
       'isWithdrawalTransaction',
       'isRecognized',
-      'isExcluded'
+      'isExcluded',
+      'isPending',
     ];
   }
 
@@ -100,6 +102,14 @@ export default class UncategorizedCashflowTransaction extends mixin(
   }
 
   /**
+   * Detarmines whether the transaction is pending.
+   * @returns {boolean}
+   */
+  public get isPending(): boolean {
+    return !!this.pending;
+  }
+
+  /**
    * Model modifiers.
    */
   static get modifiers() {
@@ -142,6 +152,20 @@ export default class UncategorizedCashflowTransaction extends mixin(
       notCategorized(query) {
         query.whereNull('categorizeRefType');
         query.whereNull('categorizeRefId');
+      },
+
+      /**
+       * Filters the not pending transactions.
+       */
+      notPending(query) {
+        query.where('pending', false);
+      },
+
+      /**
+       * Filters the pending transactions.
+       */
+      pending(query) {
+        query.where('pending', true);
       },
     };
   }

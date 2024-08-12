@@ -73,6 +73,12 @@ export class PlaidUpdateTransactions {
       item,
       trx
     );
+    // Sync removed transactions.
+    await this.plaidSync.syncRemoveTransactions(
+      tenantId,
+      removed?.map((r) => r.transaction_id),
+      trx
+    );
     // Sync bank account transactions.
     await this.plaidSync.syncAccountsTransactions(
       tenantId,

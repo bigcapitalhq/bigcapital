@@ -268,6 +268,8 @@ export interface CreateUncategorizedTransactionDTO {
   description?: string;
   referenceNo?: string | null;
   plaidTransactionId?: string | null;
+  pending?: boolean;
+  pendingPlaidTransactionId?: string | null;
   batch?: string;
 }
 
@@ -282,4 +284,18 @@ export interface IUncategorizedTransactionCreatedEventPayload {
   uncategorizedTransaction: any;
   createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO;
   trx: Knex.Transaction;
+}
+
+export interface IPendingTransactionRemovingEventPayload {
+  tenantId: number;
+  uncategorizedTransactionId: number;
+  pendingTransaction: IUncategorizedCashflowTransaction;
+  trx?: Knex.Transaction;
+}
+
+export interface IPendingTransactionRemovedEventPayload {
+  tenantId: number;
+  uncategorizedTransactionId: number;
+  pendingTransaction: IUncategorizedCashflowTransaction;
+  trx?: Knex.Transaction;
 }
