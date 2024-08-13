@@ -3,11 +3,11 @@ import { IPaymentReceive } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
-import { PaymentReceiveTransfromer } from './PaymentReceiveTransformer';
+import { PaymentReceiveTransfromer } from './PaymentReceivedTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
-export class GetPaymentReceive {
+export class GetPaymentReceived {
   @Inject()
   private tenancy: HasTenancyService;
 

@@ -11,7 +11,7 @@ import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
-export class DeletePaymentReceive {
+export class DeletePaymentReceived {
   @Inject()
   private eventPublisher: EventPublisher;
 

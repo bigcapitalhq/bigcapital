@@ -10,35 +10,35 @@ import {
   PaymentReceiveMailOptsDTO,
 } from '@/interfaces';
 import { Inject, Service } from 'typedi';
-import { CreatePaymentReceive } from './CreatePaymentReceive';
-import { EditPaymentReceive } from './EditPaymentReceive';
-import { DeletePaymentReceive } from './DeletePaymentReceive';
-import { GetPaymentReceives } from './GetPaymentReceives';
-import { GetPaymentReceive } from './GetPaymentReceive';
-import { GetPaymentReceiveInvoices } from './GetPaymentReceiveInvoices';
-import { PaymentReceiveNotifyBySms } from './PaymentReceiveSmsNotify';
-import GetPaymentReceivePdf from './GetPaymentReeceivePdf';
-import { SendPaymentReceiveMailNotification } from './PaymentReceiveMailNotification';
+import { CreatePaymentReceived } from './CreatePaymentReceived';
+import { EditPaymentReceived } from './EditPaymentReceived';
+import { DeletePaymentReceived } from './DeletePaymentReceived';
+import { GetPaymentReceives } from './GetPaymentsReceived';
+import { GetPaymentReceived } from './GetPaymentReceived';
+import { GetPaymentReceivedInvoices } from './GetPaymentReceivedInvoices';
+import { PaymentReceiveNotifyBySms } from './PaymentReceivedSmsNotify';
+import GetPaymentReceivePdf from './GetPaymentReceivedPdf';
+import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
 
 @Service()
 export class PaymentReceivesApplication {
   @Inject()
-  private createPaymentReceiveService: CreatePaymentReceive;
+  private createPaymentReceivedService: CreatePaymentReceived;
 
   @Inject()
-  private editPaymentReceiveService: EditPaymentReceive;
+  private editPaymentReceivedService: EditPaymentReceived;
 
   @Inject()
-  private deletePaymentReceiveService: DeletePaymentReceive;
+  private deletePaymentReceivedService: DeletePaymentReceived;
 
   @Inject()
-  private getPaymentReceivesService: GetPaymentReceives;
+  private getPaymentsReceivedService: GetPaymentReceives;
 
   @Inject()
-  private getPaymentReceiveService: GetPaymentReceive;
+  private getPaymentReceivedService: GetPaymentReceived;
 
   @Inject()
-  private getPaymentReceiveInvoicesService: GetPaymentReceiveInvoices;
+  private getPaymentReceiveInvoicesService: GetPaymentReceivedInvoices;
 
   @Inject()
   private paymentSmsNotify: PaymentReceiveNotifyBySms;
@@ -56,12 +56,12 @@ export class PaymentReceivesApplication {
    * @param {ISystemUser} authorizedUser
    * @returns
    */
-  public createPaymentReceive(
+  public createPaymentReceived(
     tenantId: number,
     paymentReceiveDTO: IPaymentReceiveCreateDTO,
     authorizedUser: ISystemUser
   ) {
-    return this.createPaymentReceiveService.createPaymentReceive(
+    return this.createPaymentReceivedService.createPaymentReceived(
       tenantId,
       paymentReceiveDTO,
       authorizedUser
@@ -82,7 +82,7 @@ export class PaymentReceivesApplication {
     paymentReceiveDTO: IPaymentReceiveEditDTO,
     authorizedUser: ISystemUser
   ) {
-    return this.editPaymentReceiveService.editPaymentReceive(
+    return this.editPaymentReceivedService.editPaymentReceive(
       tenantId,
       paymentReceiveId,
       paymentReceiveDTO,
@@ -102,7 +102,7 @@ export class PaymentReceivesApplication {
     paymentReceiveId: number,
     authorizedUser: ISystemUser
   ) {
-    return this.deletePaymentReceiveService.deletePaymentReceive(
+    return this.deletePaymentReceivedService.deletePaymentReceive(
       tenantId,
       paymentReceiveId,
       authorizedUser
@@ -123,7 +123,7 @@ export class PaymentReceivesApplication {
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
-    return this.getPaymentReceivesService.getPaymentReceives(
+    return this.getPaymentsReceivedService.getPaymentReceives(
       tenantId,
       filterDTO
     );
@@ -139,7 +139,7 @@ export class PaymentReceivesApplication {
     tenantId: number,
     paymentReceiveId: number
   ): Promise<IPaymentReceive> {
-    return this.getPaymentReceiveService.getPaymentReceive(
+    return this.getPaymentReceivedService.getPaymentReceive(
       tenantId,
       paymentReceiveId
     );

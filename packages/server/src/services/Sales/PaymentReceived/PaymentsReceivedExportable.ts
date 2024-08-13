@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { IAccountsStructureType, IPaymentReceivesFilter } from '@/interfaces';
 import { Exportable } from '@/services/Export/Exportable';
-import { PaymentReceivesApplication } from './PaymentReceivesApplication';
+import { PaymentReceivesApplication } from './PaymentReceivedApplication';
 
 @Service()
 export class PaymentsReceivedExportable extends Exportable {

@@ -9,7 +9,7 @@ import { SendSaleInvoiceMailJob } from '@/services/Sales/Invoices/SendSaleInvoic
 import { SendSaleInvoiceReminderMailJob } from '@/services/Sales/Invoices/SendSaleInvoiceMailReminderJob';
 import { SendSaleEstimateMailJob } from '@/services/Sales/Estimates/SendSaleEstimateMailJob';
 import { SaleReceiptMailNotificationJob } from '@/services/Sales/Receipts/SaleReceiptMailNotificationJob';
-import { PaymentReceiveMailNotificationJob } from '@/services/Sales/PaymentReceives/PaymentReceiveMailNotificationJob';
+import { PaymentReceivedMailNotificationJob } from '@/services/Sales/PaymentReceived/PaymentReceivedMailNotificationJob';
 import { PlaidFetchTransactionsJob } from '@/services/Banking/Plaid/PlaidFetchTransactionsJob';
 import { ImportDeleteExpiredFilesJobs } from '@/services/Import/jobs/ImportDeleteExpiredFilesJob';
 import { SendVerifyMailJob } from '@/services/Authentication/jobs/SendVerifyMailJob';
@@ -28,7 +28,7 @@ export default ({ agenda }: { agenda: Agenda }) => {
   new SendSaleInvoiceReminderMailJob(agenda);
   new SendSaleEstimateMailJob(agenda);
   new SaleReceiptMailNotificationJob(agenda);
-  new PaymentReceiveMailNotificationJob(agenda);
+  new PaymentReceivedMailNotificationJob(agenda);
   new PlaidFetchTransactionsJob(agenda);
   new ImportDeleteExpiredFilesJobs(agenda);
   new SendVerifyMailJob(agenda);

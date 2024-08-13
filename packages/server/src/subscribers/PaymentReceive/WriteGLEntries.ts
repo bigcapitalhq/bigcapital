@@ -5,12 +5,12 @@ import {
   IPaymentReceiveEditedPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
-import { PaymentReceiveGLEntries } from '@/services/Sales/PaymentReceives/PaymentReceiveGLEntries';
+import { PaymentReceivedGLEntries } from '@/services/Sales/PaymentReceived/PaymentReceivedGLEntries';
 
 @Service()
 export default class PaymentReceivesWriteGLEntriesSubscriber {
   @Inject()
-  private paymentReceiveGLEntries: PaymentReceiveGLEntries;
+  private paymentReceiveGLEntries: PaymentReceivedGLEntries;
 
   /**
    * Attaches events with handlers.

@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import AutoIncrementOrdersService from '../AutoIncrementOrdersService';
 
 @Service()
-export class PaymentReceiveIncrement {
+export class PaymentReceivedIncrement {
   @Inject()
   private autoIncrementOrdersService: AutoIncrementOrdersService;
 

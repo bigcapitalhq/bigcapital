@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import async from 'async';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { PaymentReceiveGLEntries } from '../PaymentReceives/PaymentReceiveGLEntries';
+import { PaymentReceivedGLEntries } from '../PaymentReceived/PaymentReceivedGLEntries';
 
 @Service()
 export class InvoicePaymentsGLEntriesRewrite {
@@ -10,7 +10,7 @@ export class InvoicePaymentsGLEntriesRewrite {
   public tenancy: HasTenancyService;
 
   @Inject()
-  public paymentGLEntries: PaymentReceiveGLEntries;
+  public paymentGLEntries: PaymentReceivedGLEntries;
 
   /**
    * Rewrites the payment GL entries task.

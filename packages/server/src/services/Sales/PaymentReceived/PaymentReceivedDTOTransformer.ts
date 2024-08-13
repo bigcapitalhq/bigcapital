@@ -7,18 +7,18 @@ import {
   IPaymentReceiveCreateDTO,
   IPaymentReceiveEditDTO,
 } from '@/interfaces';
-import { PaymentReceiveValidators } from './PaymentReceiveValidators';
-import { PaymentReceiveIncrement } from './PaymentReceiveIncrement';
+import { PaymentReceivedValidators } from './PaymentReceivedValidators';
+import { PaymentReceivedIncrement } from './PaymentReceivedIncrement';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { formatDateFields } from '@/utils';
 
 @Service()
 export class PaymentReceiveDTOTransformer {
   @Inject()
-  private validators: PaymentReceiveValidators;
+  private validators: PaymentReceivedValidators;
 
   @Inject()
-  private increments: PaymentReceiveIncrement;
+  private increments: PaymentReceivedIncrement;
 
   @Inject()
   private branchDTOTransform: BranchTransactionDTOTransform;

@@ -1,8 +1,8 @@
 import Container, { Service } from 'typedi';
-import { SendPaymentReceiveMailNotification } from './PaymentReceiveMailNotification';
+import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
 
 @Service()
-export class PaymentReceiveMailNotificationJob {
+export class PaymentReceivedMailNotificationJob {
   /**
    * Constructor method.
    */

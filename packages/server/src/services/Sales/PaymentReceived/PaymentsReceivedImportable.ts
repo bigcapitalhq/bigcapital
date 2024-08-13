@@ -2,13 +2,13 @@ import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
 import { IPaymentReceiveCreateDTO } from '@/interfaces';
 import { Importable } from '@/services/Import/Importable';
-import { CreatePaymentReceive } from './CreatePaymentReceive';
+import { CreatePaymentReceived } from './CreatePaymentReceived';
 import { PaymentsReceiveSampleData } from './constants';
 
 @Service()
-export class PaymentReceivesImportable extends Importable {
+export class PaymentsReceivedImportable extends Importable {
   @Inject()
-  private createPaymentReceiveService: CreatePaymentReceive;
+  private createPaymentReceiveService: CreatePaymentReceived;
 
   /**
    * Importing to account service.
@@ -21,7 +21,7 @@ export class PaymentReceivesImportable extends Importable {
     createPaymentDTO: IPaymentReceiveCreateDTO,
     trx?: Knex.Transaction
   ) {
-    return this.createPaymentReceiveService.createPaymentReceive(
+    return this.createPaymentReceiveService.createPaymentReceived(
       tenantId,
       createPaymentDTO,
       {},

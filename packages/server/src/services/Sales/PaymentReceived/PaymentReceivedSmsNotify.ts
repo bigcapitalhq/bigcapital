@@ -12,7 +12,7 @@ import { formatNumber, formatSmsMessage } from 'utils';
 import { TenantMetadata } from '@/system/models';
 import SaleNotifyBySms from '../SaleNotifyBySms';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { PaymentReceiveValidators } from './PaymentReceiveValidators';
+import { PaymentReceivedValidators } from './PaymentReceivedValidators';
 
 @Service()
 export class PaymentReceiveNotifyBySms {
@@ -29,7 +29,7 @@ export class PaymentReceiveNotifyBySms {
   private saleSmsNotification: SaleNotifyBySms;
 
   @Inject()
-  private validators: PaymentReceiveValidators;
+  private validators: PaymentReceivedValidators;
 
   /**
    * Notify customer via sms about payment receive details.

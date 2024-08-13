@@ -13,7 +13,7 @@ import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import { TenantMetadata } from '@/system/models';
 
 @Service()
-export class PaymentReceiveGLEntries {
+export class PaymentReceivedGLEntries {
   @Inject()
   private tenancy: TenancyService;
 

@@ -15,7 +15,7 @@ import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 import { PaymentReceive } from '@/models';
 
 @Service()
-export class PaymentReceiveValidators {
+export class PaymentReceivedValidators {
   @Inject()
   private tenancy: HasTenancyService;
 

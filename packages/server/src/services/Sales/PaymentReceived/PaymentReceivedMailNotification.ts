@@ -11,7 +11,7 @@ import {
   DEFAULT_PAYMENT_MAIL_CONTENT,
   DEFAULT_PAYMENT_MAIL_SUBJECT,
 } from './constants';
-import { GetPaymentReceive } from './GetPaymentReceive';
+import { GetPaymentReceived } from './GetPaymentReceived';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
@@ -23,7 +23,7 @@ export class SendPaymentReceiveMailNotification {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private getPaymentService: GetPaymentReceive;
+  private getPaymentService: GetPaymentReceived;
 
   @Inject()
   private contactMailNotification: ContactMailNotification;

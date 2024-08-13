@@ -9,7 +9,7 @@ import {
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import UnitOfWork from '@/services/UnitOfWork';
-import { PaymentReceiveValidators } from '../Sales/PaymentReceives/PaymentReceiveValidators';
+import { PaymentReceivedValidators } from '../Sales/PaymentReceived/PaymentReceivedValidators';
 import BaseCreditNotes from './CreditNotes';
 import {
   IApplyCreditToInvoicesDTO,
@@ -26,7 +26,7 @@ export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private paymentReceiveValidators: PaymentReceiveValidators;
+  private paymentReceiveValidators: PaymentReceivedValidators;
 
   @Inject()
   private uow: UnitOfWork;

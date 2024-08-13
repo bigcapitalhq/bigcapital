@@ -14,12 +14,9 @@ import { ERRORS } from './constants';
  * Payment receives edit/new pages service.
  */
 @Service()
-export default class PaymentReceivesPages {
+export default class PaymentsReceivedPages {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
+  private tenancy: TenancyService;
 
   /**
    * Retrive page invoices entries from the given sale invoices models.

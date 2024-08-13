@@ -1,7 +1,7 @@
 import { IPaymentReceive, IPaymentReceiveEntry } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
-import { PaymentReceiveEntryTransfromer } from './PaymentReceiveEntryTransformer';
+import { PaymentReceivedEntryTransfromer } from './PaymentReceivedEntryTransformer';
 
 export class PaymentReceiveTransfromer extends Transformer {
   /**
@@ -73,6 +73,6 @@ export class PaymentReceiveTransfromer extends Transformer {
    * @returns {IPaymentReceiveEntry[]}
    */
   protected entries = (payment: IPaymentReceive): IPaymentReceiveEntry[] => {
-    return this.item(payment.entries, new PaymentReceiveEntryTransfromer());
+    return this.item(payment.entries, new PaymentReceivedEntryTransfromer());
   };
 }

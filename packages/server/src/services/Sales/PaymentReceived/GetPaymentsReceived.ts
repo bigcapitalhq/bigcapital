@@ -6,7 +6,7 @@ import {
   IPaymentReceive,
   IPaymentReceivesFilter,
 } from '@/interfaces';
-import { PaymentReceiveTransfromer } from './PaymentReceiveTransformer';
+import { PaymentReceiveTransfromer } from './PaymentReceivedTransformer';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';

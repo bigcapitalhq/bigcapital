@@ -9,9 +9,9 @@ import {
 } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import PaymentReceivesPages from '@/services/Sales/PaymentReceives/PaymentReceivesPages';
+import PaymentsReceivedPages from '@/services/Sales/PaymentReceived/PaymentsReceivedPages';
+import { PaymentReceivesApplication } from '@/services/Sales/PaymentReceived/PaymentReceivedApplication';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { PaymentReceivesApplication } from '@/services/Sales/PaymentReceives/PaymentReceivesApplication';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { ServiceError } from '@/exceptions';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
@@ -22,7 +22,7 @@ export default class PaymentReceivesController extends BaseController {
   private paymentReceiveApplication: PaymentReceivesApplication;
 
   @Inject()
-  private PaymentReceivesPages: PaymentReceivesPages;
+  private PaymentsReceivedPages: PaymentsReceivedPages;
 
   @Inject()
   private dynamicListService: DynamicListingService;
@@ -229,7 +229,7 @@ export default class PaymentReceivesController extends BaseController {
 
     try {
       const storedPaymentReceive =
-        await this.paymentReceiveApplication.createPaymentReceive(
+        await this.paymentReceiveApplication.createPaymentReceived(
           tenantId,
           paymentReceive,
           user
@@ -376,7 +376,7 @@ export default class PaymentReceivesController extends BaseController {
     const { customerId } = this.matchedQueryData(req);
 
     try {
-      const entries = await this.PaymentReceivesPages.getNewPageEntries(
+      const entries = await this.PaymentsReceivedPages.getNewPageEntries(
         tenantId,
         customerId
       );
@@ -404,7 +404,7 @@ export default class PaymentReceivesController extends BaseController {
 
     try {
       const { paymentReceive, entries } =
-        await this.PaymentReceivesPages.getPaymentReceiveEditPage(
+        await this.PaymentsReceivedPages.getPaymentReceiveEditPage(
           tenantId,
           paymentReceiveId,
           user

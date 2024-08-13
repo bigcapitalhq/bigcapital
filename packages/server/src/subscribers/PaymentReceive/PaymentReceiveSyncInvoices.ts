@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
-import { PaymentReceiveInvoiceSync } from '@/services/Sales/PaymentReceives/PaymentReceiveInvoiceSync';
+import { PaymentReceivedInvoiceSync } from '@/services/Sales/PaymentReceived/PaymentReceivedInvoiceSync';
 import {
   IPaymentReceiveCreatedPayload,
   IPaymentReceiveDeletedPayload,
@@ -10,7 +10,7 @@ import {
 @Service()
 export default class PaymentReceiveSyncInvoicesSubscriber {
   @Inject()
-  private paymentSyncInvoice: PaymentReceiveInvoiceSync;
+  private paymentSyncInvoice: PaymentReceivedInvoiceSync;
 
   /**
    * Attaches the events to handles.

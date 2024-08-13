@@ -9,7 +9,7 @@ import { SaleInvoicesExportable } from '../Sales/Invoices/SaleInvoicesExportable
 import { SaleEstimatesExportable } from '../Sales/Estimates/SaleEstimatesExportable';
 import { SaleReceiptsExportable } from '../Sales/Receipts/SaleReceiptsExportable';
 import { BillsExportable } from '../Purchases/Bills/BillsExportable';
-import { PaymentsReceivedExportable } from '../Sales/PaymentReceives/PaymentsReceivedExportable';
+import { PaymentsReceivedExportable } from '../Sales/PaymentReceived/PaymentsReceivedExportable';
 import { BillPaymentExportable } from '../Purchases/BillPayments/BillPaymentExportable';
 import { ManualJournalsExportable } from '../ManualJournals/ManualJournalExportable';
 import { CreditNotesExportable } from '../CreditNotes/CreditNotesExportable';

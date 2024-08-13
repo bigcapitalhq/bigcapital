@@ -2,7 +2,7 @@ import { Transformer } from '@/lib/Transformer/Transformer';
 import { SaleInvoiceTransformer } from '../Invoices/SaleInvoiceTransformer';
 import { formatNumber } from '@/utils';
 
-export class PaymentReceiveEntryTransfromer extends Transformer {
+export class PaymentReceivedEntryTransfromer extends Transformer {
   /**
    * Include these attributes to payment receive entry object.
    * @returns {Array}

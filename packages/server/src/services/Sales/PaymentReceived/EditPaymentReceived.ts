@@ -8,8 +8,8 @@ import {
   IPaymentReceiveEditingPayload,
   ISystemUser,
 } from '@/interfaces';
-import { PaymentReceiveDTOTransformer } from './PaymentReceiveDTOTransformer';
-import { PaymentReceiveValidators } from './PaymentReceiveValidators';
+import { PaymentReceiveDTOTransformer } from './PaymentReceivedDTOTransformer';
+import { PaymentReceivedValidators } from './PaymentReceivedValidators';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import UnitOfWork from '@/services/UnitOfWork';
@@ -17,12 +17,12 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
 
 @Service()
-export class EditPaymentReceive {
+export class EditPaymentReceived {
   @Inject()
   private transformer: PaymentReceiveDTOTransformer;
 
   @Inject()
-  private validators: PaymentReceiveValidators;
+  private validators: PaymentReceivedValidators;
 
   @Inject()
   private eventPublisher: EventPublisher;

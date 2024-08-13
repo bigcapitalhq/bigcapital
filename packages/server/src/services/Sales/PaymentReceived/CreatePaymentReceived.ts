@@ -7,18 +7,18 @@ import {
   IPaymentReceiveCreatingPayload,
   ISystemUser,
 } from '@/interfaces';
-import { PaymentReceiveValidators } from './PaymentReceiveValidators';
+import { PaymentReceivedValidators } from './PaymentReceivedValidators';
 import events from '@/subscribers/events';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { PaymentReceiveDTOTransformer } from './PaymentReceiveDTOTransformer';
+import { PaymentReceiveDTOTransformer } from './PaymentReceivedDTOTransformer';
 import { TenantMetadata } from '@/system/models';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
-export class CreatePaymentReceive {
+export class CreatePaymentReceived {
   @Inject()
-  private validators: PaymentReceiveValidators;
+  private validators: PaymentReceivedValidators;
 
   @Inject()
   private eventPublisher: EventPublisher;
@@ -39,7 +39,7 @@ export class CreatePaymentReceive {
    * @param {number} tenantId - Tenant id.
    * @param {IPaymentReceive} paymentReceive
    */
-  public async createPaymentReceive(
+  public async createPaymentReceived(
     tenantId: number,
     paymentReceiveDTO: IPaymentReceiveCreateDTO,
     authorizedUser: ISystemUser,

@@ -13,7 +13,7 @@ import { SaleInvoicesImportable } from '../Sales/Invoices/SaleInvoicesImportable
 import { SaleEstimatesImportable } from '../Sales/Estimates/SaleEstimatesImportable';
 import { BillPaymentsImportable } from '../Purchases/BillPayments/BillPaymentsImportable';
 import { VendorCreditsImportable } from '../Purchases/VendorCredits/VendorCreditsImportable';
-import { PaymentReceivesImportable } from '../Sales/PaymentReceives/PaymentReceivesImportable';
+import { PaymentsReceivedImportable } from '../Sales/PaymentReceived/PaymentsReceivedImportable';
 import { CreditNotesImportable } from '../CreditNotes/CreditNotesImportable';
 import { SaleReceiptsImportable } from '../Sales/Receipts/SaleReceiptsImportable';
 import { TaxRatesImportable } from '../TaxRates/TaxRatesImportable';
@@ -45,7 +45,7 @@ export class ImportableResources {
     { resource: 'SaleInvoice', importable: SaleInvoicesImportable },
     { resource: 'SaleEstimate', importable: SaleEstimatesImportable },
     { resource: 'BillPayment', importable: BillPaymentsImportable },
-    { resource: 'PaymentReceive', importable: PaymentReceivesImportable },
+    { resource: 'PaymentReceive', importable: PaymentsReceivedImportable },
     { resource: 'VendorCredit', importable: VendorCreditsImportable },
     { resource: 'CreditNote', importable: CreditNotesImportable },
     { resource: 'SaleReceipt', importable: SaleReceiptsImportable },

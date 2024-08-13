@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
 import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
-import { GetPaymentReceive } from './GetPaymentReceive';
+import { GetPaymentReceived } from './GetPaymentReceived';
 
 @Service()
 export default class GetPaymentReceivePdf {
@@ -12,7 +12,7 @@ export default class GetPaymentReceivePdf {
   private templateInjectable: TemplateInjectable;
 
   @Inject()
-  private getPaymentService: GetPaymentReceive;
+  private getPaymentService: GetPaymentReceived;
 
   /**
    * Retrieve sale invoice pdf content.

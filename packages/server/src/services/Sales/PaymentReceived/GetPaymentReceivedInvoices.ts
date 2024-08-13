@@ -1,14 +1,14 @@
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { PaymentReceiveValidators } from './PaymentReceiveValidators';
+import { PaymentReceivedValidators } from './PaymentReceivedValidators';
 
 @Service()
-export class GetPaymentReceiveInvoices {
+export class GetPaymentReceivedInvoices {
   @Inject()
   private tenancy: HasTenancyService;
 
   @Inject()
-  private validators: PaymentReceiveValidators;
+  private validators: PaymentReceivedValidators;
 
   /**
    * Retrieve sale invoices that assocaited to the given payment receive.
