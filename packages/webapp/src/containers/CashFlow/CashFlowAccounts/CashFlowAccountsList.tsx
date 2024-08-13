@@ -10,6 +10,7 @@ import { CashFlowAccountsProvider } from './CashFlowAccountsProvider';
 import CashflowAccountsGrid from './CashflowAccountsGrid';
 import CashFlowAccountsActionsBar from './CashFlowAccountsActionsBar';
 import { CashflowAccountsPlaidLink } from './CashflowAccountsPlaidLink';
+import { CashflowAccountsLoadingBar } from './CashFlowAccountsLoadingBar';
 
 import withCashflowAccounts from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
 import withCashflowAccountsTableActions from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
@@ -35,6 +36,7 @@ function CashFlowAccountsList({
   return (
     <CashFlowAccountsProvider tableState={cashflowAccountsTableState}>
       <CashFlowAccountsActionsBar />
+      <CashflowAccountsLoadingBar />
 
       <DashboardPageContent>
         <CashflowAccountsGrid />

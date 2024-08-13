@@ -1,18 +1,29 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Intent,
-  Menu,
-  MenuItem,
-  Tag,
-  PopoverInteractionKind,
-  Position,
-  Tooltip,
-} from '@blueprintjs/core';
-import { Box, FormatDateCell, Icon, MaterialProgressBar } from '@/components';
-import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { Intent, Menu, MenuItem, Tag } from '@blueprintjs/core';
+import { FormatDateCell, Icon } from '@/components';
 import { safeCallback } from '@/utils';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import FinancialLoadingBar from '@/containers/FinancialStatements/FinancialLoadingBar';
+
+export function AccountTransactionsLoadingBar() {
+  const {
+    isBankAccountMetaSummaryFetching,
+    isCurrentAccountFetching,
+    isCashFlowAccountsFetching,
+  } = useAccountTransactionsContext();
+
+  const isLoading =
+    isCashFlowAccountsFetching ||
+    isCurrentAccountFetching ||
+    isBankAccountMetaSummaryFetching;
+
+  if (isLoading) {
+    return <FinancialLoadingBar />;
+  }
+  return null;
+}
 
 export function ActionsMenu({
   payload: { onUncategorize, onUnmatch },
@@ -136,17 +147,4 @@ export function useAccountTransactionsColumns() {
     ],
     [],
   );
-}
-
-/**
- * Account transactions progress bar.
- */
-export function AccountTransactionsProgressBar() {
-  const { isCashFlowTransactionsFetching, isUncategorizedTransactionFetching } =
-    useAccountTransactionsContext();
-
-  return isCashFlowTransactionsFetching ||
-    isUncategorizedTransactionFetching ? (
-    <MaterialProgressBar />
-  ) : null;
 }

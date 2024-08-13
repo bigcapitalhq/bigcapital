@@ -39,6 +39,7 @@ function AccountTransactionsProvider({ query, ...props }) {
   const {
     data: bankAccountMetaSummary,
     isLoading: isBankAccountMetaSummaryLoading,
+    isFetching: isBankAccountMetaSummaryFetching,
   } = useGetBankAccountSummaryMeta(accountId);
 
   const [scrollableRef, setScrollableRef] = useState();
@@ -52,15 +53,18 @@ function AccountTransactionsProvider({ query, ...props }) {
 
     isCashFlowAccountsFetching,
     isCashFlowAccountsLoading,
+
     isCurrentAccountFetching,
     isCurrentAccountLoading,
+
     isBankAccountMetaSummaryLoading,
+    isBankAccountMetaSummaryFetching,
 
     filterTab,
     setFilterTab,
 
     scrollableRef,
-    setScrollableRef
+    setScrollableRef,
   };
 
   return (

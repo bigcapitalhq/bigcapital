@@ -52,8 +52,11 @@ function AccountTransactionsDataTable({
   const { scrollableRef } = useAccountTransactionsContext();
 
   // Retrieve list context.
-  const { uncategorizedTransactions, isUncategorizedTransactionsLoading } =
-    useAccountUncategorizedTransactionsContext();
+  const {
+    uncategorizedTransactions,
+    isUncategorizedTransactionsLoading,
+    isUncategorizedTransactionFetching,
+  } = useAccountUncategorizedTransactionsContext();
 
   const { mutateAsync: excludeTransaction } =
     useExcludeUncategorizedTransaction();
@@ -105,6 +108,7 @@ function AccountTransactionsDataTable({
       selectionColumn={true}
       loading={isUncategorizedTransactionsLoading}
       headerLoading={isUncategorizedTransactionsLoading}
+      progressBarLoading={isUncategorizedTransactionFetching}
       expandColumnSpace={1}
       expandToggleColumn={2}
       selectionColumnWidth={45}

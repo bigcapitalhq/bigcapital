@@ -3,6 +3,7 @@ import { useMutation, useQueryClient, useInfiniteQuery } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
+import { BANK_QUERY_KEY } from '@/constants/query-keys/banking';
 
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate settings.
@@ -176,19 +177,6 @@ export function useAccountUncategorizedTransactionsInfinity(
 }
 
 /**
- * Refresh cashflow transactions infinity.
- */
-export function useRefreshCashflowTransactionsInfinity() {
-  const queryClient = useQueryClient();
-
-  return {
-    refresh: () => {
-      queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
-    },
-  };
-}
-
-/**
  * Refresh cashflow accounts.
  */
 export function useRefreshCashflowAccounts() {
@@ -208,8 +196,25 @@ export function useRefreshCashflowTransactions() {
   const query = useQueryClient();
 
   return {
-    refresh: () => {
-      query.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
+    refresh: (accountId: number) => {
+      query.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+      query.invalidateQueries(
+        t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+      );
+      query.invalidateQueries(
+        BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
+      );
+      query.invalidateQueries(
+        BANK_QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY,
+      );
+      query.invalidateQueries(
+        BANK_QUERY_KEY.PENDING_BANK_ACCOUNT_TRANSACTIONS_INFINITY,
+      );
+      query.invalidateQueries([
+        BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META,
+        accountId,
+      ]);
+      query.invalidateQueries([t.ACCOUNT, accountId]);
     },
   };
 }

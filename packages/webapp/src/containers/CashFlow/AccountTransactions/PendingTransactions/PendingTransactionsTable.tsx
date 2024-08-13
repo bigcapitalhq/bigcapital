@@ -30,8 +30,11 @@ function PendingTransactionsDataTableRoot({
   const { scrollableRef } = useAccountTransactionsContext();
 
   // Retrieve list context.
-  const { pendingTransactions, isPendingTransactionsLoading } =
-    usePendingTransactionsContext();
+  const {
+    pendingTransactions,
+    isPendingTransactionsLoading,
+    isPendingTransactionFetching,
+  } = usePendingTransactionsContext();
 
   return (
     <CashflowTransactionsTable
@@ -41,6 +44,7 @@ function PendingTransactionsDataTableRoot({
       sticky={true}
       loading={isPendingTransactionsLoading}
       headerLoading={isPendingTransactionsLoading}
+      progressBarLoading={isPendingTransactionFetching}
       TableCellRenderer={TableFastCell}
       TableLoadingRenderer={TableSkeletonRows}
       TableRowsRenderer={TableVirtualizedListRows}
