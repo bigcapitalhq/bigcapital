@@ -20,7 +20,7 @@ function PaymentMadesViewPage({
     <Switch>
       <Route
         exact={true}
-        path={['/payment-mades/:custom_view_id/custom_view', '/payment-mades']}
+        path={['/payments-made/:custom_view_id/custom_view', '/payments-made']}
       >
         
         {/* <PaymentMadeDataTable

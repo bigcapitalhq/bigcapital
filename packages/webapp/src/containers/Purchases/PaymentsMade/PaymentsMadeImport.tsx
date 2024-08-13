@@ -3,14 +3,14 @@ import { useHistory } from 'react-router-dom';
 import { DashboardInsider } from '@/components';
 import { ImportView } from '@/containers/Import';
 
-export default function PaymentMadesImport() {
+export default function PaymentsMadeImport() {
   const history = useHistory();
 
   const handleCancelBtnClick = () => {
-    history.push('/payment-mades');
+    history.push('/payments-made');
   };
   const handleImportSuccess = () => {
-    history.push('/payment-mades');
+    history.push('/payments-made');
   };
 
   return (

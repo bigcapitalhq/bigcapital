@@ -7,7 +7,7 @@ import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
-import { PAYMENT_MADE_ERRORS } from '@/containers/Purchases/PaymentMades/constants';
+import { PAYMENT_MADE_ERRORS } from '@/containers/Purchases/PaymentsMade/constants';
 
 // Default initial values of payment made.
 export const defaultPaymentMade = {
