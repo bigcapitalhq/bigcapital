@@ -12,7 +12,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 
-import { FormatDateCell, Money, Icon, Can } from '@/components';
+import { Money, Icon, Can } from '@/components';
 import { safeCallback } from '@/utils';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -43,14 +43,14 @@ export function ActionsMenu({
         <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
-          text={intl.get('edit_payment_receive')}
+          text={intl.get('edit_payment_received')}
           onClick={safeCallback(onEdit, paymentReceive)}
         />
       </Can>
       <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>
         <MenuDivider />
         <MenuItem
-          text={intl.get('delete_payment_receive')}
+          text={intl.get('delete_payment_received')}
           intent={Intent.DANGER}
           onClick={safeCallback(onDelete, paymentReceive)}
           icon={<Icon icon="trash-16" iconSize={16} />}
@@ -117,7 +117,7 @@ export function usePaymentReceivesColumns() {
       },
       {
         id: 'payment_receive_no',
-        Header: intl.get('payment_receive_no'),
+        Header: intl.get('payment_received_no'),
         accessor: (row) =>
           row.payment_receive_no ? `${row.payment_receive_no}` : null,
         width: 140,

@@ -58,7 +58,7 @@ export function PaymentMailDialogFormRoot({
 
         // Redirects to payments list if the option is enabled.
         if (redirectToPaymentsList) {
-          history.push('/payment-receives');
+          history.push('/payments-received');
         }
       })
       .catch(() => {

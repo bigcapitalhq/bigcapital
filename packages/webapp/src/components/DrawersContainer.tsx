@@ -39,7 +39,7 @@ export default function DrawersContainer() {
       <InvoiceDetailDrawer name={DRAWERS.INVOICE_DETAILS} />
       <EstimateDetailDrawer name={DRAWERS.ESTIMATE_DETAILS} />
       <ReceiptDetailDrawer name={DRAWERS.RECEIPT_DETAILS} />
-      <PaymentReceiveDetailDrawer name={DRAWERS.PAYMENT_RECEIVE_DETAILS} />
+      <PaymentReceiveDetailDrawer name={DRAWERS.PAYMENT_RECEIVED_DETAILS} />
       <PaymentMadeDetailDrawer name={DRAWERS.PAYMENT_MADE_DETAILS} />
       <ItemDetailDrawer name={DRAWERS.ITEM_DETAILS} />
       <CustomerDetailsDrawer name={DRAWERS.CUSTOMER_DETAILS} />

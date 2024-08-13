@@ -7,10 +7,10 @@ export default function PaymentsReceiveImport() {
   const history = useHistory();
 
   const handleCancelBtnClick = () => {
-    history.push('/payment-receives');
+    history.push('/payments-received');
   };
   const handleImportSuccess = () => {
-    history.push('/payment-receives');
+    history.push('/payments-received');
   };
 
   return (

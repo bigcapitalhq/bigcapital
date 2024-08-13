@@ -47,14 +47,14 @@ function InvoicePaymentTransactionsTable({
 
   // Handles delete payment transactions.
   const handleDeletePaymentTransactons = ({ payment_receive_id }) => {
-    openAlert('payment-receive-delete', {
+    openAlert('payment-received-delete', {
       paymentReceiveId: payment_receive_id,
     });
   };
 
   // Handles edit payment transactions.
   const handleEditPaymentTransactions = ({ payment_receive_id }) => {
-    history.push(`/payment-receives/${payment_receive_id}/edit`);
+    history.push(`/payments-received/${payment_receive_id}/edit`);
     closeDrawer(DRAWERS.INVOICE_DETAILS);
   };
   return (

@@ -25,7 +25,7 @@ function PaymentReceivePdfPreviewDialog({
   return (
     <Dialog
       name={dialogName}
-      title={<T id={'payment_receive_preview.dialog.title'} />}
+      title={<T id={'payment_received_preview.dialog.title'} />}
       className={classNames(CLASSES.DIALOG_PDF_PREVIEW)}
       autoFocus={true}
       canEscapeKeyClose={true}

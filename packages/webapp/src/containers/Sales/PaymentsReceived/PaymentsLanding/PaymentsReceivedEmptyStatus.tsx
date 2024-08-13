@@ -6,7 +6,7 @@ import { EmptyStatus } from '@/components';
 import { Can, FormattedMessage as T } from '@/components';
 import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
 
-export default function PaymentReceivesEmptyStatus() {
+export default function PaymentsReceivedEmptyStatus() {
   const history = useHistory();
 
   return (
@@ -29,10 +29,10 @@ export default function PaymentReceivesEmptyStatus() {
               intent={Intent.PRIMARY}
               large={true}
               onClick={() => {
-                history.push('/payment-receives/new');
+                history.push('/payment-received/new');
               }}
             >
-              <T id={'new_payment_receive'} />
+              <T id={'new_payment_received'} />
             </Button>
 
             <Button intent={Intent.NONE} large={true}>

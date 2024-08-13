@@ -4,24 +4,21 @@ import React from 'react';
 import '@/style/pages/PaymentReceive/List.scss';
 
 import { DashboardPageContent } from '@/components';
-import { PaymentReceivesListProvider } from './PaymentReceiptsListProvider';
-import PaymentReceivesTable from './PaymentReceivesTable';
-import PaymentReceiveActionsBar from './PaymentReceiveActionsBar';
+import { PaymentsReceivedListProvider } from './PaymentsReceivedListProvider';
+import PaymentReceivesTable from './PaymentsReceivedTable';
+import PaymentsReceivedActionsBar from './PaymentsReceivedActionsBar';
 
-import withPaymentReceives from './withPaymentReceives';
-import withPaymentReceivesActions from './withPaymentReceivesActions';
+import withPaymentsReceived from './withPaymentsReceived';
+import withPaymentsReceivedActions from './withPaymentsReceivedActions';
 
 import { compose, transformTableStateToQuery } from '@/utils';
 
-/**
- * Payment receives list.
- */
-function PaymentReceiveList({
-  // #withPaymentReceives
+function PaymentsReceivedList({
+  // #withPaymentsReceived
   paymentReceivesTableState,
   paymentsTableStateChanged,
 
-  // #withPaymentReceivesActions
+  // #withPaymentsReceivedActions
   resetPaymentReceivesTableState,
 }) {
   // Resets the payment receives table state once the page unmount.
@@ -33,25 +30,25 @@ function PaymentReceiveList({
   );
 
   return (
-    <PaymentReceivesListProvider
+    <PaymentsReceivedListProvider
       query={transformTableStateToQuery(paymentReceivesTableState)}
       tableStateChanged={paymentsTableStateChanged}
     >
-      <PaymentReceiveActionsBar />
+      <PaymentsReceivedActionsBar />
 
       <DashboardPageContent>
         <PaymentReceivesTable />
       </DashboardPageContent>
-    </PaymentReceivesListProvider>
+    </PaymentsReceivedListProvider>
   );
 }
 
 export default compose(
-  withPaymentReceives(
+  withPaymentsReceived(
     ({ paymentReceivesTableState, paymentsTableStateChanged }) => ({
       paymentReceivesTableState,
       paymentsTableStateChanged,
     }),
   ),
-  withPaymentReceivesActions,
-)(PaymentReceiveList);
+  withPaymentsReceivedActions,
+)(PaymentsReceivedList);

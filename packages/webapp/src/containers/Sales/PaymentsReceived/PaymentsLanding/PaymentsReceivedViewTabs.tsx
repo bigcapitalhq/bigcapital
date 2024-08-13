@@ -5,24 +5,24 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { FormattedMessage as T, DashboardViewsTabs } from '@/components';
 import { pick } from 'lodash';
 
-import withPaymentReceives from './withPaymentReceives';
-import withPaymentReceivesActions from './withPaymentReceivesActions';
-import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
+import withPaymentsReceived from './withPaymentsReceived';
+import withPaymentsReceivedActions from './withPaymentsReceivedActions';
+import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 
 import { compose } from '@/utils';
 
 /**
  * Payment receive view tabs.
  */
-function PaymentReceiveViewTabs({
-  // #withPaymentReceivesActions
+function PaymentsReceivedViewTabs({
+  // #withPaymentsReceivedActions
   addPaymentReceivesTableQueries,
 
-  // #withPaymentReceives
+  // #withPaymentsReceived
   paymentReceivesTableState,
 }) {
   const history = useHistory();
-  const { paymentReceivesViews, ...res } = usePaymentReceivesListContext();
+  const { paymentReceivesViews, ...res } = usePaymentsReceivedListContext();
 
   const tabs = paymentReceivesViews.map((view) => ({
     ...pick(view, ['name', 'id']),
@@ -30,7 +30,7 @@ function PaymentReceiveViewTabs({
 
   // Handles click a new view tab.
   const handleClickNewView = () => {
-    history.push('/custom_views/payment-receives/new');
+    history.push('/custom_views/payment-received/new');
   };
 
   // Handles the active tab chaing.
@@ -56,8 +56,8 @@ function PaymentReceiveViewTabs({
 }
 
 export default compose(
-  withPaymentReceivesActions,
-  withPaymentReceives(({ paymentReceivesTableState }) => ({
+  withPaymentsReceivedActions,
+  withPaymentsReceived(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
   })),
-)(PaymentReceiveViewTabs);
+)(PaymentsReceivedViewTabs);

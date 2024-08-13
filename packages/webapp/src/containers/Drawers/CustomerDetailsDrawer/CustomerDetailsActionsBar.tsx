@@ -68,7 +68,7 @@ function CustomerDetailsActionsBar({
   };
   // Handle new payment receive button click.
   const handleNewPaymentClick = () => {
-    history.push('/payment-receives/new');
+    history.push('/payment-received/new');
     closeDrawer(DRAWERS.CUSTOMER_DETAILS);
   };
   // Handle new estimate button click.

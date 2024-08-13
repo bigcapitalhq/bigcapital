@@ -8,9 +8,9 @@ import {
   AbilitySubject,
   PaymentReceiveAction,
 } from '@/constants/abilityOption';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { highlightText } from '@/utils';
 import { Icon } from '@/components';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 
 /**
@@ -25,7 +25,7 @@ function PaymentReceiveUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.PAYMENT_RECEIVE) {
-    openDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS, {
+    openDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS, {
       paymentReceiveId: resourceId,
     });
   }
@@ -80,7 +80,7 @@ const paymentReceivesToSearch = (payment) => ({
  */
 export const universalSearchPaymentReceiveBind = () => ({
   resourceType: RESOURCES_TYPES.PAYMENT_RECEIVE,
-  optionItemLabel: intl.get('payment_receives'),
+  optionItemLabel: intl.get('payment_received'),
   selectItemAction: PaymentReceiveUniversalSearchSelect,
   itemRenderer: PaymentReceiveUniversalSearchItem,
   itemSelect: paymentReceivesToSearch,

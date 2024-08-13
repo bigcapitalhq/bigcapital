@@ -179,8 +179,8 @@ export const SidebarMenu = [
             type: ISidebarMenuItemType.Link,
           },
           {
-            text: <T id={'sidebar.payment_receives'} />,
-            href: '/payment-receives',
+            text: <T id={'sidebar.payments_received'} />,
+            href: '/payments-received',
             type: ISidebarMenuItemType.Link,
             permission: {
               subject: AbilitySubject.PaymentReceive,
@@ -226,8 +226,8 @@ export const SidebarMenu = [
             type: ISidebarMenuItemType.Link,
           },
           {
-            text: <T id={'sidebar.new_payment_receive'} />,
-            href: '/payment-receives/new',
+            text: <T id={'sidebar.new_payment_received'} />,
+            href: '/payment-received/new',
             type: ISidebarMenuItemType.Link,
             permission: {
               subject: AbilitySubject.PaymentReceive,

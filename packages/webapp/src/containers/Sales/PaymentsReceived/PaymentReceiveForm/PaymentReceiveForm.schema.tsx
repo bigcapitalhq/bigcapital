@@ -13,7 +13,7 @@ const Schema = Yup.object().shape({
   payment_receive_no: Yup.string()
     .nullable()
     .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('payment_receive_no_')),
+    .label(intl.get('payment_received_no_')),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   // statement: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
   branch_id: Yup.string(),

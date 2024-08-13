@@ -10,12 +10,12 @@ import {
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
-const PaymentReceivesListContext = createContext();
+const PaymentsReceivedListContext = createContext();
 
 /**
  * Payment receives data provider.
  */
-function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
+function PaymentsReceivedListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
   const { data: paymentReceivesViews, isFetching: isViewsLoading } =
     useResourceViews('payment_receives');
@@ -60,12 +60,12 @@ function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
       loading={isViewsLoading || isResourceLoading}
       name={'payment_receives'}
     >
-      <PaymentReceivesListContext.Provider value={provider} {...props} />
+      <PaymentsReceivedListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const usePaymentReceivesListContext = () =>
-  React.useContext(PaymentReceivesListContext);
+const usePaymentsReceivedListContext = () =>
+  React.useContext(PaymentsReceivedListContext);
 
-export { PaymentReceivesListProvider, usePaymentReceivesListContext };
+export { PaymentsReceivedListProvider, usePaymentsReceivedListContext };

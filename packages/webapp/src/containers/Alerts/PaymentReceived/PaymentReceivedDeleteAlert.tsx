@@ -21,7 +21,7 @@ import { DRAWERS } from '@/constants/drawers';
 /**
  * Payment receive delete alert.
  */
-function PaymentReceiveDeleteAlert({
+function PaymentReceivedDeleteAlert({
   name,
 
   // #withAlertStoreConnect
@@ -48,11 +48,11 @@ function PaymentReceiveDeleteAlert({
       .then(() => {
         AppToaster.show({
           message: intl.get(
-            'the_payment_receive_has_been_deleted_successfully',
+            'the_payment_received_has_been_deleted_successfully',
           ),
           intent: Intent.SUCCESS,
         });
-        closeDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS);
+        closeDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS);
       })
       .catch(
         ({
@@ -81,7 +81,7 @@ function PaymentReceiveDeleteAlert({
     >
       <p>
         <FormattedHTMLMessage
-          id={'once_delete_this_payment_receive_you_will_able_to_restore_it'}
+          id={'once_delete_this_payment_received_you_will_able_to_restore_it'}
         />
       </p>
     </Alert>
@@ -92,4 +92,4 @@ export default compose(
   withAlertStoreConnect(),
   withAlertActions,
   withDrawerActions,
-)(PaymentReceiveDeleteAlert);
+)(PaymentReceivedDeleteAlert);

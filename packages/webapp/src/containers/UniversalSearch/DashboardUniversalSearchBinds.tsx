@@ -3,7 +3,7 @@ import { universalSearchInvoiceBind } from '../Sales/Invoices/InvoiceUniversalSe
 import { universalSearchReceiptBind } from '../Sales/Receipts/ReceiptUniversalSearch';
 import { universalSearchBillBind } from '../Purchases/Bills/BillUniversalSearch';
 import { universalSearchEstimateBind } from '../Sales/Estimates/EstimatesLanding/EstimateUniversalSearch';
-import { universalSearchPaymentReceiveBind } from '../Sales/PaymentReceives/PaymentReceiveUniversalSearch';
+import { universalSearchPaymentReceiveBind } from '../Sales/PaymentsReceived/PaymentReceiveUniversalSearch';
 import { universalSearchPaymentMadeBind } from '../Purchases/PaymentMades/PaymentMadeUniversalSearch';
 import { universalSearchItemBind } from '../Items/ItemsUniversalSearch';
 import { universalSearchCustomerBind } from '../Customers/CustomersUniversalSearch';

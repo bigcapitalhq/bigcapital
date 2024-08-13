@@ -11,17 +11,17 @@ import {
   TableSkeletonHeader,
 } from '@/components';
 
-import PaymentReceivesEmptyStatus from './PaymentReceivesEmptyStatus';
+import PaymentReceivesEmptyStatus from './PaymentsReceivedEmptyStatus';
 
-import withPaymentReceives from './withPaymentReceives';
-import withPaymentReceivesActions from './withPaymentReceivesActions';
+import withPaymentsReceived from './withPaymentsReceived';
+import withPaymentsReceivedActions from './withPaymentsReceivedActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
-import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
+import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
@@ -29,8 +29,8 @@ import { DialogsName } from '@/constants/dialogs';
 /**
  * Payment receives datatable.
  */
-function PaymentReceivesDataTable({
-  // #withPaymentReceivesActions
+function PaymentsReceivedDataTable({
+  // #withPaymentsReceivedActions
   setPaymentReceivesTableState,
 
   // #withAlertsActions
@@ -55,24 +55,24 @@ function PaymentReceivesDataTable({
     isPaymentReceivesLoading,
     isPaymentReceivesFetching,
     isEmptyStatus,
-  } = usePaymentReceivesListContext();
+  } = usePaymentsReceivedListContext();
 
   // Payment receives columns.
   const columns = usePaymentReceivesColumns();
 
   // Handles edit payment receive.
   const handleEditPaymentReceive = ({ id }) => {
-    history.push(`/payment-receives/${id}/edit`);
+    history.push(`/payments-received/${id}/edit`);
   };
 
   // Handles delete payment receive.
   const handleDeletePaymentReceive = ({ id }) => {
-    openAlert('payment-receive-delete', { paymentReceiveId: id });
+    openAlert('payment-received-delete', { paymentReceiveId: id });
   };
 
   // Handle view detail  payment receive..
   const handleViewDetailPaymentReceive = ({ id }) => {
-    openDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS, { paymentReceiveId: id });
+    openDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS, { paymentReceiveId: id });
   };
 
   // Handle mail send payment receive.
@@ -82,7 +82,7 @@ function PaymentReceivesDataTable({
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    openDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS, {
+    openDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS, {
       paymentReceiveId: cell.row.original.id,
     });
   };
@@ -144,14 +144,14 @@ function PaymentReceivesDataTable({
 }
 
 export default compose(
-  withPaymentReceivesActions,
+  withPaymentsReceivedActions,
   withAlertsActions,
   withDrawerActions,
   withDialogActions,
-  withPaymentReceives(({ paymentReceivesTableState }) => ({
+  withPaymentsReceived(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
   })),
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
   })),
-)(PaymentReceivesDataTable);
+)(PaymentsReceivedDataTable);

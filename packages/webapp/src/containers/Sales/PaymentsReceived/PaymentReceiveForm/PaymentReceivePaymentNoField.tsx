@@ -64,7 +64,7 @@ export const PaymentReceivePaymentNoField = R.compose(
     return (
       <FFormGroup
         name={'payment_receive_no'}
-        label={<T id={'payment_receive_no'} />}
+        label={<T id={'payment_received_no'} />}
         inline={true}
         labelInfo={<FieldRequiredHint />}
       >

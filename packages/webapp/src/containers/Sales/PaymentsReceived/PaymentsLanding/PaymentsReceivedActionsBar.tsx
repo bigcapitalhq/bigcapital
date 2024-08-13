@@ -22,8 +22,8 @@ import {
   DashboardActionsBar,
 } from '@/components';
 
-import withPaymentReceives from './withPaymentReceives';
-import withPaymentReceivesActions from './withPaymentReceivesActions';
+import withPaymentsReceived from './withPaymentsReceived';
+import withPaymentsReceivedActions from './withPaymentsReceivedActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -32,7 +32,7 @@ import {
   AbilitySubject,
 } from '@/constants/abilityOption';
 
-import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
+import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 import { useRefreshPaymentReceive } from '@/hooks/query/paymentReceives';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
@@ -42,11 +42,11 @@ import { DialogsName } from '@/constants/dialogs';
 /**
  * Payment receives actions bar.
  */
-function PaymentReceiveActionsBar({
-  // #withPaymentReceivesActions
+function PaymentsReceivedActionsBar({
+  // #withPaymentsReceivedActions
   setPaymentReceivesTableState,
 
-  // #withPaymentReceives
+  // #withPaymentsReceived
   paymentFilterConditions,
 
   // #withSettings
@@ -62,14 +62,14 @@ function PaymentReceiveActionsBar({
   const history = useHistory();
 
   // Payment receives list context.
-  const { paymentReceivesViews, fields } = usePaymentReceivesListContext();
+  const { paymentReceivesViews, fields } = usePaymentsReceivedListContext();
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handle new payment button click.
   const handleClickNewPaymentReceive = () => {
-    history.push('/payment-receives/new');
+    history.push('/payment-received/new');
   };
 
   // Payment receive refresh action.
@@ -91,7 +91,7 @@ function PaymentReceiveActionsBar({
   };
   // Handle the import button click.
   const handleImportBtnClick = () => {
-    history.push('/payment-receives/import');
+    history.push('/payments-received/import');
   };
   // Handle the export button click.
   const handleExportBtnClick = () => {
@@ -115,7 +115,7 @@ function PaymentReceiveActionsBar({
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}
-            text={<T id={'new_payment_receive'} />}
+            text={<T id={'new_payment_received'} />}
             onClick={handleClickNewPaymentReceive}
           />
         </Can>
@@ -181,9 +181,9 @@ function PaymentReceiveActionsBar({
 }
 
 export default compose(
-  withPaymentReceivesActions,
+  withPaymentsReceivedActions,
   withSettingsActions,
-  withPaymentReceives(({ paymentReceivesTableState }) => ({
+  withPaymentsReceived(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
     paymentFilterConditions: paymentReceivesTableState.filterRoles,
   })),
@@ -191,4 +191,4 @@ export default compose(
     paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
   })),
   withDialogActions,
-)(PaymentReceiveActionsBar);
+)(PaymentsReceivedActionsBar);

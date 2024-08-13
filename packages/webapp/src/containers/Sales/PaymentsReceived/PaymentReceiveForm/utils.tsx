@@ -204,7 +204,7 @@ export const transformErrors = (errors, { setFieldError }) => {
   if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
     setFieldError(
       'payment_receive_no',
-      intl.get('payment_receive.field.error.payment_receive_no_required'),
+      intl.get('payment_received.field.error.payment_receive_no_required'),
     );
   }
   if (getError('PAYMENT_ACCOUNT_CURRENCY_INVALID')) {

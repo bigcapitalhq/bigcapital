@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useMemo, useRef } from 'react';
-import { sumBy, isEmpty, defaultTo } from 'lodash';
+import React, { useMemo } from 'react';
+import { isEmpty, defaultTo } from 'lodash';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
@@ -133,14 +133,14 @@ function PaymentReceiveForm({
       AppToaster.show({
         message: intl.get(
           paymentReceiveId
-            ? 'the_payment_receive_transaction_has_been_edited'
-            : 'the_payment_receive_transaction_has_been_created',
+            ? 'the_payment_received_transaction_has_been_edited'
+            : 'the_payment_received_transaction_has_been_created',
         ),
         intent: Intent.SUCCESS,
       });
 
       if (submitPayload.redirect) {
-        history.push('/payment-receives');
+        history.push('/payments-received');
       }
       if (submitPayload.resetForm) {
         resetFormState({ resetForm, initialValues, values });
