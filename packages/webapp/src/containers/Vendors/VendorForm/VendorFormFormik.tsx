@@ -34,6 +34,7 @@ function VendorFormFormik({
   organization: { base_currency },
 
   // #ownProps
+  initialValues,
   onSubmitSuccess,
   onSubmitError,
   onCancel,
@@ -54,14 +55,15 @@ function VendorFormFormik({
   /**
    * Initial values in create and edit mode.
    */
-  const initialValues = useMemo(
+  const initialFormValues = useMemo(
     () => ({
       ...defaultInitialValues,
+      ...transformToForm(initialValues, defaultInitialValues),
       currency_code: base_currency,
       ...transformToForm(vendor, defaultInitialValues),
       ...transformToForm(contactDuplicate, defaultInitialValues),
     }),
-    [vendor, contactDuplicate, base_currency],
+    [vendor, contactDuplicate, base_currency, initialValues],
   );
 
   // Handles the form submit.
@@ -84,7 +86,7 @@ function VendorFormFormik({
       setSubmitting(false);
       resetForm();
 
-      safeInvoke(onSubmitSuccess, values, form, submitPayload, response);
+      safeInvoke(onSubmitSuccess, values, form, submitPayload, response.data);
     };
 
     const onError = () => {
@@ -112,7 +114,7 @@ function VendorFormFormik({
         validationSchema={
           isNewMode ? CreateVendorFormSchema : EditVendorFormSchema
         }
-        initialValues={initialValues}
+        initialValues={initialFormValues}
         onSubmit={handleFormSubmit}
       >
         <Form>
