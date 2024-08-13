@@ -90,7 +90,7 @@ export const getDashboardRoutes = () => [
       () => import('@/containers/ItemsCategories/ItemCategoriesList'),
     ),
     breadcrumb: intl.get('categories'),
-    pageTitle: intl.get('category_list'),
+    pageTitle: intl.get('categories_list'),
     defaultSearchResource: RESOURCES_TYPES.ITEM,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
