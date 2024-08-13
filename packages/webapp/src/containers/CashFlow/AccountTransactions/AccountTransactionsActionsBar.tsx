@@ -32,7 +32,7 @@ import {
   getAddMoneyOutOptions,
   getAddMoneyInOptions,
 } from '@/constants/cashflowOptions';
-import { useRefreshCashflowTransactionsInfinity } from '@/hooks/query';
+import { useRefreshCashflowTransactions } from '@/hooks/query';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -76,7 +76,7 @@ function AccountTransactionsActionsBar({
   const { accountId, currentAccount } = useAccountTransactionsContext();
 
   // Refresh cashflow infinity transactions hook.
-  const { refresh } = useRefreshCashflowTransactionsInfinity();
+  const { refresh } = useRefreshCashflowTransactions();
 
   const { mutateAsync: updateBankAccount } = useUpdateBankAccount();
 
@@ -141,7 +141,7 @@ function AccountTransactionsActionsBar({
   };
   // Handle the refresh button click.
   const handleRefreshBtnClick = () => {
-    refresh();
+    refresh(accountId);
   };
 
   const {

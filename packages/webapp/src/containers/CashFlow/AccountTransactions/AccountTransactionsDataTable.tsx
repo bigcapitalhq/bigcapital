@@ -48,8 +48,11 @@ function AccountTransactionsDataTable({
   const columns = useAccountTransactionsColumns();
 
   // Retrieve list context.
-  const { cashflowTransactions, isCashFlowTransactionsLoading } =
-    useAccountTransactionsAllContext();
+  const {
+    cashflowTransactions,
+    isCashFlowTransactionsLoading,
+    isCashFlowTransactionsFetching,
+  } = useAccountTransactionsAllContext();
 
   const { mutateAsync: uncategorizeTransaction } = useUncategorizeTransaction();
   const { mutateAsync: unmatchTransaction } =
@@ -118,6 +121,7 @@ function AccountTransactionsDataTable({
       sticky={true}
       loading={isCashFlowTransactionsLoading}
       headerLoading={isCashFlowTransactionsLoading}
+      progressBarLoading={isCashFlowTransactionsFetching}
       expandColumnSpace={1}
       expandToggleColumn={2}
       selectionColumnWidth={45}
