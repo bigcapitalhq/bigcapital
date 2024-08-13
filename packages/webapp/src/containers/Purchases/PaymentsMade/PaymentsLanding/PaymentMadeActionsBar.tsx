@@ -68,7 +68,7 @@ function PaymentMadeActionsBar({
 
   // Handle new payment made button click.
   const handleClickNewPaymentMade = () => {
-    history.push('/payment-mades/new');
+    history.push('/payments-made/new');
   };
   // Handle tab changing.
   const handleTabChange = (viewSlug) => {
@@ -84,7 +84,7 @@ function PaymentMadeActionsBar({
   };
   // Handle the import button click.
   const handleImportBtnClick = () => {
-    history.push('/payment-mades/import');
+    history.push('/payments-made/import');
   };
   // Handle the export button click.
   const handleExportBtnClick = () => {

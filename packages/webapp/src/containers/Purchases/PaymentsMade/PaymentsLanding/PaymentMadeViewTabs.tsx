@@ -37,7 +37,7 @@ function PaymentMadeViewTabs({
   );
 
   const handleClickNewView = () => {
-    history.push('/custom_views/payment-mades/new');
+    history.push('/custom_views/payments-made/new');
   };
 
   return (
