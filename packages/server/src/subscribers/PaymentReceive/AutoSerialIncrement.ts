@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
 import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
 import { PaymentReceivedIncrement } from '@/services/Sales/PaymentReceived/PaymentReceivedIncrement';
-import { IPaymentReceiveCreatedPayload } from '@/interfaces';
+import { IPaymentReceivedCreatedPayload } from '@/interfaces';
 
 @Service()
 export default class PaymentReceiveAutoSerialSubscriber extends EventSubscriber {
@@ -22,13 +22,13 @@ export default class PaymentReceiveAutoSerialSubscriber extends EventSubscriber 
 
   /**
    * Handles increment next number of payment receive once be created.
-   * @param {IPaymentReceiveCreatedPayload} payload -
+   * @param {IPaymentReceivedCreatedPayload} payload -
    */
   private handlePaymentNextNumberIncrement = async ({
     tenantId,
     paymentReceiveId,
     trx,
-  }: IPaymentReceiveCreatedPayload) => {
+  }: IPaymentReceivedCreatedPayload) => {
     await this.paymentIncrement.incrementNextPaymentReceiveNumber(tenantId);
   };
 }

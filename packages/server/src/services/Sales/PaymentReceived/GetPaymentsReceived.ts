@@ -3,8 +3,8 @@ import * as R from 'ramda';
 import {
   IFilterMeta,
   IPaginationMeta,
-  IPaymentReceive,
-  IPaymentReceivesFilter,
+  IPaymentReceived,
+  IPaymentsReceivedFilter,
 } from '@/interfaces';
 import { PaymentReceiveTransfromer } from './PaymentReceivedTransformer';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
@@ -25,13 +25,13 @@ export class GetPaymentReceives {
   /**
    * Retrieve payment receives paginated and filterable list.
    * @param {number} tenantId
-   * @param {IPaymentReceivesFilter} paymentReceivesFilter
+   * @param {IPaymentsReceivedFilter} paymentReceivesFilter
    */
   public async getPaymentReceives(
     tenantId: number,
-    filterDTO: IPaymentReceivesFilter
+    filterDTO: IPaymentsReceivedFilter
   ): Promise<{
-    paymentReceives: IPaymentReceive[];
+    paymentReceives: IPaymentReceived[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {

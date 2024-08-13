@@ -8,7 +8,7 @@ import { ILedgerEntry } from './Ledger';
 import { ISaleInvoice } from './SaleInvoice';
 import { AttachmentLinkDTO } from './Attachments';
 
-export interface IPaymentReceive {
+export interface IPaymentReceived {
   id?: number;
   customerId: number;
   paymentDate: Date;
@@ -19,14 +19,14 @@ export interface IPaymentReceive {
   depositAccountId: number;
   paymentReceiveNo: string;
   statement: string;
-  entries: IPaymentReceiveEntry[];
+  entries: IPaymentReceivedEntry[];
   userId: number;
   createdAt: Date;
   updatedAt: Date;
   localAmount?: number;
   branchId?: number;
 }
-export interface IPaymentReceiveCreateDTO {
+export interface IPaymentReceivedCreateDTO {
   customerId: number;
   paymentDate: Date;
   amount: number;
@@ -35,13 +35,13 @@ export interface IPaymentReceiveCreateDTO {
   depositAccountId: number;
   paymentReceiveNo?: string;
   statement: string;
-  entries: IPaymentReceiveEntryDTO[];
+  entries: IPaymentReceivedEntryDTO[];
 
   branchId?: number;
   attachments?: AttachmentLinkDTO[];
 }
 
-export interface IPaymentReceiveEditDTO {
+export interface IPaymentReceivedEditDTO {
   customerId: number;
   paymentDate: Date;
   amount: number;
@@ -50,12 +50,12 @@ export interface IPaymentReceiveEditDTO {
   depositAccountId: number;
   paymentReceiveNo?: string;
   statement: string;
-  entries: IPaymentReceiveEntryDTO[];
+  entries: IPaymentReceivedEntryDTO[];
   branchId?: number;
   attachments?: AttachmentLinkDTO[];
 }
 
-export interface IPaymentReceiveEntry {
+export interface IPaymentReceivedEntry {
   id?: number;
   paymentReceiveId: number;
   invoiceId: number;
@@ -64,7 +64,7 @@ export interface IPaymentReceiveEntry {
   invoice?: ISaleInvoice;
 }
 
-export interface IPaymentReceiveEntryDTO {
+export interface IPaymentReceivedEntryDTO {
   id?: number;
   index: number;
   paymentReceiveId: number;
@@ -72,7 +72,7 @@ export interface IPaymentReceiveEntryDTO {
   paymentAmount: number;
 }
 
-export interface IPaymentReceivesFilter extends IDynamicListFilterDTO {
+export interface IPaymentsReceivedFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string;
 }
 
@@ -88,65 +88,65 @@ export interface IPaymentReceivePageEntry {
   date: Date | string;
 }
 
-export interface IPaymentReceiveEditPage {
-  paymentReceive: IPaymentReceive;
+export interface IPaymentReceivedEditPage {
+  paymentReceive: IPaymentReceived;
   entries: IPaymentReceivePageEntry[];
 }
 
-export interface IPaymentsReceiveService {
+export interface IPaymentsReceivedService {
   validateCustomerHasNoPayments(
     tenantId: number,
     customerId: number
   ): Promise<void>;
 }
 
-export interface IPaymentReceiveSmsDetails {
+export interface IPaymentReceivedSmsDetails {
   customerName: string;
   customerPhoneNumber: string;
   smsMessage: string;
 }
 
-export interface IPaymentReceiveCreatingPayload {
+export interface IPaymentReceivedCreatingPayload {
   tenantId: number;
-  paymentReceiveDTO: IPaymentReceiveCreateDTO;
+  paymentReceiveDTO: IPaymentReceivedCreateDTO;
   trx: Knex.Transaction;
 }
 
-export interface IPaymentReceiveCreatedPayload {
+export interface IPaymentReceivedCreatedPayload {
   tenantId: number;
-  paymentReceive: IPaymentReceive;
+  paymentReceive: IPaymentReceived;
   paymentReceiveId: number;
   authorizedUser: ISystemUser;
-  paymentReceiveDTO: IPaymentReceiveCreateDTO;
+  paymentReceiveDTO: IPaymentReceivedCreateDTO;
   trx: Knex.Transaction;
 }
 
-export interface IPaymentReceiveEditedPayload {
+export interface IPaymentReceivedEditedPayload {
   tenantId: number;
   paymentReceiveId: number;
-  paymentReceive: IPaymentReceive;
-  oldPaymentReceive: IPaymentReceive;
-  paymentReceiveDTO: IPaymentReceiveEditDTO;
+  paymentReceive: IPaymentReceived;
+  oldPaymentReceive: IPaymentReceived;
+  paymentReceiveDTO: IPaymentReceivedEditDTO;
   authorizedUser: ISystemUser;
   trx: Knex.Transaction;
 }
 
-export interface IPaymentReceiveEditingPayload {
+export interface IPaymentReceivedEditingPayload {
   tenantId: number;
-  oldPaymentReceive: IPaymentReceive;
-  paymentReceiveDTO: IPaymentReceiveEditDTO;
+  oldPaymentReceive: IPaymentReceived;
+  paymentReceiveDTO: IPaymentReceivedEditDTO;
   trx: Knex.Transaction;
 }
 
-export interface IPaymentReceiveDeletingPayload {
+export interface IPaymentReceivedDeletingPayload {
   tenantId: number;
-  oldPaymentReceive: IPaymentReceive;
+  oldPaymentReceive: IPaymentReceived;
   trx: Knex.Transaction;
 }
-export interface IPaymentReceiveDeletedPayload {
+export interface IPaymentReceivedDeletedPayload {
   tenantId: number;
   paymentReceiveId: number;
-  oldPaymentReceive: IPaymentReceive;
+  oldPaymentReceive: IPaymentReceived;
   authorizedUser: ISystemUser;
   trx: Knex.Transaction;
 }

@@ -2,10 +2,10 @@ import { Inject, Service } from 'typedi';
 import { difference, sumBy } from 'lodash';
 import {
   IAccount,
-  IPaymentReceive,
-  IPaymentReceiveEditDTO,
-  IPaymentReceiveEntry,
-  IPaymentReceiveEntryDTO,
+  IPaymentReceived,
+  IPaymentReceivedEditDTO,
+  IPaymentReceivedEntry,
+  IPaymentReceivedEntryDTO,
   ISaleInvoice,
 } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
@@ -58,7 +58,7 @@ export class PaymentReceivedValidators {
    * Validates the invoices IDs existance.
    * @param {number} tenantId -
    * @param {number} customerId -
-   * @param {IPaymentReceiveEntryDTO[]} paymentReceiveEntries -
+   * @param {IPaymentReceivedEntryDTO[]} paymentReceiveEntries -
    */
   public async validateInvoicesIDsExistance(
     tenantId: number,
@@ -100,12 +100,12 @@ export class PaymentReceivedValidators {
    */
   public async validateInvoicesPaymentsAmount(
     tenantId: number,
-    paymentReceiveEntries: IPaymentReceiveEntryDTO[],
-    oldPaymentEntries: IPaymentReceiveEntry[] = []
+    paymentReceiveEntries: IPaymentReceivedEntryDTO[],
+    oldPaymentEntries: IPaymentReceivedEntry[] = []
   ) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
     const invoicesIds = paymentReceiveEntries.map(
-      (e: IPaymentReceiveEntryDTO) => e.invoiceId
+      (e: IPaymentReceivedEntryDTO) => e.invoiceId
     );
 
     const storedInvoices = await SaleInvoice.query().whereIn('id', invoicesIds);
@@ -124,7 +124,7 @@ export class PaymentReceivedValidators {
     const hasWrongPaymentAmount: any[] = [];
 
     paymentReceiveEntries.forEach(
-      (entry: IPaymentReceiveEntryDTO, index: number) => {
+      (entry: IPaymentReceivedEntryDTO, index: number) => {
         const entryInvoice = storedInvoicesMap.get(entry.invoiceId);
         const { dueAmount } = entryInvoice;
 
@@ -140,9 +140,9 @@ export class PaymentReceivedValidators {
 
   /**
    * Validate the payment receive number require.
-   * @param {IPaymentReceive} paymentReceiveObj
+   * @param {IPaymentReceived} paymentReceiveObj
    */
-  public validatePaymentReceiveNoRequire(paymentReceiveObj: IPaymentReceive) {
+  public validatePaymentReceiveNoRequire(paymentReceiveObj: IPaymentReceived) {
     if (!paymentReceiveObj.paymentReceiveNo) {
       throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NO_IS_REQUIRED);
     }
@@ -152,12 +152,12 @@ export class PaymentReceivedValidators {
    * Validate the payment receive entries IDs existance.
    * @param {number} tenantId
    * @param {number} paymentReceiveId
-   * @param {IPaymentReceiveEntryDTO[]} paymentReceiveEntries
+   * @param {IPaymentReceivedEntryDTO[]} paymentReceiveEntries
    */
   public async validateEntriesIdsExistance(
     tenantId: number,
     paymentReceiveId: number,
-    paymentReceiveEntries: IPaymentReceiveEntryDTO[]
+    paymentReceiveEntries: IPaymentReceivedEntryDTO[]
   ) {
     const { PaymentReceiveEntry } = this.tenancy.models(tenantId);
 
@@ -189,12 +189,12 @@ export class PaymentReceivedValidators {
 
   /**
    * Validate the payment customer whether modified.
-   * @param {IPaymentReceiveEditDTO} paymentReceiveDTO
-   * @param {IPaymentReceive} oldPaymentReceive
+   * @param {IPaymentReceivedEditDTO} paymentReceiveDTO
+   * @param {IPaymentReceived} oldPaymentReceive
    */
   public validateCustomerNotModified(
-    paymentReceiveDTO: IPaymentReceiveEditDTO,
-    oldPaymentReceive: IPaymentReceive
+    paymentReceiveDTO: IPaymentReceivedEditDTO,
+    oldPaymentReceive: IPaymentReceived
   ) {
     if (paymentReceiveDTO.customerId !== oldPaymentReceive.customerId) {
       throw new ServiceError(ERRORS.PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE);
@@ -230,7 +230,7 @@ export class PaymentReceivedValidators {
   async getPaymentReceiveOrThrowError(
     tenantId: number,
     paymentReceiveId: number
-  ): Promise<IPaymentReceive> {
+  ): Promise<IPaymentReceived> {
     const { PaymentReceive } = this.tenancy.models(tenantId);
     const paymentReceive = await PaymentReceive.query()
       .withGraphFetched('entries')

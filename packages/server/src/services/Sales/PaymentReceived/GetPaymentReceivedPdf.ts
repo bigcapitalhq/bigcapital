@@ -4,7 +4,7 @@ import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInject
 import { GetPaymentReceived } from './GetPaymentReceived';
 
 @Service()
-export default class GetPaymentReceivePdf {
+export default class GetPaymentReceivedPdf {
   @Inject()
   private chromiumlyTenancy: ChromiumlyTenancy;
 
@@ -17,7 +17,7 @@ export default class GetPaymentReceivePdf {
   /**
    * Retrieve sale invoice pdf content.
    * @param {number} tenantId -
-   * @param {IPaymentReceive} paymentReceive -
+   * @param {IPaymentReceived} paymentReceive -
    * @returns {Promise<Buffer>}
    */
   async getPaymentReceivePdf(

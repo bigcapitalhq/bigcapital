@@ -2,9 +2,9 @@ import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
 import {
   ICustomer,
-  IPaymentReceiveCreateDTO,
-  IPaymentReceiveCreatedPayload,
-  IPaymentReceiveCreatingPayload,
+  IPaymentReceivedCreateDTO,
+  IPaymentReceivedCreatedPayload,
+  IPaymentReceivedCreatingPayload,
   ISystemUser,
 } from '@/interfaces';
 import { PaymentReceivedValidators } from './PaymentReceivedValidators';
@@ -37,11 +37,11 @@ export class CreatePaymentReceived {
    * with associated invoices payment and journal transactions.
    * @async
    * @param {number} tenantId - Tenant id.
-   * @param {IPaymentReceive} paymentReceive
+   * @param {IPaymentReceived} paymentReceive
    */
   public async createPaymentReceived(
     tenantId: number,
-    paymentReceiveDTO: IPaymentReceiveCreateDTO,
+    paymentReceiveDTO: IPaymentReceivedCreateDTO,
     authorizedUser: ISystemUser,
     trx?: Knex.Transaction
   ) {
@@ -97,7 +97,7 @@ export class CreatePaymentReceived {
           trx,
           paymentReceiveDTO,
           tenantId,
-        } as IPaymentReceiveCreatingPayload);
+        } as IPaymentReceivedCreatingPayload);
 
         // Inserts the payment receive transaction.
         const paymentReceive = await PaymentReceive.query(
@@ -113,7 +113,7 @@ export class CreatePaymentReceived {
           paymentReceiveDTO,
           authorizedUser,
           trx,
-        } as IPaymentReceiveCreatedPayload);
+        } as IPaymentReceivedCreatedPayload);
 
         return paymentReceive;
       },
@@ -125,13 +125,13 @@ export class CreatePaymentReceived {
    * Transform the create payment receive DTO.
    * @param {number} tenantId
    * @param {ICustomer} customer
-   * @param {IPaymentReceiveCreateDTO} paymentReceiveDTO
+   * @param {IPaymentReceivedCreateDTO} paymentReceiveDTO
    * @returns
    */
   private transformCreateDTOToModel = async (
     tenantId: number,
     customer: ICustomer,
-    paymentReceiveDTO: IPaymentReceiveCreateDTO
+    paymentReceiveDTO: IPaymentReceivedCreateDTO
   ) => {
     return this.transformer.transformPaymentReceiveDTOToModel(
       tenantId,

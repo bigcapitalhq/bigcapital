@@ -1,5 +1,5 @@
 import { ServiceError } from '@/exceptions';
-import { IPaymentReceive } from '@/interfaces';
+import { IPaymentReceived } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
@@ -18,12 +18,12 @@ export class GetPaymentReceived {
    * Retrieve payment receive details.
    * @param {number} tenantId - Tenant id.
    * @param {number} paymentReceiveId - Payment receive id.
-   * @return {Promise<IPaymentReceive>}
+   * @return {Promise<IPaymentReceived>}
    */
   public async getPaymentReceive(
     tenantId: number,
     paymentReceiveId: number
-  ): Promise<IPaymentReceive> {
+  ): Promise<IPaymentReceived> {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
     const paymentReceive = await PaymentReceive.query()

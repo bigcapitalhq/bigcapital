@@ -1,11 +1,11 @@
 import {
   IFilterMeta,
   IPaginationMeta,
-  IPaymentReceive,
-  IPaymentReceiveCreateDTO,
-  IPaymentReceiveEditDTO,
-  IPaymentReceiveSmsDetails,
-  IPaymentReceivesFilter,
+  IPaymentReceived,
+  IPaymentReceivedCreateDTO,
+  IPaymentReceivedEditDTO,
+  IPaymentReceivedSmsDetails,
+  IPaymentsReceivedFilter,
   ISystemUser,
   PaymentReceiveMailOptsDTO,
 } from '@/interfaces';
@@ -17,7 +17,7 @@ import { GetPaymentReceives } from './GetPaymentsReceived';
 import { GetPaymentReceived } from './GetPaymentReceived';
 import { GetPaymentReceivedInvoices } from './GetPaymentReceivedInvoices';
 import { PaymentReceiveNotifyBySms } from './PaymentReceivedSmsNotify';
-import GetPaymentReceivePdf from './GetPaymentReceivedPdf';
+import GetPaymentReceivedPdf from './GetPaymentReceivedPdf';
 import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
 
 @Service()
@@ -47,18 +47,18 @@ export class PaymentReceivesApplication {
   private paymentMailNotify: SendPaymentReceiveMailNotification;
 
   @Inject()
-  private getPaymentReceivePdfService: GetPaymentReceivePdf;
+  private getPaymentReceivePdfService: GetPaymentReceivedPdf;
 
   /**
    * Creates a new payment receive.
    * @param {number} tenantId
-   * @param {IPaymentReceiveCreateDTO} paymentReceiveDTO
+   * @param {IPaymentReceivedCreateDTO} paymentReceiveDTO
    * @param {ISystemUser} authorizedUser
    * @returns
    */
   public createPaymentReceived(
     tenantId: number,
-    paymentReceiveDTO: IPaymentReceiveCreateDTO,
+    paymentReceiveDTO: IPaymentReceivedCreateDTO,
     authorizedUser: ISystemUser
   ) {
     return this.createPaymentReceivedService.createPaymentReceived(
@@ -72,14 +72,14 @@ export class PaymentReceivesApplication {
    * Edit details the given payment receive with associated entries.
    * @param {number} tenantId
    * @param {number} paymentReceiveId
-   * @param {IPaymentReceiveEditDTO} paymentReceiveDTO
+   * @param {IPaymentReceivedEditDTO} paymentReceiveDTO
    * @param {ISystemUser} authorizedUser
    * @returns
    */
   public editPaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
-    paymentReceiveDTO: IPaymentReceiveEditDTO,
+    paymentReceiveDTO: IPaymentReceivedEditDTO,
     authorizedUser: ISystemUser
   ) {
     return this.editPaymentReceivedService.editPaymentReceive(
@@ -112,14 +112,14 @@ export class PaymentReceivesApplication {
   /**
    * Retrieve payment receives paginated and filterable.
    * @param {number} tenantId
-   * @param {IPaymentReceivesFilter} filterDTO
+   * @param {IPaymentsReceivedFilter} filterDTO
    * @returns
    */
   public async getPaymentReceives(
     tenantId: number,
-    filterDTO: IPaymentReceivesFilter
+    filterDTO: IPaymentsReceivedFilter
   ): Promise<{
-    paymentReceives: IPaymentReceive[];
+    paymentReceives: IPaymentReceived[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
@@ -133,12 +133,12 @@ export class PaymentReceivesApplication {
    * Retrieves the given payment receive.
    * @param {number} tenantId
    * @param {number} paymentReceiveId
-   * @returns  {Promise<IPaymentReceive>}
+   * @returns  {Promise<IPaymentReceived>}
    */
   public async getPaymentReceive(
     tenantId: number,
     paymentReceiveId: number
-  ): Promise<IPaymentReceive> {
+  ): Promise<IPaymentReceived> {
     return this.getPaymentReceivedService.getPaymentReceive(
       tenantId,
       paymentReceiveId
@@ -175,7 +175,7 @@ export class PaymentReceivesApplication {
   public getPaymentSmsDetails = async (
     tenantId: number,
     paymentReceiveId: number
-  ): Promise<IPaymentReceiveSmsDetails> => {
+  ): Promise<IPaymentReceivedSmsDetails> => {
     return this.paymentSmsNotify.smsDetails(tenantId, paymentReceiveId);
   };
 

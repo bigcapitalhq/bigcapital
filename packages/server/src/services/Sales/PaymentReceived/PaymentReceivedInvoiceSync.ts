@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
-import { IPaymentReceiveEntryDTO } from '@/interfaces';
+import { IPaymentReceivedEntryDTO } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { entriesAmountDiff } from '@/utils';
 
@@ -19,8 +19,8 @@ export class PaymentReceivedInvoiceSync {
    */
   public async saveChangeInvoicePaymentAmount(
     tenantId: number,
-    newPaymentReceiveEntries: IPaymentReceiveEntryDTO[],
-    oldPaymentReceiveEntries?: IPaymentReceiveEntryDTO[],
+    newPaymentReceiveEntries: IPaymentReceivedEntryDTO[],
+    oldPaymentReceiveEntries?: IPaymentReceivedEntryDTO[],
     trx?: Knex.Transaction
   ): Promise<void> {
     const { SaleInvoice } = this.tenancy.models(tenantId);

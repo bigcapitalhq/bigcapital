@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
-import { IPaymentReceiveCreateDTO } from '@/interfaces';
+import { IPaymentReceivedCreateDTO } from '@/interfaces';
 import { Importable } from '@/services/Import/Importable';
 import { CreatePaymentReceived } from './CreatePaymentReceived';
 import { PaymentsReceiveSampleData } from './constants';
@@ -18,7 +18,7 @@ export class PaymentsReceivedImportable extends Importable {
    */
   public importable(
     tenantId: number,
-    createPaymentDTO: IPaymentReceiveCreateDTO,
+    createPaymentDTO: IPaymentReceivedCreateDTO,
     trx?: Knex.Transaction
   ) {
     return this.createPaymentReceiveService.createPaymentReceived(

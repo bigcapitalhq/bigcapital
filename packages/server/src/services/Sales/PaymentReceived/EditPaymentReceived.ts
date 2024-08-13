@@ -2,10 +2,10 @@ import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
 import {
   ICustomer,
-  IPaymentReceive,
-  IPaymentReceiveEditDTO,
-  IPaymentReceiveEditedPayload,
-  IPaymentReceiveEditingPayload,
+  IPaymentReceived,
+  IPaymentReceivedEditDTO,
+  IPaymentReceivedEditedPayload,
+  IPaymentReceivedEditingPayload,
   ISystemUser,
 } from '@/interfaces';
 import { PaymentReceiveDTOTransformer } from './PaymentReceivedDTOTransformer';
@@ -46,12 +46,12 @@ export class EditPaymentReceived {
    * @async
    * @param {number} tenantId -
    * @param {Integer} paymentReceiveId -
-   * @param {IPaymentReceive} paymentReceive -
+   * @param {IPaymentReceived} paymentReceive -
    */
   public async editPaymentReceive(
     tenantId: number,
     paymentReceiveId: number,
-    paymentReceiveDTO: IPaymentReceiveEditDTO,
+    paymentReceiveDTO: IPaymentReceivedEditDTO,
     authorizedUser: ISystemUser
   ) {
     const { PaymentReceive, Contact } = this.tenancy.models(tenantId);
@@ -131,7 +131,7 @@ export class EditPaymentReceived {
         tenantId,
         oldPaymentReceive,
         paymentReceiveDTO,
-      } as IPaymentReceiveEditingPayload);
+      } as IPaymentReceivedEditingPayload);
 
       // Update the payment receive transaction.
       const paymentReceive = await PaymentReceive.query(
@@ -149,7 +149,7 @@ export class EditPaymentReceived {
         paymentReceiveDTO,
         authorizedUser,
         trx,
-      } as IPaymentReceiveEditedPayload);
+      } as IPaymentReceivedEditedPayload);
 
       return paymentReceive;
     });
@@ -159,15 +159,15 @@ export class EditPaymentReceived {
    * Transform the edit payment receive DTO.
    * @param {number} tenantId
    * @param {ICustomer} customer
-   * @param {IPaymentReceiveEditDTO} paymentReceiveDTO
-   * @param {IPaymentReceive} oldPaymentReceive
+   * @param {IPaymentReceivedEditDTO} paymentReceiveDTO
+   * @param {IPaymentReceived} oldPaymentReceive
    * @returns
    */
   private transformEditDTOToModel = async (
     tenantId: number,
     customer: ICustomer,
-    paymentReceiveDTO: IPaymentReceiveEditDTO,
-    oldPaymentReceive: IPaymentReceive
+    paymentReceiveDTO: IPaymentReceivedEditDTO,
+    oldPaymentReceive: IPaymentReceived
   ) => {
     return this.transformer.transformPaymentReceiveDTOToModel(
       tenantId,

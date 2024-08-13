@@ -1,8 +1,8 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
 import {
-  IPaymentReceiveDeletedPayload,
-  IPaymentReceiveDeletingPayload,
+  IPaymentReceivedDeletedPayload,
+  IPaymentReceivedDeletingPayload,
   ISystemUser,
 } from '@/interfaces';
 import UnitOfWork from '@/services/UnitOfWork';
@@ -33,7 +33,7 @@ export class DeletePaymentReceived {
    * @async
    * @param {number} tenantId - Tenant id.
    * @param {Integer} paymentReceiveId - Payment receive id.
-   * @param {IPaymentReceive} paymentReceive - Payment receive object.
+   * @param {IPaymentReceived} paymentReceive - Payment receive object.
    */
   public async deletePaymentReceive(
     tenantId: number,
@@ -56,7 +56,7 @@ export class DeletePaymentReceived {
         tenantId,
         oldPaymentReceive,
         trx,
-      } as IPaymentReceiveDeletingPayload);
+      } as IPaymentReceivedDeletingPayload);
 
       // Deletes the payment receive associated entries.
       await PaymentReceiveEntry.query(trx)
@@ -73,7 +73,7 @@ export class DeletePaymentReceived {
         oldPaymentReceive,
         authorizedUser,
         trx,
-      } as IPaymentReceiveDeletedPayload);
+      } as IPaymentReceivedDeletedPayload);
     });
   }
 }

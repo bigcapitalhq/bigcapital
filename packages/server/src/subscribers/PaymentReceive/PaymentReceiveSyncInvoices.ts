@@ -2,9 +2,9 @@ import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
 import { PaymentReceivedInvoiceSync } from '@/services/Sales/PaymentReceived/PaymentReceivedInvoiceSync';
 import {
-  IPaymentReceiveCreatedPayload,
-  IPaymentReceiveDeletedPayload,
-  IPaymentReceiveEditedPayload,
+  IPaymentReceivedCreatedPayload,
+  IPaymentReceivedDeletedPayload,
+  IPaymentReceivedEditedPayload,
 } from '@/interfaces';
 
 @Service()
@@ -39,7 +39,7 @@ export default class PaymentReceiveSyncInvoicesSubscriber {
     tenantId,
     paymentReceive,
     trx,
-  }: IPaymentReceiveCreatedPayload) => {
+  }: IPaymentReceivedCreatedPayload) => {
     await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(
       tenantId,
       paymentReceive.entries,
@@ -57,7 +57,7 @@ export default class PaymentReceiveSyncInvoicesSubscriber {
     paymentReceive,
     oldPaymentReceive,
     trx,
-  }: IPaymentReceiveEditedPayload) => {
+  }: IPaymentReceivedEditedPayload) => {
     await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(
       tenantId,
       paymentReceive.entries,
@@ -74,7 +74,7 @@ export default class PaymentReceiveSyncInvoicesSubscriber {
     paymentReceiveId,
     oldPaymentReceive,
     trx,
-  }: IPaymentReceiveDeletedPayload) => {
+  }: IPaymentReceivedDeletedPayload) => {
     await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(
       tenantId,
       oldPaymentReceive.entries.map((entry) => ({

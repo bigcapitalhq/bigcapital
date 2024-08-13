@@ -3,9 +3,9 @@ import { Inject, Service } from 'typedi';
 import { omit, sumBy } from 'lodash';
 import {
   ICustomer,
-  IPaymentReceive,
-  IPaymentReceiveCreateDTO,
-  IPaymentReceiveEditDTO,
+  IPaymentReceived,
+  IPaymentReceivedCreateDTO,
+  IPaymentReceivedEditDTO,
 } from '@/interfaces';
 import { PaymentReceivedValidators } from './PaymentReceivedValidators';
 import { PaymentReceivedIncrement } from './PaymentReceivedIncrement';
@@ -26,16 +26,16 @@ export class PaymentReceiveDTOTransformer {
   /**
    * Transformes the create payment receive DTO to model object.
    * @param {number} tenantId
-   * @param {IPaymentReceiveCreateDTO|IPaymentReceiveEditDTO} paymentReceiveDTO - Payment receive DTO.
-   * @param {IPaymentReceive} oldPaymentReceive -
-   * @return {IPaymentReceive}
+   * @param {IPaymentReceivedCreateDTO|IPaymentReceivedEditDTO} paymentReceiveDTO - Payment receive DTO.
+   * @param {IPaymentReceived} oldPaymentReceive -
+   * @return {IPaymentReceived}
    */
   public async transformPaymentReceiveDTOToModel(
     tenantId: number,
     customer: ICustomer,
-    paymentReceiveDTO: IPaymentReceiveCreateDTO | IPaymentReceiveEditDTO,
-    oldPaymentReceive?: IPaymentReceive
-  ): Promise<IPaymentReceive> {
+    paymentReceiveDTO: IPaymentReceivedCreateDTO | IPaymentReceivedEditDTO,
+    oldPaymentReceive?: IPaymentReceived
+  ): Promise<IPaymentReceived> {
     const amount =
       paymentReceiveDTO.amount ??
       sumBy(paymentReceiveDTO.entries, 'paymentAmount');
@@ -65,7 +65,7 @@ export class PaymentReceiveDTOTransformer {
       })),
     };
     return R.compose(
-      this.branchDTOTransform.transformDTO<IPaymentReceive>(tenantId)
+      this.branchDTOTransform.transformDTO<IPaymentReceived>(tenantId)
     )(initialDTO);
   }
 }

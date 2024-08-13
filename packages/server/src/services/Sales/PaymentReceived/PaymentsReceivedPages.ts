@@ -3,7 +3,7 @@ import { omit } from 'lodash';
 import {
   ISaleInvoice,
   IPaymentReceivePageEntry,
-  IPaymentReceive,
+  IPaymentReceived,
   ISystemUser,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
@@ -65,7 +65,7 @@ export default class PaymentsReceivedPages {
     tenantId: number,
     paymentReceiveId: number
   ): Promise<{
-    paymentReceive: Omit<IPaymentReceive, 'entries'>;
+    paymentReceive: Omit<IPaymentReceived, 'entries'>;
     entries: IPaymentReceivePageEntry[];
   }> {
     const { PaymentReceive, SaleInvoice } = this.tenancy.models(tenantId);

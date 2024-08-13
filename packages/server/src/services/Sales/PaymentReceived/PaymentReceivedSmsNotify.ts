@@ -2,10 +2,10 @@ import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
 import {
-  IPaymentReceiveSmsDetails,
+  IPaymentReceivedSmsDetails,
   SMS_NOTIFICATION_KEY,
-  IPaymentReceive,
-  IPaymentReceiveEntry,
+  IPaymentReceived,
+  IPaymentReceivedEntry,
 } from '@/interfaces';
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import { formatNumber, formatSmsMessage } from 'utils';
@@ -71,12 +71,12 @@ export class PaymentReceiveNotifyBySms {
   /**
    * Sends the payment details sms notification of the given customer.
    * @param {number} tenantId
-   * @param {IPaymentReceive} paymentReceive
+   * @param {IPaymentReceived} paymentReceive
    * @param {ICustomer} customer
    */
   private sendSmsNotification = async (
     tenantId: number,
-    paymentReceive: IPaymentReceive
+    paymentReceive: IPaymentReceived
   ) => {
     const smsClient = this.tenancy.smsClient(tenantId);
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
@@ -116,12 +116,12 @@ export class PaymentReceiveNotifyBySms {
   /**
    * Formates the payment receive details sms message.
    * @param {number} tenantId -
-   * @param {IPaymentReceive} payment -
+   * @param {IPaymentReceived} payment -
    * @param {ICustomer} customer -
    */
   private formattedPaymentDetailsMessage = (
     tenantId: number,
-    payment: IPaymentReceive,
+    payment: IPaymentReceived,
     tenantMetadata: TenantMetadata
   ) => {
     const notification = this.smsNotificationsSettings.getSmsNotificationMeta(
@@ -138,14 +138,14 @@ export class PaymentReceiveNotifyBySms {
   /**
    * Formattes the payment details sms notification messafge.
    * @param {string} smsMessage
-   * @param {IPaymentReceive} payment
+   * @param {IPaymentReceived} payment
    * @param {ICustomer} customer
    * @param {TenantMetadata} tenantMetadata
    * @returns {string}
    */
   private formatPaymentDetailsMessage = (
     smsMessage: string,
-    payment: IPaymentReceive,
+    payment: IPaymentReceived,
     tenantMetadata: any
   ): string => {
     const invoiceNumbers = this.stringifyPaymentInvoicesNumber(payment);
@@ -167,12 +167,12 @@ export class PaymentReceiveNotifyBySms {
 
   /**
    * Stringify payment receive invoices to numbers as string.
-   * @param {IPaymentReceive} payment
+   * @param {IPaymentReceived} payment
    * @returns {string}
    */
-  private stringifyPaymentInvoicesNumber(payment: IPaymentReceive) {
+  private stringifyPaymentInvoicesNumber(payment: IPaymentReceived) {
     const invoicesNumberes = payment.entries.map(
-      (entry: IPaymentReceiveEntry) => entry.invoice.invoiceNo
+      (entry: IPaymentReceivedEntry) => entry.invoice.invoiceNo
     );
     return invoicesNumberes.join(', ');
   }
@@ -185,7 +185,7 @@ export class PaymentReceiveNotifyBySms {
   public smsDetails = async (
     tenantId: number,
     paymentReceiveid: number
-  ): Promise<IPaymentReceiveSmsDetails> => {
+  ): Promise<IPaymentReceivedSmsDetails> => {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
     // Retrieve the payment receive or throw not found service error.

@@ -5,9 +5,9 @@ import {
   ISaleInvoiceCreatingPaylaod,
   ISaleReceiptDeletingPayload,
   ICreditNoteDeletingPayload,
-  IPaymentReceiveCreatingPayload,
+  IPaymentReceivedCreatingPayload,
   IRefundCreditNoteDeletingPayload,
-  IPaymentReceiveDeletingPayload,
+  IPaymentReceivedDeletingPayload,
   ISaleEstimateDeletingPayload,
   ISaleEstimateCreatingPayload,
   ISaleEstimateEditingPayload,
@@ -17,7 +17,7 @@ import {
   ISaleInvoiceWrittenOffCancelPayload,
   ICreditNoteEditingPayload,
   ISaleReceiptEditingPayload,
-  IPaymentReceiveEditingPayload,
+  IPaymentReceivedEditingPayload,
   ISaleReceiptEventClosingPayload,
   ICreditNoteCreatingPayload,
 } from '@/interfaces';
@@ -454,13 +454,13 @@ export default class SalesTransactionLockingGuardSubscriber {
 
   /**
    * Transaction locking guard on payment receive editing.
-   * @param {IPaymentReceiveEditingPayload}
+   * @param {IPaymentReceivedEditingPayload}
    */
   private transactionLockingGuardOnPaymentEditing = async ({
     tenantId,
     oldPaymentReceive,
     paymentReceiveDTO,
-  }: IPaymentReceiveEditingPayload) => {
+  }: IPaymentReceivedEditingPayload) => {
     // Validate the old payment date.
     await this.salesLockingGuard.transactionLockingGuard(
       tenantId,
@@ -475,12 +475,12 @@ export default class SalesTransactionLockingGuardSubscriber {
 
   /**
    * Transaction locking guard on payment creating.
-   * @param {IPaymentReceiveCreatingPayload}
+   * @param {IPaymentReceivedCreatingPayload}
    */
   private transactionLockingGuardOnPaymentCreating = async ({
     tenantId,
     paymentReceiveDTO,
-  }: IPaymentReceiveCreatingPayload) => {
+  }: IPaymentReceivedCreatingPayload) => {
     await this.salesLockingGuard.transactionLockingGuard(
       tenantId,
       paymentReceiveDTO.paymentDate
@@ -489,12 +489,12 @@ export default class SalesTransactionLockingGuardSubscriber {
 
   /**
    * Transaction locking guard on payment deleting.
-   * @param {IPaymentReceiveDeletingPayload} payload -
+   * @param {IPaymentReceivedDeletingPayload} payload -
    */
   private transactionLockingGuardPaymentDeleting = async ({
     oldPaymentReceive,
     tenantId,
-  }: IPaymentReceiveDeletingPayload) => {
+  }: IPaymentReceivedDeletingPayload) => {
     await this.salesLockingGuard.transactionLockingGuard(
       tenantId,
       oldPaymentReceive.paymentDate
