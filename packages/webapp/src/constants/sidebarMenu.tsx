@@ -74,7 +74,7 @@ export const SidebarMenu = [
                 },
               },
               {
-                text: <T id={'category_list'} />,
+                text: <T id={'categories_list'} />,
                 href: '/items/categories',
                 type: ISidebarMenuItemType.Link,
                 permission: {
