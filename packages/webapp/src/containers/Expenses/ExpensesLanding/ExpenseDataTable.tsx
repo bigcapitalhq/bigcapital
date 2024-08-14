@@ -20,6 +20,7 @@ import withExpensesActions from './withExpensesActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withSettings from '@/containers/Settings/withSettings';
+import withExpenses from './withExpenses';
 
 import { ActionsMenu, useExpensesTableColumns } from './components';
 import { DRAWERS } from '@/constants/drawers';
@@ -39,6 +40,9 @@ function ExpensesDataTable({
 
   // #withSettings
   expensesTableSize,
+
+  // #withExpenses
+  expensesTableState
 }) {
   // Expenses list context.
   const {
@@ -116,6 +120,7 @@ function ExpensesDataTable({
         sticky={true}
         onFetchData={handleFetchData}
         pagination={true}
+        initialPageSize={expensesTableState.pageSize}
         manualSortBy={true}
         manualPagination={true}
         pagesCount={pagination.pagesCount}
@@ -147,4 +152,5 @@ export default compose(
   withSettings(({ expenseSettings }) => ({
     expensesTableSize: expenseSettings?.tableSize,
   })),
+  withExpenses(({ expensesTableState }) => ({ expensesTableState }))
 )(ExpensesDataTable);

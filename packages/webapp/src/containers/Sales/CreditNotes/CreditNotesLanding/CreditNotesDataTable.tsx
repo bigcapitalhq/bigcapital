@@ -19,6 +19,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
+import withCreditNotes from './withCreditNotes';
 
 import { useCreditNoteTableColumns, ActionsMenu } from './components';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
@@ -44,6 +45,9 @@ function CreditNotesDataTable({
 
   // #withSettings
   creditNoteTableSize,
+
+  // #withCreditNotes
+  creditNoteTableState
 }) {
   const history = useHistory();
 
@@ -129,6 +133,7 @@ function CreditNotesDataTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
+        initialPageSize={creditNoteTableState.pageSize}
         pagesCount={pagination.pagesCount}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
@@ -159,4 +164,5 @@ export default compose(
   withSettings(({ creditNoteSettings }) => ({
     creditNoteTableSize: creditNoteSettings?.tableSize,
   })),
+  withCreditNotes(({ creditNoteTableState }) => ({ creditNoteTableState }))
 )(CreditNotesDataTable);
