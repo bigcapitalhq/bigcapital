@@ -33,6 +33,9 @@ function PaymentsReceivedDataTable({
   // #withPaymentsReceivedActions
   setPaymentReceivesTableState,
 
+  // #withPaymentsReceived
+  paymentReceivesTableState,
+
   // #withAlertsActions
   openAlert,
 
@@ -124,6 +127,7 @@ function PaymentsReceivedDataTable({
         autoResetSortBy={false}
         autoResetPage={false}
         pagination={true}
+        initialPageSize={paymentReceivesTableState.pageSize}
         pagesCount={pagination.pagesCount}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}

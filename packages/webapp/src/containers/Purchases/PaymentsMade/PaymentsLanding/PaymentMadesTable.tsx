@@ -112,6 +112,7 @@ function PaymentMadesTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
+        initialPageSize={paymentMadesTableState.pageSize}
         pagesCount={pagination.pagesCount}
         autoResetSortBy={false}
         autoResetPage={false}
