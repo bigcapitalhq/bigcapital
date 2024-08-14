@@ -28,9 +28,9 @@ export type DropzoneCssVariables = {
 };
 
 export interface DropzoneProps {
-    /** Key of `theme.colors` or any valid CSS color to set colors of `Dropzone.Accept`, `theme.primaryColor` by default */
+  /** Key of `theme.colors` or any valid CSS color to set colors of `Dropzone.Accept`, `theme.primaryColor` by default */
   acceptColor?: MantineColor;
-    
+
   /** Key of `theme.colors` or any valid CSS color to set colors of `Dropzone.Reject`, `'red'` by default */
   rejectColor?: MantineColor;
 
