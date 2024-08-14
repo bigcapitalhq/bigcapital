@@ -28,9 +28,9 @@ export type DropzoneCssVariables = {
 };
 
 export interface DropzoneProps {
-  /** Key of `theme.colors` or any valid CSS color to set colors of `Dropzone.Accept`, `theme.primaryColor` by default */
+    /** Key of `theme.colors` or any valid CSS color to set colors of `Dropzone.Accept`, `theme.primaryColor` by default */
   acceptColor?: MantineColor;
-
+    
   /** Key of `theme.colors` or any valid CSS color to set colors of `Dropzone.Reject`, `'red'` by default */
   rejectColor?: MantineColor;
 
@@ -235,7 +235,13 @@ export const Dropzone = (_props: DropzoneProps) => {
     >
       <Box
         {...getRootProps({
-          className: clsx(styles.root, classNames?.root),
+          className: clsx(
+            styles.root,
+            {
+              [styles.dropzoneActive]: isDragAccept || isDragReject,
+            },
+            classNames?.root
+          ),
         })}
         // {...getStyles('root', { focusable: true })}
         {...others}
@@ -253,7 +259,7 @@ export const Dropzone = (_props: DropzoneProps) => {
         <input {...getInputProps(inputProps)} name={name} />
         <div
           data-enable-pointer-events={enablePointerEvents || undefined}
-          className={classNames?.content}
+          className={clsx(styles.content, classNames?.content)}
         >
           {children}
         </div>
