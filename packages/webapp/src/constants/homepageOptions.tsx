@@ -55,7 +55,7 @@ export const accountsReceivable = [
         description: (
           <T id={'manage_payment_transactions_from_your_customers'} />
         ),
-        link: '/payment-receives',
+        link: '/payments-received',
         subject: AbilitySubject.PaymentReceive,
         ability: PaymentReceiveAction.View,
       },

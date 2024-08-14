@@ -49,7 +49,7 @@ import InvoiceExchangeRateChangeDialog from '@/containers/Sales/Invoices/Invoice
 import InvoiceMailDialog from '@/containers/Sales/Invoices/InvoiceMailDialog/InvoiceMailDialog';
 import EstimateMailDialog from '@/containers/Sales/Estimates/EstimateMailDialog/EstimateMailDialog';
 import ReceiptMailDialog from '@/containers/Sales/Receipts/ReceiptMailDialog/ReceiptMailDialog';
-import PaymentMailDialog from '@/containers/Sales/PaymentReceives/PaymentMailDialog/PaymentMailDialog';
+import PaymentMailDialog from '@/containers/Sales/PaymentsReceived/PaymentMailDialog/PaymentMailDialog';
 import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
 import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
 import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';

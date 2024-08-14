@@ -3,7 +3,7 @@ import { CreateSaleEstimate } from './CreateSaleEstimate';
 import {
   IFilterMeta,
   IPaginationMeta,
-  IPaymentReceiveSmsDetails,
+  IPaymentReceivedSmsDetails,
   ISaleEstimate,
   ISaleEstimateDTO,
   ISalesEstimatesFilter,
@@ -191,12 +191,12 @@ export class SaleEstimatesApplication {
    * Retrieve the SMS details of the given payment receive transaction.
    * @param {number} tenantId
    * @param {number} saleEstimateId
-   * @returns {Promise<IPaymentReceiveSmsDetails>}
+   * @returns {Promise<IPaymentReceivedSmsDetails>}
    */
   public getSaleEstimateSmsDetails = (
     tenantId: number,
     saleEstimateId: number
-  ): Promise<IPaymentReceiveSmsDetails> => {
+  ): Promise<IPaymentReceivedSmsDetails> => {
     return this.saleEstimateNotifyBySmsService.smsDetails(
       tenantId,
       saleEstimateId

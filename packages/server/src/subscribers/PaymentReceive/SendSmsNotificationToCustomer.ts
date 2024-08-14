@@ -1,7 +1,7 @@
 import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
-import { PaymentReceiveNotifyBySms } from '@/services/Sales/PaymentReceives/PaymentReceiveSmsNotify';
-import { IPaymentReceiveCreatedPayload } from '@/interfaces';
+import { PaymentReceiveNotifyBySms } from '@/services/Sales/PaymentReceived/PaymentReceivedSmsNotify';
+import { IPaymentReceivedCreatedPayload } from '@/interfaces';
 import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
 
 @Service()
@@ -26,7 +26,7 @@ export default class SendSmsNotificationPaymentReceive {
     tenantId,
     paymentReceiveId,
     trx,
-  }: IPaymentReceiveCreatedPayload) => {
+  }: IPaymentReceivedCreatedPayload) => {
     // Notify via Sms after transactions complete running.
     runAfterTransaction(trx, async () => {
       try {
@@ -34,7 +34,7 @@ export default class SendSmsNotificationPaymentReceive {
           tenantId,
           paymentReceiveId
         );
-      } catch (error) {}
+      } catch (error) { }
     });
   };
 }

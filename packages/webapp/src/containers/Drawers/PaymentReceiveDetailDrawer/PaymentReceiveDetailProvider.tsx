@@ -35,13 +35,13 @@ function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
   return (
     <DrawerLoading loading={isPaymentLoading}>
       <DrawerHeaderContent
-        name={DRAWERS.PAYMENT_RECEIVE_DETAILS}
-        title={intl.get('payment_receive.drawer.title', {
+        name={DRAWERS.PAYMENT_RECEIVED_DETAILS}
+        title={intl.get('payment_received.drawer.title', {
           number: paymentReceive.payment_receive_no,
         })}
         subTitle={
           featureCan(Features.Branches)
-            ? intl.get('payment_receive.drawer.subtitle', {
+            ? intl.get('payment_received.drawer.subtitle', {
                 value: paymentReceive.branch?.name,
               })
             : null

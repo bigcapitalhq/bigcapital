@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import {
   IBillPaymentEventDeletedPayload,
-  IPaymentReceiveDeletedPayload,
+  IPaymentReceivedDeletedPayload,
 } from '@/interfaces';
 import { ValidateTransactionMatched } from '../ValidateTransactionsMatched';
 import events from '@/subscribers/events';
@@ -23,7 +23,7 @@ export class ValidateMatchingOnPaymentMadeDelete {
 
   /**
    * Validates the payment made transaction whether matched with bank transaction on deleting.
-   * @param {IPaymentReceiveDeletedPayload}
+   * @param {IPaymentReceivedDeletedPayload}
    */
   public async validateMatchingOnPaymentMadeDeleting({
     tenantId,

@@ -912,59 +912,59 @@ export const getDashboardRoutes = () => [
   },
   // Payment receives
   {
-    path: `/payment-receives/import`,
+    path: `/payments-received/import`,
     component: lazy(
-      () => import('@/containers/Sales/PaymentReceives/PaymentReceivesImport'),
+      () => import('@/containers/Sales/PaymentsReceived/PaymentsReceivedImport'),
     ),
     name: 'payment-receive-import',
-    breadcrumb: 'Payments Receive Import',
-    pageTitle: 'Payments Receive Import',
+    breadcrumb: 'Payments Received Import',
+    pageTitle: 'Payments Received Import',
     backLink: true,
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-receives/:id/edit`,
+    path: `/payments-received/:id/edit`,
     component: lazy(
       () =>
         import(
-          '@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
+          '@/containers/Sales/PaymentsReceived/PaymentReceiveForm/PaymentReceiveFormPage'
         ),
     ),
     name: 'payment-receive-edit',
     breadcrumb: intl.get('edit'),
-    pageTitle: intl.get('edit_payment_receive'),
+    pageTitle: intl.get('edit_payment_received'),
     backLink: true,
     sidebarExpand: false,
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-receives/new`,
+    path: `/payment-received/new`,
     component: lazy(
       () =>
         import(
-          '@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
+          '@/containers/Sales/PaymentsReceived/PaymentReceiveForm/PaymentReceiveFormPage'
         ),
     ),
     name: 'payment-receive-new',
-    breadcrumb: intl.get('new_payment_receive'),
-    pageTitle: intl.get('new_payment_receive'),
+    breadcrumb: intl.get('new_payment_received'),
+    pageTitle: intl.get('new_payment_received'),
     backLink: true,
     sidebarExpand: false,
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-receives`,
+    path: `/payments-received`,
     component: lazy(
       () =>
         import(
-          '@/containers/Sales/PaymentReceives/PaymentsLanding/PaymentReceivesList'
+          '@/containers/Sales/PaymentsReceived/PaymentsLanding/PaymentsReceivedList'
         ),
     ),
-    breadcrumb: intl.get('payment_receives_list'),
-    pageTitle: intl.get('payment_receives_list'),
+    breadcrumb: intl.get('payments_received_list'),
+    pageTitle: intl.get('payments_received_list'),
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },

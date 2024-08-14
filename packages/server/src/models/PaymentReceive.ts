@@ -3,7 +3,7 @@ import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
 import PaymentReceiveSettings from './PaymentReceive.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
-import { DEFAULT_VIEWS } from '@/services/Sales/PaymentReceives/constants';
+import { DEFAULT_VIEWS } from '@/services/Sales/PaymentReceived/constants';
 import ModelSearchable from './ModelSearchable';
 
 export default class PaymentReceive extends mixin(TenantModel, [
