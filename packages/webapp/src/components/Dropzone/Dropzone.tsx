@@ -238,7 +238,8 @@ export const Dropzone = (_props: DropzoneProps) => {
           className: clsx(
             styles.root,
             {
-              [styles.dropzoneActive]: isDragAccept || isDragReject,
+              [styles.dropzoneAccept]: isDragAccept,
+              [styles.dropzoneReject]: isDragReject
             },
             classNames?.root
           ),
@@ -272,8 +273,6 @@ Dropzone.displayName = '@mantine/dropzone/Dropzone';
 Dropzone.Accept = DropzoneAccept;
 Dropzone.Idle = DropzoneIdle;
 Dropzone.Reject = DropzoneReject;
-
-
 
 
 type PossibleRef<T> = Ref<T> | undefined;

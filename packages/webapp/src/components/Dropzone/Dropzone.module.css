@@ -1,6 +1,6 @@
 .root {
   padding: 20px;
-  border: 2px dashed #c5cbd3; /* Changed from dotted to dashed for better visibility */
+  border: 2px dotted #c5cbd3;
   border-radius: 6px;
   min-height: 200px;
   display: flex;
@@ -8,31 +8,13 @@
   background: #fff;
   position: relative;
   transition: background-color 0.3s ease, border-color 0.3s ease;
-}
 
-.dropzoneActive {
-  background-color: rgba(0, 123, 255, 0.15);
-  border-color: #007bff;
-}
-
-.dropzoneActive .content {
-  color: #007bff; /* Change text color to match the border when active */
-}
-
-.content {
-  position: relative;
-  z-index: 20;
-  transition: color 0.3s ease;
-}
-
-.dropzoneActive:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 123, 255, 0.3); /* This creates a full overlay effect */
-  z-index: 10;
-  border-radius: 6px; /* Ensures the overlay matches the container's rounded corners */
+  &.dropzoneAccept {
+    border-color: rgb(0, 82, 204);
+    background: rgba(0, 82, 204, 0.05);
+  }
+  &.dropzoneReject {
+    border-color: #AC2F33;
+    background: rgba(172, 47, 51, 0.05)
+  }
 }
