@@ -67,7 +67,7 @@ export interface IPaymentReceivedEntry {
 export interface IPaymentReceivedEntryDTO {
   id?: number;
   index: number;
-  paymentReceiveId: number;
+  paymentReceiveId?: number;
   invoiceId: number;
   paymentAmount: number;
 }
