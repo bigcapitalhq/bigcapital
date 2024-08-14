@@ -235,7 +235,14 @@ export const Dropzone = (_props: DropzoneProps) => {
     >
       <Box
         {...getRootProps({
-          className: clsx(styles.root, classNames?.root),
+          className: clsx(
+            styles.root,
+            {
+              [styles.dropzoneAccept]: isDragAccept,
+              [styles.dropzoneReject]: isDragReject
+            },
+            classNames?.root
+          ),
         })}
         // {...getStyles('root', { focusable: true })}
         {...others}
@@ -253,7 +260,7 @@ export const Dropzone = (_props: DropzoneProps) => {
         <input {...getInputProps(inputProps)} name={name} />
         <div
           data-enable-pointer-events={enablePointerEvents || undefined}
-          className={classNames?.content}
+          className={clsx(styles.content, classNames?.content)}
         >
           {children}
         </div>
@@ -266,8 +273,6 @@ Dropzone.displayName = '@mantine/dropzone/Dropzone';
 Dropzone.Accept = DropzoneAccept;
 Dropzone.Idle = DropzoneIdle;
 Dropzone.Reject = DropzoneReject;
-
-
 
 
 type PossibleRef<T> = Ref<T> | undefined;
