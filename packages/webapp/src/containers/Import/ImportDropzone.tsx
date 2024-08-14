@@ -13,6 +13,8 @@ export function ImportDropzone() {
       <Field id={'file'} name={'file'} type="file">
         {({ form }) => (
           <ImportDropzoneField
+            title={'Drag and drop files here or click to select files'}
+            subtitle={''}
             value={form.file}
             onChange={(file) => {
               hideAlerts();

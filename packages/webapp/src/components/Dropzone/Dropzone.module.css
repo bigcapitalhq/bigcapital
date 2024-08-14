@@ -1,5 +1,3 @@
-
-
 .root {
   padding: 20px;
   border: 2px dotted #c5cbd3;
@@ -9,4 +7,14 @@
   flex-direction: column;
   background: #fff;
   position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+
+  &.dropzoneAccept {
+    border-color: rgb(0, 82, 204);
+    background: rgba(0, 82, 204, 0.05);
+  }
+  &.dropzoneReject {
+    border-color: #AC2F33;
+    background: rgba(172, 47, 51, 0.05)
+  }
 }

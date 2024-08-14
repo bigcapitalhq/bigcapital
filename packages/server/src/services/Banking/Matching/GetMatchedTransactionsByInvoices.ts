@@ -1,22 +1,26 @@
 import { Inject, Service } from 'typedi';
 import { initialize } from 'objection';
+import { Knex } from 'knex';
+import { first } from 'lodash';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { GetMatchedTransactionInvoicesTransformer } from './GetMatchedTransactionInvoicesTransformer';
 import {
   GetMatchedTransactionsFilter,
+  IMatchTransactionDTO,
   MatchedTransactionPOJO,
   MatchedTransactionsPOJO,
 } from './types';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
+import { CreatePaymentReceived } from '@/services/Sales/PaymentReceived/CreatePaymentReceived';
+import { IPaymentReceivedCreateDTO } from '@/interfaces';
 
 @Service()
 export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByType {
   @Inject()
-  protected tenancy: HasTenancyService;
+  protected transformer: TransformerInjectable;
 
   @Inject()
-  protected transformer: TransformerInjectable;
+  protected createPaymentReceivedService: CreatePaymentReceived;
 
   /**
    * Retrieves the matched transactions.
@@ -77,5 +81,65 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
       invoice,
       new GetMatchedTransactionInvoicesTransformer()
     );
+  }
+
+  /**
+   * Creates the common matched transaction.
+   * @param {number} tenantId
+   * @param {Array<number>} uncategorizedTransactionIds
+   * @param {IMatchTransactionDTO} matchTransactionDTO
+   * @param {Knex.Transaction} trx
+   */
+  public async createMatchedTransaction(
+    tenantId: number,
+    uncategorizedTransactionIds: Array<number>,
+    matchTransactionDTO: IMatchTransactionDTO,
+    trx?: Knex.Transaction
+  ) {
+    await super.createMatchedTransaction(
+      tenantId,
+      uncategorizedTransactionIds,
+      matchTransactionDTO,
+      trx
+    );
+    const { SaleInvoice, UncategorizedCashflowTransaction, MatchedBankTransaction } =
+      this.tenancy.models(tenantId);
+
+    const uncategorizedTransactionId = first(uncategorizedTransactionIds);
+    const uncategorizedTransaction =
+      await UncategorizedCashflowTransaction.query(trx)
+        .findById(uncategorizedTransactionId)
+        .throwIfNotFound();
+
+    const invoice = await SaleInvoice.query(trx)
+      .findById(matchTransactionDTO.referenceId)
+      .throwIfNotFound();
+
+    const createPaymentReceivedDTO: IPaymentReceivedCreateDTO = {
+      customerId: invoice.customerId,
+      paymentDate: uncategorizedTransaction.date,
+      amount: invoice.dueAmount,
+      depositAccountId: uncategorizedTransaction.accountId,
+      entries: [
+        {
+          index: 1,
+          invoiceId: invoice.id,
+          paymentAmount: invoice.dueAmount,
+        },
+      ],
+      branchId: invoice.branchId,
+    };
+    // Create a payment received associated to the matched invoice.
+    const paymentReceived = await this.createPaymentReceivedService.createPaymentReceived(
+      tenantId,
+      createPaymentReceivedDTO,
+      {},
+      trx
+    );
+    // Link the create payment received with matched invoice transaction.
+    await super.createMatchedTransaction(tenantId, uncategorizedTransactionIds, {
+      referenceType: 'PaymentReceive',
+      referenceId: paymentReceived.id,
+    }, trx)
   }
 }
