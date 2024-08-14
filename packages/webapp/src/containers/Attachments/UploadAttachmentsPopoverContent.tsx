@@ -120,6 +120,7 @@ export function UploadAttachmentsPopoverContent({
             uploadIcon={null}
             value={null}
             title={''}
+            subtitle={'Drag and drop file here or choose file'}
             classNames={{ root: styles.dropzoneRoot }}
             onChange={handleChangeDropzone}
             dropzoneProps={{
