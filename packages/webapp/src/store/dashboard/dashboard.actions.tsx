@@ -125,3 +125,23 @@ export function closeSidebarSubmenu() {
     type: t.SIDEBAR_SUBMENU_CLOSE,
   };
 }
+
+export function addAutofill(autofillRef: number, payload: any) {
+  return {
+    type: t.ADD_AUTOFILL_REF,
+    payload: { ref: autofillRef, payload }
+  }
+}
+
+export function removeAutofill(autofillRef: number) {
+  return {
+    type: t.REMOVE_AUTOFILL_REF,
+    payload: { ref: autofillRef}
+  }
+}
+
+export function resetAutofill() {
+  return {
+    type: t.RESET_AUTOFILL_REF,
+  }
+}

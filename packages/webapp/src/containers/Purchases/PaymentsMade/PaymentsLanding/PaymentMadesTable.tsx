@@ -61,7 +61,7 @@ function PaymentMadesTable({
 
   // Handles the edit payment made action.
   const handleEditPaymentMade = (paymentMade) => {
-    history.push(`/payment-mades/${paymentMade.id}/edit`);
+    history.push(`/payments-made/${paymentMade.id}/edit`);
   };
 
   // Handles the delete payment made action.

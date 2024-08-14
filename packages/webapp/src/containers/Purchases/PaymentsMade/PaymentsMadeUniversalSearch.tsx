@@ -13,7 +13,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 /**
  * Universal search bill item select action.
  */
-function PaymentMadeUniversalSearchSelectComponent({
+function PaymentsMadeUniversalSearchSelectComponent({
   // #ownProps
   resourceType,
   resourceId,
@@ -27,14 +27,14 @@ function PaymentMadeUniversalSearchSelectComponent({
   return null;
 }
 
-export const PaymentMadeUniversalSearchSelect = withDrawerActions(
-  PaymentMadeUniversalSearchSelectComponent,
+export const PaymentsMadeUniversalSearchSelect = withDrawerActions(
+  PaymentsMadeUniversalSearchSelectComponent,
 );
 
 /**
  * Payment made universal search item.
  */
-export function PaymentMadeUniversalSearchItem(
+export function PaymentsMadeUniversalSearchItem(
   { text, label, reference },
   { handleClick, modifiers, query },
 ) {
@@ -78,9 +78,9 @@ const paymentMadeToSearch = (payment) => ({
  */
 export const universalSearchPaymentMadeBind = () => ({
   resourceType: RESOURCES_TYPES.PAYMENT_MADE,
-  optionItemLabel: intl.get('payment_mades'),
-  selectItemAction: PaymentMadeUniversalSearchSelect,
-  itemRenderer: PaymentMadeUniversalSearchItem,
+  optionItemLabel: intl.get('payments_made'),
+  selectItemAction: PaymentsMadeUniversalSearchSelect,
+  itemRenderer: PaymentsMadeUniversalSearchItem,
   itemSelect: paymentMadeToSearch,
   permission: {
     ability: PaymentMadeAction.View,

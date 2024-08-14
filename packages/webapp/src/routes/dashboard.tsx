@@ -90,7 +90,7 @@ export const getDashboardRoutes = () => [
       () => import('@/containers/ItemsCategories/ItemCategoriesList'),
     ),
     breadcrumb: intl.get('categories'),
-    pageTitle: intl.get('category_list'),
+    pageTitle: intl.get('categories_list'),
     defaultSearchResource: RESOURCES_TYPES.ITEM,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
@@ -1095,9 +1095,9 @@ export const getDashboardRoutes = () => [
 
   // Payment modes.
   {
-    path: `/payment-mades/import`,
+    path: `/payments-made/import`,
     component: lazy(
-      () => import('@/containers/Purchases/PaymentMades/PaymentMadesImport'),
+      () => import('@/containers/Purchases/PaymentsMade/PaymentsMadeImport'),
     ),
     name: 'payment-made-edit',
     breadcrumb: intl.get('edit'),
@@ -1107,11 +1107,11 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades/:id/edit`,
+    path: `/payments-made/:id/edit`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+          '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
         ),
     ),
     name: 'payment-made-edit',
@@ -1123,11 +1123,11 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades/new`,
+    path: `/payments-made/new`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+          '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
         ),
     ),
     name: 'payment-made-new',
@@ -1139,15 +1139,15 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades`,
+    path: `/payments-made`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'
+          '@/containers/Purchases/PaymentsMade/PaymentsLanding/PaymentMadeList'
         ),
     ),
-    breadcrumb: intl.get('payment_made_list'),
-    pageTitle: intl.get('payment_made_list'),
+    breadcrumb: intl.get('payments_made_list'),
+    pageTitle: intl.get('payments_made_list'),
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },

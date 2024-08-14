@@ -88,7 +88,7 @@ export const accountsPayable = [
       {
         title: <T id={'vendors_payments'} />,
         description: <T id={'manage_payments_transactions_to_your_vendors'} />,
-        link: '/payment-mades',
+        link: '/payments-made',
         subject: AbilitySubject.PaymentMade,
         ability: PaymentMadeAction.View,
       },

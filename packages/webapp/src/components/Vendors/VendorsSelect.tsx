@@ -1,9 +1,11 @@
 // @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
+import { useFormikContext } from 'formik';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { createNewItemFromQuery, createNewItemRenderer } from './utils';
 import { FSelect } from '../Forms';
+import { useCreateAutofillListener } from '@/hooks/state/autofill';
 import { DRAWERS } from '@/constants/drawers';
 
 /**
@@ -15,6 +17,7 @@ function VendorsSelectRoot({
   openDrawer,
 
   // #ownProps
+  name,
   items,
   allowCreate,
 
@@ -25,14 +28,24 @@ function VendorsSelectRoot({
   const maybeCreateNewItemFromQuery = allowCreate
     ? createNewItemFromQuery
     : null;
+  const { setFieldValue } = useFormikContext();
+
+  // Creates a new autofill listener once the quick vendor drawer submits the form.
+  const autofillRef = useCreateAutofillListener((payload: any) => {
+    setFieldValue(name, payload.vendorId);
+  });
 
   // Handles the create item click.
-  const handleCreateItemClick = () => {
-    openDrawer(DRAWERS.QUICK_WRITE_VENDOR);
+  const handleCreateItemClick = (item) => {
+    openDrawer(DRAWERS.QUICK_WRITE_VENDOR, {
+      autofillRef,
+      displayName: item.name,
+    });
   };
 
   return (
     <FSelect
+      name={name}
       items={items}
       textAccessor={'display_name'}
       labelAccessor={'formatted_balance'}

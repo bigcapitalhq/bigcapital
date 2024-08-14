@@ -2,11 +2,10 @@
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';
-
 import { compose } from '@/utils';
 
-const QuickCreateCustomerDrawerContent = React.lazy(() =>
-  import('./QuickCreateCustomerDrawerContent'),
+const QuickCreateCustomerDrawerContent = React.lazy(
+  () => import('./QuickCreateCustomerDrawerContent'),
 );
 
 /**
@@ -17,7 +16,7 @@ function QuickCreateCustomerDrawer({
 
   // #withDrawer
   isOpen,
-  payload,
+  payload: { autofillRef, displayName },
 }) {
   return (
     <Drawer
@@ -27,7 +26,10 @@ function QuickCreateCustomerDrawer({
       size={'80%'}
     >
       <DrawerSuspense>
-        <QuickCreateCustomerDrawerContent displayName={payload.displayName} />
+        <QuickCreateCustomerDrawerContent
+          displayName={displayName}
+          autofillRef={autofillRef}
+        />
       </DrawerSuspense>
     </Drawer>
   );
