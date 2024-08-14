@@ -144,6 +144,7 @@ function InvoicesDataTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
+        initialPageSize={invoicesTableState.pageSize}
         manualPagination={true}
         pagesCount={pagination.pagesCount}
         autoResetSortBy={false}

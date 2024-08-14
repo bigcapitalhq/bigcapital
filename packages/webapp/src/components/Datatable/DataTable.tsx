@@ -60,7 +60,7 @@ export function DataTable(props) {
 
     // Pagination props.
     initialPageIndex = 0,
-    initialPageSize = 10,
+    initialPageSize = 20,
 
     updateDebounceTime = 200,
     selectionColumnWidth = 42,

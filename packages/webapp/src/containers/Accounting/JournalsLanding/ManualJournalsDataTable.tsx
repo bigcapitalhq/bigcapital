@@ -125,8 +125,9 @@ function ManualJournalsDataTable({
         loading={isManualJournalsLoading}
         headerLoading={isManualJournalsLoading}
         progressBarLoading={isManualJournalsFetching}
-        pagesCount={pagination.pagesCount}
         pagination={true}
+        initialPageSize={manualJournalsTableState.pageSize}
+        pagesCount={pagination.pagesCount}
         autoResetSortBy={false}
         autoResetPage={false}
         TableLoadingRenderer={TableSkeletonRows}

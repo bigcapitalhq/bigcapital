@@ -17,6 +17,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withSettings from '@/containers/Settings/withSettings';
+import withItems from './withItems';
 
 import { useItemsListContext } from './ItemsListProvider';
 import { useItemsTableColumns, ItemsActionMenuList } from './components';
@@ -42,6 +43,9 @@ function ItemsDataTable({
 
   // #withSettings
   itemsTableSize,
+
+  // #withItems
+  itemsTableState,
 
   // #ownProps
   tableProps,
@@ -137,6 +141,7 @@ function ItemsDataTable({
         sticky={true}
         rowClassNames={rowClassNames}
         pagination={true}
+        initialPageSize={itemsTableState.pageSize}
         manualSortBy={true}
         manualPagination={true}
         pagesCount={pagination.pagesCount}
@@ -174,4 +179,5 @@ export default compose(
   withSettings(({ itemsSettings }) => ({
     itemsTableSize: itemsSettings.tableSize,
   })),
+  withItems(({ itemsTableState }) => ({  itemsTableState }))
 )(ItemsDataTable);
