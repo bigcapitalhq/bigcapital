@@ -150,6 +150,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "Champetaman",
+      "name": "Camilo Oviedo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/64604272?v=4",
+      "profile": "https://www.camilooviedo.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
