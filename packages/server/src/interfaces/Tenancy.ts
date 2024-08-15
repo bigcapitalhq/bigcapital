@@ -51,5 +51,4 @@ export interface ISystemService {
   cache();
   repositories();
   knex();
-  dbManager();
 }
