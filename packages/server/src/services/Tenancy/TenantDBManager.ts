@@ -1,17 +1,15 @@
 import { Container } from 'typedi';
-import Knex from 'knex';
+import { Knex, knex } from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
 import { tenantKnexConfig, tenantSeedConfig } from '@/config/knexConfig';
 import config from '@/config';
 import { ITenant, ITenantDBManager } from '@/interfaces';
 import SystemService from '@/services/Tenancy/SystemService';
 import { TenantDBAlreadyExists } from '@/exceptions';
+import { sanitizeDatabaseName } from '@/utils/sanitizers';
 
 export default class TenantDBManager implements ITenantDBManager {
   static knexCache: { [key: string]: Knex } = {};
-
-  // System database manager.
-  dbManager: any;
 
   // System knex instance.
   sysKnex: Knex;
@@ -23,7 +21,6 @@ export default class TenantDBManager implements ITenantDBManager {
   constructor() {
     const systemService = Container.get(SystemService);
 
-    this.dbManager = systemService.dbManager();
     this.sysKnex = systemService.knex();
   }
 
@@ -32,7 +29,9 @@ export default class TenantDBManager implements ITenantDBManager {
    * @return {string}
    */
   private getDatabaseName(tenant: ITenant) {
-    return `${config.tenant.db_name_prefix}${tenant.organizationId}`;
+    return sanitizeDatabaseName(
+      `${config.tenant.db_name_prefix}${tenant.organizationId}`
+    );
   }
 
   /**
@@ -59,7 +58,9 @@ export default class TenantDBManager implements ITenantDBManager {
     await this.throwErrorIfTenantDBExists(tenant);
 
     const databaseName = this.getDatabaseName(tenant);
-    await this.dbManager.createDb(databaseName);
+    await this.sysKnex.raw(
+      `CREATE DATABASE ${databaseName} DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci`
+    );
   }
 
   /**
@@ -72,7 +73,6 @@ export default class TenantDBManager implements ITenantDBManager {
     if (!isExists) {
       return;
     }
-
     await this.dropDatabase(tenant);
   }
 
@@ -83,7 +83,7 @@ export default class TenantDBManager implements ITenantDBManager {
   public async dropDatabase(tenant: ITenant) {
     const databaseName = this.getDatabaseName(tenant);
 
-    await this.dbManager.dropDb(databaseName);
+    await this.sysKnex.raw(`DROP DATABASE IF EXISTS ${databaseName}`);
   }
 
   /**
@@ -118,7 +118,7 @@ export default class TenantDBManager implements ITenantDBManager {
     let knexInstance = TenantDBManager.knexCache[key];
 
     if (!knexInstance) {
-      knexInstance = Knex({
+      knexInstance = knex({
         ...tenantKnexConfig(tenant),
         ...knexSnakeCaseMappers({ upperCase: true }),
       });

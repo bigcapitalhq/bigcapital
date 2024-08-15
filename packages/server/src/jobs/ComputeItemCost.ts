@@ -21,7 +21,7 @@ export default class ComputeItemCostJob {
 
     agenda.define(
       'compute-item-cost',
-      { priority: 'high', concurrency: 1 },
+      { priority: 'high', concurrency: 20 },
       this.handler.bind(this)
     );
     this.agenda.on('start:compute-item-cost', this.onJobStart.bind(this));
