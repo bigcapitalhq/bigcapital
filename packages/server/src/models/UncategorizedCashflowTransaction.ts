@@ -1,6 +1,5 @@
 /* eslint-disable global-require */
-import * as R from 'ramda';
-import { Model, ModelOptions, QueryContext, mixin } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import ModelSettings from './ModelSetting';
 import Account from './Account';

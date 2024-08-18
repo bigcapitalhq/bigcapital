@@ -43,8 +43,8 @@ export class AccountsApplication {
 
   /**
    * Creates a new account.
-   * @param   {number} tenantId
-   * @param   {IAccountCreateDTO} accountDTO
+   * @param {number} tenantId
+   * @param {IAccountCreateDTO} accountDTO
    * @returns {Promise<IAccount>}
    */
   public createAccount = (
@@ -108,8 +108,8 @@ export class AccountsApplication {
 
   /**
    * Retrieves the account details.
-   * @param   {number} tenantId
-   * @param   {number} accountId
+   * @param {number} tenantId
+   * @param {number} accountId
    * @returns {Promise<IAccount>}
    */
   public getAccount = (tenantId: number, accountId: number) => {

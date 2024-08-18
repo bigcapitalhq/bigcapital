@@ -17,6 +17,7 @@ import { TABLES } from '@/constants/tables';
 import withSettings from '@/containers/Settings/withSettings';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withBankingActions } from '../withBankingActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
@@ -26,7 +27,6 @@ import { useUncategorizeTransaction } from '@/hooks/query';
 import { handleCashFlowTransactionType } from './utils';
 
 import { compose } from '@/utils';
-import { withBankingActions } from '../withBankingActions';
 
 /**
  * Account transactions data table.

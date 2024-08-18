@@ -23,24 +23,8 @@ export class DeleteUncategorizedTransactionsOnAccountDeleting {
   public attach(bus) {
     bus.subscribe(
       events.accounts.onDelete,
-      this.handleDeleteBankRulesOnAccountDeleting.bind(this),
-    )
-    bus.subscribe(
-      events.accounts.onDelete,
-      this.handleDeleteUncategorizedTransactions.bind(this)
+      this.handleDeleteBankRulesOnAccountDeleting.bind(this)
     );
-  }
-
-  /**
-   * Handles delete the uncategorized transactions.
-   * @param {IAccountEventDeletePayload} payload -
-   */
-  private async handleDeleteUncategorizedTransactions({ tenantId, oldAccount, trx }: IAccountEventDeletePayload) {
-    const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
-
-    await UncategorizedCashflowTransaction.query(trx)
-      .where('accountId', oldAccount.id)
-      .delete();
   }
 
   /**
@@ -48,21 +32,47 @@ export class DeleteUncategorizedTransactionsOnAccountDeleting {
    * associated to the deleted bank account.
    * @param {IAccountEventDeletePayload}
    */
-  private async handleDeleteBankRulesOnAccountDeleting({ tenantId, oldAccount, trx }: IAccountEventDeletePayload) {
+  private async handleDeleteBankRulesOnAccountDeleting({
+    tenantId,
+    oldAccount,
+    trx,
+  }: IAccountEventDeletePayload) {
     const knex = this.tenancy.knex(tenantId);
-    const { BankRule, UncategorizedCashflowTransaction, MatchedBankTransaction, RecognizedBankTransaction } = this.tenancy.models(tenantId);
+    const {
+      BankRule,
+      UncategorizedCashflowTransaction,
+      MatchedBankTransaction,
+      RecognizedBankTransaction,
+    } = this.tenancy.models(tenantId);
 
-    const foundAssociatedRules = await BankRule.query(trx).where('applyIfAccountId', oldAccount.id);
-    const foundAssociatedRulesIds = foundAssociatedRules.map(rule => rule.id);
+    const foundAssociatedRules = await BankRule.query(trx).where(
+      'applyIfAccountId',
+      oldAccount.id
+    );
+    const foundAssociatedRulesIds = foundAssociatedRules.map((rule) => rule.id);
 
     await initialize(knex, [
       UncategorizedCashflowTransaction,
       RecognizedBankTransaction,
       MatchedBankTransaction,
     ]);
+    // Revert the recognized transactions of the given bank rules.
+    await this.revertRecognizedTransactins.revertRecognizedTransactions(
+      tenantId,
+      foundAssociatedRulesIds,
+      null,
+      trx
+    );
+    // Delete the associated uncategorized transactions.
+    await UncategorizedCashflowTransaction.query(trx)
+      .where('accountId', oldAccount.id)
+      .delete();
 
-    await this.revertRecognizedTransactins.revertRecognizedTransactions(tenantId, foundAssociatedRulesIds, null, trx)
-
-    await this.deleteBankRules.deleteBankRules(tenantId, foundAssociatedRulesIds);
+    // Delete the given bank rules.
+    await this.deleteBankRules.deleteBankRules(
+      tenantId,
+      foundAssociatedRulesIds,
+      trx
+    );
   }
 }
