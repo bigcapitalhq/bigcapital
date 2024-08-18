@@ -115,6 +115,7 @@ import { DecrementUncategorizedTransactionOnExclude } from '@/services/Banking/E
 import { DecrementUncategorizedTransactionOnCategorize } from '@/services/Cashflow/subscribers/DecrementUncategorizedTransactionOnCategorize';
 import { DisconnectPlaidItemOnAccountDeleted } from '@/services/Banking/BankAccounts/events/DisconnectPlaidItemOnAccountDeleted';
 import { LoopsEventsSubscriber } from '@/services/Loops/LoopsEventsSubscriber';
+import { DeleteUncategorizedTransactionsOnAccountDeleting } from '@/services/Banking/BankAccounts/events/DeleteUncategorizedTransactionsOnAccountDeleting';
 
 export default () => {
   return new EventPublisher();
@@ -277,6 +278,7 @@ export const susbcribers = () => {
     // Plaid
     RecognizeSyncedBankTranasctions,
     DisconnectPlaidItemOnAccountDeleted,
+    DeleteUncategorizedTransactionsOnAccountDeleting,
 
     // Loops
     LoopsEventsSubscriber

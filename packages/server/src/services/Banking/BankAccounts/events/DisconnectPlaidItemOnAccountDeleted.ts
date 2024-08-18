@@ -51,6 +51,7 @@ export class DisconnectPlaidItemOnAccountDeleted {
       .findOne('plaidItemId', oldAccount.plaidItemId)
       .delete();
 
+    // Remove Plaid item once the transaction resolve.
     if (oldPlaidItem) {
       const plaidInstance = PlaidClientWrapper.getClient();
 

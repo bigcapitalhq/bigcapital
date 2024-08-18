@@ -208,11 +208,16 @@ function AccountTransactionsActionsBar({
       bankAccountId: accountId,
     });
   };
-
   // Handles uncategorize the categorized transactions in bulk.
   const handleUncategorizeCategorizedBulkBtnClick = () => {
     openAlert('uncategorize-transactions-bulk', {
       uncategorizeTransactionsIds: categorizedTransactionsSelected,
+    });
+  };
+  // Handles the delete account button click.
+  const handleDeleteAccountClick = () => {
+    openAlert('account-delete', {
+      accountId,
     });
   };
 
@@ -364,9 +369,19 @@ function AccountTransactionsActionsBar({
 
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
 
+              <MenuDivider />
               <If condition={isSyncingOwner && isFeedsActive}>
-                <MenuItem onClick={handleDisconnectClick} text={'Disconnect'} />
+                <MenuItem
+                  intent={Intent.DANGER}
+                  onClick={handleDisconnectClick}
+                  text={'Disconnect'}
+                />
               </If>
+              <MenuItem
+                intent={Intent.DANGER}
+                onClick={handleDeleteAccountClick}
+                text={'Delete'}
+              />
             </Menu>
           }
         >
