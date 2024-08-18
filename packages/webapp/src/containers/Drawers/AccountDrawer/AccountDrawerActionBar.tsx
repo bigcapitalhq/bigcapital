@@ -6,6 +6,11 @@ import {
   NavbarGroup,
   Intent,
   NavbarDivider,
+  Popover,
+  Menu,
+  MenuItem,
+  PopoverInteractionKind,
+  Position,
 } from '@blueprintjs/core';
 import {
   DashboardActionsBar,
@@ -23,6 +28,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 import { compose, safeCallback } from '@/utils';
+import { CLASSES } from '@/constants';
 
 /**
  * Account drawer action bar.
@@ -56,6 +62,14 @@ function AccountDrawerActionBar({
   const onDeleteAccount = () => {
     openAlert('account-delete', { accountId: account.id });
   };
+  // Handle inactivate button click.
+  const handleInactivateBtnClick = () => {
+    openAlert('account-inactivate', { accountId: account.id });
+  };
+  // Handle activate button click.
+  const handleActivateBtnClick = () => {
+    openAlert('account-activate', { accountId: account.id });
+  };
 
   return (
     <DashboardActionsBar>
@@ -85,6 +99,43 @@ function AccountDrawerActionBar({
             onClick={safeCallback(onDeleteAccount)}
           />
         </Can>
+        {!account.active && (
+          <>
+            <NavbarDivider />
+            <Button
+              className={CLASSES.MINIMAL}
+              text={'Activate'}
+              intent={Intent.SUCCESS}
+              onClick={handleActivateBtnClick}
+            />
+          </>
+        )}
+        {!!account.active && (
+          <>
+            <NavbarDivider />
+            <Popover
+              minimal={true}
+              interactionKind={PopoverInteractionKind.CLICK}
+              position={Position.BOTTOM_LEFT}
+              modifiers={{
+                offset: { offset: '0, 4' },
+              }}
+              content={
+                <Menu>
+                  <MenuItem
+                    onClick={handleInactivateBtnClick}
+                    text={'Inactivate'}
+                  />
+                </Menu>
+              }
+            >
+              <Button
+                icon={<Icon icon="more-vert" iconSize={16} />}
+                minimal={true}
+              />
+            </Popover>
+          </>
+        )}
       </NavbarGroup>
     </DashboardActionsBar>
   );
