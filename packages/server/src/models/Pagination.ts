@@ -17,7 +17,12 @@ export default class PaginationQueryBuilder extends Model.QueryBuilder {
     });
   }
 
-  queryAndThrowIfHasRelations = ({ type, message, excludeRelations = [], includedRelations = [] }) => {
+  queryAndThrowIfHasRelations = ({
+    type,
+    message,
+    excludeRelations = [],
+    includedRelations = [],
+  }) => {
     const _excludeRelations = castArray(excludeRelations);
     const _includedRelations = castArray(includedRelations);
 
@@ -29,10 +34,17 @@ export default class PaginationQueryBuilder extends Model.QueryBuilder {
         ) !== -1
     );
     const relations = model.secureDeleteRelations || modelRelations;
-    const filteredRelations = !isEmpty(_includedRelations) ?
-      relations.filter(r => _includedRelations.includes(r)) :
-      !isEmpty(_excludeRelations) ? relations.filter(r => !excludeRelations.includes(r)) : relations;
-
+    const filteredByIncluded = relations.filter((r) =>
+      _includedRelations.includes(r)
+    );
+    const filteredByExcluded = relations.filter(
+      (r) => !excludeRelations.includes(r)
+    );
+    const filteredRelations = !isEmpty(_includedRelations)
+      ? filteredByIncluded
+      : !isEmpty(_excludeRelations)
+      ? filteredByExcluded
+      : relations;
 
     this.runAfter((model, query) => {
       const nonEmptyRelations = filteredRelations.filter(

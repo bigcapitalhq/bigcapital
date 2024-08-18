@@ -2,7 +2,6 @@ import { Inject, Service } from 'typedi';
 import { IAccountEventDeletedPayload } from '@/interfaces';
 import { PlaidClientWrapper } from '@/lib/Plaid';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
 import events from '@/subscribers/events';
 
 @Service()
@@ -53,16 +52,13 @@ export class DisconnectPlaidItemOnAccountDeleted {
       .delete();
 
     // Remove Plaid item once the transaction resolve.
-    runAfterTransaction(trx, async () => {
-      if (oldPlaidItem) {
-        const plaidInstance = PlaidClientWrapper.getClient();
+    if (oldPlaidItem) {
+      const plaidInstance = PlaidClientWrapper.getClient();
 
-        // Remove the Plaid item.
-        await plaidInstance.itemRemove({
-          access_token: oldPlaidItem.plaidAccessToken,
-        });
-      }
-    })
-
+      // Remove the Plaid item.
+      await plaidInstance.itemRemove({
+        access_token: oldPlaidItem.plaidAccessToken,
+      });
+    }
   }
 }
