@@ -26,7 +26,7 @@ export class DeleteBankRuleSerivce {
    * @param {number} ruleId
    * @returns {Promise<void>}
    */
-  public async deleteBankRule(tenantId: number, ruleId: number): Promise<void> {
+  public async deleteBankRule(tenantId: number, ruleId: number, trx?: Knex.Transaction): Promise<void> {
     const { BankRule, BankRuleCondition } = this.tenancy.models(tenantId);
 
     const oldBankRule = await BankRule.query()
@@ -51,6 +51,6 @@ export class DeleteBankRuleSerivce {
         ruleId,
         trx,
       } as IBankRuleEventDeletedPayload);
-    });
+    }, trx);
   }
 }

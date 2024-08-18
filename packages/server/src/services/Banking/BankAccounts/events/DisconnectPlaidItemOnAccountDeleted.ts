@@ -3,6 +3,7 @@ import { IAccountEventDeletedPayload } from '@/interfaces';
 import { PlaidClientWrapper } from '@/lib/Plaid';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
+import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
 
 @Service()
 export class DisconnectPlaidItemOnAccountDeleted {
@@ -51,13 +52,17 @@ export class DisconnectPlaidItemOnAccountDeleted {
       .findOne('plaidItemId', oldAccount.plaidItemId)
       .delete();
 
-    if (oldPlaidItem) {
-      const plaidInstance = PlaidClientWrapper.getClient();
+    // Remove Plaid item once the transaction resolve.
+    runAfterTransaction(trx, async () => {
+      if (oldPlaidItem) {
+        const plaidInstance = PlaidClientWrapper.getClient();
 
-      // Remove the Plaid item.
-      await plaidInstance.itemRemove({
-        access_token: oldPlaidItem.plaidAccessToken,
-      });
-    }
+        // Remove the Plaid item.
+        await plaidInstance.itemRemove({
+          access_token: oldPlaidItem.plaidAccessToken,
+        });
+      }
+    })
+
   }
 }
