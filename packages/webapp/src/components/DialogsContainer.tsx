@@ -4,7 +4,6 @@ import UserFormDialog from '@/containers/Dialogs/UserFormDialog';
 import ItemCategoryDialog from '@/containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from '@/containers/Dialogs/CurrencyFormDialog';
 import InventoryAdjustmentDialog from '@/containers/Dialogs/InventoryAdjustmentFormDialog';
-import PaymentViaVoucherDialog from '@/containers/Dialogs/PaymentViaVoucherDialog';
 import KeyboardShortcutsDialog from '@/containers/Dialogs/keyboardShortcutsDialog';
 import ContactDuplicateDialog from '@/containers/Dialogs/ContactDuplicateDialog';
 import QuickPaymentReceiveFormDialog from '@/containers/Dialogs/QuickPaymentReceiveFormDialog';
@@ -68,7 +67,6 @@ export default function DialogsContainer() {
       <InventoryAdjustmentDialog
         dialogName={DialogsName.InventoryAdjustmentForm}
       />
-      <PaymentViaVoucherDialog dialogName={DialogsName.PaymentViaVoucherForm} />
       <KeyboardShortcutsDialog dialogName={DialogsName.KeyboardShortcutForm} />
       <ContactDuplicateDialog dialogName={DialogsName.ContactDuplicateForm} />
       <QuickPaymentReceiveFormDialog
