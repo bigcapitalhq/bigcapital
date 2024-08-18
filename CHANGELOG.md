@@ -2,6 +2,27 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.19.4] - 18-08-2024
+
+* fix: Allow multi-lines to statements transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/594
+* feat: Add amount comparators to amount bank rule field by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/595
+* fix: Transaction type and description do not show in general ledger. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/596
+* fix: Refresh accounts and account transactions. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/597
+* fix: Typo payments made by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/598
+* fix: Typo categories list by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/600
+* fix: Autofill the quick created customer/vendor by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/601
+* fix: Remove views tabs from receipts list by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/602
+* fix: Typo payment receive messages by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/599
+* fix: Enhance Dropzone visual of  accept and reject modes by @Champetaman in https://github.com/bigcapitalhq/bigcapital/pull/603
+* fix:  Matching bank transactions should create associate payment transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/606
+* fix: Change Dropzone title and subtitle by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/607
+* fix: Inconsistance page size of paginated data tables by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/604
+* fix: Database connection lost error by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/611
+* fix: Language typos by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/613
+* Fix: Correctly display Date, Published At, and Created At in ExpenseDrawerHeader by @Champetaman in https://github.com/bigcapitalhq/bigcapital/pull/612
+* fix: Delete bank account with uncategorized transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/614
+* feat: activate/inactivate account from drawer details by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/615
+
 ## [v0.18.0] - 10-08-2024
 
 * feat: Bank rules for automated categorization by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/511
