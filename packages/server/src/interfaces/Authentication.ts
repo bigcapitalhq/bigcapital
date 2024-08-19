@@ -7,7 +7,6 @@ export interface IRegisterDTO {
   lastName: string;
   email: string;
   password: string;
-  organizationName: string;
 }
 
 export interface ILoginDTO {

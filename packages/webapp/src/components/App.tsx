@@ -27,7 +27,9 @@ const EmailConfirmation = LazyLoader({
 const RegisterVerify = LazyLoader({
   loader: () => import('@/containers/Authentication/RegisterVerify'),
 });
-
+const OneClickDemoPage = LazyLoader({
+  loader: () => import('@/containers/OneClickDemo/OneClickDemoPage'),
+});
 /**
  * App inner.
  */
@@ -37,6 +39,9 @@ function AppInsider({ history }) {
       <DashboardThemeProvider>
         <Router history={history}>
           <Switch>
+            <Route path={'/one_click_demo'}>
+              <OneClickDemoPage />
+            </Route>
             <Route path={'/auth/register/verify'}>
               <EnsureAuthenticated>
                 <EnsureUserEmailNotVerified>
