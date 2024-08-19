@@ -40,7 +40,9 @@ function AppInsider({ history }) {
         <Router history={history}>
           <Switch>
             <Route path={'/one_click_demo'}>
-              <OneClickDemoPage />
+              <EnsureAuthNotAuthenticated>
+                <OneClickDemoPage />
+              </EnsureAuthNotAuthenticated>
             </Route>
             <Route path={'/auth/register/verify'}>
               <EnsureAuthenticated>

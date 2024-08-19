@@ -16,7 +16,7 @@ import {
 /**
  * Saves the response data to cookies.
  */
-function setAuthLoginCookies(data) {
+export function setAuthLoginCookies(data) {
   setCookie('token', data.token);
   setCookie('authenticated_user_id', data.user.id);
   setCookie('organization_id', data.tenant.organization_id);
