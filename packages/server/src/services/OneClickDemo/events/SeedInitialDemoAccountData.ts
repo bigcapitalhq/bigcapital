@@ -62,19 +62,23 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
       .process(async (SeedDemoAccountSeeder) => {
         const seederInstance = new SeedDemoAccountSeeder();
 
+        // Initialize the seeder sheet file before importing.
         await this.initiateSeederFile(seederInstance.importFileName);
 
+        // Import the given seeder file.
         const importedFile = await this.importApp.import(
           tenantId,
           seederInstance.resource,
           seederInstance.importFileName,
           {}
         );
+        // Mapping the columns with resource fields.
         await this.importApp.mapping(
           tenantId,
           importedFile.import.importId,
           seederInstance.mapping
         );
+        // Commit the imported file.
         await this.importApp.process(tenantId, importedFile.import.importId);
       });
 

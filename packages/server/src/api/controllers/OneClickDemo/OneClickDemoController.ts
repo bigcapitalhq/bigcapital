@@ -1,10 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { Service, Inject } from 'typedi';
+import { body } from 'express-validator';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '@/api/controllers/BaseController';
 import { OneClickDemoApplication } from '@/services/OneClickDemo/OneClickDemoApplication';
-import { reset } from 'colorette';
-import { body } from 'express-validator';
 
 @Service()
 export class OneClickDemoController extends BaseController {
@@ -26,7 +25,6 @@ export class OneClickDemoController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.oneClickSignIn.bind(this))
     );
-
     return router;
   }
 
@@ -50,7 +48,7 @@ export class OneClickDemoController extends BaseController {
   }
 
   /**
-   *
+   * Sign-in to one-click demo account.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
