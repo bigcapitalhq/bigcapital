@@ -5,21 +5,21 @@ import { CreateOneClickDemo } from './CreateOneClickDemo';
 export class OneClickDemoApplication {
   @Inject()
   private createOneClickDemoService: CreateOneClickDemo;
-  
+
   /**
-   *
-   * @returns
+   * Creates one-click demo account.
+   * @returns {Promise<ICreateOneClickDemoPOJO>}
    */
   public createOneClick() {
     return this.createOneClickDemoService.createOneClickDemo();
   }
 
   /**
-   *
-   * @param oneClickDemoId
-   * @returns
+   * Auto-sign-in to created demo account.
+   * @param {string} demoId -
+   * @returns {Promise<IAuthSignInPOJO>}
    */
-  public autoSignIn(oneClickDemoId: string) {
-    return this.createOneClickDemoService.autoSignIn(oneClickDemoId);
+  public autoSignIn(demoId: string) {
+    return this.createOneClickDemoService.autoSignIn(demoId);
   }
 }

@@ -3,9 +3,10 @@ import { faker } from '@faker-js/faker';
 import uniqid from 'uniqid';
 import AuthenticationApplication from '../Authentication/AuthApplication';
 import OrganizationService from '../Organization/OrganizationService';
-import { IAuthSignInPOJO } from '@/interfaces';
 import { OneClickDemo } from '@/system/models/OneclickDemo';
 import { SystemUser } from '@/system/models';
+import { IAuthSignInPOJO } from '@/interfaces';
+import { ICreateOneClickDemoPOJO } from './interfaces';
 
 @Service()
 export class CreateOneClickDemo {
@@ -53,8 +54,9 @@ export class CreateOneClickDemo {
   /**
    * Sign-in automicatlly using the demo id one creating an account finish.
    * @param {string} oneClickDemoId -
+   * @returns {Promise<IAuthSignInPOJO>}
    */
-  async autoSignIn(oneClickDemoId: string) {
+  async autoSignIn(oneClickDemoId: string): Promise<IAuthSignInPOJO> {
     const foundOneclickDemo = await OneClickDemo.query()
       .findOne('key', oneClickDemoId)
       .throwIfNotFound();
@@ -66,14 +68,7 @@ export class CreateOneClickDemo {
     const password = '123123123';
 
     const signedIn = await this.authApp.signIn(email, password);
-    
+
     return signedIn;
   }
-}
-
-interface ICreateOneClickDemoPOJO {
-  email: string;
-  demoId: string;
-  signedIn: IAuthSignInPOJO;
-  buildJob: any;
 }

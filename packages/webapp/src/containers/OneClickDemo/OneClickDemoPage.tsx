@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Button, Intent, ProgressBar, Spinner, Text } from '@blueprintjs/core';
+import { Button, Intent, ProgressBar, Text } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
 import {
   useCreateOneClickDemo,
@@ -14,26 +14,21 @@ export default function OneClickDemoPage() {
     mutateAsync: createOneClickDemo,
     isLoading: isCreateOneClickLoading,
   } = useCreateOneClickDemo();
-  const { mutateAsync: oneClickDemoSignIn } = useOneClickDemoSignin();
+  const {
+    mutateAsync: oneClickDemoSignIn,
+    isLoading: isOneclickDemoSigningIn,
+  } = useOneClickDemoSignin();
   const [buildJobId, setBuildJobId] = useState<string>('');
-  const [demoId, setDemoId] = useState<string>('');
 
-  // Job done state.
+  // Job states.
+  const [demoId, setDemoId] = useState<string>('');
   const [isJobDone, setIsJobDone] = useState<boolean>(false);
 
   const {
-    data: { running, queued, failed, completed },
-    isFetching: isJobFetching,
+    data: { running, completed },
   } = useJob(buildJobId, {
     refetchInterval: 2000,
     enabled: !isJobDone && !!buildJobId,
-    onSuccess: (res) => {
-      if (res.completed) {
-        oneClickDemoSignIn({ demoId }).then((res) => {
-          debugger;
-        });
-      }
-    },
   });
 
   useEffect(() => {
@@ -42,15 +37,25 @@ export default function OneClickDemoPage() {
     }
   }, [completed, setIsJobDone]);
 
+  // One the job done request sign-in using the demo id.
+  useEffect(() => {
+    if (isJobDone) {
+      oneClickDemoSignIn({ demoId }).then((res) => {
+        debugger;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isJobDone]);
+
   const handleCreateAccountBtnClick = () => {
     createOneClickDemo({})
-      .then((res) => {
-        setBuildJobId(res?.data?.data?.build_job?.job_id);
-        setDemoId(res?.data?.data?.demo_id);
+      .then(({ data: { data } }) => {
+        setBuildJobId(data?.build_job?.job_id);
+        setDemoId(data?.demo_id);
       })
       .catch(() => {});
   };
-  const isLoading = running;
+  const isLoading = running || isOneclickDemoSigningIn;
 
   return (
     <Box className={style.root}>
@@ -61,10 +66,17 @@ export default function OneClickDemoPage() {
           {isLoading && (
             <Stack align={'center'} spacing={15}>
               <ProgressBar stripes value={null} className={style.progressBar} />
-              <Text className={style.waitingText}>
-                We're preparing temporary environment for trial, It typically
-                take few seconds. Do not close or refresh the page.
-              </Text>
+              {isOneclickDemoSigningIn && (
+                <Text className={style.waitingText}>
+                  It's signin-in to your demo account, Just a second!
+                </Text>
+              )}
+              {running && (
+                <Text className={style.waitingText}>
+                  We're preparing temporary environment for trial, It typically
+                  take few seconds. Do not close or refresh the page.
+                </Text>
+              )}
             </Stack>
           )}
         </Stack>
@@ -72,7 +84,7 @@ export default function OneClickDemoPage() {
         {!isLoading && (
           <Button
             className={style.oneClickBtn}
-            intent={Intent.PRIMARY}
+            intent={Intent.NONE}
             onClick={handleCreateAccountBtnClick}
             loading={isCreateOneClickLoading}
           >
