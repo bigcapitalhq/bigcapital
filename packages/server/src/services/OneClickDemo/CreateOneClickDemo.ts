@@ -7,6 +7,7 @@ import { OneClickDemo } from '@/system/models/OneclickDemo';
 import { SystemUser } from '@/system/models';
 import { IAuthSignInPOJO } from '@/interfaces';
 import { ICreateOneClickDemoPOJO } from './interfaces';
+import { initalizeTenantServices } from '@/api/middleware/TenantDependencyInjection';
 
 @Service()
 export class CreateOneClickDemo {
@@ -32,6 +33,9 @@ export class CreateOneClickDemo {
     const signedIn = await this.authApp.signIn(email, password);
     const tenantId = signedIn.tenant.id;
     const userId = signedIn.user.id;
+
+    // Injects the given tenant IoC services.
+    await initalizeTenantServices(tenantId);
 
     // Creates a new one-click demo.
     await OneClickDemo.query().insert({ key: demoId, tenantId, userId });

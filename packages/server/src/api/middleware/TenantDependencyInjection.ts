@@ -4,6 +4,7 @@ import { Request } from 'express';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import TenantsManagerService from '@/services/Tenancy/TenantsManager';
 import rtlDetect from 'rtl-detect';
+import { Tenant } from '@/system/models';
 
 export default (req: Request, tenant: ITenant) => {
   const { id: tenantId, organizationId } = tenant;
@@ -16,7 +17,7 @@ export default (req: Request, tenant: ITenant) => {
 
   const tenantContainer = tenantServices.tenantContainer(tenantId);
 
-  tenantContainer.set('i18n', injectI18nUtils(req));
+  tenantContainer.set('i18n', injectI18nUtils());
 
   const knexInstance = tenantServices.knex(tenantId);
   const models = tenantServices.models(tenantId);
@@ -33,14 +34,35 @@ export default (req: Request, tenant: ITenant) => {
 };
 
 export const injectI18nUtils = (req) => {
-  const locale = req.getLocale();
+  const globalI18n = Container.get('i18n');
+  const locale = globalI18n.getLocale();
   const direction = rtlDetect.getLangDir(locale);
 
   return {
     locale,
-    __: req.__,
+    __: globalI18n.__,
     direction,
     isRtl: direction === 'rtl',
     isLtr: direction === 'ltr',
   };
+};
+
+export const initalizeTenantServices = async (tenantId: number) => {
+  const tenant = await Tenant.query()
+    .findById(tenantId)
+    .withGraphFetched('metadata');
+
+  const tenantServices = Container.get(TenancyService);
+  const tenantsManager = Container.get(TenantsManagerService);
+
+  // Initialize the knex instance.
+  tenantsManager.setupKnexInstance(tenant);
+
+  const tenantContainer = tenantServices.tenantContainer(tenantId);
+  tenantContainer.set('i18n', injectI18nUtils());
+
+  tenantServices.knex(tenantId);
+  tenantServices.models(tenantId);
+  tenantServices.repositories(tenantId);
+  tenantServices.cache(tenantId);
 };

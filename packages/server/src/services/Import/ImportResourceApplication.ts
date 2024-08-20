@@ -55,7 +55,7 @@ export class ImportResourceApplication {
    */
   public async mapping(
     tenantId: number,
-    importId: number,
+    importId: string,
     maps: ImportMappingAttr[]
   ) {
     return this.importMappingService.mapping(tenantId, importId, maps);
@@ -77,7 +77,7 @@ export class ImportResourceApplication {
    * @param {number} importId
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
-  public async process(tenantId: number, importId: number) {
+  public async process(tenantId: number, importId: string) {
     return this.importProcessCommit.commit(tenantId, importId);
   }
 

@@ -25,7 +25,7 @@ export class ImportFileProcessCommit {
    */
   public async commit(
     tenantId: number,
-    importId: number
+    importId: string
   ): Promise<ImportFilePreviewPOJO> {
     const knex = this.tenancy.knex(tenantId);
     const trx = await knex.transaction({ isolationLevel: 'read uncommitted' });

@@ -1,0 +1,5 @@
+Item Type,Item Name,Item Code,Sellable,Purchasable,Cost Price,Sell Price,Cost Account,Sell Account,Inventory Account,Sell Description,Purchase Description,Category,Note,Active
+Inventory,"Hettinger, Schumm and Bartoletti",1000,T,T,10000,1000,Cost of Goods Sold,Other Income,Inventory Asset,Description ....,Description ....,sdafasdfsadf,At dolor est non tempore et quisquam.,TRUE
+Inventory,Schmitt Group,1001,T,T,10000,1000,Cost of Goods Sold,Other Income,Inventory Asset,Description ....,Description ....,sdafasdfsadf,Id perspiciatis at adipisci minus accusamus dolor iure dolore.,TRUE
+Inventory,Marks - Carroll,1002,T,T,10000,1000,Cost of Goods Sold,Other Income,Inventory Asset,Description ....,Description ....,sdafasdfsadf,Odio odio minus similique.,TRUE
+Inventory,"VonRueden, Ruecker and Hettinger",1003,T,T,10000,1000,Cost of Goods Sold,Other Income,Inventory Asset,Description ....,Description ....,sdafasdfsadf,Quibusdam dolores illo.,TRUE
