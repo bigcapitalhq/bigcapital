@@ -8,6 +8,10 @@ import { SeedDemoAccountItems } from '../DemoSeeders/SeedDemoItems';
 import { ImportResourceApplication } from '@/services/Import/ImportResourceApplication';
 import { getImportsStoragePath } from '@/services/Import/_utils';
 import { OneClickDemo } from '@/system/models/OneclickDemo';
+import { SeedDemoAccountCustomers } from '../DemoSeeders/SeedDemoCustomers';
+import { SeedDemoAccountVendors } from '../DemoSeeders/SeedDemoVendors';
+import { SeedDemoAccountManualJournals } from '../DemoSeeders/SeedDemoManualJournals';
+import { SeedDemoAccountExpenses } from '../DemoSeeders/SeedDemoExpenses';
 
 export class SeedInitialDemoAccountDataOnOrgBuild {
   @Inject()
@@ -27,7 +31,13 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
    * Demo account seeder.
    */
   get seedDemoAccountSeeders() {
-    return [SeedDemoAccountItems];
+    return [
+      SeedDemoAccountItems,
+      SeedDemoAccountCustomers,
+      SeedDemoAccountVendors,
+      SeedDemoAccountManualJournals,
+      SeedDemoAccountExpenses,
+    ];
   }
 
   /**
@@ -79,8 +89,15 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
           seederInstance.mapping
         );
         // Commit the imported file.
-        await this.importApp.process(tenantId, importedFile.import.importId);
+        const re = await this.importApp.process(
+          tenantId,
+          importedFile.import.importId
+        );
+        console.log(re);
       });
+
+    console.error(results.errors);
+    console.log(results.results);
 
     if (results.errors) {
       throw results.errors;
