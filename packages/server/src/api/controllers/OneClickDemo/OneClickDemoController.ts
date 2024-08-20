@@ -4,7 +4,7 @@ import { body } from 'express-validator';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '@/api/controllers/BaseController';
 import { OneClickDemoApplication } from '@/services/OneClickDemo/OneClickDemoApplication';
-
+import config from '@/config';
 @Service()
 export class OneClickDemoController extends BaseController {
   @Inject()
@@ -16,13 +16,29 @@ export class OneClickDemoController extends BaseController {
   router() {
     const router = Router();
 
-    router.post('/one_click', asyncMiddleware(this.oneClickDemo.bind(this)));
+    // Protects the endpoints if the feature is not enabled.
+    const protectMiddleware = (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) => {
+      // Add your protection logic here
+      if (config.oneClickDemoAccounts) {
+        next();
+      } else {
+        res.status(403).send({ message: 'Forbidden' });
+      }
+    };
+    router.post(
+      '/one_click',
+      protectMiddleware,
+      asyncMiddleware(this.oneClickDemo.bind(this))
+    );
     router.post(
       '/one_click_signin',
-      [
-        body('demo_id').exists(),
-      ],
+      [body('demo_id').exists()],
       this.validationResult,
+      protectMiddleware,
       asyncMiddleware(this.oneClickSignIn.bind(this))
     );
     return router;
