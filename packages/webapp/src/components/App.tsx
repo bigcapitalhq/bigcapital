@@ -20,6 +20,7 @@ import { queryConfig } from '../hooks/query/base';
 import { EnsureUserEmailVerified } from './Guards/EnsureUserEmailVerified';
 import { EnsureAuthNotAuthenticated } from './Guards/EnsureAuthNotAuthenticated';
 import { EnsureUserEmailNotVerified } from './Guards/EnsureUserEmailNotVerified';
+import { EnsureOneClickDemoAccountEnabled } from '@/containers/OneClickDemo/EnsureOneClickDemoAccountEnabled';
 
 const EmailConfirmation = LazyLoader({
   loader: () => import('@/containers/Authentication/EmailConfirmation'),
@@ -40,9 +41,11 @@ function AppInsider({ history }) {
         <Router history={history}>
           <Switch>
             <Route path={'/one_click_demo'}>
-              <EnsureAuthNotAuthenticated>
-                <OneClickDemoPage />
-              </EnsureAuthNotAuthenticated>
+              <EnsureOneClickDemoAccountEnabled>
+                <EnsureAuthNotAuthenticated>
+                  <OneClickDemoPage />
+                </EnsureAuthNotAuthenticated>
+              </EnsureOneClickDemoAccountEnabled>
             </Route>
             <Route path={'/auth/register/verify'}>
               <EnsureAuthenticated>

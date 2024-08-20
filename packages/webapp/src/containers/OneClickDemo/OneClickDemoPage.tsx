@@ -18,10 +18,10 @@ export default function OneClickDemoPage() {
     mutateAsync: oneClickDemoSignIn,
     isLoading: isOneclickDemoSigningIn,
   } = useOneClickDemoSignin();
-  const [buildJobId, setBuildJobId] = useState<string>('');
 
   // Job states.
   const [demoId, setDemoId] = useState<string>('');
+  const [buildJobId, setBuildJobId] = useState<string>('');
   const [isJobDone, setIsJobDone] = useState<boolean>(false);
 
   const {
