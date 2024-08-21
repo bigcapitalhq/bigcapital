@@ -86,6 +86,42 @@ export class ItemsValidators {
   }
 
   /**
+   * Validates income account existance.
+   * @param {number|null} sellable - Detarmines if the item sellable.
+   * @param {number|null} incomeAccountId - Income account id.
+   * @throws {ServiceError(ERRORS.INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM)}
+   */
+  public validateIncomeAccountExistance(
+    sellable?: boolean,
+    incomeAccountId?: number
+  ) {
+    if (sellable && !incomeAccountId) {
+      throw new ServiceError(
+        ERRORS.INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM,
+        'Income account is require with sellable item.'
+      );
+    }
+  }
+
+  /**
+   * Validates the cost account existance.
+   * @param {boolean|null} purchasable - Detarmines if the item purchasble.
+   * @param {number|null} costAccountId - Cost account id.
+   * @throws {ServiceError(ERRORS.COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM)}
+   */
+  public validateCostAccountExistance(
+    purchasable: boolean,
+    costAccountId?: number
+  ) {
+    if (purchasable && !costAccountId) {
+      throw new ServiceError(
+        ERRORS.COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM,
+        'The cost account is required with purchasable item.'
+      );
+    }
+  }
+
+  /**
    * Validate item inventory account existance and type.
    * @param {number} tenantId
    * @param {number} inventoryAccountId
