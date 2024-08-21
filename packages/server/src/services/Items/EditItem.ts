@@ -55,6 +55,11 @@ export class EditItem {
         itemDTO.categoryId
       );
     }
+    // Validate the income account id existance if the item is sellable.
+    this.validators.validateIncomeAccountExistance(
+      itemDTO.sellable,
+      itemDTO.sellAccountId
+    );
     // Validate the sell account existance on the storage.
     if (itemDTO.sellAccountId) {
       await this.validators.validateItemSellAccountExistance(
@@ -62,6 +67,11 @@ export class EditItem {
         itemDTO.sellAccountId
       );
     }
+    // Validate the cost account id existance if the item is purchasable.
+    this.validators.validateCostAccountExistance(
+      itemDTO.purchasable,
+      itemDTO.costAccountId
+    );
     // Validate the cost account existance on the storage.
     if (itemDTO.costAccountId) {
       await this.validators.validateItemCostAccountExistance(

@@ -257,25 +257,25 @@ export default {
       name: 'item.field.sell_price',
       fieldType: 'number',
     },
-    cost_price: {
+    costPrice: {
       name: 'item.field.cost_price',
       fieldType: 'number',
     },
-    costAccount: {
+    costAccountId: {
       name: 'item.field.cost_account',
       fieldType: 'relation',
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       importHint: 'Matches the account name or code.',
     },
-    sellAccount: {
+    sellAccountId: {
       name: 'item.field.sell_account',
       fieldType: 'relation',
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       importHint: 'Matches the account name or code.',
     },
-    inventoryAccount: {
+    inventoryAccountId: {
       name: 'item.field.inventory_account',
       fieldType: 'relation',
       relationModel: 'Account',
