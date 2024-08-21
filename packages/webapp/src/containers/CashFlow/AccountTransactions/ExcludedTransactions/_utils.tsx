@@ -37,12 +37,13 @@ export function useExcludedTransactionsColumns() {
     () => [
       {
         Header: 'Date',
-        accessor: 'formatted_date',
+        accessor: 'formatted_date', 
         width: 110,
       },
       {
         Header: 'Description',
         accessor: descriptionAccessor,
+        textOverview: true,
       },
       {
         Header: 'Payee',
