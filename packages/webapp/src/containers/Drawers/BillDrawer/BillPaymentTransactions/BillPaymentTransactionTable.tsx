@@ -48,7 +48,7 @@ function BillPaymentTransactionTable({
 
   // Handles edit  bill payment transactions.
   const handleEditBillPaymentTransactions = ({ bill_payment_id }) => {
-    history.push(`/payment-mades/${bill_payment_id}/edit`);
+    history.push(`/payments-made/${bill_payment_id}/edit`);
     closeDrawer(DRAWERS.BILL_DETAILS);
   };
 

@@ -1,11 +1,11 @@
 import { Inject, Service } from 'typedi';
+import PromisePool from '@supercharge/promise-pool';
 import events from '@/subscribers/events';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import {
   ICashflowTransactionCategorizedPayload,
   ICashflowTransactionUncategorizedPayload,
 } from '@/interfaces';
-import PromisePool from '@supercharge/promise-pool';
 
 @Service()
 export class DecrementUncategorizedTransactionOnCategorize {
@@ -36,13 +36,17 @@ export class DecrementUncategorizedTransactionOnCategorize {
   public async decrementUnCategorizedTransactionsOnCategorized({
     tenantId,
     uncategorizedTransactions,
-    trx
+    trx,
   }: ICashflowTransactionCategorizedPayload) {
     const { Account } = this.tenancy.models(tenantId);
 
     await PromisePool.withConcurrency(1)
       .for(uncategorizedTransactions)
       .process(async (uncategorizedTransaction) => {
+        // Cannot continue if the transaction is still pending.
+        if (uncategorizedTransaction.isPending) {
+          return;
+        }
         await Account.query(trx)
           .findById(uncategorizedTransaction.accountId)
           .decrement('uncategorizedTransactions', 1);
@@ -56,13 +60,17 @@ export class DecrementUncategorizedTransactionOnCategorize {
   public async incrementUnCategorizedTransactionsOnUncategorized({
     tenantId,
     uncategorizedTransactions,
-    trx
+    trx,
   }: ICashflowTransactionUncategorizedPayload) {
     const { Account } = this.tenancy.models(tenantId);
 
     await PromisePool.withConcurrency(1)
       .for(uncategorizedTransactions)
       .process(async (uncategorizedTransaction) => {
+        // Cannot continue if the transaction is still pending.
+        if (uncategorizedTransaction.isPending) {
+          return;
+        }
         await Account.query(trx)
           .findById(uncategorizedTransaction.accountId)
           .increment('uncategorizedTransactions', 1);
@@ -81,6 +89,9 @@ export class DecrementUncategorizedTransactionOnCategorize {
     const { Account } = this.tenancy.models(tenantId);
 
     if (!uncategorizedTransaction.accountId) return;
+
+    // Cannot continue if the transaction is still pending.
+    if (uncategorizedTransaction.isPending) return;
 
     await Account.query(trx)
       .findById(uncategorizedTransaction.accountId)

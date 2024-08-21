@@ -18,8 +18,4 @@ export default class HasSystemService implements SystemService {
   cache() {
     return this.container('cache');
   }
-
-  dbManager() {
-    return this.container('dbManager');
-  }
 }

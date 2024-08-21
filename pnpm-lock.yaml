@@ -183,14 +183,11 @@ importers:
         specifier: ^8.5.1
         version: 8.5.1
       knex:
-        specifier: ^0.95.15
-        version: 0.95.15(mysql2@1.7.0)(mysql@2.18.1)
+        specifier: ^3.1.0
+        version: 3.1.0(mysql2@1.7.0)(mysql@2.18.1)
       knex-cleaner:
         specifier: ^1.3.0
         version: 1.3.1
-      knex-db-manager:
-        specifier: ^0.6.1
-        version: 0.6.2(knex@0.95.15)
       libphonenumber-js:
         specifier: ^1.9.6
         version: 1.11.1
@@ -256,7 +253,7 @@ importers:
         version: 2.2.0
       objection:
         specifier: ^3.0.0
-        version: 3.1.4(knex@0.95.15)
+        version: 3.1.4(knex@3.1.0)
       objection-filter:
         specifier: ^4.0.1
         version: 4.4.0(objection@3.1.4)
@@ -9507,6 +9504,10 @@ packages:
     resolution: {integrity: sha512-hUewv7oMjCp+wkBv5Rm0v87eJhq4woh5rSR+42YSQJKecCqgIqNkZ6lAlQms/BwHPJA5NKMRlpxPRv0n8HQW6g==}
     dev: false
 
+  /colorette@2.0.19:
+    resolution: {integrity: sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==}
+    dev: false
+
   /colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
 
@@ -9530,6 +9531,11 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       delayed-stream: 1.0.0
+
+  /commander@10.0.1:
+    resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
+    engines: {node: '>=14'}
+    dev: false
 
   /commander@2.15.1:
     resolution: {integrity: sha512-VlfT9F3V0v+jr4yxPc5gg9s62/fIVWsd2Bk2iD435um1NlGMYdVCq+MjcXnhYq2icNOizHr1kK+5TI6H0Hy0ag==}
@@ -13154,7 +13160,6 @@ packages:
 
   /getopts@2.3.0:
     resolution: {integrity: sha512-5eDf9fuSXwxBL6q5HX+dhDj+dslFGWzU5thZ9kNKUkcPtaPdatmUFKwHFrLb/uf/WpA4BHET+AX3Scl56cAjpA==}
-    dev: true
 
   /getpass@0.1.7:
     resolution: {integrity: sha512-0fzj9JxOLfJ+XGLhR8ze3unN0KZCgZwiSSDz168VERjK8Wl8kVSdcu2kspd4s4wtAa1y/qrVRiAA0WclVsu0ng==}
@@ -16477,19 +16482,6 @@ packages:
       lodash: 4.17.21
     dev: false
 
-  /knex-db-manager@0.6.2(knex@0.95.15):
-    resolution: {integrity: sha512-IQ7kmjzT1/V129QasorbVAksY5QOYhtf1i9ExTaOrMa2k8aiViv/IR4n33aBXRK2JwLeHNZMVOJOvM2iP2BYQg==}
-    engines: {node: '>=8.0.0'}
-    deprecated: 'Tests for #88 are failing'
-    peerDependencies:
-      knex: 0.x
-    dependencies:
-      bluebird: 3.7.2
-      glob: 7.2.3
-      knex: 0.95.15(mysql2@1.7.0)(mysql@2.18.1)
-      lodash: 4.17.21
-    dev: false
-
   /knex-factory@0.0.6:
     resolution: {integrity: sha512-K8VAu9E1IZzmJ1XEuH1sGm9SP4vqQgRsE4yRfs7bSMVuVyI8yqbiv3I1J+HvtA//c6yp6EYikSpvtKfR0mi/Og==}
     dependencies:
@@ -16533,6 +16525,54 @@ packages:
       mysql2: 1.7.0
       pg-connection-string: 2.5.0
       rechoir: 0.7.0
+      resolve-from: 5.0.0
+      tarn: 3.0.2
+      tildify: 2.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /knex@3.1.0(mysql2@1.7.0)(mysql@2.18.1):
+    resolution: {integrity: sha512-GLoII6hR0c4ti243gMs5/1Rb3B+AjwMOfjYm97pu0FOQa7JH56hgBxYf5WK2525ceSbBY1cjeZ9yk99GPMB6Kw==}
+    engines: {node: '>=16'}
+    hasBin: true
+    peerDependencies:
+      better-sqlite3: '*'
+      mysql: '*'
+      mysql2: '*'
+      pg: '*'
+      pg-native: '*'
+      sqlite3: '*'
+      tedious: '*'
+    peerDependenciesMeta:
+      better-sqlite3:
+        optional: true
+      mysql:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      pg-native:
+        optional: true
+      sqlite3:
+        optional: true
+      tedious:
+        optional: true
+    dependencies:
+      colorette: 2.0.19
+      commander: 10.0.1
+      debug: 4.3.4(supports-color@5.5.0)
+      escalade: 3.1.2
+      esm: 3.2.25
+      get-package-type: 0.1.0
+      getopts: 2.3.0
+      interpret: 2.2.0
+      lodash: 4.17.21
+      mysql: 2.18.1
+      mysql2: 1.7.0
+      pg-connection-string: 2.6.2
+      rechoir: 0.8.0
       resolve-from: 5.0.0
       tarn: 3.0.2
       tildify: 2.0.0
@@ -18788,7 +18828,7 @@ packages:
     dependencies:
       debug: 4.3.4(supports-color@5.5.0)
       lodash: 4.17.21
-      objection: 3.1.4(knex@0.95.15)
+      objection: 3.1.4(knex@3.1.0)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -18798,7 +18838,7 @@ packages:
     peerDependencies:
       objection: '>= 0.8'
     dependencies:
-      objection: 3.1.4(knex@0.95.15)
+      objection: 3.1.4(knex@3.1.0)
     dev: false
 
   /objection-unique@1.2.2(objection@3.1.4):
@@ -18810,10 +18850,10 @@ packages:
       lodash.castarray: 4.4.0
       lodash.compact: 3.0.1
       lodash.isempty: 4.4.0
-      objection: 3.1.4(knex@0.95.15)
+      objection: 3.1.4(knex@3.1.0)
     dev: false
 
-  /objection@3.1.4(knex@0.95.15):
+  /objection@3.1.4(knex@3.1.0):
     resolution: {integrity: sha512-BI1YQ18JicfoODgCdKxmw4W8f24/e9hCEQpOTux0xmyd8hOidOzDd1WopOMxqxo7FA+Jfw8XTfZIUaqDnS7r0g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -18822,7 +18862,7 @@ packages:
       ajv: 8.13.0
       ajv-formats: 2.1.1(ajv@8.13.0)
       db-errors: 0.2.3
-      knex: 0.95.15(mysql2@1.7.0)(mysql@2.18.1)
+      knex: 3.1.0(mysql2@1.7.0)(mysql@2.18.1)
     dev: false
 
   /oblivious-set@1.0.0:
@@ -19436,6 +19476,10 @@ packages:
 
   /pg-connection-string@2.5.0:
     resolution: {integrity: sha512-r5o/V/ORTA6TmUnyWZR9nCj1klXCO2CEKNRlVuJptZe85QuhFayC7WeMic7ndayT5IRIR0S0xFxFi2ousartlQ==}
+    dev: false
+
+  /pg-connection-string@2.6.2:
+    resolution: {integrity: sha512-ch6OwaeaPYcova4kKZ15sbJ2hKb/VP48ZD2gE7i1J+L4MspCtBMAx8nMgz7bksc7IojCIIWuEhHibSMFH8m8oA==}
     dev: false
 
   /picocolors@0.2.1:
@@ -22064,6 +22108,13 @@ packages:
     engines: {node: '>= 0.10'}
     dependencies:
       resolve: 1.22.8
+
+  /rechoir@0.8.0:
+    resolution: {integrity: sha512-/vxpCXddiX8NGfGO/mTafwjq4aFa/71pvamip0++IQk3zG8cbCj0fifNPrjjF1XMXUne91jL9OoxmdykoEtifQ==}
+    engines: {node: '>= 10.13.0'}
+    dependencies:
+      resolve: 1.22.8
+    dev: false
 
   /recursive-readdir@2.2.2:
     resolution: {integrity: sha512-nRCcW9Sj7NuZwa2XvH9co8NPeXUBhZP7CRKJtU+cS6PW9FpCIFoI5ib0NT1ZrbNuPoRy0ylyCaUL8Gih4LSyFg==}

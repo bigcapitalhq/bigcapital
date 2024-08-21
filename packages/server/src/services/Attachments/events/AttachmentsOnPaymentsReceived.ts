@@ -1,10 +1,10 @@
 import { Inject, Service } from 'typedi';
 import { isEmpty } from 'lodash';
 import {
-  IPaymentReceiveCreatedPayload,
-  IPaymentReceiveCreatingPayload,
-  IPaymentReceiveDeletingPayload,
-  IPaymentReceiveEditedPayload,
+  IPaymentReceivedCreatedPayload,
+  IPaymentReceivedCreatingPayload,
+  IPaymentReceivedDeletingPayload,
+  IPaymentReceivedEditedPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
 import { LinkAttachment } from '../LinkAttachment';
@@ -50,13 +50,13 @@ export class AttachmentsOnPaymentsReceived {
 
   /**
    * Validates the attachment keys on creating payment.
-   * @param {IPaymentReceiveCreatingPayload}
+   * @param {IPaymentReceivedCreatingPayload}
    * @returns {Promise<void>}
    */
   private async validateAttachmentsOnPaymentCreate({
     paymentReceiveDTO,
     tenantId,
-  }: IPaymentReceiveCreatingPayload): Promise<void> {
+  }: IPaymentReceivedCreatingPayload): Promise<void> {
     if (isEmpty(paymentReceiveDTO.attachments)) {
       return;
     }
@@ -67,7 +67,7 @@ export class AttachmentsOnPaymentsReceived {
 
   /**
    * Handles linking the attachments of the created payment.
-   * @param {IPaymentReceiveCreatedPayload}
+   * @param {IPaymentReceivedCreatedPayload}
    * @returns {Promise<void>}
    */
   private async handleAttachmentsOnPaymentCreated({
@@ -75,7 +75,7 @@ export class AttachmentsOnPaymentsReceived {
     paymentReceiveDTO,
     paymentReceive,
     trx,
-  }: IPaymentReceiveCreatedPayload): Promise<void> {
+  }: IPaymentReceivedCreatedPayload): Promise<void> {
     if (isEmpty(paymentReceiveDTO.attachments)) return;
 
     const keys = paymentReceiveDTO.attachments?.map(
@@ -92,14 +92,14 @@ export class AttachmentsOnPaymentsReceived {
 
   /**
    * Handles unlinking all the unpresented keys of the edited payment.
-   * @param {IPaymentReceiveEditedPayload}
+   * @param {IPaymentReceivedEditedPayload}
    */
   private async handleUnlinkUnpresentedKeysOnPaymentEdited({
     tenantId,
     paymentReceiveDTO,
     oldPaymentReceive,
     trx,
-  }: IPaymentReceiveEditedPayload) {
+  }: IPaymentReceivedEditedPayload) {
     const keys = paymentReceiveDTO.attachments?.map(
       (attachment) => attachment.key
     );
@@ -114,7 +114,7 @@ export class AttachmentsOnPaymentsReceived {
 
   /**
    * Handles linking all the presented keys of the edited payment.
-   * @param {IPaymentReceiveEditedPayload}
+   * @param {IPaymentReceivedEditedPayload}
    * @returns {Promise<void>}
    */
   private async handleLinkPresentedKeysOnPaymentEdited({
@@ -122,7 +122,7 @@ export class AttachmentsOnPaymentsReceived {
     paymentReceiveDTO,
     oldPaymentReceive,
     trx,
-  }: IPaymentReceiveEditedPayload) {
+  }: IPaymentReceivedEditedPayload) {
     if (isEmpty(paymentReceiveDTO.attachments)) return;
 
     const keys = paymentReceiveDTO.attachments?.map(
@@ -146,7 +146,7 @@ export class AttachmentsOnPaymentsReceived {
     tenantId,
     oldPaymentReceive,
     trx,
-  }: IPaymentReceiveDeletingPayload) {
+  }: IPaymentReceivedDeletingPayload) {
     await this.unlinkAttachmentService.unlinkAllModelKeys(
       tenantId,
       'PaymentReceive',

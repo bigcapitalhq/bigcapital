@@ -48,6 +48,13 @@
     &__content {
       text-transform: capitalize;
     }
+
+    &.detail-item--multilines{
+
+      .detail-item__content{
+        white-space: pre-line;
+      }
+    }
   }
 
   + .details-menu{

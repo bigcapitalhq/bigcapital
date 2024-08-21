@@ -71,7 +71,7 @@ function VendorDetailsActionsBar({
   };
 
   const handleNewPaymentClick = () => {
-    history.push('/payment-mades/new');
+    history.push('/payments-made/new');
     closeDrawer(DRAWERS.VENDOR_DETAILS);
   };
 

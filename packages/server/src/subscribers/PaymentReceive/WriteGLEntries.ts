@@ -1,16 +1,16 @@
 import { Inject, Service } from 'typedi';
 import {
-  IPaymentReceiveCreatedPayload,
-  IPaymentReceiveDeletedPayload,
-  IPaymentReceiveEditedPayload,
+  IPaymentReceivedCreatedPayload,
+  IPaymentReceivedDeletedPayload,
+  IPaymentReceivedEditedPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
-import { PaymentReceiveGLEntries } from '@/services/Sales/PaymentReceives/PaymentReceiveGLEntries';
+import { PaymentReceivedGLEntries } from '@/services/Sales/PaymentReceived/PaymentReceivedGLEntries';
 
 @Service()
 export default class PaymentReceivesWriteGLEntriesSubscriber {
   @Inject()
-  private paymentReceiveGLEntries: PaymentReceiveGLEntries;
+  private paymentReceiveGLEntries: PaymentReceivedGLEntries;
 
   /**
    * Attaches events with handlers.
@@ -37,7 +37,7 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
     tenantId,
     paymentReceiveId,
     trx,
-  }: IPaymentReceiveCreatedPayload) => {
+  }: IPaymentReceivedCreatedPayload) => {
     await this.paymentReceiveGLEntries.writePaymentGLEntries(
       tenantId,
       paymentReceiveId,
@@ -52,7 +52,7 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
     tenantId,
     paymentReceive,
     trx,
-  }: IPaymentReceiveEditedPayload) => {
+  }: IPaymentReceivedEditedPayload) => {
     await this.paymentReceiveGLEntries.rewritePaymentGLEntries(
       tenantId,
       paymentReceive.id,
@@ -67,7 +67,7 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
     tenantId,
     paymentReceiveId,
     trx,
-  }: IPaymentReceiveDeletedPayload) => {
+  }: IPaymentReceivedDeletedPayload) => {
     await this.paymentReceiveGLEntries.revertPaymentGLEntries(
       tenantId,
       paymentReceiveId,

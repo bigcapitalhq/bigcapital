@@ -74,7 +74,7 @@ export const SidebarMenu = [
                 },
               },
               {
-                text: <T id={'category_list'} />,
+                text: <T id={'categories_list'} />,
                 href: '/items/categories',
                 type: ISidebarMenuItemType.Link,
                 permission: {
@@ -179,8 +179,8 @@ export const SidebarMenu = [
             type: ISidebarMenuItemType.Link,
           },
           {
-            text: <T id={'sidebar.payment_receives'} />,
-            href: '/payment-receives',
+            text: <T id={'sidebar.payments_received'} />,
+            href: '/payments-received',
             type: ISidebarMenuItemType.Link,
             permission: {
               subject: AbilitySubject.PaymentReceive,
@@ -226,8 +226,8 @@ export const SidebarMenu = [
             type: ISidebarMenuItemType.Link,
           },
           {
-            text: <T id={'sidebar.new_payment_receive'} />,
-            href: '/payment-receives/new',
+            text: <T id={'sidebar.new_payment_received'} />,
+            href: '/payment-received/new',
             type: ISidebarMenuItemType.Link,
             permission: {
               subject: AbilitySubject.PaymentReceive,
@@ -265,8 +265,8 @@ export const SidebarMenu = [
             type: ISidebarMenuItemType.Link,
           },
           {
-            text: <T id={'payment_mades'} />,
-            href: '/payment-mades',
+            text: <T id={'payments_made'} />,
+            href: '/payments-made',
             type: ISidebarMenuItemType.Link,
             permission: {
               subject: AbilitySubject.PaymentMade,
@@ -299,7 +299,7 @@ export const SidebarMenu = [
           },
           {
             text: <T id={'sidebar.new_payment_made'} />,
-            href: '/payment-mades/new',
+            href: '/payments-made/new',
             type: ISidebarMenuItemType.Link,
             permission: {
               subject: AbilitySubject.PaymentMade,

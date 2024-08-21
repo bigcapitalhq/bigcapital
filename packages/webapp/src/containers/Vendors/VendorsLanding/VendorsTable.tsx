@@ -137,6 +137,7 @@ function VendorsTable({
         expandable={false}
         sticky={true}
         pagination={true}
+        initialPageSize={vendorsTableState.pageSize}
         manualSortBy={true}
         pagesCount={pagination.pagesCount}
         autoResetSortBy={false}

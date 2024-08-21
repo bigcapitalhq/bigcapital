@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import { ValidationChain, check, param, query } from 'express-validator';
+import { ValidationChain, body, check, param, query } from 'express-validator';
 import { Router, Request, Response, NextFunction } from 'express';
 import { omit } from 'lodash';
 import BaseController from '../BaseController';
@@ -41,6 +41,16 @@ export default class NewCashflowTransactionController extends BaseController {
       this.newTransactionValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.newCashflowTransaction),
+      this.catchServiceErrors
+    );
+    router.post(
+      '/transactions/uncategorize/bulk',
+      [
+        body('ids').isArray({ min: 1 }),
+        body('ids.*').exists().isNumeric().toInt(),
+      ],
+      this.validationResult,
+      this.uncategorizeBulkTransactions.bind(this),
       this.catchServiceErrors
     );
     router.post(
@@ -179,6 +189,34 @@ export default class NewCashflowTransactionController extends BaseController {
         cashflowTransactionId
       );
       return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Uncategorize the given transactions in bulk.
+   * @param {Request<{}>} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Promise<Response | null>}
+   */
+  private uncategorizeBulkTransactions = async (
+    req: Request<{}>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { ids: uncategorizedTransactionIds } = this.matchedBodyData(req);
+
+    try {
+      await this.cashflowApplication.uncategorizeTransactions(
+        tenantId,
+        uncategorizedTransactionIds
+      );
+      return res.status(200).send({
+        message: 'The given transactions have been uncategorized successfully.',
+      });
     } catch (error) {
       next(error);
     }

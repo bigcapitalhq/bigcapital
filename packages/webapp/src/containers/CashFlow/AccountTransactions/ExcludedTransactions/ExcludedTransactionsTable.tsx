@@ -34,7 +34,11 @@ function ExcludedTransactionsTableRoot({
   // #withBankingActions
   setExcludedTransactionsSelected,
 }: ExcludeTransactionsTableProps) {
-  const { excludedBankTransactions } = useExcludedTransactionsBoot();
+  const {
+    excludedBankTransactions,
+    isExcludedTransactionsLoading,
+    isExcludedTransactionsFetching,
+  } = useExcludedTransactionsBoot();
   const { mutateAsync: unexcludeBankTransaction } =
     useUnexcludeUncategorizedTransaction();
 
@@ -79,8 +83,9 @@ function ExcludedTransactionsTableRoot({
       columns={columns}
       data={excludedBankTransactions}
       sticky={true}
-      loading={false}
-      headerLoading={false}
+      loading={isExcludedTransactionsLoading}
+      headerLoading={isExcludedTransactionsLoading}
+      progressBarLoading={isExcludedTransactionsFetching}
       expandColumnSpace={1}
       expandToggleColumn={2}
       selectionColumnWidth={45}

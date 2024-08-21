@@ -47,6 +47,7 @@ export class EditBankRuleService {
 
     const oldBankRule = await BankRule.query()
       .findById(ruleId)
+      .withGraphFetched('conditions')
       .throwIfNotFound();
 
     const tranformDTO = this.transformDTO(editRuleDTO);
@@ -64,15 +65,15 @@ export class EditBankRuleService {
         } as IBankRuleEventEditingPayload);
 
         // Updates the given bank rule.
-        await BankRule.query(trx).upsertGraphAndFetch({
+        const bankRule = await BankRule.query(trx).upsertGraphAndFetch({
           ...tranformDTO,
           id: ruleId,
         });
-
         // Triggers `onBankRuleEdited` event.
         await this.eventPublisher.emitAsync(events.bankRules.onEdited, {
           tenantId,
           oldBankRule,
+          bankRule,
           ruleId,
           editRuleDTO,
           trx,

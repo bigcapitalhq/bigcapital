@@ -34,4 +34,4 @@
 // import 'services/Sales/SaleInvoiceWriteoffSubscriber';
 // import 'subscribers/SaleInvoices/SendSmsNotificationToCustomer';
 // import 'subscribers/SaleReceipt/SendNotificationToCustomer';
-// import 'services/Sales/PaymentReceives/PaymentReceiveSmsSubscriber';
+// import 'services/Sales/PaymentReceived/PaymentReceiveSmsSubscriber';

@@ -17,15 +17,16 @@ import { TABLES } from '@/constants/tables';
 import withSettings from '@/containers/Settings/withSettings';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withBankingActions } from '../withBankingActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
 import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { useUncategorizeTransaction } from '@/hooks/query';
 import { handleCashFlowTransactionType } from './utils';
 
 import { compose } from '@/utils';
-import { useUncategorizeTransaction } from '@/hooks/query';
 
 /**
  * Account transactions data table.
@@ -39,13 +40,19 @@ function AccountTransactionsDataTable({
 
   // #withDrawerActions
   openDrawer,
+
+  // #withBankingActions
+  setCategorizedTransactionsSelected,
 }) {
   // Retrieve table columns.
   const columns = useAccountTransactionsColumns();
 
   // Retrieve list context.
-  const { cashflowTransactions, isCashFlowTransactionsLoading } =
-    useAccountTransactionsAllContext();
+  const {
+    cashflowTransactions,
+    isCashFlowTransactionsLoading,
+    isCashFlowTransactionsFetching,
+  } = useAccountTransactionsAllContext();
 
   const { mutateAsync: uncategorizeTransaction } = useUncategorizeTransaction();
   const { mutateAsync: unmatchTransaction } =
@@ -97,6 +104,15 @@ function AccountTransactionsDataTable({
       });
   };
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = (selected) => {
+    const selectedIds = selected
+      ?.filter((row) => row.original.uncategorized_transaction_id)
+      ?.map((row) => row.original.uncategorized_transaction_id);
+
+    setCategorizedTransactionsSelected(selectedIds);
+  };
+
   return (
     <CashflowTransactionsTable
       noInitialFetch={true}
@@ -105,6 +121,7 @@ function AccountTransactionsDataTable({
       sticky={true}
       loading={isCashFlowTransactionsLoading}
       headerLoading={isCashFlowTransactionsLoading}
+      progressBarLoading={isCashFlowTransactionsFetching}
       expandColumnSpace={1}
       expandToggleColumn={2}
       selectionColumnWidth={45}
@@ -119,6 +136,8 @@ function AccountTransactionsDataTable({
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
+      selectionColumn={true}
+      onSelectedRowsChange={handleSelectedRowsChange}
       noResults={<T id={'cash_flow.account_transactions.no_results'} />}
       className="table-constrant"
       payload={{
@@ -136,6 +155,7 @@ export default compose(
   })),
   withAlertsActions,
   withDrawerActions,
+  withBankingActions,
 )(AccountTransactionsDataTable);
 
 const DashboardConstrantTable = styled(DataTable)`

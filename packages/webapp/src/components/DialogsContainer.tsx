@@ -4,7 +4,6 @@ import UserFormDialog from '@/containers/Dialogs/UserFormDialog';
 import ItemCategoryDialog from '@/containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from '@/containers/Dialogs/CurrencyFormDialog';
 import InventoryAdjustmentDialog from '@/containers/Dialogs/InventoryAdjustmentFormDialog';
-import PaymentViaVoucherDialog from '@/containers/Dialogs/PaymentViaVoucherDialog';
 import KeyboardShortcutsDialog from '@/containers/Dialogs/keyboardShortcutsDialog';
 import ContactDuplicateDialog from '@/containers/Dialogs/ContactDuplicateDialog';
 import QuickPaymentReceiveFormDialog from '@/containers/Dialogs/QuickPaymentReceiveFormDialog';
@@ -49,7 +48,7 @@ import InvoiceExchangeRateChangeDialog from '@/containers/Sales/Invoices/Invoice
 import InvoiceMailDialog from '@/containers/Sales/Invoices/InvoiceMailDialog/InvoiceMailDialog';
 import EstimateMailDialog from '@/containers/Sales/Estimates/EstimateMailDialog/EstimateMailDialog';
 import ReceiptMailDialog from '@/containers/Sales/Receipts/ReceiptMailDialog/ReceiptMailDialog';
-import PaymentMailDialog from '@/containers/Sales/PaymentReceives/PaymentMailDialog/PaymentMailDialog';
+import PaymentMailDialog from '@/containers/Sales/PaymentsReceived/PaymentMailDialog/PaymentMailDialog';
 import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
 import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
 import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
@@ -68,7 +67,6 @@ export default function DialogsContainer() {
       <InventoryAdjustmentDialog
         dialogName={DialogsName.InventoryAdjustmentForm}
       />
-      <PaymentViaVoucherDialog dialogName={DialogsName.PaymentViaVoucherForm} />
       <KeyboardShortcutsDialog dialogName={DialogsName.KeyboardShortcutForm} />
       <ContactDuplicateDialog dialogName={DialogsName.ContactDuplicateForm} />
       <QuickPaymentReceiveFormDialog

@@ -27,7 +27,7 @@ export const accountNameAccessor = (account) => {
 export const handleDeleteErrors = (errors) => {
   if (errors.find((e) => e.type === 'ACCOUNT.PREDEFINED')) {
     AppToaster.show({
-      message: intl.get('you_could_not_delete_predefined_accounts'),
+      message: intl.get('cannot_delete_predefined_accounts'),
       intent: Intent.DANGER,
     });
   }

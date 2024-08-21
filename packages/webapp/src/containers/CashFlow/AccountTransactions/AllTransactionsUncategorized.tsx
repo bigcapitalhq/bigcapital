@@ -54,6 +54,12 @@ const AccountUncategorizedTransactions = lazy(() =>
   ).then((module) => ({ default: module.AccountUncategorizedTransactionsAll })),
 );
 
+const PendingTransactions = lazy(() =>
+  import('./PendingTransactions/PendingTransactions').then((module) => ({
+    default: module.PendingTransactions,
+  })),
+);
+
 /**
  * Switches between the account transactions tables.
  * @returns {React.ReactNode}
@@ -70,6 +76,8 @@ function AccountTransactionsSwitcher() {
     case 'all':
     default:
       return <AccountUncategorizedTransactions />;
+    case 'pending':
+      return <PendingTransactions />;
   }
 }
 

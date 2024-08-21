@@ -14,6 +14,7 @@ import CustomerFormFormik, {
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { useAddAutofillRef } from '@/hooks/state/autofill';
 
 /**
  * Drawer customer form loading wrapper.
@@ -28,9 +29,22 @@ function DrawerCustomerFormLoading({ children }) {
 /**
  * Quick customer form of the drawer.
  */
-function QuickCustomerFormDrawer({ displayName, closeDrawer, customerId }) {
+function QuickCustomerFormDrawer({
+  displayName,
+  autofillRef,
+  closeDrawer,
+  customerId,
+}) {
+  const addAutofillRef = useAddAutofillRef();
+
   // Handle the form submit request success.
-  const handleSubmitSuccess = () => {
+  const handleSubmitSuccess = (values, formArgs, submitPayload, res) => {
+    if (autofillRef) {
+      addAutofillRef(autofillRef, {
+        displayName: values.display_name,
+        customerId: res.id,
+      });
+    }
     closeDrawer(DRAWERS.QUICK_CREATE_CUSTOMER);
   };
   // Handle the form cancel action.
@@ -43,7 +57,7 @@ function QuickCustomerFormDrawer({ displayName, closeDrawer, customerId }) {
       <DrawerCustomerFormLoading>
         <CustomerFormCard>
           <CustomerFormFormik
-            initialValues={{ display_name: displayName }}
+            initialValues={{ first_name: displayName }}
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleCancelForm}
           />

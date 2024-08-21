@@ -130,6 +130,7 @@ function ReceiptsDataTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
+        initialPageSize={receiptTableState.pageSize}
         pagesCount={pagination.pagesCount}
         manualPagination={true}
         autoResetSortBy={false}

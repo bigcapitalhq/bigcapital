@@ -13,10 +13,10 @@ import {
   useAccountTransactionsContext,
 } from './AccountTransactionsProvider';
 import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
-import { AccountTransactionsProgressBar } from './components';
 import { AccountTransactionsFilterTabs } from './AccountTransactionsFilterTabs';
 import { AppContentShell } from '@/components/AppShell';
 import { CategorizeTransactionAside } from '../CategorizeTransactionAside/CategorizeTransactionAside';
+import { AccountTransactionsLoadingBar } from './components';
 import { withBanking } from '../withBanking';
 
 /**
@@ -42,8 +42,8 @@ function AccountTransactionsMain() {
   return (
     <AppContentShell.Main ref={(e) => setScrollableRef(e)}>
       <AccountTransactionsActionsBar />
+      <AccountTransactionsLoadingBar />
       <AccountTransactionsDetailsBar />
-      <AccountTransactionsProgressBar />
 
       <DashboardPageContent>
         <AccountTransactionsFilterTabs />

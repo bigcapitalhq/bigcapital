@@ -123,7 +123,12 @@ function CashflowBankAccount({
           code={account.code}
           balance={!isNull(account.amount) ? account.formatted_amount : '-'}
           type={account.account_type}
-          updatedBeforeText={getUpdatedBeforeText(account.createdAt)}
+          updatedBeforeText={
+            account.last_feeds_updated_from_now
+              ? `Updated ${account.last_feeds_updated_from_now} ago`
+              : ''
+          }
+          uncategorizedTransactionsCount={account.uncategorized_transactions}
         />
       </CashflowAccountAnchor>
     </ContextMenu2>

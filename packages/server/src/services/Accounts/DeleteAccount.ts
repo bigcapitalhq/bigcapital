@@ -73,6 +73,7 @@ export class DeleteAccount {
       .throwIfNotFound()
       .queryAndThrowIfHasRelations({
         type: ERRORS.ACCOUNT_HAS_ASSOCIATED_TRANSACTIONS,
+        excludeRelations: ['uncategorizedTransactions', 'plaidItem']
       });
     // Authorize before delete account.
     await this.authorize(tenantId, accountId, oldAccount);

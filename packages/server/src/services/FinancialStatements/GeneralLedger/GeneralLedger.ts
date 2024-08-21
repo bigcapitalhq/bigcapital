@@ -15,6 +15,7 @@ import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { flatToNestedArray } from '@/utils';
 import Ledger from '@/services/Accounting/Ledger';
 import { calculateRunningBalance } from './_utils';
+import { getTransactionTypeLabel } from '@/utils/transactions-types';
 
 /**
  * General ledger sheet.
@@ -90,11 +91,13 @@ export default class GeneralLedgerSheet extends R.compose(
       date: entry.date,
       dateFormatted: moment(entry.date).format('YYYY MMM DD'),
 
-      transactionNumber: entry.transactionNumber,
-      referenceType: entry.referenceType,
-      referenceId: entry.referenceId,
-      referenceTypeFormatted: this.i18n.__(entry.referenceTypeFormatted),
+      referenceType: entry.transactionType,
+      referenceId: entry.transactionId,
 
+      transactionNumber: entry.transactionNumber,
+      transactionTypeFormatted: this.i18n.__(
+        getTransactionTypeLabel(entry.transactionType, entry.transactionSubType)
+      ),
       contactName: get(contact, 'displayName'),
       contactType: get(contact, 'contactService'),
 

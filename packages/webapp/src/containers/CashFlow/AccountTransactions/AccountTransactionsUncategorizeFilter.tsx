@@ -1,21 +1,13 @@
 // @ts-nocheck
+import { useMemo } from 'react';
 import * as R from 'ramda';
 import * as Yup from 'yup';
-import { useMemo } from 'react';
+import { Form, Formik } from 'formik';
 import { useAppQueryString } from '@/hooks';
-import { Box, FDateInput, FFormGroup, Group, Icon, Stack } from '@/components';
+import { FDateInput, FFormGroup, Group, Icon, Stack } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { TagsControl } from '@/components/TagsControl';
-import {
-  Button,
-  Classes,
-  FormGroup,
-  Intent,
-  Popover,
-  Position,
-} from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
-import { Form, Formik } from 'formik';
+import { Button, FormGroup, Intent, Position } from '@blueprintjs/core';
 
 export function AccountTransactionsUncategorizeFilter() {
   const { bankAccountMetaSummary } = useAccountTransactionsContext();
@@ -25,31 +17,49 @@ export function AccountTransactionsUncategorizeFilter() {
     bankAccountMetaSummary?.totalUncategorizedTransactions;
   const totalRecognized = bankAccountMetaSummary?.totalRecognizedTransactions;
 
+  const totalPending = bankAccountMetaSummary?.totalPendingTransactions;
+
   const handleTabsChange = (value) => {
     setLocationQuery({ uncategorizedFilter: value });
   };
 
+  const options = useMemo(
+    () =>
+      R.when(
+        () => totalPending > 0,
+        R.append({
+          value: 'pending',
+          label: (
+            <>
+              Pending <strong>({totalPending})</strong>
+            </>
+          ),
+        }),
+      )([
+        {
+          value: 'all',
+          label: (
+            <>
+              All <strong>({totalUncategorized})</strong>
+            </>
+          ),
+        },
+        {
+          value: 'recognized',
+          label: (
+            <>
+              Recognized <strong>({totalRecognized})</strong>
+            </>
+          ),
+        },
+      ]),
+    [totalPending, totalRecognized, totalUncategorized],
+  );
+
   return (
     <Group position={'apart'}>
       <TagsControl
-        options={[
-          {
-            value: 'all',
-            label: (
-              <>
-                All <strong>({totalUncategorized})</strong>
-              </>
-            ),
-          },
-          {
-            value: 'recognized',
-            label: (
-              <>
-                Recognized <strong>({totalRecognized})</strong>
-              </>
-            ),
-          },
-        ]}
+        options={options}
         value={locationQuery?.uncategorizedFilter || 'all'}
         onValueChange={handleTabsChange}
       />

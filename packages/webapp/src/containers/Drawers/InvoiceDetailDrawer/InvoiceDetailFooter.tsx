@@ -23,13 +23,16 @@ export function InvoiceDetailFooter() {
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <If condition={invoice.terms_conditions}>
-          <DetailItem label={<T id={'terms_conditions'} />}>
+          <DetailItem label={<T id={'terms_conditions'} />} multiline>
             {invoice.terms_conditions}
           </DetailItem>
         </If>
 
         <If condition={invoice.invoice_message}>
-          <DetailItem label={<T id={'invoice.details.invoice_message'} />}>
+          <DetailItem
+            label={<T id={'invoice.details.invoice_message'} />}
+            multiline
+          >
             {invoice.invoice_message}
           </DetailItem>
         </If>

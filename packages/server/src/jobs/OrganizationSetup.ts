@@ -8,7 +8,7 @@ export default class OrganizationSetupJob {
   constructor(agenda) {
     agenda.define(
       'organization-setup',
-      { priority: 'high', concurrency: 1 },
+      { priority: 'high', concurrency: 20 },
       this.handler
     );
   }

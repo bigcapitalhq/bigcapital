@@ -20,7 +20,10 @@ export function PaymentMadeDetailFooter() {
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <If condition={paymentMade.statement}>
-          <DetailItem label={<T id={'payment_made.details.statement'} />}>
+          <DetailItem
+            label={<T id={'payment_made.details.statement'} />}
+            multiline
+          >
             {paymentMade.statement}
           </DetailItem>
         </If>

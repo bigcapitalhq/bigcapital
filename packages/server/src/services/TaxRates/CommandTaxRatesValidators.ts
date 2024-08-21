@@ -1,9 +1,10 @@
-import { ServiceError } from '@/exceptions';
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
+import { difference } from 'lodash';
+import { ServiceError } from '@/exceptions';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { IItemEntryDTO, ITaxRate } from '@/interfaces';
 import { ERRORS } from './constants';
-import { difference } from 'lodash';
 
 @Service()
 export class CommandTaxRatesValidators {
@@ -44,11 +45,16 @@ export class CommandTaxRatesValidators {
    * Validates the tax code uniquiness.
    * @param {number} tenantId
    * @param {string} taxCode
+   * @param {Knex.Transaction} trx -
    */
-  public async validateTaxCodeUnique(tenantId: number, taxCode: string) {
+  public async validateTaxCodeUnique(
+    tenantId: number,
+    taxCode: string,
+    trx?: Knex.Transaction
+  ) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
-    const foundTaxCode = await TaxRate.query().findOne({ code: taxCode });
+    const foundTaxCode = await TaxRate.query(trx).findOne({ code: taxCode });
 
     if (foundTaxCode) {
       throw new ServiceError(ERRORS.TAX_CODE_NOT_UNIQUE);

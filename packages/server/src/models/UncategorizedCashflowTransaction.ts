@@ -1,9 +1,8 @@
 /* eslint-disable global-require */
 import moment from 'moment';
-import { Model, ModelOptions, QueryContext, mixin } from 'objection';
+import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import ModelSettings from './ModelSetting';
-import Account from './Account';
 import UncategorizedCashflowTransactionMeta from './UncategorizedCashflowTransaction.meta';
 
 export default class UncategorizedCashflowTransaction extends mixin(
@@ -21,6 +20,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
   plaidTransactionId!: string;
   recognizedTransactionId!: number;
   excludedAt: Date;
+  pending: boolean;
 
   /**
    * Table name.
@@ -47,6 +47,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
       'isWithdrawalTransaction',
       'isRecognized',
       'isExcluded',
+      'isPending',
     ];
   }
 
@@ -97,6 +98,14 @@ export default class UncategorizedCashflowTransaction extends mixin(
    */
   public get isExcluded(): boolean {
     return !!this.excludedAt;
+  }
+
+  /**
+   * Detarmines whether the transaction is pending.
+   * @returns {boolean}
+   */
+  public get isPending(): boolean {
+    return !!this.pending;
   }
 
   /**

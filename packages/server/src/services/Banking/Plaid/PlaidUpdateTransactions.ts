@@ -1,10 +1,10 @@
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { PlaidClientWrapper } from '@/lib/Plaid/Plaid';
 import { PlaidSyncDb } from './PlaidSyncDB';
 import { PlaidFetchedTransactionsUpdates } from '@/interfaces';
 import UnitOfWork from '@/services/UnitOfWork';
-import { Knex } from 'knex';
 
 @Service()
 export class PlaidUpdateTransactions {
@@ -19,9 +19,9 @@ export class PlaidUpdateTransactions {
 
   /**
    * Handles sync the Plaid item to Bigcaptial under UOW.
-   * @param {number} tenantId
-   * @param {number} plaidItemId
-   * @returns {Promise<{  addedCount: number; modifiedCount: number; removedCount: number; }>}
+   * @param {number} tenantId - Tenant id.
+   * @param {number} plaidItemId - Plaid item id.
+   * @returns {Promise<{ addedCount: number; modifiedCount: number; removedCount: number; }>}
    */
   public async updateTransactions(tenantId: number, plaidItemId: string) {
     return this.uow.withTransaction(tenantId, (trx: Knex.Transaction) => {
@@ -71,6 +71,12 @@ export class PlaidUpdateTransactions {
       accounts,
       institution,
       item,
+      trx
+    );
+    // Sync removed transactions.
+    await this.plaidSync.syncRemoveTransactions(
+      tenantId,
+      removed?.map((r) => r.transaction_id),
       trx
     );
     // Sync bank account transactions.

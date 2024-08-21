@@ -20,7 +20,8 @@ export function AccountTransactionsFilterTabs() {
   const hasUncategorizedTransx = useMemo(
     () =>
       bankAccountMetaSummary?.totalUncategorizedTransactions > 0 ||
-      bankAccountMetaSummary?.totalExcludedTransactions > 0,
+      bankAccountMetaSummary?.totalExcludedTransactions > 0 ||
+      bankAccountMetaSummary?.totalPendingTransactions > 0,
     [bankAccountMetaSummary],
   );
 

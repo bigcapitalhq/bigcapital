@@ -9,12 +9,13 @@ import { SaleInvoicesExportable } from '../Sales/Invoices/SaleInvoicesExportable
 import { SaleEstimatesExportable } from '../Sales/Estimates/SaleEstimatesExportable';
 import { SaleReceiptsExportable } from '../Sales/Receipts/SaleReceiptsExportable';
 import { BillsExportable } from '../Purchases/Bills/BillsExportable';
-import { PaymentsReceivedExportable } from '../Sales/PaymentReceives/PaymentsReceivedExportable';
+import { PaymentsReceivedExportable } from '../Sales/PaymentReceived/PaymentsReceivedExportable';
 import { BillPaymentExportable } from '../Purchases/BillPayments/BillPaymentExportable';
 import { ManualJournalsExportable } from '../ManualJournals/ManualJournalExportable';
 import { CreditNotesExportable } from '../CreditNotes/CreditNotesExportable';
 import { VendorCreditsExportable } from '../Purchases/VendorCredits/VendorCreditsExportable';
 import { ItemCategoriesExportable } from '../ItemCategories/ItemCategoriesExportable';
+import { TaxRatesExportable } from '../TaxRates/TaxRatesExportable';
 
 @Service()
 export class ExportableResources {
@@ -46,6 +47,7 @@ export class ExportableResources {
     { resource: 'ManualJournal', exportable: ManualJournalsExportable },
     { resource: 'CreditNote', exportable: CreditNotesExportable },
     { resource: 'VendorCredit', exportable: VendorCreditsExportable },
+    { resource: 'TaxRate', exportable: TaxRatesExportable },
   ];
 
   /**

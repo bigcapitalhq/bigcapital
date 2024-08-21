@@ -34,7 +34,12 @@ export class GetRecognizedTransactionsService {
           q.withGraphFetched('recognizedTransaction.assignAccount');
           q.withGraphFetched('recognizedTransaction.bankRule');
           q.whereNotNull('recognizedTransactionId');
+
+          // Exclude the excluded transactions.
           q.modify('notExcluded');
+
+          // Exclude the pending transactions.
+          q.modify('notPending');
 
           if (_query.accountId) {
             q.where('accountId', _query.accountId);
@@ -50,6 +55,9 @@ export class GetRecognizedTransactionsService {
           }
           if (_query.maxAmount) {
             q.modify('maxAmount', _query.maxAmount);
+          }
+          if (_query.accountId) {
+            q.where('accountId', _query.accountId);
           }
         })
         .pagination(_query.page - 1, _query.pageSize);

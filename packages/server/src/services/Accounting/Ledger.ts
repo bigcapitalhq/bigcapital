@@ -249,6 +249,7 @@ export default class Ledger implements ILedger {
 
       transactionId: entry.referenceId,
       transactionType: entry.referenceType,
+      transactionSubType: entry.transactionType,
 
       transactionNumber: entry.transactionNumber,
       referenceNumber: entry.referenceNumber,
@@ -262,6 +263,8 @@ export default class Ledger implements ILedger {
 
       taxRateId: entry.taxRateId,
       taxRate: entry.taxRate,
+
+      note: entry.note,
     };
   }
 

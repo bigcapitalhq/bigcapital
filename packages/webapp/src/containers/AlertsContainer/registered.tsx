@@ -6,9 +6,9 @@ import InventoryAdjustmentsAlerts from '@/containers/InventoryAdjustments/Invent
 import EstimatesAlerts from '@/containers/Sales/Estimates/EstimatesAlerts';
 import InvoicesAlerts from '@/containers/Sales/Invoices/InvoicesAlerts';
 import ReceiptsAlerts from '@/containers/Sales/Receipts/ReceiptsAlerts';
-import PaymentReceiveAlerts from '@/containers/Sales/PaymentReceives/PaymentReceiveAlerts';
+import PaymentsReceivedAlerts from '@/containers/Sales/PaymentsReceived/PaymentsReceivedAlerts';
 import BillsAlerts from '@/containers/Purchases/Bills/BillsLanding/BillsAlerts';
-import PaymentMadesAlerts from '@/containers/Purchases/PaymentMades/PaymentMadesAlerts';
+import PaymentsMadeAlerts from '@/containers/Purchases/PaymentsMade/PaymentsMadeAlerts';
 import CustomersAlerts from '@/containers/Customers/CustomersAlerts';
 import VendorsAlerts from '@/containers/Vendors/VendorsAlerts';
 import ManualJournalsAlerts from '@/containers/Accounting/JournalsLanding/ManualJournalsAlerts';
@@ -38,9 +38,9 @@ export default [
   ...EstimatesAlerts,
   ...InvoicesAlerts,
   ...ReceiptsAlerts,
-  ...PaymentReceiveAlerts,
+  ...PaymentsReceivedAlerts,
   ...BillsAlerts,
-  ...PaymentMadesAlerts,
+  ...PaymentsMadeAlerts,
   ...CustomersAlerts,
   ...VendorsAlerts,
   ...ManualJournalsAlerts,

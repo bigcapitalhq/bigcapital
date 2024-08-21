@@ -1,8 +1,8 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
 import {
-  IPaymentReceiveCreatingPayload,
-  IPaymentReceiveEditingPayload,
+  IPaymentReceivedCreatingPayload,
+  IPaymentReceivedEditingPayload,
 } from '@/interfaces';
 import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
 
@@ -28,12 +28,12 @@ export class PaymentReceiveBranchValidateSubscriber {
 
   /**
    * Validate branch existance on estimate creating.
-   * @param {IPaymentReceiveCreatingPayload} payload
+   * @param {IPaymentReceivedCreatingPayload} payload
    */
   private validateBranchExistanceOnPaymentCreating = async ({
     tenantId,
     paymentReceiveDTO,
-  }: IPaymentReceiveCreatingPayload) => {
+  }: IPaymentReceivedCreatingPayload) => {
     await this.validateBranchExistance.validateTransactionBranchWhenActive(
       tenantId,
       paymentReceiveDTO.branchId
@@ -42,12 +42,12 @@ export class PaymentReceiveBranchValidateSubscriber {
 
   /**
    * Validate branch existance once estimate editing.
-   * @param {IPaymentReceiveEditingPayload} payload
+   * @param {IPaymentReceivedEditingPayload} payload
    */
   private validateBranchExistanceOnPaymentEditing = async ({
     paymentReceiveDTO,
     tenantId,
-  }: IPaymentReceiveEditingPayload) => {
+  }: IPaymentReceivedEditingPayload) => {
     await this.validateBranchExistance.validateTransactionBranchWhenActive(
       tenantId,
       paymentReceiveDTO.branchId

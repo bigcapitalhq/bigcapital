@@ -3,7 +3,6 @@ import LoggerInstance from '@/loaders/logger';
 import agendaFactory from '@/loaders/agenda';
 import SmsClientLoader from '@/loaders/smsClient';
 import mailInstance from '@/loaders/mail';
-import dbManagerFactory from '@/loaders/dbManager';
 import i18n from '@/loaders/i18n';
 import repositoriesLoader from '@/loaders/systemRepositories';
 import Cache from '@/services/Cache';
@@ -16,7 +15,6 @@ export default ({ mongoConnection, knex }) => {
   try {
     const agendaInstance = agendaFactory({ mongoConnection });
     const smsClientInstance = SmsClientLoader(config.easySMSGateway.api_key);
-    const dbManager = dbManagerFactory(knex);
     const cacheInstance = new Cache();
 
     Container.set('logger', LoggerInstance);
@@ -24,7 +22,6 @@ export default ({ mongoConnection, knex }) => {
     Container.set('SMSClient', smsClientInstance);
     Container.set('mail', mailInstance);
   
-    Container.set('dbManager', dbManager);
     LoggerInstance.info(
       '[DI] Database manager has been injected into container.'
     );

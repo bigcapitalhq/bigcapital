@@ -26,31 +26,39 @@ export class DeleteBankRuleSerivce {
    * @param {number} ruleId
    * @returns {Promise<void>}
    */
-  public async deleteBankRule(tenantId: number, ruleId: number): Promise<void> {
+  public async deleteBankRule(
+    tenantId: number,
+    ruleId: number,
+    trx?: Knex.Transaction
+  ): Promise<void> {
     const { BankRule, BankRuleCondition } = this.tenancy.models(tenantId);
 
     const oldBankRule = await BankRule.query()
       .findById(ruleId)
       .throwIfNotFound();
 
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onBankRuleDeleting` event.
-      await this.eventPublisher.emitAsync(events.bankRules.onDeleting, {
-        tenantId,
-        oldBankRule,
-        ruleId,
-        trx,
-      } as IBankRuleEventDeletingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onBankRuleDeleting` event.
+        await this.eventPublisher.emitAsync(events.bankRules.onDeleting, {
+          tenantId,
+          oldBankRule,
+          ruleId,
+          trx,
+        } as IBankRuleEventDeletingPayload);
 
-      await BankRuleCondition.query(trx).where('ruleId', ruleId).delete();
-      await BankRule.query(trx).findById(ruleId).delete();
+        await BankRuleCondition.query(trx).where('ruleId', ruleId).delete()
+        await BankRule.query(trx).findById(ruleId).delete();
 
-      // Triggers `onBankRuleDeleted` event.
-      await await this.eventPublisher.emitAsync(events.bankRules.onDeleted, {
-        tenantId,
-        ruleId,
-        trx,
-      } as IBankRuleEventDeletedPayload);
-    });
+        // Triggers `onBankRuleDeleted` event.
+        await await this.eventPublisher.emitAsync(events.bankRules.onDeleted, {
+          tenantId,
+          ruleId,
+          trx,
+        } as IBankRuleEventDeletedPayload);
+      },
+      trx
+    );
   }
 }

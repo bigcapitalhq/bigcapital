@@ -12,7 +12,7 @@ import { DRAWERS } from '@/constants/drawers';
 /**
  * Quick create/edit vendor drawer.
  */
-export default function QuickWriteVendorDrawerContent({ displayName }) {
+export default function QuickWriteVendorDrawerContent({ displayName, autofillRef }) {
   return (
     <React.Fragment>
       <DrawerHeaderContent
@@ -21,7 +21,7 @@ export default function QuickWriteVendorDrawerContent({ displayName }) {
 
       />
       <DrawerBody>
-        <QuickVendorFormDrawer displayName={displayName} />
+        <QuickVendorFormDrawer displayName={displayName} autofillRef={autofillRef} />
       </DrawerBody>
     </React.Fragment>
   );

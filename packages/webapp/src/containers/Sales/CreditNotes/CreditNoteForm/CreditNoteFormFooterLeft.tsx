@@ -15,6 +15,8 @@ export function CreditNoteFormFooterLeft() {
         <FEditableText
           name={'note'}
           placeholder={intl.get('credit_note.label_customer_note.placeholder')}
+          multiline
+          fastField
         />
       </CreditNoteMsgFormGroup>
       {/* --------- Terms and conditions --------- */}
@@ -27,6 +29,8 @@ export function CreditNoteFormFooterLeft() {
           placeholder={intl.get(
             'credit_note.label_terms_and_conditions.placeholder',
           )}
+          multiline
+          fastField
         />
       </TermsConditsFormGroup>
     </React.Fragment>

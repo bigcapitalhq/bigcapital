@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import { castArray, omit, pick } from 'lodash';
 import { isEmpty } from 'lodash';
 import { ServiceError } from '@/exceptions';
 
@@ -16,7 +17,15 @@ export default class PaginationQueryBuilder extends Model.QueryBuilder {
     });
   }
 
-  queryAndThrowIfHasRelations = ({ type, message }) => {
+  queryAndThrowIfHasRelations = ({
+    type,
+    message,
+    excludeRelations = [],
+    includedRelations = [],
+  }) => {
+    const _excludeRelations = castArray(excludeRelations);
+    const _includedRelations = castArray(includedRelations);
+
     const model = this.modelClass();
     const modelRelations = Object.keys(model.relationMappings).filter(
       (relation) =>
@@ -25,9 +34,20 @@ export default class PaginationQueryBuilder extends Model.QueryBuilder {
         ) !== -1
     );
     const relations = model.secureDeleteRelations || modelRelations;
+    const filteredByIncluded = relations.filter((r) =>
+      _includedRelations.includes(r)
+    );
+    const filteredByExcluded = relations.filter(
+      (r) => !excludeRelations.includes(r)
+    );
+    const filteredRelations = !isEmpty(_includedRelations)
+      ? filteredByIncluded
+      : !isEmpty(_excludeRelations)
+      ? filteredByExcluded
+      : relations;
 
     this.runAfter((model, query) => {
-      const nonEmptyRelations = relations.filter(
+      const nonEmptyRelations = filteredRelations.filter(
         (relation) => !isEmpty(model[relation])
       );
       if (nonEmptyRelations.length > 0) {
@@ -36,7 +56,7 @@ export default class PaginationQueryBuilder extends Model.QueryBuilder {
       return model;
     });
     return this.onBuild((query) => {
-      relations.forEach((relation) => {
+      filteredRelations.forEach((relation) => {
         query.withGraphFetched(`${relation}(selectId)`).modifiers({
           selectId(builder) {
             builder.select('id');

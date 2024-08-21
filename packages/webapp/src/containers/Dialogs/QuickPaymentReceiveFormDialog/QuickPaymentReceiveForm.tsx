@@ -70,7 +70,7 @@ function QuickPaymentReceiveForm({
     // Handle request response success.
     const onSaved = (response) => {
       AppToaster.show({
-        message: intl.get('the_payment_receive_transaction_has_been_created'),
+        message: intl.get('the_payment_received_transaction_has_been_created'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);

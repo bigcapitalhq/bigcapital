@@ -6,7 +6,7 @@ import SaleNotifyBySms from '../SaleNotifyBySms';
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import {
   ICustomer,
-  IPaymentReceiveSmsDetails,
+  IPaymentReceivedSmsDetails,
   ISaleEstimate,
   SMS_NOTIFICATION_KEY,
 } from '@/interfaces';
@@ -173,12 +173,12 @@ export class SaleEstimateNotifyBySms {
    * Retrieve the SMS details of the given payment receive transaction.
    * @param {number} tenantId
    * @param {number} saleEstimateId
-   * @returns {Promise<IPaymentReceiveSmsDetails>}
+   * @returns {Promise<IPaymentReceivedSmsDetails>}
    */
   public smsDetails = async (
     tenantId: number,
     saleEstimateId: number
-  ): Promise<IPaymentReceiveSmsDetails> => {
+  ): Promise<IPaymentReceivedSmsDetails> => {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve the sale invoice or throw not found service error.

@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { isEqual, omit } from 'lodash';
 import events from '@/subscribers/events';
 import {
   IBankRuleEventCreatedPayload,
@@ -55,10 +56,22 @@ export class TriggerRecognizedTransactions {
   private async recognizedTransactionsOnRuleEdited({
     tenantId,
     editRuleDTO,
+    oldBankRule,
+    bankRule,
     ruleId,
   }: IBankRuleEventEditedPayload) {
     const payload = { tenantId, ruleId };
 
+    // Cannot continue if the new and old bank rule values are the same,
+    // after excluding `createdAt` and `updatedAt` dates.
+    if (
+      isEqual(
+        omit(bankRule, ['createdAt', 'updatedAt']),
+        omit(oldBankRule, ['createdAt', 'updatedAt'])
+      )
+    ) {
+      return;
+    }
     await this.agenda.now(
       'rerecognize-uncategorized-transactions-job',
       payload

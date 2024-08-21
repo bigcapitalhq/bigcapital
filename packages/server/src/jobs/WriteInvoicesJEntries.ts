@@ -15,7 +15,7 @@ export default class WriteInvoicesJournalEntries {
 
     agenda.define(
       eventName,
-      { priority: 'normal', concurrency: 1 },
+      { priority: 'normal', concurrency: 20 },
       this.handler.bind(this)
     );
     agenda.on(`complete:${eventName}`, this.onJobCompleted.bind(this));

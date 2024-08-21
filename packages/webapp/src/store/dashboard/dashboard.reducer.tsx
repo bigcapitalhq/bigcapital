@@ -1,10 +1,9 @@
 // @ts-nocheck
 import { createReducer } from '@reduxjs/toolkit';
-import { isUndefined, isNumber } from 'lodash';
+import { isUndefined, isNumber, omit } from 'lodash';
 import t from '@/store/types';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-
 
 const initialState = {
   pageTitle: '',
@@ -23,6 +22,7 @@ const initialState = {
   appIntlIsLoading: true,
   sidebarSubmenu: { isOpen: false, submenuId: null },
   features: {},
+  autofill: {},
 };
 
 const STORAGE_KEY = 'bigcapital:dashboard';
@@ -142,6 +142,18 @@ const reducerInstance = createReducer(initialState, {
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);
+  },
+
+  [t.ADD_AUTOFILL_REF]: (state, action) => {
+    state.autofill[action.payload.ref] = action.payload.payload || null;
+  },
+
+  [t.REMOVE_AUTOFILL_REF]: (state, action) => {
+    state.autofill = omit(state.autofill, [action.payload.ref]);
+  },
+
+  [t.RESET_AUTOFILL_REF]: (state, action) => {
+    state.autofill = {};
   },
 });
 
