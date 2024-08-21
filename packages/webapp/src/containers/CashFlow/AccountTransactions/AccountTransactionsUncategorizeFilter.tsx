@@ -1,13 +1,13 @@
 // @ts-nocheck
 import { useMemo } from 'react';
 import * as R from 'ramda';
-import * as Yup from 'yup';
-import { Form, Formik } from 'formik';
 import { useAppQueryString } from '@/hooks';
-import { FDateInput, FFormGroup, Group, Icon, Stack } from '@/components';
+import { Group, Icon } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { TagsControl } from '@/components/TagsControl';
-import { Button, FormGroup, Intent, Position } from '@blueprintjs/core';
+import { Button, Classes, Position } from '@blueprintjs/core';
+import { AccountTransactionsDateFilterForm } from './AccountTransactionsDateFilter';
+import { Popover2 } from '@blueprintjs/popover2';
 
 export function AccountTransactionsUncategorizeFilter() {
   const { bankAccountMetaSummary } = useAccountTransactionsContext();
@@ -58,11 +58,20 @@ export function AccountTransactionsUncategorizeFilter() {
 
   return (
     <Group position={'apart'}>
-      <TagsControl
-        options={options}
-        value={locationQuery?.uncategorizedFilter || 'all'}
-        onValueChange={handleTabsChange}
-      />
+      <Group>
+        <TagsControl
+          options={options}
+          value={locationQuery?.uncategorizedFilter || 'all'}
+          onValueChange={handleTabsChange}
+        />
+        <Popover2
+          content={<UncategorizedTransactionsDateFilter />}
+          position={Position.RIGHT}
+          popoverClassName={Classes.POPOVER_CONTENT_SIZING}
+        >
+          <Button icon={<Icon icon={'date-range'} />}>Date Filter</Button>
+        </Popover2>
+      </Group>
       <TagsControl
         options={[{ value: 'excluded', label: 'Excluded' }]}
         value={locationQuery?.uncategorizedFilter || 'all'}
@@ -72,69 +81,14 @@ export function AccountTransactionsUncategorizeFilter() {
   );
 }
 
-const initialValues = {
-  fromDate: '',
-  toDate: '',
-};
-
-const validationSchema = Yup.object().shape({
-  fromDate: Yup.date()
-    .nullable()
-    .required('From Date is required')
-    .max(Yup.ref('toDate'), 'From Date cannot be after To Date'),
-  toDate: Yup.date()
-    .nullable()
-    .required('To Date is required')
-    .min(Yup.ref('fromDate'), 'To Date cannot be before From Date'),
-});
-
-function UncategorizedTransactionsDateFilter() {
+export const UncategorizedTransactionsDateFilter = () => {
+  const initialValues = {};
   const handleSubmit = () => {};
 
   return (
-    <Formik
+    <AccountTransactionsDateFilterForm
       initialValues={initialValues}
       onSubmit={handleSubmit}
-      validationSchema={validationSchema}
-    >
-      <Form>
-        <Stack>
-          <Group>
-            <FFormGroup name={'fromDate'} label={'From Date'}>
-              <FDateInput
-                name={'fromDate'}
-                popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date) => date.toLocaleDateString()}
-                parseDate={(str) => new Date(str)}
-                inputProps={{
-                  fill: true,
-                  leftElement: <Icon icon={'date-range'} />,
-                }}
-                style={{ marginBottom: 0 }}
-              />
-            </FFormGroup>
-
-            <FormGroup label={'To Date'} name={'toDate'}>
-              <FDateInput
-                name={'toDate'}
-                popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date) => date.toLocaleDateString()}
-                parseDate={(str) => new Date(str)}
-                inputProps={{
-                  fill: true,
-                  leftElement: <Icon icon={'date-range'} />,
-                }}
-                style={{ marginBottom: 0 }}
-              />
-            </FormGroup>
-          </Group>
-
-          <Group spacing={10}>
-            <Button intent={Intent.PRIMARY}>Filter</Button>
-            <Button>Cancel</Button>
-          </Group>
-        </Stack>
-      </Form>
-    </Formik>
+    />
   );
-}
+};
