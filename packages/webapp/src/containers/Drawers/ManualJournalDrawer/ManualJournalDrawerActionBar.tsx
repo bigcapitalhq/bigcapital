@@ -13,6 +13,7 @@ import {
   DrawerActionsBar,
   Can,
   FormattedMessage as T,
+  If,
 } from '@/components';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
@@ -35,7 +36,7 @@ function ManualJournalDrawerActionBar({
   closeDrawer,
 }) {
   const history = useHistory();
-  const { manualJournalId } = useManualJournalDrawerContext();
+  const { manualJournalId, manualJournal } = useManualJournalDrawerContext();
 
   // Handle edit manual journal action.
   const handleEditManualJournal = () => {
@@ -46,6 +47,11 @@ function ManualJournalDrawerActionBar({
   // Handle manual journal delete action.
   const handleDeleteManualJournal = () => {
     openAlert('journal-delete', { manualJournalId });
+  };
+
+  // Handle manual journal publish action.
+  const handlePublishManualJournal = () => {
+    openAlert('journal-publish', { manualJournalId });
   };
 
   return (
@@ -59,6 +65,19 @@ function ManualJournalDrawerActionBar({
             onClick={handleEditManualJournal}
           />
         </Can>
+
+        <If condition={!manualJournal.is_published}>
+          <Can I={ManualJournalAction.Edit} a={AbilitySubject.ManualJournal}>
+            <NavbarDivider />
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon="arrow-to-top" />}
+              text={'Publish'}
+              intent={Intent.SUCCESS}
+              onClick={handlePublishManualJournal}
+            />
+          </Can>
+        </If>
         <Can I={ManualJournalAction.Delete} a={AbilitySubject.ManualJournal}>
           <NavbarDivider />
           <Button
