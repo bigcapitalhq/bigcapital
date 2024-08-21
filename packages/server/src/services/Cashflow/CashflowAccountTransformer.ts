@@ -8,7 +8,12 @@ export class CashflowAccountTransformer extends Transformer {
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
-    return ['formattedAmount'];
+    return [
+      'formattedAmount',
+      'lastFeedsUpdatedAt',
+      'lastFeedsUpdatedAtFormatted',
+      'lastFeedsUpdatedFromNow',
+    ];
   };
 
   /**
@@ -29,7 +34,7 @@ export class CashflowAccountTransformer extends Transformer {
 
   /**
    * Retrieve formatted account amount.
-   * @param   {IAccount} invoice
+   * @param {IAccount} invoice
    * @returns {string}
    */
   protected formattedAmount = (account: IAccount): string => {
@@ -37,4 +42,22 @@ export class CashflowAccountTransformer extends Transformer {
       currencyCode: account.currencyCode,
     });
   };
+
+  /**
+   * Retrieves the last feeds update at formatted date.
+   * @param {IAccount} account
+   * @returns {string}
+   */
+  protected lastFeedsUpdatedAtFormatted(account: IAccount): string {
+    return this.formatDate(account.lastFeedsUpdatedAt);
+  }
+
+  /**
+   * Retrieves the last feeds updated from now.
+   * @param {IAccount} account
+   * @returns {string}
+   */
+  protected lastFeedsUpdatedFromNow(account: IAccount): string {
+    return this.formatDateFromNow(account.lastFeedsUpdatedAt);
+  }
 }
