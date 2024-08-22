@@ -245,4 +245,9 @@ module.exports = {
   loops: {
     apiKey: process.env.LOOPS_API_KEY,
   },
+
+  oneClickDemoAccounts: parseBoolean(
+    process.env.ONE_CLICK_DEMO_ACCOUNTS,
+    false
+  ),
 };

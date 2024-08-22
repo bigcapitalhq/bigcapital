@@ -12,6 +12,8 @@ import { SeedDemoAccountCustomers } from '../DemoSeeders/SeedDemoCustomers';
 import { SeedDemoAccountVendors } from '../DemoSeeders/SeedDemoVendors';
 import { SeedDemoAccountManualJournals } from '../DemoSeeders/SeedDemoManualJournals';
 import { SeedDemoAccountExpenses } from '../DemoSeeders/SeedDemoExpenses';
+import { SeedDemoBankTransactions } from '../DemoSeeders/SeedDemoBankTransactions';
+import { SeedDemoSaleInvoices } from '../DemoSeeders/SeedDemoSaleInvoices';
 
 export class SeedInitialDemoAccountDataOnOrgBuild {
   @Inject()
@@ -36,7 +38,9 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
       SeedDemoAccountCustomers,
       SeedDemoAccountVendors,
       SeedDemoAccountManualJournals,
+      SeedDemoBankTransactions,
       SeedDemoAccountExpenses,
+      SeedDemoSaleInvoices,
     ];
   }
 
@@ -80,7 +84,7 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
           tenantId,
           seederInstance.resource,
           seederInstance.importFileName,
-          {}
+          seederInstance.importParams || {}
         );
         // Mapping the columns with resource fields.
         await this.importApp.mapping(
