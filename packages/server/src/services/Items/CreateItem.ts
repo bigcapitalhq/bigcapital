@@ -43,12 +43,22 @@ export class CreateItem {
         itemDTO.sellAccountId
       );
     }
+    // Validate the income account id existance if the item is sellable.
+    this.validators.validateIncomeAccountExistance(
+      itemDTO.sellable,
+      itemDTO.sellAccountId
+    );
     if (itemDTO.costAccountId) {
       await this.validators.validateItemCostAccountExistance(
         tenantId,
         itemDTO.costAccountId
       );
     }
+    // Validate the cost account id existance if the item is purchasable.
+    this.validators.validateCostAccountExistance(
+      itemDTO.purchasable,
+      itemDTO.costAccountId
+    );
     if (itemDTO.inventoryAccountId) {
       await this.validators.validateItemInventoryAccountExistance(
         tenantId,

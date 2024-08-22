@@ -62,6 +62,7 @@ export function BankAccount({
   balance,
   loading = false,
   updatedBeforeText,
+  uncategorizedTransactionsCount,
   ...restProps
 }) {
   return (
@@ -77,17 +78,19 @@ export function BankAccount({
       </BankAccountHeader>
 
       <BankAccountMeta>
-        {false && (
+        {uncategorizedTransactionsCount > 0 && (
           <BankAccountMetaLine
             title={intl.get('cash_flow.transactions_for_review')}
-            value={'0'}
+            value={uncategorizedTransactionsCount}
             className={clsx({ [Classes.SKELETON]: loading })}
           />
         )}
-        <BankAccountMetaLine
-          title={updatedBeforeText}
-          className={clsx({ [Classes.SKELETON]: loading })}
-        />
+        {updatedBeforeText && (
+          <BankAccountMetaLine
+            title={updatedBeforeText}
+            className={clsx({ [Classes.SKELETON]: loading })}
+          />
+        )}
       </BankAccountMeta>
 
       <BankAccountBalance amount={balance} loading={loading} />

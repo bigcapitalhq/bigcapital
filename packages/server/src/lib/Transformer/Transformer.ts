@@ -164,6 +164,10 @@ export class Transformer {
     return date ? moment(date).format(this.dateFormat) : '';
   }
 
+  protected formatDateFromNow(date){
+    return date ? moment(date).fromNow(true) : '';
+  }
+
   /**
    *
    * @param number
