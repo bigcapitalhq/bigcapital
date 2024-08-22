@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
 import { Container } from 'typedi';
+import { Request, Response, NextFunction } from 'express';
 import SettingsStore from '@/services/Settings/SettingsStore';
 
 export default async (req: Request, res: Response, next: NextFunction) => {

@@ -16,7 +16,7 @@ import {
 import { setAuthLoginCookies } from './authentication';
 import { batch } from 'react-redux';
 
-interface CreateOneClickDemoValues {}
+interface CreateOneClickDemoValues { }
 interface CreateOneClickDemoRes {
   email: string;
   signedIn: any;
@@ -24,7 +24,7 @@ interface CreateOneClickDemoRes {
 }
 
 /**
- *
+ * Creates one-click demo account.
  * @param {UseMutationOptions<CreateOneClickDemoRes, Error, CreateOneClickDemoValues>} props
  * @returns {UseMutationResult<CreateOneClickDemoRes, Error, CreateOneClickDemoValues>}
  */
@@ -41,7 +41,7 @@ export function useCreateOneClickDemo(
   return useMutation<CreateOneClickDemoRes, Error, CreateOneClickDemoValues>(
     () => apiRequest.post(`/demo/one_click`),
     {
-      onSuccess: (res, id) => {},
+      onSuccess: (res, id) => { },
       ...props,
     },
   );
@@ -50,10 +50,10 @@ export function useCreateOneClickDemo(
 interface OneClickSigninDemoValues {
   demoId: string;
 }
-interface OneClickSigninDemoRes {}
+interface OneClickSigninDemoRes { }
 
 /**
- *
+ * Sign-in to the created one-click demo account.
  * @param {UseMutationOptions<OneClickSigninDemoRes, Error, OneClickSigninDemoValues>} props
  * @returns {UseMutationResult<OneClickSigninDemoRes, Error, OneClickSigninDemoValues>}
  */

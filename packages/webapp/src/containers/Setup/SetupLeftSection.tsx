@@ -1,13 +1,12 @@
 // @ts-nocheck
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { Text } from '@blueprintjs/core';
 import { Icon, For, FormattedMessage as T, Stack } from '@/components';
-
 import { getFooterLinks } from '@/constants/footerLinks';
 import { useAuthActions } from '@/hooks/state';
 import style from './SetupLeftSection.module.scss';
-import { Text } from '@blueprintjs/core';
 import { Config } from '@/config';
-import { useHistory } from 'react-router-dom';
 
 /**
  * Footer item link.
