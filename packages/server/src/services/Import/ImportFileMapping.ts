@@ -23,7 +23,7 @@ export class ImportFileMapping {
    */
   public async mapping(
     tenantId: number,
-    importId: number,
+    importId: string,
     maps: ImportMappingAttr[]
   ): Promise<ImportFileMapPOJO> {
     const importFile = await Import.query()

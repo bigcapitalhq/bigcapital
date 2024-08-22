@@ -5,6 +5,7 @@ import { ServiceError } from '@/exceptions';
 import {
   IOrganizationBuildDTO,
   IOrganizationBuildEventPayload,
+  IOrganizationBuiltEventPayload,
   IOrganizationUpdateDTO,
   ISystemUser,
   ITenant,
@@ -17,6 +18,8 @@ import { Tenant } from '@/system/models';
 import OrganizationBaseCurrencyLocking from './OrganizationBaseCurrencyLocking';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from './constants';
+import { initializeTenantSettings } from '@/api/middleware/SettingsMiddleware';
+import { initalizeTenantServices } from '@/api/middleware/TenantDependencyInjection';
 
 @Service()
 export default class OrganizationService {
@@ -62,6 +65,10 @@ export default class OrganizationService {
     // Migrated tenant.
     const migratedTenant = await tenant.$query().withGraphFetched('metadata');
 
+    // Injects the given tenant IoC services.
+    await initalizeTenantServices(tenantId);
+    await initializeTenantSettings(tenantId);
+
     // Creates a tenancy object from given tenant model.
     const tenancyContext =
       this.tenantsManager.getSeedMigrationContext(migratedTenant);
@@ -82,6 +89,11 @@ export default class OrganizationService {
 
     //
     await this.flagTenantDBBatch(tenantId);
+
+    // Triggers the organization built event.
+    await this.eventPublisher.emitAsync(events.organization.built, {
+      tenantId: tenant.id,
+    } as IOrganizationBuiltEventPayload)
   }
 
   /**

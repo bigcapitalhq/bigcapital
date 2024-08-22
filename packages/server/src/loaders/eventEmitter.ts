@@ -116,6 +116,7 @@ import { DecrementUncategorizedTransactionOnCategorize } from '@/services/Cashfl
 import { DisconnectPlaidItemOnAccountDeleted } from '@/services/Banking/BankAccounts/events/DisconnectPlaidItemOnAccountDeleted';
 import { LoopsEventsSubscriber } from '@/services/Loops/LoopsEventsSubscriber';
 import { DeleteUncategorizedTransactionsOnAccountDeleting } from '@/services/Banking/BankAccounts/events/DeleteUncategorizedTransactionsOnAccountDeleting';
+import { SeedInitialDemoAccountDataOnOrgBuild } from '@/services/OneClickDemo/events/SeedInitialDemoAccountData';
 
 export default () => {
   return new EventPublisher();
@@ -282,5 +283,8 @@ export const susbcribers = () => {
 
     // Loops
     LoopsEventsSubscriber
+
+    // Demo Account
+    SeedInitialDemoAccountDataOnOrgBuild
   ];
 };

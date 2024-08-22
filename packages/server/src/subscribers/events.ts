@@ -35,6 +35,8 @@ export default {
    */
   organization: {
     build: 'onOrganizationBuild',
+    built: 'onOrganizationBuilt',
+
     seeded: 'onOrganizationSeeded',
 
     baseCurrencyUpdated: 'onOrganizationBaseCurrencyUpdated',

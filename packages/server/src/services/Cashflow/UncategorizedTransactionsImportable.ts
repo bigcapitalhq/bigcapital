@@ -87,7 +87,7 @@ export class UncategorizedTransactionsImportable extends Importable {
   }
 
   /**
-   * Transformes the import params before storing them.
+   * Transforms the import params before storing them.
    * @param {Record<string, any>} parmas
    */
   public transformParams(parmas: Record<string, any>) {

@@ -44,7 +44,7 @@ export class SaleInvoiceGLEntries {
 
     // Find or create the A/R account.
     const ARAccount = await accountRepository.findOrCreateAccountReceivable(
-      saleInvoice.currencyCode
+      saleInvoice.currencyCode, {}, trx
     );
     // Find or create tax payable account.
     const taxPayableAccount = await accountRepository.findOrCreateTaxPayable(

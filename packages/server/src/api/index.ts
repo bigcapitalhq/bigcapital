@@ -63,6 +63,7 @@ import { BankingController } from './controllers/Banking/BankingController';
 import { Webhooks } from './controllers/Webhooks/Webhooks';
 import { ExportController } from './controllers/Export/ExportController';
 import { AttachmentsController } from './controllers/Attachments/AttachmentsController';
+import { OneClickDemoController } from './controllers/OneClickDemo/OneClickDemoController';
 
 export default () => {
   const app = Router();
@@ -80,6 +81,7 @@ export default () => {
   app.use('/jobs', Container.get(Jobs).router());
   app.use('/account', Container.get(Account).router());
   app.use('/webhooks', Container.get(Webhooks).router());
+  app.use('/demo', Container.get(OneClickDemoController).router())
 
   // - Dashboard routes.
   // ---------------------------

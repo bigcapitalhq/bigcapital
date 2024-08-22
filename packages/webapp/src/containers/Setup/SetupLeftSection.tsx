@@ -1,9 +1,12 @@
 // @ts-nocheck
 import React from 'react';
-import { Icon, For, FormattedMessage as T } from '@/components';
-
+import { useHistory } from 'react-router-dom';
+import { Text } from '@blueprintjs/core';
+import { Icon, For, FormattedMessage as T, Stack } from '@/components';
 import { getFooterLinks } from '@/constants/footerLinks';
 import { useAuthActions } from '@/hooks/state';
+import style from './SetupLeftSection.module.scss';
+import { Config } from '@/config';
 
 /**
  * Footer item link.
@@ -25,8 +28,21 @@ function SetupLeftSectionFooter() {
   // Retrieve the footer links.
   const footerLinks = getFooterLinks();
 
+  const handleDemoBtnClick = () => {
+    window.open(Config.oneClickDemo.demoUrl);
+  };
+
   return (
     <div className={'content__footer'}>
+      {Config.oneClickDemo.demoUrl && (
+        <Stack spacing={16}>
+          <Text className={style.demoButtonLabel}>Not Now?</Text>
+          <button className={style.demoButton} onClick={handleDemoBtnClick}>
+            Try Demo Account
+          </button>
+        </Stack>
+      )}
+
       <div className={'content__links'}>
         <For render={FooterLinkItem} of={footerLinks} />
       </div>

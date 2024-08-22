@@ -37,7 +37,7 @@ export class ImportFileProcess {
    */
   public async import(
     tenantId: number,
-    importId: number,
+    importId: string,
     trx?: Knex.Transaction
   ): Promise<ImportFilePreviewPOJO> {
     const importFile = await Import.query()

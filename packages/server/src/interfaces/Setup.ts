@@ -33,3 +33,7 @@ export interface IOrganizationBuildEventPayload {
   buildDTO: IOrganizationBuildDTO;
   systemUser: ISystemUser;
 }
+
+export interface IOrganizationBuiltEventPayload {
+  tenantId: number;
+}

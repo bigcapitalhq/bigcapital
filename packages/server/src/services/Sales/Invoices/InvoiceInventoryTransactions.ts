@@ -32,7 +32,8 @@ export class InvoiceInventoryTransactions {
     const inventoryEntries =
       await this.itemsEntriesService.filterInventoryEntries(
         tenantId,
-        saleInvoice.entries
+        saleInvoice.entries,
+        trx
       );
     const transaction = {
       transactionId: saleInvoice.id,
