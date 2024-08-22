@@ -2,12 +2,11 @@
 import { useMemo } from 'react';
 import * as R from 'ramda';
 import { useAppQueryString } from '@/hooks';
-import { Group, Icon } from '@/components';
+import { Group, Stack, } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { TagsControl } from '@/components/TagsControl';
-import { Button, Classes, Position } from '@blueprintjs/core';
-import { AccountTransactionsDateFilterForm } from './AccountTransactionsDateFilter';
-import { Popover2 } from '@blueprintjs/popover2';
+import { AccountUncategorizedDateFilter } from './UncategorizedTransactions/AccountUncategorizedDateFilter';
+import { Divider } from '@blueprintjs/core';
 
 export function AccountTransactionsUncategorizeFilter() {
   const { bankAccountMetaSummary } = useAccountTransactionsContext();
@@ -57,21 +56,17 @@ export function AccountTransactionsUncategorizeFilter() {
   );
 
   return (
-    <Group position={'apart'}>
-      <Group>
+    <Group position={'apart'} style={{ marginBottom: 14 }}>
+      <Group align={'stretch'} spacing={10}>
         <TagsControl
           options={options}
           value={locationQuery?.uncategorizedFilter || 'all'}
           onValueChange={handleTabsChange}
         />
-        <Popover2
-          content={<UncategorizedTransactionsDateFilter />}
-          position={Position.RIGHT}
-          popoverClassName={Classes.POPOVER_CONTENT_SIZING}
-        >
-          <Button icon={<Icon icon={'date-range'} />}>Date Filter</Button>
-        </Popover2>
+        <Divider />
+        <AccountUncategorizedDateFilter />
       </Group>
+
       <TagsControl
         options={[{ value: 'excluded', label: 'Excluded' }]}
         value={locationQuery?.uncategorizedFilter || 'all'}
@@ -80,15 +75,3 @@ export function AccountTransactionsUncategorizeFilter() {
     </Group>
   );
 }
-
-export const UncategorizedTransactionsDateFilter = () => {
-  const initialValues = {};
-  const handleSubmit = () => {};
-
-  return (
-    <AccountTransactionsDateFilterForm
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-    />
-  );
-};

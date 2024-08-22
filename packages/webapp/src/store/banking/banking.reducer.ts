@@ -14,6 +14,8 @@ interface StorePlaidState {
   enableMultipleCategorization: boolean;
 
   categorizedTransactionsSelected: Array<number | string>;
+
+  uncategorizedFilter: { fromDate?: string; toDate?: string };
 }
 
 export const PlaidSlice = createSlice({
@@ -31,6 +33,9 @@ export const PlaidSlice = createSlice({
     transactionsToCategorizeSelected: [],
     enableMultipleCategorization: false,
     categorizedTransactionsSelected: [],
+
+    // Filter
+    uncategorizedFilter: {},
   } as StorePlaidState,
   reducers: {
     setPlaidId: (state: StorePlaidState, action: PayloadAction<string>) => {
@@ -199,6 +204,26 @@ export const PlaidSlice = createSlice({
     resetCategorizedTransactionsSelected: (state: StorePlaidState) => {
       state.categorizedTransactionsSelected = [];
     },
+
+    /**
+     * Sets the uncategorized transactions filter.
+     * @param {StorePlaidState} state 
+     * @param {PayloadAction<{ filter: any }>} action 
+     */
+    setUncategorizedTransactionsFilter: (
+      state: StorePlaidState,
+      action: PayloadAction<{ filter: any }>,
+    ) => {
+      state.uncategorizedFilter = action.payload.filter;
+    },
+
+    /**
+     * Resets the uncategorized transactions filter.
+     * @param {StorePlaidState} state 
+     */
+    resetUncategorizedTranasctionsFilter: (state: StorePlaidState) => {
+      state.uncategorizedFilter = {};
+    },
   },
 });
 
@@ -220,6 +245,10 @@ export const {
   enableMultipleCategorization,
   setCategorizedTransactionsSelected,
   resetCategorizedTransactionsSelected,
+
+  // Uncategorized transactions filter.
+  setUncategorizedTransactionsFilter,
+  resetUncategorizedTranasctionsFilter,
 } = PlaidSlice.actions;
 
 export const getPlaidToken = (state: any) => state.plaid.plaidToken;
@@ -234,3 +263,6 @@ export const isMultipleCategorization = (state: any) =>
 
 export const getTransactionsToCategorizeIdsSelected = (state: any) =>
   state.plaid.transactionsToCategorizeSelected;
+
+export const getUncategorizedTransactionsFilter = (state: any) =>
+  state.uncategorizedFilter;

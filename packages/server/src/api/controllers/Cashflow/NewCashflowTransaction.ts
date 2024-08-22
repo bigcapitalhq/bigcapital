@@ -84,6 +84,8 @@ export default class NewCashflowTransactionController extends BaseController {
       param('id').exists().isNumeric().toInt(),
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
+      query('min_date').optional().isISO8601().toDate(),
+      query('max_date').optional().isISO8601().toDate(),
     ];
   }
 
