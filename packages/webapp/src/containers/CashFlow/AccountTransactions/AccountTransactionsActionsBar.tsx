@@ -227,7 +227,7 @@ function AccountTransactionsActionsBar({
         <CashFlowMenuItems
           items={addMoneyInOptions}
           onItemSelect={handleMoneyInFormTransaction}
-          text={<T id={'cash_flow.label.add_money_in'} />}
+          text={<T id={'banking.label.add_money_in'} />}
           buttonProps={{
             icon: <Icon icon={'arrow-downward'} iconSize={20} />,
           }}
@@ -235,7 +235,7 @@ function AccountTransactionsActionsBar({
         <CashFlowMenuItems
           items={addMoneyOutOptions}
           onItemSelect={handlMoneyOutFormTransaction}
-          text={<T id={'cash_flow.label.add_money_out'} />}
+          text={<T id={'banking.label.add_money_out'} />}
           buttonProps={{
             icon: <Icon icon={'arrow-upward'} iconSize={20} />,
           }}

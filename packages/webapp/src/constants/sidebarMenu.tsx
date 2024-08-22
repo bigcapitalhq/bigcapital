@@ -441,12 +441,12 @@ export const SidebarMenu = [
   // # Cashflow
   // ---------------
   {
-    text: <T id={'siebar.cashflow'} />,
+    text: <T id={'sidebar.banking'} />,
     type: ISidebarMenuItemType.Overlay,
     overlayId: ISidebarMenuOverlayIds.Cashflow,
     children: [
       {
-        text: <T id={'siebar.cashflow'} />,
+        text: <T id={'sidebar.banking'} />,
         type: ISidebarMenuItemType.Group,
         children: [
           {

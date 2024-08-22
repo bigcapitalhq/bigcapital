@@ -80,7 +80,7 @@ export function BankAccount({
       <BankAccountMeta>
         {uncategorizedTransactionsCount > 0 && (
           <BankAccountMetaLine
-            title={intl.get('cash_flow.transactions_for_review')}
+            title={intl.get('banking.transactions_for_review')}
             value={uncategorizedTransactionsCount}
             className={clsx({ [Classes.SKELETON]: loading })}
           />
