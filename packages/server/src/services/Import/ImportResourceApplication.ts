@@ -67,7 +67,7 @@ export class ImportResourceApplication {
    * @param {number} importId - Import id.
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
-  public async preview(tenantId: number, importId: number) {
+  public async preview(tenantId: number, importId: string) {
     return this.ImportFilePreviewService.preview(tenantId, importId);
   }
 

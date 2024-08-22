@@ -7,7 +7,9 @@ import { OneClickDemo } from '@/system/models/OneclickDemo';
 import { SystemUser } from '@/system/models';
 import { IAuthSignInPOJO } from '@/interfaces';
 import { ICreateOneClickDemoPOJO } from './interfaces';
-import { initalizeTenantServices } from '@/api/middleware/TenantDependencyInjection';
+import events from '@/subscribers/events';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { defaultDemoOrganizationDTO } from './_constants';
 
 @Service()
 export class CreateOneClickDemo {
@@ -16,6 +18,10 @@ export class CreateOneClickDemo {
 
   @Inject()
   private organizationService: OrganizationService;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
+
 
   /**
    * Creates one-click demo account.
@@ -34,22 +40,12 @@ export class CreateOneClickDemo {
     const tenantId = signedIn.tenant.id;
     const userId = signedIn.user.id;
 
-    // Injects the given tenant IoC services.
-    await initalizeTenantServices(tenantId);
-
     // Creates a new one-click demo.
     await OneClickDemo.query().insert({ key: demoId, tenantId, userId });
 
     const buildJob = await this.organizationService.buildRunJob(
       tenantId,
-      {
-        name: 'BIGCAPITAL, INC',
-        base_currency: 'USD',
-        location: 'US',
-        language: 'en',
-        fiscal_year: 'march',
-        timezone: 'US/Central',
-      },
+      defaultDemoOrganizationDTO,
       signedIn.user
     );
     return { email, demoId, signedIn, buildJob };

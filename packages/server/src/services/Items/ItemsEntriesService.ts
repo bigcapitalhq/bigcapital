@@ -5,6 +5,7 @@ import { ServiceError } from '@/exceptions';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { ItemEntry } from '@/models';
 import { entriesAmountDiff } from 'utils';
+import { Knex } from 'knex';
 
 const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -58,13 +59,14 @@ export default class ItemsEntriesService {
    */
   public async filterInventoryEntries(
     tenantId: number,
-    entries: IItemEntry[]
+    entries: IItemEntry[],
+    trx?: Knex.Transaction
   ): Promise<IItemEntry[]> {
     const { Item } = this.tenancy.models(tenantId);
     const entriesItemsIds = entries.map((e) => e.itemId);
 
     // Retrieve entries inventory items.
-    const inventoryItems = await Item.query()
+    const inventoryItems = await Item.query(trx)
       .whereIn('id', entriesItemsIds)
       .where('type', 'inventory');
 

@@ -1,9 +1,11 @@
 import { Inject } from 'typedi';
 import { promises as fs } from 'fs';
 import path from 'path';
+import uniqid from 'uniqid';
+import { isEmpty } from 'lodash';
 import events from '@/subscribers/events';
 import { PromisePool } from '@supercharge/promise-pool';
-import { IOrganizationBuildEventPayload } from '@/interfaces';
+import { IOrganizationBuiltEventPayload } from '@/interfaces';
 import { SeedDemoAccountItems } from '../DemoSeeders/SeedDemoItems';
 import { ImportResourceApplication } from '@/services/Import/ImportResourceApplication';
 import { getImportsStoragePath } from '@/services/Import/_utils';
@@ -24,7 +26,7 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
    */
   public attach = (bus) => {
     bus.subscribe(
-      events.organization.build,
+      events.organization.built,
       this.seedInitialDemoAccountDataOnOrgBuild.bind(this)
     );
   };
@@ -35,12 +37,12 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
   get seedDemoAccountSeeders() {
     return [
       SeedDemoAccountItems,
+      SeedDemoBankTransactions,
       SeedDemoAccountCustomers,
       SeedDemoAccountVendors,
       SeedDemoAccountManualJournals,
-      SeedDemoBankTransactions,
-      SeedDemoAccountExpenses,
       SeedDemoSaleInvoices,
+      SeedDemoAccountExpenses,
     ];
   }
 
@@ -50,11 +52,14 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
    * @returns {Promise<void>}
    */
   async initiateSeederFile(fileName: string) {
-    const destination = path.join(getImportsStoragePath(), fileName);
+    const destFileName = uniqid();
     const source = path.join(global.__views_dir, `/demo-sheets`, fileName);
+    const destination = path.join(getImportsStoragePath(), destFileName);
 
     // Use the fs.promises.copyFile method to copy the file
     await fs.copyFile(source, destination);
+
+    return destFileName;
   }
 
   /**
@@ -63,7 +68,7 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
    */
   async seedInitialDemoAccountDataOnOrgBuild({
     tenantId,
-  }: IOrganizationBuildEventPayload) {
+  }: IOrganizationBuiltEventPayload) {
     const foundDemo = await OneClickDemo.query().findOne('tenantId', tenantId);
 
     // Can't continue if the found demo is not exists.
@@ -77,14 +82,14 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
         const seederInstance = new SeedDemoAccountSeeder();
 
         // Initialize the seeder sheet file before importing.
-        await this.initiateSeederFile(seederInstance.importFileName);
+        const importFileName = await this.initiateSeederFile(seederInstance.importFileName);
 
         // Import the given seeder file.
         const importedFile = await this.importApp.import(
           tenantId,
           seederInstance.resource,
-          seederInstance.importFileName,
-          seederInstance.importParams || {}
+          importFileName,
+          seederInstance.importParams
         );
         // Mapping the columns with resource fields.
         await this.importApp.mapping(
@@ -92,18 +97,16 @@ export class SeedInitialDemoAccountDataOnOrgBuild {
           importedFile.import.importId,
           seederInstance.mapping
         );
+        await this.importApp.preview(tenantId, importedFile.import.importId);
+
         // Commit the imported file.
-        const re = await this.importApp.process(
+        await this.importApp.process(
           tenantId,
           importedFile.import.importId
         );
-        console.log(re);
       });
 
-    console.error(results.errors);
-    console.log(results.results);
-
-    if (results.errors) {
+    if (!isEmpty(results.errors)) {
       throw results.errors;
     }
   }

@@ -1,11 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 import { Container } from 'typedi';
 import SettingsStore from '@/services/Settings/SettingsStore';
- 
+
 export default async (req: Request, res: Response, next: NextFunction) => {
   const { tenantId } = req.user;
 
-  const Logger = Container.get('logger');
+  const settings = await initializeTenantSettings(tenantId);
+  req.settings = settings;
+
+  res.on('finish', async () => {
+    await settings.save();
+  });
+  next();
+}
+
+
+export const initializeTenantSettings = async (tenantId: number) => {
   const tenantContainer = Container.of(`tenant-${tenantId}`);
 
   if (tenantContainer && !tenantContainer.has('settings')) {
@@ -18,10 +28,5 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
   await settings.load();
 
-  req.settings = settings;
-
-  res.on('finish', async () => {
-    await settings.save();
-  });
-  next();
+  return settings;
 }

@@ -106,6 +106,9 @@ export class TriggerRecognizedTransactions {
     const batch = importFile.paramsParsed.batch;
     const payload = { tenantId, transactionsCriteria: { batch } };
 
+    // Cannot continue if the imported resource is not bank account transactions.
+    if (importFile.resource !== 'UncategorizedCashflowTransaction') return;
+
     await this.agenda.now('recognize-uncategorized-transactions-job', payload);
   }
 }
