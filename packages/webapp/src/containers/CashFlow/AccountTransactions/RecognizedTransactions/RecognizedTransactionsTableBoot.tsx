@@ -1,9 +1,11 @@
 // @ts-nocheck
 import React from 'react';
 import { flatten, map } from 'lodash';
-import { IntersectionObserver } from '@/components';
+import * as R from 'ramda';
+import { IntersectionObserver, NumericInputCell } from '@/components';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 import { useRecognizedBankTransactionsInfinity } from '@/hooks/query/bank-rules';
+import { withBanking } from '../../withBanking';
 
 interface RecognizedTransactionsContextValue {
   isRecongizedTransactionsLoading: boolean;
@@ -27,7 +29,10 @@ interface RecognizedTransactionsTableBootProps {
 /**
  * Account uncategorized transctions provider.
  */
-function RecognizedTransactionsTableBoot({
+function RecognizedTransactionsTableBootRoot({
+  // #withBanking
+  uncategorizedTransactionsFilter,
+
   children,
 }: RecognizedTransactionsTableBootProps) {
   const { accountId } = useAccountTransactionsContext();
@@ -44,6 +49,8 @@ function RecognizedTransactionsTableBoot({
   } = useRecognizedBankTransactionsInfinity({
     page_size: 50,
     account_id: accountId,
+    min_date: uncategorizedTransactionsFilter.fromDate || null,
+    max_date: uncategorizedTransactionsFilter?.toDate || null,
   });
   // Memorized the cashflow account transactions.
   const recognizedTransactions = React.useMemo(
@@ -83,6 +90,12 @@ function RecognizedTransactionsTableBoot({
     </RecognizedTransactionsContext.Provider>
   );
 }
+
+const RecognizedTransactionsTableBoot = R.compose(
+  withBanking(({ uncategorizedTransactionsFilter }) => ({
+    uncategorizedTransactionsFilter,
+  })),
+)(RecognizedTransactionsTableBootRoot);
 
 const useRecognizedTransactionsBoot = () =>
   React.useContext(RecognizedTransactionsContext);

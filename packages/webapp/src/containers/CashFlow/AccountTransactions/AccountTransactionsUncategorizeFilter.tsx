@@ -1,10 +1,12 @@
 // @ts-nocheck
-import * as R from 'ramda';
 import { useMemo } from 'react';
+import * as R from 'ramda';
 import { useAppQueryString } from '@/hooks';
-import { Group } from '@/components';
+import { Group, Stack, } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { TagsControl } from '@/components/TagsControl';
+import { AccountUncategorizedDateFilter } from './UncategorizedTransactions/AccountUncategorizedDateFilter';
+import { Divider } from '@blueprintjs/core';
 
 export function AccountTransactionsUncategorizeFilter() {
   const { bankAccountMetaSummary } = useAccountTransactionsContext();
@@ -54,12 +56,17 @@ export function AccountTransactionsUncategorizeFilter() {
   );
 
   return (
-    <Group position={'apart'}>
-      <TagsControl
-        options={options}
-        value={locationQuery?.uncategorizedFilter || 'all'}
-        onValueChange={handleTabsChange}
-      />
+    <Group position={'apart'} style={{ marginBottom: 14 }}>
+      <Group align={'stretch'} spacing={10}>
+        <TagsControl
+          options={options}
+          value={locationQuery?.uncategorizedFilter || 'all'}
+          onValueChange={handleTabsChange}
+        />
+        <Divider />
+        <AccountUncategorizedDateFilter />
+      </Group>
+
       <TagsControl
         options={[{ value: 'excluded', label: 'Excluded' }]}
         value={locationQuery?.uncategorizedFilter || 'all'}

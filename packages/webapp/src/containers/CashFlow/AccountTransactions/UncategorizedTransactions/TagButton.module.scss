@@ -1,0 +1,11 @@
+.root{
+  min-height: 26px;
+  border-radius: 15px;
+  font-size: 13px;
+  padding: 0 10px;
+
+  &:global(.bp4-button:not([class*=bp4-intent-]):not(.bp4-minimal)) {
+    background: #fff;
+    border: 1px solid #e1e2e8;
+  }
+}

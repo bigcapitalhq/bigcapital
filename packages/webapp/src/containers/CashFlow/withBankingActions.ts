@@ -15,6 +15,8 @@ import {
   removeTransactionsToCategorizeSelected,
   setCategorizedTransactionsSelected,
   resetCategorizedTransactionsSelected,
+  setUncategorizedTransactionsFilter,
+  resetUncategorizedTranasctionsFilter,
 } from '@/store/banking/banking.reducer';
 
 export interface WithBankingActionsProps {
@@ -40,6 +42,9 @@ export interface WithBankingActionsProps {
 
   setCategorizedTransactionsSelected: (ids: Array<string | number>) => void;
   resetCategorizedTransactionsSelected: () => void;
+
+  setUncategorizedTransactionsFilter: (filter: any) => void;
+  resetUncategorizedTranasctionsFilter: () => void;
 }
 
 const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
@@ -138,6 +143,19 @@ const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
    */
   resetCategorizedTransactionsSelected: () =>
     dispatch(resetCategorizedTransactionsSelected()),
+
+  /**
+   * Sets the uncategorized transactions filter.
+   * @param {any} filter -
+   */
+  setUncategorizedTransactionsFilter: (filter: any) =>
+    dispatch(setUncategorizedTransactionsFilter({ filter })),
+
+  /**
+   * Resets the uncategorized transactions filter.
+   */
+  resetUncategorizedTranasctionsFilter: () =>
+    dispatch(resetUncategorizedTranasctionsFilter()),
 });
 
 export const withBankingActions = connect<

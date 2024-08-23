@@ -23,7 +23,7 @@ export class GetRecognizedTransactionsService {
   ) {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
-    const _filter = {
+    const _query = {
       page: 1,
       pageSize: 20,
       ...filter,
@@ -41,11 +41,26 @@ export class GetRecognizedTransactionsService {
           // Exclude the pending transactions.
           q.modify('notPending');
 
-          if (_filter.accountId) {
-            q.where('accountId', _filter.accountId);
+          if (_query.accountId) {
+            q.where('accountId', _query.accountId);
+          }
+          if (_query.minDate) {
+            q.modify('fromDate', _query.minDate);
+          }
+          if (_query.maxDate) {
+            q.modify('toDate', _query.maxDate);
+          }
+          if (_query.minAmount) {
+            q.modify('minAmount', _query.minAmount);
+          }
+          if (_query.maxAmount) {
+            q.modify('maxAmount', _query.maxAmount);
+          }
+          if (_query.accountId) {
+            q.where('accountId', _query.accountId);
           }
         })
-        .pagination(_filter.page - 1, _filter.pageSize);
+        .pagination(_query.page - 1, _query.pageSize);
 
     const data = await this.transformer.transform(
       tenantId,

@@ -167,11 +167,18 @@ export interface CategorizeTransactionAsExpenseDTO {
 export interface IGetUncategorizedTransactionsQuery {
   page?: number;
   pageSize?: number;
+  minDate?: Date;
+  maxDate?: Date;
+  minAmount?: number;
+  maxAmount?: number;
 }
-
 
 export interface IGetRecognizedTransactionsQuery {
   page?: number;
   pageSize?: number;
   accountId?: number;
+  minDate?: Date;
+  maxDate?: Date;
+  minAmount?: number;
+  maxAmount?: number;
 }

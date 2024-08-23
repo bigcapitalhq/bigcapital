@@ -1,8 +1,8 @@
 /* eslint-disable global-require */
+import moment from 'moment';
 import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import ModelSettings from './ModelSetting';
-import Account from './Account';
 import UncategorizedCashflowTransactionMeta from './UncategorizedCashflowTransaction.meta';
 
 export default class UncategorizedCashflowTransaction extends mixin(
@@ -165,6 +165,28 @@ export default class UncategorizedCashflowTransaction extends mixin(
        */
       pending(query) {
         query.where('pending', true);
+      },
+
+      minAmount(query, minAmount) {
+        query.where('amount', '>=', minAmount);
+      },
+
+      maxAmount(query, maxAmount) {
+        query.where('amount', '<=', maxAmount);
+      },
+
+      toDate(query, toDate) {
+        const dateFormat = 'YYYY-MM-DD';
+        const _toDate = moment(toDate).endOf('day').format(dateFormat);
+
+        query.where('date', '<=', _toDate);
+      },
+
+      fromDate(query, fromDate) {
+        const dateFormat = 'YYYY-MM-DD';
+        const _fromDate = moment(fromDate).startOf('day').format(dateFormat);
+
+        query.where('date', '>=', _fromDate);
       },
     };
   }

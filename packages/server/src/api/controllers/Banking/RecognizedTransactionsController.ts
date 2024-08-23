@@ -21,6 +21,10 @@ export class RecognizedTransactionsController extends BaseController {
         query('page').optional().isNumeric().toInt(),
         query('page_size').optional().isNumeric().toInt(),
         query('account_id').optional().isNumeric().toInt(),
+        query('min_date').optional({ nullable: true }).isISO8601().toDate(),
+        query('max_date').optional({ nullable: true }).isISO8601().toDate(),
+        query('min_amount').optional({ nullable: true }).isFloat().toFloat(),
+        query('max_amount').optional({ nullable: true }).isFloat().isFloat(),
       ],
       this.validationResult,
       this.getRecognizedTransactions.bind(this)

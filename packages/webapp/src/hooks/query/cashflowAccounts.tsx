@@ -152,7 +152,7 @@ export function useAccountUncategorizedTransactionsInfinity(
   const apiRequest = useApiRequest();
 
   return useInfiniteQuery(
-    [t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY, accountId],
+    [t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY, accountId, query],
     async ({ pageParam = 1 }) => {
       const response = await apiRequest.http({
         ...axios,
