@@ -121,7 +121,7 @@ export function useAccountUncategorizedTransactionsColumns() {
       },
       {
         id: 'deposit',
-        Header: intl.get('cash_flow.label.deposit'),
+        Header: intl.get('banking.label.deposit'),
         accessor: 'formatted_deposit_amount',
         width: 40,
         className: 'deposit',
@@ -131,7 +131,7 @@ export function useAccountUncategorizedTransactionsColumns() {
       },
       {
         id: 'withdrawal',
-        Header: intl.get('cash_flow.label.withdrawal'),
+        Header: intl.get('banking.label.withdrawal'),
         accessor: 'formatted_withdrawal_amount',
         className: 'withdrawal',
         width: 40,

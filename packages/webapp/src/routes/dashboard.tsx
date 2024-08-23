@@ -1162,7 +1162,7 @@ export const getDashboardRoutes = () => [
     ),
     sidebarExpand: false,
     backLink: true,
-    pageTitle: intl.get('cash_flow.label_account_transcations'),
+    pageTitle: intl.get('banking.label_account_transcations'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
@@ -1186,7 +1186,7 @@ export const getDashboardRoutes = () => [
       () =>
         import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
     ),
-    pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
+    pageTitle: intl.get('siebar.banking.bank_accounts'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },

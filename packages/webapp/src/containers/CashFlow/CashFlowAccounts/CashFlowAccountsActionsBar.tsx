@@ -78,13 +78,13 @@ function CashFlowAccountsActionsBar({
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus-24'} iconSize={20} />}
-            text={<T id={'cash_flow.label.add_cash_account'} />}
+            text={<T id={'banking.label.add_cash_account'} />}
             onClick={handleAddBankAccount}
           />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus-24'} iconSize={20} />}
-            text={<T id={'cash_flow.label.add_bank_account'} />}
+            text={<T id={'banking.label.add_bank_account'} />}
             onClick={handleAddCashAccount}
           />
           <NavbarDivider />

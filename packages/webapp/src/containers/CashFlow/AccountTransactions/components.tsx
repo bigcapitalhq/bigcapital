@@ -116,7 +116,7 @@ export function useAccountTransactionsColumns() {
       },
       {
         id: 'deposit',
-        Header: intl.get('cash_flow.label.deposit'),
+        Header: intl.get('banking.label.deposit'),
         accessor: 'formatted_deposit',
         width: 110,
         className: 'deposit',
@@ -126,7 +126,7 @@ export function useAccountTransactionsColumns() {
       },
       {
         id: 'withdrawal',
-        Header: intl.get('cash_flow.label.withdrawal'),
+        Header: intl.get('banking.label.withdrawal'),
         accessor: 'formatted_withdrawal',
         className: 'withdrawal',
         width: 150,
@@ -136,7 +136,7 @@ export function useAccountTransactionsColumns() {
       },
       {
         id: 'running_balance',
-        Header: intl.get('cash_flow.label.running_balance'),
+        Header: intl.get('banking.label.running_balance'),
         accessor: 'formatted_running_balance',
         className: 'running_balance',
         width: 150,
