@@ -67,7 +67,7 @@ export function AccountTransactionsDateFilterForm({
             <FFormGroup
               name={'fromDate'}
               label={'From Date'}
-              style={{ marginBottom: 0 }}
+              style={{ marginBottom: 0, flex: '1' }}
             >
               <FDateInput
                 name={'fromDate'}
@@ -85,7 +85,7 @@ export function AccountTransactionsDateFilterForm({
             <FormGroup
               label={'To Date'}
               name={'toDate'}
-              style={{ marginBottom: 0 }}
+              style={{ marginBottom: 0, flex: '1' }}
             >
               <FDateInput
                 name={'toDate'}
@@ -156,11 +156,16 @@ function AccountTransactionDatePeriodField() {
   };
 
   return (
-    <FFormGroup name={'period'} label={'Date'} style={{ marginBottom: 0 }}>
+    <FFormGroup
+      name={'period'}
+      label={'Date'}
+      style={{ marginBottom: 0, flex: '0 28%' }}
+    >
       <FSelect
         name={'period'}
         items={periodOptions}
         onItemSelect={handleItemChange}
+        popoverProps={{ captureDismiss: true }}
       />
     </FFormGroup>
   );

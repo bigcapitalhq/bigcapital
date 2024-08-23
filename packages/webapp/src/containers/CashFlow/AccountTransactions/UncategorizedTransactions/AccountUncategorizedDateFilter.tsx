@@ -1,8 +1,9 @@
 // @ts-nocheck
+import { useState } from 'react';
 import * as R from 'ramda';
 import moment from 'moment';
 import { Box, Icon } from '@/components';
-import { Button, Classes, Popover, Position } from '@blueprintjs/core';
+import { Classes, Popover, Position } from '@blueprintjs/core';
 import { withBankingActions } from '../../withBankingActions';
 import { withBanking } from '../../withBanking';
 import { AccountTransactionsDateFilterForm } from '../AccountTransactionsDateFilter';
@@ -29,17 +30,31 @@ function AccountUncategorizedDateFilterRoot({
       ? `Date: ${fromDateFormatted} → ${toDateFormatted}`
       : 'Date Filter';
 
+  // Popover open state.
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  // Handle the filter form submitting.
+  const handleSubmit = () => {
+    setIsOpen(false);
+  };
+
   return (
     <Popover
       content={
         <Box style={{ padding: 18 }}>
-          <UncategorizedTransactionsDateFilter />
+          <UncategorizedTransactionsDateFilter onSubmit={handleSubmit} />
         </Box>
       }
       position={Position.RIGHT}
       popoverClassName={Classes.POPOVER_CONTENT}
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
     >
-      <TagButton outline icon={<Icon icon={'date-range'} />}>
+      <TagButton
+        outline
+        icon={<Icon icon={'date-range'} />}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         {buttonText}
       </TagButton>
     </Popover>
@@ -64,6 +79,9 @@ export const UncategorizedTransactionsDateFilter = R.compose(
 
     // #withBanking
     uncategorizedTransactionsFilter,
+
+    // #ownProps
+    onSubmit,
   }) => {
     const initialValues = {
       ...uncategorizedTransactionsFilter,
@@ -74,6 +92,7 @@ export const UncategorizedTransactionsDateFilter = R.compose(
         fromDate: values.fromDate,
         toDate: values.toDate,
       });
+      onSubmit && onSubmit(values);
     };
 
     return (

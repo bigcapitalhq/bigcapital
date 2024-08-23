@@ -1,9 +1,11 @@
 // @ts-nocheck
 import React from 'react';
 import { flatten, map } from 'lodash';
+import * as R from 'ramda';
 import { IntersectionObserver } from '@/components';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 import { useExcludedBankTransactionsInfinity } from '@/hooks/query/bank-rules';
+import { withBanking } from '../../withBanking';
 
 interface ExcludedBankTransactionsContextValue {
   isExcludedTransactionsLoading: boolean;
@@ -27,7 +29,11 @@ interface ExcludedBankTransactionsTableBootProps {
 /**
  * Account uncategorized transctions provider.
  */
-function ExcludedBankTransactionsTableBoot({
+function ExcludedBankTransactionsTableBootRoot({
+  // #withBanking
+  uncategorizedTransactionsFilter,
+
+  // #ownProps
   children,
 }: ExcludedBankTransactionsTableBootProps) {
   const { accountId } = useAccountTransactionsContext();
@@ -44,6 +50,8 @@ function ExcludedBankTransactionsTableBoot({
   } = useExcludedBankTransactionsInfinity({
     page_size: 50,
     account_id: accountId,
+    min_date: uncategorizedTransactionsFilter?.fromDate || null,
+    max_date: uncategorizedTransactionsFilter.toDate || null,
   });
   // Memorized the cashflow account transactions.
   const excludedBankTransactions = React.useMemo(
@@ -83,6 +91,12 @@ function ExcludedBankTransactionsTableBoot({
     </ExcludedTransactionsContext.Provider>
   );
 }
+
+const ExcludedBankTransactionsTableBoot = R.compose(
+  withBanking(({ uncategorizedTransactionsFilter }) => ({
+    uncategorizedTransactionsFilter,
+  })),
+)(ExcludedBankTransactionsTableBootRoot);
 
 const useExcludedTransactionsBoot = () =>
   React.useContext(ExcludedTransactionsContext);

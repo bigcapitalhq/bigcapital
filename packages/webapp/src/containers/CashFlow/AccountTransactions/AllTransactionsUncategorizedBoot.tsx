@@ -37,8 +37,8 @@ function AccountUncategorizedTransactionsBootRoot({
     hasNextPage: hasUncategorizedTransactionsNextPage,
   } = useAccountUncategorizedTransactionsInfinity(accountId, {
     page_size: 50,
-    min_date: uncategorizedTransactionsFilter?.fromDate,
-    max_date: uncategorizedTransactionsFilter?.toDate,
+    min_date: uncategorizedTransactionsFilter?.fromDate || null,
+    max_date: uncategorizedTransactionsFilter?.toDate || null,
   });
   // Memorized the cashflow account transactions.
   const uncategorizedTransactions = React.useMemo(
