@@ -282,9 +282,9 @@ export const susbcribers = () => {
     DeleteUncategorizedTransactionsOnAccountDeleting,
 
     // Loops
-    LoopsEventsSubscriber
+    LoopsEventsSubscriber,
 
     // Demo Account
-    SeedInitialDemoAccountDataOnOrgBuild
+    SeedInitialDemoAccountDataOnOrgBuild,
   ];
 };
