@@ -35,7 +35,7 @@ export class Webhooks extends BaseController {
    */
   public async lemonWebhooks(req: Request, res: Response, next: NextFunction) {
     const data = req.body;
-    const signature = req.headers['x-signature'] ?? '';
+    const signature = req.headers['x-signature'] as string ?? '';
     const rawBody = req.rawBody;
 
     try {

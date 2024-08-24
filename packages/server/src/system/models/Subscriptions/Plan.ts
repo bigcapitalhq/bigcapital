@@ -3,6 +3,10 @@ import SystemModel from '@/system/models/SystemModel';
 import { PlanSubscription } from '..';
 
 export default class Plan extends mixin(SystemModel) {
+  price: number;
+  invoiceInternal: number;
+  invoicePeriod: string;
+  
   /**
    * Table name.
    */

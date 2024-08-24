@@ -50,6 +50,10 @@ export default {
     onSubscriptionResumed: 'onSubscriptionResumed',
     onSubscriptionPlanChanged: 'onSubscriptionPlanChanged',
     onSubscribed: 'onOrganizationSubscribed',
+
+    onSubscriptionCancelled: 'onSubscriptionCancelled',
+    onSubscriptionPaymentSucceed: 'onSubscriptionPaymentSucceed',
+    onSubscriptionPaymentFailed: 'onSubscriptionPaymentFailed'
   },
 
   /**
