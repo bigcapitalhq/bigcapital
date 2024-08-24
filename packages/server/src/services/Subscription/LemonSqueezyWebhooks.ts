@@ -59,6 +59,7 @@ export class LemonSqueezyWebhooks {
 
     const userId = eventBody.meta.custom_data?.user_id;
     const tenantId = eventBody.meta.custom_data?.tenant_id;
+    const subscriptionSlug = 'main';
 
     if (!webhookHasMeta(eventBody)) {
       throw new Error("Event body is missing the 'meta' property.");
@@ -68,13 +69,13 @@ export class LemonSqueezyWebhooks {
         if (webhookEvent === 'subscription_payment_success') {
           await this.subscriptionService.markSubscriptionPaymentSucceed(
             tenantId,
-            'main'
+            subscriptionSlug
           );
           // Marks the main subscription payment as failed.
         } else if (webhookEvent === 'subscription_payment_failed') {
           await this.subscriptionService.markSubscriptionPaymentFailed(
             tenantId,
-            'main'
+            subscriptionSlug
           );
         }
         // Save subscription invoices; eventBody is a SubscriptionInvoice
@@ -100,20 +101,25 @@ export class LemonSqueezyWebhooks {
           await this.subscriptionService.newSubscribtion(
             tenantId,
             plan.slug,
-            'main',
+            subscriptionSlug,
             { lemonSqueezyId: subscriptionId }
           );
           // Cancel the given subscription of the organization.
         } else if (webhookEvent === 'subscription_cancelled') {
           await this.subscriptionService.cancelSubscription(
             tenantId,
-            plan.slug
+            subscriptionSlug
           );
         } else if (webhookEvent === 'subscription_plan_changed') {
           await this.subscriptionService.subscriptionPlanChanged(
             tenantId,
             plan.slug,
-            'main'
+            subscriptionSlug
+          );
+        } else if (webhookEvent === 'subscription_resumed') {
+          await this.subscriptionService.resumeSubscription(
+            tenantId,
+            subscriptionSlug
           );
         }
       } else if (webhookEvent.startsWith('order_')) {

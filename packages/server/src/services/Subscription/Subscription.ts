@@ -82,6 +82,48 @@ export class Subscription {
       throw new ServiceError(ERRORS.SUBSCRIPTION_ALREADY_CANCELED);
     }
     await subscription.$query().patch({ canceledAt: new Date() });
+
+    // Triggers `onSubscriptionCancelled` event.
+    await this.eventPublisher.emitAsync(
+      events.subscription.onSubscriptionCancelled,
+      {
+        tenantId,
+        subscriptionSlug,
+      }
+    );
+  }
+
+  /**
+   * Resumes the given tenant subscription.
+   * @param {number} tenantId
+   * @param {string} subscriptionSlug  - Subscription slug by deafult main subscription.
+   * @returns {Promise<void>}
+   */
+  async resumeSubscription(
+    tenantId: number,
+    subscriptionSlug: string = 'main'
+  ) {
+    const tenant = await Tenant.query().findById(tenantId).throwIfNotFound();
+
+    const subscription = await PlanSubscription.query().findOne({
+      tenantId,
+      slug: subscriptionSlug,
+    });
+    // Throw error early if the subscription is not exist.
+    if (!subscription) {
+      throw new ServiceError(ERRORS.SUBSCRIPTION_NOT_EXIST);
+    }
+    // Throw error early if the subscription is not cancelled.
+    if (!subscription.canceled()) {
+      throw new ServiceError(ERRORS.SUBSCRIPTION_ALREADY_ACTIVE);
+    }
+    await subscription.$query().patch({ canceledAt: null });
+
+    // Triggers `onSubscriptionResumed` event.
+    await this.eventPublisher.emitAsync(
+      events.subscription.onSubscriptionResumed,
+      { tenantId, subscriptionSlug }
+    );
   }
 
   /**
