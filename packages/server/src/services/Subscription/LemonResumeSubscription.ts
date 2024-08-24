@@ -1,11 +1,11 @@
 import { Inject, Service } from 'typedi';
+import { updateSubscription } from '@lemonsqueezy/lemonsqueezy.js';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import { configureLemonSqueezy } from './utils';
 import { PlanSubscription } from '@/system/models';
 import { ServiceError } from '@/exceptions';
-import { ERRORS, IOrganizationSubscriptionResumed } from './types';
-import { updateSubscription } from '@lemonsqueezy/lemonsqueezy.js';
+import { ERRORS, IOrganizationSubscriptionResume } from './types';
 
 @Service()
 export class LemonResumeSubscription {
@@ -39,7 +39,7 @@ export class LemonResumeSubscription {
     // Triggers `onSubscriptionResume` event.
     await this.eventPublisher.emitAsync(
       events.subscription.onSubscriptionResume,
-      { tenantId, subscriptionId } as IOrganizationSubscriptionResumed
+      { tenantId, subscriptionId } as IOrganizationSubscriptionResume
     );
   }
 }
