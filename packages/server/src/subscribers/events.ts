@@ -46,10 +46,19 @@ export default {
    * Organization subscription.
    */
   subscription: {
-    onSubscriptionCanceled: 'onSubscriptionCanceled',
+    onSubscriptionCancel: 'onSubscriptionCancel',
+    onSubscriptionCancelled: 'onSubscriptionCancelled',
+
+    onSubscriptionResume: 'onSubscriptionResume',
     onSubscriptionResumed: 'onSubscriptionResumed',
+
+    onSubscriptionPlanChange: 'onSubscriptionPlanChange',
     onSubscriptionPlanChanged: 'onSubscriptionPlanChanged',
-    onSubscribed: 'onOrganizationSubscribed',
+
+    onSubscriptionSubscribed: 'onSubscriptionSubscribed',
+
+    onSubscriptionPaymentSucceed: 'onSubscriptionPaymentSucceed',
+    onSubscriptionPaymentFailed: 'onSubscriptionPaymentFailed'
   },
 
   /**

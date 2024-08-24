@@ -5,7 +5,7 @@ import { PlanSubscription } from '@/system/models';
 import { ServiceError } from '@/exceptions';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
-import { ERRORS, IOrganizationSubscriptionCanceled } from './types';
+import { ERRORS, IOrganizationSubscriptionCancelled } from './types';
 
 @Service()
 export class LemonCancelSubscription {
@@ -18,12 +18,15 @@ export class LemonCancelSubscription {
    * @param {number} subscriptionId
    * @returns {Promise<void>}
    */
-  public async cancelSubscription(tenantId: number) {
+  public async cancelSubscription(
+    tenantId: number,
+    subscriptionSlug: string = 'main'
+  ) {
     configureLemonSqueezy();
 
     const subscription = await PlanSubscription.query().findOne({
       tenantId,
-      slug: 'main',
+      slug: subscriptionSlug,
     });
     if (!subscription) {
       throw new ServiceError(ERRORS.SUBSCRIPTION_ID_NOT_ASSOCIATED_TO_TENANT);
@@ -35,13 +38,10 @@ export class LemonCancelSubscription {
     if (cancelledSub.error) {
       throw new Error(cancelledSub.error.message);
     }
-    await PlanSubscription.query().findById(subscriptionId).patch({
-      canceledAt: new Date(),
-    });
-    // Triggers `onSubscriptionCanceled` event.
+    // Triggers `onSubscriptionCancelled` event.
     await this.eventPublisher.emitAsync(
-      events.subscription.onSubscriptionCanceled,
-      { tenantId, subscriptionId } as IOrganizationSubscriptionCanceled
+      events.subscription.onSubscriptionCancel,
+      { tenantId, subscriptionId } as IOrganizationSubscriptionCancelled
     );
   }
 }

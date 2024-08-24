@@ -1,8 +1,8 @@
+import { Inject, Service } from 'typedi';
 import { IAuthSignedUpEventPayload } from '@/interfaces';
 import events from '@/subscribers/events';
 import config from '@/config';
 import { Subscription } from '../Subscription';
-import { Inject, Service } from 'typedi';
 
 @Service()
 export class SubscribeFreeOnSignupCommunity {

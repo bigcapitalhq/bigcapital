@@ -117,6 +117,7 @@ import { DisconnectPlaidItemOnAccountDeleted } from '@/services/Banking/BankAcco
 import { LoopsEventsSubscriber } from '@/services/Loops/LoopsEventsSubscriber';
 import { DeleteUncategorizedTransactionsOnAccountDeleting } from '@/services/Banking/BankAccounts/events/DeleteUncategorizedTransactionsOnAccountDeleting';
 import { SeedInitialDemoAccountDataOnOrgBuild } from '@/services/OneClickDemo/events/SeedInitialDemoAccountData';
+import { TriggerInvalidateCacheOnSubscriptionChange } from '@/services/Subscription/events/TriggerInvalidateCacheOnSubscriptionChange';
 
 export default () => {
   return new EventPublisher();
@@ -247,8 +248,10 @@ export const susbcribers = () => {
     DeleteCashflowTransactionOnUncategorize,
     PreventDeleteTransactionOnDelete,
 
+    // Subscription
     SubscribeFreeOnSignupCommunity,
     SendVerfiyMailOnSignUp,
+    TriggerInvalidateCacheOnSubscriptionChange,
 
     // Attachments
     AttachmentsOnSaleInvoiceCreated,

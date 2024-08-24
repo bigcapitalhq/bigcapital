@@ -20,8 +20,14 @@ export class SubscriptionApplication {
    * @param {string} id
    * @returns {Promise<void>}
    */
-  public cancelSubscription(tenantId: number, id: string) {
-    return this.cancelSubscriptionService.cancelSubscription(tenantId, id);
+  public cancelSubscription(
+    tenantId: number,
+    subscriptionSlug: string = 'main'
+  ) {
+    return this.cancelSubscriptionService.cancelSubscription(
+      tenantId,
+      subscriptionSlug
+    );
   }
 
   /**
@@ -29,8 +35,14 @@ export class SubscriptionApplication {
    * @param {number} tenantId
    * @returns {Promise<void>}
    */
-  public resumeSubscription(tenantId: number) {
-    return this.resumeSubscriptionService.resumeSubscription(tenantId);
+  public resumeSubscription(
+    tenantId: number,
+    subscriptionSlug: string = 'main'
+  ) {
+    return this.resumeSubscriptionService.resumeSubscription(
+      tenantId,
+      subscriptionSlug
+    );
   }
 
   /**

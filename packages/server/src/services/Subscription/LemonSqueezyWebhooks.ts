@@ -59,11 +59,25 @@ export class LemonSqueezyWebhooks {
 
     const userId = eventBody.meta.custom_data?.user_id;
     const tenantId = eventBody.meta.custom_data?.tenant_id;
+    const subscriptionSlug = 'main';
 
     if (!webhookHasMeta(eventBody)) {
       throw new Error("Event body is missing the 'meta' property.");
     } else if (webhookHasData(eventBody)) {
       if (webhookEvent.startsWith('subscription_payment_')) {
+        // Marks the main subscription payment as succeed.
+        if (webhookEvent === 'subscription_payment_success') {
+          await this.subscriptionService.markSubscriptionPaymentSucceed(
+            tenantId,
+            subscriptionSlug
+          );
+          // Marks the main subscription payment as failed.
+        } else if (webhookEvent === 'subscription_payment_failed') {
+          await this.subscriptionService.markSubscriptionPaymentFailed(
+            tenantId,
+            subscriptionSlug
+          );
+        }
         // Save subscription invoices; eventBody is a SubscriptionInvoice
         // Not implemented.
       } else if (webhookEvent.startsWith('subscription_')) {
@@ -74,16 +88,39 @@ export class LemonSqueezyWebhooks {
         // We assume that the Plan table is up to date.
         const plan = await Plan.query().findOne('lemonVariantId', variantId);
 
+        // Update the subscription in the database.
+        const priceId = attributes.first_subscription_item.price_id;
+        const subscriptionId = eventBody.data.id;
+
+        // Throw error early if the given lemon variant id is not associated to any plan.
         if (!plan) {
           throw new Error(`Plan with variantId ${variantId} not found.`);
-        } else {
-          // Update the subscription in the database.
-          const priceId = attributes.first_subscription_item.price_id;
-
-          // Create a new subscription of the tenant.
-          if (webhookEvent === 'subscription_created') {
-            await this.subscriptionService.newSubscribtion(tenantId, plan.slug);
-          }
+        }
+        // Create a new subscription of the tenant.
+        if (webhookEvent === 'subscription_created') {
+          await this.subscriptionService.newSubscribtion(
+            tenantId,
+            plan.slug,
+            subscriptionSlug,
+            { lemonSqueezyId: subscriptionId }
+          );
+          // Cancel the given subscription of the organization.
+        } else if (webhookEvent === 'subscription_cancelled') {
+          await this.subscriptionService.cancelSubscription(
+            tenantId,
+            subscriptionSlug
+          );
+        } else if (webhookEvent === 'subscription_plan_changed') {
+          await this.subscriptionService.subscriptionPlanChanged(
+            tenantId,
+            plan.slug,
+            subscriptionSlug
+          );
+        } else if (webhookEvent === 'subscription_resumed') {
+          await this.subscriptionService.resumeSubscription(
+            tenantId,
+            subscriptionSlug
+          );
         }
       } else if (webhookEvent.startsWith('order_')) {
         // Save orders; eventBody is a "Order"

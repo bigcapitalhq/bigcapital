@@ -198,14 +198,16 @@ export default class Tenant extends BaseModel {
     planId,
     invoiceInterval,
     invoicePeriod,
-    subscriptionSlug
+    subscriptionSlug,
+    payload?,
   ) {
     return Tenant.newSubscription(
       this.id,
       planId,
       invoiceInterval,
       invoicePeriod,
-      subscriptionSlug
+      subscriptionSlug,
+      payload
     );
   }
 
@@ -217,7 +219,8 @@ export default class Tenant extends BaseModel {
     planId: number,
     invoiceInterval: 'month' | 'year',
     invoicePeriod: number,
-    subscriptionSlug: string
+    subscriptionSlug: string,
+    payload?: { lemonSqueezyId: string }
   ) {
     const period = new SubscriptionPeriod(invoiceInterval, invoicePeriod);
 
@@ -227,6 +230,7 @@ export default class Tenant extends BaseModel {
       planId,
       startsAt: period.getStartDate(),
       endsAt: period.getEndDate(),
+      lemonSubscriptionId: payload?.lemonSqueezyId || null,
     });
   }
 }

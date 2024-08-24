@@ -18,25 +18,30 @@ export class LemonChangeSubscriptionPlan {
    * @param {number} newVariantId - New variant id.
    * @returns {Promise<void>}
    */
-  public async changeSubscriptionPlan(tenantId: number, newVariantId: number) {
+  public async changeSubscriptionPlan(
+    tenantId: number,
+    newVariantId: number,
+    subscriptionSlug: string = 'main'
+  ) {
     configureLemonSqueezy();
 
     const subscription = await PlanSubscription.query().findOne({
       tenantId,
-      slug: 'main',
+      slug: subscriptionSlug,
     });
     const lemonSubscriptionId = subscription.lemonSubscriptionId;
 
     // Send request to Lemon Squeezy to change the subscription.
     const updatedSub = await updateSubscription(lemonSubscriptionId, {
       variantId: newVariantId,
+      invoiceImmediately: true,
     });
     if (updatedSub.error) {
       throw new ServiceError('SOMETHING_WENT_WRONG');
     }
     // Triggers `onSubscriptionPlanChanged` event.
     await this.eventPublisher.emitAsync(
-      events.subscription.onSubscriptionPlanChanged,
+      events.subscription.onSubscriptionPlanChange,
       {
         tenantId,
         lemonSubscriptionId,

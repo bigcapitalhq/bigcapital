@@ -113,7 +113,7 @@ export class SubscriptionController extends BaseController {
     const { tenantId } = req;
 
     try {
-      await this.subscriptionApp.cancelSubscription(tenantId, '455610');
+      await this.subscriptionApp.cancelSubscription(tenantId);
 
       return res.status(200).send({
         status: 200,

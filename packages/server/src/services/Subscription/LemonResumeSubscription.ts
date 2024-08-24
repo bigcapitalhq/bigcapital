@@ -14,15 +14,16 @@ export class LemonResumeSubscription {
 
   /**
    * Resumes the main subscription of the given tenant.
-   * @param {number} tenantId -
+   * @param {number} tenantId - Tenant id.
+   * @param {string} subscriptionSlug - Subscription slug by default main subscription.
    * @returns {Promise<void>}
    */
-  public async resumeSubscription(tenantId: number) {
+  public async resumeSubscription(tenantId: number, subscriptionSlug: string = 'main') {
     configureLemonSqueezy();
 
     const subscription = await PlanSubscription.query().findOne({
       tenantId,
-      slug: 'main',
+      slug: subscriptionSlug,
     });
     if (!subscription) {
       throw new ServiceError(ERRORS.SUBSCRIPTION_ID_NOT_ASSOCIATED_TO_TENANT);
@@ -33,15 +34,11 @@ export class LemonResumeSubscription {
       cancelled: false,
     });
     if (returnedSub.error) {
-      throw new ServiceError('');
+      throw new ServiceError(ٌٌُERRORS.SOMETHING_WENT_WRONG_WITH_LS);
     }
-    // Update the subscription of the organization.
-    await PlanSubscription.query().findById(subscriptionId).patch({
-      canceledAt: null,
-    });
-    // Triggers `onSubscriptionCanceled` event.
+    // Triggers `onSubscriptionResume` event.
     await this.eventPublisher.emitAsync(
-      events.subscription.onSubscriptionResumed,
+      events.subscription.onSubscriptionResume,
       { tenantId, subscriptionId } as IOrganizationSubscriptionResumed
     );
   }
