@@ -4,8 +4,8 @@ import { configureLemonSqueezy } from './utils';
 import { PlanSubscription } from '@/system/models';
 import { ServiceError } from '@/exceptions';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { ERRORS, IOrganizationSubscriptionCancel } from './types';
 import events from '@/subscribers/events';
-import { ERRORS, IOrganizationSubscriptionCancelled } from './types';
 
 @Service()
 export class LemonCancelSubscription {
@@ -41,7 +41,7 @@ export class LemonCancelSubscription {
     // Triggers `onSubscriptionCancelled` event.
     await this.eventPublisher.emitAsync(
       events.subscription.onSubscriptionCancel,
-      { tenantId, subscriptionId } as IOrganizationSubscriptionCancelled
+      { tenantId, subscriptionId } as IOrganizationSubscriptionCancel
     );
   }
 }

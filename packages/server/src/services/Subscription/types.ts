@@ -4,7 +4,7 @@ export const ERRORS = {
   SUBSCRIPTION_NOT_EXIST: 'SUBSCRIPTION_NOT_EXIST',
   SUBSCRIPTION_ALREADY_CANCELED: 'SUBSCRIPTION_ALREADY_CANCELED',
   SUBSCRIPTION_ALREADY_ACTIVE: 'SUBSCRIPTION_ALREADY_ACTIVE',
-  SOMETHING_WENT_WRONG_WITH_LS: 'SOMETHING_WENT_WRONG_WITH_LS'
+  SOMETHING_WENT_WRONG_WITH_LS: 'SOMETHING_WENT_WRONG_WITH_LS',
 };
 
 export interface IOrganizationSubscriptionChanged {
@@ -13,11 +13,20 @@ export interface IOrganizationSubscriptionChanged {
   newVariantId: number;
 }
 
+export interface IOrganizationSubscriptionCancel {
+  tenantId: number;
+  subscriptionId: string;
+}
+
 export interface IOrganizationSubscriptionCancelled {
   tenantId: number;
   subscriptionId: string;
 }
 
+export interface IOrganizationSubscriptionResume {
+  tenantId: number;
+  subscriptionId: number;
+}
 export interface IOrganizationSubscriptionResumed {
   tenantId: number;
   subscriptionId: number;
