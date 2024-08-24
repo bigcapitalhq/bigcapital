@@ -23,6 +23,9 @@ export function DashboardSockets() {
         intent: Intent.SUCCESS,
       });
     });
+    socket.current.on('SUBSCRIPTION_CHANGED', () => {
+      client.invalidateQueries('GetSubscriptions');
+    });
     return () => {
       socket.current.removeAllListeners();
       socket.current.close();

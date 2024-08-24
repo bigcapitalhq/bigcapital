@@ -12,7 +12,7 @@ import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 
 const QueryKeys = {
-  Subscriptions: 'Subscriptions',
+  Subscriptions: 'GetSubscriptions',
 };
 
 interface CancelMainSubscriptionValues {}
