@@ -54,9 +54,9 @@ export default [
     disabled: false,
     href: '/preferences/items',
   },
-  {
-    text: <T id={'sms_integration.label'} />,
-    disabled: false,
-    href: '/preferences/sms-message',
-  },
+  // {
+  //   text: <T id={'sms_integration.label'} />,
+  //   disabled: false,
+  //   href: '/preferences/sms-message',
+  // },
 ];
