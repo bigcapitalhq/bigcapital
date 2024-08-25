@@ -100,7 +100,7 @@ export const useAuthResetPassword = (props) => {
 /**
  * Fetches the authentication page metadata.
  */
-export const useAuthMetadata = (props) => {
+export const useAuthMetadata = (props = {}) => {
   return useRequestQuery(
     [t.AUTH_METADATA_PAGE],
     {

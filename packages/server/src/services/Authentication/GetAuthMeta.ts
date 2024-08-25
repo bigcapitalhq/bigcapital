@@ -11,6 +11,10 @@ export class GetAuthMeta {
   public async getAuthMeta(): Promise<IAuthGetMetaPOJO> {
     return {
       signupDisabled: config.signupRestrictions.disabled,
+      oneClickDemo: {
+        enable: config.oneClickDemoAccounts.enable,
+        demoUrl: config.oneClickDemoAccounts.demoUrl,
+      },
     };
   }
 }

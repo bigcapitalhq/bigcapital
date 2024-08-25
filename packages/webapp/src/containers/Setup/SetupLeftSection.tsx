@@ -6,7 +6,7 @@ import { Icon, For, FormattedMessage as T, Stack } from '@/components';
 import { getFooterLinks } from '@/constants/footerLinks';
 import { useAuthActions } from '@/hooks/state';
 import style from './SetupLeftSection.module.scss';
-import { Config } from '@/config';
+import { useAuthMetadata } from '@/hooks/query';
 
 /**
  * Footer item link.
@@ -28,13 +28,16 @@ function SetupLeftSectionFooter() {
   // Retrieve the footer links.
   const footerLinks = getFooterLinks();
 
+  const { data: authMeta } = useAuthMetadata();
+  const demoUrl = authMeta?.meta?.one_click_demo?.demo_url;
+
   const handleDemoBtnClick = () => {
-    window.open(Config.oneClickDemo.demoUrl);
+    window.open(demoUrl);
   };
 
   return (
     <div className={'content__footer'}>
-      {Config.oneClickDemo.demoUrl && (
+      {demoUrl && (
         <Stack spacing={16}>
           <Text className={style.demoButtonLabel}>Not Now?</Text>
           <button className={style.demoButton} onClick={handleDemoBtnClick}>
