@@ -64,11 +64,19 @@ export default function useApiRequest() {
           setGlobalErrors({ too_many_requests: true });
         }
         if (status === 400) {
-          const lockedError = data.errors.find(
-            (error) => error.type === 'TRANSACTIONS_DATE_LOCKED',
-          );
-          if (lockedError) {
+          if (
+            data.errors.find(
+              (error) => error.type === 'TRANSACTIONS_DATE_LOCKED',
+            )
+          ) {
             setGlobalErrors({ transactionsLocked: { ...lockedError.data } });
+          }
+          if (
+            data.errors.find(
+              (e) => e.type === 'ORGANIZATION.SUBSCRIPTION.INACTIVE',
+            )
+          ) {
+            setGlobalErrors({ subscriptionInactive: true });
           }
           if (data.errors.find((e) => e.type === 'USER_INACTIVE')) {
             setGlobalErrors({ userInactive: true });

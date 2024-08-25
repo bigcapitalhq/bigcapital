@@ -2,6 +2,7 @@ import { Model, mixin } from 'objection';
 import SystemModel from '@/system/models/SystemModel';
 import moment from 'moment';
 import SubscriptionPeriod from '@/services/Subscription/SubscriptionPeriod';
+import { SubscriptionPaymentStatus } from '@/interfaces';
 
 export default class PlanSubscription extends mixin(SystemModel) {
   public lemonSubscriptionId: number;
@@ -12,6 +13,8 @@ export default class PlanSubscription extends mixin(SystemModel) {
   public canceledAt: Date;
 
   public trialEndsAt: Date;
+
+  public paymentStatus: SubscriptionPaymentStatus;
 
   /**
    * Table name.
@@ -31,7 +34,16 @@ export default class PlanSubscription extends mixin(SystemModel) {
    * Defined virtual attributes.
    */
   static get virtualAttributes() {
-    return ['active', 'inactive', 'ended', 'canceled', 'onTrial', 'status'];
+    return [
+      'active',
+      'inactive',
+      'ended',
+      'canceled',
+      'onTrial',
+      'status',
+      'isPaymentFailed',
+      'isPaymentSucceed',
+    ];
   }
 
   /**
@@ -68,6 +80,22 @@ export default class PlanSubscription extends mixin(SystemModel) {
         const endDate = moment().format(dateFormat);
 
         builder.where('trial_ends_at', '<=', endDate);
+      },
+
+      /**
+       * Filter the failed payment.
+       * @param builder 
+       */
+      failedPayment(builder) {
+        builder.where('payment_status', SubscriptionPaymentStatus.Failed);
+      },
+
+      /**
+       * Filter the succeed payment.
+       * @param builder 
+       */
+      succeedPayment(builder) {
+        builder.where('payment_status', SubscriptionPaymentStatus.Succeed);
       },
     };
   }
@@ -108,6 +136,10 @@ export default class PlanSubscription extends mixin(SystemModel) {
 
   /**
    * Check if the subscription is active.
+   * Crtiria should be:
+   *  - During the trial period and NOT canceled.
+   *  - Not ended.
+   * 
    * @return {Boolean}
    */
   public active() {
@@ -199,5 +231,21 @@ export default class PlanSubscription extends mixin(SystemModel) {
       invoicePeriod
     );
     return this.$query().update({ startsAt, endsAt });
+  }
+
+  /**
+   * Detarmines the subscription payment whether is failed.
+   * @returns {boolean}
+   */
+  public isPaymentFailed() {
+    return this.paymentStatus === SubscriptionPaymentStatus.Failed;
+  }
+
+  /**
+   * Detarmines the subscription payment whether is succeed.
+   * @returns {boolean}
+   */
+  public isPaymentSucceed() {
+    return this.paymentStatus === SubscriptionPaymentStatus.Succeed;
   }
 }

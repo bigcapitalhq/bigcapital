@@ -1,6 +1,9 @@
 import { Container } from 'typedi';
 import { Request, Response, NextFunction } from 'express';
 
+const SupportedMethods = ['POST', 'PUT'];
+const Excluded = [];
+
 export default (subscriptionSlug = 'main') =>
   async (req: Request, res: Response, next: NextFunction) => {
     const { tenant, tenantId } = req;
@@ -19,8 +22,7 @@ export default (subscriptionSlug = 'main') =>
         errors: [{ type: 'TENANT.HAS.NO.SUBSCRIPTION' }],
       });
     }
-    // Validate in case the subscription is inactive.
-    else if (subscription.inactive()) {
+    if (SupportedMethods.includes(req.method) && subscription.inactive()) {
       return res.boom.badRequest(null, {
         errors: [{ type: 'ORGANIZATION.SUBSCRIPTION.INACTIVE' }],
       });
