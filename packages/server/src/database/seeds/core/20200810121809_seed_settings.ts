@@ -15,6 +15,7 @@ export default class SeedSettings extends TenantSeeder {
 
       // Manual journals settings.
       { group: 'manual_journals', key: 'next_number', value: '00001' },
+      { group: 'manual_journals', key: 'number_prefix', value: 'J-' },
       { group: 'manual_journals', key: 'auto_increment', value: true },
 
       // Sale invoices settings.
