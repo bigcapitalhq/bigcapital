@@ -24,7 +24,7 @@ function SubscriptionPlansPeriodSwitcherRoot({
     );
   };
   return (
-    <Group position={'center'} spacing={10} style={{ marginBottom: '1.2rem' }}>
+    <Group position={'center'} spacing={10} style={{ marginBottom: '1.6rem' }}>
       <Text>Pay Monthly</Text>
       <Switch
         large
