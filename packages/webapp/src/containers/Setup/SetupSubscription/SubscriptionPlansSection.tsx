@@ -1,6 +1,7 @@
 import { Callout } from '@blueprintjs/core';
 import { SubscriptionPlans } from './SubscriptionPlans';
 import { SubscriptionPlansPeriodSwitcher } from './SubscriptionPlansPeriodSwitcher';
+import { SubscriptionPlansOfferChecks } from './SubscriptionPlansOfferChecks';
 
 /**
  * Billing plans.
@@ -14,6 +15,7 @@ export function SubscriptionPlansSection() {
         include applicable taxes.
       </Callout>
 
+      <SubscriptionPlansOfferChecks />
       <SubscriptionPlansPeriodSwitcher />
       <SubscriptionPlans />
     </section>
