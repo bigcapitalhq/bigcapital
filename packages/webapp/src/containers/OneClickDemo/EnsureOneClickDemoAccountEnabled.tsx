@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { Config } from '@/config';
+import { useOneClickDemoBoot } from './OneClickDemoBoot';
 
 interface EnsureOneClickDemoAccountEnabledProps {
   children: React.ReactNode;
@@ -11,9 +11,10 @@ export const EnsureOneClickDemoAccountEnabled = ({
   children,
   redirectTo = '/',
 }: EnsureOneClickDemoAccountEnabledProps) => {
-  const enabeld = Config.oneClickDemo.enable || false;
+  const { authMeta } = useOneClickDemoBoot();
+  const enabled = authMeta?.meta?.one_click_demo?.enable || false;
 
-  if (!enabeld) {
+  if (!enabled) {
     return <Redirect to={{ pathname: redirectTo }} />;
   }
   return <>{children}</>;

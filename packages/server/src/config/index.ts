@@ -246,8 +246,11 @@ module.exports = {
     apiKey: process.env.LOOPS_API_KEY,
   },
 
-  oneClickDemoAccounts: parseBoolean(
-    process.env.ONE_CLICK_DEMO_ACCOUNTS,
-    false
-  ),
+  /**
+   * One-click demo accounts.
+   */
+  oneClickDemoAccounts: {
+    enable: parseBoolean(process.env.ONE_CLICK_DEMO_ACCOUNTS, false),
+    demoUrl: process.env.ONE_CLICK_DEMO_ACCOUNTS_URL || '',
+  },
 };
