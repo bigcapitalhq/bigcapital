@@ -6,7 +6,7 @@ import Roles from '../containers/Preferences/Users/Roles/RolesForm/RolesFormPage
 import Accountant from '@/containers/Preferences/Accountant/Accountant';
 import Currencies from '@/containers/Preferences/Currencies/Currencies';
 import Item from '@/containers/Preferences/Item';
-import SMSIntegration from '../containers/Preferences/SMSIntegration';
+// import SMSIntegration from '../containers/Preferences/SMSIntegration';
 import DefaultRoute from '../containers/Preferences/DefaultRoute';
 import Warehouses from '../containers/Preferences/Warehouses';
 import Branches from '../containers/Preferences/Branches';
@@ -85,11 +85,11 @@ export default [
     component: Item,
     exact: true,
   },
-  {
-    path: `${BASE_URL}/sms-message`,
-    component: SMSIntegration,
-    exact: true,
-  },
+  // {
+  //   path: `${BASE_URL}/sms-message`,
+  //   component: SMSIntegration,
+  //   exact: true,
+  // },
   {
     path: `${BASE_URL}/billing`,
     component: BillingPage,
