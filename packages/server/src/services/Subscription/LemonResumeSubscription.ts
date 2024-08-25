@@ -18,7 +18,10 @@ export class LemonResumeSubscription {
    * @param {string} subscriptionSlug - Subscription slug by default main subscription.
    * @returns {Promise<void>}
    */
-  public async resumeSubscription(tenantId: number, subscriptionSlug: string = 'main') {
+  public async resumeSubscription(
+    tenantId: number,
+    subscriptionSlug: string = 'main'
+  ) {
     configureLemonSqueezy();
 
     const subscription = await PlanSubscription.query().findOne({
@@ -34,7 +37,7 @@ export class LemonResumeSubscription {
       cancelled: false,
     });
     if (returnedSub.error) {
-      throw new ServiceError(ٌٌُERRORS.SOMETHING_WENT_WRONG_WITH_LS);
+      throw new ServiceError(ERRORS.SOMETHING_WENT_WRONG_WITH_LS);
     }
     // Triggers `onSubscriptionResume` event.
     await this.eventPublisher.emitAsync(
