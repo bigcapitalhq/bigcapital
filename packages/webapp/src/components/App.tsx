@@ -12,7 +12,6 @@ import AppIntlLoader from './AppIntlLoader';
 import { EnsureAuthenticated } from '@/components/Guards/EnsureAuthenticated';
 import GlobalErrors from '@/containers/GlobalErrors/GlobalErrors';
 import DashboardPrivatePages from '@/components/Dashboard/PrivatePages';
-import { Authentication } from '@/containers/Authentication/Authentication';
 
 import LazyLoader from '@/components/LazyLoader';
 import { SplashScreen, DashboardThemeProvider } from '../components';
@@ -21,6 +20,9 @@ import { EnsureUserEmailVerified } from './Guards/EnsureUserEmailVerified';
 import { EnsureAuthNotAuthenticated } from './Guards/EnsureAuthNotAuthenticated';
 import { EnsureUserEmailNotVerified } from './Guards/EnsureUserEmailNotVerified';
 
+const  AuthenticationPage = LazyLoader({
+  loader: () => import('@/containers/Authentication/AuthenticationPage'),
+});
 const EmailConfirmation = LazyLoader({
   loader: () => import('@/containers/Authentication/EmailConfirmation'),
 });
@@ -53,12 +55,7 @@ function AppInsider({ history }) {
               <EmailConfirmation />
             </Route>
 
-            <Route path={'/auth'}>
-              <EnsureAuthNotAuthenticated>
-                <Authentication />
-              </EnsureAuthNotAuthenticated>
-            </Route>
-
+            <Route path={'/auth'} children={<AuthenticationPage />} />
             <Route path={'/'}>
               <EnsureAuthenticated>
                 <EnsureUserEmailVerified>
