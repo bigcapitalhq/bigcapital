@@ -100,7 +100,6 @@ export class TriggerRecognizedTransactions {
   private async triggerRecognizeTransactionsOnImportCommitted({
     tenantId,
     importId,
-    meta,
   }: IImportFileCommitedEventPayload) {
     const importFile = await Import.query().findOne({ importId });
     const batch = importFile.paramsParsed.batch;
