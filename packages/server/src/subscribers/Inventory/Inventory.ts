@@ -86,20 +86,14 @@ export default class InventorySubscriber {
   private handleScheduleItemsCostOnInventoryTransactionsCreated = async ({
     tenantId,
     inventoryTransactions,
-    trx
+    trx,
   }: IInventoryTransactionsCreatedPayload) => {
     const inventoryItemsIds = map(inventoryTransactions, 'itemId');
 
-    runAfterTransaction(trx, async () => {
-      try {
-        await this.saleInvoicesCost.computeItemsCostByInventoryTransactions(
-          tenantId,
-          inventoryTransactions
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    });
+    await this.saleInvoicesCost.computeItemsCostByInventoryTransactions(
+      tenantId,
+      inventoryTransactions
+    );
   };
 
   /**

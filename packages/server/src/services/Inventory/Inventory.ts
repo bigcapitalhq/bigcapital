@@ -139,24 +139,26 @@ export default class InventoryService {
   ) {
     const agenda = Container.get('agenda');
 
+    const commonJobsQuery = {
+      name: 'compute-item-cost',
+      lastRunAt: { $exists: false },
+      'data.tenantId': tenantId,
+      'data.itemId': itemId,
+    };
     // Cancel any `compute-item-cost` in the queue has upper starting date
     // with the same given item.
     await agenda.cancel({
-      name: 'compute-item-cost',
-      nextRunAt: { $ne: null },
-      'data.tenantId': tenantId,
-      'data.itemId': itemId,
-      'data.startingDate': { $gt: startingDate },
+      ...commonJobsQuery,
+      'data.startingDate': { $lte: startingDate },
     });
     // Retrieve any `compute-item-cost` in the queue has lower starting date
     // with the same given item.
     const dependsJobs = await agenda.jobs({
-      name: 'compute-item-cost',
-      nextRunAt: { $ne: null },
-      'data.tenantId': tenantId,
-      'data.itemId': itemId,
-      'data.startingDate': { $lte: startingDate },
+      ...commonJobsQuery,
+      'data.startingDate': { $gte: startingDate },
     });
+
+    // If the depends jobs cleared.
     if (dependsJobs.length === 0) {
       await agenda.schedule(
         config.scheduleComputeItemCost,
