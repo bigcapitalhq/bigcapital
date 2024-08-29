@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { ISalesInvoicesFilter } from '@/interfaces';
 import { SaleInvoiceApplication } from './SaleInvoicesApplication';
 import { Exportable } from '@/services/Export/Exportable';
+import { EXPORT_SIZE_LIMIT } from '@/services/Export/constants';
 
 @Service()
 export class SaleInvoicesExportable extends Exportable {
@@ -19,7 +20,7 @@ export class SaleInvoicesExportable extends Exportable {
       columnSortBy: 'created_at',
       ...query,
       page: 1,
-      pageSize: 120000,
+      pageSize: EXPORT_SIZE_LIMIT,
     } as ISalesInvoicesFilter;
 
     return this.saleInvoicesApplication

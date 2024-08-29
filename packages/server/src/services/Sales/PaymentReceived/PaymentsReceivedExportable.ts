@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { IAccountsStructureType, IPaymentsReceivedFilter } from '@/interfaces';
 import { Exportable } from '@/services/Export/Exportable';
 import { PaymentReceivesApplication } from './PaymentReceivedApplication';
+import { EXPORT_SIZE_LIMIT } from '@/services/Export/constants';
 
 @Service()
 export class PaymentsReceivedExportable extends Exportable {
@@ -21,6 +22,8 @@ export class PaymentsReceivedExportable extends Exportable {
       inactiveMode: false,
       ...query,
       structure: IAccountsStructureType.Flat,
+      page: 1,
+      pageSize: EXPORT_SIZE_LIMIT,
     } as IPaymentsReceivedFilter;
 
     return this.paymentReceivedApp

@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { IItemsFilter } from '@/interfaces';
 import { CustomersApplication } from './CustomersApplication';
 import { Exportable } from '@/services/Export/Exportable';
+import { EXPORT_SIZE_LIMIT } from '@/services/Export/constants';
 
 @Service()
 export class CustomersExportable extends Exportable {
@@ -17,9 +18,9 @@ export class CustomersExportable extends Exportable {
     const parsedQuery = {
       sortOrder: 'DESC',
       columnSortBy: 'created_at',
-      page: 1,
       ...query,
-      pageSize: 12,
+      page: 1,
+      pageSize: EXPORT_SIZE_LIMIT,
     } as IItemsFilter;
 
     return this.customersApplication

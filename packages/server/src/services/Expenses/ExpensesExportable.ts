@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { Exportable } from '../Export/Exportable';
 import { IExpensesFilter } from '@/interfaces';
 import { ExpensesApplication } from './ExpensesApplication';
+import { EXPORT_SIZE_LIMIT } from '../Export/constants';
 
 @Service()
 export class ExpensesExportable extends Exportable {
@@ -19,7 +20,7 @@ export class ExpensesExportable extends Exportable {
       columnSortBy: 'created_at',
       ...query,
       page: 1,
-      pageSize: 12000,
+      pageSize: EXPORT_SIZE_LIMIT,
     } as IExpensesFilter;
 
     return this.expensesApplication
