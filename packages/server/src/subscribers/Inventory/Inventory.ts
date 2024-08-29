@@ -92,7 +92,7 @@ export default class InventorySubscriber {
     inventoryTransactions,
     trx,
   }: IInventoryTransactionsCreatedPayload) => {
-    const inImportPreviewScope = this.importAls.isImportPreview();
+    const inImportPreviewScope = this.importAls.isImportPreview;
 
     // Avoid running the cost items job if the async process is in import preview.
     if (inImportPreviewScope) return;

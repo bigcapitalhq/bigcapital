@@ -8,6 +8,7 @@ export class ImportAls {
   constructor() {
     this.als = new AsyncLocalStorage();
   }
+
   /**
    * Runs a callback function within the context of a new AsyncLocalStorage store.
    * @param callback The function to be executed within the AsyncLocalStorage context.
@@ -82,7 +83,7 @@ export class ImportAls {
    * Checks if the current context is an import operation.
    * @returns {boolean} True if the context is an import operation, false otherwise.
    */
-  public isImport(): boolean {
+  public get isImport(): boolean {
     return !!this.getStore()?.get('isImport');
   }
 
@@ -90,7 +91,7 @@ export class ImportAls {
    * Checks if the current context is an import commit operation.
    * @returns {boolean} True if the context is an import commit operation, false otherwise.
    */
-  public isImportCommit(): boolean {
+  public get isImportCommit(): boolean {
     return !!this.getStore()?.get('isImportCommit');
   }
 
@@ -98,7 +99,7 @@ export class ImportAls {
    * Checks if the current context is an import preview operation.
    * @returns {boolean} True if the context is an import preview operation, false otherwise.
    */
-  public isImportPreview(): boolean {
+  public get isImportPreview(): boolean {
     return !!this.getStore()?.get('isImportPreview');
   }
 }
