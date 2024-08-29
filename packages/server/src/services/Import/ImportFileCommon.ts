@@ -12,7 +12,11 @@ import {
   ImportableContext,
 } from './interfaces';
 import { ServiceError } from '@/exceptions';
-import { getUniqueImportableValue, trimObject } from './_utils';
+import {
+  convertMappingsToObject,
+  getUniqueImportableValue,
+  trimObject,
+} from './_utils';
 import { ImportableResources } from './ImportableResources';
 import ResourceService from '../Resource/ResourceService';
 import { Import } from '@/system/models';
@@ -42,7 +46,6 @@ export class ImportFileCommon {
 
     return XLSX.utils.sheet_to_json(worksheet, {});
   }
-
 
   /**
    * Imports the given parsed data to the resource storage through registered importable service.
@@ -82,11 +85,14 @@ export class ImportFileCommon {
         rowNumber,
         uniqueValue,
       };
+      const mappingSettings = convertMappingsToObject(importFile.columnsParsed);
+
       try {
         // Validate the DTO object before passing it to the service layer.
         await this.importFileValidator.validateData(
           resourceFields,
-          transformedDTO
+          transformedDTO,
+          mappingSettings
         );
         try {
           // Run the importable function and listen to the errors.

@@ -14,7 +14,7 @@
 
   th.label,
   td.label{
-    width: 32% !important;
+    width: 30% !important;
   }
 
   thead{
@@ -31,16 +31,14 @@
     tr td {
       vertical-align: middle;
     }
-
-    tr td{
-      :global(.bp4-popover-target .bp4-button),
-      :global(.bp4-popover-wrapper){
-        max-width: 250px;
-      }
-    }
   }
 }
 
 .requiredSign{
   color: rgb(250, 82, 82);
+}
+
+.columnSelectButton{
+  max-width: 250px;
+  min-width: 250px;
 }

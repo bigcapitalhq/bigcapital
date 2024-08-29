@@ -1,5 +1,9 @@
 import { Service } from 'typedi';
-import { ImportInsertError, ResourceMetaFieldsMap } from './interfaces';
+import {
+  ImportInsertError,
+  ImportMappingAttr,
+  ResourceMetaFieldsMap,
+} from './interfaces';
 import { ERRORS, convertFieldsToYupValidation } from './_utils';
 import { IModelMeta } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
@@ -24,9 +28,13 @@ export class ImportFileDataValidator {
    */
   public async validateData(
     importableFields: ResourceMetaFieldsMap,
-    data: Record<string, any>
+    data: Record<string, any>,
+    mappingSettings: Record<string, ImportMappingAttr> = {}
   ): Promise<void | ImportInsertError[]> {
-    const YupSchema = convertFieldsToYupValidation(importableFields);
+    const YupSchema = convertFieldsToYupValidation(
+      importableFields,
+      mappingSettings
+    );
     const _data = { ...data };
 
     try {

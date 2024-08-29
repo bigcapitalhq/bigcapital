@@ -13,6 +13,7 @@ export type EntityColumnField = {
   required?: boolean;
   hint?: string;
   group?: string;
+  type: string;
 };
 
 export interface EntityColumn {

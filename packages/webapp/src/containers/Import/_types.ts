@@ -12,4 +12,13 @@ export interface ImportFileMappingFormProps {
   children: React.ReactNode;
 }
 
-export type ImportFileMappingFormValues = Record<string, string | null>;
+export type ImportFileMappingFormValues = Record<
+  string,
+  { from: string | null; dateFormat?: string }
+>;
+
+export type ImportFileMappingRes = {
+  from: string;
+  to: string;
+  group: string;
+}[];

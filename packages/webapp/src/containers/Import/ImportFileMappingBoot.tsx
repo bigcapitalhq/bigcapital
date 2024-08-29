@@ -2,8 +2,11 @@ import { Spinner } from '@blueprintjs/core';
 import React, { createContext, useContext } from 'react';
 import { Box } from '@/components';
 import { useImportFileMeta } from '@/hooks/query/import';
+import { useDateFormats } from '@/hooks/query';
 
-interface ImportFileMapBootContextValue {}
+interface ImportFileMapBootContextValue {
+  dateFormats: Array<any>;
+}
 
 const ImportFileMapBootContext = createContext<ImportFileMapBootContextValue>(
   {} as ImportFileMapBootContextValue,
@@ -39,14 +42,22 @@ export const ImportFileMapBootProvider = ({
     enabled: Boolean(importId),
   });
 
+  // Fetch date format options.
+  const { data: dateFormats, isLoading: isDateFormatsLoading } =
+    useDateFormats();
+
   const value = {
     importFile,
     isImportFileLoading,
     isImportFileFetching,
+    dateFormats,
+    isDateFormatsLoading,
   };
+  const isLoading = isDateFormatsLoading || isImportFileLoading;
+
   return (
     <ImportFileMapBootContext.Provider value={value}>
-      {isImportFileLoading ? (
+      {isLoading ? (
         <Box style={{ padding: '2rem', textAlign: 'center' }}>
           <Spinner size={26} />
         </Box>
