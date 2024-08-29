@@ -10,6 +10,7 @@ import { Errors, ExportFormat } from './common';
 import { IModelMeta, IModelMetaColumn } from '@/interfaces';
 import { flatDataCollections, getDataAccessor } from './utils';
 import { ExportPdf } from './ExportPdf';
+import { ExportAls } from './ExportAls';
 
 @Service()
 export class ExportResourceService {
@@ -22,13 +23,33 @@ export class ExportResourceService {
   @Inject()
   private exportPdf: ExportPdf;
 
+  @Inject()
+  private exportAls: ExportAls;
+
+  /**
+   *
+   * @param {number} tenantId
+   * @param {string} resourceName
+   * @param {ExportFormat} format
+   * @returns
+   */
+  public async export(
+    tenantId: number,
+    resourceName: string,
+    format: ExportFormat = ExportFormat.Csv
+  ) {
+    return this.exportAls.run(() =>
+      this.exportAlsRun(tenantId, resourceName, format)
+    );
+  }
+
   /**
    * Exports the given resource data through csv, xlsx or pdf.
    * @param {number} tenantId - Tenant id.
    * @param {string} resourceName - Resource name.
    * @param {ExportFormat} format - File format.
    */
-  public async export(
+  public async exportAlsRun(
     tenantId: number,
     resourceName: string,
     format: ExportFormat = ExportFormat.Csv

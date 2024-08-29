@@ -3,11 +3,16 @@ import { isNull } from 'lodash';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
 import { Transformer } from './Transformer';
+import { ImportAls } from '@/services/Import/ImportALS';
+import { ExportAls } from '@/services/Export/ExportAls';
 
 @Service()
 export class TransformerInjectable {
   @Inject()
   private tenancy: HasTenancyService;
+
+  @Inject()
+  private exportAls: ExportAls;
 
   /**
    * Retrieves the application context of all tenant transformers.
@@ -17,10 +22,12 @@ export class TransformerInjectable {
   async getApplicationContext(tenantId: number) {
     const i18n = this.tenancy.i18n(tenantId);
     const organization = await TenantMetadata.query().findOne({ tenantId });
+    const exportAls = this.exportAls;
 
     return {
       organization,
       i18n,
+      exportAls,
     };
   }
 

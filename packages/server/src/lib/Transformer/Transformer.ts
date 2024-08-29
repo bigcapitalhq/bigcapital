@@ -2,6 +2,7 @@ import moment from 'moment';
 import * as R from 'ramda';
 import { includes, isFunction, isObject, isUndefined, omit } from 'lodash';
 import { formatNumber, sortObjectKeysAlphabetically } from 'utils';
+import { EXPORT_DTE_FORMAT } from '@/services/Export/constants';
 
 export class Transformer {
   public context: any;
@@ -156,22 +157,34 @@ export class Transformer {
   }
 
   /**
-   *
-   * @param date
-   * @returns
+   * Format date.
+   * @param {} date
+   * @param {string} format -
+   * @returns {}
    */
-  protected formatDate(date) {
-    return date ? moment(date).format(this.dateFormat) : '';
+  protected formatDate(date, format?: string) {
+    // Use the export date format if the async operation is in exporting,
+    // otherwise use the given or default format.
+    const _format = this.context.exportAls.isExport
+      ? EXPORT_DTE_FORMAT
+      : format || this.dateFormat;
+
+    return date ? moment(date).format(_format) : '';
   }
 
-  protected formatDateFromNow(date){
+  /**
+   *
+   * @param date
+   * @returns {}
+   */
+  protected formatDateFromNow(date) {
     return date ? moment(date).fromNow(true) : '';
   }
 
   /**
    *
    * @param number
-   * @returns
+   * @returns {}
    */
   protected formatNumber(number, props?) {
     return formatNumber(number, { money: false, ...props });
@@ -181,7 +194,7 @@ export class Transformer {
    *
    * @param money
    * @param options
-   * @returns
+   * @returns {}
    */
   protected formatMoney(money, options?) {
     return formatNumber(money, {
