@@ -1,3 +1,4 @@
+import { Mutex } from 'async-mutex';
 import { Container, Service, Inject } from 'typedi';
 import { chain } from 'lodash';
 import moment from 'moment';
@@ -34,17 +35,26 @@ export class SaleInvoicesCost {
     inventoryItemsIds: number[],
     startingDate: Date
   ): Promise<void> {
-    const asyncOpers: Promise<[]>[] = [];
+    const mutex = new Mutex();
 
-    inventoryItemsIds.forEach((inventoryItemId: number) => {
-      const oper: Promise<[]> = this.inventoryService.scheduleComputeItemCost(
-        tenantId,
-        inventoryItemId,
-        startingDate
-      );
-      asyncOpers.push(oper);
-    });
-    await Promise.all([...asyncOpers]);
+    const asyncOpers = inventoryItemsIds.map(
+      async (inventoryItemId: number) => {
+        // @todo refactor the lock acquire to be distrbuted using Redis
+        // and run the cost schedule job after running invoice transaction.
+        const release = await mutex.acquire();
+
+        try {
+          await this.inventoryService.scheduleComputeItemCost(
+            tenantId,
+            inventoryItemId,
+            startingDate
+          );
+        } finally {
+          release();
+        }
+      }
+    );
+    await Promise.all(asyncOpers);
   }
 
   /**
@@ -86,17 +96,22 @@ export class SaleInvoicesCost {
     tenantId: number,
     inventoryTransactions: IInventoryTransaction[]
   ) {
-    const asyncOpers: Promise<[]>[] = [];
+    const mutex = new Mutex();
     const reducedTransactions = this.getMaxDateInventoryTransactions(
       inventoryTransactions
     );
-    reducedTransactions.forEach((transaction) => {
-      const oper: Promise<[]> = this.inventoryService.scheduleComputeItemCost(
-        tenantId,
-        transaction.itemId,
-        transaction.date
-      );
-      asyncOpers.push(oper);
+    const asyncOpers = reducedTransactions.map(async (transaction) => {
+      const release = await mutex.acquire();
+
+      try {
+        await this.inventoryService.scheduleComputeItemCost(
+          tenantId,
+          transaction.itemId,
+          transaction.date
+        );
+      } finally {
+        release();
+      }
     });
     await Promise.all([...asyncOpers]);
   }

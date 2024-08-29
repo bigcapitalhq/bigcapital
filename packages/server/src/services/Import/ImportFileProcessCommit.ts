@@ -5,6 +5,7 @@ import { ImportFileProcess } from './ImportFileProcess';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import { IImportFileCommitedEventPayload } from '@/interfaces/Import';
+import { ImportAls } from './ImportALS';
 
 @Service()
 export class ImportFileProcessCommit {
@@ -15,7 +16,25 @@ export class ImportFileProcessCommit {
   private importFile: ImportFileProcess;
 
   @Inject()
+  private importAls: ImportAls;
+
+  @Inject()
   private eventPublisher: EventPublisher;
+
+  /**
+   * Commits the imported file under ALS.
+   * @param {number} tenantId
+   * @param {string} importId
+   * @returns {Promise<ImportFilePreviewPOJO>}
+   */
+  public commit(
+    tenantId: number,
+    importId: string
+  ): Promise<ImportFilePreviewPOJO> {
+    return this.importAls.runCommit<Promise<ImportFilePreviewPOJO>>(() =>
+      this.commitAlsRun(tenantId, importId)
+    );
+  }
 
   /**
    * Commits the imported file.
@@ -23,7 +42,7 @@ export class ImportFileProcessCommit {
    * @param {number} importId
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
-  public async commit(
+  public async commitAlsRun(
     tenantId: number,
     importId: string
   ): Promise<ImportFilePreviewPOJO> {

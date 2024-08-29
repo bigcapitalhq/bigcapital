@@ -10,6 +10,7 @@ import {
 } from '@/interfaces';
 import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
 import { SaleInvoicesCost } from '@/services/Sales/Invoices/SalesInvoicesCost';
+import { ImportAls } from '@/services/Import/ImportALS';
 
 @Service()
 export default class InventorySubscriber {
@@ -24,6 +25,9 @@ export default class InventorySubscriber {
 
   @Inject('agenda')
   private agenda: any;
+
+  @Inject()
+  private importAls: ImportAls;
 
   /**
    * Attaches events with handlers.
@@ -86,20 +90,17 @@ export default class InventorySubscriber {
   private handleScheduleItemsCostOnInventoryTransactionsCreated = async ({
     tenantId,
     inventoryTransactions,
-    trx
+    trx,
   }: IInventoryTransactionsCreatedPayload) => {
-    const inventoryItemsIds = map(inventoryTransactions, 'itemId');
+    const inImportPreviewScope = this.importAls.isImportPreview();
 
-    runAfterTransaction(trx, async () => {
-      try {
-        await this.saleInvoicesCost.computeItemsCostByInventoryTransactions(
-          tenantId,
-          inventoryTransactions
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    });
+    // Avoid running the cost items job if the async process is in import preview.
+    if (inImportPreviewScope) return;
+
+    await this.saleInvoicesCost.computeItemsCostByInventoryTransactions(
+      tenantId,
+      inventoryTransactions
+    );
   };
 
   /**
