@@ -6,7 +6,6 @@ import {
   ISaleInvoiceEditedPayload,
 } from '@/interfaces';
 import { SaleInvoiceGLEntries } from '@/services/Sales/Invoices/InvoiceGLEntries';
-import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
 
 @Service()
 export default class SaleInvoiceWriteGLEntriesSubscriber {

@@ -157,7 +157,6 @@ export default class InventoryService {
       ...commonJobsQuery,
       'data.startingDate': { $gte: startingDate },
     });
-
     // If the depends jobs cleared.
     if (dependsJobs.length === 0) {
       await agenda.schedule(
@@ -173,6 +172,13 @@ export default class InventoryService {
       await this.eventPublisher.emitAsync(
         events.inventory.onComputeItemCostJobScheduled,
         { startingDate, itemId, tenantId } as IInventoryItemCostScheduledPayload
+      );
+    } else {
+      // Re-schedule the jobs that have higher date from current moment.
+      await Promise.all(
+        dependsJobs.map((job) =>
+          job.schedule(config.scheduleComputeItemCost).save()
+        )
       );
     }
   }
