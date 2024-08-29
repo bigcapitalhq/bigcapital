@@ -73,8 +73,9 @@ export function OneClickDemoPageContent() {
               )}
               {running && (
                 <Text className={style.waitingText}>
-                  We're preparing temporary environment for trial, It typically
-                  take few seconds. Do not close or refresh the page.
+                  We're preparing the temporary environment for trial. It
+                  typically takes a few seconds. Do not close or refresh the
+                  page.
                 </Text>
               )}
             </Stack>
