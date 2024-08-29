@@ -2,10 +2,12 @@
 import { Route, Switch, useLocation } from 'react-router-dom';
 import BodyClassName from 'react-body-classname';
 import styled from 'styled-components';
+import { Suspense } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { Spinner } from '@blueprintjs/core';
 
 import authenticationRoutes from '@/routes/authentication';
-import { Icon, FormattedMessage as T } from '@/components';
+import { Box, Icon, FormattedMessage as T } from '@/components';
 import { AuthMetaBootProvider } from './AuthMetaBoot';
 
 import '@/style/pages/Authentication/Auth.scss';
@@ -20,7 +22,15 @@ export function Authentication() {
           </AuthLogo>
 
           <AuthMetaBootProvider>
-            <AuthenticationRoutes />
+            <Suspense
+              fallback={
+                <Box style={{ marginTop: '5rem' }}>
+                  <Spinner size={30} />
+                </Box>
+              }
+            >
+              <AuthenticationRoutes />
+            </Suspense>
           </AuthMetaBootProvider>
         </AuthInsider>
       </AuthPage>
