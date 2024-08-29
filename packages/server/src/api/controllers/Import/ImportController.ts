@@ -40,6 +40,7 @@ export class ImportController extends BaseController {
         body('mapping.*.group').optional(),
         body('mapping.*.from').exists(),
         body('mapping.*.to').exists(),
+        body('mapping.*.dateFormat').optional({ nullable: true }),
       ],
       this.validationResult,
       this.asyncMiddleware(this.mapping.bind(this)),

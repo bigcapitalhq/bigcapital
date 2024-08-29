@@ -8,9 +8,12 @@ import { EntityColumnField, useImportFileContext } from './ImportFileProvider';
 import { CLASSES } from '@/constants';
 import { ImportFileContainer } from './ImportFileContainer';
 import { ImportStepperStep } from './_types';
-import { ImportFileMapBootProvider } from './ImportFileMappingBoot';
+import {
+  ImportFileMapBootProvider,
+  useImportFileMapBootContext,
+} from './ImportFileMappingBoot';
 import styles from './ImportFileMapping.module.scss';
-import { getFieldKey } from './_utils';
+import { getDateFieldKey, getFieldKey } from './_utils';
 
 export function ImportFileMapping() {
   const { importId, entityColumns } = useImportFileContext();
@@ -82,6 +85,7 @@ interface ImportFileMappingFieldsProps {
  */
 function ImportFileMappingFields({ fields }: ImportFileMappingFieldsProps) {
   const { sheetColumns } = useImportFileContext();
+  const { dateFormats } = useImportFileMapBootContext();
 
   const items = useMemo(
     () => sheetColumns.map((column) => ({ value: column, text: column })),
@@ -95,22 +99,35 @@ function ImportFileMappingFields({ fields }: ImportFileMappingFieldsProps) {
           {column.required && <span className={styles.requiredSign}>*</span>}
         </td>
         <td className={styles.field}>
-          <Group spacing={4}>
+          <Group spacing={12} noWrap>
             <FSelect
-              name={getFieldKey(column.key, column.group)}
+              name={`['${getFieldKey(column.key, column.group)}'].from`}
               items={items}
               popoverProps={{ minimal: true }}
               minimal={true}
               fill={true}
+              className={styles.columnSelectButton}
             />
             {column.hint && (
               <Hint content={column.hint} position={Position.BOTTOM} />
+            )}
+            {column.type === 'date' && (
+              <FSelect
+                name={getDateFieldKey(column.key, column.group)}
+                items={dateFormats}
+                placeholder={'Select date format'}
+                minimal={true}
+                fill={true}
+                valueAccessor={'key'}
+                textAccessor={'label'}
+                labelAccessor={''}
+              />
             )}
           </Group>
         </td>
       </tr>
     ),
-    [items],
+    [items, dateFormats],
   );
   const columns = useMemo(
     () => fields.map(columnMapper),

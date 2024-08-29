@@ -17,9 +17,10 @@ import {
   head,
   split,
   last,
+  set,
 } from 'lodash';
 import pluralize from 'pluralize';
-import { ResourceMetaFieldsMap } from './interfaces';
+import { ImportMappingAttr, ResourceMetaFieldsMap } from './interfaces';
 import { IModelMetaField, IModelMetaField2 } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
 import { multiNumberParse } from '@/utils/multi-number-parse';
@@ -58,11 +59,19 @@ export function trimObject(obj: Record<string, string | number>) {
  * @param {ResourceMetaFieldsMap} fields
  * @returns {Yup}
  */
-export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
+export const convertFieldsToYupValidation = (
+  fields: ResourceMetaFieldsMap,
+  parentFieldName: string = '',
+  mappingSettings: Record<string, ImportMappingAttr> = {}
+) => {
   const yupSchema = {};
 
   Object.keys(fields).forEach((fieldName: string) => {
     const field = fields[fieldName] as IModelMetaField;
+    const fieldPath = parentFieldName
+      ? `${parentFieldName}.${fieldName}`
+      : fieldName;
+
     let fieldSchema;
     fieldSchema = Yup.string().label(field.name);
 
@@ -105,13 +114,23 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
           if (!val) {
             return true;
           }
-          return moment(val, 'YYYY-MM-DD', true).isValid();
+          const fieldDateFormat =
+            (get(
+              mappingSettings,
+              `${fieldPath}.dateFormat`
+            ) as unknown as string) || 'YYYY-MM-DD';
+
+          return moment(val, fieldDateFormat, true).isValid();
         }
       );
     } else if (field.fieldType === 'url') {
       fieldSchema = fieldSchema.url();
     } else if (field.fieldType === 'collection') {
-      const nestedFieldShema = convertFieldsToYupValidation(field.fields);
+      const nestedFieldShema = convertFieldsToYupValidation(
+        field.fields,
+        field.name,
+        mappingSettings
+      );
       fieldSchema = Yup.array().label(field.name);
 
       if (!isUndefined(field.collectionMaxLength)) {
@@ -258,6 +277,7 @@ export const getResourceColumns = (resourceColumns: {
     ]) => {
       const extra: Record<string, any> = {};
       const key = fieldKey;
+      const type = field.fieldType;
 
       if (group) {
         extra.group = group;
@@ -270,6 +290,7 @@ export const getResourceColumns = (resourceColumns: {
         name,
         required,
         hint: importHint,
+        type,
         order,
         ...extra,
       };
@@ -322,6 +343,8 @@ export const valueParser =
       });
       const result = await relationQuery.first();
       _value = get(result, 'id');
+    } else if (field.fieldType === 'date') {
+      
     } else if (field.fieldType === 'collection') {
       const ObjectFieldKey = key.includes('.') ? key.split('.')[1] : key;
       const _valueParser = valueParser(fields, tenantModels);
@@ -433,8 +456,8 @@ export const getMapToPath = (to: string, group = '') =>
   group ? `${group}.${to}` : to;
 
 export const getImportsStoragePath = () => {
-  return  path.join(global.__storage_dir, `/imports`);
-}
+  return path.join(global.__storage_dir, `/imports`);
+};
 
 /**
  * Deletes the imported file from the storage and database.
@@ -456,4 +479,20 @@ export const readImportFile = (filename: string) => {
   const filePath = getImportsStoragePath();
 
   return fs.readFile(`${filePath}/${filename}`);
+};
+
+/**
+ * Converts an array of mapping objects to a structured object.
+ * @param {Array<Object>} mappings - Array of mapping objects.
+ * @returns {Object} - Structured object based on the mappings.
+ */
+export const convertMappingsToObject = (mappings) => {
+  return mappings.reduce((acc, mapping) => {
+    const { to, group } = mapping;
+    const key = group ? `['${group}.${to}']` : to;
+
+    set(acc, key, mapping);
+
+    return acc;
+  }, {});
 };
