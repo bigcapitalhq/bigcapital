@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { AccountsApplication } from './AccountsApplication';
 import { Exportable } from '../Export/Exportable';
 import { IAccountsFilter, IAccountsStructureType } from '@/interfaces';
+import { EXPORT_SIZE_LIMIT } from '../Export/constants';
 
 @Service()
 export class AccountsExportable extends Exportable {
@@ -20,7 +21,7 @@ export class AccountsExportable extends Exportable {
       inactiveMode: false,
       ...query,
       structure: IAccountsStructureType.Flat,
-      pageSize: 12000,
+      pageSize: EXPORT_SIZE_LIMIT,
       page: 1,
     } as IAccountsFilter;
 

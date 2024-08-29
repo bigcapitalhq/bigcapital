@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { IManualJournalsFilter } from '@/interfaces';
 import { Exportable } from '../Export/Exportable';
 import { ManualJournalsApplication } from './ManualJournalsApplication';
+import { EXPORT_SIZE_LIMIT } from '../Export/constants';
 
 @Service()
 export class ManualJournalsExportable extends Exportable {
@@ -19,7 +20,7 @@ export class ManualJournalsExportable extends Exportable {
       columnSortBy: 'created_at',
       ...query,
       page: 1,
-      pageSize: 12000,
+      pageSize: EXPORT_SIZE_LIMIT,
     } as IManualJournalsFilter;
 
     return this.manualJournalsApplication

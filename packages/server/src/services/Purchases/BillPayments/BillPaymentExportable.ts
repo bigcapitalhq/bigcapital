@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { Exportable } from '@/services/Export/Exportable';
 import { BillPaymentsApplication } from './BillPaymentsApplication';
+import { EXPORT_SIZE_LIMIT } from '@/services/Export/constants';
 
 @Service()
 export class BillPaymentExportable extends Exportable {
@@ -14,11 +15,11 @@ export class BillPaymentExportable extends Exportable {
    */
   public exportable(tenantId: number, query: any) {
     const parsedQuery = {
-      page: 1,
-      pageSize: 12,
-      ...query,
       sortOrder: 'desc',
       columnSortBy: 'created_at',
+      ...query,
+      page: 1,
+      pageSize: EXPORT_SIZE_LIMIT,
     } as any;
 
     return this.billPaymentsApplication
