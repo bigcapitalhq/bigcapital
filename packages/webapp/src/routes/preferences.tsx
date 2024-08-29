@@ -3,7 +3,7 @@ import { lazy } from 'react';
 
 const BASE_URL = '/preferences';
 
-export default [
+export const getPreferenceRoutes = () => [
   {
     path: `${BASE_URL}/general`,
     component: lazy(() => import('@/containers/Preferences/General/General')),
