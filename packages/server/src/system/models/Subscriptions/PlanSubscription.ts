@@ -84,7 +84,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
 
       /**
        * Filter the failed payment.
-       * @param builder 
+       * @param builder
        */
       failedPayment(builder) {
         builder.where('payment_status', SubscriptionPaymentStatus.Failed);
@@ -92,7 +92,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
 
       /**
        * Filter the succeed payment.
-       * @param builder 
+       * @param builder
        */
       succeedPayment(builder) {
         builder.where('payment_status', SubscriptionPaymentStatus.Succeed);
@@ -136,14 +136,13 @@ export default class PlanSubscription extends mixin(SystemModel) {
 
   /**
    * Check if the subscription is active.
-   * Crtiria should be:
-   *  - During the trial period and NOT canceled.
-   *  - Not ended.
-   * 
+   * Crtiria should be active:
+   *  - During the trial period should NOT be canceled.
+   *  - Out of trial period should NOT be ended.
    * @return {Boolean}
    */
   public active() {
-    return this.onTrial() || !this.ended();
+    return this.onTrial() ? !this.canceled() : !this.ended();
   }
 
   /**
