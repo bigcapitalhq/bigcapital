@@ -11,6 +11,7 @@ import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileUploadPOJO } from './interfaces';
 import { Import } from '@/system/models';
+import { parseSheetData } from './sheet_utils';
 
 @Service()
 export class ImportFileUploadService {
@@ -77,13 +78,11 @@ export class ImportFileUploadService {
     const buffer = await readImportFile(filename);
 
     // Parse the buffer file to array data.
-    const sheetData = this.importFileCommon.parseXlsxSheet(buffer);
+    const [sheetData, sheetColumns] = parseSheetData(buffer);
+    const coumnsStringified = JSON.stringify(sheetColumns);
 
     // Throws service error if the sheet data is empty.
     validateSheetEmpty(sheetData);
-
-    const sheetColumns = this.importFileCommon.parseSheetColumns(sheetData);
-    const coumnsStringified = JSON.stringify(sheetColumns);
 
     try {
       // Validates the params Yup schema.
