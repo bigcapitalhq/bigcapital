@@ -1,4 +1,3 @@
-import XLSX from 'xlsx';
 import bluebird from 'bluebird';
 import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
@@ -27,23 +26,7 @@ export class ImportFileCommon {
 
   @Inject()
   private resource: ResourceService;
-
-  /**
-   * Maps the columns of the imported data based on the provided mapping attributes.
-   * @param {Record<string, any>[]} body - The array of data objects to map.
-   * @param {ImportMappingAttr[]} map - The mapping attributes.
-   * @returns {Record<string, any>[]} - The mapped data objects.
-   */
-  public parseXlsxSheet(buffer: Buffer): Record<string, unknown>[] {
-    const workbook = XLSX.read(buffer, { type: 'buffer', raw: true });
-
-    const firstSheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[firstSheetName];
-
-    return XLSX.utils.sheet_to_json(worksheet, {});
-  }
-
-
+  
   /**
    * Imports the given parsed data to the resource storage through registered importable service.
    * @param {number} tenantId -

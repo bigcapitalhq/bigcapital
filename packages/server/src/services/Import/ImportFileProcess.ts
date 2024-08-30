@@ -2,18 +2,14 @@ import { Inject, Service } from 'typedi';
 import { chain } from 'lodash';
 import { Knex } from 'knex';
 import { ServiceError } from '@/exceptions';
-import {
-  ERRORS,
-  getSheetColumns,
-  getUnmappedSheetColumns,
-  readImportFile,
-} from './_utils';
+import { ERRORS, getUnmappedSheetColumns, readImportFile } from './_utils';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataTransformer } from './ImportFileDataTransformer';
 import ResourceService from '../Resource/ResourceService';
 import UnitOfWork from '../UnitOfWork';
 import { ImportFilePreviewPOJO } from './interfaces';
 import { Import } from '@/system/models';
+import { parseSheetData } from './sheet_utils';
 
 @Service()
 export class ImportFileProcess {
@@ -49,10 +45,10 @@ export class ImportFileProcess {
     if (!importFile.isMapped) {
       throw new ServiceError(ERRORS.IMPORT_FILE_NOT_MAPPED);
     }
-    // Read the imported file.
+    // Read the imported file and parse the given buffer to get columns
+    // and sheet data in json format.
     const buffer = await readImportFile(importFile.filename);
-    const sheetData = this.importCommon.parseXlsxSheet(buffer);
-    const header = getSheetColumns(sheetData);
+    const [sheetData, sheetColumns] = parseSheetData(buffer);
 
     const resource = importFile.resource;
     const resourceFields = this.resource.getResourceFields2(tenantId, resource);
@@ -87,7 +83,7 @@ export class ImportFileProcess {
       .flatten()
       .value();
 
-    const unmappedColumns = getUnmappedSheetColumns(header, mapping);
+    const unmappedColumns = getUnmappedSheetColumns(sheetColumns, mapping);
     const totalCount = allData.length;
 
     const createdCount = successedImport.length;
