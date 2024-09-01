@@ -118,6 +118,7 @@ import { LoopsEventsSubscriber } from '@/services/Loops/LoopsEventsSubscriber';
 import { DeleteUncategorizedTransactionsOnAccountDeleting } from '@/services/Banking/BankAccounts/events/DeleteUncategorizedTransactionsOnAccountDeleting';
 import { SeedInitialDemoAccountDataOnOrgBuild } from '@/services/OneClickDemo/events/SeedInitialDemoAccountData';
 import { TriggerInvalidateCacheOnSubscriptionChange } from '@/services/Subscription/events/TriggerInvalidateCacheOnSubscriptionChange';
+import { EventsTrackerListeners } from '@/services/EventsTracker/events/events';
 
 export default () => {
   return new EventPublisher();
@@ -289,5 +290,7 @@ export const susbcribers = () => {
 
     // Demo Account
     SeedInitialDemoAccountDataOnOrgBuild,
+
+    ...EventsTrackerListeners
   ];
 };

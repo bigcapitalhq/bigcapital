@@ -99,6 +99,7 @@
     "objection-unique": "^1.2.2",
     "plaid": "^10.3.0",
     "pluralize": "^8.0.0",
+    "posthog-node": "^4.2.0",
     "pug": "^3.0.2",
     "puppeteer": "^10.2.0",
     "qim": "0.0.52",
