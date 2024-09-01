@@ -11,6 +11,7 @@ import {
 } from '@/interfaces';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { TenantMetadata } from '@/system/models';
+import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 
 @Service()
 export class ExpenseDTOTransformer {
@@ -40,8 +41,8 @@ export class ExpenseDTOTransformer {
 
   /**
    * Mapping expense DTO to model.
-   * @param  {IExpenseDTO} expenseDTO
-   * @param  {ISystemUser} authorizedUser
+   * @param {IExpenseDTO} expenseDTO
+   * @param {ISystemUser} authorizedUser
    * @return {IExpense}
    */
   private expenseDTOToModel(
@@ -52,9 +53,14 @@ export class ExpenseDTOTransformer {
     const landedCostAmount = this.getExpenseLandedCostAmount(expenseDTO);
     const totalAmount = this.getExpenseCategoriesTotal(expenseDTO.categories);
 
+    const categories = R.compose(
+      // Associate the default index to categories lines.
+      assocItemEntriesDefaultIndex
+    )(expenseDTO.categories || []);
+
     const initialDTO = {
-      categories: [],
       ...omit(expenseDTO, ['publish', 'attachments']),
+      categories,
       totalAmount,
       landedCostAmount,
       paymentDate: moment(expenseDTO.paymentDate).toMySqlDateTime(),

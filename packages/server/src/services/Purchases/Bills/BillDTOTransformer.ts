@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
 import composeAsync from 'async/compose';
-import { formatDateFields } from 'utils';
+import { assocDepthLevelToObjectTree, formatDateFields } from 'utils';
 import {
   IBillDTO,
   IBill,
@@ -15,6 +15,7 @@ import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
+import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 
 @Service()
 export class BillDTOTransformer {
@@ -54,9 +55,9 @@ export class BillDTOTransformer {
 
   /**
    * Converts create bill DTO to model.
-   * @param   {number} tenantId
-   * @param   {IBillDTO} billDTO
-   * @param   {IBill} oldBill
+   * @param {number} tenantId
+   * @param {IBillDTO} billDTO
+   * @param {IBill} oldBill
    * @returns {IBill}
    */
   public async billDTOToModel(
@@ -92,7 +93,9 @@ export class BillDTOTransformer {
 
     const entries = R.compose(
       // Remove tax code from entries.
-      R.map(R.omit(['taxCode']))
+      R.map(R.omit(['taxCode'])),
+      // Associate the default index to each item entry line.
+      assocItemEntriesDefaultIndex
     )(asyncEntries);
 
     const initialDTO = {

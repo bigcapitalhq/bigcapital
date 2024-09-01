@@ -11,6 +11,7 @@ import { PaymentReceivedValidators } from './PaymentReceivedValidators';
 import { PaymentReceivedIncrement } from './PaymentReceivedIncrement';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { formatDateFields } from '@/utils';
+import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 
 @Service()
 export class PaymentReceiveDTOTransformer {
@@ -52,6 +53,11 @@ export class PaymentReceiveDTOTransformer {
 
     this.validators.validatePaymentNoRequire(paymentReceiveNo);
 
+    const entries = R.compose(
+      // Associate the default index to each item entry line.
+      assocItemEntriesDefaultIndex
+    )(paymentReceiveDTO.entries);
+
     const initialDTO = {
       ...formatDateFields(omit(paymentReceiveDTO, ['entries', 'attachments']), [
         'paymentDate',
@@ -60,9 +66,7 @@ export class PaymentReceiveDTOTransformer {
       currencyCode: customer.currencyCode,
       ...(paymentReceiveNo ? { paymentReceiveNo } : {}),
       exchangeRate: paymentReceiveDTO.exchangeRate || 1,
-      entries: paymentReceiveDTO.entries.map((entry) => ({
-        ...entry,
-      })),
+      entries,
     };
     return R.compose(
       this.branchDTOTransform.transformDTO<IPaymentReceived>(tenantId)

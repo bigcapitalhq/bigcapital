@@ -9,11 +9,13 @@ import {
   IVendorCredit,
   IVendorCreditCreateDTO,
   IVendorCreditEditDTO,
+  IVendorCreditEntryDTO,
 } from '@/interfaces';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import AutoIncrementOrdersService from '@/services/Sales/AutoIncrementOrdersService';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
+import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 
 @Service()
 export default class BaseVendorCredit {
@@ -50,10 +52,18 @@ export default class BaseVendorCredit {
     const amount = this.itemsEntriesService.getTotalItemsEntries(
       vendorCreditDTO.entries
     );
-    const entries = vendorCreditDTO.entries.map((entry) => ({
-      ...entry,
-      referenceType: 'VendorCredit',
-    }));
+
+    const entries = R.compose(
+      // Associate the default index to each item entry.
+      assocItemEntriesDefaultIndex,
+
+      // Associate the reference type to item entries.
+      R.map((entry: IVendorCreditEntryDTO) => ({
+        referenceType: 'VendorCredit',
+        ...entry,
+      }))
+    )(vendorCreditDTO.entries);
+
     // Retreive the next vendor credit number.
     const autoNextNumber = this.getNextCreditNumber(tenantId);
 
