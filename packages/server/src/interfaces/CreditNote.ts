@@ -1,10 +1,10 @@
 import { Knex } from 'knex';
-import { IDynamicListFilter, IItemEntry, IVendorCredit } from '@/interfaces';
+import { IDynamicListFilter, IItemEntry } from '@/interfaces';
 import { ILedgerEntry } from './Ledger';
 import { AttachmentLinkDTO } from './Attachments';
 
 export interface ICreditNoteEntryNewDTO {
-  index: number;
+  index?: number;
   itemId: number;
   rate: number;
   quantity: number;
@@ -22,7 +22,7 @@ export interface ICreditNoteNewDTO {
   entries: ICreditNoteEntryNewDTO[];
   branchId?: number;
   warehouseId?: number;
-  attachments?: AttachmentLinkDTO[]
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface ICreditNoteEditDTO {
@@ -35,7 +35,7 @@ export interface ICreditNoteEditDTO {
   entries: ICreditNoteEntryNewDTO[];
   branchId?: number;
   warehouseId?: number;
-  attachments?: AttachmentLinkDTO[]
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface ICreditNoteEntry extends IItemEntry {}
@@ -61,7 +61,7 @@ export interface ICreditNote {
   localAmount?: number;
   branchId?: number;
   warehouseId: number;
-  createdAt?: Date,
+  createdAt?: Date;
 }
 
 export enum CreditNoteAction {

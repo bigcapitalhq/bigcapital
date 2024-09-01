@@ -5,11 +5,17 @@ import * as R from 'ramda';
 import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from './constants';
-import { ICreditNote, ICreditNoteEditDTO, ICreditNoteNewDTO } from '@/interfaces';
+import {
+  ICreditNote,
+  ICreditNoteEditDTO,
+  ICreditNoteEntryNewDTO,
+  ICreditNoteNewDTO,
+} from '@/interfaces';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import AutoIncrementOrdersService from '@/services/Sales/AutoIncrementOrdersService';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
+import { assocItemEntriesDefaultIndex } from '../Items/utils';
 
 @Service()
 export default class BaseCreditNotes {
@@ -43,10 +49,17 @@ export default class BaseCreditNotes {
     const amount = this.itemsEntriesService.getTotalItemsEntries(
       creditNoteDTO.entries
     );
-    const entries = creditNoteDTO.entries.map((entry) => ({
-      ...entry,
-      referenceType: 'CreditNote',
-    }));
+    const entries = R.compose(
+      // Associate the default index to each item entry.
+      assocItemEntriesDefaultIndex,
+
+      // Associate the reference type to credit note entries.
+      R.map((entry: ICreditNoteEntryNewDTO) => ({
+        ...entry,
+        referenceType: 'CreditNote',
+      }))
+    )(creditNoteDTO.entries);
+
     // Retreive the next credit note number.
     const autoNextNumber = this.getNextCreditNumber(tenantId);
 

@@ -9,6 +9,7 @@ import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrat
 import { formatDateFields } from '@/utils';
 import moment from 'moment';
 import { SaleEstimateIncrement } from './SaleEstimateIncrement';
+import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 
 @Service()
 export class SaleEstimateDTOTransformer {
@@ -56,6 +57,14 @@ export class SaleEstimateDTOTransformer {
     // Validate the sale estimate number require.
     this.validators.validateEstimateNoRequire(estimateNumber);
 
+    const entries = R.compose(
+      // Associate the reference type to item entries.
+      R.map((entry) => R.assoc('reference_type', 'SaleEstimate', entry)),
+
+      // Associate default index to item entries.
+      assocItemEntriesDefaultIndex
+    )(estimateDTO.entries);
+
     const initialDTO = {
       amount,
       ...formatDateFields(
@@ -65,10 +74,7 @@ export class SaleEstimateDTOTransformer {
       currencyCode: paymentCustomer.currencyCode,
       exchangeRate: estimateDTO.exchangeRate || 1,
       ...(estimateNumber ? { estimateNumber } : {}),
-      entries: estimateDTO.entries.map((entry) => ({
-        reference_type: 'SaleEstimate',
-        ...entry,
-      })),
+      entries,
       // Avoid rewrite the deliver date in edit mode when already published.
       ...(estimateDTO.delivered &&
         !oldSaleEstimate?.deliveredAt && {

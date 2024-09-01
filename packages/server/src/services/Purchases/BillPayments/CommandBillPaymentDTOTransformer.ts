@@ -3,8 +3,8 @@ import * as R from 'ramda';
 import { omit, sumBy } from 'lodash';
 import { IBillPayment, IBillPaymentDTO, IVendor } from '@/interfaces';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
+import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 import { formatDateFields } from '@/utils';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class CommandBillPaymentDTOTransformer {
@@ -27,6 +27,12 @@ export class CommandBillPaymentDTOTransformer {
     const amount =
       billPaymentDTO.amount ?? sumBy(billPaymentDTO.entries, 'paymentAmount');
 
+    // Associate the default index to each item entry.
+    const entries = R.compose(
+      // Associate the default index to payment entries.
+      assocItemEntriesDefaultIndex
+    )(billPaymentDTO.entries);
+
     const initialDTO = {
       ...formatDateFields(omit(billPaymentDTO, ['attachments']), [
         'paymentDate',
@@ -34,7 +40,7 @@ export class CommandBillPaymentDTOTransformer {
       amount,
       currencyCode: vendor.currencyCode,
       exchangeRate: billPaymentDTO.exchangeRate || 1,
-      entries: billPaymentDTO.entries,
+      entries,
     };
     return R.compose(
       this.branchDTOTransform.transformDTO<IBillPayment>(tenantId)

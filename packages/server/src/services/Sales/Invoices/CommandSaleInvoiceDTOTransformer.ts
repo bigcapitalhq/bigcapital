@@ -17,6 +17,7 @@ import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { SaleInvoiceIncrement } from './SaleInvoiceIncrement';
 import { formatDateFields } from 'utils';
 import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
+import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 import { ItemEntry } from '@/models';
 
 @Service()
@@ -81,7 +82,10 @@ export class CommandSaleInvoiceDTOTransformer {
 
     const entries = R.compose(
       // Remove tax code from entries.
-      R.map(R.omit(['taxCode']))
+      R.map(R.omit(['taxCode'])),
+
+      // Associate the default index for each item entry lin.
+      assocItemEntriesDefaultIndex
     )(asyncEntries);
 
     const initialDTO = {

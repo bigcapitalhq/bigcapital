@@ -104,4 +104,3 @@ export class CreateSaleEstimate {
       trx
     );
   }
-}

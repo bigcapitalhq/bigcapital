@@ -11,6 +11,7 @@ import { ICustomer, ISaleReceipt, ISaleReceiptDTO } from '@/interfaces';
 import { formatDateFields } from '@/utils';
 import { SaleReceiptIncrement } from './SaleReceiptIncrement';
 import { ItemEntry } from '@/models';
+import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 
 @Service()
 export class SaleReceiptDTOTransformer {
@@ -61,10 +62,15 @@ export class SaleReceiptDTOTransformer {
       ...entry,
     }));
 
-    const entries = await composeAsync(
+    const asyncEntries = await composeAsync(
       // Sets default cost and sell account to receipt items entries.
       this.itemsEntriesService.setItemsEntriesDefaultAccounts(tenantId)
     )(initialEntries);
+
+    const entries = R.compose(
+      // Associate the default index for each item entry.
+      assocItemEntriesDefaultIndex
+    )(asyncEntries);
 
     const initialDTO = {
       amount,

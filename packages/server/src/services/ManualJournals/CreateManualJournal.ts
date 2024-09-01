@@ -18,6 +18,8 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { CommandManualJournalValidators } from './CommandManualJournalValidators';
 import { AutoIncrementManualJournal } from './AutoIncrementManualJournal';
 import { ManualJournalBranchesDTOTransformer } from '@/services/Branches/Integrations/ManualJournals/ManualJournalDTOTransformer';
+import { assocItemEntriesDefaultIndex } from '../Items/utils';
+
 @Service()
 export class CreateManualJournalService {
   @Inject()
@@ -58,16 +60,22 @@ export class CreateManualJournalService {
     // The manual or auto-increment journal number.
     const journalNumber = manualJournalDTO.journalNumber || autoNextNumber;
 
+    const entries = R.compose(
+      // Associate the default index to each item entry.
+      assocItemEntriesDefaultIndex
+    )(manualJournalDTO.entries);
+
     const initialDTO = {
       ...omit(manualJournalDTO, ['publish', 'attachments']),
       ...(manualJournalDTO.publish
         ? { publishedAt: moment().toMySqlDateTime() }
         : {}),
       amount,
+      date,
       currencyCode: manualJournalDTO.currencyCode || baseCurrency,
       exchangeRate: manualJournalDTO.exchangeRate || 1,
-      date,
       journalNumber,
+      entries,
       userId: authorizedUser.id,
     };
     return R.compose(
