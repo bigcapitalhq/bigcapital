@@ -14,12 +14,16 @@ export class BillPaymentExportable extends Exportable {
    * @returns
    */
   public exportable(tenantId: number, query: any) {
+    const filterQuery = (builder) => {
+      builder.withGraphFetched('entries.bill');
+    };
     const parsedQuery = {
       sortOrder: 'desc',
       columnSortBy: 'created_at',
       ...query,
       page: 1,
       pageSize: EXPORT_SIZE_LIMIT,
+      filterQuery
     } as any;
 
     return this.billPaymentsApplication

@@ -13,7 +13,7 @@ export default {
   importAggregateBy: 'estimateNumber',
 
   print: {
-    pageTitle: 'Sale Estimates'
+    pageTitle: 'Sale Estimates',
   },
 
   fields: {
@@ -142,6 +142,7 @@ export default {
     delivered: {
       name: 'Delivered',
       type: 'boolean',
+      accessor: 'isDelivered',
       exportable: true,
       printable: false,
     },

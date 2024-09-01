@@ -74,6 +74,7 @@ export interface IPaymentReceivedEntryDTO {
 
 export interface IPaymentsReceivedFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string;
+  filterQuery?: (trx: Knex.Transaction) => void;
 }
 
 export interface IPaymentReceivePageEntry {

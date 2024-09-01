@@ -1,6 +1,9 @@
 export default {
   importable: true,
+
   exportable: true,
+  exportFlattenOn: 'entries',
+
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'paymentReceiveNo',
@@ -72,7 +75,7 @@ export default {
     amount: {
       name: 'payment_receive.field.amount',
       type: 'number',
-      accessor: 'formattedAmount'
+      accessor: 'formattedAmount',
     },
     referenceNo: {
       name: 'payment_receive.field.reference_no',
@@ -91,6 +94,34 @@ export default {
       name: 'payment_receive.field.statement',
       type: 'text',
       printable: false,
+    },
+    entries: {
+      name: 'Entries',
+      accessor: 'entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        date: {
+          name: 'Invoice date',
+          accessor: 'invoice.invoiceDateFormatted',
+        },
+        invoiceNo: {
+          name: 'Invoice No.',
+          accessor: 'invoice.invoiceNo',
+        },
+        invoiceRefNo: {
+          name: 'Invoice Reference No.',
+          accessor: 'invoice.referenceNo',
+        },
+        invoiceAmount: {
+          name: 'Invoice Amount',
+          accessor: 'invoice.totalFormatted',
+        },
+        paidAmount: {
+          name: 'Paid Amount',
+          accessor: 'paymentAmountFormatted',
+        },
+      },
     },
     created_at: {
       name: 'payment_receive.field.created_at',

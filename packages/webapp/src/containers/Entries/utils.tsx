@@ -9,9 +9,11 @@ import {
   compose,
   updateTableCell,
   updateAutoAddNewLine,
+  updateMinEntriesLines,
   orderingLinesIndexes,
   updateTableRow,
   formattedAmount,
+  updateRemoveLineByIndex,
 } from '@/utils';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
 

@@ -41,17 +41,17 @@ export default {
       fieldType: 'boolean',
     },
     sell_price: {
-      name: 'item.field.cost_price',
+      name: 'item.field.sell_price',
       column: 'sell_price',
       fieldType: 'number',
     },
     cost_price: {
-      name: 'item.field.cost_account',
+      name: 'item.field.cost_price',
       column: 'cost_price',
       fieldType: 'number',
     },
     cost_account: {
-      name: 'item.field.sell_account',
+      name: 'item.field.cost_account',
       column: 'cost_account_id',
       fieldType: 'relation',
 
@@ -62,7 +62,7 @@ export default {
       relationEntityKey: 'slug',
     },
     sell_account: {
-      name: 'item.field.sell_description',
+      name: 'item.field.sell_account',
       column: 'sell_account_id',
       fieldType: 'relation',
 
@@ -155,24 +155,24 @@ export default {
       printable: false,
     },
     sellPrice: {
-      name: 'item.field.cost_price',
+      name: 'item.field.sell_price',
       type: 'number',
       exportable: true,
     },
     costPrice: {
-      name: 'item.field.cost_account',
+      name: 'item.field.cost_price',
       type: 'number',
       exportable: true,
     },
     costAccount: {
-      name: 'item.field.sell_account',
+      name: 'item.field.cost_account',
       type: 'text',
       accessor: 'costAccount.name',
       exportable: true,
       printable: false,
     },
     sellAccount: {
-      name: 'item.field.sell_description',
+      name: 'item.field.sell_account',
       type: 'text',
       accessor: 'sellAccount.name',
       exportable: true,

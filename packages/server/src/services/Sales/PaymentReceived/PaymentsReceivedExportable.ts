@@ -16,6 +16,10 @@ export class PaymentsReceivedExportable extends Exportable {
    * @returns
    */
   public exportable(tenantId: number, query: IPaymentsReceivedFilter) {
+    const filterQuery = (builder) => {
+      builder.withGraphFetched('entries.invoice');
+    };
+
     const parsedQuery = {
       sortOrder: 'desc',
       columnSortBy: 'created_at',
@@ -24,6 +28,7 @@ export class PaymentsReceivedExportable extends Exportable {
       structure: IAccountsStructureType.Flat,
       page: 1,
       pageSize: EXPORT_SIZE_LIMIT,
+      filterQuery,
     } as IPaymentsReceivedFilter;
 
     return this.paymentReceivedApp
