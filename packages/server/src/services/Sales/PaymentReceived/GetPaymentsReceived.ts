@@ -50,7 +50,9 @@ export class GetPaymentReceives {
       .onBuild((builder) => {
         builder.withGraphFetched('customer');
         builder.withGraphFetched('depositAccount');
+
         dynamicList.buildQuery()(builder);
+        filterDTO?.filterQuery && filterDTO.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

@@ -5,6 +5,8 @@ export default {
     sortField: 'bill_date',
   },
   exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -77,7 +79,7 @@ export default {
     paymentDate: {
       name: 'bill_payment.field.payment_date',
       type: 'date',
-      accessor: 'formattedPaymentDate'
+      accessor: 'formattedPaymentDate',
     },
     paymentNumber: {
       name: 'bill_payment.field.payment_number',
@@ -110,6 +112,34 @@ export default {
     reference: {
       name: 'bill_payment.field.reference',
       type: 'text',
+    },
+    entries: {
+      name: 'Entries',
+      accessor: 'entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        date: {
+          name: 'Bill date',
+          accessor: 'bill.formattedBillDate',
+        },
+        billNo: {
+          name: 'Bill No.',
+          accessor: 'bill.billNo',
+        },
+        billRefNo: {
+          name: 'Bill Reference No.',
+          accessor: 'bill.referenceNo',
+        },
+        billAmount: {
+          name: 'Bill Amount',
+          accessor: 'bill.totalFormatted',
+        },
+        paidAmount: {
+          name: 'Paid Amount',
+          accessor: 'paymentAmountFormatted',
+        },
+      },
     },
   },
   fields2: {

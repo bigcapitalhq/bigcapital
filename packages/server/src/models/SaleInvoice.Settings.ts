@@ -155,6 +155,7 @@ export default {
       name: 'invoice.field.delivered',
       type: 'boolean',
       printable: false,
+      accessor: 'isDelivered',
     },
     entries: {
       name: 'Entries',
