@@ -253,4 +253,12 @@ module.exports = {
     enable: parseBoolean(process.env.ONE_CLICK_DEMO_ACCOUNTS, false),
     demoUrl: process.env.ONE_CLICK_DEMO_ACCOUNTS_URL || '',
   },
+
+  /**
+   * PostHog
+   */
+  posthog: {
+    apiKey: process.env.POSTHOG_API_KEY,
+    host: process.env.POSTHOG_HOST
+  }
 };
