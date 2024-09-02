@@ -1,3 +1,5 @@
+import { Features } from '@/interfaces';
+
 export default {
   importable: true,
 
@@ -128,6 +130,12 @@ export default {
       type: 'date',
       printable: false,
     },
+    branch: {
+      name: 'Branch',
+      type: 'text',
+      accessor: 'branch.name',
+      features: [Features.BRANCHES],
+    },
   },
   fields2: {
     customerId: {
@@ -188,6 +196,14 @@ export default {
           required: true,
         },
       },
+    },
+    branchId: {
+      name: 'Branch',
+      fieldType: 'relation',
+      relationModel: 'Branch',
+      relationImportMatch: ['name', 'code'],
+      features: [Features.BRANCHES],
+      required: true,
     },
   },
 };

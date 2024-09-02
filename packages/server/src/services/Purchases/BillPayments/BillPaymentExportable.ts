@@ -16,6 +16,7 @@ export class BillPaymentExportable extends Exportable {
   public exportable(tenantId: number, query: any) {
     const filterQuery = (builder) => {
       builder.withGraphFetched('entries.bill');
+      builder.withGraphFetched('branch');
     };
     const parsedQuery = {
       sortOrder: 'desc',

@@ -15,12 +15,17 @@ export class SaleEstimatesExportable extends Exportable {
    * @returns
    */
   public exportable(tenantId: number, query: ISalesInvoicesFilter) {
+    const filterQuery = (query) => {
+      query.withGraphFetched('branch');
+      query.withGraphFetched('warehouse');
+    };
     const parsedQuery = {
       sortOrder: 'desc',
       columnSortBy: 'created_at',
       ...query,
       page: 1,
       pageSize: EXPORT_SIZE_LIMIT,
+      filterQuery,
     } as ISalesInvoicesFilter;
 
     return this.saleEstimatesApplication

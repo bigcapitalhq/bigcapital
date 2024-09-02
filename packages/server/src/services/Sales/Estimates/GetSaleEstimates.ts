@@ -53,6 +53,7 @@ export class GetSaleEstimates {
         builder.withGraphFetched('entries');
         builder.withGraphFetched('entries.item'); 
         dynamicFilter.buildQuery()(builder);
+        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

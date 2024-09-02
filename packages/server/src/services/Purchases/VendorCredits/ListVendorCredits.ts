@@ -48,6 +48,10 @@ export default class ListVendorCredits extends BaseVendorCredit {
         builder.withGraphFetched('entries');
         builder.withGraphFetched('vendor');
         dynamicFilter.buildQuery()(builder);
+
+        // Gives ability to inject custom query to filter results.
+        vendorCreditQuery?.filterQuery &&
+          vendorCreditQuery?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

@@ -99,6 +99,7 @@ export interface IBillsFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string;
   page: number;
   pageSize: number;
+  filterQuery?: (q: any) => void;
 }
 
 export interface IBillsService {

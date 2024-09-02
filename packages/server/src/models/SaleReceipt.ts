@@ -109,6 +109,7 @@ export default class SaleReceipt extends mixin(TenantModel, [
     const ItemEntry = require('models/ItemEntry');
     const Branch = require('models/Branch');
     const Document = require('models/Document');
+    const Warehouse = require('models/Warehouse');
 
     return {
       customer: {
@@ -166,6 +167,18 @@ export default class SaleReceipt extends mixin(TenantModel, [
         join: {
           from: 'sales_receipts.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Sale receipt may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse.default,
+        join: {
+          from: 'sales_receipts.warehouseId',
+          to: 'warehouses.id',
         },
       },
 

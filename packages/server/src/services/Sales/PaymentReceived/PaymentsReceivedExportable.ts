@@ -18,6 +18,7 @@ export class PaymentsReceivedExportable extends Exportable {
   public exportable(tenantId: number, query: IPaymentsReceivedFilter) {
     const filterQuery = (builder) => {
       builder.withGraphFetched('entries.invoice');
+      builder.withGraphFetched('branch');
     };
 
     const parsedQuery = {

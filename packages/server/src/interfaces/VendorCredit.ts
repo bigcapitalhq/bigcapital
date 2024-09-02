@@ -106,6 +106,7 @@ export interface IVendorCreditsQueryDTO extends IDynamicListFilter {
   page: number;
   pageSize: number;
   searchKeyword?: string;
+  filterQuery?: (q: any) => void;
 }
 
 export interface IVendorCreditEditingPayload {

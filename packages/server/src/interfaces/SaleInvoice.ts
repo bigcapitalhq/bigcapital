@@ -79,6 +79,7 @@ export interface ISalesInvoicesFilter extends IDynamicListFilter {
   page: number;
   pageSize: number;
   searchKeyword?: string;
+  filterQuery?: (q: Knex.QueryBuilder) => void;
 }
 
 export interface ISalesInvoicesService {

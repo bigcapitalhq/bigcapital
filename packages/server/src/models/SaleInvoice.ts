@@ -408,6 +408,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
     const InventoryCostLotTracker = require('models/InventoryCostLotTracker');
     const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
     const Branch = require('models/Branch');
+    const Warehouse = require('models/Warehouse');
     const Account = require('models/Account');
     const TaxRateTransaction = require('models/TaxRateTransaction');
     const Document = require('models/Document');
@@ -497,6 +498,18 @@ export default class SaleInvoice extends mixin(TenantModel, [
           from: 'sales_invoices.branchId',
           to: 'branches.id',
         },
+      },
+
+      /**
+       * Invoice may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse.default,
+        join: {
+          from: 'sales_invoices.warehouseId',
+          to: 'warehouses.id',
+        }
       },
 
       /**

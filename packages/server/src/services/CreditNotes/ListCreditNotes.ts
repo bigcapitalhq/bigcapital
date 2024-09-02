@@ -48,6 +48,7 @@ export default class ListCreditNotes extends BaseCreditNotes {
         builder.withGraphFetched('entries.item');
         builder.withGraphFetched('customer');
         dynamicFilter.buildQuery()(builder);
+        creditNotesQuery?.filterQuery && creditNotesQuery?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

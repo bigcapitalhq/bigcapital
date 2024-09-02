@@ -1,3 +1,5 @@
+import { Features } from '@/interfaces';
+
 export default {
   defaultFilterField: 'vendor',
   defaultSort: {
@@ -141,6 +143,12 @@ export default {
         },
       },
     },
+    branch: {
+      name: 'Branch',
+      type: 'text',
+      accessor: 'branch.name',
+      features: [Features.BRANCHES],
+    },
   },
   fields2: {
     vendorId: {
@@ -203,6 +211,14 @@ export default {
           required: true,
         },
       },
+    },
+    branchId: {
+      name: 'Branch',
+      fieldType: 'relation',
+      relationModel: 'Branch',
+      relationImportMatch: ['name', 'code'],
+      features: [Features.BRANCHES],
+      required: true,
     },
   },
 };

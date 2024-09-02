@@ -56,6 +56,7 @@ export class GetSaleReceipts {
         builder.withGraphFetched('entries.item');
 
         dynamicFilter.buildQuery()(builder);
+        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 
