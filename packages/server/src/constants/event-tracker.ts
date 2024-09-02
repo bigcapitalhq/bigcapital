@@ -34,6 +34,12 @@ export const ITEM_EVENT_DELETED = 'Item deleted';
 export const AUTH_SIGNED_UP = 'Auth Signed-up';
 export const AUTH_RESET_PASSWORD = 'Auth reset password';
 
+export const BANK_TRANSACTION_MATCHED = 'Bank transaction matching deleted';
+export const BANK_TRANSACTION_EXCLUDED = 'Bank transaction excluded';
+export const BANK_TRANSACTION_CATEGORIZED = 'Bank transaction categorized';
+export const BANK_TRANSACTION_UNCATEGORIZED = 'Bank transaction uncategorized';
+export const BANK_ACCOUNT_DISCONNECTED = 'Bank account disconnected';
+
 export const ACCOUNT_GROUP = 'Account';
 export const ITEM_GROUP = 'Item';
 export const AUTH_GROUP = 'Auth';

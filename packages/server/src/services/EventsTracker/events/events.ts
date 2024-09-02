@@ -7,6 +7,7 @@ import { ExpenseEventsTracker } from './ExpenseEventsTracker';
 import { AccountEventsTracker } from './AccountEventsTracker';
 import { AuthenticationEventsTracker } from './AuthenticationEventsTracker';
 import { ItemEventsTracker } from './ItemEventsTracker';
+import { BankTransactionEventsTracker } from './BankTransactionEventsTracker';
 
 export const EventsTrackerListeners = [
   SaleInvoiceEventsTracker,
@@ -17,5 +18,6 @@ export const EventsTrackerListeners = [
   AccountEventsTracker,
   ExpenseEventsTracker,
   AuthenticationEventsTracker,
-  ItemEventsTracker
+  ItemEventsTracker,
+  BankTransactionEventsTracker,
 ];
