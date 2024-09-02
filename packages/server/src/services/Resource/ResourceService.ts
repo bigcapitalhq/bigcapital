@@ -1,11 +1,18 @@
 import { Service, Inject } from 'typedi';
-import { camelCase, upperFirst, pickBy } from 'lodash';
+import { camelCase, upperFirst, pickBy, isEmpty } from 'lodash';
 import * as qim from 'qim';
 import pluralize from 'pluralize';
-import { IModelMeta, IModelMetaField, IModelMetaField2 } from '@/interfaces';
+import {
+  Features,
+  IModelMeta,
+  IModelMetaField,
+  IModelMetaField2,
+} from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
 import I18nService from '@/services/I18n/I18nService';
+import { WarehousesSettings } from '../Warehouses/WarehousesSettings';
+import { BranchesSettings } from '../Branches/BranchesSettings';
 
 const ERRORS = {
   RESOURCE_MODEL_NOT_FOUND: 'RESOURCE_MODEL_NOT_FOUND',
@@ -18,6 +25,12 @@ export default class ResourceService {
 
   @Inject()
   i18nService: I18nService;
+
+  @Inject()
+  private branchesSettings: BranchesSettings;
+
+  @Inject()
+  private warehousesSettings: WarehousesSettings;
 
   /**
    * Transform resource to model name.
@@ -74,13 +87,45 @@ export default class ResourceService {
     return meta.fields;
   }
 
+  public filterSupportFeatures = (
+    tenantId,
+    fields: { [key: string]: IModelMetaField2 }
+  ) => {
+    const isMultiFeaturesEnabled =
+      this.branchesSettings.isMultiBranchesActive(tenantId);
+    const isMultiWarehousesEnabled =
+      this.warehousesSettings.isMultiWarehousesActive(tenantId);
+
+    return pickBy(fields, (field) => {
+      if (
+        !isMultiWarehousesEnabled &&
+        field.features?.includes(Features.WAREHOUSES)
+      ) {
+        return false;
+      }
+      if (
+        !isMultiFeaturesEnabled &&
+        field.features?.includes(Features.BRANCHES)
+      ) {
+        return false;
+      }
+      return true;
+    });
+  };
+
   public getResourceFields2(
     tenantId: number,
     modelName: string
   ): { [key: string]: IModelMetaField2 } {
     const meta = this.getResourceMeta(tenantId, modelName);
 
-    return meta.fields2;
+    return this.filterSupportFeatures(tenantId, meta.fields2);
+  }
+
+  public getResourceColumns(tenantId: number, modelName: string) {
+    const meta = this.getResourceMeta(tenantId, modelName);
+
+    return this.filterSupportFeatures(tenantId, meta.columns);
   }
 
   /**

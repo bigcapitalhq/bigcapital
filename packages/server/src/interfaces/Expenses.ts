@@ -17,6 +17,7 @@ export interface IExpensesFilter {
   columnSortBy: string;
   sortOrder: string;
   viewSlug?: string;
+  filterQuery?: (query: any) => void;
 }
 
 export interface IExpense {

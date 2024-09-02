@@ -15,12 +15,16 @@ export class ExpensesExportable extends Exportable {
    * @returns
    */
   public exportable(tenantId: number, query: IExpensesFilter) {
+    const filterQuery = (query) => {
+      query.withGraphFetched('branch');
+    };
     const parsedQuery = {
       sortOrder: 'desc',
       columnSortBy: 'created_at',
       ...query,
       page: 1,
       pageSize: EXPORT_SIZE_LIMIT,
+      filterQuery,
     } as IExpensesFilter;
 
     return this.expensesApplication

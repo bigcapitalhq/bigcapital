@@ -54,6 +54,7 @@ export class GetExpenses {
         builder.withGraphFetched('categories.expenseAccount');
 
         dynamicList.buildQuery()(builder);
+        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 
