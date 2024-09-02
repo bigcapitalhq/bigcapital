@@ -15,12 +15,17 @@ export class CreditNotesExportable extends Exportable {
    * @returns {}
    */
   public exportable(tenantId: number, query: ICreditNotesQueryDTO) {
+    const filterQuery = (query) => {
+      query.withGraphFetched('branch');
+      query.withGraphFetched('warehouse');
+    };
     const parsedQuery = {
       sortOrder: 'desc',
       columnSortBy: 'created_at',
       ...query,
       page: 1,
       pageSize: 12000,
+      filterQuery,
     } as ICreditNotesQueryDTO;
 
     return this.getCreditNotes

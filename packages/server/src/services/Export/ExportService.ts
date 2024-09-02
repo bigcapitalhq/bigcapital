@@ -56,7 +56,10 @@ export class ExportResourceService {
   ) {
     const resource = sanitizeResourceName(resourceName);
     const resourceMeta = this.getResourceMeta(tenantId, resource);
-
+    const resourceColumns = this.resourceService.getResourceColumns(
+      tenantId,
+      resource
+    );
     this.validateResourceMeta(resourceMeta);
 
     const data = await this.getExportableData(tenantId, resource);
@@ -64,7 +67,7 @@ export class ExportResourceService {
 
     // Returns the csv, xlsx format.
     if (format === ExportFormat.Csv || format === ExportFormat.Xlsx) {
-      const exportableColumns = this.getExportableColumns(resourceMeta);
+      const exportableColumns = this.getExportableColumns(resourceColumns);
       const workbook = this.createWorkbook(transformed, exportableColumns);
 
       return this.exportWorkbook(workbook, format);
@@ -143,7 +146,7 @@ export class ExportResourceService {
    * @param {IModelMeta} resourceMeta - The metadata of the resource.
    * @returns An array of exportable columns.
    */
-  private getExportableColumns(resourceMeta: IModelMeta) {
+  private getExportableColumns(resourceColumns: any) {
     const processColumns = (
       columns: { [key: string]: IModelMetaColumn },
       parent = ''
@@ -166,7 +169,7 @@ export class ExportResourceService {
           }
         });
     };
-    return processColumns(resourceMeta.columns);
+    return processColumns(resourceColumns);
   }
 
   private getPrintableColumns(resourceMeta: IModelMeta) {

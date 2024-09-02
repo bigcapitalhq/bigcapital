@@ -402,6 +402,7 @@ export default class Bill extends mixin(TenantModel, [
     const ItemEntry = require('models/ItemEntry');
     const BillLandedCost = require('models/BillLandedCost');
     const Branch = require('models/Branch');
+    const Warehouse = require('models/Warehouse');
     const TaxRateTransaction = require('models/TaxRateTransaction');
     const Document = require('models/Document');
     const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
@@ -450,6 +451,18 @@ export default class Bill extends mixin(TenantModel, [
         join: {
           from: 'bills.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Bill may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse.default,
+        join: {
+          from: 'bills.warehouseId',
+          to: 'warehouses.id',
         },
       },
 

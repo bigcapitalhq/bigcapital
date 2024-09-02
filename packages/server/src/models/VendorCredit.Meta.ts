@@ -1,3 +1,5 @@
+import { Features } from '@/interfaces';
+
 function StatusFieldFilterQuery(query, role) {
   query.modify('filterByStatus', role.value);
 }
@@ -160,6 +162,18 @@ export default {
         },
       },
     },
+    branch: {
+      name: 'Branch',
+      type: 'text',
+      accessor: 'branch.name',
+      features: [Features.BRANCHES],
+    },
+    warehouse: {
+      name: 'Warehouse',
+      type: 'text',
+      accessor: 'warehouse.name',
+      features: [Features.BRANCHES],
+    },
   },
   fields2: {
     vendorId: {
@@ -224,6 +238,22 @@ export default {
           fieldType: 'text',
         },
       },
+    },
+    branchId: {
+      name: 'Branch',
+      fieldType: 'relation',
+      relationModel: 'Branch',
+      relationImportMatch: ['name', 'code'],
+      features: [Features.BRANCHES],
+      required: true
+    },
+    warehouseId: {
+      name: 'Warehouse',
+      fieldType: 'relation',
+      relationModel: 'Warehouse',
+      relationImportMatch: ['name', 'code'],
+      features: [Features.WAREHOUSES],
+      required: true
     },
   },
 };

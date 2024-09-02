@@ -52,6 +52,7 @@ export class GetSaleInvoices {
         builder.withGraphFetched('entries.item');
         builder.withGraphFetched('customer');
         dynamicFilter.buildQuery()(builder);
+        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

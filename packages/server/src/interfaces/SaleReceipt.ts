@@ -29,7 +29,9 @@ export interface ISaleReceipt {
   entries?: IItemEntry[];
 }
 
-export interface ISalesReceiptsFilter {}
+export interface ISalesReceiptsFilter {
+  filterQuery?: (query: any) => void;
+}
 
 export interface ISaleReceiptDTO {
   customerId: number;

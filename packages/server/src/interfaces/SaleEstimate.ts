@@ -44,6 +44,7 @@ export interface ISaleEstimateDTO {
 
 export interface ISalesEstimatesFilter extends IDynamicListFilterDTO {
   stringifiedFilterRoles?: string;
+  filterQuery?: (q: any) => void;
 }
 
 export interface ISalesEstimatesService {

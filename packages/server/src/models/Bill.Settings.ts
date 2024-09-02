@@ -1,3 +1,5 @@
+import { Features } from '@/interfaces';
+
 export default {
   defaultFilterField: 'vendor',
   defaultSort: {
@@ -167,6 +169,18 @@ export default {
         },
       },
     },
+    branch: {
+      name: 'Branch',
+      type: 'text',
+      accessor: 'branch.name',
+      features: [Features.BRANCHES],
+    },
+    warehouse: {
+      name: 'Warehouse',
+      type: 'text',
+      accessor: 'warehouse.name',
+      features: [Features.BRANCHES],
+    },
   },
   fields2: {
     billNumber: {
@@ -237,6 +251,22 @@ export default {
           fieldType: 'text',
         },
       },
+    },
+    branchId: {
+      name: 'Branch',
+      fieldType: 'relation',
+      relationModel: 'Branch',
+      relationImportMatch: ['name', 'code'],
+      features: [Features.BRANCHES],
+      required: true,
+    },
+    warehouseId: {
+      name: 'Warehouse',
+      fieldType: 'relation',
+      relationModel: 'Warehouse',
+      relationImportMatch: ['name', 'code'],
+      features: [Features.WAREHOUSES],
+      required: true,
     },
   },
 };

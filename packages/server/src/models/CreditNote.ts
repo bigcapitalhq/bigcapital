@@ -175,6 +175,7 @@ export default class CreditNote extends mixin(TenantModel, [
     const Customer = require('models/Customer');
     const Branch = require('models/Branch');
     const Document = require('models/Document');
+    const Warehouse = require('models/Warehouse');
 
     return {
       /**
@@ -232,6 +233,18 @@ export default class CreditNote extends mixin(TenantModel, [
         join: {
           from: 'credit_notes.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Credit note may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse.default,
+        join: {
+          from: 'credit_notes.warehouseId',
+          to: 'warehouses.id',
         },
       },
 

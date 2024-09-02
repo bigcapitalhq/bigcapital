@@ -130,7 +130,9 @@ export interface ICreditNoteOpenedPayload {
   trx: Knex.Transaction;
 }
 
-export interface ICreditNotesQueryDTO {}
+export interface ICreditNotesQueryDTO {
+  filterQuery?: (query: any) => void;
+}
 
 export interface ICreditNotesQueryDTO extends IDynamicListFilter {
   page: number;

@@ -151,6 +151,7 @@ export interface IModelMetaFieldCommon2 {
   importHint?: string;
   order?: number;
   unique?: number;
+  features?: Array<any>
 }
 
 export interface IModelMetaRelationField2 {

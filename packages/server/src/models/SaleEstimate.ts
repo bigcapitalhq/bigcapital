@@ -182,6 +182,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
     const ItemEntry = require('models/ItemEntry');
     const Customer = require('models/Customer');
     const Branch = require('models/Branch');
+    const Warehouse = require('models/Warehouse');
     const Document = require('models/Document');
 
     return {
@@ -218,6 +219,18 @@ export default class SaleEstimate extends mixin(TenantModel, [
         join: {
           from: 'sales_estimates.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Sale estimate may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse.default,
+        join: {
+          from: 'sales_estimates.warehouseId',
+          to: 'warehouses.id',
         },
       },
 

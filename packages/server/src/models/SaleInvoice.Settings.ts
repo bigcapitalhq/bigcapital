@@ -1,3 +1,5 @@
+import { Features } from '@/interfaces';
+
 export default {
   defaultFilterField: 'customer',
   defaultSort: {
@@ -185,6 +187,18 @@ export default {
         },
       },
     },
+    branch: {
+      name: 'Branch',
+      type: 'text',
+      accessor: 'branch.name',
+      features: [Features.BRANCHES],
+    },
+    warehouse: {
+      name: 'Warehouse',
+      type: 'text',
+      accessor: 'warehouse.name',
+      features: [Features.BRANCHES],
+    },
   },
   fields2: {
     invoiceDate: {
@@ -267,6 +281,22 @@ export default {
       name: 'invoice.field.delivered',
       fieldType: 'boolean',
       printable: false,
+    },
+    branchId: {
+      name: 'Branch',
+      fieldType: 'relation',
+      relationModel: 'Branch',
+      relationImportMatch: ['name', 'code'],
+      features: [Features.BRANCHES],
+      required: true,
+    },
+    warehouseId: {
+      name: 'Warehouse',
+      fieldType: 'relation',
+      relationModel: 'Warehouse',
+      relationImportMatch: ['name', 'code'],
+      features: [Features.WAREHOUSES],
+      required: true,
     },
   },
 };

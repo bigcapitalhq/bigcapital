@@ -33,6 +33,8 @@ export class ImportFileMapping {
     // Invalidate the from/to map attributes.
     this.validateMapsAttrs(tenantId, importFile, maps);
 
+    // @todo validate the required fields.
+
     // Validate the diplicated relations of map attrs.
     this.validateDuplicatedMapAttrs(maps);
 

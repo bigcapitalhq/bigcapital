@@ -178,6 +178,7 @@ export default class VendorCredit extends mixin(TenantModel, [
     const ItemEntry = require('models/ItemEntry');
     const Branch = require('models/Branch');
     const Document = require('models/Document');
+    const Warehouse = require('models/Warehouse');
 
     return {
       vendor: {
@@ -214,6 +215,18 @@ export default class VendorCredit extends mixin(TenantModel, [
         join: {
           from: 'vendor_credits.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Vendor credit may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse.default,
+        join: {
+          from: 'vendor_credits.warehouseId',
+          to: 'warehouses.id',
         },
       },
 
