@@ -47,3 +47,21 @@ export const SALE_GROUP = 'Sale';
 export const PAYMENT_GROUP = 'Payment';
 export const BILL_GROUP = 'Bill';
 export const EXPENSE_GROUP = 'Expense';
+
+export const MANUAL_JOURNAL_CREATED = 'Manual journal created';
+export const MANUAL_JOURNAL_EDITED = 'Manual journal edited';
+export const MANUAL_JOURNAL_DELETED = 'Manual journal deleted';
+export const MANUAL_JOURNAL_PUBLISHED = 'Manual journal published';
+
+export const CUSTOMER_CREATED = 'Customer created';
+export const CUSTOMER_EDITED = 'Customer edited';
+export const CUSTOMER_DELETED = 'Customer deleted';
+
+export const VENDOR_CREATED = 'Vendor created';
+export const VENDOR_EDITED = 'Vendor edited';
+export const VENDOR_DELETED = 'Vendor deleted';
+
+export const BANK_RULE_CREATED = 'Bank rule created';
+export const BANK_RULE_EDITED = 'Bank rule edited';
+export const BANK_RULE_DELETED = 'Bank rule deleted';
+
