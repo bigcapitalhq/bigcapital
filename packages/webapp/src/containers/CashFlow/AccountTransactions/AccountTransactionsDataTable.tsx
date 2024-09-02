@@ -22,6 +22,7 @@ import { withBankingActions } from '../withBankingActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import { useUncategorizeTransaction } from '@/hooks/query';
 import { handleCashFlowTransactionType } from './utils';
@@ -61,6 +62,8 @@ function AccountTransactionsDataTable({
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.CASHFLOW_Transactions);
+
+  const { scrollableRef } = useAccountTransactionsContext();
 
   // Handle view details action.
   const handleViewDetailCashflowTransaction = (referenceType) => {
@@ -132,7 +135,7 @@ function AccountTransactionsDataTable({
       ContextMenu={ActionsMenu}
       onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
-      vListrowHeight={cashflowTansactionsTableSize == 'small' ? 32 : 40}
+      vListrowHeight={32}
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
@@ -140,6 +143,7 @@ function AccountTransactionsDataTable({
       onSelectedRowsChange={handleSelectedRowsChange}
       noResults={<T id={'cash_flow.account_transactions.no_results'} />}
       className="table-constrant"
+      windowScrollerProps={{ scrollElement: scrollableRef }}
       payload={{
         onViewDetails: handleViewDetailCashflowTransaction,
         onUncategorize: handleUncategorizeTransaction,
