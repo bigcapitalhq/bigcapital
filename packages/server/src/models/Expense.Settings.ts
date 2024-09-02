@@ -1,3 +1,5 @@
+import { Features } from '@/interfaces';
+
 /**
  * Expense - Settings.
  */
@@ -119,6 +121,12 @@ export default {
       type: 'boolean',
       printable: false,
     },
+    branch: {
+      name: 'Branch',
+      type: 'text',
+      accessor: 'branch.name',
+      features: [Features.BRANCHES],
+    },
   },
   fields2: {
     paymentAccountId: {
@@ -177,6 +185,14 @@ export default {
     publish: {
       name: 'expense.field.publish',
       fieldType: 'boolean',
+    },
+    branchId: {
+      name: 'Branch',
+      fieldType: 'relation',
+      relationModel: 'Branch',
+      relationImportMatch: ['name', 'code'],
+      features: [Features.BRANCHES],
+      required: true,
     },
   },
 };
