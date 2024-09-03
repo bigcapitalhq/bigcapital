@@ -241,7 +241,7 @@ export interface ICustomerEventCreatingPayload {
   trx: Knex.Transaction;
 }
 export interface ICustomerEventEditedPayload {
-  tenantId: number;
+  tenantId: number
   customerId: number;
   customer: ICustomer;
   trx: Knex.Transaction;

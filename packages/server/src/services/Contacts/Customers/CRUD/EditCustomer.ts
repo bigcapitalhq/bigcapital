@@ -65,6 +65,7 @@ export class EditCustomer {
       });
       // Triggers `onCustomerEdited` event.
       await this.eventPublisher.emitAsync(events.customers.onEdited, {
+        tenantId,
         customerId,
         customer,
         trx,
