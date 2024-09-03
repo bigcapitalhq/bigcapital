@@ -8,6 +8,7 @@
     border-spacing: 0;
     min-width: 100%;
     display: block;
+    color: #101219;
 
     .thead .thead-inner,
     .tbody .tbody-inner {
@@ -21,7 +22,7 @@
         padding: 0.68rem 0.5rem;
         background: #f5f5f5;
         font-size: 14px;
-        color: #4E5B6F;
+        color: #424853;
         font-weight: 400;
         border-bottom: 1px solid #d2dde2;
 
@@ -180,9 +181,9 @@
       }
 
       .tr .td {
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #ececec;
         align-items: center;
-        color: #101219;
+        
 
         .placeholder {
           color: #a0a0a0;

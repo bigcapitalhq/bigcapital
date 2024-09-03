@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
+import clsx from 'classnames';
 import { isNumber } from 'lodash';
 import {
   Menu,
@@ -11,6 +12,7 @@ import {
   Position,
   Button,
   Popover,
+  Classes,
 } from '@blueprintjs/core';
 import { FormattedMessage as T, Icon, Money, If, Can } from '@/components';
 import { isBlank, safeCallback } from '@/utils';
@@ -182,7 +184,7 @@ export const useItemsTableColumns = () => {
         id: 'code',
         Header: intl.get('item_code'),
         accessor: 'code',
-        className: 'code',
+        className: clsx(Classes.TEXT_MUTED),
         width: 120,
         clickable: true,
       },
@@ -198,7 +200,7 @@ export const useItemsTableColumns = () => {
         id: 'category',
         Header: intl.get('category'),
         accessor: 'category.name',
-        className: 'category',
+        className: clsx(Classes.TEXT_MUTED),
         width: 150,
         clickable: true,
         textOverview: true,

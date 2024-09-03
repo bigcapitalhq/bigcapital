@@ -1,7 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Tag } from '@blueprintjs/core';
+import { Intent, Tag, Classes } from '@blueprintjs/core';
+import clsx from 'classnames';
 
 import { If, AppToaster } from '@/components';
 import { NormalCell, BalanceCell, BankBalanceCell } from './components';
@@ -73,7 +74,7 @@ export const useAccountsTableColumns = () => {
         id: 'type',
         Header: intl.get('type'),
         accessor: 'account_type_label',
-        className: 'type',
+        className: clsx('type', Classes.TEXT_MUTED),
         width: 140,
         clickable: true,
         textOverview: true,
@@ -91,6 +92,7 @@ export const useAccountsTableColumns = () => {
         id: 'currency',
         Header: intl.get('currency'),
         accessor: 'currency_code',
+        className: clsx(Classes.TEXT_MUTED),
         width: 75,
         clickable: true,
       },
