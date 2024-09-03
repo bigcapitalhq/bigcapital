@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { Suspense } from 'react';
 import * as R from 'ramda';
 import { Spinner } from '@blueprintjs/core';
+import { Suspense, lazy } from 'react';
 
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
@@ -15,7 +15,7 @@ import {
 import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
 import { AccountTransactionsFilterTabs } from './AccountTransactionsFilterTabs';
 import { AppContentShell } from '@/components/AppShell';
-import { CategorizeTransactionAside } from '../CategorizeTransactionAside/CategorizeTransactionAside';
+import { AccountTransactionsAside } from './AccountTransactionsAside';
 import { AccountTransactionsLoadingBar } from './components';
 import { withBanking } from '../withBanking';
 
@@ -56,14 +56,6 @@ function AccountTransactionsMain() {
   );
 }
 
-function AccountTransactionsAside() {
-  return (
-    <AppContentShell.Aside>
-      <CategorizeTransactionAside />
-    </AppContentShell.Aside>
-  );
-}
-
 export default R.compose(
   withBanking(
     ({ selectedUncategorizedTransactionId, openMatchingTransactionAside }) => ({
@@ -73,11 +65,8 @@ export default R.compose(
   ),
 )(AccountTransactionsListRoot);
 
-const AccountsTransactionsAll = React.lazy(
-  () => import('./AccountsTransactionsAll'),
-);
-
-const AccountsTransactionsUncategorized = React.lazy(
+const AccountsTransactionsAll = lazy(() => import('./AccountsTransactionsAll'));
+const AccountsTransactionsUncategorized = lazy(
   () => import('./AllTransactionsUncategorized'),
 );
 
