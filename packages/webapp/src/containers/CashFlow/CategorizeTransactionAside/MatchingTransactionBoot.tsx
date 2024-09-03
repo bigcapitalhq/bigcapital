@@ -2,6 +2,7 @@ import React, { createContext } from 'react';
 import { defaultTo } from 'lodash';
 import * as R from 'ramda';
 import { useGetBankTransactionsMatches } from '@/hooks/query/bank-rules';
+import { Spinner } from '@blueprintjs/core';
 
 interface MatchingTransactionBootValues {
   isMatchingTransactionsLoading: boolean;
@@ -52,6 +53,11 @@ function MatchingTransactionBoot({
     matches,
   } as MatchingTransactionBootValues;
 
+  const isLoading = isMatchingTransactionsLoading;
+
+  if (isLoading) {
+    return <Spinner size={40} />;
+  }
   return <RuleFormBootContext.Provider value={provider} {...props} />;
 }
 

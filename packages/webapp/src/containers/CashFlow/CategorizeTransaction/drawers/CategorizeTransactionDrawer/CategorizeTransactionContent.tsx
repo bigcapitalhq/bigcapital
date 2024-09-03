@@ -1,6 +1,8 @@
 // @ts-nocheck
+import { Suspense } from 'react';
 import styled from 'styled-components';
 import * as R from 'ramda';
+import { Spinner } from '@blueprintjs/core';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { CategorizeTransactionForm } from './CategorizeTransactionForm';
 import { withBanking } from '@/containers/CashFlow/withBanking';
@@ -13,7 +15,9 @@ function CategorizeTransactionContentRoot({
       uncategorizedTransactionsIds={transactionsToCategorizeIdsSelected}
     >
       <CategorizeTransactionDrawerBody>
-        <CategorizeTransactionForm />
+        <Suspense fallback={<Spinner size={40} />}>
+          <CategorizeTransactionForm />
+        </Suspense>
       </CategorizeTransactionDrawerBody>
     </CategorizeTransactionBoot>
   );
