@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React from 'react';
-import { InputGroup, FormGroup, Position, Classes } from '@blueprintjs/core';
+import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { CustomersSelect, FormattedMessage as T } from '@/components';
+import { CustomersSelect, FInputGroup, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -15,15 +15,14 @@ import {
 import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
 import {
   CurrencySelectList,
-  CustomerSelectField,
   FFormGroup,
   AccountsSelect,
   FieldRequiredHint,
   Hint,
 } from '@/components';
 import { ExpensesExchangeRateInputField } from './components';
-import { ACCOUNT_PARENT_TYPE } from '@/constants/accountTypes';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
+import { SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from './constants';
 
 /**
  * Expense form header.
@@ -68,7 +67,7 @@ export default function ExpenseFormHeader() {
           name={'payment_account_id'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
-          filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
+          filterByTypes={SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES}
           allowCreate={true}
           fastField={true}
           shouldUpdate={accountsFieldShouldUpdate}
@@ -107,19 +106,15 @@ export default function ExpenseFormHeader() {
         formGroupProps={{ label: ' ', inline: true }}
       />
 
-      <FastField name={'reference_no'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference_no'} />}
-            className={classNames('form-group--ref_no', Classes.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference_no" />}
-            inline={true}
-          >
-            <InputGroup minimal={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      {/* ----------- Reference No. ----------- */}
+      <FFormGroup
+        name={'reference_no'}
+        label={<T id={'reference_no'} />}
+        inline={true}
+        fastField
+      >
+        <FInputGroup minimal={true} name={'reference_no'} fastField />
+      </FFormGroup>
 
       {/* ----------- Customer ----------- */}
       <ExpenseFormCustomerSelect />
