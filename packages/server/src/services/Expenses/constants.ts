@@ -1,3 +1,5 @@
+import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+
 export const DEFAULT_VIEW_COLUMNS = [];
 export const DEFAULT_VIEWS = [
   {
@@ -75,4 +77,13 @@ export const ExpensesSampleData = [
       'Hic alias rerum sed commodi dolores sint animi perferendis.',
     Publish: 'T',
   },
+];
+
+export const SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES = [
+  ACCOUNT_TYPE.CASH,
+  ACCOUNT_TYPE.BANK,
+  ACCOUNT_TYPE.CREDIT_CARD,
+  ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+  ACCOUNT_TYPE.NON_CURRENT_ASSET,
+  ACCOUNT_TYPE.FIXED_ASSET,
 ];

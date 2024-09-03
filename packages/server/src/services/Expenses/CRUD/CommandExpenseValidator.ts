@@ -1,7 +1,7 @@
 import { Service, Inject } from 'typedi';
 import { sumBy, difference } from 'lodash';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from '../constants';
+import { ERRORS, SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from '../constants';
 import {
   IAccount,
   IExpense,
@@ -79,7 +79,9 @@ export class CommandExpenseValidator {
    * @throws {ServiceError}
    */
   public validatePaymentAccountType = (paymentAccount: number[]) => {
-    if (!paymentAccount.isParentType(ACCOUNT_PARENT_TYPE.CURRENT_ASSET)) {
+    if (
+      !paymentAccount.isAccountType(SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES)
+    ) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_HAS_INVALID_TYPE);
     }
   };
