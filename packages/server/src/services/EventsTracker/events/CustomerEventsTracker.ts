@@ -18,9 +18,6 @@ export class CustomerEventsTracker extends EventSubscriber {
   @Inject()
   private posthog: PosthogService;
 
-  /**
-   * Constructor method.
-   */
   public attach(bus) {
     bus.subscribe(
       events.customers.onCreated,

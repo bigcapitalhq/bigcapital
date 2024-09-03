@@ -18,9 +18,6 @@ export class VendorEventsTracker extends EventSubscriber {
   @Inject()
   private posthog: PosthogService;
 
-  /**
-   * Constructor method.
-   */
   public attach(bus) {
     bus.subscribe(events.vendors.onCreated, this.handleTrackVendorCreatedEvent);
     bus.subscribe(events.vendors.onEdited, this.handleTrackEditedVendorEvent);
