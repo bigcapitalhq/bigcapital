@@ -34,21 +34,23 @@ import {
 } from '@/constants/cashflowOptions';
 import { useRefreshCashflowTransactions } from '@/hooks/query';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useAppShellContext } from '@/components/AppShell/AppContentShell/AppContentShellProvider';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
-
-import { compose } from '@/utils';
+import { withBankingActions } from '../withBankingActions';
+import { withBanking } from '../withBanking';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 import {
   useUpdateBankAccount,
   useExcludeUncategorizedTransactions,
   useUnexcludeUncategorizedTransactions,
 } from '@/hooks/query/bank-rules';
-import { withBankingActions } from '../withBankingActions';
-import { withBanking } from '../withBanking';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+
 import { DialogsName } from '@/constants/dialogs';
+import { compose } from '@/utils';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -221,6 +223,13 @@ function AccountTransactionsActionsBar({
     });
   };
 
+  const { hideAside } = useAppShellContext();
+  const isMin1350Query = useMediaQuery('(min-width: 1350px)');
+
+  // Shrink actions to dropdown if the aside is open and matched the media query,
+  // To avoid actions overflow in small screens.
+  const shrinkActions = !hideAside && !isMin1350Query;
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -241,23 +250,27 @@ function AccountTransactionsActionsBar({
           }}
         />
         <NavbarDivider />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="print-16" iconSize={16} />}
-          text={<T id={'print'} />}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-import-16" iconSize={16} />}
-          text={<T id={'import'} />}
-          onClick={handleImportBtnClick}
-        />
-        <NavbarDivider />
+
+        <If condition={!shrinkActions}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="print-16" iconSize={16} />}
+            text={<T id={'print'} />}
+          />
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-import-16" iconSize={16} />}
+            text={<T id={'import'} />}
+            onClick={handleImportBtnClick}
+          />
+          <NavbarDivider />
+        </If>
+
         <DashboardRowsHeightButton
           initialValue={cashflowTansactionsTableSize}
           onChange={handleTableRowSizeChange}
@@ -288,6 +301,40 @@ function AccountTransactionsActionsBar({
               }
             />
           </Tooltip>
+        </If>
+
+        <If condition={shrinkActions}>
+          <NavbarDivider />
+          <Popover
+            minimal={true}
+            interactionKind={PopoverInteractionKind.CLICK}
+            position={Position.BOTTOM_LEFT}
+            modifiers={{
+              offset: { offset: '0, 4' },
+            }}
+            content={
+              <Menu>
+                <MenuItem
+                  icon={<Icon icon="print-16" iconSize={16} />}
+                  text={<T id={'print'} />}
+                />
+                <MenuItem
+                  icon={<Icon icon="file-export-16" iconSize={16} />}
+                  text={<T id={'export'} />}
+                />
+                <MenuItem
+                  icon={<Icon icon="file-import-16" iconSize={16} />}
+                  text={<T id={'import'} />}
+                  onClick={handleImportBtnClick}
+                />
+              </Menu>
+            }
+          >
+            <Button
+              icon={<Icon icon="more-h-16" iconSize={16} />}
+              minimal={true}
+            />
+          </Popover>
         </If>
 
         {!isEmpty(uncategorizedTransationsIdsSelected) && (
@@ -368,7 +415,6 @@ function AccountTransactionsActionsBar({
               </If>
 
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
-
               <MenuDivider />
               <If condition={isSyncingOwner && isFeedsActive}>
                 <MenuItem
