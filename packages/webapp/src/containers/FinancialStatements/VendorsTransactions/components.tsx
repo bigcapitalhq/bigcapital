@@ -19,6 +19,7 @@ import {
   useVendorsTransactionsCsvExport,
   useVendorsTransactionsXlsxExport,
 } from '@/hooks/query';
+import { Align } from '@/constants';
 
 /**
  * Retrieve vendors transactions columns.
@@ -63,6 +64,8 @@ export const useVendorsTransactionsColumns = () => {
           minWidth: 100,
           magicSpacing: 10,
         }),
+        money: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('debit'),
@@ -73,6 +76,8 @@ export const useVendorsTransactionsColumns = () => {
           minWidth: 100,
           magicSpacing: 10,
         }),
+        money: true,
+        align: Align.Right,
       },
       {
         Header: intl.get('running_balance'),
@@ -83,6 +88,8 @@ export const useVendorsTransactionsColumns = () => {
           minWidth: 120,
           magicSpacing: 10,
         }),
+        money: true,
+        align: Align.Right,
       },
     ],
     [table],
