@@ -13,7 +13,7 @@ export default function PaymentReceiveFormAlerts() {
   const handleClearingAllLines = () => {
     const newEntries = clearAllPaymentEntries(entries);
     setFieldValue('entries', newEntries);
-    setFieldValue('full_amount', '');
+    setFieldValue('amount', '');
   };
 
   return (

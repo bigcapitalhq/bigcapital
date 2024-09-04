@@ -12,12 +12,13 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { isEmpty, toSafeInteger } from 'lodash';
-import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
+import { FastField, useFormikContext, ErrorMessage } from 'formik';
 
 import {
   FeatureCan,
   CustomersSelect,
   FormattedMessage as T,
+  FMoneyInputGroup,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -32,7 +33,6 @@ import {
   AccountsSelect,
   FieldRequiredHint,
   Icon,
-  MoneyInputGroup,
   InputPrependText,
   CustomerDrawerLink,
   Hint,
@@ -64,7 +64,7 @@ export default function PaymentReceiveHeaderFields() {
 
   // Formik form context.
   const {
-    values: { entries },
+    values: { entries, currency_code },
     setFieldValue,
   } = useFormikContext();
 
@@ -79,7 +79,7 @@ export default function PaymentReceiveHeaderFields() {
     const fullAmount = safeSumBy(newEntries, 'payment_amount');
 
     setFieldValue('entries', newEntries);
-    setFieldValue('full_amount', fullAmount);
+    setFieldValue('amount', fullAmount);
   };
   // Handles the full-amount field blur.
   const onFullAmountBlur = (value) => {
@@ -124,48 +124,34 @@ export default function PaymentReceiveHeaderFields() {
       </FastField>
 
       {/* ------------ Full amount ------------ */}
-      <Field name={'amount'}>
-        {({
-          form: {
-            setFieldValue,
-            values: { currency_code, entries },
-          },
-          field: { value, onChange },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={<T id={'full_amount'} />}
-            inline={true}
-            className={('form-group--full-amount', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            labelInfo={<Hint />}
-            helperText={<ErrorMessage name="full_amount" />}
-          >
-            <ControlGroup>
-              <InputPrependText text={currency_code} />
-              <MoneyInputGroup
-                value={value}
-                onChange={(value) => {
-                  setFieldValue('amount', value);
-                }}
-                onBlurValue={onFullAmountBlur}
-              />
-            </ControlGroup>
+      <FFormGroup
+        name={'amount'}
+        label={<T id={'full_amount'} />}
+        inline={true}
+        labelInfo={<Hint />}
+        fastField
+      >
+        <ControlGroup>
+          <InputPrependText text={currency_code} />
+          <FMoneyInputGroup
+            name={'amount'}
+            onBlurValue={onFullAmountBlur}
+            fastField
+          />
+        </ControlGroup>
 
-            {!isEmpty(entries) && (
-              <Button
-                onClick={handleReceiveFullAmountClick}
-                className={'receive-full-amount'}
-                small={true}
-                minimal={true}
-              >
-                <T id={'receive_full_amount'} /> (
-                <Money amount={totalDueAmount} currency={currency_code} />)
-              </Button>
-            )}
-          </FormGroup>
+        {!isEmpty(entries) && (
+          <Button
+            onClick={handleReceiveFullAmountClick}
+            className={'receive-full-amount'}
+            small={true}
+            minimal={true}
+          >
+            <T id={'receive_full_amount'} /> (
+            <Money amount={totalDueAmount} currency={currency_code} />)
+          </Button>
         )}
-      </Field>
+      </FFormGroup>
 
       {/* ------------ Payment receive no. ------------ */}
       <PaymentReceivePaymentNoField />
@@ -197,23 +183,14 @@ export default function PaymentReceiveHeaderFields() {
       </FFormGroup>
 
       {/* ------------ Reference No. ------------ */}
-      <FastField name={'reference_no'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference'} />}
-            inline={true}
-            className={classNames('form-group--reference', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference" />}
-          >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'reference_no'}
+        label={<T id={'reference'} />}
+        inline={true}
+        fastField
+      >
+        <InputGroup name={'reference_no'} minimal={true} fastField />
+      </FFormGroup>
 
       {/*------------ Project name -----------*/}
       <FeatureCan feature={Features.Projects}>

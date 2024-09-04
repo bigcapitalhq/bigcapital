@@ -71,7 +71,6 @@ export const defaultRequestPayment = {
  */
 export const transformToEditForm = (paymentReceive, paymentReceiveEntries) => ({
   ...transformToForm(paymentReceive, defaultPaymentReceive),
-  full_amount: safeSumBy(paymentReceiveEntries, 'payment_amount'),
   entries: [
     ...paymentReceiveEntries.map((paymentReceiveEntry) => ({
       ...transformToForm(paymentReceiveEntry, defaultPaymentReceiveEntry),

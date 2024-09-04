@@ -12,8 +12,13 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
-import { FormattedMessage as T, VendorsSelect } from '@/components';
+import { FastField, useFormikContext, ErrorMessage } from 'formik';
+import {
+  FInputGroup,
+  FMoneyInputGroup,
+  FormattedMessage as T,
+  VendorsSelect,
+} from '@/components';
 import { CLASSES } from '@/constants/classes';
 
 import {
@@ -25,7 +30,6 @@ import {
   Hint,
   Icon,
   VendorDrawerLink,
-  MoneyInputGroup,
 } from '@/components';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
@@ -49,7 +53,7 @@ import { accountsFieldShouldUpdate, vendorsFieldShouldUpdate } from './utils';
 function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
   // Formik form context.
   const {
-    values: { entries },
+    values: { entries, currency_code },
     setFieldValue,
   } = useFormikContext();
 
@@ -115,47 +119,34 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       </FastField>
 
       {/* ------------ Full amount ------------ */}
-      <Field name={'amount'}>
-        {({
-          form: {
-            values: { currency_code, entries },
-          },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={<T id={'full_amount'} />}
-            inline={true}
-            className={('form-group--full-amount', Classes.FILL)}
-            intent={inputIntent({ error, touched })}
-            labelInfo={<Hint />}
-            helperText={<ErrorMessage name="amount" />}
-          >
-            <ControlGroup>
-              <InputPrependText text={currency_code} />
-              <MoneyInputGroup
-                value={value}
-                onChange={(value) => {
-                  setFieldValue('amount', value);
-                }}
-                onBlurValue={onFullAmountBlur}
-              />
-            </ControlGroup>
+      <FFormGroup
+        name={'amount'}
+        label={<T id={'full_amount'} />}
+        inline={true}
+        labelInfo={<Hint />}
+        fastField
+      >
+        <ControlGroup>
+          <InputPrependText text={currency_code} />
+          <FMoneyInputGroup
+            fastField
+            name={'amount'}
+            onBlurValue={onFullAmountBlur}
+          />
+        </ControlGroup>
 
-            {!isEmpty(entries) && (
-              <Button
-                onClick={handleReceiveFullAmountClick}
-                className={'receive-full-amount'}
-                small={true}
-                minimal={true}
-              >
-                <T id={'receive_full_amount'} /> (
-                <Money amount={payableFullAmount} currency={currency_code} />)
-              </Button>
-            )}
-          </FormGroup>
+        {!isEmpty(entries) && (
+          <Button
+            onClick={handleReceiveFullAmountClick}
+            className={'receive-full-amount'}
+            small={true}
+            minimal={true}
+          >
+            <T id={'receive_full_amount'} /> (
+            <Money amount={payableFullAmount} currency={currency_code} />)
+          </Button>
         )}
-      </Field>
+      </FFormGroup>
 
       {/* ------------ Payment number ------------ */}
       <FastField name={'payment_number'}>
@@ -203,23 +194,14 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       </FFormGroup>
 
       {/* ------------ Reference ------------ */}
-      <FastField name={'reference'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference'} />}
-            inline={true}
-            className={classNames('form-group--reference', Classes.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference" />}
-          >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'reference'}
+        label={<T id={'reference'} />}
+        inline={true}
+        fastField
+      >
+        <FInputGroup name={'reference'} minimal={true} fastField />
+      </FFormGroup>
     </div>
   );
 }

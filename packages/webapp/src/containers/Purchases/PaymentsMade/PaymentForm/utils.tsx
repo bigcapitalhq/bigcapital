@@ -53,7 +53,6 @@ export const defaultPaymentMade = {
 
 export const transformToEditForm = (paymentMade, paymentMadeEntries) => {
   const attachments = transformAttachmentsToForm(paymentMade);
-  const appliedAmount = safeSumBy(paymentMadeEntries, 'payment_amount');
 
   return {
     ...transformToForm(paymentMade, defaultPaymentMade),
