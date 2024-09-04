@@ -113,6 +113,7 @@ export function usePaymentReceivesColumns() {
         align: 'right',
         clickable: true,
         textOverview: true,
+        money: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {

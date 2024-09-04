@@ -117,6 +117,7 @@ export function usePaymentMadesTableColumns() {
         className: 'amount',
         align: 'right',
         clickable: true,
+        money: true,
       },
       {
         id: 'reference_no',

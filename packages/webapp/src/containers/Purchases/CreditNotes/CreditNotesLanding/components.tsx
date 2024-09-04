@@ -154,6 +154,7 @@ export function useVendorsCreditNoteTableColumns() {
         clickable: true,
         textOverview: true,
         disableSortBy: true,
+        money: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {
