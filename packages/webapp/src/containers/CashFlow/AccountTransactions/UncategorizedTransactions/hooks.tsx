@@ -1,8 +1,10 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
+import clsx from 'classnames';
 import {
   Checkbox,
+  Classes,
   Intent,
   PopoverInteractionKind,
   Position,
@@ -97,6 +99,7 @@ export function useAccountUncategorizedTransactionsColumns() {
         width: 160,
         textOverview: true,
         clickable: true,
+        className: clsx(Classes.TEXT_MUTED),
       },
       {
         id: 'payee',
@@ -123,21 +126,21 @@ export function useAccountUncategorizedTransactionsColumns() {
         id: 'deposit',
         Header: intl.get('banking.label.deposit'),
         accessor: 'formatted_deposit_amount',
-        width: 40,
-        className: 'deposit',
-        textOverview: true,
         align: 'right',
+        width: 40,
+        textOverview: true,
         clickable: true,
+        money: true
       },
       {
         id: 'withdrawal',
         Header: intl.get('banking.label.withdrawal'),
         accessor: 'formatted_withdrawal_amount',
-        className: 'withdrawal',
         width: 40,
         textOverview: true,
         align: 'right',
         clickable: true,
+        money: true
       },
       {
         id: 'categorize_include',

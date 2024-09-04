@@ -229,7 +229,6 @@ export function useInvoicesTableColumns() {
         Header: intl.get('invoice_no__'),
         accessor: 'invoice_no',
         width: 100,
-        className: 'invoice_no',
         clickable: true,
         textOverview: true,
       },
@@ -241,6 +240,7 @@ export function useInvoicesTableColumns() {
         align: 'right',
         clickable: true,
         textOverview: true,
+        money: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {
@@ -266,7 +266,6 @@ export function useInvoicesTableColumns() {
         Header: intl.get('reference_no'),
         accessor: 'reference_no',
         width: 90,
-        className: 'reference_no',
         clickable: true,
         textOverview: true,
       },

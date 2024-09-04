@@ -189,6 +189,7 @@ export function useBillsTableColumns() {
         width: 120,
         align: 'right',
         clickable: true,
+        money: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {

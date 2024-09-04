@@ -1,7 +1,9 @@
 // @ts-nocheck
+import React from 'react';
+import clsx from 'classnames';
+import { Classes } from '@blueprintjs/core';
 import { Group, Icon } from '@/components';
 import { getColumnWidth } from '@/utils';
-import React from 'react';
 import { useRecognizedTransactionsBoot } from './RecognizedTransactionsTableBoot';
 
 const getReportColWidth = (data, accessor, headerText) => {
@@ -26,10 +28,6 @@ const recognizeAccessor = (transaction) => {
       <span>{transaction.assigned_account_name}</span>
     </>
   );
-};
-
-const descriptionAccessor = (transaction) => {
-  return <span style={{ color: '#5F6B7C' }}>{transaction.description}</span>;
 };
 
 /**
@@ -59,7 +57,8 @@ export function useUncategorizedTransactionsColumns() {
       },
       {
         Header: 'Description',
-        accessor: descriptionAccessor,
+        accessor: 'description',
+        className: clsx(Classes.TEXT_MUTED),        
         textOverview: true,
       },
       {
@@ -82,12 +81,14 @@ export function useUncategorizedTransactionsColumns() {
         accessor: 'formatted_deposit_amount',
         align: 'right',
         width: depositWidth,
+        money: true
       },
       {
         Header: 'Withdrawal',
         accessor: 'formatted_withdrawal_amount',
         align: 'right',
         width: withdrawalWidth,
+        money: true
       },
     ],
     [],

@@ -1,9 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import clsx from 'classnames';
-import styled from 'styled-components';
 import {
-  DataTable,
   TableFastCell,
   TableSkeletonRows,
   TableSkeletonHeader,
@@ -16,6 +13,7 @@ import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 import { usePendingTransactionsContext } from './PendingTransactionsTableBoot';
 import { usePendingTransactionsTableColumns } from './_hooks';
 
+import { BankAccountDataTable } from '../components/BankAccountDataTable';
 import { compose } from '@/utils';
 
 /**
@@ -37,7 +35,7 @@ function PendingTransactionsDataTableRoot({
   } = usePendingTransactionsContext();
 
   return (
-    <CashflowTransactionsTable
+    <BankAccountDataTable
       noInitialFetch={true}
       columns={columns}
       data={pendingTransactions || []}
@@ -54,7 +52,6 @@ function PendingTransactionsDataTableRoot({
       vListOverscanRowCount={0}
       noResults={'There is no pending transactions in the current account.'}
       windowScrollerProps={{ scrollElement: scrollableRef }}
-      className={clsx('table-constrant')}
     />
   );
 }
@@ -65,47 +62,3 @@ export const PendingTransactionsDataTable = compose(
   })),
   withBankingActions,
 )(PendingTransactionsDataTableRoot);
-
-const DashboardConstrantTable = styled(DataTable)`
-  .table {
-    .thead {
-      .th {
-        background: #fff;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 13px;i
-        font-weight: 500;
-      }
-    }
-
-    .tbody {
-      .tr:last-child .td {
-        border-bottom: 0;
-      }
-    }
-  }
-`;
-
-const CashflowTransactionsTable = styled(DashboardConstrantTable)`
-  .table .tbody {
-    .tbody-inner .tr.no-results {
-      .td {
-        padding: 2rem 0;
-        font-size: 14px;
-        color: #888;
-        font-weight: 400;
-        border-bottom: 0;
-      }
-    }
-
-    .tbody-inner {
-      .tr .td:not(:first-child) {
-        border-left: 1px solid #e6e6e6;
-      }
-
-      .td-description {
-        color: #5f6b7c;
-      }
-    }
-  }
-`;

@@ -1,13 +1,14 @@
 // @ts-nocheck
 import React, { useContext } from 'react';
 import classNames from 'classnames';
-import { camelCase} from 'lodash';
+import { camelCase } from 'lodash';
 
 import { If, Skeleton } from '@/components';
 import { useAppIntlContext } from '@/components/AppIntlProvider';
 import TableContext from './TableContext';
 import { saveInvoke, ignoreEventFromSelectors } from '@/utils';
 import { isCellLoading } from './utils';
+import { MoneyDisplay } from '../Money/MoneyDisplay';
 
 const ROW_CLICK_SELECTORS_INGORED = ['.expand-toggle', '.selection-checkbox'];
 
@@ -58,7 +59,7 @@ export default function TableCell({ cell, row, index }) {
       return;
     }
     saveInvoke(onCellClick, cell, event);
-  };  
+  };
   const cellType = camelCase(cell.column.Cell.cellType) || 'text';
 
   return (
@@ -109,7 +110,11 @@ export default function TableCell({ cell, row, index }) {
           </span>
         </If>
 
-        {cell.render('Cell')}
+        {cell.column?.money ? (
+          <MoneyDisplay>{cell.render('Cell')}</MoneyDisplay>
+        ) : (
+          <>{cell.render('Cell')}</>
+        )}
       </div>
     </div>
   );
