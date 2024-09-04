@@ -1,0 +1,29 @@
+.root {
+  :global .table{    
+    .thead {
+      .th {
+        background: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+    }
+
+    .tbody-inner .tr.no-results {
+      .td {
+        padding: 2rem 0;
+        font-size: 14px;
+        color: #888;
+        font-weight: 400;
+        border-bottom: 0;
+      }
+    }
+
+    .tbody-inner {
+      .tr .td{
+        border-bottom: 1px solid #ececec;
+      }
+    }
+  }
+}

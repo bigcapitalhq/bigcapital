@@ -34,6 +34,7 @@ const amountAccessor = R.curry((data, column) => {
       minWidth: AMOUNT_COLUMNS_MIN_WIDTH,
     }),
     align: Align.Right,
+    money: true,
   };
 });
 

@@ -104,6 +104,7 @@ export const useAccountsTableColumns = () => {
         width: 150,
         clickable: true,
         align: 'right',
+        money: true,
       },
       {
         id: 'balance',
@@ -112,6 +113,7 @@ export const useAccountsTableColumns = () => {
         Cell: BalanceCell,
         width: 150,
         clickable: true,
+        money: true,
         align: 'right',
       },
     ],

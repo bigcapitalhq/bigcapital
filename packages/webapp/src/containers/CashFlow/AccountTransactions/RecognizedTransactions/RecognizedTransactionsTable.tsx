@@ -27,6 +27,7 @@ import {
   withBankingActions,
 } from '../../withBankingActions';
 import styles from './RecognizedTransactionsTable.module.scss';
+import { BankAccountDataTable } from '../components/BankAccountDataTable';
 
 interface RecognizedTransactionsTableProps extends WithBankingActionsProps {}
 
@@ -83,7 +84,7 @@ function RecognizedTransactionsTableRoot({
   };
 
   return (
-    <CashflowTransactionsTable
+    <BankAccountDataTable
       noInitialFetch={true}
       columns={columns}
       data={recognizedTransactions}
@@ -100,14 +101,12 @@ function RecognizedTransactionsTableRoot({
       ContextMenu={ActionsMenu}
       onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
-      vListrowHeight={'small' == 'small' ? 32 : 40}
       vListrowHeight={40}
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       windowScrollerProps={{ scrollElement: scrollableRef }}
       noResults={<RecognizedTransactionsTableNoResults />}
-      className="table-constrant"
       payload={{
         onExclude: handleExcludeClick,
         onCategorize: handleCategorizeClick,
@@ -119,45 +118,6 @@ function RecognizedTransactionsTableRoot({
 export const RecognizedTransactionsTable = compose(withBankingActions)(
   RecognizedTransactionsTableRoot,
 );
-
-const DashboardConstrantTable = styled(DataTable)`
-  .table {
-    .thead {
-      .th {
-        background: #fff;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        font-size: 13px;
-      }
-    }
-
-    .tbody {
-      .tr:last-child .td {
-        border-bottom: 0;
-      }
-    }
-  }
-`;
-
-const CashflowTransactionsTable = styled(DashboardConstrantTable)`
-  .table .tbody {
-    .tbody-inner .tr.no-results {
-      .td {
-        padding: 2rem 0;
-        font-size: 14px;
-        color: #888;
-        font-weight: 400;
-        border-bottom: 0;
-      }
-    }
-
-    .tbody-inner {
-      .tr .td {
-        border-bottom: 1px solid #e6e6e6;
-      }
-    }
-  }
-`;
 
 function RecognizedTransactionsTableNoResults() {
   return (

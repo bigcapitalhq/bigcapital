@@ -143,6 +143,7 @@ export function useExpensesTableColumns() {
         align: 'right',
         width: 150,
         clickable: true,
+        money: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {

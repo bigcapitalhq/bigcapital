@@ -27,6 +27,7 @@ export const useManualJournalsColumns = () => {
         accessor: 'formatted_amount',
         width: 115,
         clickable: true,
+        money: true,
         align: 'right',
         className: clsx(CLASSES.FONT_BOLD),
       },

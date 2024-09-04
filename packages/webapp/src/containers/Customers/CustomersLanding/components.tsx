@@ -170,6 +170,7 @@ export function useCustomersTableColumns() {
         align: 'right',
         width: 100,
         clickable: true,
+        money: true,
       },
     ],
     [],

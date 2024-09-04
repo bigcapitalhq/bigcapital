@@ -192,6 +192,7 @@ export function useVendorsTableColumns() {
         align: 'right',
         width: 100,
         clickable: true,
+        money: true,
       },
     ],
     [],

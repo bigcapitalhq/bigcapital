@@ -1,22 +1,21 @@
 // @ts-nocheck
 import React from 'react';
 import clsx from 'classnames';
-import styled from 'styled-components';
 import { Intent } from '@blueprintjs/core';
 import {
-  DataTable,
   TableFastCell,
   TableSkeletonRows,
   TableSkeletonHeader,
   TableVirtualizedListRows,
-  FormattedMessage as T,
   AppToaster,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 import { ActionsMenu } from './components';
+import { BankAccountDataTable } from '../components/BankAccountDataTable';
 
 import withSettings from '@/containers/Settings/withSettings';
 import { withBankingActions } from '../../withBankingActions';
+import { withBanking } from '../../withBanking';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountUncategorizedTransactionsContext } from '../AllTransactionsUncategorizedBoot';
@@ -25,7 +24,6 @@ import { useAccountUncategorizedTransactionsColumns } from './hooks';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 
 import { compose } from '@/utils';
-import { withBanking } from '../../withBanking';
 import styles from './AccountTransactionsUncategorizedTable.module.scss';
 
 /**
@@ -48,7 +46,6 @@ function AccountTransactionsDataTable({
 }) {
   // Retrieve table columns.
   const columns = useAccountUncategorizedTransactionsColumns();
-
   const { scrollableRef } = useAccountTransactionsContext();
 
   // Retrieve list context.
@@ -100,7 +97,7 @@ function AccountTransactionsDataTable({
   };
 
   return (
-    <CashflowTransactionsTable
+    <BankAccountDataTable
       noInitialFetch={true}
       columns={columns}
       data={uncategorizedTransactions || []}
@@ -119,7 +116,7 @@ function AccountTransactionsDataTable({
       ContextMenu={ActionsMenu}
       onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
-      vListrowHeight={cashflowTansactionsTableSize === 'small' ? 32 : 40}
+      vListrowHeight={cashflowTansactionsTableSize === 'small' ? 34 : 40}
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
@@ -132,7 +129,7 @@ function AccountTransactionsDataTable({
       }}
       onSelectedRowsChange={handleSelectedRowsChange}
       windowScrollerProps={{ scrollElement: scrollableRef }}
-      className={clsx('table-constrant', styles.table, {
+      className={clsx(styles.table, {
         [styles.showCategorizeColumn]: enableMultipleCategorization,
       })}
     />
@@ -151,47 +148,3 @@ export default compose(
     }),
   ),
 )(AccountTransactionsDataTable);
-
-const DashboardConstrantTable = styled(DataTable)`
-  .table {
-    .thead {
-      .th {
-        background: #fff;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 13px;i
-        font-weight: 500;
-      }
-    }
-
-    .tbody {
-      .tr:last-child .td {
-        border-bottom: 0;
-      }
-    }
-  }
-`;
-
-const CashflowTransactionsTable = styled(DashboardConstrantTable)`
-  .table .tbody {
-    .tbody-inner .tr.no-results {
-      .td {
-        padding: 2rem 0;
-        font-size: 14px;
-        color: #888;
-        font-weight: 400;
-        border-bottom: 0;
-      }
-    }
-
-    .tbody-inner {
-      .tr .td:not(:first-child) {
-        border-left: 1px solid #e6e6e6;
-      }
-
-      .td-description {
-        color: #5f6b7c;
-      }
-    }
-  }
-`;

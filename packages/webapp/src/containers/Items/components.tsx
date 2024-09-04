@@ -212,6 +212,7 @@ export const useItemsTableColumns = () => {
         align: 'right',
         width: 150,
         clickable: true,
+        money: true,
       },
       {
         id: 'cost_price',
@@ -220,6 +221,7 @@ export const useItemsTableColumns = () => {
         align: 'right',
         width: 150,
         clickable: true,
+        money: true,
       },
       {
         id: 'quantity_on_hand',
@@ -229,6 +231,7 @@ export const useItemsTableColumns = () => {
         align: 'right',
         width: 140,
         clickable: true,
+        money: true,
       },
     ],
     [],

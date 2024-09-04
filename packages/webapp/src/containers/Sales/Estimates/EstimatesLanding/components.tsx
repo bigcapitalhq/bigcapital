@@ -207,6 +207,7 @@ export function useEstiamtesTableColumns() {
         align: 'right',
         clickable: true,
         className: clsx(CLASSES.FONT_BOLD),
+        money: true
       },
       {
         id: 'status',

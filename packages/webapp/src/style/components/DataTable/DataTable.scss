@@ -378,6 +378,8 @@
 .table-constrant,
 .table--constrant {
   .table {
+    color: #000;
+
     .thead {
       .tr:first-of-type .th {
         border-top: 1px solid #000000;
@@ -395,7 +397,6 @@
       background: #fff;
       padding: 0.5rem 0.5rem;
       border-bottom: 0;
-      color: #000;
     }
   }
 }

@@ -1,10 +1,8 @@
 // @ts-nocheck
 import React from 'react';
-import styled from 'styled-components';
 import { Intent } from '@blueprintjs/core';
 import * as R from 'ramda';
 import {
-  DataTable,
   TableFastCell,
   TableSkeletonRows,
   TableSkeletonHeader,
@@ -17,9 +15,10 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { useExcludedTransactionsColumns } from './_utils';
 import { useExcludedTransactionsBoot } from './ExcludedTransactionsTableBoot';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
+import { useUnexcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
 
 import { ActionsMenu } from './_components';
-import { useUnexcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { BankAccountDataTable } from '../components/BankAccountDataTable';
 import {
   WithBankingActionsProps,
   withBankingActions,
@@ -78,7 +77,7 @@ function ExcludedTransactionsTableRoot({
   };
 
   return (
-    <CashflowTransactionsTable
+    <BankAccountDataTable
       noInitialFetch={true}
       columns={columns}
       data={excludedBankTransactions}
@@ -116,42 +115,3 @@ function ExcludedTransactionsTableRoot({
 export const ExcludedTransactionsTable = R.compose(withBankingActions)(
   ExcludedTransactionsTableRoot,
 );
-
-const DashboardConstrantTable = styled(DataTable)`
-  .table {
-    .thead {
-      .th {
-        background: #fff;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        font-size: 13px;
-      }
-    }
-
-    .tbody {
-      .tr:last-child .td {
-        border-bottom: 0;
-      }
-    }
-  }
-`;
-
-const CashflowTransactionsTable = styled(DashboardConstrantTable)`
-  .table .tbody {
-    .tbody-inner .tr.no-results {
-      .td {
-        padding: 2rem 0;
-        font-size: 14px;
-        color: #888;
-        font-weight: 400;
-        border-bottom: 0;
-      }
-    }
-
-    .tbody-inner {
-      .tr .td {
-        border-bottom: 1px solid #e6e6e6;
-      }
-    }
-  }
-`;
