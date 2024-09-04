@@ -2,6 +2,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { curry } from 'lodash/fp';
+import { useHistory } from 'react-router-dom';
 import {
   Popover,
   Menu,
@@ -11,10 +13,9 @@ import {
   Classes,
 } from '@blueprintjs/core';
 import { Icon } from '@/components';
-import { useHistory } from 'react-router-dom';
-import { curry } from 'lodash/fp';
 
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { useAppShellContext } from '@/components/AppShell/AppContentShell/AppContentShellProvider';
 
 function AccountSwitchButton() {
   const { currentAccount } = useAccountTransactionsContext();
@@ -22,7 +23,7 @@ function AccountSwitchButton() {
   return (
     <AccountSwitchButtonBase
       minimal={true}
-      rightIcon={<Icon icon={'arrow-drop-down'} iconSize={24} />}
+      rightIcon={<Icon icon={'caret-down-16'} iconSize={16} />}
     >
       <AccountSwitchText>{currentAccount.name}</AccountSwitchText>
     </AccountSwitchButtonBase>
@@ -110,12 +111,16 @@ function AccountTransactionsDetailsBarSkeleton() {
 }
 
 function AccountTransactionsDetailsContent() {
+  const { hideAside } = useAppShellContext();
+
   return (
     <React.Fragment>
       <AccountSwitchItem />
-      <AccountNumberItem />
+
+      {/** Hide some details once the aside opens to preserve space on details bar. */}
+      {hideAside && <AccountNumberItem />}
       <AccountBalanceItem />
-      <AccountBankBalanceItem />
+      {hideAside && <AccountBankBalanceItem />}
     </React.Fragment>
   );
 }
