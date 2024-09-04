@@ -78,9 +78,9 @@ export class RecognizeTranasctionsService {
       });
 
     const bankRules = await BankRule.query(trx).onBuild((q) => {
-      const rulesIds = castArray(ruleId);
+      const rulesIds = !isEmpty(ruleId) ? castArray(ruleId) : [];
 
-      if (!isEmpty(rulesIds)) {
+      if (rulesIds?.length > 0) {
         q.whereIn('id', rulesIds);
       }
       q.withGraphFetched('conditions');
