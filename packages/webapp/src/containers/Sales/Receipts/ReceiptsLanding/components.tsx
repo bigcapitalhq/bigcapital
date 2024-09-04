@@ -160,6 +160,7 @@ export function useReceiptsTableColumns() {
         align: 'right',
         clickable: true,
         textOverview: true,
+        money: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {

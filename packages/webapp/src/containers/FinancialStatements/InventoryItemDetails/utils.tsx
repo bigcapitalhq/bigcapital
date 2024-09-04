@@ -29,6 +29,7 @@ const numericColumn = R.curry((data, index, column) => ({
   }),
   disableSortBy: true,
   align: Align.Right,
+  money: true,
 }));
 
 const columnsMapper = R.curry((data, index, column) => ({

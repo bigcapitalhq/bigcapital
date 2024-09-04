@@ -30,13 +30,14 @@ const dateRangeMapper = (data, index, column) => ({
   key: column.key,
   accessor: `cells[${index}].value`,
   width: getColumnWidth(data, `cells.${index}.value`, {
-    magicSpacing: 10,
+    magicSpacing: 12,
     minWidth: 100,
   }),
   className: `date-period ${column.key}`,
   disableSortBy: true,
   textOverview: true,
   align: Align.Right,
+  money: true
 });
 
 /**
@@ -50,11 +51,12 @@ const totalMapper = (data, index, column) => ({
   textOverview: true,
   Cell: CellTextSpan,
   width: getColumnWidth(data, `cells[${index}].value`, {
-    magicSpacing: 10,
+    magicSpacing: 12,
     minWidth: 100,
   }),
   disableSortBy: true,
   align: Align.Right,
+  money: true
 });
 
 /**
