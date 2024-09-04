@@ -9,7 +9,7 @@ const Schema = Yup.object().shape({
   deposit_account_id: Yup.number()
     .required()
     .label(intl.get('deposit_account_')),
-  full_amount: Yup.number().nullable(),
+  amount: Yup.number().required().label('Amount'),
   payment_receive_no: Yup.string()
     .nullable()
     .max(DATATYPES_LENGTH.STRING)
