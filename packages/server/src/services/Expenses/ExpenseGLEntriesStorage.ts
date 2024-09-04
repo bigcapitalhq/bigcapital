@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { Service, Inject } from 'typedi';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ExpenseGLEntries } from './ExpenseGLEntries';
+import { ExpenseGLEntries } from './ExpenseGLEntriesService';
 
 @Service()
 export class ExpenseGLEntriesStorage {
@@ -11,9 +11,6 @@ export class ExpenseGLEntriesStorage {
 
   @Inject()
   private ledgerStorage: LedgerStorageService;
-
-  @Inject()
-  private tenancy: HasTenancyService;
 
   /**
    * Writes the expense GL entries.
@@ -26,15 +23,12 @@ export class ExpenseGLEntriesStorage {
     expenseId: number,
     trx?: Knex.Transaction
   ) => {
-    const { Expense } = await this.tenancy.models(tenantId);
-
-    const expense = await Expense.query(trx)
-      .findById(expenseId)
-      .withGraphFetched('categories');
-
     // Retrieves the given expense ledger.
-    const expenseLedger = this.expenseGLEntries.getExpenseLedger(expense);
-
+    const expenseLedger = await this.expenseGLEntries.getExpenseLedgerById(
+      tenantId,
+      expenseId,
+      trx
+    );
     // Commits the expense ledger entries.
     await this.ledgerStorage.commit(tenantId, expenseLedger, trx);
   };
