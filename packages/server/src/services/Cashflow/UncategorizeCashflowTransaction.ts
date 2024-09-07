@@ -33,22 +33,25 @@ export class UncategorizeCashflowTransaction {
   ): Promise<Array<number>> {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
-    const oldUncategorizedTransaction =
+    const oldMainUncategorizedTransaction =
       await UncategorizedCashflowTransaction.query()
         .findById(uncategorizedTransactionId)
         .throwIfNotFound();
 
-    validateTransactionShouldBeCategorized(oldUncategorizedTransaction);
+    validateTransactionShouldBeCategorized(oldMainUncategorizedTransaction);
 
     const associatedUncategorizedTransactions =
       await UncategorizedCashflowTransaction.query()
-        .where('categorizeRefId', oldUncategorizedTransaction.categorizeRefId)
+        .where('categorizeRefId', oldMainUncategorizedTransaction.categorizeRefId)
         .where(
           'categorizeRefType',
-          oldUncategorizedTransaction.categorizeRefType
-        );
+          oldMainUncategorizedTransaction.categorizeRefType
+        )
+        // Exclude the main transaction.
+        .whereNot('id', uncategorizedTransactionId);
+
     const oldUncategorizedTransactions = [
-      oldUncategorizedTransaction,
+      oldMainUncategorizedTransaction,
       ...associatedUncategorizedTransactions,
     ];
     const oldUncategoirzedTransactionsIds = oldUncategorizedTransactions.map(
@@ -85,6 +88,7 @@ export class UncategorizeCashflowTransaction {
         {
           tenantId,
           uncategorizedTransactionId,
+          oldMainUncategorizedTransaction,
           uncategorizedTransactions,
           oldUncategorizedTransactions,
           trx,

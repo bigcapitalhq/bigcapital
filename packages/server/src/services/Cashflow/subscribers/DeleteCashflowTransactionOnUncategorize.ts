@@ -22,32 +22,25 @@ export class DeleteCashflowTransactionOnUncategorize {
   };
 
   /**
-   * Deletes the cashflow transaction on uncategorize transaction.
+   * Deletes the cashflow transaction once uncategorize the bank transaction.
    * @param {ICashflowTransactionUncategorizedPayload} payload
    */
   public async deleteCashflowTransactionOnUncategorize({
     tenantId,
-    oldUncategorizedTransactions,
+    oldMainUncategorizedTransaction,
     trx,
   }: ICashflowTransactionUncategorizedPayload) {
-    const _oldUncategorizedTransactions = oldUncategorizedTransactions.filter(
-      (transaction) => transaction.categorizeRefType === 'CashflowTransaction'
-    );
-
-    // Deletes the cashflow transaction.
-    if (_oldUncategorizedTransactions.length > 0) {
-      const result = await PromisePool.withConcurrency(1)
-        .for(_oldUncategorizedTransactions)
-        .process(async (oldUncategorizedTransaction) => {
-          await this.deleteCashflowTransactionService.deleteCashflowTransaction(
-            tenantId,
-            oldUncategorizedTransaction.categorizeRefId,
-            trx
-          );
-        });
-      if (result.errors.length > 0) {
-        throw new ServiceError('SOMETHING_WRONG');
-      }
+    // Cannot continue if the main transaction does not reference to cashflow type.
+    if (
+      oldMainUncategorizedTransaction.categorizeRefType !==
+      'CashflowTransaction'
+    ) {
+      return;
     }
+    await this.deleteCashflowTransactionService.deleteCashflowTransaction(
+      tenantId,
+      oldMainUncategorizedTransaction.categorizeRefId,
+      trx
+    );
   }
 }
