@@ -5,14 +5,7 @@ import { body, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
 import { AttachmentsApplication } from '@/services/Attachments/AttachmentsApplication';
 import { AttachmentUploadPipeline } from '@/services/Attachments/S3UploadPipeline';
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  Route,
-} from '@/decorators/swagger-decorators';
 
-@ApiTags('Attachments')
 @Service()
 export class AttachmentsController extends BaseController {
   @Inject()
@@ -128,26 +121,6 @@ export class AttachmentsController extends BaseController {
    * @param {NextFunction} next
    * @returns {Promise<Response|void>}
    */
-  @ApiResponse({
-    status: 200,
-    description: 'Details of the given attachement',
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'string' },
-          name: { type: 'string' },
-          email: { type: 'string' },
-        },
-      },
-    },
-  })
-  @ApiOperation({
-    summary: 'Retrieve a specific details of attachment',
-    description: 'Get all registered users',
-  })
-  @Route('/attachments/:id')
   private async getAttachment(
     req: Request,
     res: Response,
