@@ -146,6 +146,7 @@ export interface ICashflowTransactionUncategorizedPayload {
   tenantId: number;
   uncategorizedTransactionId: number;
   uncategorizedTransactions: Array<IUncategorizedCashflowTransaction>;
+  oldMainUncategorizedTransaction: IUncategorizedCashflowTransaction;
   oldUncategorizedTransactions: Array<IUncategorizedCashflowTransaction>;
   trx: Knex.Transaction;
 }
