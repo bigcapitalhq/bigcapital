@@ -8,6 +8,11 @@ import { IItemDTO, ItemAction, AbilitySubject } from '@/interfaces';
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import CheckAbilities from '@/api/middleware/CheckPolicies';
 import { ItemsApplication } from '@/services/Items/ItemsApplication';
+import {
+  ApiOperation,
+  ApiResponse,
+  Route,
+} from '@/decorators/swagger-decorators';
 
 @Service()
 export default class ItemsController extends BaseController {
@@ -198,6 +203,22 @@ export default class ItemsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
+  @ApiResponse({
+    status: 200,
+    description: 'Details of the given attachement',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        name: { type: 'string' },
+      },
+    },
+  })
+  @ApiOperation({
+    summary: 'Creates a new item (inventory or service)',
+    description: 'Get all registered users',
+  })
+  @Route('/items')
   private async newItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const itemDTO: IItemDTO = this.matchedBodyData(req);
