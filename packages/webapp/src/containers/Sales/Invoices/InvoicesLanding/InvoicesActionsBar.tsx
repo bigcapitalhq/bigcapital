@@ -7,6 +7,11 @@ import {
   NavbarGroup,
   Intent,
   Alignment,
+  Menu,
+  MenuItem,
+  Popover,
+  PopoverInteractionKind,
+  Position,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -32,6 +37,8 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import { compose } from '@/utils';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Invoices table actions bar.
@@ -51,6 +58,9 @@ function InvoiceActionsBar({
 
   // #withDialogsActions
   openDialog,
+
+  // #withDrawerActions
+  openDrawer,
 }) {
   const history = useHistory();
 
@@ -95,6 +105,11 @@ function InvoiceActionsBar({
   // Handles the print button click.
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'SaleInvoice' });
+  };
+
+  // Handles the invoice customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.INVOICE_CUSTOMIZE);
   };
 
   return (
@@ -164,6 +179,25 @@ function InvoiceActionsBar({
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                onClick={handleCustomizeBtnClick}
+                text={'Customize Invoice'}
+              />
+            </Menu>
+          }
+        >
+          <Button icon={<Icon icon="cog-16" iconSize={16} />} minimal={true} />
+        </Popover>
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
@@ -184,4 +218,5 @@ export default compose(
     invoicesTableSize: invoiceSettings?.tableSize,
   })),
   withDialogActions,
+  withDrawerActions,
 )(InvoiceActionsBar);

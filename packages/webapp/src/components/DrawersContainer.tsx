@@ -25,6 +25,7 @@ import CategorizeTransactionDrawer from '@/containers/CashFlow/CategorizeTransac
 import ChangeSubscriptionPlanDrawer from '@/containers/Subscriptions/drawers/ChangeSubscriptionPlanDrawer/ChangeSubscriptionPlanDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
+import { InvoiceCustomizeDrawer } from '@/containers/Sales/Invoices/InvoiceCustomize/InvoiceCustomizeDrawer';
 
 /**
  * Drawers container of the dashboard.
@@ -65,6 +66,7 @@ export default function DrawersContainer() {
       <TaxRateDetailsDrawer name={DRAWERS.TAX_RATE_DETAILS} />
       <CategorizeTransactionDrawer name={DRAWERS.CATEGORIZE_TRANSACTION} />
       <ChangeSubscriptionPlanDrawer name={DRAWERS.CHANGE_SUBSCARIPTION_PLAN} />
+      <InvoiceCustomizeDrawer name={DRAWERS.INVOICE_CUSTOMIZE} />
     </div>
   );
 }

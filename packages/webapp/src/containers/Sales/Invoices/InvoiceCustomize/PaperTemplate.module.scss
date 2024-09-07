@@ -1,0 +1,105 @@
+
+.root {
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: inset 0 4px 0px 0 #002762, 0 10px 15px rgba(0, 0, 0, 0.15);
+  padding: 22px;
+  position: relative;
+}
+
+.bigTitle{
+  font-size: 60px;
+  margin: 0;
+  LINE-HEIGHT: 1;
+  MARGIN-BOTTOM: 20px;
+}
+
+.details {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.detail {
+  display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.detailLabel {
+  min-width: 120px;
+}
+
+.addressRoot{
+  display: flex;
+  flex-direction: row;
+}
+
+.addressBillTo{
+  flex: 1;
+}
+
+.addressFrom{
+  flex: 1;
+}
+
+.table :global {
+  margin-top: 40px;
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  thead th{
+    font-weight: 400;
+    border-bottom: 1px solid #000;
+  }
+
+  tbody{
+
+    tr {
+
+    }
+    td{
+      border: 1px solid #F6F6F6;
+      padding: 10px 0;
+    }
+  }
+}
+
+.totals{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+  margin-left: auto;
+}
+.totalsItem{
+  display: flex;
+  padding: 6px 0;
+}
+.totalsItemLabel{
+  min-width: 160px;
+}
+
+.logoWrap{
+  height: 120px;
+  width: 120px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+
+  img{
+    max-width: 100%;
+  }
+}
+
+
+.footer{
+
+}
+
+.paragraph{
+  margin-bottom: 20px;  
+}
+
+.paragraphLabel{
+  color: #333333;
+}
