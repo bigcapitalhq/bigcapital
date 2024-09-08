@@ -259,6 +259,14 @@ module.exports = {
    */
   posthog: {
     apiKey: process.env.POSTHOG_API_KEY,
-    host: process.env.POSTHOG_HOST
-  }
+    host: process.env.POSTHOG_HOST,
+  },
+
+  /**
+   * Stripe Payment Integration.
+   */
+  stripePayment: {
+    secretKey: process.env.STRIPE_PAYMENT_SECRET_KEY || '',
+    publishableKey: process.env.STRIPE_PAYMENT_PUBLISHABLE_KEY || '',
+  },
 };

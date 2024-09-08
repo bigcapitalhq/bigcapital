@@ -302,6 +302,9 @@ importers:
       source-map-loader:
         specifier: ^4.0.1
         version: 4.0.2(webpack@5.91.0)
+      stripe:
+        specifier: ^16.10.0
+        version: 16.10.0
       tmp-promise:
         specifier: ^3.0.3
         version: 3.0.3
@@ -507,6 +510,12 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^1.2.5
         version: 1.9.7(react-redux@7.2.9)(react@18.3.1)
+      '@stripe/connect-js':
+        specifier: ^3.3.12
+        version: 3.3.12
+      '@stripe/react-connect-js':
+        specifier: ^3.3.13
+        version: 3.3.13(@stripe/connect-js@3.3.12)(react-dom@18.3.1)(react@18.3.1)
       '@testing-library/jest-dom':
         specifier: ^4.2.4
         version: 4.2.4
@@ -5708,6 +5717,22 @@ packages:
 
   /@socket.io/component-emitter@3.1.2:
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
+    dev: false
+
+  /@stripe/connect-js@3.3.12:
+    resolution: {integrity: sha512-hXbgvGq9Lb6BYgsb8lcbjL76Yqsxr0yAj6T9ZFTfUK0O4otI5GSEWum9do9rf/E5OfYy6fR1FG/77Jve2w1o6Q==}
+    dev: false
+
+  /@stripe/react-connect-js@3.3.13(@stripe/connect-js@3.3.12)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-kMxYjeQUcl/ixu/mSeX5QGIr/MuP+YxFSEBdb8j6w+tbK82tmcjyFDgoQTQwVXNqUV6jI66Kks3XcfpPRfeiJA==}
+    peerDependencies:
+      '@stripe/connect-js': '>=3.3.11'
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@stripe/connect-js': 3.3.12
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /@supercharge/promise-pool@3.2.0:
@@ -24009,6 +24034,14 @@ packages:
   /strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
+
+  /stripe@16.10.0:
+    resolution: {integrity: sha512-H0qeSCkZVvk4fVchUbg0rNNviwOyw3Rsr9X6MKe84ajBeMz4ogEOZykaUcb/n0GSdvWlXAtbnB1gxl3xOlH+ZA==}
+    engines: {node: '>=12.*'}
+    dependencies:
+      '@types/node': 14.18.63
+      qs: 6.12.1
+    dev: false
 
   /strnum@1.0.5:
     resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}

@@ -64,6 +64,7 @@ import { Webhooks } from './controllers/Webhooks/Webhooks';
 import { ExportController } from './controllers/Export/ExportController';
 import { AttachmentsController } from './controllers/Attachments/AttachmentsController';
 import { OneClickDemoController } from './controllers/OneClickDemo/OneClickDemoController';
+import { StripeIntegrationController } from './controllers/StripeIntegration/StripeIntegrationController';
 
 export default () => {
   const app = Router();
@@ -147,6 +148,7 @@ export default () => {
   dashboard.use('/import', Container.get(ImportController).router());
   dashboard.use('/export', Container.get(ExportController).router());
   dashboard.use('/attachments', Container.get(AttachmentsController).router());
+  dashboard.use('/stripe_integration', Container.get(StripeIntegrationController).router());
 
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());

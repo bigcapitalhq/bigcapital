@@ -109,6 +109,7 @@
     "rtl-detect": "^1.0.4",
     "socket.io": "^4.7.4",
     "source-map-loader": "^4.0.1",
+    "stripe": "^16.10.0",
     "tmp-promise": "^3.0.3",
     "ts-transformer-keys": "^0.4.2",
     "tsyringe": "^4.3.0",
