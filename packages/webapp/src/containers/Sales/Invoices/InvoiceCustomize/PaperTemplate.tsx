@@ -1,3 +1,4 @@
+import clsx from 'classnames';
 import styles from './PaperTemplate.module.scss';
 
 export function PaperTemplate() {
@@ -7,7 +8,10 @@ export function PaperTemplate() {
         <h1 className={styles.bigTitle}>Invoice</h1>
 
         <div className={styles.logoWrap}>
-          <img alt="" src="https://cdn-development.mercury.com/demo-assets/avatars/mercury-demo-dark.png" />
+          <img
+            alt=""
+            src="https://cdn-development.mercury.com/demo-assets/avatars/mercury-demo-dark.png"
+          />
         </div>
       </div>
 
@@ -30,7 +34,7 @@ export function PaperTemplate() {
 
       <div className={styles.addressRoot}>
         <div className={styles.addressBillTo}>
-          Bigcapital Technology, Inc. <br />
+          <strong>Bigcapital Technology, Inc.</strong> <br />
           131 Continental Dr Suite 305 Newark,
           <br />
           Delaware 19713
@@ -43,7 +47,7 @@ export function PaperTemplate() {
         </div>
 
         <div className={styles.addressFrom}>
-          Billed To <br />
+          <strong>Billed To</strong> <br />
           Bigcapital Technology, Inc. <br />
           131 Continental Dr Suite 305 Newark,
           <br />
@@ -62,17 +66,17 @@ export function PaperTemplate() {
           <tr>
             <th>Item</th>
             <th>Description</th>
-            <th>Rate</th>
-            <th>Total</th>
+            <th className={styles.rate}>Rate</th>
+            <th className={styles.total}>Total</th>
           </tr>
         </thead>
 
-        <tbody>
+        <tbody className={styles.tableBody}>
           <tr>
             <td>Simply dummy text</td>
             <td>Simply dummy text of the printing and typesetting</td>
-            <td>1 X $100,00</td>
-            <td>$100,00</td>
+            <td className={styles.rate}>1 X $100,00</td>
+            <td className={styles.total}>$100,00</td>
           </tr>
         </tbody>
       </table>
@@ -81,37 +85,37 @@ export function PaperTemplate() {
         <div className={styles.totals}>
           <div className={styles.totalsItem}>
             <div className={styles.totalsItemLabel}>Sub Total</div>
-            <div>630.00</div>
+            <div className={styles.totalsItemAmount}>630.00</div>
           </div>
 
           <div className={styles.totalsItem}>
             <div className={styles.totalsItemLabel}>Discount</div>
-            <div>0.00</div>
+            <div className={styles.totalsItemAmount}>0.00</div>
           </div>
 
           <div className={styles.totalsItem}>
             <div className={styles.totalsItemLabel}>Sample Tax1 (4.70%)</div>
-            <div>11.75</div>
+            <div className={styles.totalsItemAmount}>11.75</div>
           </div>
 
           <div className={styles.totalsItem}>
             <div className={styles.totalsItemLabel}>Sample Tax2 (7.00%)</div>
-            <div>21.00</div>
+            <div className={styles.totalsItemAmount}>21.00</div>
           </div>
 
-          <div className={styles.totalsItem}>
+          <div className={clsx(styles.totalsItem, styles.totalBottomBordered)}>
             <div className={styles.totalsItemLabel}>Total</div>
-            <div>$662.75</div>
+            <div className={styles.totalsItemAmount}>$662.75</div>
           </div>
 
           <div className={styles.totalsItem}>
             <div className={styles.totalsItemLabel}>Payment Made</div>
-            <div>100.00</div>
+            <div className={styles.totalsItemAmount}>100.00</div>
           </div>
 
-          <div className={styles.totalsItem}>
+          <div className={clsx(styles.totalsItem, styles.totalBottomBordered)}>
             <div className={styles.totalsItemLabel}>Balance Due</div>
-            <div className={styles.totalsItemLabel}>$562.75</div>
+            <div className={styles.totalsItemAmount}>$562.75</div>
           </div>
         </div>
       </div>
