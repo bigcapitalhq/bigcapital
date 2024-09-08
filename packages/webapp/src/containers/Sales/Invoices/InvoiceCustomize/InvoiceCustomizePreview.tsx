@@ -13,7 +13,7 @@ function InvoiceCustomizePreviewRoot({ closeDrawer }) {
     closeDrawer(name);
   };
   return (
-    <Stack spacing={0} style={{ borderLeft: '1px solid #D9D9D9', height: '100vh' }}>
+    <Stack spacing={0} style={{ borderLeft: '1px solid #D9D9D9', height: '100vh', flex: '1 1' }}>
       <InvoiceCustomizeHeader
         label={'Preview'}
         closeButton

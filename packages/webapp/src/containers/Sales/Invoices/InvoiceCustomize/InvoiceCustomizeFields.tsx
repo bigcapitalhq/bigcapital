@@ -3,7 +3,6 @@ import * as R from 'ramda';
 import { Box, Group, Stack } from '@/components';
 import { InvoiceCustomizeHeader } from './InvoiceCustomizeHeader';
 import { InvoiceCustomizeTabs } from './InvoiceCustomizeTabs';
-import styles from './InvoiceCustomizeFields.module.scss';
 import { InvoiceCustomizeGeneralField } from './InvoiceCustomizeGeneralFields';
 import { useInvoiceCustomizeTabsController } from './InvoiceCustomizeTabsController';
 import { Button, Intent } from '@blueprintjs/core';
@@ -11,6 +10,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useFormikContext } from 'formik';
 import { InvoiceCustomizeContentFields } from './InvoiceCutomizeContentFields';
+import styles from './InvoiceCustomizeFields.module.scss';
 
 export function InvoiceCustomizeFields() {
   return (
@@ -27,7 +27,7 @@ export function InvoiceCustomizeFieldsMain() {
     <Stack spacing={0} className={styles.mainFields}>
       <InvoiceCustomizeHeader label={'Customize'} />
 
-      <Stack spacing={0} style={{ flex: '1 1 auto' }}>
+      <Stack spacing={0} style={{ flex: '1 1 auto', overflow: 'auto' }}>
         {currentTabId === 'general' && <InvoiceCustomizeGeneralField />}
         {currentTabId === 'content' && <InvoiceCustomizeContentFields />}
 

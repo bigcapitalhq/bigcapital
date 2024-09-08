@@ -1,8 +1,9 @@
 // @ts-nocheck
-import { FFormGroup, FSwitch, Stack } from '@/components';
+import { Box, FFormGroup, FSwitch, Group, Stack } from '@/components';
 import { FColorInput } from './FColorField';
 import styles from './InvoiceCustomizeFields.module.scss';
-import { Classes } from '@blueprintjs/core';
+import { Classes, Text } from '@blueprintjs/core';
+import { CreditCardIcon } from './CreditCardIcon';
 
 export function InvoiceCustomizeGeneralField() {
   return (
@@ -49,6 +50,29 @@ export function InvoiceCustomizeGeneralField() {
           />
         </FFormGroup>
       </Stack>
+
+      <InvoiceCustomizePaymentManage />
     </Stack>
+  );
+}
+
+function InvoiceCustomizePaymentManage() {
+  return (
+    <Group
+      style={{
+        backgroundColor: '#FBFBFB',
+        border: '1px solid #E1E1E1',
+        padding: 10,
+        borderRadius: 5,
+      }}
+      position={'apart'}
+    >
+      <Group spacing={10}>
+        <CreditCardIcon fill={'#7D8897'} height={16} width={16} />
+        <Text>Accept payment methods</Text>
+      </Group>
+
+      <a href={'#'}>Manage</a>
+    </Group>
   );
 }

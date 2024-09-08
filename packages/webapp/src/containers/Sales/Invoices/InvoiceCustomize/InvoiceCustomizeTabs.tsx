@@ -1,11 +1,11 @@
 import { Box, Stack } from '@/components';
 import { Tab, Tabs } from '@blueprintjs/core';
 import { InvoiceCustomizeHeader } from './InvoiceCustomizeHeader';
-import styles from './InvoiceCustomizeTabs.module.scss';
 import {
   InvoiceCustomizeTabsEnum,
   useInvoiceCustomizeTabsController,
 } from './InvoiceCustomizeTabsController';
+import styles from './InvoiceCustomizeTabs.module.scss';
 
 export function InvoiceCustomizeTabs() {
   const { setCurrentTabId } = useInvoiceCustomizeTabsController();
