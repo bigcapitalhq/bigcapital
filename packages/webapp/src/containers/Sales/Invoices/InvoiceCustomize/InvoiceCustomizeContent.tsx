@@ -9,7 +9,7 @@ export default function InvoiceCustomizeContent() {
   return (
     <Box className={Classes.DRAWER_BODY}>
       <InvoiceCustomizeForm>
-        <Group spacing={0} align="flex-start">
+        <Group spacing={0} align="stretch">
           <InvoiceCustomizeTabsControllerProvider>
             <InvoiceCustomizeFields />
             <InvoiceCustomizePreview />

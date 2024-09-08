@@ -1,6 +1,6 @@
 import { Group, Icon } from '@/components';
-import styles from './InvoiceCustomizeHeader.module.scss';
 import { Button, Classes } from '@blueprintjs/core';
+import styles from './InvoiceCustomizeHeader.module.scss';
 
 interface InvoiceCustomizeHeaderProps {
   label?: string;

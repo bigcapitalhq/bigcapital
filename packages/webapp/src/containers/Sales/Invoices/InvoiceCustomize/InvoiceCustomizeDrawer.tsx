@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
-
 import { Drawer, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';
 
@@ -25,6 +24,7 @@ function InvoiceCustomizeDrawerRoot({
       name={name}
       size={'100%'}
     >
+
       <DrawerSuspense>
         <InvoiceCustomizeContent />
       </DrawerSuspense>

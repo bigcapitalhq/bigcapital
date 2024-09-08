@@ -1,4 +1,4 @@
-import { Box } from '@/components';
+import { Box, Stack } from '@/components';
 import { Tab, Tabs } from '@blueprintjs/core';
 import { InvoiceCustomizeHeader } from './InvoiceCustomizeHeader';
 import styles from './InvoiceCustomizeTabs.module.scss';
@@ -14,16 +14,22 @@ export function InvoiceCustomizeTabs() {
     setCurrentTabId(value);
   };
   return (
-    <Box className={styles.root}>
+    <Stack spacing={0} className={styles.root}>
       <InvoiceCustomizeHeader label={''} />
 
       <Box className={styles.content}>
-        <Tabs vertical fill onChange={handleChange} className={styles.tabsList}>
+        <Tabs
+          vertical
+          fill
+          large
+          onChange={handleChange}
+          className={styles.tabsList}
+        >
           <Tab id="general" title="General" />
           <Tab id="content" title="Content" />
           <Tab id="total" title="Total" />
         </Tabs>
       </Box>
-    </Box>
+    </Stack>
   );
 }
