@@ -6,6 +6,11 @@ import {
   NavbarDivider,
   NavbarGroup,
   Alignment,
+  Menu,
+  MenuItem,
+  Popover,
+  PopoverInteractionKind,
+  Position,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -28,9 +33,11 @@ import withCreditNotesActions from './withCreditNotesActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Credit note table actions bar.
@@ -50,6 +57,9 @@ function CreditNotesActionsBar({
 
   // #withDialogActions
   openDialog,
+
+  // #withDrawerActions
+  openDrawer
 }) {
   const history = useHistory();
 
@@ -89,6 +99,10 @@ function CreditNotesActionsBar({
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'CreditNote' });
   };
+  // Handle the customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.CREDIT_NOTE_CUSTOMIZE);
+  }
 
   return (
     <DashboardActionsBar>
@@ -149,6 +163,25 @@ function CreditNotesActionsBar({
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                onClick={handleCustomizeBtnClick}
+                text={'Customize Invoice'}
+              />
+            </Menu>
+          }
+        >
+          <Button icon={<Icon icon="cog-16" iconSize={16} />} minimal={true} />
+        </Popover>
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
@@ -169,4 +202,5 @@ export default compose(
     creditNoteTableSize: creditNoteSettings?.tableSize,
   })),
   withDialogActions,
+  withDrawerActions
 )(CreditNotesActionsBar);
