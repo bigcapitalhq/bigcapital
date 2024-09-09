@@ -268,5 +268,6 @@ module.exports = {
   stripePayment: {
     secretKey: process.env.STRIPE_PAYMENT_SECRET_KEY || '',
     publishableKey: process.env.STRIPE_PAYMENT_PUBLISHABLE_KEY || '',
+    webhooksSecret: process.env.STRIPE_PAYMENT_WEBHOOKS_SECRET || '',
   },
 };

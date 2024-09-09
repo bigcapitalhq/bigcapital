@@ -4,7 +4,7 @@ import config from '@/config';
 
 @Service()
 export class StripePaymentService {
-  private stripe;
+  public stripe;
 
   constructor() {
     this.stripe = new stripe(config.stripePayment.secretKey, {
@@ -12,7 +12,12 @@ export class StripePaymentService {
     });
   }
 
-  public async createAccountSession(accountId: string) {
+  /**
+   * 
+   * @param {number} accountId 
+   * @returns {Promise<string>}
+   */
+  public async createAccountSession(accountId: string): Promise<string> {
     try {
       const accountSession = await this.stripe.accountSessions.create({
         account: accountId,
@@ -28,7 +33,7 @@ export class StripePaymentService {
     }
   }
 
-  public async createAccount() {
+  public async createAccount(): Promise<string> {
     try {
       const account = await this.stripe.accounts.create({});
 

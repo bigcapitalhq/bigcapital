@@ -119,6 +119,7 @@ import { DeleteUncategorizedTransactionsOnAccountDeleting } from '@/services/Ban
 import { SeedInitialDemoAccountDataOnOrgBuild } from '@/services/OneClickDemo/events/SeedInitialDemoAccountData';
 import { TriggerInvalidateCacheOnSubscriptionChange } from '@/services/Subscription/events/TriggerInvalidateCacheOnSubscriptionChange';
 import { EventsTrackerListeners } from '@/services/EventsTracker/events/events';
+import { CreatePaymentLinkOnInvoiceCreated } from '@/services/StripePayment/events/CreatePaymentLinkOnInvoiceCreated';
 
 export default () => {
   return new EventPublisher();
@@ -290,6 +291,9 @@ export const susbcribers = () => {
 
     // Demo Account
     SeedInitialDemoAccountDataOnOrgBuild,
+
+    // Stripe Payment
+    CreatePaymentLinkOnInvoiceCreated
 
     ...EventsTrackerListeners
   ];

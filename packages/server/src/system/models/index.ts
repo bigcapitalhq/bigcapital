@@ -7,6 +7,7 @@ import PasswordReset from './PasswordReset';
 import Invite from './Invite';
 import SystemPlaidItem from './SystemPlaidItem';
 import { Import } from './Import';
+import { StripeAccount } from './StripeAccount';
 
 export {
   Plan,
@@ -18,4 +19,5 @@ export {
   Invite,
   SystemPlaidItem,
   Import,
+  StripeAccount
 };
