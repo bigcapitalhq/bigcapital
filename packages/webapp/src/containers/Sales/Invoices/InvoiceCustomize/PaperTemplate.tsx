@@ -83,7 +83,9 @@ export function PaperTemplate() {
 
       <div style={{ display: 'flex' }}>
         <div className={styles.totals}>
-          <div className={styles.totalsItem}>
+          <div
+            className={clsx(styles.totalsItem, styles.totalBottomGrayBordered)}
+          >
             <div className={styles.totalsItemLabel}>Sub Total</div>
             <div className={styles.totalsItemAmount}>630.00</div>
           </div>

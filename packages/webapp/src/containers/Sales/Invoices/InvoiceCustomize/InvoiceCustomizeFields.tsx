@@ -50,7 +50,11 @@ function InvoiceCustomizeFooterActionsRoot({ closeDrawer }) {
 
   return (
     <Group spacing={10} className={styles.footerActions}>
-      <Button onClick={handleSubmitBtnClick} intent={Intent.PRIMARY}>
+      <Button
+        onClick={handleSubmitBtnClick}
+        intent={Intent.PRIMARY}
+        style={{ minWidth: 75 }}
+      >
         Save
       </Button>
       <Button onClick={handleCancelBtnClick}>Cancel</Button>

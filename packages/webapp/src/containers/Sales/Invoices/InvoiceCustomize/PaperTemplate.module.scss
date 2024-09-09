@@ -2,9 +2,10 @@
 .root {
   border-radius: 5px;
   background-color: #fff;
-  color: #000;
+  color: #111;
   box-shadow: inset 0 4px 0px 0 #002762, 0 10px 15px rgba(0, 0, 0, 0.05);
-  padding: 22px 30px;
+  padding: 24px 30px;
+  font-size: 12px;
   position: relative;
   margin: 0 auto;
   width: 794px;
@@ -15,13 +16,13 @@
   font-size: 60px;
   margin: 0;
   line-height: 1;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   font-weight: 500;
   color: #333;
 }
 
 .details {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -39,6 +40,7 @@
 .addressRoot{
   display: flex;
   flex-direction: row;
+  margin-bottom: 25px;
 }
 
 .addressBillTo{
@@ -50,7 +52,6 @@
 }
 
 .table {
-  margin-top: 40px;
   width: 100%;
   border-collapse: collapse;
   text-align: left;
@@ -58,7 +59,8 @@
   thead th{
     font-weight: 400;
     border-bottom: 1px solid #000;
-    padding: 5px 10px;
+    padding: 2px 10px;
+    color: #333;
 
     &.rate,
     &.total{
@@ -101,10 +103,11 @@
   flex-direction: column;
   margin-bottom: 40px;
   margin-left: auto;
+  width: 300px;
 }
 .totalsItem{
   display: flex;
-  padding: 6px 0;
+  padding: 4px 0;
 }
 .totalsItemLabel{
   min-width: 160px;
@@ -116,13 +119,16 @@
 .totalBottomBordered {
   border-bottom: 1px solid #000;
 }
+.totalBottomGrayBordered {
+  border-bottom: 1px solid #DADADA;
+}
 
 .logoWrap{
   height: 120px;
   width: 120px;
   position: absolute;
-  right: 20px;
-  top: 20px;
+  right: 26px;
+  top: 26px;
   border-radius: 5px;
   overflow: hidden;
 
@@ -137,10 +143,7 @@
 
 .paragraph{
   margin-bottom: 20px;  
-  font-size: 12px;
 }
-
 .paragraphLabel{
-  margin-bottom: 2px;
   color: #666;
 }
