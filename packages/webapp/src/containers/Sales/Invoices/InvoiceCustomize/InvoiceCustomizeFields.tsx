@@ -1,16 +1,16 @@
 // @ts-nocheck
+import React from 'react';
 import * as R from 'ramda';
-import { Box, Group, Stack } from '@/components';
+import { Button, Intent } from '@blueprintjs/core';
+import { Group, Stack } from '@/components';
 import { InvoiceCustomizeHeader } from './InvoiceCustomizeHeader';
 import { InvoiceCustomizeTabs } from './InvoiceCustomizeTabs';
-import { InvoiceCustomizeGeneralField } from './InvoiceCustomizeGeneralFields';
 import { useInvoiceCustomizeTabsController } from './InvoiceCustomizeTabsController';
-import { Button, Intent } from '@blueprintjs/core';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useFormikContext } from 'formik';
-import { InvoiceCustomizeContentFields } from './InvoiceCutomizeContentFields';
+import { useInvoiceCustomizeContext } from './InvoiceCustomizeProvider';
 import styles from './InvoiceCustomizeFields.module.scss';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 export function InvoiceCustomizeFields() {
   return (
@@ -23,14 +23,22 @@ export function InvoiceCustomizeFields() {
 
 export function InvoiceCustomizeFieldsMain() {
   const { currentTabId } = useInvoiceCustomizeTabsController();
+  const { CustomizeTabs } = useInvoiceCustomizeContext();
+
+  const CustomizeTabPanel = React.useMemo(
+    () =>
+      React.Children.map(CustomizeTabs, (tab) => {
+        return tab.props.id === currentTabId ? tab : null;
+      }).filter(Boolean),
+    [CustomizeTabs, currentTabId],
+  );
+
   return (
     <Stack spacing={0} className={styles.mainFields}>
       <InvoiceCustomizeHeader label={'Customize'} />
 
       <Stack spacing={0} style={{ flex: '1 1 auto', overflow: 'auto' }}>
-        {currentTabId === 'general' && <InvoiceCustomizeGeneralField />}
-        {currentTabId === 'content' && <InvoiceCustomizeContentFields />}
-
+        {CustomizeTabPanel}
         <InvoiceCustomizeFooterActions />
       </Stack>
     </Stack>

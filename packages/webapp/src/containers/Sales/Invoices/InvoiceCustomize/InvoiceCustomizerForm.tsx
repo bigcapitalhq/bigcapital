@@ -1,25 +1,25 @@
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+// @ts-nocheck
 import React from 'react';
+import { Formik, Form, FormikHelpers } from 'formik';
 
-const validationSchema = Yup.object().shape({
-  invoiceNumber: Yup.string().required('Invoice number is required'),
-  customerName: Yup.string().required('Customer name is required'),
-  amount: Yup.number()
-    .required('Amount is required')
-    .positive('Amount must be positive'),
-});
-
-interface InvoiceCustomizeFormProps {
-  children: React.ReactNode;
+export interface InvoiceCustomizeFormProps<T> {
+  initialValues?: T;
+  validationSchema?: any;
+  onSubmit?: (values: T, formikHelpers: FormikHelpers<T>) => void;
+  children?: React.ReactNode;
 }
 
-export function InvoiceCustomizeForm({ children }: InvoiceCustomizeFormProps) {
+export function InvoiceCustomizeForm<T>({
+  initialValues,
+  validationSchema,
+  onSubmit,
+  children,
+}: InvoiceCustomizeFormProps<T>) {
   return (
-    <Formik
-      initialValues={{ invoiceNumber: '', customerName: '', amount: '' }}
+    <Formik<T>
+      initialValues={{ ...initialValues }}
       validationSchema={validationSchema}
-      onSubmit={(values) => {}}
+      onSubmit={(value, helpers) => onSubmit && onSubmit(value, helpers)}
     >
       <Form>{children}</Form>
     </Formik>

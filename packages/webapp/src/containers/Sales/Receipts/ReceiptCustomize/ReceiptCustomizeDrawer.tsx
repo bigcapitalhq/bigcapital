@@ -4,15 +4,15 @@ import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';
 
-const InvoiceCustomizeContent = React.lazy(
-  () => import('./InvoiceCustomizeContent'),
+const ReceiptCustomizeContent = React.lazy(
+  () => import('./ReceiptCustomizeContent'),
 );
 
 /**
- * Invoice customize drawer.
+ * Receipt customize drawer.
  * @returns {React.ReactNode}
  */
-function InvoiceCustomizeDrawerRoot({
+function ReceiptCustomizeDrawerRoot({
   name,
   // #withDrawer
   isOpen,
@@ -21,12 +21,12 @@ function InvoiceCustomizeDrawerRoot({
   return (
     <Drawer isOpen={isOpen} name={name} size={'100%'}>
       <DrawerSuspense>
-        <InvoiceCustomizeContent />
+        <ReceiptCustomizeContent />
       </DrawerSuspense>
     </Drawer>
   );
 }
 
-export const InvoiceCustomizeDrawer = R.compose(withDrawers())(
-  InvoiceCustomizeDrawerRoot,
+export const ReceiptCustomizeDrawer = R.compose(withDrawers())(
+  ReceiptCustomizeDrawerRoot,
 );

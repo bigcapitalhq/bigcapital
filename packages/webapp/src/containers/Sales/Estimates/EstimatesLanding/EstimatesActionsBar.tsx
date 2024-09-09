@@ -7,6 +7,11 @@ import {
   NavbarGroup,
   Intent,
   Alignment,
+  Menu,
+  MenuItem,
+  Popover,
+  PopoverInteractionKind,
+  Position,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
@@ -35,6 +40,8 @@ import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Estimates list actions bar.
@@ -51,6 +58,9 @@ function EstimateActionsBar({
 
   // #withDialogActions
   openDialog,
+
+  // #withDrawerActions
+  openDrawer,
 
   // #withSettingsActions
   addSetting,
@@ -95,6 +105,10 @@ function EstimateActionsBar({
   // Handles the print button click.
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'SaleEstimate' });
+  };
+  // Handle customize button clicl.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.ESTIMATE_CUSTOMIZE);
   };
 
   return (
@@ -167,6 +181,25 @@ function EstimateActionsBar({
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                onClick={handleCustomizeBtnClick}
+                text={'Customize Estimate'}
+              />
+            </Menu>
+          }
+        >
+          <Button icon={<Icon icon="cog-16" iconSize={16} />} minimal={true} />
+        </Popover>
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
@@ -187,4 +220,5 @@ export default compose(
     estimatesTableSize: estimatesSettings?.tableSize,
   })),
   withDialogActions,
+  withDrawerActions,
 )(EstimateActionsBar);

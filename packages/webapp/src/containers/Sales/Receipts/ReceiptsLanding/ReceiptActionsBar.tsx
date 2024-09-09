@@ -7,6 +7,11 @@ import {
   NavbarGroup,
   Intent,
   Alignment,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  Menu,
+  MenuItem,
 } from '@blueprintjs/core';
 
 import { useHistory } from 'react-router-dom';
@@ -38,6 +43,8 @@ import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Receipts actions bar.
@@ -54,6 +61,9 @@ function ReceiptActionsBar({
 
   // #withDialogActions
   openDialog,
+
+  // #withDrawerActions
+  openDrawer,
 
   // #withSettingsActions
   addSetting,
@@ -102,6 +112,10 @@ function ReceiptActionsBar({
   // Handle print button click.
   const handlePrintButtonClick = () => {
     downloadExportPdf({ resource: 'SaleReceipt' });
+  };
+  // Handle customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.RECEIPT_CUSTOMIZE);
   };
 
   return (
@@ -173,6 +187,25 @@ function ReceiptActionsBar({
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                onClick={handleCustomizeBtnClick}
+                text={'Customize Receipt'}
+              />
+            </Menu>
+          }
+        >
+          <Button icon={<Icon icon="cog-16" iconSize={16} />} minimal={true} />
+        </Popover>
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
@@ -193,4 +226,5 @@ export default compose(
     receiptsTableSize: receiptSettings?.tableSize,
   })),
   withDialogActions,
+  withDrawerActions,
 )(ReceiptActionsBar);

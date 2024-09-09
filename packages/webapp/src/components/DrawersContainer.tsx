@@ -23,10 +23,11 @@ import WarehouseTransferDetailDrawer from '@/containers/Drawers/WarehouseTransfe
 import TaxRateDetailsDrawer from '@/containers/TaxRates/drawers/TaxRateDetailsDrawer/TaxRateDetailsDrawer';
 import CategorizeTransactionDrawer from '@/containers/CashFlow/CategorizeTransaction/drawers/CategorizeTransactionDrawer/CategorizeTransactionDrawer';
 import ChangeSubscriptionPlanDrawer from '@/containers/Subscriptions/drawers/ChangeSubscriptionPlanDrawer/ChangeSubscriptionPlanDrawer';
+import { InvoiceCustomizeDrawer } from '@/containers/Sales/Invoices/InvoiceCustomize/InvoiceCustomizeDrawer';
+import { EstimateCustomizeDrawer } from '@/containers/Sales/Estimates/EstimateCustomize/EstimateCustomizeDrawer';
+import { ReceiptCustomizeDrawer } from '@/containers/Sales/Receipts/ReceiptCustomize/ReceiptCustomizeDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
-import { InvoiceCustomizeDrawer } from '@/containers/Sales/Invoices/InvoiceCustomize/InvoiceCustomizeDrawer';
-
 /**
  * Drawers container of the dashboard.
  */
@@ -67,6 +68,8 @@ export default function DrawersContainer() {
       <CategorizeTransactionDrawer name={DRAWERS.CATEGORIZE_TRANSACTION} />
       <ChangeSubscriptionPlanDrawer name={DRAWERS.CHANGE_SUBSCARIPTION_PLAN} />
       <InvoiceCustomizeDrawer name={DRAWERS.INVOICE_CUSTOMIZE} />
+      <EstimateCustomizeDrawer name={DRAWERS.ESTIMATE_CUSTOMIZE} />
+      <ReceiptCustomizeDrawer name={DRAWERS.RECEIPT_CUSTOMIZE} />
     </div>
   );
 }

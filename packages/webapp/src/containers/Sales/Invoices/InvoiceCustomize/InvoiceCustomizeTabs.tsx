@@ -6,10 +6,17 @@ import {
   useInvoiceCustomizeTabsController,
 } from './InvoiceCustomizeTabsController';
 import styles from './InvoiceCustomizeTabs.module.scss';
+import { useInvoiceCustomizeContext } from './InvoiceCustomizeProvider';
+import React from 'react';
 
 export function InvoiceCustomizeTabs() {
   const { setCurrentTabId } = useInvoiceCustomizeTabsController();
 
+  const { CustomizeTabs } = useInvoiceCustomizeContext();
+
+  const tabItems = React.Children.map(CustomizeTabs, (node) => ({
+    ...(React.isValidElement(node) ? node.props : {}),
+  }));
   const handleChange = (value: InvoiceCustomizeTabsEnum) => {
     setCurrentTabId(value);
   };
@@ -25,9 +32,9 @@ export function InvoiceCustomizeTabs() {
           onChange={handleChange}
           className={styles.tabsList}
         >
-          <Tab id="general" title="General" />
-          <Tab id="content" title="Content" />
-          <Tab id="total" title="Total" />
+          {tabItems?.map(({ id, label }: { id: string; label: string }) => (
+            <Tab id={id} key={id} title={label} />
+          ))}
         </Tabs>
       </Box>
     </Stack>
