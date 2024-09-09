@@ -1,20 +1,20 @@
-import { Group, Icon } from '@/components';
 import { Button, Classes } from '@blueprintjs/core';
-import styles from './InvoiceCustomizeHeader.module.scss';
+import { Group, Icon } from '@/components';
+import styles from './ElementCustomizeHeader.module.scss';
 
-interface InvoiceCustomizeHeaderProps {
+interface ElementCustomizeHeaderProps {
   label?: string;
   children?: React.ReactNode;
   closeButton?: boolean;
   onClose?: () => void;
 }
 
-export function InvoiceCustomizeHeader({
+export function ElementCustomizeHeader({
   label,
   closeButton,
   onClose,
   children,
-}: InvoiceCustomizeHeaderProps) {
+}: ElementCustomizeHeaderProps) {
   const handleClose = () => {
     onClose && onClose();
   };

@@ -1,8 +1,8 @@
 import { Box } from '@/components';
-import { useInvoiceCustomizeContext } from './InvoiceCustomizeProvider';
+import { useElementCustomizeContext } from './ElementCustomizeProvider';
 
-export function InvoiceCustomizePreviewContent() {
-  const { PaperTemplate } = useInvoiceCustomizeContext();
+export function ElementCustomizePreviewContent() {
+  const { PaperTemplate } = useElementCustomizeContext();
 
   return (
     <Box

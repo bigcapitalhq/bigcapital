@@ -2,19 +2,19 @@
 import React from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 
-export interface InvoiceCustomizeFormProps<T> {
+export interface ElementCustomizeFormProps<T> {
   initialValues?: T;
   validationSchema?: any;
   onSubmit?: (values: T, formikHelpers: FormikHelpers<T>) => void;
   children?: React.ReactNode;
 }
 
-export function InvoiceCustomizeForm<T>({
+export function ElementCustomizeForm<T>({
   initialValues,
   validationSchema,
   onSubmit,
   children,
-}: InvoiceCustomizeFormProps<T>) {
+}: ElementCustomizeFormProps<T>) {
   return (
     <Formik<T>
       initialValues={{ ...initialValues }}

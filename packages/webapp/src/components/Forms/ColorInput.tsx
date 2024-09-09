@@ -11,9 +11,9 @@ import {
 import { HexColorPicker } from 'react-colorful';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { Box, BoxProps } from '@/components';
-import styles from './ColorField.module.scss';
+import styles from './ColorInput.module.scss';
 
-export interface ColorFieldProps {
+export interface ColorInputProps {
   value?: string;
   initialValue?: string;
   onChange?: (value: string) => void;
@@ -23,7 +23,7 @@ export interface ColorFieldProps {
   pickerWrapProps?: Partial<BoxProps>;
 }
 
-export function ColorField({
+export function ColorInput({
   value,
   initialValue,
   onChange,
@@ -31,7 +31,7 @@ export function ColorField({
   inputProps,
   pickerWrapProps,
   pickerProps,
-}: ColorFieldProps) {
+}: ColorInputProps) {
   const [_value, handleChange] = useUncontrolled({
     value,
     initialValue,

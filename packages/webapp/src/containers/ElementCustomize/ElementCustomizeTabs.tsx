@@ -1,28 +1,28 @@
+import React from 'react';
 import { Box, Stack } from '@/components';
 import { Tab, Tabs } from '@blueprintjs/core';
-import { InvoiceCustomizeHeader } from './InvoiceCustomizeHeader';
+import { ElementCustomizeHeader } from './ElementCustomizeHeader';
 import {
-  InvoiceCustomizeTabsEnum,
-  useInvoiceCustomizeTabsController,
-} from './InvoiceCustomizeTabsController';
-import styles from './InvoiceCustomizeTabs.module.scss';
-import { useInvoiceCustomizeContext } from './InvoiceCustomizeProvider';
-import React from 'react';
+  ElementCustomizeTabsEnum,
+  useElementCustomizeTabsController,
+} from './ElementCustomizeTabsController';
+import { useElementCustomizeContext } from './ElementCustomizeProvider';
+import styles from './ElementCustomizeTabs.module.scss';
 
-export function InvoiceCustomizeTabs() {
-  const { setCurrentTabId } = useInvoiceCustomizeTabsController();
+export function ElementCustomizeTabs() {
+  const { setCurrentTabId } = useElementCustomizeTabsController();
 
-  const { CustomizeTabs } = useInvoiceCustomizeContext();
+  const { CustomizeTabs } = useElementCustomizeContext();
 
   const tabItems = React.Children.map(CustomizeTabs, (node) => ({
     ...(React.isValidElement(node) ? node.props : {}),
   }));
-  const handleChange = (value: InvoiceCustomizeTabsEnum) => {
+  const handleChange = (value: ElementCustomizeTabsEnum) => {
     setCurrentTabId(value);
   };
   return (
     <Stack spacing={0} className={styles.root}>
-      <InvoiceCustomizeHeader label={''} />
+      <ElementCustomizeHeader label={''} />
 
       <Box className={styles.content}>
         <Tabs

@@ -2,28 +2,28 @@
 import React from 'react';
 import * as R from 'ramda';
 import { Button, Intent } from '@blueprintjs/core';
-import { Group, Stack } from '@/components';
-import { InvoiceCustomizeHeader } from './InvoiceCustomizeHeader';
-import { InvoiceCustomizeTabs } from './InvoiceCustomizeTabs';
-import { useInvoiceCustomizeTabsController } from './InvoiceCustomizeTabsController';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useFormikContext } from 'formik';
-import { useInvoiceCustomizeContext } from './InvoiceCustomizeProvider';
-import styles from './InvoiceCustomizeFields.module.scss';
+import { Group, Stack } from '@/components';
+import { ElementCustomizeHeader } from './ElementCustomizeHeader';
+import { ElementCustomizeTabs } from './ElementCustomizeTabs';
+import { useElementCustomizeTabsController } from './ElementCustomizeTabsController';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useElementCustomizeContext } from './ElementCustomizeProvider';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import styles from './ElementCustomize.module.scss';
 
-export function InvoiceCustomizeFields() {
+export function ElementCustomizeFields() {
   return (
-    <Group spacing={0} align={'stretch'} className={styles.root}>
-      <InvoiceCustomizeTabs />
-      <InvoiceCustomizeFieldsMain />
+  <Group spacing={0} align={'stretch'} className={styles.root}>
+      <ElementCustomizeTabs />
+      <ElementCustomizeFieldsMain />
     </Group>
   );
 }
 
-export function InvoiceCustomizeFieldsMain() {
-  const { currentTabId } = useInvoiceCustomizeTabsController();
-  const { CustomizeTabs } = useInvoiceCustomizeContext();
+export function ElementCustomizeFieldsMain() {
+  const { currentTabId } = useElementCustomizeTabsController();
+  const { CustomizeTabs } = useElementCustomizeContext();
 
   const CustomizeTabPanel = React.useMemo(
     () =>
@@ -35,17 +35,17 @@ export function InvoiceCustomizeFieldsMain() {
 
   return (
     <Stack spacing={0} className={styles.mainFields}>
-      <InvoiceCustomizeHeader label={'Customize'} />
+      <ElementCustomizeHeader label={'Customize'} />
 
       <Stack spacing={0} style={{ flex: '1 1 auto', overflow: 'auto' }}>
         {CustomizeTabPanel}
-        <InvoiceCustomizeFooterActions />
+        <ElementCustomizeFooterActions />
       </Stack>
     </Stack>
   );
 }
 
-function InvoiceCustomizeFooterActionsRoot({ closeDrawer }) {
+function ElementCustomizeFooterActionsRoot({ closeDrawer }) {
   const { name } = useDrawerContext();
   const { submitForm } = useFormikContext();
 
@@ -70,6 +70,6 @@ function InvoiceCustomizeFooterActionsRoot({ closeDrawer }) {
   );
 }
 
-const InvoiceCustomizeFooterActions = R.compose(withDrawerActions)(
-  InvoiceCustomizeFooterActionsRoot,
+const ElementCustomizeFooterActions = R.compose(withDrawerActions)(
+  ElementCustomizeFooterActionsRoot,
 );

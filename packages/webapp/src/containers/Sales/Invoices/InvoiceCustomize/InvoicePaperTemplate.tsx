@@ -1,5 +1,5 @@
 import clsx from 'classnames';
-import styles from './PaperTemplate.module.scss';
+import styles from './InvoicePaperTemplate.module.scss';
 
 interface PaperTemplateProps {
   invoiceNumber?: string;

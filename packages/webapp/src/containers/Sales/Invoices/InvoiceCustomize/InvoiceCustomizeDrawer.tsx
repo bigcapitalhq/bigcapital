@@ -4,8 +4,8 @@ import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';
 
-const InvoiceCustomizeContent = React.lazy(
-  () => import('./InvoiceCustomizeContent'),
+const InvoiceCustomize = React.lazy(
+  () => import('./InvoiceCustomize'),
 );
 
 /**
@@ -21,7 +21,7 @@ function InvoiceCustomizeDrawerRoot({
   return (
     <Drawer isOpen={isOpen} name={name} size={'100%'}>
       <DrawerSuspense>
-        <InvoiceCustomizeContent />
+        <InvoiceCustomize />
       </DrawerSuspense>
     </Drawer>
   );

@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { Box, FFormGroup, FSwitch, Group, Stack } from '@/components';
-import { FColorInput } from './FColorField';
-import styles from './InvoiceCustomizeFields.module.scss';
 import { Classes, Text } from '@blueprintjs/core';
-import { CreditCardIcon } from './CreditCardIcon';
+import { FFormGroup, FSwitch, Group, Stack } from '@/components';
+import { FColorInput } from '@/components/Forms/FColorInput';
+import { CreditCardIcon } from '@/icons/CreditCardIcon';
+import styles from './InvoiceCustomizeFields.module.scss';
 
 export function InvoiceCustomizeGeneralField() {
   return (

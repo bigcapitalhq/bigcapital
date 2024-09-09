@@ -1,74 +1,65 @@
 import React from 'react';
-import { Box, Group } from '@/components';
-import { InvoiceCustomizeProvider } from './InvoiceCustomizeProvider';
-import {
-  InvoiceCustomizeForm,
-  InvoiceCustomizeFormProps,
-} from './InvoiceCustomizerForm';
-import { InvoiceCustomizeTabsControllerProvider } from './InvoiceCustomizeTabsController';
-import { InvoiceCustomizeFields } from './InvoiceCustomizeFields';
-import { InvoiceCustomizePreview } from './InvoiceCustomizePreview';
-import { extractChildren } from '@/utils/extract-children';
+import { Box } from '@/components';
+import { Classes } from '@blueprintjs/core';
+import { InvoicePaperTemplate } from './InvoicePaperTemplate';
+import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
+import { InvoiceCustomizeGeneralField } from './InvoiceCustomizeGeneralFields';
+import { InvoiceCustomizeContentFields } from './InvoiceCutomizeContentFields';
 
-export interface InvoiceCustomizeProps<T> extends InvoiceCustomizeFormProps<T> {
-  children?: React.ReactNode;
+interface InvoiceCustomizeValues {
+  invoiceNumber?: string;
+  invoiceNumberLabel?: string;
+
+  dateIssue?: string;
+  dateIssueLabel?: string;
+
+  dueDate?: string;
+  dueDateLabel?: string;
+
+  companyName?: string;
+
+  bigtitle?: string;
+
+  itemRateLabel?: string;
+  itemQuantityLabel?: string;
+  itemTotalLabel?: string;
+
+  // Totals
+  showDueAmount?: boolean;
+  showDiscount?: boolean;
+  showPaymentMade?: boolean;
+  showTaxes?: boolean;
+  showSubtotal?: boolean;
+  showTotal?: boolean;
+  showBalanceDue?: boolean;
+
+  paymentMadeLabel?: string;
+  discountLabel?: string;
+  subtotalLabel?: string;
+  totalLabel?: string;
+  balanceDueLabel?: string;
 }
 
-export function InvoiceCustomize<T>({
-  initialValues,
-  validationSchema,
-  onSubmit,
-  children,
-}: InvoiceCustomizeProps<T>) {
-  const PaperTemplate = React.useMemo(
-    () => extractChildren(children, InvoiceCustomize.PaperTemplate),
-    [children],
-  );
-  const CustomizeTabs = React.useMemo(
-    () => extractChildren(children, InvoiceCustomize.FieldsTab),
-    [children],
-  );
-
-  const value = { PaperTemplate, CustomizeTabs };
-
+export default function InvoiceCustomizeContent() {
   return (
-    <InvoiceCustomizeForm
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
-      <InvoiceCustomizeTabsControllerProvider>
-        <InvoiceCustomizeProvider value={value}>
-          <Group spacing={0} align="stretch">
-            <InvoiceCustomizeFields />
-            <InvoiceCustomizePreview />
-          </Group>
-        </InvoiceCustomizeProvider>
-      </InvoiceCustomizeTabsControllerProvider>
-    </InvoiceCustomizeForm>
+    <Box className={Classes.DRAWER_BODY}>
+      <ElementCustomize<InvoiceCustomizeValues>>
+        <ElementCustomize.PaperTemplate>
+          <InvoicePaperTemplate />
+        </ElementCustomize.PaperTemplate>
+
+        <ElementCustomize.FieldsTab id={'general'} label={'General'}>
+          <InvoiceCustomizeGeneralField />
+        </ElementCustomize.FieldsTab>
+
+        <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
+          <InvoiceCustomizeContentFields />
+        </ElementCustomize.FieldsTab>
+
+        <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
+          asdfasdfdsaf #3
+        </ElementCustomize.FieldsTab>
+      </ElementCustomize>
+    </Box>
   );
 }
-
-export interface InvoiceCustomizePaperTemplateProps {
-  children?: React.ReactNode;
-}
-
-InvoiceCustomize.PaperTemplate = ({
-  children,
-}: InvoiceCustomizePaperTemplateProps) => {
-  return <Box>{children}</Box>;
-};
-
-export interface InvoiceCustomizeContentProps {
-  id: string;
-  label: string;
-  children?: React.ReactNode;
-}
-
-InvoiceCustomize.FieldsTab = ({
-  id,
-  label,
-  children,
-}: InvoiceCustomizeContentProps) => {
-  return <Box>{children}</Box>;
-};

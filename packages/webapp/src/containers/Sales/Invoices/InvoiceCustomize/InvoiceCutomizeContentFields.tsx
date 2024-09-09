@@ -1,5 +1,5 @@
-import { FInputGroup, FSwitch, Group, Stack } from '@/components';
 import { Classes } from '@blueprintjs/core';
+import { FInputGroup, FSwitch, Group, Stack } from '@/components';
 
 const items = [
   { key: 'dueAmount', label: 'Due Amount' },
