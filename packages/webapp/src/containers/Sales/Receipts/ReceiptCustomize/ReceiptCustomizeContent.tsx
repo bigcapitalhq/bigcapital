@@ -1,9 +1,9 @@
-import React from 'react';
 import { Box } from '@/components';
 import { Classes } from '@blueprintjs/core';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { ReceiptCustomizeGeneralField } from './ReceiptCustomizeFieldsGeneral';
 import { ReceiptCustomizeFieldsContent } from './ReceiptCustomizeFieldsContent';
+import { ReceiptPaperTemplate } from './ReceiptPaperTemplate';
 import { ReceiptCustomizeValues } from './types';
 import { initialValues } from './constants';
 
@@ -16,9 +16,9 @@ export default function ReceiptCustomizeContent() {
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {/* <ElementCustomize.PaperTemplate>
-          <InvoicePaperTemplate />
-        </ElementCustomize.PaperTemplate> */}
+        <ElementCustomize.PaperTemplate>
+          <ReceiptPaperTemplate />
+        </ElementCustomize.PaperTemplate>
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>
           <ReceiptCustomizeGeneralField />

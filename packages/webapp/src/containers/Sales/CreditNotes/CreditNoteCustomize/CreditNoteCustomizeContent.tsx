@@ -5,6 +5,7 @@ import { Classes } from '@blueprintjs/core';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { CreditNoteCustomizeGeneralField } from './CreditNoteCustomizeGeneralFields';
 import { CreditNoteCustomizeContentFields } from './CreditNoteCutomizeContentFields';
+import { CreditNotePaperTemplate } from './CreditNotePaperTemplate';
 import { CreditNoteCustomizeValues } from './types';
 import { initialValues } from './constants';
 
@@ -18,7 +19,7 @@ export default function CreditNoteCustomizeContent() {
         onSubmit={handleFormSubmit}
       >
         <ElementCustomize.PaperTemplate>
-          {/* <InvoicePaperTemplate /> */}
+          <CreditNotePaperTemplate />
         </ElementCustomize.PaperTemplate>
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>

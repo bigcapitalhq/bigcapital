@@ -5,6 +5,7 @@ import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { PaymentReceivedCustomizeGeneralField } from './PaymentReceivedCustomizeFieldsGeneral';
 import { PaymentReceivedCustomizeContentFields } from './PaymentReceivedCustomizeFieldsContent';
 import { PaymentReceivedCustomizeValues } from './types';
+import { PaymentReceivedPaperTemplate } from './PaymentReceivedPaperTemplate';
 import { initialValues } from './constants';
 
 export default function PaymentReceivedCustomizeContent() {
@@ -16,9 +17,9 @@ export default function PaymentReceivedCustomizeContent() {
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {/* <ElementCustomize.PaperTemplate>
-          <InvoicePaperTemplate />
-        </ElementCustomize.PaperTemplate> */}
+        <ElementCustomize.PaperTemplate>
+          <PaymentReceivedPaperTemplate />
+        </ElementCustomize.PaperTemplate>
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>
           <PaymentReceivedCustomizeGeneralField />

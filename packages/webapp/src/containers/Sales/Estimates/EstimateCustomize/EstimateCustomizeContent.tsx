@@ -4,6 +4,7 @@ import { Classes } from '@blueprintjs/core';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { EstimateCustomizeGeneralField } from './EstimateCustomizeFieldsGeneral';
 import { EstimateCustomizeContentFields } from './EstimateCustomizeFieldsContent';
+import { EstimatePaperTemplate } from './EstimatePaperTemplate';
 import { EstimateCustomizeValues } from './types';
 import { initialValues } from './constants';
 
@@ -16,9 +17,9 @@ export default function EstimateCustomizeContent() {
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
-        {/* <ElementCustomize.PaperTemplate>
-          <InvoicePaperTemplate />
-        </ElementCustomize.PaperTemplate> */}
+        <ElementCustomize.PaperTemplate>
+          <EstimatePaperTemplate />
+        </ElementCustomize.PaperTemplate>
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>
           <EstimateCustomizeGeneralField />
