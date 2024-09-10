@@ -5,45 +5,18 @@ import { InvoicePaperTemplate } from './InvoicePaperTemplate';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { InvoiceCustomizeGeneralField } from './InvoiceCustomizeGeneralFields';
 import { InvoiceCustomizeContentFields } from './InvoiceCutomizeContentFields';
-
-interface InvoiceCustomizeValues {
-  invoiceNumber?: string;
-  invoiceNumberLabel?: string;
-
-  dateIssue?: string;
-  dateIssueLabel?: string;
-
-  dueDate?: string;
-  dueDateLabel?: string;
-
-  companyName?: string;
-
-  bigtitle?: string;
-
-  itemRateLabel?: string;
-  itemQuantityLabel?: string;
-  itemTotalLabel?: string;
-
-  // Totals
-  showDueAmount?: boolean;
-  showDiscount?: boolean;
-  showPaymentMade?: boolean;
-  showTaxes?: boolean;
-  showSubtotal?: boolean;
-  showTotal?: boolean;
-  showBalanceDue?: boolean;
-
-  paymentMadeLabel?: string;
-  discountLabel?: string;
-  subtotalLabel?: string;
-  totalLabel?: string;
-  balanceDueLabel?: string;
-}
+import { InvoiceCustomizeValues } from './types';
+import { initialValues } from './constants';
 
 export default function InvoiceCustomizeContent() {
+  const handleFormSubmit = (values: InvoiceCustomizeValues) => {};
+
   return (
     <Box className={Classes.DRAWER_BODY}>
-      <ElementCustomize<InvoiceCustomizeValues>>
+      <ElementCustomize<InvoiceCustomizeValues>
+        initialValues={initialValues}
+        onSubmit={handleFormSubmit}
+      >
         <ElementCustomize.PaperTemplate>
           <InvoicePaperTemplate />
         </ElementCustomize.PaperTemplate>

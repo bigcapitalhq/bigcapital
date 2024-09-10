@@ -11,6 +11,7 @@ import {
 import { HexColorPicker } from 'react-colorful';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { Box, BoxProps } from '@/components';
+import { sanitizeToHexColor } from '@/utils/sanitize-hex-color';
 import styles from './ColorInput.module.scss';
 
 export interface ColorInputProps {
@@ -72,6 +73,10 @@ export function ColorInput({
             />
           </Box>
         }
+        onChange={(e) => {
+          const value = sanitizeToHexColor(e.currentTarget.value);
+          handleChange(value);
+        }}
         {...inputProps}
         className={clsx(styles.field, inputProps?.className)}
       />

@@ -20,33 +20,38 @@ export function InvoiceCustomizeGeneralField() {
         <FFormGroup
           name={'primaryColor'}
           label={'Primary Color'}
-          inline
           className={styles.fieldGroup}
+          inline
+          fastField
         >
           <FColorInput
             name={'primaryColor'}
             inputProps={{ style: { maxWidth: 120 } }}
+            fastField
           />
         </FFormGroup>
 
         <FFormGroup
           name={'secondaryColor'}
           label={'Secondary Color'}
-          inline
           className={styles.fieldGroup}
+          inline
+          fastField
         >
           <FColorInput
             name={'secondaryColor'}
             inputProps={{ style: { maxWidth: 120 } }}
+            fastField
           />
         </FFormGroup>
 
-        <FFormGroup name={'showLogo'} label={'Logo'}>
+        <FFormGroup name={'showCompanyLogo'} label={'Logo'} fastField>
           <FSwitch
-            name={'showLogo'}
+            name={'showCompanyLogo'}
             label={'Display company logo in the paper'}
             className={styles.showCompanyLogoField}
             large
+            fastField
           />
         </FFormGroup>
       </Stack>

@@ -3,7 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { Group, Stack } from '@/components';
+import { Box, Group, Stack } from '@/components';
 import { ElementCustomizeHeader } from './ElementCustomizeHeader';
 import { ElementCustomizeTabs } from './ElementCustomizeTabs';
 import { useElementCustomizeTabsController } from './ElementCustomizeTabsController';
@@ -14,7 +14,7 @@ import styles from './ElementCustomize.module.scss';
 
 export function ElementCustomizeFields() {
   return (
-  <Group spacing={0} align={'stretch'} className={styles.root}>
+    <Group spacing={0} align={'stretch'} className={styles.root}>
       <ElementCustomizeTabs />
       <ElementCustomizeFieldsMain />
     </Group>
@@ -38,7 +38,7 @@ export function ElementCustomizeFieldsMain() {
       <ElementCustomizeHeader label={'Customize'} />
 
       <Stack spacing={0} style={{ flex: '1 1 auto', overflow: 'auto' }}>
-        {CustomizeTabPanel}
+        <Box style={{ flex: '1 1' }}>{CustomizeTabPanel}</Box>
         <ElementCustomizeFooterActions />
       </Stack>
     </Stack>

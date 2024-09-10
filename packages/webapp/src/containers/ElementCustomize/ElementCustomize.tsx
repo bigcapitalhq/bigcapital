@@ -56,7 +56,7 @@ export interface ElementCustomizePaperTemplateProps {
 ElementCustomize.PaperTemplate = ({
   children,
 }: ElementCustomizePaperTemplateProps) => {
-  return <Box>{children}</Box>;
+  return <>{children}</>;
 };
 
 export interface ElementCustomizeContentProps {
@@ -70,5 +70,5 @@ ElementCustomize.FieldsTab = ({
   label,
   children,
 }: ElementCustomizeContentProps) => {
-  return <Box>{children}</Box>;
+  return <>{children}</>;
 };
