@@ -2,17 +2,17 @@ import React from 'react';
 import { Box } from '@/components';
 import { Classes } from '@blueprintjs/core';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
-import { ReceiptCustomizeGeneralField } from './ReceiptCustomizeFieldsGeneral';
-import { ReceiptCustomizeFieldsContent } from './ReceiptCustomizeFieldsContent';
-import { ReceiptCustomizeValues } from './types';
+import { PaymentReceivedCustomizeGeneralField } from './PaymentReceivedCustomizeFieldsGeneral';
+import { PaymentReceivedCustomizeContentFields } from './PaymentReceivedCustomizeFieldsContent';
+import { PaymentReceivedCustomizeValues } from './types';
 import { initialValues } from './constants';
 
-export default function ReceiptCustomizeContent() {
-  const handleFormSubmit = (values: ReceiptCustomizeValues) => {};
+export default function PaymentReceivedCustomizeContent() {
+  const handleFormSubmit = (values: PaymentReceivedCustomizeValues) => {};
 
   return (
     <Box className={Classes.DRAWER_BODY}>
-      <ElementCustomize<ReceiptCustomizeValues>
+      <ElementCustomize<PaymentReceivedCustomizeValues>
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >
@@ -21,11 +21,11 @@ export default function ReceiptCustomizeContent() {
         </ElementCustomize.PaperTemplate> */}
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>
-          <ReceiptCustomizeGeneralField />
+          <PaymentReceivedCustomizeGeneralField />
         </ElementCustomize.FieldsTab>
 
         <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
-          <ReceiptCustomizeFieldsContent />
+          <PaymentReceivedCustomizeContentFields />
         </ElementCustomize.FieldsTab>
 
         <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
