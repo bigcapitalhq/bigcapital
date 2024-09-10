@@ -1,6 +1,11 @@
 // @ts-nocheck
 import { Stack } from '@/components';
 import { Classes } from '@blueprintjs/core';
+import { fieldsGroups } from './constants';
+import {
+  ElementCustomizeContentItemFieldGroup,
+  ElementCustomizeFieldsGroup,
+} from '@/containers/ElementCustomize/ElementCustomizeFieldsGroup';
 
 export function PaymentReceivedCustomizeContentFields() {
   return (
@@ -16,7 +21,24 @@ export function PaymentReceivedCustomizeContentFields() {
         </p>
       </Stack>
 
-      <Stack></Stack>
+      <Stack>
+        {fieldsGroups.map((group) => (
+          <ElementCustomizeFieldsGroup label={group.label}>
+            {group.fields.map((item, index) => (
+              <ElementCustomizeContentItemFieldGroup
+                key={index}
+                inputGroupProps={{
+                  name: item.enableKey,
+                  label: item.label,
+                }}
+                switchProps={{
+                  name: item.labelKey,
+                }}
+              />
+            ))}
+          </ElementCustomizeFieldsGroup>
+        ))}
+      </Stack>
     </Stack>
   );
 }

@@ -1,14 +1,23 @@
 import { Group, Stack } from '@/components';
-import { PaperTemplate, PaperTemplateProps } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import {
+  PaperTemplate,
+  PaperTemplateProps,
+} from '../../Invoices/InvoiceCustomize/PaperTemplate';
 
 export interface PaymentReceivedPaperTemplateProps extends PaperTemplateProps {
   billedToAddress?: Array<string>;
-  billedFromAddress?: Array<string>;
+  showBillingToAddress?: boolean;
 
+  billedFromAddress?: Array<string>;
+  showBilledFromAddress?: boolean;
+  billedToLabel?: string;
+
+  // Total.
   total?: string;
   showTotal?: boolean;
   totalLabel?: string;
 
+  // Subtotal.
   subtotal?: string;
   showSubtotal?: boolean;
   subtotalLabel?: string;
@@ -19,10 +28,12 @@ export interface PaymentReceivedPaperTemplateProps extends PaperTemplateProps {
     invoiceNumber: string;
   }>;
 
+  // Issue date.
   paymentReceivedDateLabel?: string;
   showPaymentReceivedDate?: boolean;
   paymentReceivedDate?: string;
 
+  // Payment received number.
   paymentReceivedNumebr?: string;
   paymentReceivedNumberLabel?: string;
   showPaymentReceivedNumber?: boolean;
@@ -49,6 +60,9 @@ export function PaymentReceivedPaperTemplate({
     '+1 762-339-5634',
     'ahmed@bigcapital.app',
   ],
+  showBilledFromAddress,
+  showBillingToAddress,
+
   total = '$1000.00',
   totalLabel = 'Total',
   showTotal = true,
@@ -96,8 +110,12 @@ export function PaymentReceivedPaperTemplate({
         </PaperTemplate.TermsList>
 
         <Group spacing={10}>
-          <PaperTemplate.Address items={billedToAddress} />
-          <PaperTemplate.Address items={billedFromAddress} />
+          {showBillingToAddress && (
+            <PaperTemplate.Address items={billedToAddress} />
+          )}
+          {showBilledFromAddress && (
+            <PaperTemplate.Address items={billedFromAddress} />
+          )}
         </Group>
 
         <Stack spacing={0}>

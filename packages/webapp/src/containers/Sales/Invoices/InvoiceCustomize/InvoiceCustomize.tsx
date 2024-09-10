@@ -1,7 +1,12 @@
 import React from 'react';
+import * as R from 'ramda';
 import { Box } from '@/components';
 import { Classes } from '@blueprintjs/core';
-import { InvoicePaperTemplate } from './InvoicePaperTemplate';
+import { useFormikContext } from 'formik';
+import {
+  InvoicePaperTemplate,
+  InvoicePaperTemplateProps,
+} from './InvoicePaperTemplate';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { InvoiceCustomizeGeneralField } from './InvoiceCustomizeGeneralFields';
 import { InvoiceCustomizeContentFields } from './InvoiceCutomizeContentFields';
@@ -18,7 +23,7 @@ export default function InvoiceCustomizeContent() {
         onSubmit={handleFormSubmit}
       >
         <ElementCustomize.PaperTemplate>
-          <InvoicePaperTemplate />
+          <InvoicePaperTemplateFormConnected />
         </ElementCustomize.PaperTemplate>
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>
@@ -36,3 +41,16 @@ export default function InvoiceCustomizeContent() {
     </Box>
   );
 }
+
+const withFormikProps = <P extends object>(
+  Component: React.ComponentType<P>,
+) => {
+  return (props: Omit<P, keyof InvoicePaperTemplateProps>) => {
+    const { values } = useFormikContext<InvoicePaperTemplateProps>();
+
+    return <Component {...(props as P)} {...values} />;
+  };
+};
+
+export const InvoicePaperTemplateFormConnected =
+  R.compose(withFormikProps)(InvoicePaperTemplate);

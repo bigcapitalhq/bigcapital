@@ -8,52 +8,78 @@ export const initialValues = {
   companyLogo:
     'https://cdn-development.mercury.com/demo-assets/avatars/mercury-demo-dark.png',
 
-  // Top details.
-  showInvoiceNumber: true,
-  invoiceNumberLabel: 'Invoice number',
-
-  showDateIssue: true,
-  dateIssueLabel: 'Date of Issue',
-
-  showDueDate: true,
-  dueDateLabel: 'Due Date',
-
-  // Company name
-  companyName: 'Bigcapital Technology, Inc.',
-
-  // Addresses
-  showBilledFromAddress: true,
-  showBillingToAddress: true,
-  billedToLabel: 'Billed To',
-
   // Entries
   itemNameLabel: 'Item',
   itemDescriptionLabel: 'Description',
   itemRateLabel: 'Rate',
   itemTotalLabel: 'Total',
 
-  // Totals
-  showSubtotal: true,
-  subtotalLabel: 'Subtotal',
-
-  showDiscount: true,
-  discountLabel: 'Discount',
-
-  showTaxes: true,
-
+  // Total
   showTotal: true,
   totalLabel: 'Total',
 
-  paymentMadeLabel: 'Payment Made',
-  showPaymentMade: true,
+  // Subtotal
+  showSubtotal: true,
+  subtotalLabel: 'Subtotal',
 
-  dueAmountLabel: 'Due Amount',
-  showDueAmount: true,
+  // Customer Note.
+  showCustomerNote: true,
+  customerNoteLabel: 'Customer Note',
 
-  // Footer paragraphs.
-  termsConditionsLabel: 'Terms & Conditions',
+  // Terms & Conditions
   showTermsConditions: true,
+  termsConditionsLabel: 'Terms & Conditions',
 
-  statementLabel: 'Statement',
-  showStatement: true,
+  // Date issue.
+  creditNoteDateLabel: 'Issue of Date',
+  showCreditNoteDate: true,
+
+  // Credit Number.
+  creditNoteNumberLabel: 'Credit Note #',
+  showCreditNoteNumber: true,
 };
+
+export const fieldsGroups = [
+  {
+    label: 'Header',
+    fields: [
+      {
+        labelKey: 'creditNoteDateLabel',
+        enableKey: 'showCreditNoteDate',
+        label: 'Issue of Date',
+      },
+      {
+        labelKey: 'creditNoteNumberLabel',
+        enableKey: 'showCreditNoteNumber',
+        label: 'Credit Note #',
+      },
+    ],
+  },
+  {
+    label: 'Totals',
+    fields: [
+      {
+        labelKey: 'subtotalLabel',
+        enableKey: 'showSubtotal',
+        label: 'Subtotal',
+      },
+      { labelKey: 'totalLabel', enableKey: 'showTotal', label: 'Total' },
+    ],
+  },
+  {
+    label: 'Footer',
+    fields: [
+      {
+        labelKey: 'termsConditionsLabel',
+        enableKey: 'showTermsConditions',
+        label: 'Terms & Conditions',
+      },
+      {
+        labelKey: 'customerNoteLabel',
+        enableKey: 'showCustomerNote',
+        label: 'Customer Note',
+        labelPlaceholder: 'Customer Note',
+      },
+    ],
+  },
+];

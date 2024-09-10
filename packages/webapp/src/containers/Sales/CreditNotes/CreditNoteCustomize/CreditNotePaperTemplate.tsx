@@ -5,18 +5,22 @@ export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
   billedToAddress?: Array<string>;
   billedFromAddress?: Array<string>;
 
+  // Total
   total?: string;
   showTotal?: boolean;
   totalLabel?: string;
 
+  // Subtotal;
   subtotal?: string;
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
+  // Customer Note.
   showCustomerNote?: boolean;
   customerNote?: string;
   customerNoteLabel?: string;
 
+  // Terms & Conditions
   showTermsConditions?: boolean;
   termsConditions?: string;
   termsConditionsLabel?: string;
@@ -29,10 +33,12 @@ export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
     total: string;
   }>;
 
+  // Date issue.
   creditNoteDateLabel?: string;
   showCreditNoteDate?: boolean;
   creditNoteDate?: string;
 
+  // Credit Number.
   creditNoteNumebr?: string;
   creditNoteNumberLabel?: string;
   showCreditNoteNumber?: boolean;

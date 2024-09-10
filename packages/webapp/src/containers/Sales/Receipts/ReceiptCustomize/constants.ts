@@ -8,10 +8,11 @@ export const initialValues = {
   companyLogo:
     'https://cdn-development.mercury.com/demo-assets/avatars/mercury-demo-dark.png',
 
-  // Top details.
+  // Receipt Number
   showReceiptNumber: true,
   receiptNumberLabel: 'Receipt number',
 
+  // Receipt Date
   showReceiptDate: true,
   receiptDateLabel: 'Date of Issue',
 
@@ -29,17 +30,19 @@ export const initialValues = {
   itemRateLabel: 'Rate',
   itemTotalLabel: 'Total',
 
-  // Totals
+  // Subtotal
   showSubtotal: true,
   subtotalLabel: 'Subtotal',
 
+  // Total
   showTotal: true,
   totalLabel: 'Total',
 
-  // Footer paragraphs.
+  // Terms & Conditions
   termsConditionsLabel: 'Terms & Conditions',
   showTermsConditions: true,
 
+  // Customer Note
   customerNoteLabel: 'Customer Note',
   showCustomerNote: true,
 };

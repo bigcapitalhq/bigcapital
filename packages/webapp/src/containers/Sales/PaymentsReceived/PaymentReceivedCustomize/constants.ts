@@ -9,14 +9,11 @@ export const initialValues = {
     'https://cdn-development.mercury.com/demo-assets/avatars/mercury-demo-dark.png',
 
   // Top details.
-  showInvoiceNumber: true,
-  invoiceNumberLabel: 'Invoice number',
+  showPaymentReceivedNumber: true,
+  paymentReceivedNumberLabel: 'Payment number',
 
-  showDateIssue: true,
-  dateIssueLabel: 'Date of Issue',
-
-  showDueDate: true,
-  dueDateLabel: 'Due Date',
+  showPaymentReceivedDate: true,
+  paymentReceivedDateLabel: 'Date of Issue',
 
   // Company name
   companyName: 'Bigcapital Technology, Inc.',
@@ -36,26 +33,8 @@ export const initialValues = {
   showSubtotal: true,
   subtotalLabel: 'Subtotal',
 
-  showDiscount: true,
-  discountLabel: 'Discount',
-
-  showTaxes: true,
-
   showTotal: true,
   totalLabel: 'Total',
-
-  paymentMadeLabel: 'Payment Made',
-  showPaymentMade: true,
-
-  dueAmountLabel: 'Due Amount',
-  showDueAmount: true,
-
-  // Footer paragraphs.
-  termsConditionsLabel: 'Terms & Conditions',
-  showTermsConditions: true,
-
-  statementLabel: 'Statement',
-  showStatement: true,
 };
 
 export const fieldsGroups = [
@@ -63,19 +42,14 @@ export const fieldsGroups = [
     label: 'Header',
     fields: [
       {
-        labelKey: 'invoiceNumberLabel',
-        enableKey: 'showInvoiceNumber',
-        label: 'Invoice No.',
+        labelKey: 'paymentReceivedNumberLabel',
+        enableKey: 'showPaymentReceivedNumber',
+        label: 'Payment No.',
       },
       {
-        labelKey: 'dateIssueLabel',
-        enableKey: 'showDateIssue',
-        label: 'Issue Date',
-      },
-      {
-        labelKey: 'dueDateLabel',
-        enableKey: 'showDueDate',
-        label: 'Due Date',
+        labelKey: 'paymentReceivedDateLabel',
+        enableKey: 'showPaymentReceivedDate',
+        label: 'Payment Date',
       },
       {
         enableKey: 'showBillingToAddress',
@@ -96,39 +70,7 @@ export const fieldsGroups = [
         enableKey: 'showSubtotal',
         label: 'Subtotal',
       },
-      {
-        labelKey: 'discountLabel',
-        enableKey: 'showDiscount',
-        label: 'Discount',
-      },
-      { enableKey: 'showTaxes', label: 'Taxes' },
       { labelKey: 'totalLabel', enableKey: 'showTotal', label: 'Total' },
-      {
-        labelKey: 'paymentMadeLabel',
-        enableKey: 'showPaymentMade',
-        label: 'Payment Made',
-      },
-      {
-        labelKey: 'dueAmountLabel',
-        enableKey: 'showDueAmount',
-        label: 'Due Amount',
-      },
-    ],
-  },
-  {
-    label: 'Footer',
-    fields: [
-      {
-        labelKey: 'termsConditionsLabel',
-        enableKey: 'showTermsConditions',
-        label: 'Terms & Conditions',
-      },
-      {
-        labelKey: 'statementLabel',
-        enableKey: 'showStatement',
-        label: 'Statement',
-        labelPlaceholder: 'Statement',
-      },
     ],
   },
 ];

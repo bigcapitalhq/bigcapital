@@ -1,10 +1,6 @@
-import clsx from 'classnames';
-import * as R from 'ramda';
-import { useFormikContext } from 'formik';
-import styles from './InvoicePaperTemplate.module.scss';
+import React from 'react';
 import { PaperTemplate } from './PaperTemplate';
 import { Group, Stack } from '@/components';
-import React from 'react';
 
 interface PapaerLine {
   item?: string;
@@ -19,7 +15,7 @@ interface PaperTax {
   amount: string;
 }
 
-interface PaperTemplateProps {
+export interface InvoicePaperTemplateProps {
   primaryColor?: string;
   secondaryColor?: string;
 
@@ -92,7 +88,7 @@ interface PaperTemplateProps {
   billedToAddress?: Array<string | React.ReactNode>;
 }
 
-function InvoicePaperTemplateRoot({
+export function InvoicePaperTemplate({
   primaryColor,
   secondaryColor,
 
@@ -183,7 +179,7 @@ function InvoicePaperTemplateRoot({
     '+1 762-339-5634',
     'ahmed@bigcapital.app',
   ],
-}: PaperTemplateProps) {
+}: InvoicePaperTemplateProps) {
   return (
     <PaperTemplate
       primaryColor={primaryColor}
@@ -290,17 +286,3 @@ function InvoicePaperTemplateRoot({
     </PaperTemplate>
   );
 }
-
-const withFormikProps = <P extends object>(
-  Component: React.ComponentType<P>,
-) => {
-  return (props: Omit<P, keyof PaperTemplateProps>) => {
-    const { values } = useFormikContext<PaperTemplateProps>();
-
-    return <Component {...(props as P)} {...values} />;
-  };
-};
-
-export const InvoicePaperTemplate = R.compose(withFormikProps)(
-  InvoicePaperTemplateRoot,
-);
