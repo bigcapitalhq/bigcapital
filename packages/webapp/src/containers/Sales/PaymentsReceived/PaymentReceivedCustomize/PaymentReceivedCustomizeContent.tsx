@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box } from '@/components';
+import { useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
+import { Box } from '@/components';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { PaymentReceivedCustomizeGeneralField } from './PaymentReceivedCustomizeFieldsGeneral';
 import { PaymentReceivedCustomizeContentFields } from './PaymentReceivedCustomizeFieldsContent';
@@ -18,7 +19,7 @@ export default function PaymentReceivedCustomizeContent() {
         onSubmit={handleFormSubmit}
       >
         <ElementCustomize.PaperTemplate>
-          <PaymentReceivedPaperTemplate />
+          <PaymentReceivedPaperTemplateFormConnected />
         </ElementCustomize.PaperTemplate>
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>
@@ -35,4 +36,10 @@ export default function PaymentReceivedCustomizeContent() {
       </ElementCustomize>
     </Box>
   );
+}
+
+function PaymentReceivedPaperTemplateFormConnected() {
+  const { values } = useFormikContext<PaymentReceivedCustomizeValues>();
+
+  return <PaymentReceivedPaperTemplate {...values} />;
 }

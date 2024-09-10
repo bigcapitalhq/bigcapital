@@ -1,10 +1,32 @@
 import { Group, Stack } from '@/components';
-import { PaperTemplate, PaperTemplateProps } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import {
+  PaperTemplate,
+  PaperTemplateProps,
+} from '../../Invoices/InvoiceCustomize/PaperTemplate';
 
 export interface EstimatePaperTemplateProps extends PaperTemplateProps {
+  estimateNumebr?: string;
+  estimateNumberLabel?: string;
+  showEstimateNumber?: boolean;
+
+  expirationDate?: string;
+  showExpirationDate?: boolean;
+  expirationDateLabel?: string;
+
+  estimateDateLabel?: string;
+  showEstimateDate?: boolean;
+  estimateDate?: string;
+
+  companyName?: string;
+
+  // Address
+  showBilledToAddress?: boolean;
   billedToAddress?: Array<string>;
+
+  showBilledFromAddress?: boolean;
   billedFromAddress?: Array<string>;
 
+  // Totals
   total?: string;
   showTotal?: boolean;
   totalLabel?: string;
@@ -13,6 +35,7 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
+  // Statements
   showCustomerNote?: boolean;
   customerNote?: string;
   customerNoteLabel?: string;
@@ -28,18 +51,6 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
     quantity: string;
     total: string;
   }>;
-
-  expirationDate?: string;
-  showExpirationDate?: boolean;
-  expirationDateLabel?: string;
-
-  estimateDateLabel?: string;
-  showEstimateDate?: boolean;
-  estimateDate?: string;
-
-  estimateNumebr?: string;
-  estimateNumberLabel?: string;
-  showEstimateNumber?: boolean;
 }
 
 export function EstimatePaperTemplate({

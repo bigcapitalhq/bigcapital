@@ -1,8 +1,11 @@
 // @ts-nocheck
-import { FInputGroup, FSwitch, Group, Stack } from '@/components';
-import { CLASSES } from '@/constants';
+import { Stack } from '@/components';
 import { Classes } from '@blueprintjs/core';
 import { fieldsGroups } from './constants';
+import {
+  ElementCustomizeFieldsGroup,
+  ElementCustomizeContentItemFieldGroup,
+} from '@/containers/ElementCustomize/ElementCustomizeFieldsGroup';
 
 export function InvoiceCustomizeContentFields() {
   return (
@@ -20,25 +23,20 @@ export function InvoiceCustomizeContentFields() {
 
       <Stack>
         {fieldsGroups.map((group) => (
-          <>
-            <h4 className={CLASSES.TEXT_MUTED} style={{ fontWeight: 600 }}>
-              {group.label}
-            </h4>
-            <Stack spacing={14}>
-              {group.fields.map((item, index) => (
-                <Group spacing={14} position={'apart'} key={index}>
-                  <FSwitch name={item.enableKey} label={item.label} fastField />
-                  {item.labelKey && (
-                    <FInputGroup
-                      name={item.labelKey}
-                      style={{ maxWidth: 150 }}
-                      fastField
-                    />
-                  )}
-                </Group>
-              ))}
-            </Stack>
-          </>
+          <ElementCustomizeFieldsGroup label={group.label}>
+            {group.fields.map((item, index) => (
+              <ElementCustomizeContentItemFieldGroup
+                key={index}
+                inputGroupProps={{
+                  name: item.enableKey,
+                  label: item.label,
+                }}
+                switchProps={{
+                  name: item.labelKey,
+                }}
+              />
+            ))}
+          </ElementCustomizeFieldsGroup>
         ))}
       </Stack>
     </Stack>

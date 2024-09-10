@@ -2,6 +2,9 @@ import clsx from 'classnames';
 import * as R from 'ramda';
 import { useFormikContext } from 'formik';
 import styles from './InvoicePaperTemplate.module.scss';
+import { PaperTemplate } from './PaperTemplate';
+import { Group, Stack } from '@/components';
+import React from 'react';
 
 interface PapaerLine {
   item?: string;
@@ -85,15 +88,14 @@ interface PaperTemplateProps {
   lines?: Array<PapaerLine>;
   taxes?: Array<PaperTax>;
 
-  billedFromAddres?: Array<string>;
-  billedToAddress?: Array<string>;
+  billedFromAddres?: Array<string | React.ReactNode>;
+  billedToAddress?: Array<string | React.ReactNode>;
 }
 
 function InvoicePaperTemplateRoot({
   primaryColor,
   secondaryColor,
 
-  bigtitle = 'Invoice',
   companyName = 'Bigcapital Technology, Inc.',
 
   showCompanyLogo = true,
@@ -183,156 +185,109 @@ function InvoicePaperTemplateRoot({
   ],
 }: PaperTemplateProps) {
   return (
-    <div className={styles.root}>
-      <style>{`:root { --invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor}; }`}</style>
-
-      <div>
-        <h1 className={styles.bigTitle}>{bigtitle}</h1>
-
-        {showCompanyLogo && (
-          <div className={styles.logoWrap}>
-            <img alt="" src={companyLogo} />
-          </div>
-        )}
-      </div>
-
-      <div className={styles.details}>
-        {showInvoiceNumber && (
-          <div className={styles.detail}>
-            <div className={styles.detailLabel}>{invoiceNumberLabel}</div>
-            <div>{invoiceNumber}</div>
-          </div>
-        )}
-        {showDateIssue && (
-          <div className={styles.detail}>
-            <div className={styles.detailLabel}>{dateIssueLabel}</div>
-            <div>{dateIssue}</div>
-          </div>
-        )}
-        {showDueDate && (
-          <div className={styles.detail}>
-            <div className={styles.detailLabel}>{dueDateLabel}</div>
-            <div>{dueDate}</div>
-          </div>
-        )}
-      </div>
-
-      <div className={styles.addressRoot}>
-        {showBilledFromAddress && (
-          <div className={styles.addressBillTo}>
-            <strong>{companyName}</strong> <br />
-            {billedFromAddres.map((text, index) => (
-              <div key={index}>{text}</div>
-            ))}
-          </div>
-        )}
-
-        {showBillingToAddress && (
-          <div className={styles.addressFrom}>
-            <strong>{billedToLabel}</strong> <br />
-            {billedToAddress.map((text, index) => (
-              <div key={index}>{text}</div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>{lineItemLabel}</th>
-            <th>{lineDescriptionLabel}</th>
-            <th className={styles.rate}>{lineRateLabel}</th>
-            <th className={styles.total}>{lineTotalLabel}</th>
-          </tr>
-        </thead>
-
-        <tbody className={styles.tableBody}>
-          {lines.map((line, index) => (
-            <tr key={index}>
-              <td>{line.item}</td>
-              <td>{line.description}</td>
-              <td className={styles.rate}>
-                {line.quantity} X {line.rate}
-              </td>
-              <td className={styles.total}>{line.total}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div style={{ display: 'flex' }}>
-        <div className={styles.totals}>
-          {showSubtotal && (
-            <div
-              className={clsx(
-                styles.totalsItem,
-                styles.totalBottomGrayBordered,
-              )}
-            >
-              <div className={styles.totalsItemLabel}>{subtotalLabel}</div>
-              <div className={styles.totalsItemAmount}>{subtotal}</div>
-            </div>
+    <PaperTemplate
+      primaryColor={primaryColor}
+      secondaryColor={secondaryColor}
+      showCompanyLogo={showCompanyLogo}
+      companyLogo={companyLogo}
+      bigtitle={'Invoice'}
+    >
+      <Stack spacing={24}>
+        <PaperTemplate.TermsList>
+          {showInvoiceNumber && (
+            <PaperTemplate.TermsItem label={invoiceNumberLabel}>
+              {invoiceNumber}
+            </PaperTemplate.TermsItem>
           )}
-
-          {showDiscount && (
-            <div className={styles.totalsItem}>
-              <div className={styles.totalsItemLabel}>{discountLabel}</div>
-              <div className={styles.totalsItemAmount}>{discount}</div>
-            </div>
+          {showDateIssue && (
+            <PaperTemplate.TermsItem label={dateIssueLabel}>
+              {dateIssue}
+            </PaperTemplate.TermsItem>
           )}
-
-          {showTaxes && (
-            <>
-              {taxes.map((tax, index) => (
-                <div key={index} className={styles.totalsItem}>
-                  <div className={styles.totalsItemLabel}>{tax.label}</div>
-                  <div className={styles.totalsItemAmount}>{tax.amount}</div>
-                </div>
-              ))}
-            </>
+          {showDueDate && (
+            <PaperTemplate.TermsItem label={dueDateLabel}>
+              {dueDate}
+            </PaperTemplate.TermsItem>
           )}
+        </PaperTemplate.TermsList>
 
-          {showTotal && (
-            <div
-              className={clsx(styles.totalsItem, styles.totalBottomBordered)}
-            >
-              <div className={styles.totalsItemLabel}>{totalLabel}</div>
-              <div className={styles.totalsItemAmount}>{total}</div>
-            </div>
+        <Group spacing={10}>
+          {showBilledFromAddress && (
+            <PaperTemplate.Address
+              items={[<strong>{companyName}</strong>, ...billedFromAddres]}
+            />
           )}
-
-          {showPaymentMade && (
-            <div className={styles.totalsItem}>
-              <div className={styles.totalsItemLabel}>{paymentMadeLabel}</div>
-              <div className={styles.totalsItemAmount}>{paymentMade}</div>
-            </div>
+          {showBillingToAddress && (
+            <PaperTemplate.Address items={billedToAddress} />
           )}
+        </Group>
 
-          {showBalanceDue && (
-            <div
-              className={clsx(styles.totalsItem, styles.totalBottomBordered)}
-            >
-              <div className={styles.totalsItemLabel}>{balanceDueLabel}</div>
-              <div className={styles.totalsItemAmount}>{balanceDue}</div>
-            </div>
+        <Stack spacing={0}>
+          <PaperTemplate.Table
+            columns={[
+              { label: lineItemLabel, accessor: 'item' },
+              { label: lineDescriptionLabel, accessor: 'description' },
+              { label: lineRateLabel, accessor: 'rate' },
+              { label: lineTotalLabel, accessor: 'total' },
+            ]}
+            data={lines}
+          />
+          <PaperTemplate.Totals>
+            {showSubtotal && (
+              <PaperTemplate.TotalLine
+                label={subtotalLabel}
+                amount={subtotal}
+              />
+            )}
+            {showDiscount && (
+              <PaperTemplate.TotalLine
+                label={discountLabel}
+                amount={discount}
+              />
+            )}
+            {showTaxes && (
+              <>
+                {taxes.map((tax, index) => (
+                  <PaperTemplate.TotalLine
+                    key={index}
+                    label={tax.label}
+                    amount={tax.amount}
+                  />
+                ))}
+              </>
+            )}
+            {showTotal && (
+              <PaperTemplate.TotalLine label={totalLabel} amount={total} />
+            )}
+            {showPaymentMade && (
+              <PaperTemplate.TotalLine
+                label={paymentMadeLabel}
+                amount={paymentMade}
+              />
+            )}
+            {showBalanceDue && (
+              <PaperTemplate.TotalLine
+                label={balanceDueLabel}
+                amount={balanceDue}
+              />
+            )}
+          </PaperTemplate.Totals>
+        </Stack>
+
+        <Stack spacing={0}>
+          {showTermsConditions && (
+            <PaperTemplate.Statement label={termsConditionsLabel}>
+              {termsConditions}
+            </PaperTemplate.Statement>
           )}
-        </div>
-      </div>
-
-      {showTermsConditions && (
-        <div className={styles.paragraph}>
-          <div className={styles.paragraphLabel}>{termsConditionsLabel}</div>
-          <div>{termsConditions}</div>
-        </div>
-      )}
-      {showStatement && (
-        <div className={styles.paragraph}>
-          <div className={styles.paragraphLabel}>{statementLabel}</div>
-          <div>{statement}</div>
-        </div>
-      )}
-    </div>
+          {showStatement && (
+            <PaperTemplate.Statement label={statementLabel}>
+              {statement}
+            </PaperTemplate.Statement>
+          )}
+        </Stack>
+      </Stack>
+    </PaperTemplate>
   );
 }
 

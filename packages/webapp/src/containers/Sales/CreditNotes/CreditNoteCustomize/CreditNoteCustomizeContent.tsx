@@ -1,13 +1,12 @@
-import React from 'react';
 import { Box } from '@/components';
 import { Classes } from '@blueprintjs/core';
-// import { InvoicePaperTemplate } from './InvoicePaperTemplate';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { CreditNoteCustomizeGeneralField } from './CreditNoteCustomizeGeneralFields';
 import { CreditNoteCustomizeContentFields } from './CreditNoteCutomizeContentFields';
 import { CreditNotePaperTemplate } from './CreditNotePaperTemplate';
 import { CreditNoteCustomizeValues } from './types';
 import { initialValues } from './constants';
+import { useFormikContext } from 'formik';
 
 export default function CreditNoteCustomizeContent() {
   const handleFormSubmit = (values: CreditNoteCustomizeValues) => {};
@@ -19,7 +18,7 @@ export default function CreditNoteCustomizeContent() {
         onSubmit={handleFormSubmit}
       >
         <ElementCustomize.PaperTemplate>
-          <CreditNotePaperTemplate />
+          <CreditNotePaperTemplateFormConnected />
         </ElementCustomize.PaperTemplate>
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>
@@ -36,4 +35,10 @@ export default function CreditNoteCustomizeContent() {
       </ElementCustomize>
     </Box>
   );
+}
+
+function CreditNotePaperTemplateFormConnected() {
+  const { values } = useFormikContext<CreditNoteCustomizeValues>();
+
+  return <CreditNotePaperTemplate {...values} />;
 }

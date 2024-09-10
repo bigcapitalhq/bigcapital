@@ -94,7 +94,11 @@ PaperTemplate.MutedText = () => {};
 
 PaperTemplate.Text = () => {};
 
-PaperTemplate.Address = ({ items }: { items: Array<string> }) => {
+PaperTemplate.Address = ({
+  items,
+}: {
+  items: Array<string | React.ReactNode>;
+}) => {
   return (
     <Stack spacing={0}>
       {items.map((item, index) => (

@@ -6,6 +6,7 @@ import { ReceiptCustomizeFieldsContent } from './ReceiptCustomizeFieldsContent';
 import { ReceiptPaperTemplate } from './ReceiptPaperTemplate';
 import { ReceiptCustomizeValues } from './types';
 import { initialValues } from './constants';
+import { useFormikContext } from 'formik';
 
 export default function ReceiptCustomizeContent() {
   const handleFormSubmit = (values: ReceiptCustomizeValues) => {};
@@ -17,7 +18,7 @@ export default function ReceiptCustomizeContent() {
         onSubmit={handleFormSubmit}
       >
         <ElementCustomize.PaperTemplate>
-          <ReceiptPaperTemplate />
+          <ReceiptPaperTemplateFormConnected />
         </ElementCustomize.PaperTemplate>
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>
@@ -34,4 +35,10 @@ export default function ReceiptCustomizeContent() {
       </ElementCustomize>
     </Box>
   );
+}
+
+function ReceiptPaperTemplateFormConnected() {
+  const { values } = useFormikContext<ReceiptCustomizeValues>();
+
+  return <ReceiptPaperTemplate {...values} />;
 }

@@ -1,4 +1,3 @@
-
 export const initialValues = {
   // Colors
   primaryColor: '#2c3dd8',
@@ -13,8 +12,8 @@ export const initialValues = {
   showEstimateNumber: true,
   estimateNumberLabel: 'Estimate number',
 
-  showDateIssue: true,
-  dateIssueLabel: 'Date of Issue',
+  estimateDateLabel: 'Date of Issue',
+  showEstimateDate: true,
 
   showExpirationDate: true,
   expirationDateLabel: 'Expiration Date',
@@ -37,23 +36,16 @@ export const initialValues = {
   showSubtotal: true,
   subtotalLabel: 'Subtotal',
 
-  showDiscount: true,
-  discountLabel: 'Discount',
-
-  showTaxes: true,
-
   showTotal: true,
   totalLabel: 'Total',
 
-  // Footer paragraphs.
-  termsConditionsLabel: 'Terms & Conditions',
+  // Statements
+  showCustomerNote: true,
+  customerNoteLabel: 'Customer Note',
+
   showTermsConditions: true,
-
-  statementLabel: 'Statement',
-  showStatement: true,
+  termsConditionsLabel: 'Terms & Conditions',
 };
-
-
 
 export const fieldsGroups = [
   {
@@ -65,8 +57,8 @@ export const fieldsGroups = [
         label: 'Estimate No.',
       },
       {
-        labelKey: 'dateIssueLabel',
-        enableKey: 'showDateIssue',
+        labelKey: 'estimateDateLabel',
+        enableKey: 'showEstimateDate',
         label: 'Issue Date',
       },
       {
@@ -93,12 +85,6 @@ export const fieldsGroups = [
         enableKey: 'showSubtotal',
         label: 'Subtotal',
       },
-      {
-        labelKey: 'discountLabel',
-        enableKey: 'showDiscount',
-        label: 'Discount',
-      },
-      { enableKey: 'showTaxes', label: 'Taxes' },
       { labelKey: 'totalLabel', enableKey: 'showTotal', label: 'Total' },
     ],
   },
@@ -111,8 +97,8 @@ export const fieldsGroups = [
         label: 'Terms & Conditions',
       },
       {
-        labelKey: 'statementLabel',
-        enableKey: 'showStatement',
+        labelKey: 'customerNoteLabel',
+        enableKey: 'showCustomerNote',
         label: 'Statement',
         labelPlaceholder: 'Statement',
       },

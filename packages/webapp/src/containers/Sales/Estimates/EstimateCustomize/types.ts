@@ -8,14 +8,14 @@ export interface EstimateCustomizeValues {
   companyLogo?: string;
 
   // Top details.
-  showInvoiceNumber?: boolean;
-  invoiceNumberLabel?: string;
+  estimateNumberLabel?: string;
+  showEstimateNumber?: boolean;
 
-  showDateIssue?: boolean;
-  dateIssueLabel?: string;
+  showExpirationDate?: boolean;
+  expirationDateLabel?: string;
 
-  showDueDate?: boolean;
-  dueDateLabel?: string;
+  estimateDateLabel?: string;
+  showEstimateDate?: boolean;
 
   // Company name
   companyName?: string;
@@ -35,24 +35,13 @@ export interface EstimateCustomizeValues {
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
-  showDiscount?: boolean;
-  discountLabel?: string;
-
-  showTaxes?: boolean;
-
   showTotal?: boolean;
   totalLabel?: string;
 
-  paymentMadeLabel?: string;
-  showPaymentMade?: boolean;
+  // Statements
+  showCustomerNote?: boolean;
+  customerNoteLabel?: string;
 
-  dueAmountLabel?: string;
-  showDueAmount?: boolean;
-
-  // Footer paragraphs.
-  termsConditionsLabel?: string;
   showTermsConditions?: boolean;
-
-  statementLabel?: string;
-  showStatement?: boolean;
+  termsConditionsLabel?: string;
 }

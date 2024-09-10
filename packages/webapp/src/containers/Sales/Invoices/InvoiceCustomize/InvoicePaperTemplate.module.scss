@@ -22,7 +22,6 @@
 }
 
 .details {
-  margin-bottom: 25px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -40,7 +39,6 @@
 .addressRoot{
   display: flex;
   flex-direction: row;
-  margin-bottom: 25px;
 }
 
 .addressBillTo{
@@ -101,7 +99,6 @@
 .totals{
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
   margin-left: auto;
   width: 300px;
 }

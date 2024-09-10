@@ -19,7 +19,7 @@ export function EstimateCustomizeGeneralField() {
         <FFormGroup
           name={'primaryColor'}
           label={'Primary Color'}
-          // className={styles.fieldGroup}
+          style={{ justifyContent: 'space-between' }}
           inline
           fastField
         >
@@ -33,7 +33,7 @@ export function EstimateCustomizeGeneralField() {
         <FFormGroup
           name={'secondaryColor'}
           label={'Secondary Color'}
-          // className={styles.fieldGroup}
+          style={{ justifyContent: 'space-between' }}
           inline
           fastField
         >
@@ -48,7 +48,7 @@ export function EstimateCustomizeGeneralField() {
           <FSwitch
             name={'showCompanyLogo'}
             label={'Display company logo in the paper'}
-            // className={styles.showCompanyLogoField}
+            style={{ fontSize: 14 }}
             large
             fastField
           />

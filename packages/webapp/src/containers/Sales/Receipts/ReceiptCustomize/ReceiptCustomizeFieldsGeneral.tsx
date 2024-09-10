@@ -2,7 +2,6 @@
 import { Classes } from '@blueprintjs/core';
 import { FFormGroup, FSwitch, Stack } from '@/components';
 import { FColorInput } from '@/components/Forms/FColorInput';
-// import styles from './InvoiceCustomizeFields.module.scss';
 
 export function ReceiptCustomizeGeneralField() {
   return (
@@ -19,7 +18,7 @@ export function ReceiptCustomizeGeneralField() {
         <FFormGroup
           name={'primaryColor'}
           label={'Primary Color'}
-          // className={styles.fieldGroup}
+          style={{ justifyContent: 'space-between' }}
           inline
           fastField
         >
@@ -33,7 +32,7 @@ export function ReceiptCustomizeGeneralField() {
         <FFormGroup
           name={'secondaryColor'}
           label={'Secondary Color'}
-          // className={styles.fieldGroup}
+          style={{ justifyContent: 'space-between' }}
           inline
           fastField
         >
@@ -48,7 +47,7 @@ export function ReceiptCustomizeGeneralField() {
           <FSwitch
             name={'showCompanyLogo'}
             label={'Display company logo in the paper'}
-            // className={styles.showCompanyLogoField}
+            style={{ fontSize: 14 }}
             large
             fastField
           />

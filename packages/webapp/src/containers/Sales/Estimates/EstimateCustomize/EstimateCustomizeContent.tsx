@@ -7,6 +7,7 @@ import { EstimateCustomizeContentFields } from './EstimateCustomizeFieldsContent
 import { EstimatePaperTemplate } from './EstimatePaperTemplate';
 import { EstimateCustomizeValues } from './types';
 import { initialValues } from './constants';
+import { useFormikContext } from 'formik';
 
 export default function EstimateCustomizeContent() {
   const handleFormSubmit = (values: EstimateCustomizeValues) => {};
@@ -18,7 +19,7 @@ export default function EstimateCustomizeContent() {
         onSubmit={handleFormSubmit}
       >
         <ElementCustomize.PaperTemplate>
-          <EstimatePaperTemplate />
+          <EstimatePaperTemplateFormConnected />
         </ElementCustomize.PaperTemplate>
 
         <ElementCustomize.FieldsTab id={'general'} label={'General'}>
@@ -35,4 +36,10 @@ export default function EstimateCustomizeContent() {
       </ElementCustomize>
     </Box>
   );
+}
+
+function EstimatePaperTemplateFormConnected() {
+  const { values } = useFormikContext<EstimateCustomizeValues>();
+
+  return <EstimatePaperTemplate {...values} />;
 }

@@ -10,13 +10,10 @@ export const initialValues = {
 
   // Top details.
   showReceiptNumber: true,
-  receiptNumberLabel: 'Invoice number',
+  receiptNumberLabel: 'Receipt number',
 
-  showDateIssue: true,
-  dateIssueLabel: 'Date of Issue',
-
-  showDueDate: true,
-  dueDateLabel: 'Due Date',
+  showReceiptDate: true,
+  receiptDateLabel: 'Date of Issue',
 
   // Company name
   companyName: 'Bigcapital Technology, Inc.',
@@ -36,24 +33,13 @@ export const initialValues = {
   showSubtotal: true,
   subtotalLabel: 'Subtotal',
 
-  showDiscount: true,
-  discountLabel: 'Discount',
-
-  showTaxes: true,
-
   showTotal: true,
   totalLabel: 'Total',
-
-  paymentMadeLabel: 'Payment Made',
-  showPaymentMade: true,
-
-  dueAmountLabel: 'Due Amount',
-  showDueAmount: true,
 
   // Footer paragraphs.
   termsConditionsLabel: 'Terms & Conditions',
   showTermsConditions: true,
 
-  statementLabel: 'Statement',
-  showStatement: true,
+  customerNoteLabel: 'Customer Note',
+  showCustomerNote: true,
 };

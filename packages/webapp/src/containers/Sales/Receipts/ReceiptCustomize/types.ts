@@ -8,14 +8,11 @@ export interface ReceiptCustomizeValues {
   companyLogo?: string;
 
   // Top details.
-  showInvoiceNumber?: boolean;
-  invoiceNumberLabel?: string;
+  showReceiptNumber?: boolean;
+  receiptNumberLabel?: string;
 
-  showDateIssue?: boolean;
-  dateIssueLabel?: string;
-
-  showDueDate?: boolean;
-  dueDateLabel?: string;
+  showReceiptDate?: boolean;
+  receiptDateLabel?: string;
 
   // Company name
   companyName?: string;
@@ -35,24 +32,13 @@ export interface ReceiptCustomizeValues {
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
-  showDiscount?: boolean;
-  discountLabel?: string;
-
-  showTaxes?: boolean;
-
   showTotal?: boolean;
   totalLabel?: string;
 
-  paymentMadeLabel?: string;
-  showPaymentMade?: boolean;
-
-  dueAmountLabel?: string;
-  showDueAmount?: boolean;
-
-  // Footer paragraphs.
+  // Statements
   termsConditionsLabel?: string;
   showTermsConditions?: boolean;
 
-  statementLabel?: string;
-  showStatement?: boolean;
+  customerNoteLabel?: string;
+  showCustomerNote?: boolean;
 }
