@@ -64,6 +64,7 @@ import { Webhooks } from './controllers/Webhooks/Webhooks';
 import { ExportController } from './controllers/Export/ExportController';
 import { AttachmentsController } from './controllers/Attachments/AttachmentsController';
 import { OneClickDemoController } from './controllers/OneClickDemo/OneClickDemoController';
+import { PdfTemplatesController } from './controllers/PdfTemplates/PdfTemplatesController';
 
 export default () => {
   const app = Router();
@@ -81,7 +82,7 @@ export default () => {
   app.use('/jobs', Container.get(Jobs).router());
   app.use('/account', Container.get(Account).router());
   app.use('/webhooks', Container.get(Webhooks).router());
-  app.use('/demo', Container.get(OneClickDemoController).router())
+  app.use('/demo', Container.get(OneClickDemoController).router());
 
   // - Dashboard routes.
   // ---------------------------
@@ -147,6 +148,10 @@ export default () => {
   dashboard.use('/import', Container.get(ImportController).router());
   dashboard.use('/export', Container.get(ExportController).router());
   dashboard.use('/attachments', Container.get(AttachmentsController).router());
+  dashboard.use(
+    '/pdf_templates',
+    Container.get(PdfTemplatesController).router()
+  );
 
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());

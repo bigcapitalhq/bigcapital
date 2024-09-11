@@ -58,7 +58,7 @@ export default {
     onSubscriptionSubscribed: 'onSubscriptionSubscribed',
 
     onSubscriptionPaymentSucceed: 'onSubscriptionPaymentSucceed',
-    onSubscriptionPaymentFailed: 'onSubscriptionPaymentFailed'
+    onSubscriptionPaymentFailed: 'onSubscriptionPaymentFailed',
   },
 
   /**
@@ -683,5 +683,17 @@ export default {
   // Import files.
   import: {
     onImportCommitted: 'onImportFileCommitted',
+  },
+
+  pdfTemplate: {
+    onCreating: 'onPdfTemplateCreating',
+    onCreated: 'onPdfTemplateCreated',
+
+    onEditing: 'onPdfTemplateEditing',
+    onEdited: 'onPdfTemplatedEdited',
+
+    onDeleted: 'onPdfTemplateDeleted',
+
+    onInvoiceCreated: 'onInvoicePdfTemplateCreated',
   },
 };
