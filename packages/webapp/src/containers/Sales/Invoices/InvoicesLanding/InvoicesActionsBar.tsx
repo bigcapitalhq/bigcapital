@@ -109,7 +109,7 @@ function InvoiceActionsBar({
 
   // Handles the invoice customize button click.
   const handleCustomizeBtnClick = () => {
-    openDrawer(DRAWERS.INVOICE_CUSTOMIZE);
+    openDrawer(DRAWERS.BRANDING_TEMPLATES);
   };
 
   return (

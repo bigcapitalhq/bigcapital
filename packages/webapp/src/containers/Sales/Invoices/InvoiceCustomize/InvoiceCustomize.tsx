@@ -41,11 +41,11 @@ export default function InvoiceCustomizeContent() {
       const reqValues = transformToEditRequest(values, templateId);
 
       // Edit existing template
-      editPdfTemplate({ ...reqValues })
-        .then(() => handleSuccess('PDF template updated successfully!'))
-        .catch(() =>
-          handleError('An error occurred while updating the PDF template.'),
-        );
+      // editPdfTemplate({ templateId, values: reqValues })
+      //   .then(() => handleSuccess('PDF template updated successfully!'))
+      //   .catch(() =>
+      //     handleError('An error occurred while updating the PDF template.'),
+      //   );
     } else {
       const reqValues = transformToNewRequest(values);
 

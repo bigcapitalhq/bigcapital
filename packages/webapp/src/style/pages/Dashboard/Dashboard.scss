@@ -232,6 +232,15 @@ $dashboard-views-bar-height: 44px;
         &.#{$ns}-minimal.#{$ns}-intent-warning{
           color: #cc7e25;
         }
+        &.#{$ns}-minimal.#{$ns}-intent-primary{
+          color: #223fc5;
+          
+          &:hover,
+          &:focus{
+            color: #223fc5;
+            background: rgba(34, 63, 197, 0.08);
+          }
+        }
 
         &.button--blue-highlight {
           background-color: #ebfaff;

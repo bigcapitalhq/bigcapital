@@ -149,7 +149,7 @@ export default () => {
   dashboard.use('/export', Container.get(ExportController).router());
   dashboard.use('/attachments', Container.get(AttachmentsController).router());
   dashboard.use(
-    '/pdf_templates',
+    '/pdf-templates',
     Container.get(PdfTemplatesController).router()
   );
 

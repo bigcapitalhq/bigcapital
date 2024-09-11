@@ -27,9 +27,11 @@ import { InvoiceCustomizeDrawer } from '@/containers/Sales/Invoices/InvoiceCusto
 import { EstimateCustomizeDrawer } from '@/containers/Sales/Estimates/EstimateCustomize/EstimateCustomizeDrawer';
 import { ReceiptCustomizeDrawer } from '@/containers/Sales/Receipts/ReceiptCustomize/ReceiptCustomizeDrawer';
 import { CreditNoteCustomizeDrawer } from '@/containers/Sales/CreditNotes/CreditNoteCustomize/CreditNoteCustomizeDrawer';
+import { PaymentReceivedCustomizeDrawer } from '@/containers/Sales/PaymentsReceived/PaymentReceivedCustomize/PaymentReceivedCustomizeDrawer';
+import { BrandingTemplatesDrawer } from '@/containers/Sales/Invoices/BrandingTemplates/BrandingTemplatesDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
-import { PaymentReceivedCustomizeDrawer } from '@/containers/Sales/PaymentsReceived/PaymentReceivedCustomize/PaymentReceivedCustomizeDrawer';
+
 /**
  * Drawers container of the dashboard.
  */
@@ -73,7 +75,10 @@ export default function DrawersContainer() {
       <EstimateCustomizeDrawer name={DRAWERS.ESTIMATE_CUSTOMIZE} />
       <ReceiptCustomizeDrawer name={DRAWERS.RECEIPT_CUSTOMIZE} />
       <CreditNoteCustomizeDrawer name={DRAWERS.CREDIT_NOTE_CUSTOMIZE} />
-      <PaymentReceivedCustomizeDrawer name={DRAWERS.PAYMENT_RECEIVED_CUSTOMIZE} />
+      <PaymentReceivedCustomizeDrawer
+        name={DRAWERS.PAYMENT_RECEIVED_CUSTOMIZE}
+      />
+      <BrandingTemplatesDrawer name={DRAWERS.BRANDING_TEMPLATES} />
     </div>
   );
 }
