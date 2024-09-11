@@ -692,6 +692,7 @@ export default {
     onEditing: 'onPdfTemplateEditing',
     onEdited: 'onPdfTemplatedEdited',
 
+    onDeleting: 'onPdfTemplateDeleting',
     onDeleted: 'onPdfTemplateDeleted',
 
     onInvoiceCreated: 'onInvoicePdfTemplateCreated',

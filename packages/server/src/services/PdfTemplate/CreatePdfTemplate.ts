@@ -31,13 +31,18 @@ export class CreatePdfTemplate {
     const attributes = invoiceTemplateDTO;
 
     return this.uow.withTransaction(tenantId, async (trx) => {
+      // Triggers `onPdfTemplateCreating` event.
+      await this.eventPublisher.emitAsync(events.pdfTemplate.onCreating, {
+        tenantId,
+      });
+
       await PdfTemplate.query(trx).insert({
         templateName,
         resource,
         attributes,
       });
-
-      await this.eventPublisher.emitAsync(events.pdfTemplate.onInvoiceCreated, {
+      // Triggers `onPdfTemplateCreated` event.
+      await this.eventPublisher.emitAsync(events.pdfTemplate.onCreated, {
         tenantId,
       });
     });

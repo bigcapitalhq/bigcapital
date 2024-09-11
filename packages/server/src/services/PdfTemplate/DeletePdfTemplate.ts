@@ -24,8 +24,14 @@ export class DeletePdfTemplate {
     const { PdfTemplate } = this.tenancy.models(tenantId);
 
     return this.uow.withTransaction(tenantId, async (trx) => {
+      // Triggers `onPdfTemplateDeleting` event.
+      await this.eventPublisher.emitAsync(events.pdfTemplate.onDeleting, {
+        tenantId,
+        templateId,
+      });
       await PdfTemplate.query(trx).deleteById(templateId);
 
+      // Triggers `onPdfTemplateDeleted` event.
       await this.eventPublisher.emitAsync(events.pdfTemplate.onDeleted, {
         tenantId,
         templateId,

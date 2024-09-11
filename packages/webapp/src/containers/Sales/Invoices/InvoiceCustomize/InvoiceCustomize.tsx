@@ -1,7 +1,7 @@
 import React from 'react';
 import * as R from 'ramda';
-import { Box } from '@/components';
-import { Classes } from '@blueprintjs/core';
+import { AppToaster, Box } from '@/components';
+import { Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import {
   InvoicePaperTemplate,
@@ -12,9 +12,51 @@ import { InvoiceCustomizeGeneralField } from './InvoiceCustomizeGeneralFields';
 import { InvoiceCustomizeContentFields } from './InvoiceCutomizeContentFields';
 import { InvoiceCustomizeValues } from './types';
 import { initialValues } from './constants';
+import {
+  useCreatePdfTemplate,
+  useEditPdfTemplate,
+} from '@/hooks/query/pdf-templates';
+import { transformToEditRequest, transformToNewRequest } from './utils';
 
 export default function InvoiceCustomizeContent() {
-  const handleFormSubmit = (values: InvoiceCustomizeValues) => {};
+  const { mutateAsync: createPdfTemplate } = useCreatePdfTemplate();
+  const { mutateAsync: editPdfTemplate } = useEditPdfTemplate();
+
+  const templateId: number = 1;
+
+  const handleFormSubmit = (values: InvoiceCustomizeValues) => {
+    const handleSuccess = (message: string) => {
+      AppToaster.show({
+        intent: Intent.SUCCESS,
+        message,
+      });
+    };
+    const handleError = (message: string) => {
+      AppToaster.show({
+        intent: Intent.DANGER,
+        message,
+      });
+    };
+    if (templateId) {
+      const reqValues = transformToEditRequest(values, templateId);
+
+      // Edit existing template
+      editPdfTemplate({ ...reqValues })
+        .then(() => handleSuccess('PDF template updated successfully!'))
+        .catch(() =>
+          handleError('An error occurred while updating the PDF template.'),
+        );
+    } else {
+      const reqValues = transformToNewRequest(values);
+
+      // Create new template
+      createPdfTemplate(reqValues)
+        .then(() => handleSuccess('PDF template created successfully!'))
+        .catch(() =>
+          handleError('An error occurred while creating the PDF template.'),
+        );
+    }
+  };
 
   return (
     <Box className={Classes.DRAWER_BODY}>

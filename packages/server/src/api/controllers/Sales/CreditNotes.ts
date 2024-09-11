@@ -236,6 +236,9 @@ export default class PaymentReceivesController extends BaseController {
 
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
+
+      // Pdf template id.
+      check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 

@@ -148,17 +148,20 @@ export default class SalesReceiptsController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim(),
+      check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
+
       check('receipt_message').optional().trim(),
+
       check('statement').optional().trim(),
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
+
+      // Pdf template id.
+      check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 
