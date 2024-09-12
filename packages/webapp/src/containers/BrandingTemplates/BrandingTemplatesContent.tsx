@@ -5,8 +5,8 @@ import { BrandingTemplatesBoot } from './BrandingTemplatesBoot';
 import { Box, Card, DrawerHeaderContent, Group } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { BrandingTemplatesTable } from './BrandingTemplatesTable';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { BrandingTemplateActionsBar } from './BrandingTemplatesActionsBar';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 export default function BrandingTemplateContent() {
   return (

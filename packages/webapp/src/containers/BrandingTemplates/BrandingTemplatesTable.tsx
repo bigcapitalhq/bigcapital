@@ -5,10 +5,11 @@ import clsx from 'classnames';
 import { DataTable, Group, TableSkeletonRows } from '@/components';
 import { useBrandingTemplatesBoot } from './BrandingTemplatesBoot';
 import { ActionsMenu } from './_components';
+import { DRAWERS } from '@/constants/drawers';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import { DRAWERS } from '@/constants/drawers';
 import styles from './BrandTemplates.module.scss';
+import { getCustomizeDrawerNameFromResource } from './_utils';
 
 interface BrandingTemplatesTableProps {}
 
@@ -35,7 +36,10 @@ function BrandingTemplateTableRoot({
     const templateId = cell.row.original.id;
     const resource = cell.row.original.resource;
 
-    openDrawer(DRAWERS.INVOICE_CUSTOMIZE, { templateId, resource });
+    // Retrieves the customize drawer name from the given resource name.
+    const drawerName = getCustomizeDrawerNameFromResource(resource);
+
+    openDrawer(drawerName, { templateId, resource });
   };
 
   return (

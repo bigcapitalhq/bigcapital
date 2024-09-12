@@ -1,4 +1,6 @@
-export interface CreditNoteCustomizeValues {
+import { BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
+
+export interface CreditNoteCustomizeValues extends BrandingTemplateValues {
   // Colors
   primaryColor?: string;
   secondaryColor?: string;

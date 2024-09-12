@@ -5,14 +5,26 @@ import { CreditNoteCustomizeContentFields } from './CreditNoteCutomizeContentFie
 import { CreditNotePaperTemplate } from './CreditNotePaperTemplate';
 import { CreditNoteCustomizeValues } from './types';
 import { initialValues } from './constants';
+import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
+import { useDrawerActions } from '@/hooks/state';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 export function CreditNoteCustomizeContent() {
-  const handleFormSubmit = (values: CreditNoteCustomizeValues) => {};
+  const { payload, name } = useDrawerContext();
+  const { closeDrawer } = useDrawerActions();
+
+  const templateId = payload?.templateId || null;
+
+  const handleSuccess = () => {
+    closeDrawer(name);
+  };
 
   return (
-    <ElementCustomize<CreditNoteCustomizeValues>
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
+    <BrandingTemplateForm<CreditNoteCustomizeValues>
+      resource={'CreditNote'}
+      templateId={templateId}
+      defaultValues={initialValues}
+      onSuccess={handleSuccess}
     >
       <ElementCustomize.PaperTemplate>
         <CreditNotePaperTemplateFormConnected />
@@ -29,7 +41,7 @@ export function CreditNoteCustomizeContent() {
       <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
         asdfasdfdsaf #3
       </ElementCustomize.FieldsTab>
-    </ElementCustomize>
+    </BrandingTemplateForm>
   );
 }
 

@@ -28,12 +28,6 @@ export const transformToNewRequest = (
   };
 };
 
-export const useIsTemplateNamedFilled = () => {
-  const { values } = useFormikContext<InvoiceCustomizeValues>();
-
-  return values.templateName && values.templateName?.length >= 4;
-};
-
 export const useInvoiceCustomizeInitialValues = (): InvoiceCustomizeValues => {
   const { pdfTemplate } = useBrandingTemplateBoot();
 

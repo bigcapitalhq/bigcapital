@@ -11,7 +11,7 @@ import {
 import { FColorInput } from '@/components/Forms/FColorInput';
 import { CreditCardIcon } from '@/icons/CreditCardIcon';
 import { Overlay } from './Overlay';
-import { useIsTemplateNamedFilled } from './utils';
+import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 
 export function InvoiceCustomizeGeneralField() {
   const isTemplateNameFilled = useIsTemplateNamedFilled();

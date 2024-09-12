@@ -6,7 +6,7 @@ import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 export default function CreditNoteCustomizeDrawerBody() {
   const { payload } = useDrawerContext();
-  const templateId = payload.templateId;
+  const templateId = payload?.templateId || null;
 
   return (
     <Box className={Classes.DRAWER_BODY}>
