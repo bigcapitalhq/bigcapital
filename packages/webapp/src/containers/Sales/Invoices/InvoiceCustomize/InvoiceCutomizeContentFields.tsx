@@ -16,7 +16,7 @@ export function InvoiceCustomizeContentFields() {
       <Stack spacing={10}>
         <h3>General Branding</h3>
         <p className={Classes.TEXT_MUTED}>
-          Set your invoice details to be automatically applied every time you
+          Set your invoice details to be automatically applied every timeyou
           create a new invoice.
         </p>
       </Stack>

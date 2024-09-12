@@ -190,7 +190,7 @@ function InvoiceActionsBar({
             <Menu>
               <MenuItem
                 onClick={handleCustomizeBtnClick}
-                text={'Customize Invoice'}
+                text={'Invoice Templates'}
               />
             </Menu>
           }

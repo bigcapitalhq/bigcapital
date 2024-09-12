@@ -47,7 +47,7 @@ export function ElementCustomizeFieldsMain() {
 
 function ElementCustomizeFooterActionsRoot({ closeDrawer }) {
   const { name } = useDrawerContext();
-  const { submitForm } = useFormikContext();
+  const { submitForm, isSubmitting } = useFormikContext();
 
   const handleSubmitBtnClick = () => {
     submitForm();
@@ -62,6 +62,7 @@ function ElementCustomizeFooterActionsRoot({ closeDrawer }) {
         onClick={handleSubmitBtnClick}
         intent={Intent.PRIMARY}
         style={{ minWidth: 75 }}
+        loading={isSubmitting}
       >
         Save
       </Button>

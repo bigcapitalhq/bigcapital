@@ -26,20 +26,21 @@ export class PdfTemplatesController extends BaseController {
       '/:template_id',
       [
         param('template_id').exists().isInt().toInt(),
+        check('template_name').exists(),
         check('attributes').exists(),
       ],
       this.validationResult,
       this.editPdfTemplate.bind(this)
     );
+    router.get('/', this.getPdfTemplates.bind(this));
     router.get(
       '/:template_id',
       [param('template_id').exists().isInt().toInt()],
       this.validationResult,
       this.getPdfTemplate.bind(this)
     );
-    router.get('/', this.getPdfTemplates.bind(this));
     router.post(
-      '/invoices',
+      '/',
       [check('template_name').exists(), check('attributes').exists()],
       this.validationResult,
       this.createPdfInvoiceTemplate.bind(this)
@@ -70,13 +71,13 @@ export class PdfTemplatesController extends BaseController {
   async editPdfTemplate(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { template_id: templateId } = req.params;
-    const { attributes } = this.matchedBodyData(req);
+    const editTemplateDTO = this.matchedBodyData(req);
 
     try {
       const result = await this.pdfTemplateApplication.editPdfTemplate(
         tenantId,
         Number(templateId),
-        attributes
+        editTemplateDTO
       );
       return res.status(200).send(result);
     } catch (error) {

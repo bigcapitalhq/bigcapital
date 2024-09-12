@@ -4,9 +4,7 @@ import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';
 
-const InvoiceCustomize = React.lazy(
-  () => import('./InvoiceCustomize'),
-);
+const InvoiceCustomize = React.lazy(() => import('./InvoiceCustomize'));
 
 /**
  * Invoice customize drawer.
@@ -16,10 +14,10 @@ function InvoiceCustomizeDrawerRoot({
   name,
   // #withDrawer
   isOpen,
-  payload: {},
+  payload,
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} size={'100%'}>
+    <Drawer isOpen={isOpen} name={name} size={'100%'} payload={payload}>
       <DrawerSuspense>
         <InvoiceCustomize />
       </DrawerSuspense>

@@ -30,11 +30,14 @@ export class EditPdfTemplate {
     const { PdfTemplate } = this.tenancy.models(tenantId);
 
     return this.uow.withTransaction(tenantId, async (trx) => {
-      await PdfTemplate.query(trx)
-        .patch({
-          ...editTemplateDTO,
-        })
-        .where('id', templateId);
+      await this.eventPublisher.emitAsync(events.pdfTemplate.onEditing, {
+        tenantId,
+        templateId,
+      });
+      await PdfTemplate.query(trx).where('id', templateId).update({
+        templateName: editTemplateDTO.templateName,
+        attributes: editTemplateDTO.attributes,
+      });
 
       await this.eventPublisher.emitAsync(events.pdfTemplate.onEdited, {
         tenantId,

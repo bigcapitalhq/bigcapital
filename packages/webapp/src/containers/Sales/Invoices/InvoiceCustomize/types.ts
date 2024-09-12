@@ -1,4 +1,6 @@
 export interface InvoiceCustomizeValues {
+  templateName: string;
+
   // Colors
   primaryColor?: string;
   secondaryColor?: string;

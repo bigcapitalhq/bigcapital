@@ -1,61 +1,84 @@
 // @ts-nocheck
 import { Classes, Text } from '@blueprintjs/core';
-import { FFormGroup, FSwitch, Group, Stack } from '@/components';
+import {
+  FFormGroup,
+  FieldRequiredHint,
+  FInputGroup,
+  FSwitch,
+  Group,
+  Stack,
+} from '@/components';
 import { FColorInput } from '@/components/Forms/FColorInput';
 import { CreditCardIcon } from '@/icons/CreditCardIcon';
+import { Overlay } from './Overlay';
+import { useIsTemplateNamedFilled } from './utils';
 
 export function InvoiceCustomizeGeneralField() {
+  const isTemplateNameFilled = useIsTemplateNamedFilled();
+
   return (
     <Stack style={{ padding: 20, flex: '1 1 auto' }}>
       <Stack spacing={0}>
         <h2 style={{ fontSize: 16, marginBottom: 10 }}>General Branding</h2>
         <p className={Classes.TEXT_MUTED}>
-          Set your invoice details to be automatically applied every time you
+          Set your invoice details to be automatically applied every timeyou
           create a new invoice.
         </p>
       </Stack>
 
-      <Stack spacing={0}>
-        <FFormGroup
-          name={'primaryColor'}
-          label={'Primary Color'}
-          style={{ justifyContent: 'space-between' }}
-          inline
-          fastField
-        >
-          <FColorInput
+      <FFormGroup
+        name={'templateName'}
+        label={'Template Name'}
+        labelInfo={<FieldRequiredHint />}
+        fastField
+        style={{ marginBottom: 10 }}
+      >
+        <FInputGroup name={'templateName'} fastField />
+      </FFormGroup>
+
+      <Overlay visible={!isTemplateNameFilled}>
+        <Stack spacing={0}>
+          <FFormGroup
             name={'primaryColor'}
-            inputProps={{ style: { maxWidth: 120 } }}
+            label={'Primary Color'}
+            style={{ justifyContent: 'space-between' }}
+            inline
             fastField
-          />
-        </FFormGroup>
+          >
+            <FColorInput
+              name={'primaryColor'}
+              inputProps={{ style: { maxWidth: 120 } }}
+              fastField
+            />
+          </FFormGroup>
 
-        <FFormGroup
-          name={'secondaryColor'}
-          label={'Secondary Color'}
-          style={{ justifyContent: 'space-between' }}
-          inline
-          fastField
-        >
-          <FColorInput
+          <FFormGroup
             name={'secondaryColor'}
-            inputProps={{ style: { maxWidth: 120 } }}
+            label={'Secondary Color'}
+            style={{ justifyContent: 'space-between' }}
+            inline
             fastField
-          />
-        </FFormGroup>
+          >
+            <FColorInput
+              name={'secondaryColor'}
+              inputProps={{ style: { maxWidth: 120 } }}
+              fastField
+            />
+          </FFormGroup>
 
-        <FFormGroup name={'showCompanyLogo'} label={'Logo'} fastField>
-          <FSwitch
-            name={'showCompanyLogo'}
-            label={'Display company logo in the paper'}
-            style={{ fontSize: 14 }}
-            large
-            fastField
-          />
-        </FFormGroup>
-      </Stack>
+          <FFormGroup name={'showCompanyLogo'} label={'Logo'} fastField>
+            <FSwitch
+              name={'showCompanyLogo'}
+              label={'Display company logo in the paper'}
+              style={{ fontSize: 14 }}
+              large
+              fastField
+            />
+          </FFormGroup>
+        </Stack>
 
-      <InvoiceCustomizePaymentManage />
+        <InvoiceCustomizePaymentManage />
+      </Overlay>
     </Stack>
   );
 }

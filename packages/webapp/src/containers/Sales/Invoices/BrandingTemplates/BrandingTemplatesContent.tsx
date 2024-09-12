@@ -2,13 +2,7 @@
 import * as R from 'ramda';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { BrandingTemplatesBoot } from './BrandingTemplatesBoot';
-import {
-  Box,
-  Card,
-  DrawerBody,
-  DrawerHeaderContent,
-  Group,
-} from '@/components';
+import { Box, Card, DrawerHeaderContent, Group } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { BrandingTemplatesTable } from './BrandingTemplatesTable';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

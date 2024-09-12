@@ -10,6 +10,8 @@ import {
   closeSidebarSubmenu,
   openDialog,
   closeDialog,
+  openDrawer,
+  closeDrawer,
 } from '@/store/dashboard/dashboard.actions';
 
 export const useDispatchAction = (action) => {
@@ -75,5 +77,12 @@ export const useDialogActions = () => {
   return {
     openDialog: useDispatchAction(openDialog),
     closeDialog: useDispatchAction(closeDialog),
+  };
+};
+
+export const useDrawerActions = () => {
+  return {
+    openDrawer: useDispatchAction(openDrawer),
+    closeDrawer: useDispatchAction(closeDrawer),
   };
 };

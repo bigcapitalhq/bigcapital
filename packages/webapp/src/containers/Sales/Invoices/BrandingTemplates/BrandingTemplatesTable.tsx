@@ -18,7 +18,6 @@ function BrandingTemplateTableRoot({
 }: BrandingTemplatesTableProps) {
   // Table columns.
   const columns = useBrandingTemplatesColumns();
-
   const { isPdfTemplatesLoading, pdfTemplates } = useBrandingTemplatesBoot();
 
   const handleEditTemplate = (template) => {
@@ -70,7 +69,7 @@ const useBrandingTemplatesColumns = () => {
       Header: 'Template Name',
       accessor: (row) => (
         <Group spacing={10}>
-          {row.template_name} <Tag round>Default</Tag>
+          {row.template_name} {row.default && <Tag round>Default</Tag>}
         </Group>
       ),
       width: 65,
