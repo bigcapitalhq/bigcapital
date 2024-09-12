@@ -1,4 +1,6 @@
-export interface PaymentReceivedCustomizeValues {
+import { BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
+
+export interface PaymentReceivedCustomizeValues extends BrandingTemplateValues {
   // Colors
   primaryColor?: string;
   secondaryColor?: string;

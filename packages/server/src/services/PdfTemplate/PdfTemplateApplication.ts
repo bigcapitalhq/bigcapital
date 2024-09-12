@@ -26,11 +26,13 @@ export class PdfTemplateApplication {
   public async createPdfTemplate(
     tenantId: number,
     templateName: string,
+    resource: string,
     invoiceTemplateDTO: ICreateInvoicePdfTemplateDTO
   ) {
     return this.createPdfTemplateService.createPdfTemplate(
       tenantId,
       templateName,
+      resource,
       invoiceTemplateDTO
     );
   }

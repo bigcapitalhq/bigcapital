@@ -32,7 +32,12 @@ export class PdfTemplatesController extends BaseController {
       this.validationResult,
       this.editPdfTemplate.bind(this)
     );
-    router.get('/', this.getPdfTemplates.bind(this));
+    router.get(
+      '/',
+      [query('resource').optional()],
+      this.validationResult,
+      this.getPdfTemplates.bind(this)
+    );
     router.get(
       '/:template_id',
       [param('template_id').exists().isInt().toInt()],
@@ -41,7 +46,11 @@ export class PdfTemplatesController extends BaseController {
     );
     router.post(
       '/',
-      [check('template_name').exists(), check('attributes').exists()],
+      [
+        check('template_name').exists(),
+        check('resource').exists(),
+        check('attributes').exists(),
+      ],
       this.validationResult,
       this.createPdfInvoiceTemplate.bind(this)
     );
@@ -54,12 +63,13 @@ export class PdfTemplatesController extends BaseController {
     next: NextFunction
   ) {
     const { tenantId } = req;
-    const { templateName, attributes } = this.matchedBodyData(req);
+    const { templateName, resource, attributes } = this.matchedBodyData(req);
 
     try {
       const result = await this.pdfTemplateApplication.createPdfTemplate(
         tenantId,
         templateName,
+        resource,
         attributes
       );
       return res.status(201).send(result);
@@ -117,10 +127,12 @@ export class PdfTemplatesController extends BaseController {
 
   async getPdfTemplates(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+    const query = this.matchedQueryData(req);
 
     try {
       const templates = await this.pdfTemplateApplication.getPdfTemplates(
-        tenantId
+        tenantId,
+        query
       );
       return res.status(200).send(templates);
     } catch (error) {

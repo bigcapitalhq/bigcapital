@@ -4,8 +4,8 @@ import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';
 
-const EstimateCustomizeContent = React.lazy(
-  () => import('./EstimateCustomizeContent'),
+const EstimateCustomizeDrawerBody = React.lazy(
+  () => import('./EstimateCustomizeDrawerBody'),
 );
 
 /**
@@ -22,7 +22,7 @@ function EstimateCustomizeDrawerRoot({
   return (
     <Drawer isOpen={isOpen} name={name} size={'100%'}>
       <DrawerSuspense>
-        <EstimateCustomizeContent />
+        <EstimateCustomizeDrawerBody />
       </DrawerSuspense>
     </Drawer>
   );

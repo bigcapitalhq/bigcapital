@@ -1,16 +1,15 @@
 import { omit } from 'lodash';
-import { useFormikContext } from 'formik';
-import { InvoiceCustomizeValues } from './types';
 import {
   CreatePdfTemplateValues,
   EditPdfTemplateValues,
 } from '@/hooks/query/pdf-templates';
+import { useBrandingTemplateBoot } from './BrandingTemplateBoot';
 import { transformToForm } from '@/utils';
-import { initialValues } from './constants';
-import { useBrandingTemplateBoot } from '@/containers/BrandingTemplates/BrandingTemplateBoot';
+import { BrandingTemplateValues } from './types';
+import { useFormikContext } from 'formik';
 
-export const transformToEditRequest = (
-  values: InvoiceCustomizeValues,
+export const transformToEditRequest = <T extends BrandingTemplateValues>(
+  values: T,
 ): EditPdfTemplateValues => {
   return {
     templateName: values.templateName,
@@ -18,23 +17,28 @@ export const transformToEditRequest = (
   };
 };
 
-export const transformToNewRequest = (
-  values: InvoiceCustomizeValues,
+export const transformToNewRequest = <T extends BrandingTemplateValues>(
+  values: T,
+  resource: string
 ): CreatePdfTemplateValues => {
   return {
-    resource: 'SaleInvoice',
+    resource,
     templateName: values.templateName,
     attributes: omit(values, ['templateName']),
   };
 };
 
 export const useIsTemplateNamedFilled = () => {
-  const { values } = useFormikContext<InvoiceCustomizeValues>();
+  const { values } = useFormikContext<BrandingTemplateValues>();
 
   return values.templateName && values.templateName?.length >= 4;
 };
 
-export const useInvoiceCustomizeInitialValues = (): InvoiceCustomizeValues => {
+export const useBrandingTemplateFormInitialValues = <
+  T extends BrandingTemplateValues,
+>(
+  initialValues = {},
+) => {
   const { pdfTemplate } = useBrandingTemplateBoot();
 
   const defaultPdfTemplate = {
@@ -43,9 +47,6 @@ export const useInvoiceCustomizeInitialValues = (): InvoiceCustomizeValues => {
   };
   return {
     ...initialValues,
-    ...(transformToForm(
-      defaultPdfTemplate,
-      initialValues,
-    ) as InvoiceCustomizeValues),
+    ...(transformToForm(defaultPdfTemplate, initialValues) as T),
   };
 };

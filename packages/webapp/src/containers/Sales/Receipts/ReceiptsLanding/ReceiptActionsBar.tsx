@@ -115,7 +115,7 @@ function ReceiptActionsBar({
   };
   // Handle customize button click.
   const handleCustomizeBtnClick = () => {
-    openDrawer(DRAWERS.RECEIPT_CUSTOMIZE);
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleReceipt' });
   };
 
   return (
@@ -198,7 +198,7 @@ function ReceiptActionsBar({
             <Menu>
               <MenuItem
                 onClick={handleCustomizeBtnClick}
-                text={'Customize Receipt'}
+                text={'Customize Template'}
               />
             </Menu>
           }

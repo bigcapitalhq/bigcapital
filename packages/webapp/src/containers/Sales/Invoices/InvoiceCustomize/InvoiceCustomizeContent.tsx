@@ -1,8 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
-import { AppToaster } from '@/components';
-import { Intent } from '@blueprintjs/core';
-import { FormikHelpers, useFormikContext } from 'formik';
+import { useFormikContext } from 'formik';
 import {
   InvoicePaperTemplate,
   InvoicePaperTemplateProps,
@@ -11,70 +9,29 @@ import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { InvoiceCustomizeGeneralField } from './InvoiceCustomizeGeneralFields';
 import { InvoiceCustomizeContentFields } from './InvoiceCutomizeContentFields';
 import { InvoiceCustomizeValues } from './types';
-import {
-  useCreatePdfTemplate,
-  useEditPdfTemplate,
-} from '@/hooks/query/pdf-templates';
-import {
-  transformToEditRequest,
-  transformToNewRequest,
-  useInvoiceCustomizeInitialValues,
-} from './utils';
 import { InvoiceCustomizeSchema } from './InvoiceCustomizeForm.schema';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
+import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
+import { initialValues } from './constants';
 
 export function InvoiceCustomizeContent() {
-  const { mutateAsync: createPdfTemplate } = useCreatePdfTemplate();
-  const { mutateAsync: editPdfTemplate } = useEditPdfTemplate();
-
   const { payload, name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
 
   const templateId = payload?.templateId || null;
 
-  const handleFormSubmit = (
-    values: InvoiceCustomizeValues,
-    { setSubmitting }: FormikHelpers<InvoiceCustomizeValues>,
-  ) => {
-    const handleSuccess = (message: string) => {
-      AppToaster.show({ intent: Intent.SUCCESS, message });
-      setSubmitting(false);
-      closeDrawer(name);
-    };
-    const handleError = (message: string) => {
-      AppToaster.show({ intent: Intent.DANGER, message });
-      setSubmitting(false);
-    };
-    if (templateId) {
-      const reqValues = transformToEditRequest(values);
-      setSubmitting(true);
-
-      // Edit existing template
-      editPdfTemplate({ templateId, values: reqValues })
-        .then(() => handleSuccess('PDF template updated successfully!'))
-        .catch(() =>
-          handleError('An error occurred while updating the PDF template.'),
-        );
-    } else {
-      const reqValues = transformToNewRequest(values);
-      setSubmitting(true);
-
-      // Create new template
-      createPdfTemplate(reqValues)
-        .then(() => handleSuccess('PDF template created successfully!'))
-        .catch(() =>
-          handleError('An error occurred while creating the PDF template.'),
-        );
-    }
+  const handleSuccess = () => {
+    closeDrawer(name);
   };
-  const initialValues = useInvoiceCustomizeInitialValues();
 
   return (
-    <ElementCustomize<InvoiceCustomizeValues>
-      initialValues={initialValues}
+    <BrandingTemplateForm<InvoiceCustomizeValues>
+      templateId={templateId}
+      defaultValues={initialValues}
       validationSchema={InvoiceCustomizeSchema}
-      onSubmit={handleFormSubmit}
+      onSuccess={handleSuccess}
+      resource={'SaleInvoice'}
     >
       <ElementCustomize.PaperTemplate>
         <InvoicePaperTemplateFormConnected />
@@ -91,7 +48,7 @@ export function InvoiceCustomizeContent() {
       <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
         asdfasdfdsaf #3
       </ElementCustomize.FieldsTab>
-    </ElementCustomize>
+    </BrandingTemplateForm>
   );
 }
 

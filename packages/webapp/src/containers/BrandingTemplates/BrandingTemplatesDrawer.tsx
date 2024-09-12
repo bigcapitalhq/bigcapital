@@ -16,12 +16,13 @@ function BrandingTemplatesDrawerRoot({
   name,
   // #withDrawer
   isOpen,
-  payload: {},
+  payload,
 }) {
   return (
     <Drawer
       isOpen={isOpen}
       name={name}
+      payload={payload}
       size={'600px'}
       style={{ borderLeftColor: '#cbcbcb' }}
     >

@@ -1,5 +1,6 @@
 import React, { createContext } from 'react';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 interface BrandingTemplatesBootValues {
   pdfTemplates: any;
@@ -15,8 +16,11 @@ interface BrandingTemplatesBootProps {
 }
 
 function BrandingTemplatesBoot({ ...props }: BrandingTemplatesBootProps) {
+  const { payload } = useDrawerContext();
+  const resource = payload?.resource || null;
+
   const { data: pdfTemplates, isLoading: isPdfTemplatesLoading } =
-    useGetPdfTemplates();
+    useGetPdfTemplates({ resource });
 
   const provider = {
     pdfTemplates,

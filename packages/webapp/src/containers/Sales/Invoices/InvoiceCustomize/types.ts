@@ -1,6 +1,6 @@
-export interface InvoiceCustomizeValues {
-  templateName: string;
+import { BrandingTemplateValues } from "@/containers/BrandingTemplates/types";
 
+export interface InvoiceCustomizeValues extends BrandingTemplateValues {
   // Colors
   primaryColor?: string;
   secondaryColor?: string;

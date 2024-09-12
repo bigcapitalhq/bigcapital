@@ -1,18 +1,17 @@
-// @ts-nocheck
+import { Box } from '@/components';
 import { Classes } from '@blueprintjs/core';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { InvoiceCustomizeContent } from './InvoiceCustomizeContent';
+import { PaymentReceivedCustomizeContent } from './PaymentReceivedCustomizeContent';
 import { BrandingTemplateBoot } from '@/containers/BrandingTemplates/BrandingTemplateBoot';
-import { Box } from '@/components';
 
-export default function InvoiceCustomize() {
+export default function PaymentReceivedCustomize() {
   const { payload } = useDrawerContext();
   const templateId = payload.templateId;
 
   return (
     <Box className={Classes.DRAWER_BODY}>
       <BrandingTemplateBoot templateId={templateId}>
-        <InvoiceCustomizeContent />
+        <PaymentReceivedCustomizeContent />
       </BrandingTemplateBoot>
     </Box>
   );

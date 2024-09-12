@@ -101,7 +101,7 @@ function CreditNotesActionsBar({
   };
   // Handle the customize button click.
   const handleCustomizeBtnClick = () => {
-    openDrawer(DRAWERS.CREDIT_NOTE_CUSTOMIZE);
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'CreditNote' });
   }
 
   return (
@@ -174,7 +174,7 @@ function CreditNotesActionsBar({
             <Menu>
               <MenuItem
                 onClick={handleCustomizeBtnClick}
-                text={'Customize Invoice'}
+                text={'Customize Templates'}
               />
             </Menu>
           }

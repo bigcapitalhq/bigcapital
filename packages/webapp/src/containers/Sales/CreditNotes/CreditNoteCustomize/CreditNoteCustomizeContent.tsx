@@ -1,39 +1,35 @@
-import { Box } from '@/components';
-import { Classes } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { CreditNoteCustomizeGeneralField } from './CreditNoteCustomizeGeneralFields';
 import { CreditNoteCustomizeContentFields } from './CreditNoteCutomizeContentFields';
 import { CreditNotePaperTemplate } from './CreditNotePaperTemplate';
 import { CreditNoteCustomizeValues } from './types';
 import { initialValues } from './constants';
-import { useFormikContext } from 'formik';
 
-export default function CreditNoteCustomizeContent() {
+export function CreditNoteCustomizeContent() {
   const handleFormSubmit = (values: CreditNoteCustomizeValues) => {};
 
   return (
-    <Box className={Classes.DRAWER_BODY}>
-      <ElementCustomize<CreditNoteCustomizeValues>
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
-      >
-        <ElementCustomize.PaperTemplate>
-          <CreditNotePaperTemplateFormConnected />
-        </ElementCustomize.PaperTemplate>
+    <ElementCustomize<CreditNoteCustomizeValues>
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
+    >
+      <ElementCustomize.PaperTemplate>
+        <CreditNotePaperTemplateFormConnected />
+      </ElementCustomize.PaperTemplate>
 
-        <ElementCustomize.FieldsTab id={'general'} label={'General'}>
-          <CreditNoteCustomizeGeneralField />
-        </ElementCustomize.FieldsTab>
+      <ElementCustomize.FieldsTab id={'general'} label={'General'}>
+        <CreditNoteCustomizeGeneralField />
+      </ElementCustomize.FieldsTab>
 
-        <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
-          <CreditNoteCustomizeContentFields />
-        </ElementCustomize.FieldsTab>
+      <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
+        <CreditNoteCustomizeContentFields />
+      </ElementCustomize.FieldsTab>
 
-        <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
-          asdfasdfdsaf #3
-        </ElementCustomize.FieldsTab>
-      </ElementCustomize>
-    </Box>
+      <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
+        asdfasdfdsaf #3
+      </ElementCustomize.FieldsTab>
+    </ElementCustomize>
   );
 }
 

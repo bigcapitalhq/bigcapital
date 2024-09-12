@@ -1,6 +1,13 @@
 // @ts-nocheck
 import { Classes, Text } from '@blueprintjs/core';
-import { FFormGroup, FSwitch, Group, Stack } from '@/components';
+import {
+  FFormGroup,
+  FInputGroup,
+  FSwitch,
+  FieldRequiredHint,
+  Group,
+  Stack,
+} from '@/components';
 import { FColorInput } from '@/components/Forms/FColorInput';
 // import styles from './InvoiceCustomizeFields.module.scss';
 
@@ -10,10 +17,20 @@ export function EstimateCustomizeGeneralField() {
       <Stack spacing={0}>
         <h2 style={{ fontSize: 16, marginBottom: 10 }}>General Branding</h2>
         <p className={Classes.TEXT_MUTED}>
-          Set your invoice details to be automatically applied every time you
+          Set your invoice details to be automatically applied every timeyou
           create a new invoice.
         </p>
       </Stack>
+
+      <FFormGroup
+        name={'templateName'}
+        label={'Template Name'}
+        labelInfo={<FieldRequiredHint />}
+        fastField
+        style={{ marginBottom: 10 }}
+      >
+        <FInputGroup name={'templateName'} fastField />
+      </FFormGroup>
 
       <Stack spacing={0}>
         <FFormGroup

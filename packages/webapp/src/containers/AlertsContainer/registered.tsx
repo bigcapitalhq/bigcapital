@@ -29,7 +29,7 @@ import { CashflowAlerts } from '../CashFlow/CashflowAlerts';
 import { BankRulesAlerts } from '../Banking/Rules/RulesList/BankRulesAlerts';
 import { SubscriptionAlerts } from '../Subscriptions/alerts/alerts';
 import { BankAccountAlerts } from '@/containers/CashFlow/AccountTransactions/alerts';
-import { BrandingTemplatesAlerts } from '../Sales/Invoices/BrandingTemplates/alerts/BrandingTemplatesAlerts';
+import { BrandingTemplatesAlerts } from '../BrandingTemplates/alerts/BrandingTemplatesAlerts';
 
 export default [
   ...AccountsAlerts,

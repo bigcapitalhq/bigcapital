@@ -1,40 +1,49 @@
-import React from 'react';
-import { Box } from '@/components';
 import { Classes } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import { Box } from '@/components';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { EstimateCustomizeGeneralField } from './EstimateCustomizeFieldsGeneral';
 import { EstimateCustomizeContentFields } from './EstimateCustomizeFieldsContent';
 import { EstimatePaperTemplate } from './EstimatePaperTemplate';
 import { EstimateCustomizeValues } from './types';
 import { initialValues } from './constants';
-import { useFormikContext } from 'formik';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useDrawerActions } from '@/hooks/state';
+import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
 
-export default function EstimateCustomizeContent() {
-  const handleFormSubmit = (values: EstimateCustomizeValues) => {};
+export function EstimateCustomizeContent() {
+  const { payload, name } = useDrawerContext();
+  const { closeDrawer } = useDrawerActions();
+
+  const templateId = payload?.templateId || null;
+
+  const handleSuccess = () => {
+    closeDrawer(name);
+  };
 
   return (
-    <Box className={Classes.DRAWER_BODY}>
-      <ElementCustomize<EstimateCustomizeValues>
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
-      >
-        <ElementCustomize.PaperTemplate>
-          <EstimatePaperTemplateFormConnected />
-        </ElementCustomize.PaperTemplate>
+    <BrandingTemplateForm<EstimateCustomizeValues>
+      templateId={templateId}
+      defaultValues={initialValues}
+      onSuccess={handleSuccess}
+      resource={'SaleEstimate'}
+    >
+      <ElementCustomize.PaperTemplate>
+        <EstimatePaperTemplateFormConnected />
+      </ElementCustomize.PaperTemplate>
 
-        <ElementCustomize.FieldsTab id={'general'} label={'General'}>
-          <EstimateCustomizeGeneralField />
-        </ElementCustomize.FieldsTab>
+      <ElementCustomize.FieldsTab id={'general'} label={'General'}>
+        <EstimateCustomizeGeneralField />
+      </ElementCustomize.FieldsTab>
 
-        <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
-          <EstimateCustomizeContentFields />
-        </ElementCustomize.FieldsTab>
+      <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
+        <EstimateCustomizeContentFields />
+      </ElementCustomize.FieldsTab>
 
-        <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
-          asdfasdfdsaf #3
-        </ElementCustomize.FieldsTab>
-      </ElementCustomize>
-    </Box>
+      <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
+        asdfasdfdsaf #3
+      </ElementCustomize.FieldsTab>
+    </BrandingTemplateForm>
   );
 }
 

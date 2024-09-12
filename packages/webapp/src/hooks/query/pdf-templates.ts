@@ -153,12 +153,16 @@ export const useGetPdfTemplate = (
 
 // Hook for getting multiple PDF templates
 export const useGetPdfTemplates = (
+  query?: { resource: string },
   options?: UseQueryOptions<GetPdfTemplatesResponse, Error>,
 ): UseQueryResult<GetPdfTemplatesResponse, Error> => {
   const apiRequest = useApiRequest();
   return useQuery<GetPdfTemplatesResponse, Error>(
-    PdfTemplatesQueryKey,
-    () => apiRequest.get('/pdf-templates').then((res) => res.data),
+    [PdfTemplatesQueryKey, query],
+    () =>
+      apiRequest
+        .get('/pdf-templates', { params: query })
+        .then((res) => res.data),
     options,
   );
 };

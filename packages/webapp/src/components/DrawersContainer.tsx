@@ -28,7 +28,7 @@ import { EstimateCustomizeDrawer } from '@/containers/Sales/Estimates/EstimateCu
 import { ReceiptCustomizeDrawer } from '@/containers/Sales/Receipts/ReceiptCustomize/ReceiptCustomizeDrawer';
 import { CreditNoteCustomizeDrawer } from '@/containers/Sales/CreditNotes/CreditNoteCustomize/CreditNoteCustomizeDrawer';
 import { PaymentReceivedCustomizeDrawer } from '@/containers/Sales/PaymentsReceived/PaymentReceivedCustomize/PaymentReceivedCustomizeDrawer';
-import { BrandingTemplatesDrawer } from '@/containers/Sales/Invoices/BrandingTemplates/BrandingTemplatesDrawer';
+import { BrandingTemplatesDrawer } from '@/containers/BrandingTemplates/BrandingTemplatesDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
 

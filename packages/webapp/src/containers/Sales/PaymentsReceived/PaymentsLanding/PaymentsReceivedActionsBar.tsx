@@ -113,7 +113,7 @@ function PaymentsReceivedActionsBar({
   };
   // Handle the customize button click.
   const handleCustomizeBtnClick = () => {
-    openDrawer(DRAWERS.PAYMENT_RECEIVED_CUSTOMIZE);
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'PaymentReceive' });
   };
 
   return (
@@ -195,7 +195,7 @@ function PaymentsReceivedActionsBar({
             <Menu>
               <MenuItem
                 onClick={handleCustomizeBtnClick}
-                text={'Customize Invoice'}
+                text={'Customize Templates'}
               />
             </Menu>
           }

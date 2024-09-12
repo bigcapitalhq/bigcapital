@@ -1,4 +1,6 @@
 export const initialValues = {
+  templateName: '',
+
   // Colors
   primaryColor: '#2c3dd8',
   secondaryColor: '#2c3dd8',

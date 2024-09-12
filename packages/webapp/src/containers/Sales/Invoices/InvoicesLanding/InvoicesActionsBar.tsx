@@ -109,7 +109,7 @@ function InvoiceActionsBar({
 
   // Handles the invoice customize button click.
   const handleCustomizeBtnClick = () => {
-    openDrawer(DRAWERS.BRANDING_TEMPLATES);
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleInvoice' });
   };
 
   return (
@@ -190,7 +190,7 @@ function InvoiceActionsBar({
             <Menu>
               <MenuItem
                 onClick={handleCustomizeBtnClick}
-                text={'Invoice Templates'}
+                text={'Customize Templates'}
               />
             </Menu>
           }

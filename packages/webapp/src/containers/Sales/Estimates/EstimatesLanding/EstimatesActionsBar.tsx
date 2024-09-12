@@ -108,7 +108,7 @@ function EstimateActionsBar({
   };
   // Handle customize button clicl.
   const handleCustomizeBtnClick = () => {
-    openDrawer(DRAWERS.ESTIMATE_CUSTOMIZE);
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleEstimate' });
   };
 
   return (
@@ -192,7 +192,7 @@ function EstimateActionsBar({
             <Menu>
               <MenuItem
                 onClick={handleCustomizeBtnClick}
-                text={'Customize Estimate'}
+                text={'Customize Templates'}
               />
             </Menu>
           }

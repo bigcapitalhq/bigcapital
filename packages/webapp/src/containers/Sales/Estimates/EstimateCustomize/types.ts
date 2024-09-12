@@ -1,4 +1,6 @@
-export interface EstimateCustomizeValues {
+import { BrandingTemplateValues } from "@/containers/BrandingTemplates/types";
+
+export interface EstimateCustomizeValues extends BrandingTemplateValues {
   // Colors
   primaryColor?: string;
   secondaryColor?: string;

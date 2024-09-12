@@ -24,10 +24,10 @@ export class CreatePdfTemplate {
   public createPdfTemplate(
     tenantId: number,
     templateName: string,
+    resource: string,
     invoiceTemplateDTO: ICreateInvoicePdfTemplateDTO
   ) {
     const { PdfTemplate } = this.tennacy.models(tenantId);
-    const resource = 'SaleInvoice';
     const attributes = invoiceTemplateDTO;
 
     return this.uow.withTransaction(tenantId, async (trx) => {
