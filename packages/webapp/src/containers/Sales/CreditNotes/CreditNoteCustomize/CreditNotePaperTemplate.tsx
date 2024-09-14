@@ -5,8 +5,12 @@ import {
 } from '../../Invoices/InvoiceCustomize/PaperTemplate';
 
 export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
+  // Address
   billedToAddress?: Array<string>;
   billedFromAddress?: Array<string>;
+  showBilledToAddress?: boolean;
+  showBilledFromAddress?: boolean;
+  billedToLabel?: string;
 
   // Total
   total?: string;
@@ -28,6 +32,7 @@ export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
   termsConditions?: string;
   termsConditionsLabel?: string;
 
+  // Lines
   lines?: Array<{
     item: string;
     description: string;
@@ -52,7 +57,9 @@ export function CreditNotePaperTemplate({
   secondaryColor,
   showCompanyLogo = true,
   companyLogo,
+  companyName = 'Bigcapital Technology, Inc.',
 
+  // Address
   billedToAddress = [
     'Bigcapital Technology, Inc.',
     '131 Continental Dr Suite 305 Newark,',
@@ -68,18 +75,26 @@ export function CreditNotePaperTemplate({
     '+1 762-339-5634',
     'ahmed@bigcapital.app',
   ],
+  showBilledToAddress = true,
+  showBilledFromAddress = true,
+  billedToLabel = 'Billed To',
+
+  // Total
   total = '$1000.00',
   totalLabel = 'Total',
   showTotal = true,
 
+  // Subtotal
   subtotal = '1000/00',
   subtotalLabel = 'Subtotal',
   showSubtotal = true,
 
+  // Customer note
   showCustomerNote = true,
   customerNote = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
   customerNoteLabel = 'Customer Note',
 
+  // Terms & conditions
   showTermsConditions = true,
   termsConditions = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
   termsConditionsLabel = 'Terms & Conditions',
@@ -93,10 +108,12 @@ export function CreditNotePaperTemplate({
       total: '$1000.00',
     },
   ],
+  // Credit note number.
   showCreditNoteNumber = true,
   creditNoteNumberLabel = 'Credit Note Number',
   creditNoteNumebr = '346D3D40-0001',
 
+  // Credit note date.
   creditNoteDate = 'September 3, 2024',
   showCreditNoteDate = true,
   creditNoteDateLabel = 'Credit Note Date',
@@ -116,7 +133,6 @@ export function CreditNotePaperTemplate({
               {creditNoteNumebr}
             </PaperTemplate.TermsItem>
           )}
-
           {showCreditNoteDate && (
             <PaperTemplate.TermsItem label={creditNoteDateLabel}>
               {creditNoteDate}
@@ -125,8 +141,16 @@ export function CreditNotePaperTemplate({
         </PaperTemplate.TermsList>
 
         <Group spacing={10}>
-          <PaperTemplate.Address items={billedToAddress} />
-          <PaperTemplate.Address items={billedFromAddress} />
+          {showBilledFromAddress && (
+            <PaperTemplate.Address
+              items={[<strong>{companyName}</strong>, ...billedFromAddress]}
+            />
+          )}
+          {showBilledToAddress && (
+            <PaperTemplate.Address
+              items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
+            />
+          )}
         </Group>
 
         <Stack spacing={0}>

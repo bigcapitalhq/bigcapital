@@ -18,7 +18,6 @@ import { initialValues } from './constants';
 export function InvoiceCustomizeContent() {
   const { payload, name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
-
   const templateId = payload?.templateId || null;
 
   const handleSuccess = () => {

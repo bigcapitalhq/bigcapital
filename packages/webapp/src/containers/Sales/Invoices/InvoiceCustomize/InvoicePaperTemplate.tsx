@@ -214,7 +214,9 @@ export function InvoicePaperTemplate({
             />
           )}
           {showBillingToAddress && (
-            <PaperTemplate.Address items={billedToAddress} />
+            <PaperTemplate.Address
+              items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
+            />
           )}
         </Group>
 

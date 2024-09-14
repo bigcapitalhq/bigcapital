@@ -10,6 +10,11 @@ export const initialValues = {
   companyLogo:
     'https://cdn-development.mercury.com/demo-assets/avatars/mercury-demo-dark.png',
 
+  // Address
+  showBilledToAddress: true,
+  showBilledFromAddress: true,
+  billedToLabel: 'Bill To',
+
   // Entries
   itemNameLabel: 'Item',
   itemDescriptionLabel: 'Description',
@@ -54,6 +59,15 @@ export const fieldsGroups = [
         labelKey: 'creditNoteNumberLabel',
         enableKey: 'showCreditNoteNumber',
         label: 'Credit Note #',
+      },
+      {
+        enableKey: 'showBilledToAddress',
+        labelKey: 'billedToLabel',
+        label: 'Bill To',
+      },
+      {
+        enableKey: 'showBilledFromAddress',
+        label: 'Billed From',
       },
     ],
   },

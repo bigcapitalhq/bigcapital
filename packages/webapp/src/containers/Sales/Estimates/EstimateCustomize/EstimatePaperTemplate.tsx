@@ -25,6 +25,7 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
 
   showBilledFromAddress?: boolean;
   billedFromAddress?: Array<string>;
+  billedToLabel?: string;
 
   // Totals
   total?: string;
@@ -77,6 +78,7 @@ export function EstimatePaperTemplate({
   ],
   showBilledFromAddress = true,
   showBilledToAddress = true,
+  billedToLabel = 'Billed To',
 
   total = '$1000.00',
   totalLabel = 'Total',
@@ -151,7 +153,9 @@ export function EstimatePaperTemplate({
             />
           )}
           {showBilledToAddress && (
-            <PaperTemplate.Address items={billedToAddress} />
+            <PaperTemplate.Address
+              items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
+            />
           )}
         </Group>
 
