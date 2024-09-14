@@ -63,6 +63,7 @@ function ElementCustomizeFooterActionsRoot({ closeDrawer }) {
         intent={Intent.PRIMARY}
         style={{ minWidth: 75 }}
         loading={isSubmitting}
+        type={'submit'}
       >
         Save
       </Button>
