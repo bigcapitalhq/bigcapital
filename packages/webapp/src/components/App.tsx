@@ -32,7 +32,9 @@ const RegisterVerify = lazy(
 const OneClickDemoPage = lazy(
   () => import('@/containers/OneClickDemo/OneClickDemoPage'),
 );
-
+const PaymentPortalPage = lazy(
+  () => import('@/containers/PaymentPortal/PaymentPortalPage'),
+);
 /**
  * App inner.
  */
@@ -57,6 +59,7 @@ function AppInsider({ history }) {
                 children={<EmailConfirmation />}
               />
               <Route path={'/auth'} children={<AuthenticationPage />} />
+              <Route path={'/payment'} children={<PaymentPortalPage />} />
               <Route path={'/'} children={<DashboardPrivatePages />} />
             </Switch>
           </Router>
