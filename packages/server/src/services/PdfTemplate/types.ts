@@ -1,3 +1,6 @@
+export enum ERRORS {
+  CANNOT_DELETE_PREDEFINED_PDF_TEMPLATE = 'CANNOT_DELETE_PREDEFINED_PDF_TEMPLATE',
+}
 export interface ICreateInvoicePdfTemplateDTO {
   // Colors
   primaryColor?: string;

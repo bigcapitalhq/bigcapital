@@ -1,8 +1,10 @@
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
 import UnitOfWork from '../UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { ServiceError } from '@/exceptions';
+import { ERRORS } from './types';
 
 @Service()
 export class DeletePdfTemplate {
@@ -18,16 +20,26 @@ export class DeletePdfTemplate {
   /**
    * Deletes a pdf template.
    * @param {number} tenantId
-   * @param {number} templateId
+   * @param {number} templateId - Pdf template id.
    */
-  public deletePdfTemplate(tenantId: number, templateId: number) {
+  public async deletePdfTemplate(tenantId: number, templateId: number) {
     const { PdfTemplate } = this.tenancy.models(tenantId);
 
+    const oldPdfTemplate = await PdfTemplate.query()
+      .findById(templateId)
+      .throwIfNotFound();
+
+    // Cannot delete the predefined pdf templates.
+    if (oldPdfTemplate.predefined) {
+      throw new ServiceError(ERRORS.CANNOT_DELETE_PREDEFINED_PDF_TEMPLATE);
+    }
     return this.uow.withTransaction(tenantId, async (trx) => {
       // Triggers `onPdfTemplateDeleting` event.
       await this.eventPublisher.emitAsync(events.pdfTemplate.onDeleting, {
         tenantId,
         templateId,
+        oldPdfTemplate,
+        trx,
       });
       await PdfTemplate.query(trx).deleteById(templateId);
 
@@ -35,6 +47,8 @@ export class DeletePdfTemplate {
       await this.eventPublisher.emitAsync(events.pdfTemplate.onDeleted, {
         tenantId,
         templateId,
+        oldPdfTemplate,
+        trx,
       });
     });
   }

@@ -3,7 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 import { Alert, Intent } from '@blueprintjs/core';
-import { useDeletePdfTemplate} from '@/hooks/query/pdf-templates';
+import { useDeletePdfTemplate } from '@/hooks/query/pdf-templates';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -35,13 +35,30 @@ function DeleteBrandingTemplateAlert({
         });
         closeAlert(name);
       })
-      .catch((error) => {
-        AppToaster.show({
-          message: 'Something went wrong.',
-          intent: Intent.DANGER,
-        });
-        closeAlert(name);
-      });
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          if (
+            errors.find(
+              (error) => error.type === 'CANNOT_DELETE_PREDEFINED_PDF_TEMPLATE',
+            )
+          ) {
+            AppToaster.show({
+              message: 'Cannot delete a predefined branding template.',
+              intent: Intent.DANGER,
+            });
+          } else {
+            AppToaster.show({
+              message: 'Something went wrong.',
+              intent: Intent.DANGER,
+            });
+          }
+          closeAlert(name);
+        },
+      );
   };
 
   const handleCancel = () => {
@@ -57,9 +74,7 @@ function DeleteBrandingTemplateAlert({
       onCancel={handleCancel}
       onConfirm={handleConfirmDelete}
     >
-      <p>
-        Are you sure want to delete branding template?
-      </p>
+      <p>Are you sure want to delete branding template?</p>
     </Alert>
   );
 }
@@ -68,5 +83,3 @@ export default compose(
   withAlertStoreConnect(),
   withAlertActions,
 )(DeleteBrandingTemplateAlert);
-
-
