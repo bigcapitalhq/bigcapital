@@ -25,7 +25,7 @@ export const initialValues = {
 
   // Addresses
   showBilledFromAddress: true,
-  showBillingToAddress: true,
+  showBilledToAddress: true,
   billedToLabel: 'Billed To',
 
   // Entries
@@ -55,7 +55,7 @@ export const fieldsGroups = [
     fields: [
       {
         labelKey: 'estimateNumberLabel',
-        enableKey: 'showEstimateeNumber',
+        enableKey: 'showEstimateNumber',
         label: 'Estimate No.',
       },
       {
@@ -65,11 +65,11 @@ export const fieldsGroups = [
       },
       {
         labelKey: 'expirationDateLabel',
-        enableKey: 'expirationDueDate',
+        enableKey: 'showExpirationDate',
         label: 'Expiration Date',
       },
       {
-        enableKey: 'showBillingToAddress',
+        enableKey: 'showBilledToAddress',
         labelKey: 'billedToLabel',
         label: 'Bill To',
       },

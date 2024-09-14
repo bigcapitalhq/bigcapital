@@ -9,10 +9,11 @@ export interface ReceiptCustomizeValues extends BrandingTemplateValues {
   showCompanyLogo?: boolean;
   companyLogo?: string;
 
-  // Top details.
+  // Receipt Number
   showReceiptNumber?: boolean;
   receiptNumberLabel?: string;
 
+  // Receipt Date.
   showReceiptDate?: boolean;
   receiptDateLabel?: string;
 
@@ -21,7 +22,7 @@ export interface ReceiptCustomizeValues extends BrandingTemplateValues {
 
   // Addresses
   showBilledFromAddress?: boolean;
-  showBillingToAddress?: boolean;
+  showBilledToAddress?: boolean;
   billedToLabel?: string;
 
   // Entries
@@ -30,17 +31,19 @@ export interface ReceiptCustomizeValues extends BrandingTemplateValues {
   itemRateLabel?: string;
   itemTotalLabel?: string;
 
-  // Totals
+  // Subtotal
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
+  // Total
   showTotal?: boolean;
   totalLabel?: string;
 
-  // Statements
+  // Terms & Conditions
   termsConditionsLabel?: string;
   showTermsConditions?: boolean;
 
+  // Statement
   customerNoteLabel?: string;
   showCustomerNote?: boolean;
 }

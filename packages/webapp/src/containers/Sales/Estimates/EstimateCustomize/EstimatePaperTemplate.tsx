@@ -58,6 +58,7 @@ export function EstimatePaperTemplate({
   secondaryColor,
   showCompanyLogo = true,
   companyLogo,
+  companyName,
 
   billedToAddress = [
     'Bigcapital Technology, Inc.',
@@ -74,6 +75,9 @@ export function EstimatePaperTemplate({
     '+1 762-339-5634',
     'ahmed@bigcapital.app',
   ],
+  showBilledFromAddress = true,
+  showBilledToAddress = true,
+
   total = '$1000.00',
   totalLabel = 'Total',
   showTotal = true,
@@ -141,8 +145,14 @@ export function EstimatePaperTemplate({
         </PaperTemplate.TermsList>
 
         <Group spacing={10}>
-          <PaperTemplate.Address items={billedToAddress} />
-          <PaperTemplate.Address items={billedFromAddress} />
+          {showBilledFromAddress && (
+            <PaperTemplate.Address
+              items={[<strong>{companyName}</strong>, ...billedFromAddress]}
+            />
+          )}
+          {showBilledToAddress && (
+            <PaperTemplate.Address items={billedToAddress} />
+          )}
         </Group>
 
         <Stack spacing={0}>
@@ -150,8 +160,8 @@ export function EstimatePaperTemplate({
             columns={[
               { label: 'Item', accessor: 'item' },
               { label: 'Description', accessor: 'item' },
-              { label: 'Rate', accessor: 'rate' },
-              { label: 'Total', accessor: 'total' },
+              { label: 'Rate', accessor: 'rate', align: 'right' },
+              { label: 'Total', accessor: 'total', align: 'right' },
             ]}
             data={lines}
           />

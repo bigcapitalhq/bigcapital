@@ -23,7 +23,7 @@ export const initialValues = {
 
   // Addresses
   showBilledFromAddress: true,
-  showBillingToAddress: true,
+  showBilledToAddress: true,
   billedToLabel: 'Billed To',
 
   // Entries
@@ -48,3 +48,56 @@ export const initialValues = {
   customerNoteLabel: 'Customer Note',
   showCustomerNote: true,
 };
+
+export const fieldsGroups = [
+  {
+    label: 'Header',
+    fields: [
+      {
+        labelKey: 'receiptNumberLabel',
+        enableKey: 'showReceiptNumber',
+        label: 'Receipt Number',
+      },
+      {
+        labelKey: 'receiptDateLabel',
+        enableKey: 'showReceiptDate',
+        label: 'Receipt Date',
+      },
+      {
+        enableKey: 'showBilledToAddress',
+        labelKey: 'billedToLabel',
+        label: 'Bill To',
+      },
+      {
+        enableKey: 'showBilledFromAddress',
+        label: 'Billed From',
+      },
+    ],
+  },
+  {
+    label: 'Totals',
+    fields: [
+      {
+        labelKey: 'subtotalLabel',
+        enableKey: 'showSubtotal',
+        label: 'Subtotal',
+      },
+      { labelKey: 'totalLabel', enableKey: 'showTotal', label: 'Total' },
+    ],
+  },
+  {
+    label: 'Statements',
+    fields: [
+      {
+        enableKey: 'showCustomerNote',
+        labelKey: 'customerNoteLabel',
+        label: 'Customer Note',
+      },
+      {
+        enableKey: 'showTermsConditions',
+        labelKey: 'termsConditionsLabel',
+        label: 'Terms & Conditions',
+      },
+    ],
+  },
+];

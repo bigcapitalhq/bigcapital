@@ -1,5 +1,8 @@
 import { Group, Stack } from '@/components';
-import { PaperTemplate, PaperTemplateProps } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import {
+  PaperTemplate,
+  PaperTemplateProps,
+} from '../../Invoices/InvoiceCustomize/PaperTemplate';
 
 export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
   billedToAddress?: Array<string>;
@@ -131,8 +134,8 @@ export function CreditNotePaperTemplate({
             columns={[
               { label: 'Item', accessor: 'item' },
               { label: 'Description', accessor: 'item' },
-              { label: 'Rate', accessor: 'rate' },
-              { label: 'Total', accessor: 'total' },
+              { label: 'Rate', accessor: 'rate', align: 'right' },
+              { label: 'Total', accessor: 'total', align: 'right' },
             ]}
             data={lines}
           />

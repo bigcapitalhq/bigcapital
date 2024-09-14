@@ -1,26 +1,38 @@
 import { Group, Stack } from '@/components';
-import { PaperTemplate, PaperTemplateProps } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import {
+  PaperTemplate,
+  PaperTemplateProps,
+} from '../../Invoices/InvoiceCustomize/PaperTemplate';
 
 export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
+  // Addresses
   billedToAddress?: Array<string>;
   billedFromAddress?: Array<string>;
+  showBilledFromAddress?: boolean;
+  showBilledToAddress?: boolean;
+  billedToLabel?: string;
 
+  // Total
   total?: string;
   showTotal?: boolean;
   totalLabel?: string;
 
+  // Subtotal
   subtotal?: string;
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
+// Customer Note
   showCustomerNote?: boolean;
   customerNote?: string;
   customerNoteLabel?: string;
 
+  // Terms & Conditions
   showTermsConditions?: boolean;
   termsConditions?: string;
   termsConditionsLabel?: string;
 
+  // Lines
   lines?: Array<{
     item: string;
     description: string;
@@ -29,10 +41,12 @@ export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
     total: string;
   }>;
 
+  // Receipt Date.
   receiptDateLabel?: string;
   showReceiptDate?: boolean;
   receiptDate?: string;
 
+  // Receipt Number
   receiptNumebr?: string;
   receiptNumberLabel?: string;
   showReceiptNumber?: boolean;
@@ -43,7 +57,9 @@ export function ReceiptPaperTemplate({
   secondaryColor,
   showCompanyLogo = true,
   companyLogo,
+  companyName = 'Bigcapital Technology, Inc.',
 
+  // # Address
   billedToAddress = [
     'Bigcapital Technology, Inc.',
     '131 Continental Dr Suite 305 Newark,',
@@ -59,6 +75,10 @@ export function ReceiptPaperTemplate({
     '+1 762-339-5634',
     'ahmed@bigcapital.app',
   ],
+  showBilledFromAddress = true,
+  showBilledToAddress = true,
+  billedToLabel = 'Billed To',
+
   total = '$1000.00',
   totalLabel = 'Total',
   showTotal = true,
@@ -107,7 +127,6 @@ export function ReceiptPaperTemplate({
               {receiptNumebr}
             </PaperTemplate.TermsItem>
           )}
-
           {showReceiptDate && (
             <PaperTemplate.TermsItem label={receiptDateLabel}>
               {receiptDate}
@@ -116,8 +135,16 @@ export function ReceiptPaperTemplate({
         </PaperTemplate.TermsList>
 
         <Group spacing={10}>
-          <PaperTemplate.Address items={billedToAddress} />
-          <PaperTemplate.Address items={billedFromAddress} />
+          {showBilledFromAddress && (
+            <PaperTemplate.Address
+              items={[<strong>{companyName}</strong>, ...billedFromAddress]}
+            />
+          )}
+          {showBilledToAddress && (
+            <PaperTemplate.Address
+              items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
+            />
+          )}
         </Group>
 
         <Stack spacing={0}>
@@ -125,8 +152,8 @@ export function ReceiptPaperTemplate({
             columns={[
               { label: 'Item', accessor: 'item' },
               { label: 'Description', accessor: 'item' },
-              { label: 'Rate', accessor: 'rate' },
-              { label: 'Total', accessor: 'total' },
+              { label: 'Rate', accessor: 'rate', align: 'right' },
+              { label: 'Total', accessor: 'total', align: 'right' },
             ]}
             data={lines}
           />

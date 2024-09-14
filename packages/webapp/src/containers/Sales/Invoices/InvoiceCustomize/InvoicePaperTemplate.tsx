@@ -1,5 +1,5 @@
 import React from 'react';
-import { PaperTemplate } from './PaperTemplate';
+import { PaperTemplate, PaperTemplateTotalBorder } from './PaperTemplate';
 import { Group, Stack } from '@/components';
 
 interface PapaerLine {
@@ -223,8 +223,8 @@ export function InvoicePaperTemplate({
             columns={[
               { label: lineItemLabel, accessor: 'item' },
               { label: lineDescriptionLabel, accessor: 'description' },
-              { label: lineRateLabel, accessor: 'rate' },
-              { label: lineTotalLabel, accessor: 'total' },
+              { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}
             data={lines}
           />
@@ -233,6 +233,7 @@ export function InvoicePaperTemplate({
               <PaperTemplate.TotalLine
                 label={subtotalLabel}
                 amount={subtotal}
+                border={PaperTemplateTotalBorder.Gray}
               />
             )}
             {showDiscount && (
@@ -253,7 +254,12 @@ export function InvoicePaperTemplate({
               </>
             )}
             {showTotal && (
-              <PaperTemplate.TotalLine label={totalLabel} amount={total} />
+              <PaperTemplate.TotalLine
+                label={totalLabel}
+                amount={total}
+                border={PaperTemplateTotalBorder.Dark}
+                style={{ fontWeight: 500 }}
+              />
             )}
             {showPaymentMade && (
               <PaperTemplate.TotalLine
@@ -265,6 +271,8 @@ export function InvoicePaperTemplate({
               <PaperTemplate.TotalLine
                 label={balanceDueLabel}
                 amount={balanceDue}
+                border={PaperTemplateTotalBorder.Dark}
+                style={{ fontWeight: 500 }}
               />
             )}
           </PaperTemplate.Totals>

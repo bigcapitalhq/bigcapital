@@ -10,6 +10,7 @@ export interface PaperTemplateProps {
 
   showCompanyLogo?: boolean;
   companyLogo?: string;
+  companyName?: string;
 
   bigtitle?: string;
 
@@ -44,7 +45,11 @@ export function PaperTemplate({
 }
 
 interface PaperTemplateTableProps {
-  columns: Array<{ accessor: string; label: string }>;
+  columns: Array<{
+    accessor: string;
+    label: string;
+    align?: 'left' | 'center' | 'right';
+  }>;
   data: Array<Record<string, any>>;
 }
 
@@ -54,7 +59,9 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
       <thead>
         <tr>
           {columns.map((col, index) => (
-            <th key={index}>{col.label}</th>
+            <th key={index} align={col.align}>
+              {col.label}
+            </th>
           ))}
         </tr>
       </thead>
@@ -63,7 +70,9 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
         {data.map((_data: any) => (
           <tr>
             {columns.map((column, index) => (
-              <td key={index}>{get(_data, column.accessor)}</td>
+              <td align={column.align} key={index}>
+                {get(_data, column.accessor)}
+              </td>
             ))}
           </tr>
         ))}
@@ -72,18 +81,34 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
   );
 };
 
+export enum PaperTemplateTotalBorder {
+  Gray = 'gray',
+  Dark = 'dark',
+}
+
 PaperTemplate.Totals = ({ children }: { children: React.ReactNode }) => {
-  return <div className={styles.totals}>{children}</div>;
+  return <div className={clsx(styles.totals)}>{children}</div>;
 };
 PaperTemplate.TotalLine = ({
   label,
   amount,
+  border,
+  style,
 }: {
   label: string;
   amount: string;
+  border?: PaperTemplateTotalBorder;
+  style?: any;
 }) => {
   return (
-    <div className={clsx(styles.totalsItem, styles.totalBottomGrayBordered)}>
+    <div
+      className={clsx(styles.totalsItem, {
+        [styles.totalBottomBordered]: border === PaperTemplateTotalBorder.Dark,
+        [styles.totalBottomGrayBordered]:
+          border === PaperTemplateTotalBorder.Gray,
+      })}
+      style={style}
+    >
       <div className={styles.totalsItemLabel}>{label}</div>
       <div className={styles.totalsItemAmount}>{amount}</div>
     </div>

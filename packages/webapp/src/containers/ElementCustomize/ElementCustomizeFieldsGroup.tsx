@@ -1,7 +1,7 @@
 // @ts-nocheck
+import { InputGroupProps, SwitchProps } from '@blueprintjs/core';
 import { FInputGroup, FSwitch, Group, Stack } from '@/components';
 import { CLASSES } from '@/constants';
-import { InputGroupProps, SwitchProps } from '@blueprintjs/core';
 
 export function ElementCustomizeFieldsGroup({
   label,

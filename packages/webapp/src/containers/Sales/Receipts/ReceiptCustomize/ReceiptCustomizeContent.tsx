@@ -1,10 +1,10 @@
+import { useFormikContext } from 'formik';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { ReceiptCustomizeGeneralField } from './ReceiptCustomizeFieldsGeneral';
 import { ReceiptCustomizeFieldsContent } from './ReceiptCustomizeFieldsContent';
 import { ReceiptPaperTemplate } from './ReceiptPaperTemplate';
 import { ReceiptCustomizeValues } from './types';
 import { initialValues } from './constants';
-import { useFormikContext } from 'formik';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
 import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
@@ -12,7 +12,6 @@ import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 export function ReceiptCustomizeContent() {
   const { payload, name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
-
   const templateId = payload?.templateId || null;
 
   const handleFormSuccess = () => {

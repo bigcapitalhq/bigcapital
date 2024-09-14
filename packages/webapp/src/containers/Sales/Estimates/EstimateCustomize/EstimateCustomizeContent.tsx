@@ -1,6 +1,4 @@
-import { Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { Box } from '@/components';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { EstimateCustomizeGeneralField } from './EstimateCustomizeFieldsGeneral';
 import { EstimateCustomizeContentFields } from './EstimateCustomizeFieldsContent';
@@ -14,7 +12,6 @@ import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTem
 export function EstimateCustomizeContent() {
   const { payload, name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
-
   const templateId = payload?.templateId || null;
 
   const handleSuccess = () => {

@@ -2,6 +2,7 @@ import { Group, Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
+  PaperTemplateTotalBorder,
 } from '../../Invoices/InvoiceCustomize/PaperTemplate';
 
 export interface PaymentReceivedPaperTemplateProps extends PaperTemplateProps {
@@ -44,6 +45,7 @@ export function PaymentReceivedPaperTemplate({
   secondaryColor,
   showCompanyLogo = true,
   companyLogo,
+  companyName = 'Bigcapital Technology, Inc.',
 
   billedToAddress = [
     'Bigcapital Technology, Inc.',
@@ -62,6 +64,7 @@ export function PaymentReceivedPaperTemplate({
   ],
   showBilledFromAddress,
   showBillingToAddress,
+  billedToLabel = 'Billed To',
 
   total = '$1000.00',
   totalLabel = 'Total',
@@ -110,11 +113,15 @@ export function PaymentReceivedPaperTemplate({
         </PaperTemplate.TermsList>
 
         <Group spacing={10}>
-          {showBillingToAddress && (
-            <PaperTemplate.Address items={billedToAddress} />
-          )}
           {showBilledFromAddress && (
-            <PaperTemplate.Address items={billedFromAddress} />
+            <PaperTemplate.Address
+              items={[<strong>{companyName}</strong>, ...billedFromAddress]}
+            />
+          )}
+          {showBillingToAddress && (
+            <PaperTemplate.Address
+              items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
+            />
           )}
         </Group>
 
@@ -122,8 +129,12 @@ export function PaymentReceivedPaperTemplate({
           <PaperTemplate.Table
             columns={[
               { label: 'Invoice #', accessor: 'invoiceNumber' },
-              { label: 'Invoice Amount', accessor: 'invoiceAmount' },
-              { label: 'Paid Amount', accessor: 'paidAmount' },
+              {
+                label: 'Invoice Amount',
+                accessor: 'invoiceAmount',
+                align: 'right',
+              },
+              { label: 'Paid Amount', accessor: 'paidAmount', align: 'right' },
             ]}
             data={lines}
           />
@@ -132,10 +143,16 @@ export function PaymentReceivedPaperTemplate({
               <PaperTemplate.TotalLine
                 label={subtotalLabel}
                 amount={subtotal}
+                border={PaperTemplateTotalBorder.Gray}
               />
             )}
             {showTotal && (
-              <PaperTemplate.TotalLine label={totalLabel} amount={total} />
+              <PaperTemplate.TotalLine
+                label={totalLabel}
+                amount={total}
+                border={PaperTemplateTotalBorder.Dark}
+                style={{ fontWeight: 500 }}
+              />
             )}
           </PaperTemplate.Totals>
         </Stack>
