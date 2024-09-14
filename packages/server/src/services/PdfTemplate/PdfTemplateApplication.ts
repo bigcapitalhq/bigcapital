@@ -5,6 +5,7 @@ import { DeletePdfTemplate } from './DeletePdfTemplate';
 import { GetPdfTemplate } from './GetPdfTemplate';
 import { GetPdfTemplates } from './GetPdfTemplates';
 import { EditPdfTemplate } from './EditPdfTemplate';
+import { AssignPdfTemplateDefault } from './AssignPdfTemplateDefault';
 
 @Service()
 export class PdfTemplateApplication {
@@ -22,6 +23,9 @@ export class PdfTemplateApplication {
 
   @Inject()
   private editPdfTemplateService: EditPdfTemplate;
+
+  @Inject()
+  private assignPdfTemplateDefaultService: AssignPdfTemplateDefault;
 
   public async createPdfTemplate(
     tenantId: number,
@@ -65,5 +69,15 @@ export class PdfTemplateApplication {
     query?: { resource?: string }
   ) {
     return this.getPdfTemplatesService.getPdfTemplates(tenantId, query);
+  }
+
+  public async assignPdfTemplateAsDefault(
+    tenantId: number,
+    templateId: number
+  ) {
+    return this.assignPdfTemplateDefaultService.assignDefaultTemplate(
+      tenantId,
+      templateId
+    );
   }
 }

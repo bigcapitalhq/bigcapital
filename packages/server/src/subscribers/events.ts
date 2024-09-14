@@ -695,6 +695,9 @@ export default {
     onDeleting: 'onPdfTemplateDeleting',
     onDeleted: 'onPdfTemplateDeleted',
 
+    onAssignedDefault: 'onPdfTemplateAssignedDefault',
+    onAssigningDefault: 'onPdfTemplateAssigningDefault',
+
     onInvoiceCreated: 'onInvoicePdfTemplateCreated',
   },
 };

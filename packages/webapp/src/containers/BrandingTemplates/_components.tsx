@@ -7,10 +7,19 @@ import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
  */
 export function ActionsMenu({
   row: { original },
-  payload: { onDeleteTemplate, onEditTemplate },
+  payload: { onDeleteTemplate, onEditTemplate, onMarkDefaultTemplate },
 }) {
   return (
     <Menu>
+      {!original.default && (
+        <>
+          <MenuItem
+            text={'Mark as Default'}
+            onClick={safeCallback(onMarkDefaultTemplate, original)}
+          />
+          <MenuDivider />
+        </>
+      )}
       <MenuItem
         text={'Edit Template'}
         onClick={safeCallback(onEditTemplate, original)}

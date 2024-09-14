@@ -166,3 +166,40 @@ export const useGetPdfTemplates = (
     options,
   );
 };
+
+export interface AssignPdfTemplateAsDefaultValues {
+  templateId: number;
+}
+
+export interface AssignPdfTemplateAsDefaultResponse {}
+
+export const useAssignPdfTemplateAsDefault = (
+  options?: UseMutationOptions<
+    AssignPdfTemplateAsDefaultResponse,
+    Error,
+    AssignPdfTemplateAsDefaultValues
+  >,
+): UseMutationResult<
+  AssignPdfTemplateAsDefaultResponse,
+  Error,
+  AssignPdfTemplateAsDefaultValues
+> => {
+  const apiRequest = useApiRequest();
+  const queryClient = useQueryClient();
+  return useMutation<
+    AssignPdfTemplateAsDefaultResponse,
+    Error,
+    AssignPdfTemplateAsDefaultValues
+  >(
+    ({ templateId }) =>
+      apiRequest
+        .post(`/pdf-templates/${templateId}/assign_default`)
+        .then((res) => res.data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([PdfTemplatesQueryKey]);
+      },
+      ...options,
+    },
+  );
+};

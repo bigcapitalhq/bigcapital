@@ -42,6 +42,11 @@ function BrandingTemplateTableRoot({
     openDrawer(drawerName, { templateId, resource });
   };
 
+  // Handle mark as default button click.
+  const handleMarkDefaultTemplate = (template) => {
+    openAlert('branding-template-mark-default', { templateId: template.id });
+  };
+
   return (
     <DataTable
       columns={columns}
@@ -54,6 +59,7 @@ function BrandingTemplateTableRoot({
       payload={{
         onDeleteTemplate: handleDeleteTemplate,
         onEditTemplate: handleEditTemplate,
+        onMarkDefaultTemplate: handleMarkDefaultTemplate,
       }}
       rowContextMenu={ActionsMenu}
       onCellClick={handleCellClick}

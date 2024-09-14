@@ -21,7 +21,6 @@ export class PdfTemplatesController extends BaseController {
       this.validationResult,
       this.deletePdfTemplate.bind(this)
     );
-
     router.put(
       '/:template_id',
       [
@@ -53,6 +52,12 @@ export class PdfTemplatesController extends BaseController {
       ],
       this.validationResult,
       this.createPdfInvoiceTemplate.bind(this)
+    );
+    router.post(
+      '/:template_id/assign_default',
+      [param('template_id').exists().isInt().toInt()],
+      this.validationResult,
+      this.assginPdfTemplateAsDefault.bind(this)
     );
     return router;
   }
@@ -135,6 +140,31 @@ export class PdfTemplatesController extends BaseController {
         query
       );
       return res.status(200).send(templates);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async assginPdfTemplateAsDefault(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { template_id: templateId } = req.params;
+
+    try {
+      await this.pdfTemplateApplication.assignPdfTemplateAsDefault(
+        tenantId,
+        Number(templateId)
+      );
+      return res
+        .status(204)
+        .send({
+          id: templateId,
+          message:
+            'The given pdf template has been assigned as default template',
+        });
     } catch (error) {
       next(error);
     }
