@@ -22,7 +22,7 @@ function SharePaymentLinkDialogRoot({ dialogName, payload, isOpen }) {
       title={'Share Link'}
       canEscapeJeyClose={true}
       autoFocus={true}
-      style={{ width: 400 }}
+      style={{ width: 570 }}
     >
       <DialogSuspense>
         <SharePaymentLinkContent />

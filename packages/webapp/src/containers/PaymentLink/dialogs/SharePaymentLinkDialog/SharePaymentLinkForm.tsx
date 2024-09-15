@@ -1,11 +1,11 @@
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
+import moment from 'moment';
 import { useCreatePaymentLink } from '@/hooks/query/payment-link';
 import { AppToaster } from '@/components';
 import { SharePaymentLinkFormSchema } from './SharePaymentLinkForm.schema';
 import { useDialogContext } from '@/components/Dialog/DialogProvider';
-import { useDialogActions } from '@/hooks/state';
 import { useSharePaymentLink } from './SharePaymentLinkProvider';
 
 interface SharePaymentLinkFormProps {
@@ -20,8 +20,8 @@ interface SharePaymentLinkFormValues {
 }
 
 const initialValues = {
-  publicity: '',
-  expiryDate: '',
+  publicity: 'public',
+  expiryDate: moment().add(30, 'days').format('YYYY-MM-DD'),
   transactionId: '',
   transactionType: '',
 };

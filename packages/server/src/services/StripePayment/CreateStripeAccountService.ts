@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
+import { snakeCase } from 'lodash';
 import { StripePaymentService } from './StripePaymentService';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { snakeCase } from 'lodash';
 
 interface CreateStripeAccountDTO {
   name: string;
@@ -28,7 +28,7 @@ export class CreateStripeAccountService {
 
     // Creates a new Stripe account.
     const account = await this.stripePaymentService.createAccount();
-
+  
     const slug = snakeCase(createStripeAccountDTO.name);
 
     // Store the Stripe account on tenant store.

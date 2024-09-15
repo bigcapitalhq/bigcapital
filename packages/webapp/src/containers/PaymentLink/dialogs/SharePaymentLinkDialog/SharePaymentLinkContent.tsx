@@ -5,12 +5,10 @@ import { SharePaymentLinkProvider } from './SharePaymentLinkProvider';
 
 export function SharePaymentLinkContent() {
   return (
-    <DialogBody>
-      <SharePaymentLinkProvider>
-        <SharePaymentLinkForm>
-          <SharePaymentLinkFormContent />
-        </SharePaymentLinkForm>
-      </SharePaymentLinkProvider>
-    </DialogBody>
+    <SharePaymentLinkProvider>
+      <SharePaymentLinkForm>
+        <SharePaymentLinkFormContent />
+      </SharePaymentLinkForm>
+    </SharePaymentLinkProvider>
   );
 }
