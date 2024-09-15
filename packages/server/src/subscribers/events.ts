@@ -163,6 +163,9 @@ export default {
 
     onMailReminderSend: 'onSaleInvoiceMailReminderSend',
     onMailReminderSent: 'onSaleInvoiceMailReminderSent',
+
+    onPublicLinkGenerating: 'onPublicSharableLinkGenerating',
+    onPublicLinkGenerated: 'onPublicSharableLinkGenerated',
   },
 
   /**

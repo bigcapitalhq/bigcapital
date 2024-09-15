@@ -33,11 +33,15 @@ export class StripePaymentService {
     }
   }
 
+  /**
+   * 
+   * @returns {Promise<string>}
+   */
   public async createAccount(): Promise<string> {
     try {
       const account = await this.stripe.accounts.create({});
 
-      return account.id;
+      return account;
     } catch (error) {
       throw new Error(
         'An error occurred when calling the Stripe API to create an account'

@@ -45,7 +45,6 @@ export class StripeWebhooksController {
           config.stripePayment.webhooksSecret
         );
       } catch (err) {
-        console.log(err);
         return res.status(400).send(`Webhook Error: ${err.message}`);
       }
       // Handle the event based on its type

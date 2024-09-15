@@ -8,6 +8,7 @@ import Invite from './Invite';
 import SystemPlaidItem from './SystemPlaidItem';
 import { Import } from './Import';
 import { StripeAccount } from './StripeAccount';
+import { PaymentLink } from './PaymentLink';
 
 export {
   Plan,
@@ -19,5 +20,6 @@ export {
   Invite,
   SystemPlaidItem,
   Import,
-  StripeAccount
+  StripeAccount,
+  PaymentLink,
 };
