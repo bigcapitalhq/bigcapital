@@ -77,4 +77,5 @@ export enum DialogsName {
   Export = 'Export',
   BankRuleForm = 'BankRuleForm',
   DisconnectBankAccountConfirmation = 'DisconnectBankAccountConfirmation',
+  SharePaymentLink = 'SharePaymentLink'
 }

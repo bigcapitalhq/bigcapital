@@ -2,27 +2,31 @@ import { Text, Classes, Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { Box, Group, Stack } from '@/components';
 import styles from './PaymentPortal.module.scss';
+import { usePaymentPortalBoot } from './PaymentPortalBoot';
 
 export function PaymentPortal() {
+  const { sharableLinkMeta } = usePaymentPortalBoot();
+
   return (
     <Box className={styles.root}>
       <Stack className={styles.body}>
         <Group spacing={8}>
           <Box className={styles.companyLogoWrap}></Box>
-          <Text>Bigcapital Technology, Inc.</Text>
+          <Text>{sharableLinkMeta?.companyName}</Text>
         </Group>
 
         <Stack spacing={6}>
           <h1 className={styles.bigTitle}>
-            Bigcapital Technology, Inc. Sent an Invoice for $1000.00
+            {sharableLinkMeta?.companyName} Sent an Invoice for{' '}
+            {sharableLinkMeta?.totalFormatted}
           </h1>
           <Text className={clsx(Classes.TEXT_MUTED, styles.invoiceDueDate)}>
-            Invoice due September 13, 2024
+            Invoice due {sharableLinkMeta?.dueDateFormatted}
           </Text>
         </Stack>
 
         <Stack spacing={2}>
-          <Box className={styles.customerName}>Ahmed Bouhuolia</Box>
+          <Box className={styles.customerName}>{sharableLinkMeta?.customerName}</Box>
           <Box>Bigcapital Technology, Inc.</Box>
           <Box>131 Continental Dr Suite 305 Newark,</Box>
           <Box>Delaware 19713</Box>
@@ -30,7 +34,9 @@ export function PaymentPortal() {
           <Box>ahmed@bigcapital.app</Box>
         </Stack>
 
-        <h2 className={styles.invoiceNumber}>Invoice INV-000001</h2>
+        <h2 className={styles.invoiceNumber}>
+          Invoice {sharableLinkMeta?.invoiceNo}
+        </h2>
 
         <Stack spacing={0} className={styles.totals}>
           <Group
@@ -38,12 +44,14 @@ export function PaymentPortal() {
             className={clsx(styles.totalItem, styles.borderBottomGray)}
           >
             <Text>Sub Total</Text>
-            <Text>11.00</Text>
+            <Text>{sharableLinkMeta?.subtotalFormatted}</Text>
           </Group>
 
           <Group position={'apart'} className={styles.totalItem}>
             <Text>Total</Text>
-            <Text style={{ fontWeight: 600 }}>11.00</Text>
+            <Text style={{ fontWeight: 600 }}>
+              {sharableLinkMeta?.totalFormatted}
+            </Text>
           </Group>
 
           <Group
@@ -51,7 +59,7 @@ export function PaymentPortal() {
             className={clsx(styles.totalItem, styles.borderBottomDark)}
           >
             <Text>Paid Amount (-)</Text>
-            <Text>11.00</Text>
+            <Text>{sharableLinkMeta?.paymentAmountFormatted}</Text>
           </Group>
 
           <Group
@@ -59,7 +67,9 @@ export function PaymentPortal() {
             className={clsx(styles.totalItem, styles.borderBottomDark)}
           >
             <Text>Due Amount</Text>
-            <Text style={{ fontWeight: 600 }}>11.00</Text>
+            <Text style={{ fontWeight: 600 }}>
+              {sharableLinkMeta?.dueAmountFormatted}
+            </Text>
           </Group>
         </Stack>
 
@@ -79,7 +89,7 @@ export function PaymentPortal() {
             intent={Intent.PRIMARY}
             className={clsx(styles.footerButton, styles.buyButton)}
           >
-            Pay $10,000.00
+            Pay {sharableLinkMeta?.totalFormatted}
           </Button>
         </Stack>
 

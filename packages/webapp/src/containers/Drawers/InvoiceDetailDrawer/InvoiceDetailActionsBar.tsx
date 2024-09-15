@@ -103,6 +103,13 @@ function InvoiceDetailActionsBar({
     openDialog(DialogsName.InvoiceMail, { invoiceId });
   };
 
+  const handleShareButtonClick = () => {
+    openDialog(DialogsName.SharePaymentLink, {
+      transactionId: invoiceId,
+      transactionType: 'SaleInvoice',
+    });
+  };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -150,6 +157,11 @@ function InvoiceDetailActionsBar({
             onClick={handleDeleteInvoice}
           />
         </Can>
+        <Button
+          className={Classes.MINIMAL}
+          text={'Share'}
+          onClick={handleShareButtonClick}
+        />
         <Can I={SaleInvoiceAction.Writeoff} a={AbilitySubject.Invoice}>
           <NavbarDivider />
           <BadDebtMenuItem

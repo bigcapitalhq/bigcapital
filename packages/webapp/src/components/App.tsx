@@ -59,7 +59,7 @@ function AppInsider({ history }) {
                 children={<EmailConfirmation />}
               />
               <Route path={'/auth'} children={<AuthenticationPage />} />
-              <Route path={'/payment'} children={<PaymentPortalPage />} />
+              <Route path={'/payment/:linkId'} children={<PaymentPortalPage />} />
               <Route path={'/'} children={<DashboardPrivatePages />} />
             </Switch>
           </Router>
