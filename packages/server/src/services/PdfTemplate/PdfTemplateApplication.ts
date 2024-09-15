@@ -27,6 +27,14 @@ export class PdfTemplateApplication {
   @Inject()
   private assignPdfTemplateDefaultService: AssignPdfTemplateDefault;
 
+  /**
+   * Creates a new PDF template.
+   * @param {number} tenantId -
+   * @param {string} templateName - The name of the PDF template to create.
+   * @param {string} resource - The resource type associated with the PDF template.
+   * @param {ICreateInvoicePdfTemplateDTO} invoiceTemplateDTO - The data transfer object containing the details for the new PDF template.
+   * @returns {Promise<any>}
+   */
   public async createPdfTemplate(
     tenantId: number,
     templateName: string,
@@ -41,6 +49,13 @@ export class PdfTemplateApplication {
     );
   }
 
+  /**
+   * Edits an existing PDF template.
+   * @param {number} tenantId - The ID of the tenant.
+   * @param {number} templateId - The ID of the PDF template to edit.
+   * @param {IEditPdfTemplateDTO} editTemplateDTO - The data transfer object containing the updated details for the PDF template.
+   * @returns {Promise<any>}
+   */
   public async editPdfTemplate(
     tenantId: number,
     templateId: number,
@@ -53,6 +68,13 @@ export class PdfTemplateApplication {
     );
   }
 
+  /**
+   * Deletes a PDF template.
+   * @param {number} tenantId - The ID of the tenant.
+   * @param {number} templateId - The ID of the PDF template to delete.
+   * @returns {Promise<any>}
+   */
+
   public async deletePdfTemplate(tenantId: number, templateId: number) {
     return this.deletePdfTemplateService.deletePdfTemplate(
       tenantId,
@@ -60,10 +82,22 @@ export class PdfTemplateApplication {
     );
   }
 
+  /**
+   * Retrieves a PDF template by its ID for a specified tenant.
+   * @param {number} tenantId -
+   * @param {number} templateId - The ID of the PDF template to retrieve.
+   * @returns {Promise<any>}
+   */
   public async getPdfTemplate(tenantId: number, templateId: number) {
     return this.getPdfTemplateService.getPdfTemplate(tenantId, templateId);
   }
 
+  /**
+   * Retrieves a list of PDF templates.
+   * @param {number} tenantId - The ID of the tenant for which to retrieve templates.
+   * @param {Object} query
+   * @returns {Promise<any>}
+   */
   public async getPdfTemplates(
     tenantId: number,
     query?: { resource?: string }
@@ -71,6 +105,12 @@ export class PdfTemplateApplication {
     return this.getPdfTemplatesService.getPdfTemplates(tenantId, query);
   }
 
+  /**
+   * Assigns a PDF template as the default template.
+   * @param {number} tenantId
+   * @param {number} templateId - The ID of the PDF template to assign as default.
+   * @returns {Promise<any>}
+   */
   public async assignPdfTemplateAsDefault(
     tenantId: number,
     templateId: number

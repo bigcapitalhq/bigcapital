@@ -18,11 +18,21 @@ export class GetPdfTemplatesTransformer extends Transformer {
     return ['createdAtFormatted', 'resourceFormatted'];
   };
 
-  private createdAtFormatted = (template) => {
+  /**
+   * Formats the creation date of the PDF template.
+   * @param {Object} template
+   * @returns {string} A formatted string representing the creation date of the template.
+   */
+  protected createdAtFormatted = (template) => {
     return this.formatDate(template.createdAt);
   };
 
-  private resourceFormatted = (template) => {
+  /**
+   * Formats the creation date of the PDF template.
+   * @param {Object} template -
+   * @returns {string} A formatted string representing the creation date of the template.
+   */
+  protected resourceFormatted = (template) => {
     return getTransactionTypeLabel(template.resource);
   };
 }

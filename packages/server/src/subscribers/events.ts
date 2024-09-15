@@ -685,6 +685,7 @@ export default {
     onImportCommitted: 'onImportFileCommitted',
   },
 
+  // Branding templates
   pdfTemplate: {
     onCreating: 'onPdfTemplateCreating',
     onCreated: 'onPdfTemplateCreated',
@@ -697,7 +698,5 @@ export default {
 
     onAssignedDefault: 'onPdfTemplateAssignedDefault',
     onAssigningDefault: 'onPdfTemplateAssigningDefault',
-
-    onInvoiceCreated: 'onInvoicePdfTemplateCreated',
   },
 };

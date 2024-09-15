@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { Knex } from 'knex';
 import { IEditPdfTemplateDTO } from './types';
 import HasTenancyService from '../Tenancy/TenancyService';
 import UnitOfWork from '../UnitOfWork';
@@ -19,30 +20,39 @@ export class EditPdfTemplate {
   /**
    * Edits an existing pdf template.
    * @param {number} tenantId
-   * @param {number} templateId
+   * @param {number} templateId - Template id.
    * @param {IEditPdfTemplateDTO} editTemplateDTO
    */
-  public editPdfTemplate(
+  public async editPdfTemplate(
     tenantId: number,
     templateId: number,
     editTemplateDTO: IEditPdfTemplateDTO
   ) {
     const { PdfTemplate } = this.tenancy.models(tenantId);
 
-    return this.uow.withTransaction(tenantId, async (trx) => {
+    const oldPdfTemplate = await PdfTemplate.query()
+      .findById(templateId)
+      .throwIfNotFound();
+
+    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
+      // Triggers `onPdfTemplateEditing` event.
       await this.eventPublisher.emitAsync(events.pdfTemplate.onEditing, {
         tenantId,
         templateId,
       });
-      await PdfTemplate.query(trx).where('id', templateId).update({
-        templateName: editTemplateDTO.templateName,
-        attributes: editTemplateDTO.attributes,
-      });
+      const pdfTemplate = await PdfTemplate.query(trx)
+        .where('id', templateId)
+        .update({
+          templateName: editTemplateDTO.templateName,
+          attributes: editTemplateDTO.attributes,
+        });
 
+      // Triggers `onPdfTemplatedEdited` event.
       await this.eventPublisher.emitAsync(events.pdfTemplate.onEdited, {
         tenantId,
         templateId,
       });
+      return pdfTemplate;
     });
   }
 }

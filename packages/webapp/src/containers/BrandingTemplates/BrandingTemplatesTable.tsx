@@ -1,15 +1,14 @@
 // @ts-nocheck
 import * as R from 'ramda';
-import { Classes, Tag } from '@blueprintjs/core';
-import clsx from 'classnames';
-import { DataTable, Group, TableSkeletonRows } from '@/components';
+import { DataTable, TableSkeletonRows } from '@/components';
 import { useBrandingTemplatesBoot } from './BrandingTemplatesBoot';
 import { ActionsMenu } from './_components';
 import { DRAWERS } from '@/constants/drawers';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import styles from './BrandTemplates.module.scss';
 import { getCustomizeDrawerNameFromResource } from './_utils';
+import { useBrandingTemplatesColumns } from './_hooks';
+import styles from './BrandTemplates.module.scss';
 
 interface BrandingTemplatesTableProps {}
 
@@ -72,25 +71,3 @@ export const BrandingTemplatesTable = R.compose(
   withAlertActions,
   withDrawerActions,
 )(BrandingTemplateTableRoot);
-
-const useBrandingTemplatesColumns = () => {
-  return [
-    {
-      Header: 'Template Name',
-      accessor: (row) => (
-        <Group spacing={10}>
-          {row.template_name} {row.default && <Tag round>Default</Tag>}
-        </Group>
-      ),
-      width: 65,
-      clickable: true,
-    },
-    {
-      Header: 'Created At',
-      accessor: 'created_at_formatted',
-      width: 35,
-      className: clsx(Classes.TEXT_MUTED),
-      clickable: true,
-    },
-  ];
-};
