@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { useFormikContext } from 'formik';
 import {
   Button,
   Classes,
@@ -20,14 +21,22 @@ import {
 } from '@/components';
 import { useSharePaymentLink } from './SharePaymentLinkProvider';
 import { useClipboard } from '@/hooks/utils/useClipboard';
+import { useDialogActions } from '@/hooks/state';
+import { useDialogContext } from '@/components/Dialog/DialogProvider';
 
 export function SharePaymentLinkFormContent() {
   const { url } = useSharePaymentLink();
+  const { closeDialog } = useDialogActions();
+  const { name } = useDialogContext();
+  const { isSubmitting } = useFormikContext();
 
   const clipboard = useClipboard();
 
   const handleCopyBtnClick = () => {
     clipboard.copy(url);
+  };
+  const handleCancelBtnClick = () => {
+    closeDialog(name);
   };
 
   return (
@@ -115,10 +124,11 @@ export function SharePaymentLinkFormContent() {
             </Button>
           ) : (
             <>
-              <Button>Cancel</Button>
+              <Button onClick={handleCancelBtnClick}>Cancel</Button>
               <Button
                 type={'submit'}
                 intent={Intent.PRIMARY}
+                loading={isSubmitting}
                 style={{ minWidth: 100 }}
               >
                 Generate

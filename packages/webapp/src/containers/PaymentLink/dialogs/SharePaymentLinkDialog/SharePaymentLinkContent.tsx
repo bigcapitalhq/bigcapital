@@ -1,4 +1,3 @@
-import { DialogBody } from '@blueprintjs/core';
 import { SharePaymentLinkForm } from './SharePaymentLinkForm';
 import { SharePaymentLinkFormContent } from './SharePaymentLinkFormContent';
 import { SharePaymentLinkProvider } from './SharePaymentLinkProvider';
