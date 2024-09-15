@@ -9,6 +9,8 @@ exports.up = function (knex) {
       table.text('resource');
       table.text('template_name');
       table.json('attributes');
+      table.boolean('predefined').defaultTo(false);
+      table.boolean('default').defaultTo(false);
       table.timestamps();
     })
     .table('sales_invoices', (table) => {
