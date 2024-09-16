@@ -33,6 +33,14 @@ export class AssignPdfTemplateDefault {
     return this.uow.withTransaction(
       tenantId,
       async (trx?: Knex.Transaction) => {
+        // Triggers `onPdfTemplateAssigningDefault` event.
+        await this.eventPublisher.emitAsync(
+          events.pdfTemplate.onAssigningDefault,
+          {
+            tenantId,
+            templateId,
+          }
+        );
         await PdfTemplate.query(trx)
           .where('resource', oldPdfTempalte.resource)
           .patch({ default: false });
@@ -41,6 +49,7 @@ export class AssignPdfTemplateDefault {
           .findById(templateId)
           .patch({ default: true });
 
+        // Triggers `onPdfTemplateAssignedDefault` event.
         await this.eventPublisher.emitAsync(
           events.pdfTemplate.onAssignedDefault,
           {

@@ -158,3 +158,88 @@ export const SaleInvoicesSampleData = [
     Description: 'Description',
   },
 ];
+
+export const defaultInvoicePdfTemplateAttributes =  {
+  primaryColor: 'red',
+  secondaryColor: 'red',
+
+  companyName: 'Bigcapital Technology, Inc.',
+
+  showCompanyLogo: true,
+  companyLogo: '',
+
+  dueDateLabel: 'Date due',
+  showDueDate: true,
+
+  dateIssueLabel: 'Date of issue',
+  showDateIssue: true,
+
+  // dateIssue,
+  invoiceNumberLabel: 'Invoice number',
+  showInvoiceNumber: true,
+
+  // Address
+  showBillingToAddress: true,
+  showBilledFromAddress: true,
+  billedToLabel: 'Billed To',
+
+  // Entries
+  lineItemLabel: 'Item',
+  lineDescriptionLabel: 'Description',
+  lineRateLabel: 'Rate',
+  lineTotalLabel: 'Total',
+
+  totalLabel: 'Total',
+  subtotalLabel: 'Subtotal',
+  discountLabel: 'Discount',
+  paymentMadeLabel: 'Payment Made',
+  balanceDueLabel: 'Balance Due',
+
+  // Totals
+  showTotal: true,
+  showSubtotal: true,
+  showDiscount: true,
+  showTaxes: true,
+  showPaymentMade: true,
+  showDueAmount: true,
+  showBalanceDue: true,
+
+  discount: '0.00',
+
+  // Footer paragraphs.
+  termsConditionsLabel: 'Terms & Conditions',
+  showTermsConditions: true,
+
+  lines: [
+    {
+      item: 'Simply dummy text',
+      description: 'Simply dummy text of the printing and typesetting',
+      rate: '1',
+      quantity: '1000',
+      total: '$1000.00',
+    },
+  ],
+  taxes: [
+    { label: 'Sample Tax1 (4.70%)', amount: '11.75' },
+    { label: 'Sample Tax2 (7.00%)', amount: '21.74' },
+  ],
+
+  statementLabel: 'Statement',
+  showStatement: true,
+  billedToAddress: [
+    'Bigcapital Technology, Inc.',
+    '131 Continental Dr Suite 305 Newark,',
+    'Delaware 19713',
+    'United States',
+    '+1 762-339-5634',
+    'ahmed@bigcapital.app',
+  ],
+  billedFromAddres: [
+    '131 Continental Dr Suite 305 Newark,',
+    'Delaware 19713',
+    'United States',
+    '+1 762-339-5634',
+    'ahmed@bigcapital.app',
+  ],
+}
+

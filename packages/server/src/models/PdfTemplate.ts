@@ -15,6 +15,9 @@ export class PdfTemplate extends TenantModel {
     return ['createdAt', 'updatedAt'];
   }
 
+  /**
+   * Json schema.
+   */
   static get jsonSchema() {
     return {
       type: 'object',
