@@ -1,6 +1,9 @@
 html(lang=locale)
   head
     title My Site - #{title}
+    style
+      include ../scss/normalize.css
+      include ../scss/base.css
     block head
   body
     div.paper-template

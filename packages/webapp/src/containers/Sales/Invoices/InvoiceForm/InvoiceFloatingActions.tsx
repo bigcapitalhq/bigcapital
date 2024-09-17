@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Intent,
   Button,
@@ -10,12 +10,17 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
-import { useFormikContext } from 'formik';
-import { If, Icon, FormattedMessage as T, Group } from '@/components';
 import { useHistory } from 'react-router-dom';
+import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import { CLASSES } from '@/constants/classes';
+import { If, Icon, FormattedMessage as T, Group, FSelect } from '@/components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+import { useInvoiceFormBrandingTemplatesOptions } from './utils';
+import {
+  BrandingThemeFormGroup,
+  BrandingThemeSelectButton,
+} from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 /**
  * Invoice floating actions bar.
@@ -74,6 +79,8 @@ export default function InvoiceFloatingActions() {
   const handleClearBtnClick = (event) => {
     resetForm();
   };
+
+  const brandingTemplatesOptions = useInvoiceFormBrandingTemplatesOptions();
 
   return (
     <Group
@@ -192,6 +199,26 @@ export default function InvoiceFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
+
+      {/* ----------- Branding Template Select ----------- */}
+      <BrandingThemeFormGroup
+        name={'pdf_template_id'}
+        label={'Branding'}
+        inline
+        fastField
+        style={{ marginLeft: 20 }}
+      >
+        <FSelect
+          name={'pdf_template_id'}
+          items={brandingTemplatesOptions}
+          input={({ activeItem, text, label, value }) => (
+            <BrandingThemeSelectButton text={text || 'Brand Theme'} minimal />
+          )}
+          filterable={false}
+          popoverProps={{ minimal: true }}
+        />
+      </BrandingThemeFormGroup>
     </Group>
   );
 }
+

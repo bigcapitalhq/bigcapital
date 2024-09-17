@@ -17,7 +17,7 @@ export class TemplateInjectable {
   public async render(
     tenantId: number,
     filename: string,
-    options: Record<string, string | number | boolean>
+    options: Record<string, any>
   ) {
     const i18n = this.tenancy.i18n(tenantId);
 

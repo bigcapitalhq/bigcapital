@@ -224,9 +224,7 @@ export default class SaleInvoicesController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim(),
+      check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.tax_code')
         .optional({ nullable: true })
         .trim()
@@ -257,6 +255,9 @@ export default class SaleInvoicesController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
+
+      // Pdf template id.
+      check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 

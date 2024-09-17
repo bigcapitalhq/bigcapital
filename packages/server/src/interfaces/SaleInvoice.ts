@@ -45,6 +45,11 @@ export interface ISaleInvoice {
   subtotal: number;
   subtotalLocal: number;
   subtotalExludingTax: number;
+
+  termsConditions: string;
+  invoiceMessage: string;
+
+  pdfTemplateId?: number;
 }
 
 export interface ISaleInvoiceDTO {
@@ -216,4 +221,84 @@ export interface ISaleInvoiceMailSent {
   tenantId: number;
   saleInvoiceId: number;
   messageOptions: SendInvoiceMailDTO;
+}
+
+
+// Invoice Pdf Document
+export interface InvoicePdfLine {
+  item: string;
+  description: string;
+  rate: string;
+  quantity: string;
+  total: string;
+}
+
+export interface InvoicePdfTax {
+  label: string;
+  amount: string;
+}
+
+export interface InvoicePdfTemplateAttributes {
+  primaryColor: string;
+  secondaryColor: string;
+  
+  companyName: string;
+  
+  showCompanyLogo: boolean;
+  companyLogo: string;
+
+  dueDate: string;
+  dueDateLabel: string;
+  showDueDate: boolean;
+
+  dateIssue: string;
+  dateIssueLabel: string;
+  showDateIssue: boolean;
+
+  invoiceNumberLabel: string;
+  invoiceNumber: string;
+  showInvoiceNumber: boolean;
+
+  showBillingToAddress: boolean;
+  showBilledFromAddress: boolean;
+  billedToLabel: string;
+
+  lineItemLabel: string;
+  lineDescriptionLabel: string;
+  lineRateLabel: string;
+  lineTotalLabel: string;
+
+  totalLabel: string;
+  subtotalLabel: string;
+  discountLabel: string;
+  paymentMadeLabel: string;
+  balanceDueLabel: string;
+
+  showTotal: boolean;
+  showSubtotal: boolean;
+  showDiscount: boolean;
+  showTaxes: boolean;
+  showPaymentMade: boolean;
+  showDueAmount: boolean;
+  showBalanceDue: boolean;
+
+  total: string;
+  subtotal: string;
+  discount: string;
+  paymentMade: string;
+  balanceDue: string;
+
+  termsConditionsLabel: string;
+  showTermsConditions: boolean;
+  termsConditions: string;
+
+  lines: InvoicePdfLine[];
+  taxes: InvoicePdfTax[];
+
+  statementLabel: string;
+  showStatement: boolean;
+  statement: string;
+
+  billedToAddress: string[];
+  billedFromAddres: string[];
 }

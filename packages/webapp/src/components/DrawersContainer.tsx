@@ -23,6 +23,12 @@ import WarehouseTransferDetailDrawer from '@/containers/Drawers/WarehouseTransfe
 import TaxRateDetailsDrawer from '@/containers/TaxRates/drawers/TaxRateDetailsDrawer/TaxRateDetailsDrawer';
 import CategorizeTransactionDrawer from '@/containers/CashFlow/CategorizeTransaction/drawers/CategorizeTransactionDrawer/CategorizeTransactionDrawer';
 import ChangeSubscriptionPlanDrawer from '@/containers/Subscriptions/drawers/ChangeSubscriptionPlanDrawer/ChangeSubscriptionPlanDrawer';
+import { InvoiceCustomizeDrawer } from '@/containers/Sales/Invoices/InvoiceCustomize/InvoiceCustomizeDrawer';
+import { EstimateCustomizeDrawer } from '@/containers/Sales/Estimates/EstimateCustomize/EstimateCustomizeDrawer';
+import { ReceiptCustomizeDrawer } from '@/containers/Sales/Receipts/ReceiptCustomize/ReceiptCustomizeDrawer';
+import { CreditNoteCustomizeDrawer } from '@/containers/Sales/CreditNotes/CreditNoteCustomize/CreditNoteCustomizeDrawer';
+import { PaymentReceivedCustomizeDrawer } from '@/containers/Sales/PaymentsReceived/PaymentReceivedCustomize/PaymentReceivedCustomizeDrawer';
+import { BrandingTemplatesDrawer } from '@/containers/BrandingTemplates/BrandingTemplatesDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
 
@@ -65,6 +71,14 @@ export default function DrawersContainer() {
       <TaxRateDetailsDrawer name={DRAWERS.TAX_RATE_DETAILS} />
       <CategorizeTransactionDrawer name={DRAWERS.CATEGORIZE_TRANSACTION} />
       <ChangeSubscriptionPlanDrawer name={DRAWERS.CHANGE_SUBSCARIPTION_PLAN} />
+      <InvoiceCustomizeDrawer name={DRAWERS.INVOICE_CUSTOMIZE} />
+      <EstimateCustomizeDrawer name={DRAWERS.ESTIMATE_CUSTOMIZE} />
+      <ReceiptCustomizeDrawer name={DRAWERS.RECEIPT_CUSTOMIZE} />
+      <CreditNoteCustomizeDrawer name={DRAWERS.CREDIT_NOTE_CUSTOMIZE} />
+      <PaymentReceivedCustomizeDrawer
+        name={DRAWERS.PAYMENT_RECEIVED_CUSTOMIZE}
+      />
+      <BrandingTemplatesDrawer name={DRAWERS.BRANDING_TEMPLATES} />
     </div>
   );
 }

@@ -8,6 +8,11 @@ import {
   NavbarGroup,
   Intent,
   Alignment,
+  Menu,
+  MenuItem,
+  Popover,
+  PopoverInteractionKind,
+  Position,
 } from '@blueprintjs/core';
 import {
   Icon,
@@ -30,9 +35,11 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withVendorsCreditNotes from './withVendorsCreditNotes';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withVendorActions from './withVendorActions';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Vendors Credit note  table actions bar.
@@ -54,6 +61,9 @@ function VendorsCreditNoteActionsBar({
 
   // #withDialogActions
   openDialog,
+
+  // #withDrawerActions
+  openDrawer,
 }) {
   const history = useHistory();
 
@@ -91,6 +101,10 @@ function VendorsCreditNoteActionsBar({
   // Handle the print button click.
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'VendorCredit' });
+  };
+  // Handle the customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.CREDIT_NOTE_DETAILS);
   };
 
   return (
@@ -152,6 +166,25 @@ function VendorsCreditNoteActionsBar({
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                onClick={handleCustomizeBtnClick}
+                text={'Customize Credit Note'}
+              />
+            </Menu>
+          }
+        >
+          <Button icon={<Icon icon="cog-16" iconSize={16} />} minimal={true} />
+        </Popover>
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
@@ -173,4 +206,5 @@ export default compose(
     creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
   })),
   withDialogActions,
+  withDrawerActions,
 )(VendorsCreditNoteActionsBar);

@@ -1,7 +1,14 @@
 // @ts-nocheck
 import React, { createContext, useContext } from 'react';
 
-const DrawerContext = createContext();
+interface DrawerContextValue {
+  name: string;
+  payload: Record<string, any>;
+}
+
+const DrawerContext = createContext<DrawerContextValue>(
+  {} as DrawerContextValue,
+);
 
 /**
  * Account form provider.

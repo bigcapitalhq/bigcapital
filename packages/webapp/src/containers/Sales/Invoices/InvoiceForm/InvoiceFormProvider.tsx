@@ -19,6 +19,7 @@ import {
 } from '@/hooks/query';
 import { useProjects } from '@/containers/Projects/hooks';
 import { useTaxRates } from '@/hooks/query/taxRates';
+import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
 const InvoiceFormContext = createContext();
 
@@ -54,6 +55,10 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     estimateId,
     { enabled: !!estimateId },
   );
+
+  // Fetches branding templates of invoice.
+  const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
+    useGetPdfTemplates({ resource: 'SaleInvoice' });
 
   const newInvoice = !isEmpty(estimate)
     ? transformToEditForm({
@@ -105,7 +110,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
+    isWarehouesLoading || isBranchesLoading || isProjectsLoading || isBrandingTemplatesLoading;
 
   const provider = {
     invoice,
@@ -119,6 +124,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     warehouses,
     projects,
     taxRates,
+    brandingTemplates,
 
     isInvoiceLoading,
     isItemsLoading,
@@ -130,6 +136,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isBranchesSuccess,
     isWarehousesSuccess,
     isTaxRatesLoading,
+    isBrandingTemplatesLoading,
 
     createInvoiceMutate,
     editInvoiceMutate,

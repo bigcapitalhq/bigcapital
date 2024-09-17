@@ -20,6 +20,10 @@ export class ChromiumlyTenancy {
     properties?: PageProperties,
     pdfFormat?: PdfFormat
   ) {
-    return this.htmlConvert.convert(tenantId, content, properties, pdfFormat);
+    const parsedProperties = {
+      margins: { top: 0, bottom: 0, left: 0, right: 0 },
+      ...properties,
+    }
+    return this.htmlConvert.convert(tenantId, content, parsedProperties, pdfFormat);
   }
 }

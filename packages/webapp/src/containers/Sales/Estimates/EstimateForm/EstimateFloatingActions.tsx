@@ -11,11 +11,16 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { If, Icon, FormattedMessage as T, Group } from '@/components';
+import { If, Icon, FormattedMessage as T, Group, FSelect } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import { useEstimateFormContext } from './EstimateFormProvider';
+import { useEstimateFormBrandingTemplatesOptions } from './utils';
+import {
+  BrandingThemeFormGroup,
+  BrandingThemeSelectButton,
+} from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 /**
  * Estimate floating actions bar.
@@ -72,6 +77,8 @@ export default function EstimateFloatingActions() {
   const handleClearBtnClick = (event) => {
     resetForm();
   };
+
+  const brandingTemplatesOptions = useEstimateFormBrandingTemplatesOptions();
 
   return (
     <Group
@@ -193,6 +200,25 @@ export default function EstimateFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
+
+      {/* ----------- Branding Template Select ----------- */}
+      <BrandingThemeFormGroup
+        name={'pdf_template_id'}
+        label={'Branding'}
+        inline
+        fastField
+        style={{ marginLeft: 20 }}
+      >
+        <FSelect
+          name={'pdf_template_id'}
+          items={brandingTemplatesOptions}
+          input={({ activeItem, text, label, value }) => (
+            <BrandingThemeSelectButton text={text || 'Brand Theme'} minimal />
+          )}
+          filterable={false}
+          popoverProps={{ minimal: true }}
+        />
+      </BrandingThemeFormGroup>
     </Group>
   );
 }

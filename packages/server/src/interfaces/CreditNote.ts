@@ -62,6 +62,8 @@ export interface ICreditNote {
   branchId?: number;
   warehouseId: number;
   createdAt?: Date;
+  termsConditions: string;
+  note: string;
 }
 
 export enum CreditNoteAction {
@@ -258,3 +260,49 @@ export type ICreditNoteGLCommonEntry = Pick<
   | 'debit'
   | 'branchId'
 >;
+
+export interface CreditNotePdfTemplateAttributes {
+  primaryColor: string;
+  secondaryColor: string;
+  showCompanyLogo: boolean;
+  companyLogo: string;
+  companyName: string;
+
+  billedToAddress: string[];
+  billedFromAddress: string[];
+  showBilledToAddress: boolean;
+  showBilledFromAddress: boolean;
+  billedToLabel: string;
+
+  total: string;
+  totalLabel: string;
+  showTotal: boolean;
+
+  subtotal: string;
+  subtotalLabel: string;
+  showSubtotal: boolean;
+
+  showCustomerNote: boolean;
+  customerNote: string;
+  customerNoteLabel: string;
+
+  showTermsConditions: boolean;
+  termsConditions: string;
+  termsConditionsLabel: string;
+
+  lines: Array<{
+    item: string;
+    description: string;
+    rate: string;
+    quantity: string;
+    total: string;
+  }>;
+
+  showCreditNoteNumber: boolean;
+  creditNoteNumberLabel: string;
+  creditNoteNumebr: string;
+
+  creditNoteDate: string;
+  showCreditNoteDate: boolean;
+  creditNoteDateLabel: string;
+}

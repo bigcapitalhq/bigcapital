@@ -687,6 +687,9 @@ importers:
       react-body-classname:
         specifier: ^1.3.1
         version: 1.3.1(react@18.3.1)
+      react-colorful:
+        specifier: ^5.6.1
+        version: 5.6.1(react-dom@18.3.1)(react@18.3.1)
       react-content-loader:
         specifier: ^6.0.1
         version: 6.2.1(react@18.3.1)
@@ -21275,6 +21278,16 @@ packages:
       react-side-effect: 2.1.2(react@18.3.1)
     transitivePeerDependencies:
       - react
+    dev: false
+
+  /react-colorful@5.6.1(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-1exovf0uGTGyq5mXQT0zgQ80uvj2PCwvF8zY1RN9/vbJVSjSo3fsB/4L3ObbF7u70NduSiK4xu4Y6q1MHoUGEw==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /react-content-loader@6.2.1(react@18.3.1):

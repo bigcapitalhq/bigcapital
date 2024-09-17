@@ -1,82 +1,207 @@
 extends ../PaperTemplateLayout.pug
 
-block head 
-  style
-    if (isRtl)
-      include ../../css/modules/estimate-rtl.css
-    else
-      include ../../css/modules/estimate.css
+block head
+  - var prefix = 'bc' 
+  style.
+    .#{prefix}-root {
+      color: #111;
+      padding: 24px 30px;
+      font-size: 12px;
+      position: relative;
+      box-shadow: inset 0 4px 0px 0 var(--invoice-primary-color);
+    }
+    .#{prefix}-big-title {
+      font-size: 60px;
+      margin: 0;
+      line-height: 1;
+      margin-bottom: 25px;
+      font-weight: 500;
+      color: #333;
+    }
+    .#{prefix}-logo-wrap {
+      height: 120px;
+      width: 120px;
+      position: absolute;
+      right: 26px;
+      top: 26px;
+      overflow: hidden;
+    }
+    .#{prefix}-terms {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+    .#{prefix}-terms-item {
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+    }
+    .#{prefix}-terms-item__label {
+      min-width: 120px;
+      color: #333;
+    }
+    .#{prefix}-terms-item__value {
+    }
+    .#{prefix}-addresses{
+      box-sizing: border-box;
+      display: flex;
+      flex-flow: wrap;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: start;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .#{prefix}-addresses > * {
+      flex: 1 1;
+    }
+    .#{prefix}-address {
+    }
+    .#{prefix}-address__item {
+    }
+    .#{prefix}-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: inherit;
+    }
+    .#{prefix}-table__header {
+      font-weight: 400;
+      border-bottom: 1px solid #000;
+      padding: 2px 10px;
+      color: #333;
+    }
+    .#{prefix}-table__header:first-of-type{
+      padding-left: 0;
+    }
+    .#{prefix}-table__header:last-of-type{
+      padding-right: 0;
+    }
+    .#{prefix}-table__header--right {
+      text-align: right;
+    }
+    .#{prefix}-table__cell {
+      border-bottom: 1px solid #F6F6F6;
+      padding: 12px 10px;
+    }
+    .#{prefix}-table__cell--right{
+      text-align: right;
+    }
+    .#{prefix}-table__cell:first-of-type{
+      padding-left: 0;
+    }
+    .#{prefix}-table__cell:last-of-type {
+      padding-right: 0;
+    }
+    .#{prefix}-totals {
+      display: flex;
+      flex-direction: column;
+      margin-left: auto;
+      width: 300px;
+      margin-bottom: 24px;
+    }
+    .#{prefix}-totals__item {
+      display: flex;
+      padding: 4px 0;
+    }
+    .#{prefix}-totals__item--border-gray {
+      border-bottom: 1px solid #DADADA;
+    }
+    .#{prefix}-totals__item--border-dark {
+      border-bottom: 1px solid #000;
+    }
+    .#{prefix}-totals__item--font-weight-bold {
+      font-weight: bold;
+    }
+    .#{prefix}-totals__item-label {
+      min-width: 160px;
+    }
+    .#{prefix}-totals__item-amount {
+      flex: 1 1 auto;
+      text-align: right;
+    }
+    .#{prefix}-statement {
+      margin-bottom: 20px;
+    }
+    .#{prefix}-statement__label {
+      color: #666;
+    }
+    .#{prefix}-statement__value {
+    }
 
 block content 
- div.estimate
-  div.estimate__header
-    div.paper
-      h1.title #{__("estimate.paper.estimate")}
-      span.email #{saleEstimate.estimateNumber}
+  div(class=`${prefix}-root`, style=`--invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor};`)
+    h1(class=`${prefix}-big-title`) Estimate
 
-    div.organization 
-      h3.title #{organizationName}
-      if organizationEmail
-       span.email #{organizationEmail}
+    if showCompanyLogo
+      div(class=`${prefix}-logo-wrap`)
+        img(alt="", src=companyLogo)
 
-  div.estimate__estimate-amount
-    div.label #{__('estimate.paper.estimate_amount')}
-    div.amount #{saleEstimate.formattedAmount}
+    //- Terms List
+    div(class=`${prefix}-terms`)
+      if showEstimateNumber
+        div(class=`${prefix}-terms-item`)
+          div(class=`${prefix}-terms-item__label`) #{estimateNumberLabel}
+          div(class=`${prefix}-terms-item__value`) #{estimateNumebr}
+      if showEstimateDate
+        div(class=`${prefix}-terms-item`)
+          div(class=`${prefix}-terms-item__label`) #{estimateDateLabel}
+          div(class=`${prefix}-terms-item__value`) #{estimateDate}
+      if showExpirationDate
+        div(class=`${prefix}-terms-item`)
+          div(class=`${prefix}-terms-item__label`) #{expirationDateLabel}
+          div(class=`${prefix}-terms-item__value`) #{expirationDate}
 
-  div.estimate__meta
-    if saleEstimate.estimateNumber
-      div.estimate__meta-item.estimate__meta-item--estimate-number
-        span.label #{__("estimate.paper.estimate_number")}
-        span.value #{saleEstimate.estimateNumber}
+    //- Addresses (Group section)
+    div(class=`${prefix}-addresses`)
+      if showBilledFromAddress
+        div(class=`${prefix}-address`)
+          strong #{companyName}
+          each item in billedFromAddress
+            div(class=`${prefix}-address__item`) #{item}
 
-    div.estimate__meta-item.estimate__meta-item--billed-to
-      span.label #{__("estimate.paper.billed_to")}
-      span.value #{saleEstimate.customer.displayName}
+      if showBilledToAddress
+        div(class=`${prefix}-address`)
+          strong #{billedToLabel}
+          each item in billedToAddress
+            div(class=`${prefix}-address__item`) #{item}
 
-    div.estimate__meta-item.estimate__meta-item--estimate-date
-      span.label #{__("estimate.paper.estimate_date")}
-      span.value #{saleEstimate.formattedEstimateDate}
-
-    div.estimate__meta-item.estimate__meta-item--due-date
-      span.label #{__("estimate.paper.expiration_date")}
-      span.value #{saleEstimate.formattedExpirationDate}
-
-  div.estimate__table
-   table 
-     thead 
-      tr
-        th.item #{__("item_entry.paper.item_name")}
-        th.rate #{__("item_entry.paper.rate")}
-        th.quantity #{__("item_entry.paper.quantity")}
-        th.total #{__("item_entry.paper.total")}
+    //- Table section (Line items)
+    table(class=`${prefix}-table`)
+      thead
+        tr
+          th(class=`${prefix}-table__header`) Item
+          th(class=`${prefix}-table__header`) Description
+          th(class=`${prefix}-table__header ${prefix}-table__header--right`) Rate
+          th(class=`${prefix}-table__header ${prefix}-table__header--right`) Total
       tbody
-        each entry in saleEstimate.entries
-         tr
-           td.item
-            div.title=entry.item.name
-            span.description=entry.description
-           td.rate=entry.rate
-           td.quantity=entry.quantity
-           td.total=entry.amount
+        each line in lines
+          tr
+            td(class=`${prefix}-table__cell`) #{line.item}
+            td(class=`${prefix}-table__cell`) #{line.description}
+            td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.rate}
+            td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.total}
 
-  div.estimate__table-after
-    div.estimate__table-total 
-      table
-        tbody
-          tr.subtotal 
-            td #{__('estimate.paper.subtotal')}
-            td #{saleEstimate.formattedAmount}
-          tr.total 
-            td #{__('estimate.paper.total')}
-            td #{saleEstimate.formattedAmount}
+    //- Totals section
+    div(class=`${prefix}-totals`)
+      if showSubtotal
+        div(class=`${prefix}-totals__item ${prefix}-totals__item--border-gray`)
+          div(class=`${prefix}-totals__item-label`) #{subtotalLabel}
+          div(class=`${prefix}-totals__item-amount`) #{subtotal}
+      if showTotal
+        div(class=`${prefix}-totals__item ${prefix}-totals__item--border-dark  ${prefix}-totals__item--font-weight-bold`)
+          div(class=`${prefix}-totals__item-label`) #{totalLabel}
+          div(class=`${prefix}-totals__item-amount`) #{total}
 
-  div.estimate__footer
-    if saleEstimate.termsConditions
-      div.estimate__conditions
-        h3 #{__("estimate.paper.conditions_title")}
-        p #{saleEstimate.termsConditions}
+    //- Statements section
+    if showCustomerNote && customerNote
+      div(class=`${prefix}-statement`)
+        div(class=`${prefix}-statement__label`) #{customerNoteLabel}
+        div(class=`${prefix}-statement__value`) #{customerNote}
 
-    if saleEstimate.note
-      div.estimate__notes
-        h3 #{__("estimate.paper.notes_title")}
-        p #{saleEstimate.note}
+    if showTermsConditions && termsConditions
+      div(class=`${prefix}-statement`)
+        div(class=`${prefix}-statement__label`) #{termsConditionsLabel}
+        div(class=`${prefix}-statement__value`) #{termsConditions}

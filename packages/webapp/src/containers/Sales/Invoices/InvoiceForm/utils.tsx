@@ -10,7 +10,6 @@ import {
   compose,
   transformToForm,
   repeatValue,
-  formattedAmount,
   defaultFastFieldShouldUpdate,
 } from '@/utils';
 import { ERROR } from '@/constants/errors';
@@ -31,6 +30,7 @@ import {
   transformAttachmentsToForm,
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
+import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -66,6 +66,7 @@ export const defaultInvoice = {
   branch_id: '',
   warehouse_id: '',
   project_id: '',
+  pdf_template_id: '',
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
   attachments: [],
 };
@@ -405,4 +406,13 @@ export const useInvoiceCurrencyCode = () => {
   const { values } = useFormikContext();
 
   return values.currency_code;
+};
+
+export const useInvoiceFormBrandingTemplatesOptions = () => {
+  const { brandingTemplates } = useInvoiceFormContext();
+
+  return React.useMemo(
+    () => convertBrandingTemplatesToOptions(brandingTemplates),
+    [brandingTemplates],
+  );
 };

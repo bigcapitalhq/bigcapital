@@ -238,7 +238,7 @@ export default class ItemsEntriesService {
    * Sets the cost/sell accounts to the invoice entries.
    */
   public setItemsEntriesDefaultAccounts(tenantId: number) {
-    return async (entries: IItemEntry[]) => {
+    return async (entries: IItemEntry[]) =>   {
       const { Item } = this.tenancy.models(tenantId);
 
       const entriesItemsIds = entries.map((e) => e.itemId);
