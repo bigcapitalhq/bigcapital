@@ -9,7 +9,6 @@ export const mergePdfTemplateWithDefaultAttributes = (
     brandingTemplate,
     (val, key) => val !== null && Object.keys(defaultAttributes).includes(key)
   );
-
   return {
     ...defaultAttributes,
     ...brandingAttributes,
@@ -38,6 +37,10 @@ export const transformInvoiceToPdfTemplate = (
       rate: entry.rateFormatted,
       quantity: entry.quantityFormatted,
       total: entry.totalFormatted,
+    })),
+    taxes: invoice.taxes.map((tax) => ({
+      label: tax.name,
+      amount: tax.taxRateAmountFormatted,
     })),
   };
 };

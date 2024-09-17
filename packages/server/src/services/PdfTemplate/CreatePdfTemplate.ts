@@ -36,7 +36,7 @@ export class CreatePdfTemplate {
         tenantId,
       });
 
-      await PdfTemplate.query(trx).insert({
+      const pdfTemplate = await PdfTemplate.query(trx).insert({
         templateName,
         resource,
         attributes,
@@ -45,6 +45,7 @@ export class CreatePdfTemplate {
       await this.eventPublisher.emitAsync(events.pdfTemplate.onCreated, {
         tenantId,
       });
+      return pdfTemplate;
     });
   }
 }

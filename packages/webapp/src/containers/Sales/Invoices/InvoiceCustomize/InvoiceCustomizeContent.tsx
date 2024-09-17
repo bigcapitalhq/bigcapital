@@ -43,10 +43,6 @@ export function InvoiceCustomizeContent() {
       <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
         <InvoiceCustomizeContentFields />
       </ElementCustomize.FieldsTab>
-
-      <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
-        asdfasdfdsaf #3
-      </ElementCustomize.FieldsTab>
     </BrandingTemplateForm>
   );
 }

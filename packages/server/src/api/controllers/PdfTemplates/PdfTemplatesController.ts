@@ -21,7 +21,7 @@ export class PdfTemplatesController extends BaseController {
       this.validationResult,
       this.deletePdfTemplate.bind(this)
     );
-    router.put(
+    router.post(
       '/:template_id',
       [
         param('template_id').exists().isInt().toInt(),
@@ -77,7 +77,10 @@ export class PdfTemplatesController extends BaseController {
         resource,
         attributes
       );
-      return res.status(201).send(result);
+      return res.status(201).send({
+        id: result.id,
+        message: 'The PDF template has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -94,7 +97,10 @@ export class PdfTemplatesController extends BaseController {
         Number(templateId),
         editTemplateDTO
       );
-      return res.status(200).send(result);
+      return res.status(200).send({
+        id: result.id,
+        message: 'The PDF template has been updated successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -109,7 +115,10 @@ export class PdfTemplatesController extends BaseController {
         tenantId,
         Number(templateId)
       );
-      return res.status(204).send();
+      return res.status(204).send({
+        id: templateId,
+        message: 'The PDF template has been deleted successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -158,13 +167,10 @@ export class PdfTemplatesController extends BaseController {
         tenantId,
         Number(templateId)
       );
-      return res
-        .status(204)
-        .send({
-          id: templateId,
-          message:
-            'The given pdf template has been assigned as default template',
-        });
+      return res.status(204).send({
+        id: templateId,
+        message: 'The given pdf template has been assigned as default template',
+      });
     } catch (error) {
       next(error);
     }

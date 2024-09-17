@@ -37,10 +37,6 @@ export function PaymentReceivedCustomizeContent() {
       <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
         <PaymentReceivedCustomizeContentFields />
       </ElementCustomize.FieldsTab>
-
-      <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
-        asdfasdfdsaf #3
-      </ElementCustomize.FieldsTab>
     </BrandingTemplateForm>
   );
 }

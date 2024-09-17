@@ -36,10 +36,6 @@ export function ReceiptCustomizeContent() {
       <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
         <ReceiptCustomizeFieldsContent />
       </ElementCustomize.FieldsTab>
-
-      <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
-        asdfasdfdsaf #3
-      </ElementCustomize.FieldsTab>
     </BrandingTemplateForm>
   );
 }

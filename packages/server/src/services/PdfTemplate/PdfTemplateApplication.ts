@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { ICreateInvoicePdfTemplateDTO } from './types';
+import { ICreateInvoicePdfTemplateDTO, IEditPdfTemplateDTO } from './types';
 import { CreatePdfTemplate } from './CreatePdfTemplate';
 import { DeletePdfTemplate } from './DeletePdfTemplate';
 import { GetPdfTemplate } from './GetPdfTemplate';

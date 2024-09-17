@@ -36,10 +36,6 @@ export function EstimateCustomizeContent() {
       <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
         <EstimateCustomizeContentFields />
       </ElementCustomize.FieldsTab>
-
-      <ElementCustomize.FieldsTab id={'totals'} label={'Totals'}>
-        asdfasdfdsaf #3
-      </ElementCustomize.FieldsTab>
     </BrandingTemplateForm>
   );
 }

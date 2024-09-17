@@ -1,6 +1,12 @@
 export enum ERRORS {
   CANNOT_DELETE_PREDEFINED_PDF_TEMPLATE = 'CANNOT_DELETE_PREDEFINED_PDF_TEMPLATE',
 }
+
+export interface IEditPdfTemplateDTO {
+  templateName: string;
+  attributes: Record<string, any>;
+}
+
 export interface ICreateInvoicePdfTemplateDTO {
   // Colors
   primaryColor?: string;

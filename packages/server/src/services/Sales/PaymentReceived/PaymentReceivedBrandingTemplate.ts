@@ -18,7 +18,7 @@ export class PaymentReceivedBrandingTemplate {
   public async getPaymentReceivedPdfTemplate(
     tenantId: number,
     paymentTemplateId: number
-  ): Promise<PdfTemplate> {
+   ) {
     const template = await this.getPdfTemplateService.getPdfTemplate(
       tenantId,
       paymentTemplateId

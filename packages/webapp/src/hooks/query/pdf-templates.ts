@@ -98,7 +98,7 @@ export const useEditPdfTemplate = (
   >(
     ({ templateId, values }) =>
       apiRequest
-        .put(`/pdf-templates/${templateId}`, transfromToSnakeCase(values))
+        .post(`/pdf-templates/${templateId}`, transfromToSnakeCase(values))
         .then((res) => res.data),
     {
       onSuccess: () => {

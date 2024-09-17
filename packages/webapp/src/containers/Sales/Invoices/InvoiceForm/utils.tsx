@@ -10,7 +10,6 @@ import {
   compose,
   transformToForm,
   repeatValue,
-  formattedAmount,
   defaultFastFieldShouldUpdate,
 } from '@/utils';
 import { ERROR } from '@/constants/errors';
