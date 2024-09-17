@@ -26,7 +26,7 @@ block head
       top: 26px;
       overflow: hidden;
     }
-    .#{prefix}-terms-list {
+    .#{prefix}-terms {
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -43,7 +43,7 @@ block head
     }
     .#{prefix}-terms-item__value {
     }
-    .#{prefix}-address-section{
+    .#{prefix}-addresses{
       box-sizing: border-box;
       display: flex;
       flex-flow: wrap;
@@ -53,6 +53,9 @@ block head
       justify-content: flex-start;
       gap: 10px;
       margin-bottom: 24px;
+    }
+    .#{prefix}-addresses > * {
+      flex: 1 1;
     }
     .#{prefix}-address {
     }
@@ -120,8 +123,10 @@ block head
       text-align: right;
     }
     .#{prefix}-statement {
+      margin-bottom: 20px;
     }
     .#{prefix}-statement__label {
+      color: #666;
     }
     .#{prefix}-statement__value {
     }
@@ -150,7 +155,7 @@ block content
           div(class=`${prefix}-terms-item__value`) #{expirationDate}
 
     //- Addresses (Group section)
-    div(class=`${prefix}-address-section`)
+    div(class=`${prefix}-addresses`)
       if showBilledFromAddress
         div(class=`${prefix}-address`)
           strong #{companyName}
@@ -182,21 +187,21 @@ block content
     //- Totals section
     div(class=`${prefix}-totals`)
       if showSubtotal
-        div(class=`${prefix}-totals__item`)
+        div(class=`${prefix}-totals__item ${prefix}-totals__item--border-gray`)
           div(class=`${prefix}-totals__item-label`) #{subtotalLabel}
           div(class=`${prefix}-totals__item-amount`) #{subtotal}
       if showTotal
-        div(class=`${prefix}-totals__item`)
+        div(class=`${prefix}-totals__item ${prefix}-totals__item--border-dark  ${prefix}-totals__item--font-weight-bold`)
           div(class=`${prefix}-totals__item-label`) #{totalLabel}
           div(class=`${prefix}-totals__item-amount`) #{total}
 
     //- Statements section
-    if showCustomerNote
+    if showCustomerNote && customerNote
       div(class=`${prefix}-statement`)
         div(class=`${prefix}-statement__label`) #{customerNoteLabel}
         div(class=`${prefix}-statement__value`) #{customerNote}
 
-    if showTermsConditions
+    if showTermsConditions && termsConditions
       div(class=`${prefix}-statement`)
         div(class=`${prefix}-statement__label`) #{termsConditionsLabel}
         div(class=`${prefix}-statement__value`) #{termsConditions}

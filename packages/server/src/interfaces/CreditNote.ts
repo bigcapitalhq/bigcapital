@@ -62,6 +62,8 @@ export interface ICreditNote {
   branchId?: number;
   warehouseId: number;
   createdAt?: Date;
+  termsConditions: string;
+  note: string;
 }
 
 export enum CreditNoteAction {

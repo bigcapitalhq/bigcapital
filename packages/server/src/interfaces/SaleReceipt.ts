@@ -155,3 +155,57 @@ export interface ISaleReceiptMailPresend {
   saleReceiptId: number;
   messageOptions: SaleReceiptMailOptsDTO;
 }
+
+export interface ISaleReceiptBrandingTemplateAttributes {
+  primaryColor: string;
+  secondaryColor: string;
+  showCompanyLogo: boolean;
+  companyLogo: string;
+  companyName: string;
+
+  // Address
+  billedToAddress: string[];
+  billedFromAddress: string[];
+  showBilledFromAddress: boolean;
+  showBilledToAddress: boolean;
+  billedToLabel: string;
+
+  // Total
+  total: string;
+  totalLabel: string;
+  showTotal: boolean;
+
+  // Subtotal
+  subtotal: string;
+  subtotalLabel: string;
+  showSubtotal: boolean;
+
+  // Customer Note
+  showCustomerNote: boolean;
+  customerNote: string;
+  customerNoteLabel: string;
+
+  // Terms & Conditions
+  showTermsConditions: boolean;
+  termsConditions: string;
+  termsConditionsLabel: string;
+
+  // Lines
+  lines: Array<{
+    item: string;
+    description: string;
+    rate: string;
+    quantity: string;
+    total: string;
+  }>;
+
+  // Receipt Number
+  showReceiptNumber: boolean;
+  receiptNumberLabel: string;
+  receiptNumebr: string;
+
+  // Receipt Date
+  receiptDate: string;
+  showReceiptDate: boolean;
+  receiptDateLabel: string;
+}

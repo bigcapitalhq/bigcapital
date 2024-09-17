@@ -44,8 +44,7 @@ block head
     .#{prefix}-terms-item__value {
       /* Styles for the term value */
     }
-
-    .#{prefix}-group {
+    .#{prefix}-address-section{
       box-sizing: border-box;
       display: flex;
       flex-flow: wrap;
@@ -56,12 +55,9 @@ block head
       gap: 10px;
       margin-bottom: 24px;
     }
-
-
-    .#{prefix}-address {
-      /* Styles for each address block */
+    .#{prefix}-address-section > * {
+      flex: 1 1;
     }
-
     .#{prefix}-table {
       width: 100%;
       border-collapse: collapse;
@@ -124,15 +120,12 @@ block head
       flex: 1 1 auto;
       text-align: right;
     }
-
     .#{prefix}-statement {
-      /* Styles for customer note/terms statement section */
+      margin-bottom: 20px;
     }
-
     .#{prefix}-statement__label {
-      /* Styles for statement label */
+      color: #666;
     }
-
     .#{prefix}-statement__value {
       /* Styles for statement value */
     }
@@ -156,7 +149,7 @@ block content
         div(class=`${prefix}-terms-item__label`) #{creditNoteDateLabel}:
         div(class=`${prefix}-terms-item__value`) #{creditNoteDate}
 
-  div(class=`${prefix}-group`)
+  div(class=`${prefix}-address-section`)
     if showBilledFromAddress
       div(class=`${prefix}-address`)
         strong #{companyName}
@@ -169,30 +162,30 @@ block content
           div #{address}
 
   table(class=`${prefix}-table`)
-    thead(class=`${prefix}-table__header`)
+    thead
       tr
-        th #{'Item'}
-        th #{'Description'}
-        th #{'Rate'}
-        th #{'Total'}
+        th(class=`${prefix}-table__header`) #{'Item'}
+        th(class=`${prefix}-table__header`) #{'Description'}
+        th(class=`${prefix}-table__header`) #{'Rate'}
+        th(class=`${prefix}-table__header`) #{'Total'}
     tbody
       each line in lines
         tr(class=`${prefix}-table__row`)
-          td #{line.item}
-          td #{line.description}
-          td(class=`${prefix}-table__column--right`) #{line.rate}
-          td(class=`${prefix}-table__column--right`) #{line.total}
+          td(class=`${prefix}-table__cell`) #{line.item}
+          td(class=`${prefix}-table__cell`) #{line.description}
+          td(class=`${prefix}-table__cell--right`) #{line.rate}
+          td(class=`${prefix}-table__cell--right`) #{line.total}
 
   div(class=`${prefix}-totals`)
     if showSubtotal
       div(class=`${prefix}-totals__item ${prefix}-totals__item--border-gray`)
-        div #{subtotalLabel}:
-        div #{subtotal}
+        div(class=`${prefix}-totals__item-label`) #{subtotallabel}
+        div(class=`${prefix}-totals__item-amount`) #{subtotal}
 
     if showTotal
       div(class=`${prefix}-totals__item ${prefix}-totals__item--border-dark`)
-        div #{totalLabel}:
-        div #{total}
+        div(class=`${prefix}-totals__item-amount`) #{totalLabel}:
+        div(class=`${prefix}-totals__item-label`) #{total}
 
   if showCustomerNote
     div(class=`${prefix}-statement`)

@@ -229,13 +229,13 @@ block content
           div(class=`${prefix}-totals__item-amount`) #{balanceDue}
 
     //- Footer section
-    if showTermsConditions
+    if showTermsConditions && termsConditions
       div(class=`${prefix}-paragraph`)
         if termsConditionsLabel
           div(class=`${prefix}-paragraph__label`) #{termsConditionsLabel}
         div(class=`${prefix}-paragraph__value`) #{termsConditions}
 
-    if showStatement
+    if showStatement && statement
       div(class=`${prefix}-paragraph`)
         if statementLabel
           div(class=`${prefix}-paragraph__label`) #{statementLabel}

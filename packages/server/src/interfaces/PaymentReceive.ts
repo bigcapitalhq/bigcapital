@@ -203,53 +203,35 @@ export interface PaymentReceivedPdfTax {
 export interface PaymentReceivedPdfTemplateAttributes {
   primaryColor: string;
   secondaryColor: string;
-  companyName: string;
-
   showCompanyLogo: boolean;
   companyLogo: string;
+  companyName: string;
 
-  dueDateLabel: string;
-  showDueDate: boolean;
-
-  dateIssueLabel: string;
-  showDateIssue: boolean;
-
-  invoiceNumberLabel: string;
-  showInvoiceNumber: boolean;
-
-  showBillingToAddress: boolean;
-  showBilledFromAddress: boolean;
-  billedToLabel: string;
-
-  lineItemLabel: string;
-  lineDescriptionLabel: string;
-  lineRateLabel: string;
-  lineTotalLabel: string;
-
-  totalLabel: string;
-  subtotalLabel: string;
-  discountLabel: string;
-  paymentMadeLabel: string;
-  balanceDueLabel: string;
-
-  showTotal: boolean;
-  showSubtotal: boolean;
-  showDiscount: boolean;
-  showTaxes: boolean;
-  showPaymentMade: boolean;
-  showDueAmount: boolean;
-  showBalanceDue: boolean;
-
-  discount: string;
-
-  termsConditionsLabel: string;
-  showTermsConditions: boolean;
-
-  lines: PaymentReceivedPdfLineItem[];
-  taxes: PaymentReceivedPdfTax[];
-
-  statementLabel: string;
-  showStatement: boolean;
   billedToAddress: string[];
   billedFromAddress: string[];
+  showBilledFromAddress: boolean;
+  showBillingToAddress: boolean;
+  billedToLabel: string;
+
+  total: string;
+  totalLabel: string;
+  showTotal: boolean;
+
+  subtotal: string;
+  subtotalLabel: string;
+  showSubtotal: boolean;
+
+  lines: Array<{
+    invoiceNumber: string;
+    invoiceAmount: string;
+    paidAmount: string;
+  }>;
+
+  showPaymentReceivedNumber: boolean;
+  paymentReceivedNumberLabel: string;
+  paymentReceivedNumebr: string;
+
+  paymentReceivedDate: string;
+  showPaymentReceivedDate: boolean;
+  paymentReceivedDateLabel: string;
 }

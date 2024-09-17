@@ -136,19 +136,18 @@ function ReceiptFormProvider({ receiptId, ...props }) {
 
     // Branding templates
     brandingTemplates,
-    isBrandingTemplatesLoading
+    isBrandingTemplatesLoading,
   };
+  const isLoading =
+    isReceiptLoading ||
+    isAccountsLoading ||
+    isCustomersLoading ||
+    isItemsLoading ||
+    isSettingLoading ||
+    isBrandingTemplatesLoading;
+
   return (
-    <DashboardInsider
-      loading={
-        isReceiptLoading ||
-        isAccountsLoading ||
-        isCustomersLoading ||
-        isItemsLoading ||
-        isSettingLoading
-      }
-      name={'receipt-form'}
-    >
+    <DashboardInsider loading={isLoading} name={'receipt-form'}>
       <ReceiptFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

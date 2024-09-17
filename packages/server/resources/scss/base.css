@@ -29,14 +29,12 @@ body{
   line-height: 1.5;
   color: #000;
   background-color: #fff;
-  direction: ltr;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+}
 
+body, h1, h2, h3, h4, h5, h6{
   font-family: "Noto Sans", sans-serif;
   font-optical-sizing: auto;
-  /* font-weight: <weight>; */
   font-style: normal;
-  /* font-variation-settings:
-    "wdth" 100; */
 }

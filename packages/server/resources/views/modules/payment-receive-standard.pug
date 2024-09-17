@@ -42,9 +42,6 @@ block head
       min-width: 120px;
       color: #333;
     }
-    .#{prefix}-group{ 
-
-    }
     .#{prefix}-addresses{ 
       box-sizing: border-box;
       display: flex;
@@ -95,12 +92,6 @@ block head
     }
     .#{prefix}-table__cell--right {
       text-align: right;
-    }
-    .#{prefix}-table__column{ 
-
-    }
-    .#{prefix}-table__column--right{ 
-
     }
     .#{prefix}-totals {
       display: flex;
@@ -177,11 +168,11 @@ block content
 
     div(class=`${prefix}-totals`)
       if showSubtotal
-        div(class=`${prefix}-totals__item`)
+        div(class=`${prefix}-totals__item ${prefix}-totals__item--gray-border`)
           div(class=`${prefix}-totals__item-label`) #{subtotalLabel}
           div(class=`${prefix}-totals__item-amount`) #{subtotal}
 
       if showTotal
-        div(class=`${prefix}-totals__item`)
+        div(class=`${prefix}-totals__item ${prefix}-totals__item--dark-border`)
           div(class=`${prefix}-totals__item-label`) #{totalLabel}
           div(class=`${prefix}-totals__item-amount`) #{total}
