@@ -2,6 +2,7 @@ import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import { omit } from 'lodash';
 import * as R from 'ramda';
+import composeAsync from 'async/compose';
 import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from './constants';
@@ -16,6 +17,7 @@ import AutoIncrementOrdersService from '@/services/Sales/AutoIncrementOrdersServ
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { assocItemEntriesDefaultIndex } from '../Items/utils';
+import { BrandingTemplateDTOTransformer } from '../PdfTemplate/BrandingTemplateDTOTransformer';
 
 @Service()
 export default class BaseCreditNotes {
@@ -34,17 +36,20 @@ export default class BaseCreditNotes {
   @Inject()
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
 
+  @Inject()
+  private brandingTemplatesTransformer: BrandingTemplateDTOTransformer;
+
   /**
    * Transformes the credit/edit DTO to model.
    * @param {ICreditNoteNewDTO | ICreditNoteEditDTO} creditNoteDTO
    * @param {string} customerCurrencyCode -
    */
-  protected transformCreateEditDTOToModel = (
+  protected transformCreateEditDTOToModel = async (
     tenantId: number,
     creditNoteDTO: ICreditNoteNewDTO | ICreditNoteEditDTO,
     customerCurrencyCode: string,
     oldCreditNote?: ICreditNote
-  ): ICreditNote => {
+  ): Promise<ICreditNote> => {
     // Retrieve the total amount of the given items entries.
     const amount = this.itemsEntriesService.getTotalItemsEntries(
       creditNoteDTO.entries
@@ -83,10 +88,18 @@ export default class BaseCreditNotes {
       refundedAmount: 0,
       invoicesAmount: 0,
     };
+    const initialAsyncDTO = await composeAsync(
+      // Assigns the default branding template id to the invoice DTO.
+      this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
+        tenantId,
+        'CreditNote'
+      )
+    )(initialDTO);
+
     return R.compose(
       this.branchDTOTransform.transformDTO<ICreditNote>(tenantId),
       this.warehouseDTOTransform.transformDTO<ICreditNote>(tenantId)
-    )(initialDTO);
+    )(initialAsyncDTO);
   };
 
   /**

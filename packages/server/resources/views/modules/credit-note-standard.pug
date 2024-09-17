@@ -1,81 +1,198 @@
 extends ../PaperTemplateLayout.pug
 
 block head 
-  style
-    if (isRtl)
-      include ../../css/modules/credit-rtl.css
-    else
-      include ../../css/modules/credit.css
+  - var prefix = 'bc'
+  style.
+    .#{prefix}-root {
+      color: #111;
+      padding: 24px 30px;
+      font-size: 12px;
+      position: relative;
+      box-shadow: inset 0 4px 0px 0 var(--invoice-primary-color);
+    }
+    .#{prefix}-big-title {
+      font-size: 60px;
+      margin: 0;
+      line-height: 1;
+      margin-bottom: 25px;
+      font-weight: 500;
+      color: #333;
+    }
+    .#{prefix}-logo-wrap {
+      height: 120px;
+      width: 120px;
+      position: absolute;
+      right: 26px;
+      top: 26px;
+      overflow: hidden;
+    }
+    .#{prefix}-terms-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+    .#{prefix}-terms-item {
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+    }
+    .#{prefix}-terms-item__label {
+      min-width: 120px;
+      color: #333;
+    }
+    .#{prefix}-terms-item__value {
+      /* Styles for the term value */
+    }
+    .#{prefix}-address-section{
+      box-sizing: border-box;
+      display: flex;
+      flex-flow: wrap;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: start;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .#{prefix}-address-section > * {
+      flex: 1 1;
+    }
+    .#{prefix}-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: inherit;
+    }
+    .#{prefix}-table__header {
+      font-weight: 400;
+      border-bottom: 1px solid #000;
+      padding: 2px 10px;
+      color: #333;
+    }
+    .#{prefix}-table__header:first-of-type{
+      padding-left: 0;
+    }
+    .#{prefix}-table__header:last-of-type{
+      padding-right: 0;
+    }
+    .#{prefix}-table__header--right {
+      text-align: right;
+    }
+    .#{prefix}-table__cell {
+      border-bottom: 1px solid #F6F6F6;
+      padding: 12px 10px;
+    }
+    .#{prefix}-table__cell:first-of-type{
+      padding-left: 0;
+    }
+    .#{prefix}-table__cell:last-of-type {
+      padding-right: 0;
+    }
+    .#{prefix}-table__cell--right {
+      text-align: right;
+    }
+
+    .#{prefix}-totals {
+      display: flex;
+      flex-direction: column;
+      margin-left: auto;
+      width: 300px;
+      margin-bottom: 24px;
+    }
+    .#{prefix}-totals__item {
+      display: flex;
+      padding: 4px 0;
+    }
+    .#{prefix}-totals__item--border-gray {
+      border-bottom: 1px solid #DADADA;
+    }
+    .#{prefix}-totals__item--border-dark {
+      border-bottom: 1px solid #000;
+    }
+    .#{prefix}-totals__item--font-weight-bold {
+      font-weight: bold;
+    }
+    .#{prefix}-totals__item-label {
+      min-width: 160px;
+    }
+    .#{prefix}-totals__item-amount {
+      flex: 1 1 auto;
+      text-align: right;
+    }
+    .#{prefix}-statement {
+      margin-bottom: 20px;
+    }
+    .#{prefix}-statement__label {
+      color: #666;
+    }
+    .#{prefix}-statement__value {
+      /* Styles for statement value */
+    }
 
 block content
- div.credit
-  div.credit__header
-    div.paper
-      h1.title #{__('credit.paper.credit_note')}
-      if creditNote.creditNoteNumber
-       span.creditNoteNumber #{creditNote.creditNoteNumber}
+ div(class=`${prefix}-root`)
+  div(class=`${prefix}-big-title`) Credit Note
 
-    div.organization
-      h3.title #{organizationName}
-      if organizationEmail
-       span.email #{organizationEmail}
+  if showCompanyLogo
+    div(class=`${prefix}-logo-wrap`)
+      img(src=companyLogo alt=`Company Logo`)
+  
+  div(class=`${prefix}-terms-list`)
+    if showCreditNoteNumber
+      div(class=`${prefix}-terms-item`)
+        div(class=`${prefix}-terms-item__label`) #{creditNoteNumberLabel}:
+        div(class=`${prefix}-terms-item__value`) #{creditNoteNumebr}
 
-  div.credit__full-amount
-    div.label #{__('credit.paper.amount')}
-    div.amount #{creditNote.formattedAmount}
+    if showCreditNoteDate
+      div(class=`${prefix}-terms-item`)
+        div(class=`${prefix}-terms-item__label`) #{creditNoteDateLabel}:
+        div(class=`${prefix}-terms-item__value`) #{creditNoteDate}
 
-  div.credit__meta
-   div.credit__meta-item.credit__meta-item--amount
-    span.label #{__('credit.paper.remaining')}
-    span.value #{creditNote.formattedCreditsRemaining}
+  div(class=`${prefix}-address-section`)
+    if showBilledFromAddress
+      div(class=`${prefix}-address`)
+        strong #{companyName}
+        each address in billedFromAddress
+          div #{address}
+    if showBilledToAddress
+      div(class=`${prefix}-address`)
+        strong #{billedToLabel}
+        each address in billedToAddress
+          div #{address}
 
-   div.credit__meta-item.credit__meta-item--billed-to
-    span.label #{__("credit.paper.billed_to")}
-    span.value #{creditNote.customer.displayName}
-
-   div.credit__meta-item.credit__meta-item--credit-date
-    span.label #{__("credit.paper.credit_date")}
-    span.value #{creditNote.formattedCreditNoteDate}
-
-  div.credit__table
-   table 
-    thead 
-     tr
-       th.item #{__("item_entry.paper.item_name")}
-       th.rate #{__("item_entry.paper.rate")}
-       th.quantity #{__("item_entry.paper.quantity")}
-       th.total #{__("item_entry.paper.total")}
+  table(class=`${prefix}-table`)
+    thead
+      tr
+        th(class=`${prefix}-table__header`) #{'Item'}
+        th(class=`${prefix}-table__header`) #{'Description'}
+        th(class=`${prefix}-table__header`) #{'Rate'}
+        th(class=`${prefix}-table__header`) #{'Total'}
     tbody
-      each entry in creditNote.entries
-       tr
-        td.item
-         div.title=entry.item.name
-         span.description=entry.description
-        td.rate=entry.rate
-        td.quantity=entry.quantity
-        td.total=entry.amount
+      each line in lines
+        tr(class=`${prefix}-table__row`)
+          td(class=`${prefix}-table__cell`) #{line.item}
+          td(class=`${prefix}-table__cell`) #{line.description}
+          td(class=`${prefix}-table__cell--right`) #{line.rate}
+          td(class=`${prefix}-table__cell--right`) #{line.total}
 
-  div.credit__table-after
-    div.credit__table-total
-      table 
-        tbody
-          tr.total
-            td #{__('credit.paper.total')}
-            td #{creditNote.formattedAmount}
-          tr.payment-amount
-            td #{__('credit.paper.credits_used')}
-            td #{creditNote.formattedCreditsUsed}
-          tr.blanace-due
-            td #{__('credit.paper.credits_remaining')}
-            td #{creditNote.formattedCreditsRemaining}
+  div(class=`${prefix}-totals`)
+    if showSubtotal
+      div(class=`${prefix}-totals__item ${prefix}-totals__item--border-gray`)
+        div(class=`${prefix}-totals__item-label`) #{subtotallabel}
+        div(class=`${prefix}-totals__item-amount`) #{subtotal}
 
-  div.credit__footer        
-    if creditNote.termsConditions
-     div.credit__conditions
-      h3 #{__("credit.paper.terms_conditions")}
-      p #{creditNote.termsConditions}
+    if showTotal
+      div(class=`${prefix}-totals__item ${prefix}-totals__item--border-dark`)
+        div(class=`${prefix}-totals__item-amount`) #{totalLabel}:
+        div(class=`${prefix}-totals__item-label`) #{total}
 
-    if creditNote.note
-     div.credit__notes
-      h3 #{__("credit.paper.notes")}
-      p #{creditNote.note}
+  if showCustomerNote
+    div(class=`${prefix}-statement`)
+      div(class=`${prefix}-statement__label`) #{customerNoteLabel}:
+      div(class=`${prefix}-statement__value`) #{customerNote}
+
+  if showTermsConditions
+    div(class=`${prefix}-statement`)
+      div(class=`${prefix}-statement__label`) #{termsConditionsLabel}:
+      div(class=`${prefix}-statement__value`) #{termsConditions}

@@ -2,8 +2,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export function Card({ className, children }) {
-  return <CardRoot className={className}>{children}</CardRoot>;
+export function Card({ className, style, children }) {
+  return (
+    <CardRoot className={className} style={style}>
+      {children}
+    </CardRoot>
+  );
 }
 
 const CardRoot = styled.div`

@@ -25,6 +25,7 @@ export interface IPaymentReceived {
   updatedAt: Date;
   localAmount?: number;
   branchId?: number;
+  pdfTemplateId?: number;
 }
 export interface IPaymentReceivedCreateDTO {
   customerId: number;
@@ -184,4 +185,53 @@ export interface PaymentReceiveMailPresendEvent {
   tenantId: number;
   paymentReceiveId: number;
   messageOptions: PaymentReceiveMailOptsDTO;
+}
+
+export interface PaymentReceivedPdfLineItem {
+  item: string;
+  description: string;
+  rate: string;
+  quantity: string;
+  total: string;
+}
+
+export interface PaymentReceivedPdfTax {
+  label: string;
+  amount: string;
+}
+
+export interface PaymentReceivedPdfTemplateAttributes {
+  primaryColor: string;
+  secondaryColor: string;
+  showCompanyLogo: boolean;
+  companyLogo: string;
+  companyName: string;
+
+  billedToAddress: string[];
+  billedFromAddress: string[];
+  showBilledFromAddress: boolean;
+  showBillingToAddress: boolean;
+  billedToLabel: string;
+
+  total: string;
+  totalLabel: string;
+  showTotal: boolean;
+
+  subtotal: string;
+  subtotalLabel: string;
+  showSubtotal: boolean;
+
+  lines: Array<{
+    invoiceNumber: string;
+    invoiceAmount: string;
+    paidAmount: string;
+  }>;
+
+  showPaymentReceivedNumber: boolean;
+  paymentReceivedNumberLabel: string;
+  paymentReceivedNumebr: string;
+
+  paymentReceivedDate: string;
+  showPaymentReceivedDate: boolean;
+  paymentReceivedDateLabel: string;
 }

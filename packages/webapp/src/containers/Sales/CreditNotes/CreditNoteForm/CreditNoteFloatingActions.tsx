@@ -12,10 +12,15 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { If, Icon, FormattedMessage as T, Group } from '@/components';
+import { If, Icon, FormattedMessage as T, Group, FSelect } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+import {
+  BrandingThemeFormGroup,
+  BrandingThemeSelectButton,
+} from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import { useCreditNoteFormBrandingTemplatesOptions } from './utils';
 
 /**
  * Credit note floating actions.
@@ -73,6 +78,8 @@ export default function CreditNoteFloatingActions() {
   const handleClearBtnClick = (event) => {
     resetForm();
   };
+
+  const brandingTemplatesOptions = useCreditNoteFormBrandingTemplatesOptions();
 
   return (
     <Group
@@ -190,6 +197,25 @@ export default function CreditNoteFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
+
+      {/* ----------- Branding Template Select ----------- */}
+      <BrandingThemeFormGroup
+        name={'pdf_template_id'}
+        label={'Branding'}
+        inline
+        fastField
+        style={{ marginLeft: 20 }}
+      >
+        <FSelect
+          name={'pdf_template_id'}
+          items={brandingTemplatesOptions}
+          input={({ activeItem, text, label, value }) => (
+            <BrandingThemeSelectButton text={text || 'Brand Theme'} minimal />
+          )}
+          filterable={false}
+          popoverProps={{ minimal: true }}
+        />
+      </BrandingThemeFormGroup>
     </Group>
   );
 }

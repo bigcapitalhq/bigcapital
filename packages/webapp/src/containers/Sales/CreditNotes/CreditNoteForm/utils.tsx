@@ -24,6 +24,7 @@ import {
   transformAttachmentsToForm,
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
+import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -54,7 +55,8 @@ export const defaultCreditNote = {
   exchange_rate: 1,
   currency_code: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
-  attachments: []
+  attachments: [],
+  pdf_template_id: '',
 };
 
 /**
@@ -213,4 +215,14 @@ export const useCreditNoteIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+
+export const useCreditNoteFormBrandingTemplatesOptions = () => {
+  const { brandingTemplates } = useCreditNoteFormContext();
+
+  return React.useMemo(
+    () => convertBrandingTemplatesToOptions(brandingTemplates),
+    [brandingTemplates],
+  );
 };

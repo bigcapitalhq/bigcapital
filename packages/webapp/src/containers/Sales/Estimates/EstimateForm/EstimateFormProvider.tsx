@@ -12,8 +12,9 @@ import {
   useCreateEstimate,
   useEditEstimate,
 } from '@/hooks/query';
-import { Features } from '@/constants';
 import { useProjects } from '@/containers/Projects/hooks';
+import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { ITEMS_FILTER_ROLES } from './utils';
 
@@ -71,6 +72,10 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
+  // Fetches branding templates of invoice.
+  const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
+    useGetPdfTemplates({ resource: 'SaleEstimate' });
+
   // Handle fetch settings.
   useSettingsEstimates();
 
@@ -112,13 +117,19 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
 
     createEstimateMutate,
     editEstimateMutate,
+
+    brandingTemplates,
+    isBrandingTemplatesLoading,
   };
 
+  const isLoading =
+    isCustomersLoading ||
+    isItemsLoading ||
+    isEstimateLoading ||
+    isBrandingTemplatesLoading;
+
   return (
-    <DashboardInsider
-      loading={isCustomersLoading || isItemsLoading || isEstimateLoading}
-      name={'estimate-form'}
-    >
+    <DashboardInsider loading={isLoading} name={'estimate-form'}>
       <EstimateFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

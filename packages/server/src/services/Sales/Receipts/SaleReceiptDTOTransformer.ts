@@ -12,6 +12,7 @@ import { formatDateFields } from '@/utils';
 import { SaleReceiptIncrement } from './SaleReceiptIncrement';
 import { ItemEntry } from '@/models';
 import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
+import { BrandingTemplateDTOTransformer } from '@/services/PdfTemplate/BrandingTemplateDTOTransformer';
 
 @Service()
 export class SaleReceiptDTOTransformer {
@@ -29,6 +30,9 @@ export class SaleReceiptDTOTransformer {
 
   @Inject()
   private receiptIncrement: SaleReceiptIncrement;
+
+  @Inject()
+  private brandingTemplatesTransformer: BrandingTemplateDTOTransformer;
 
   /**
    * Transform create DTO object to model object.
@@ -88,9 +92,17 @@ export class SaleReceiptDTOTransformer {
         }),
       entries,
     };
+    const initialAsyncDTO = await composeAsync(
+      // Assigns the default branding template id to the invoice DTO.
+      this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
+        tenantId,
+        'SaleReceipt'
+      )
+    )(initialDTO);
+
     return R.compose(
       this.branchDTOTransform.transformDTO<ISaleReceipt>(tenantId),
       this.warehouseDTOTransform.transformDTO<ISaleReceipt>(tenantId)
-    )(initialDTO);
+    )(initialAsyncDTO);
   }
 }

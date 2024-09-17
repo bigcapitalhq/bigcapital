@@ -1,0 +1,24 @@
+.root {
+  background: #fff;
+}
+
+.mainFields{
+  width: 400px;
+  height: 100vh;
+}
+.fieldGroup {
+
+  :global .bp4-form-content{
+    margin-left: auto;
+  }
+}
+
+.footerActions{
+  padding: 10px 16px;
+  border-top: 1px solid #d9d9d9;
+  flex-flow: row-reverse;
+}
+
+.showCompanyLogoField:global(.bp4-large){
+  font-size: 14px;
+}

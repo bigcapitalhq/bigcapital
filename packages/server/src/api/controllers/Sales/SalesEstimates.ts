@@ -168,9 +168,7 @@ export default class SalesEstimatesController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim(),
+      check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.discount')
         .optional({ nullable: true })
         .isNumeric()
@@ -186,6 +184,9 @@ export default class SalesEstimatesController extends BaseController {
 
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
+
+      // Pdf template id.
+      check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 

@@ -9,7 +9,7 @@ export const ERRORS = {
     'CREDIT_NOTE_APPLY_TO_INVOICES_NOT_FOUND',
   CREDIT_NOTE_HAS_REFUNDS_TRANSACTIONS: 'CREDIT_NOTE_HAS_REFUNDS_TRANSACTIONS',
   CREDIT_NOTE_HAS_APPLIED_INVOICES: 'CREDIT_NOTE_HAS_APPLIED_INVOICES',
-  CUSTOMER_HAS_LINKED_CREDIT_NOTES: 'CUSTOMER_HAS_LINKED_CREDIT_NOTES'
+  CUSTOMER_HAS_LINKED_CREDIT_NOTES: 'CUSTOMER_HAS_LINKED_CREDIT_NOTES',
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];
@@ -66,3 +66,72 @@ export const DEFAULT_VIEWS = [
     columns: DEFAULT_VIEW_COLUMNS,
   },
 ];
+
+export const defaultCreditNoteBrandingAttributes = {
+  primaryColor: '',
+  secondaryColor: '',
+  showCompanyLogo: true,
+  companyLogo: '',
+  companyName: 'Bigcapital Technology, Inc.',
+
+  // Address
+  billedToAddress: [
+    'Bigcapital Technology, Inc.',
+    '131 Continental Dr Suite 305 Newark,',
+    'Delaware 19713',
+    'United States',
+    '+1 762-339-5634',
+    'ahmed@bigcapital.app',
+  ],
+  billedFromAddress: [
+    '131 Continental Dr Suite 305 Newark,',
+    'Delaware 19713',
+    'United States',
+    '+1 762-339-5634',
+    'ahmed@bigcapital.app',
+  ],
+  showBilledToAddress: true,
+  showBilledFromAddress: true,
+  billedToLabel: 'Billed To',
+
+  // Total
+  total: '$1000.00',
+  totalLabel: 'Total',
+  showTotal: true,
+
+  // Subtotal
+  subtotal: '1000/00',
+  subtotalLabel: 'Subtotal',
+  showSubtotal: true,
+
+  // Customer note
+  showCustomerNote: true,
+  customerNote:
+    'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  customerNoteLabel: 'Customer Note',
+
+  // Terms & conditions
+  showTermsConditions: true,
+  termsConditions:
+    'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  termsConditionsLabel: 'Terms & Conditions',
+
+  lines: [
+    {
+      item: 'Simply dummy text',
+      description: 'Simply dummy text of the printing and typesetting',
+      rate: '1',
+      quantity: '1000',
+      total: '$1000.00',
+    },
+  ],
+  // Credit note number.
+  showCreditNoteNumber: true,
+  creditNoteNumberLabel: 'Credit Note Number',
+  creditNoteNumebr: '346D3D40-0001',
+
+  // Credit note date.
+  creditNoteDate: 'September 3, 2024',
+  showCreditNoteDate: true,
+  creditNoteDateLabel: 'Credit Note Date',
+};

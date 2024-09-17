@@ -2,7 +2,77 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
-## [0.19.4] - 18-08-2024
+# [0.19.17]
+
+* fix: Un-categorize bank transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/663
+
+# [0.19.16]
+
+* feat: Tracking more Posthog events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/653
+* fix: Expense cannot accept credit card as payment account by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/654
+* fix: Suspense the lazy loaded components in banking pages by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/657
+* feat: Add help dropdown menu by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/656
+* feat: Bank pages layout breaking by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/658
+* feat: Datatable UI improvements by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/655
+* fix: Array cast of recognize function rule ids by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/660
+* fix: Payment made filling the form full amount field by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/661
+* feat: Tabular number of all money columns by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/659
+* refactor: The expense G/L writer by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/662
+
+## [0.19.15] - 
+
+* fix: Bank transactions infinity scrolling by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/648
+* feat: Integrate multiple branches and warehouses to resource importing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/645
+* fix: Integrate multiple branches with expense resource by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/649
+* feat: Cover more tracking events. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/650
+* feat: Track banking service events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/651
+
+## [0.19.14]
+
+* fix: Import bugs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/643
+* fix: Set default index to transaction entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/644
+* feat(server): Events tracking using Posthog by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/646
+
+## [0.19.13]
+
+* fix: Subscription middleware by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/624
+* fix: Getting the sheet columns in import sheet by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/641
+
+## [0.19.12]
+
+* fix: Typo one-click demo page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/640
+
+## [0.19.11]
+
+* fix: Avoid running the cost job in import preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/635
+* fix: Debounce scheduling calculating items cost by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/634
+* fix: Expand the resources export page size limitation by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/636
+* feat: Optimize loading perf. by splitting big chunks and lazy loading them by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/632
+* fix: Use standard ISO 8601 format for exported data by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/638
+* fix: Add customer type to customers resource by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/639
+
+## [0.19.10]
+
+* fix: Add subscription plans offer text by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/629
+
+## [0.19.9]
+
+* fix: Make webapp package env variables dynamic by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/628
+
+## [v0.19.8]
+
+* fix: Cannot import items income and cost accounts by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/617
+* fix: Some bank account details hidden by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/618
+* feat(ee): One-click demo account by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/616
+* feat: change banking service language by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/619
+* feat(banking): Filter uncategorized bank transactions by date by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/590
+* Fix: Syntax error caused error by @wolone in https://github.com/bigcapitalhq/bigcapital/pull/622
+* fix: Listen to payment webhooks by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/623
+* fix: Add prefix J-00001 to manual journals increments by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/625
+* fix: Disable sms service until Twilo integration by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/626
+* fix: Style tweaks in onboarding page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/627
+
+## [0.19.5] - 18-08-2024
 
 * fix: Allow multi-lines to statements transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/594
 * feat: Add amount comparators to amount bank rule field by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/595
@@ -22,6 +92,15 @@ All notable changes to Bigcapital server-side will be in this file.
 * Fix: Correctly display Date, Published At, and Created At in ExpenseDrawerHeader by @Champetaman in https://github.com/bigcapitalhq/bigcapital/pull/612
 * fix: Delete bank account with uncategorized transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/614
 * feat: activate/inactivate account from drawer details by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/615
+
+## [v0.19.4]
+
+* feat: Import and export tax rates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/591
+* feat: Un-categorize bank transactions in bulk by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/587
+* feat: Pending bank transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/589
+* fix: Update `dev` Script in `package.json` to Use `cross-env` by @Champetaman in https://github.com/bigcapitalhq/bigcapital/pull/588
+* fix: Should not load branches on reconcile matching form if the branches not enabled by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/592
+* fix: Rounding the total amount the pending and matched transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/593
 
 ## [v0.18.0] - 10-08-2024
 

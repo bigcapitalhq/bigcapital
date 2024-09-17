@@ -58,7 +58,7 @@ export default {
     onSubscriptionSubscribed: 'onSubscriptionSubscribed',
 
     onSubscriptionPaymentSucceed: 'onSubscriptionPaymentSucceed',
-    onSubscriptionPaymentFailed: 'onSubscriptionPaymentFailed'
+    onSubscriptionPaymentFailed: 'onSubscriptionPaymentFailed',
   },
 
   /**
@@ -686,5 +686,20 @@ export default {
   // Import files.
   import: {
     onImportCommitted: 'onImportFileCommitted',
+  },
+
+  // Branding templates
+  pdfTemplate: {
+    onCreating: 'onPdfTemplateCreating',
+    onCreated: 'onPdfTemplateCreated',
+
+    onEditing: 'onPdfTemplateEditing',
+    onEdited: 'onPdfTemplatedEdited',
+
+    onDeleting: 'onPdfTemplateDeleting',
+    onDeleted: 'onPdfTemplateDeleted',
+
+    onAssignedDefault: 'onPdfTemplateAssignedDefault',
+    onAssigningDefault: 'onPdfTemplateAssigningDefault',
   },
 };

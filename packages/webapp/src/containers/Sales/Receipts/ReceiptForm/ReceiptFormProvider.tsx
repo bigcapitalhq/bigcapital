@@ -15,6 +15,7 @@ import {
   useEditReceipt,
 } from '@/hooks/query';
 import { useProjects } from '@/containers/Projects/hooks';
+import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
 const ReceiptFormContext = createContext();
 
@@ -77,7 +78,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     [],
   );
 
-  // Handle fetch Items data table or list
+  // Handle fetch Items data table or list.
   const {
     data: { items },
     isLoading: isItemsLoading,
@@ -85,12 +86,15 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     page_size: 10000,
     stringified_filter_roles: stringifiedFilterRoles,
   });
-
   // Fetch project list.
   const {
     data: { projects },
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
+
+  // Fetches branding templates of receipt.
+  const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
+    useGetPdfTemplates({ resource: 'SaleReceipt' });
 
   // Fetch receipt settings.
   const { isLoading: isSettingLoading } = useSettingsReceipts();
@@ -101,7 +105,6 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   const [submitPayload, setSubmitPayload] = useState({});
 
   const isNewMode = !receiptId;
-
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
   const provider = {
@@ -130,18 +133,21 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     createReceiptMutate,
     editReceiptMutate,
     setSubmitPayload,
+
+    // Branding templates
+    brandingTemplates,
+    isBrandingTemplatesLoading,
   };
+  const isLoading =
+    isReceiptLoading ||
+    isAccountsLoading ||
+    isCustomersLoading ||
+    isItemsLoading ||
+    isSettingLoading ||
+    isBrandingTemplatesLoading;
+
   return (
-    <DashboardInsider
-      loading={
-        isReceiptLoading ||
-        isAccountsLoading ||
-        isCustomersLoading ||
-        isItemsLoading ||
-        isSettingLoading
-      }
-      name={'receipt-form'}
-    >
+    <DashboardInsider loading={isLoading} name={'receipt-form'}>
       <ReceiptFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

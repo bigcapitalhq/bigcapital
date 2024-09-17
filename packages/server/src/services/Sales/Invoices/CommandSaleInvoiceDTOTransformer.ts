@@ -19,6 +19,7 @@ import { formatDateFields } from 'utils';
 import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
 import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 import { ItemEntry } from '@/models';
+import { BrandingTemplateDTOTransformer } from '@/services/PdfTemplate/BrandingTemplateDTOTransformer';
 
 @Service()
 export class CommandSaleInvoiceDTOTransformer {
@@ -39,6 +40,9 @@ export class CommandSaleInvoiceDTOTransformer {
 
   @Inject()
   private taxDTOTransformer: ItemEntriesTaxTransactions;
+
+  @Inject()
+  private brandingTemplatesTransformer: BrandingTemplateDTOTransformer;
 
   /**
    * Transformes the create DTO to invoice object model.
@@ -113,11 +117,19 @@ export class CommandSaleInvoiceDTOTransformer {
       userId: authorizedUser.id,
     } as ISaleInvoice;
 
+    const initialAsyncDTO = await composeAsync(
+      // Assigns the default branding template id to the invoice DTO.
+      this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
+        tenantId,
+        'SaleInvoice'
+      )
+    )(initialDTO);
+
     return R.compose(
       this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
       this.branchDTOTransform.transformDTO<ISaleInvoice>(tenantId),
       this.warehouseDTOTransform.transformDTO<ISaleInvoice>(tenantId)
-    )(initialDTO);
+    )(initialAsyncDTO);
   }
 
   /**

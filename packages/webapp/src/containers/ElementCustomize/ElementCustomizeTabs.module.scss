@@ -1,0 +1,21 @@
+
+.root {
+  flex: 1;
+  min-width: 165px;
+  max-width: 165px;
+}
+
+.content{
+  padding: 5px;
+  flex: 1;
+  border-right: 1px solid #E1E1E1;
+}
+
+.tabsList{
+  width: 100%;
+  flex: 1;
+
+  :global .bp4-tab-list{
+    flex: 1;
+  }
+}

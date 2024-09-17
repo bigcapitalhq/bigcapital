@@ -6,16 +6,14 @@ import styled from 'styled-components';
 import clsx from 'classnames';
 
 export function FSelect({ ...props }) {
-  const input = ({ activeItem, text, label, value }) => {
-    return (
-      <SelectButton
-        text={text || props.placeholder || 'Select an item ...'}
-        disabled={props.disabled || false}
-        {...props.buttonProps}
-        className={clsx({ 'is-selected': !!text }, props.className)}
-      />
-    );
-  };
+  const input = ({ activeItem, text, label, value }) => (
+    <SelectButton
+      text={text || props.placeholder || 'Select an item ...'}
+      disabled={props.disabled || false}
+      {...props.buttonProps}
+      className={clsx({ 'is-selected': !!text }, props.className)}
+    />
+  );
   return <Select input={input} fill={true} {...props} />;
 }
 

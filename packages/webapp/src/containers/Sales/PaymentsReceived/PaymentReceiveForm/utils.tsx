@@ -19,6 +19,7 @@ import {
   transformAttachmentsToForm,
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
+import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 // Default payment receive entry.
 export const defaultPaymentReceiveEntry = {
@@ -44,10 +45,11 @@ export const defaultPaymentReceive = {
   statement: '',
   amount: '',
   currency_code: '',
-  branch_id: '',
   exchange_rate: 1,
   entries: [],
   attachments: [],
+  branch_id: '',
+  pdf_template_id: '',
 };
 
 export const defaultRequestPaymentEntry = {
@@ -302,4 +304,13 @@ export const getExceededAmountFromValues = (values) => {
   const totalAmount = values.amount;
 
   return totalAmount - totalApplied;
+};
+
+export const usePaymentReceivedFormBrandingTemplatesOptions = () => {
+  const { brandingTemplates } = usePaymentReceiveFormContext();
+
+  return React.useMemo(
+    () => convertBrandingTemplatesToOptions(brandingTemplates),
+    [brandingTemplates],
+  );
 };

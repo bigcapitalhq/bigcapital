@@ -67,6 +67,7 @@ import { OneClickDemoController } from './controllers/OneClickDemo/OneClickDemoC
 import { StripeIntegrationController } from './controllers/StripeIntegration/StripeIntegrationController';
 import { ShareLinkController } from './controllers/ShareLink/ShareLinkController';
 import { PublicSharableLinkController } from './controllers/ShareLink/PublicSharableLinkController';
+import { PdfTemplatesController } from './controllers/PdfTemplates/PdfTemplatesController';
 
 export default () => {
   const app = Router();
@@ -155,6 +156,11 @@ export default () => {
     '/stripe_integration',
     Container.get(StripeIntegrationController).router()
   );
+  dashboard.use(
+    '/pdf-templates',
+    Container.get(PdfTemplatesController).router()
+  );
+
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());
   dashboard.use('/', Container.get(WarehousesItemController).router());

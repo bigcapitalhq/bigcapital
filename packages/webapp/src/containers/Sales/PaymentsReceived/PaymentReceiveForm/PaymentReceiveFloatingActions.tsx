@@ -12,10 +12,15 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { Group, Icon, FormattedMessage as T } from '@/components';
+import { FSelect, Group, Icon, FormattedMessage as T } from '@/components';
 import { useFormikContext } from 'formik';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { CLASSES } from '@/constants/classes';
+import {
+  BrandingThemeFormGroup,
+  BrandingThemeSelectButton,
+} from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import { usePaymentReceivedFormBrandingTemplatesOptions } from './utils';
 
 /**
  * Payment receive floating actions bar.
@@ -52,6 +57,9 @@ export default function PaymentReceiveFormFloatingActions() {
     setSubmitPayload({ redirect: false, publish: true });
     submitForm();
   };
+
+  const brandingTemplatesOpts =
+    usePaymentReceivedFormBrandingTemplatesOptions();
 
   return (
     <Group
@@ -109,6 +117,25 @@ export default function PaymentReceiveFormFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
+
+      {/* ----------- Branding Template Select ----------- */}
+      <BrandingThemeFormGroup
+        name={'pdf_template_id'}
+        label={'Branding'}
+        inline
+        fastField
+        style={{ marginLeft: 20 }}
+      >
+        <FSelect
+          name={'pdf_template_id'}
+          items={brandingTemplatesOpts}
+          input={({ activeItem, text, label, value }) => (
+            <BrandingThemeSelectButton text={text || 'Brand Theme'} minimal />
+          )}
+          filterable={false}
+          popoverProps={{ minimal: true }}
+        />
+      </BrandingThemeFormGroup>
     </Group>
   );
 }
