@@ -4,7 +4,6 @@ block head
   - var prefix = 'bc'
   style.
     .#{prefix}-root {
-      background-color: #fff;
       color: #111;
       padding: 24px 30px;
       font-size: 12px;
@@ -25,7 +24,6 @@ block head
       position: absolute;
       right: 26px;
       top: 26px;
-      border-radius: 5px;
       overflow: hidden;
     }
     .#{prefix}-details {
@@ -122,7 +120,6 @@ block head
     }
     .#{prefix}-totals__item--font-weight-bold {
       font-weight: bold;
-      /* Additional styles for total items with bold font weight */
     }
     .#{prefix}-totals__item-label {
       min-width: 160px;
@@ -143,6 +140,7 @@ block head
 block content
   //- block head
   div(class=`${prefix}-root`, style=`--invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor};`)
+  
     //- Title and company logo
     h1(class=`${prefix}-big-title`) Invoice
 

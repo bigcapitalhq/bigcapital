@@ -18,6 +18,7 @@ import {
   useSettingsCreditNotes,
   useInvoice,
 } from '@/hooks/query';
+import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
 const CreditNoteFormContext = React.createContext();
 
@@ -73,6 +74,10 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
+  // Fetches branding templates of invoice.
+  const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
+    useGetPdfTemplates({ resource: 'PaymentReceive' });
+
   // Handle fetching settings.
   useSettingsCreditNotes();
 
@@ -115,13 +120,18 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     createCreditNoteMutate,
     editCreditNoteMutate,
     setSubmitPayload,
+
+    // Branding templates.
+    brandingTemplates,
+    isBrandingTemplatesLoading,
   };
 
   const isLoading =
     isItemsLoading ||
     isCustomersLoading ||
     isCreditNoteLoading ||
-    isInvoiceLoading;
+    isInvoiceLoading ||
+    isBrandingTemplatesLoading;
 
   return (
     <DashboardInsider loading={isLoading} name={'credit-note-form'}>

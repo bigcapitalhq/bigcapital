@@ -22,6 +22,7 @@ import {
   transformAttachmentsToForm,
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
+import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -61,6 +62,7 @@ export const defaultReceipt = {
   currency_code: '',
   entries: [...repeatValue(defaultReceiptEntry, MIN_LINES_NUMBER)],
   attachments: [],
+  pdf_template_id: '',
 };
 
 const ERRORS = {
@@ -271,4 +273,13 @@ export const resetFormState = ({ initialValues, values, resetForm }) => {
       brand_id: values.brand_id,
     },
   });
+};
+
+export const useReceiptFormBrandingTemplatesOptions = () => {
+  const { brandingTemplates } = useReceiptFormContext();
+
+  return React.useMemo(
+    () => convertBrandingTemplatesToOptions(brandingTemplates),
+    [brandingTemplates],
+  );
 };

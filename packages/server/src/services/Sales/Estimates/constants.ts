@@ -173,3 +173,122 @@ export const SaleEstimatesSampleData = [
     'Line Description': 'Qui suscipit ducimus qui qui.',
   },
 ];
+
+export const defaultEstimatePdfBrandingAttributes = {
+  primaryColor: '#000',
+  secondaryColor: '#000',
+  showCompanyLogo: true,
+  companyLogo: '',
+  companyName: '',
+
+  billedToAddress: [
+    'Bigcapital Technology, Inc.',
+    '131 Continental Dr Suite 305 Newark,',
+    'Delaware 19713',
+    'United States',
+    '+1 762-339-5634',
+    'ahmed@bigcapital.app',
+  ],
+  billedFromAddress: [
+    '131 Continental Dr Suite 305 Newark,',
+    'Delaware 19713',
+    'United States',
+    '+1 762-339-5634',
+    'ahmed@bigcapital.app',
+  ],
+  showBilledFromAddress: true,
+  showBilledToAddress: true,
+  billedToLabel: 'Billed To',
+
+  total: '$1000.00',
+  totalLabel: 'Total',
+  showTotal: true,
+
+  subtotal: '1000/00',
+  subtotalLabel: 'Subtotal',
+  showSubtotal: true,
+
+  showCustomerNote: true,
+  customerNote:
+    'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  customerNoteLabel: 'Customer Note',
+
+  showTermsConditions: true,
+  termsConditions:
+    'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  termsConditionsLabel: 'Terms & Conditions',
+
+  lines: [
+    {
+      item: 'Simply dummy text',
+      description: 'Simply dummy text of the printing and typesetting',
+      rate: '1',
+      quantity: '1000',
+      total: '$1000.00',
+    },
+  ],
+  showEstimateNumber: true,
+  estimateNumberLabel: 'Estimate Number',
+  estimateNumebr: '346D3D40-0001',
+
+  estimateDate: 'September 3, 2024',
+  showEstimateDate: true,
+  estimateDateLabel: 'Estimate Date',
+
+  expirationDateLabel: 'Expiration Date',
+  showExpirationDate: true,
+  expirationDate: 'September 3, 2024',
+};
+
+
+interface EstimatePdfBrandingLineItem {
+  item: string;
+  description: string;
+  rate: string;
+  quantity: string;
+  total: string;
+}
+
+export interface EstimatePdfBrandingAttributes {
+  primaryColor: string;
+  secondaryColor: string;
+  showCompanyLogo: boolean;
+  companyLogo: string;
+  companyName: string;
+
+  billedToAddress: string[];
+  billedFromAddress: string[];
+  showBilledFromAddress: boolean;
+  showBilledToAddress: boolean;
+  billedToLabel: string;
+
+  total: string;
+  totalLabel: string;
+  showTotal: boolean;
+
+  subtotal: string;
+  subtotalLabel: string;
+  showSubtotal: boolean;
+
+  showCustomerNote: boolean;
+  customerNote: string;
+  customerNoteLabel: string;
+
+  showTermsConditions: boolean;
+  termsConditions: string;
+  termsConditionsLabel: string;
+
+  lines: EstimatePdfBrandingLineItem[];
+
+  showEstimateNumber: boolean;
+  estimateNumberLabel: string;
+  estimateNumebr: string;
+
+  estimateDate: string;
+  showEstimateDate: boolean;
+  estimateDateLabel: string;
+
+  expirationDateLabel: string;
+  showExpirationDate: boolean;
+  expirationDate: string;
+}

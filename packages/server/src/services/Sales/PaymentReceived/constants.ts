@@ -45,3 +45,53 @@ export const PaymentsReceiveSampleData = [
     'Payment Amount': 850,
   },
 ];
+
+export const defaultPaymentReceivedPdfTemplateAttributes = {
+  primaryColor: '#000',
+  secondaryColor: '#000',
+  showCompanyLogo: true,
+  companyLogo: '',
+  companyName: 'Bigcapital Technology, Inc.',
+
+  billedToAddress: [
+    'Bigcapital Technology, Inc.',
+    '131 Continental Dr Suite 305 Newark,',
+    'Delaware 19713',
+    'United States',
+    '+1 762-339-5634',
+    'ahmed@bigcapital.app',
+  ],
+  billedFromAddress: [
+    '131 Continental Dr Suite 305 Newark,',
+    'Delaware 19713',
+    'United States',
+    '+1 762-339-5634',
+    'ahmed@bigcapital.app',
+  ],
+  showBilledFromAddress: true,
+  showBillingToAddress: true,
+  billedToLabel: 'Billed To',
+
+  total: '$1000.00',
+  totalLabel: 'Total',
+  showTotal: true,
+
+  subtotal: '1000/00',
+  subtotalLabel: 'Subtotal',
+  showSubtotal: true,
+
+  lines: [
+    {
+      invoiceNumber: 'INV-00001',
+      invoiceAmount: '$1000.00',
+      paidAmount: '$1000.00',
+    },
+  ],
+  showPaymentReceivedNumber: true,
+  paymentReceivedNumberLabel: 'Payment Number',
+  paymentReceivedNumebr: '346D3D40-0001',
+
+  paymentReceivedDate: 'September 3, 2024',
+  showPaymentReceivedDate: true,
+  paymentReceivedDateLabel: 'Payment Date',
+};

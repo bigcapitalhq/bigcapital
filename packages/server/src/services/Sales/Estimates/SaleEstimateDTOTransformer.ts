@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
 import { omit, sumBy } from 'lodash';
+import composeAsync from 'async/compose';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ICustomer, ISaleEstimate, ISaleEstimateDTO } from '@/interfaces';
 import { SaleEstimateValidators } from './SaleEstimateValidators';
@@ -10,6 +11,7 @@ import { formatDateFields } from '@/utils';
 import moment from 'moment';
 import { SaleEstimateIncrement } from './SaleEstimateIncrement';
 import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
+import { BrandingTemplateDTOTransformer } from '@/services/PdfTemplate/BrandingTemplateDTOTransformer';
 
 @Service()
 export class SaleEstimateDTOTransformer {
@@ -27,6 +29,9 @@ export class SaleEstimateDTOTransformer {
 
   @Inject()
   private estimateIncrement: SaleEstimateIncrement;
+
+  @Inject()
+  private brandingTemplatesTransformer: BrandingTemplateDTOTransformer;
 
   /**
    * Transform create DTO object ot model object.
@@ -81,10 +86,18 @@ export class SaleEstimateDTOTransformer {
           deliveredAt: moment().toMySqlDateTime(),
         }),
     };
+    const initialAsyncDTO = await composeAsync(
+      // Assigns the default branding template id to the invoice DTO.
+      this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
+        tenantId,
+        'SaleEstimate'
+      )
+    )(initialDTO);
+
     return R.compose(
       this.branchDTOTransform.transformDTO<ISaleEstimate>(tenantId),
       this.warehouseDTOTransform.transformDTO<ISaleEstimate>(tenantId)
-    )(initialDTO);
+    )(initialAsyncDTO);
   }
 
   /**

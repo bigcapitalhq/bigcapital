@@ -25,6 +25,7 @@ import {
   DashboardFilterButton,
   DashboardRowsHeightButton,
   DashboardActionsBar,
+  FSelect,
 } from '@/components';
 
 import withEstimates from './withEstimates';
@@ -42,6 +43,10 @@ import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  BrandingThemeFormGroup,
+  BrandingThemeSelectButton,
+} from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 /**
  * Estimates list actions bar.

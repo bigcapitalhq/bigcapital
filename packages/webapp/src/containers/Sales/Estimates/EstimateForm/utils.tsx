@@ -22,6 +22,7 @@ import {
   transformAttachmentsToForm,
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
+import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -60,7 +61,8 @@ export const defaultEstimate = {
   exchange_rate: 1,
   currency_code: '',
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
-  attachments: []
+  attachments: [],
+  pdf_template_id: '',
 };
 
 const ERRORS = {
@@ -261,4 +263,13 @@ export const resetFormState = ({ initialValues, values, resetForm }) => {
       brand_id: values.brand_id,
     },
   });
+};
+
+export const useEstimateFormBrandingTemplatesOptions = () => {
+  const { brandingTemplates } = useEstimateFormContext();
+
+  return React.useMemo(
+    () => convertBrandingTemplatesToOptions(brandingTemplates),
+    [brandingTemplates],
+  );
 };

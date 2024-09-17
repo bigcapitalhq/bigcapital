@@ -25,6 +25,7 @@ export interface IPaymentReceived {
   updatedAt: Date;
   localAmount?: number;
   branchId?: number;
+  pdfTemplateId?: number;
 }
 export interface IPaymentReceivedCreateDTO {
   customerId: number;
@@ -184,4 +185,71 @@ export interface PaymentReceiveMailPresendEvent {
   tenantId: number;
   paymentReceiveId: number;
   messageOptions: PaymentReceiveMailOptsDTO;
+}
+
+export interface PaymentReceivedPdfLineItem {
+  item: string;
+  description: string;
+  rate: string;
+  quantity: string;
+  total: string;
+}
+
+export interface PaymentReceivedPdfTax {
+  label: string;
+  amount: string;
+}
+
+export interface PaymentReceivedPdfTemplateAttributes {
+  primaryColor: string;
+  secondaryColor: string;
+  companyName: string;
+
+  showCompanyLogo: boolean;
+  companyLogo: string;
+
+  dueDateLabel: string;
+  showDueDate: boolean;
+
+  dateIssueLabel: string;
+  showDateIssue: boolean;
+
+  invoiceNumberLabel: string;
+  showInvoiceNumber: boolean;
+
+  showBillingToAddress: boolean;
+  showBilledFromAddress: boolean;
+  billedToLabel: string;
+
+  lineItemLabel: string;
+  lineDescriptionLabel: string;
+  lineRateLabel: string;
+  lineTotalLabel: string;
+
+  totalLabel: string;
+  subtotalLabel: string;
+  discountLabel: string;
+  paymentMadeLabel: string;
+  balanceDueLabel: string;
+
+  showTotal: boolean;
+  showSubtotal: boolean;
+  showDiscount: boolean;
+  showTaxes: boolean;
+  showPaymentMade: boolean;
+  showDueAmount: boolean;
+  showBalanceDue: boolean;
+
+  discount: string;
+
+  termsConditionsLabel: string;
+  showTermsConditions: boolean;
+
+  lines: PaymentReceivedPdfLineItem[];
+  taxes: PaymentReceivedPdfTax[];
+
+  statementLabel: string;
+  showStatement: boolean;
+  billedToAddress: string[];
+  billedFromAddress: string[];
 }

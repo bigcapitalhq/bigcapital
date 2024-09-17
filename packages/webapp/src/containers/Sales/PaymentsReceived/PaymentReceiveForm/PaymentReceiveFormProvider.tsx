@@ -13,6 +13,7 @@ import {
   useCreatePaymentReceive,
   useEditPaymentReceive,
 } from '@/hooks/query';
+import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
 // Payment receive form context.
 const PaymentReceiveFormContext = createContext();
@@ -65,6 +66,10 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
+  // Fetches branding templates of payment received module.
+  const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
+    useGetPdfTemplates({ resource: 'PaymentReceive' });
+
   // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;
 
@@ -102,13 +107,20 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
 
     isExcessConfirmed,
     setIsExcessConfirmed,
+
+    // Branding templates
+    brandingTemplates,
+    isBrandingTemplatesLoading,
   };
 
+  const isLoading =
+    isPaymentLoading ||
+    isAccountsLoading ||
+    isCustomersLoading ||
+    isBrandingTemplatesLoading;
+
   return (
-    <DashboardInsider
-      loading={isPaymentLoading || isAccountsLoading || isCustomersLoading}
-      name={'payment-receive-form'}
-    >
+    <DashboardInsider loading={isLoading} name={'payment-receive-form'}>
       <PaymentReceiveFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
