@@ -32,7 +32,7 @@ function MarkDefaultBrandingTemplateAlert({
       .then(() => {
         AppToaster.show({
           message:
-            'The branding template has been marked as default successfully.',
+            'The branding template has been marked as a default template.',
           intent: Intent.SUCCESS,
         });
         closeAlert(name);
@@ -60,8 +60,7 @@ function MarkDefaultBrandingTemplateAlert({
       onConfirm={handleConfirmDelete}
     >
       <p>
-        Are you sure want to mark the given branding template as default
-        template?
+        Are you sure want to mark the given branding template as a default template?
       </p>
     </Alert>
   );

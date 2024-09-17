@@ -43,9 +43,10 @@ export class SaleEstimatesPdf {
   }
 
   /**
-   *
-   * @param {number} tenantId
-   * @param {number} estimateId
+   * Retrieves the given estimate branding attributes.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} estimateId - Estimate id.
+   * @returns {Promise<EstimatePdfBrandingAttributes>}
    */
   async getEstimateBrandingAttributes(
     tenantId: number,

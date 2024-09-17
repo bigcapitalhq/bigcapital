@@ -5,6 +5,7 @@ import { GetSaleReceipt } from './GetSaleReceipt';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SaleReceiptBrandingTemplate } from './SaleReceiptBrandingTemplate';
 import { transformReceiptToBrandingTemplateAttributes } from './utils';
+import { ISaleReceiptBrandingTemplateAttributes } from '@/interfaces';
 
 @Service()
 export class SaleReceiptsPdf {
@@ -34,26 +35,26 @@ export class SaleReceiptsPdf {
       tenantId,
       saleReceiptId
     );
-    console.log(brandingAttributes, 'attributes');
-    
+    // Converts the receipt template to html content.
     const htmlContent = await this.templateInjectable.render(
       tenantId,
       'modules/receipt-regular',
       brandingAttributes
     );
+    // Renders the html content to pdf document.
     return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent);
   }
 
   /**
    * Retrieves receipt branding attributes.
    * @param {number} tenantId
-   * @param {number] receiptId
-   * @returns
+   * @param {number} receiptId
+   * @returns {Promise<ISaleReceiptBrandingTemplateAttributes>}
    */
   public async getReceiptBrandingAttributes(
     tenantId: number,
     receiptId: number
-  ) {
+  ): Promise<ISaleReceiptBrandingTemplateAttributes> {
     const { PdfTemplate } = this.tenancy.models(tenantId);
 
     const saleReceipt = await this.getSaleReceiptService.getSaleReceipt(

@@ -1,5 +1,5 @@
 export const SALE_INVOICE_CREATED = 'Sale invoice created';
-export const SALE_INVOICE_EDITED = 'Sale invoice d';
+export const SALE_INVOICE_EDITED = 'Sale invoice edited';
 export const SALE_INVOICE_DELETED = 'Sale invoice deleted';
 export const SALE_INVOICE_MAIL_DELIVERED = 'Sale invoice mail delivered';
 
