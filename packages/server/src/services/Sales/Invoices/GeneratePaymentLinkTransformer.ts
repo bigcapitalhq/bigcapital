@@ -1,4 +1,5 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { PUBLIC_PAYMENT_LINK } from './constants';
 
 export class GeneratePaymentLinkTransformer extends Transformer {
   /**
@@ -18,11 +19,10 @@ export class GeneratePaymentLinkTransformer extends Transformer {
   };
 
   /**
-   * 
-   * @param link 
-   * @returns 
+   * Retrieves the public/private payment linl
+   * @returns {string}
    */
   public link(link) {
-    return `http://localhost:3000/payment/${link.linkId}`;
+    return PUBLIC_PAYMENT_LINK?.replace('{PAYMENT_LINK_ID}', link.linkId);
   }
 }

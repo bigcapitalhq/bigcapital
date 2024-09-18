@@ -1,3 +1,5 @@
+import config from '@/config';
+
 export const DEFAULT_INVOICE_MAIL_SUBJECT =
   'Invoice {InvoiceNumber} from {CompanyName}';
 export const DEFAULT_INVOICE_MAIL_CONTENT = `
@@ -29,6 +31,8 @@ Amount   : <strong>{InvoiceAmount}</strong></p>
 <i>{CompanyName}</i>
 </p>
 `;
+
+export const PUBLIC_PAYMENT_LINK = `${config.baseURL}/payment/{PAYMENT_LINK_ID}`;
 
 export const ERRORS = {
   INVOICE_NUMBER_NOT_UNIQUE: 'INVOICE_NUMBER_NOT_UNIQUE',
