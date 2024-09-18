@@ -120,6 +120,7 @@ import { SeedInitialDemoAccountDataOnOrgBuild } from '@/services/OneClickDemo/ev
 import { TriggerInvalidateCacheOnSubscriptionChange } from '@/services/Subscription/events/TriggerInvalidateCacheOnSubscriptionChange';
 import { EventsTrackerListeners } from '@/services/EventsTracker/events/events';
 import { CreatePaymentLinkOnInvoiceCreated } from '@/services/StripePayment/events/CreatePaymentLinkOnInvoiceCreated';
+import { InvoicePaymentIntegrationSubscriber } from '@/services/Sales/Invoices/subscribers/InvoicePaymentIntegrationSubscriber';
 
 export default () => {
   return new EventPublisher();
@@ -293,7 +294,8 @@ export const susbcribers = () => {
     SeedInitialDemoAccountDataOnOrgBuild,
 
     // Stripe Payment
-    CreatePaymentLinkOnInvoiceCreated
+    CreatePaymentLinkOnInvoiceCreated,
+    InvoicePaymentIntegrationSubscriber,
 
     ...EventsTrackerListeners
   ];

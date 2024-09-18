@@ -1,23 +1,25 @@
-import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 
-export class TransactionPaymentService extends TenantModel {
+export class TransactionPaymentServiceEntry extends TenantModel {
   /**
    * Table name
    */
   static get tableName() {
-    return 'transactions_payment_services';
+    return 'transactions_payment_methods';
   }
 
+  /**
+   * Json schema of the model.
+   */
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['service', 'enable'],
+      required: ['paymentIntegrationId'], 
       properties: {
         id: { type: 'integer' },
-        reference_id: { type: 'integer' },
-        reference_type: { type: 'string' },
-        service: { type: 'string' },
+        referenceId: { type: 'integer' },
+        referenceType: { type: 'string' },
+        paymentIntegrationId: { type: 'integer' },
         enable: { type: 'boolean' },
         options: { type: 'object' },
       },

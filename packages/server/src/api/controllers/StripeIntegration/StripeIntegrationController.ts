@@ -2,11 +2,15 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { Service, Inject } from 'typedi';
 import { StripePaymentService } from '@/services/StripePayment/StripePaymentService';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { StripeIntegrationApplication } from './StripeIntegrationApplication';
 
 @Service()
 export class StripeIntegrationController {
   @Inject()
   private stripePaymentService: StripePaymentService;
+
+  @Inject()
+  private stripeIntegrationApp: StripeIntegrationApplication;
 
   router() {
     const router = Router();
@@ -20,9 +24,19 @@ export class StripeIntegrationController {
   }
 
   public async createAccount(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+
     try {
-      const accountId = await this.stripePaymentService.createAccount();
-      res.status(201).json({ accountId });
+      const accountId = await this.stripeIntegrationApp.createStripeAccount(
+        tenantId
+      );
+
+      res
+        .status(201)
+        .json({
+          accountId,
+          message: 'The Stripe account has been created successfully.',
+        });
     } catch (error) {
       next(error);
     }

@@ -1,8 +1,8 @@
 import { Inject, Service } from 'typedi';
 import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
 import {
-  ISaleInvoiceCreatedPayload,
   ISaleInvoiceDeletedPayload,
+  PaymentIntegrationTransactionLinkEventPayload,
 } from '@/interfaces';
 import { SaleInvoiceStripePaymentLink } from '../SaleInvoiceStripePaymentLink';
 import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
@@ -22,29 +22,35 @@ export class CreatePaymentLinkOnInvoiceCreated extends EventSubscriber {
    */
   public attach(bus) {
     bus.subscribe(
-      events.saleInvoice.onCreated,
-      this.handleUpdateTransactionsOnItemCreated
+      events.paymentIntegrationLink.onPaymentIntegrationLink,
+      this.handleCreatePaymentLinkOnIntegrationLink
     );
-    bus.subscribe(
-      events.saleInvoice.onDeleted,
-      this.handleDeletePaymentLinkOnInvoiceDeleted
-    );
+    // bus.subscribe(
+    //   events.saleInvoice.onDeleted,
+    //   this.handleDeletePaymentLinkOnInvoiceDeleted
+    // );
   }
 
   /**
    * Updates the Plaid item transactions
    * @param {IPlaidItemCreatedEventPayload} payload - Event payload.
    */
-  private handleUpdateTransactionsOnItemCreated = async ({
-    saleInvoice,
-    saleInvoiceId,
+  private handleCreatePaymentLinkOnIntegrationLink = async ({
     tenantId,
+    paymentIntegrationId,
+    referenceId,
+    referenceType,
     trx,
-  }: ISaleInvoiceCreatedPayload) => {
+  }: PaymentIntegrationTransactionLinkEventPayload) => {
+    // Can't continue if the link request is not coming from the invoice transaction.
+    if ('SaleInvoice' !== referenceType) {
+      return;
+    }
     runAfterTransaction(trx, async () => {
       await this.invoiceStripePaymentLink.createPaymentLink(
         tenantId,
-        saleInvoice
+        paymentIntegrationId,
+        referenceId
       );
     });
   };
@@ -61,6 +67,5 @@ export class CreatePaymentLinkOnInvoiceCreated extends EventSubscriber {
       tenantId,
       saleInvoiceId
     );
-    
   };
 }

@@ -414,8 +414,8 @@ export default class SaleInvoice extends mixin(TenantModel, [
     const Document = require('models/Document');
     const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
     const {
-      TransactionPaymentService,
-    } = require('models/TransactionPaymentService');
+      TransactionPaymentServiceEntry,
+  } = require('models/TransactionPaymentServiceEntry');
 
     return {
       /**
@@ -577,14 +577,17 @@ export default class SaleInvoice extends mixin(TenantModel, [
       },
 
       /**
-       * Sale invoice may belongs to payment methods.
+       * Sale invoice may belongs to payment methods entries.
        */
       paymentMethods: {
         relation: Model.HasManyRelation,
-        modelClass: TransactionPaymentService,
+        modelClass: TransactionPaymentServiceEntry,
         join: {
           from: 'sales_invoices.id',
-          to: 'transactions_payment_services.referenceId',
+          to: 'transactions_payment_methods.referenceId',
+        },
+        beforeInsert: (model) => {
+          model.referenceType = 'SaleInvoice';
         },
         filter: (query) => {
           query.where('reference_type', 'SaleInvoice');

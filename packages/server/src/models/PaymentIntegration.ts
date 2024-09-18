@@ -1,6 +1,7 @@
 import { Model } from 'objection';
+import TenantModel from 'models/TenantModel';
 
-export class PaymentIntegration extends Model {
+export class PaymentIntegration extends TenantModel {
   static get tableName() {
     return 'payment_integrations';
   }
@@ -12,7 +13,7 @@ export class PaymentIntegration extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['service', 'enable'],
+      required: ['name', 'service', 'enable'],
       properties: {
         id: { type: 'integer' },
         service: { type: 'string' },

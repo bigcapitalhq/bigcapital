@@ -7,8 +7,14 @@ exports.up = function (knex) {
     table.increments('id');
     table.integer('reference_id').unsigned();
     table.string('reference_type');
-    table.integer('integration_id');
-    table.json('options');
+    table
+      .integer('payment_integration_id')
+      .unsigned()
+      .index()
+      .references('id')
+      .inTable('payment_integrations');
+    table.boolean('enable').defaultTo(false);
+    table.json('options').nullable();
   });
 };
 

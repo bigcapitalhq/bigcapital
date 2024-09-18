@@ -702,4 +702,17 @@ export default {
     onAssignedDefault: 'onPdfTemplateAssignedDefault',
     onAssigningDefault: 'onPdfTemplateAssigningDefault',
   },
+
+  // Payment methods integrations
+  paymentIntegrationLink: {
+    onPaymentIntegrationLink: 'onPaymentIntegrationLink'
+  },
+
+  // Stripe Payment Integration
+  stripeIntegration: {
+    onAccountCreated: 'onStripeIntegrationAccountCreated',
+    onAccountDeleted: 'onStripeIntegrationAccountDeleted',
+
+    onPaymentLinkCreated: 'onStripePaymentLinkCreated',
+  }
 };
