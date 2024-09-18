@@ -68,6 +68,7 @@ import { StripeIntegrationController } from './controllers/StripeIntegration/Str
 import { ShareLinkController } from './controllers/ShareLink/ShareLinkController';
 import { PublicSharableLinkController } from './controllers/ShareLink/PublicSharableLinkController';
 import { PdfTemplatesController } from './controllers/PdfTemplates/PdfTemplatesController';
+import { PaymentServicesController } from './controllers/PaymentServices/PaymentServicesController';
 
 export default () => {
   const app = Router();
@@ -160,7 +161,10 @@ export default () => {
     '/pdf-templates',
     Container.get(PdfTemplatesController).router()
   );
-
+  dashboard.use(
+    '/payment-services',
+    Container.get(PaymentServicesController).router()
+  );
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());
   dashboard.use('/', Container.get(WarehousesItemController).router());

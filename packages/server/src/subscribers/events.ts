@@ -705,7 +705,8 @@ export default {
 
   // Payment methods integrations
   paymentIntegrationLink: {
-    onPaymentIntegrationLink: 'onPaymentIntegrationLink'
+    onPaymentIntegrationLink: 'onPaymentIntegrationLink',
+    onPaymentIntegrationDeleteLink: 'onPaymentIntegrationDeleteLink'
   },
 
   // Stripe Payment Integration
@@ -714,5 +715,6 @@ export default {
     onAccountDeleted: 'onStripeIntegrationAccountDeleted',
 
     onPaymentLinkCreated: 'onStripePaymentLinkCreated',
+    onPaymentLinkInactivated: 'onStripePaymentLinkInactivated'
   }
 };

@@ -30,6 +30,17 @@ export class TransactionPaymentServiceEntry extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    return {};
+    const { PaymentIntegration } = require('./PaymentIntegration');
+
+    return {
+      paymentIntegration: {
+        relation: TenantModel.BelongsToOneRelation,
+        modelClass: PaymentIntegration,
+        join: {
+          from: 'transactions_payment_methods.paymentIntegrationId',
+          to: 'payment_integrations.id',
+        },
+      },
+    };
   }
 }

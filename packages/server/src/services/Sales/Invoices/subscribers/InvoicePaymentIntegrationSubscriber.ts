@@ -3,7 +3,9 @@ import { omit } from 'lodash';
 import events from '@/subscribers/events';
 import {
   ISaleInvoiceCreatedPayload,
+  ISaleInvoiceDeletingPayload,
   PaymentIntegrationTransactionLink,
+  PaymentIntegrationTransactionLinkDeleteEventPayload,
   PaymentIntegrationTransactionLinkEventPayload,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
@@ -20,6 +22,10 @@ export class InvoicePaymentIntegrationSubscriber {
     bus.subscribe(
       events.saleInvoice.onCreated,
       this.handleCreatePaymentIntegrationEvents
+    );
+    bus.subscribe(
+      events.saleInvoice.onDeleting,
+      this.handleCreatePaymentIntegrationEventsOnDeleteInvoice
     );
     return bus;
   };
@@ -50,6 +56,36 @@ export class InvoicePaymentIntegrationSubscriber {
         await this.eventPublisher.emitAsync(
           events.paymentIntegrationLink.onPaymentIntegrationLink,
           payload as PaymentIntegrationTransactionLinkEventPayload
+        );
+      }
+    );
+  };
+
+  /**
+   *
+   * @param {ISaleInvoiceDeletingPayload} payload
+   */
+  private handleCreatePaymentIntegrationEventsOnDeleteInvoice = ({
+    tenantId,
+    oldSaleInvoice,
+    trx,
+  }: ISaleInvoiceDeletingPayload) => {
+    const paymentMethods =
+      oldSaleInvoice.paymentMethods?.filter((method) => method.enable) || [];
+
+    paymentMethods.map(
+      async (paymentMethod: PaymentIntegrationTransactionLink) => {
+        const payload = {
+          ...omit(paymentMethod, ['id']),
+          tenantId,
+          oldSaleInvoiceId: oldSaleInvoice.id,
+          trx,
+        } as PaymentIntegrationTransactionLinkDeleteEventPayload;
+
+        // Triggers `onPaymentIntegrationDeleteLink` event.
+        await this.eventPublisher.emitAsync(
+          events.paymentIntegrationLink.onPaymentIntegrationDeleteLink,
+          payload
         );
       }
     );

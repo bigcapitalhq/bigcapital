@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
 import {
-  ISaleInvoiceDeletedPayload,
+  PaymentIntegrationTransactionLinkDeleteEventPayload,
   PaymentIntegrationTransactionLinkEventPayload,
 } from '@/interfaces';
 import { SaleInvoiceStripePaymentLink } from '../SaleInvoiceStripePaymentLink';
@@ -25,10 +25,10 @@ export class CreatePaymentLinkOnInvoiceCreated extends EventSubscriber {
       events.paymentIntegrationLink.onPaymentIntegrationLink,
       this.handleCreatePaymentLinkOnIntegrationLink
     );
-    // bus.subscribe(
-    //   events.saleInvoice.onDeleted,
-    //   this.handleDeletePaymentLinkOnInvoiceDeleted
-    // );
+    bus.subscribe(
+      events.paymentIntegrationLink.onPaymentIntegrationDeleteLink,
+      this.handleDeletePaymentLinkOnIntegrationLinkDelete
+    );
   }
 
   /**
@@ -59,13 +59,15 @@ export class CreatePaymentLinkOnInvoiceCreated extends EventSubscriber {
    * Deletes the Stripe payment link once the associated invoice deleted.
    * @param {ISaleInvoiceDeletedPayload}
    */
-  private handleDeletePaymentLinkOnInvoiceDeleted = async ({
-    saleInvoiceId,
+  private handleDeletePaymentLinkOnIntegrationLinkDelete = async ({
+    oldSaleInvoiceId,
     tenantId,
-  }: ISaleInvoiceDeletedPayload) => {
-    await this.deleteStripePaymentLinkInvoice.deletePaymentLink(
+    trx,
+  }: PaymentIntegrationTransactionLinkDeleteEventPayload) => {
+    await this.deleteStripePaymentLinkInvoice.deleteInvoicePaymentLink(
       tenantId,
-      saleInvoiceId
+      oldSaleInvoiceId,
+      trx
     );
   };
 }

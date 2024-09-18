@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash';
 import {
   ISaleInvoiceCreatedPayload,
   ISaleInvoiceCreatingPaylaod,
-  ISaleInvoiceDeletePayload,
+  ISaleInvoiceDeletingPayload,
   ISaleInvoiceEditedPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
@@ -146,13 +146,13 @@ export class AttachmentsOnSaleInvoiceCreated {
    */
   private async handleUnlinkAttachmentsOnInvoiceDeleted({
     tenantId,
-    saleInvoice,
+    oldSaleInvoice,
     trx,
-  }: ISaleInvoiceDeletePayload) {
+  }: ISaleInvoiceDeletingPayload) {
     await this.unlinkAttachmentService.unlinkAllModelKeys(
       tenantId,
       'SaleInvoice',
-      saleInvoice.id,
+      oldSaleInvoice.id,
       trx
     );
   }

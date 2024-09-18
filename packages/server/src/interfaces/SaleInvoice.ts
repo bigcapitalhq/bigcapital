@@ -23,6 +23,16 @@ export interface PaymentIntegrationTransactionLinkEventPayload {
   trx?: Knex.Transaction
 }
 
+export interface PaymentIntegrationTransactionLinkDeleteEventPayload {
+  tenantId: number;
+  enable: true;
+  paymentIntegrationId: number;
+  referenceType: string;
+  referenceId: number;
+  oldSaleInvoiceId: number;
+  trx?: Knex.Transaction 
+}
+
 export interface ISaleInvoice {
   id: number;
   amount: number;
@@ -156,9 +166,15 @@ export interface ISaleInvoiceEditingPayload {
 
 export interface ISaleInvoiceDeletePayload {
   tenantId: number;
-  saleInvoice: ISaleInvoice;
+  oldSaleInvoice: ISaleInvoice;
   saleInvoiceId: number;
-  trx: Knex.Transaction;
+}
+
+export interface ISaleInvoiceDeletingPayload {
+  tenantId: number;
+  oldSaleInvoice: ISaleInvoice;
+  saleInvoiceId: number;
+  trx: Knex.Transaction; 
 }
 
 export interface ISaleInvoiceDeletedPayload {

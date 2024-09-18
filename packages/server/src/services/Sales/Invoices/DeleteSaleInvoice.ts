@@ -4,6 +4,7 @@ import {
   ISystemUser,
   ISaleInvoiceDeletePayload,
   ISaleInvoiceDeletedPayload,
+  ISaleInvoiceDeletingPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
 import UnitOfWork from '@/services/UnitOfWork';
@@ -82,10 +83,10 @@ export class DeleteSaleInvoice {
   ) {
     const { saleInvoiceRepository } = this.tenancy.repositories(tenantId);
 
-    const saleInvoice = await saleInvoiceRepository.findOneById(
-      saleInvoiceId,
-      'entries'
-    );
+    const saleInvoice = await saleInvoiceRepository.findOneById(saleInvoiceId, [
+      'entries',
+      'paymentMethods',
+    ]);
     if (!saleInvoice) {
       throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
     }
@@ -118,15 +119,22 @@ export class DeleteSaleInvoice {
     // Validate the sale invoice has applied to credit note transaction.
     await this.validateInvoiceHasNoAppliedToCredit(tenantId, saleInvoiceId);
 
+    // Triggers `onSaleInvoiceDelete` event.
+    await this.eventPublisher.emitAsync(events.saleInvoice.onDelete, {
+      tenantId,
+      oldSaleInvoice,
+      saleInvoiceId,
+    } as ISaleInvoiceDeletePayload);
+
     // Deletes sale invoice transaction and associate transactions with UOW env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onSaleInvoiceDelete` event.
+      // Triggers `onSaleInvoiceDeleting` event.
       await this.eventPublisher.emitAsync(events.saleInvoice.onDeleting, {
         tenantId,
-        saleInvoice: oldSaleInvoice,
+        oldSaleInvoice,
         saleInvoiceId,
         trx,
-      } as ISaleInvoiceDeletePayload);
+      } as ISaleInvoiceDeletingPayload);
 
       // Unlink the converted sale estimates from the given sale invoice.
       await this.unlockEstimateFromInvoice.unlinkConvertedEstimateFromInvoice(
