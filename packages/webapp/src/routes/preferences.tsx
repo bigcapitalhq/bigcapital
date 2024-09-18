@@ -22,6 +22,13 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/payment-methods`,
+    component: lazy(
+      () => import('../containers/Preferences/PaymentMethods/PreferencesPaymentMethodsPage'),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/credit-notes`,
     component: lazy(() =>
       import(

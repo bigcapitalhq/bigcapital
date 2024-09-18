@@ -17,6 +17,10 @@ export default [
     href: '/preferences/users',
   },
   {
+    text: 'Payment Methods',
+    href: '/preferences/payment-methods'
+  },
+  {
     text: <T id={'preferences.estimates'} />,
     href: '/preferences/estimates',
   },
