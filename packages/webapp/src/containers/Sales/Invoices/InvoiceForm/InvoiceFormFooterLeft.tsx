@@ -3,10 +3,22 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
+import { useDialogActions } from '@/hooks/state';
+import { DialogsName } from '@/constants/dialogs';
 
 export function InvoiceFormFooterLeft() {
+  const { openDialog } = useDialogActions();
+
+  const handleSelectPaymentMethodsClick = () => {
+    openDialog(DialogsName.SelectPaymentMethod, {});
+  }
+
   return (
     <React.Fragment>
+      <FFormGroup label={'Payment Options'} name={'payment_method_id'}>
+        <a href={'#'} onClick={handleSelectPaymentMethodsClick}>Payment Options</a>
+      </FFormGroup>
+
       {/* --------- Invoice message --------- */}
       <InvoiceMsgFormGroup
         name={'invoice_message'}
