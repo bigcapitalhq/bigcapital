@@ -3,23 +3,31 @@
   height: 50px;
   width :50px;
   border-radius: 50px;
-  background-color: #fff;
-  background: #dfdfdf;
+  background-color: #dfdfdf;
+  background-image: url('https://pbs.twimg.com/profile_images/1381635804397703182/x5chIdsO_400x400.png');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 1px solid #e8e8e8;
+}
+
+.rootBodyPage {
+  background: #181a30;
 }
 
 .root {
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
   width: 600px;
   margin: 40px auto;
-  color: #000;
+  color: #222;
   background-color: #fff;
 }
 
 .bigTitle{
   margin: 0;
   font-weight: 500;
-  color: #111;
+  color: #222;
   font-size: 26px;
 }
 
@@ -28,16 +36,17 @@
 }
 
 .invoiceNumber {
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
+  font-weight: 600;
 }
 
 .body {
-  padding: 30px;
+  padding: 30px 26px;
 }
 
 .footer{
-  padding: 20px 30px;
+  padding: 20px 26px;
   background-color: #FAFAFA;
   border-top: 1px solid #DCE0E5;
   border-radius: 0 0 8px 8px;
@@ -50,7 +59,7 @@
   font-weight: 600;
 }
 .totals {
-
+  color: #000;
 }
 
 .totalItem {
@@ -62,6 +71,10 @@
   &.borderBottomDark{
     border-bottom: 1px solid #000;
   }
+}
+
+.footerButtons{
+  margin-top: 20px;
 }
 
 .footerButton{
@@ -84,5 +97,6 @@
 }
 
 .buyNote{
+  margin-top: 16px;
   font-size: 12px;
 }

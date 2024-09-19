@@ -3,6 +3,7 @@ import {
   GetSharableLinkMetaResponse,
   useGetSharableLinkMeta,
 } from '@/hooks/query/payment-link';
+import { Spinner } from '@blueprintjs/core';
 
 interface PaymentPortalContextType {
   sharableLinkMeta: GetSharableLinkMetaResponse | undefined;
@@ -29,6 +30,9 @@ export const PaymentPortalBoot: React.FC<PaymentPortalBootProps> = ({
     sharableLinkMeta,
     isSharableLinkMetaLoading,
   };
+  if (isSharableLinkMetaLoading) {
+    return <Spinner size={20} />;
+  }
 
   return (
     <PaymentPortalContext.Provider value={value}>
