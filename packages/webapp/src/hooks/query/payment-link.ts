@@ -67,6 +67,18 @@ export interface GetSharableLinkMetaResponse {
   totalLocalFormatted: string;
   customerName: string;
   companyName: string;
+  invoiceMessage: string;
+  termsConditions: string;
+  entries: Array<{
+    description: string;
+    itemName: string;
+    quantity: number;
+    quantityFormatted: string;
+    rate: number;
+    rateFormatted: string;
+    total: number;
+    totalFormatted: string;
+  }>;
 }
 
 /**

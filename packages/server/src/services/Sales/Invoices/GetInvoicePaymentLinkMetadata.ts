@@ -1,10 +1,9 @@
 import moment from 'moment';
+import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { PaymentLink } from '@/system/models';
-import { Inject, Service } from 'typedi';
-import { GeneratePaymentLinkTransformer } from './GeneratePaymentLinkTransformer';
 import { GetInvoicePaymentLinkMetaTransformer } from './GetInvoicePaymentLinkTransformer';
 import { initalizeTenantServices } from '@/api/middleware/TenantDependencyInjection';
 
@@ -46,7 +45,7 @@ export class GetInvoicePaymentLinkMetadata {
 
     const invoice = await SaleInvoice.query()
       .findById(paymentLink.resourceId)
-      .withGraphFetched('entries')
+      .withGraphFetched('entries.item')
       .withGraphFetched('customer')
       .throwIfNotFound();
 

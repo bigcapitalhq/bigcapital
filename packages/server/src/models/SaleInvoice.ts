@@ -415,7 +415,8 @@ export default class SaleInvoice extends mixin(TenantModel, [
     const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
     const {
       TransactionPaymentServiceEntry,
-  } = require('models/TransactionPaymentServiceEntry');
+    } = require('models/TransactionPaymentServiceEntry');
+    const { PdfTemplate } = require('models/PdfTemplate');
 
     return {
       /**
@@ -592,6 +593,18 @@ export default class SaleInvoice extends mixin(TenantModel, [
         filter: (query) => {
           query.where('reference_type', 'SaleInvoice');
         },
+      },
+
+      /**
+       * Sale invoice may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplate,
+        join: {
+          from: 'sales_invoices.pdfTemplateId',
+          to: 'pdf_templates.id',
+        }
       },
     };
   }

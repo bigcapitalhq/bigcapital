@@ -10,14 +10,11 @@ export default function PaymentPortalPage() {
   const { linkId } = useParams<{ linkId: string }>();
 
   return (
-    <>
-      <BodyClassName className={styles.rootBodyPage}>
-        <PaymentPortalBoot linkId={linkId}>
-          <PaymentPortal />
-        </PaymentPortalBoot>
-      </BodyClassName>
-
-      <PaymentInvoicePreviewDrawer name={DRAWERS.PAYMENT_INVOICE_PREVIEW} />
-    </>
+    <BodyClassName className={styles.rootBodyPage}>
+      <PaymentPortalBoot linkId={linkId}>
+        <PaymentPortal />
+        <PaymentInvoicePreviewDrawer name={DRAWERS.PAYMENT_INVOICE_PREVIEW} />
+      </PaymentPortalBoot>
+    </BodyClassName>
   );
 }
