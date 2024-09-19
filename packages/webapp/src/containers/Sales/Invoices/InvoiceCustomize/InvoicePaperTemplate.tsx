@@ -73,13 +73,13 @@ export interface InvoicePaperTemplateProps {
   balanceDue?: string;
 
   // Footer
-  termsConditionsLabel: string;
-  showTermsConditions: boolean;
-  termsConditions: string;
+  termsConditionsLabel?: string;
+  showTermsConditions?: boolean;
+  termsConditions?: string;
 
-  statementLabel: string;
-  showStatement: boolean;
-  statement: string;
+  statementLabel?: string;
+  showStatement?: boolean;
+  statement?: string;
 
   lines?: Array<PapaerLine>;
   taxes?: Array<PaperTax>;

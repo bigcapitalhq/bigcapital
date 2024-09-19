@@ -3,9 +3,16 @@ import clsx from 'classnames';
 import { Box, Group, Stack } from '@/components';
 import styles from './PaymentPortal.module.scss';
 import { usePaymentPortalBoot } from './PaymentPortalBoot';
+import { useDrawerActions } from '@/hooks/state';
+import { DRAWERS } from '@/constants/drawers';
 
 export function PaymentPortal() {
+  const { openDrawer } = useDrawerActions();
   const { sharableLinkMeta } = usePaymentPortalBoot();
+
+  const handleInvoicePreviewBtnClick = () => {
+    openDrawer(DRAWERS.PAYMENT_INVOICE_PREVIEW);
+  };
 
   return (
     <Box className={styles.root}>
@@ -85,6 +92,7 @@ export function PaymentPortal() {
             Download Invoice
           </Button>
           <Button
+            onClick={handleInvoicePreviewBtnClick}
             className={clsx(styles.footerButton, styles.viewInvoiceButton)}
           >
             View Invoice
