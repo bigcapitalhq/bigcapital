@@ -15,7 +15,6 @@ export function StripeIntegration() {
     null,
   );
   const stripeConnectInstance = useStripeConnect(connectedAccountId || '');
-
   const { mutateAsync: createAccount } = useCreateStripeAccount();
 
   const handleSignupBtnClick = () => {

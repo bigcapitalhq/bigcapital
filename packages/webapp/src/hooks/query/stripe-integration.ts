@@ -5,6 +5,7 @@ import {
   UseMutationResult,
 } from 'react-query';
 import useApiRequest from '../useRequest';
+import { transformToCamelCase } from '@/utils';
 
 interface AccountSessionValues {
   connectedAccountId?: string;
@@ -53,6 +54,45 @@ export const useCreateStripeAccount = (
       return apiRequest
         .post('/stripe_integration/account')
         .then((res) => res.data);
+    },
+    { ...options },
+  );
+};
+
+interface CreateCheckoutSessionValues {
+  linkId: string;
+}
+
+interface CreateCheckoutSessionResponse {
+  sessionId: string;
+  publishableKey: string;
+  redirectTo: string;
+}
+
+export const useCreateStripeCheckoutSession = (
+  options?: UseMutationOptions<
+    CreateCheckoutSessionResponse,
+    Error,
+    CreateCheckoutSessionValues
+  >,
+): UseMutationResult<
+  CreateCheckoutSessionResponse,
+  Error,
+  CreateCheckoutSessionValues
+> => {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (values: CreateCheckoutSessionValues) => {
+      return apiRequest
+        .post(
+          `/stripe_integration/${values.linkId}/create_checkout_session`,
+          values,
+        )
+        .then(
+          (res) =>
+            transformToCamelCase(res.data) as CreateCheckoutSessionResponse,
+        );
     },
     { ...options },
   );

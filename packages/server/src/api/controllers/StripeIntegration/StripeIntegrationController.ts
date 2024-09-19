@@ -3,6 +3,7 @@ import { Service, Inject } from 'typedi';
 import { StripePaymentService } from '@/services/StripePayment/StripePaymentService';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { StripeIntegrationApplication } from './StripeIntegrationApplication';
+import { StripePaymentApplication } from '@/services/StripePayment/StripePaymentApplication';
 
 @Service()
 export class StripeIntegrationController {
@@ -12,6 +13,9 @@ export class StripeIntegrationController {
   @Inject()
   private stripeIntegrationApp: StripeIntegrationApplication;
 
+  @Inject()
+  private stripePaymentApp: StripePaymentApplication;
+
   router() {
     const router = Router();
 
@@ -20,7 +24,39 @@ export class StripeIntegrationController {
       '/account_session',
       asyncMiddleware(this.createAccountSession.bind(this))
     );
+    router.post(
+      '/:linkId/create_checkout_session',
+      this.createCheckoutSession.bind(this)
+    );
+
     return router;
+  }
+
+  /**
+   * Creates a Stripe checkout session for the given payment link id.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Promise<Response|void>}
+   */
+  public async createCheckoutSession(
+    req: Request<{ linkId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { linkId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      const session =
+        await this.stripePaymentApp.createSaleInvoiceCheckoutSession(
+          tenantId,
+          linkId
+        );
+      return res.status(200).send(session);
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**

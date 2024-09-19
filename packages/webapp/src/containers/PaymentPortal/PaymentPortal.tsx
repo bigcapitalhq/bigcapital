@@ -1,17 +1,36 @@
 import { Text, Classes, Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
-import { Box, Group, Stack } from '@/components';
-import styles from './PaymentPortal.module.scss';
+import { AppToaster, Box, Group, Stack } from '@/components';
 import { usePaymentPortalBoot } from './PaymentPortalBoot';
 import { useDrawerActions } from '@/hooks/state';
+import { useCreateStripeCheckoutSession } from '@/hooks/query/stripe-integration';
 import { DRAWERS } from '@/constants/drawers';
+import styles from './PaymentPortal.module.scss';
 
 export function PaymentPortal() {
   const { openDrawer } = useDrawerActions();
-  const { sharableLinkMeta } = usePaymentPortalBoot();
+  const { sharableLinkMeta, linkId } = usePaymentPortalBoot();
+  const {
+    mutateAsync: createStripeCheckoutSession,
+    isLoading: isStripeCheckoutLoading,
+  } = useCreateStripeCheckoutSession();
 
+  // Handles invoice preview button click.
   const handleInvoicePreviewBtnClick = () => {
     openDrawer(DRAWERS.PAYMENT_INVOICE_PREVIEW);
+  };
+  // handles the pay button click.
+  const handlePayButtonClick = () => {
+    createStripeCheckoutSession({ linkId })
+      .then((session) => {
+        window.open(session.redirectTo);
+      })
+      .catch(() => {
+        AppToaster.show({
+          intent: Intent.DANGER,
+          message: 'Something went wrong.',
+        });
+      });
   };
 
   return (
@@ -91,15 +110,19 @@ export function PaymentPortal() {
           >
             Download Invoice
           </Button>
+
           <Button
             onClick={handleInvoicePreviewBtnClick}
             className={clsx(styles.footerButton, styles.viewInvoiceButton)}
           >
             View Invoice
           </Button>
+
           <Button
             intent={Intent.PRIMARY}
             className={clsx(styles.footerButton, styles.buyButton)}
+            loading={isStripeCheckoutLoading}
+            onClick={handlePayButtonClick}
           >
             Pay {sharableLinkMeta?.totalFormatted}
           </Button>

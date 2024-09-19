@@ -4,6 +4,8 @@ import { CreateStripeAccountService } from '@/api/controllers/StripeIntegration/
 import { CreateStripeAccountDTO } from '@/api/controllers/StripeIntegration/types';
 import { SaleInvoiceStripePaymentLink } from './SaleInvoiceStripePaymentLink';
 import { DeleteStripePaymentLinkInvoice } from './DeleteStripePaymentLinkInvoice';
+import { CreateInvoiceCheckoutSession } from './CreateInvoiceCheckoutSession';
+import { StripeInvoiceCheckoutSessionPOJO } from '@/interfaces/StripePayment';
 
 export class StripePaymentApplication {
   @Inject()
@@ -14,6 +16,9 @@ export class StripePaymentApplication {
 
   @Inject()
   private deleteStripePaymentLinkInvoice: DeleteStripePaymentLinkInvoice;
+
+  @Inject()
+  private createSaleInvoiceCheckoutSessionService: CreateInvoiceCheckoutSession;
 
   /**
    * Creates a new Stripe account for Bigcapital.
@@ -46,6 +51,22 @@ export class StripePaymentApplication {
       tenantId,
       stripeIntegrationId,
       invoiceId
+    );
+  }
+
+  /**
+   * Creates the Stripe checkout session from the given sale invoice.
+   * @param {number} tenantId
+   * @param {string} paymentLinkId
+   * @returns {Promise<StripeInvoiceCheckoutSessionPOJO>}
+   */
+  public createSaleInvoiceCheckoutSession(
+    tenantId: number,
+    paymentLinkId: number
+  ): Promise<StripeInvoiceCheckoutSessionPOJO> {
+    return this.createSaleInvoiceCheckoutSessionService.createInvoiceCheckoutSession(
+      tenantId,
+      paymentLinkId
     );
   }
 

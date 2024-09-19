@@ -6,6 +6,7 @@ import {
 import { Spinner } from '@blueprintjs/core';
 
 interface PaymentPortalContextType {
+  linkId: string;
   sharableLinkMeta: GetSharableLinkMetaResponse | undefined;
   isSharableLinkMetaLoading: boolean;
 }
@@ -27,6 +28,7 @@ export const PaymentPortalBoot: React.FC<PaymentPortalBootProps> = ({
     useGetSharableLinkMeta(linkId);
 
   const value = {
+    linkId,
     sharableLinkMeta,
     isSharableLinkMetaLoading,
   };

@@ -8,3 +8,10 @@ export interface StripePaymentLinkCreatedEventPayload {
 export interface StripeCheckoutSessionCompletedEventPayload {
   event: any;
 }
+
+
+export interface StripeInvoiceCheckoutSessionPOJO {
+  sessionId: string;
+  publishableKey: string;
+  redirectTo: string;
+}
