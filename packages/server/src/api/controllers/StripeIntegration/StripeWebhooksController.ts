@@ -1,10 +1,11 @@
-import { StripePaymentService } from '@/services/StripePayment/StripePaymentService';
 import { NextFunction, Request, Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
-import config from '@/config';
 import bodyParser from 'body-parser';
-import { SaleInvoiceStripePaymentLink } from '@/services/StripePayment/SaleInvoiceStripePaymentLink';
-import { CreatePaymentReceiveStripePayment } from '@/services/StripePayment/CreatePaymentReceivedStripePayment';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { StripeCheckoutSessionCompletedEventPayload } from '@/interfaces/StripePayment';
+import { StripePaymentService } from '@/services/StripePayment/StripePaymentService';
+import events from '@/subscribers/events';
+import config from '@/config';
 
 @Service()
 export class StripeWebhooksController {
@@ -12,7 +13,7 @@ export class StripeWebhooksController {
   private stripePaymentService: StripePaymentService;
 
   @Inject()
-  private createPaymentReceiveStripePayment: CreatePaymentReceiveStripePayment;
+  private eventPublisher: EventPublisher;
 
   router() {
     const router = Router();
@@ -26,10 +27,13 @@ export class StripeWebhooksController {
   }
 
   /**
+   * Handles incoming Stripe webhook events.
+   * Verifies the webhook signature, processes the event based on its type,
+   * and triggers appropriate actions or events in the system.
    *
-   * @param req
-   * @param res
-   * @param next
+   * @param {Request} req - The Express request object containing the webhook payload.
+   * @param {Response} res - The Express response object.
+   * @param {NextFunction} next - The Express next middleware function.
    */
   public async handleWebhook(req: Request, res: Response, next: NextFunction) {
     try {
@@ -50,20 +54,12 @@ export class StripeWebhooksController {
       // Handle the event based on its type
       switch (event.type) {
         case 'checkout.session.completed':
-          const { metadata } = event.data.object;
-          const tenantId = parseInt(metadata.tenantId, 10);
-          const saleInvoiceId = parseInt(metadata.saleInvoiceId, 10);
-
-          // Get the amount from the event
-          const amount = event.data.object.amount_total;
-
-          // Convert from Stripe amount (cents) to normal amount (dollars)
-          const amountInDollars = amount / 100;
-
-          await this.createPaymentReceiveStripePayment.createPaymentReceived(
-            tenantId,
-            saleInvoiceId,
-            amountInDollars
+          // Triggers `onStripeCheckoutSessionCompleted` event.
+          this.eventPublisher.emitAsync(
+            events.stripeWebhooks.onCheckoutSessionCompleted,
+            {
+              event,
+            } as StripeCheckoutSessionCompletedEventPayload
           );
           break;
         case 'payment_intent.payment_failed':

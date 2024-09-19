@@ -716,5 +716,10 @@ export default {
 
     onPaymentLinkCreated: 'onStripePaymentLinkCreated',
     onPaymentLinkInactivated: 'onStripePaymentLinkInactivated'
+  },
+
+  // Stripe Payment Webhooks
+  stripeWebhooks: {
+    onCheckoutSessionCompleted: 'onStripeCheckoutSessionCompleted'
   }
 };

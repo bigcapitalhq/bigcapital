@@ -1,8 +1,10 @@
-
-
 export interface StripePaymentLinkCreatedEventPayload {
   tenantId: number;
   paymentLinkId: string;
   saleInvoiceId: number;
   stripeIntegrationId: number;
+}
+
+export interface StripeCheckoutSessionCompletedEventPayload {
+  event: any;
 }

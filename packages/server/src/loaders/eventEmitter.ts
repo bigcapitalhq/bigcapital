@@ -121,6 +121,7 @@ import { TriggerInvalidateCacheOnSubscriptionChange } from '@/services/Subscript
 import { EventsTrackerListeners } from '@/services/EventsTracker/events/events';
 import { CreatePaymentLinkOnInvoiceCreated } from '@/services/StripePayment/events/CreatePaymentLinkOnInvoiceCreated';
 import { InvoicePaymentIntegrationSubscriber } from '@/services/Sales/Invoices/subscribers/InvoicePaymentIntegrationSubscriber';
+import { StripeWebhooksSubscriber } from '@/services/StripePayment/events/StripeWebhooksSubscriber';
 
 export default () => {
   return new EventPublisher();
@@ -296,6 +297,7 @@ export const susbcribers = () => {
     // Stripe Payment
     CreatePaymentLinkOnInvoiceCreated,
     InvoicePaymentIntegrationSubscriber,
+    StripeWebhooksSubscriber,
 
     ...EventsTrackerListeners
   ];

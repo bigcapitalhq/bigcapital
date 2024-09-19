@@ -23,6 +23,13 @@ export class StripeIntegrationController {
     return router;
   }
 
+  /**
+   * Creates a new Stripe account.
+   * @param {Request} req - The Express request object.
+   * @param {Response} res - The Express response object.
+   * @param {NextFunction} next - The Express next middleware function.
+   * @returns {Promise<void>}
+   */
   public async createAccount(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
 
@@ -31,17 +38,22 @@ export class StripeIntegrationController {
         tenantId
       );
 
-      res
-        .status(201)
-        .json({
-          accountId,
-          message: 'The Stripe account has been created successfully.',
-        });
+      res.status(201).json({
+        accountId,
+        message: 'The Stripe account has been created successfully.',
+      });
     } catch (error) {
       next(error);
     }
   }
 
+  /**
+   * Creates a new Stripe account session.
+   * @param {Request} req - The Express request object.
+   * @param {Response} res - The Express response object.
+   * @param {NextFunction} next - The Express next middleware function.
+   * @returns {Promise<void>}
+   */
   public async createAccountSession(
     req: Request,
     res: Response,
