@@ -1,4 +1,6 @@
+// @ts-nocheck
 import * as Yup from 'yup';
+import { useState } from 'react';
 import {
   ElementCustomize,
   ElementCustomizeProps,
@@ -16,6 +18,7 @@ import {
 } from '@/hooks/query/pdf-templates';
 import { FormikHelpers } from 'formik';
 import { BrandingTemplateValues } from './types';
+import { useUploadAttachments } from '@/hooks/query/attachments';
 
 interface BrandingTemplateFormProps<T> extends ElementCustomizeProps<T> {
   resource: string;
@@ -37,8 +40,21 @@ export function BrandingTemplateForm<T extends BrandingTemplateValues>({
   const { mutateAsync: editPdfTemplate } = useEditPdfTemplate();
 
   const initialValues = useBrandingTemplateFormInitialValues<T>(defaultValues);
-
-  const handleFormSubmit = (values: T, { setSubmitting }: FormikHelpers<T>) => {
+  const [isUploading, setIsLoading] = useState<boolean>(false);
+  
+  // Uploads the attachments.
+  const { mutateAsync: uploadAttachments } = useUploadAttachments({
+    onSuccess: () => {
+      setIsLoading(true);
+    },
+  });
+  // Handles the form submitting.
+  //  - Uploads the company logos.
+  //  - Push the updated data.
+  const handleFormSubmit = async (
+    values: T,
+    { setSubmitting }: FormikHelpers<T>,
+  ) => {
     const handleSuccess = (message: string) => {
       AppToaster.show({ intent: Intent.SUCCESS, message });
       setSubmitting(false);
@@ -49,26 +65,44 @@ export function BrandingTemplateForm<T extends BrandingTemplateValues>({
       setSubmitting(false);
       onError && onError();
     };
+
+    if (values.companyLogoFile) {
+      isUploading(true);
+      const formData = new FormData();
+      const key = Date.now().toString();
+
+      formData.append('file', values.companyLogoFile);
+      formData.append('internalKey', key);
+
+      try {
+        await uploadAttachments(formData);
+        setIsLoading(false);
+      } catch {
+        handleError('An error occurred while uploading company logo.');
+        setIsLoading(false);
+        return;
+      }
+    }
     if (templateId) {
       const reqValues = transformToEditRequest(values);
       setSubmitting(true);
 
-      // Edit existing template
-      editPdfTemplate({ templateId, values: reqValues })
-        .then(() => handleSuccess('PDF template updated successfully!'))
-        .catch(() =>
-          handleError('An error occurred while updating the PDF template.'),
-        );
+      try {
+        await editPdfTemplate({ templateId, values: reqValues });
+        handleSuccess('PDF template updated successfully!');
+      } catch {
+        handleError('An error occurred while updating the PDF template.');
+      }
     } else {
       const reqValues = transformToNewRequest(values, resource);
       setSubmitting(true);
 
-      // Create new template
-      createPdfTemplate(reqValues)
-        .then(() => handleSuccess('PDF template created successfully!'))
-        .catch(() =>
-          handleError('An error occurred while creating the PDF template.'),
-        );
+      try {
+        await createPdfTemplate(reqValues);
+        handleSuccess('PDF template created successfully!');
+      } catch {
+        handleError('An error occurred while creating the PDF template.');
+      }
     }
   };
 

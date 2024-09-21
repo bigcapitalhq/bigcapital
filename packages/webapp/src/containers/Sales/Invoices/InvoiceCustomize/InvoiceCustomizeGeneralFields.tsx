@@ -12,6 +12,8 @@ import { FColorInput } from '@/components/Forms/FColorInput';
 import { CreditCardIcon } from '@/icons/CreditCardIcon';
 import { Overlay } from './Overlay';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { CompanyLogoUpload } from './CompanyLogoUpload';
+import { useFormikContext } from 'formik';
 
 export function InvoiceCustomizeGeneralField() {
   const isTemplateNameFilled = useIsTemplateNamedFilled();
@@ -75,6 +77,8 @@ export function InvoiceCustomizeGeneralField() {
               fastField
             />
           </FFormGroup>
+
+          <CompanyLogoUploadField />
         </Stack>
 
         <InvoiceCustomizePaymentManage />
@@ -99,7 +103,24 @@ function InvoiceCustomizePaymentManage() {
         <Text>Accept payment methods</Text>
       </Group>
 
-      <a href={'#'}>Manage</a>
+      <a style={{ fontSize: 13 }} href={'#'}>Manage</a>
     </Group>
+  );
+}
+
+function CompanyLogoUploadField() {
+  const { setFieldValue } = useFormikContext();
+
+  return (
+    <FFormGroup name={'companyLogo'} label={''} fastField>
+      <CompanyLogoUpload
+        onChange={(file) => {
+          const imageUrl = file ? URL.createObjectURL(file) : '';
+
+          setFieldValue('companyLogoFile', file);
+          setFieldValue('companyLogo', imageUrl);
+        }}
+      />
+    </FFormGroup>
   );
 }
