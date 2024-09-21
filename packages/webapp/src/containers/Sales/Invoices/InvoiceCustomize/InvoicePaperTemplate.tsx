@@ -207,7 +207,7 @@ export function InvoicePaperTemplate({
           )}
         </PaperTemplate.TermsList>
 
-        <Group spacing={10}>
+        <PaperTemplate.AddressesGroup>
           {showBilledFromAddress && (
             <PaperTemplate.Address
               items={[<strong>{companyName}</strong>, ...billedFromAddres]}
@@ -218,7 +218,7 @@ export function InvoicePaperTemplate({
               items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
             />
           )}
-        </Group>
+        </PaperTemplate.AddressesGroup>
 
         <Stack spacing={0}>
           <PaperTemplate.Table

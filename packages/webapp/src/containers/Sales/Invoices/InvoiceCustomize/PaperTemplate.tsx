@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'classnames';
 import { get } from 'lodash';
-import { Stack } from '@/components';
+import { Group, GroupProps, Stack } from '@/components';
 import styles from './InvoicePaperTemplate.module.scss';
 
 export interface PaperTemplateProps {
@@ -119,6 +119,9 @@ PaperTemplate.MutedText = () => {};
 
 PaperTemplate.Text = () => {};
 
+PaperTemplate.AddressesGroup = (props: GroupProps) => {
+  return <Group spacing={10} {...props} className={styles.addressRoot} />
+}
 PaperTemplate.Address = ({
   items,
 }: {

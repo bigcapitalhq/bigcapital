@@ -37,16 +37,9 @@
 }
 
 .addressRoot{
-  display: flex;
-  flex-direction: row;
-}
-
-.addressBillTo{
-  flex: 1;
-}
-
-.addressFrom{
-  flex: 1;
+  > div{
+    flex: 1;
+  }
 }
 
 .table {
