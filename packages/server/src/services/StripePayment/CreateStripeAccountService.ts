@@ -1,11 +1,9 @@
+import { StripePaymentService } from '@/services/StripePayment/StripePaymentService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
-import { snakeCase } from 'lodash';
-import { StripePaymentService } from './StripePaymentService';
-import HasTenancyService from '../Tenancy/TenancyService';
-
-interface CreateStripeAccountDTO {
-  name: string;
-}
+import { CreateStripeAccountDTO } from './types';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class CreateStripeAccountService {
@@ -15,29 +13,43 @@ export class CreateStripeAccountService {
   @Inject()
   private tenancy: HasTenancyService;
 
+  @Inject()
+  private eventPublisher: EventPublisher;
+
   /**
-   * Creates a new Stripe account for Bigcapital.
-   * @param {number} tenantId 
-   * @param {number} createStripeAccountDTO 
+   * Creates a new Stripe account.
+   * @param {number} tenantId
+   * @param {CreateStripeAccountDTO} stripeAccountDTO
+   * @returns {Promise<string>}
    */
-  async createAccount(
+  async createStripeAccount(
     tenantId: number,
-    createStripeAccountDTO: CreateStripeAccountDTO
-  ) {
+    stripeAccountDTO?: CreateStripeAccountDTO
+  ): Promise<string> {
     const { PaymentIntegration } = this.tenancy.models(tenantId);
+    const stripeAccount = await this.stripePaymentService.createAccount();
+    const stripeAccountId = stripeAccount.id;
 
-    // Creates a new Stripe account.
-    const account = await this.stripePaymentService.createAccount();
-  
-    const slug = snakeCase(createStripeAccountDTO.name);
-
-    // Store the Stripe account on tenant store.
+    const parsedStripeAccountDTO = {
+      ...stripeAccountDTO,
+      name: 'Stripe',
+    };
+    // Stores the details of the Stripe account.
     await PaymentIntegration.query().insert({
-      service: 'stripe',
-      name: createStripeAccountDTO.name,
-      slug,
-      enable: true,
-      accountId: account.id,
+      name: parsedStripeAccountDTO.name,
+      accountId: stripeAccountId,
+      enable: false,
+      service: 'Stripe',
     });
+    // Triggers `onStripeIntegrationAccountCreated` event.
+    await this.eventPublisher.emitAsync(
+      events.stripeIntegration.onAccountCreated,
+      {
+        tenantId,
+        stripeAccountDTO,
+        stripeAccountId,
+      }
+    );
+    return stripeAccountId;
   }
 }

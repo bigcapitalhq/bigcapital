@@ -14,6 +14,11 @@ interface AccountSessionResponse {
   client_secret: string;
 }
 
+/**
+ * Generates a new Stripe checkout session for the provided link ID.
+ * @param {CreateCheckoutSessionValues} values - The values required to create a checkout session.
+ * @returns {Promise<CreateCheckoutSessionResponse>} The response containing the checkout session details.
+ */
 export const useCreateStripeAccountSession = (
   options?: UseMutationOptions<
     AccountSessionResponse,

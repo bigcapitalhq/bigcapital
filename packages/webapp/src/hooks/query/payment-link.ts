@@ -10,17 +10,17 @@ import {
 import useApiRequest from '../useRequest';
 import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 
+// Create Payment Link
+// ------------------------------------
 interface CreatePaymentLinkValues {
   publicity: string;
   transactionType: string;
   transactionId: number | string;
   expiryDate: string;
 }
-
 interface CreatePaymentLinkResponse {
   link: string;
 }
-
 /**
  * Creates a new payment link.
  * @param {UseMutationOptions<CreatePaymentLinkResponse, Error, CreatePaymentLinkValues>} options
@@ -50,7 +50,10 @@ export function useCreatePaymentLink(
   );
 }
 
-export interface GetSharableLinkMetaResponse {
+
+// Get Invoice Payment Link
+// -----------------------------------------
+export interface GetInvoicePaymentLinkResponse {
   dueAmount: number;
   dueAmountFormatted: string;
   dueDate: string;
@@ -80,20 +83,19 @@ export interface GetSharableLinkMetaResponse {
     totalFormatted: string;
   }>;
 }
-
 /**
- * Fetches the sharable link metadata for a given link ID.
+ * Fetches the sharable invoice link metadata for a given link ID.
  * @param {string} linkId - The ID of the link to fetch metadata for.
- * @param {UseQueryOptions<GetSharableLinkMetaResponse, Error>} options - Optional query options.
- * @returns {UseQueryResult<GetSharableLinkMetaResponse, Error>} The query result.
+ * @param {UseQueryOptions<GetInvoicePaymentLinkResponse, Error>} options - Optional query options.
+ * @returns {UseQueryResult<GetInvoicePaymentLinkResponse, Error>} The query result.
  */
-export function useGetSharableLinkMeta(
+export function useGetInvoicePaymentLink(
   linkId: string,
-  options?: UseQueryOptions<GetSharableLinkMetaResponse, Error>,
-): UseQueryResult<GetSharableLinkMetaResponse, Error> {
+  options?: UseQueryOptions<GetInvoicePaymentLinkResponse, Error>,
+): UseQueryResult<GetInvoicePaymentLinkResponse, Error> {
   const apiRequest = useApiRequest();
 
-  return useQuery<GetSharableLinkMetaResponse, Error>(
+  return useQuery<GetInvoicePaymentLinkResponse, Error>(
     ['sharable-link-meta', linkId],
     () =>
       apiRequest

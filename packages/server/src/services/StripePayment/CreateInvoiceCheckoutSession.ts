@@ -47,8 +47,11 @@ export class CreateInvoiceCheckoutSession {
     const stripeAccountId = stripePaymentMethod?.paymentIntegration?.accountId;
     const paymentIntegrationId = stripePaymentMethod?.paymentIntegration?.id;
 
-    const session = await this.createCheckoutSession(invoice, stripeAccountId);
-
+    // Creates checkout session for the given invoice.
+    const session = await this.createCheckoutSession(invoice, stripeAccountId, {
+      tenantId,
+      paymentLinkId: paymentLink.id,
+    });
     return {
       sessionId: session.id,
       publishableKey: config.stripePayment.publishableKey,
@@ -64,7 +67,8 @@ export class CreateInvoiceCheckoutSession {
    */
   private createCheckoutSession(
     invoice: ISaleInvoice,
-    stripeAccountId: string
+    stripeAccountId: string,
+    metadata?: Record<string, any>
   ) {
     return this.stripePaymentService.stripe.checkout.sessions.create(
       {
@@ -84,11 +88,13 @@ export class CreateInvoiceCheckoutSession {
         mode: 'payment',
         success_url: `${origin}/success`,
         cancel_url: `${origin}/cancel`,
+        metadata: {
+          saleInvoiceId: invoice.id,
+          resource: 'SaleInvoice',
+          ...metadata,
+        },
       },
-      {
-        stripeAccount: stripeAccountId,
-        // stripeAccount: 'acct_1Q0nE7ESY7RfeebE',
-      }
+      { stripeAccount: stripeAccountId }
     );
   }
 }

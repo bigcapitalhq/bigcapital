@@ -5,10 +5,13 @@ import { transformToCamelCase } from '@/utils';
 
 const PaymentServicesQueryKey = 'PaymentServices';
 
-export interface GetPaymentServicesResponse {
-  
-}
+export interface GetPaymentServicesResponse {}
 
+/**
+ * Retrieves the integrated payment services.
+ * @param {UseQueryOptions<GetPaymentServicesResponse, Error>} options
+ * @returns {UseQueryResult<GetPaymentServicesResponse, Error>}
+ */
 export const useGetPaymentServices = (
   options?: UseQueryOptions<GetPaymentServicesResponse, Error>,
 ): UseQueryResult<GetPaymentServicesResponse, Error> => {

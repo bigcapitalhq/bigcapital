@@ -1,13 +1,13 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import {
-  GetSharableLinkMetaResponse,
-  useGetSharableLinkMeta,
+  GetInvoicePaymentLinkResponse,
+  useGetInvoicePaymentLink,
 } from '@/hooks/query/payment-link';
 import { Spinner } from '@blueprintjs/core';
 
 interface PaymentPortalContextType {
   linkId: string;
-  sharableLinkMeta: GetSharableLinkMetaResponse | undefined;
+  sharableLinkMeta: GetInvoicePaymentLinkResponse | undefined;
   isSharableLinkMetaLoading: boolean;
 }
 
@@ -25,7 +25,7 @@ export const PaymentPortalBoot: React.FC<PaymentPortalBootProps> = ({
   children,
 }) => {
   const { data: sharableLinkMeta, isLoading: isSharableLinkMetaLoading } =
-    useGetSharableLinkMeta(linkId);
+    useGetInvoicePaymentLink(linkId);
 
   const value = {
     linkId,
