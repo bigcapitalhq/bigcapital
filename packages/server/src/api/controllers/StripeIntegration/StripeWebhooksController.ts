@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
 import bodyParser from 'body-parser';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { StripeCheckoutSessionCompletedEventPayload } from '@/interfaces/StripePayment';
+import { StripeWebhookEventPayload } from '@/interfaces/StripePayment';
 import { StripePaymentService } from '@/services/StripePayment/StripePaymentService';
 import events from '@/subscribers/events';
 import config from '@/config';
@@ -59,12 +59,16 @@ export class StripeWebhooksController {
             events.stripeWebhooks.onCheckoutSessionCompleted,
             {
               event,
-            } as StripeCheckoutSessionCompletedEventPayload
+            } as StripeWebhookEventPayload
           );
           break;
-        case 'payment_intent.payment_failed':
-          // Handle failed payment intent
-          console.log('PaymentIntent failed.');
+        case 'account.updated':
+          this.eventPublisher.emitAsync(
+            events.stripeWebhooks.onAccountUpdated,
+            {
+              event,
+            } as StripeWebhookEventPayload
+          );
           break;
         // Add more cases as needed
         default:

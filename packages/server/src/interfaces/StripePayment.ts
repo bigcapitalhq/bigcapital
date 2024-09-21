@@ -14,3 +14,8 @@ export interface StripeInvoiceCheckoutSessionPOJO {
   publishableKey: string;
   redirectTo: string;
 }
+
+
+export interface StripeWebhookEventPayload {
+  event: any;
+}

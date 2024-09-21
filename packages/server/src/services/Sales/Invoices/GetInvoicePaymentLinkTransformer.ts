@@ -82,7 +82,7 @@ class GetInvoicePaymentLinkEntryMetaTransformer extends ItemEntryTransformer {
     ];
   };
 
-  itemName(entry) {
+  public itemName(entry) {
     return entry.item.name;
   }
 

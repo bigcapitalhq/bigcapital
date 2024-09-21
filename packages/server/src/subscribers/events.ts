@@ -728,6 +728,7 @@ export default {
 
   // Stripe Payment Webhooks
   stripeWebhooks: {
-    onCheckoutSessionCompleted: 'onStripeCheckoutSessionCompleted'
+    onCheckoutSessionCompleted: 'onStripeCheckoutSessionCompleted',
+    onAccountUpdated: 'onStripeAccountUpdated'
   }
 };

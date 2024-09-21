@@ -10,7 +10,7 @@ import { initalizeTenantServices } from '@/api/middleware/TenantDependencyInject
 @Service()
 export class GetInvoicePaymentLinkMetadata {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   @Inject()
   private transformer: TransformerInjectable;
@@ -23,12 +23,9 @@ export class GetInvoicePaymentLinkMetadata {
   async getInvoicePaymentLinkMeta(linkId: string) {
     const paymentLink = await PaymentLink.query()
       .findOne('linkId', linkId)
+      .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
-
-    // 
-    if (paymentLink.resourceType !== 'SaleInvoice') {
-      throw new ServiceError('');
-    }
+ 
     // Validate the expiry at date.
     if (paymentLink.expiryAt) {
       const currentDate = moment();

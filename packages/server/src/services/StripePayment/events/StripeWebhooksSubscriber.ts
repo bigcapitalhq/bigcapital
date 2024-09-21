@@ -1,10 +1,18 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
 import { CreatePaymentReceiveStripePayment } from '../CreatePaymentReceivedStripePayment';
-import { StripeCheckoutSessionCompletedEventPayload } from '@/interfaces/StripePayment';
+import {
+  StripeCheckoutSessionCompletedEventPayload,
+  StripeWebhookEventPayload,
+} from '@/interfaces/StripePayment';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Tenant } from '@/system/models';
 
 @Service()
 export class StripeWebhooksSubscriber {
+  @Inject()
+  private tenancy: HasTenancyService;
+
   @Inject()
   private createPaymentReceiveStripePayment: CreatePaymentReceiveStripePayment;
 
@@ -15,6 +23,10 @@ export class StripeWebhooksSubscriber {
     bus.subscribe(
       events.stripeWebhooks.onCheckoutSessionCompleted,
       this.handleCheckoutSessionCompleted.bind(this)
+    );
+    bus.subscribe(
+      events.stripeWebhooks.onAccountUpdated,
+      this.handleAccountUpdated.bind(this)
     );
   }
 
@@ -35,10 +47,38 @@ export class StripeWebhooksSubscriber {
     // Convert from Stripe amount (cents) to normal amount (dollars)
     const amountInDollars = amount / 100;
 
+    // Creates a new payment received transaction.
     await this.createPaymentReceiveStripePayment.createPaymentReceived(
       tenantId,
       saleInvoiceId,
       amountInDollars
     );
+  }
+
+  /**
+   * Handles the account updated.
+   * @param {StripeWebhookEventPayload}
+   */
+  async handleAccountUpdated({ event }: StripeWebhookEventPayload) {
+    const { metadata } = event.data.object;
+    const account = event.data.object;
+    const tenantId = parseInt(metadata.tenantId, 10);
+
+    if (!metadata?.paymentIntegrationId || !metadata.tenantId) return;
+
+    // Find the tenant or throw not found error.
+    await Tenant.query().findById(tenantId).throwIfNotFound();
+
+    // Check if the account capabilities are active
+    if (account.capabilities.card_payments === 'active') {
+      const { PaymentIntegration } = this.tenancy.models(tenantId);
+
+      // Marks the payment method integration as active.
+      await PaymentIntegration.query()
+        .findById(metadata?.paymentIntegrationId)
+        .patch({
+          active: true,
+        });
+    }
   }
 }
