@@ -25,7 +25,7 @@ export function PaymentPortal() {
       .then((session) => {
         window.open(session.redirectTo);
       })
-      .catch(() => {
+      .catch((error) => {
         AppToaster.show({
           intent: Intent.DANGER,
           message: 'Something went wrong.',
@@ -52,7 +52,7 @@ export function PaymentPortal() {
             </Text>
           </Stack>
 
-          <Stack spacing={2}>
+          <Stack className={styles.address} spacing={2}>
             <Box className={styles.customerName}>
               {sharableLinkMeta?.customerName}
             </Box>

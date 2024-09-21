@@ -2,5 +2,5 @@
 
 
 export interface CreateStripeAccountDTO {
-  name: string;
+  name?: string;
 }

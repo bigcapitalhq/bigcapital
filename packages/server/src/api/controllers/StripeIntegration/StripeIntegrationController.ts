@@ -1,18 +1,10 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { Service, Inject } from 'typedi';
-import { StripePaymentService } from '@/services/StripePayment/StripePaymentService';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import { StripeIntegrationApplication } from './StripeIntegrationApplication';
 import { StripePaymentApplication } from '@/services/StripePayment/StripePaymentApplication';
 
 @Service()
 export class StripeIntegrationController {
-  @Inject()
-  private stripePaymentService: StripePaymentService;
-
-  @Inject()
-  private stripeIntegrationApp: StripeIntegrationApplication;
-
   @Inject()
   private stripePaymentApp: StripePaymentApplication;
 
@@ -70,7 +62,7 @@ export class StripeIntegrationController {
     const { tenantId } = req;
 
     try {
-      const accountId = await this.stripeIntegrationApp.createStripeAccount(
+      const accountId = await this.stripePaymentApp.createStripeAccount(
         tenantId
       );
 
@@ -95,9 +87,12 @@ export class StripeIntegrationController {
     res: Response,
     next: NextFunction
   ) {
+    const { tenantId } = req;
     const { account } = req.body;
+
     try {
-      const clientSecret = await this.stripePaymentService.createAccountSession(
+      const clientSecret = await this.stripePaymentApp.createStripeAccount(
+        tenantId,
         account
       );
       res.status(200).json({ clientSecret });

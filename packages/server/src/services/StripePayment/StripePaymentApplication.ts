@@ -9,7 +9,7 @@ export class StripePaymentApplication {
   private createStripeAccountService: CreateStripeAccountService;
 
   @Inject()
-  private createSaleInvoiceCheckoutSessionService: CreateInvoiceCheckoutSession;
+  private createInvoiceCheckoutSessionService: CreateInvoiceCheckoutSession;
 
   /**
    * Creates a new Stripe account for Bigcapital.
@@ -18,7 +18,7 @@ export class StripePaymentApplication {
    */
   public createStripeAccount(
     tenantId: number,
-    createStripeAccountDTO: CreateStripeAccountDTO
+    createStripeAccountDTO: CreateStripeAccountDTO = {}
   ) {
     return this.createStripeAccountService.createStripeAccount(
       tenantId,
@@ -36,7 +36,7 @@ export class StripePaymentApplication {
     tenantId: number,
     paymentLinkId: number
   ): Promise<StripeInvoiceCheckoutSessionPOJO> {
-    return this.createSaleInvoiceCheckoutSessionService.createInvoiceCheckoutSession(
+    return this.createInvoiceCheckoutSessionService.createInvoiceCheckoutSession(
       tenantId,
       paymentLinkId
     );

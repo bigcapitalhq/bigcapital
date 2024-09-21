@@ -31,8 +31,8 @@ export class CreateStripeAccountService {
     const stripeAccountId = stripeAccount.id;
 
     const parsedStripeAccountDTO = {
-      ...stripeAccountDTO,
       name: 'Stripe',
+      ...stripeAccountDTO,
     };
     // Stores the details of the Stripe account.
     await PaymentIntegration.query().insert({

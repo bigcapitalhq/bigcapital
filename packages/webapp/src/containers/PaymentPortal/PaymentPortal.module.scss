@@ -1,3 +1,17 @@
+
+.rootBodyPage {
+  background: #0c103f;
+}
+
+.root {
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  width: 600px;
+  margin: 40px auto;
+  color: #222;
+  background-color: #fff;
+}
+
 .companyLogoWrap {
   height: 50px;
   width :50px;
@@ -10,19 +24,6 @@
   border: 1px solid #e8e8e8;
 }
 
-.rootBodyPage {
-  background: #181a30;
-}
-
-.root {
-  border-radius: 10px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  width: 600px;
-  margin: 40px auto;
-  color: #222;
-  background-color: #fff;
-}
-
 .bigTitle{
   margin: 0;
   font-weight: 500;
@@ -31,7 +32,7 @@
 }
 
 .invoiceDueDate{
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .invoiceNumber {
@@ -53,12 +54,14 @@
   font-size: 12px;
 }
 
+.address{
+  color: #5f6b7c;
+}
+
 .customerName{
   font-size: 16px;
   font-weight: 600;
-}
-.totals {
-  color: #000;
+  color: #222;
 }
 
 .totalItem {
@@ -72,6 +75,26 @@
   }
 }
 
+.downloadInvoiceButton:global(.bp4-button.bp4-minimal){
+  box-shadow: 0 0 0 1px #DCE0E5;
+}
+
+.viewInvoiceButton:global(.bp4-button:not([class*=bp4-intent-]):not(.bp4-minimal)){
+  background-color: #EDEFF2;
+}
+
+.buyNote{
+  margin-top: 16px;
+  font-size: 12px;
+}
+
+
+// Footer
+// -------------------
+.totals {
+  color: #000;
+}
+
 .footerButtons{
   margin-top: 20px;
 }
@@ -81,21 +104,7 @@
   line-height: 40px;
   font-size: 16px;
 }
-.downloadInvoiceButton:global(.bp4-button.bp4-minimal){
-  box-shadow: 0 0 0 1px #DCE0E5;
-}
-.viewInvoiceButton:global(.bp4-button:not([class*=bp4-intent-]):not(.bp4-minimal)){
-  background-color: #EDEFF2;
-}
-.buyButton{
-
-}
 
 .footerText{
   color: #666;
-}
-
-.buyNote{
-  margin-top: 16px;
-  font-size: 12px;
 }
