@@ -703,6 +703,14 @@ export default {
     onAssigningDefault: 'onPdfTemplateAssigningDefault',
   },
 
+  // Payment method.
+  paymentMethod: {
+    onEditing: 'onPaymentMethodEditing',
+    onEdited: 'onPaymentMethodEdited',
+
+    onDeleted: 'onPaymentMethodDeleted',
+  },
+
   // Payment methods integrations
   paymentIntegrationLink: {
     onPaymentIntegrationLink: 'onPaymentIntegrationLink',

@@ -78,7 +78,7 @@ export function PaymentPortal() {
 
             <Group position={'apart'} className={styles.totalItem}>
               <Text>Total</Text>
-              <Text style={{ fontWeight: 600 }}>
+              <Text style={{ fontWeight: 500 }}>
                 {sharableLinkMeta?.totalFormatted}
               </Text>
             </Group>
@@ -96,7 +96,7 @@ export function PaymentPortal() {
               className={clsx(styles.totalItem, styles.borderBottomDark)}
             >
               <Text>Due Amount</Text>
-              <Text style={{ fontWeight: 600 }}>
+              <Text style={{ fontWeight: 500 }}>
                 {sharableLinkMeta?.dueAmountFormatted}
               </Text>
             </Group>

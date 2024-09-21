@@ -15,7 +15,7 @@ export class StripeWebhooksController {
   @Inject()
   private eventPublisher: EventPublisher;
 
-  router() {
+  public router() {
     const router = Router();
 
     router.post(
@@ -35,7 +35,7 @@ export class StripeWebhooksController {
    * @param {Response} res - The Express response object.
    * @param {NextFunction} next - The Express next middleware function.
    */
-  public async handleWebhook(req: Request, res: Response, next: NextFunction) {
+  private async handleWebhook(req: Request, res: Response, next: NextFunction) {
     try {
       let event = req.body;
       const sig = req.headers['stripe-signature'];

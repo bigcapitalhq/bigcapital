@@ -38,7 +38,7 @@ export class CreateStripeAccountService {
     await PaymentIntegration.query().insert({
       name: parsedStripeAccountDTO.name,
       accountId: stripeAccountId,
-      enable: false,
+      active: false, // Active will turn true after onboarding.
       service: 'Stripe',
     });
     // Triggers `onStripeIntegrationAccountCreated` event.

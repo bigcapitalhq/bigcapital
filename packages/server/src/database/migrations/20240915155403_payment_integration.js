@@ -8,7 +8,7 @@ exports.up = function (knex) {
     table.string('service');
     table.string('name'); 
     table.string('slug');
-    table.boolean('enable').defaultTo(true);
+    table.boolean('active').defaultTo(false);
     table.string('account_id');
     table.json('options');
     table.timestamps();

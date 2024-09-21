@@ -1,37 +1,17 @@
 import React, { useState } from 'react';
 import {
-  ConnectAccountOnboarding,
-  ConnectComponentsProvider,
-} from '@stripe/react-connect-js';
-import { useStripeConnect } from './use-stripe-connect';
-import { useCreateStripeAccount } from '@/hooks/query/stripe-integration';
+  useCreateStripeAccount,
+  useCreateStripeAccountLink,
+} from '@/hooks/query/stripe-integration';
 
-export function StripeIntegration() {
-  const [accountCreatePending, setAccountCreatePending] =
-    useState<boolean>(false);
-  const [onboardingExited, setOnboardingExited] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [connectedAccountId, setConnectedAccountId] = useState<string | null>(
-    null,
-  );
-  const stripeConnectInstance = useStripeConnect(connectedAccountId || '');
-  const { mutateAsync: createAccount } = useCreateStripeAccount();
-
-  const handleSignupBtnClick = () => {
-    setAccountCreatePending(true);
-    setError(false);
-
-    createAccount({})
-      .then((account) => {
-        setConnectedAccountId(account.account_id);
-      })
-      .catch(() => {
-        setError(true);
-      })
-      .finally(() => {
-        setAccountCreatePending(false);
-      });
-  };
+export const StripeIntegration2 = () => {
+  const [accountCreatePending, setAccountCreatePending] = useState(false);
+  const [accountLinkCreatePending, setAccountLinkCreatePending] =
+    useState(false);
+  const [error, setError] = useState(false);
+  const [connectedAccountId, setConnectedAccountId] = useState<string>();
+  const { mutateAsync: createStripeAccount } = useCreateStripeAccount();
+  const { mutateAsync: createStripeAccountLink } = useCreateStripeAccountLink();
 
   return (
     <div className="container">
@@ -40,29 +20,70 @@ export function StripeIntegration() {
       </div>
       <div className="content">
         {!connectedAccountId && <h2>Get ready for take off</h2>}
-        {connectedAccountId && !stripeConnectInstance && (
-          <h2>Add information to start accepting money</h2>
-        )}
         {!connectedAccountId && (
           <p>
             Bigcapital Technology, Inc. is the world's leading air travel
             platform: join our team of pilots to help people travel faster.
           </p>
         )}
-        {!accountCreatePending && !connectedAccountId && (
-          <div>
-            <button onClick={handleSignupBtnClick}>Sign up</button>
-          </div>
+        {connectedAccountId && (
+          <h2>Add information to start accepting money</h2>
         )}
-        {stripeConnectInstance && (
-          <ConnectComponentsProvider connectInstance={stripeConnectInstance}>
-            <ConnectAccountOnboarding
-              onExit={() => setOnboardingExited(true)}
-            />
-          </ConnectComponentsProvider>
+        {connectedAccountId && (
+          <p>
+            Matt's Mats partners with Stripe to help you receive payments and
+            keep your personal bank and details secure.
+          </p>
+        )}
+        {!accountCreatePending && !connectedAccountId && (
+          <button
+            onClick={async () => {
+              setAccountCreatePending(true);
+              setError(false);
+              createStripeAccount({}).then((response) => {
+                const { account_id: accountId } = response;
+                setAccountCreatePending(false);
+
+                if (accountId) {
+                  setConnectedAccountId(accountId);
+                }
+                if (error) {
+                  setError(true);
+                }
+              });
+            }}
+          >
+            Create an account!
+          </button>
+        )}
+        {connectedAccountId && !accountLinkCreatePending && (
+          <button
+            onClick={() => {
+              setAccountLinkCreatePending(true);
+              setError(false);
+              createStripeAccountLink({
+                stripeAccountId: connectedAccountId,
+              })
+                .then((res) => {
+                  const { clientSecret } = res;
+                  setAccountLinkCreatePending(false);
+
+                  if (clientSecret.url) {
+                    window.location.href = clientSecret.url;
+                  }
+                })
+                .catch(() => {
+                  setError(true);
+                });
+            }}
+          >
+            Add information
+          </button>
         )}
         {error && <p className="error">Something went wrong!</p>}
-        {(connectedAccountId || accountCreatePending || onboardingExited) && (
+        {(connectedAccountId ||
+          accountCreatePending ||
+          accountLinkCreatePending) && (
           <div className="dev-callout">
             {connectedAccountId && (
               <p>
@@ -71,17 +92,14 @@ export function StripeIntegration() {
               </p>
             )}
             {accountCreatePending && <p>Creating a connected account...</p>}
-            {onboardingExited && (
-              <p>The Account Onboarding component has exited</p>
-            )}
+            {accountLinkCreatePending && <p>Creating a new Account Link...</p>}
           </div>
         )}
         <div className="info-callout">
           <p>
-            This is a sample app for Connect onboarding using the Account
-            Onboarding embedded component.{' '}
+            This is a sample app for Stripe-hosted Connect onboarding.{' '}
             <a
-              href="https://docs.stripe.com/connect/onboarding/quickstart?connect-onboarding-surface=embedded"
+              href="https://docs.stripe.com/connect/onboarding/quickstart?connect-onboarding-surface=hosted"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -92,4 +110,4 @@ export function StripeIntegration() {
       </div>
     </div>
   );
-}
+};

@@ -1,26 +1,29 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import { body } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { StripePaymentApplication } from '@/services/StripePayment/StripePaymentApplication';
+import BaseController from '../BaseController';
 
 @Service()
-export class StripeIntegrationController {
+export class StripeIntegrationController extends BaseController {
   @Inject()
   private stripePaymentApp: StripePaymentApplication;
 
-  router() {
+  public router() {
     const router = Router();
 
     router.post('/account', asyncMiddleware(this.createAccount.bind(this)));
     router.post(
-      '/account_session',
-      asyncMiddleware(this.createAccountSession.bind(this))
+      '/account_link',
+      [body('stripe_account_id').exists()],
+      this.validationResult,
+      asyncMiddleware(this.createAccountLink.bind(this))
     );
     router.post(
       '/:linkId/create_checkout_session',
       this.createCheckoutSession.bind(this)
     );
-
     return router;
   }
 
@@ -65,8 +68,7 @@ export class StripeIntegrationController {
       const accountId = await this.stripePaymentApp.createStripeAccount(
         tenantId
       );
-
-      res.status(201).json({
+      return res.status(201).json({
         accountId,
         message: 'The Stripe account has been created successfully.',
       });
@@ -82,20 +84,20 @@ export class StripeIntegrationController {
    * @param {NextFunction} next - The Express next middleware function.
    * @returns {Promise<void>}
    */
-  public async createAccountSession(
+  public async createAccountLink(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
     const { tenantId } = req;
-    const { account } = req.body;
+    const { stripeAccountId } = this.matchedBodyData(req);
 
     try {
-      const clientSecret = await this.stripePaymentApp.createStripeAccount(
+      const clientSecret = await this.stripePaymentApp.createAccountLink(
         tenantId,
-        account
+        stripeAccountId
       );
-      res.status(200).json({ clientSecret });
+      return res.status(200).json({ clientSecret });
     } catch (error) {
       next(error);
     }

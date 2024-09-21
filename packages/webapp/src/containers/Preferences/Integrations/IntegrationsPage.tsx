@@ -1,5 +1,5 @@
-import { StripeIntegration } from '@/containers/StripePayment/StripeIntegration';
+import { StripeIntegration2 } from '@/containers/StripePayment/StripeIntegration';
 
 export default function IntegrationsPage() {
-  return <StripeIntegration />
+  return <StripeIntegration2 />
 }

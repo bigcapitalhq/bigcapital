@@ -7,6 +7,49 @@ import {
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 
+
+// Create Stripe Account Link.
+// ------------------------------------
+interface StripeAccountLinkResponse {
+  clientSecret: {
+    created: number;
+    expiresAt: number;
+    object: string;
+    url: string;
+  };
+}
+interface StripeAccountLinkValues {
+  stripeAccountId: string;
+}
+
+export const useCreateStripeAccountLink = (
+  options?: UseMutationOptions<
+    StripeAccountLinkResponse,
+    Error,
+    StripeAccountLinkValues
+  >,
+): UseMutationResult<
+  StripeAccountLinkResponse,
+  Error,
+  StripeAccountLinkValues
+> => {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (values: StripeAccountLinkValues) => {
+      return apiRequest
+        .post('/stripe_integration/account_link', {
+          stripe_account_id: values?.stripeAccountId,
+        })
+        .then((res) => transformToCamelCase(res.data));
+    },
+    { ...options },
+  );
+};
+
+
+// Create Stripe Account Session.
+// ------------------------------------
 interface AccountSessionValues {
   connectedAccountId?: string;
 }
@@ -40,6 +83,8 @@ export const useCreateStripeAccountSession = (
   );
 };
 
+// Create Stripe Account.
+// ------------------------------------
 interface CreateStripeAccountValues {}
 interface CreateStripeAccountResponse {
   account_id: string;
@@ -64,6 +109,8 @@ export const useCreateStripeAccount = (
   );
 };
 
+// Create Stripe Checkout Session.
+// ------------------------------------
 interface CreateCheckoutSessionValues {
   linkId: string;
 }

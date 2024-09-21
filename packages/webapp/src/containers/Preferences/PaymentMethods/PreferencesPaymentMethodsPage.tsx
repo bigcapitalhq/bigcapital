@@ -1,20 +1,23 @@
 // @ts-nocheck
 import styled from 'styled-components';
+import { Button, Classes, Intent, Text } from '@blueprintjs/core';
 import { Box, Card, Group, Stack } from '@/components';
 import { StripeLogo } from '@/icons/StripeLogo';
-import { Button, Classes, Intent, Text } from '@blueprintjs/core';
+import { PaymentMethodsBoot } from './PreferencesPaymentMethodsBoot';
 
 export default function PreferencesPaymentMethodsPage() {
   return (
     <PaymentMethodsRoot>
-      <Text className={Classes.TEXT_MUTED} style={{ marginBottom: 20 }}>
-        Accept payments from all the major debit and credit card networks
-        through the supported payment gateways.
-      </Text>
+      <PaymentMethodsBoot>
+        <Text className={Classes.TEXT_MUTED} style={{ marginBottom: 20 }}>
+          Accept payments from all the major debit and credit card networks
+          through the supported payment gateways.
+        </Text>
 
-      <Stack>
-        <StripePaymentMethod />
-      </Stack>
+        <Stack>
+          <StripePaymentMethod />
+        </Stack>
+      </PaymentMethodsBoot>
     </PaymentMethodsRoot>
   );
 }

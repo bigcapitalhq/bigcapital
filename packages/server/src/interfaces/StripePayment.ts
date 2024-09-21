@@ -9,7 +9,6 @@ export interface StripeCheckoutSessionCompletedEventPayload {
   event: any;
 }
 
-
 export interface StripeInvoiceCheckoutSessionPOJO {
   sessionId: string;
   publishableKey: string;
