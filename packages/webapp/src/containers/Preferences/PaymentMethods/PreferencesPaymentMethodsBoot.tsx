@@ -1,9 +1,12 @@
-import React, { createContext, ReactNode, useContext } from 'react';
-import { useGetPaymentServicesState } from '@/hooks/query/payment-services';
+import { createContext, ReactNode, useContext } from 'react';
+import {
+  GetPaymentServicesStateResponse,
+  useGetPaymentServicesState,
+} from '@/hooks/query/payment-services';
 
 type PaymentMethodsContextType = {
   isPaymentMethodsStateLoading: boolean;
-  paymentMethodsState: any;
+  paymentMethodsState: GetPaymentServicesStateResponse | undefined;
 };
 
 const PaymentMethodsContext = createContext<PaymentMethodsContextType>(

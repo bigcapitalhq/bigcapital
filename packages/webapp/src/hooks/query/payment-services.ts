@@ -33,7 +33,16 @@ export const useGetPaymentServices = (
   );
 };
 
-export interface GetPaymentServicesStateResponse {}
+export interface GetPaymentServicesStateResponse {
+  stripe: {
+    isStripeAccountCreated: boolean;
+    isStripePaymentActive: boolean;
+    stripeAccountId: string;
+    stripeCurrencies: string[];
+    stripePublishableKey: string;
+    stripeRedirectUrl: string;
+  };
+}
 /**
  * Retrieves the state of payment services.
  * @param {UseQueryOptions<GetPaymentServicesStateResponse, Error>} options
@@ -52,7 +61,7 @@ export const useGetPaymentServicesState = (
         .then(
           (response) =>
             transformToCamelCase(
-              response.data?.paymentServicesState,
+              response.data?.data,
             ) as GetPaymentServicesStateResponse,
         ),
     {

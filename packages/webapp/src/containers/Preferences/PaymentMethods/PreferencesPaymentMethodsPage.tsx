@@ -1,9 +1,18 @@
 // @ts-nocheck
 import styled from 'styled-components';
 import { Button, Classes, Intent, Text } from '@blueprintjs/core';
-import { Box, Card, Group, Stack } from '@/components';
+import { AppToaster, Box, Card, Group, Stack } from '@/components';
 import { StripeLogo } from '@/icons/StripeLogo';
-import { PaymentMethodsBoot } from './PreferencesPaymentMethodsBoot';
+import {
+  PaymentMethodsBoot,
+  usePaymentMethodsBoot,
+} from './PreferencesPaymentMethodsBoot';
+import { StripePreSetupDialog } from './dialogs/StripePreSetupDialog/StripePreSetupDialog';
+import { DialogsName } from '@/constants/dialogs';
+import { useDialogActions, useDrawerActions } from '@/hooks/state';
+import { useCreateStripeAccountLink } from '@/hooks/query/stripe-integration';
+import { StripeIntegrationEditDrawer } from './drawers/StripeIntegrationEditDrawer';
+import { DRAWERS } from '@/constants/drawers';
 
 export default function PreferencesPaymentMethodsPage() {
   return (
@@ -18,19 +27,81 @@ export default function PreferencesPaymentMethodsPage() {
           <StripePaymentMethod />
         </Stack>
       </PaymentMethodsBoot>
+
+      <StripePreSetupDialog dialogName={DialogsName.StripeSetup} />
+      <StripeIntegrationEditDrawer
+        name={DRAWERS.STRIPE_PAYMENT_INTEGRATION_EDIT}
+      />
     </PaymentMethodsRoot>
   );
 }
 
 function StripePaymentMethod() {
+  const { openDialog } = useDialogActions();
+  const { openDrawer } = useDrawerActions();
+  const { paymentMethodsState } = usePaymentMethodsBoot();
+  const stripeState = paymentMethodsState?.stripe;
+
+  const isAccountCreated = stripeState?.isStripeAccountCreated;
+  const isAccountActive = stripeState?.isStripePaymentActive;
+  const stripeAccountId = stripeState?.stripeAccountId;
+
+  const {
+    mutateAsync: createStripeAccountLink,
+    isLoading: isCreateStripeLinkLoading,
+  } = useCreateStripeAccountLink();
+
+  // Handle Stripe setup button click.
+  const handleSetUpBtnClick = () => {
+    openDialog(DialogsName.StripeSetup);
+  };
+
+  // Handle complete Stripe setup button click.
+  const handleCompleteSetUpBtnClick = () => {
+    createStripeAccountLink({ stripeAccountId })
+      .then((res) => {
+        const { clientSecret } = res;
+
+        if (clientSecret.url) {
+          window.open(clientSecret.url, '_blank');
+        }
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
+  };
+
+  const handleEditBtnClick = () => {
+    openDrawer(DRAWERS.STRIPE_PAYMENT_INTEGRATION_EDIT);
+  };
+
   return (
     <Card style={{ margin: 0 }}>
       <Group position="apart">
         <StripeLogo />
-        <Group>
-          <Button intent={Intent.PRIMARY} small>
-            Set it Up
+        <Group spacing={10}>
+          <Button small onClick={handleEditBtnClick}>
+            Edit
           </Button>
+
+          {!isAccountCreated && (
+            <Button intent={Intent.PRIMARY} small onClick={handleSetUpBtnClick}>
+              Set it Up
+            </Button>
+          )}
+          {isAccountCreated && !isAccountActive && (
+            <Button
+              intent={Intent.PRIMARY}
+              small
+              onClick={handleCompleteSetUpBtnClick}
+              loading={isCreateStripeLinkLoading}
+            >
+              Complete Stripe Set Up
+            </Button>
+          )}
         </Group>
       </Group>
 

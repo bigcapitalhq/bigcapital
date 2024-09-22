@@ -13,11 +13,11 @@ export class PaymentIntegration extends TenantModel {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['name', 'service', 'enable'],
+      required: ['name', 'service', 'active'],
       properties: {
         id: { type: 'integer' },
         service: { type: 'string' },
-        enable: { type: 'boolean' },
+        active: { type: 'boolean' },
         accountId: { type: 'string' },
         options: { type: 'object' },
         createdAt: { type: 'string', format: 'date-time' },

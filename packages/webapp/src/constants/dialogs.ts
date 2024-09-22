@@ -79,4 +79,6 @@ export enum DialogsName {
   DisconnectBankAccountConfirmation = 'DisconnectBankAccountConfirmation',
   SharePaymentLink = 'SharePaymentLink',
   SelectPaymentMethod = 'SelectPaymentMethodsDialog',
+
+  StripeSetup = 'StripeSetup'
 }
