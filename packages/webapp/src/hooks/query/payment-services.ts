@@ -114,3 +114,24 @@ export const useUpdatePaymentMethod = (): UseMutationResult<
       .then((response) => response.data),
   );
 };
+
+interface GetPaymentMethodResponse {}
+/**
+ * Retrieves a specific payment method.
+ * @param {number} paymentMethodId - The ID of the payment method.
+ * @returns {UseQueryResult<GetPaymentMethodResponse, Error>}
+ */
+export const useGetPaymentMethod = (
+  paymentMethodId: number,
+): UseQueryResult<GetPaymentMethodResponse, Error> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetPaymentMethodResponse, Error>(
+    ['paymentMethod', paymentMethodId],
+    () => apiRequest.get(`/payment-services/${paymentMethodId}`),
+    {
+      select: (data) =>
+        transformToCamelCase(data.data) as GetPaymentMethodResponse,
+    },
+  );
+};

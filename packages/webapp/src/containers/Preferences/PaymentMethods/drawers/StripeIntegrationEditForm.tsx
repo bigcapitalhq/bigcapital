@@ -7,6 +7,8 @@ import { Intent } from '@blueprintjs/core';
 import { usePaymentMethodsBoot } from '../PreferencesPaymentMethodsBoot';
 import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useStripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
+import { transformToForm } from '@/utils';
 
 interface StripeIntegrationFormValues {
   paymentAccountId: string;
@@ -34,8 +36,14 @@ export function StripeIntegrationEditForm({
   const { name } = useDrawerContext();
   const { mutateAsync: updatePaymentMethod } = useUpdatePaymentMethod();
   const { paymentMethodsState } = usePaymentMethodsBoot();
+  const { paymentMethod } = useStripeIntegrationEditBoot();
   const stripePaymentState = paymentMethodsState?.stripe;
   const paymentMethodId = stripePaymentState?.stripePaymentMethodId;
+
+  const formInitialValues = {
+    ...initialValues,
+    ...transformToForm(paymentMethod?.options, initialValues),
+  };
 
   const onSubmit = (
     values: StripeIntegrationFormValues,
@@ -62,7 +70,7 @@ export function StripeIntegrationEditForm({
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={formInitialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >

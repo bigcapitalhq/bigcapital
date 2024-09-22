@@ -4,6 +4,7 @@ import { DeletePaymentMethodService } from './DeletePaymentMethodService';
 import { EditPaymentMethodService } from './EditPaymentMethodService';
 import { EditPaymentMethodDTO, GetPaymentMethodsPOJO } from './types';
 import { GetPaymentMethodsStateService } from './GetPaymentMethodsState';
+import { GetPaymentMethodService } from './GetPaymentService';
 
 @Service()
 export class PaymentServicesApplication {
@@ -19,6 +20,9 @@ export class PaymentServicesApplication {
   @Inject()
   private getPaymentMethodsStateService: GetPaymentMethodsStateService;
 
+  @Inject()
+  private getPaymentMethodService: GetPaymentMethodService;
+
   /**
    * Retrieves the payment services for a specific invoice.
    * @param {number} tenantId - The ID of the tenant.
@@ -28,6 +32,18 @@ export class PaymentServicesApplication {
   public async getPaymentServicesForInvoice(tenantId: number): Promise<any> {
     return this.getPaymentServicesSpecificInvoice.getPaymentServicesInvoice(
       tenantId
+    );
+  }
+
+  /**
+   * Retrieves specific payment service details.
+   * @param {number} tenantId - Tennat id.
+   * @param {number} paymentServiceId - Payment service id.
+   */
+  public async getPaymentService(tenantId: number, paymentServiceId: number) {
+    return this.getPaymentMethodService.getPaymentMethod(
+      tenantId,
+      paymentServiceId
     );
   }
 

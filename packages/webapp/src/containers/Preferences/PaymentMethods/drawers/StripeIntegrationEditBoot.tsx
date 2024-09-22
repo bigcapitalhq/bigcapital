@@ -1,10 +1,14 @@
 import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
 import { useAccounts } from '@/hooks/query';
+import { useGetPaymentMethod } from '@/hooks/query/payment-services';
 
 interface StripeIntegrationEditContextType {
   accounts: any;
   isAccountsLoading: boolean;
+
+  paymentMethod: any;
+  isPaymentMethodLoading: boolean;
 }
 
 const StripeIntegrationEditContext =
@@ -27,8 +31,19 @@ export const useStripeIntegrationEditBoot = () => {
 
 export const StripeIntegrationEditBoot: React.FC = ({ children }) => {
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts({}, {});
-  const value = { accounts, isAccountsLoading };
-  const isLoading = isAccountsLoading;
+  const { data: paymentMethod, isLoading: isPaymentMethodLoading } =
+    useGetPaymentMethod(9);
+
+  const value = {
+    // Accounts.
+    accounts,
+    isAccountsLoading,
+
+    // Payment methods.
+    paymentMethod,
+    isPaymentMethodLoading,
+  };
+  const isLoading = isAccountsLoading || isPaymentMethodLoading;
 
   if (isLoading) {
     return <Spinner size={20} />;

@@ -21,6 +21,7 @@ export class PaymentServicesController extends BaseController {
       asyncMiddleware(this.getPaymentServicesSpecificInvoice.bind(this))
     );
     router.get('/state', this.getPaymentMethodsState.bind(this));
+    router.get('/:paymentServiceId', this.getPaymentService.bind(this));
     router.post(
       '/:paymentMethodId',
       [
@@ -60,6 +61,33 @@ export class PaymentServicesController extends BaseController {
         await this.paymentServicesApp.getPaymentServicesForInvoice(tenantId);
 
       return res.status(200).send({ paymentServices });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves a specific payment service.
+   * @param {Request} req - Request.
+   * @param {Response} res - Response.
+   * @param {NextFunction} next - Next function.
+   * @return {Promise<Response | void>}
+   */
+  private async getPaymentService(
+    req: Request<{ paymentServiceId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { paymentServiceId } = req.params;
+
+    try {
+      const paymentService = await this.paymentServicesApp.getPaymentService(
+        tenantId,
+        paymentServiceId
+      );
+
+      return res.status(200).send({ data: paymentService });
     } catch (error) {
       next(error);
     }

@@ -91,10 +91,12 @@ function StripePaymentMethod() {
       });
   };
 
+  // Handle edit button click.
   const handleEditBtnClick = () => {
     openDrawer(DRAWERS.STRIPE_PAYMENT_INTEGRATION_EDIT);
   };
 
+  // Handle delete connection button click.
   const handleDeleteConnectionClick = () => {
     openAlert('delete-stripe-payment-method', {
       paymentMethodId: stripePaymentMethodId,
@@ -133,7 +135,6 @@ function StripePaymentMethod() {
               Complete Stripe Set Up
             </Button>
           )}
-
           {isAccountCreated && (
             <Popover
               content={
