@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useContext } from 'react';
+import { Spinner } from '@blueprintjs/core';
 import {
   GetPaymentServicesStateResponse,
   useGetPaymentServicesState,
@@ -23,6 +24,9 @@ const PaymentMethodsBoot = ({ children }: PaymentMethodsProviderProps) => {
 
   const value = { isPaymentMethodsStateLoading, paymentMethodsState };
 
+  if (isPaymentMethodsStateLoading) {
+    return <Spinner size={20} />;
+  }
   return (
     <PaymentMethodsContext.Provider value={value}>
       {children}

@@ -2,6 +2,7 @@
 import {
   useMutation,
   useQuery,
+  useQueryClient,
   UseQueryOptions,
   UseQueryResult,
 } from 'react-query';
@@ -9,6 +10,7 @@ import useApiRequest from '../useRequest';
 import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 
 const PaymentServicesQueryKey = 'PaymentServices';
+const PaymentServicesStateQueryKey = 'PaymentServicesState';
 
 export interface GetPaymentServicesResponse {}
 /**
@@ -60,7 +62,7 @@ export const useGetPaymentServicesState = (
   const apiRequest = useApiRequest();
 
   return useQuery<GetPaymentServicesStateResponse, Error>(
-    ['PaymentServicesState'],
+    [PaymentServicesStateQueryKey],
     () =>
       apiRequest
         .get('/payment-services/state')
@@ -99,19 +101,27 @@ export const useUpdatePaymentMethod = (): UseMutationResult<
   unknown
 > => {
   const apiRequest = useApiRequest();
+  const queryClient = useQueryClient();
 
   return useMutation<
     UpdatePaymentMethodResponse,
     Error,
     UpdatePaymentMethodValues,
     unknown
-  >((data: UpdatePaymentMethodValues) =>
-    apiRequest
-      .post(
-        `/payment-services/${data.paymentMethodId}`,
-        transfromToSnakeCase(data.values),
-      )
-      .then((response) => response.data),
+  >(
+    (data: UpdatePaymentMethodValues) =>
+      apiRequest
+        .post(
+          `/payment-services/${data.paymentMethodId}`,
+          transfromToSnakeCase(data.values),
+        )
+        .then((response) => response.data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(PaymentServicesStateQueryKey);
+        queryClient.invalidateQueries(PaymentServicesQueryKey);
+      },
+    },
   );
 };
 
@@ -127,11 +137,13 @@ export const useGetPaymentMethod = (
   const apiRequest = useApiRequest();
 
   return useQuery<GetPaymentMethodResponse, Error>(
-    ['paymentMethod', paymentMethodId],
-    () => apiRequest.get(`/payment-services/${paymentMethodId}`),
-    {
-      select: (data) =>
-        transformToCamelCase(data.data) as GetPaymentMethodResponse,
-    },
+    [PaymentServicesQueryKey, paymentMethodId],
+    () =>
+      apiRequest
+        .get(`/payment-services/${paymentMethodId}`)
+        .then(
+          (res) =>
+            transformToCamelCase(res.data?.data) as GetPaymentMethodResponse,
+        ),
   );
 };

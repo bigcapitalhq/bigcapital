@@ -26,15 +26,10 @@ export class PaymentServicesController extends BaseController {
       '/:paymentMethodId',
       [
         param('paymentMethodId').exists(),
+
         body('name').optional().isString(),
-        body('options.bankAccountId').optional().isNumeric(),
-        body('options.clearingAccountId').optional().isNumeric(),
-        body('options.showVisa').optional().isBoolean(),
-        body('options.showMasterCard').optional().isBoolean(),
-        body('options.showDiscover').optional().isBoolean(),
-        body('options.showAmer').optional().isBoolean(),
-        body('options.showJcb').optional().isBoolean(),
-        body('options.showDiners').optional().isBoolean(),
+        body('options.bank_account_id').optional().isNumeric(),
+        body('options.clearing_account_id').optional().isNumeric(),
       ],
       this.validationResult,
       asyncMiddleware(this.updatePaymentMethod.bind(this))

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import {
   Button,
@@ -20,6 +21,7 @@ import { StripePreSetupDialog } from './dialogs/StripePreSetupDialog/StripePreSe
 import { DialogsName } from '@/constants/dialogs';
 import {
   useAlertActions,
+  useChangePreferencesPageTitle,
   useDialogActions,
   useDrawerActions,
 } from '@/hooks/state';
@@ -29,6 +31,12 @@ import { DRAWERS } from '@/constants/drawers';
 import { MoreIcon } from '@/icons/More';
 
 export default function PreferencesPaymentMethodsPage() {
+  const changePageTitle = useChangePreferencesPageTitle();
+
+  useEffect(() => {
+    changePageTitle('Payment Methods');
+  }, [changePageTitle]);
+
   return (
     <PaymentMethodsRoot>
       <PaymentMethodsBoot>

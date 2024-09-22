@@ -11,12 +11,13 @@ export function StripeIntegrationEditFormContent() {
   return (
     <Stack spacing={0} style={{ padding: 20 }}>
       <FFormGroup
-        name={'paymentAccountId'}
-        label={'Payment Account'}
+        name={'bankAccountId'}
+        label={'Bank Account'}
         style={{ maxWidth: 300 }}
+        helperText={'The bank account where the Stripe payout is deposited.'}
       >
         <AccountsSelect
-          name={'paymentAccountId'}
+          name={'bankAccountId'}
           items={accounts}
           fastField
           fill
@@ -27,6 +28,8 @@ export function StripeIntegrationEditFormContent() {
       <FFormGroup
         name={'clearingAccountId'}
         label={'Clearing Account'}
+        subLabel='Liability Account'
+        helperText={'Clearing account tracks all payments collected through Stripe.'}
         style={{ maxWidth: 300 }}
       >
         <AccountsSelect

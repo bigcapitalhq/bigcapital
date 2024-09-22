@@ -11,20 +11,17 @@ import { useStripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
 import { transformToForm } from '@/utils';
 
 interface StripeIntegrationFormValues {
-  paymentAccountId: string;
+  bankAccountId: string;
   clearingAccountId: string;
 }
-
 const initialValues = {
-  paymentAccountId: '',
+  bankAccountId: '',
   clearingAccountId: '',
 };
-
 const validationSchema = Yup.object().shape({
-  paymentAccountId: Yup.string().required('Payment Account is required'),
+  bankAccountId: Yup.string().required('Bank Account is required'),
   clearingAccountId: Yup.string().required('Clearing Account is required'),
 });
-
 interface StripeIntegrationEditFormProps {
   children: React.ReactNode;
 }
@@ -44,13 +41,14 @@ export function StripeIntegrationEditForm({
     ...initialValues,
     ...transformToForm(paymentMethod?.options, initialValues),
   };
-
   const onSubmit = (
     values: StripeIntegrationFormValues,
     { setSubmitting }: FormikHelpers<StripeIntegrationFormValues>,
   ) => {
+    const _values = { options: { ...values } };
+
     setSubmitting(true);
-    updatePaymentMethod({ paymentMethodId, values })
+    updatePaymentMethod({ paymentMethodId, values: _values })
       .then(() => {
         AppToaster.show({
           message: 'The Stripe settings have been updated.',

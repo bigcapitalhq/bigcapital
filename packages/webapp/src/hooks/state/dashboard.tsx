@@ -14,6 +14,7 @@ import {
   closeDrawer,
   openAlert,
   closeAlert,
+  changePreferencesPageTitle,
 } from '@/store/dashboard/dashboard.actions';
 
 export const useDispatchAction = (action) => {
@@ -94,4 +95,8 @@ export const useAlertActions = () => {
     openAlert: useDispatchAction(openAlert),
     closeAlert: useDispatchAction(closeAlert),
   };
+};
+
+export const useChangePreferencesPageTitle = () => {
+  return useDispatchAction(changePreferencesPageTitle);
 };
