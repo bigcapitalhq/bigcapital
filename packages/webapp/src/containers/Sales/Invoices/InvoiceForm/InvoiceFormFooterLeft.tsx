@@ -2,23 +2,25 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
-import { useDialogActions } from '@/hooks/state';
-import { DialogsName } from '@/constants/dialogs';
+import { Button, Intent } from '@blueprintjs/core';
+import {
+  FFormGroup,
+  FEditableText,
+  FormattedMessage as T,
+  Box,
+  Group,
+  Stack,
+} from '@/components';
+import { VisaIcon } from '@/icons/Visa';
+import { MastercardIcon } from '@/icons/Mastercard';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
+import { PaymentOptionsButtonPopver } from '@/containers/PaymentMethods/SelectPaymentMethodPopover';
 
 export function InvoiceFormFooterLeft() {
-  const { openDialog } = useDialogActions();
-
-  const handleSelectPaymentMethodsClick = () => {
-    openDialog(DialogsName.SelectPaymentMethod, {});
-  }
+  const { paymentServices } = useInvoiceFormContext();
 
   return (
-    <React.Fragment>
-      <FFormGroup label={'Payment Options'} name={'payment_method_id'}>
-        <a href={'#'} onClick={handleSelectPaymentMethodsClick}>Payment Options</a>
-      </FFormGroup>
-
+    <Stack spacing={20}>
       {/* --------- Invoice message --------- */}
       <InvoiceMsgFormGroup
         name={'invoice_message'}
@@ -46,14 +48,31 @@ export function InvoiceFormFooterLeft() {
           fastField
         />
       </TermsConditsFormGroup>
-    </React.Fragment>
+
+      {/* --------- Payment Options --------- */}
+      <PaymentOptionsFormGroup
+        label={'Payment Options'}
+        name={'payment_method_id'}
+      >
+        <PaymentOptionsText>
+          Select an online payment option to get paid faster{' '}
+          <Group spacing={6} style={{ marginLeft: 8 }}>
+            <VisaIcon />
+            <MastercardIcon />
+          </Group>
+          <PaymentOptionsButtonPopver paymentMethods={paymentServices}>
+            <PaymentOptionsButton intent={Intent.PRIMARY} small minimal>
+              Payment Options
+            </PaymentOptionsButton>
+          </PaymentOptionsButtonPopver>
+        </PaymentOptionsText>
+      </PaymentOptionsFormGroup>
+    </Stack>
   );
 }
 
 const InvoiceMsgFormGroup = styled(FFormGroup)`
   &.bp4-form-group {
-    margin-bottom: 40px;
-
     .bp4-label {
       font-size: 12px;
       margin-bottom: 12px;
@@ -73,5 +92,31 @@ const TermsConditsFormGroup = styled(FFormGroup)`
     .bp4-form-content {
       margin-left: 10px;
     }
+  }
+`;
+
+const PaymentOptionsFormGroup = styled(FFormGroup)`
+  &.bp4-form-group {
+    .bp4-label {
+      font-weight: 500;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+  }
+`;
+
+const PaymentOptionsText = styled(Box)`
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  color: #5f6b7c;
+`;
+
+const PaymentOptionsButton = styled(Button)`
+  font-size: 13px;
+  margin-left: 4px;
+
+  &.bp4-minimal.bp4-intent-primary {
+    color: #0052cc;
   }
 `;

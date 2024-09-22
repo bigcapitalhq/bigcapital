@@ -21,7 +21,7 @@ export class GetPaymentServicesSpecificInvoice {
     const { PaymentIntegration } = this.tenancy.models(tenantId);
 
     const paymentGateways = await PaymentIntegration.query()
-      .where('enable', true)
+      .where('active', true)
       .orderBy('name', 'ASC');
 
     return this.transform.transform(

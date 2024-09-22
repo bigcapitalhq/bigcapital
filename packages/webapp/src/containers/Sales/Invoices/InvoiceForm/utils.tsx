@@ -69,6 +69,7 @@ export const defaultInvoice = {
   pdf_template_id: '',
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
   attachments: [],
+  payment_methods: {},
 };
 
 // Invoice entry request schema.
@@ -223,8 +224,18 @@ export function transformValueToRequest(values) {
     entries: transformEntriesToRequest(values.entries),
     delivered: false,
     attachments: transformAttachmentsToRequest(values),
+    payment_methods: transformPaymentMethodsToRequest(values?.payment_methods),
   };
 }
+
+const transformPaymentMethodsToRequest = (
+  paymentMethods: Record<string, { enable: boolean }>,
+): Array<{ payment_integration_id: string; enable: boolean }> => {
+  return Object.entries(paymentMethods).map(([paymentMethodId, method]) => ({
+    payment_integration_id: paymentMethodId,
+    enable: method.enable,
+  }));
+};
 
 export const useSetPrimaryWarehouseToForm = () => {
   const { setFieldValue } = useFormikContext();

@@ -150,6 +150,10 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     editInvoiceMutate,
     setSubmitPayload,
     isNewMode,
+
+    // Payment Services
+    paymentServices,
+    isPaymentServicesLoading,
   };
 
   return (

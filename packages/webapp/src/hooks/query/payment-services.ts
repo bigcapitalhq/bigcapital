@@ -31,7 +31,7 @@ export const useGetPaymentServices = (
         .then(
           (response) =>
             transformToCamelCase(
-              response.data?.paymentServices,
+              response.data?.payment_services,
             ) as GetPaymentServicesResponse,
         ),
     {
