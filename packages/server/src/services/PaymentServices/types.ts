@@ -18,6 +18,7 @@ export interface GetPaymentMethodsPOJO {
     isStripeAccountCreated: boolean;
     isStripePaymentActive: boolean;
     stripeAccountId: string | null;
+    stripePaymentMethodId: number | null;
     stripePublishableKey: string | null;
     stripeCurrencies: Array<string>;
     stripeRedirectUrl: string | null;

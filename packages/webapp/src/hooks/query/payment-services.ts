@@ -1,7 +1,12 @@
 // @ts-nocheck
-import { useQuery, UseQueryOptions, UseQueryResult } from 'react-query';
+import {
+  useMutation,
+  useQuery,
+  UseQueryOptions,
+  UseQueryResult,
+} from 'react-query';
 import useApiRequest from '../useRequest';
-import { transformToCamelCase } from '@/utils';
+import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 
 const PaymentServicesQueryKey = 'PaymentServices';
 
@@ -37,7 +42,8 @@ export interface GetPaymentServicesStateResponse {
   stripe: {
     isStripeAccountCreated: boolean;
     isStripePaymentActive: boolean;
-    stripeAccountId: string;
+    stripeAccountId: string | null;
+    stripePaymentMethodId: number | null;
     stripeCurrencies: string[];
     stripePublishableKey: string;
     stripeRedirectUrl: string;
@@ -67,5 +73,44 @@ export const useGetPaymentServicesState = (
     {
       ...options,
     },
+  );
+};
+
+interface UpdatePaymentMethodResponse {
+  id: number;
+  message: string;
+}
+interface UpdatePaymentMethodValues {
+  paymentMethodId: string | number;
+  values: {
+    name: string;
+    bankAccountId: number;
+    clearingAccountId: number;
+  };
+}
+/**
+ * Updates a payment method.
+ * @returns {UseMutationResult<UpdatePaymentMethodResponse, Error, UpdatePaymentMethodValues, unknown>}
+ */
+export const useUpdatePaymentMethod = (): UseMutationResult<
+  UpdatePaymentMethodResponse,
+  Error,
+  UpdatePaymentMethodValues,
+  unknown
+> => {
+  const apiRequest = useApiRequest();
+
+  return useMutation<
+    UpdatePaymentMethodResponse,
+    Error,
+    UpdatePaymentMethodValues,
+    unknown
+  >((data: UpdatePaymentMethodValues) =>
+    apiRequest
+      .post(
+        `/payment-services/${data.paymentMethodId}`,
+        transfromToSnakeCase(data.values),
+      )
+      .then((response) => response.data),
   );
 };

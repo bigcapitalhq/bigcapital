@@ -1,6 +1,15 @@
 // @ts-nocheck
 import styled from 'styled-components';
-import { Button, Classes, Intent, Text } from '@blueprintjs/core';
+import {
+  Button,
+  Classes,
+  Intent,
+  Menu,
+  MenuItem,
+  Popover,
+  Tag,
+  Text,
+} from '@blueprintjs/core';
 import { AppToaster, Box, Card, Group, Stack } from '@/components';
 import { StripeLogo } from '@/icons/StripeLogo';
 import {
@@ -9,10 +18,15 @@ import {
 } from './PreferencesPaymentMethodsBoot';
 import { StripePreSetupDialog } from './dialogs/StripePreSetupDialog/StripePreSetupDialog';
 import { DialogsName } from '@/constants/dialogs';
-import { useDialogActions, useDrawerActions } from '@/hooks/state';
+import {
+  useAlertActions,
+  useDialogActions,
+  useDrawerActions,
+} from '@/hooks/state';
 import { useCreateStripeAccountLink } from '@/hooks/query/stripe-integration';
 import { StripeIntegrationEditDrawer } from './drawers/StripeIntegrationEditDrawer';
 import { DRAWERS } from '@/constants/drawers';
+import { MoreIcon } from '@/icons/More';
 
 export default function PreferencesPaymentMethodsPage() {
   return (
@@ -26,12 +40,12 @@ export default function PreferencesPaymentMethodsPage() {
         <Stack>
           <StripePaymentMethod />
         </Stack>
-      </PaymentMethodsBoot>
 
-      <StripePreSetupDialog dialogName={DialogsName.StripeSetup} />
-      <StripeIntegrationEditDrawer
-        name={DRAWERS.STRIPE_PAYMENT_INTEGRATION_EDIT}
-      />
+        <StripePreSetupDialog dialogName={DialogsName.StripeSetup} />
+        <StripeIntegrationEditDrawer
+          name={DRAWERS.STRIPE_PAYMENT_INTEGRATION_EDIT}
+        />
+      </PaymentMethodsBoot>
     </PaymentMethodsRoot>
   );
 }
@@ -39,12 +53,15 @@ export default function PreferencesPaymentMethodsPage() {
 function StripePaymentMethod() {
   const { openDialog } = useDialogActions();
   const { openDrawer } = useDrawerActions();
+  const { openAlert } = useAlertActions();
+
   const { paymentMethodsState } = usePaymentMethodsBoot();
   const stripeState = paymentMethodsState?.stripe;
 
   const isAccountCreated = stripeState?.isStripeAccountCreated;
   const isAccountActive = stripeState?.isStripePaymentActive;
   const stripeAccountId = stripeState?.stripeAccountId;
+  const stripePaymentMethodId = stripeState?.stripePaymentMethodId;
 
   const {
     mutateAsync: createStripeAccountLink,
@@ -78,10 +95,24 @@ function StripePaymentMethod() {
     openDrawer(DRAWERS.STRIPE_PAYMENT_INTEGRATION_EDIT);
   };
 
+  const handleDeleteConnectionClick = () => {
+    openAlert('delete-stripe-payment-method', {
+      paymentMethodId: stripePaymentMethodId,
+    });
+  };
+
   return (
     <Card style={{ margin: 0 }}>
       <Group position="apart">
-        <StripeLogo />
+        <Group>
+          <StripeLogo />
+
+          {isAccountActive && (
+            <Tag minimal intent={Intent.SUCCESS}>
+              Active
+            </Tag>
+          )}
+        </Group>
         <Group spacing={10}>
           <Button small onClick={handleEditBtnClick}>
             Edit
@@ -101,6 +132,22 @@ function StripePaymentMethod() {
             >
               Complete Stripe Set Up
             </Button>
+          )}
+
+          {isAccountCreated && (
+            <Popover
+              content={
+                <Menu>
+                  <MenuItem
+                    intent={Intent.DANGER}
+                    text={'Delete Connection'}
+                    onClick={handleDeleteConnectionClick}
+                  />
+                </Menu>
+              }
+            >
+              <Button small icon={<MoreIcon size={16} />} />
+            </Popover>
           )}
         </Group>
       </Group>

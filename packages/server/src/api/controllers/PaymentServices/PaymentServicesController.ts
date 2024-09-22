@@ -27,7 +27,7 @@ export class PaymentServicesController extends BaseController {
         param('paymentMethodId').exists(),
         body('name').optional().isString(),
         body('options.bankAccountId').optional().isNumeric(),
-        body('options.clearningAccountId').optional().isNumeric(),
+        body('options.clearingAccountId').optional().isNumeric(),
         body('options.showVisa').optional().isBoolean(),
         body('options.showMasterCard').optional().isBoolean(),
         body('options.showDiscover').optional().isBoolean(),

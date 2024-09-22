@@ -26,6 +26,7 @@ export class GetPaymentMethodsStateService {
     const isStripeAccountCreated = !!stripePayment;
     const isStripePaymentActive = !!(stripePayment?.active || null);
 
+    const stripePaymentMethodId = stripePayment?.id || null;
     const stripeAccountId = stripePayment?.accountId || null;
     const stripePublishableKey = config.stripePayment.publishableKey;
     const stripeCurrencies = ['USD', 'EUR'];
@@ -36,6 +37,7 @@ export class GetPaymentMethodsStateService {
         isStripeAccountCreated,
         isStripePaymentActive,
         stripeAccountId,
+        stripePaymentMethodId,
         stripePublishableKey,
         stripeCurrencies,
         stripeRedirectUrl,

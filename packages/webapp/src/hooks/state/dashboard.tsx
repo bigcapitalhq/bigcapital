@@ -12,6 +12,8 @@ import {
   closeDialog,
   openDrawer,
   closeDrawer,
+  openAlert,
+  closeAlert,
 } from '@/store/dashboard/dashboard.actions';
 
 export const useDispatchAction = (action) => {
@@ -84,5 +86,12 @@ export const useDrawerActions = () => {
   return {
     openDrawer: useDispatchAction(openDrawer),
     closeDrawer: useDispatchAction(closeDrawer),
+  };
+};
+
+export const useAlertActions = () => {
+  return {
+    openAlert: useDispatchAction(openAlert),
+    closeAlert: useDispatchAction(closeAlert),
   };
 };

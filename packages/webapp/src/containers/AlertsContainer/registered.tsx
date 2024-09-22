@@ -30,6 +30,7 @@ import { BankRulesAlerts } from '../Banking/Rules/RulesList/BankRulesAlerts';
 import { SubscriptionAlerts } from '../Subscriptions/alerts/alerts';
 import { BankAccountAlerts } from '@/containers/CashFlow/AccountTransactions/alerts';
 import { BrandingTemplatesAlerts } from '../BrandingTemplates/alerts/BrandingTemplatesAlerts';
+import { PaymentMethodsAlerts } from '../Preferences/PaymentMethods/alerts/PaymentMethodsAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -63,4 +64,5 @@ export default [
   ...SubscriptionAlerts,
   ...BankAccountAlerts,
   ...BrandingTemplatesAlerts,
+  ...PaymentMethodsAlerts,
 ];

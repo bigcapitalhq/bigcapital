@@ -44,7 +44,7 @@ export function StripeIntegrationEditFormContent() {
 export function StripeIntegrationEditFormFooter() {
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
-  const { submitForm } = useFormikContext();
+  const { submitForm, isSubmitting } = useFormikContext();
 
   const handleSubmitBtnClick = () => {
     submitForm();
@@ -56,7 +56,11 @@ export function StripeIntegrationEditFormFooter() {
   return (
     <>
       <Group spacing={10}>
-        <Button intent={Intent.PRIMARY} onClick={handleSubmitBtnClick}>
+        <Button
+          intent={Intent.PRIMARY}
+          loading={isSubmitting}
+          onClick={handleSubmitBtnClick}
+        >
           Save
         </Button>
         <Button onClick={handleCancelBtnClick}>Cancel</Button>
