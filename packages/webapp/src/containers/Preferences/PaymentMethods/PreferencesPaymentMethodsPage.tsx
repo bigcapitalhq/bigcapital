@@ -124,10 +124,11 @@ function StripePaymentMethod() {
           )}
         </Group>
         <Group spacing={10}>
-          <Button small onClick={handleEditBtnClick}>
-            Edit
-          </Button>
-
+          {isAccountActive && (
+            <Button small onClick={handleEditBtnClick}>
+              Edit
+            </Button>
+          )}
           {!isAccountCreated && (
             <Button intent={Intent.PRIMARY} small onClick={handleSetUpBtnClick}>
               Set it Up

@@ -20,7 +20,7 @@ export const useDeletePaymentMethod = (
   return useMutation<void, Error, DeletePaymentMethodValues>(
     ({ paymentMethodId }) => {
       return apiRequest
-        .delete(`/payment-methods/${paymentMethodId}`)
+        .delete(`/payment-services/${paymentMethodId}`)
         .then((res) => res.data);
     },
     { ...options },

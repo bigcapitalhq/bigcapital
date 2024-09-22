@@ -91,9 +91,11 @@ export const useDrawerActions = () => {
 };
 
 export const useAlertActions = () => {
+  const dispatch = useDispatch();
+
   return {
-    openAlert: useDispatchAction(openAlert),
-    closeAlert: useDispatchAction(closeAlert),
+    openAlert: (name, payload) => dispatch(openAlert(name, payload)),
+    closeAlert: (name, payload) => dispatch(closeAlert(name, payload)),
   };
 };
 

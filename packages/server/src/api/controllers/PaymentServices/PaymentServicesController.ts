@@ -34,6 +34,12 @@ export class PaymentServicesController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.updatePaymentMethod.bind(this))
     );
+    router.delete(
+      '/:paymentMethodId',
+      [param('paymentMethodId').exists()],
+      this.validationResult,
+      this.deletePaymentMethod.bind(this)
+    );
 
     return router;
   }
@@ -137,6 +143,35 @@ export class PaymentServicesController extends BaseController {
         await this.paymentServicesApp.getPaymentMethodsState(tenantId);
 
       return res.status(200).send({ data: paymentMethodsState });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Deletes the given payment method.
+   * @param {Request<{ paymentMethodId: number }>} req - Request.
+   * @param {Response} res - Response.
+   * @param {NextFunction} next - Next function.
+   * @return {Promise<Response | void>}
+   */
+  private async deletePaymentMethod(
+    req: Request<{ paymentMethodId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { paymentMethodId } = req.params;
+
+    try {
+      await this.paymentServicesApp.deletePaymentMethod(
+        tenantId,
+        paymentMethodId
+      );
+      return res.status(204).send({
+        id: paymentMethodId,
+        message: 'The payment method has been deleted.',
+      });
     } catch (error) {
       next(error);
     }
