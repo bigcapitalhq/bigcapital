@@ -14,10 +14,10 @@ function StripePreSetupDialogRoot({ dialogName, payload, isOpen }) {
       name={dialogName}
       isOpen={isOpen}
       payload={payload}
-      title={'Share Link'}
+      title={'Connect a Stripe account to accept card payments'}
       canEscapeJeyClose={true}
       autoFocus={true}
-      style={{ width: 570 }}
+      style={{ width: 500 }}
     >
       <DialogSuspense>
         <StripePreSetupDialogContent />
