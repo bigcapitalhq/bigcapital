@@ -5,7 +5,7 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
-import { useDeletePaymentMethod } from '@/hooks/query/payment-methods';
+import { useDeletePaymentMethod } from '@/hooks/query/payment-services';
 import { compose } from '@/utils';
 
 /**
@@ -28,7 +28,6 @@ function DeleteStripeAccountAlert({
   const handleCancelOpenBill = () => {
     closeAlert(name);
   };
-
   // Handle confirm bill open.
   const handleConfirmBillOpen = () => {
     deletePaymentMethod({ paymentMethodId })

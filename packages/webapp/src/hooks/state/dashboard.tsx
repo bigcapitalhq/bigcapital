@@ -83,19 +83,29 @@ export const useDialogActions = () => {
   };
 };
 
+/**
+ * Drawer actions.
+ * @returns
+ */
 export const useDrawerActions = () => {
+  const dispatch = useDispatch();
+
   return {
-    openDrawer: useDispatchAction(openDrawer),
-    closeDrawer: useDispatchAction(closeDrawer),
+    openDrawer: (name, payload?: {}) => dispatch(openDrawer(name, payload)),
+    closeDrawer: (name, payload?: {}) => dispatch(closeDrawer(name, payload)),
   };
 };
 
+/**
+ * Alert actions.
+ * @returns
+ */
 export const useAlertActions = () => {
   const dispatch = useDispatch();
 
   return {
-    openAlert: (name, payload) => dispatch(openAlert(name, payload)),
-    closeAlert: (name, payload) => dispatch(closeAlert(name, payload)),
+    openAlert: (name, payload?: {}) => dispatch(openAlert(name, payload)),
+    closeAlert: (name, payload?: {}) => dispatch(closeAlert(name, payload)),
   };
 };
 

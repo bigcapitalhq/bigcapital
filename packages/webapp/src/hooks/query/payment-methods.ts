@@ -7,25 +7,6 @@ import {
 import useApiRequest from '../useRequest';
 
 
-// # Delete payment method
-// -----------------------------------------
-interface DeletePaymentMethodValues {
-  paymentMethodId: number;
-}
-export const useDeletePaymentMethod = (
-  options?: UseMutationOptions<void, Error, DeletePaymentMethodValues>,
-): UseMutationResult<void, Error, DeletePaymentMethodValues> => {
-  const apiRequest = useApiRequest();
-
-  return useMutation<void, Error, DeletePaymentMethodValues>(
-    ({ paymentMethodId }) => {
-      return apiRequest
-        .delete(`/payment-services/${paymentMethodId}`)
-        .then((res) => res.data);
-    },
-    { ...options },
-  );
-};
 
 // # Edit payment method
 // -----------------------------------------

@@ -10,8 +10,9 @@ import {
 
 export function StripeIntegrationEditContent() {
   return (
-    <StripeIntegrationEditBoot>
+    <>
       <DrawerHeaderContent title={'Edit Stripe Integration'} />
+
       <StripeIntegrationEditBoot>
         <StripeIntegrationEditForm>
           <DrawerBody>
@@ -23,6 +24,6 @@ export function StripeIntegrationEditContent() {
           </div>
         </StripeIntegrationEditForm>
       </StripeIntegrationEditBoot>
-    </StripeIntegrationEditBoot>
+    </>
   );
 }

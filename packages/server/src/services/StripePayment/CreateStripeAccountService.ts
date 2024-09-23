@@ -1,6 +1,6 @@
+import { Inject, Service } from 'typedi';
 import { StripePaymentService } from '@/services/StripePayment/StripePaymentService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
 import { CreateStripeAccountDTO } from './types';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
@@ -8,17 +8,17 @@ import events from '@/subscribers/events';
 @Service()
 export class CreateStripeAccountService {
   @Inject()
-  private stripePaymentService: StripePaymentService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  private tenancy: HasTenancyService;
+  private stripePaymentService: StripePaymentService;
 
   @Inject()
   private eventPublisher: EventPublisher;
 
   /**
    * Creates a new Stripe account.
-   * @param {number} tenantId
+   * @param {number} tenantI
    * @param {CreateStripeAccountDTO} stripeAccountDTO
    * @returns {Promise<string>}
    */

@@ -111,13 +111,6 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
-    path: `${BASE_URL}/integrations`,
-    component: lazy(
-      () => import('@/containers/Preferences/Integrations/IntegrationsPage'),
-    ),
-    exact: true,
-  },
-  {
     path: `${BASE_URL}/`,
     component: lazy(() => import('../containers/Preferences/DefaultRoute')),
     exact: true,

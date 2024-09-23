@@ -2,7 +2,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { isEmpty } from 'lodash';
 import { Button, Intent } from '@blueprintjs/core';
+import { useHistory } from 'react-router-dom';
 import {
   FFormGroup,
   FEditableText,
@@ -18,6 +20,11 @@ import { PaymentOptionsButtonPopver } from '@/containers/PaymentMethods/SelectPa
 
 export function InvoiceFormFooterLeft() {
   const { paymentServices } = useInvoiceFormContext();
+  const history = useHistory();
+
+  const handleSetupPaymentsClick = () => {
+    history.push('/preferences/payment-methods');
+  };
 
   return (
     <Stack spacing={20}>
@@ -60,11 +67,22 @@ export function InvoiceFormFooterLeft() {
             <VisaIcon />
             <MastercardIcon />
           </Group>
-          <PaymentOptionsButtonPopver paymentMethods={paymentServices}>
-            <PaymentOptionsButton intent={Intent.PRIMARY} small minimal>
-              Payment Options
+          {isEmpty(paymentServices) ? (
+            <PaymentOptionsButton
+              intent={Intent.PRIMARY}
+              onClick={handleSetupPaymentsClick}
+              small
+              minimal
+            >
+              Setup payment gateways
             </PaymentOptionsButton>
-          </PaymentOptionsButtonPopver>
+          ) : (
+            <PaymentOptionsButtonPopver paymentMethods={paymentServices}>
+              <PaymentOptionsButton intent={Intent.PRIMARY} small minimal>
+                Payment Options
+              </PaymentOptionsButton>
+            </PaymentOptionsButtonPopver>
+          )}
         </PaymentOptionsText>
       </PaymentOptionsFormGroup>
     </Stack>

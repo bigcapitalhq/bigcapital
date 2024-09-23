@@ -12,6 +12,9 @@ import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 const PaymentServicesQueryKey = 'PaymentServices';
 const PaymentServicesStateQueryKey = 'PaymentServicesState';
 
+
+// # Get payment services.
+// -----------------------------------------
 export interface GetPaymentServicesResponse {}
 /**
  * Retrieves the integrated payment services.
@@ -40,10 +43,13 @@ export const useGetPaymentServices = (
   );
 };
 
+// # Get payment services state.
+// -----------------------------------------
 export interface GetPaymentServicesStateResponse {
   stripe: {
     isStripeAccountCreated: boolean;
     isStripePaymentActive: boolean;
+    isStripeServerConfigured: boolean;
     stripeAccountId: string | null;
     stripePaymentMethodId: number | null;
     stripeCurrencies: string[];
@@ -78,6 +84,8 @@ export const useGetPaymentServicesState = (
   );
 };
 
+// # Update payment method
+// -----------------------------------------
 interface UpdatePaymentMethodResponse {
   id: number;
   message: string;
@@ -125,6 +133,8 @@ export const useUpdatePaymentMethod = (): UseMutationResult<
   );
 };
 
+// # Get payment method
+// -----------------------------------------
 interface GetPaymentMethodResponse {}
 /**
  * Retrieves a specific payment method.
@@ -133,6 +143,7 @@ interface GetPaymentMethodResponse {}
  */
 export const useGetPaymentMethod = (
   paymentMethodId: number,
+  options?: UseQueryOptions<GetPaymentMethodResponse, Error>,
 ): UseQueryResult<GetPaymentMethodResponse, Error> => {
   const apiRequest = useApiRequest();
 
@@ -145,5 +156,32 @@ export const useGetPaymentMethod = (
           (res) =>
             transformToCamelCase(res.data?.data) as GetPaymentMethodResponse,
         ),
+    options,
+  );
+};
+
+// # Delete payment method
+// -----------------------------------------
+interface DeletePaymentMethodValues {
+  paymentMethodId: number;
+}
+export const useDeletePaymentMethod = (
+  options?: UseMutationOptions<void, Error, DeletePaymentMethodValues>,
+): UseMutationResult<void, Error, DeletePaymentMethodValues> => {
+  const apiRequest = useApiRequest();
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, DeletePaymentMethodValues>(
+    ({ paymentMethodId }) => {
+      return apiRequest
+        .delete(`/payment-services/${paymentMethodId}`)
+        .then((res) => res.data);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(PaymentServicesStateQueryKey);
+      },
+      ...options,
+    },
   );
 };

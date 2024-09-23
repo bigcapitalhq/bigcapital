@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { GetPaymentMethodsPOJO } from './types';
 import config from '@/config';
+import { isStripePaymentConfigured } from './utils';
 
 @Service()
 export class GetPaymentMethodsStateService {
@@ -31,11 +32,13 @@ export class GetPaymentMethodsStateService {
     const stripePublishableKey = config.stripePayment.publishableKey;
     const stripeCurrencies = ['USD', 'EUR'];
     const stripeRedirectUrl = 'https://your-stripe-redirect-url.com';
+    const isStripeServerConfigured = isStripePaymentConfigured();
 
     const paymentMethodPOJO: GetPaymentMethodsPOJO = {
       stripe: {
         isStripeAccountCreated,
         isStripePaymentActive,
+        isStripeServerConfigured,
         stripeAccountId,
         stripePaymentMethodId,
         stripePublishableKey,

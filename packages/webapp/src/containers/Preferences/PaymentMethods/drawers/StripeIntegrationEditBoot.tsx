@@ -2,6 +2,7 @@ import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
 import { useAccounts } from '@/hooks/query';
 import { useGetPaymentMethod } from '@/hooks/query/payment-services';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 interface StripeIntegrationEditContextType {
   accounts: any;
@@ -20,7 +21,6 @@ export const useStripeIntegrationEditBoot = () => {
   const context = useContext<StripeIntegrationEditContextType>(
     StripeIntegrationEditContext,
   );
-
   if (!context) {
     throw new Error(
       'useStripeIntegrationEditContext must be used within a StripeIntegrationEditProvider',
@@ -30,9 +30,15 @@ export const useStripeIntegrationEditBoot = () => {
 };
 
 export const StripeIntegrationEditBoot: React.FC = ({ children }) => {
+  const {
+    payload: { stripePaymentMethodId },
+  } = useDrawerContext();
+
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts({}, {});
   const { data: paymentMethod, isLoading: isPaymentMethodLoading } =
-    useGetPaymentMethod(9);
+    useGetPaymentMethod(stripePaymentMethodId, {
+      enabled: !!stripePaymentMethodId,
+    });
 
   const value = {
     // Accounts.

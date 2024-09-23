@@ -15,7 +15,6 @@ export interface StripeInvoiceCheckoutSessionPOJO {
   redirectTo: string;
 }
 
-
 export interface StripeWebhookEventPayload {
   event: any;
 }
