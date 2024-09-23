@@ -1,3 +1,5 @@
+import { Button, DialogBody, DialogFooter, Intent } from '@blueprintjs/core';
+import styled from 'styled-components';
 import { Stack } from '@/components';
 import { useDialogContext } from '@/components/Dialog/DialogProvider';
 import {
@@ -9,8 +11,6 @@ import { CreditCard2Icon } from '@/icons/CreditCard2';
 import { DollarIcon } from '@/icons/Dollar';
 import { LayoutAutoIcon } from '@/icons/LayoutAuto';
 import { SwitchIcon } from '@/icons/SwitchIcon';
-import { Button, DialogBody, DialogFooter, Intent } from '@blueprintjs/core';
-import styled from 'styled-components';
 
 export function StripePreSetupDialogContent() {
   const { name } = useDialogContext();

@@ -27,7 +27,7 @@ export default function PreferencesPaymentMethodsPage() {
       <PaymentMethodsBoot>
         <Text className={Classes.TEXT_MUTED} style={{ marginBottom: 20 }}>
           Accept payments from all the major debit and credit card networks
-          through the supported payment gateways.
+          through the supported payment methods.
         </Text>
 
         <Stack>

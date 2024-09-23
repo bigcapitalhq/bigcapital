@@ -136,10 +136,10 @@ export function StripePaymentMethod() {
         className={Classes.TEXT_MUTED}
         style={{ fontSize: 13 }}
       >
-        Stripe is an online payment processing platform that allows you to
-        receive one-time and recurring payments securely from customers. It also
-        manages all your payments and makes reconciliation a breeze. You can set
-        it up in no time and get paid faster. 
+        Stripe is a secure online payment platform that lets you easily accept
+        both one-time and recurring payments. It simplifies managing
+        transactions and streamlines reconciliation. Setup is quick, helping you
+        get paid faster and more efficiently.
       </PaymentDescription>
 
       <PaymentFooter>
@@ -153,7 +153,7 @@ export function StripePaymentMethod() {
           {!isStripeServerConfigured && (
             <Text style={{ color: '#CD4246' }}>
               Stripe payment is not configured from the server.{' '}
-            </Text>
+            </Text> 
           )}
         </Stack>
       </PaymentFooter>
