@@ -10,6 +10,7 @@ import {
 import { FColorInput } from '@/components/Forms/FColorInput';
 import { Overlay } from '../../Invoices/InvoiceCustomize/Overlay';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { BrandingCompanyLogoUploadField } from '@/containers/ElementCustomize/components/BrandingCompanyLogoUploadField';
 
 export function CreditNoteCustomizeGeneralField() {
   const isTemplateNameFilled = useIsTemplateNamedFilled();
@@ -64,15 +65,23 @@ export function CreditNoteCustomizeGeneralField() {
             />
           </FFormGroup>
 
-          <FFormGroup name={'showCompanyLogo'} label={'Logo'} fastField>
-            <FSwitch
+          <Stack spacing={10}>
+            <FFormGroup
               name={'showCompanyLogo'}
-              label={'Display company logo in the paper'}
-              style={{ fontSize: 14 }}
-              large
+              label={'Logo'}
               fastField
-            />
-          </FFormGroup>
+              style={{ marginBottom: 0 }}
+            >
+              <FSwitch
+                name={'showCompanyLogo'}
+                label={'Display company logo in the paper'}
+                style={{ fontSize: 14 }}
+                fastField
+              />
+            </FFormGroup>
+
+            <BrandingCompanyLogoUploadField />
+          </Stack>
         </Stack>
       </Overlay>
     </Stack>

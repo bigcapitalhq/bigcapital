@@ -12,6 +12,7 @@ import { FColorInput } from '@/components/Forms/FColorInput';
 import { CreditCardIcon } from '@/icons/CreditCardIcon';
 import { Overlay } from './Overlay';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { BrandingCompanyLogoUploadField } from '@/containers/ElementCustomize/components/BrandingCompanyLogoUploadField';
 
 export function InvoiceCustomizeGeneralField() {
   const isTemplateNameFilled = useIsTemplateNamedFilled();
@@ -66,15 +67,23 @@ export function InvoiceCustomizeGeneralField() {
             />
           </FFormGroup>
 
-          <FFormGroup name={'showCompanyLogo'} label={'Logo'} fastField>
-            <FSwitch
+          <Stack spacing={10}>
+            <FFormGroup
               name={'showCompanyLogo'}
-              label={'Display company logo in the paper'}
-              style={{ fontSize: 14 }}
-              large
+              label={'Logo'}
               fastField
-            />
-          </FFormGroup>
+              style={{ marginBottom: 0 }}
+            >
+              <FSwitch
+                name={'showCompanyLogo'}
+                label={'Display company logo in the paper'}
+                style={{ fontSize: 14 }}
+                fastField
+              />
+            </FFormGroup>
+
+            <BrandingCompanyLogoUploadField />
+          </Stack>
         </Stack>
 
         <InvoiceCustomizePaymentManage />
@@ -99,7 +108,9 @@ function InvoiceCustomizePaymentManage() {
         <Text>Accept payment methods</Text>
       </Group>
 
-      <a href={'#'}>Manage</a>
+      <a style={{ fontSize: 13 }} href={'#'}>
+        Manage
+      </a>
     </Group>
   );
 }

@@ -7,7 +7,8 @@ export interface InvoiceCustomizeValues extends BrandingTemplateValues {
 
   // Company Logo
   showCompanyLogo?: boolean;
-  companyLogo?: string;
+  companyLogoKey?: string;
+  companyLogoUri?: string;
 
   // Top details.
   showInvoiceNumber?: boolean;

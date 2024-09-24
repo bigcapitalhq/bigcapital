@@ -20,7 +20,7 @@ export interface InvoicePaperTemplateProps {
   secondaryColor?: string;
 
   showCompanyLogo?: boolean;
-  companyLogo?: string;
+  companyLogoUri?: string;
 
   showInvoiceNumber?: boolean;
   invoiceNumber?: string;
@@ -95,7 +95,7 @@ export function InvoicePaperTemplate({
   companyName = 'Bigcapital Technology, Inc.',
 
   showCompanyLogo = true,
-  companyLogo,
+  companyLogoUri,
 
   dueDate = 'September 3, 2024',
   dueDateLabel = 'Date due',
@@ -185,7 +185,7 @@ export function InvoicePaperTemplate({
       primaryColor={primaryColor}
       secondaryColor={secondaryColor}
       showCompanyLogo={showCompanyLogo}
-      companyLogo={companyLogo}
+      companyLogo={companyLogoUri}
       bigtitle={'Invoice'}
     >
       <Stack spacing={24}>
