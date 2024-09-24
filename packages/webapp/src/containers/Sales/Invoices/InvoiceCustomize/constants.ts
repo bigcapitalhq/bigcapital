@@ -7,8 +7,8 @@ export const initialValues = {
 
   // Company logo.
   showCompanyLogo: true,
-  companyLogo:
-    'https://cdn-development.mercury.com/demo-assets/avatars/mercury-demo-dark.png',
+  companyLogoKey: '',
+  companyLogoUri: '',
 
   // Top details.
   showInvoiceNumber: true,

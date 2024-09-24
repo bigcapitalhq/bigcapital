@@ -7,26 +7,35 @@ import {
 import { useBrandingTemplateBoot } from './BrandingTemplateBoot';
 import { transformToForm } from '@/utils';
 import { BrandingTemplateValues } from './types';
-import { useFormikContext } from 'formik';
 import { DRAWERS } from '@/constants/drawers';
+
+const commonExcludedAttrs = ['templateName', 'companyLogoUri'];
 
 export const transformToEditRequest = <T extends BrandingTemplateValues>(
   values: T,
+  defaultValues: T,
 ): EditPdfTemplateValues => {
   return {
     templateName: values.templateName,
-    attributes: omit(values, ['templateName']),
+    attributes: transformToForm(
+      omit(values, commonExcludedAttrs),
+      defaultValues,
+    ),
   };
 };
 
 export const transformToNewRequest = <T extends BrandingTemplateValues>(
   values: T,
+  defaultValues: T,
   resource: string,
 ): CreatePdfTemplateValues => {
   return {
     resource,
     templateName: values.templateName,
-    attributes: omit(values, ['templateName']),
+    attributes: transformToForm(
+      omit(values, commonExcludedAttrs),
+      defaultValues,
+    ),
   };
 };
 
@@ -66,5 +75,5 @@ export const getButtonLabelFromResource = (resource: string) => {
     CreditNote: 'Create Credit Note Branding',
     PaymentReceive: 'Create Payment Branding',
   };
-  return R.prop(resource, pairs) || 'Create Branding Template'; 
-}
+  return R.prop(resource, pairs) || 'Create Branding Template';
+};

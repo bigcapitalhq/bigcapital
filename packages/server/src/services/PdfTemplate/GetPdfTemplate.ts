@@ -1,11 +1,16 @@
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
+import { GetPdfTemplateTransformer } from './GetPdfTemplateTransformer';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
 export class GetPdfTemplate {
   @Inject()
   private tenancy: HasTenancyService;
+
+  @Inject()
+  private transformer: TransformerInjectable
 
   /**
    * Retrieves a pdf template by its ID.
@@ -24,6 +29,10 @@ export class GetPdfTemplate {
       .findById(templateId)
       .throwIfNotFound();
 
-    return template;
+    return this.transformer.transform(
+      tenantId,
+      template,
+      new GetPdfTemplateTransformer()
+    );
   }
 }

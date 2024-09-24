@@ -19,6 +19,7 @@ import {
 import { FormikHelpers } from 'formik';
 import { BrandingTemplateValues } from './types';
 import { useUploadAttachments } from '@/hooks/query/attachments';
+import { excludePrivateProps } from '@/utils';
 
 interface BrandingTemplateFormProps<T> extends ElementCustomizeProps<T> {
   resource: string;
@@ -41,7 +42,7 @@ export function BrandingTemplateForm<T extends BrandingTemplateValues>({
 
   const initialValues = useBrandingTemplateFormInitialValues<T>(defaultValues);
   const [isUploading, setIsLoading] = useState<boolean>(false);
-  
+
   // Uploads the attachments.
   const { mutateAsync: uploadAttachments } = useUploadAttachments({
     onSuccess: () => {
@@ -53,38 +54,53 @@ export function BrandingTemplateForm<T extends BrandingTemplateValues>({
   //  - Push the updated data.
   const handleFormSubmit = async (
     values: T,
-    { setSubmitting }: FormikHelpers<T>,
+    { setSubmitting, setFieldValue }: FormikHelpers<T>,
   ) => {
+    const _values = { ...values };
+
+    // Handle create/edit request success.
     const handleSuccess = (message: string) => {
       AppToaster.show({ intent: Intent.SUCCESS, message });
       setSubmitting(false);
       onSuccess && onSuccess();
     };
+    // Handle create/edit request error.
     const handleError = (message: string) => {
       AppToaster.show({ intent: Intent.DANGER, message });
       setSubmitting(false);
       onError && onError();
     };
-
-    if (values.companyLogoFile) {
-      isUploading(true);
+    // Start upload the company logo file if it is presented.
+    if (values._companyLogoFile) {
+      setIsLoading(true);
       const formData = new FormData();
       const key = Date.now().toString();
 
-      formData.append('file', values.companyLogoFile);
+      formData.append('file', values._companyLogoFile);
       formData.append('internalKey', key);
 
       try {
-        await uploadAttachments(formData);
+        const uploadedAttachmentRes = await uploadAttachments(formData);
         setIsLoading(false);
+
+        // Adds the attachment key to the values after finishing upload.
+        _values['companyLogoKey'] = uploadedAttachmentRes?.key;
       } catch {
         handleError('An error occurred while uploading company logo.');
         setIsLoading(false);
         return;
       }
     }
+    // Exclude all the private props that starts with _.
+    const excludedPrivateValues = excludePrivateProps(_values);
+
+    // Transform the the form values to request based on the mode (new or edit mode).
+    const reqValues = templateId
+      ? transformToEditRequest(excludedPrivateValues, initialValues)
+      : transformToNewRequest(excludedPrivateValues, initialValues, resource);
+
+    // Template id is presented means edit mode.
     if (templateId) {
-      const reqValues = transformToEditRequest(values);
       setSubmitting(true);
 
       try {
@@ -94,7 +110,6 @@ export function BrandingTemplateForm<T extends BrandingTemplateValues>({
         handleError('An error occurred while updating the PDF template.');
       }
     } else {
-      const reqValues = transformToNewRequest(values, resource);
       setSubmitting(true);
 
       try {
@@ -119,3 +134,8 @@ export function BrandingTemplateForm<T extends BrandingTemplateValues>({
 export const validationSchema = Yup.object().shape({
   templateName: Yup.string().required('Template Name is required'),
 });
+
+
+// Initial values - companyLogoKey, companyLogoUri
+// Form - _companyLogoFile, companyLogoKey, companyLogoUri
+// Request - companyLogoKey

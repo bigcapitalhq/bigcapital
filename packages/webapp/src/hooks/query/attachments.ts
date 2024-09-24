@@ -1,6 +1,16 @@
 // @ts-nocheck
 import { useMutation } from 'react-query';
 import useApiRequest from '../useRequest';
+import { transformToCamelCase } from '@/utils';
+
+interface UploadAttachmentResponse {
+  createdAt: string;
+  id: number;
+  key: string;
+  mimeType: string;
+  originName: string;
+  size: number;
+}
 
 /**
  * Uploads the given attachments.
@@ -8,8 +18,11 @@ import useApiRequest from '../useRequest';
 export function useUploadAttachments(props) {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('attachments', values),
+  return useMutation<UploadAttachmentResponse>(
+    (values) =>
+      apiRequest
+        .post('attachments', values)
+        .then((res) => transformToCamelCase(res.data?.data)),
     props,
   );
 }

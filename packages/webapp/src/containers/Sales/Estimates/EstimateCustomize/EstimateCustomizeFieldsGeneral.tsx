@@ -1,16 +1,16 @@
 // @ts-nocheck
-import { Classes, Text } from '@blueprintjs/core';
+import { Classes } from '@blueprintjs/core';
 import {
   FFormGroup,
   FInputGroup,
   FSwitch,
   FieldRequiredHint,
-  Group,
   Stack,
 } from '@/components';
 import { FColorInput } from '@/components/Forms/FColorInput';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 import { Overlay } from '../../Invoices/InvoiceCustomize/Overlay';
+import { BrandingCompanyLogoUploadField } from '@/containers/ElementCustomize/components/BrandingCompanyLogoUploadField';
 
 export function EstimateCustomizeGeneralField() {
   const isTemplateNameFilled = useIsTemplateNamedFilled();
@@ -65,15 +65,24 @@ export function EstimateCustomizeGeneralField() {
             />
           </FFormGroup>
 
-          <FFormGroup name={'showCompanyLogo'} label={'Logo'} fastField>
-            <FSwitch
+          <Stack spacing={10}>
+            <FFormGroup
               name={'showCompanyLogo'}
-              label={'Display company logo in the paper'}
-              style={{ fontSize: 14 }}
-              large
+              label={'Logo'}
               fastField
-            />
-          </FFormGroup>
+              style={{ marginBottom: 0 }}
+            >
+              <FSwitch
+                name={'showCompanyLogo'}
+                label={'Display company logo in the paper'}
+                style={{ fontSize: 14 }}
+                large
+                fastField
+              />
+            </FFormGroup>
+
+            <BrandingCompanyLogoUploadField />
+          </Stack>
         </Stack>
       </Overlay>
     </Stack>

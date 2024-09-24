@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Group } from '@/components';
+import { Group } from '@/components';
 import { ElementCustomizeProvider } from './ElementCustomizeProvider';
 import {
   ElementCustomizeForm,

@@ -12,8 +12,7 @@ import { FColorInput } from '@/components/Forms/FColorInput';
 import { CreditCardIcon } from '@/icons/CreditCardIcon';
 import { Overlay } from './Overlay';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
-import { CompanyLogoUpload } from './CompanyLogoUpload';
-import { useFormikContext } from 'formik';
+import { BrandingCompanyLogoUploadField } from '@/containers/ElementCustomize/components/BrandingCompanyLogoUploadField';
 
 export function InvoiceCustomizeGeneralField() {
   const isTemplateNameFilled = useIsTemplateNamedFilled();
@@ -68,17 +67,23 @@ export function InvoiceCustomizeGeneralField() {
             />
           </FFormGroup>
 
-          <FFormGroup name={'showCompanyLogo'} label={'Logo'} fastField>
-            <FSwitch
+          <Stack spacing={10}>
+            <FFormGroup
               name={'showCompanyLogo'}
-              label={'Display company logo in the paper'}
-              style={{ fontSize: 14 }}
-              large
+              label={'Logo'}
               fastField
-            />
-          </FFormGroup>
+              style={{ marginBottom: 0 }}
+            >
+              <FSwitch
+                name={'showCompanyLogo'}
+                label={'Display company logo in the paper'}
+                style={{ fontSize: 14 }}
+                fastField
+              />
+            </FFormGroup>
 
-          <CompanyLogoUploadField />
+            <BrandingCompanyLogoUploadField />
+          </Stack>
         </Stack>
 
         <InvoiceCustomizePaymentManage />
@@ -103,24 +108,9 @@ function InvoiceCustomizePaymentManage() {
         <Text>Accept payment methods</Text>
       </Group>
 
-      <a style={{ fontSize: 13 }} href={'#'}>Manage</a>
+      <a style={{ fontSize: 13 }} href={'#'}>
+        Manage
+      </a>
     </Group>
-  );
-}
-
-function CompanyLogoUploadField() {
-  const { setFieldValue } = useFormikContext();
-
-  return (
-    <FFormGroup name={'companyLogo'} label={''} fastField>
-      <CompanyLogoUpload
-        onChange={(file) => {
-          const imageUrl = file ? URL.createObjectURL(file) : '';
-
-          setFieldValue('companyLogoFile', file);
-          setFieldValue('companyLogo', imageUrl);
-        }}
-      />
-    </FFormGroup>
   );
 }
