@@ -7,7 +7,6 @@ import {
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 
-
 // Create Stripe Account Link.
 // ------------------------------------
 interface StripeAccountLinkResponse {
@@ -46,7 +45,6 @@ export const useCreateStripeAccountLink = (
     { ...options },
   );
 };
-
 
 // Create Stripe Account Session.
 // ------------------------------------
@@ -144,6 +142,73 @@ export const useCreateStripeCheckoutSession = (
         .then(
           (res) =>
             transformToCamelCase(res.data) as CreateCheckoutSessionResponse,
+        );
+    },
+    { ...options },
+  );
+};
+
+// Create Stripe Account OAuth Link.
+// ------------------------------------
+interface StripeAccountLinkResponse {
+  clientSecret: {
+    created: number;
+    expiresAt: number;
+    object: string;
+    url: string;
+  };
+}
+
+interface StripeAccountLinkValues {
+  stripeAccountId: string;
+}
+
+export const useGetStripeAccountLink = (
+  options?: UseQueryOptions<StripeAccountLinkResponse, Error>,
+): UseQueryResult<StripeAccountLinkResponse, Error> => {
+  const apiRequest = useApiRequest();
+  return useQuery(
+    'getStripeAccountLink',
+    () => {
+      return apiRequest
+        .get('/stripe_integration/link')
+        .then((res) => transformToCamelCase(res.data));
+    },
+    { ...options },
+  );
+};
+
+// Get Stripe Account OAuth Callback Mutation.
+// ------------------------------------
+interface StripeAccountCallbackMutationValues {
+  code: string;
+}
+
+interface StripeAccountCallbackMutationResponse {
+  success: boolean;
+}
+
+export const useSetStripeAccountCallback = (
+  options?: UseMutationOptions<
+    StripeAccountCallbackMutationResponse,
+    Error,
+    StripeAccountCallbackMutationValues
+  >,
+): UseMutationResult<
+  StripeAccountCallbackMutationResponse,
+  Error,
+  StripeAccountCallbackMutationValues
+> => {
+  const apiRequest = useApiRequest();
+  return useMutation(
+    (values: StripeAccountCallbackMutationValues) => {
+      return apiRequest
+        .post(`/stripe_integration/callback`, values)
+        .then(
+          (res) =>
+            transformToCamelCase(
+              res.data,
+            ) as StripeAccountCallbackMutationResponse,
         );
     },
     { ...options },

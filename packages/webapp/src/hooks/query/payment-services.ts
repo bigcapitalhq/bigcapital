@@ -12,7 +12,6 @@ import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 const PaymentServicesQueryKey = 'PaymentServices';
 const PaymentServicesStateQueryKey = 'PaymentServicesState';
 
-
 // # Get payment services.
 // -----------------------------------------
 export interface GetPaymentServicesResponse {}
@@ -48,12 +47,15 @@ export const useGetPaymentServices = (
 export interface GetPaymentServicesStateResponse {
   stripe: {
     isStripeAccountCreated: boolean;
-    isStripePaymentActive: boolean;
+    isStripePaymentEnabled: boolean;
+    isStripePayoutEnabled: boolean;
+    isStripeEnabled: boolean;
     isStripeServerConfigured: boolean;
     stripeAccountId: string | null;
     stripePaymentMethodId: number | null;
     stripeCurrencies: string[];
     stripePublishableKey: string;
+    stripeAuthLink: string;
     stripeRedirectUrl: string;
   };
 }

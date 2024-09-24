@@ -4,6 +4,7 @@ import { IAccount } from '@/interfaces';
 import { Knex } from 'knex';
 import {
   PrepardExpenses,
+  StripeClearingAccount,
   TaxPayableAccount,
   UnearnedRevenueAccount,
 } from '@/database/seeds/data/accounts';
@@ -242,6 +243,39 @@ export default class AccountRepository extends TenantRepository {
     if (!result) {
       result = await this.model.query(trx).insertAndFetch({
         ...PrepardExpenses,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
+
+
+  /**
+   * Finds or creates the stripe clearing account.
+   * @param {Record<string, string>} extraAttrs 
+   * @param {Knex.Transaction} trx 
+   * @returns 
+   */
+  public async findOrCreateStripeClearing(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction
+  ) {
+    // Retrieves the given tenant metadata.
+    const tenantMeta = await TenantMetadata.query().findOne({
+      tenantId: this.tenantId,
+    });
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
+
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: StripeClearingAccount.slug, ..._extraAttrs });
+
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...StripeClearingAccount,
         ..._extraAttrs,
       });
     }

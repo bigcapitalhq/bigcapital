@@ -10,8 +10,9 @@ import {
   Popover,
   Tag,
   Text,
+  Tooltip,
 } from '@blueprintjs/core';
-import { AppToaster, Box, Card, Group, Stack } from '@/components';
+import { Box, Card, Group, Stack } from '@/components';
 import { StripeLogo } from '@/icons/StripeLogo';
 import { usePaymentMethodsBoot } from './PreferencesPaymentMethodsBoot';
 import { DialogsName } from '@/constants/dialogs';
@@ -20,7 +21,6 @@ import {
   useDialogActions,
   useDrawerActions,
 } from '@/hooks/state';
-import { useCreateStripeAccountLink } from '@/hooks/query/stripe-integration';
 import { DRAWERS } from '@/constants/drawers';
 import { MoreIcon } from '@/icons/More';
 import { STRIPE_PRICING_LINK } from './constants';
@@ -34,37 +34,15 @@ export function StripePaymentMethod() {
   const stripeState = paymentMethodsState?.stripe;
 
   const isAccountCreated = stripeState?.isStripeAccountCreated;
-  const isAccountActive = stripeState?.isStripePaymentActive;
-  const stripeAccountId = stripeState?.stripeAccountId;
+  const isPaymentEnabled = stripeState?.isStripePaymentEnabled;
+  const isPayoutEnabled = stripeState?.isStripePayoutEnabled;
+  const isStripeEnabled = stripeState?.isStripeEnabled;
   const stripePaymentMethodId = stripeState?.stripePaymentMethodId;
   const isStripeServerConfigured = stripeState?.isStripeServerConfigured;
-
-  const {
-    mutateAsync: createStripeAccountLink,
-    isLoading: isCreateStripeLinkLoading,
-  } = useCreateStripeAccountLink();
 
   // Handle Stripe setup button click.
   const handleSetUpBtnClick = () => {
     openDialog(DialogsName.StripeSetup);
-  };
-
-  // Handle complete Stripe setup button click.
-  const handleCompleteSetUpBtnClick = () => {
-    createStripeAccountLink({ stripeAccountId })
-      .then((res) => {
-        const { clientSecret } = res;
-
-        if (clientSecret.url) {
-          window.open(clientSecret.url, '_blank');
-        }
-      })
-      .catch(() => {
-        AppToaster.show({
-          message: 'Something went wrong.',
-          intent: Intent.DANGER,
-        });
-      });
   };
 
   // Handle edit button click.
@@ -87,14 +65,30 @@ export function StripePaymentMethod() {
         <Group>
           <StripeLogo />
 
-          {isAccountActive && (
-            <Tag minimal intent={Intent.SUCCESS}>
-              Active
-            </Tag>
-          )}
+          <Group spacing={10}>
+            {isStripeEnabled && (
+              <Tag minimal intent={Intent.SUCCESS}>
+                Active
+              </Tag>
+            )}
+            {!isPaymentEnabled && isAccountCreated && (
+              <Tooltip content="The account cannot accept payments because verification may be incomplete, there may be legal or compliance issues, or required documents haven't been submitted or verified.">
+                <Tag minimal intent={Intent.DANGER}>
+                  Payment Not Enabled
+                </Tag>
+              </Tooltip>
+            )}
+            {!isPayoutEnabled && isAccountCreated && (
+              <Tooltip content="The account cannot receive payouts due to incomplete or invalid bank details, pending identity verification, or compliance restrictions.">
+                <Tag minimal intent={Intent.DANGER}>
+                  Payout Not Enabled
+                </Tag>
+              </Tooltip>
+            )}
+          </Group>
         </Group>
         <Group spacing={10}>
-          {isAccountActive && (
+          {isAccountCreated && (
             <Button small onClick={handleEditBtnClick}>
               Edit
             </Button>
@@ -102,16 +96,6 @@ export function StripePaymentMethod() {
           {!isAccountCreated && (
             <Button intent={Intent.PRIMARY} small onClick={handleSetUpBtnClick}>
               Set it Up
-            </Button>
-          )}
-          {isAccountCreated && !isAccountActive && (
-            <Button
-              intent={Intent.PRIMARY}
-              small
-              onClick={handleCompleteSetUpBtnClick}
-              loading={isCreateStripeLinkLoading}
-            >
-              Complete Stripe Set Up
             </Button>
           )}
           {isAccountCreated && (
@@ -153,7 +137,7 @@ export function StripePaymentMethod() {
           {!isStripeServerConfigured && (
             <Text style={{ color: '#CD4246' }}>
               Stripe payment is not configured from the server.{' '}
-            </Text> 
+            </Text>
           )}
         </Stack>
       </PaymentFooter>

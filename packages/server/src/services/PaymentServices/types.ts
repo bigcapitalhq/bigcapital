@@ -16,11 +16,17 @@ export interface EditPaymentMethodDTO {
 export interface GetPaymentMethodsPOJO {
   stripe: {
     isStripeAccountCreated: boolean;
-    isStripePaymentActive: boolean;
+
+    isStripePaymentEnabled: boolean;
+    isStripePayoutEnabled: boolean;
+    isStripeEnabled: boolean;
+
     isStripeServerConfigured: boolean;
+    
     stripeAccountId: string | null;
     stripePaymentMethodId: number | null;
     stripePublishableKey: string | null;
+    stripeAuthLink: string;
     stripeCurrencies: Array<string>;
     stripeRedirectUrl: string | null;
   };

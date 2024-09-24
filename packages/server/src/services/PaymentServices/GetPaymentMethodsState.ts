@@ -3,11 +3,15 @@ import HasTenancyService from '../Tenancy/TenancyService';
 import { GetPaymentMethodsPOJO } from './types';
 import config from '@/config';
 import { isStripePaymentConfigured } from './utils';
+import { GetStripeAuthorizationLinkService } from '../StripePayment/GetStripeAuthorizationLink';
 
 @Service()
 export class GetPaymentMethodsStateService {
   @Inject()
   private tenancy: HasTenancyService;
+
+  @Inject()
+  private getStripeAuthorizationLinkService: GetStripeAuthorizationLinkService;
 
   /**
    * Retrieves the payment state provising state.
@@ -25,7 +29,9 @@ export class GetPaymentMethodsStateService {
         service: 'Stripe',
       });
     const isStripeAccountCreated = !!stripePayment;
-    const isStripePaymentActive = !!(stripePayment?.active || null);
+    const isStripePaymentEnabled = stripePayment?.paymentEnabled;
+    const isStripePayoutEnabled = stripePayment?.payoutEnabled;
+    const isStripeEnabled = stripePayment?.fullEnabled;
 
     const stripePaymentMethodId = stripePayment?.id || null;
     const stripeAccountId = stripePayment?.accountId || null;
@@ -33,16 +39,21 @@ export class GetPaymentMethodsStateService {
     const stripeCurrencies = ['USD', 'EUR'];
     const stripeRedirectUrl = 'https://your-stripe-redirect-url.com';
     const isStripeServerConfigured = isStripePaymentConfigured();
+    const stripeAuthLink =
+      this.getStripeAuthorizationLinkService.getStripeAuthLink();
 
     const paymentMethodPOJO: GetPaymentMethodsPOJO = {
       stripe: {
         isStripeAccountCreated,
-        isStripePaymentActive,
+        isStripePaymentEnabled,
+        isStripePayoutEnabled,
+        isStripeEnabled,
         isStripeServerConfigured,
         stripeAccountId,
         stripePaymentMethodId,
         stripePublishableKey,
         stripeCurrencies,
+        stripeAuthLink,
         stripeRedirectUrl,
       },
     };

@@ -2,11 +2,11 @@ import { Service } from 'typedi';
 import stripe from 'stripe';
 import config from '@/config';
 
-const origin = 'http://localhost:4000';
+const origin = 'https://cfdf-102-164-97-88.ngrok-free.app';
 
 @Service()
 export class StripePaymentService {
-  public stripe;
+  public stripe: stripe;
 
   constructor() {
     this.stripe = new stripe(config.stripePayment.secretKey, {
@@ -36,9 +36,9 @@ export class StripePaymentService {
   }
 
   /**
-   * 
-   * @param {number} accountId 
-   * @returns 
+   *
+   * @param {number} accountId
+   * @returns
    */
   public async createAccountLink(accountId: string) {
     try {
@@ -62,8 +62,9 @@ export class StripePaymentService {
    */
   public async createAccount(): Promise<string> {
     try {
-      const account = await this.stripe.accounts.create({});
-
+      const account = await this.stripe.accounts.create({
+        type: 'standard',
+      });
       return account;
     } catch (error) {
       throw new Error(

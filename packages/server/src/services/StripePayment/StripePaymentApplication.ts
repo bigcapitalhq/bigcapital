@@ -4,6 +4,8 @@ import { StripeInvoiceCheckoutSessionPOJO } from '@/interfaces/StripePayment';
 import { CreateStripeAccountService } from './CreateStripeAccountService';
 import { CreateStripeAccountLinkService } from './CreateStripeAccountLink';
 import { CreateStripeAccountDTO } from './types';
+import { ExchangeStripeOAuthTokenService } from './ExchangeStripeOauthToken';
+import { GetStripeAuthorizationLinkService } from './GetStripeAuthorizationLink';
 
 export class StripePaymentApplication {
   @Inject()
@@ -14,6 +16,12 @@ export class StripePaymentApplication {
 
   @Inject()
   private createInvoiceCheckoutSessionService: CreateInvoiceCheckoutSession;
+
+  @Inject()
+  private exchangeStripeOAuthTokenService: ExchangeStripeOAuthTokenService;
+
+  @Inject()
+  private getStripeConnectLinkService: GetStripeAuthorizationLinkService;
 
   /**
    * Creates a new Stripe account for Bigcapital.
@@ -56,6 +64,26 @@ export class StripePaymentApplication {
     return this.createInvoiceCheckoutSessionService.createInvoiceCheckoutSession(
       tenantId,
       paymentLinkId
+    );
+  }
+
+  /**
+   * Retrieves Stripe OAuth2 connect link.
+   * @returns {string}
+   */
+  public getStripeConnectLink() {
+    return this.getStripeConnectLinkService.getStripeAuthLink();
+  }
+
+  /**
+   * Exchanges the given Stripe authorization code to Stripe user id and access token.
+   * @param {string} authorizationCode
+   * @returns
+   */
+  public exchangeStripeOAuthToken(tenantId: number, authorizationCode: string) {
+    return this.exchangeStripeOAuthTokenService.excahngeStripeOAuthToken(
+      tenantId,
+      authorizationCode
     );
   }
 }

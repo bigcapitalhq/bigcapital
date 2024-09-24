@@ -723,7 +723,9 @@ export default {
     onAccountDeleted: 'onStripeIntegrationAccountDeleted',
 
     onPaymentLinkCreated: 'onStripePaymentLinkCreated',
-    onPaymentLinkInactivated: 'onStripePaymentLinkInactivated'
+    onPaymentLinkInactivated: 'onStripePaymentLinkInactivated',
+
+    onOAuthCodeGranted: 'onStripeOAuthCodeGranted',
   },
 
   // Stripe Payment Webhooks

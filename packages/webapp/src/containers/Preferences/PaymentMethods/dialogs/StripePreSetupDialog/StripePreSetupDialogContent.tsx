@@ -1,52 +1,31 @@
+import { useState } from 'react';
 import { Button, DialogBody, DialogFooter, Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { Stack } from '@/components';
 import { useDialogContext } from '@/components/Dialog/DialogProvider';
-import {
-  useCreateStripeAccount,
-  useCreateStripeAccountLink,
-} from '@/hooks/query/stripe-integration';
 import { useDialogActions } from '@/hooks/state';
 import { CreditCard2Icon } from '@/icons/CreditCard2';
 import { DollarIcon } from '@/icons/Dollar';
 import { LayoutAutoIcon } from '@/icons/LayoutAuto';
 import { SwitchIcon } from '@/icons/SwitchIcon';
+import { usePaymentMethodsBoot } from '../../PreferencesPaymentMethodsBoot';
 
 export function StripePreSetupDialogContent() {
   const { name } = useDialogContext();
   const { closeDialog } = useDialogActions();
-
-  const {
-    mutateAsync: createStripeAccount,
-    isLoading: isCreateStripeAccountLoading,
-  } = useCreateStripeAccount();
-
-  const {
-    mutateAsync: createStripeAccountLink,
-    isLoading: isCreateStripeLinkLoading,
-  } = useCreateStripeAccountLink();
+  const { paymentMethodsState } = usePaymentMethodsBoot();
+  const [isRedirecting, setIsRedirecting] = useState<boolean>(false);
 
   const handleSetUpBtnClick = () => {
-    createStripeAccount({})
-      .then((response) => {
-        const { account_id: accountId } = response;
-
-        return createStripeAccountLink({ stripeAccountId: accountId });
-      })
-      .then((res) => {
-        const { clientSecret } = res;
-
-        if (clientSecret.url) {
-          window.location.href = clientSecret.url;
-        }
-      });
+    if (paymentMethodsState?.stripe.stripeAuthLink) {
+      setIsRedirecting(true);
+      window.location.href = paymentMethodsState?.stripe.stripeAuthLink;
+    }
   };
-
+  // Handle cancel button click.
   const handleCancelBtnClick = () => {
     closeDialog(name);
   };
-
-  const isLoading = isCreateStripeAccountLoading || isCreateStripeLinkLoading;
 
   return (
     <>
@@ -92,7 +71,7 @@ export function StripePreSetupDialogContent() {
             <Button
               intent={Intent.PRIMARY}
               onClick={handleSetUpBtnClick}
-              loading={isLoading}
+              loading={isRedirecting}
             >
               Set Up Stripe
             </Button>

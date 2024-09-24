@@ -1,7 +1,10 @@
 import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
 
-export class PaymentIntegration extends TenantModel {
+export class PaymentIntegration extends Model {
+  paymentEnabled!: boolean;
+  payoutEnabled!: boolean;
+
   static get tableName() {
     return 'payment_integrations';
   }
@@ -10,16 +13,35 @@ export class PaymentIntegration extends TenantModel {
     return 'id';
   }
 
+  static get virtualAttributes() {
+    return ['fullEnabled'];
+  }
+
+  static get jsonAttributes() {
+    return ['options'];
+  }
+
+  get fullEnabled() {
+    return this.paymentEnabled && this.payoutEnabled;
+  }
+
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['name', 'service', 'active'],
+      required: ['name', 'service'],
       properties: {
         id: { type: 'integer' },
         service: { type: 'string' },
-        active: { type: 'boolean' },
+        paymentEnabled: { type: 'boolean' },
+        payoutEnabled: { type: 'boolean' },
         accountId: { type: 'string' },
-        options: { type: 'object' },
+        options: {
+          type: 'object',
+          properties: {
+            bankAccountId: { type: 'number' },
+            clearingAccountId: { type: 'number' },
+          },
+        },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' },
       },

@@ -8,7 +8,8 @@ exports.up = function (knex) {
     table.string('service');
     table.string('name'); 
     table.string('slug');
-    table.boolean('active').defaultTo(false);
+    table.boolean('payment_enabled').defaultTo(false);
+    table.boolean('payout_enabled').defaultTo(false);
     table.string('account_id');
     table.json('options');
     table.timestamps();

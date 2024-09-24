@@ -31,6 +31,17 @@ export const PrepardExpenses = {
   predefined: true,
 };
 
+export const StripeClearingAccount = {
+  name: 'Stripe Clearing',
+  slug: 'stripe-clearing',
+  account_type: 'other-current-liability',
+  parent_account_id: null,
+  code: '50006',
+  active: true,
+  index: 1,
+  predefined: true, 
+}
+
 export default [
   {
     name: 'Bank Account',
