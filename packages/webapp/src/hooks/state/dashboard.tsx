@@ -12,6 +12,9 @@ import {
   closeDialog,
   openDrawer,
   closeDrawer,
+  openAlert,
+  closeAlert,
+  changePreferencesPageTitle,
 } from '@/store/dashboard/dashboard.actions';
 
 export const useDispatchAction = (action) => {
@@ -80,9 +83,32 @@ export const useDialogActions = () => {
   };
 };
 
+/**
+ * Drawer actions.
+ * @returns
+ */
 export const useDrawerActions = () => {
+  const dispatch = useDispatch();
+
   return {
-    openDrawer: useDispatchAction(openDrawer),
-    closeDrawer: useDispatchAction(closeDrawer),
+    openDrawer: (name, payload?: {}) => dispatch(openDrawer(name, payload)),
+    closeDrawer: (name, payload?: {}) => dispatch(closeDrawer(name, payload)),
   };
+};
+
+/**
+ * Alert actions.
+ * @returns
+ */
+export const useAlertActions = () => {
+  const dispatch = useDispatch();
+
+  return {
+    openAlert: (name, payload?: {}) => dispatch(openAlert(name, payload)),
+    closeAlert: (name, payload?: {}) => dispatch(closeAlert(name, payload)),
+  };
+};
+
+export const useChangePreferencesPageTitle = () => {
+  return useDispatchAction(changePreferencesPageTitle);
 };

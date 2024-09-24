@@ -5,6 +5,34 @@ import { IDynamicListFilter } from '@/interfaces/DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 import { AttachmentLinkDTO } from './Attachments';
 
+export interface PaymentIntegrationTransactionLink {
+  id: number;
+  enable: true;
+  paymentIntegrationId: number;
+  referenceType: string;
+  referenceId: number;
+}
+
+export interface PaymentIntegrationTransactionLinkEventPayload {
+  tenantId: number;
+  enable: true;
+  paymentIntegrationId: number;
+  referenceType: string;
+  referenceId: number;
+  saleInvoiceId: number;
+  trx?: Knex.Transaction
+}
+
+export interface PaymentIntegrationTransactionLinkDeleteEventPayload {
+  tenantId: number;
+  enable: true;
+  paymentIntegrationId: number;
+  referenceType: string;
+  referenceId: number;
+  oldSaleInvoiceId: number;
+  trx?: Knex.Transaction 
+}
+
 export interface ISaleInvoice {
   id: number;
   amount: number;
@@ -50,6 +78,8 @@ export interface ISaleInvoice {
   invoiceMessage: string;
 
   pdfTemplateId?: number;
+
+  paymentMethods?: Array<PaymentIntegrationTransactionLink>;
 }
 
 export interface ISaleInvoiceDTO {
@@ -136,9 +166,15 @@ export interface ISaleInvoiceEditingPayload {
 
 export interface ISaleInvoiceDeletePayload {
   tenantId: number;
-  saleInvoice: ISaleInvoice;
+  oldSaleInvoice: ISaleInvoice;
   saleInvoiceId: number;
-  trx: Knex.Transaction;
+}
+
+export interface ISaleInvoiceDeletingPayload {
+  tenantId: number;
+  oldSaleInvoice: ISaleInvoice;
+  saleInvoiceId: number;
+  trx: Knex.Transaction; 
 }
 
 export interface ISaleInvoiceDeletedPayload {
@@ -223,7 +259,6 @@ export interface ISaleInvoiceMailSent {
   messageOptions: SendInvoiceMailDTO;
 }
 
-
 // Invoice Pdf Document
 export interface InvoicePdfLine {
   item: string;
@@ -241,9 +276,9 @@ export interface InvoicePdfTax {
 export interface InvoicePdfTemplateAttributes {
   primaryColor: string;
   secondaryColor: string;
-  
+
   companyName: string;
-  
+
   showCompanyLogo: boolean;
   companyLogo: string;
 

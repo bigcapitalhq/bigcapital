@@ -1,8 +1,8 @@
+import { Knex } from 'knex';
 import { Service, Inject } from 'typedi';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import JournalCommands from '@/services/Accounting/JournalCommands';
-import Knex from 'knex';
 
 @Service()
 export default class JournalPosterService {

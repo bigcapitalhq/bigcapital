@@ -258,6 +258,11 @@ export default class SaleInvoicesController extends BaseController {
 
       // Pdf template id.
       check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
+
+      // Payment methods.
+      check('payment_methods').optional({ nullable: true }).isArray(),
+      check('payment_methods.*.payment_integration_id').exists().toInt(),
+      check('payment_methods.*.enable').exists().isBoolean(),
     ];
   }
 

@@ -17,6 +17,10 @@ export default [
     href: '/preferences/users',
   },
   {
+    text: 'Payment Methods',
+    href: '/preferences/payment-methods'
+  },
+  {
     text: <T id={'preferences.estimates'} />,
     href: '/preferences/estimates',
   },
@@ -53,6 +57,11 @@ export default [
     text: <T id={'items'} />,
     disabled: false,
     href: '/preferences/items',
+  },
+  {
+    text: 'Integrations',
+    disabled: false,
+    href: '/preferences/integrations'
   },
   // {
   //   text: <T id={'sms_integration.label'} />,

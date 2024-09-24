@@ -5,6 +5,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 import '@/style/components/Dialog/Dialog.scss';
+import { DialogProvider } from './DialogProvider';
 
 function DialogComponent(props) {
   const { name, children, closeDialog, onClose } = props;
@@ -15,7 +16,7 @@ function DialogComponent(props) {
   };
   return (
     <Dialog {...props} onClose={handleClose}>
-      {children}
+      <DialogProvider value={props}>{children}</DialogProvider>
     </Dialog>
   );
 }

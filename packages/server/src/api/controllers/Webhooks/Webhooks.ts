@@ -1,9 +1,10 @@
 import { NextFunction, Router, Request, Response } from 'express';
-import { Inject, Service } from 'typedi';
+import Container, { Inject, Service } from 'typedi';
 import { PlaidApplication } from '@/services/Banking/Plaid/PlaidApplication';
 import BaseController from '../BaseController';
 import { LemonSqueezyWebhooks } from '@/services/Subscription/LemonSqueezyWebhooks';
 import { PlaidWebhookTenantBootMiddleware } from '@/services/Banking/Plaid/PlaidWebhookTenantBootMiddleware';
+import { StripeWebhooksController } from '../StripeIntegration/StripeWebhooksController';
 
 @Service()
 export class Webhooks extends BaseController {
@@ -23,6 +24,8 @@ export class Webhooks extends BaseController {
     router.post('/plaid', this.plaidWebhooks.bind(this));
 
     router.post('/lemon', this.lemonWebhooks.bind(this));
+
+    router.use(Container.get(StripeWebhooksController).router());
 
     return router;
   }

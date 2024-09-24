@@ -64,7 +64,11 @@ import { Webhooks } from './controllers/Webhooks/Webhooks';
 import { ExportController } from './controllers/Export/ExportController';
 import { AttachmentsController } from './controllers/Attachments/AttachmentsController';
 import { OneClickDemoController } from './controllers/OneClickDemo/OneClickDemoController';
+import { StripeIntegrationController } from './controllers/StripeIntegration/StripeIntegrationController';
+import { ShareLinkController } from './controllers/ShareLink/ShareLinkController';
+import { PublicSharableLinkController } from './controllers/ShareLink/PublicSharableLinkController';
 import { PdfTemplatesController } from './controllers/PdfTemplates/PdfTemplatesController';
+import { PaymentServicesController } from './controllers/PaymentServices/PaymentServicesController';
 
 export default () => {
   const app = Router();
@@ -83,6 +87,7 @@ export default () => {
   app.use('/account', Container.get(Account).router());
   app.use('/webhooks', Container.get(Webhooks).router());
   app.use('/demo', Container.get(OneClickDemoController).router());
+  app.use(Container.get(PublicSharableLinkController).router());
 
   // - Dashboard routes.
   // ---------------------------
@@ -149,13 +154,21 @@ export default () => {
   dashboard.use('/export', Container.get(ExportController).router());
   dashboard.use('/attachments', Container.get(AttachmentsController).router());
   dashboard.use(
+    '/stripe_integration',
+    Container.get(StripeIntegrationController).router()
+  );
+  dashboard.use(
     '/pdf-templates',
     Container.get(PdfTemplatesController).router()
   );
-
+  dashboard.use(
+    '/payment-services',
+    Container.get(PaymentServicesController).router()
+  );
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());
   dashboard.use('/', Container.get(WarehousesItemController).router());
+  dashboard.use('/', Container.get(ShareLinkController).router());
 
   dashboard.use('/dashboard', Container.get(DashboardController).router());
   dashboard.use('/', Container.get(Miscellaneous).router());

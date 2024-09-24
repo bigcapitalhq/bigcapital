@@ -35,7 +35,8 @@ export class GetSaleInvoice {
       .withGraphFetched('customer')
       .withGraphFetched('branch')
       .withGraphFetched('taxes.taxRate')
-      .withGraphFetched('attachments');
+      .withGraphFetched('attachments')
+      .withGraphFetched('paymentMethods');
 
     // Validates the given sale invoice existance.
     this.validators.validateInvoiceExistance(saleInvoice);

@@ -4,9 +4,10 @@ import { FormattedMessage as T } from '@/components';
 import { Classes, Icon, H4, Button } from '@blueprintjs/core';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { useDrawerContext } from './DrawerProvider';
 
-import styled from 'styled-components';
 import { compose } from '@/utils';
+import styled from 'styled-components';
 
 /**
  * Drawer header content.
@@ -16,18 +17,15 @@ function DrawerHeaderContentRoot(props) {
     icon,
     title = <T id={'view_paper'} />,
     subTitle,
-    onClose,
-    name,
     closeDrawer,
   } = props;
+  const { name } = useDrawerContext();
 
   if (title == null) {
     return null;
   }
-
   const handleClose = (event) => {
     closeDrawer(name);
-    onClose && onClose(event);
   };
 
   return (

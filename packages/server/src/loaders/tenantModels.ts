@@ -69,6 +69,8 @@ import { BankRuleCondition } from '@/models/BankRuleCondition';
 import { RecognizedBankTransaction } from '@/models/RecognizedBankTransaction';
 import { MatchedBankTransaction } from '@/models/MatchedBankTransaction';
 import { PdfTemplate } from '@/models/PdfTemplate';
+import { PaymentIntegration } from '@/models/PaymentIntegration';
+import { TransactionPaymentServiceEntry } from '@/models/TransactionPaymentServiceEntry';
 
 export default (knex) => {
   const models = {
@@ -140,7 +142,9 @@ export default (knex) => {
     BankRuleCondition,
     RecognizedBankTransaction,
     MatchedBankTransaction,
-    PdfTemplate
+    PdfTemplate,
+    PaymentIntegration,
+    TransactionPaymentServiceEntry,
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 };

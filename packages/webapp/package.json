@@ -17,6 +17,8 @@
     "@casl/react": "^2.3.0",
     "@craco/craco": "^5.9.0",
     "@reduxjs/toolkit": "^1.2.5",
+    "@stripe/connect-js": "^3.3.12",
+    "@stripe/react-connect-js": "^3.3.13",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",

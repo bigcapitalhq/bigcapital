@@ -51,7 +51,7 @@ export default class SalesTransactionLockingGuardSubscriber {
       this.transactionLockinGuardOnInvoiceWritingoffCanceling
     );
     bus.subscribe(
-      events.saleInvoice.onDeleting,
+      events.saleInvoice.onDelete,
       this.transactionLockingGuardOnInvoiceDeleting
     );
 
@@ -176,15 +176,15 @@ export default class SalesTransactionLockingGuardSubscriber {
    * @param {ISaleInvoiceDeletePayload} payload
    */
   private transactionLockingGuardOnInvoiceDeleting = async ({
-    saleInvoice,
+    oldSaleInvoice,
     tenantId,
   }: ISaleInvoiceDeletePayload) => {
     // Can't continue if the old invoice not published.
-    if (!saleInvoice.isDelivered) return;
+    if (!oldSaleInvoice.isDelivered) return;
 
     await this.salesLockingGuard.transactionLockingGuard(
       tenantId,
-      saleInvoice.invoiceDate
+      oldSaleInvoice.invoiceDate
     );
   };
 

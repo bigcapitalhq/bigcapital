@@ -73,13 +73,13 @@ export interface InvoicePaperTemplateProps {
   balanceDue?: string;
 
   // Footer
-  termsConditionsLabel: string;
-  showTermsConditions: boolean;
-  termsConditions: string;
+  termsConditionsLabel?: string;
+  showTermsConditions?: boolean;
+  termsConditions?: string;
 
-  statementLabel: string;
-  showStatement: boolean;
-  statement: string;
+  statementLabel?: string;
+  showStatement?: boolean;
+  statement?: string;
 
   lines?: Array<PapaerLine>;
   taxes?: Array<PaperTax>;
@@ -99,16 +99,16 @@ export function InvoicePaperTemplate({
 
   dueDate = 'September 3, 2024',
   dueDateLabel = 'Date due',
-  showDueDate,
+  showDueDate = true,
 
   dateIssue = 'September 3, 2024',
   dateIssueLabel = 'Date of issue',
-  showDateIssue,
+  showDateIssue = true,
 
   // dateIssue,
   invoiceNumberLabel = 'Invoice number',
   invoiceNumber = '346D3D40-0001',
-  showInvoiceNumber,
+  showInvoiceNumber = true,
 
   // Address
   showBillingToAddress = true,
@@ -207,7 +207,7 @@ export function InvoicePaperTemplate({
           )}
         </PaperTemplate.TermsList>
 
-        <Group spacing={10}>
+        <PaperTemplate.AddressesGroup>
           {showBilledFromAddress && (
             <PaperTemplate.Address
               items={[<strong>{companyName}</strong>, ...billedFromAddres]}
@@ -218,7 +218,7 @@ export function InvoicePaperTemplate({
               items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
             />
           )}
-        </Group>
+        </PaperTemplate.AddressesGroup>
 
         <Stack spacing={0}>
           <PaperTemplate.Table
@@ -281,12 +281,12 @@ export function InvoicePaperTemplate({
         </Stack>
 
         <Stack spacing={0}>
-          {showTermsConditions && (
+          {showTermsConditions && termsConditions && (
             <PaperTemplate.Statement label={termsConditionsLabel}>
               {termsConditions}
             </PaperTemplate.Statement>
           )}
-          {showStatement && (
+          {showStatement && statement && (
             <PaperTemplate.Statement label={statementLabel}>
               {statement}
             </PaperTemplate.Statement>

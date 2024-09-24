@@ -1,0 +1,29 @@
+.root {
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  min-height: 120px;
+  padding: 10px;
+  justify-content: center;
+  position: relative;
+
+  &:hover .removeButton{
+    visibility: visible;
+  }
+}
+
+.previewImage {
+  max-width: 200px;
+}
+
+.title{
+  font-size: 13px;
+  color: #738091;
+}
+
+.removeButton{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border-radius: 32px;
+  visibility: hidden;
+}

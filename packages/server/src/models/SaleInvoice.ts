@@ -413,6 +413,10 @@ export default class SaleInvoice extends mixin(TenantModel, [
     const TaxRateTransaction = require('models/TaxRateTransaction');
     const Document = require('models/Document');
     const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
+    const {
+      TransactionPaymentServiceEntry,
+    } = require('models/TransactionPaymentServiceEntry');
+    const { PdfTemplate } = require('models/PdfTemplate');
 
     return {
       /**
@@ -509,7 +513,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
         join: {
           from: 'sales_invoices.warehouseId',
           to: 'warehouses.id',
-        }
+        },
       },
 
       /**
@@ -566,11 +570,41 @@ export default class SaleInvoice extends mixin(TenantModel, [
         modelClass: MatchedBankTransaction,
         join: {
           from: 'sales_invoices.id',
-          to: "matched_bank_transactions.referenceId",
+          to: 'matched_bank_transactions.referenceId',
         },
         filter(query) {
           query.where('reference_type', 'SaleInvoice');
         },
+      },
+
+      /**
+       * Sale invoice may belongs to payment methods entries.
+       */
+      paymentMethods: {
+        relation: Model.HasManyRelation,
+        modelClass: TransactionPaymentServiceEntry,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'transactions_payment_methods.referenceId',
+        },
+        beforeInsert: (model) => {
+          model.referenceType = 'SaleInvoice';
+        },
+        filter: (query) => {
+          query.where('reference_type', 'SaleInvoice');
+        },
+      },
+
+      /**
+       * Sale invoice may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplate,
+        join: {
+          from: 'sales_invoices.pdfTemplateId',
+          to: 'pdf_templates.id',
+        }
       },
     };
   }

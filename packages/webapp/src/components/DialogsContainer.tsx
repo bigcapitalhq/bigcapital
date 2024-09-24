@@ -52,6 +52,8 @@ import PaymentMailDialog from '@/containers/Sales/PaymentsReceived/PaymentMailDi
 import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
 import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
 import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
+import { SharePaymentLinkDialog } from '@/containers/PaymentLink/dialogs/SharePaymentLinkDialog/SharePaymentLinkDialog';
+import { SelectPaymentMethodsDialog } from '@/containers/PaymentLink/dialogs/SelectPaymentMethodsDialog/SelectPaymentMethodsDialog';
 
 /**
  * Dialogs container.
@@ -150,6 +152,10 @@ export default function DialogsContainer() {
       <RuleFormDialog dialogName={DialogsName.BankRuleForm} />
       <DisconnectBankAccountDialog
         dialogName={DialogsName.DisconnectBankAccountConfirmation}
+      />
+      <SharePaymentLinkDialog dialogName={DialogsName.SharePaymentLink} />
+      <SelectPaymentMethodsDialog
+        dialogName={DialogsName.SelectPaymentMethod}
       />
     </div>
   );

@@ -20,6 +20,7 @@ import {
 import { useProjects } from '@/containers/Projects/hooks';
 import { useTaxRates } from '@/hooks/query/taxRates';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { useGetPaymentServices } from '@/hooks/query/payment-services';
 
 const InvoiceFormContext = createContext();
 
@@ -59,6 +60,10 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   // Fetches branding templates of invoice.
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
     useGetPdfTemplates({ resource: 'SaleInvoice' });
+
+  // Fetches the payment services.
+  const { data: paymentServices, isLoading: isPaymentServicesLoading } =
+    useGetPaymentServices();
 
   const newInvoice = !isEmpty(estimate)
     ? transformToEditForm({
@@ -110,7 +115,10 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehouesLoading || isBranchesLoading || isProjectsLoading || isBrandingTemplatesLoading;
+    isWarehouesLoading ||
+    isBranchesLoading ||
+    isProjectsLoading ||
+    isBrandingTemplatesLoading;
 
   const provider = {
     invoice,
@@ -142,6 +150,10 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     editInvoiceMutate,
     setSubmitPayload,
     isNewMode,
+
+    // Payment Services
+    paymentServices,
+    isPaymentServicesLoading,
   };
 
   return (

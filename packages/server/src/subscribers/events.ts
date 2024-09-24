@@ -163,6 +163,9 @@ export default {
 
     onMailReminderSend: 'onSaleInvoiceMailReminderSend',
     onMailReminderSent: 'onSaleInvoiceMailReminderSent',
+
+    onPublicLinkGenerating: 'onPublicSharableLinkGenerating',
+    onPublicLinkGenerated: 'onPublicSharableLinkGenerated',
   },
 
   /**
@@ -699,4 +702,35 @@ export default {
     onAssignedDefault: 'onPdfTemplateAssignedDefault',
     onAssigningDefault: 'onPdfTemplateAssigningDefault',
   },
+
+  // Payment method.
+  paymentMethod: {
+    onEditing: 'onPaymentMethodEditing',
+    onEdited: 'onPaymentMethodEdited',
+
+    onDeleted: 'onPaymentMethodDeleted',
+  },
+
+  // Payment methods integrations
+  paymentIntegrationLink: {
+    onPaymentIntegrationLink: 'onPaymentIntegrationLink',
+    onPaymentIntegrationDeleteLink: 'onPaymentIntegrationDeleteLink'
+  },
+
+  // Stripe Payment Integration
+  stripeIntegration: {
+    onAccountCreated: 'onStripeIntegrationAccountCreated',
+    onAccountDeleted: 'onStripeIntegrationAccountDeleted',
+
+    onPaymentLinkCreated: 'onStripePaymentLinkCreated',
+    onPaymentLinkInactivated: 'onStripePaymentLinkInactivated',
+
+    onOAuthCodeGranted: 'onStripeOAuthCodeGranted',
+  },
+
+  // Stripe Payment Webhooks
+  stripeWebhooks: {
+    onCheckoutSessionCompleted: 'onStripeCheckoutSessionCompleted',
+    onAccountUpdated: 'onStripeAccountUpdated'
+  }
 };

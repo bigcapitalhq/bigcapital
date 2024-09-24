@@ -69,6 +69,7 @@ export const defaultInvoice = {
   pdf_template_id: '',
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
   attachments: [],
+  payment_methods: {},
 };
 
 // Invoice entry request schema.
@@ -107,6 +108,7 @@ export function transformToEditForm(invoice) {
       : TaxType.Exclusive,
     entries,
     attachments: transformAttachmentsToForm(invoice),
+    payment_methods: transformPaymentMethodsToForm(invoice?.payment_methods),
   };
 }
 
@@ -223,8 +225,37 @@ export function transformValueToRequest(values) {
     entries: transformEntriesToRequest(values.entries),
     delivered: false,
     attachments: transformAttachmentsToRequest(values),
+    payment_methods: transformPaymentMethodsToRequest(values?.payment_methods),
   };
 }
+
+/**
+ * Transformes the form payment methods to request.
+ * @param {Record<string, { enable: boolean }>} paymentMethods
+ * @returns {Array<{ payment_integration_id: string; enable: boolean }>}
+ */
+const transformPaymentMethodsToRequest = (
+  paymentMethods: Record<string, { enable: boolean }>,
+): Array<{ payment_integration_id: string; enable: boolean }> => {
+  return Object.entries(paymentMethods).map(([paymentMethodId, method]) => ({
+    payment_integration_id: paymentMethodId,
+    enable: method.enable,
+  }));
+};
+
+/**
+ * Transformes payment methods from request to form.
+ * @param {Array<{ payment_integration_id: number; enable: boolean }>} paymentMethods
+ * @returns {Record<string, { enable: boolean }>}
+ */
+const transformPaymentMethodsToForm = (
+  paymentMethods: Array<{ payment_integration_id: number; enable: boolean }>,
+): Record<string, { enable: boolean }> => {
+  return paymentMethods?.reduce((acc, method) => {
+    acc[method.payment_integration_id] = { enable: method.enable };
+    return acc;
+  }, {});
+};
 
 export const useSetPrimaryWarehouseToForm = () => {
   const { setFieldValue } = useFormikContext();

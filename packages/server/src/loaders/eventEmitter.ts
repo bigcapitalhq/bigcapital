@@ -117,8 +117,10 @@ import { DisconnectPlaidItemOnAccountDeleted } from '@/services/Banking/BankAcco
 import { LoopsEventsSubscriber } from '@/services/Loops/LoopsEventsSubscriber';
 import { DeleteUncategorizedTransactionsOnAccountDeleting } from '@/services/Banking/BankAccounts/events/DeleteUncategorizedTransactionsOnAccountDeleting';
 import { SeedInitialDemoAccountDataOnOrgBuild } from '@/services/OneClickDemo/events/SeedInitialDemoAccountData';
-import { TriggerInvalidateCacheOnSubscriptionChange } from '@/services/Subscription/events/TriggerInvalidateCacheOnSubscriptionChange';
 import { EventsTrackerListeners } from '@/services/EventsTracker/events/events';
+import { InvoicePaymentIntegrationSubscriber } from '@/services/Sales/Invoices/subscribers/InvoicePaymentIntegrationSubscriber';
+import { StripeWebhooksSubscriber } from '@/services/StripePayment/events/StripeWebhooksSubscriber';
+import { SeedStripeAccountsOnOAuthGrantedSubscriber } from '@/services/StripePayment/events/SeedStripeAccounts';
 
 export default () => {
   return new EventPublisher();
@@ -252,7 +254,6 @@ export const susbcribers = () => {
     // Subscription
     SubscribeFreeOnSignupCommunity,
     SendVerfiyMailOnSignUp,
-    TriggerInvalidateCacheOnSubscriptionChange,
 
     // Attachments
     AttachmentsOnSaleInvoiceCreated,
@@ -290,6 +291,11 @@ export const susbcribers = () => {
 
     // Demo Account
     SeedInitialDemoAccountDataOnOrgBuild,
+
+    // Stripe Payment
+    InvoicePaymentIntegrationSubscriber,
+    StripeWebhooksSubscriber,
+    SeedStripeAccountsOnOAuthGrantedSubscriber,
 
     ...EventsTrackerListeners
   ];
