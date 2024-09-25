@@ -3,20 +3,30 @@ import {
   PaperTemplate,
   PaperTemplateProps,
 } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import {
+  DefaultPdfTemplateTerms,
+  DefaultPdfTemplateItemDescription,
+  DefaultPdfTemplateStatement,
+  DefaultPdfTemplateItemName,
+} from '@/constants/PdfTemplates';
 
 export interface EstimatePaperTemplateProps extends PaperTemplateProps {
+  // # Estimate number
   estimateNumebr?: string;
   estimateNumberLabel?: string;
   showEstimateNumber?: boolean;
 
+  // # Expiration date
   expirationDate?: string;
   showExpirationDate?: boolean;
   expirationDateLabel?: string;
 
+  // # Estimate date
   estimateDateLabel?: string;
   showEstimateDate?: boolean;
   estimateDate?: string;
 
+  // # Customer name
   companyName?: string;
 
   // Address
@@ -36,11 +46,12 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
-  // Statements
+  // # Statements
   showCustomerNote?: boolean;
   customerNote?: string;
   customerNoteLabel?: string;
 
+  // # Terms & conditions
   showTermsConditions?: boolean;
   termsConditions?: string;
   termsConditionsLabel?: string;
@@ -91,17 +102,17 @@ export function EstimatePaperTemplate({
   showSubtotal = true,
 
   showCustomerNote = true,
-  customerNote = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  customerNote = DefaultPdfTemplateStatement,
   customerNoteLabel = 'Customer Note',
 
   showTermsConditions = true,
-  termsConditions = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  termsConditions = DefaultPdfTemplateTerms,
   termsConditionsLabel = 'Terms & Conditions',
 
   lines = [
     {
-      item: 'Simply dummy text',
-      description: 'Simply dummy text of the printing and typesetting',
+      item: DefaultPdfTemplateItemName,
+      description: DefaultPdfTemplateItemDescription,
       rate: '1',
       quantity: '1000',
       total: '$1000.00',
@@ -165,7 +176,7 @@ export function EstimatePaperTemplate({
           <PaperTemplate.Table
             columns={[
               { label: 'Item', accessor: 'item' },
-              { label: 'Description', accessor: 'item' },
+              { label: 'Description', accessor: 'description' },
               { label: 'Rate', accessor: 'rate', align: 'right' },
               { label: 'Total', accessor: 'total', align: 'right' },
             ]}

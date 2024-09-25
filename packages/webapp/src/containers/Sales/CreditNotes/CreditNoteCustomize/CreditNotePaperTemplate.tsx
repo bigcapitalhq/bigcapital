@@ -1,8 +1,14 @@
-import { Group, Stack } from '@/components';
+import { Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
 } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import {
+  DefaultPdfTemplateTerms,
+  DefaultPdfTemplateItemDescription,
+  DefaultPdfTemplateStatement,
+  DefaultPdfTemplateItemName,
+} from '@/constants/PdfTemplates';
 
 export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
   // Address
@@ -95,18 +101,18 @@ export function CreditNotePaperTemplate({
 
   // Customer note
   showCustomerNote = true,
-  customerNote = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  customerNote = DefaultPdfTemplateStatement,
   customerNoteLabel = 'Customer Note',
 
   // Terms & conditions
   showTermsConditions = true,
-  termsConditions = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  termsConditions = DefaultPdfTemplateTerms,
   termsConditionsLabel = 'Terms & Conditions',
 
   lines = [
     {
-      item: 'Simply dummy text',
-      description: 'Simply dummy text of the printing and typesetting',
+      item: DefaultPdfTemplateItemName,
+      description: DefaultPdfTemplateItemDescription,
       rate: '1',
       quantity: '1000',
       total: '$1000.00',
@@ -161,7 +167,7 @@ export function CreditNotePaperTemplate({
           <PaperTemplate.Table
             columns={[
               { label: 'Item', accessor: 'item' },
-              { label: 'Description', accessor: 'item' },
+              { label: 'Description', accessor: 'description' },
               { label: 'Rate', accessor: 'rate', align: 'right' },
               { label: 'Total', accessor: 'total', align: 'right' },
             ]}

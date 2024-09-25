@@ -1,4 +1,4 @@
-import { Group, Stack } from '@/components';
+import { Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,

@@ -3,6 +3,12 @@ import {
   PaperTemplate,
   PaperTemplateProps,
 } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import {
+  DefaultPdfTemplateTerms,
+  DefaultPdfTemplateItemDescription,
+  DefaultPdfTemplateStatement,
+  DefaultPdfTemplateItemName,
+} from '@/constants/PdfTemplates';
 
 export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
   // Addresses
@@ -22,7 +28,7 @@ export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
-// Customer Note
+  // Customer Note
   showCustomerNote?: boolean;
   customerNote?: string;
   customerNoteLabel?: string;
@@ -93,17 +99,17 @@ export function ReceiptPaperTemplate({
   showSubtotal = true,
 
   showCustomerNote = true,
-  customerNote = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
   customerNoteLabel = 'Customer Note',
+  customerNote = DefaultPdfTemplateStatement,
 
   showTermsConditions = true,
-  termsConditions = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
   termsConditionsLabel = 'Terms & Conditions',
+  termsConditions = DefaultPdfTemplateTerms,
 
   lines = [
     {
-      item: 'Simply dummy text',
-      description: 'Simply dummy text of the printing and typesetting',
+      item: DefaultPdfTemplateItemName,
+      description: DefaultPdfTemplateItemDescription,
       rate: '1',
       quantity: '1000',
       total: '$1000.00',
@@ -156,7 +162,7 @@ export function ReceiptPaperTemplate({
           <PaperTemplate.Table
             columns={[
               { label: 'Item', accessor: 'item' },
-              { label: 'Description', accessor: 'item' },
+              { label: 'Description', accessor: 'description' },
               { label: 'Rate', accessor: 'rate', align: 'right' },
               { label: 'Total', accessor: 'total', align: 'right' },
             ]}

@@ -1,7 +1,12 @@
 import React from 'react';
 import { PaperTemplate, PaperTemplateTotalBorder } from './PaperTemplate';
 import { Stack } from '@/components';
-
+import {
+  DefaultPdfTemplateTerms,
+  DefaultPdfTemplateItemDescription,
+  DefaultPdfTemplateStatement,
+  DefaultPdfTemplateItemName,
+} from '@/constants/PdfTemplates';
 interface PapaerLine {
   item?: string;
   description?: string;
@@ -145,12 +150,12 @@ export function InvoicePaperTemplate({
   // Footer paragraphs.
   termsConditionsLabel = 'Terms & Conditions',
   showTermsConditions = true,
-  termsConditions = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  termsConditions = DefaultPdfTemplateTerms,
 
   lines = [
     {
-      item: 'Simply dummy text',
-      description: 'Simply dummy text of the printing and typesetting',
+      item: DefaultPdfTemplateItemName,
+      description: DefaultPdfTemplateItemDescription,
       rate: '1',
       quantity: '1000',
       total: '$1000.00',
@@ -163,7 +168,7 @@ export function InvoicePaperTemplate({
 
   statementLabel = 'Statement',
   showStatement = true,
-  statement = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
+  statement = DefaultPdfTemplateStatement,
   billedToAddress = [
     'Bigcapital Technology, Inc.',
     '131 Continental Dr Suite 305 Newark,',
@@ -286,6 +291,7 @@ export function InvoicePaperTemplate({
               {termsConditions}
             </PaperTemplate.Statement>
           )}
+
           {showStatement && statement && (
             <PaperTemplate.Statement label={statementLabel}>
               {statement}
