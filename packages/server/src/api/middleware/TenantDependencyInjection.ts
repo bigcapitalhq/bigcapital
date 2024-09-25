@@ -50,7 +50,8 @@ export const injectI18nUtils = (req) => {
 export const initalizeTenantServices = async (tenantId: number) => {
   const tenant = await Tenant.query()
     .findById(tenantId)
-    .withGraphFetched('metadata');
+    .withGraphFetched('metadata')
+    .throwIfNotFound();
 
   const tenantServices = Container.get(TenancyService);
   const tenantsManager = Container.get(TenantsManagerService);

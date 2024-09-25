@@ -87,7 +87,10 @@ export default () => {
   app.use('/account', Container.get(Account).router());
   app.use('/webhooks', Container.get(Webhooks).router());
   app.use('/demo', Container.get(OneClickDemoController).router());
-  app.use(Container.get(PublicSharableLinkController).router());
+  app.use(
+    '/payment-links',
+    Container.get(PublicSharableLinkController).router()
+  );
 
   // - Dashboard routes.
   // ---------------------------

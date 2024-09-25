@@ -1,20 +1,21 @@
-import config from '@/config';
-import { StripePaymentService } from './StripePaymentService';
+import { Inject, Service } from 'typedi';
+import { StripePaymentService } from '../StripePayment/StripePaymentService';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { ISaleInvoice } from '@/interfaces';
-import { Inject, Service } from 'typedi';
 import { StripeInvoiceCheckoutSessionPOJO } from '@/interfaces/StripePayment';
 import { PaymentLink } from '@/system/models';
+import { initializeTenantSettings } from '@/api/middleware/SettingsMiddleware';
+import config from '@/config';
 
 const origin = 'http://localhost';
 
 @Service()
 export class CreateInvoiceCheckoutSession {
   @Inject()
-  private stripePaymentService: StripePaymentService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  private tenancy: HasTenancyService;
+  private stripePaymentService: StripePaymentService;
 
   /**
    * Creates a new Stripe checkout session from the given sale invoice.
@@ -23,17 +24,18 @@ export class CreateInvoiceCheckoutSession {
    * @returns {Promise<StripeInvoiceCheckoutSessionPOJO>}
    */
   async createInvoiceCheckoutSession(
-    tenantId: number,
-    publicPaymentLinkId: number
+    publicPaymentLinkId: string
   ): Promise<StripeInvoiceCheckoutSessionPOJO> {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
-
     // Retrieves the payment link from the given id.
     const paymentLink = await PaymentLink.query()
       .findOne('linkId', publicPaymentLinkId)
       .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
 
+    const tenantId = paymentLink.tenantId;
+    await initializeTenantSettings(tenantId);
+
+    const { SaleInvoice } = this.tenancy.models(tenantId);
     // Retrieves the invoice from associated payment link.
     const invoice = await SaleInvoice.query()
       .findById(paymentLink.resourceId)

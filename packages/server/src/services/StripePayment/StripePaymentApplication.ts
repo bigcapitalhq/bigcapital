@@ -1,6 +1,4 @@
 import { Inject } from 'typedi';
-import { CreateInvoiceCheckoutSession } from './CreateInvoiceCheckoutSession';
-import { StripeInvoiceCheckoutSessionPOJO } from '@/interfaces/StripePayment';
 import { CreateStripeAccountService } from './CreateStripeAccountService';
 import { CreateStripeAccountLinkService } from './CreateStripeAccountLink';
 import { CreateStripeAccountDTO } from './types';
@@ -13,9 +11,6 @@ export class StripePaymentApplication {
 
   @Inject()
   private createStripeAccountLinkService: CreateStripeAccountLinkService;
-
-  @Inject()
-  private createInvoiceCheckoutSessionService: CreateInvoiceCheckoutSession;
 
   @Inject()
   private exchangeStripeOAuthTokenService: ExchangeStripeOAuthTokenService;
@@ -48,22 +43,6 @@ export class StripePaymentApplication {
     return this.createStripeAccountLinkService.createAccountLink(
       tenantId,
       stripeAccountId
-    );
-  }
-
-  /**
-   * Creates the Stripe checkout session from the given sale invoice.
-   * @param {number} tenantId
-   * @param {string} paymentLinkId
-   * @returns {Promise<StripeInvoiceCheckoutSessionPOJO>}
-   */
-  public createSaleInvoiceCheckoutSession(
-    tenantId: number,
-    paymentLinkId: number
-  ): Promise<StripeInvoiceCheckoutSessionPOJO> {
-    return this.createInvoiceCheckoutSessionService.createInvoiceCheckoutSession(
-      tenantId,
-      paymentLinkId
     );
   }
 

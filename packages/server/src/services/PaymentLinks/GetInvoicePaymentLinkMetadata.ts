@@ -4,7 +4,7 @@ import { ServiceError } from '@/exceptions';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { PaymentLink } from '@/system/models';
-import { GetInvoicePaymentLinkMetaTransformer } from './GetInvoicePaymentLinkTransformer';
+import { GetInvoicePaymentLinkMetaTransformer } from '../Sales/Invoices/GetInvoicePaymentLinkTransformer';
 import { initalizeTenantServices } from '@/api/middleware/TenantDependencyInjection';
 
 @Service()
