@@ -27,10 +27,6 @@ export class StripeIntegrationController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.createAccountLink.bind(this))
     );
-    router.post(
-      '/:linkId/create_checkout_session',
-      this.createCheckoutSession.bind(this)
-    );
     return router;
   }
 
@@ -70,33 +66,6 @@ export class StripeIntegrationController extends BaseController {
       await this.stripePaymentApp.exchangeStripeOAuthToken(tenantId, code);
 
       return res.status(200).send({});
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Creates a Stripe checkout session for the given payment link id.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   * @returns {Promise<Response|void>}
-   */
-  public async createCheckoutSession(
-    req: Request<{ linkId: number }>,
-    res: Response,
-    next: NextFunction
-  ) {
-    const { linkId } = req.params;
-    const { tenantId } = req;
-
-    try {
-      const session =
-        await this.stripePaymentApp.createSaleInvoiceCheckoutSession(
-          tenantId,
-          linkId
-        );
-      return res.status(200).send(session);
     } catch (error) {
       next(error);
     }

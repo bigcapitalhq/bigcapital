@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { body, param } from 'express-validator';
+import { param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
-import { GetInvoicePaymentLinkMetadata } from '@/services/Sales/Invoices/GetInvoicePaymentLinkMetadata';
+import { PaymentLinksApplication } from '@/services/PaymentLinks/PaymentLinksApplication';
 
 @Service()
 export class PublicSharableLinkController extends BaseController {
   @Inject()
-  private getSharableLinkMetaService: GetInvoicePaymentLinkMetadata;
+  private paymentLinkApp: PaymentLinksApplication;
 
   /**
    * Router constructor.
@@ -16,11 +16,17 @@ export class PublicSharableLinkController extends BaseController {
     const router = Router();
 
     router.get(
-      '/sharable-links/meta/invoice/:linkId',
-      [param('linkId').exists()],
+      '/:paymentLinkId/invoice',
+      [param('paymentLinkId').exists()],
       this.validationResult,
       this.getPaymentLinkPublicMeta.bind(this),
       this.validationResult
+    );
+    router.post(
+      '/:paymentLinkId/stripe_checkout_session',
+      [param('paymentLinkId').exists()],
+      this.validationResult,
+      this.createInvoicePaymentLinkCheckoutSession.bind(this)
     );
     return router;
   }
@@ -33,17 +39,43 @@ export class PublicSharableLinkController extends BaseController {
    * @returns
    */
   public async getPaymentLinkPublicMeta(
-    req: Request,
+    req: Request<{ paymentLinkId: string }>,
     res: Response,
     next: NextFunction
   ) {
-    const { linkId } = req.params;
+    const { paymentLinkId } = req.params;
 
     try {
-      const data =
-        await this.getSharableLinkMetaService.getInvoicePaymentLinkMeta(linkId);
+      const data = await this.paymentLinkApp.getInvoicePaymentLink(
+        paymentLinkId
+      );
 
       return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Creates a Stripe checkout session for the given payment link id.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Promise<Response|void>}
+   */
+  public async createInvoicePaymentLinkCheckoutSession(
+    req: Request<{ paymentLinkId: string }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { paymentLinkId } = req.params;
+
+    try {
+      const session =
+        await this.paymentLinkApp.createInvoicePaymentCheckoutSession(
+          paymentLinkId
+        );
+      return res.status(200).send(session);
     } catch (error) {
       next(error);
     }

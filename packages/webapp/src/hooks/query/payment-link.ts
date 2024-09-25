@@ -10,6 +10,8 @@ import {
 import useApiRequest from '../useRequest';
 import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 
+const GetPaymentLinkInvoice = 'GetPaymentLinkInvoice';
+
 // Create Payment Link
 // ------------------------------------
 interface CreatePaymentLinkValues {
@@ -101,13 +103,49 @@ export function useGetInvoicePaymentLink(
   const apiRequest = useApiRequest();
 
   return useQuery<GetInvoicePaymentLinkResponse, Error>(
-    ['sharable-link-meta', linkId],
+    [GetPaymentLinkInvoice, linkId],
     () =>
       apiRequest
-        .get(`/sharable-links/meta/invoice/${linkId}`)
+        .get(`/payment-links/${linkId}/invoice`)
         .then((res) => transformToCamelCase(res.data?.data)),
     {
       ...options,
     },
   );
 }
+
+// Create Stripe Checkout Session.
+// ------------------------------------
+interface CreateCheckoutSessionValues {
+  linkId: string;
+}
+interface CreateCheckoutSessionResponse {
+  sessionId: string;
+  publishableKey: string;
+  redirectTo: string;
+}
+export const useCreateStripeCheckoutSession = (
+  options?: UseMutationOptions<
+    CreateCheckoutSessionResponse,
+    Error,
+    CreateCheckoutSessionValues
+  >,
+): UseMutationResult<
+  CreateCheckoutSessionResponse,
+  Error,
+  CreateCheckoutSessionValues
+> => {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (values: CreateCheckoutSessionValues) => {
+      return apiRequest
+        .post(`/payment-links/${values.linkId}/stripe_checkout_session`, values)
+        .then(
+          (res) =>
+            transformToCamelCase(res.data) as CreateCheckoutSessionResponse,
+        );
+    },
+    { ...options },
+  );
+};

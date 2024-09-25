@@ -3,7 +3,7 @@ import clsx from 'classnames';
 import { AppToaster, Box, Group, Stack } from '@/components';
 import { usePaymentPortalBoot } from './PaymentPortalBoot';
 import { useDrawerActions } from '@/hooks/state';
-import { useCreateStripeCheckoutSession } from '@/hooks/query/stripe-integration';
+import { useCreateStripeCheckoutSession } from '@/hooks/query/payment-link';
 import { DRAWERS } from '@/constants/drawers';
 import styles from './PaymentPortal.module.scss';
 

@@ -107,46 +107,6 @@ export const useCreateStripeAccount = (
   );
 };
 
-// Create Stripe Checkout Session.
-// ------------------------------------
-interface CreateCheckoutSessionValues {
-  linkId: string;
-}
-
-interface CreateCheckoutSessionResponse {
-  sessionId: string;
-  publishableKey: string;
-  redirectTo: string;
-}
-
-export const useCreateStripeCheckoutSession = (
-  options?: UseMutationOptions<
-    CreateCheckoutSessionResponse,
-    Error,
-    CreateCheckoutSessionValues
-  >,
-): UseMutationResult<
-  CreateCheckoutSessionResponse,
-  Error,
-  CreateCheckoutSessionValues
-> => {
-  const apiRequest = useApiRequest();
-
-  return useMutation(
-    (values: CreateCheckoutSessionValues) => {
-      return apiRequest
-        .post(
-          `/stripe_integration/${values.linkId}/create_checkout_session`,
-          values,
-        )
-        .then(
-          (res) =>
-            transformToCamelCase(res.data) as CreateCheckoutSessionResponse,
-        );
-    },
-    { ...options },
-  );
-};
 
 // Create Stripe Account OAuth Link.
 // ------------------------------------
