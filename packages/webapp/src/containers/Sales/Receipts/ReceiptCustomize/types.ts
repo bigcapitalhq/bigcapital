@@ -7,7 +7,6 @@ export interface ReceiptCustomizeValues extends BrandingTemplateValues {
 
   // Company Logo
   showCompanyLogo?: boolean;
-  companyLogo?: string;
 
   // Receipt Number
   showReceiptNumber?: boolean;

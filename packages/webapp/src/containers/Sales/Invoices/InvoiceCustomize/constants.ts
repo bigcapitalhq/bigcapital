@@ -1,3 +1,5 @@
+export const MANAGE_LINK_URL = '/preferences/payment-methods';
+
 export const initialValues = {
   templateName: '',
 

@@ -53,10 +53,14 @@ export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
 }
 
 export function CreditNotePaperTemplate({
+  // # Colors
   primaryColor,
   secondaryColor,
+
+  // # Company Logo
   showCompanyLogo = true,
-  companyLogo,
+  companyLogoUri = '',
+
   companyName = 'Bigcapital Technology, Inc.',
 
   // Address
@@ -123,7 +127,7 @@ export function CreditNotePaperTemplate({
       primaryColor={primaryColor}
       secondaryColor={secondaryColor}
       showCompanyLogo={showCompanyLogo}
-      companyLogo={companyLogo}
+      companyLogoUri={companyLogoUri}
       bigtitle={'Credit Note'}
     >
       <Stack spacing={24}>

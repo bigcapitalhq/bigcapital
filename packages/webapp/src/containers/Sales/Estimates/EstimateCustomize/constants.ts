@@ -1,14 +1,14 @@
 export const initialValues = {
   templateName: '',
-  
+
   // Colors
   primaryColor: '#2c3dd8',
   secondaryColor: '#2c3dd8',
 
   // Company logo.
   showCompanyLogo: true,
-  companyLogo:
-    'https://cdn-development.mercury.com/demo-assets/avatars/mercury-demo-dark.png',
+  companyLogoKey: '',
+  companyLogoUri: '',
 
   // Top details.
   showEstimateNumber: true,

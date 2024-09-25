@@ -7,7 +7,6 @@ export interface CreditNoteCustomizeValues extends BrandingTemplateValues {
 
   // Company Logo
   showCompanyLogo?: boolean;
-  companyLogo?: string;
 
   // Entries
   itemNameLabel?: string;

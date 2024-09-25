@@ -41,10 +41,15 @@ export interface PaymentReceivedPaperTemplateProps extends PaperTemplateProps {
 }
 
 export function PaymentReceivedPaperTemplate({
+  // # Colors
   primaryColor,
   secondaryColor,
+
+  // # Company logo
   showCompanyLogo = true,
-  companyLogo,
+  companyLogoUri,
+
+  // # Company name
   companyName = 'Bigcapital Technology, Inc.',
 
   billedToAddress = [
@@ -94,7 +99,7 @@ export function PaymentReceivedPaperTemplate({
       primaryColor={primaryColor}
       secondaryColor={secondaryColor}
       showCompanyLogo={showCompanyLogo}
-      companyLogo={companyLogo}
+      companyLogoUri={companyLogoUri}
       bigtitle={'Payment'}
     >
       <Stack spacing={24}>

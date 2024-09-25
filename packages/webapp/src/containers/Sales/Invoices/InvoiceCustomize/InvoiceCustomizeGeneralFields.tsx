@@ -13,6 +13,10 @@ import { CreditCardIcon } from '@/icons/CreditCardIcon';
 import { Overlay } from './Overlay';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 import { BrandingCompanyLogoUploadField } from '@/containers/ElementCustomize/components/BrandingCompanyLogoUploadField';
+import { Link } from 'react-router-dom';
+import { MANAGE_LINK_URL } from './constants';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useDrawerActions } from '@/hooks/state';
 
 export function InvoiceCustomizeGeneralField() {
   const isTemplateNameFilled = useIsTemplateNamedFilled();
@@ -93,6 +97,13 @@ export function InvoiceCustomizeGeneralField() {
 }
 
 function InvoiceCustomizePaymentManage() {
+  const { name } = useDrawerContext();
+  const { closeDrawer } = useDrawerActions();
+
+  const handleLinkClick = () => {
+    closeDrawer(name);
+  };
+
   return (
     <Group
       style={{
@@ -108,9 +119,13 @@ function InvoiceCustomizePaymentManage() {
         <Text>Accept payment methods</Text>
       </Group>
 
-      <a style={{ fontSize: 13 }} href={'#'}>
+      <Link
+        style={{ fontSize: 13 }}
+        to={MANAGE_LINK_URL}
+        onClick={handleLinkClick}
+      >
         Manage
-      </a>
+      </Link>
     </Group>
   );
 }
