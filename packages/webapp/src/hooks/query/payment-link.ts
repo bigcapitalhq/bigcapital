@@ -50,7 +50,6 @@ export function useCreatePaymentLink(
   );
 }
 
-
 // Get Invoice Payment Link
 // -----------------------------------------
 export interface GetInvoicePaymentLinkResponse {
@@ -81,6 +80,12 @@ export interface GetInvoicePaymentLinkResponse {
     rateFormatted: string;
     total: number;
     totalFormatted: string;
+  }>;
+  taxes: Array<{
+    name: string;
+    taxRateAmount: number;
+    taxRateAmountFormatted: string;
+    taxRateCode: string;
   }>;
 }
 /**

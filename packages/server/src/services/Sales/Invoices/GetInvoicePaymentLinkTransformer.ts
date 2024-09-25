@@ -1,4 +1,5 @@
 import { ItemEntryTransformer } from './ItemEntryTransformer';
+import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
 import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
 
 export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer {
@@ -37,6 +38,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
       'invoiceMessage',
       'termsConditions',
       'entries',
+      'taxes',
     ];
   };
 
@@ -58,6 +60,22 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
       invoice.entries,
       new GetInvoicePaymentLinkEntryMetaTransformer(),
       {
+        currencyCode: invoice.currencyCode,
+      }
+    );
+  };
+
+  /**
+   * Retrieves the sale invoice entries.
+   * @returns {}
+   */
+  protected taxes = (invoice) => {
+    return this.item(
+      invoice.taxes,
+      new GetInvoicePaymentLinkTaxEntryTransformer(),
+      {
+        subtotal: invoice.subtotal,
+        isInclusiveTax: invoice.isInclusiveTax,
         currencyCode: invoice.currencyCode,
       }
     );
@@ -92,5 +110,15 @@ class GetInvoicePaymentLinkEntryMetaTransformer extends ItemEntryTransformer {
    */
   public excludeAttributes = (): string[] => {
     return ['*'];
+  };
+}
+
+class GetInvoicePaymentLinkTaxEntryTransformer extends SaleInvoiceTaxEntryTransformer {
+  /**
+   * Included attributes.
+   * @returns {Array}
+   */
+  public includeAttributes = (): string[] => {
+    return ['name', 'taxRateCode', 'taxRateAmount', 'taxRateAmountFormatted'];
   };
 }

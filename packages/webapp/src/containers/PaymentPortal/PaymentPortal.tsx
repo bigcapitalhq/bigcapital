@@ -83,6 +83,13 @@ export function PaymentPortal() {
               </Text>
             </Group>
 
+            {sharableLinkMeta?.taxes?.map((tax, key) => (
+              <Group key={key} position={'apart'} className={styles.totalItem}>
+                <Text>{tax?.name}</Text>
+                <Text>{tax?.taxRateAmountFormatted}</Text>
+              </Group>
+            ))}
+
             <Group
               position={'apart'}
               className={clsx(styles.totalItem, styles.borderBottomGray)}
