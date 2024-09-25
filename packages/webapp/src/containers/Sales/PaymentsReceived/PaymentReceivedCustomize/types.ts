@@ -7,7 +7,6 @@ export interface PaymentReceivedCustomizeValues extends BrandingTemplateValues {
 
   // Company Logo
   showCompanyLogo?: boolean;
-  companyLogo?: string;
 
   // Top details.
   showInvoiceNumber?: boolean;

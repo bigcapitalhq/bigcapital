@@ -1,4 +1,4 @@
-import { Group, Stack } from '@/components';
+import { Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
@@ -57,8 +57,10 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
 export function EstimatePaperTemplate({
   primaryColor,
   secondaryColor,
+
   showCompanyLogo = true,
-  companyLogo,
+  companyLogoUri = '',
+
   companyName,
 
   billedToAddress = [
@@ -122,7 +124,7 @@ export function EstimatePaperTemplate({
       primaryColor={primaryColor}
       secondaryColor={secondaryColor}
       showCompanyLogo={showCompanyLogo}
-      companyLogo={companyLogo}
+      companyLogoUri={companyLogoUri}
       bigtitle={'Estimate'}
     >
       <Stack spacing={24}>

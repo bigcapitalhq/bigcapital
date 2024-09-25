@@ -25,6 +25,17 @@ export class PaymentIntegration extends Model {
     return this.paymentEnabled && this.payoutEnabled;
   }
 
+  static get modifiers() {
+    return {
+      /**
+       * Query to filter enabled payment and payout.
+       */
+      fullEnabled(query) {
+        query.where('paymentEnabled', true).andWhere('payoutEnabled', true);
+      },
+    };
+  }
+
   static get jsonSchema() {
     return {
       type: 'object',

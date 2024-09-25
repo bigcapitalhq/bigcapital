@@ -30,6 +30,10 @@ export function PaymentInvoicePreviewContent() {
               rate: entry.rateFormatted,
               total: entry.totalFormatted,
             }))}
+            taxes={sharableLinkMeta?.taxes?.map((tax) => ({
+              label: tax.name,
+              amount: tax.taxRateAmountFormatted,
+            }))}
           />
         </Box>
       </DrawerBody>

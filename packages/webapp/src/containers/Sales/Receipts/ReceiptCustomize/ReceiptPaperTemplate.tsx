@@ -1,4 +1,4 @@
-import { Group, Stack } from '@/components';
+import { Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
@@ -53,10 +53,15 @@ export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
 }
 
 export function ReceiptPaperTemplate({
+  // # Colors
   primaryColor,
   secondaryColor,
+
+  // # Company logo
   showCompanyLogo = true,
-  companyLogo,
+  companyLogoUri,
+
+  // # Company name
   companyName = 'Bigcapital Technology, Inc.',
 
   // # Address
@@ -117,7 +122,7 @@ export function ReceiptPaperTemplate({
       primaryColor={primaryColor}
       secondaryColor={secondaryColor}
       showCompanyLogo={showCompanyLogo}
-      companyLogo={companyLogo}
+      companyLogoUri={companyLogoUri}
       bigtitle={'Receipt'}
     >
       <Stack spacing={24}>

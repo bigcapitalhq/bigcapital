@@ -76,7 +76,6 @@ export function EstimateCustomizeGeneralField() {
                 name={'showCompanyLogo'}
                 label={'Display company logo in the paper'}
                 style={{ fontSize: 14 }}
-                large
                 fastField
               />
             </FFormGroup>

@@ -1,4 +1,4 @@
-import { BrandingTemplateValues } from "@/containers/BrandingTemplates/types";
+import { BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
 
 export interface EstimateCustomizeValues extends BrandingTemplateValues {
   // Colors
@@ -7,7 +7,8 @@ export interface EstimateCustomizeValues extends BrandingTemplateValues {
 
   // Company Logo
   showCompanyLogo?: boolean;
-  companyLogo?: string;
+  companyLogoKey?: string;
+  companyLogoUri?: string;
 
   // Top details.
   estimateNumberLabel?: string;

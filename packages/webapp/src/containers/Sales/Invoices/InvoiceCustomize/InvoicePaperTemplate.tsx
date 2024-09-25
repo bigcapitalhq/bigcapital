@@ -1,6 +1,6 @@
 import React from 'react';
 import { PaperTemplate, PaperTemplateTotalBorder } from './PaperTemplate';
-import { Group, Stack } from '@/components';
+import { Stack } from '@/components';
 
 interface PapaerLine {
   item?: string;
@@ -95,7 +95,7 @@ export function InvoicePaperTemplate({
   companyName = 'Bigcapital Technology, Inc.',
 
   showCompanyLogo = true,
-  companyLogoUri,
+  companyLogoUri = '',
 
   dueDate = 'September 3, 2024',
   dueDateLabel = 'Date due',
@@ -185,7 +185,7 @@ export function InvoicePaperTemplate({
       primaryColor={primaryColor}
       secondaryColor={secondaryColor}
       showCompanyLogo={showCompanyLogo}
-      companyLogo={companyLogoUri}
+      companyLogoUri={companyLogoUri}
       bigtitle={'Invoice'}
     >
       <Stack spacing={24}>

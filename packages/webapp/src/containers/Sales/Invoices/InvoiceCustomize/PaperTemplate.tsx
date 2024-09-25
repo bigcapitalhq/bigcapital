@@ -9,7 +9,7 @@ export interface PaperTemplateProps {
   secondaryColor?: string;
 
   showCompanyLogo?: boolean;
-  companyLogo?: string;
+  companyLogoUri?: string;
   companyName?: string;
 
   bigtitle?: string;
@@ -21,7 +21,7 @@ export function PaperTemplate({
   primaryColor,
   secondaryColor,
   showCompanyLogo,
-  companyLogo,
+  companyLogoUri,
   bigtitle = 'Invoice',
   children,
 }: PaperTemplateProps) {
@@ -32,9 +32,9 @@ export function PaperTemplate({
       <div>
         <h1 className={styles.bigTitle}>{bigtitle}</h1>
 
-        {showCompanyLogo && (
+        {showCompanyLogo && companyLogoUri && (
           <div className={styles.logoWrap}>
-            <img alt="" src={companyLogo} />
+            <img alt="" src={companyLogoUri} />
           </div>
         )}
       </div>
@@ -120,8 +120,8 @@ PaperTemplate.MutedText = () => {};
 PaperTemplate.Text = () => {};
 
 PaperTemplate.AddressesGroup = (props: GroupProps) => {
-  return <Group spacing={10} {...props} className={styles.addressRoot} />
-}
+  return <Group spacing={10} {...props} className={styles.addressRoot} />;
+};
 PaperTemplate.Address = ({
   items,
 }: {

@@ -134,8 +134,3 @@ export function BrandingTemplateForm<T extends BrandingTemplateValues>({
 export const validationSchema = Yup.object().shape({
   templateName: Yup.string().required('Template Name is required'),
 });
-
-
-// Initial values - companyLogoKey, companyLogoUri
-// Form - _companyLogoFile, companyLogoKey, companyLogoUri
-// Request - companyLogoKey
