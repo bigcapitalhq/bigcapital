@@ -69,9 +69,12 @@ export const SaleReceiptsSampleData = [
 export const defaultSaleReceiptBrandingAttributes = {
   primaryColor: '',
   secondaryColor: '',
-  showCompanyLogo: true,
-  companyLogo: '',
   companyName: 'Bigcapital Technology, Inc.',
+
+  // # Company logo
+  showCompanyLogo: true,
+  companyLogoUri: '',
+  companyLogoKey: '',
 
   // # Address
   billedToAddress: [

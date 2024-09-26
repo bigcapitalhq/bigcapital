@@ -134,9 +134,9 @@ block content
  div(class=`${prefix}-root`)
   div(class=`${prefix}-big-title`) Credit Note
 
-  if showCompanyLogo
+  if showCompanyLogo && companyLogoUri
     div(class=`${prefix}-logo-wrap`)
-      img(src=companyLogo alt=`Company Logo`)
+      img(src=companyLogoUri alt=`Company Logo`)
   
   div(class=`${prefix}-terms-list`)
     if showCreditNoteNumber
@@ -155,6 +155,7 @@ block content
         strong #{companyName}
         each address in billedFromAddress
           div #{address}
+
     if showBilledToAddress
       div(class=`${prefix}-address`)
         strong #{billedToLabel}
@@ -187,12 +188,12 @@ block content
         div(class=`${prefix}-totals__item-amount`) #{totalLabel}:
         div(class=`${prefix}-totals__item-label`) #{total}
 
-  if showCustomerNote
+  if showCustomerNote && customerNote
     div(class=`${prefix}-statement`)
       div(class=`${prefix}-statement__label`) #{customerNoteLabel}:
       div(class=`${prefix}-statement__value`) #{customerNote}
 
-  if showTermsConditions
+  if showTermsConditions && termsConditions
     div(class=`${prefix}-statement`)
       div(class=`${prefix}-statement__label`) #{termsConditionsLabel}:
       div(class=`${prefix}-statement__value`) #{termsConditions}

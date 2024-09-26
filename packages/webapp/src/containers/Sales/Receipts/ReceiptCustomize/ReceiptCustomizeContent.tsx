@@ -1,5 +1,5 @@
 import { useFormikContext } from 'formik';
-import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
+import { ElementCustomize } from '@/containers/ElementCustomize/ElementCustomize';
 import { ReceiptCustomizeGeneralField } from './ReceiptCustomizeFieldsGeneral';
 import { ReceiptCustomizeFieldsContent } from './ReceiptCustomizeFieldsContent';
 import { ReceiptPaperTemplate } from './ReceiptPaperTemplate';
@@ -20,10 +20,10 @@ export function ReceiptCustomizeContent() {
 
   return (
     <BrandingTemplateForm<ReceiptCustomizeValues>
-      templateId={templateId}
-      initialValues={initialValues}
-      onSuccess={handleFormSuccess}
       resource={'SaleReceipt'}
+      templateId={templateId}
+      defaultValues={initialValues}
+      onSuccess={handleFormSuccess}
     >
       <ElementCustomize.PaperTemplate>
         <ReceiptPaperTemplateFormConnected />

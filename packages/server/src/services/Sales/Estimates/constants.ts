@@ -177,8 +177,12 @@ export const SaleEstimatesSampleData = [
 export const defaultEstimatePdfBrandingAttributes = {
   primaryColor: '#000',
   secondaryColor: '#000',
+
+  // # Company logo
   showCompanyLogo: true,
-  companyLogo: '',
+  companyLogoUri: '',
+  companyLogoKey: '',
+
   companyName: '',
 
   billedToAddress: [

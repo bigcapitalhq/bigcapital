@@ -144,9 +144,9 @@ block content
     //- Title and company logo
     h1(class=`${prefix}-big-title`) Invoice
 
-    if showCompanyLogo
+    if showCompanyLogo && companyLogoUri
       div(class=`${prefix}-logo-wrap`)
-        img(alt="", src=companyLogo)
+        img(alt="Company logo", src=companyLogoUri)
 
     //- Invoice details
     div(class=`${prefix}-details`)
