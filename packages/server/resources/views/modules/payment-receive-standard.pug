@@ -124,9 +124,9 @@ block content
   div(class=`${prefix}-root`)
     div(class=`${prefix}-big-title`) Payment
 
-    if showCompanyLogo
+    if showCompanyLogo && companyLogoUri
       div(class=`${prefix}-logo-wrap`)
-        img(src=companyLogo alt="Company Logo")
+        img(src=companyLogoUri alt="Company Logo")
     
     div(class=`${prefix}-terms-list`)
       if showPaymentReceivedNumber

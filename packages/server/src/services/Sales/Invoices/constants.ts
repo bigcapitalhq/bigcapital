@@ -170,7 +170,8 @@ export const defaultInvoicePdfTemplateAttributes =  {
   companyName: 'Bigcapital Technology, Inc.',
 
   showCompanyLogo: true,
-  companyLogo: '',
+  companyLogoKey: '',
+  companyLogoUri: '',
 
   dueDateLabel: 'Date due',
   showDueDate: true,

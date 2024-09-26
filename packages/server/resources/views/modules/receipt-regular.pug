@@ -128,9 +128,10 @@ block content
     //- Title and company logo
     h1(class=`${prefix}-big-title`) Receipt
 
-    if showCompanyLogo
+    //- Company Logo
+    if showCompanyLogo && companyLogoUri
       div(class=`${prefix}-logo-wrap`)
-        img(src=companyLogo alt=`Company Logo`)
+        img(src=companyLogoUri alt=`Company Logo`)
 
     //- Terms List
     div(class=`${prefix}-terms-list`)
@@ -186,13 +187,13 @@ block content
           span(class=`${prefix}-totals__line__amount`)= total
 
     //- Customer Note Section
-    if showCustomerNote
+    if showCustomerNote && customerNote
       div(class=`${prefix}-statement`)
         div(class=`${prefix}-statement__label`)= customerNoteLabel
         div(class=`${prefix}-statement__value`)= customerNote
 
     //- Terms & Conditions Section
-    if showTermsConditions
+    if showTermsConditions && termsConditions
       div(class=`${prefix}-statement`)
         div(class=`${prefix}-statement__label`)= termsConditionsLabel
         div(class=`${prefix}-statement__value`)= termsConditions

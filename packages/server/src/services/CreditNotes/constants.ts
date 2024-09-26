@@ -68,10 +68,16 @@ export const DEFAULT_VIEWS = [
 ];
 
 export const defaultCreditNoteBrandingAttributes = {
+  // # Colors
   primaryColor: '',
   secondaryColor: '',
+  
+  // # Company logo
   showCompanyLogo: true,
-  companyLogo: '',
+  companyLogoKey: '',
+  companyLogoUri: '',
+
+  // # Company name
   companyName: 'Bigcapital Technology, Inc.',
 
   // Address

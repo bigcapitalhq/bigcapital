@@ -8,7 +8,7 @@ export const initialValues = {
   // Company logo.
   showCompanyLogo: true,
   companyLogoUri: '',
-  companyLogokey: '',
+  companyLogoKey: '',
 
   // Top details.
   showPaymentReceivedNumber: true,

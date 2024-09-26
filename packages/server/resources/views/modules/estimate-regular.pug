@@ -135,9 +135,9 @@ block content
   div(class=`${prefix}-root`, style=`--invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor};`)
     h1(class=`${prefix}-big-title`) Estimate
 
-    if showCompanyLogo
+    if showCompanyLogo && companyLogoUri
       div(class=`${prefix}-logo-wrap`)
-        img(alt="", src=companyLogo)
+        img(alt="Company logo", src=companyLogoUri)
 
     //- Terms List
     div(class=`${prefix}-terms`)
