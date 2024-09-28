@@ -18,7 +18,7 @@ import BaseController from '@/api/controllers/BaseController';
 @Service()
 export default class OrganizationController extends BaseController {
   @Inject()
-  organizationService: OrganizationService;
+  private organizationService: OrganizationService;
 
   /**
    * Router constructor.
@@ -69,6 +69,19 @@ export default class OrganizationController extends BaseController {
       check('fiscal_year').exists().isIn(MONTHS),
       check('language').exists().isString().isIn(ACCEPTED_LOCALES),
       check('date_format').optional().isIn(DATE_FORMATS),
+
+      // # Address
+      check('address').optional({ nullable: true }),
+      check('address.address_1').optional().isString().trim(),
+      check('address.address_2').optional().isString().trim(),
+      check('address.postal_code').optional().isString().trim(),
+      check('address.city').optional().isString().trim(), 
+      check('address.state_province').optional().isString().trim(),
+      check('address.phone').optional().isString().trim(),
+
+      // # Branding
+      check('primary_color').optional().isString().trim(),
+      check('company_logo_key').optional().isString().trim(),
     ];
   }
 
@@ -86,7 +99,28 @@ export default class OrganizationController extends BaseController {
    */
   private get updateOrganizationValidationSchema(): ValidationChain[] {
     return [
-      ...this.commonOrganizationValidationSchema,
+      // # Profile
+      check('name').optional().trim(),
+      check('industry').optional({ nullable: true }).isString().trim(),
+      check('location').optional().isString().isISO31661Alpha2(),
+      check('base_currency').optional().isISO4217(),
+      check('timezone').optional().isIn(moment.tz.names()),
+      check('fiscal_year').optional().isIn(MONTHS),
+      check('language').optional().isString().isIn(ACCEPTED_LOCALES),
+      check('date_format').optional().isIn(DATE_FORMATS),
+
+      // # Address
+      check('address.address_1').optional().isString().trim(),
+      check('address.address_2').optional().isString().trim(),
+      check('address.postal_code').optional().isString().trim(),
+      check('address.city').optional().isString().trim(),
+      check('address.state_province').optional().isString().trim(),
+      check('address.phone').optional().isString().trim(),
+
+      // # Branding
+      check('primary_color').optional().isHexColor().trim(),
+      check('logo_key').optional().isString().trim(),
+
       check('tax_number').optional({ nullable: true }).isString().trim(),
     ];
   }
@@ -156,7 +190,7 @@ export default class OrganizationController extends BaseController {
     next: NextFunction
   ) {
     const { tenantId } = req;
-    const tenantDTO = this.matchedBodyData(req);
+    const tenantDTO = this.matchedBodyData(req, { includeOptionals: false });
 
     try {
       await this.organizationService.updateOrganization(tenantId, tenantDTO);

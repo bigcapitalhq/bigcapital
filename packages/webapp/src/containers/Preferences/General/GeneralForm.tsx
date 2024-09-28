@@ -14,6 +14,8 @@ import {
   FFormGroup,
   FInputGroup,
   FSelect,
+  Stack,
+  Group,
 } from '@/components';
 import { inputIntent } from '@/utils';
 import { CLASSES } from '@/constants/classes';
@@ -97,6 +99,50 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
           popoverProps={{ minimal: true }}
           fastField={true}
         />
+      </FFormGroup>
+
+      {/* ---------- Address ---------- */}
+      <FFormGroup
+        name={'address'}
+        label={'Organization Address'}
+
+        inline
+        fastField
+      >
+        <Stack>
+          <FInputGroup
+            name={'address.address_1'}
+            placeholder={'Address 1'}
+            fastField
+          />
+          <FInputGroup
+            name={'address.address_2'}
+            placeholder={'Address 2'}
+            fastField
+          />
+
+          <Group spacing={15}>
+            <FInputGroup name={'address.city'} placeholder={'City'} fastField />
+            <FInputGroup
+              name={'address.postal_code'}
+              placeholder={'ZIP Code'}
+              fastField
+            />
+          </Group>
+
+          <Group spacing={15}>
+            <FInputGroup
+              name={'address.state_province'}
+              placeholder={'State or Province'}
+              fastField
+            />
+            <FInputGroup
+              name={'address.phone'}
+              placeholder={'Phone number'}
+              fastField
+            />
+          </Group>
+        </Stack>
       </FFormGroup>
 
       {/* ----------  Base currency ----------  */}

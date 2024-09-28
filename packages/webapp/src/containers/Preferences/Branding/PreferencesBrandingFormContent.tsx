@@ -8,7 +8,7 @@ import styles from './PreferencesBranding.module.scss';
 
 export function PreferencesBrandingFormContent() {
   return (
-    <Stack style={{ flex: '1' }}>
+    <Stack style={{ flex: '1' }} spacing={10}>
       <FFormGroup name={'companyLogo'} label={'Company Logo'}>
         <Group spacing={15} align={'left'}>
           <BrandingCompanyLogoUpload />

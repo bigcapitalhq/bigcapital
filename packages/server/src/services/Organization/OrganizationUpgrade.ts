@@ -13,16 +13,13 @@ import TenantsManagerService from '@/services/Tenancy/TenantsManager';
 @Service()
 export default class OrganizationUpgrade {
   @Inject()
-  tenancy: HasTenancyService;
+  private organizationService: OrganizationService;
 
   @Inject()
-  organizationService: OrganizationService;
-
-  @Inject()
-  tenantsManager: TenantsManagerService;
+  private tenantsManager: TenantsManagerService;
 
   @Inject('agenda')
-  agenda: any;
+  private agenda: any;
 
   /**
    * Upgrades the given organization database.
