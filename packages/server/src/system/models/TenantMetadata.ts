@@ -41,4 +41,18 @@ export default class TenantMetadata extends BaseModel {
   static get tableName() {
     return 'tenants_metadata';
   }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['logoUri'];
+  }
+
+  /**
+   * 
+   */
+  public get logoUri() {
+    return this.logoKey ? `https://bigcapital.sfo3.digitaloceanspaces.com/${this.logoKey}` : null;
+  }
 }

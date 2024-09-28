@@ -105,7 +105,6 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
       <FFormGroup
         name={'address'}
         label={'Organization Address'}
-
         inline
         fastField
       >
@@ -120,7 +119,6 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
             placeholder={'Address 2'}
             fastField
           />
-
           <Group spacing={15}>
             <FInputGroup name={'address.city'} placeholder={'City'} fastField />
             <FInputGroup
@@ -129,7 +127,6 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
               fastField
             />
           </Group>
-
           <Group spacing={15}>
             <FInputGroup
               name={'address.state_province'}

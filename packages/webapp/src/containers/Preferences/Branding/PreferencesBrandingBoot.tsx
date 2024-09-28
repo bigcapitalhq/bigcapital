@@ -1,6 +1,10 @@
+import { useCurrentOrganization } from '@/hooks/query';
 import React, { createContext, useContext, ReactNode } from 'react';
 
-interface PreferencesBrandingContextType {}
+interface PreferencesBrandingContextType {
+  isOrganizationLoading: boolean;
+  organization: any;
+}
 
 const PreferencesBrandingContext =
   createContext<PreferencesBrandingContextType>(
@@ -14,7 +18,14 @@ interface PreferencesBrandingProviderProps {
 export const PreferencesBrandingBoot: React.FC<
   PreferencesBrandingProviderProps
 > = ({ children }) => {
-  const contextValue: PreferencesBrandingContextType = {};
+  // Fetches current organization information.
+  const { isLoading: isOrganizationLoading, data: organization } =
+    useCurrentOrganization({});
+
+  const contextValue: PreferencesBrandingContextType = {
+    isOrganizationLoading,
+    organization,
+  };
 
   return (
     <PreferencesBrandingContext.Provider value={contextValue}>

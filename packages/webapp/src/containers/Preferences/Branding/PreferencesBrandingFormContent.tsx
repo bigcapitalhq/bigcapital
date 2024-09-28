@@ -53,6 +53,7 @@ export function BrandingCompanyLogoUpload() {
 
         setFieldValue('_logoFile', file);
         setFieldValue('logoUri', imageUrl);
+        setFieldValue('logoKey', '');
       }}
       classNames={{
         root: styles.fileUploadRoot,
