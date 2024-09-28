@@ -104,8 +104,11 @@ export interface GetInvoicePaymentLinkResponse {
       name: string;
       primaryColor: string;
       logoUri: string;
+      addressTextFormatted: string;
     }
   >;
+  hasStripePaymentMethod: boolean;
+  isReceivable: boolean;
 }
 
 /**

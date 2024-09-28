@@ -1,3 +1,4 @@
+import { addressTextFormat } from '@/utils/address-text-format';
 import BaseModel from 'models/Model';
 
 export default class TenantMetadata extends BaseModel {
@@ -12,8 +13,11 @@ export default class TenantMetadata extends BaseModel {
   fiscalYear!: string;
   primaryColor!: string;
   logoKey!: string;
-  address!: object;
+  address!: Record<string, any>;
 
+  /**
+   * Json schema.
+   */
   static get jsonSchema() {
     return {
       type: 'object',
@@ -50,9 +54,35 @@ export default class TenantMetadata extends BaseModel {
   }
 
   /**
-   * 
+   * Organization logo url.
+   * @returns {string | null}
    */
   public get logoUri() {
-    return this.logoKey ? `https://bigcapital.sfo3.digitaloceanspaces.com/${this.logoKey}` : null;
+    return this.logoKey
+      ? `https://bigcapital.sfo3.digitaloceanspaces.com/${this.logoKey}`
+      : null;
+  }
+
+  /**
+   * Retrieves the organization address formatted text.
+   * @returns {string}
+   */
+  public get addressTextFormatted() {
+    const defaultMessage = `<strong>{ORGANIZATION_NAME}</strong>
+  {ADDRESS_1},
+  {ADDRESS_2},
+  {CITY} {STATE},
+  {POSTAL_CODE},
+  {COUNTRY}
+`;
+    return addressTextFormat(defaultMessage, {
+      organizationName: this.name,
+      address1: this.address?.address1,
+      address2: this.address?.address2,
+      state: this.address?.stateProvince,
+      city: this.address?.city,
+      postalCode: this.address?.postalCode,
+      country: 'United State',
+    });
   }
 }

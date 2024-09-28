@@ -96,7 +96,6 @@ export function PaymentPortal() {
                 <Text>{tax?.taxRateAmountFormatted}</Text>
               </Group>
             ))}
-
             <Group
               position={'apart'}
               className={clsx(styles.totalItem, styles.borderBottomGray)}
@@ -132,14 +131,17 @@ export function PaymentPortal() {
             View Invoice
           </Button>
 
-          <Button
-            intent={Intent.PRIMARY}
-            className={clsx(styles.footerButton, styles.buyButton)}
-            loading={isStripeCheckoutLoading}
-            onClick={handlePayButtonClick}
-          >
-            Pay {sharableLinkMeta?.totalFormatted}
-          </Button>
+          {sharableLinkMeta?.isReceivable &&
+            sharableLinkMeta?.hasStripePaymentMethod && (
+              <Button
+                intent={Intent.PRIMARY}
+                className={clsx(styles.footerButton, styles.buyButton)}
+                loading={isStripeCheckoutLoading}
+                onClick={handlePayButtonClick}
+              >
+                Pay {sharableLinkMeta?.totalFormatted}
+              </Button>
+            )}
         </Stack>
 
         <Text className={clsx(Classes.TEXT_MUTED, styles.buyNote)}>
@@ -150,15 +152,11 @@ export function PaymentPortal() {
       </Stack>
 
       <Stack spacing={18} className={styles.footer}>
-        <Stack spacing={0}>
-          <Box>
-            <strong>Bigcapital Technology, Inc.</strong>
-          </Box>
-          <Box>131 Continental Dr Suite 305 Newark,</Box>
-          <Box>Delaware 19713</Box>
-          <Box>United States</Box>
-          <Box>ahmed@bigcapital.app</Box>
-        </Stack>
+        <Box
+          dangerouslySetInnerHTML={{
+            __html: sharableLinkMeta?.organization?.addressTextFormatted || '',
+          }}
+        ></Box>
 
         <Stack spacing={0} className={styles.footerText}>
           © 2024 Bigcapital Technology, Inc.

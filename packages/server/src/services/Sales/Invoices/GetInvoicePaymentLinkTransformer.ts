@@ -41,6 +41,8 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
       'entries',
       'taxes',
       'organization',
+      'isReceivable',
+      'hasStripePaymentMethod',
     ];
   };
 
@@ -50,7 +52,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
 
   /**
    * Retrieves the organization metadata for the payment link.
-   * @returns 
+   * @returns
    */
   public organization(invoice) {
     return this.item(
@@ -89,6 +91,16 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
       }
     );
   };
+
+  protected isReceivable(invoice) {
+    return invoice.dueAmount > 0;
+  }
+
+  protected hasStripePaymentMethod(invoice) {
+    return invoice.paymentMethods.some(
+      (paymentMethod) => paymentMethod.paymentIntegration.service === 'Stripe'
+    );
+  }
 }
 
 class GetPaymentLinkOrganizationMetaTransformer extends Transformer {
@@ -97,12 +109,26 @@ class GetPaymentLinkOrganizationMetaTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['primaryColor', 'name', 'address', 'logoUri'];
+    return [
+      'primaryColor',
+      'name',
+      'address',
+      'logoUri',
+      'addressTextFormatted',
+    ];
   };
 
   public excludeAttributes = (): string[] => {
     return ['*'];
   };
+
+  /**
+   * Retrieves the formatted text of organization address.
+   * @returns {string}
+   */
+  public addressTextFormatted() {
+    return this.context.organization.addressTextFormatted;
+  }
 }
 
 class GetInvoicePaymentLinkEntryMetaTransformer extends ItemEntryTransformer {
