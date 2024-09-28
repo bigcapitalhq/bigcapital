@@ -38,13 +38,20 @@ export function PaymentPortal() {
       <Stack spacing={0} className={styles.body}>
         <Stack>
           <Group spacing={10}>
-            <Box className={styles.companyLogoWrap}></Box>
-            <Text>{sharableLinkMeta?.companyName}</Text>
+            {sharableLinkMeta?.organization?.logoUri && (
+              <Box
+                className={styles.companyLogoWrap}
+                style={{
+                  backgroundImage: `url(${sharableLinkMeta?.organization?.logoUri})`,
+                }}
+              ></Box>
+            )}
+            <Text>{sharableLinkMeta?.organization?.name}</Text>
           </Group>
 
           <Stack spacing={6}>
             <h1 className={styles.bigTitle}>
-              {sharableLinkMeta?.companyName} Sent an Invoice for{' '}
+              {sharableLinkMeta?.organization?.name} Sent an Invoice for{' '}
               {sharableLinkMeta?.totalFormatted}
             </h1>
             <Text className={clsx(Classes.TEXT_MUTED, styles.invoiceDueDate)}>

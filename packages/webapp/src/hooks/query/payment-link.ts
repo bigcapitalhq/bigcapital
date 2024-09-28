@@ -54,6 +54,15 @@ export function useCreatePaymentLink(
 
 // Get Invoice Payment Link
 // -----------------------------------------
+interface GetInvoicePaymentLinkAddressResponse {
+  address_1: string;
+  address_2: string;
+  postal_code: string;
+  city: string;
+  state_province: string;
+  phone: string;
+}
+
 export interface GetInvoicePaymentLinkResponse {
   dueAmount: number;
   dueAmountFormatted: string;
@@ -70,7 +79,6 @@ export interface GetInvoicePaymentLinkResponse {
   totalFormatted: string;
   totalLocalFormatted: string;
   customerName: string;
-  companyName: string;
   invoiceMessage: string;
   termsConditions: string;
   entries: Array<{
@@ -89,7 +97,17 @@ export interface GetInvoicePaymentLinkResponse {
     taxRateAmountFormatted: string;
     taxRateCode: string;
   }>;
+  organization: Record<
+    string,
+    {
+      address: Record<string, GetInvoicePaymentLinkAddressResponse>;
+      name: string;
+      primaryColor: string;
+      logoUri: string;
+    }
+  >;
 }
+
 /**
  * Fetches the sharable invoice link metadata for a given link ID.
  * @param {string} linkId - The ID of the link to fetch metadata for.
