@@ -24,8 +24,10 @@ export const initialValues = {
   companyName: 'Bigcapital Technology, Inc.',
 
   // Addresses
-  showBilledFromAddress: true,
-  showBilledToAddress: true,
+  showCustomerAddress: true,
+  showCompanyAddress: true,
+  customerAddress: '',
+  companyAddress: '',
   billedToLabel: 'Billed To',
 
   // Entries
@@ -45,6 +47,7 @@ export const initialValues = {
   showCustomerNote: true,
   customerNoteLabel: 'Customer Note',
 
+  // Terms & Conditions
   showTermsConditions: true,
   termsConditionsLabel: 'Terms & Conditions',
 };

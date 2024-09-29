@@ -32,11 +32,11 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   companyName?: string;
 
   // Address
-  showBilledToAddress?: boolean;
-  billedToAddress?: string;
+  showCustomerAddress?: boolean;
+  customerAddress?: string;
 
-  showBilledFromAddress?: boolean;
-  billedFromAddress?: string;
+  showCompanyAddress?: boolean;
+  companyAddress?: string;
   billedToLabel?: string;
 
   // Totals
@@ -77,10 +77,10 @@ export function EstimatePaperTemplate({
   companyName,
 
   // # Address
-  billedToAddress = DefaultPdfTemplateAddressBilledTo,
-  billedFromAddress = DefaultPdfTemplateAddressBilledFrom,
-  showBilledFromAddress = true,
-  showBilledToAddress = true,
+  customerAddress = DefaultPdfTemplateAddressBilledTo,
+  companyAddress = DefaultPdfTemplateAddressBilledFrom,
+  showCompanyAddress = true,
+  showCustomerAddress = true,
   billedToLabel = 'Billed To',
 
   // #Total
@@ -151,16 +151,15 @@ export function EstimatePaperTemplate({
         </PaperTemplate.TermsList>
 
         <PaperTemplate.AddressesGroup>
-          {showBilledFromAddress && (
+          {showCompanyAddress && (
             <PaperTemplate.Address>
-              <strong>{companyName}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedFromAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
             </PaperTemplate.Address>
           )}
-          {showBilledToAddress && (
+          {showCustomerAddress && (
             <PaperTemplate.Address>
               <strong>{billedToLabel}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedToAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: customerAddress }} />
             </PaperTemplate.Address>
           )}
         </PaperTemplate.AddressesGroup>

@@ -185,23 +185,10 @@ export const defaultEstimatePdfBrandingAttributes = {
 
   companyName: '',
 
-  billedToAddress: [
-    'Bigcapital Technology, Inc.',
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  billedFromAddress: [
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  showBilledFromAddress: true,
-  showBilledToAddress: true,
+  customerAddress: '',
+  companyAddress: '',
+  showCustomerAddress: true,
+  showCompanyAddress: true,
   billedToLabel: 'Billed To',
 
   total: '$1000.00',

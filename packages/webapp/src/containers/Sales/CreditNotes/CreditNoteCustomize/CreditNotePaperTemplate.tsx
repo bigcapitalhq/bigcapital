@@ -14,10 +14,12 @@ import {
 
 export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
   // Address
-  billedToAddress?: string;
-  billedFromAddress?: string;
-  showBilledToAddress?: boolean;
-  showBilledFromAddress?: boolean;
+  showCustomerAddress?: boolean;
+  customerAddress?: string;
+
+  showCompanyAddress?: boolean;
+  companyAddress?: string;
+
   billedToLabel?: string;
 
   // Total
@@ -72,11 +74,12 @@ export function CreditNotePaperTemplate({
   companyName = 'Bigcapital Technology, Inc.',
 
   // Address
-  billedToAddress = DefaultPdfTemplateAddressBilledTo,
-  billedFromAddress = DefaultPdfTemplateAddressBilledFrom,
+  showCustomerAddress = true,
+  customerAddress = DefaultPdfTemplateAddressBilledTo,
 
-  showBilledFromAddress = true,
-  showBilledToAddress = true,
+  showCompanyAddress = true,
+  companyAddress = DefaultPdfTemplateAddressBilledFrom,
+
   billedToLabel = 'Billed To',
 
   // Total
@@ -141,16 +144,16 @@ export function CreditNotePaperTemplate({
         </PaperTemplate.TermsList>
 
         <PaperTemplate.AddressesGroup>
-          {showBilledFromAddress && (
+          {showCompanyAddress && (
             <PaperTemplate.Address>
-              <strong>{companyName}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedFromAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
             </PaperTemplate.Address>
           )}
-          {showBilledToAddress && (
+
+          {showCustomerAddress && (
             <PaperTemplate.Address>
               <strong>{billedToLabel}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedToAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: customerAddress }} />
             </PaperTemplate.Address>
           )}
         </PaperTemplate.AddressesGroup>

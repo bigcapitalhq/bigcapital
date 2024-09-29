@@ -2,11 +2,15 @@ import { Inject, Service } from 'typedi';
 import { mergePdfTemplateWithDefaultAttributes } from './utils';
 import { GetPdfTemplate } from '@/services/PdfTemplate/GetPdfTemplate';
 import { defaultEstimatePdfBrandingAttributes } from '../Estimates/constants';
+import { GetOrganizationBrandingAttributes } from '@/services/PdfTemplate/GetOrganizationBrandingAttributes';
 
 @Service()
 export class SaleEstimatePdfTemplate {
   @Inject()
   private getPdfTemplateService: GetPdfTemplate;
+
+  @Inject()
+  private getOrgBrandingAttrs: GetOrganizationBrandingAttributes;
 
   /**
    * Retrieves the estimate pdf template.
@@ -19,9 +23,19 @@ export class SaleEstimatePdfTemplate {
       tenantId,
       estimateTemplateId
     );
+    // Retreives the organization branding attributes.
+    const commonOrgBrandingAttrs =
+      await this.getOrgBrandingAttrs.getOrganizationBrandingAttributes(
+        tenantId
+      );
+
+    const orgainizationBrandingAttrs = {
+      ...defaultEstimatePdfBrandingAttributes,
+      ...commonOrgBrandingAttrs,
+    };
     const attributes = mergePdfTemplateWithDefaultAttributes(
       template.attributes,
-      defaultEstimatePdfBrandingAttributes
+      orgainizationBrandingAttrs
     );
     return {
       ...template,
