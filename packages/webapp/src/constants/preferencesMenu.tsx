@@ -9,6 +9,11 @@ export default [
     href: '/preferences/general',
   },
   {
+    text: 'Branding',
+    disabled: false,
+    href: '/preferences/branding',
+  },
+  {
     text: 'Billing',
     href: '/preferences/billing',
   },

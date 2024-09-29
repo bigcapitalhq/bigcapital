@@ -1,11 +1,13 @@
 import React from 'react';
 import { PaperTemplate, PaperTemplateTotalBorder } from './PaperTemplate';
-import { Stack } from '@/components';
+import { Box, Stack } from '@/components';
 import {
   DefaultPdfTemplateTerms,
   DefaultPdfTemplateItemDescription,
   DefaultPdfTemplateStatement,
   DefaultPdfTemplateItemName,
+  DefaultPdfTemplateAddressBilledTo,
+  DefaultPdfTemplateAddressBilledFrom,
 } from '@/constants/PdfTemplates';
 interface PapaerLine {
   item?: string;
@@ -89,8 +91,8 @@ export interface InvoicePaperTemplateProps {
   lines?: Array<PapaerLine>;
   taxes?: Array<PaperTax>;
 
-  billedFromAddres?: Array<string | React.ReactNode>;
-  billedToAddress?: Array<string | React.ReactNode>;
+  billedFromAddres?: string;
+  billedToAddress?: string;
 }
 
 export function InvoicePaperTemplate({
@@ -169,21 +171,8 @@ export function InvoicePaperTemplate({
   statementLabel = 'Statement',
   showStatement = true,
   statement = DefaultPdfTemplateStatement,
-  billedToAddress = [
-    'Bigcapital Technology, Inc.',
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  billedFromAddres = [
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
+  billedToAddress = DefaultPdfTemplateAddressBilledTo,
+  billedFromAddres = DefaultPdfTemplateAddressBilledFrom,
 }: InvoicePaperTemplateProps) {
   return (
     <PaperTemplate
@@ -214,14 +203,16 @@ export function InvoicePaperTemplate({
 
         <PaperTemplate.AddressesGroup>
           {showBilledFromAddress && (
-            <PaperTemplate.Address
-              items={[<strong>{companyName}</strong>, ...billedFromAddres]}
-            />
+            <PaperTemplate.Address>
+              <strong>{companyName}</strong>
+              <Box dangerouslySetInnerHTML={{ __html: billedFromAddres }} />
+            </PaperTemplate.Address>
           )}
           {showBillingToAddress && (
-            <PaperTemplate.Address
-              items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
-            />
+            <PaperTemplate.Address>
+              <strong>{billedToLabel}</strong>
+              <Box dangerouslySetInnerHTML={{ __html: billedToAddress }} />
+            </PaperTemplate.Address>
           )}
         </PaperTemplate.AddressesGroup>
 

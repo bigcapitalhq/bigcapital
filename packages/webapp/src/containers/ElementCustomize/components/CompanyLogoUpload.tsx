@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { useRef, useState } from 'react';
+import clsx from 'classnames';
 import { Button, Intent } from '@blueprintjs/core';
 import { Icon, Stack } from '@/components';
 import { Dropzone, DropzoneProps } from '@/components/Dropzone';
@@ -69,7 +70,7 @@ export function CompanyLogoUpload({
       onReject={(files) => console.log('rejected files', files)}
       maxSize={5 * 1024 ** 2}
       accept={[MIME_TYPES.png, MIME_TYPES.jpeg]}
-      classNames={{ root: styles?.root, content: styles.dropzoneContent }}
+      classNames={{ root: clsx(styles?.root, classNames?.root), content: styles.dropzoneContent }}
       activateOnClick={false}
       openRef={openRef}
       {...dropzoneProps}

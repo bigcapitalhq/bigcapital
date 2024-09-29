@@ -18,14 +18,26 @@ export interface IOrganizationBuildDTO {
   dateFormat?: string;
 }
 
+interface OrganizationAddressDTO {
+  address1: string;
+  address2: string;
+  postalCode: string;
+  city: string;
+  stateProvince: string;
+  phone: string;
+}
+
 export interface IOrganizationUpdateDTO {
   name: string;
-  location: string;
-  baseCurrency: string;
-  timezone: string;
-  fiscalYear: string;
-  industry: string;
-  taxNumber: string;
+  location?: string;
+  baseCurrency?: string;
+  timezone?: string;
+  fiscalYear?: string;
+  industry?: string;
+  taxNumber?: string;
+  primaryColor?: string;
+  logoKey?: string;
+  address?: OrganizationAddressDTO;
 }
 
 export interface IOrganizationBuildEventPayload {

@@ -24,6 +24,7 @@ const defaultValues = {
   date_format: '',
   timezone: '',
   tax_number: '',
+  address: {},
 };
 
 /**

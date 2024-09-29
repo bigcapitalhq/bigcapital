@@ -93,7 +93,7 @@ export default class OrganizationService {
     // Triggers the organization built event.
     await this.eventPublisher.emitAsync(events.organization.built, {
       tenantId: tenant.id,
-    } as IOrganizationBuiltEventPayload)
+    } as IOrganizationBuiltEventPayload);
   }
 
   /**
@@ -190,11 +190,13 @@ export default class OrganizationService {
     this.throwIfTenantNotExists(tenant);
 
     // Validate organization transactions before mutate base currency.
-    await this.validateMutateBaseCurrency(
-      tenant,
-      organizationDTO.baseCurrency,
-      tenant.metadata?.baseCurrency
-    );
+    if (organizationDTO.baseCurrency) {
+      await this.validateMutateBaseCurrency(
+        tenant,
+        organizationDTO.baseCurrency,
+        tenant.metadata?.baseCurrency
+      );
+    }
     await tenant.saveMetadata(organizationDTO);
 
     if (organizationDTO.baseCurrency !== tenant.metadata?.baseCurrency) {

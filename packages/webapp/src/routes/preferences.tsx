@@ -10,6 +10,11 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/branding`,
+    component: lazy(() => import('../containers/Preferences/Branding/PreferencesBrandingPage')),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/users`,
     component: lazy(() => import('../containers/Preferences/Users/Users')),
     exact: true,

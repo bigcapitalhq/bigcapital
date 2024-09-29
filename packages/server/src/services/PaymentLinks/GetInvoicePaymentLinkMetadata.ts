@@ -45,6 +45,7 @@ export class GetInvoicePaymentLinkMetadata {
       .withGraphFetched('entries.item')
       .withGraphFetched('customer')
       .withGraphFetched('taxes.taxRate')
+      .withGraphFetched('paymentMethods.paymentIntegration')
       .throwIfNotFound();
 
     return this.transformer.transform(
