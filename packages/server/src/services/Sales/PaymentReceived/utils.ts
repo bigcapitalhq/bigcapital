@@ -2,6 +2,7 @@ import {
   IPaymentReceived,
   PaymentReceivedPdfTemplateAttributes,
 } from '@/interfaces';
+import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export const transformPaymentReceivedToPdfTemplate = (
   payment: IPaymentReceived
@@ -17,5 +18,6 @@ export const transformPaymentReceivedToPdfTemplate = (
       invoiceAmount: entry.invoice.totalFormatted,
       paidAmount: entry.paymentAmountFormatted,
     })),
+    customerAddress: contactAddressTextFormat(payment.customer),
   };
 };

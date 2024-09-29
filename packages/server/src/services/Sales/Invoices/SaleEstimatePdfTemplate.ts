@@ -28,7 +28,7 @@ export class SaleEstimatePdfTemplate {
       await this.getOrgBrandingAttrs.getOrganizationBrandingAttributes(
         tenantId
       );
-
+    // Merge the default branding attributes with organization attrs.
     const orgainizationBrandingAttrs = {
       ...defaultEstimatePdfBrandingAttributes,
       ...commonOrgBrandingAttrs,

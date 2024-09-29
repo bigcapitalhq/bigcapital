@@ -231,7 +231,6 @@ export const defaultEstimatePdfBrandingAttributes = {
   expirationDate: 'September 3, 2024',
 };
 
-
 interface EstimatePdfBrandingLineItem {
   item: string;
   description: string;
@@ -247,10 +246,13 @@ export interface EstimatePdfBrandingAttributes {
   companyLogo: string;
   companyName: string;
 
-  billedToAddress: string[];
-  billedFromAddress: string[];
-  showBilledFromAddress: boolean;
-  showBilledToAddress: boolean;
+  // Customer Address
+  showCustomerAddress: boolean;
+  customerAddress: string;
+
+  // Company Address
+  showCompanyAddress: boolean;
+  companyAddress: string;
   billedToLabel: string;
 
   total: string;

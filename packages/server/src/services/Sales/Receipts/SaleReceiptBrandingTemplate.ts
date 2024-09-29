@@ -2,12 +2,15 @@ import { GetPdfTemplate } from '@/services/PdfTemplate/GetPdfTemplate';
 import { Inject, Service } from 'typedi';
 import { defaultSaleReceiptBrandingAttributes } from './constants';
 import { mergePdfTemplateWithDefaultAttributes } from '../Invoices/utils';
+import { GetOrganizationBrandingAttributes } from '@/services/PdfTemplate/GetOrganizationBrandingAttributes';
 
 @Service()
 export class SaleReceiptBrandingTemplate {
   @Inject()
   private getPdfTemplateService: GetPdfTemplate;
 
+  @Inject()
+  private getOrgBrandingAttributes: GetOrganizationBrandingAttributes;
 
   /**
    * Retrieves the sale receipt branding template.
@@ -23,9 +26,20 @@ export class SaleReceiptBrandingTemplate {
       tenantId,
       templateId
     );
+    // Retrieves the organization branding attributes.
+    const commonOrgBrandingAttrs =
+      await this.getOrgBrandingAttributes.getOrganizationBrandingAttributes(
+        tenantId
+      );
+
+    // Merges the default branding attributes with organization common branding attrs.
+    const organizationBrandingAttrs = {
+      ...defaultSaleReceiptBrandingAttributes,
+      ...commonOrgBrandingAttrs,
+    };
     const attributes = mergePdfTemplateWithDefaultAttributes(
       template.attributes,
-      defaultSaleReceiptBrandingAttributes
+      organizationBrandingAttrs
     );
     return {
       ...template,

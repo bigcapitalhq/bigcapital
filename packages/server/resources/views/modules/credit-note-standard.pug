@@ -150,17 +150,14 @@ block content
         div(class=`${prefix}-terms-item__value`) #{creditNoteDate}
 
   div(class=`${prefix}-address-section`)
-    if showBilledFromAddress
-      div(class=`${prefix}-address`)
-        strong #{companyName}
-        each address in billedFromAddress
-          div #{address}
+    if showCompanyAddress
+      div(class=`${prefix}-address-from`)
+        div !{companyAddress}
 
-    if showBilledToAddress
-      div(class=`${prefix}-address`)
+    if showCustomerAddress
+      div(class=`${prefix}-address-to`)
         strong #{billedToLabel}
-        each address in billedToAddress
-          div #{address}
+        div !{customerAddress}
 
   table(class=`${prefix}-table`)
     thead

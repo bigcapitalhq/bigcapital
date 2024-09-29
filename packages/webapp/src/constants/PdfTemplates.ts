@@ -17,7 +17,6 @@ United States, <br />
 ahmed@bigcapital.app
 `;
 
-
 export const DefaultPdfTemplateAddressBilledFrom = `131 Continental Dr Suite 305 Newark, <br />
 Delaware 19713,<br />
 United States, <br />

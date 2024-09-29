@@ -23,10 +23,11 @@ export const initialValues = {
   // Company name
   companyName: 'Bigcapital Technology, Inc.',
 
-  // Addresses
+  // Customer address
   showCustomerAddress: true,
+  
+  // Company address
   showCompanyAddress: true,
-  customerAddress: '',
   companyAddress: '',
   billedToLabel: 'Billed To',
 

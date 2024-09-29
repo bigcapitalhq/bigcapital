@@ -80,24 +80,13 @@ export const defaultCreditNoteBrandingAttributes = {
   // # Company name
   companyName: 'Bigcapital Technology, Inc.',
 
-  // Address
-  billedToAddress: [
-    'Bigcapital Technology, Inc.',
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  billedFromAddress: [
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  showBilledToAddress: true,
-  showBilledFromAddress: true,
+  // # Customer address
+  showCustomerAddress: true,
+  customerAddress: '',
+
+  // # Company address
+  showCompanyAddress: true,
+  companyAddress: '',
   billedToLabel: 'Billed To',
 
   // Total

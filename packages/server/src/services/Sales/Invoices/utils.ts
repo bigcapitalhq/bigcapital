@@ -1,5 +1,6 @@
 import { pickBy } from 'lodash';
 import { InvoicePdfTemplateAttributes, ISaleInvoice } from '@/interfaces';
+import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export const mergePdfTemplateWithDefaultAttributes = (
   brandingTemplate?: Record<string, any>,
@@ -42,5 +43,7 @@ export const transformInvoiceToPdfTemplate = (
       label: tax.name,
       amount: tax.taxRateAmountFormatted,
     })),
+
+    customerAddress: contactAddressTextFormat(invoice.customer),
   };
 };

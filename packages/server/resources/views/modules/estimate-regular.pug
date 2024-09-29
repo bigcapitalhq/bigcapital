@@ -156,17 +156,14 @@ block content
 
     //- Addresses (Group section)
     div(class=`${prefix}-addresses`)
-      if showBilledFromAddress
-        div(class=`${prefix}-address`)
-          strong #{companyName}
-          each item in billedFromAddress
-            div(class=`${prefix}-address__item`) #{item}
+      if showCompanyAddress
+        div(class=`${prefix}-address-from`)
+          div !{companyAddress}
 
-      if showBilledToAddress
-        div(class=`${prefix}-address`)
+      if showCustomerAddress
+        div(class=`${prefix}-address-to`)
           strong #{billedToLabel}
-          each item in billedToAddress
-            div(class=`${prefix}-address__item`) #{item}
+          div !{customerAddress}
 
     //- Table section (Line items)
     table(class=`${prefix}-table`)

@@ -140,17 +140,14 @@ block content
           div(class=`${prefix}-terms-item__value`) #{paymentReceivedDate}
     
     div(class=`${prefix}-addresses`)
-      if showBilledFromAddress
-        div(class=`${prefix}-address`)
-          strong(class=`${prefix}-address__item`) #{companyName}
-          each addressLine in billedFromAddress
-            div(class=`${prefix}-address__item`) #{addressLine}
+      if showCompanyAddress
+        div(class=`${prefix}-address-from`)
+          div !{companyAddress}
 
-      if showBillingToAddress
-        div(class=`${prefix}-address`)
-          strong(class=`${prefix}-address__item`) #{billedToLabel}
-          each addressLine in billedToAddress
-            div(class=`${prefix}-address__item`) #{addressLine}
+      if showCustomerAddress
+        div(class=`${prefix}-address-to`)
+          strong #{billedToLabel}
+          div !{customerAddress}
 
     table(class=`${prefix}-table`)
       thead

@@ -207,10 +207,13 @@ export interface PaymentReceivedPdfTemplateAttributes {
   companyLogo: string;
   companyName: string;
 
-  billedToAddress: string[];
-  billedFromAddress: string[];
-  showBilledFromAddress: boolean;
-  showBillingToAddress: boolean;
+  // Customer Address
+  showCustomerAddress: boolean;
+  customerAddress: string;
+
+  // Company address
+  showCompanyAddress: boolean;
+  companyAddress: string;
   billedToLabel: string;
 
   total: string;

@@ -71,23 +71,27 @@ export function EstimatePaperTemplate({
   primaryColor,
   secondaryColor,
 
+  // # Company logo
   showCompanyLogo = true,
   companyLogoUri = '',
 
   companyName,
 
-  // # Address
-  customerAddress = DefaultPdfTemplateAddressBilledTo,
+  // # Company address
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
   showCompanyAddress = true,
+
+  // # Customer address
+  customerAddress = DefaultPdfTemplateAddressBilledTo,
   showCustomerAddress = true,
   billedToLabel = 'Billed To',
 
-  // #Total
+  // # Total
   total = '$1000.00',
   totalLabel = 'Total',
   showTotal = true,
 
+  // # Subtotal
   subtotal = '1000/00',
   subtotalLabel = 'Subtotal',
   showSubtotal = true,
@@ -111,14 +115,18 @@ export function EstimatePaperTemplate({
       total: '$1000.00',
     },
   ],
+
+  // Estimate number
   showEstimateNumber = true,
   estimateNumberLabel = 'Estimate Number',
   estimateNumebr = '346D3D40-0001',
 
+  // Estimate date
   estimateDate = 'September 3, 2024',
   showEstimateDate = true,
   estimateDateLabel = 'Estimate Date',
 
+  // Expiration date
   expirationDateLabel = 'Expiration Date',
   showExpirationDate = true,
   expirationDate = 'September 3, 2024',

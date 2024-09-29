@@ -1,3 +1,4 @@
+import { contactAddressTextFormat } from '@/utils/address-text-format';
 import { EstimatePdfBrandingAttributes } from './constants';
 
 export const transformEstimateToPdfTemplate = (
@@ -18,5 +19,6 @@ export const transformEstimateToPdfTemplate = (
     subtotal: estimate.formattedSubtotal,
     customerNote: estimate.customerNote,
     termsConditions: estimate.termsConditions,
+    customerAddress: contactAddressTextFormat(estimate.customer),
   };
 };
