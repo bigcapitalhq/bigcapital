@@ -1,15 +1,19 @@
-import { Stack } from '@/components';
+import { Box, Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
   PaperTemplateTotalBorder,
 } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import {
+  DefaultPdfTemplateAddressBilledFrom,
+  DefaultPdfTemplateAddressBilledTo,
+} from '@/constants/PdfTemplates';
 
 export interface PaymentReceivedPaperTemplateProps extends PaperTemplateProps {
-  billedToAddress?: Array<string>;
-  showBillingToAddress?: boolean;
+  billedToAddress?: string;
+  showBilledToAddress?: boolean;
 
-  billedFromAddress?: Array<string>;
+  billedFromAddress?: string;
   showBilledFromAddress?: boolean;
   billedToLabel?: string;
 
@@ -52,23 +56,10 @@ export function PaymentReceivedPaperTemplate({
   // # Company name
   companyName = 'Bigcapital Technology, Inc.',
 
-  billedToAddress = [
-    'Bigcapital Technology, Inc.',
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  billedFromAddress = [
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
+  billedToAddress = DefaultPdfTemplateAddressBilledTo,
+  billedFromAddress = DefaultPdfTemplateAddressBilledFrom,
   showBilledFromAddress,
-  showBillingToAddress,
+  showBilledToAddress,
   billedToLabel = 'Billed To',
 
   total = '$1000.00',
@@ -119,14 +110,16 @@ export function PaymentReceivedPaperTemplate({
 
         <PaperTemplate.AddressesGroup>
           {showBilledFromAddress && (
-            <PaperTemplate.Address
-              items={[<strong>{companyName}</strong>, ...billedFromAddress]}
-            />
+            <PaperTemplate.Address>
+              <strong>{companyName}</strong>
+              <Box dangerouslySetInnerHTML={{ __html: billedFromAddress }} />
+            </PaperTemplate.Address>
           )}
-          {showBillingToAddress && (
-            <PaperTemplate.Address
-              items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
-            />
+          {showBilledToAddress && (
+            <PaperTemplate.Address>
+              <strong>{billedToLabel}</strong>
+              <Box dangerouslySetInnerHTML={{ __html: billedToAddress }} />
+            </PaperTemplate.Address>
           )}
         </PaperTemplate.AddressesGroup>
 

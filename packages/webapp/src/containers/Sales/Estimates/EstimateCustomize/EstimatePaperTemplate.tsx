@@ -1,4 +1,4 @@
-import { Stack } from '@/components';
+import { Box, Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
@@ -8,6 +8,8 @@ import {
   DefaultPdfTemplateItemDescription,
   DefaultPdfTemplateStatement,
   DefaultPdfTemplateItemName,
+  DefaultPdfTemplateAddressBilledTo,
+  DefaultPdfTemplateAddressBilledFrom,
 } from '@/constants/PdfTemplates';
 
 export interface EstimatePaperTemplateProps extends PaperTemplateProps {
@@ -31,10 +33,10 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
 
   // Address
   showBilledToAddress?: boolean;
-  billedToAddress?: Array<string>;
+  billedToAddress?: string;
 
   showBilledFromAddress?: boolean;
-  billedFromAddress?: Array<string>;
+  billedFromAddress?: string;
   billedToLabel?: string;
 
   // Totals
@@ -74,25 +76,14 @@ export function EstimatePaperTemplate({
 
   companyName,
 
-  billedToAddress = [
-    'Bigcapital Technology, Inc.',
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  billedFromAddress = [
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
+  // # Address
+  billedToAddress = DefaultPdfTemplateAddressBilledTo,
+  billedFromAddress = DefaultPdfTemplateAddressBilledFrom,
   showBilledFromAddress = true,
   showBilledToAddress = true,
   billedToLabel = 'Billed To',
 
+  // #Total
   total = '$1000.00',
   totalLabel = 'Total',
   showTotal = true,
@@ -101,10 +92,12 @@ export function EstimatePaperTemplate({
   subtotalLabel = 'Subtotal',
   showSubtotal = true,
 
+  // # Customer Note
   showCustomerNote = true,
   customerNote = DefaultPdfTemplateStatement,
   customerNoteLabel = 'Customer Note',
 
+  // # Terms & Conditions
   showTermsConditions = true,
   termsConditions = DefaultPdfTemplateTerms,
   termsConditionsLabel = 'Terms & Conditions',
@@ -145,13 +138,11 @@ export function EstimatePaperTemplate({
               {estimateNumebr}
             </PaperTemplate.TermsItem>
           )}
-
           {showEstimateDate && (
             <PaperTemplate.TermsItem label={estimateDateLabel}>
               {estimateDate}
             </PaperTemplate.TermsItem>
           )}
-
           {showExpirationDate && (
             <PaperTemplate.TermsItem label={expirationDateLabel}>
               {expirationDate}
@@ -161,14 +152,16 @@ export function EstimatePaperTemplate({
 
         <PaperTemplate.AddressesGroup>
           {showBilledFromAddress && (
-            <PaperTemplate.Address
-              items={[<strong>{companyName}</strong>, ...billedFromAddress]}
-            />
+            <PaperTemplate.Address>
+              <strong>{companyName}</strong>
+              <Box dangerouslySetInnerHTML={{ __html: billedFromAddress }} />
+            </PaperTemplate.Address>
           )}
           {showBilledToAddress && (
-            <PaperTemplate.Address
-              items={[<strong>{billedToLabel}</strong>, ...billedToAddress]}
-            />
+            <PaperTemplate.Address>
+              <strong>{billedToLabel}</strong>
+              <Box dangerouslySetInnerHTML={{ __html: billedToAddress }} />
+            </PaperTemplate.Address>
           )}
         </PaperTemplate.AddressesGroup>
 

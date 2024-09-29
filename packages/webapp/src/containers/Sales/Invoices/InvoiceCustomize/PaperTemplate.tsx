@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'classnames';
 import { get } from 'lodash';
-import { Group, GroupProps, Stack } from '@/components';
+import { Box, Group, GroupProps, Stack } from '@/components';
 import styles from './InvoicePaperTemplate.module.scss';
 
 export interface PaperTemplateProps {
@@ -123,16 +123,14 @@ PaperTemplate.AddressesGroup = (props: GroupProps) => {
   return <Group spacing={10} {...props} className={styles.addressRoot} />;
 };
 PaperTemplate.Address = ({
-  items,
+  children,
 }: {
-  items: Array<string | React.ReactNode>;
+  children: React.ReactNode;
 }) => {
   return (
-    <Stack spacing={0}>
-      {items.map((item, index) => (
-        <div key={index}>{item}</div>
-      ))}
-    </Stack>
+    <Box>
+      {children}
+    </Box>
   );
 };
 

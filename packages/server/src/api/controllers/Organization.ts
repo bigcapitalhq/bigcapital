@@ -56,10 +56,10 @@ export default class OrganizationController extends BaseController {
   }
 
   /**
-   * Organization setup schema.
-   * @return {ValidationChain[]}
+   * Build organization validation schema.
+   * @returns {ValidationChain[]}
    */
-  private get commonOrganizationValidationSchema(): ValidationChain[] {
+  private get buildOrganizationValidationSchema(): ValidationChain[] {
     return [
       check('name').exists().trim(),
       check('industry').optional({ nullable: true }).isString().trim(),
@@ -69,28 +69,7 @@ export default class OrganizationController extends BaseController {
       check('fiscal_year').exists().isIn(MONTHS),
       check('language').exists().isString().isIn(ACCEPTED_LOCALES),
       check('date_format').optional().isIn(DATE_FORMATS),
-
-      // # Address
-      check('address').optional({ nullable: true }),
-      check('address.address_1').optional().isString().trim(),
-      check('address.address_2').optional().isString().trim(),
-      check('address.postal_code').optional().isString().trim(),
-      check('address.city').optional().isString().trim(), 
-      check('address.state_province').optional().isString().trim(),
-      check('address.phone').optional().isString().trim(),
-
-      // # Branding
-      check('primary_color').optional().isString().trim(),
-      check('company_logo_key').optional().isString().trim(),
     ];
-  }
-
-  /**
-   * Build organization validation schema.
-   * @returns {ValidationChain[]}
-   */
-  private get buildOrganizationValidationSchema(): ValidationChain[] {
-    return [...this.commonOrganizationValidationSchema];
   }
 
   /**

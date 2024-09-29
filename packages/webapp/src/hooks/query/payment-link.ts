@@ -63,6 +63,14 @@ interface GetInvoicePaymentLinkAddressResponse {
   phone: string;
 }
 
+interface GetInvoicePaymentLinkOrganizationRes {
+  address: Record<string, GetInvoicePaymentLinkAddressResponse>;
+  name: string;
+  primaryColor: string;
+  logoUri: string;
+  addressTextFormatted: string;
+}
+
 export interface GetInvoicePaymentLinkResponse {
   dueAmount: number;
   dueAmountFormatted: string;
@@ -97,16 +105,7 @@ export interface GetInvoicePaymentLinkResponse {
     taxRateAmountFormatted: string;
     taxRateCode: string;
   }>;
-  organization: Record<
-    string,
-    {
-      address: Record<string, GetInvoicePaymentLinkAddressResponse>;
-      name: string;
-      primaryColor: string;
-      logoUri: string;
-      addressTextFormatted: string;
-    }
-  >;
+  organization: GetInvoicePaymentLinkOrganizationRes;
   hasStripePaymentMethod: boolean;
   isReceivable: boolean;
 }
