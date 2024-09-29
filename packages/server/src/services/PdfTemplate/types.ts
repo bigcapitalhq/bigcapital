@@ -65,3 +65,12 @@ export interface ICreateInvoicePdfTemplateDTO {
   statementLabel?: string;
   showStatement?: boolean;
 }
+
+
+export interface CommonOrganizationBrandingAttributes {
+  companyName?: string;
+  primaryColor?: string;
+  companyLogoKey?: string;
+  companyLogoUri?: string;
+  companyAddress?: string;
+}

@@ -163,7 +163,7 @@ export const SaleInvoicesSampleData = [
   },
 ];
 
-export const defaultInvoicePdfTemplateAttributes =  {
+export const defaultInvoicePdfTemplateAttributes = {
   primaryColor: 'red',
   secondaryColor: 'red',
 
@@ -184,8 +184,11 @@ export const defaultInvoicePdfTemplateAttributes =  {
   showInvoiceNumber: true,
 
   // Address
-  showBillingToAddress: true,
-  showBilledFromAddress: true,
+  showCustomerAddress: true,
+  customerAddress: '',
+
+  showCompanyAddress: true,
+  companyAddress: '',
   billedToLabel: 'Billed To',
 
   // Entries
@@ -229,22 +232,7 @@ export const defaultInvoicePdfTemplateAttributes =  {
     { label: 'Sample Tax2 (7.00%)', amount: '21.74' },
   ],
 
+  // # Statement
   statementLabel: 'Statement',
   showStatement: true,
-  billedToAddress: [
-    'Bigcapital Technology, Inc.',
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  billedFromAddres: [
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-}
-
+};

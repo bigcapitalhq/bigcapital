@@ -203,3 +203,28 @@ export const useAssignPdfTemplateAsDefault = (
     },
   );
 };
+
+// Retrieve organization branding state.
+// --------------------------------------------------
+export interface GetPdfTemplateBrandingStateResponse {
+  companyName: string;
+  companyAddress: string;
+  companyLogoUri: string;
+  companyLogoKey: string;
+  primaryColor: string;
+}
+
+export const useGetPdfTemplateBrandingState = (
+  options?: UseQueryOptions<GetPdfTemplateBrandingStateResponse, Error>,
+): UseQueryResult<GetPdfTemplateBrandingStateResponse, Error> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetPdfTemplateBrandingStateResponse, Error>(
+    [PdfTemplatesQueryKey, 'state'],
+    () =>
+      apiRequest
+        .get('/pdf-templates/state')
+        .then((res) => transformToCamelCase(res.data?.data)),
+    options,
+  );
+};

@@ -6,6 +6,7 @@ import { GetPdfTemplate } from './GetPdfTemplate';
 import { GetPdfTemplates } from './GetPdfTemplates';
 import { EditPdfTemplate } from './EditPdfTemplate';
 import { AssignPdfTemplateDefault } from './AssignPdfTemplateDefault';
+import { GetPdfTemplateBrandingState } from './GetPdfTemplateBrandingState';
 
 @Service()
 export class PdfTemplateApplication {
@@ -26,6 +27,9 @@ export class PdfTemplateApplication {
 
   @Inject()
   private assignPdfTemplateDefaultService: AssignPdfTemplateDefault;
+
+  @Inject()
+  private getPdfTemplateBrandingStateService: GetPdfTemplateBrandingState;
 
   /**
    * Creates a new PDF template.
@@ -119,5 +123,13 @@ export class PdfTemplateApplication {
       tenantId,
       templateId
     );
+  }
+
+  /**
+   * 
+   * @param {number} tenantId 
+   */
+  public async getPdfTemplateBrandingState(tenantId: number) {
+    return this.getPdfTemplateBrandingStateService.getBrandingState(tenantId);
   }
 }
