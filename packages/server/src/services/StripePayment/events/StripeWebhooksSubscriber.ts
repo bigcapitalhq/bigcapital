@@ -8,6 +8,7 @@ import {
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
 import { initalizeTenantServices } from '@/api/middleware/TenantDependencyInjection';
+import { initializeTenantSettings } from '@/api/middleware/SettingsMiddleware';
 
 @Service()
 export class StripeWebhooksSubscriber {
@@ -43,6 +44,7 @@ export class StripeWebhooksSubscriber {
     const saleInvoiceId = parseInt(metadata.saleInvoiceId, 10);
 
     await initalizeTenantServices(tenantId);
+    await initializeTenantSettings(tenantId);
 
     // Get the amount from the event
     const amount = event.data.object.amount_total;

@@ -20,7 +20,7 @@ export class CreatePaymentReceiveStripePayment {
   private uow: UnitOfWork;
 
   /**
-   * 
+   *
    * @param {number} tenantId
    * @param {number} saleInvoiceId
    * @param {number} paidAmount
@@ -36,26 +36,27 @@ export class CreatePaymentReceiveStripePayment {
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Finds or creates a new stripe payment clearing account (current asset).
       const stripeClearingAccount =
-        accountRepository.findOrCreateStripeClearing({}, trx);
+        await accountRepository.findOrCreateStripeClearing({}, trx);
 
       // Retrieves the given invoice to create payment transaction associated to it.
       const invoice = await this.getSaleInvoiceService.getSaleInvoice(
         tenantId,
         saleInvoiceId
       );
+      const paymentReceivedDTO = {
+        customerId: invoice.customerId,
+        paymentDate: new Date(),
+        amount: paidAmount,
+        exchangeRate: 1,
+        referenceNo: '',
+        statement: '',
+        depositAccountId: stripeClearingAccount.id,
+        entries: [{ invoiceId: saleInvoiceId, paymentAmount: paidAmount }],
+      };
       // Create a payment received transaction associated to the given invoice.
       await this.createPaymentReceivedService.createPaymentReceived(
         tenantId,
-        {
-          customerId: invoice.customerId,
-          paymentDate: new Date(),
-          amount: paidAmount,
-          exchangeRate: 1,
-          referenceNo: '',
-          statement: '',
-          depositAccountId: stripeClearingAccount.id,
-          entries: [{ invoiceId: saleInvoiceId, paymentAmount: paidAmount }],
-        },
+        paymentReceivedDTO,
         {},
         trx
       );
