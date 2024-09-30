@@ -18,10 +18,12 @@ export function EstimateCustomizeGeneralField() {
   return (
     <Stack style={{ padding: 20, flex: '1 1 auto' }}>
       <Stack spacing={0}>
-        <h2 style={{ fontSize: 16, marginBottom: 10 }}>General Branding</h2>
+        <h2 style={{ fontSize: 16, marginBottom: 10, fontWeight: 600 }}>
+          General Branding
+        </h2>
         <p className={Classes.TEXT_MUTED}>
-          Set your invoice details to be automatically applied every timeyou
-          create a new invoice.
+          Set your company logo and branding colors to be automatically applied
+          to your estimates.
         </p>
       </Stack>
 
@@ -38,7 +40,7 @@ export function EstimateCustomizeGeneralField() {
       <Overlay visible={!isTemplateNameFilled}>
         <Stack spacing={0}>
           <FFormGroup
-            name={'primaryColor'}
+            name={'primaryColor'} 
             label={'Primary Color'}
             style={{ justifyContent: 'space-between' }}
             inline
