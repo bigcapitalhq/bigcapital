@@ -1,3 +1,5 @@
+import { IContact } from '@/interfaces';
+
 interface OrganizationAddressFormatArgs {
   organizationName?: string;
   address1?: string;
@@ -17,7 +19,19 @@ const defaultMessage = `
   {COUNTRY}
 `;
 
-export const addressTextFormat = (
+const formatText = (message: string, replacements: Record<string, string>) => {
+  let formattedMessage = Object.entries(replacements).reduce(
+    (msg, [key, value]) => {
+      return msg.split(`{${key}}`).join(value || '');
+    },
+    message
+  );
+  formattedMessage = formattedMessage.replace(/\n/g, '<br />');
+
+  return formattedMessage.trim();
+};
+
+export const organizationAddressTextFormat = (
   message: string,
   args: OrganizationAddressFormatArgs
 ) => {
@@ -30,13 +44,53 @@ export const addressTextFormat = (
     POSTAL_CODE: args.postalCode || '',
     COUNTRY: args.country || '',
   };
-  let formattedMessage = Object.entries(replacements).reduce(
-    (msg, [key, value]) => {
-      return value ? msg.split(`{${key}}`).join(value) : msg;
-    },
-    message
-  );
-  formattedMessage = formattedMessage.replace(/\n/g, '<br />');
+  return formatText(message, replacements);
+};
 
-  return formattedMessage.trim();
+interface ContactAddressTextFormatArgs {
+  displayName?: string;
+  state?: string;
+  postalCode?: string;
+  email?: string;
+  country?: string;
+  city?: string;
+  address2?: string;
+  address1?: string;
+}
+
+const contactFormatMessage = `{CONTACT_NAME}
+{ADDRESS_1}
+{ADDRESS_2}
+{CITY} {STATE}
+{POSTAL_CODE}
+{COUNTRY}
+{EMAIL}
+`;
+
+export const contactAddressTextFormat = (
+  contact: IContact,
+  message: string = contactFormatMessage
+) => {
+  const args = {
+    displayName: contact.displayName,
+    address1: contact.billingAddress1,
+    address2: contact.billingAddress2,
+    state: contact.billingAddressState,
+    country: contact.billingAddressCountry,
+    postalCode: contact?.billingAddressPostcode,
+    city: contact?.billingAddressCity,
+    email: contact?.email,
+  } as ContactAddressTextFormatArgs;
+
+  const replacements: Record<string, string> = {
+    CONTACT_NAME: args.displayName || '',
+    ADDRESS_1: args.address1 || '',
+    ADDRESS_2: args.address2 || '',
+    CITY: args.city || '',
+    STATE: args.state || '',
+    POSTAL_CODE: args.postalCode || '',
+    COUNTRY: args.country || '',
+    EMAIL: args?.email || '',
+  };
+  return formatText(message, replacements);
 };

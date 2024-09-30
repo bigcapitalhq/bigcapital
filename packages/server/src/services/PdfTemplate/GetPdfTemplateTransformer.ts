@@ -1,5 +1,6 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { getTransactionTypeLabel } from '@/utils/transactions-types';
+import { getUploadedObjectUri } from '../Attachments/utils';
 
 export class GetPdfTemplateTransformer extends Transformer {
   /**
@@ -56,7 +57,7 @@ class GetPdfTemplateAttributesTransformer extends Transformer {
    */
   protected companyLogoUri(template) {
     return template.companyLogoKey
-      ? `https://bigcapital.sfo3.digitaloceanspaces.com/${template.companyLogoKey}`
+      ? getUploadedObjectUri(template.companyLogoKey)
       : '';
   }
 }

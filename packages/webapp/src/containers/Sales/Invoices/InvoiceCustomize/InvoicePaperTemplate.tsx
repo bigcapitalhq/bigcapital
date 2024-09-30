@@ -45,8 +45,12 @@ export interface InvoicePaperTemplateProps {
   bigtitle?: string;
 
   // Address
-  showBillingToAddress?: boolean;
-  showBilledFromAddress?: boolean;
+  showCustomerAddress?: boolean;
+  customerAddress?: string;
+
+  showCompanyAddress?: boolean;
+  companyAddress?: string;
+
   billedToLabel?: string;
 
   // Entries
@@ -90,9 +94,6 @@ export interface InvoicePaperTemplateProps {
 
   lines?: Array<PapaerLine>;
   taxes?: Array<PaperTax>;
-
-  billedFromAddres?: string;
-  billedToAddress?: string;
 }
 
 export function InvoicePaperTemplate({
@@ -118,8 +119,12 @@ export function InvoicePaperTemplate({
   showInvoiceNumber = true,
 
   // Address
-  showBillingToAddress = true,
-  showBilledFromAddress = true,
+  showCustomerAddress = true,
+  customerAddress = DefaultPdfTemplateAddressBilledTo,
+
+  showCompanyAddress = true,
+  companyAddress = DefaultPdfTemplateAddressBilledFrom,
+
   billedToLabel = 'Billed To',
 
   // Entries
@@ -171,8 +176,6 @@ export function InvoicePaperTemplate({
   statementLabel = 'Statement',
   showStatement = true,
   statement = DefaultPdfTemplateStatement,
-  billedToAddress = DefaultPdfTemplateAddressBilledTo,
-  billedFromAddres = DefaultPdfTemplateAddressBilledFrom,
 }: InvoicePaperTemplateProps) {
   return (
     <PaperTemplate
@@ -202,16 +205,16 @@ export function InvoicePaperTemplate({
         </PaperTemplate.TermsList>
 
         <PaperTemplate.AddressesGroup>
-          {showBilledFromAddress && (
+          {showCompanyAddress && (
             <PaperTemplate.Address>
-              <strong>{companyName}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedFromAddres }} />
+              <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
             </PaperTemplate.Address>
           )}
-          {showBillingToAddress && (
+
+          {showCustomerAddress && (
             <PaperTemplate.Address>
               <strong>{billedToLabel}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedToAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: customerAddress }} />
             </PaperTemplate.Address>
           )}
         </PaperTemplate.AddressesGroup>

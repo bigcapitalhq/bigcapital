@@ -1,4 +1,5 @@
 import { ISaleReceipt, ISaleReceiptBrandingTemplateAttributes } from "@/interfaces";
+import { contactAddressTextFormat } from "@/utils/address-text-format";
 
 
 
@@ -13,8 +14,8 @@ export const transformReceiptToBrandingTemplateAttributes = (saleReceipt: ISaleR
       quantity: entry.quantityFormatted,
       total: entry.totalFormatted,
     })),
-
     receiptNumber: saleReceipt.receiptNumber,
     receiptDate: saleReceipt.formattedReceiptDate,
+    customerAddress: contactAddressTextFormat(saleReceipt.customer),
   };
 }

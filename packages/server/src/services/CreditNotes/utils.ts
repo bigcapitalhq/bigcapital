@@ -1,4 +1,5 @@
 import { CreditNotePdfTemplateAttributes, ICreditNote } from '@/interfaces';
+import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export const transformCreditNoteToPdfTemplate = (
   creditNote: ICreditNote
@@ -19,5 +20,6 @@ export const transformCreditNoteToPdfTemplate = (
     })),
     customerNote: creditNote.note,
     termsConditions: creditNote.termsConditions,
+    customerAddress: contactAddressTextFormat(creditNote.customer),
   };
 };

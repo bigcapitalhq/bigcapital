@@ -1,5 +1,6 @@
-import { addressTextFormat } from '@/utils/address-text-format';
+import { organizationAddressTextFormat } from '@/utils/address-text-format';
 import BaseModel from 'models/Model';
+import { getUploadedObjectUri } from '../../services/Attachments/utils';
 
 export default class TenantMetadata extends BaseModel {
   baseCurrency!: string;
@@ -58,9 +59,7 @@ export default class TenantMetadata extends BaseModel {
    * @returns {string | null}
    */
   public get logoUri() {
-    return this.logoKey
-      ? `https://bigcapital.sfo3.digitaloceanspaces.com/${this.logoKey}`
-      : null;
+    return this.logoKey ? getUploadedObjectUri(this.logoKey) : null;
   }
 
   /**
@@ -75,7 +74,7 @@ export default class TenantMetadata extends BaseModel {
   {POSTAL_CODE},
   {COUNTRY}
 `;
-    return addressTextFormat(defaultMessage, {
+    return organizationAddressTextFormat(defaultMessage, {
       organizationName: this.name,
       address1: this.address?.address1,
       address2: this.address?.address2,

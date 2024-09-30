@@ -48,8 +48,8 @@ block head
       box-sizing: border-box;
       display: flex;
       flex-flow: wrap;
-      -webkit-box-align: center;
-      align-items: center;
+      -webkit-box-align: flex-start;
+      align-items: flex-start;
       -webkit-box-pack: start;
       justify-content: flex-start;
       gap: 10px;
@@ -150,17 +150,14 @@ block content
         div(class=`${prefix}-terms-item__value`) #{creditNoteDate}
 
   div(class=`${prefix}-address-section`)
-    if showBilledFromAddress
-      div(class=`${prefix}-address`)
-        strong #{companyName}
-        each address in billedFromAddress
-          div #{address}
+    if showCompanyAddress
+      div(class=`${prefix}-address-from`)
+        div !{companyAddress}
 
-    if showBilledToAddress
-      div(class=`${prefix}-address`)
+    if showCustomerAddress
+      div(class=`${prefix}-address-to`)
         strong #{billedToLabel}
-        each address in billedToAddress
-          div #{address}
+        div !{customerAddress}
 
   table(class=`${prefix}-table`)
     thead

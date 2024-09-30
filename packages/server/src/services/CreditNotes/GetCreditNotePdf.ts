@@ -34,8 +34,6 @@ export default class GetCreditNotePdf {
       tenantId,
       creditNoteId
     );
-    console.log(brandingAttributes, 'brandingAttributes');
-
     const htmlContent = await this.templateInjectable.render(
       tenantId,
       'modules/credit-note-standard',

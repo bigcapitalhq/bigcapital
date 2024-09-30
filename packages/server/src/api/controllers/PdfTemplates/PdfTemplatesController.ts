@@ -31,6 +31,7 @@ export class PdfTemplatesController extends BaseController {
       this.validationResult,
       this.editPdfTemplate.bind(this)
     );
+    router.get('/state', this.getOrganizationBrandingState.bind(this));
     router.get(
       '/',
       [query('resource').optional()],
@@ -171,6 +172,22 @@ export class PdfTemplatesController extends BaseController {
         id: templateId,
         message: 'The given pdf template has been assigned as default template',
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getOrganizationBrandingState(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+
+    try {
+      const data =
+        await this.pdfTemplateApplication.getPdfTemplateBrandingState(tenantId);
+
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

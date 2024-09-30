@@ -32,11 +32,11 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   companyName?: string;
 
   // Address
-  showBilledToAddress?: boolean;
-  billedToAddress?: string;
+  showCustomerAddress?: boolean;
+  customerAddress?: string;
 
-  showBilledFromAddress?: boolean;
-  billedFromAddress?: string;
+  showCompanyAddress?: boolean;
+  companyAddress?: string;
   billedToLabel?: string;
 
   // Totals
@@ -71,23 +71,27 @@ export function EstimatePaperTemplate({
   primaryColor,
   secondaryColor,
 
+  // # Company logo
   showCompanyLogo = true,
   companyLogoUri = '',
 
   companyName,
 
-  // # Address
-  billedToAddress = DefaultPdfTemplateAddressBilledTo,
-  billedFromAddress = DefaultPdfTemplateAddressBilledFrom,
-  showBilledFromAddress = true,
-  showBilledToAddress = true,
+  // # Company address
+  companyAddress = DefaultPdfTemplateAddressBilledFrom,
+  showCompanyAddress = true,
+
+  // # Customer address
+  customerAddress = DefaultPdfTemplateAddressBilledTo,
+  showCustomerAddress = true,
   billedToLabel = 'Billed To',
 
-  // #Total
+  // # Total
   total = '$1000.00',
   totalLabel = 'Total',
   showTotal = true,
 
+  // # Subtotal
   subtotal = '1000/00',
   subtotalLabel = 'Subtotal',
   showSubtotal = true,
@@ -111,14 +115,18 @@ export function EstimatePaperTemplate({
       total: '$1000.00',
     },
   ],
+
+  // Estimate number
   showEstimateNumber = true,
   estimateNumberLabel = 'Estimate Number',
   estimateNumebr = '346D3D40-0001',
 
+  // Estimate date
   estimateDate = 'September 3, 2024',
   showEstimateDate = true,
   estimateDateLabel = 'Estimate Date',
 
+  // Expiration date
   expirationDateLabel = 'Expiration Date',
   showExpirationDate = true,
   expirationDate = 'September 3, 2024',
@@ -151,16 +159,15 @@ export function EstimatePaperTemplate({
         </PaperTemplate.TermsList>
 
         <PaperTemplate.AddressesGroup>
-          {showBilledFromAddress && (
+          {showCompanyAddress && (
             <PaperTemplate.Address>
-              <strong>{companyName}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedFromAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
             </PaperTemplate.Address>
           )}
-          {showBilledToAddress && (
+          {showCustomerAddress && (
             <PaperTemplate.Address>
               <strong>{billedToLabel}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedToAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: customerAddress }} />
             </PaperTemplate.Address>
           )}
         </PaperTemplate.AddressesGroup>

@@ -185,23 +185,10 @@ export const defaultEstimatePdfBrandingAttributes = {
 
   companyName: '',
 
-  billedToAddress: [
-    'Bigcapital Technology, Inc.',
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  billedFromAddress: [
-    '131 Continental Dr Suite 305 Newark,',
-    'Delaware 19713',
-    'United States',
-    '+1 762-339-5634',
-    'ahmed@bigcapital.app',
-  ],
-  showBilledFromAddress: true,
-  showBilledToAddress: true,
+  customerAddress: '',
+  companyAddress: '',
+  showCustomerAddress: true,
+  showCompanyAddress: true,
   billedToLabel: 'Billed To',
 
   total: '$1000.00',
@@ -244,7 +231,6 @@ export const defaultEstimatePdfBrandingAttributes = {
   expirationDate: 'September 3, 2024',
 };
 
-
 interface EstimatePdfBrandingLineItem {
   item: string;
   description: string;
@@ -260,10 +246,13 @@ export interface EstimatePdfBrandingAttributes {
   companyLogo: string;
   companyName: string;
 
-  billedToAddress: string[];
-  billedFromAddress: string[];
-  showBilledFromAddress: boolean;
-  showBilledToAddress: boolean;
+  // Customer Address
+  showCustomerAddress: boolean;
+  customerAddress: string;
+
+  // Company Address
+  showCompanyAddress: boolean;
+  companyAddress: string;
   billedToLabel: string;
 
   total: string;

@@ -44,15 +44,16 @@ export const useBrandingTemplateFormInitialValues = <
 >(
   initialValues = {},
 ) => {
-  const { pdfTemplate } = useBrandingTemplateBoot();
+  const { pdfTemplate, brandingTemplateState } = useBrandingTemplateBoot();
 
-  const defaultPdfTemplate = {
+  const brandingAttributes = {
     templateName: pdfTemplate?.templateName,
+    ...brandingTemplateState,
     ...pdfTemplate?.attributes,
   };
   return {
     ...initialValues,
-    ...(transformToForm(defaultPdfTemplate, initialValues) as T),
+    ...(transformToForm(brandingAttributes, initialValues) as T),
   };
 };
 

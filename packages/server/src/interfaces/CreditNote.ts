@@ -262,16 +262,24 @@ export type ICreditNoteGLCommonEntry = Pick<
 >;
 
 export interface CreditNotePdfTemplateAttributes {
+  // # Primary color
   primaryColor: string;
   secondaryColor: string;
+
+  // # Company logo
   showCompanyLogo: boolean;
   companyLogo: string;
+
+  // # Company name
   companyName: string;
 
-  billedToAddress: string[];
-  billedFromAddress: string[];
-  showBilledToAddress: boolean;
-  showBilledFromAddress: boolean;
+  // # Customer Address
+  showCustomerAddress: boolean;
+  customerAddress: string;
+
+  // # Company address
+  showCompanyAddress: boolean;
+  companyAddress: string;
   billedToLabel: string;
 
   total: string;

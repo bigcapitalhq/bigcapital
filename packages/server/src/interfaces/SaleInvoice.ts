@@ -294,8 +294,13 @@ export interface InvoicePdfTemplateAttributes {
   invoiceNumber: string;
   showInvoiceNumber: boolean;
 
-  showBillingToAddress: boolean;
-  showBilledFromAddress: boolean;
+  // Customer Address
+  showCustomerAddress: boolean;
+  customerAddress: string;
+
+  // Company address
+  showCompanyAddress: boolean;
+  companyAddress: string;
   billedToLabel: string;
 
   lineItemLabel: string;
@@ -333,7 +338,4 @@ export interface InvoicePdfTemplateAttributes {
   statementLabel: string;
   showStatement: boolean;
   statement: string;
-
-  billedToAddress: string[];
-  billedFromAddres: string[];
 }

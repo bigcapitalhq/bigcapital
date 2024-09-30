@@ -11,9 +11,10 @@ export const initialValues = {
   companyLogoUri: '',
 
   // Address
-  showBilledToAddress: true,
-  showBilledFromAddress: true,
-  billedToLabel: 'Bill To',
+  showCustomerAddress: true,
+  showCompanyAddress: true,
+  companyAddress: '',
+  billedToLabel: 'Billed To',
 
   // Entries
   itemNameLabel: 'Item',

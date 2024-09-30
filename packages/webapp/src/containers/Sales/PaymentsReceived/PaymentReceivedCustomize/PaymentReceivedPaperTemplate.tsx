@@ -10,11 +10,14 @@ import {
 } from '@/constants/PdfTemplates';
 
 export interface PaymentReceivedPaperTemplateProps extends PaperTemplateProps {
-  billedToAddress?: string;
-  showBilledToAddress?: boolean;
+  // Customer address
+  showCustomerAddress?: boolean;
+  customerAddress?: string;
 
-  billedFromAddress?: string;
-  showBilledFromAddress?: boolean;
+  // Company address
+  showCompanyAddress?: boolean;
+  companyAddress?: string;
+
   billedToLabel?: string;
 
   // Total.
@@ -56,10 +59,14 @@ export function PaymentReceivedPaperTemplate({
   // # Company name
   companyName = 'Bigcapital Technology, Inc.',
 
-  billedToAddress = DefaultPdfTemplateAddressBilledTo,
-  billedFromAddress = DefaultPdfTemplateAddressBilledFrom,
-  showBilledFromAddress,
-  showBilledToAddress,
+  // # Customer address
+  showCustomerAddress = true,
+  customerAddress = DefaultPdfTemplateAddressBilledTo,
+
+  // # Company address
+  showCompanyAddress = true,
+  companyAddress = DefaultPdfTemplateAddressBilledFrom,
+
   billedToLabel = 'Billed To',
 
   total = '$1000.00',
@@ -109,16 +116,16 @@ export function PaymentReceivedPaperTemplate({
         </PaperTemplate.TermsList>
 
         <PaperTemplate.AddressesGroup>
-          {showBilledFromAddress && (
+          {showCompanyAddress && (
             <PaperTemplate.Address>
-              <strong>{companyName}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedFromAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
             </PaperTemplate.Address>
           )}
-          {showBilledToAddress && (
+
+          {showCustomerAddress && (
             <PaperTemplate.Address>
               <strong>{billedToLabel}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedToAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: customerAddress }} />
             </PaperTemplate.Address>
           )}
         </PaperTemplate.AddressesGroup>

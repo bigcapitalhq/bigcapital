@@ -48,9 +48,7 @@ block head
       box-sizing: border-box;
       display: flex;
       flex-flow: wrap;
-      -webkit-box-align: center;
-      align-items: center;
-      -webkit-box-pack: start;
+      align-items: flex-start;
       justify-content: flex-start;
       gap: 10px;
       margin-bottom: 24px;
@@ -167,17 +165,14 @@ block content
 
     //- Address section
     div(class=`${prefix}-address-root`)
-      if showBilledFromAddress
+      if showCompanyAddress
         div(class=`${prefix}-address-from`)
-          strong #{companyName}
-          each item in billedFromAddres
-            div(class=`${prefix}-address-from__item`) #{item}
+          div !{companyAddress}
 
-      if showBillingToAddress
+      if showCustomerAddress
         div(class=`${prefix}-address-to`)
           strong #{billedToLabel}
-          each item in billedToAddress
-            div(class=`${prefix}-address-to__item`) #{item}
+          div !{customerAddress}
 
     //- Invoice table
     table(class=`${prefix}-table`)

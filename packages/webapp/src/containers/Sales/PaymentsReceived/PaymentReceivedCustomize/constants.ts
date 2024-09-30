@@ -14,15 +14,19 @@ export const initialValues = {
   showPaymentReceivedNumber: true,
   paymentReceivedNumberLabel: 'Payment number',
 
+  // Payment number
   showPaymentReceivedDate: true,
   paymentReceivedDateLabel: 'Date of Issue',
 
   // Company name
   companyName: 'Bigcapital Technology, Inc.',
 
-  // Addresses
-  showBilledFromAddress: true,
-  showBillingToAddress: true,
+  // Customer address
+  showCompanyAddress: true,
+  companyAddress: '',
+
+  // Company address
+  showCustomerAddress: true,
   billedToLabel: 'Billed To',
 
   // Entries
@@ -31,10 +35,11 @@ export const initialValues = {
   itemRateLabel: 'Rate',
   itemTotalLabel: 'Total',
 
-  // Totals
+  // Subtotal
   showSubtotal: true,
   subtotalLabel: 'Subtotal',
 
+  // Total
   showTotal: true,
   totalLabel: 'Total',
 };

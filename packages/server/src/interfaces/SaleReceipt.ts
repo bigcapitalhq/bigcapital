@@ -163,11 +163,13 @@ export interface ISaleReceiptBrandingTemplateAttributes {
   companyLogo: string;
   companyName: string;
 
-  // Address
-  billedToAddress: string[];
-  billedFromAddress: string[];
-  showBilledFromAddress: boolean;
-  showBilledToAddress: boolean;
+  // Customer Address
+  showCustomerAddress: boolean;
+  customerAddress: string;
+
+  // Company address
+  showCompanyAddress: boolean;
+  companyAddress: string;
   billedToLabel: string;
 
   // Total

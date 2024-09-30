@@ -14,10 +14,12 @@ import {
 
 export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
   // Addresses
-  billedToAddress?: string;
-  billedFromAddress?: string;
-  showBilledFromAddress?: boolean;
-  showBilledToAddress?: boolean;
+  showCustomerAddress?: boolean;
+  customerAddress?: string;
+
+  showCompanyAddress?: boolean;
+  companyAddress?: string;
+
   billedToLabel?: string;
 
   // Total
@@ -73,10 +75,12 @@ export function ReceiptPaperTemplate({
   companyName = 'Bigcapital Technology, Inc.',
 
   // # Address
-  billedToAddress = DefaultPdfTemplateAddressBilledTo,
-  billedFromAddress = DefaultPdfTemplateAddressBilledFrom,
-  showBilledFromAddress = true,
-  showBilledToAddress = true,
+  showCustomerAddress = true,
+  customerAddress = DefaultPdfTemplateAddressBilledTo,
+
+  showCompanyAddress = true,
+  companyAddress = DefaultPdfTemplateAddressBilledFrom,
+
   billedToLabel = 'Billed To',
 
   total = '$1000.00',
@@ -135,16 +139,16 @@ export function ReceiptPaperTemplate({
         </PaperTemplate.TermsList>
 
         <PaperTemplate.AddressesGroup>
-          {showBilledFromAddress && (
+          {showCompanyAddress && (
             <PaperTemplate.Address>
-              <strong>{companyName}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedFromAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
             </PaperTemplate.Address>
           )}
-          {showBilledToAddress && (
+
+          {showCustomerAddress && (
             <PaperTemplate.Address>
               <strong>{billedToLabel}</strong>
-              <Box dangerouslySetInnerHTML={{ __html: billedToAddress }} />
+              <Box dangerouslySetInnerHTML={{ __html: customerAddress }} />
             </PaperTemplate.Address>
           )}
         </PaperTemplate.AddressesGroup>

@@ -46,8 +46,8 @@ block head
       box-sizing: border-box;
       display: flex;
       flex-flow: wrap;
-      -webkit-box-align: center;
-      align-items: center;
+      -webkit-box-align: flex-start;
+      align-items: flex-start;
       -webkit-box-pack: start;
       justify-content: flex-start;
       gap: 10px;
@@ -146,17 +146,14 @@ block content
 
     //- Address Section
     div(class=`${prefix}-address-section`)
-      if showBilledFromAddress
-        div(class=`${prefix}-address`)
-          strong= companyName
-          each addressLine in billedFromAddress
-            div= addressLine
+      if showCompanyAddress
+        div(class=`${prefix}-address-from`)
+          div !{companyAddress}
 
-      if showBilledToAddress
-        div(class=`${prefix}-address`)
-          strong= billedToLabel
-          each addressLine in billedToAddress
-            div= addressLine
+      if showCustomerAddress
+        div(class=`${prefix}-address-to`)
+          strong #{billedToLabel}
+          div !{customerAddress}
 
     //- Table Section
     table(class=`${prefix}-table`)
