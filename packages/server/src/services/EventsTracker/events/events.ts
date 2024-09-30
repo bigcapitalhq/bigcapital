@@ -15,6 +15,7 @@ import { BankRuleEventsTracker } from './BankRuleEventsTracker';
 import { PdfTemplateEventsTracker } from './PdfTemplateEventsTracker';
 import { PaymentMethodEventsTracker } from './PaymentMethodEventsTracker';
 import { PaymentLinkEventsTracker } from './PaymentLinkEventsTracker';
+import { StripeIntegrationEventsTracker } from './StripeIntegrationEventsTracker';
 
 export const EventsTrackerListeners = [
   SaleInvoiceEventsTracker,
@@ -34,4 +35,5 @@ export const EventsTrackerListeners = [
   PdfTemplateEventsTracker,
   PaymentMethodEventsTracker,
   PaymentLinkEventsTracker,
+  StripeIntegrationEventsTracker,
 ];
