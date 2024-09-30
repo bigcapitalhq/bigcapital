@@ -79,6 +79,8 @@ export const PAYMENT_METHOD_DELETED = 'Payment method deleted';
 
 export const INVOICE_PAYMENT_LINK_GENERATED = 'Invoice payment link generated';
 
+export const STRIPE_INTEGRAION_CONNECTED = 'Stripe integration oauth2 connected';
+
 // # Event Groups
 export const ACCOUNT_GROUP = 'Account';
 export const ITEM_GROUP = 'Item';
