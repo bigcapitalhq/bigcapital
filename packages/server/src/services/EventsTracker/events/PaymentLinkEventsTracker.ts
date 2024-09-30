@@ -19,11 +19,11 @@ export class PaymentLinkEventsTracker extends EventSubscriber {
     );
   }
 
-  public handleTrackInvoicePublicLinkGeneratedEvent({ tenantId }) {
+  public handleTrackInvoicePublicLinkGeneratedEvent = ({ tenantId }) => {
     this.posthog.trackEvent({
       distinctId: `tenant-${tenantId}`,
       event: INVOICE_PAYMENT_LINK_GENERATED,
       properties: {},
     });
-  }
+  };
 }
