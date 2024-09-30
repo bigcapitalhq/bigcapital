@@ -12,18 +12,23 @@ export interface PaymentReceivedCustomizeValues extends BrandingTemplateValues {
   showInvoiceNumber?: boolean;
   invoiceNumberLabel?: string;
 
+  // # Issue date
   showDateIssue?: boolean;
   dateIssueLabel?: string;
 
+  // # Due date
   showDueDate?: boolean;
   dueDateLabel?: string;
 
-  // Company name
+  // # Company name
   companyName?: string;
 
-  // Addresses
-  showBilledFromAddress?: boolean;
-  showBillingToAddress?: boolean;
+  // # Customer address
+  showCustomerAddress?: boolean;
+
+  // # Company address
+  showCompanyAddress?: boolean;
+  companyAddress?: string;
   billedToLabel?: string;
 
   // Entries
@@ -54,6 +59,7 @@ export interface PaymentReceivedCustomizeValues extends BrandingTemplateValues {
   termsConditionsLabel?: string;
   showTermsConditions?: boolean;
 
+  // # Statement
   statementLabel?: string;
   showStatement?: boolean;
 }

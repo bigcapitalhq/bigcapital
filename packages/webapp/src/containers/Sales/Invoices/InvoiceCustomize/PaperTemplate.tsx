@@ -120,18 +120,17 @@ PaperTemplate.MutedText = () => {};
 PaperTemplate.Text = () => {};
 
 PaperTemplate.AddressesGroup = (props: GroupProps) => {
-  return <Group spacing={10} {...props} className={styles.addressRoot} />;
-};
-PaperTemplate.Address = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
   return (
-    <Box>
-      {children}
-    </Box>
+    <Group
+      spacing={10}
+      align={'flex-start'}
+      {...props}
+      className={styles.addressRoot}
+    />
   );
+};
+PaperTemplate.Address = ({ children }: { children: React.ReactNode }) => {
+  return <Box>{children}</Box>;
 };
 
 PaperTemplate.Statement = ({

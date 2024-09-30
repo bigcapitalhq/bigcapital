@@ -179,14 +179,15 @@ export const defaultInvoicePdfTemplateAttributes = {
   dateIssueLabel: 'Date of issue',
   showDateIssue: true,
 
-  // dateIssue,
+  // # Invoice number,
   invoiceNumberLabel: 'Invoice number',
   showInvoiceNumber: true,
 
-  // Address
+  // # Customer address
   showCustomerAddress: true,
   customerAddress: '',
 
+  // # Company address
   showCompanyAddress: true,
   companyAddress: '',
   billedToLabel: 'Billed To',
