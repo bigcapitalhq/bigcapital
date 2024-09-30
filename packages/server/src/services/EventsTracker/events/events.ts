@@ -12,6 +12,9 @@ import { CustomerEventsTracker } from './CustomerEventsTracker';
 import { VendorEventsTracker } from './VendorEventsTracker';
 import { ManualJournalEventsTracker } from './ManualJournalEventsTracker';
 import { BankRuleEventsTracker } from './BankRuleEventsTracker';
+import { PdfTemplateEventsTracker } from './PdfTemplateEventsTracker';
+import { PaymentMethodEventsTracker } from './PaymentMethodEventsTracker';
+import { PaymentLinkEventsTracker } from './PaymentLinkEventsTracker';
 
 export const EventsTrackerListeners = [
   SaleInvoiceEventsTracker,
@@ -28,4 +31,7 @@ export const EventsTrackerListeners = [
   VendorEventsTracker,
   ManualJournalEventsTracker,
   BankRuleEventsTracker,
+  PdfTemplateEventsTracker,
+  PaymentMethodEventsTracker,
+  PaymentLinkEventsTracker,
 ];

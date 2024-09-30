@@ -69,6 +69,16 @@ export const BANK_RULE_CREATED = 'Bank rule created';
 export const BANK_RULE_EDITED = 'Bank rule edited';
 export const BANK_RULE_DELETED = 'Bank rule deleted';
 
+export const PDF_TEMPLATE_CREATED = 'PDF template created';
+export const PDF_TEMPLATE_EDITED = 'PDF template edited';
+export const PDF_TEMPLATE_DELETED = 'PDF template deleted';
+export const PDF_TEMPLATE_ASSIGNED_DEFAULT = 'PDF template assigned as default';
+
+export const PAYMENT_METHOD_EDITED = 'Payment method edited';
+export const PAYMENT_METHOD_DELETED = 'Payment method deleted';
+
+export const INVOICE_PAYMENT_LINK_GENERATED = 'Invoice payment link generated';
+
 // # Event Groups
 export const ACCOUNT_GROUP = 'Account';
 export const ITEM_GROUP = 'Item';
