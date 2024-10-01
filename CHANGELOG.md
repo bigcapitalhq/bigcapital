@@ -2,6 +2,23 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.20.0]
+
+* feat: Customize pdf templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/667
+* feat: Onboard accounts to Stripe Connect by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/668
+* feat: Upload company logo to invoice templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/670
+* fix: Invoice pdf customize by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/672
+* fix: Invoice customize bugs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/673
+* feat: Clean up payment links endpoints by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/674
+* feat: Hook up company logo to server-side pdf templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/675
+* feat: Company branding preferences by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/677
+* feat: Pdf templates customer/company addresses by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/678
+* fix: Listen to Stripe session completed event by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/679
+* feat: Track pdf templates Posthog events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/680
+* fix: Branding customize content by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/681
+* feat: Listen to Stripe integration events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/682
+* feat: Hook up customer/company address to invoice preview of payment page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/683
+
 # [0.19.17]
 
 * fix: Un-categorize bank transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/663
