@@ -108,6 +108,7 @@ export interface GetInvoicePaymentLinkResponse {
   organization: GetInvoicePaymentLinkOrganizationRes;
   hasStripePaymentMethod: boolean;
   isReceivable: boolean;
+  formattedCustomerAddress: string;
 }
 
 /**

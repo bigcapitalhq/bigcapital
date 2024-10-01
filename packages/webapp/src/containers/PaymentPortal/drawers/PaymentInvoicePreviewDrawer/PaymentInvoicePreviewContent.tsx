@@ -34,6 +34,10 @@ export function PaymentInvoicePreviewContent() {
               label: tax.name,
               amount: tax.taxRateAmountFormatted,
             }))}
+            companyAddress={
+              sharableLinkMeta?.organization?.addressTextFormatted
+            }
+            customerAddress={sharableLinkMeta?.formattedCustomerAddress}
           />
         </Box>
       </DrawerBody>

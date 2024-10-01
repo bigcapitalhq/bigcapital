@@ -68,11 +68,11 @@ export default class TenantMetadata extends BaseModel {
    */
   public get addressTextFormatted() {
     const defaultMessage = `<strong>{ORGANIZATION_NAME}</strong>
-  {ADDRESS_1},
-  {ADDRESS_2},
-  {CITY} {STATE},
-  {POSTAL_CODE},
+  {ADDRESS_1}
+  {ADDRESS_2}
+  {CITY}, {STATE} {POSTAL_CODE}
   {COUNTRY}
+  {PHONE}
 `;
     return organizationAddressTextFormat(defaultMessage, {
       organizationName: this.name,
@@ -81,6 +81,7 @@ export default class TenantMetadata extends BaseModel {
       state: this.address?.stateProvince,
       city: this.address?.city,
       postalCode: this.address?.postalCode,
+      phone: this.address?.phone,
       country: 'United State',
     });
   }

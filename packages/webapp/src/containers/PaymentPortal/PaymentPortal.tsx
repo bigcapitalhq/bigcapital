@@ -1,4 +1,4 @@
-import { Text, Classes, Button, Intent } from '@blueprintjs/core';
+import { Text, Classes, Button, Intent, Tag } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { AppToaster, Box, Group, Stack } from '@/components';
 import { usePaymentPortalBoot } from './PaymentPortalBoot';
@@ -54,20 +54,25 @@ export function PaymentPortal() {
               {sharableLinkMeta?.organization?.name} Sent an Invoice for{' '}
               {sharableLinkMeta?.totalFormatted}
             </h1>
-            <Text className={clsx(Classes.TEXT_MUTED, styles.invoiceDueDate)}>
-              Invoice due {sharableLinkMeta?.dueDateFormatted}
-            </Text>
+            <Group spacing={10}>
+              <Text className={clsx(Classes.TEXT_MUTED, styles.invoiceDueDate)}>
+                Invoice due {sharableLinkMeta?.dueDateFormatted}{' '}
+              </Text>
+            </Group>
           </Stack>
 
           <Stack className={styles.address} spacing={2}>
             <Box className={styles.customerName}>
               {sharableLinkMeta?.customerName}
             </Box>
-            <Box>Bigcapital Technology, Inc.</Box>
-            <Box>131 Continental Dr Suite 305 Newark,</Box>
-            <Box>Delaware 19713</Box>
-            <Box>United States</Box>
-            <Box>ahmed@bigcapital.app</Box>
+
+            {sharableLinkMeta?.formattedCustomerAddress && (
+              <Box
+                dangerouslySetInnerHTML={{
+                  __html: sharableLinkMeta?.formattedCustomerAddress,
+                }}
+              />
+            )}
           </Stack>
 
           <h2 className={styles.invoiceNumber}>
