@@ -3,6 +3,7 @@ import { ItemEntryTransformer } from './ItemEntryTransformer';
 import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
 import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer {
   /**
@@ -43,6 +44,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
       'organization',
       'isReceivable',
       'hasStripePaymentMethod',
+      'formattedCustomerAddress',
     ];
   };
 
@@ -100,6 +102,14 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
     return invoice.paymentMethods.some(
       (paymentMethod) => paymentMethod.paymentIntegration.service === 'Stripe'
     );
+  }
+
+  protected formattedCustomerAddress(invoice) {
+    return contactAddressTextFormat(invoice.customer, `{ADDRESS_1}
+{ADDRESS_2}
+{CITY}, {STATE} {POSTAL_CODE}
+{COUNTRY}
+{PHONE}`);
   }
 }
 
