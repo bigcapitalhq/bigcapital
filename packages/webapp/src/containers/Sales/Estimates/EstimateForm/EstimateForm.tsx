@@ -58,6 +58,7 @@ function EstimateForm({
     submitPayload,
     createEstimateMutate,
     editEstimateMutate,
+    saleEstimateState,
   } = useEstimateFormContext();
 
   const estimateNumber = transactionNumber(
@@ -79,6 +80,7 @@ function EstimateForm({
           currency_code: base_currency,
           terms_conditions: defaultTo(estimateTermsConditions, ''),
           note: defaultTo(estimateCustomerNotes, ''),
+          pdf_template_id: saleEstimateState?.defaultTemplateId,
         }),
   };
 

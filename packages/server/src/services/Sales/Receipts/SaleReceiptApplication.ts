@@ -4,6 +4,7 @@ import {
   IFilterMeta,
   IPaginationMeta,
   ISaleReceipt,
+  ISaleReceiptState,
   ISalesReceiptsFilter,
   SaleReceiptMailOpts,
   SaleReceiptMailOptsDTO,
@@ -16,6 +17,7 @@ import { CloseSaleReceipt } from './CloseSaleReceipt';
 import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
 import { SaleReceiptNotifyBySms } from './SaleReceiptNotifyBySms';
 import { SaleReceiptMailNotification } from './SaleReceiptMailNotification';
+import { GetSaleReceiptState } from './GetSaleReceiptState';
 
 @Service()
 export class SaleReceiptApplication {
@@ -45,6 +47,9 @@ export class SaleReceiptApplication {
 
   @Inject()
   private saleReceiptNotifyByMailService: SaleReceiptMailNotification;
+
+  @Inject()
+  private getSaleReceiptStateService: GetSaleReceiptState;
 
   /**
    * Creates a new sale receipt with associated entries.
@@ -206,5 +211,14 @@ export class SaleReceiptApplication {
       tenantId,
       saleReceiptId
     );
+  }
+
+  /**
+   * Retrieves the current state of the sale receipt.
+   * @param {number} tenantId - The ID of the tenant.
+   * @returns {Promise<ISaleReceiptState>} - A promise resolving to the sale receipt state.
+   */
+  public getSaleReceiptState(tenantId: number): Promise<ISaleReceiptState> {
+    return this.getSaleReceiptStateService.getSaleReceiptState(tenantId);
   }
 }

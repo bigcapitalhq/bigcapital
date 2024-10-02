@@ -11,6 +11,8 @@ import {
   useSettingsEstimates,
   useCreateEstimate,
   useEditEstimate,
+  useGetSaleEstimatesState,
+  ISaleEstimatesStateResponse,
 } from '@/hooks/query';
 import { useProjects } from '@/containers/Projects/hooks';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
@@ -18,7 +20,12 @@ import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { ITEMS_FILTER_ROLES } from './utils';
 
-const EstimateFormContext = createContext();
+interface EstimateFormProviderValues {
+  saleEstimateState: ISaleEstimatesStateResponse;
+  isSaleEstimateStateLoading: boolean;
+}
+
+const EstimateFormContext = createContext({} as EstimateFormProviderValues);
 
 /**
  * Estimate form provider.
@@ -76,6 +83,10 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
     useGetPdfTemplates({ resource: 'SaleEstimate' });
 
+  // Fetches the sale estimate state.
+  const { data: saleEstimateState, isLoading: isSaleEstimateStateLoading } =
+    useGetSaleEstimatesState();
+
   // Handle fetch settings.
   useSettingsEstimates();
 
@@ -118,15 +129,21 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     createEstimateMutate,
     editEstimateMutate,
 
+    // Branding templates
     brandingTemplates,
     isBrandingTemplatesLoading,
+
+    // Estimate state
+    saleEstimateState,
+    isSaleEstimateStateLoading,
   };
 
   const isLoading =
     isCustomersLoading ||
     isItemsLoading ||
     isEstimateLoading ||
-    isBrandingTemplatesLoading;
+    isBrandingTemplatesLoading ||
+    isSaleEstimateStateLoading;
 
   return (
     <DashboardInsider loading={isLoading} name={'estimate-form'}>
@@ -135,6 +152,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   );
 }
 
-const useEstimateFormContext = () => useContext(EstimateFormContext);
+const useEstimateFormContext = () =>
+  useContext<EstimateFormProviderValues>(EstimateFormContext);
 
 export { EstimateFormProvider, useEstimateFormContext };

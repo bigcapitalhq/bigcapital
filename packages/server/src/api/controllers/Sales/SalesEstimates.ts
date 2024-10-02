@@ -106,6 +106,12 @@ export default class SalesEstimatesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
+      '/state',
+      CheckPolicies(SaleEstimateAction.View, AbilitySubject.SaleEstimate),
+      this.getSaleEstimateState.bind(this),
+      this.handleServiceErrors
+    );
+    router.get(
       '/:id',
       CheckPolicies(SaleEstimateAction.View, AbilitySubject.SaleEstimate),
       this.validateSpecificEstimateSchema,
@@ -539,6 +545,23 @@ export default class SalesEstimatesController extends BaseController {
       const data = await this.saleEstimatesApplication.getSaleEstimateMail(
         tenantId,
         invoiceId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private getSaleEstimateState = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+
+    try {
+      const data = await this.saleEstimatesApplication.getSaleEstimateState(
+        tenantId
       );
       return res.status(200).send({ data });
     } catch (error) {

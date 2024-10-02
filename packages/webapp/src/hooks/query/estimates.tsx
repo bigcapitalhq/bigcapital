@@ -2,7 +2,7 @@
 import { useQueryClient, useMutation } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import t from './types';
 import { useRequestPdf } from '../useRequestPdf';
 
@@ -268,5 +268,24 @@ export function useSaleEstimateDefaultOptions(estimateId, props) {
       select: (res) => res.data.data,
       ...props,
     },
+  );
+}
+
+export interface ISaleEstimatesStateResponse {
+  defaultTemplateId: number;
+}
+
+export function useGetSaleEstimatesState(
+  options?: UseQueryOptions<ISaleEstimatesStateResponse, Error>,
+): UseQueryResult<ISaleEstimatesStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<ISaleEstimatesStateResponse, Error>(
+    ['SALE_ESTIMATES_STATE'],
+    () =>
+      apiRequest
+        .get('/sales/estimates/state')
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
   );
 }

@@ -238,3 +238,8 @@ export interface PaymentReceivedPdfTemplateAttributes {
   showPaymentReceivedDate: boolean;
   paymentReceivedDateLabel: string;
 }
+
+
+export interface IPaymentReceivedState {
+  defaultTemplateId: number;
+}

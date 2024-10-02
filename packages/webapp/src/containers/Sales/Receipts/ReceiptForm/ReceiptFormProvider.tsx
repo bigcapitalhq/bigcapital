@@ -13,11 +13,20 @@ import {
   useItems,
   useCreateReceipt,
   useEditReceipt,
+  useGetReceiptState,
+  IGetReceiptStateResponse,
 } from '@/hooks/query';
 import { useProjects } from '@/containers/Projects/hooks';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
-const ReceiptFormContext = createContext();
+const ReceiptFormContext = createContext<ReceiptFormProviderValue>(
+  {} as ReceiptFormProviderValue,
+);
+
+interface ReceiptFormProviderValue {
+  isSaleReceiptStateLoading: boolean;
+  saleReceiptState: IGetReceiptStateResponse;
+}
 
 /**
  * Receipt form provider.
@@ -96,6 +105,10 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
     useGetPdfTemplates({ resource: 'SaleReceipt' });
 
+  // Fetches the sale receipt state.
+  const { data: saleReceiptState, isLoading: isSaleReceiptStateLoading } =
+    useGetReceiptState();
+
   // Fetch receipt settings.
   const { isLoading: isSettingLoading } = useSettingsReceipts();
 
@@ -137,6 +150,10 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     // Branding templates
     brandingTemplates,
     isBrandingTemplatesLoading,
+
+    // State
+    isSaleReceiptStateLoading,
+    saleReceiptState,
   };
   const isLoading =
     isReceiptLoading ||
@@ -144,7 +161,8 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isCustomersLoading ||
     isItemsLoading ||
     isSettingLoading ||
-    isBrandingTemplatesLoading;
+    isBrandingTemplatesLoading ||
+    isSaleReceiptStateLoading;
 
   return (
     <DashboardInsider loading={isLoading} name={'receipt-form'}>
@@ -153,6 +171,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   );
 }
 
-const useReceiptFormContext = () => React.useContext(ReceiptFormContext);
+const useReceiptFormContext = () =>
+  React.useContext<ReceiptFormProviderValue>(ReceiptFormContext);
 
 export { ReceiptFormProvider, useReceiptFormContext };

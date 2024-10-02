@@ -131,6 +131,12 @@ export default class SaleInvoicesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
+      '/state',
+      CheckPolicies(SaleInvoiceAction.View, AbilitySubject.SaleInvoice),
+      asyncMiddleware(this.getSaleInvoiceState.bind(this)),
+      this.handleServiceErrors
+    );
+    router.get(
       '/:id',
       CheckPolicies(SaleInvoiceAction.View, AbilitySubject.SaleInvoice),
       this.specificSaleInvoiceValidation,
@@ -138,6 +144,7 @@ export default class SaleInvoicesController extends BaseController {
       asyncMiddleware(this.getSaleInvoice.bind(this)),
       this.handleServiceErrors
     );
+
     router.get(
       '/',
       CheckPolicies(SaleInvoiceAction.View, AbilitySubject.SaleInvoice),
@@ -453,6 +460,24 @@ export default class SaleInvoicesController extends BaseController {
       return res.status(200).send({ saleInvoice });
     }
   }
+
+  private async getSaleInvoiceState(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+
+    try {
+      const data = await this.saleInvoiceApplication.getSaleInvoiceState(
+        tenantId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   /**
    * Retrieve paginated sales invoices with custom view metadata.
    * @param {Request} req

@@ -61,6 +61,7 @@ function InvoiceForm({
     createInvoiceMutate,
     editInvoiceMutate,
     submitPayload,
+    saleInvoiceState
   } = useInvoiceFormContext();
 
   // Invoice number.
@@ -83,6 +84,7 @@ function InvoiceForm({
           currency_code: base_currency,
           invoice_message: defaultTo(invoiceCustomerNotes, ''),
           terms_conditions: defaultTo(invoiceTermsConditions, ''),
+          pdf_template_id: saleInvoiceState?.defaultTemplateId,
           ...newInvoice,
         }),
   };

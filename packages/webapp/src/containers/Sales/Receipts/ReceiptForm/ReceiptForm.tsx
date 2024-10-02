@@ -63,6 +63,7 @@ function ReceiptForm({
     createReceiptMutate,
     submitPayload,
     isNewMode,
+    saleReceiptState,
   } = useReceiptFormContext();
 
   // The next receipt number.
@@ -84,6 +85,7 @@ function ReceiptForm({
           currency_code: base_currency,
           receipt_message: receiptMessage,
           terms_conditions: receiptTermsConditions,
+          pdf_template_id: saleReceiptState?.pdfTemplateId,
         }),
   };
   // Handle the form submit.

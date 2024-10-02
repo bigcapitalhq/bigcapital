@@ -1,5 +1,11 @@
 // @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
+import {
+  useQueryClient,
+  useMutation,
+  UseQueryResult,
+  UseQueryOptions,
+  useQuery,
+} from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { transformPagination } from '@/utils';
@@ -242,5 +248,24 @@ export function useSaleReceiptDefaultOptions(invoiceId, props) {
       select: (res) => res.data.data,
       ...props,
     },
+  );
+}
+
+export interface IGetReceiptStateResponse {
+  pdfTemplateId: number;
+}
+
+export function useGetReceiptState(
+  options?: UseQueryOptions<IGetReceiptStateResponse, Error>,
+): UseQueryResult<IGetReceiptStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<IGetReceiptStateResponse, Error>(
+    ['SALE_RECEIPT_STATE'],
+    () =>
+      apiRequest
+        .get(`/sales/receipts/state`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
   );
 }
