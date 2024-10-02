@@ -86,6 +86,11 @@ export type CurrencyInputProps = Overwrite<
     prefix?: string;
 
     /**
+     * Include a suffix eg. %
+     */
+    suffix?: string;
+
+    /**
      * Incremental value change on arrow down and arrow up key press
      */
     step?: number;
