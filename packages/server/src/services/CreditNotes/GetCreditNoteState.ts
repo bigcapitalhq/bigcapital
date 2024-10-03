@@ -1,24 +1,22 @@
 import { Inject, Service } from 'typedi';
-import { ISaleInvocieState } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ICreditNoteState } from '@/interfaces';
+import HasTenancyService from '../Tenancy/TenancyService';
 
 @Service()
-export class GetSaleInvoiceState {
+export class GetCreditNoteState {
   @Inject()
   private tenancy: HasTenancyService;
 
   /**
-   * Retrieves the create/edit invoice state.
+   * Retrieves the create/edit initial state of the payment received.
    * @param {Number} saleInvoiceId -
    * @return {Promise<ISaleInvoice>}
    */
-  public async getSaleInvoiceState(
-    tenantId: number
-  ): Promise<ISaleInvocieState> {
+  public async getCreditNoteState(tenantId: number): Promise<ICreditNoteState> {
     const { PdfTemplate } = this.tenancy.models(tenantId);
 
     const defaultPdfTemplate = await PdfTemplate.query()
-      .findOne({ resource: 'SaleInvoice' })
+      .findOne({ resource: 'CreditNote' })
       .modify('default');
 
     return {

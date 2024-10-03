@@ -8,7 +8,7 @@ import {
 } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
 
@@ -252,7 +252,7 @@ export function useSaleReceiptDefaultOptions(invoiceId, props) {
 }
 
 export interface IGetReceiptStateResponse {
-  pdfTemplateId: number;
+  defaultTemplateId: number;
 }
 
 export function useGetReceiptState(

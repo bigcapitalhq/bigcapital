@@ -2,14 +2,13 @@
 import {
   useMutation,
   useQueryClient,
-  QueryClient,
   UseQueryOptions,
   UseQueryResult,
   useQuery,
 } from 'react-query';
 import useApiRequest from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination, saveInvoke } from '@/utils';
+import { transformPagination, saveInvoke, transformToCamelCase } from '@/utils';
 import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
 
@@ -297,7 +296,7 @@ export function usePaymentReceivedState(
     () =>
       apiRequest
         .get('/sales/payment_receives/state', { params: query })
-        .then((res) => res.data),
+        .then((res) => transformToCamelCase(res.data?.data)),
     {
       ...options,
     },

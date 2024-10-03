@@ -259,7 +259,7 @@ export class SaleEstimatesApplication {
    * @param {number} tenantId - The ID of the tenant.
    * @returns {Promise<ISaleEstimateState>} - A promise resolving to the sale estimate state.
    */
-  public getSaleEstimateStat(tenantId: number) {
+  public getSaleEstimateState(tenantId: number) {
     return this.getSaleEstimateStateService.getSaleEstimateState(tenantId);
   }
 }

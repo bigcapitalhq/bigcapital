@@ -314,3 +314,7 @@ export interface CreditNotePdfTemplateAttributes {
   showCreditNoteDate: boolean;
   creditNoteDateLabel: string;
 }
+
+export interface ICreditNoteState {
+  defaultTemplateId: number;
+}

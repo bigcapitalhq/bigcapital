@@ -51,7 +51,7 @@ export default class SalesEstimatesController extends BaseController {
     router.post(
       '/:id/approve',
       CheckPolicies(SaleEstimateAction.Edit, AbilitySubject.SaleEstimate),
-      [this.validateSpecificEstimateSchema],
+      [...this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.approveSaleEstimate.bind(this)),
       this.handleServiceErrors
@@ -59,7 +59,7 @@ export default class SalesEstimatesController extends BaseController {
     router.post(
       '/:id/reject',
       CheckPolicies(SaleEstimateAction.Edit, AbilitySubject.SaleEstimate),
-      [this.validateSpecificEstimateSchema],
+      [...this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.rejectSaleEstimate.bind(this)),
       this.handleServiceErrors

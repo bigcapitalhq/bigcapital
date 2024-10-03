@@ -137,7 +137,8 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     isPaymentLoading ||
     isAccountsLoading ||
     isCustomersLoading ||
-    isBrandingTemplatesLoading;
+    isBrandingTemplatesLoading ||
+    isPaymentReceivedStateLoading;
 
   return (
     <DashboardInsider loading={isLoading} name={'payment-receive-form'}>

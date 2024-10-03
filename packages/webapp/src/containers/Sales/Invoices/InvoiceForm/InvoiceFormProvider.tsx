@@ -172,17 +172,16 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isInvoiceStateLoading,
   };
 
+  const isLoading =
+    isInvoiceLoading ||
+    isItemsLoading ||
+    isCustomersLoading ||
+    isEstimateLoading ||
+    isSettingsLoading || 
+    isInvoiceStateLoading;
+
   return (
-    <DashboardInsider
-      loading={
-        isInvoiceLoading ||
-        isItemsLoading ||
-        isCustomersLoading ||
-        isEstimateLoading ||
-        isSettingsLoading
-      }
-      name={'invoice-form'}
-    >
+    <DashboardInsider loading={isLoading} name={'invoice-form'}>
       <InvoiceFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

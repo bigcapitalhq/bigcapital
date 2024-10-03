@@ -90,7 +90,7 @@ function PaymentReceiveForm({
           }),
           deposit_account_id: defaultTo(preferredDepositAccount, ''),
           currency_code: base_currency,
-          pdf_template_id: paymentReceivedState.defaultTemplateId,
+          pdf_template_id: paymentReceivedState?.defaultTemplateId,
         }),
   };
   // Handle form submit.

@@ -85,7 +85,7 @@ function ReceiptForm({
           currency_code: base_currency,
           receipt_message: receiptMessage,
           terms_conditions: receiptTermsConditions,
-          pdf_template_id: saleReceiptState?.pdfTemplateId,
+          pdf_template_id: saleReceiptState?.defaultTemplateId,
         }),
   };
   // Handle the form submit.
@@ -173,7 +173,7 @@ function ReceiptForm({
 
           {/*---------- Dialogs ---------*/}
           <ReceiptFormDialogs />
-
+css
           {/*---------- Effects ---------*/}
           <ReceiptSyncIncrementSettingsToForm />
           <ReceiptSyncAutoExRateToForm />

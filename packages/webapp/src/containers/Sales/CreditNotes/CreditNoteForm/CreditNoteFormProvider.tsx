@@ -85,7 +85,7 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
 
   // Fetches branding templates of invoice.
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
-    useGetPdfTemplates({ resource: 'PaymentReceive' });
+    useGetPdfTemplates({ resource: 'CreditNote' });
 
   // Fetches the credit note state.
   const { data: creditNoteState, isLoading: isCreditNoteStateLoading } =
