@@ -281,7 +281,7 @@ export function useGetSaleEstimatesState(
   const apiRequest = useApiRequest();
 
   return useQuery<ISaleEstimatesStateResponse, Error>(
-    ['SALE_ESTIMATES_STATE'],
+    ['SALE_ESTIMATE_STATE'],
     () =>
       apiRequest
         .get('/sales/estimates/state')

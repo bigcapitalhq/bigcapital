@@ -198,6 +198,11 @@ export const useAssignPdfTemplateAsDefault = (
     {
       onSuccess: () => {
         queryClient.invalidateQueries([PdfTemplatesQueryKey]);
+        queryClient.invalidateQueries(['SALE_INVOICE_STATE']);
+        queryClient.invalidateQueries(['SALE_ESTIMATE_STATE']);
+        queryClient.invalidateQueries(['SALE_RECEIPT_STATE']);
+        queryClient.invalidateQueries(['CREDIT_NOTE_STATE']);
+        queryClient.invalidateQueries(['PAYMENT_RECEIVED_STATE']);
       },
       ...options,
     },

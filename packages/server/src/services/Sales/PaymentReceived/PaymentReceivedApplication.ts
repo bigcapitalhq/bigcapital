@@ -228,6 +228,11 @@ export class PaymentReceivesApplication {
     );
   };
 
+  /**
+   * Retrieves the create/edit initial state of the payment received.
+   * @param {number} tenantId - The ID of the tenant.
+   * @returns {Promise<IPaymentReceivedState>}
+   */
   public getPaymentReceivedState = (tenantId: number) => {
     return this.getPaymentReceivedStateService.getPaymentReceivedState(
       tenantId

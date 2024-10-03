@@ -286,16 +286,15 @@ export interface PaymentReceivedStateResponse {
  * @returns {UseQueryResult<PaymentReceivedStateResponse, Error>} The query result.
  */
 export function usePaymentReceivedState(
-  query: Record<string, any>,
   options?: UseQueryOptions<PaymentReceivedStateResponse, Error>,
 ): UseQueryResult<PaymentReceivedStateResponse, Error> {
   const apiRequest = useApiRequest();
 
   return useQuery<PaymentReceivedStateResponse, Error>(
-    [t.PAYMENT_RECEIVE_STATE, query],
+    ['PAYMENT_RECEIVED_STATE'],
     () =>
       apiRequest
-        .get('/sales/payment_receives/state', { params: query })
+        .get('/sales/payment_receives/state')
         .then((res) => transformToCamelCase(res.data?.data)),
     {
       ...options,
