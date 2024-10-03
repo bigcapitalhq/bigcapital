@@ -19,6 +19,7 @@ import { GetPaymentReceivedInvoices } from './GetPaymentReceivedInvoices';
 import { PaymentReceiveNotifyBySms } from './PaymentReceivedSmsNotify';
 import GetPaymentReceivedPdf from './GetPaymentReceivedPdf';
 import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
+import { GetPaymentReceivedState } from './GetPaymentReceivedState';
 
 @Service()
 export class PaymentReceivesApplication {
@@ -48,6 +49,9 @@ export class PaymentReceivesApplication {
 
   @Inject()
   private getPaymentReceivePdfService: GetPaymentReceivedPdf;
+
+  @Inject()
+  private getPaymentReceivedStateService: GetPaymentReceivedState;
 
   /**
    * Creates a new payment receive.
@@ -221,6 +225,17 @@ export class PaymentReceivesApplication {
     return this.getPaymentReceivePdfService.getPaymentReceivePdf(
       tenantId,
       paymentReceiveId
+    );
+  };
+
+  /**
+   * Retrieves the create/edit initial state of the payment received.
+   * @param {number} tenantId - The ID of the tenant.
+   * @returns {Promise<IPaymentReceivedState>}
+   */
+  public getPaymentReceivedState = (tenantId: number) => {
+    return this.getPaymentReceivedStateService.getPaymentReceivedState(
+      tenantId
     );
   };
 }

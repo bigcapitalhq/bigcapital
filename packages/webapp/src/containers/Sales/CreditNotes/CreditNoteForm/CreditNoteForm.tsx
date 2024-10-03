@@ -67,6 +67,7 @@ function CreditNoteForm({
     newCreditNote,
     createCreditNoteMutate,
     editCreditNoteMutate,
+    creditNoteState,
   } = useCreditNoteFormContext();
 
   // Credit number.
@@ -85,6 +86,7 @@ function CreditNoteForm({
           currency_code: base_currency,
           terms_conditions: defaultTo(creditTermsConditions, ''),
           note: defaultTo(creditCustomerNotes, ''),
+          pdf_template_id: creditNoteState?.defaultTemplateId,
           ...newCreditNote,
         }),
   };

@@ -144,3 +144,6 @@ export interface ISaleEstimateMailPresendEvent {
   messageOptions: SaleEstimateMailOptionsDTO;
 }
 
+export interface ISaleEstimateState {
+  defaultTemplateId: number;
+}

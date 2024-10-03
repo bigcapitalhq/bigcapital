@@ -20,7 +20,7 @@ export interface PaymentIntegrationTransactionLinkEventPayload {
   referenceType: string;
   referenceId: number;
   saleInvoiceId: number;
-  trx?: Knex.Transaction
+  trx?: Knex.Transaction;
 }
 
 export interface PaymentIntegrationTransactionLinkDeleteEventPayload {
@@ -30,7 +30,7 @@ export interface PaymentIntegrationTransactionLinkDeleteEventPayload {
   referenceType: string;
   referenceId: number;
   oldSaleInvoiceId: number;
-  trx?: Knex.Transaction 
+  trx?: Knex.Transaction;
 }
 
 export interface ISaleInvoice {
@@ -174,7 +174,7 @@ export interface ISaleInvoiceDeletingPayload {
   tenantId: number;
   oldSaleInvoice: ISaleInvoice;
   saleInvoiceId: number;
-  trx: Knex.Transaction; 
+  trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceDeletedPayload {
@@ -338,4 +338,8 @@ export interface InvoicePdfTemplateAttributes {
   statementLabel: string;
   showStatement: boolean;
   statement: string;
+}
+
+export interface ISaleInvocieState {
+  defaultTemplateId: number;
 }

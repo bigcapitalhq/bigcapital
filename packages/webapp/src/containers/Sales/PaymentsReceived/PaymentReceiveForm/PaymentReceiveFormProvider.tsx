@@ -12,11 +12,21 @@ import {
   useBranches,
   useCreatePaymentReceive,
   useEditPaymentReceive,
+  usePaymentReceivedState,
+  PaymentReceivedStateResponse,
 } from '@/hooks/query';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
+interface PaymentReceivedFormContextValue {
+  isPaymentReceivedStateLoading: boolean;
+  paymentReceivedState: PaymentReceivedStateResponse;
+}
+
 // Payment receive form context.
-const PaymentReceiveFormContext = createContext();
+const PaymentReceiveFormContext =
+  createContext<PaymentReceivedFormContextValue>(
+    {} as PaymentReceivedFormContextValue,
+  );
 
 /**
  * Payment receive form provider.
@@ -70,6 +80,12 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
     useGetPdfTemplates({ resource: 'PaymentReceive' });
 
+  // Fetches the payment received initial state.
+  const {
+    data: paymentReceivedState,
+    isLoading: isPaymentReceivedStateLoading,
+  } = usePaymentReceivedState();
+
   // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;
 
@@ -111,13 +127,18 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     // Branding templates
     brandingTemplates,
     isBrandingTemplatesLoading,
+
+    // Payment received state
+    isPaymentReceivedStateLoading,
+    paymentReceivedState,
   };
 
   const isLoading =
     isPaymentLoading ||
     isAccountsLoading ||
     isCustomersLoading ||
-    isBrandingTemplatesLoading;
+    isBrandingTemplatesLoading ||
+    isPaymentReceivedStateLoading;
 
   return (
     <DashboardInsider loading={isLoading} name={'payment-receive-form'}>
@@ -127,6 +148,6 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
 }
 
 const usePaymentReceiveFormContext = () =>
-  useContext(PaymentReceiveFormContext);
+  useContext<PaymentReceivedFormContextValue>(PaymentReceiveFormContext);
 
 export { PaymentReceiveFormProvider, usePaymentReceiveFormContext };

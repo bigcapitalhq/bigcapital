@@ -109,6 +109,12 @@ export default class SalesReceiptsController extends BaseController {
       this.dynamicListService.handlerErrorsToResponse
     );
     router.get(
+      '/state',
+      CheckPolicies(SaleReceiptAction.View, AbilitySubject.SaleReceipt),
+      asyncMiddleware(this.getSaleReceiptState.bind(this)),
+      this.handleServiceErrors
+    ); 
+    router.get(
       '/:id',
       CheckPolicies(SaleReceiptAction.View, AbilitySubject.SaleReceipt),
       [...this.specificReceiptValidationSchema],
@@ -366,6 +372,30 @@ export default class SalesReceiptsController extends BaseController {
         saleReceiptId
       );
       return res.status(200).send({ saleReceipt });
+    }
+  }
+
+  /**
+   *
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async getSaleReceiptState(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+
+    // Retrieves receipt in pdf format.
+    try {
+      const data = await this.saleReceiptsApplication.getSaleReceiptState(
+        tenantId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
     }
   }
 

@@ -20,6 +20,7 @@ import { RejectSaleEstimate } from './RejectSaleEstimate';
 import { SaleEstimateNotifyBySms } from './SaleEstimateSmsNotify';
 import { SaleEstimatesPdf } from './SaleEstimatesPdf';
 import { SendSaleEstimateMail } from './SendSaleEstimateMail';
+import { GetSaleEstimateState } from './GetSaleEstimateState';
 
 @Service()
 export class SaleEstimatesApplication {
@@ -55,6 +56,9 @@ export class SaleEstimatesApplication {
 
   @Inject()
   private sendEstimateMailService: SendSaleEstimateMail;
+
+  @Inject()
+  private getSaleEstimateStateService: GetSaleEstimateState;
 
   /**
    * Create a sale estimate.
@@ -248,5 +252,14 @@ export class SaleEstimatesApplication {
       tenantId,
       saleEstimateId
     );
+  }
+
+  /**
+   * Retrieves the current state of the sale estimate.
+   * @param {number} tenantId - The ID of the tenant.
+   * @returns {Promise<ISaleEstimateState>} - A promise resolving to the sale estimate state.
+   */
+  public getSaleEstimateState(tenantId: number) {
+    return this.getSaleEstimateStateService.getSaleEstimateState(tenantId);
   }
 }

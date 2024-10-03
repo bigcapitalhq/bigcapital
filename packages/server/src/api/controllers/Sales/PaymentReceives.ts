@@ -96,6 +96,12 @@ export default class PaymentReceivesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
+      '/state',
+      CheckPolicies(PaymentReceiveAction.View, AbilitySubject.PaymentReceive),
+      this.getPaymentReceivedState.bind(this),
+      this.handleServiceErrors
+    );
+    router.get(
       '/:id',
       CheckPolicies(PaymentReceiveAction.View, AbilitySubject.PaymentReceive),
       this.paymentReceiveValidation,
@@ -386,6 +392,29 @@ export default class PaymentReceivesController extends BaseController {
       return res.status(200).send({
         entries: this.transfromToResponse(entries),
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   *
+   * @async
+   * @param {Request} req -
+   * @param {Response} res -
+   */
+  private async getPaymentReceivedState(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+  const { tenantId } = req;
+
+    try {
+      const data = await this.paymentReceiveApplication.getPaymentReceivedState(
+        tenantId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

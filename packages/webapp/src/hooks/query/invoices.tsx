@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
+import { useQueryClient, useMutation, useQuery } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import useApiRequest from '../useRequest';
 import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
@@ -339,5 +339,24 @@ export function useSaleInvoiceDefaultOptions(invoiceId, props) {
       select: (res) => res.data.data,
       ...props,
     },
+  );
+}
+
+export interface GetSaleInvoiceStateResponse {
+  defaultTemplateId: number;
+}
+
+export function useGetSaleInvoiceState(
+  options?: UseQueryOptions<GetSaleInvoiceStateResponse, Error>,
+): UseQueryResult<GetSaleInvoiceStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleInvoiceStateResponse, Error>(
+    ['SALE_INVOICE_STATE'],
+    () =>
+      apiRequest
+        .get(`/sales/invoices/state`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
   );
 }

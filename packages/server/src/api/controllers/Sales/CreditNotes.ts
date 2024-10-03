@@ -27,6 +27,7 @@ import GetCreditNoteAssociatedAppliedInvoices from '@/services/CreditNotes/GetCr
 import GetRefundCreditTransaction from '@/services/CreditNotes/GetRefundCreditNoteTransaction';
 import GetCreditNotePdf from '../../../services/CreditNotes/GetCreditNotePdf';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { GetCreditNoteState } from '@/services/CreditNotes/GetCreditNoteState';
 /**
  * Credit notes controller.
  * @service
@@ -81,6 +82,9 @@ export default class PaymentReceivesController extends BaseController {
   @Inject()
   creditNotePdf: GetCreditNotePdf;
 
+  @Inject()
+  getCreditNoteStateService: GetCreditNoteState;
+
   /**
    * Router constructor.
    */
@@ -103,6 +107,12 @@ export default class PaymentReceivesController extends BaseController {
       [...this.newCreditNoteDTOSchema],
       this.validationResult,
       this.asyncMiddleware(this.newCreditNote),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/state',
+      CheckPolicies(CreditNoteAction.View, AbilitySubject.CreditNote),
+      this.asyncMiddleware(this.getCreditNoteState.bind(this)),
       this.handleServiceErrors
     );
     // Get specific credit note.
@@ -731,6 +741,23 @@ export default class PaymentReceivesController extends BaseController {
           creditNoteId
         );
       return res.status(200).send({ data: appliedInvoices });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private getCreditNoteState = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+
+    try {
+      const data = await this.getCreditNoteStateService.getCreditNoteState(
+        tenantId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

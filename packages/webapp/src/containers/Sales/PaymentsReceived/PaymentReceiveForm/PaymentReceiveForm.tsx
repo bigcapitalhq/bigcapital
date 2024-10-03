@@ -69,6 +69,7 @@ function PaymentReceiveForm({
     editPaymentReceiveMutate,
     createPaymentReceiveMutate,
     isExcessConfirmed,
+    paymentReceivedState,
   } = usePaymentReceiveFormContext();
 
   // Payment receive number.
@@ -77,29 +78,21 @@ function PaymentReceiveForm({
     paymentReceiveNextNumber,
   );
   // Form initial values.
-  const initialValues = useMemo(
-    () => ({
-      ...(!isEmpty(paymentReceiveEditPage)
-        ? transformToEditForm(paymentReceiveEditPage, paymentEntriesEditPage)
-        : {
-            ...defaultPaymentReceive,
-            // If the auto-increment mode is enabled, take the next payment
-            // number from the settings.
-            ...(paymentReceiveAutoIncrement && {
-              payment_receive_no: nextPaymentNumber,
-            }),
-            deposit_account_id: defaultTo(preferredDepositAccount, ''),
-            currency_code: base_currency,
+  const initialValues = {
+    ...(!isEmpty(paymentReceiveEditPage)
+      ? transformToEditForm(paymentReceiveEditPage, paymentEntriesEditPage)
+      : {
+          ...defaultPaymentReceive,
+          // If the auto-increment mode is enabled, take the next payment
+          // number from the settings.
+          ...(paymentReceiveAutoIncrement && {
+            payment_receive_no: nextPaymentNumber,
           }),
-    }),
-    [
-      paymentReceiveEditPage,
-      nextPaymentNumber,
-      paymentEntriesEditPage,
-      paymentReceiveAutoIncrement,
-      preferredDepositAccount,
-    ],
-  );
+          deposit_account_id: defaultTo(preferredDepositAccount, ''),
+          currency_code: base_currency,
+          pdf_template_id: paymentReceivedState?.defaultTemplateId,
+        }),
+  };
   // Handle form submit.
   const handleSubmitForm = (
     values,

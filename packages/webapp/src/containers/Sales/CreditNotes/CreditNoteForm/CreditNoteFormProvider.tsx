@@ -17,10 +17,19 @@ import {
   useBranches,
   useSettingsCreditNotes,
   useInvoice,
+  useGetCreditNoteState,
+  CreditNoteStateResponse,
 } from '@/hooks/query';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
-const CreditNoteFormContext = React.createContext();
+interface CreditNoteFormProviderValue {
+  creditNoteState: CreditNoteStateResponse;
+  isCreditNoteStateLoading: boolean;
+}
+
+const CreditNoteFormContext = React.createContext<CreditNoteFormProviderValue>(
+  {} as CreditNoteFormProviderValue,
+);
 
 /**
  * Credit note data provider.
@@ -76,7 +85,11 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
 
   // Fetches branding templates of invoice.
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
-    useGetPdfTemplates({ resource: 'PaymentReceive' });
+    useGetPdfTemplates({ resource: 'CreditNote' });
+
+  // Fetches the credit note state.
+  const { data: creditNoteState, isLoading: isCreditNoteStateLoading } =
+    useGetCreditNoteState();
 
   // Handle fetching settings.
   useSettingsCreditNotes();
@@ -124,6 +137,10 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     // Branding templates.
     brandingTemplates,
     isBrandingTemplatesLoading,
+
+    // Credit note state
+    creditNoteState,
+    isCreditNoteStateLoading,
   };
 
   const isLoading =
@@ -140,6 +157,7 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
   );
 }
 
-const useCreditNoteFormContext = () => React.useContext(CreditNoteFormContext);
+const useCreditNoteFormContext = () =>
+  React.useContext<CreditNoteFormProviderValue>(CreditNoteFormContext);
 
 export { CreditNoteFormProvider, useCreditNoteFormContext };

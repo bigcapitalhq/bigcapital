@@ -211,3 +211,8 @@ export interface ISaleReceiptBrandingTemplateAttributes {
   showReceiptDate: boolean;
   receiptDateLabel: string;
 }
+
+
+export interface ISaleReceiptState {
+  defaultTemplateId: number;
+}

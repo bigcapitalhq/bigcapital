@@ -30,6 +30,20 @@ export class PdfTemplate extends TenantModel {
   }
 
   /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      /**
+       * Filters the due invoices.
+       */
+      default(query) {
+        query.where('default', true);
+      },
+    };
+  }
+
+  /**
    * Virtual attributes.
    */
   static get virtualAttributes() {

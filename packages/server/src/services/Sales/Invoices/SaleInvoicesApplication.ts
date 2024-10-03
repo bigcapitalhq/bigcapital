@@ -28,6 +28,7 @@ import { SaleInvoiceNotifyBySms } from './SaleInvoiceNotifyBySms';
 import { SendInvoiceMailReminder } from './SendSaleInvoiceMailReminder';
 import { SendSaleInvoiceMail } from './SendSaleInvoiceMail';
 import { GetSaleInvoiceMailReminder } from './GetSaleInvoiceMailReminder';
+import { GetSaleInvoiceState } from './GetSaleInvoiceState';
 
 @Service()
 export class SaleInvoiceApplication {
@@ -72,6 +73,9 @@ export class SaleInvoiceApplication {
 
   @Inject()
   private getSaleInvoiceReminderService: GetSaleInvoiceMailReminder;
+
+  @Inject()
+  private getSaleInvoiceStateService: GetSaleInvoiceState;
 
   /**
    * Creates a new sale invoice with associated GL entries.
@@ -167,6 +171,16 @@ export class SaleInvoiceApplication {
       saleInvoiceId,
       authorizedUser
     );
+  }
+
+  /**
+   * Retrieves the sale invoice state.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @returns
+   */
+  public getSaleInvoiceState(tenantId: number) {
+    return this.getSaleInvoiceStateService.getSaleInvoiceState(tenantId);
   }
 
   /**

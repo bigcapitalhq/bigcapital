@@ -51,7 +51,7 @@ export default class SalesEstimatesController extends BaseController {
     router.post(
       '/:id/approve',
       CheckPolicies(SaleEstimateAction.Edit, AbilitySubject.SaleEstimate),
-      [this.validateSpecificEstimateSchema],
+      [...this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.approveSaleEstimate.bind(this)),
       this.handleServiceErrors
@@ -59,7 +59,7 @@ export default class SalesEstimatesController extends BaseController {
     router.post(
       '/:id/reject',
       CheckPolicies(SaleEstimateAction.Edit, AbilitySubject.SaleEstimate),
-      [this.validateSpecificEstimateSchema],
+      [...this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.rejectSaleEstimate.bind(this)),
       this.handleServiceErrors
@@ -103,6 +103,12 @@ export default class SalesEstimatesController extends BaseController {
       [this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.deleteEstimate.bind(this)),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/state',
+      CheckPolicies(SaleEstimateAction.View, AbilitySubject.SaleEstimate),
+      this.getSaleEstimateState.bind(this),
       this.handleServiceErrors
     );
     router.get(
@@ -539,6 +545,23 @@ export default class SalesEstimatesController extends BaseController {
       const data = await this.saleEstimatesApplication.getSaleEstimateMail(
         tenantId,
         invoiceId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private getSaleEstimateState = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+
+    try {
+      const data = await this.saleEstimatesApplication.getSaleEstimateState(
+        tenantId
       );
       return res.status(200).send({ data });
     } catch (error) {

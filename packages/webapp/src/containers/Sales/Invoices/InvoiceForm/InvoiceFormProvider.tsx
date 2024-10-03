@@ -16,13 +16,22 @@ import {
   useEditInvoice,
   useSettingsInvoices,
   useEstimate,
+  useGetSaleInvoiceState,
+  GetSaleInvoiceStateResponse,
 } from '@/hooks/query';
 import { useProjects } from '@/containers/Projects/hooks';
 import { useTaxRates } from '@/hooks/query/taxRates';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 import { useGetPaymentServices } from '@/hooks/query/payment-services';
 
-const InvoiceFormContext = createContext();
+interface InvoiceFormContextValue {
+  saleInvoiceState: GetSaleInvoiceStateResponse | null;
+  isInvoiceStateLoading: boolean;
+}
+
+const InvoiceFormContext = createContext<InvoiceFormContextValue>(
+  {} as InvoiceFormContextValue,
+);
 
 /**
  * Accounts chart data provider.
@@ -100,6 +109,9 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
+  const { data: saleInvoiceState, isLoading: isInvoiceStateLoading } =
+    useGetSaleInvoiceState();
+
   // Handle fetching settings.
   const { isLoading: isSettingsLoading } = useSettingsInvoices();
 
@@ -154,24 +166,28 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     // Payment Services
     paymentServices,
     isPaymentServicesLoading,
+
+    // Invoice state
+    saleInvoiceState,
+    isInvoiceStateLoading,
   };
 
+  const isLoading =
+    isInvoiceLoading ||
+    isItemsLoading ||
+    isCustomersLoading ||
+    isEstimateLoading ||
+    isSettingsLoading || 
+    isInvoiceStateLoading;
+
   return (
-    <DashboardInsider
-      loading={
-        isInvoiceLoading ||
-        isItemsLoading ||
-        isCustomersLoading ||
-        isEstimateLoading ||
-        isSettingsLoading
-      }
-      name={'invoice-form'}
-    >
+    <DashboardInsider loading={isLoading} name={'invoice-form'}>
       <InvoiceFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const useInvoiceFormContext = () => React.useContext(InvoiceFormContext);
+const useInvoiceFormContext = () =>
+  React.useContext<InvoiceFormContextValue>(InvoiceFormContext);
 
 export { InvoiceFormProvider, useInvoiceFormContext };

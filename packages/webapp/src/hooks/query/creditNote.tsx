@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
+import { useQueryClient, useMutation, useQuery } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import useApiRequest from '../useRequest';
 import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
@@ -355,4 +355,22 @@ export function useRefundCreditTransaction(id, props, requestProps) {
  */
 export function usePdfCreditNote(creditNoteId) {
   return useRequestPdf({ url: `sales/credit_notes/${creditNoteId}` });
+}
+
+export interface CreditNoteStateResponse {
+  defaultTemplateId: number;
+}
+export function useGetCreditNoteState(
+  options?: UseQueryOptions<CreditNoteStateResponse, Error>,
+): UseQueryResult<CreditNoteStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<CreditNoteStateResponse, Error>(
+    ['CREDIT_NOTE_STATE'],
+    () =>
+      apiRequest
+        .get('/sales/credit_notes/state')
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
+  );
 }

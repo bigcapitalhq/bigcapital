@@ -1,11 +1,16 @@
 // @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
-import { useRequestQuery } from '../useQueryRequest';
+import {
+  useMutation,
+  useQueryClient,
+  UseQueryOptions,
+  UseQueryResult,
+  useQuery,
+} from 'react-query';
 import useApiRequest from '../useRequest';
-import { transformPagination, saveInvoke } from '@/utils';
-
-import t from './types';
+import { useRequestQuery } from '../useQueryRequest';
+import { transformPagination, saveInvoke, transformToCamelCase } from '@/utils';
 import { useRequestPdf } from '../useRequestPdf';
+import t from './types';
 
 // Common invalidate queries.
 const commonInvalidateQueries = (client) => {
@@ -266,6 +271,33 @@ export function usePaymentReceiveDefaultOptions(paymentReceiveId, props) {
     {
       select: (res) => res.data.data,
       ...props,
+    },
+  );
+}
+
+export interface PaymentReceivedStateResponse {
+  defaultTemplateId: number;
+}
+
+/**
+ * Retrieves the payment receive state.
+ * @param {Record<string, any>} query - Query parameters for the request.
+ * @param {UseQueryOptions<PaymentReceivedStateResponse, Error>} options - Optional query options.
+ * @returns {UseQueryResult<PaymentReceivedStateResponse, Error>} The query result.
+ */
+export function usePaymentReceivedState(
+  options?: UseQueryOptions<PaymentReceivedStateResponse, Error>,
+): UseQueryResult<PaymentReceivedStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<PaymentReceivedStateResponse, Error>(
+    ['PAYMENT_RECEIVED_STATE'],
+    () =>
+      apiRequest
+        .get('/sales/payment_receives/state')
+        .then((res) => transformToCamelCase(res.data?.data)),
+    {
+      ...options,
     },
   );
 }
