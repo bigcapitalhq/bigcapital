@@ -83,12 +83,12 @@ export const fieldsGroups = [
         label: 'Due Date',
       },
       {
-        enableKey: 'showBillingToAddress',
+        enableKey: 'showCustomerAddress',
         labelKey: 'billedToLabel',
         label: 'Bill To',
       },
       {
-        enableKey: 'showBilledFromAddress',
+        enableKey: 'showCompanyAddress',
         label: 'Billed From',
       },
     ],
