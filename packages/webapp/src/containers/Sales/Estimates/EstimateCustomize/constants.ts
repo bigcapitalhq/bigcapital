@@ -25,7 +25,7 @@ export const initialValues = {
 
   // Customer address
   showCustomerAddress: true,
-  
+
   // Company address
   showCompanyAddress: true,
   companyAddress: '',
@@ -73,12 +73,12 @@ export const fieldsGroups = [
         label: 'Expiration Date',
       },
       {
-        enableKey: 'showBilledToAddress',
+        enableKey: 'showCustomerAddress',
         labelKey: 'billedToLabel',
         label: 'Bill To',
       },
       {
-        enableKey: 'showBilledFromAddress',
+        enableKey: 'showCompanyAddress',
         label: 'Billed From',
       },
     ],

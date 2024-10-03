@@ -62,12 +62,12 @@ export const fieldsGroups = [
         label: 'Credit Note #',
       },
       {
-        enableKey: 'showBilledToAddress',
+        enableKey: 'showCustomerAddress',
         labelKey: 'billedToLabel',
         label: 'Bill To',
       },
       {
-        enableKey: 'showBilledFromAddress',
+        enableKey: 'showCompanyAddress',
         label: 'Billed From',
       },
     ],

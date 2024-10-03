@@ -21,7 +21,7 @@ export const initialValues = {
   // Company name
   companyName: 'Bigcapital Technology, Inc.',
 
-  // Customer address 
+  // Customer address
   showCustomerAddress: true,
 
   // Company address
@@ -67,12 +67,12 @@ export const fieldsGroups = [
         label: 'Receipt Date',
       },
       {
-        enableKey: 'showBilledToAddress',
+        enableKey: 'showCustomerAddress',
         labelKey: 'billedToLabel',
         label: 'Bill To',
       },
       {
-        enableKey: 'showBilledFromAddress',
+        enableKey: 'showCompanyAddress',
         label: 'Billed From',
       },
     ],

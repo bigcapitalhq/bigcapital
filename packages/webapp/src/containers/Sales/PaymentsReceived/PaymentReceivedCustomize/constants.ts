@@ -59,12 +59,12 @@ export const fieldsGroups = [
         label: 'Payment Date',
       },
       {
-        enableKey: 'showBillingToAddress',
+        enableKey: 'showCustomerAddress',
         labelKey: 'billedToLabel',
         label: 'Bill To',
       },
       {
-        enableKey: 'showBilledFromAddress',
+        enableKey: 'showCompanyAddress',
         label: 'Billed From',
       },
     ],
