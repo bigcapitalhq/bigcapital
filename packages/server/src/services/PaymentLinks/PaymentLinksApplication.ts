@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { GetInvoicePaymentLinkMetadata } from './GetInvoicePaymentLinkMetadata';
 import { CreateInvoiceCheckoutSession } from './CreateInvoiceCheckoutSession';
 import { StripeInvoiceCheckoutSessionPOJO } from '@/interfaces/StripePayment';
+import { GetPaymentLinkInvoicePdf } from './GetPaymentLinkInvoicePdf';
 
 @Service()
 export class PaymentLinksApplication {
@@ -10,6 +11,9 @@ export class PaymentLinksApplication {
 
   @Inject()
   private createInvoiceCheckoutSessionService: CreateInvoiceCheckoutSession;
+  
+  @Inject()
+  private getPaymentLinkInvoicePdfService: GetPaymentLinkInvoicePdf;
 
   /**
    * Retrieves the invoice payment link.
@@ -31,6 +35,18 @@ export class PaymentLinksApplication {
     paymentLinkId: string
   ): Promise<StripeInvoiceCheckoutSessionPOJO> {
     return this.createInvoiceCheckoutSessionService.createInvoiceCheckoutSession(
+      paymentLinkId
+    );
+  }
+
+  /**
+   * Retrieves the sale invoice pdf of the given payment link id.
+   * @param {number} tenantId
+   * @param {number} paymentLinkId
+   * @returns {Promise<Buffer> }
+   */
+  public getPaymentLinkInvoicePdf(paymentLinkId: string): Promise<Buffer> {
+    return this.getPaymentLinkInvoicePdfService.getPaymentLinkInvoicePdf(
       paymentLinkId
     );
   }
