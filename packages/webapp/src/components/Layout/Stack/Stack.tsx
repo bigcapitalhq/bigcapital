@@ -11,12 +11,15 @@ export interface StackProps extends React.ComponentPropsWithoutRef<'div'> {
 
   /** justify-content CSS property */
   justify?: React.CSSProperties['justifyContent'];
+
+  flex?: React.CSSProperties['flex'];
 }
 
 const defaultProps: Partial<StackProps> = {
   spacing: 20,
   align: 'stretch',
   justify: 'top',
+  flex: 'none',
 };
 
 export function Stack(props: StackProps) {
@@ -33,4 +36,5 @@ const StackStyled = styled(Box)`
   align-items: ${(props: StackProps) => props.align};
   justify-content: justify;
   gap: ${(props: StackProps) => props.spacing}px;
+  flex: ${(props: StackProps) => props.flex};
 `;

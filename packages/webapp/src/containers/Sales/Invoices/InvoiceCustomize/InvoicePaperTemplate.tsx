@@ -1,6 +1,6 @@
 import React from 'react';
 import { PaperTemplate, PaperTemplateTotalBorder } from './PaperTemplate';
-import { Box, Stack } from '@/components';
+import { Box, Group, Stack } from '@/components';
 import {
   DefaultPdfTemplateTerms,
   DefaultPdfTemplateItemDescription,
@@ -178,31 +178,35 @@ export function InvoicePaperTemplate({
   statement = DefaultPdfTemplateStatement,
 }: InvoicePaperTemplateProps) {
   return (
-    <PaperTemplate
-      primaryColor={primaryColor}
-      secondaryColor={secondaryColor}
-      showCompanyLogo={showCompanyLogo}
-      companyLogoUri={companyLogoUri}
-      bigtitle={'Invoice'}
-    >
+    <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
-        <PaperTemplate.TermsList>
-          {showInvoiceNumber && (
-            <PaperTemplate.TermsItem label={invoiceNumberLabel}>
-              {invoiceNumber}
-            </PaperTemplate.TermsItem>
+        <Group align="start" spacing={10}>
+          <Stack flex={1}>
+            <PaperTemplate.BigTitle title={'Invoice'} />
+
+            <PaperTemplate.TermsList>
+              {showInvoiceNumber && (
+                <PaperTemplate.TermsItem label={invoiceNumberLabel}>
+                  {invoiceNumber}
+                </PaperTemplate.TermsItem>
+              )}
+              {showDateIssue && (
+                <PaperTemplate.TermsItem label={dateIssueLabel}>
+                  {dateIssue}
+                </PaperTemplate.TermsItem>
+              )}
+              {showDueDate && (
+                <PaperTemplate.TermsItem label={dueDateLabel}>
+                  {dueDate}
+                </PaperTemplate.TermsItem>
+              )}
+            </PaperTemplate.TermsList>
+          </Stack>
+
+          {companyLogoUri && showCompanyLogo && (
+            <PaperTemplate.Logo logoUri={companyLogoUri} />
           )}
-          {showDateIssue && (
-            <PaperTemplate.TermsItem label={dateIssueLabel}>
-              {dateIssue}
-            </PaperTemplate.TermsItem>
-          )}
-          {showDueDate && (
-            <PaperTemplate.TermsItem label={dueDateLabel}>
-              {dueDate}
-            </PaperTemplate.TermsItem>
-          )}
-        </PaperTemplate.TermsList>
+        </Group>
 
         <PaperTemplate.AddressesGroup>
           {showCompanyAddress && (

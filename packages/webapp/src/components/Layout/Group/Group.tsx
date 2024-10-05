@@ -27,11 +27,14 @@ export interface GroupProps extends React.ComponentPropsWithoutRef<'div'> {
 
   /** Defines align-items css property */
   align?: React.CSSProperties['alignItems'];
+
+  flex?: React.CSSProperties['flex'];
 }
 
 const defaultProps: Partial<GroupProps> = {
   position: 'left',
   spacing: 20,
+  flex: 'none'
 };
 
 export function Group({ children, ...props }: GroupProps) {
@@ -48,6 +51,7 @@ const GroupStyled = styled(Box)`
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
+  flex: ${(props: GroupProps) => (props.flex)};
   align-items: ${(props: GroupProps) => (props.align || 'center')};
   flex-wrap: ${(props: GroupProps) => (props.noWrap ? 'nowrap' : 'wrap')};
   justify-content: ${(props: GroupProps) =>
