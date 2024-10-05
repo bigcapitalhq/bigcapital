@@ -104,12 +104,24 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
     );
   }
 
-  protected formattedCustomerAddress(invoice) {
-    return contactAddressTextFormat(invoice.customer, `{ADDRESS_1}
+  get customerAddressFormat() {
+    return `{ADDRESS_1}
 {ADDRESS_2}
-{CITY}, {STATE} {POSTAL_CODE}
+{CITY} {STATE} {POSTAL_CODE}
 {COUNTRY}
-{PHONE}`);
+{PHONE}`;
+  }
+
+  /**
+   * Retrieves the formatted customer address.
+   * @param invoice 
+   * @returns {string}
+   */
+  protected formattedCustomerAddress(invoice) {
+    return contactAddressTextFormat(
+      invoice.customer,
+      this.customerAddressFormat
+    );
   }
 }
 
