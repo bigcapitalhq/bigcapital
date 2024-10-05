@@ -11,13 +11,13 @@ interface OrganizationAddressFormatArgs {
   phone?: string;
 }
 
-const defaultMessage = `
-  <strong>{ORGANIZATION_NAME}</strong>
-  {ADDRESS_1}
-  {ADDRESS_2}
-  {CITY}, {STATE} {POSTAL_CODE}
-  {COUNTRY}
-  {PHONE}
+export const defaultOrganizationAddressFormat = `
+<strong>{ORGANIZATION_NAME}</strong>
+{ADDRESS_1}
+{ADDRESS_2}
+{CITY} {STATE} {POSTAL_CODE}
+{COUNTRY}
+{PHONE}
 `;
 /**
  * Formats the address text based on the provided message and arguments.
@@ -36,7 +36,9 @@ const formatText = (message: string, replacements: Record<string, string>) => {
     },
     message
   );
-  formattedMessage = formattedMessage.replace(/\n{2,}/g, '\n').trim();
+  // Removes any empty lines.
+  formattedMessage = formattedMessage.replace(/^\s*[\r\n]/gm, '');
+  formattedMessage = formattedMessage.replace(/\n{2,}/g, '\n');
   formattedMessage = formattedMessage.replace(/\n/g, '<br />');
   formattedMessage = formattedMessage.trim();
 
@@ -72,17 +74,17 @@ interface ContactAddressTextFormatArgs {
   phone?: string;
 }
 
-const contactFormatMessage = `{CONTACT_NAME}
+export const defaultContactAddressFormat = `{CONTACT_NAME}
 {ADDRESS_1}
 {ADDRESS_2}
-{CITY}, {STATE} {POSTAL_CODE}
+{CITY} {STATE} {POSTAL_CODE}
 {COUNTRY}
 {PHONE}
 `;
 
 export const contactAddressTextFormat = (
   contact: IContact,
-  message: string = contactFormatMessage
+  message: string = defaultContactAddressFormat
 ) => {
   const args = {
     displayName: contact.displayName,

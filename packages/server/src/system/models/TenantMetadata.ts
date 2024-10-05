@@ -1,4 +1,7 @@
-import { organizationAddressTextFormat } from '@/utils/address-text-format';
+import {
+  defaultOrganizationAddressFormat,
+  organizationAddressTextFormat,
+} from '@/utils/address-text-format';
 import BaseModel from 'models/Model';
 import { getUploadedObjectUri } from '../../services/Attachments/utils';
 
@@ -67,14 +70,7 @@ export default class TenantMetadata extends BaseModel {
    * @returns {string}
    */
   public get addressTextFormatted() {
-    const defaultMessage = `<strong>{ORGANIZATION_NAME}</strong>
-  {ADDRESS_1}
-  {ADDRESS_2}
-  {CITY}, {STATE} {POSTAL_CODE}
-  {COUNTRY}
-  {PHONE}
-`;
-    return organizationAddressTextFormat(defaultMessage, {
+    return organizationAddressTextFormat(defaultOrganizationAddressFormat, {
       organizationName: this.name,
       address1: this.address?.address1,
       address2: this.address?.address2,
