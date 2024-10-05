@@ -10,19 +10,33 @@ block head
       position: relative;
       box-shadow: inset 0 4px 0px 0 var(--invoice-primary-color);
     }
-    .#{prefix}-logo-wrap {
-      height: 120px;
-      width: 120px;
-      position: absolute;
-      right: 26px;
-      top: 26px;
-      overflow: hidden;
+    .#{prefix}-header{
+      box-sizing: border-box;
+      display: flex;
+      flex-flow: wrap;
+      flex: 0 0 auto;
+      align-items: start;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+    .#{prefix}-header-details{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 20px;
+      flex: 1 1 0%;
+    }
+    .#{prefix}-logo-wrap img {
+      height: auto;
+      width: auto;
+      max-width: 400px;
+      max-height: 160px;
     }
     .#{prefix}-big-title {
       font-size: 60px;
       margin: 0;
       line-height: 1;
-      margin-bottom: 25px;
       font-weight: 500;
       color: #333;      
     }
@@ -124,25 +138,30 @@ block head
 block content 
   //- block head
   div(class=`${prefix}-root`, style=`--invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor};`)
-  
-    //- Title and company logo
-    h1(class=`${prefix}-big-title`) Receipt
 
-    //- Company Logo
-    if showCompanyLogo && companyLogoUri
-      div(class=`${prefix}-logo-wrap`)
-        img(src=companyLogoUri alt=`Company Logo`)
+    //- Header (includes big title, details and logo )
+    div(class=`${prefix}-header`)
+      //- Header details (includes big title and details )
+      div(class=`${prefix}-header-details`)
+        //- Title and company logo
+        h1(class=`${prefix}-big-title`) Receipt
 
-    //- Terms List
-    div(class=`${prefix}-terms-list`)
-      if showReceiptNumber
-        div(class=`${prefix}-terms-item`)
-          span(class=`${prefix}-terms-item__label`)= receiptNumberLabel
-          span(class=`${prefix}-terms-item__value`)= receiptNumber
-      if showReceiptDate
-        div(class=`${prefix}-terms-item`)
-          span(class=`${prefix}-terms-item__label`)= receiptDateLabel
-          span(class=`${prefix}-terms-item__value`)= receiptDate
+        //- Terms List
+        div(class=`${prefix}-terms-list`)
+          if showReceiptNumber
+            div(class=`${prefix}-terms-item`)
+              span(class=`${prefix}-terms-item__label`)= receiptNumberLabel
+              span(class=`${prefix}-terms-item__value`)= receiptNumber
+
+          if showReceiptDate
+            div(class=`${prefix}-terms-item`)
+              span(class=`${prefix}-terms-item__label`)= receiptDateLabel
+              span(class=`${prefix}-terms-item__value`)= receiptDate
+
+      //- Company logo
+      if showCompanyLogo && companyLogoUri
+        div(class=`${prefix}-logo-wrap`)
+          img(src=companyLogoUri alt=`Company Logo`)
 
     //- Address Section
     div(class=`${prefix}-address-section`)

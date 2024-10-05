@@ -11,21 +11,37 @@ block head
       position: relative;
       box-shadow: inset 0 4px 0px 0 var(--invoice-primary-color);
     }
+        .#{prefix}-header{
+      box-sizing: border-box;
+      display: flex;
+      flex-flow: wrap;
+      flex: 0 0 auto;
+      -webkit-box-align: start;
+      align-items: start;
+      -webkit-box-pack: start;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+    .#{prefix}-header-details{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 20px;
+      flex: 1 1 0%;
+    }
     .#{prefix}-big-title{ 
       font-size: 60px;
       margin: 0;
       line-height: 1;
-      margin-bottom: 25px;
       font-weight: 500;
       color: #333;
     }
-    .#{prefix}-logo-wrap{ 
-      height: 120px;
-      width: 120px;
-      position: absolute;
-      right: 26px;
-      top: 26px;
-      overflow: hidden;
+    .#{prefix}-logo-wrap img {
+      height: auto;
+      width: auto;
+      max-width: 400px;
+      max-height: 160px;
     }
     .#{prefix}-terms-list{ 
       display: flex;
@@ -120,23 +136,26 @@ block head
     }
 block content
   div(class=`${prefix}-root`)
-    div(class=`${prefix}-big-title`) Payment
+    //- Header (includes big title, details and logo )
+    div(class=`${prefix}-header`)
+      //- Header details (includes big title and details )
+      div(class=`${prefix}-header-details`)
+        div(class=`${prefix}-big-title`) Payment
+        div(class=`${prefix}-terms-list`)
+          if showPaymentReceivedNumber
+            div(class=`${prefix}-terms-item`)
+              div(class=`${prefix}-terms-item__label`) #{paymentReceivedNumberLabel}
+              div(class=`${prefix}-terms-item__value`) #{paymentReceivedNumebr}
 
-    if showCompanyLogo && companyLogoUri
-      div(class=`${prefix}-logo-wrap`)
-        img(src=companyLogoUri alt="Company Logo")
-    
-    div(class=`${prefix}-terms-list`)
-      if showPaymentReceivedNumber
-        div(class=`${prefix}-terms-item`)
-          div(class=`${prefix}-terms-item__label`) #{paymentReceivedNumberLabel}
-          div(class=`${prefix}-terms-item__value`) #{paymentReceivedNumebr}
+          if showPaymentReceivedDate
+            div(class=`${prefix}-terms-item`)
+              div(class=`${prefix}-terms-item__label`) #{paymentReceivedDateLabel}
+              div(class=`${prefix}-terms-item__value`) #{paymentReceivedDate}
 
-      if showPaymentReceivedDate
-        div(class=`${prefix}-terms-item`)
-          div(class=`${prefix}-terms-item__label`) #{paymentReceivedDateLabel}
-          div(class=`${prefix}-terms-item__value`) #{paymentReceivedDate}
-    
+      if showCompanyLogo && companyLogoUri
+        div(class=`${prefix}-logo-wrap`)
+          img(src=companyLogoUri alt="Company Logo")
+        
     div(class=`${prefix}-addresses`)
       if showCompanyAddress
         div(class=`${prefix}-address-from`)

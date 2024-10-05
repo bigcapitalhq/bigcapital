@@ -10,21 +10,37 @@ block head
       position: relative;
       box-shadow: inset 0 4px 0px 0 var(--invoice-primary-color);
     }
+    .#{prefix}-header{
+      box-sizing: border-box;
+      display: flex;
+      flex-flow: wrap;
+      flex: 0 0 auto;
+      -webkit-box-align: start;
+      align-items: start;
+      -webkit-box-pack: start;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+    .#{prefix}-header-details{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 20px;
+      flex: 1 1 0%;
+    }
     .#{prefix}-big-title {
       font-size: 60px;
       margin: 0;
       line-height: 1;
-      margin-bottom: 25px;
       font-weight: 500;
       color: #333;
     }
-    .#{prefix}-logo-wrap {
-      height: 120px;
-      width: 120px;
-      position: absolute;
-      right: 26px;
-      top: 26px;
-      overflow: hidden;
+    .#{prefix}-logo-wrap img {
+      height: auto;
+      width: auto;
+      max-width: 400px;
+      max-height: 160px;
     }
     .#{prefix}-details {
       display: flex;
@@ -138,30 +154,35 @@ block head
 block content
   //- block head
   div(class=`${prefix}-root`, style=`--invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor};`)
-  
-    //- Title and company logo
-    h1(class=`${prefix}-big-title`) Invoice
 
-    if showCompanyLogo && companyLogoUri
-      div(class=`${prefix}-logo-wrap`)
-        img(alt="Company logo", src=companyLogoUri)
+    //- Header (includes big title, details and logo )
+    div(class=`${prefix}-header`)
+      //- Header details (includes big title and details )
+      div(class=`${prefix}-header-details`)
+        //- Title and company logo
+        h1(class=`${prefix}-big-title`) Invoice
 
-    //- Invoice details
-    div(class=`${prefix}-details`)
-      if showInvoiceNumber
-        div(class=`${prefix}-detail`)
-          div(class=`${prefix}-detail__label`) #{invoiceNumberLabel}
-          div(class=`${prefix}-detail__value`) #{invoiceNumber}
+        //- Invoice details
+        div(class=`${prefix}-details`)
+          if showInvoiceNumber
+            div(class=`${prefix}-detail`)
+              div(class=`${prefix}-detail__label`) #{invoiceNumberLabel}
+              div(class=`${prefix}-detail__value`) #{invoiceNumber}
 
-      if showDateIssue
-        div(class=`${prefix}-detail`)
-          div(class=`${prefix}-detail__label`) #{dateIssueLabel}
-          div(class=`${prefix}-detail__value`) #{dateIssue}
+          if showDateIssue
+            div(class=`${prefix}-detail`)
+              div(class=`${prefix}-detail__label`) #{dateIssueLabel}
+              div(class=`${prefix}-detail__value`) #{dateIssue}
 
-      if showDueDate
-        div(class=`${prefix}-detail`)
-          div(class=`${prefix}-detail__label`) #{dueDateLabel}
-          div(class=`${prefix}-detail__value`) #{dueDate}
+          if showDueDate
+            div(class=`${prefix}-detail`)
+              div(class=`${prefix}-detail__label`) #{dueDateLabel}
+              div(class=`${prefix}-detail__value`) #{dueDate}
+
+      //- Company logo
+      if showCompanyLogo && companyLogoUri
+        div(class=`${prefix}-logo-wrap`)
+          img(alt="Company logo", src=companyLogoUri)
 
     //- Address section
     div(class=`${prefix}-address-root`)
