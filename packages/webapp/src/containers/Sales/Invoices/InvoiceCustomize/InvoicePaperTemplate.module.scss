@@ -11,16 +11,13 @@
   width: 794px;
   height: 1123px;
 }
-
 .bigTitle{
   font-size: 60px;
   margin: 0;
   line-height: 1;
-  margin-bottom: 25px;
   font-weight: 500;
   color: #333;
 }
-
 .details {
   display: flex;
   flex-direction: column;
@@ -35,13 +32,11 @@
   min-width: 120px;
   color: #333;
 }
-
 .addressRoot{
   > div{
     flex: 1;
   }
 }
-
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -66,10 +61,6 @@
   }
 
   tbody{
-
-    tr {
-
-    }
     td{
       border-bottom: 1px solid #F6F6F6;
       padding: 12px 10px;
@@ -80,7 +71,6 @@
       &:last-of-type{
         padding-right: 0;
       }
-
       &.rate,
       &.total{
         text-align: right;
@@ -88,7 +78,6 @@
     }
   }
 }
-
 .totals{
   display: flex;
   flex-direction: column;
@@ -112,25 +101,22 @@
 .totalBottomGrayBordered {
   border-bottom: 1px solid #DADADA;
 }
-
 .logoWrap{
-  height: 120px;
-  width: 120px;
-  position: absolute;
-  right: 26px;
-  top: 26px;
-  border-radius: 5px;
   overflow: hidden;
 
   img{
     max-width: 100%;
   }
 }
-
+.logoImg {
+  height: auto;
+  width: auto;
+  max-width: 400px;
+  max-height: 160px;
+}
 .footer{
 
 }
-
 .paragraph{
   margin-bottom: 20px;  
 }

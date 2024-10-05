@@ -1,4 +1,4 @@
-import { Box, Stack } from '@/components';
+import { Box, Group, Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
@@ -13,6 +13,13 @@ import {
 } from '@/constants/PdfTemplates';
 
 export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
+  // # Company logo
+  showCompanyLogo?: boolean;
+  companyLogoUri?: string;
+
+  // # Company name
+  companyName?: string;
+
   // Address
   showCustomerAddress?: boolean;
   customerAddress?: string;
@@ -122,26 +129,30 @@ export function CreditNotePaperTemplate({
   creditNoteDateLabel = 'Credit Note Date',
 }: CreditNotePaperTemplateProps) {
   return (
-    <PaperTemplate
-      primaryColor={primaryColor}
-      secondaryColor={secondaryColor}
-      showCompanyLogo={showCompanyLogo}
-      companyLogoUri={companyLogoUri}
-      bigtitle={'Credit Note'}
-    >
+    <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
-        <PaperTemplate.TermsList>
-          {showCreditNoteNumber && (
-            <PaperTemplate.TermsItem label={creditNoteNumberLabel}>
-              {creditNoteNumebr}
-            </PaperTemplate.TermsItem>
+        <Group align={'start'} spacing={10}>
+          <Stack flex={1}>
+            <PaperTemplate.BigTitle title={'Credit Note'} />
+
+            <PaperTemplate.TermsList>
+              {showCreditNoteNumber && (
+                <PaperTemplate.TermsItem label={creditNoteNumberLabel}>
+                  {creditNoteNumebr}
+                </PaperTemplate.TermsItem>
+              )}
+              {showCreditNoteDate && (
+                <PaperTemplate.TermsItem label={creditNoteDateLabel}>
+                  {creditNoteDate}
+                </PaperTemplate.TermsItem>
+              )}
+            </PaperTemplate.TermsList>
+          </Stack>
+
+          {companyLogoUri && showCompanyLogo && (
+            <PaperTemplate.Logo logoUri={companyLogoUri} />
           )}
-          {showCreditNoteDate && (
-            <PaperTemplate.TermsItem label={creditNoteDateLabel}>
-              {creditNoteDate}
-            </PaperTemplate.TermsItem>
-          )}
-        </PaperTemplate.TermsList>
+        </Group>
 
         <PaperTemplate.AddressesGroup>
           {showCompanyAddress && (

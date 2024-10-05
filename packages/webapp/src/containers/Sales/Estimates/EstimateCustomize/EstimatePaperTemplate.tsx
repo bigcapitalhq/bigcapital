@@ -1,4 +1,4 @@
-import { Box, Stack } from '@/components';
+import { Box, Group, Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
@@ -13,6 +13,10 @@ import {
 } from '@/constants/PdfTemplates';
 
 export interface EstimatePaperTemplateProps extends PaperTemplateProps {
+  // # Company
+  showCompanyLogo?: boolean;
+  companyLogoUri?: string;
+
   // # Estimate number
   estimateNumebr?: string;
   estimateNumberLabel?: string;
@@ -132,31 +136,35 @@ export function EstimatePaperTemplate({
   expirationDate = 'September 3, 2024',
 }: EstimatePaperTemplateProps) {
   return (
-    <PaperTemplate
-      primaryColor={primaryColor}
-      secondaryColor={secondaryColor}
-      showCompanyLogo={showCompanyLogo}
-      companyLogoUri={companyLogoUri}
-      bigtitle={'Estimate'}
-    >
+    <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
-        <PaperTemplate.TermsList>
-          {showEstimateNumber && (
-            <PaperTemplate.TermsItem label={estimateNumberLabel}>
-              {estimateNumebr}
-            </PaperTemplate.TermsItem>
+        <Group align={'start'} spacing={10}>
+          <Stack flex={1}>
+            <PaperTemplate.BigTitle title={'Estimate'} />
+
+            <PaperTemplate.TermsList>
+              {showEstimateNumber && (
+                <PaperTemplate.TermsItem label={estimateNumberLabel}>
+                  {estimateNumebr}
+                </PaperTemplate.TermsItem>
+              )}
+              {showEstimateDate && (
+                <PaperTemplate.TermsItem label={estimateDateLabel}>
+                  {estimateDate}
+                </PaperTemplate.TermsItem>
+              )}
+              {showExpirationDate && (
+                <PaperTemplate.TermsItem label={expirationDateLabel}>
+                  {expirationDate}
+                </PaperTemplate.TermsItem>
+              )}
+            </PaperTemplate.TermsList>
+          </Stack>
+
+          {companyLogoUri && showCompanyLogo && (
+            <PaperTemplate.Logo logoUri={companyLogoUri} />
           )}
-          {showEstimateDate && (
-            <PaperTemplate.TermsItem label={estimateDateLabel}>
-              {estimateDate}
-            </PaperTemplate.TermsItem>
-          )}
-          {showExpirationDate && (
-            <PaperTemplate.TermsItem label={expirationDateLabel}>
-              {expirationDate}
-            </PaperTemplate.TermsItem>
-          )}
-        </PaperTemplate.TermsList>
+        </Group>
 
         <PaperTemplate.AddressesGroup>
           {showCompanyAddress && (

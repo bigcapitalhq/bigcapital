@@ -1,4 +1,4 @@
-import { Box, Stack } from '@/components';
+import { Box, Group, Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
@@ -13,6 +13,13 @@ import {
 } from '@/constants/PdfTemplates';
 
 export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
+  // # Company logo
+  showCompanyLogo?: boolean;
+  companyLogoUri?: string;
+
+  // # Company name
+  companyName?: string;
+
   // Addresses
   showCustomerAddress?: boolean;
   customerAddress?: string;
@@ -117,26 +124,30 @@ export function ReceiptPaperTemplate({
   receiptDateLabel = 'Receipt Date',
 }: ReceiptPaperTemplateProps) {
   return (
-    <PaperTemplate
-      primaryColor={primaryColor}
-      secondaryColor={secondaryColor}
-      showCompanyLogo={showCompanyLogo}
-      companyLogoUri={companyLogoUri}
-      bigtitle={'Receipt'}
-    >
+    <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
-        <PaperTemplate.TermsList>
-          {showReceiptNumber && (
-            <PaperTemplate.TermsItem label={receiptNumberLabel}>
-              {receiptNumebr}
-            </PaperTemplate.TermsItem>
+        <Group align={'start'} spacing={10}>
+          <Stack flex={1}>
+            <PaperTemplate.BigTitle title={'Receipt'} />
+
+            <PaperTemplate.TermsList>
+              {showReceiptNumber && (
+                <PaperTemplate.TermsItem label={receiptNumberLabel}>
+                  {receiptNumebr}
+                </PaperTemplate.TermsItem>
+              )}
+              {showReceiptDate && (
+                <PaperTemplate.TermsItem label={receiptDateLabel}>
+                  {receiptDate}
+                </PaperTemplate.TermsItem>
+              )}
+            </PaperTemplate.TermsList>
+          </Stack>
+
+          {companyLogoUri && showCompanyLogo && (
+            <PaperTemplate.Logo logoUri={companyLogoUri} />
           )}
-          {showReceiptDate && (
-            <PaperTemplate.TermsItem label={receiptDateLabel}>
-              {receiptDate}
-            </PaperTemplate.TermsItem>
-          )}
-        </PaperTemplate.TermsList>
+        </Group>
 
         <PaperTemplate.AddressesGroup>
           {showCompanyAddress && (

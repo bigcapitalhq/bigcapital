@@ -7,37 +7,17 @@ import styles from './InvoicePaperTemplate.module.scss';
 export interface PaperTemplateProps {
   primaryColor?: string;
   secondaryColor?: string;
-
-  showCompanyLogo?: boolean;
-  companyLogoUri?: string;
-  companyName?: string;
-
-  bigtitle?: string;
-
   children?: React.ReactNode;
 }
 
 export function PaperTemplate({
   primaryColor,
   secondaryColor,
-  showCompanyLogo,
-  companyLogoUri,
-  bigtitle = 'Invoice',
   children,
 }: PaperTemplateProps) {
   return (
     <div className={styles.root}>
       <style>{`:root { --invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor}; }`}</style>
-
-      <div>
-        <h1 className={styles.bigTitle}>{bigtitle}</h1>
-
-        {showCompanyLogo && companyLogoUri && (
-          <div className={styles.logoWrap}>
-            <img alt="" src={companyLogoUri} />
-          </div>
-        )}
-      </div>
 
       {children}
     </div>
@@ -52,6 +32,26 @@ interface PaperTemplateTableProps {
   }>;
   data: Array<Record<string, any>>;
 }
+
+interface PaperTemplateBigTitleProps {
+  title: string;
+}
+
+PaperTemplate.BigTitle = ({ title }: PaperTemplateBigTitleProps) => {
+  return <h1 className={styles.bigTitle}>{title}</h1>;
+};
+
+interface PaperTemplateLogoProps {
+  logoUri: string;
+}
+
+PaperTemplate.Logo = ({ logoUri }: PaperTemplateLogoProps) => {
+  return (
+    <div className={styles.logoWrap}>
+      <img className={styles.logoImg} alt="" src={logoUri} />
+    </div>
+  );
+};
 
 PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
   return (

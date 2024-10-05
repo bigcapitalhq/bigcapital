@@ -1,4 +1,4 @@
-import { Box, Stack } from '@/components';
+import { Box, Group, Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
@@ -10,6 +10,13 @@ import {
 } from '@/constants/PdfTemplates';
 
 export interface PaymentReceivedPaperTemplateProps extends PaperTemplateProps {
+  // # Company logo
+  showCompanyLogo?: boolean;
+  companyLogoUri?: string;
+
+  // # Company name
+  companyName?: string;
+
   // Customer address
   showCustomerAddress?: boolean;
   customerAddress?: string;
@@ -93,27 +100,31 @@ export function PaymentReceivedPaperTemplate({
   paymentReceivedDateLabel = 'Payment Date',
 }: PaymentReceivedPaperTemplateProps) {
   return (
-    <PaperTemplate
-      primaryColor={primaryColor}
-      secondaryColor={secondaryColor}
-      showCompanyLogo={showCompanyLogo}
-      companyLogoUri={companyLogoUri}
-      bigtitle={'Payment'}
-    >
+    <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
-        <PaperTemplate.TermsList>
-          {showPaymentReceivedNumber && (
-            <PaperTemplate.TermsItem label={paymentReceivedNumberLabel}>
-              {paymentReceivedNumebr}
-            </PaperTemplate.TermsItem>
-          )}
+        <Group align={'start'} spacing={10}>
+          <Stack flex={1}>
+            <PaperTemplate.BigTitle title={'Payment'} />
 
-          {showPaymentReceivedDate && (
-            <PaperTemplate.TermsItem label={paymentReceivedDateLabel}>
-              {paymentReceivedDate}
-            </PaperTemplate.TermsItem>
+            <PaperTemplate.TermsList>
+              {showPaymentReceivedNumber && (
+                <PaperTemplate.TermsItem label={paymentReceivedNumberLabel}>
+                  {paymentReceivedNumebr}
+                </PaperTemplate.TermsItem>
+              )}
+
+              {showPaymentReceivedDate && (
+                <PaperTemplate.TermsItem label={paymentReceivedDateLabel}>
+                  {paymentReceivedDate}
+                </PaperTemplate.TermsItem>
+              )}
+            </PaperTemplate.TermsList>
+          </Stack>
+
+          {companyLogoUri && showCompanyLogo && (
+            <PaperTemplate.Logo logoUri={companyLogoUri} />
           )}
-        </PaperTemplate.TermsList>
+        </Group>
 
         <PaperTemplate.AddressesGroup>
           {showCompanyAddress && (
