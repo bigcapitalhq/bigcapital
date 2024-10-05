@@ -33,7 +33,11 @@ export function PaymentPortal() {
   const handleInvoiceDownloadBtnClick = () => {
     generatePaymentLinkInvoice({ paymentLinkId: linkId })
       .then((data) => {
-        downloadFile(data, `Invoice ${sharableLinkMeta?.invoiceNo}.pdf`);
+        downloadFile(
+          data,
+          `Invoice ${sharableLinkMeta?.invoiceNo}`,
+          'application/pdf',
+        );
       })
       .catch(() => {
         AppToaster.show({

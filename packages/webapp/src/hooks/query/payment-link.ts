@@ -200,7 +200,10 @@ export const useGeneratePaymentLinkInvoicePdf = (
   >(
     (values: GeneratePaymentLinkInvoicePdfValues) => {
       return apiRequest
-        .get(`/payment-links/${values.paymentLinkId}/invoice/pdf`)
+        .get(`/payment-links/${values.paymentLinkId}/invoice/pdf`, {
+          responseType: 'blob',
+          headers: { accept: 'application/pdf' },
+        })
         .then((res) => res?.data);
     },
     { ...options },
@@ -217,7 +220,10 @@ export const useGetPaymentLinkInvoicePdf = (
     [GetPaymentLinkInvoicePdf, invoiceId],
     () =>
       apiRequest
-        .get(`/payment-links/${invoiceId}/invoice/pdf`)
+        .get(`/payment-links/${invoiceId}/invoice/pdf`, {
+          responseType: 'blob',
+          headers: { accept: 'application/pdf' },
+        })
         .then((res) => res.data),
     {
       ...options,

@@ -43,9 +43,9 @@ export class PaymentLinksApplication {
    * Retrieves the sale invoice pdf of the given payment link id.
    * @param {number} tenantId
    * @param {number} paymentLinkId
-   * @returns
+   * @returns {Promise<Buffer> }
    */
-  public getPaymentLinkInvoicePdf(paymentLinkId: string) {
+  public getPaymentLinkInvoicePdf(paymentLinkId: string): Promise<Buffer> {
     return this.getPaymentLinkInvoicePdfService.getPaymentLinkInvoicePdf(
       paymentLinkId
     );
