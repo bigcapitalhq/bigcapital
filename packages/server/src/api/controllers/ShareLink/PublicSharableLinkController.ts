@@ -22,6 +22,13 @@ export class PublicSharableLinkController extends BaseController {
       this.getPaymentLinkPublicMeta.bind(this),
       this.validationResult
     );
+    router.get(
+      '/:paymentLinkId/invoice/pdf',
+      [param('paymentLinkId').exists()],
+      this.validationResult,
+      this.getPaymentLinkInvoicePdf.bind(this),
+      this.validationResult
+    );
     router.post(
       '/:paymentLinkId/stripe_checkout_session',
       [param('paymentLinkId').exists()],
@@ -76,6 +83,33 @@ export class PublicSharableLinkController extends BaseController {
           paymentLinkId
         );
       return res.status(200).send(session);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the sale invoice pdf of the given payment link.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async getPaymentLinkInvoicePdf(
+    req: Request<{ paymentLinkId: string }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { paymentLinkId } = req.params;
+
+    try {
+      const pdfContent = await this.paymentLinkApp.getPaymentLinkInvoicePdf(
+        paymentLinkId
+      );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      res.send(pdfContent);
     } catch (error) {
       next(error);
     }

@@ -11,6 +11,7 @@ import useApiRequest from '../useRequest';
 import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 
 const GetPaymentLinkInvoice = 'GetPaymentLinkInvoice';
+const GetPaymentLinkInvoicePdf = 'GetPaymentLinkInvoicePdf';
 
 // Create Payment Link
 // ------------------------------------
@@ -168,5 +169,58 @@ export const useCreateStripeCheckoutSession = (
         );
     },
     { ...options },
+  );
+};
+
+// Get Payment Link Invoice PDF
+// ------------------------------------
+interface GetPaymentLinkInvoicePdfResponse {}
+
+interface GeneratePaymentLinkInvoicePdfValues {
+  paymentLinkId: string;
+}
+
+export const useGeneratePaymentLinkInvoicePdf = (
+  options?: UseMutationOptions<
+    GetPaymentLinkInvoicePdfResponse,
+    Error,
+    GeneratePaymentLinkInvoicePdfValues
+  >,
+): UseMutationResult<
+  GetPaymentLinkInvoicePdfResponse,
+  Error,
+  GeneratePaymentLinkInvoicePdfValues
+> => {
+  const apiRequest = useApiRequest();
+
+  return useMutation<
+    GetPaymentLinkInvoicePdfResponse,
+    Error,
+    GeneratePaymentLinkInvoicePdfValues
+  >(
+    (values: GeneratePaymentLinkInvoicePdfValues) => {
+      return apiRequest
+        .get(`/payment-links/${values.paymentLinkId}/invoice/pdf`)
+        .then((res) => res?.data);
+    },
+    { ...options },
+  );
+};
+
+export const useGetPaymentLinkInvoicePdf = (
+  invoiceId: string,
+  options?: UseQueryOptions<GetPaymentLinkInvoicePdfResponse, Error>,
+): UseQueryResult<GetPaymentLinkInvoicePdfResponse, Error> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetPaymentLinkInvoicePdfResponse, Error>(
+    [GetPaymentLinkInvoicePdf, invoiceId],
+    () =>
+      apiRequest
+        .get(`/payment-links/${invoiceId}/invoice/pdf`)
+        .then((res) => res.data),
+    {
+      ...options,
+    },
   );
 };

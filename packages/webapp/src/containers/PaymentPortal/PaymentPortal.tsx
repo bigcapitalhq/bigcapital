@@ -1,10 +1,14 @@
-import { Text, Classes, Button, Intent, Tag } from '@blueprintjs/core';
+import { Text, Classes, Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { AppToaster, Box, Group, Stack } from '@/components';
 import { usePaymentPortalBoot } from './PaymentPortalBoot';
 import { useDrawerActions } from '@/hooks/state';
-import { useCreateStripeCheckoutSession } from '@/hooks/query/payment-link';
+import {
+  useCreateStripeCheckoutSession,
+  useGeneratePaymentLinkInvoicePdf,
+} from '@/hooks/query/payment-link';
 import { DRAWERS } from '@/constants/drawers';
+import { downloadFile } from '@/hooks/useDownloadFile';
 import styles from './PaymentPortal.module.scss';
 
 export function PaymentPortal() {
@@ -15,10 +19,30 @@ export function PaymentPortal() {
     isLoading: isStripeCheckoutLoading,
   } = useCreateStripeCheckoutSession();
 
+  const {
+    mutateAsync: generatePaymentLinkInvoice,
+    isLoading: isInvoiceGenerating,
+  } = useGeneratePaymentLinkInvoicePdf();
+
   // Handles invoice preview button click.
   const handleInvoicePreviewBtnClick = () => {
     openDrawer(DRAWERS.PAYMENT_INVOICE_PREVIEW);
   };
+
+  // Handles invoice download button click.
+  const handleInvoiceDownloadBtnClick = () => {
+    generatePaymentLinkInvoice({ paymentLinkId: linkId })
+      .then((data) => {
+        downloadFile(data, `Invoice ${sharableLinkMeta?.invoiceNo}.pdf`);
+      })
+      .catch(() => {
+        AppToaster.show({
+          intent: Intent.DANGER,
+          message: 'Something went wrong.',
+        });
+      });
+  };
+
   // handles the pay button click.
   const handlePayButtonClick = () => {
     createStripeCheckoutSession({ linkId })
@@ -125,6 +149,8 @@ export function PaymentPortal() {
           <Button
             minimal
             className={clsx(styles.footerButton, styles.downloadInvoiceButton)}
+            onClick={handleInvoiceDownloadBtnClick}
+            loading={isInvoiceGenerating}
           >
             Download Invoice
           </Button>

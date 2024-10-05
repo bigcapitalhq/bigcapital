@@ -33,9 +33,15 @@ export const useDownloadFile = (args: IArgs) => {
   return { ...mutation };
 };
 
-export function downloadFile(data, filename, mime, bom) {
+export function downloadFile(
+  data,
+  filename,
+  mime = 'application/octet-stream',
+  bom?: any,
+) {
   var blobData = typeof bom !== 'undefined' ? [bom, data] : [data];
-  var blob = new Blob(blobData, { type: mime || 'application/octet-stream' });
+  var blob = new Blob(blobData, { type: mime });
+
   if (typeof window.navigator.msSaveBlob !== 'undefined') {
     // IE workaround for "HTML7007: One or more blob URLs were
     // revoked by closing the blob for which they were created.
