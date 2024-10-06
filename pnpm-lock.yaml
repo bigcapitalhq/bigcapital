@@ -583,6 +583,9 @@ importers:
       '@types/react-dom':
         specifier: ^16.9.16
         version: 16.9.24
+      '@types/react-helmet':
+        specifier: ^6.1.11
+        version: 6.1.11
       '@types/react-redux':
         specifier: ^7.1.24
         version: 7.1.33
@@ -649,6 +652,9 @@ importers:
       formik:
         specifier: ^2.2.5
         version: 2.4.6(react@18.3.1)
+      helmet:
+        specifier: ^3.21.0
+        version: 3.23.3
       history:
         specifier: 4.10.1
         version: 4.10.1
@@ -733,6 +739,9 @@ importers:
       react-error-overlay:
         specifier: ^6.0.9
         version: 6.0.11
+      react-helmet:
+        specifier: ^6.1.0
+        version: 6.1.0(react@18.3.1)
       react-hotkeys-hook:
         specifier: ^3.0.3
         version: 3.4.7(react-dom@18.3.1)(react@18.3.1)
@@ -6926,6 +6935,12 @@ packages:
 
   /@types/react-dom@16.9.24:
     resolution: {integrity: sha512-Gcmq2JTDheyWn/1eteqyzzWKSqDjYU6KYsIvH7thb7CR5OYInAWOX+7WnKf6PaU/cbdOc4szJItcDEJO7UGmfA==}
+    dependencies:
+      '@types/react': 16.14.60
+    dev: false
+
+  /@types/react-helmet@6.1.11:
+    resolution: {integrity: sha512-0QcdGLddTERotCXo3VFlUSWO3ztraw8nZ6e3zJSgG7apwV5xt+pJUS8ewPBqT4NYB1optGLprNQzFleIY84u/g==}
     dependencies:
       '@types/react': 16.14.60
     dev: false
@@ -21931,6 +21946,18 @@ packages:
 
   /react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
+    dev: false
+
+  /react-helmet@6.1.0(react@18.3.1):
+    resolution: {integrity: sha512-4uMzEY9nlDlgxr61NL3XbKRy1hEkXmKNXhjbAIOVw5vcFrsdYbH2FEwcNyWvWinl103nXgzYNlns9ca+8kFiWw==}
+    peerDependencies:
+      react: '>=16.3.0'
+    dependencies:
+      object-assign: 4.1.1
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-fast-compare: 3.2.2
+      react-side-effect: 2.1.2(react@18.3.1)
     dev: false
 
   /react-hotkeys-hook@3.4.7(react-dom@18.3.1)(react@18.3.1):
