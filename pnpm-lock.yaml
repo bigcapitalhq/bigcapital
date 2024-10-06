@@ -37,8 +37,6 @@ importers:
         specifier: ^9.0.5
         version: 9.1.2
 
-  packages/bigcapital-utils: {}
-
   packages/server:
     dependencies:
       '@aws-sdk/client-s3':
@@ -49,7 +47,7 @@ importers:
         version: 3.583.0
       '@bigcapital/utils':
         specifier: '*'
-        version: link:../bigcapital-utils
+        version: link:../../shared/bigcapital-utils
       '@casl/ability':
         specifier: ^5.4.3
         version: 5.4.4
@@ -482,7 +480,7 @@ importers:
     dependencies:
       '@bigcapital/utils':
         specifier: '*'
-        version: link:../bigcapital-utils
+        version: link:../../shared/bigcapital-utils
       '@blueprintjs-formik/core':
         specifier: ^0.3.6
         version: 0.3.6(@babel/core@7.24.5)(@blueprintjs/core@4.20.2)(@blueprintjs/select@4.9.24)(formik@2.4.6)(react-dom@18.3.1)(react-is@18.3.1)(react@18.3.1)
@@ -840,6 +838,8 @@ importers:
       yup:
         specifier: ^0.28.1
         version: 0.28.5
+
+  shared/bigcapital-utils: {}
 
 packages:
 

@@ -90,11 +90,7 @@ RUN chown node:node /
 RUN npm install -g pnpm
 
 # Copy application dependency manifests to the container image.
-COPY ./package*.json ./
-COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
-COPY ./lerna.json ./lerna.json
-COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY ./packages/server/package*.json ./packages/server/
+COPY --chown=node:node ./ ./
 
 # Install application dependencies
 RUN apk update
@@ -109,6 +105,6 @@ RUN pnpm install
 COPY --chown=node:node ./packages/server ./packages/server
 
 # # Creates a "dist" folder with the production build
-RUN npm run build:server --skip-nx-cache
+RUN pnpm run build:server --skip-nx-cache
 
 CMD [ "node", "./packages/server/build/index.js" ]
