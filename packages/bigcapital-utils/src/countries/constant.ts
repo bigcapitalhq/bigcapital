@@ -1,13 +1,4 @@
-interface Country {
-  name: string;
-  native: string;
-  phone: number[];
-  continent: string;
-  continents?: string[];
-  capital: string;
-  currency: string[];
-  languages: string[];
-}
+import { Country } from './types';
 
 export const Countries: Record<string, Country> = {
   AD: {

@@ -1,0 +1,22 @@
+{
+  "name": "@bigcapital/utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build:cjs": "tsup src/index.ts --format cjs --dts --sourcemap",
+    "build:esm": "tsup src/index.ts --format esm --dts --sourcemap",
+    "build": "npm run build:cjs && npm run build:esm",
+    "dev": "npm run build -- --watch"
+  },
+  "author": "",
+  "license": "ISC"
+}

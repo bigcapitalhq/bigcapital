@@ -7,6 +7,7 @@ import { Button, FormGroup, Intent } from '@blueprintjs/core';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { ErrorMessage, FastField } from 'formik';
 import { useHistory } from 'react-router-dom';
+import { getAllCountries } from '@bigcapital/utils';
 
 import {
   FieldRequiredHint,
@@ -23,7 +24,6 @@ import { getAllCurrenciesOptions } from '@/constants/currencies';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
 import { useGeneralFormContext } from './GeneralFormProvider';
-import { getAllCountries } from '@/utils/countries';
 
 import { shouldBaseCurrencyUpdate } from './utils';
 
