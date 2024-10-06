@@ -4,11 +4,11 @@
   "scripts": {
     "dev": "lerna run dev",
     "build": "lerna run build",
-    "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
-    "build:webapp": "lerna run build --scope \"@bigcapital/webapp\"",
-    "dev:server": "lerna run dev --scope \"@bigcapital/server\"",
-    "build:server": "lerna run build --scope \"@bigcapital/server\"",
-    "serve:server": "lerna run serve --scope \"@bigcapital/server\"",
+    "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\"",
+    "build:webapp": "lerna run build --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\"",
+    "dev:server": "lerna run dev --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\"",
+    "build:server": "lerna run build --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\"",
+    "serve:server": "lerna run serve --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\"",
     "test:e2e": "playwright test",
     "prepare": "husky install"
   },
