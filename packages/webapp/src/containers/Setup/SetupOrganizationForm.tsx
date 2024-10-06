@@ -4,6 +4,7 @@ import { FastField, Form, ErrorMessage } from 'formik';
 import { Button, Intent, FormGroup, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
+import { getAllCountries } from '@bigcapital/utils';
 import {
   FFormGroup,
   FInputGroup,
@@ -17,7 +18,6 @@ import { inputIntent } from '@/utils';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
 import { getAllCurrenciesOptions } from '@/constants/currencies';
-import { getAllCountries } from '@/utils/countries';
 
 const countries = getAllCountries();
 

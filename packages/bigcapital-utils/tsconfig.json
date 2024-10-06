@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                             // Equivalent to ES6 output
+    "module": "ESNext",                        // CommonJS for Node.js compatibility
+    "outDir": "dist",                            // Output directory for compiled files
+    "declaration": true,                         // Generates .d.ts files (same as dts: true)
+    "declarationDir": "dist",                    // Specifies where to output declaration files
+    "sourceMap": true,                           // Generate sourcemaps
+    "esModuleInterop": true,                     // Enables interop between CommonJS and ESModules
+    "strict": true,                              // Enables strict type-checking options
+    "moduleResolution": "node",                  // Resolve modules using Node.js-style resolution
+    "skipLibCheck": true,                        // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true     // Enforces consistent casing in import paths
+  },
+  "include": ["src/**/*"],                       // Includes all TypeScript files in the src directory
+  "exclude": ["node_modules"]                    // Excludes node_modules from being compiled
+}

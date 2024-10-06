@@ -3,6 +3,7 @@ import {
   organizationAddressTextFormat,
 } from '@/utils/address-text-format';
 import BaseModel from 'models/Model';
+import { findByIsoCountryCode } from '@bigcapital/utils';
 import { getUploadedObjectUri } from '../../services/Attachments/utils';
 
 export default class TenantMetadata extends BaseModel {
@@ -70,6 +71,8 @@ export default class TenantMetadata extends BaseModel {
    * @returns {string}
    */
   public get addressTextFormatted() {
+    const addressCountry = findByIsoCountryCode(this.location);
+
     return organizationAddressTextFormat(defaultOrganizationAddressFormat, {
       organizationName: this.name,
       address1: this.address?.address1,
@@ -78,7 +81,7 @@ export default class TenantMetadata extends BaseModel {
       city: this.address?.city,
       postalCode: this.address?.postalCode,
       phone: this.address?.phone,
-      country: 'United State',
+      country: addressCountry?.name ?? '',
     });
   }
 }
