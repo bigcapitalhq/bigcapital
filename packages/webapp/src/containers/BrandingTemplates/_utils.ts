@@ -44,11 +44,10 @@ export const useBrandingTemplateFormInitialValues = <
 >(
   initialValues = {},
 ) => {
-  const { pdfTemplate, brandingTemplateState } = useBrandingTemplateBoot();
+  const { pdfTemplate } = useBrandingTemplateBoot();
 
   const brandingAttributes = {
     templateName: pdfTemplate?.templateName,
-    // ...brandingTemplateState,
     ...pdfTemplate?.attributes,
   };
   return {
