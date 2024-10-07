@@ -63,7 +63,7 @@ const withInvoicePreviewTemplateProps = <P extends object>(
     const { values } = useFormikContext<InvoiceCustomizeFormValues>();
     const { brandingState, } = useElementCustomizeContext();
 
-    const mergedProps: InvoicePaperTemplateProps = { ...brandingState, ...values }
+    const mergedProps: InvoicePaperTemplateProps = { ...brandingState, ...values };
 
     return <Component {...(props as P)} {...mergedProps} />;
   };

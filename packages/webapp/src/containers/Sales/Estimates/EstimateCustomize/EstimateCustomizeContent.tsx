@@ -49,7 +49,7 @@ function EstimatePaperTemplateFormConnected() {
   const { values } = useFormikContext<EstimateCustomizeValues>();
   const { brandingState } = useElementCustomizeContext()
 
-  const mergedProps: EstimatePaperTemplateProps = { ...values, ...brandingState }
+  const mergedProps: EstimatePaperTemplateProps = { ...brandingState, ...values, }
 
   return <EstimatePaperTemplate {...mergedProps} />;
 }
