@@ -1,4 +1,6 @@
-import { BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
+import { BrandingState, BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
+
+export interface PaymentReceivedPreviewState extends BrandingState {}
 
 export interface PaymentReceivedCustomizeValues extends BrandingTemplateValues {
   // Colors
@@ -20,15 +22,11 @@ export interface PaymentReceivedCustomizeValues extends BrandingTemplateValues {
   showDueDate?: boolean;
   dueDateLabel?: string;
 
-  // # Company name
-  companyName?: string;
-
   // # Customer address
   showCustomerAddress?: boolean;
 
   // # Company address
   showCompanyAddress?: boolean;
-  companyAddress?: string;
   billedToLabel?: string;
 
   // Entries

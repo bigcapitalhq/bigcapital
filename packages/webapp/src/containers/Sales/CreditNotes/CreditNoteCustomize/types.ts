@@ -1,4 +1,6 @@
-import { BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
+import { BrandingState, BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
+
+export interface CreditNoteBrandingState extends BrandingState {}
 
 export interface CreditNoteCustomizeValues extends BrandingTemplateValues {
   // Colors

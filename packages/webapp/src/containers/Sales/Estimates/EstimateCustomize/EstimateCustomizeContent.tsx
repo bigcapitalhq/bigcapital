@@ -2,12 +2,13 @@ import { useFormikContext } from 'formik';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { EstimateCustomizeGeneralField } from './EstimateCustomizeFieldsGeneral';
 import { EstimateCustomizeContentFields } from './EstimateCustomizeFieldsContent';
-import { EstimatePaperTemplate } from './EstimatePaperTemplate';
-import { EstimateCustomizeValues } from './types';
+import { EstimatePaperTemplate, EstimatePaperTemplateProps } from './EstimatePaperTemplate';
+import { EstimateBrandingState, EstimateCustomizeValues } from './types';
 import { initialValues } from './constants';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
+import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 
 export function EstimateCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -19,7 +20,7 @@ export function EstimateCustomizeContent() {
   };
 
   return (
-    <BrandingTemplateForm<EstimateCustomizeValues>
+    <BrandingTemplateForm<EstimateCustomizeValues, EstimateBrandingState>
       templateId={templateId}
       defaultValues={initialValues}
       onSuccess={handleSuccess}
@@ -40,8 +41,15 @@ export function EstimateCustomizeContent() {
   );
 }
 
+/**
+ * Injects the `EstimatePaperTemplate` component props from the form and branding states.
+ * @returns {JSX.Element}
+ */
 function EstimatePaperTemplateFormConnected() {
   const { values } = useFormikContext<EstimateCustomizeValues>();
+  const { brandingState } = useElementCustomizeContext()
 
-  return <EstimatePaperTemplate {...values} />;
+  const mergedProps: EstimatePaperTemplateProps = { ...values, ...brandingState }
+
+  return <EstimatePaperTemplate {...mergedProps} />;
 }

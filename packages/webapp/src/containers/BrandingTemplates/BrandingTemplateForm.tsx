@@ -8,6 +8,7 @@ import {
 import {
   transformToEditRequest,
   transformToNewRequest,
+  useBrandingState,
   useBrandingTemplateFormInitialValues,
 } from './_utils';
 import { AppToaster } from '@/components';
@@ -17,31 +18,42 @@ import {
   useEditPdfTemplate,
 } from '@/hooks/query/pdf-templates';
 import { FormikHelpers } from 'formik';
-import { BrandingTemplateValues } from './types';
+import { BrandingTemplateValues, BrandingState } from './types';
 import { useUploadAttachments } from '@/hooks/query/attachments';
 import { excludePrivateProps } from '@/utils';
 
-interface BrandingTemplateFormProps<T> extends ElementCustomizeProps<T> {
+interface BrandingTemplateFormProps<
+  T extends BrandingTemplateValues,
+  Y extends BrandingState
+> extends ElementCustomizeProps<T, Y> {
   resource: string;
   templateId?: number;
   onSuccess?: () => void;
   onError?: () => void;
+
+  /* The default values hold the initial values of the form and the values being sent to the server. */
   defaultValues?: T;
 }
 
-export function BrandingTemplateForm<T extends BrandingTemplateValues>({
+export function BrandingTemplateForm<
+  T extends BrandingTemplateValues,
+  Y extends BrandingState,
+>({
   templateId,
   onSuccess,
   onError,
   defaultValues,
   resource,
   ...props
-}: BrandingTemplateFormProps<T>) {
+}: BrandingTemplateFormProps<T, Y>) {
+  // Create/edit pdf template mutators.
   const { mutateAsync: createPdfTemplate } = useCreatePdfTemplate();
   const { mutateAsync: editPdfTemplate } = useEditPdfTemplate();
 
   const initialValues = useBrandingTemplateFormInitialValues<T>(defaultValues);
-  const [isUploading, setIsLoading] = useState<boolean>(false);
+  const brandingState = useBrandingState();
+
+  const [, setIsLoading] = useState<boolean>(false);
 
   // Uploads the attachments.
   const { mutateAsync: uploadAttachments } = useUploadAttachments({
@@ -122,10 +134,11 @@ export function BrandingTemplateForm<T extends BrandingTemplateValues>({
   };
 
   return (
-    <ElementCustomize<T>
+    <ElementCustomize<T, Y>
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}
+      brandingState={brandingState || {}}
       {...props}
     />
   );

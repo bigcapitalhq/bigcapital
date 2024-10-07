@@ -18,9 +18,6 @@ export const initialValues = {
   showPaymentReceivedDate: true,
   paymentReceivedDateLabel: 'Date of Issue',
 
-  // Company name
-  companyName: 'Bigcapital Technology, Inc.',
-
   // Customer address
   showCompanyAddress: true,
   companyAddress: '',

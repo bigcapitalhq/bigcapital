@@ -1,4 +1,6 @@
-import { BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
+import { BrandingState, BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
+
+export interface EstimateBrandingState extends BrandingState {}
 
 export interface EstimateCustomizeValues extends BrandingTemplateValues {
   // Colors
@@ -19,9 +21,6 @@ export interface EstimateCustomizeValues extends BrandingTemplateValues {
 
   estimateDateLabel?: string;
   showEstimateDate?: boolean;
-
-  // Company name
-  companyName?: string;
 
   // Addresses
   showBilledFromAddress?: boolean;
