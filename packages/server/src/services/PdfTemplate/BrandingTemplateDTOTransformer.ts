@@ -1,7 +1,6 @@
-import * as R from 'ramda';
-import HasTenancyService from '../Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
-import { isEmpty } from 'lodash';
+import { isNil } from 'lodash';
+import HasTenancyService from '../Tenancy/TenancyService';
 
 @Service()
 export class BrandingTemplateDTOTransformer {
@@ -22,11 +21,12 @@ export class BrandingTemplateDTOTransformer {
       const { PdfTemplate } = this.tenancy.models(tenantId);
       const attributeName = 'pdfTemplateId';
 
-      const defaultTemplate = await PdfTemplate.query().findOne({
-        resource,
-        default: true,
-      });
-      if (!defaultTemplate || !isEmpty(object[attributeName])) {
+      const defaultTemplate = await PdfTemplate.query()
+        .modify('default')
+        .findOne({ resource });
+
+      // If the default template is not found OR the given object has no defined template id.
+      if (!defaultTemplate || !isNil(object[attributeName])) {
         return object;
       }
       return {
