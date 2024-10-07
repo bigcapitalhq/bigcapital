@@ -20,7 +20,6 @@ export const initialValues = {
 
   // Customer address
   showCompanyAddress: true,
-  companyAddress: '',
 
   // Company address
   showCustomerAddress: true,
