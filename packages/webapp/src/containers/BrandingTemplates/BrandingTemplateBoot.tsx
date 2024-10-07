@@ -11,7 +11,7 @@ interface PdfTemplateContextValue {
   templateId: number | string;
 
   // Pdf template.
-  pdfTemplate: GetPdfTemplateResponse;
+  pdfTemplate: GetPdfTemplateResponse | undefined;
   isPdfTemplateLoading: boolean;
 
   // Branding state.
@@ -42,8 +42,7 @@ export const BrandingTemplateBoot = ({
 
   const isLoading = isPdfTemplateLoading ||
     isBrandingTemplateLoading ||
-    !brandingTemplateState ||
-    !pdfTemplate;
+    !brandingTemplateState;
 
   if (isLoading) {
     return <Spinner size={20} />;
