@@ -18,14 +18,10 @@ export const initialValues = {
   showReceiptDate: true,
   receiptDateLabel: 'Date of Issue',
 
-  // Company name
-  companyName: 'Bigcapital Technology, Inc.',
-
   // Customer address
   showCustomerAddress: true,
 
   // Company address
-  companyAddress: '',
   showCompanyAddress: true,
   billedToLabel: 'Billed To',
 

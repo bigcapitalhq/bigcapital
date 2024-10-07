@@ -2,12 +2,13 @@ import { useFormikContext } from 'formik';
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { CreditNoteCustomizeGeneralField } from './CreditNoteCustomizeGeneralFields';
 import { CreditNoteCustomizeContentFields } from './CreditNoteCutomizeContentFields';
-import { CreditNotePaperTemplate } from './CreditNotePaperTemplate';
-import { CreditNoteCustomizeValues } from './types';
+import { CreditNotePaperTemplate, CreditNotePaperTemplateProps } from './CreditNotePaperTemplate';
+import { CreditNoteBrandingState, CreditNoteCustomizeValues } from './types';
 import { initialValues } from './constants';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
 import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 
 export function CreditNoteCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -20,7 +21,7 @@ export function CreditNoteCustomizeContent() {
   };
 
   return (
-    <BrandingTemplateForm<CreditNoteCustomizeValues>
+    <BrandingTemplateForm<CreditNoteCustomizeValues, CreditNoteBrandingState>
       resource={'CreditNote'}
       templateId={templateId}
       defaultValues={initialValues}
@@ -43,6 +44,9 @@ export function CreditNoteCustomizeContent() {
 
 function CreditNotePaperTemplateFormConnected() {
   const { values } = useFormikContext<CreditNoteCustomizeValues>();
+  const { brandingState } = useElementCustomizeContext();
 
-  return <CreditNotePaperTemplate {...values} />;
+  const mergedProps: CreditNotePaperTemplateProps = { ...brandingState, ...values };
+
+  return <CreditNotePaperTemplate {...mergedProps} />;
 }

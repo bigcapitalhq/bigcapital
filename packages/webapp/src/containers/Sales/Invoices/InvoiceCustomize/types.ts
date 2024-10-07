@@ -1,6 +1,8 @@
-import { BrandingTemplateValues } from "@/containers/BrandingTemplates/types";
+import { BrandingState, BrandingTemplateValues } from '@/containers/BrandingTemplates/types';
 
-export interface InvoiceCustomizeValues extends BrandingTemplateValues {
+export interface InvoiceCustomizeState extends BrandingState {}
+
+export interface InvoiceCustomizeFormValues extends BrandingTemplateValues {
   // Colors
   primaryColor?: string;
   secondaryColor?: string;
@@ -14,14 +16,13 @@ export interface InvoiceCustomizeValues extends BrandingTemplateValues {
   showInvoiceNumber?: boolean;
   invoiceNumberLabel?: string;
 
+  // Date issue
   showDateIssue?: boolean;
   dateIssueLabel?: string;
 
+  // Due date
   showDueDate?: boolean;
   dueDateLabel?: string;
-
-  // Company name
-  companyName?: string;
 
   // Addresses
   showBilledFromAddress?: boolean;
@@ -38,6 +39,7 @@ export interface InvoiceCustomizeValues extends BrandingTemplateValues {
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
+  // Discount
   showDiscount?: boolean;
   discountLabel?: string;
 

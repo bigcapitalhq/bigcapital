@@ -2,7 +2,7 @@
 import React from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 
-export interface ElementCustomizeFormProps<T> {
+export interface ElementCustomizeFormProps<T, Y> {
   initialValues?: T;
   validationSchema?: any;
   onSubmit?: (values: T, formikHelpers: FormikHelpers<T>) => void;

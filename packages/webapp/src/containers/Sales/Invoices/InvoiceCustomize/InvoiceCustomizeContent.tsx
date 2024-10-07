@@ -8,13 +8,17 @@ import {
 import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
 import { InvoiceCustomizeGeneralField } from './InvoiceCustomizeGeneralFields';
 import { InvoiceCustomizeContentFields } from './InvoiceCutomizeContentFields';
-import { InvoiceCustomizeValues } from './types';
+import { InvoiceCustomizeFormValues, InvoiceCustomizeState } from './types';
 import { InvoiceCustomizeSchema } from './InvoiceCustomizeForm.schema';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
 import { initialValues } from './constants';
+import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 
+/**
+ * Invoice branding template customize.
+ */
 export function InvoiceCustomizeContent() {
   const { payload, name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
@@ -25,7 +29,7 @@ export function InvoiceCustomizeContent() {
   };
 
   return (
-    <BrandingTemplateForm<InvoiceCustomizeValues>
+    <BrandingTemplateForm<InvoiceCustomizeFormValues, InvoiceCustomizeState>
       templateId={templateId}
       defaultValues={initialValues}
       validationSchema={InvoiceCustomizeSchema}
@@ -47,15 +51,23 @@ export function InvoiceCustomizeContent() {
   );
 }
 
-const withFormikProps = <P extends object>(
+/**
+ * Injects the `InvoicePaperTemplate` component props from the form and branding states.
+ * @param Component 
+ * @returns {JSX.Element}
+ */
+const withInvoicePreviewTemplateProps = <P extends object>(
   Component: React.ComponentType<P>,
 ) => {
   return (props: Omit<P, keyof InvoicePaperTemplateProps>) => {
-    const { values } = useFormikContext<InvoicePaperTemplateProps>();
+    const { values } = useFormikContext<InvoiceCustomizeFormValues>();
+    const { brandingState, } = useElementCustomizeContext();
 
-    return <Component {...(props as P)} {...values} />;
+    const mergedProps: InvoicePaperTemplateProps = { ...brandingState, ...values }
+
+    return <Component {...(props as P)} {...mergedProps} />;
   };
 };
 
 export const InvoicePaperTemplateFormConnected =
-  R.compose(withFormikProps)(InvoicePaperTemplate);
+  R.compose(withInvoicePreviewTemplateProps)(InvoicePaperTemplate);

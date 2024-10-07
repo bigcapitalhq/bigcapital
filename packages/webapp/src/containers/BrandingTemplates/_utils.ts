@@ -6,7 +6,7 @@ import {
 } from '@/hooks/query/pdf-templates';
 import { useBrandingTemplateBoot } from './BrandingTemplateBoot';
 import { transformToForm } from '@/utils';
-import { BrandingTemplateValues } from './types';
+import { BrandingState, BrandingTemplateValues } from './types';
 import { DRAWERS } from '@/constants/drawers';
 
 const commonExcludedAttrs = ['templateName', 'companyLogoUri'];
@@ -44,11 +44,10 @@ export const useBrandingTemplateFormInitialValues = <
 >(
   initialValues = {},
 ) => {
-  const { pdfTemplate, brandingTemplateState } = useBrandingTemplateBoot();
+  const { pdfTemplate } = useBrandingTemplateBoot();
 
   const brandingAttributes = {
     templateName: pdfTemplate?.templateName,
-    ...brandingTemplateState,
     ...pdfTemplate?.attributes,
   };
   return {
@@ -56,6 +55,15 @@ export const useBrandingTemplateFormInitialValues = <
     ...(transformToForm(brandingAttributes, initialValues) as T),
   };
 };
+
+export const useBrandingState = (state?: Partial<BrandingState>): BrandingState => {
+  const { brandingTemplateState } = useBrandingTemplateBoot();
+
+  return {
+    ...brandingTemplateState,
+    ...state
+  }
+}
 
 export const getCustomizeDrawerNameFromResource = (resource: string) => {
   const pairs = {

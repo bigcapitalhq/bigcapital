@@ -20,15 +20,11 @@ export const initialValues = {
   showExpirationDate: true,
   expirationDateLabel: 'Expiration Date',
 
-  // Company name
-  companyName: 'Bigcapital Technology, Inc.',
-
   // Customer address
   showCustomerAddress: true,
 
   // Company address
   showCompanyAddress: true,
-  companyAddress: '',
   billedToLabel: 'Billed To',
 
   // Entries

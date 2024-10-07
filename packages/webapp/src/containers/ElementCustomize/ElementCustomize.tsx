@@ -9,17 +9,21 @@ import { ElementCustomizeTabsControllerProvider } from './ElementCustomizeTabsCo
 import { ElementCustomizeFields } from './ElementCustomizeFields';
 import { ElementCustomizePreview } from './ElementCustomizePreview';
 import { extractChildren } from '@/utils/extract-children';
+import { ElementPreviewState } from '../BrandingTemplates/types';
 
-export interface ElementCustomizeProps<T> extends ElementCustomizeFormProps<T> {
+export interface ElementCustomizeProps<T, Y>
+  extends ElementCustomizeFormProps<T, Y> {
+  brandingState?: Y;
   children?: React.ReactNode;
 }
 
-export function ElementCustomize<T>({
+export function ElementCustomize<T, Y extends ElementPreviewState>({
   initialValues,
   validationSchema,
+  brandingState,
   onSubmit,
   children,
-}: ElementCustomizeProps<T>) {
+}: ElementCustomizeProps<T, Y>) {
   const PaperTemplate = React.useMemo(
     () => extractChildren(children, ElementCustomize.PaperTemplate),
     [children],
@@ -29,7 +33,7 @@ export function ElementCustomize<T>({
     [children],
   );
 
-  const value = { PaperTemplate, CustomizeTabs };
+  const value = { PaperTemplate, CustomizeTabs, brandingState };
 
   return (
     <ElementCustomizeForm

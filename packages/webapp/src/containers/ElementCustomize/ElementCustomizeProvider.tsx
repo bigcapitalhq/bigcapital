@@ -1,18 +1,22 @@
 import React, { createContext, useContext } from 'react';
+import { ElementPreviewState } from '../BrandingTemplates/types';
 
 interface ElementCustomizeValue {
   PaperTemplate?: React.ReactNode;
   CustomizeTabs: React.ReactNode;
+  brandingState?: ElementPreviewState;
 }
 
 const ElementCustomizeContext = createContext<ElementCustomizeValue>(
   {} as ElementCustomizeValue,
 );
 
-export const ElementCustomizeProvider: React.FC<{
+interface ElementCustomizeProviderProps {
   value: ElementCustomizeValue;
   children: React.ReactNode;
-}> = ({ value, children }) => {
+}
+
+export const ElementCustomizeProvider = ({ value, children }: ElementCustomizeProviderProps) => {
   return (
     <ElementCustomizeContext.Provider value={{ ...value }}>
       {children}

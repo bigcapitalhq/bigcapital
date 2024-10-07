@@ -1,19 +1,21 @@
 import React, { createContext, useContext } from 'react';
+import { Spinner } from '@blueprintjs/core';
 import {
   GetPdfTemplateBrandingStateResponse,
   GetPdfTemplateResponse,
   useGetPdfTemplate,
   useGetPdfTemplateBrandingState,
 } from '@/hooks/query/pdf-templates';
-import { Spinner } from '@blueprintjs/core';
 
 interface PdfTemplateContextValue {
   templateId: number | string;
-  pdfTemplate: GetPdfTemplateResponse | undefined;
+
+  // Pdf template.
+  pdfTemplate: GetPdfTemplateResponse;
   isPdfTemplateLoading: boolean;
 
   // Branding state.
-  brandingTemplateState: GetPdfTemplateBrandingStateResponse | undefined;
+  brandingTemplateState: GetPdfTemplateBrandingStateResponse;
   isBrandingTemplateLoading: boolean;
 }
 
@@ -34,10 +36,18 @@ export const BrandingTemplateBoot = ({
     useGetPdfTemplate(templateId, {
       enabled: !!templateId,
     });
-  // Retreives the branding template state.
+  // Retrieves the branding template state.
   const { data: brandingTemplateState, isLoading: isBrandingTemplateLoading } =
     useGetPdfTemplateBrandingState();
 
+  const isLoading = isPdfTemplateLoading ||
+    isBrandingTemplateLoading ||
+    !brandingTemplateState ||
+    !pdfTemplate;
+
+  if (isLoading) {
+    return <Spinner size={20} />;
+  }
   const value = {
     templateId,
     pdfTemplate,
@@ -47,11 +57,6 @@ export const BrandingTemplateBoot = ({
     isBrandingTemplateLoading,
   };
 
-  const isLoading = isPdfTemplateLoading || isBrandingTemplateLoading;
-
-  if (isLoading) {
-    return <Spinner size={20} />;
-  }
   return (
     <PdfTemplateContext.Provider value={value}>
       {children}

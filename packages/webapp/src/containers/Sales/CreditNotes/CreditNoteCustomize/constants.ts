@@ -13,7 +13,6 @@ export const initialValues = {
   // Address
   showCustomerAddress: true,
   showCompanyAddress: true,
-  companyAddress: '',
   billedToLabel: 'Billed To',
 
   // Entries

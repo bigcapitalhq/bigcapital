@@ -1,6 +1,5 @@
 import { omit } from 'lodash';
-import { useFormikContext } from 'formik';
-import { InvoiceCustomizeValues } from './types';
+import { InvoiceCustomizeFormValues } from './types';
 import {
   CreatePdfTemplateValues,
   EditPdfTemplateValues,
@@ -10,7 +9,7 @@ import { initialValues } from './constants';
 import { useBrandingTemplateBoot } from '@/containers/BrandingTemplates/BrandingTemplateBoot';
 
 export const transformToEditRequest = (
-  values: InvoiceCustomizeValues,
+  values: InvoiceCustomizeFormValues,
 ): EditPdfTemplateValues => {
   return {
     templateName: values.templateName,
@@ -19,7 +18,7 @@ export const transformToEditRequest = (
 };
 
 export const transformToNewRequest = (
-  values: InvoiceCustomizeValues,
+  values: InvoiceCustomizeFormValues,
 ): CreatePdfTemplateValues => {
   return {
     resource: 'SaleInvoice',
@@ -28,7 +27,7 @@ export const transformToNewRequest = (
   };
 };
 
-export const useInvoiceCustomizeInitialValues = (): InvoiceCustomizeValues => {
+export const useInvoiceCustomizeInitialValues = (): InvoiceCustomizeFormValues => {
   const { pdfTemplate } = useBrandingTemplateBoot();
 
   const defaultPdfTemplate = {
@@ -40,6 +39,6 @@ export const useInvoiceCustomizeInitialValues = (): InvoiceCustomizeValues => {
     ...(transformToForm(
       defaultPdfTemplate,
       initialValues,
-    ) as InvoiceCustomizeValues),
+    ) as InvoiceCustomizeFormValues),
   };
 };

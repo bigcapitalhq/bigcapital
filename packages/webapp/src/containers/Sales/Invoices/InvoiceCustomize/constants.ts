@@ -16,19 +16,17 @@ export const initialValues = {
   showInvoiceNumber: true,
   invoiceNumberLabel: 'Invoice number',
 
+  // Issue date
   showDateIssue: true,
   dateIssueLabel: 'Date of Issue',
 
+  // Due date.
   showDueDate: true,
   dueDateLabel: 'Due Date',
-
-  // Company name
-  companyName: 'Bigcapital Technology, Inc.',
 
   // Addresses
   showCustomerAddress: true,
   showCompanyAddress: true,
-  companyAddress: '',
   billedToLabel: 'Billed To',
 
   // Entries
@@ -41,6 +39,7 @@ export const initialValues = {
   showSubtotal: true,
   subtotalLabel: 'Subtotal',
 
+  // Discount
   showDiscount: true,
   discountLabel: 'Discount',
 
@@ -52,6 +51,7 @@ export const initialValues = {
   paymentMadeLabel: 'Payment Made',
   showPaymentMade: true,
 
+  // Due amount
   dueAmountLabel: 'Due Amount',
   showDueAmount: true,
 
@@ -59,6 +59,7 @@ export const initialValues = {
   termsConditionsLabel: 'Terms & Conditions',
   showTermsConditions: true,
 
+  // Statement
   statementLabel: 'Statement',
   showStatement: true,
 };
