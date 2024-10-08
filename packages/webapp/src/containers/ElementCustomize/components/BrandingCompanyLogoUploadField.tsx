@@ -13,6 +13,9 @@ export function BrandingCompanyLogoUploadField() {
         onChange={(file) => {
           const imageUrl = file ? URL.createObjectURL(file) : '';
 
+          // Reset the logo key since it is changed.
+          setFieldValue('companyLogoKey', '');
+
           setFieldValue('_companyLogoFile', file);
           setFieldValue('companyLogoUri', imageUrl);
         }}
