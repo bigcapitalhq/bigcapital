@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'classnames';
 import { get } from 'lodash';
-import { Box, Group, GroupProps, Stack } from '@/components';
+import { Box, Group, GroupProps } from '@/components';
 import styles from './InvoicePaperTemplate.module.scss';
 
 export interface PaperTemplateProps {
