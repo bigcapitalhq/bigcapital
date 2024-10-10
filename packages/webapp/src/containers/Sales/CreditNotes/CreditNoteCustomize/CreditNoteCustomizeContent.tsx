@@ -1,14 +1,21 @@
 import { useFormikContext } from 'formik';
-import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
+import {
+  ElementCustomize,
+  ElementCustomizeContent,
+} from '../../../ElementCustomize/ElementCustomize';
 import { CreditNoteCustomizeGeneralField } from './CreditNoteCustomizeGeneralFields';
 import { CreditNoteCustomizeContentFields } from './CreditNoteCutomizeContentFields';
-import { CreditNotePaperTemplate, CreditNotePaperTemplateProps } from './CreditNotePaperTemplate';
+import {
+  CreditNotePaperTemplate,
+  CreditNotePaperTemplateProps,
+} from './CreditNotePaperTemplate';
 import { CreditNoteBrandingState, CreditNoteCustomizeValues } from './types';
 import { initialValues } from './constants';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
 import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 
 export function CreditNoteCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -27,6 +34,16 @@ export function CreditNoteCustomizeContent() {
       defaultValues={initialValues}
       onSuccess={handleSuccess}
     >
+      <CreditNoteCustomizeFormContent />
+    </BrandingTemplateForm>
+  );
+}
+
+function CreditNoteCustomizeFormContent() {
+  const isTemplateNameFilled = useIsTemplateNamedFilled();
+
+  return (
+    <ElementCustomizeContent>
       <ElementCustomize.PaperTemplate>
         <CreditNotePaperTemplateFormConnected />
       </ElementCustomize.PaperTemplate>
@@ -35,10 +52,14 @@ export function CreditNoteCustomizeContent() {
         <CreditNoteCustomizeGeneralField />
       </ElementCustomize.FieldsTab>
 
-      <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
+      <ElementCustomize.FieldsTab
+        id={'content'}
+        label={'Content'}
+        tabProps={{ disabled: !isTemplateNameFilled }}
+      >
         <CreditNoteCustomizeContentFields />
       </ElementCustomize.FieldsTab>
-    </BrandingTemplateForm>
+    </ElementCustomizeContent>
   );
 }
 
@@ -46,7 +67,10 @@ function CreditNotePaperTemplateFormConnected() {
   const { values } = useFormikContext<CreditNoteCustomizeValues>();
   const { brandingState } = useElementCustomizeContext();
 
-  const mergedProps: CreditNotePaperTemplateProps = { ...brandingState, ...values };
+  const mergedProps: CreditNotePaperTemplateProps = {
+    ...brandingState,
+    ...values,
+  };
 
   return <CreditNotePaperTemplate {...mergedProps} />;
 }

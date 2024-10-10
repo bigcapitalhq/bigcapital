@@ -1,14 +1,24 @@
 import { useFormikContext } from 'formik';
-import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
+import {
+  ElementCustomize,
+  ElementCustomizeContent,
+} from '../../../ElementCustomize/ElementCustomize';
 import { PaymentReceivedCustomizeGeneralField } from './PaymentReceivedCustomizeFieldsGeneral';
 import { PaymentReceivedCustomizeContentFields } from './PaymentReceivedCustomizeFieldsContent';
-import { PaymentReceivedCustomizeValues, PaymentReceivedPreviewState } from './types';
-import { PaymentReceivedPaperTemplate, PaymentReceivedPaperTemplateProps } from './PaymentReceivedPaperTemplate';
+import {
+  PaymentReceivedCustomizeValues,
+  PaymentReceivedPreviewState,
+} from './types';
+import {
+  PaymentReceivedPaperTemplate,
+  PaymentReceivedPaperTemplateProps,
+} from './PaymentReceivedPaperTemplate';
 import { initialValues } from './constants';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 
 export function PaymentReceivedCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -21,12 +31,25 @@ export function PaymentReceivedCustomizeContent() {
   };
 
   return (
-    <BrandingTemplateForm<PaymentReceivedCustomizeValues, PaymentReceivedPreviewState>
+    <BrandingTemplateForm<
+      PaymentReceivedCustomizeValues,
+      PaymentReceivedPreviewState
+    >
       templateId={templateId}
       defaultValues={initialValues}
       onSuccess={handleSuccess}
       resource={'PaymentReceive'}
     >
+      <PaymentReceivedCustomizeFormContent />
+    </BrandingTemplateForm>
+  );
+}
+
+function PaymentReceivedCustomizeFormContent() {
+  const isTemplateNameFilled = useIsTemplateNamedFilled();
+
+  return (
+    <ElementCustomizeContent>
       <ElementCustomize.PaperTemplate>
         <PaymentReceivedPaperTemplateFormConnected />
       </ElementCustomize.PaperTemplate>
@@ -35,10 +58,14 @@ export function PaymentReceivedCustomizeContent() {
         <PaymentReceivedCustomizeGeneralField />
       </ElementCustomize.FieldsTab>
 
-      <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
+      <ElementCustomize.FieldsTab
+        id={'content'}
+        label={'Content'}
+        tabProps={{ disabled: !isTemplateNameFilled }}
+      >
         <PaymentReceivedCustomizeContentFields />
       </ElementCustomize.FieldsTab>
-    </BrandingTemplateForm>
+    </ElementCustomizeContent>
   );
 }
 
@@ -46,7 +73,10 @@ function PaymentReceivedPaperTemplateFormConnected() {
   const { values } = useFormikContext<PaymentReceivedCustomizeValues>();
   const { brandingState } = useElementCustomizeContext();
 
-  const paperTemplateProps: PaymentReceivedPaperTemplateProps = { ...brandingState, ...values };
+  const paperTemplateProps: PaymentReceivedPaperTemplateProps = {
+    ...brandingState,
+    ...values,
+  };
 
   return <PaymentReceivedPaperTemplate {...paperTemplateProps} />;
 }

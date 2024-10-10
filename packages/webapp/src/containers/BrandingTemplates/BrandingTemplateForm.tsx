@@ -51,8 +51,6 @@ export function BrandingTemplateForm<
   const { mutateAsync: editPdfTemplate } = useEditPdfTemplate();
 
   const initialValues = useBrandingTemplateFormInitialValues<T>(defaultValues);
-  const brandingState = useBrandingState();
-
   const [, setIsLoading] = useState<boolean>(false);
 
   // Uploads the attachments.
@@ -138,7 +136,6 @@ export function BrandingTemplateForm<
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}
-      brandingState={brandingState || {}}
       {...props}
     />
   );
