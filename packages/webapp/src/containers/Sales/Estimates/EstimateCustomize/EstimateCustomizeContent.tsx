@@ -1,14 +1,21 @@
 import { useFormikContext } from 'formik';
-import { ElementCustomize } from '../../../ElementCustomize/ElementCustomize';
+import {
+  ElementCustomize,
+  ElementCustomizeContent,
+} from '../../../ElementCustomize/ElementCustomize';
 import { EstimateCustomizeGeneralField } from './EstimateCustomizeFieldsGeneral';
 import { EstimateCustomizeContentFields } from './EstimateCustomizeFieldsContent';
-import { EstimatePaperTemplate, EstimatePaperTemplateProps } from './EstimatePaperTemplate';
+import {
+  EstimatePaperTemplate,
+  EstimatePaperTemplateProps,
+} from './EstimatePaperTemplate';
 import { EstimateBrandingState, EstimateCustomizeValues } from './types';
 import { initialValues } from './constants';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 
 export function EstimateCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -26,6 +33,16 @@ export function EstimateCustomizeContent() {
       onSuccess={handleSuccess}
       resource={'SaleEstimate'}
     >
+      <EstimateCustomizeFormContent />
+    </BrandingTemplateForm>
+  );
+}
+
+function EstimateCustomizeFormContent() {
+  const isTemplateNameFilled = useIsTemplateNamedFilled();
+
+  return (
+    <ElementCustomizeContent>
       <ElementCustomize.PaperTemplate>
         <EstimatePaperTemplateFormConnected />
       </ElementCustomize.PaperTemplate>
@@ -34,10 +51,14 @@ export function EstimateCustomizeContent() {
         <EstimateCustomizeGeneralField />
       </ElementCustomize.FieldsTab>
 
-      <ElementCustomize.FieldsTab id={'content'} label={'Content'}>
+      <ElementCustomize.FieldsTab
+        id={'content'}
+        label={'Content'}
+        tabProps={{ disabled: !isTemplateNameFilled }}
+      >
         <EstimateCustomizeContentFields />
       </ElementCustomize.FieldsTab>
-    </BrandingTemplateForm>
+    </ElementCustomizeContent>
   );
 }
 
@@ -47,9 +68,12 @@ export function EstimateCustomizeContent() {
  */
 function EstimatePaperTemplateFormConnected() {
   const { values } = useFormikContext<EstimateCustomizeValues>();
-  const { brandingState } = useElementCustomizeContext()
+  const { brandingState } = useElementCustomizeContext();
 
-  const mergedProps: EstimatePaperTemplateProps = { ...brandingState, ...values, }
+  const mergedProps: EstimatePaperTemplateProps = {
+    ...brandingState,
+    ...values,
+  };
 
   return <EstimatePaperTemplate {...mergedProps} />;
 }
