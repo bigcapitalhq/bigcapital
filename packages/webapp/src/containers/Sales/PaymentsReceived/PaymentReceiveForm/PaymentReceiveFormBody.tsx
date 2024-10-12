@@ -2,15 +2,14 @@
 import React from 'react';
 import { FastField } from 'formik';
 import PaymentReceiveItemsTable from './PaymentReceiveItemsTable';
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
+import { Box } from '@/components';
 
 /**
  * Payment Receive form body.
  */
 export default function PaymentReceiveFormBody() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+    <Box p="18px 32px 0">
       <FastField name={'entries'}>
         {({ form: { values, setFieldValue }, field: { value } }) => (
           <PaymentReceiveItemsTable
@@ -22,6 +21,6 @@ export default function PaymentReceiveFormBody() {
           />
         )}
       </FastField>
-    </div>
+    </Box>
   );
 }

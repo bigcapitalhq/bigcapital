@@ -6,20 +6,21 @@ import { x } from '@xstyled/emotion';
 
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
 import { getEntriesTotal } from '@/containers/Entries/utils';
-import { PageFormBigNumber } from '@/components';
+import { Group, PageFormBigNumber } from '@/components';
 
 // Estimate form top header.
 function EstimateFormHeader() {
   return (
-    <x.div
-      display="flex"
+    <Group
+      position="apart"
+      align={'flex-start'}
       bg="white"
       p="25px 32px"
       borderBottom="1px solid #d2dce2"
     >
       <EstimateFormHeaderFields />
       <EstimateFormBigTotal />
-    </x.div>
+    </Group>
   );
 }
 

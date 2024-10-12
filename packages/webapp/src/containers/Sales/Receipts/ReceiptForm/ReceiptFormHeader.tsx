@@ -1,13 +1,9 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-
-import { CLASSES } from '@/constants/classes';
-import { PageFormBigNumber } from '@/components';
+import { Group, PageFormBigNumber } from '@/components';
 import ReceiptFormHeaderFields from './ReceiptFormHeaderFields';
-
 import { getEntriesTotal } from '@/containers/Entries/utils';
 
 /**
@@ -18,12 +14,18 @@ function ReceiptFormHeader({
   onReceiptNumberChanged,
 }) {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <Group
+      position="apart"
+      align={'flex-start'}
+      display="flex"
+      bg="white"
+      p="25px 32px"
+    >
       <ReceiptFormHeaderFields
         onReceiptNumberChanged={onReceiptNumberChanged}
       />
       <ReceiptFormHeaderBigTotal />
-    </div>
+    </Group>
   );
 }
 

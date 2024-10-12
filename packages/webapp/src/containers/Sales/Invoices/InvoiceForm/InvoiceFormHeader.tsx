@@ -2,10 +2,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
-import { x } from '@xstyled/emotion';
-
+import { Group, PageFormBigNumber } from '@/components';
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
-import { PageFormBigNumber } from '@/components';
 import { useInvoiceDueAmount } from './utils';
 
 /**
@@ -13,15 +11,16 @@ import { useInvoiceDueAmount } from './utils';
  */
 function InvoiceFormHeader() {
   return (
-    <x.div
-      display="flex"
+    <Group
+      position="apart"
+      align={'flex-start'}
       bg="white"
       p="25px 32px"
       borderBottom="1px solid #d2dce2"
     >
       <InvoiceFormHeaderFields />
       <InvoiceFormBigTotal />
-    </x.div>
+    </Group>
   );
 }
 

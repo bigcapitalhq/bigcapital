@@ -16,7 +16,7 @@ import { useReceiptFormContext } from './ReceiptFormProvider';
 import ReceiptFromHeader from './ReceiptFormHeader';
 import ReceiptItemsEntriesEditor from './ReceiptItemsEntriesEditor';
 import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
-import ReceiptFormFooter from './ReceiptFormFooter';
+import { ReceiptFormFooter } from './ReceiptFormFooter';
 import ReceiptFormDialogs from './ReceiptFormDialogs';
 import ReceiptFormTopBar from './ReceiptFormTopbar';
 
@@ -162,7 +162,7 @@ function ReceiptFormRoot({
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          flex: 1
+          flex: 1,
         })}
       >
         <PageForm flex={1}>

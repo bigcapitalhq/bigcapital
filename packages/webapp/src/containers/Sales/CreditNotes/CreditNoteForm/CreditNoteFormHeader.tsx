@@ -1,23 +1,28 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { CLASSES } from '@/constants/classes';
 import CreditNoteFormHeaderFields from './CreditNoteFormHeaderFields';
 
 import { getEntriesTotal } from '@/containers/Entries/utils';
-import { PageFormBigNumber } from '@/components';
+import { Group, PageFormBigNumber } from '@/components';
 
 /**
  * Credit note header.
  */
 function CreditNoteFormHeader() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <Group
+      position="apart"
+      align={'flex-start'}
+      display="flex"
+      bg="white"
+      p="25px 32px"
+      borderBottom="1px solid #d2dce2"
+    >
       <CreditNoteFormHeaderFields />
       <CreditNoteFormBigNumber />
-    </div>
+    </Group>
   );
 }
 

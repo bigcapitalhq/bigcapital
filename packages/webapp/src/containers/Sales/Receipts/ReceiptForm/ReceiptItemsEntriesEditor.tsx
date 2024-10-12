@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
+import { x } from '@xstyled/emotion';
 import { FastField } from 'formik';
-import { CLASSES } from '@/constants/classes';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
@@ -11,8 +10,12 @@ export default function ReceiptItemsEntriesEditor({ defaultReceipt }) {
   const { items } = useReceiptFormContext();
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <FastField name={'entries'} items={items} shouldUpdate={entriesFieldShouldUpdate}>
+    <x.div p="18px 32px 0">
+      <FastField
+        name={'entries'}
+        items={items}
+        shouldUpdate={entriesFieldShouldUpdate}
+      >
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -31,6 +34,6 @@ export default function ReceiptItemsEntriesEditor({ defaultReceipt }) {
           />
         )}
       </FastField>
-    </div>
+    </x.div>
   );
 }
