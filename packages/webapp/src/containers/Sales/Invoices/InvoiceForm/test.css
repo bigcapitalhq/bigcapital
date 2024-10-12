@@ -1,0 +1,25 @@
+.dashboard__page{
+    overflow: hidden;
+    flex: 1;
+}
+
+dashboard__insider dashboard__insider--invoice-form{
+    overflow: hidden;
+    padding: 0;
+}
+
+page-form page-form--strip page-form--invoice{
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+page-form form {
+    overflow: auto;
+    flex: 1;
+}
+
+page-form__footer {
+    padding-bottom: 20px;
+}

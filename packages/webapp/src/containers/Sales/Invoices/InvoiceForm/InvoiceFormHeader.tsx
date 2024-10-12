@@ -1,12 +1,10 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
+import { x } from '@xstyled/emotion';
 
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
-
-import { CLASSES } from '@/constants/classes';
 import { PageFormBigNumber } from '@/components';
 import { useInvoiceDueAmount } from './utils';
 
@@ -15,10 +13,15 @@ import { useInvoiceDueAmount } from './utils';
  */
 function InvoiceFormHeader() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <x.div
+      display="flex"
+      bg="white"
+      p="25px 32px"
+      borderBottom="1px solid #d2dce2"
+    >
       <InvoiceFormHeaderFields />
       <InvoiceFormBigTotal />
-    </div>
+    </x.div>
   );
 }
 

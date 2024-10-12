@@ -1,21 +1,19 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
+import { x } from '@xstyled/emotion';
 
-import { CLASSES } from '@/constants/classes';
 import { Row, Col, Paper } from '@/components';
 import { PaymentReceiveFormFootetLeft } from './PaymentReceiveFormFootetLeft';
 import { PaymentReceiveFormFootetRight } from './PaymentReceiveFormFootetRight';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 /**
- * Payment receive form footer.
+ * Payment received form footer.
  */
 export default function PaymentReceiveFormFooter() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <PaymentReceiveFooterPaper>
+    <x.div mt={'20px'} px={'32px'} pb={'20px'} flex={1}>
+      <Paper p={'20px'}>
         <Row>
           <Col md={8}>
             <PaymentReceiveFormFootetLeft />
@@ -26,11 +24,7 @@ export default function PaymentReceiveFormFooter() {
             <PaymentReceiveFormFootetRight />
           </Col>
         </Row>
-      </PaymentReceiveFooterPaper>
-    </div>
+      </Paper>
+    </x.div>
   );
 }
-
-const PaymentReceiveFooterPaper = styled(Paper)`
-  padding: 20px;
-`;

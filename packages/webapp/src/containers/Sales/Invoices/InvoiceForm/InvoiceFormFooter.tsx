@@ -1,18 +1,16 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
+import { x } from '@xstyled/emotion';
 
-import { CLASSES } from '@/constants/classes';
-import { Paper, Row, Col } from '@/components';
+import { Row, Col, Paper } from '@/components';
 import { InvoiceFormFooterLeft } from './InvoiceFormFooterLeft';
 import { InvoiceFormFooterRight } from './InvoiceFormFooterRight';
 import { UploadAttachmentButton } from '../../../Attachments/UploadAttachmentButton';
 
 export default function InvoiceFormFooter() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <InvoiceFooterPaper>
+    <x.div mt={'20px'} px={'32px'} pb={'20px'} flex={1}>
+      <Paper p={'20px'}>
         <Row>
           <Col md={8}>
             <InvoiceFormFooterLeft />
@@ -23,11 +21,7 @@ export default function InvoiceFormFooter() {
             <InvoiceFormFooterRight />
           </Col>
         </Row>
-      </InvoiceFooterPaper>
-    </div>
+      </Paper>
+    </x.div>
   );
 }
-
-const InvoiceFooterPaper = styled(Paper)`
-  padding: 20px;
-`;

@@ -113,6 +113,13 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
       })
     : [];
 
+  const isBootLoading =
+    isItemsLoading ||
+    isCustomersLoading ||
+    isCreditNoteLoading ||
+    isInvoiceLoading ||
+    isBrandingTemplatesLoading;
+
   // Provider payload.
   const provider = {
     items,
@@ -141,20 +148,11 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     // Credit note state
     creditNoteState,
     isCreditNoteStateLoading,
+
+    isBootLoading,
   };
 
-  const isLoading =
-    isItemsLoading ||
-    isCustomersLoading ||
-    isCreditNoteLoading ||
-    isInvoiceLoading ||
-    isBrandingTemplatesLoading;
-
-  return (
-    <DashboardInsider loading={isLoading} name={'credit-note-form'}>
-      <CreditNoteFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <CreditNoteFormContext.Provider value={provider} {...props} />;
 }
 
 const useCreditNoteFormContext = () =>

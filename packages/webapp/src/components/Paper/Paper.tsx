@@ -1,13 +1,20 @@
-// @ts-nocheck
 import React from 'react';
-import styled from 'styled-components';
+import { x, SystemProps } from '@xstyled/emotion';
 
-export function Paper({ children, className }) {
-  return <PaperRoot className={className}>{children}</PaperRoot>;
+interface PaperProps extends SystemProps {
+  children: React.ReactNode;
 }
 
-const PaperRoot = styled.div`
-  border: 1px solid #d2dce2;
-  background: #fff;
-  padding: 10px;
-`;
+export const Paper = ({ children, ...props }: PaperProps) => {
+  return (
+    <x.div
+      background={'white'}
+      p={'10px'}
+      border={'1px solid #d2dce2'}
+      {...props}
+    >
+      {children}
+    </x.div>
+  );
+};
+Paper.displayName = 'Paper';

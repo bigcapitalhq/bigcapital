@@ -1,12 +1,12 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { defaultTo, isEmpty } from 'lodash';
-import { CLASSES } from '@/constants/classes';
+import { css } from '@emotion/css';
+
 import {
   CreateCreditNoteFormSchema,
   EditCreditNoteFormSchema,
@@ -42,6 +42,7 @@ import {
   CreditNoteExchangeRateSync,
   CreditNoteSyncIncrementSettingsToForm,
 } from './components';
+import { PageForm } from '@/components/PageForm';
 
 /**
  * Credit note form.
@@ -148,36 +149,42 @@ function CreditNoteForm({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_CREDIT_NOTE,
-      )}
+    <Formik
+      validationSchema={
+        isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
+      }
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
     >
-      <Formik
-        validationSchema={
-          isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
-        }
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
+      <Form
+        className={css({
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        })}
       >
-        <Form>
-          <CreditNoteFormTopBar />
-          <CreditNoteFormHeader />
-          <CreditNoteItemsEntriesEditorField />
-          <CreditNoteFormFooter />
-          <CreditNoteFloatingActions />
+        <PageForm flex="1">
+          <PageForm.Body>
+            <CreditNoteFormTopBar />
+            <CreditNoteFormHeader />
+            <CreditNoteItemsEntriesEditorField />
+            <CreditNoteFormFooter />
+          </PageForm.Body>
 
-          {/*-------- Dialogs --------*/}
-          <CreditNoteFormDialogs />
+          <PageForm.Footer>
+            <CreditNoteFloatingActions />
+          </PageForm.Footer>
+        </PageForm>
 
-          {/*-------- Effects --------*/}
-          <CreditNoteSyncIncrementSettingsToForm />
-          <CreditNoteExchangeRateSync />
-        </Form>
-      </Formik>
-    </div>
+        {/*-------- Dialogs --------*/}
+        <CreditNoteFormDialogs />
+
+        {/*-------- Effects --------*/}
+        <CreditNoteSyncIncrementSettingsToForm />
+        <CreditNoteExchangeRateSync />
+      </Form>
+    </Formik>
   );
 }
 export default compose(

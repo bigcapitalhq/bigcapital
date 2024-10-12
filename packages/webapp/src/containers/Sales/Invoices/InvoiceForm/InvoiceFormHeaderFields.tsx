@@ -15,6 +15,7 @@ import {
   FieldRequiredHint,
   FeatureCan,
   CustomersSelect,
+  Stack
 } from '@/components';
 import {
   momentFormatter,
@@ -47,7 +48,7 @@ export default function InvoiceFormHeaderFields() {
   const { values } = useFormikContext();
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+    <Stack spacing={0}>
       {/* ----------- Customer name ----------- */}
       <InvoiceFormCustomerSelect />
 
@@ -151,7 +152,7 @@ export default function InvoiceFormHeaderFields() {
           )}
         </FFormGroup>
       </FeatureCan>
-    </div>
+    </Stack>
   );
 }
 

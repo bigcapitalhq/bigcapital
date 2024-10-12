@@ -1,11 +1,10 @@
 // @ts-nocheck
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
+import { css } from '@emotion/css';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { sumBy, isEmpty, defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from '@/constants/classes';
 
 import {
   CreateEstimateFormSchema,
@@ -36,8 +35,9 @@ import {
   handleErrors,
   resetFormState,
 } from './utils';
+import { PageForm } from '@/components/PageForm';
 
-/**
+/**6
  * Estimate form.
  */
 function EstimateForm({
@@ -148,36 +148,42 @@ function EstimateForm({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_ESTIMATE,
-      )}
+    <Formik
+      validationSchema={
+        isNewMode ? CreateEstimateFormSchema : EditEstimateFormSchema
+      }
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
     >
-      <Formik
-        validationSchema={
-          isNewMode ? CreateEstimateFormSchema : EditEstimateFormSchema
-        }
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
+      <Form
+        className={css({
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1
+        })}
       >
-        <Form>
-          <EstimtaeFormTopBar />
-          <EstimateFormHeader />
-          <EstimateItemsEntriesField />
-          <EstimateFormFooter />
-          <EstimateFloatingActions />
+        <PageForm flex={1}>
+          <PageForm.Body>
+            <EstimtaeFormTopBar />
+            <EstimateFormHeader />
+            <EstimateItemsEntriesField />
+            <EstimateFormFooter />
+          </PageForm.Body>
 
-          {/*------- Dialogs -------*/}
-          <EstimateFormDialogs />
+          <PageForm.Footer>
+            <EstimateFloatingActions />
+          </PageForm.Footer>
+        </PageForm>
 
-          {/*------- Effects -------*/}
-          <EstimateIncrementSyncSettingsToForm />
-          <EstimateSyncAutoExRateToForm />
-        </Form>
-      </Formik>
-    </div>
+        {/*------- Dialogs -------*/}
+        <EstimateFormDialogs />
+
+        {/*------- Effects -------*/}
+        <EstimateIncrementSyncSettingsToForm />
+        <EstimateSyncAutoExRateToForm />
+      </Form>
+    </Formik>
   );
 }
 

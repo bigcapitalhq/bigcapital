@@ -120,6 +120,15 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   const isNewMode = !receiptId;
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
+  const isBootLoading =
+    isReceiptLoading ||
+    isAccountsLoading ||
+    isCustomersLoading ||
+    isItemsLoading ||
+    isSettingLoading ||
+    isBrandingTemplatesLoading ||
+    isSaleReceiptStateLoading;
+
   const provider = {
     receiptId,
     receipt,
@@ -154,21 +163,10 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     // State
     isSaleReceiptStateLoading,
     saleReceiptState,
-  };
-  const isLoading =
-    isReceiptLoading ||
-    isAccountsLoading ||
-    isCustomersLoading ||
-    isItemsLoading ||
-    isSettingLoading ||
-    isBrandingTemplatesLoading ||
-    isSaleReceiptStateLoading;
 
-  return (
-    <DashboardInsider loading={isLoading} name={'receipt-form'}>
-      <ReceiptFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+    isBootLoading,
+  };
+  return <ReceiptFormContext.Provider value={provider} {...props} />;
 }
 
 const useReceiptFormContext = () =>

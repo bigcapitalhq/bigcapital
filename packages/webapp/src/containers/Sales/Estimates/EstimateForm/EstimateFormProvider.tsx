@@ -103,6 +103,13 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   const isFeatureLoading =
     isWarehouesLoading || isBranchesLoading || isProjectsLoading;
 
+  const isBootLoading =
+    isCustomersLoading ||
+    isItemsLoading ||
+    isEstimateLoading ||
+    isBrandingTemplatesLoading ||
+    isSaleEstimateStateLoading;
+
   // Provider payload.
   const provider = {
     estimateId,
@@ -136,20 +143,11 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     // Estimate state
     saleEstimateState,
     isSaleEstimateStateLoading,
+
+    isBootLoading,
   };
 
-  const isLoading =
-    isCustomersLoading ||
-    isItemsLoading ||
-    isEstimateLoading ||
-    isBrandingTemplatesLoading ||
-    isSaleEstimateStateLoading;
-
-  return (
-    <DashboardInsider loading={isLoading} name={'estimate-form'}>
-      <EstimateFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <EstimateFormContext.Provider value={provider} {...props} />;
 }
 
 const useEstimateFormContext = () =>

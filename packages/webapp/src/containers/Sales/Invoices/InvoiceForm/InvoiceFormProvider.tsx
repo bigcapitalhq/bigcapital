@@ -132,6 +132,14 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isProjectsLoading ||
     isBrandingTemplatesLoading;
 
+  const isBootLoading =
+    isInvoiceLoading ||
+    isItemsLoading ||
+    isCustomersLoading ||
+    isEstimateLoading ||
+    isSettingsLoading ||
+    isInvoiceStateLoading;
+
   const provider = {
     invoice,
     items,
@@ -170,21 +178,11 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     // Invoice state
     saleInvoiceState,
     isInvoiceStateLoading,
+
+    isBootLoading,
   };
 
-  const isLoading =
-    isInvoiceLoading ||
-    isItemsLoading ||
-    isCustomersLoading ||
-    isEstimateLoading ||
-    isSettingsLoading || 
-    isInvoiceStateLoading;
-
-  return (
-    <DashboardInsider loading={isLoading} name={'invoice-form'}>
-      <InvoiceFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <InvoiceFormContext.Provider value={provider} {...props} />;
 }
 
 const useInvoiceFormContext = () =>

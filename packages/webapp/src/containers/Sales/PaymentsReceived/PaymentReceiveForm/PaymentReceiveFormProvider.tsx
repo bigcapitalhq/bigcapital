@@ -97,6 +97,13 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
 
   const [isExcessConfirmed, setIsExcessConfirmed] = useState<boolean>(false);
 
+  const isBootLoading =
+    isPaymentLoading ||
+    isAccountsLoading ||
+    isCustomersLoading ||
+    isBrandingTemplatesLoading ||
+    isPaymentReceivedStateLoading;
+
   // Provider payload.
   const provider = {
     paymentReceiveId,
@@ -131,20 +138,11 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     // Payment received state
     isPaymentReceivedStateLoading,
     paymentReceivedState,
+
+    isBootLoading,
   };
 
-  const isLoading =
-    isPaymentLoading ||
-    isAccountsLoading ||
-    isCustomersLoading ||
-    isBrandingTemplatesLoading ||
-    isPaymentReceivedStateLoading;
-
-  return (
-    <DashboardInsider loading={isLoading} name={'payment-receive-form'}>
-      <PaymentReceiveFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <PaymentReceiveFormContext.Provider value={provider} {...props} />;
 }
 
 const usePaymentReceiveFormContext = () =>

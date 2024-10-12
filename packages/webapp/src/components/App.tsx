@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { defaultTheme, ThemeProvider } from '@xstyled/emotion';
 import { lazy, Suspense } from 'react';
 import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
@@ -35,6 +36,13 @@ const OneClickDemoPage = lazy(
 const PaymentPortalPage = lazy(
   () => import('@/containers/PaymentPortal/PaymentPortalPage'),
 );
+
+
+const theme = {
+  ...defaultTheme,
+  // Customize your theme here
+}
+
 /**
  * App inner.
  */
@@ -42,30 +50,38 @@ function AppInsider({ history }) {
   return (
     <div className="App">
       <DashboardThemeProvider>
-        <Suspense fallback={'Loading...'}>
-          <Router history={history}>
-            <Switch>
-              <Route path={'/one_click_demo'} children={<OneClickDemoPage />} />
-              <Route path={'/auth/register/verify'}>
-                <EnsureAuthenticated>
-                  <EnsureUserEmailNotVerified>
-                    <RegisterVerify />
-                  </EnsureUserEmailNotVerified>
-                </EnsureAuthenticated>
-              </Route>
+        <ThemeProvider theme={theme}>
+          <Suspense fallback={'Loading...'}>
+            <Router history={history}>
+              <Switch>
+                <Route
+                  path={'/one_click_demo'}
+                  children={<OneClickDemoPage />}
+                />
+                <Route path={'/auth/register/verify'}>
+                  <EnsureAuthenticated>
+                    <EnsureUserEmailNotVerified>
+                      <RegisterVerify />
+                    </EnsureUserEmailNotVerified>
+                  </EnsureAuthenticated>
+                </Route>
 
-              <Route
-                path={'/auth/email_confirmation'}
-                children={<EmailConfirmation />}
-              />
-              <Route path={'/auth'} children={<AuthenticationPage />} />
-              <Route path={'/payment/:linkId'} children={<PaymentPortalPage />} />
-              <Route path={'/'} children={<DashboardPrivatePages />} />
-            </Switch>
-          </Router>
-        </Suspense>
+                <Route
+                  path={'/auth/email_confirmation'}
+                  children={<EmailConfirmation />}
+                />
+                <Route path={'/auth'} children={<AuthenticationPage />} />
+                <Route
+                  path={'/payment/:linkId'}
+                  children={<PaymentPortalPage />}
+                />
+                <Route path={'/'} children={<DashboardPrivatePages />} />
+              </Switch>
+            </Router>
+          </Suspense>
 
-        <GlobalErrors />
+          <GlobalErrors />
+        </ThemeProvider>
       </DashboardThemeProvider>
     </div>
   );
