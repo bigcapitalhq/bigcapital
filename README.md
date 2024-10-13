@@ -12,6 +12,9 @@
     <a href="https://github.com/bigcapitalhq/bigcapital/commits/develop">
       <img src="https://img.shields.io/github/commit-activity/m/bigcapitalhq/bigcapital/develop" />
     </a>
+    <a href="https://hub.docker.com/u/bigcapitalhq">
+      <img src="https://img.shields.io/docker/pulls/bigcapitalhq/webapp" />
+    </a>
     <a href="https://discord.com/invite/c8nPBJafeb">
       <img src="https://img.shields.io/discord/1066514716752625725?label=Discord" alt="" />
     </a>
