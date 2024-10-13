@@ -1,22 +1,26 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { CLASSES } from '@/constants/classes';
+import { x } from '@xstyled/emotion';
 
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
-
 import { getEntriesTotal } from '@/containers/Entries/utils';
-import { PageFormBigNumber } from '@/components';
+import { Group, PageFormBigNumber } from '@/components';
 
 // Estimate form top header.
 function EstimateFormHeader() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <Group
+      position="apart"
+      align={'flex-start'}
+      bg="white"
+      p="25px 32px"
+      borderBottom="1px solid #d2dce2"
+    >
       <EstimateFormHeaderFields />
       <EstimateFormBigTotal />
-    </div>
+    </Group>
   );
 }
 

@@ -1,9 +1,8 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
-import { Money } from '@/components';
+import { Group, Money } from '@/components';
 import { FormattedMessage as T } from '@/components';
 
 import { CLASSES } from '@/constants/classes';
@@ -14,12 +13,16 @@ import PaymentReceiveHeaderFields from './PaymentReceiveHeaderFields';
  */
 function PaymentReceiveFormHeader() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <div className={classNames(CLASSES.PAGE_FORM_HEADER_PRIMARY)}>
-        <PaymentReceiveHeaderFields />
-        <PaymentReceiveFormBigTotal />
-      </div>
-    </div>
+    <Group
+      position="apart"
+      align={'flex-start'}
+      bg="white"
+      p="25px 32px"
+      borderBottom="1px solid #d2dce2"
+    >
+      <PaymentReceiveHeaderFields />
+      <PaymentReceiveFormBigTotal />
+    </Group>
   );
 }
 

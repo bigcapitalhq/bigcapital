@@ -1,13 +1,15 @@
 import React, { forwardRef, Ref } from 'react';
 import { HTMLDivProps, Props } from '@blueprintjs/core';
+import { SystemProps, x } from '@xstyled/emotion';
 
-export interface BoxProps extends Props, HTMLDivProps {
-  className?: string;
-}
+export interface BoxProps
+  extends SystemProps,
+    Props,
+    Omit<HTMLDivProps, 'color'> {}
 
 export const Box = forwardRef(
   ({ className, ...rest }: BoxProps, ref: Ref<HTMLDivElement>) => {
-    const Element = 'div';
+    const Element = x.div;
 
     return <Element className={className} ref={ref} {...rest} />;
   },

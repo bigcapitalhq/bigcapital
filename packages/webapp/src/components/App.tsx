@@ -35,6 +35,7 @@ const OneClickDemoPage = lazy(
 const PaymentPortalPage = lazy(
   () => import('@/containers/PaymentPortal/PaymentPortalPage'),
 );
+
 /**
  * App inner.
  */
@@ -59,7 +60,10 @@ function AppInsider({ history }) {
                 children={<EmailConfirmation />}
               />
               <Route path={'/auth'} children={<AuthenticationPage />} />
-              <Route path={'/payment/:linkId'} children={<PaymentPortalPage />} />
+              <Route
+                path={'/payment/:linkId'}
+                children={<PaymentPortalPage />}
+              />
               <Route path={'/'} children={<DashboardPrivatePages />} />
             </Switch>
           </Router>

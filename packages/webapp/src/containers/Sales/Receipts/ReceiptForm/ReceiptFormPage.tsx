@@ -1,25 +1,44 @@
 // @ts-nocheck
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { css } from '@emotion/css';
 
-import '@/style/pages/SaleReceipt/PageForm.scss';
-
-import ReceiptFrom from './ReceiptForm';
-import { ReceiptFormProvider } from './ReceiptFormProvider';
+import {
+  ReceiptFormProvider,
+  useReceiptFormContext,
+} from './ReceiptFormProvider';
 import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
+import { DashboardInsider } from '@/components';
+import { ReceiptForm } from './ReceiptForm';
 
 /**
  * Receipt form page.
  */
 export default function ReceiptFormPage() {
   const { id } = useParams();
-  const idInt = parseInt(id, 10);
+  const receiptId = parseInt(id, 10);
 
   return (
-    <ReceiptFormProvider receiptId={idInt}>
+    <ReceiptFormProvider receiptId={receiptId}>
       <AutoExchangeRateProvider>
-        <ReceiptFrom />
+        <ReceiptFormPageContent />
       </AutoExchangeRateProvider>
     </ReceiptFormProvider>
+  );
+}
+
+function ReceiptFormPageContent() {
+  const { isBootLoading } = useReceiptFormContext();
+
+  return (
+    <DashboardInsider
+      loading={isBootLoading}
+      className={css`
+        min-height: calc(100vh - var(--top-offset));
+        max-height: calc(100vh - var(--top-offset));
+      `}
+    >
+      <ReceiptForm />
+    </DashboardInsider>
   );
 }

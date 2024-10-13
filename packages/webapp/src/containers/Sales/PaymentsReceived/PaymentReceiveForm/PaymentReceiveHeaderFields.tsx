@@ -13,12 +13,15 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { isEmpty, toSafeInteger } from 'lodash';
 import { FastField, useFormikContext, ErrorMessage } from 'formik';
+import { css } from '@emotion/css';
+import { Theme, useTheme } from '@emotion/react';
 
 import {
   FeatureCan,
   CustomersSelect,
   FormattedMessage as T,
   FMoneyInputGroup,
+  Stack,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -55,10 +58,30 @@ import {
 import { Features } from '@/constants';
 import { PaymentReceivePaymentNoField } from './PaymentReceivePaymentNoField';
 
+
+const getHeaderFieldsStyle = (theme: Theme) => css`
+  .${theme.bpPrefix}-form-group {
+    margin-bottom: 0;
+
+    &.${theme.bpPrefix}-inline {
+      max-width: 470px;
+    }
+    .${theme.bpPrefix}-label {
+      min-width: 160px;
+    }
+    .${theme.bpPrefix}-form-content {
+      width: 100%;
+    }
+  }
+`;
+
 /**
  * Payment receive header fields.
  */
 export default function PaymentReceiveHeaderFields() {
+  const theme = useTheme();
+  const styleClassName = getHeaderFieldsStyle(theme);
+
   // Payment receive form context.
   const { accounts, projects } = usePaymentReceiveFormContext();
 
@@ -88,7 +111,7 @@ export default function PaymentReceiveHeaderFields() {
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+    <Stack spacing={18} flex={1} className={styleClassName}>
       {/* ------------- Customer name ------------- */}
       <PaymentReceiveCustomerSelect />
 
@@ -143,9 +166,25 @@ export default function PaymentReceiveHeaderFields() {
         {!isEmpty(entries) && (
           <Button
             onClick={handleReceiveFullAmountClick}
-            className={'receive-full-amount'}
-            small={true}
-            minimal={true}
+            className={css`
+              &:not([class*='${theme.bpPrefix}-intent-']) {
+                &.${theme.bpPrefix}-minimal {
+                  width: auto;
+                  padding: 0;
+                  min-height: auto;
+                  font-size: 12px;
+                  margin-top: 4px;
+                  background-color: transparent;
+                  color: #0052cc;
+
+                  &:hover {
+                    text-decoration: underline;
+                  }
+                }
+              }
+            `}
+            small
+            minimal
           >
             <T id={'receive_full_amount'} /> (
             <Money amount={totalDueAmount} currency={currency_code} />)
@@ -186,10 +225,10 @@ export default function PaymentReceiveHeaderFields() {
       <FFormGroup
         name={'reference_no'}
         label={<T id={'reference'} />}
-        inline={true}
+        inline
         fastField
       >
-        <InputGroup name={'reference_no'} minimal={true} fastField />
+        <InputGroup name={'reference_no'} minimal fastField />
       </FFormGroup>
 
       {/*------------ Project name -----------*/}
@@ -208,7 +247,7 @@ export default function PaymentReceiveHeaderFields() {
           />
         </FFormGroup>
       </FeatureCan>
-    </div>
+    </Stack>
   );
 }
 

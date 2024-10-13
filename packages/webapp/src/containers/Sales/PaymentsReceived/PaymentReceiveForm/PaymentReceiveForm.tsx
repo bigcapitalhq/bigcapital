@@ -1,15 +1,12 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
 import { isEmpty, defaultTo } from 'lodash';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
 
-import '@/style/pages/PaymentReceive/PageForm.scss';
-
-import { CLASSES } from '@/constants/classes';
 import PaymentReceiveHeader from './PaymentReceiveFormHeader';
 import PaymentReceiveFormBody from './PaymentReceiveFormBody';
 import PaymentReceiveFloatingActions from './PaymentReceiveFloatingActions';
@@ -40,11 +37,12 @@ import {
   getExceededAmountFromValues,
 } from './utils';
 import { PaymentReceiveSyncIncrementSettingsToForm } from './components';
+import { PageForm } from '@/components/PageForm';
 
 /**
  * Payment Receive form.
  */
-function PaymentReceiveForm({
+function PaymentReceiveFormRoot({
   // #withSettings
   preferredDepositAccount,
   paymentReceiveNextNumber,
@@ -159,30 +157,37 @@ function PaymentReceiveForm({
       return createPaymentReceiveMutate(form).then(onSaved).catch(onError);
     }
   };
+
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_PAYMENT_RECEIVE,
-      )}
+    <Formik
+      initialValues={initialValues}
+      onSubmit={handleSubmitForm}
+      validationSchema={
+        isNewMode
+          ? CreatePaymentReceiveFormSchema
+          : EditPaymentReceiveFormSchema
+      }
     >
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmitForm}
-        validationSchema={
-          isNewMode
-            ? CreatePaymentReceiveFormSchema
-            : EditPaymentReceiveFormSchema
-        }
+      <Form
+        className={css({
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        })}
       >
-        <Form>
+        <PageForm flex={1}>
           <PaymentReceiveInnerProvider>
-            <PaymentReceiveFormTopBar />
-            <PaymentReceiveHeader />
-            <PaymentReceiveFormBody />
-            <PaymentReceiveFormFooter />
-            <PaymentReceiveFloatingActions />
+            <PageForm.Body>
+              <PaymentReceiveFormTopBar />
+              <PaymentReceiveHeader />
+              <PaymentReceiveFormBody />
+              <PaymentReceiveFormFooter />
+            </PageForm.Body>
+
+            <PageForm.Footer>
+              <PaymentReceiveFloatingActions />
+            </PageForm.Footer>
 
             {/* ------- Effects ------- */}
             <PaymentReceiveSyncIncrementSettingsToForm />
@@ -191,13 +196,13 @@ function PaymentReceiveForm({
             <PaymentReceiveFormAlerts />
             <PaymentReceiveFormDialogs />
           </PaymentReceiveInnerProvider>
-        </Form>
-      </Formik>
-    </div>
+        </PageForm>
+      </Form>
+    </Formik>
   );
 }
 
-export default compose(
+export const PaymentReceivedForm = compose(
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveSettings,
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
@@ -207,4 +212,4 @@ export default compose(
   })),
   withCurrentOrganization(),
   withDialogActions,
-)(PaymentReceiveForm);
+)(PaymentReceiveFormRoot);

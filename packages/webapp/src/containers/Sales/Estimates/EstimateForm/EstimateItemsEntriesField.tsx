@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
+import { x } from '@xstyled/emotion';
 import { FastField } from 'formik';
-import { CLASSES } from '@/constants/classes';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
@@ -14,7 +13,7 @@ export default function EstimateFormItemsEntriesField() {
   const { items } = useEstimateFormContext();
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+    <x.div p="18px 32px 0">
       <FastField
         name={'entries'}
         items={items}
@@ -38,6 +37,6 @@ export default function EstimateFormItemsEntriesField() {
           />
         )}
       </FastField>
-    </div>
+    </x.div>
   );
 }

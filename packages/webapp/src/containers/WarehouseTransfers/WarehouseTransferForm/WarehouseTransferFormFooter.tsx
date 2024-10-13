@@ -10,17 +10,13 @@ import { WarehouseTransferFormFooterLeft } from './WarehouseTransferFormFooterLe
 export default function WarehouseTransferFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <WarehousesTransferFooterPaper>
+      <Paper p={'20px'}>
         <Row>
           <Col md={8}>
             <WarehouseTransferFormFooterLeft />
           </Col>
         </Row>
-      </WarehousesTransferFooterPaper>
+      </Paper>
     </div>
   );
 }
-
-const WarehousesTransferFooterPaper = styled(Paper)`
-  padding: 20px;
-`;

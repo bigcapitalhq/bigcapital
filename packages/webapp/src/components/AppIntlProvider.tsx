@@ -1,12 +1,31 @@
 // @ts-nocheck
 import React, { createContext } from 'react';
 
-const AppIntlContext = createContext();
+interface AppIntlContextValue {
+  currentLocale: string;
+  direction: 'rtl' | 'ltr';
+  isRTL: boolean;
+  isLTR: boolean;
+}
+
+const AppIntlContext = createContext<AppIntlContextValue>(
+  {} as AppIntlContextValue,
+);
+
+interface AppIntlProviderProps {
+  currentLocale: string;
+  isRTL: boolean;
+  children: React.ReactNode;
+}
 
 /**
  * Application intl provider.
  */
-function AppIntlProvider({ currentLocale, isRTL, children }) {
+function AppIntlProvider({
+  currentLocale,
+  isRTL,
+  children,
+}: AppIntlProviderProps) {
   const provider = {
     currentLocale,
     isRTL,
@@ -21,6 +40,7 @@ function AppIntlProvider({ currentLocale, isRTL, children }) {
   );
 }
 
-const useAppIntlContext = () => React.useContext(AppIntlContext);
+const useAppIntlContext = () =>
+  React.useContext<AppIntlContextValue>(AppIntlContext);
 
 export { AppIntlProvider, useAppIntlContext };

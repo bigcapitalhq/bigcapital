@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { FastField } from 'formik';
+import { x } from '@xstyled/emotion';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { entriesFieldShouldUpdate } from './utils';

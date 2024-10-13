@@ -1,12 +1,11 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { sumBy, isEmpty, defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from '@/constants/classes';
+import { css } from '@emotion/css';
 import {
   getCreateInvoiceFormSchema,
   getEditInvoiceFormSchema,
@@ -23,7 +22,7 @@ import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import { AppToaster } from '@/components';
+import { AppToaster, Box } from '@/components';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { InvoiceFormActions } from './InvoiceFormActions';
@@ -34,12 +33,16 @@ import {
   transformValueToRequest,
   resetFormState,
 } from './utils';
-import { InvoiceExchangeRateSync, InvoiceNoSyncSettingsToForm } from './components';
+import {
+  InvoiceExchangeRateSync,
+  InvoiceNoSyncSettingsToForm,
+} from './components';
+import { PageForm } from '@/components/PageForm';
 
 /**
  * Invoice form.
  */
-function InvoiceForm({
+function InvoiceFormRoot({
   // #withSettings
   invoiceNextNumber,
   invoiceNumberPrefix,
@@ -61,7 +64,7 @@ function InvoiceForm({
     createInvoiceMutate,
     editInvoiceMutate,
     submitPayload,
-    saleInvoiceState
+    saleInvoiceState,
   } = useInvoiceFormContext();
 
   // Invoice number.
@@ -156,30 +159,36 @@ function InvoiceForm({
   const EditInvoiceFormSchema = getEditInvoiceFormSchema();
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_INVOICE,
-      )}
+    <Formik
+      validationSchema={
+        isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema
+      }
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
     >
-      <Formik
-        validationSchema={
-          isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema
-        }
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
+      <Form
+        className={css({
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        })}
       >
-        <Form>
-          <InvoiceFormTopBar />
-          <InvoiceFormHeader />
+        <PageForm flex={1}>
+          <PageForm.Body>
+            <InvoiceFormTopBar />
+            <InvoiceFormHeader />
 
-          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-            <InvoiceFormActions />
-            <InvoiceItemsEntriesEditorField />
-          </div>
-          <InvoiceFormFooter />
-          <InvoiceFloatingActions />
+            <Box p="18px 32px 0">
+              <InvoiceFormActions />
+              <InvoiceItemsEntriesEditorField />
+            </Box>
+            <InvoiceFormFooter />
+          </PageForm.Body>
+
+          <PageForm.Footer>
+            <InvoiceFloatingActions />
+          </PageForm.Footer>
 
           {/*---------- Dialogs ----------*/}
           <InvoiceFormDialogs />
@@ -187,13 +196,13 @@ function InvoiceForm({
           {/*---------- Effects ----------*/}
           <InvoiceNoSyncSettingsToForm />
           <InvoiceExchangeRateSync />
-        </Form>
-      </Formik>
-    </div>
+        </PageForm>
+      </Form>
+    </Formik>
   );
 }
 
-export default compose(
+export const InvoiceForm = compose(
   withDashboardActions,
   withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
@@ -203,4 +212,4 @@ export default compose(
     invoiceTermsConditions: invoiceSettings?.termsConditions,
   })),
   withCurrentOrganization(),
-)(InvoiceForm);
+)(InvoiceFormRoot);

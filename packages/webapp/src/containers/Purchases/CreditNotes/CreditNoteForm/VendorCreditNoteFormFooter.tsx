@@ -15,7 +15,7 @@ import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmen
 export default function VendorCreditNoteFormFooter() {
   return (
     <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <VendorCreditNoteFooterPaper>
+      <Paper p={'20px'}>
         <Row>
           <Col md={8}>
             <VendorCreditNoteFormFooterLeft />
@@ -26,11 +26,7 @@ export default function VendorCreditNoteFormFooter() {
             <VendorCreditNoteFormFooterRight />
           </Col>
         </Row>
-      </VendorCreditNoteFooterPaper>
+      </Paper>
     </div>
   );
 }
-
-const VendorCreditNoteFooterPaper = styled(Paper)`
-  padding: 20px;
-`;

@@ -15,7 +15,7 @@ import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmen
 export default function PaymentMadeFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <PaymentReceiveFooterPaper>
+      <Paper p={'20px'}>
         <Row>
           <Col md={8}>
             <PaymentMadeFormFooterLeft />
@@ -26,11 +26,7 @@ export default function PaymentMadeFooter() {
             <PaymentMadeFormFooterRight />
           </Col>
         </Row>
-      </PaymentReceiveFooterPaper>
+      </Paper>
     </div>
   );
 }
-
-const PaymentReceiveFooterPaper = styled(Paper)`
-  padding: 20px;
-`;

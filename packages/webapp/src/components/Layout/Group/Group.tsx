@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import { SystemProps } from '@xstyled/emotion';
 import { Box } from '../Box';
 import { filterFalsyChildren } from './_utils';
 
@@ -12,7 +12,9 @@ export const GROUP_POSITIONS = {
   apart: 'space-between',
 };
 
-export interface GroupProps extends React.ComponentPropsWithoutRef<'div'> {
+export interface GroupProps
+  extends SystemProps,
+    Omit<React.ComponentPropsWithoutRef<'div'>, 'color'> {
   /** Defines justify-content property */
   position?: GroupPosition;
 
@@ -27,34 +29,30 @@ export interface GroupProps extends React.ComponentPropsWithoutRef<'div'> {
 
   /** Defines align-items css property */
   align?: React.CSSProperties['alignItems'];
-
-  flex?: React.CSSProperties['flex'];
 }
 
-const defaultProps: Partial<GroupProps> = {
-  position: 'left',
-  spacing: 20,
-  flex: 'none'
-};
-
-export function Group({ children, ...props }: GroupProps) {
-  const groupProps = {
-    ...defaultProps,
-    ...props,
-  };
+export function Group({
+  position = 'left',
+  spacing = 20,
+  align = 'center',
+  noWrap,
+  children,
+  ...props
+}: GroupProps) {
   const filteredChildren = filterFalsyChildren(children);
 
-  return <GroupStyled {...groupProps}>{filteredChildren}</GroupStyled>;
+  return (
+    <Box
+      boxSizing={'border-box'}
+      display={'flex'}
+      flexDirection={'row'}
+      alignItems={align}
+      flexWrap={noWrap ? 'nowrap' : 'wrap'}
+      justifyContent={GROUP_POSITIONS[position]}
+      gap={`${spacing}px`}
+      {...props}
+    >
+      {filteredChildren}
+    </Box>
+  );
 }
-
-const GroupStyled = styled(Box)`
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  flex: ${(props: GroupProps) => (props.flex)};
-  align-items: ${(props: GroupProps) => (props.align || 'center')};
-  flex-wrap: ${(props: GroupProps) => (props.noWrap ? 'nowrap' : 'wrap')};
-  justify-content: ${(props: GroupProps) =>
-    GROUP_POSITIONS[props.position || 'left']};
-  gap: ${(props: GroupProps) => props.spacing}px;
-`;
