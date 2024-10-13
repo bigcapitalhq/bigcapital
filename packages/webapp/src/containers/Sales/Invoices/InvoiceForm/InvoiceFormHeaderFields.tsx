@@ -2,20 +2,23 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FormGroup, InputGroup, Position, Classes } from '@blueprintjs/core';
+import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { css } from '@emotion/css';
+import { Theme, useTheme } from '@emotion/react';
 
 import {
   FFormGroup,
   FormattedMessage as T,
-  Col,
-  Row,
   CustomerDrawerLink,
   FieldRequiredHint,
   FeatureCan,
   CustomersSelect,
-  Stack
+  Stack,
+  Group,
+  FInputGroup,
+  Icon,
 } from '@/components';
 import {
   momentFormatter,
@@ -39,97 +42,105 @@ import {
 import { Features } from '@/constants';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
+const getInvoiceFieldsStyle = (theme: Theme) => css`
+  .${theme.bpPrefix}-form-group {
+    margin-bottom: 0;
+
+    &.${theme.bpPrefix}-inline {
+      max-width: 450px;
+    }
+    .${theme.bpPrefix}-label {
+      min-width: 150px;
+      font-weight: 500;
+    }
+    .${theme.bpPrefix}-form-content {
+      width: 100%;
+    }
+  }
+`;
+
 /**
  * Invoice form header fields.
  */
 export default function InvoiceFormHeaderFields() {
-  // Invoice form context.
+  const theme = useTheme();
   const { projects } = useInvoiceFormContext();
   const { values } = useFormikContext();
+  const invoiceFieldsClassName = getInvoiceFieldsStyle(theme);
 
   return (
-    <Stack spacing={0}>
+    <Stack spacing={18} flex={1} className={invoiceFieldsClassName}>
       {/* ----------- Customer name ----------- */}
       <InvoiceFormCustomerSelect />
 
       {/* ----------- Exchange rate ----------- */}
       <InvoiceExchangeRateInputField />
 
-      <Row>
-        <Col xs={6}>
-          {/* ----------- Invoice date ----------- */}
-          <FastField name={'invoice_date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'invoice_date'} />}
-                inline={true}
-                labelInfo={<FieldRequiredHint />}
-                className={classNames('form-group--invoice-date', CLASSES.FILL)}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="invoice_date" />}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('invoice_date', formattedDate);
-                  })}
-                  popoverProps={{
-                    position: Position.BOTTOM_LEFT,
-                    minimal: true,
-                  }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
-        </Col>
+      {/* ----------- Invoice date ----------- */}
+      <FastField name={'invoice_date'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
+          <FormGroup
+            label={<T id={'invoice_date'} />}
+            inline={true}
+            labelInfo={<FieldRequiredHint />}
+            className={classNames(CLASSES.FILL)}
+            intent={inputIntent({ error, touched })}
+            helperText={<ErrorMessage name="invoice_date" />}
+          >
+            <DateInput
+              {...momentFormatter('YYYY/MM/DD')}
+              value={tansformDateValue(value)}
+              onChange={handleDateChange((formattedDate) => {
+                form.setFieldValue('invoice_date', formattedDate);
+              })}
+              popoverProps={{
+                position: Position.BOTTOM_LEFT,
+                minimal: true,
+              }}
+              inputProps={{
+                leftIcon: <Icon icon={'date-range'} />,
+              }}
+            />
+          </FormGroup>
+        )}
+      </FastField>
 
-        <Col xs={6}>
-          {/* ----------- Due date ----------- */}
-          <FastField name={'due_date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'due_date'} />}
-                labelInfo={<FieldRequiredHint />}
-                inline={true}
-                className={classNames('form-group--due-date', CLASSES.FILL)}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="due_date" />}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('due_date', formattedDate);
-                  })}
-                  popoverProps={{
-                    position: Position.BOTTOM_LEFT,
-                    minimal: true,
-                  }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
-        </Col>
-      </Row>
+      {/* ----------- Due date ----------- */}
+      <FastField name={'due_date'}>
+        {({ form, field: { value }, meta: { error, touched } }) => (
+          <FormGroup
+            label={<T id={'due_date'} />}
+            labelInfo={<FieldRequiredHint />}
+            inline={true}
+            className={classNames(CLASSES.FILL)}
+            intent={inputIntent({ error, touched })}
+            helperText={<ErrorMessage name="due_date" />}
+          >
+            <DateInput
+              {...momentFormatter('YYYY/MM/DD')}
+              value={tansformDateValue(value)}
+              onChange={handleDateChange((formattedDate) => {
+                form.setFieldValue('due_date', formattedDate);
+              })}
+              popoverProps={{
+                position: Position.BOTTOM_LEFT,
+                minimal: true,
+              }}
+              inputProps={{
+                leftIcon: <Icon icon={'date-range'} />,
+              }}
+            />
+          </FormGroup>
+        )}
+      </FastField>
 
       {/* ----------- Invoice number ----------- */}
       <InvoiceFormInvoiceNumberField />
 
       {/* ----------- Reference ----------- */}
-      <FastField name={'reference_no'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference'} />}
-            inline={true}
-            className={classNames('form-group--reference', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference_no" />}
-          >
-            <InputGroup minimal={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'reference_no'} label={<T id={'reference'} />} inline>
+        <FInputGroup name={'reference_no'} minimal={true} />
+      </FFormGroup>
 
       {/*------------ Project name -----------*/}
       <FeatureCan feature={Features.Projects}>

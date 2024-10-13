@@ -1,7 +1,6 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import { sumBy } from 'lodash';
 import { useFormikContext } from 'formik';
 import { Group, Money } from '@/components';
 import { FormattedMessage as T } from '@/components';

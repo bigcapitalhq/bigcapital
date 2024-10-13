@@ -40,7 +40,7 @@ const PaymentPortalPage = lazy(
 
 const theme = {
   ...defaultTheme,
-  // Customize your theme here
+  bpPrefix: 'bp4',
 }
 
 /**

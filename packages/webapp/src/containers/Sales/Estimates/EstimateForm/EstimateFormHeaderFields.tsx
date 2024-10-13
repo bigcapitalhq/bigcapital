@@ -1,10 +1,10 @@
 // @ts-nocheck
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FormGroup, InputGroup, Position, Classes } from '@blueprintjs/core';
+import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
-
+import { css } from '@emotion/css';
 import {
   FeatureCan,
   FFormGroup,
@@ -13,6 +13,8 @@ import {
   Icon,
   CustomerDrawerLink,
   CustomersSelect,
+  FInputGroup,
+  Stack,
 } from '@/components';
 import {
   momentFormatter,
@@ -31,15 +33,36 @@ import {
 import { EstimateFormEstimateNumberField } from './EstimateFormEstimateNumberField';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
+import { useTheme } from '@emotion/react';
+import { Theme } from '@xstyled/emotion';
+
+const getEstimateFieldsStyle = (theme: Theme) => css`
+  .${theme.bpPrefix}-form-group {
+    margin-bottom: 0;
+
+    &.${theme.bpPrefix}-inline {
+      max-width: 470px;
+    }
+    .${theme.bpPrefix}-label {
+      min-width: 160px;
+      font-weight: 500;
+    }
+    .${theme.bpPrefix}-form-content {
+      width: 100%;
+    }
+  }
+`;
 
 /**
  * Estimate form header.
  */
 export default function EstimateFormHeader() {
+  const theme = useTheme();
   const { projects } = useEstimateFormContext();
+  const styleClassName = getEstimateFieldsStyle(theme);
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+    <Stack spacing={18} flex={1} className={styleClassName}>
       {/* ----------- Customer name ----------- */}
       <EstimateFormCustomerSelect />
 
@@ -106,19 +129,9 @@ export default function EstimateFormHeader() {
       <EstimateFormEstimateNumberField />
 
       {/* ----------- Reference ----------- */}
-      <FastField name={'reference'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference'} />}
-            inline={true}
-            className={classNames('form-group--reference', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference" />}
-          >
-            <InputGroup minimal={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'reference'} label={<T id={'reference'} />} inline fill>
+        <FInputGroup name={'reference'} minimal={true} />
+      </FFormGroup>
 
       {/*------------ Project name -----------*/}
       <FeatureCan feature={Features.Projects}>
@@ -136,7 +149,7 @@ export default function EstimateFormHeader() {
           />
         </FFormGroup>
       </FeatureCan>
-    </div>
+    </Stack>
   );
 }
 

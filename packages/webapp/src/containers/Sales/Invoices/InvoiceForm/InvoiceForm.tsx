@@ -22,7 +22,7 @@ import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import { AppToaster } from '@/components';
+import { AppToaster, Box } from '@/components';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { InvoiceFormActions } from './InvoiceFormActions';
@@ -166,20 +166,23 @@ function InvoiceFormRoot({
       initialValues={initialValues}
       onSubmit={handleSubmit}
     >
-      <Form 
+      <Form
         className={css({
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          flex: 1
+          flex: 1,
         })}
       >
         <PageForm flex={1}>
           <PageForm.Body>
             <InvoiceFormTopBar />
             <InvoiceFormHeader />
-            <InvoiceFormActions />
-            <InvoiceItemsEntriesEditorField />
+
+            <Box p="18px 32px 0">
+              <InvoiceFormActions />
+              <InvoiceItemsEntriesEditorField />
+            </Box>
             <InvoiceFormFooter />
           </PageForm.Body>
 

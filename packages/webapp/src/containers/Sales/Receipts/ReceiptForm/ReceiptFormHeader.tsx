@@ -20,6 +20,7 @@ function ReceiptFormHeader({
       display="flex"
       bg="white"
       p="25px 32px"
+      borderBottom="1px solid #d2dce2"
     >
       <ReceiptFormHeaderFields
         onReceiptNumberChanged={onReceiptNumberChanged}
