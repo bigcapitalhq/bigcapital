@@ -16,11 +16,14 @@ import { useHistory } from 'react-router-dom';
 import { If, Icon } from '@/components';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { useReceiptFormBrandingTemplatesOptions } from './utils';
+import { useDrawerActions } from '@/hooks/state';
 import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 import { PageForm } from '@/components/PageForm';
+import { MoreIcon } from '@/icons/More';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Receipt floating actions bar.
@@ -28,6 +31,8 @@ import { PageForm } from '@/components/PageForm';
 export default function ReceiptFormFloatingActions() {
   // History context.
   const history = useHistory();
+
+  const { openDrawer } = useDrawerActions();
 
   // Formik context.
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
@@ -78,6 +83,11 @@ export default function ReceiptFormFloatingActions() {
   // Handle the clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
+  };
+
+  // Handles the invoice customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleReceipt' });
   };
 
   const brandingTemplatesOptions = useReceiptFormBrandingTemplatesOptions();
@@ -199,7 +209,7 @@ export default function ReceiptFormFloatingActions() {
         />
       </Group>
 
-      <Group spacing={20}>
+      <Group spacing={0}>
         {/* ----------- Branding Template Select ----------- */}
         <BrandingThemeFormGroup
           name={'pdf_template_id'}
@@ -218,6 +228,26 @@ export default function ReceiptFormFloatingActions() {
             popoverProps={{ minimal: true }}
           />
         </BrandingThemeFormGroup>
+
+        {/* ----------- Setting Select ----------- */}
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.TOP_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                text={'Customize Templates'}
+                onClick={handleCustomizeBtnClick}
+              />
+            </Menu>
+          }
+        >
+          <Button minimal icon={<MoreIcon height={'14px'} width={'14px'} />} />
+        </Popover>
       </Group>
     </PageForm.FooterActions>
   );

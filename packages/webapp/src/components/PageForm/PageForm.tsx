@@ -50,7 +50,7 @@ PageFormFooter.displayName = 'PageFormFooter';
 const footerActionsStyle = `
   width: 100%;
   background: #fff;
-  padding: 14px 18px;
+  padding: 14px 20px;
   border-top: 1px solid rgb(210, 221, 226);
   box-shadow: 0px -1px 4px 0px rgba(0, 0, 0, 0.05);
 

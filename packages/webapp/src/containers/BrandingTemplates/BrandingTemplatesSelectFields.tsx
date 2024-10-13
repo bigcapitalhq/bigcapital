@@ -1,6 +1,6 @@
-import { Button } from '@blueprintjs/core';
+import { Button, ButtonProps } from '@blueprintjs/core';
 import styled from 'styled-components';
-import { FFormGroup } from '@/components';
+import { FFormGroup, Icon } from '@/components';
 
 export const BrandingThemeFormGroup = styled(FFormGroup)`
   margin-bottom: 0;
@@ -14,33 +14,21 @@ export const BrandingThemeFormGroup = styled(FFormGroup)`
   }
 `;
 
-export const BrandingThemeSelectButton = styled(Button)`
-  position: relative;
-  padding-right: 26px;
+export const BrandingThemeSelectButton = (props: ButtonProps) => {
+  return (
+    <Button
+      text={props?.text || 'Brand Theme'}
+      rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+      minimal
+      {...props}
+    />
+  );
+};
 
-  &::after {
-    content: '';
-    display: inline-block;
-    width: 0;
-    height: 0;
-
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid #98a1ae;
-
-    position: absolute;
-    right: -2px;
-    top: 50%;
-    margin-top: -2px;
-    margin-right: 12px;
-    border-radius: 1px;
-  }
-`;
-
-
-export const convertBrandingTemplatesToOptions = (brandingTemplates: Array<any>) => {
+export const convertBrandingTemplatesToOptions = (
+  brandingTemplates: Array<any>,
+) => {
   return brandingTemplates?.map(
-    (template) =>
-      ({ text: template.template_name, value: template.id } || []),
-  )
-}
+    (template) => ({ text: template.template_name, value: template.id } || []),
+  );
+};
