@@ -1,9 +1,8 @@
 // @ts-nocheck
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FormGroup, Position, Classes } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { Position, Classes } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import { css } from '@emotion/css';
 import {
   FeatureCan,
@@ -15,15 +14,9 @@ import {
   CustomersSelect,
   FInputGroup,
   Stack,
+  FDateInput,
 } from '@/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
 import { customersFieldShouldUpdate } from './utils';
-import { CLASSES } from '@/constants/classes';
 import { Features } from '@/constants';
 import { ProjectsSelect } from '@/containers/Projects/components';
 import {
@@ -70,60 +63,47 @@ export default function EstimateFormHeader() {
       <EstimateExchangeRateInputField />
 
       {/* ----------- Estimate Date ----------- */}
-      <FastField name={'estimate_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'estimate_date'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames(CLASSES.FILL, 'form-group--estimate-date')}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="estimate_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('estimate_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'estimate_date'}
+        label={<T id={'estimate_date'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline
+        fastField
+      >
+        <FDateInput
+          name={'estimate_date'}
+          formatDate={(date) => date.toLocaleDateString()}
+          parseDate={(str) => new Date(str)}
+          popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+            fill: true,
+          }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Expiration date ----------- */}
-      <FastField name={'expiration_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'expiration_date'} />}
-            labelInfo={<FieldRequiredHint />}
-            inline={true}
-            className={classNames(
-              CLASSES.FORM_GROUP_LIST_SELECT,
-              CLASSES.FILL,
-              'form-group--expiration-date',
-            )}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="expiration_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('expiration_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'expiration_date'}
+        label={<T id={'expiration_date'} />}
+        inline
+        fastField
+      >
+        <FDateInput
+          name={'expiration_date'}
+          formatDate={(date) => date.toLocaleDateString()}
+          parseDate={(str) => new Date(str)}
+          popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+            fill: true,
+          }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Estimate number ----------- */}
       <EstimateFormEstimateNumberField />

@@ -17,18 +17,13 @@ import {
   FFormGroup,
   CustomersSelect,
   Stack,
+  FDateInput,
 } from '@/components';
 import { customerNameFieldShouldUpdate } from './utils';
 
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import { CreditNoteExchangeRateInputField } from './components';
 import { CreditNoteTransactionNoField } from './CreditNoteTransactionNoField';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
 const getCreditNoteFieldsStyle = (theme: Theme) => css`
@@ -63,30 +58,26 @@ export default function CreditNoteFormHeaderFields() {
       <CreditNoteExchangeRateInputField />
 
       {/* ----------- Credit note date ----------- */}
-      <FastField name={'credit_note_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'credit_note.label_credit_note_date'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--credit_note_date', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="credit_note_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('credit_note_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'credit_note_date'}
+        label={<T id={'credit_note.label_credit_note_date'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline
+        fastField
+      >
+        <FDateInput
+          name={'credit_note_date'}
+          formatDate={(date) => date.toLocaleDateString()}
+          parseDate={(str) => new Date(str)}
+          popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+            fill: true
+          }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Credit note # ----------- */}
       <CreditNoteTransactionNoField />
