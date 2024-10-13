@@ -2,9 +2,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FormGroup, Position, Classes } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { Position, Classes } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
 
@@ -16,20 +15,14 @@ import {
   FeatureCan,
   CustomersSelect,
   Stack,
-  Group,
   FInputGroup,
   Icon,
+  FDateInput,
 } from '@/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
-import { CLASSES } from '@/constants/classes';
 import { customerNameFieldShouldUpdate } from './utils';
 
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 import {
   InvoiceExchangeRateInputField,
   InvoiceProjectSelectButton,
@@ -40,7 +33,6 @@ import {
   ProjectBillableEntriesLink,
 } from '@/containers/Projects/components';
 import { Features } from '@/constants';
-import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
 const getInvoiceFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -77,62 +69,55 @@ export default function InvoiceFormHeaderFields() {
       <InvoiceExchangeRateInputField />
 
       {/* ----------- Invoice date ----------- */}
-      <FastField name={'invoice_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'invoice_date'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames(CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="invoice_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('invoice_date', formattedDate);
-              })}
-              popoverProps={{
-                position: Position.BOTTOM_LEFT,
-                minimal: true,
-              }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'invoice_date'}
+        label={<T id={'invoice_date'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline
+        fastField
+      >
+        <FDateInput
+          name={'invoice_date'}
+          formatDate={(date) => date.toLocaleDateString()}
+          parseDate={(str) => new Date(str)}
+          popoverProps={{
+            position: Position.BOTTOM_LEFT,
+            minimal: true,
+            fill: true,
+          }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+          }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Due date ----------- */}
-      <FastField name={'due_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'due_date'} />}
-            labelInfo={<FieldRequiredHint />}
-            inline={true}
-            className={classNames(CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="due_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('due_date', formattedDate);
-              })}
-              popoverProps={{
-                position: Position.BOTTOM_LEFT,
-                minimal: true,
-              }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'due_date'}
+        label={<T id={'due_date'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline
+        fastField
+      >
+        <FDateInput
+          name={'due_date'}
+          formatDate={(date) => date.toLocaleDateString()}
+          parseDate={(str) => new Date(str)}
+          popoverProps={{
+            position: Position.BOTTOM_LEFT,
+            minimal: true,
+            fill: true,
+          }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+            fill: true,
+          }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Invoice number ----------- */}
       <InvoiceFormInvoiceNumberField />

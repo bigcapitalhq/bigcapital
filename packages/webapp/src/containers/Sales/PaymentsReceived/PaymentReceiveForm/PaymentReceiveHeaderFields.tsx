@@ -3,16 +3,14 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import {
-  FormGroup,
   InputGroup,
   Position,
   Classes,
   ControlGroup,
   Button,
 } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
 import { isEmpty, toSafeInteger } from 'lodash';
-import { FastField, useFormikContext, ErrorMessage } from 'formik';
+import { useFormikContext } from 'formik';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
 
@@ -22,15 +20,9 @@ import {
   FormattedMessage as T,
   FMoneyInputGroup,
   Stack,
+  FDateInput,
 } from '@/components';
-import { CLASSES } from '@/constants/classes';
-import {
-  safeSumBy,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  inputIntent,
-} from '@/utils';
+import { safeSumBy } from '@/utils';
 import {
   FFormGroup,
   AccountsSelect,
@@ -57,7 +49,6 @@ import {
 } from './utils';
 import { Features } from '@/constants';
 import { PaymentReceivePaymentNoField } from './PaymentReceivePaymentNoField';
-
 
 const getHeaderFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -120,31 +111,28 @@ export default function PaymentReceiveHeaderFields() {
         name={'exchange_rate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
+
       {/* ------------- Payment date ------------- */}
-      <FastField name={'payment_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'payment_date'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--select-list', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="payment_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('payment_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'payment_date'}
+        label={<T id={'payment_date'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline
+        fastField
+      >
+        <FDateInput
+          name={'payment_date'}
+          formatDate={(date) => date.toLocaleDateString()}
+          parseDate={(str) => new Date(str)}
+          popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+            fill: true,
+          }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ------------ Full amount ------------ */}
       <FFormGroup

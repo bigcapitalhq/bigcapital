@@ -2,13 +2,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { FormGroup, Position, Classes } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
+import { useFormikContext } from 'formik';
+import { Position, Classes } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
 
-import { CLASSES } from '@/constants/classes';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { Features } from '@/constants';
 import {
@@ -22,14 +20,9 @@ import {
   FeatureCan,
   FInputGroup,
   Stack,
+  FDateInput,
 } from '@/components';
 import { ProjectsSelect } from '@/containers/Projects/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  inputIntent,
-} from '@/utils';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { accountsFieldShouldUpdate, customersFieldShouldUpdate } from './utils';
 import {
@@ -99,29 +92,25 @@ export default function ReceiptFormHeader() {
       </FFormGroup>
 
       {/* ----------- Receipt date ----------- */}
-      <FastField name={'receipt_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'receipt_date'} />}
-            inline={true}
-            className={classNames(CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="receipt_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('receipt_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'receipt_date'}
+        label={<T id={'receipt_date'} />}
+        inline
+        fastField
+      >
+        <FDateInput
+          name={'receipt_date'}
+          formatDate={(date) => date.toLocaleDateString()}
+          parseDate={(str) => new Date(str)}
+          popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+            fill: true,
+          }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Receipt number ----------- */}
       <ReceiptFormReceiptNumberField />
