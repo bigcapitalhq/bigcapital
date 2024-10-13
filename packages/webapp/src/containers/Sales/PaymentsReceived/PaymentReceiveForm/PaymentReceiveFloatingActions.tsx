@@ -11,8 +11,9 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { FSelect, Group, Icon, FormattedMessage as T } from '@/components';
 import { useFormikContext } from 'formik';
+import { FSelect, Group, Icon, FormattedMessage as T } from '@/components';
+import { useDrawerActions } from '@/hooks/state';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {
   BrandingThemeFormGroup,
@@ -20,6 +21,8 @@ import {
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 import { usePaymentReceivedFormBrandingTemplatesOptions } from './utils';
 import { PageForm } from '@/components/PageForm';
+import { MoreIcon } from '@/icons/More';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Payment receive floating actions bar.
@@ -33,6 +36,8 @@ export default function PaymentReceiveFormFloatingActions() {
 
   // History context.
   const history = useHistory();
+
+  const { openDrawer } = useDrawerActions();
 
   // Handle submit button click.
   const handleSubmitBtnClick = (event) => {
@@ -55,6 +60,11 @@ export default function PaymentReceiveFormFloatingActions() {
   const handleSubmitContinueEditingBtnClick = (event) => {
     setSubmitPayload({ redirect: false, publish: true });
     submitForm();
+  };
+
+  // Handles the invoice customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'PaymentReceive' });
   };
 
   const brandingTemplatesOpts =
@@ -115,7 +125,7 @@ export default function PaymentReceiveFormFloatingActions() {
         />
       </Group>
 
-      <Group>
+      <Group spacing={0}>
         {/* ----------- Branding Template Select ----------- */}
         <BrandingThemeFormGroup
           name={'pdf_template_id'}
@@ -134,6 +144,26 @@ export default function PaymentReceiveFormFloatingActions() {
             popoverProps={{ minimal: true }}
           />
         </BrandingThemeFormGroup>
+
+        {/* ----------- Setting Select ----------- */}
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.TOP_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                text={'Customize Templates'}
+                onClick={handleCustomizeBtnClick}
+              />
+            </Menu>
+          }
+        >
+          <Button minimal icon={<MoreIcon height={'14px'} width={'14px'} />} />
+        </Popover>
       </Group>
     </PageForm.FooterActions>
   );

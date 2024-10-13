@@ -110,7 +110,7 @@ export function StripePaymentMethod() {
                 </Menu>
               }
             >
-              <Button small icon={<MoreIcon size={16} />} />
+              <Button small icon={<MoreIcon height={10} width={10} />} />
             </Popover>
           )}
         </Group>

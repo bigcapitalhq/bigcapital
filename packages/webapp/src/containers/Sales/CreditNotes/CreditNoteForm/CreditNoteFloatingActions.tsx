@@ -26,12 +26,16 @@ import {
   BrandingThemeSelectButton,
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 import { useCreditNoteFormBrandingTemplatesOptions } from './utils';
+import { MoreIcon } from '@/icons/More';
+import { useDrawerActions } from '@/hooks/state';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Credit note floating actions.
  */
 export default function CreditNoteFloatingActions() {
   const history = useHistory();
+  const { openDrawer } = useDrawerActions();
 
   // Formik context.
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
@@ -82,6 +86,11 @@ export default function CreditNoteFloatingActions() {
   // Handle clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
+  };
+
+  // Handles the credit note customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'CreditNote' });
   };
 
   const brandingTemplatesOptions = useCreditNoteFormBrandingTemplatesOptions();
@@ -202,7 +211,7 @@ export default function CreditNoteFloatingActions() {
         />
       </Group>
 
-      <Group>
+      <Group spacing={0}>
         {/* ----------- Branding Template Select ----------- */}
         <BrandingThemeFormGroup
           name={'pdf_template_id'}
@@ -221,6 +230,26 @@ export default function CreditNoteFloatingActions() {
             popoverProps={{ minimal: true }}
           />
         </BrandingThemeFormGroup>
+
+        {/* ----------- Setting Select ----------- */}
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.TOP_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                text={'Customize Templates'}
+                onClick={handleCustomizeBtnClick}
+              />
+            </Menu>
+          }
+        >
+          <Button minimal icon={<MoreIcon height={'14px'} width={'14px'} />} />
+        </Popover>
       </Group>
     </PageForm.FooterActions>
   );

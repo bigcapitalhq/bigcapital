@@ -15,17 +15,21 @@ import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { useEstimateFormBrandingTemplatesOptions } from './utils';
+import { useDrawerActions } from '@/hooks/state';
 import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 import { PageForm } from '@/components/PageForm';
+import { MoreIcon } from '@/icons/More';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Estimate floating actions bar.
  */
 export default function EstimateFloatingActions() {
   const history = useHistory();
+  const { openDrawer } = useDrawerActions();
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
 
   // Estimate form context.
@@ -75,6 +79,11 @@ export default function EstimateFloatingActions() {
   // Handle the clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
+  };
+
+  // Handles the invoice customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleEstimate' });
   };
 
   const brandingTemplatesOptions = useEstimateFormBrandingTemplatesOptions();
@@ -199,7 +208,7 @@ export default function EstimateFloatingActions() {
         />
       </Group>
 
-      <Group>
+      <Group spacing={0}>
         {/* ----------- Branding Template Select ----------- */}
         <BrandingThemeFormGroup
           name={'pdf_template_id'}
@@ -218,6 +227,26 @@ export default function EstimateFloatingActions() {
             popoverProps={{ minimal: true }}
           />
         </BrandingThemeFormGroup>
+
+        {/* ----------- More Select ----------- */}
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.TOP_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                text={'Customize Templates'}
+                onClick={handleCustomizeBtnClick}
+              />
+            </Menu>
+          }
+        >
+          <Button minimal icon={<MoreIcon height={'14px'} width={'14px'} />} />
+        </Popover>
       </Group>
     </PageForm.FooterActions>
   );

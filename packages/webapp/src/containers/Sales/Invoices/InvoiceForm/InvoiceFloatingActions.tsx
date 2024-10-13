@@ -15,17 +15,21 @@ import { useFormikContext } from 'formik';
 import { If, Icon, FormattedMessage as T, Group, FSelect } from '@/components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { useInvoiceFormBrandingTemplatesOptions } from './utils';
+import { useDrawerActions } from '@/hooks/state';
 import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 import { PageForm } from '@/components/PageForm';
+import { MoreIcon } from '@/icons/More';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Invoice floating actions bar.
  */
 export default function InvoiceFloatingActions() {
   const history = useHistory();
+  const { openDrawer } = useDrawerActions();
 
   // Formik context.
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
@@ -77,6 +81,11 @@ export default function InvoiceFloatingActions() {
   // Handle clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
+  };
+
+  // Handles the invoice customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleInvoice' });
   };
 
   const brandingTemplatesOptions = useInvoiceFormBrandingTemplatesOptions();
@@ -200,7 +209,7 @@ export default function InvoiceFloatingActions() {
         />
       </Group>
 
-      <Group spacing={10}>
+      <Group spacing={0}>
         {/* ----------- Branding Template Select ----------- */}
         <BrandingThemeFormGroup
           name={'pdf_template_id'}
@@ -213,12 +222,31 @@ export default function InvoiceFloatingActions() {
             name={'pdf_template_id'}
             items={brandingTemplatesOptions}
             input={({ activeItem, text, label, value }) => (
-              <BrandingThemeSelectButton text={text || 'Brand Theme'} minimal />
+              <BrandingThemeSelectButton text={text || 'Brand Theme'} />
             )}
             filterable={false}
             popoverProps={{ minimal: true }}
           />
         </BrandingThemeFormGroup>
+
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.TOP_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                text={'Customize Templates'}
+                onClick={handleCustomizeBtnClick}
+              />
+            </Menu>
+          }
+        >
+          <Button minimal icon={<MoreIcon height={'14px'} width={'14px'} />} />
+        </Popover>
       </Group>
     </PageForm.FooterActions>
   );

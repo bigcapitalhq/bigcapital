@@ -18,9 +18,9 @@ export const MoreIcon: React.FC<MoreIconProps> = ({ size = 16, ...props }) => (
     {...props}
   >
     <g id="more_3_">
-      <circle cx={size / 8} cy={size / 2.00625} r={size / 8} />
-      <circle cx={size - size / 8} cy={size / 2.00625} r={size / 8} />
-      <circle cx={size / 2} cy={size / 2.00625} r={size / 8} />
+      <circle cx="2" cy="8.03" r="2" />
+      <circle cx="14" cy="8.03" r="2" />
+      <circle cx="8" cy="8.03" r="2" />
     </g>
   </svg>
 );
