@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
-import styled from 'styled-components';
 
 import { CLASSES } from '@/constants/classes';
 import { Row, Col, Paper } from '@/components';
@@ -12,7 +11,7 @@ import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmen
 export default function ExpenseFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <ExpensesFooterPaper>
+      <Paper p={'20px'}>
         <Row>
           <Col md={8}>
             <ExpenseFormFooterLeft />
@@ -23,11 +22,7 @@ export default function ExpenseFormFooter() {
             <ExpenseFormFooterRight />
           </Col>
         </Row>
-      </ExpensesFooterPaper>
+      </Paper>
     </div>
   );
 }
-
-const ExpensesFooterPaper = styled(Paper)`
-  padding: 20px;
-`;

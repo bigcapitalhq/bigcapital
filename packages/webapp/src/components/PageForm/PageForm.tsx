@@ -9,7 +9,7 @@ interface PageFormProps extends SystemProps {
 }
 
 /**
- *
+ * Page form layout.
  * @returns {React.ReactNode}
  */
 export const PageForm = ({ children, ...props }: PageFormProps) => {
@@ -22,22 +22,23 @@ export const PageForm = ({ children, ...props }: PageFormProps) => {
 PageForm.displayName = 'PageFormBody';
 
 /**
- *
+ * Page form body layout, by default the content body is scrollable.
  * @returns {React.ReactNode}
  */
 const PageFormBody: FC<{ children: React.ReactNode } & SystemProps> = ({
   children,
+  ...props
 }) => {
   return (
-    <x.div flex="1" overflow="auto">
-      {children}{' '}
+    <x.div flex="1" overflow="auto" {...props}>
+      {children}
     </x.div>
   );
 };
 PageFormBody.displayName = 'PageFormBody';
 
 /**
- *
+ * Page form footer.
  * @returns {React.ReactNode}
  */
 const PageFormFooter: FC<{ children: React.ReactNode } & SystemProps> = ({ children }) => {

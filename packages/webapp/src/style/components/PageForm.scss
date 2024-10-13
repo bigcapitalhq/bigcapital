@@ -4,11 +4,11 @@
 //   > .page-form__floating-actions
 .page-form {
   $self: '.page-form';
-  // padding-bottom: 20px;
+  padding-bottom: 20px;
 
   &__floating-actions {
-    // position: fixed;
-    // bottom: 0;
+    position: fixed;
+    bottom: 0;
     width: 100%;
     background: #fff;
     padding: 14px 18px;

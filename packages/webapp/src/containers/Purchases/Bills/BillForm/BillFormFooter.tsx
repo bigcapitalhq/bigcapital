@@ -13,7 +13,7 @@ import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmen
 export default function BillFormFooter() {
   return (
     <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
-      <BillFooterPaper>
+      <Paper p={'20px'}>
         <Row>
           <Col md={8}>
             <BillFormFooterLeft />
@@ -24,11 +24,7 @@ export default function BillFormFooter() {
             <BillFormFooterRight />
           </Col>
         </Row>
-      </BillFooterPaper>
+      </Paper>
     </div>
   );
 }
-
-const BillFooterPaper = styled(Paper)`
-  padding: 20px;
-`;
