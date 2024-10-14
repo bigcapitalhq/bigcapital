@@ -294,7 +294,7 @@ export default {
       name: 'item.field.note',
       fieldType: 'text',
     },
-    category: {
+    categoryId: {
       name: 'item.field.category',
       fieldType: 'relation',
       relationModel: 'ItemCategory',
