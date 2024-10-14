@@ -4,6 +4,8 @@ import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
+import events from '@/subscribers/events';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
 export class GetSaleInvoice {
@@ -15,6 +17,9 @@ export class GetSaleInvoice {
 
   @Inject()
   private validators: CommandSaleInvoiceValidators;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Retrieve sale invoice with associated entries.
@@ -41,10 +46,20 @@ export class GetSaleInvoice {
     // Validates the given sale invoice existance.
     this.validators.validateInvoiceExistance(saleInvoice);
 
-    return this.transformer.transform(
+    const transformed = await this.transformer.transform(
       tenantId,
       saleInvoice,
       new SaleInvoiceTransformer()
     );
+    const eventPayload = {
+      tenantId,
+      saleInvoiceId,
+    };
+    // Triggers the `onSaleInvoiceItemViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.saleInvoice.onViewed,
+      eventPayload
+    );
+    return transformed;
   }
 }

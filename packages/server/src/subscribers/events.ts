@@ -74,6 +74,9 @@ export default {
    * Accounts service.
    */
   accounts: {
+    onViewed: 'onAccountViewed',
+    onListViewed: 'onAccountsListViewed',
+
     onCreating: 'onAccountCreating',
     onCreated: 'onAccountCreated',
 
@@ -127,6 +130,9 @@ export default {
    * Sales invoices service.
    */
   saleInvoice: {
+    onViewed: 'onSaleInvoiceItemViewed',
+    onListViewed: 'onSaleInvoiceListViewed',
+
     onCreate: 'onSaleInvoiceCreate',
     onCreating: 'onSaleInvoiceCreating',
     onCreated: 'onSaleInvoiceCreated',
@@ -338,6 +344,8 @@ export default {
    * Items service.
    */
   item: {
+    onViewed: 'onItemViewed',
+    
     onCreated: 'onItemCreated',
     onCreating: 'onItemCreating',
 

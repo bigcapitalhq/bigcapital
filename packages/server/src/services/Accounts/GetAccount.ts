@@ -3,6 +3,8 @@ import I18nService from '@/services/I18n/I18nService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { AccountTransformer } from './AccountTransform';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class GetAccount {
@@ -14,6 +16,9 @@ export class GetAccount {
 
   @Inject()
   private transformer: TransformerInjectable;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Retrieve the given account details.
@@ -39,6 +44,13 @@ export class GetAccount {
       new AccountTransformer(),
       { accountsGraph }
     );
+    const eventPayload = {
+      tenantId,
+      accountId,
+    };
+    // Triggers `onAccountViewed` event.
+    await this.eventPublisher.emitAsync(events.accounts.onViewed, eventPayload);
+
     return this.i18nService.i18nApply(
       [['accountTypeLabel'], ['accountNormalFormatted']],
       transformed,

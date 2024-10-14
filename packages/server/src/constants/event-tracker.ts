@@ -2,6 +2,7 @@ export const SALE_INVOICE_CREATED = 'Sale invoice created';
 export const SALE_INVOICE_EDITED = 'Sale invoice edited';
 export const SALE_INVOICE_DELETED = 'Sale invoice deleted';
 export const SALE_INVOICE_MAIL_DELIVERED = 'Sale invoice mail delivered';
+export const SALE_INVOICE_VIEWED = 'Sale invoice viewed';
 
 export const SALE_ESTIMATE_CREATED = 'Sale estimate created';
 export const SALE_ESTIMATE_EDITED = 'Sale estimate edited';
@@ -26,10 +27,12 @@ export const EXPENSE_DELETED = 'Expense deleted';
 export const ACCOUNT_CREATED = 'Account created';
 export const ACCOUNT_EDITED = 'Account Edited';
 export const ACCOUNT_DELETED = 'Account deleted';
+export const ACCOUNT_VIEWED = 'Account viewed';
 
 export const ITEM_EVENT_CREATED = 'Item created';
 export const ITEM_EVENT_EDITED = 'Item edited';
 export const ITEM_EVENT_DELETED = 'Item deleted';
+export const ITEM_EVENT_VIEWED = 'Item viewed';
 
 export const AUTH_SIGNED_UP = 'Auth Signed-up';
 export const AUTH_RESET_PASSWORD = 'Auth reset password';
