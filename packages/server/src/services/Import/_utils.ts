@@ -299,7 +299,7 @@ export const valueParser =
       // Parses the enumeration value.
     } else if (field.fieldType === 'enumeration') {
       const option = get(field, 'options', []).find(
-        (option) => option.label === value
+        (option) => option.label?.toLowerCase() === value?.toLowerCase()
       );
       _value = get(option, 'key');
       // Parses the numeric value.
@@ -433,8 +433,8 @@ export const getMapToPath = (to: string, group = '') =>
   group ? `${group}.${to}` : to;
 
 export const getImportsStoragePath = () => {
-  return  path.join(global.__storage_dir, `/imports`);
-}
+  return path.join(global.__storage_dir, `/imports`);
+};
 
 /**
  * Deletes the imported file from the storage and database.
