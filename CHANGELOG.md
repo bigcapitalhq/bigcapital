@@ -2,6 +2,43 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.20.5]
+
+* fix: Disable tabs of the pdf customization if the first field not filed up by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/701
+* fix: Invoice form layout by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/705
+* refactor: Invoice, estimate, receipt, credit note and payment received date input fields by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/707
+* feat: Add customize templates button to edit forms by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/708
+* feat: Track account, invoice and item viewed events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/709
+
+# [0.20.4]
+
+* fix: Delete company logo from the PDF template by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/699
+* fix: Set max width/height to company logo of pdf templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/700
+
+# [0.20.3]
+
+* feat: Assign default PDF template automatically by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/687
+* fix: pdf template addresses controlling by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/688
+* fix: Remove empty lines from address formats by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/690
+* fix: Pdf templates layout by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/691
+* feat: Download invoice pdf of the payment link by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/689
+* fix: Display country name by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/693
+* feat: Add shared packages to Docker container by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/694
+
+# [0.20.2]
+
+* feat: Assign default PDF template automatically by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/687
+* fix: pdf template addresses controlling by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/688
+* fix: Remove empty lines from address formats by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/690
+* fix: Pdf templates layout by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/691
+* feat: Download invoice pdf of the payment link by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/689
+* fix: Display country name by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/693
+* feat: Add shared packages to Docker container by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/694
+
+# [0.20.1]
+
+* fix: Getting uploaded object uri by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/684
+
 # [0.20.0]
 
 * feat: Customize pdf templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/667
