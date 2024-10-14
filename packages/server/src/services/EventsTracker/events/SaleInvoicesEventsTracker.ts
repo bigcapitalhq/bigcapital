@@ -10,6 +10,7 @@ import {
   SALE_INVOICE_CREATED,
   SALE_INVOICE_DELETED,
   SALE_INVOICE_EDITED,
+  SALE_INVOICE_VIEWED,
 } from '@/constants/event-tracker';
 
 @Service()
@@ -32,6 +33,10 @@ export class SaleInvoiceEventsTracker extends EventSubscriber {
     bus.subscribe(
       events.saleInvoice.onDeleted,
       this.handleTrackDeletedInvoiceEvent
+    );
+    bus.subscribe(
+      events.saleInvoice.onViewed,
+      this.handleTrackViewedInvoiceEvent
     );
   }
 
@@ -61,6 +66,14 @@ export class SaleInvoiceEventsTracker extends EventSubscriber {
     this.posthog.trackEvent({
       distinctId: `tenant-${tenantId}`,
       event: SALE_INVOICE_DELETED,
+      properties: {},
+    });
+  };
+
+  private handleTrackViewedInvoiceEvent = ({ tenantId }) => {
+    this.posthog.trackEvent({
+      distinctId: `tenant-${tenantId}`,
+      event: SALE_INVOICE_VIEWED,
       properties: {},
     });
   };

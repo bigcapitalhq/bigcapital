@@ -3,6 +3,8 @@ import { IItem } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import ItemTransformer from './ItemTransformer';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Inject()
 export class GetItem {
@@ -11,6 +13,9 @@ export class GetItem {
 
   @Inject()
   private transformer: TransformerInjectable;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Retrieve the item details of the given id with associated details.
@@ -31,6 +36,16 @@ export class GetItem {
       .withGraphFetched('purchaseTaxRate')
       .throwIfNotFound();
 
-    return this.transformer.transform(tenantId, item, new ItemTransformer());
+    const transformed = await this.transformer.transform(
+      tenantId,
+      item,
+      new ItemTransformer()
+    );
+    const eventPayload = { tenantId, itemId };
+
+    // Triggers the `onItemViewed` event.
+    await this.eventPublisher.emitAsync(events.item.onViewed, eventPayload);
+
+    return transformed;
   }
 }

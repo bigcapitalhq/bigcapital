@@ -11,6 +11,7 @@ import {
   ACCOUNT_CREATED,
   ACCOUNT_EDITED,
   ACCOUNT_DELETED,
+  ACCOUNT_VIEWED,
 } from '@/constants/event-tracker';
 
 @Service()
@@ -31,6 +32,7 @@ export class AccountEventsTracker extends EventSubscriber {
       events.accounts.onDeleted,
       this.handleTrackDeletedAccountEvent
     );
+    bus.subscribe(events.accounts.onViewed, this.handleTrackAccountViewedEvent);
   }
 
   private handleTrackAccountCreatedEvent = ({
@@ -59,6 +61,14 @@ export class AccountEventsTracker extends EventSubscriber {
     this.posthog.trackEvent({
       distinctId: `tenant-${tenantId}`,
       event: ACCOUNT_DELETED,
+      properties: {},
+    });
+  };
+
+  private handleTrackAccountViewedEvent = ({ tenantId }) => {
+    this.posthog.trackEvent({
+      distinctId: `tenant-${tenantId}`,
+      event: ACCOUNT_VIEWED,
       properties: {},
     });
   };

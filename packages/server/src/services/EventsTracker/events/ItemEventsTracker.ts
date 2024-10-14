@@ -11,6 +11,7 @@ import {
   ITEM_EVENT_CREATED,
   ITEM_EVENT_EDITED,
   ITEM_EVENT_DELETED,
+  ITEM_EVENT_VIEWED,
 } from '@/constants/event-tracker';
 
 @Service()
@@ -25,6 +26,7 @@ export class ItemEventsTracker extends EventSubscriber {
     bus.subscribe(events.item.onCreated, this.handleTrackItemCreatedEvent);
     bus.subscribe(events.item.onEdited, this.handleTrackEditedItemEvent);
     bus.subscribe(events.item.onDeleted, this.handleTrackDeletedItemEvent);
+    bus.subscribe(events.item.onViewed, this.handleTrackViewedItemEvent);
   }
 
   private handleTrackItemCreatedEvent = ({
@@ -53,6 +55,16 @@ export class ItemEventsTracker extends EventSubscriber {
     this.posthog.trackEvent({
       distinctId: `tenant-${tenantId}`,
       event: ITEM_EVENT_DELETED,
+      properties: {},
+    });
+  };
+
+  private handleTrackViewedItemEvent = ({
+    tenantId,
+  }: IItemEventDeletedPayload) => {
+    this.posthog.trackEvent({
+      distinctId: `tenant-${tenantId}`,
+      event: ITEM_EVENT_VIEWED,
       properties: {},
     });
   };
