@@ -14,6 +14,8 @@ export class AccountTransformer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
+      'accountTypeLabel',
+      'accountNormalFormatted',
       'formattedAmount',
       'flattenName',
       'bankBalanceFormatted',
@@ -82,6 +84,22 @@ export class AccountTransformer extends Transformer {
    */
   protected isFeedsPaused = (account: any): boolean => {
     return account.plaidItem?.isPaused || false;
+  };
+
+  /**
+   * Retrieves formatted account type label.
+   * @returns {string}
+   */
+  protected accountTypeLabel = (account: any): string => {
+    return this.context.i18n.__(account.accountTypeLabel);
+  };
+
+  /**
+   * Retrieves formatted account normal.
+   * @returns {string}
+   */
+  protected accountNormalFormatted = (account: any): string => {
+    return this.context.i18n.__(account.accountNormalFormatted);
   };
 
   /**
