@@ -51,10 +51,6 @@ export class GetAccount {
     // Triggers `onAccountViewed` event.
     await this.eventPublisher.emitAsync(events.accounts.onViewed, eventPayload);
 
-    return this.i18nService.i18nApply(
-      [['accountTypeLabel'], ['accountNormalFormatted']],
-      transformed,
-      tenantId
-    );
+    return transformed;
   };
 }
