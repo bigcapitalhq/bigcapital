@@ -12,7 +12,7 @@ export class GetCashflowTransactionService {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private transfromer: TransformerInjectable;
+  private transformer: TransformerInjectable;
 
   /**
    * Retrieve the given cashflow transaction.
@@ -37,7 +37,7 @@ export class GetCashflowTransactionService {
     this.throwErrorCashflowTranscationNotFound(cashflowTransaction);
 
     // Transformes the cashflow transaction model to POJO.
-    return this.transfromer.transform(
+    return this.transformer.transform(
       tenantId,
       cashflowTransaction,
       new CashflowTransactionTransformer()

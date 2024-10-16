@@ -4,6 +4,7 @@ import { CashflowAccountTransformer } from './CashflowAccountTransformer';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 
 @Service()
 export default class GetCashflowAccountsService {
@@ -41,14 +42,20 @@ export default class GetCashflowAccountsService {
     const accounts = await CashflowAccount.query().onBuild((builder) => {
       dynamicList.buildQuery()(builder);
 
-      builder.whereIn('account_type', ['bank', 'cash']);
+      builder.whereIn('account_type', [
+        ACCOUNT_TYPE.BANK,
+        ACCOUNT_TYPE.CASH,
+        ACCOUNT_TYPE.CREDIT_CARD,
+      ]);
       builder.modify('inactiveMode', filter.inactiveMode);
     });
     // Retrieves the transformed accounts.
-    return this.transformer.transform(
+    const transformed = await this.transformer.transform(
       tenantId,
       accounts,
       new CashflowAccountTransformer()
     );
+
+    return transformed;
   }
 }

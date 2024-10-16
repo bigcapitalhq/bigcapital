@@ -11,6 +11,12 @@ export default class UncategorizedCashflowTransaction extends mixin(
 ) {
   id!: number;
   date!: Date | string;
+
+  /**
+   * Transaction amount.
+   * Negative represents to spending and positive to deposit/card charge.
+   * @param {number}
+   */
   amount!: number;
   categorized!: boolean;
   accountId!: number;
