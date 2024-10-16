@@ -129,6 +129,7 @@ export const ACCOUNT_TYPES = [
     normal: ACCOUNT_NORMAL.CREDIT,
     rootType: ACCOUNT_ROOT_TYPE.LIABILITY,
     parentType: ACCOUNT_PARENT_TYPE.CURRENT_LIABILITY,
+    multiCurrency: true,
     balanceSheet: true,
     incomeSheet: false,
   },

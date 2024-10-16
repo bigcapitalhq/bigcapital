@@ -4,11 +4,27 @@ import {
   Institution as PlaidInstitution,
   AccountBase as PlaidAccount,
   TransactionBase as PlaidTransactionBase,
+  AccountType as PlaidAccountType,
 } from 'plaid';
 import {
   CreateUncategorizedTransactionDTO,
   IAccountCreateDTO,
 } from '@/interfaces';
+import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+
+/**
+ * Retrieves the system account type from the given Plaid account type.
+ * @param {PlaidAccountType} plaidAccountType
+ * @returns {string}
+ */
+const getAccountTypeFromPlaidAccountType = (
+  plaidAccountType: PlaidAccountType
+) => {
+  if (plaidAccountType === PlaidAccountType.Credit) {
+    return ACCOUNT_TYPE.CREDIT_CARD;
+  }
+  return ACCOUNT_TYPE.BANK;
+};
 
 /**
  * Transformes the Plaid account to create cashflow account DTO.
@@ -28,7 +44,7 @@ export const transformPlaidAccountToCreateAccount = R.curry(
       code: '',
       description: plaidAccount.official_name,
       currencyCode: plaidAccount.balances.iso_currency_code,
-      accountType: 'cash',
+      accountType: getAccountTypeFromPlaidAccountType(plaidAccount.type),
       active: true,
       bankBalance: plaidAccount.balances.current,
       accountMask: plaidAccount.mask,
