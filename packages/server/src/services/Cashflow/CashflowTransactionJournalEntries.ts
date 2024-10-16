@@ -1,14 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
-import {
-  ILedgerEntry,
-  ICashflowTransaction,
-  AccountNormal,
-} from '../../interfaces';
-import {
-  transformCashflowTransactionType,
-  getCashflowAccountTransactionsTypes,
-} from './utils';
+import { ILedgerEntry, ICashflowTransaction } from '../../interfaces';
+import { transformCashflowTransactionType } from './utils';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import Ledger from '@/services/Accounting/Ledger';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
@@ -70,7 +63,7 @@ export default class CashflowTransactionJournalEntries {
       debit: cashflowTransaction.isCashDebit
         ? cashflowTransaction.localAmount
         : 0,
-      accountNormal: AccountNormal.DEBIT,
+      accountNormal: cashflowTransaction?.cashflowAccount?.accountNormal,
       index: 1,
     };
   };
@@ -143,6 +136,7 @@ export default class CashflowTransactionJournalEntries {
     // Retrieves the cashflow transactions with associated entries.
     const transaction = await CashflowTransaction.query(trx)
       .findById(cashflowTransactionId)
+      .withGraphFetched('cashflowAccount')
       .withGraphFetched('creditAccount');
 
     // Retrieves the cashflow transaction ledger.
