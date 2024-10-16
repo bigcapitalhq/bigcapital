@@ -13,6 +13,7 @@ export type CleanValueOptions = {
   allowNegativeValue?: boolean;
   turnOffAbbreviations?: boolean;
   prefix?: string;
+  suffix?: string;
 };
 
 /**
@@ -27,12 +28,14 @@ export const cleanValue = ({
   allowNegativeValue = true,
   turnOffAbbreviations = false,
   prefix = '',
+  suffix = '',
 }: CleanValueOptions): string => {
   const abbreviations = turnOffAbbreviations ? [] : ['k', 'm', 'b'];
   const isNegative = value.includes('-');
 
   const [prefixWithValue, preValue] = RegExp(`(\\d+)-?${escapeRegExp(prefix)}`).exec(value) || [];
   const withoutPrefix = prefix ? value.replace(prefixWithValue, '').concat(preValue) : value;
+  // Remove suffix from value
   const withoutSeparators = removeSeparators(withoutPrefix, groupSeparator);
   const withoutInvalidChars = removeInvalidChars(withoutSeparators, [
     groupSeparator,

@@ -38,7 +38,8 @@ export class ItemEntryTransformer extends Transformer {
    * @returns {string}
    */
   protected totalFormatted = (entry: IItemEntry): string => {
-    return formatNumber(entry.total, {
+    const discountedTotal = entry.total - ((entry.total * entry.discount) / 100);
+    return formatNumber(discountedTotal, {
       currencyCode: this.context.currencyCode,
       money: false,
     });
