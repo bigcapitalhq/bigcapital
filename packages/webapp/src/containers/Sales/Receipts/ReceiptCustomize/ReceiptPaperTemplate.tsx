@@ -1,3 +1,4 @@
+import { Classes, Text } from '@blueprintjs/core';
 import { Box, Group, Stack } from '@/components';
 import {
   PaperTemplate,
@@ -67,6 +68,12 @@ export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
   receiptNumebr?: string;
   receiptNumberLabel?: string;
   showReceiptNumber?: boolean;
+
+  // Entries
+  lineItemLabel?: string;
+  lineQuantityLabel?: string;
+  lineRateLabel?: string;
+  lineTotalLabel?: string;
 }
 
 export function ReceiptPaperTemplate({
@@ -115,13 +122,22 @@ export function ReceiptPaperTemplate({
       total: '$1000.00',
     },
   ],
+
+  // Receipt Number
   showReceiptNumber = true,
   receiptNumberLabel = 'Receipt Number',
   receiptNumebr = '346D3D40-0001',
 
+  // Receipt Date
   receiptDate = 'September 3, 2024',
   showReceiptDate = true,
   receiptDateLabel = 'Receipt Date',
+
+  // Entries
+  lineItemLabel = 'Item',
+  lineQuantityLabel = 'Qty',
+  lineRateLabel = 'Rate',
+  lineTotalLabel = 'Total',
 }: ReceiptPaperTemplateProps) {
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
@@ -167,10 +183,23 @@ export function ReceiptPaperTemplate({
         <Stack spacing={0}>
           <PaperTemplate.Table
             columns={[
-              { label: 'Item', accessor: 'item' },
-              { label: 'Description', accessor: 'description' },
-              { label: 'Rate', accessor: 'rate', align: 'right' },
-              { label: 'Total', accessor: 'total', align: 'right' },
+              {
+                label: lineItemLabel,
+                accessor: (data) => (
+                  <Stack spacing={2}>
+                    <Text>{data.item}</Text>
+                    <Text
+                      className={Classes.TEXT_MUTED}
+                      style={{ fontSize: 12 }}
+                    >
+                      {data.description}
+                    </Text>
+                  </Stack>
+                ),
+              },
+              { label: lineQuantityLabel, accessor: 'quantity' },
+              { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}
             data={lines}
           />

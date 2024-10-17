@@ -1,3 +1,4 @@
+import { Classes, Text } from '@blueprintjs/core';
 import { Box, Group, Stack } from '@/components';
 import {
   PaperTemplate,
@@ -67,6 +68,12 @@ export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
   creditNoteNumebr?: string;
   creditNoteNumberLabel?: string;
   showCreditNoteNumber?: boolean;
+
+  // Entries
+  lineItemLabel?: string;
+  lineQuantityLabel?: string;
+  lineRateLabel?: string;
+  lineTotalLabel?: string;
 }
 
 export function CreditNotePaperTemplate({
@@ -127,6 +134,12 @@ export function CreditNotePaperTemplate({
   creditNoteDate = 'September 3, 2024',
   showCreditNoteDate = true,
   creditNoteDateLabel = 'Credit Note Date',
+
+  // Entries
+  lineItemLabel = 'Item',
+  lineQuantityLabel = 'Qty',
+  lineRateLabel = 'Rate',
+  lineTotalLabel = 'Total',
 }: CreditNotePaperTemplateProps) {
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
@@ -172,10 +185,23 @@ export function CreditNotePaperTemplate({
         <Stack spacing={0}>
           <PaperTemplate.Table
             columns={[
-              { label: 'Item', accessor: 'item' },
-              { label: 'Description', accessor: 'description' },
-              { label: 'Rate', accessor: 'rate', align: 'right' },
-              { label: 'Total', accessor: 'total', align: 'right' },
+              {
+                label: lineItemLabel,
+                accessor: (data) => (
+                  <Stack spacing={2}>
+                    <Text>{data.item}</Text>
+                    <Text
+                      className={Classes.TEXT_MUTED}
+                      style={{ fontSize: 12 }}
+                    >
+                      {data.description}
+                    </Text>
+                  </Stack>
+                ),
+              },
+              { label: lineQuantityLabel, accessor: 'quantity' },
+              { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}
             data={lines}
           />

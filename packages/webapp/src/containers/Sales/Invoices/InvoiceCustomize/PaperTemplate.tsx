@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'classnames';
-import { get } from 'lodash';
+import { get, isFunction } from 'lodash';
 import { Box, Group, GroupProps } from '@/components';
 import styles from './InvoicePaperTemplate.module.scss';
 
@@ -26,8 +26,9 @@ export function PaperTemplate({
 
 interface PaperTemplateTableProps {
   columns: Array<{
-    accessor: string;
+    accessor: string | ((data: Record<string, any>) => JSX.Element);
     label: string;
+    value?: JSX.Element;
     align?: 'left' | 'center' | 'right';
   }>;
   data: Array<Record<string, any>>;
@@ -71,7 +72,9 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
           <tr>
             {columns.map((column, index) => (
               <td align={column.align} key={index}>
-                {get(_data, column.accessor)}
+                {isFunction(column?.accessor)
+                  ? column?.accessor(_data)
+                  : get(_data, column.accessor)}
               </td>
             ))}
           </tr>
@@ -115,9 +118,9 @@ PaperTemplate.TotalLine = ({
   );
 };
 
-PaperTemplate.MutedText = () => {};
+PaperTemplate.MutedText = () => { };
 
-PaperTemplate.Text = () => {};
+PaperTemplate.Text = () => { };
 
 PaperTemplate.AddressesGroup = (props: GroupProps) => {
   return (
