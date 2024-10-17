@@ -115,6 +115,14 @@ block head
     .#{prefix}-table__cell--right {
       text-align: right;
     }
+    .#{prefix}-table__cell--item .item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .#{prefix}-table__cell--item .item__description {
+      color: #5f6b7c;
+    }
     .#{prefix}-totals {
       display: flex;
       flex-direction: column;
@@ -200,14 +208,17 @@ block content
       thead
         tr
           th(class=`${prefix}-table__header`) #{lineItemLabel}
-          th(class=`${prefix}-table__header`) #{lineDescriptionLabel}
+          th(class=`${prefix}-table__header ${prefix}-table__header--right`) #{lineQuantityLabel}
           th(class=`${prefix}-table__header ${prefix}-table__header--right`) #{lineRateLabel}
           th(class=`${prefix}-table__header ${prefix}-table__header--right`) #{lineTotalLabel}
       tbody
         each line in lines
           tr
-            td(class=`${prefix}-table__cell`) #{line.item}
-            td(class=`${prefix}-table__cell`) #{line.description}
+            td(class=`${prefix}-table__cell ${prefix}-table__cell--item`)
+              div.item
+                div.item__label #{line.item}
+                div.item__description #{line.description}
+            td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.quantity}
             td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.rate}
             td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.total}
 

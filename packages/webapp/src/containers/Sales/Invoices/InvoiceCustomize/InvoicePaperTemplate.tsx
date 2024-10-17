@@ -1,4 +1,4 @@
-import React from 'react';
+import { Classes, Text } from '@blueprintjs/core';
 import { PaperTemplate, PaperTemplateTotalBorder } from './PaperTemplate';
 import { Box, Group, Stack } from '@/components';
 import {
@@ -9,6 +9,7 @@ import {
   DefaultPdfTemplateAddressBilledTo,
   DefaultPdfTemplateAddressBilledFrom,
 } from '@/constants/PdfTemplates';
+
 interface PapaerLine {
   item?: string;
   description?: string;
@@ -55,7 +56,7 @@ export interface InvoicePaperTemplateProps {
 
   // Entries
   lineItemLabel?: string;
-  lineDescriptionLabel?: string;
+  lineQuantityLabel?: string;
   lineRateLabel?: string;
   lineTotalLabel?: string;
 
@@ -129,7 +130,7 @@ export function InvoicePaperTemplate({
 
   // Entries
   lineItemLabel = 'Item',
-  lineDescriptionLabel = 'Description',
+  lineQuantityLabel = 'Qty',
   lineRateLabel = 'Rate',
   lineTotalLabel = 'Total',
 
@@ -214,7 +215,6 @@ export function InvoicePaperTemplate({
               <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
             </PaperTemplate.Address>
           )}
-
           {showCustomerAddress && (
             <PaperTemplate.Address>
               <strong>{billedToLabel}</strong>
@@ -226,8 +226,21 @@ export function InvoicePaperTemplate({
         <Stack spacing={0}>
           <PaperTemplate.Table
             columns={[
-              { label: lineItemLabel, accessor: 'item' },
-              { label: lineDescriptionLabel, accessor: 'description' },
+              {
+                label: lineItemLabel,
+                accessor: (data) => (
+                  <Stack spacing={2}>
+                    <Text>{data.item}</Text>
+                    <Text
+                      className={Classes.TEXT_MUTED}
+                      style={{ fontSize: 12 }}
+                    >
+                      {data.description}
+                    </Text>
+                  </Stack>
+                ),
+              },
+              { label: lineQuantityLabel, accessor: 'quantity' },
               { label: lineRateLabel, accessor: 'rate', align: 'right' },
               { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}

@@ -194,7 +194,7 @@ export const defaultInvoicePdfTemplateAttributes = {
 
   // Entries
   lineItemLabel: 'Item',
-  lineDescriptionLabel: 'Description',
+  lineQuantityLabel: 'Qty',
   lineRateLabel: 'Rate',
   lineTotalLabel: 'Total',
 

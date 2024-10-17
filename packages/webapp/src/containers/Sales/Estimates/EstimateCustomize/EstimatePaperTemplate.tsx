@@ -1,3 +1,4 @@
+import { Classes, Text } from '@blueprintjs/core';
 import { Box, Group, Stack } from '@/components';
 import {
   PaperTemplate,
@@ -69,6 +70,13 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
     quantity: string;
     total: string;
   }>;
+
+  // Lines
+  lineItemLabel?: string,
+  lineQuantityLabel?: string,
+  lineRateLabel?: string,
+  lineTotalLabel?: string,
+
 }
 
 export function EstimatePaperTemplate({
@@ -134,6 +142,13 @@ export function EstimatePaperTemplate({
   expirationDateLabel = 'Expiration Date',
   showExpirationDate = true,
   expirationDate = 'September 3, 2024',
+
+  // Entries
+  lineItemLabel = 'Item',
+  lineQuantityLabel = 'Qty',
+  lineRateLabel = 'Rate',
+  lineTotalLabel = 'Total',
+
 }: EstimatePaperTemplateProps) {
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
@@ -183,10 +198,23 @@ export function EstimatePaperTemplate({
         <Stack spacing={0}>
           <PaperTemplate.Table
             columns={[
-              { label: 'Item', accessor: 'item' },
-              { label: 'Description', accessor: 'description' },
-              { label: 'Rate', accessor: 'rate', align: 'right' },
-              { label: 'Total', accessor: 'total', align: 'right' },
+              {
+                label: lineItemLabel,
+                accessor: (data) => (
+                  <Stack spacing={2}>
+                    <Text>{data.item}</Text>
+                    <Text
+                      className={Classes.TEXT_MUTED}
+                      style={{ fontSize: 12 }}
+                    >
+                      {data.description}
+                    </Text>
+                  </Stack>
+                ),
+              },
+              { label: lineQuantityLabel, accessor: 'quantity' },
+              { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}
             data={lines}
           />
