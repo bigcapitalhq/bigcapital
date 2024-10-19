@@ -180,6 +180,7 @@ export default {
    * Sales estimates service.
    */
   saleEstimate: {
+    onViewed: 'onSaleEstimateViewed',
     onPdfViewed: 'onSaleEstimatePdfViewed',
 
     onCreating: 'onSaleEstimateCreating',
