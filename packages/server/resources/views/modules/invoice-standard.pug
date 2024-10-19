@@ -102,6 +102,9 @@ block head
     .#{prefix}-table__header--right {
       text-align: right;
     }
+    .#{prefix}-table__header--item {
+      width: 50%;
+    }
     .#{prefix}-table__cell {
       border-bottom: 1px solid #F6F6F6;
       padding: 12px 10px;
@@ -157,7 +160,7 @@ block head
       color: #666;
     }
     .#{prefix}-paragraph__value {
-      /* Styles for values within the paragraph section */
+      white-space: pre-line;
     }
 block content
   //- block head
@@ -207,10 +210,10 @@ block content
     table(class=`${prefix}-table`)
       thead
         tr
-          th(class=`${prefix}-table__header`) #{lineItemLabel}
-          th(class=`${prefix}-table__header ${prefix}-table__header--right`) #{lineQuantityLabel}
-          th(class=`${prefix}-table__header ${prefix}-table__header--right`) #{lineRateLabel}
-          th(class=`${prefix}-table__header ${prefix}-table__header--right`) #{lineTotalLabel}
+          th(class=`${prefix}-table__header ${prefix}-table__header--item`) #{lineItemLabel}
+          th(class=`${prefix}-table__header ${prefix}-table__header--quantity ${prefix}-table__header--right`) #{lineQuantityLabel}
+          th(class=`${prefix}-table__header ${prefix}-table__header--rate ${prefix}-table__header--right`) #{lineRateLabel}
+          th(class=`${prefix}-table__header ${prefix}-table__header--total ${prefix}-table__header--right`) #{lineTotalLabel}
       tbody
         each line in lines
           tr
