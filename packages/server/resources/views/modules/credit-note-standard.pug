@@ -150,7 +150,7 @@ block head
       color: #666;
     }
     .#{prefix}-statement__value {
-      /* Styles for statement value */
+      white-space: pre-line;
     }
 
 block content
@@ -190,20 +190,20 @@ block content
   table(class=`${prefix}-table`)
     thead
       tr
-        th(class=`${prefix}-table__header`) #{'Item'}
-        th(class=`${prefix}-table__header ${prefix}-table__header--right`) #{'Quantity'}
-        th(class=`${prefix}-table__header ${prefix}-table__header--right`) #{'Rate'}
-        th(class=`${prefix}-table__header ${prefix}-table__header--right`) #{'Total'}
+        th(class=`${prefix}-table__header ${prefix}-table__header--item`) #{'Item'}
+        th(class=`${prefix}-table__header ${prefix}-table__header--quantity ${prefix}-table__header--right`) #{'Quantity'}
+        th(class=`${prefix}-table__header ${prefix}-table__header--rate ${prefix}-table__header--right`) #{'Rate'}
+        th(class=`${prefix}-table__header ${prefix}-table__header--total ${prefix}-table__header--right`) #{'Total'}
     tbody
       each line in lines
         tr(class=`${prefix}-table__row`)
-          td(class=`${prefix}-table__cell ${prefix}-table__cell--item`) 
+          td(class=`${prefix}-table__cell ${prefix}-table__cell--item ${prefix}-table__cell--item`) 
             div.item
               div.item__label #{line.item}
               div.item__description #{line.description}
-          td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.quantity}
-          td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.rate}
-          td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.total}
+          td(class=`${prefix}-table__cell ${prefix}-table__cell--quantity ${prefix}-table__cell--right`) #{line.quantity}
+          td(class=`${prefix}-table__cell ${prefix}-table__cell--rate ${prefix}-table__cell--right`) #{line.rate}
+          td(class=`${prefix}-table__cell ${prefix}-table__cell--total ${prefix}-table__cell--right`) #{line.total}
 
   div(class=`${prefix}-totals`)
     if showSubtotal

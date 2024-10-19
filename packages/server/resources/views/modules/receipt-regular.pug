@@ -92,6 +92,9 @@ block head
     .#{prefix}-table__header--right {
       text-align: right;
     }
+    .#{prefix}-table__header--item{
+      width: 50%;
+    }
     .#{prefix}-table__cell {
       border-bottom: 1px solid #F6F6F6;
       padding: 12px 10px;
@@ -141,7 +144,9 @@ block head
       margin-bottom: 20px;
     }
     .#{prefix}-statement__label {}
-    .#{prefix}-statement__value {}
+    .#{prefix}-statement__value {
+      white-space: pre-line;
+    }
 
 block content 
   //- block head
@@ -186,10 +191,10 @@ block content
     table(class=`${prefix}-table`)
       thead(class=`${prefix}-table__header`)
         tr
-          th(class=`${prefix}-table__header`) Item
-          th(class=`${prefix}-table__header ${prefix}-table__header--right`) Qty
-          th(class=`${prefix}-table__header ${prefix}-table__header--right`) Rate
-          th(class=`${prefix}-table__header ${prefix}-table__header--right`) Total
+          th(class=`${prefix}-table__header ${prefix}-table__header--item`) Item
+          th(class=`${prefix}-table__header ${prefix}-table__header--quantity ${prefix}-table__header--right`) Qty
+          th(class=`${prefix}-table__header ${prefix}-table__header--rate ${prefix}-table__header--right`) Rate
+          th(class=`${prefix}-table__header ${prefix}-table__header--total ${prefix}-table__header--right`) Total
       tbody
         each line in lines
           tr(class=`${prefix}-table__row`)

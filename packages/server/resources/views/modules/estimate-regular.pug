@@ -96,6 +96,9 @@ block head
     .#{prefix}-table__header--right {
       text-align: right;
     }
+    .#{prefix}-table__header--item{
+      width: 50%;
+    }
     .#{prefix}-table__cell {
       border-bottom: 1px solid #F6F6F6;
       padding: 12px 10px;
@@ -151,6 +154,7 @@ block head
       color: #666;
     }
     .#{prefix}-statement__value {
+      white-space: pre-line;
     }
 
 block content 
@@ -200,10 +204,10 @@ block content
     table(class=`${prefix}-table`)
       thead
         tr
-          th(class=`${prefix}-table__header`) Item
-          th(class=`${prefix}-table__header ${prefix}-table__header--right`) Qty
-          th(class=`${prefix}-table__header ${prefix}-table__header--right`) Rate
-          th(class=`${prefix}-table__header ${prefix}-table__header--right`) Total
+          th(class=`${prefix}-table__header ${prefix}-table__header--item`) Item
+          th(class=`${prefix}-table__header ${prefix}-table__header--quantity ${prefix}-table__header--right`) Qty
+          th(class=`${prefix}-table__header ${prefix}-table__header--rate ${prefix}-table__header--right`) Rate
+          th(class=`${prefix}-table__header ${prefix}-table__header--total ${prefix}-table__header--right`) Total
       tbody
         each line in lines
           tr
@@ -211,9 +215,9 @@ block content
               div.item  
                 div.item__label #{line.item}
                 div.item__description #{line.description}
-            td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.quantity}
-            td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.rate}
-            td(class=`${prefix}-table__cell ${prefix}-table__cell--right`) #{line.total}
+            td(class=`${prefix}-table__cell ${prefix}-table__cell--quantity ${prefix}-table__cell--right`) #{line.quantity}
+            td(class=`${prefix}-table__cell ${prefix}-table__cell--rate ${prefix}-table__cell--right`) #{line.rate}
+            td(class=`${prefix}-table__cell ${prefix}-table__cell--total ${prefix}-table__cell--right`) #{line.total}
 
     //- Totals section
     div(class=`${prefix}-totals`)
