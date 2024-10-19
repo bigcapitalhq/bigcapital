@@ -33,7 +33,7 @@ export default class GetPaymentReceivedPdf {
   async getPaymentReceivePdf(
     tenantId: number,
     paymentReceiveId: number
-  ): Promise<Buffer> {
+  ): Promise<[Buffer, string]> {
     const brandingAttributes = await this.getPaymentBrandingAttributes(
       tenantId,
       paymentReceiveId
@@ -43,8 +43,33 @@ export default class GetPaymentReceivedPdf {
       'modules/payment-receive-standard',
       brandingAttributes
     );
+    const filename = await this.getPaymentReceivedFilename(
+      tenantId,
+      paymentReceiveId
+    );
     // Converts the given html content to pdf document.
-    return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent);
+    const content = await this.chromiumlyTenancy.convertHtmlContent(
+      tenantId,
+      htmlContent
+    );
+    return [content, filename];
+  }
+
+  /**
+   * Retrieves the filename of the given payment.
+   * @param {number} tenantId
+   * @param {number} paymentReceivedId
+   * @returns {Promise<string>}
+   */
+  private async getPaymentReceivedFilename(
+    tenantId: number,
+    paymentReceivedId: number
+  ): Promise<string> {
+    const { PaymentReceive } = this.tenancy.models(tenantId);
+
+    const payment = await PaymentReceive.query().findById(paymentReceivedId);
+
+    return `Payment-${payment.paymentReceiveNo}`;
   }
 
   /**

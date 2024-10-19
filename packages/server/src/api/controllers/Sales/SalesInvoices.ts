@@ -441,13 +441,15 @@ export default class SaleInvoicesController extends BaseController {
     ]);
     // Retrieves invoice in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
-      const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(
-        tenantId,
-        saleInvoiceId
-      );
+      const [pdfContent, filename] =
+        await this.saleInvoiceApplication.saleInvoicePdf(
+          tenantId,
+          saleInvoiceId
+        );
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
       // Retrieves invoice in json format.

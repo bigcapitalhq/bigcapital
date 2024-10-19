@@ -11,7 +11,7 @@ import { compose } from '@/utils';
 function PaymentReceivePdfPreviewDialogContent({
   subscriptionForm: { paymentReceiveId },
 }) {
-  const { isLoading, pdfUrl } = usePdfPaymentReceive(paymentReceiveId);
+  const { isLoading, pdfUrl, filename } = usePdfPaymentReceive(paymentReceiveId);
 
   return (
     <DialogContent>
@@ -27,7 +27,7 @@ function PaymentReceivePdfPreviewDialogContent({
 
         <AnchorButton
           href={pdfUrl}
-          download={'payment.pdf'}
+          download={filename}
           minimal={true}
           outlined={true}
         >

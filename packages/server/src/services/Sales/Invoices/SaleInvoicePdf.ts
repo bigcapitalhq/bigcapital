@@ -33,7 +33,9 @@ export class SaleInvoicePdf {
   public async saleInvoicePdf(
     tenantId: number,
     invoiceId: number
-  ): Promise<Buffer> {
+  ): Promise<[Buffer, string]> {
+    const filename = await this.getInvoicePdfFilename(tenantId, invoiceId);
+
     const brandingAttributes = await this.getInvoiceBrandingAttributes(
       tenantId,
       invoiceId
@@ -44,7 +46,29 @@ export class SaleInvoicePdf {
       brandingAttributes
     );
     // Converts the given html content to pdf document.
-    return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent);
+    const buffer = await this.chromiumlyTenancy.convertHtmlContent(
+      tenantId,
+      htmlContent
+    );
+
+    return [buffer, filename];
+  }
+
+  /**
+   * Retrieves the filename pdf document of the given invoice.
+   * @param {number} tenantId
+   * @param {number} invoiceId
+   * @returns {Promise<string>}
+   */
+  private async getInvoicePdfFilename(
+    tenantId: number,
+    invoiceId: number
+  ): Promise<string> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    const invoice = await SaleInvoice.query().findById(invoiceId);
+
+    return `Invoice-${invoice.invoiceNo}`;
   }
 
   /**

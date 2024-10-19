@@ -398,13 +398,15 @@ export default class SalesEstimatesController extends BaseController {
     ]);
     // Retrieves estimate in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
-      const pdfContent = await this.saleEstimatesApplication.getSaleEstimatePdf(
-        tenantId,
-        estimateId
-      );
+      const [pdfContent, filename] =
+        await this.saleEstimatesApplication.getSaleEstimatePdf(
+          tenantId,
+          estimateId
+        );
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
       // Retrieves estimates in json format.

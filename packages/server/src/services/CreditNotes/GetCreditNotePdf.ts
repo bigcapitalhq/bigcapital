@@ -28,8 +28,12 @@ export default class GetCreditNotePdf {
    * Retrieves sale invoice pdf content.
    * @param {number} tenantId - Tenant id.
    * @param {number} creditNoteId - Credit note id.
+   * @returns {Promise<[Buffer, string]>}
    */
-  public async getCreditNotePdf(tenantId: number, creditNoteId: number) {
+  public async getCreditNotePdf(
+    tenantId: number,
+    creditNoteId: number
+  ): Promise<[Buffer, string]> {
     const brandingAttributes = await this.getCreditNoteBrandingAttributes(
       tenantId,
       creditNoteId
@@ -39,7 +43,30 @@ export default class GetCreditNotePdf {
       'modules/credit-note-standard',
       brandingAttributes
     );
-    return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent);
+    const filename = await this.getCreditNoteFilename(tenantId, creditNoteId);
+
+    const document = await this.chromiumlyTenancy.convertHtmlContent(
+      tenantId,
+      htmlContent
+    );
+    return [document, filename];
+  }
+
+  /**
+   * Retrieves the filename pdf document of the given credit note.
+   * @param {number} tenantId
+   * @param {number} creditNoteId
+   * @returns {Promise<string>}
+   */
+  public async getCreditNoteFilename(
+    tenantId: number,
+    creditNoteId: number
+  ): Promise<string> {
+    const { CreditNote } = this.tenancy.models(tenantId);
+
+    const creditNote = await CreditNote.query().findById(creditNoteId);
+
+    return `Credit-${creditNote.creditNoteNumber}`;
   }
 
   /**
