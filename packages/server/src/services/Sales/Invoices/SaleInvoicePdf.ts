@@ -6,6 +6,8 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { transformInvoiceToPdfTemplate } from './utils';
 import { InvoicePdfTemplateAttributes } from '@/interfaces';
 import { SaleInvoicePdfTemplate } from './SaleInvoicePdfTemplate';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class SaleInvoicePdf {
@@ -23,6 +25,9 @@ export class SaleInvoicePdf {
 
   @Inject()
   private invoiceBrandingTemplateService: SaleInvoicePdfTemplate;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Retrieve sale invoice pdf content.
@@ -50,7 +55,13 @@ export class SaleInvoicePdf {
       tenantId,
       htmlContent
     );
+    const eventPayload = { tenantId, saleInvoiceId: invoiceId };
 
+    // Triggers the `onSaleInvoicePdfViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.saleInvoice.onPdfViewed,
+      eventPayload
+    );
     return [buffer, filename];
   }
 

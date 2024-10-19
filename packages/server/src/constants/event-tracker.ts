@@ -3,14 +3,21 @@ export const SALE_INVOICE_EDITED = 'Sale invoice edited';
 export const SALE_INVOICE_DELETED = 'Sale invoice deleted';
 export const SALE_INVOICE_MAIL_DELIVERED = 'Sale invoice mail delivered';
 export const SALE_INVOICE_VIEWED = 'Sale invoice viewed';
+export const SALE_INVOICE_PDF_VIEWED = 'Sale invoice PDF viewed';
 
 export const SALE_ESTIMATE_CREATED = 'Sale estimate created';
 export const SALE_ESTIMATE_EDITED = 'Sale estimate edited';
 export const SALE_ESTIMATE_DELETED = 'Sale estimate deleted';
+export const SALE_ESTIMATE_PDF_VIEWED = 'Sale estimate PDF viewed';
 
 export const PAYMENT_RECEIVED_CREATED = 'Payment received created';
 export const PAYMENT_RECEIVED_EDITED = 'payment received edited';
 export const PAYMENT_RECEIVED_DELETED = 'Payment received deleted';
+export const PAYMENT_RECEIVED_PDF_VIEWED = 'Payment received PDF viewed';
+
+export const SALE_RECEIPT_PDF_VIEWED = 'Sale credit PDF viewed';
+
+export const CREDIT_NOTE_PDF_VIEWED = 'Credit note PDF viewed';
 
 export const BILL_CREATED = 'Bill created';
 export const BILL_EDITED = 'Bill edited';
@@ -82,7 +89,8 @@ export const PAYMENT_METHOD_DELETED = 'Payment method deleted';
 
 export const INVOICE_PAYMENT_LINK_GENERATED = 'Invoice payment link generated';
 
-export const STRIPE_INTEGRAION_CONNECTED = 'Stripe integration oauth2 connected';
+export const STRIPE_INTEGRAION_CONNECTED =
+  'Stripe integration oauth2 connected';
 
 // # Event Groups
 export const ACCOUNT_GROUP = 'Account';

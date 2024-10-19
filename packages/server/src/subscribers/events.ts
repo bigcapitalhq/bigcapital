@@ -133,6 +133,8 @@ export default {
     onViewed: 'onSaleInvoiceItemViewed',
     onListViewed: 'onSaleInvoiceListViewed',
 
+    onPdfViewed: 'onSaleInvoicePdfViewed',
+
     onCreate: 'onSaleInvoiceCreate',
     onCreating: 'onSaleInvoiceCreating',
     onCreated: 'onSaleInvoiceCreated',
@@ -178,6 +180,8 @@ export default {
    * Sales estimates service.
    */
   saleEstimate: {
+    onPdfViewed: 'onSaleEstimatePdfViewed',
+
     onCreating: 'onSaleEstimateCreating',
     onCreated: 'onSaleEstimateCreated',
 
@@ -215,6 +219,8 @@ export default {
    * Sales receipts service.
    */
   saleReceipt: {
+    onPdfViewed: 'onSaleReceiptPdfViewed',
+
     onCreating: 'onSaleReceiptsCreating',
     onCreated: 'onSaleReceiptsCreated',
 
@@ -242,6 +248,8 @@ export default {
    * Payment receipts service.
    */
   paymentReceive: {
+    onPdfViewed: 'onPaymentReceivedPdfViewed',
+
     onCreated: 'onPaymentReceiveCreated',
     onCreating: 'onPaymentReceiveCreating',
 
@@ -345,7 +353,7 @@ export default {
    */
   item: {
     onViewed: 'onItemViewed',
-    
+
     onCreated: 'onItemCreated',
     onCreating: 'onItemCreating',
 
@@ -464,6 +472,8 @@ export default {
    * Credit note service.
    */
   creditNote: {
+    onPdfViewed: 'onCreditNotePdfViewed',
+
     onCreate: 'onCreditNoteCreate',
     onCreating: 'onCreditNoteCreating',
     onCreated: 'onCreditNoteCreated',
@@ -722,7 +732,7 @@ export default {
   // Payment methods integrations
   paymentIntegrationLink: {
     onPaymentIntegrationLink: 'onPaymentIntegrationLink',
-    onPaymentIntegrationDeleteLink: 'onPaymentIntegrationDeleteLink'
+    onPaymentIntegrationDeleteLink: 'onPaymentIntegrationDeleteLink',
   },
 
   // Stripe Payment Integration
@@ -739,6 +749,6 @@ export default {
   // Stripe Payment Webhooks
   stripeWebhooks: {
     onCheckoutSessionCompleted: 'onStripeCheckoutSessionCompleted',
-    onAccountUpdated: 'onStripeAccountUpdated'
-  }
+    onAccountUpdated: 'onStripeAccountUpdated',
+  },
 };

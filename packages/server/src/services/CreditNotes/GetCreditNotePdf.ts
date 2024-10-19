@@ -6,6 +6,8 @@ import { CreditNoteBrandingTemplate } from './CreditNoteBrandingTemplate';
 import { CreditNotePdfTemplateAttributes } from '@/interfaces';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { transformCreditNoteToPdfTemplate } from './utils';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export default class GetCreditNotePdf {
@@ -23,6 +25,9 @@ export default class GetCreditNotePdf {
 
   @Inject()
   private creditNoteBrandingTemplate: CreditNoteBrandingTemplate;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Retrieves sale invoice pdf content.
@@ -48,6 +53,13 @@ export default class GetCreditNotePdf {
     const document = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
       htmlContent
+    );
+    const eventPayload = { tenantId, creditNoteId };
+
+    // Triggers the `onCreditNotePdfViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.creditNote.onPdfViewed,
+      eventPayload
     );
     return [document, filename];
   }
