@@ -39,8 +39,8 @@ export class ItemsApplication {
 
   /**
    * Creates a new item (service/product).
-   * @param   {number} tenantId
-   * @param   {IItemCreateDTO} itemDTO
+   * @param {number} tenantId
+   * @param {IItemCreateDTO} itemDTO
    * @returns {Promise<IItem>}
    */
   public async createItem(
@@ -52,8 +52,8 @@ export class ItemsApplication {
 
   /**
    * Retrieves the given item.
-   * @param   {number} tenantId
-   * @param   {number} itemId
+   * @param {number} tenantId
+   * @param {number} itemId
    * @returns {Promise<IItem>}
    */
   public getItem(tenantId: number, itemId: number): Promise<IItem> {
@@ -62,9 +62,9 @@ export class ItemsApplication {
 
   /**
    * Edits the given item (service/product).
-   * @param   {number} tenantId
-   * @param   {number} itemId
-   * @param   {IItemEditDTO} itemDTO
+   * @param {number} tenantId
+   * @param {number} itemId
+   * @param {IItemEditDTO} itemDTO
    * @returns {Promise<IItem>}
    */
   public editItem(tenantId: number, itemId: number, itemDTO: IItemEditDTO) {
@@ -73,8 +73,8 @@ export class ItemsApplication {
 
   /**
    * Deletes the given item (service/product).
-   * @param   {number} tenantId
-   * @param   {number} itemId
+   * @param {number} tenantId
+   * @param {number} itemId
    * @returns {Promise<void>}
    */
   public deleteItem(tenantId: number, itemId: number) {

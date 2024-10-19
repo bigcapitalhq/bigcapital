@@ -12,6 +12,7 @@ import {
   SALE_ESTIMATE_EDITED,
   SALE_ESTIMATE_DELETED,
   SALE_ESTIMATE_PDF_VIEWED,
+  SALE_ESTIMATE_VIEWED,
 } from '@/constants/event-tracker';
 
 @Service()
@@ -38,6 +39,10 @@ export class SaleEstimateEventsTracker extends EventSubscriber {
     bus.subscribe(
       events.saleEstimate.onPdfViewed,
       this.handleTrackPdfViewedEstimateEvent
+    );
+    bus.subscribe(
+      events.saleEstimate.onViewed,
+      this.handleTrackViewedEstimateEvent
     );
   }
 
@@ -77,6 +82,14 @@ export class SaleEstimateEventsTracker extends EventSubscriber {
     this.posthog.trackEvent({
       distinctId: `tenant-${tenantId}`,
       event: SALE_ESTIMATE_PDF_VIEWED,
+      properties: {},
+    });
+  };
+
+  private handleTrackViewedEstimateEvent = ({ tenantId }) => {
+    this.posthog.trackEvent({
+      distinctId: `tenant-${tenantId}`,
+      event: SALE_ESTIMATE_VIEWED,
       properties: {},
     });
   };

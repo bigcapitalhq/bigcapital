@@ -1,7 +1,6 @@
-import Knex from 'knex';
-import { IRefundCreditNote } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export default class RefundSyncCreditNoteBalance {

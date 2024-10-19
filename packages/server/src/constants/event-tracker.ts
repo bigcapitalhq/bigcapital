@@ -9,6 +9,7 @@ export const SALE_ESTIMATE_CREATED = 'Sale estimate created';
 export const SALE_ESTIMATE_EDITED = 'Sale estimate edited';
 export const SALE_ESTIMATE_DELETED = 'Sale estimate deleted';
 export const SALE_ESTIMATE_PDF_VIEWED = 'Sale estimate PDF viewed';
+export const SALE_ESTIMATE_VIEWED = 'Sale estimate viewed';
 
 export const PAYMENT_RECEIVED_CREATED = 'Payment received created';
 export const PAYMENT_RECEIVED_EDITED = 'payment received edited';
@@ -47,6 +48,8 @@ export const AUTH_RESET_PASSWORD = 'Auth reset password';
 export const SUBSCRIPTION_CANCELLED = 'Subscription cancelled';
 export const SUBSCRIPTION_RESUMED = 'Subscription resumed';
 export const SUBSCRIPTION_PLAN_CHANGED = 'Subscription plan changed';
+export const SUBSCRIPTION_PAYMENT_SUCCEED = 'Subscription payment succeed';
+export const SUBSCRIPTION_PAYMENT_FAILED = 'Subscription payment failed';
 
 export const CUSTOMER_CREATED = 'Customer created';
 export const CUSTOMER_EDITED = 'Customer edited';
