@@ -231,12 +231,12 @@ block content
           div(class=`${prefix}-totals__item-amount`) #{total}
 
     //- Statements section
-    if showCustomerNote && customerNote
-      div(class=`${prefix}-statement`)
-        div(class=`${prefix}-statement__label`) #{customerNoteLabel}
-        div(class=`${prefix}-statement__value`) #{customerNote}
-
     if showTermsConditions && termsConditions
       div(class=`${prefix}-statement`)
         div(class=`${prefix}-statement__label`) #{termsConditionsLabel}
         div(class=`${prefix}-statement__value`) #{termsConditions}
+
+    if showCustomerNote && customerNote
+      div(class=`${prefix}-statement`)
+        div(class=`${prefix}-statement__label`) #{customerNoteLabel}
+        div(class=`${prefix}-statement__value`) #{customerNote}

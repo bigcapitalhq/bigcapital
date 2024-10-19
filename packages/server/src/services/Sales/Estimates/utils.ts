@@ -17,7 +17,7 @@ export const transformEstimateToPdfTemplate = (
     })),
     total: estimate.formattedSubtotal,
     subtotal: estimate.formattedSubtotal,
-    customerNote: estimate.customerNote,
+    customerNote: estimate.note,
     termsConditions: estimate.termsConditions,
     customerAddress: contactAddressTextFormat(estimate.customer),
   };
