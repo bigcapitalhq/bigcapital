@@ -31,6 +31,8 @@ export class SaleReceiptsPdf {
    * @returns {Promise<Buffer>}
    */
   public async saleReceiptPdf(tenantId: number, saleReceiptId: number) {
+    const filename = await this.getSaleReceiptFilename(tenantId, saleReceiptId);
+
     const brandingAttributes = await this.getReceiptBrandingAttributes(
       tenantId,
       saleReceiptId
@@ -42,7 +44,28 @@ export class SaleReceiptsPdf {
       brandingAttributes
     );
     // Renders the html content to pdf document.
-    return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent);
+    const content = await this.chromiumlyTenancy.convertHtmlContent(
+      tenantId,
+      htmlContent
+    );
+    return [content, filename];
+  }
+
+  /**
+   * Retrieves the filename file document of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} receiptId
+   * @returns {Promise<string>}
+   */
+  public async getSaleReceiptFilename(
+    tenantId: number,
+    receiptId: number
+  ): Promise<string> {
+    const { SaleReceipt } = this.tenancy.models(tenantId);
+
+    const receipt = await SaleReceipt.query().findById(receiptId);
+
+    return `Receipt-${receipt.receiptNumber}`;
   }
 
   /**

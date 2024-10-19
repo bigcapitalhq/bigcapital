@@ -408,7 +408,7 @@ export default class PaymentReceivesController extends BaseController {
     res: Response,
     next: NextFunction
   ) {
-  const { tenantId } = req;
+    const { tenantId } = req;
 
     try {
       const data = await this.paymentReceiveApplication.getPaymentReceivedState(
@@ -473,7 +473,7 @@ export default class PaymentReceivesController extends BaseController {
     ]);
     // Response in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
-      const pdfContent =
+      const [pdfContent, filename] =
         await this.paymentReceiveApplication.getPaymentReceivePdf(
           tenantId,
           paymentReceiveId
@@ -481,6 +481,7 @@ export default class PaymentReceivesController extends BaseController {
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
       // Response in json format.

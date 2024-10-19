@@ -471,13 +471,14 @@ export default class PaymentReceivesController extends BaseController {
       ACCEPT_TYPE.APPLICATION_PDF,
     ]);
     if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
-      const pdfContent = await this.creditNotePdf.getCreditNotePdf(
+      const [pdfContent, filename] = await this.creditNotePdf.getCreditNotePdf(
         tenantId,
         creditNoteId
       );
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
     } else {

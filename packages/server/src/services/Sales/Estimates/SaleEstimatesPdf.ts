@@ -29,7 +29,14 @@ export class SaleEstimatesPdf {
    * @param {number} tenantId -
    * @param {ISaleInvoice} saleInvoice -
    */
-  public async getSaleEstimatePdf(tenantId: number, saleEstimateId: number) {
+  public async getSaleEstimatePdf(
+    tenantId: number,
+    saleEstimateId: number
+  ): Promise<[Buffer, string]> {
+    const filename = await this.getSaleEstimateFilename(
+      tenantId,
+      saleEstimateId
+    );
     const brandingAttributes = await this.getEstimateBrandingAttributes(
       tenantId,
       saleEstimateId
@@ -39,7 +46,25 @@ export class SaleEstimatesPdf {
       'modules/estimate-regular',
       brandingAttributes
     );
-    return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent);
+    const content = await this.chromiumlyTenancy.convertHtmlContent(
+      tenantId,
+      htmlContent
+    );
+    return [content, filename];
+  }
+
+  /**
+   * Retrieves the filename file document of the given estimate.
+   * @param {number} tenantId
+   * @param {number} estimateId
+   * @returns {Promise<string>}
+   */
+  private async getSaleEstimateFilename(tenantId: number, estimateId: number) {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
+
+    const estimate = await SaleEstimate.query().findById(estimateId);
+
+    return `Estimate-${estimate.estimateNumber}`;
   }
 
   /**

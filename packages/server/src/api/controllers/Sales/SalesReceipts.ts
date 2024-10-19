@@ -113,7 +113,7 @@ export default class SalesReceiptsController extends BaseController {
       CheckPolicies(SaleReceiptAction.View, AbilitySubject.SaleReceipt),
       asyncMiddleware(this.getSaleReceiptState.bind(this)),
       this.handleServiceErrors
-    ); 
+    );
     router.get(
       '/:id',
       CheckPolicies(SaleReceiptAction.View, AbilitySubject.SaleReceipt),
@@ -356,13 +356,15 @@ export default class SalesReceiptsController extends BaseController {
     ]);
     // Retrieves receipt in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
-      const pdfContent = await this.saleReceiptsApplication.getSaleReceiptPdf(
-        tenantId,
-        saleReceiptId
-      );
+      const [pdfContent, filename] =
+        await this.saleReceiptsApplication.getSaleReceiptPdf(
+          tenantId,
+          saleReceiptId
+        );
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
       // Retrieves receipt in json format.

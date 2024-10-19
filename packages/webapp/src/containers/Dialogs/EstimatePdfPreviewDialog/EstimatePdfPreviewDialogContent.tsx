@@ -14,7 +14,7 @@ function EstimatePdfPreviewDialogContent({
   // #withDialogActions
   closeDialog,
 }) {
-  const { isLoading, pdfUrl } = usePdfEstimate(estimateId);
+  const { isLoading, pdfUrl, filename } = usePdfEstimate(estimateId);
 
   return (
     <DialogContent>
@@ -30,7 +30,7 @@ function EstimatePdfPreviewDialogContent({
 
         <AnchorButton
           href={pdfUrl}
-          download={'estimate.pdf'}
+          download={filename}
           minimal={true}
           outlined={true}
         >
