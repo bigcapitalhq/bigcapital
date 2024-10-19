@@ -6,6 +6,8 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { PaymentReceivedBrandingTemplate } from './PaymentReceivedBrandingTemplate';
 import { transformPaymentReceivedToPdfTemplate } from './utils';
 import { PaymentReceivedPdfTemplateAttributes } from '@/interfaces';
+import events from '@/subscribers/events';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
 export default class GetPaymentReceivedPdf {
@@ -24,6 +26,9 @@ export default class GetPaymentReceivedPdf {
   @Inject()
   private paymentBrandingTemplateService: PaymentReceivedBrandingTemplate;
 
+  @Inject()
+  private eventPublisher: EventPublisher;
+
   /**
    * Retrieve sale invoice pdf content.
    * @param {number} tenantId -
@@ -32,11 +37,11 @@ export default class GetPaymentReceivedPdf {
    */
   async getPaymentReceivePdf(
     tenantId: number,
-    paymentReceiveId: number
+    paymentReceivedId: number
   ): Promise<[Buffer, string]> {
     const brandingAttributes = await this.getPaymentBrandingAttributes(
       tenantId,
-      paymentReceiveId
+      paymentReceivedId
     );
     const htmlContent = await this.templateInjectable.render(
       tenantId,
@@ -45,12 +50,19 @@ export default class GetPaymentReceivedPdf {
     );
     const filename = await this.getPaymentReceivedFilename(
       tenantId,
-      paymentReceiveId
+      paymentReceivedId
     );
     // Converts the given html content to pdf document.
     const content = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
       htmlContent
+    );
+    const eventPayload = { tenantId, paymentReceivedId };
+
+    // Triggers the `onCreditNotePdfViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.paymentReceive.onPdfViewed,
+      eventPayload
     );
     return [content, filename];
   }

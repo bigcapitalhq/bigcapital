@@ -11,6 +11,7 @@ import {
   PAYMENT_RECEIVED_CREATED,
   PAYMENT_RECEIVED_EDITED,
   PAYMENT_RECEIVED_DELETED,
+  PAYMENT_RECEIVED_PDF_VIEWED,
 } from '@/constants/event-tracker';
 
 @Service()
@@ -33,6 +34,10 @@ export class PaymentReceivedEventsTracker extends EventSubscriber {
     bus.subscribe(
       events.paymentReceive.onDeleted,
       this.handleTrackDeletedPaymentReceivedEvent
+    );
+    bus.subscribe(
+      events.paymentReceive.onPdfViewed,
+      this.handleTrackPdfViewedPaymentReceivedEvent
     );
   }
 
@@ -62,6 +67,16 @@ export class PaymentReceivedEventsTracker extends EventSubscriber {
     this.posthog.trackEvent({
       distinctId: `tenant-${tenantId}`,
       event: PAYMENT_RECEIVED_DELETED,
+      properties: {},
+    });
+  };
+
+  private handleTrackPdfViewedPaymentReceivedEvent = ({
+    tenantId,
+  }: IPaymentReceivedDeletedPayload) => {
+    this.posthog.trackEvent({
+      distinctId: `tenant-${tenantId}`,
+      event: PAYMENT_RECEIVED_PDF_VIEWED,
       properties: {},
     });
   };

@@ -6,6 +6,8 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SaleReceiptBrandingTemplate } from './SaleReceiptBrandingTemplate';
 import { transformReceiptToBrandingTemplateAttributes } from './utils';
 import { ISaleReceiptBrandingTemplateAttributes } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class SaleReceiptsPdf {
@@ -23,6 +25,9 @@ export class SaleReceiptsPdf {
 
   @Inject()
   private saleReceiptBrandingTemplate: SaleReceiptBrandingTemplate;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Retrieves sale invoice pdf content.
@@ -47,6 +52,13 @@ export class SaleReceiptsPdf {
     const content = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
       htmlContent
+    );
+    const eventPayload = { tenantId, saleReceiptId };
+
+    // Triggers the `onSaleReceiptPdfViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.saleReceipt.onPdfViewed,
+      eventPayload
     );
     return [content, filename];
   }

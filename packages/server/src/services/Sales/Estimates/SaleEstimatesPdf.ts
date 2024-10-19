@@ -6,6 +6,8 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SaleEstimatePdfTemplate } from '../Invoices/SaleEstimatePdfTemplate';
 import { transformEstimateToPdfTemplate } from './utils';
 import { EstimatePdfBrandingAttributes } from './constants';
+import events from '@/subscribers/events';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
 export class SaleEstimatesPdf {
@@ -23,6 +25,9 @@ export class SaleEstimatesPdf {
 
   @Inject()
   private estimatePdfTemplate: SaleEstimatePdfTemplate;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Retrieve sale invoice pdf content.
@@ -49,6 +54,13 @@ export class SaleEstimatesPdf {
     const content = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
       htmlContent
+    );
+    const eventPayload = { tenantId, saleEstimateId };
+
+    // Triggers the `onSaleEstimatePdfViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.saleEstimate.onPdfViewed,
+      eventPayload
     );
     return [content, filename];
   }
