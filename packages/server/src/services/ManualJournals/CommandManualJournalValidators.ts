@@ -33,6 +33,10 @@ export class CommandManualJournalValidators {
     if (totalCredit <= 0 || totalDebit <= 0) {
       throw new ServiceError(ERRORS.CREDIT_DEBIT_NOT_EQUAL_ZERO);
     }
+
+    if (totalCredit !== totalDebit) {
+      throw new ServiceError(ERRORS.CREDIT_DEBIT_NOT_EQUAL);
+    }
   }
 
   private roundToTwoDecimals(value: number): number {
