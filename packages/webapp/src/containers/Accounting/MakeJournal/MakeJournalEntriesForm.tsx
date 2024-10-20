@@ -67,17 +67,17 @@ function MakeJournalEntriesForm({
     () => ({
       ...(!isEmpty(manualJournal)
         ? {
-            ...transformToEditForm(manualJournal),
-          }
+          ...transformToEditForm(manualJournal),
+        }
         : {
-            ...defaultManualJournal,
-            // If the auto-increment mode is enabled, take the next journal
-            // number from the settings.
-            ...(journalAutoIncrement && {
-              journal_number: journalNumber,
-            }),
-            currency_code: base_currency,
+          ...defaultManualJournal,
+          // If the auto-increment mode is enabled, take the next journal
+          // number from the settings.
+          ...(journalAutoIncrement && {
+            journal_number: journalNumber,
           }),
+          currency_code: base_currency,
+        }),
     }),
     [manualJournal, base_currency, journalNumber, journalAutoIncrement],
   );
@@ -88,15 +88,19 @@ function MakeJournalEntriesForm({
     const entries = values.entries.filter(
       (entry) => entry.debit || entry.credit,
     );
+
+    // Updated getTotal function
     const getTotal = (type = 'credit') => {
       return entries.reduce((total, item) => {
-        return item[type] ? item[type] + total : total;
+        const value = item[type] ? parseFloat(item[type]) : 0;
+        return Math.round((total + value) * 100) / 100;
       }, 0);
     };
+
     const totalCredit = getTotal('credit');
     const totalDebit = getTotal('debit');
 
-    // Validate the total credit should be eqials total debit.
+    // Validate the total credit should be equals total debit.
     if (totalCredit !== totalDebit) {
       AppToaster.show({
         message: intl.get('should_total_of_credit_and_debit_be_equal'),
