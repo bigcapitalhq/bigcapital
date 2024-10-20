@@ -23,23 +23,20 @@ export class CommandManualJournalValidators {
    * @param {IManualJournalDTO} manualJournalDTO
    */
   public valdiateCreditDebitTotalEquals(manualJournalDTO: IManualJournalDTO) {
-    let totalCredit = 0;
-    let totalDebit = 0;
+    const totalCredit = this.roundToTwoDecimals(
+      manualJournalDTO.entries.reduce((sum, entry) => sum + (entry.credit || 0), 0)
+    );
+    const totalDebit = this.roundToTwoDecimals(
+      manualJournalDTO.entries.reduce((sum, entry) => sum + (entry.debit || 0), 0)
+    );
 
-    manualJournalDTO.entries.forEach((entry) => {
-      if (entry.credit > 0) {
-        totalCredit += entry.credit;
-      }
-      if (entry.debit > 0) {
-        totalDebit += entry.debit;
-      }
-    });
     if (totalCredit <= 0 || totalDebit <= 0) {
       throw new ServiceError(ERRORS.CREDIT_DEBIT_NOT_EQUAL_ZERO);
     }
-    if (totalCredit !== totalDebit) {
-      throw new ServiceError(ERRORS.CREDIT_DEBIT_NOT_EQUAL);
-    }
+  }
+
+  private roundToTwoDecimals(value: number): number {
+    return Math.round(value * 100) / 100;
   }
 
   /**
@@ -308,3 +305,4 @@ export class CommandManualJournalValidators {
     }
   };
 }
+
