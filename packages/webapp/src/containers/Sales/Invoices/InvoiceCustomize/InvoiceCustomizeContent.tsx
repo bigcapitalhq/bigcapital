@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import * as R from 'ramda';
 import { useFormikContext } from 'formik';
+import { Spinner, Tab } from '@blueprintjs/core';
 import {
   InvoicePaperTemplate,
   InvoicePaperTemplateProps,
@@ -19,6 +20,19 @@ import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTem
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { initialValues } from './constants';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { InvoiceCustomizeTabs } from './InvoiceCustomizeTabs';
+
+const InvoicePaymentPagePreview = lazy(() =>
+  import('@/containers/PaymentPortal/InvoicePaymentPagePreview').then(
+    (module) => ({ default: module.InvoicePaymentPagePreview }),
+  ),
+);
+
+const InvoiceMailReceiptPreview = lazy(() =>
+  import(
+    '@/containers/Sales/Invoices/InvoiceCustomize/InvoiceMailReceiptPreview'
+  ).then((module) => ({ default: module.InvoiceMailReceiptPreview })),
+);
 
 /**
  * Invoice branding template customize.
@@ -56,7 +70,39 @@ function InvoiceCustomizeFormContent() {
   return (
     <ElementCustomizeContent>
       <ElementCustomize.PaperTemplate>
-        <InvoicePaperTemplateFormConnected />
+        <InvoiceCustomizeTabs
+          defaultSelectedTabId={'pdf-document'}
+          id={'customize-preview-tabs'}
+          renderActiveTabPanelOnly
+        >
+          <Tab
+            id="pdf-document"
+            title={'PDF document'}
+            panel={
+              <Suspense fallback={<Spinner />}>
+                <InvoicePaperTemplateFormConnected />
+              </Suspense>
+            }
+          />
+          <Tab
+            id={'payment-page'}
+            title={'Payment page'}
+            panel={
+              <Suspense fallback={<Spinner />}>
+                <InvoicePaymentPagePreview />
+              </Suspense>
+            }
+          />
+          <Tab
+            id={'email-receipt'}
+            title={'Email receipt'}
+            panel={
+              <Suspense fallback={<Spinner />}>
+                <InvoiceMailReceiptPreview mx={'auto'} />
+              </Suspense>
+            }
+          />
+        </InvoiceCustomizeTabs>
       </ElementCustomize.PaperTemplate>
 
       <ElementCustomize.FieldsTab id={'general'} label={'General'}>
@@ -90,7 +136,6 @@ const withInvoicePreviewTemplateProps = <P extends object>(
       ...brandingState,
       ...values,
     };
-
     return <Component {...(props as P)} {...mergedProps} />;
   };
 };
