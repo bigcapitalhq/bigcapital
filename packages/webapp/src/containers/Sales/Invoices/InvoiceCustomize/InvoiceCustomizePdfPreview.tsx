@@ -6,10 +6,11 @@ import {
 } from './InvoicePaperTemplate';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { InvoiceCustomizeFormValues } from './types';
+import { Box } from '@/components';
 
 /**
  * Injects the `InvoicePaperTemplate` component props from the form and branding states.
- * @param Component
+ * @param {React.ComponentType<P>} Component
  * @returns {JSX.Element}
  */
 const withInvoicePreviewTemplateProps = <P extends object>(
@@ -23,7 +24,11 @@ const withInvoicePreviewTemplateProps = <P extends object>(
       ...brandingState,
       ...values,
     };
-    return <Component {...(props as P)} {...mergedProps} />;
+    return (
+      <Box px={4} py={6}>
+        <Component {...(props as P)} {...mergedProps} />
+      </Box>
+    );
   };
 };
 

@@ -706,6 +706,9 @@ importers:
       plaid-threads:
         specifier: ^11.4.3
         version: 11.5.0(react-dom@18.3.1)(react@18.3.1)
+      polished:
+        specifier: ^4.3.1
+        version: 4.3.1
       prop-types:
         specifier: 15.8.1
         version: 15.8.1
@@ -20484,6 +20487,13 @@ packages:
     engines: {node: '>=18.12'}
     hasBin: true
     dev: true
+
+  /polished@4.3.1:
+    resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
+    engines: {node: '>=10'}
+    dependencies:
+      '@babel/runtime': 7.24.5
+    dev: false
 
   /popper.js@1.16.1:
     resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}

@@ -4,6 +4,7 @@ import { InvoiceCustomizeFormValues } from './types';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { useFormikContext } from 'formik';
 import { InvoiceMailReceiptPreview } from './InvoiceMailReceiptPreview';
+import { Box } from '@/components';
 
 const withInvoiceMailReceiptPreviewConnected = <P extends Object>(
   Component: React.ComponentType<P>,
@@ -21,7 +22,11 @@ const withInvoiceMailReceiptPreviewConnected = <P extends Object>(
       primaryColor: mergedBrandingState?.primaryColor,
       // organizationAddress: mergedBrandingState,
     };
-    return <Component {...(props as P)} {...mergedProps} />;
+    return (
+      <Box px={4} py={8}>
+        <Component {...(props as P)} {...mergedProps} />
+      </Box>
+    );
   };
 };
 

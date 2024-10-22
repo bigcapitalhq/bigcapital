@@ -79,6 +79,7 @@
     "path-browserify": "^1.0.1",
     "plaid": "^9.3.0",
     "plaid-threads": "^11.4.3",
+    "polished": "^4.3.1",
     "prop-types": "15.8.1",
     "query-string": "^7.1.1",
     "ramda": "^0.27.1",

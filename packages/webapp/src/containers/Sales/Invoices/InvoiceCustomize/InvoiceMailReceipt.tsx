@@ -1,6 +1,7 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
+import { lighten } from 'polished';
 import { Group, Stack, StackProps } from '@/components';
 
 export interface InvoiceMailReceiptProps extends StackProps {
@@ -9,7 +10,7 @@ export interface InvoiceMailReceiptProps extends StackProps {
   companyLogoUri?: string;
 
   // # Colors
-  primaryColor?: string,
+  primaryColor?: string;
 
   // # Due date
   dueDate: string;
@@ -45,7 +46,7 @@ export function InvoiceMailReceipt({
   companyLogoUri,
 
   // # Colors
-  primaryColor,
+  primaryColor = 'rgb(0, 82, 204)',
 
   // Due date
   dueDate,
@@ -126,8 +127,13 @@ export function InvoiceMailReceipt({
           large
           intent={Intent.PRIMARY}
           className={css`
-            &.bp4-intent-primary{
+            &.bp4-intent-primary {
               background-color: ${primaryColor};
+
+              &:hover,
+              &:focus {
+                background-color: ${lighten(0.1, primaryColor)};
+              }
             }
             &.bp4-large {
               min-height: 38px;

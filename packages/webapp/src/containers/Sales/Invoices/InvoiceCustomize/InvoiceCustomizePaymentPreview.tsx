@@ -1,11 +1,14 @@
 import * as R from 'ramda';
 import { useFormikContext } from 'formik';
+import { css } from '@emotion/css';
 import {
   InvoicePaymentPagePreview,
   InvoicePaymentPagePreviewProps,
 } from '@/containers/PaymentPortal/InvoicePaymentPagePreview';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { InvoiceCustomizeFormValues } from './types';
+import { Box } from '@/components';
+
 
 const withInvoicePaymentPreviewPageProps = <P extends Object>(
   Component: React.ComponentType<P>,
@@ -22,7 +25,19 @@ const withInvoicePaymentPreviewPageProps = <P extends Object>(
       companyLogoUri: mergedBrandingState?.companyLogoUri,
       primaryColor: mergedBrandingState?.primaryColor,
     };
-    return <Component {...(props as P)} {...mergedProps} />;
+    return (
+      <Box px={4} py={8}>
+        <Component
+          {...(props as P)}
+          {...mergedProps}
+          classNames={{
+            root: css`
+              margin: 0 auto;
+            `,
+          }}
+        />
+      </Box>
+    );
   };
 };
 

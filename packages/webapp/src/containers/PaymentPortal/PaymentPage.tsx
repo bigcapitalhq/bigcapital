@@ -1,8 +1,9 @@
 import { Text, Classes, Button, Intent, ButtonProps } from '@blueprintjs/core';
 import clsx from 'classnames';
+import { css } from '@emotion/css';
+import { lighten } from 'polished';
 import { Box, Group, Stack } from '@/components';
 import styles from './PaymentPortal.module.scss';
-import { css } from '@emotion/css';
 
 export interface PaymentPageProps {
   // # Company name
@@ -58,6 +59,8 @@ export interface PaymentPageProps {
 
   // # Copyright
   copyrightText?: string;
+
+  classNames?: Record<string, string>
 }
 
 export function InvoicePaymentPage({
@@ -67,7 +70,7 @@ export function InvoicePaymentPage({
   organizationAddress,
 
   // # Colors
-  primaryColor,
+  primaryColor = 'rgb(0, 82, 204)',
 
   // # Customer
   customerName,
@@ -114,9 +117,11 @@ export function InvoicePaymentPage({
 
   // # Copyright
   copyrightText = `© 2024 Bigcapital Technology, Inc. <br /> All rights reserved.`,
+
+  classNames,
 }: PaymentPageProps) {
   return (
-    <Box className={styles.root}>
+    <Box className={clsx(styles.root, classNames?.root)}>
       <Stack spacing={0} className={styles.body}>
         <Stack>
           <Group spacing={10}>
@@ -217,6 +222,11 @@ export function InvoicePaymentPage({
                 css`
                   &.bp4-intent-primary {
                     background-color: ${primaryColor};
+
+                    &:hover,
+                    &:focus {
+                      background-color: ${lighten(0.1, primaryColor)};
+                    }
                   }
                 `,
               )}
