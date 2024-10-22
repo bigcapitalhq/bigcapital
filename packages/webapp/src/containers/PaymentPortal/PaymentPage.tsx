@@ -2,58 +2,117 @@ import { Text, Classes, Button, Intent, ButtonProps } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { Box, Group, Stack } from '@/components';
 import styles from './PaymentPortal.module.scss';
+import { css } from '@emotion/css';
 
 export interface PaymentPageProps {
+  // # Company name
   companyLogoUri: string;
   organizationName: string;
+  organizationAddress: string;
+
+  // # Colors
+  primaryColor?: string;
+
+  // # Customer name
   customerName: string;
-  subtotal: string;
-  total: string;
-  dueDate: string;
-  viewInvoiceLabel?: string;
-  invoiceNumber: string;
-  totalLabel?: string;
-  subtotalLabel?: string;
   customerAddress?: string;
-  downloadInvoiceBtnLabel?: string;
-  showPayButton?: boolean;
+
+  // # Subtotal
+  subtotal: string;
+  subtotalLabel?: string;
+
+  // # Total
+  total: string;
+  totalLabel?: string;
+
+  // # Due date
+  dueDate: string;
+
+  // # Paid amount
   paidAmount: string;
   paidAmountLabel?: string;
-  organizationAddress: string;
+
+  // # Due amount
   dueAmount: string;
   dueAmountLabel?: string;
+
+  // # Download invoice button
+  downloadInvoiceBtnLabel?: string;
   downloadInvoiceButtonProps?: Partial<ButtonProps>;
-  payInvoiceButtonProps?: Partial<ButtonProps>;
+
+  // # View invoice button
+  viewInvoiceLabel?: string;
   viewInvoiceButtonProps?: Partial<ButtonProps>;
+
+  // # Invoice number
+  invoiceNumber: string;
   invoiceNumberLabel?: string;
+
+  // # Pay button
+  showPayButton?: boolean;
+  payButtonLabel?: string;
+  payInvoiceButtonProps?: Partial<ButtonProps>;
+
+  // # Buy note
   buyNote?: string;
+
+  // # Copyright
   copyrightText?: string;
 }
 
 export function InvoicePaymentPage({
+  // # Company
   companyLogoUri,
   organizationName,
+  organizationAddress,
+
+  // # Colors
+  primaryColor,
+
+  // # Customer
   customerName,
+  customerAddress,
+
+  // # Subtotal
   subtotal,
+  subtotalLabel = 'Subtotal',
+
+  // # Total
   total,
+  totalLabel = 'Total',
+
+  // # Due date
   dueDate,
+
+  // # Paid amount
   paidAmount,
   paidAmountLabel = 'Paid Amount (-)',
+
+  // # Invoice number
   invoiceNumber,
-  customerAddress,
-  totalLabel = 'Total',
-  subtotalLabel = 'Subtotal',
-  viewInvoiceLabel = 'View Invoice',
+  invoiceNumberLabel = 'Invoice #',
+
+  // # Download invoice button
   downloadInvoiceBtnLabel = 'Download Invoice',
-  showPayButton = true,
-  organizationAddress,
+  downloadInvoiceButtonProps,
+
+  // # View invoice button
+  viewInvoiceLabel = 'View Invoice',
+  viewInvoiceButtonProps,
+
+  // # Due amount
   dueAmount,
   dueAmountLabel = 'Due Amount',
-  downloadInvoiceButtonProps,
+
+  // # Pay button
+  showPayButton = true,
+  payButtonLabel = 'Pay {total}',
   payInvoiceButtonProps,
-  viewInvoiceButtonProps,
-  invoiceNumberLabel = 'Invoice #',
+
+  // # Buy note
   buyNote = 'By confirming your payment, you allow Bigcapital Technology, Inc. to charge you for this payment and save your payment information in accordance with their terms.',
+
+  // # Copyright
   copyrightText = `© 2024 Bigcapital Technology, Inc. <br /> All rights reserved.`,
 }: PaymentPageProps) {
   return (
@@ -91,7 +150,9 @@ export function InvoicePaymentPage({
             )}
           </Stack>
 
-          <h2 className={styles.invoiceNumber}>Invoice {invoiceNumber}</h2>
+          <h2 className={styles.invoiceNumber}>
+            {invoiceNumberLabel} {invoiceNumber}
+          </h2>
 
           <Stack spacing={0} className={styles.totals}>
             <Group
@@ -125,7 +186,7 @@ export function InvoicePaymentPage({
               position={'apart'}
               className={clsx(styles.totalItem, styles.borderBottomDark)}
             >
-              <Text>Due Amount</Text>
+              <Text>{dueAmountLabel}</Text>
               <Text style={{ fontWeight: 500 }}>{dueAmount}</Text>
             </Group>
           </Stack>
@@ -150,10 +211,18 @@ export function InvoicePaymentPage({
           {showPayButton && (
             <Button
               intent={Intent.PRIMARY}
-              className={clsx(styles.footerButton, styles.buyButton)}
+              className={clsx(
+                styles.footerButton,
+                styles.buyButton,
+                css`
+                  &.bp4-intent-primary {
+                    background-color: ${primaryColor};
+                  }
+                `,
+              )}
               {...payInvoiceButtonProps}
             >
-              Pay {total}
+              {payButtonLabel.replace('{total}', total)}
             </Button>
           )}
         </Stack>

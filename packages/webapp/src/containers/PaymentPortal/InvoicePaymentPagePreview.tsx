@@ -1,6 +1,7 @@
 import { InvoicePaymentPage, PaymentPageProps } from './PaymentPage';
 
-interface InvoicePaymentPagePreviewProps extends Partial<PaymentPageProps> { }
+export interface InvoicePaymentPagePreviewProps
+  extends Partial<PaymentPageProps> { }
 
 export function InvoicePaymentPagePreview(
   props: InvoicePaymentPagePreviewProps,

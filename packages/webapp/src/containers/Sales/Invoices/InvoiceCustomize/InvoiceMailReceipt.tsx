@@ -4,35 +4,75 @@ import { x } from '@xstyled/emotion';
 import { Group, Stack, StackProps } from '@/components';
 
 export interface InvoiceMailReceiptProps extends StackProps {
-  companyLogoUri?: string;
-  message: string;
+  // # Company
   companyName: string;
-  invoiceNumber: string;
+  companyLogoUri?: string;
+
+  // # Colors
+  primaryColor?: string,
+
+  // # Due date
   dueDate: string;
-  items?: Array<{ label: string; total: string; quantity: string | number }>;
-  total: string;
-  dueAmount: string;
-  totalLabel?: string;
+  dueDateLabel?: string;
+
+  // # Due amount
   dueAmountLabel?: string;
+  dueAmount: string;
+
+  // # Total
+  total: string;
+  totalLabel?: string;
+
+  // # Invoice number
+  invoiceNumber: string;
+  invoiceNumberLabel?: string;
+
+  // # Mail message
+  message: string;
+
+  // # Invoice items
+  items?: Array<{ label: string; total: string; quantity: string | number }>;
+
+  // # View invoice button
+  showViewInvoiceButton?: boolean;
   viewInvoiceButtonLabel?: string;
   viewInvoiceButtonOnClick?: () => void;
-  invoiceNumberLabel?: string;
 }
 
 export function InvoiceMailReceipt({
-  companyLogoUri,
-  message,
+  // Company
   companyName,
-  total,
-  invoiceNumber,
+  companyLogoUri,
+
+  // # Colors
+  primaryColor,
+
+  // Due date
   dueDate,
+  dueDateLabel = 'Due',
+
+  // Due amount
+  dueAmountLabel = 'Due Amount',
   dueAmount,
+
+  // Total
+  total,
+  totalLabel = 'Total',
+
+  // Invoice number
+  invoiceNumber,
+  invoiceNumberLabel = 'Invoice #',
+
+  // Invoice message
+  message,
+
+  // Invoice items
   items,
+
+  // View invoice button
+  showViewInvoiceButton = true,
   viewInvoiceButtonLabel = 'View Invoice',
   viewInvoiceButtonOnClick,
-  totalLabel = 'Total',
-  dueAmountLabel = 'Due Amount',
-  invoiceNumberLabel = 'Invoice #',
   ...restProps
 }: InvoiceMailReceiptProps) {
   return (
@@ -48,7 +88,15 @@ export function InvoiceMailReceipt({
     >
       <Stack spacing={16} textAlign={'center'}>
         {companyLogoUri && (
-          <x.div h={'90px'} w={'90px'} bg="#F2F2F2" mx="auto"></x.div>
+          <x.div
+            h="90px"
+            w="90px"
+            mx="auto"
+            backgroundRepeat="no-repeat"
+            backgroundPosition="center center"
+            backgroundSize="contain"
+            backgroundImage={`url("${companyLogoUri}")`}
+          ></x.div>
         )}
         <Stack spacing={8}>
           <x.h1 m={0} fontSize={'18px'} fontWeight={500} color="#404854">
@@ -64,7 +112,7 @@ export function InvoiceMailReceipt({
           </x.span>
 
           <x.span fontSize={'13px'} color="#404854">
-            Due {dueDate}
+            {dueDateLabel} {dueDate}
           </x.span>
         </Stack>
       </Stack>
@@ -73,18 +121,23 @@ export function InvoiceMailReceipt({
         {message}
       </x.p>
 
-      <Button
-        large
-        intent={Intent.PRIMARY}
-        className={css`
-          &.bp4-large {
-            min-height: 38px;
-          }
-        `}
-        onClick={viewInvoiceButtonOnClick}
-      >
-        {viewInvoiceButtonLabel}
-      </Button>
+      {showViewInvoiceButton && (
+        <Button
+          large
+          intent={Intent.PRIMARY}
+          className={css`
+            &.bp4-intent-primary{
+              background-color: ${primaryColor};
+            }
+            &.bp4-large {
+              min-height: 38px;
+            }
+          `}
+          onClick={viewInvoiceButtonOnClick}
+        >
+          {viewInvoiceButtonLabel}
+        </Button>
+      )}
 
       <Stack spacing={0}>
         {items?.map((item, key) => (
