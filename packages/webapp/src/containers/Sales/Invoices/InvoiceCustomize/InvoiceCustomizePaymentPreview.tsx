@@ -9,7 +9,6 @@ import { useElementCustomizeContext } from '@/containers/ElementCustomize/Elemen
 import { InvoiceCustomizeFormValues } from './types';
 import { Box } from '@/components';
 
-
 const withInvoicePaymentPreviewPageProps = <P extends Object>(
   Component: React.ComponentType<P>,
 ) => {
@@ -26,13 +25,20 @@ const withInvoicePaymentPreviewPageProps = <P extends Object>(
       primaryColor: mergedBrandingState?.primaryColor,
     };
     return (
-      <Box px={4} py={8}>
+      <Box px={4} pt={8} pb={16}>
         <Component
           {...(props as P)}
           {...mergedProps}
           classNames={{
             root: css`
               margin: 0 auto;
+              border-radius: 5px !important;
+              transform: scale(0.9);
+              transform-origin: top;
+              boxshadow: 0 10px 15px rgba(0, 0, 0, 0.05) !important;
+            `,
+            bigTitle: css`
+              color: #333 !important;
             `,
           }}
         />

@@ -137,7 +137,7 @@ export function InvoicePaymentPage({
           </Group>
 
           <Stack spacing={6}>
-            <h1 className={styles.bigTitle}>
+            <h1 className={clsx(styles.bigTitle, classNames?.bigTitle)}>
               {organizationName} Sent an Invoice for {total}
             </h1>
             <Group spacing={10}>

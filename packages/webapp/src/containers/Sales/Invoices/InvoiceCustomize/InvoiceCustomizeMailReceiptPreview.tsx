@@ -23,7 +23,7 @@ const withInvoiceMailReceiptPreviewConnected = <P extends Object>(
       // organizationAddress: mergedBrandingState,
     };
     return (
-      <Box px={4} py={8}>
+      <Box px={4} pt={8} pb={16}>
         <Component {...(props as P)} {...mergedProps} />
       </Box>
     );
