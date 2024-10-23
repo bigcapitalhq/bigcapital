@@ -4,7 +4,7 @@ import {
 } from './InvoiceMailReceipt';
 
 export interface InvoiceMailReceiptPreviewProps
-  extends Partial<InvoiceMailReceiptProps> { }
+  extends Partial<InvoiceMailReceiptProps> {}
 
 const receiptMessage = `Hi Ahmed,
 
@@ -30,7 +30,7 @@ export function InvoiceMailReceiptPreview(
     invoiceNumber: 'INV-0001',
     dueDate: '2 Oct 2024',
     dueAmount: '$1,000.00',
-    items: [{ label: 'Line Item #1', total: '$1000.00', quantity: 1 }],
+    items: [{ label: 'Web development', total: '$1000.00', quantity: 1 }],
     companyLogoUri: ' ',
     ...props,
   };

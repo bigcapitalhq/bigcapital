@@ -23,8 +23,6 @@ function BrandingTemplatesDrawerRoot({
       isOpen={isOpen}
       name={name}
       payload={payload}
-      size={'600px'}
-      style={{ borderLeftColor: '#cbcbcb' }}
     >
       <DrawerSuspense>
         <BrandingTemplatesContent />

@@ -31,6 +31,7 @@ import { PaymentReceivedCustomizeDrawer } from '@/containers/Sales/PaymentsRecei
 import { BrandingTemplatesDrawer } from '@/containers/BrandingTemplates/BrandingTemplatesDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
+import { InvoiceSendMailDrawer } from '@/containers/Sales/Invoices/InvoiceSendMailDrawer/InvoiceSendMailDrawer';
 
 /**
  * Drawers container of the dashboard.
@@ -79,6 +80,7 @@ export default function DrawersContainer() {
         name={DRAWERS.PAYMENT_RECEIVED_CUSTOMIZE}
       />
       <BrandingTemplatesDrawer name={DRAWERS.BRANDING_TEMPLATES} />
+      <InvoiceSendMailDrawer name={DRAWERS.INVOICE_SEND_MAIL} />
     </div>
   );
 }
