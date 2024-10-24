@@ -159,6 +159,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "nklmantey",
+      "name": "Mantey",
+      "avatar_url": "https://avatars.githubusercontent.com/u/90279429?v=4",
+      "profile": "https://nklmantey.com/",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
