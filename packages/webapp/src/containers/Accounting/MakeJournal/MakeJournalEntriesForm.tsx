@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
-import { isEmpty, omit } from 'lodash';
+import { sumBy, round, isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -88,15 +88,17 @@ function MakeJournalEntriesForm({
     const entries = values.entries.filter(
       (entry) => entry.debit || entry.credit,
     );
+    // Updated getTotal function using lodash
     const getTotal = (type = 'credit') => {
-      return entries.reduce((total, item) => {
-        return item[type] ? item[type] + total : total;
-      }, 0);
+      return round(
+        sumBy(entries, (entry) => parseFloat(entry[type] || 0)),
+        2,
+      );
     };
     const totalCredit = getTotal('credit');
     const totalDebit = getTotal('debit');
 
-    // Validate the total credit should be eqials total debit.
+    // Validate the total credit should be equals total debit.
     if (totalCredit !== totalDebit) {
       AppToaster.show({
         message: intl.get('should_total_of_credit_and_debit_be_equal'),

@@ -1,4 +1,4 @@
-import { difference, isEmpty } from 'lodash';
+import { difference, isEmpty, round, sumBy } from 'lodash';
 import { Service, Inject } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import {
@@ -23,20 +23,18 @@ export class CommandManualJournalValidators {
    * @param {IManualJournalDTO} manualJournalDTO
    */
   public valdiateCreditDebitTotalEquals(manualJournalDTO: IManualJournalDTO) {
-    let totalCredit = 0;
-    let totalDebit = 0;
-
-    manualJournalDTO.entries.forEach((entry) => {
-      if (entry.credit > 0) {
-        totalCredit += entry.credit;
-      }
-      if (entry.debit > 0) {
-        totalDebit += entry.debit;
-      }
-    });
+    const totalCredit = round(
+      sumBy(manualJournalDTO.entries, (entry) => entry.credit || 0),
+      2
+    );
+    const totalDebit = round(
+      sumBy(manualJournalDTO.entries, (entry) => entry.debit || 0),
+      2
+    );
     if (totalCredit <= 0 || totalDebit <= 0) {
       throw new ServiceError(ERRORS.CREDIT_DEBIT_NOT_EQUAL_ZERO);
     }
+
     if (totalCredit !== totalDebit) {
       throw new ServiceError(ERRORS.CREDIT_DEBIT_NOT_EQUAL);
     }
