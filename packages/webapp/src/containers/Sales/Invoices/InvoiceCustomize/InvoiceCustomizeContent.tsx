@@ -1,10 +1,5 @@
-import React from 'react';
-import * as R from 'ramda';
-import { useFormikContext } from 'formik';
-import {
-  InvoicePaperTemplate,
-  InvoicePaperTemplateProps,
-} from './InvoicePaperTemplate';
+import { lazy, Suspense } from 'react';
+import { Spinner, Tab } from '@blueprintjs/core';
 import {
   ElementCustomize,
   ElementCustomizeContent,
@@ -16,9 +11,27 @@ import { InvoiceCustomizeSchema } from './InvoiceCustomizeForm.schema';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
-import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { initialValues } from './constants';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { InvoiceCustomizeTabs } from './InvoiceCustomizeTabs';
+
+const InvoiceCustomizePaymentPreview = lazy(() =>
+  import('./InvoiceCustomizePaymentPreview').then((module) => ({
+    default: module.InvoiceCustomizePaymentPreview,
+  })),
+);
+
+const InvoiceCustomizeMailReceiptPreview = lazy(() =>
+  import('./InvoiceCustomizeMailReceiptPreview').then((module) => ({
+    default: module.InvoiceCustomizeMailReceiptPreview,
+  })),
+);
+
+const InvoiceCustomizePdfPreview = lazy(() =>
+  import('./InvoiceCustomizePdfPreview').then((module) => ({
+    default: module.InvoiceCustomizePdfPreview,
+  })),
+);
 
 /**
  * Invoice branding template customize.
@@ -56,7 +69,39 @@ function InvoiceCustomizeFormContent() {
   return (
     <ElementCustomizeContent>
       <ElementCustomize.PaperTemplate>
-        <InvoicePaperTemplateFormConnected />
+        <InvoiceCustomizeTabs
+          defaultSelectedTabId={'pdf-document'}
+          id={'customize-preview-tabs'}
+          renderActiveTabPanelOnly
+        >
+          <Tab
+            id="pdf-document"
+            title={'PDF document'}
+            panel={
+              <Suspense fallback={<Spinner />}>
+                <InvoiceCustomizePdfPreview />
+              </Suspense>
+            }
+          />
+          <Tab
+            id={'payment-page'}
+            title={'Payment page'}
+            panel={
+              <Suspense fallback={<Spinner />}>
+                <InvoiceCustomizePaymentPreview />
+              </Suspense>
+            }
+          />
+          <Tab
+            id={'email-receipt'}
+            title={'Email receipt'}
+            panel={
+              <Suspense fallback={<Spinner />}>
+                <InvoiceCustomizeMailReceiptPreview mx={'auto'} />
+              </Suspense>
+            }
+          />
+        </InvoiceCustomizeTabs>
       </ElementCustomize.PaperTemplate>
 
       <ElementCustomize.FieldsTab id={'general'} label={'General'}>
@@ -73,28 +118,3 @@ function InvoiceCustomizeFormContent() {
     </ElementCustomizeContent>
   );
 }
-
-/**
- * Injects the `InvoicePaperTemplate` component props from the form and branding states.
- * @param Component
- * @returns {JSX.Element}
- */
-const withInvoicePreviewTemplateProps = <P extends object>(
-  Component: React.ComponentType<P>,
-) => {
-  return (props: Omit<P, keyof InvoicePaperTemplateProps>) => {
-    const { values } = useFormikContext<InvoiceCustomizeFormValues>();
-    const { brandingState } = useElementCustomizeContext();
-
-    const mergedProps: InvoicePaperTemplateProps = {
-      ...brandingState,
-      ...values,
-    };
-
-    return <Component {...(props as P)} {...mergedProps} />;
-  };
-};
-
-export const InvoicePaperTemplateFormConnected = R.compose(
-  withInvoicePreviewTemplateProps,
-)(InvoicePaperTemplate);
