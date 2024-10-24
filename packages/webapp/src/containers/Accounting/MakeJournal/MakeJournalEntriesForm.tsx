@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
-import { isEmpty, omit } from 'lodash';
+import { sumBy, round, isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
@@ -67,17 +67,17 @@ function MakeJournalEntriesForm({
     () => ({
       ...(!isEmpty(manualJournal)
         ? {
-          ...transformToEditForm(manualJournal),
-        }
+            ...transformToEditForm(manualJournal),
+          }
         : {
-          ...defaultManualJournal,
-          // If the auto-increment mode is enabled, take the next journal
-          // number from the settings.
-          ...(journalAutoIncrement && {
-            journal_number: journalNumber,
+            ...defaultManualJournal,
+            // If the auto-increment mode is enabled, take the next journal
+            // number from the settings.
+            ...(journalAutoIncrement && {
+              journal_number: journalNumber,
+            }),
+            currency_code: base_currency,
           }),
-          currency_code: base_currency,
-        }),
     }),
     [manualJournal, base_currency, journalNumber, journalAutoIncrement],
   );
@@ -88,15 +88,13 @@ function MakeJournalEntriesForm({
     const entries = values.entries.filter(
       (entry) => entry.debit || entry.credit,
     );
-
-    // Updated getTotal function
+    // Updated getTotal function using lodash
     const getTotal = (type = 'credit') => {
-      return entries.reduce((total, item) => {
-        const value = item[type] ? parseFloat(item[type]) : 0;
-        return Math.round((total + value) * 100) / 100;
-      }, 0);
+      return round(
+        sumBy(entries, (entry) => parseFloat(entry[type] || 0)),
+        2,
+      );
     };
-
     const totalCredit = getTotal('credit');
     const totalDebit = getTotal('debit');
 

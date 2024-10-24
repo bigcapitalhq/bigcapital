@@ -1,4 +1,4 @@
-import { difference, isEmpty } from 'lodash';
+import { difference, isEmpty, round, sumBy } from 'lodash';
 import { Service, Inject } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import {
@@ -23,13 +23,14 @@ export class CommandManualJournalValidators {
    * @param {IManualJournalDTO} manualJournalDTO
    */
   public valdiateCreditDebitTotalEquals(manualJournalDTO: IManualJournalDTO) {
-    const totalCredit = this.roundToTwoDecimals(
-      manualJournalDTO.entries.reduce((sum, entry) => sum + (entry.credit || 0), 0)
+    const totalCredit = round(
+      sumBy(manualJournalDTO.entries, (entry) => entry.credit || 0),
+      2
     );
-    const totalDebit = this.roundToTwoDecimals(
-      manualJournalDTO.entries.reduce((sum, entry) => sum + (entry.debit || 0), 0)
+    const totalDebit = round(
+      sumBy(manualJournalDTO.entries, (entry) => entry.debit || 0),
+      2
     );
-
     if (totalCredit <= 0 || totalDebit <= 0) {
       throw new ServiceError(ERRORS.CREDIT_DEBIT_NOT_EQUAL_ZERO);
     }
@@ -37,10 +38,6 @@ export class CommandManualJournalValidators {
     if (totalCredit !== totalDebit) {
       throw new ServiceError(ERRORS.CREDIT_DEBIT_NOT_EQUAL);
     }
-  }
-
-  private roundToTwoDecimals(value: number): number {
-    return Math.round(value * 100) / 100;
   }
 
   /**
@@ -309,4 +306,3 @@ export class CommandManualJournalValidators {
     }
   };
 }
-
