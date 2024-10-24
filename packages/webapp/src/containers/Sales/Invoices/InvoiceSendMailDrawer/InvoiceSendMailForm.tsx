@@ -5,8 +5,9 @@ import { css } from '@emotion/css';
 const initialValues = {
   subject: '',
   message: '',
-  to: '',
-  cc: '',
+  to: [],
+  cc: [],
+  bcc: []
 };
 interface InvoiceSendMailFormValues {
   subject: string;

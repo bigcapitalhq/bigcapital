@@ -1,12 +1,12 @@
-import { Tab, Tabs } from "@blueprintjs/core";
-import { css } from "@emotion/css";
-import { Box, Stack } from "@/components";
-import { InvoiceMailReceiptPreview } from "../InvoiceCustomize/InvoiceMailReceiptPreview";
-import { InvoicePaperTemplate } from "../InvoiceCustomize/InvoicePaperTemplate";
+import { Tab, Tabs } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { Stack } from '@/components';
+import { InvoiceMailReceiptPreviewConneceted } from './InvoiceMailReceiptPreviewConnected.';
+import { InvoiceSendPdfPreviewConnected } from './InvoiceSendPdfPreviewConnected';
 
 export function InvoiceSendMailPreview() {
   return (
-    <Stack bg="#F5F5F5" flex={'1'} minWidth="850px">
+    <Stack bg="#F5F5F5" flex={'1'} maxHeight={'100%'} minWidth="850px">
       <Tabs
         id={'preview'}
         defaultSelectedTabId={'payment-page'}
@@ -39,28 +39,12 @@ export function InvoiceSendMailPreview() {
         <Tab
           id={'payment-page'}
           title={'Payment page'}
-          panel={
-            <Box px={4} pt={8} pb={16}>
-              <InvoiceMailReceiptPreview
-                className={css`
-                  margin: 0 auto;
-                `}
-              />
-            </Box>
-          }
+          panel={<InvoiceMailReceiptPreviewConneceted />}
         />
         <Tab
           id="pdf-document"
           title={'PDF document'}
-          panel={
-            <Box px={4} py={6}>
-              <InvoicePaperTemplate
-                className={css`
-                  margin: 0 auto;
-                `}
-              />
-            </Box>
-          }
+          panel={<InvoiceSendPdfPreviewConnected />}
         />
       </Tabs>
     </Stack>

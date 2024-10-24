@@ -1,7 +1,13 @@
+// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
+import { useInvoice } from '@/hooks/query';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
-interface InvoiceSendMailBootValues {}
+interface InvoiceSendMailBootValues {
+  invoice: any;
+  isInvoiceLoading: boolean;
+}
 interface InvoiceSendMailBootProps {
   children: React.ReactNode;
 }
@@ -10,12 +16,22 @@ const InvoiceSendMailContentBootContext =
   createContext<InvoiceSendMailBootValues>({} as InvoiceSendMailBootValues);
 
 export const InvoiceSendMailBoot = ({ children }: InvoiceSendMailBootProps) => {
-  const isLoading = false;
+  const {
+    payload: { invoiceId },
+  } = useDrawerContext();
+
+  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
+    enabled: !!invoiceId,
+  });
+  const isLoading = isInvoiceLoading;
 
   if (isLoading) {
     return <Spinner size={20} />;
   }
-  const value = {};
+  const value = {
+    invoice,
+    isInvoiceLoading,
+  };
 
   return (
     <InvoiceSendMailContentBootContext.Provider value={value}>
