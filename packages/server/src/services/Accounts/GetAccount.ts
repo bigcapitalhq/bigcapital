@@ -1,5 +1,4 @@
 import { Service, Inject } from 'typedi';
-import I18nService from '@/services/I18n/I18nService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { AccountTransformer } from './AccountTransform';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
@@ -10,9 +9,6 @@ import events from '@/subscribers/events';
 export class GetAccount {
   @Inject()
   private tenancy: HasTenancyService;
-
-  @Inject()
-  private i18nService: I18nService;
 
   @Inject()
   private transformer: TransformerInjectable;
@@ -44,10 +40,8 @@ export class GetAccount {
       new AccountTransformer(),
       { accountsGraph }
     );
-    const eventPayload = {
-      tenantId,
-      accountId,
-    };
+    const eventPayload = { tenantId, accountId };
+
     // Triggers `onAccountViewed` event.
     await this.eventPublisher.emitAsync(events.accounts.onViewed, eventPayload);
 

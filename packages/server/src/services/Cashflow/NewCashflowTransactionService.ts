@@ -122,6 +122,7 @@ export default class NewCashflowTransactionService {
    * @param {number} tenantId -
    * @param {ICashflowOwnerContributionDTO} ownerContributionDTO
    * @param {number} userId - User id.
+   * @returns {Promise<ICashflowTransaction>}
    */
   public newCashflowTransaction = async (
     tenantId: number,

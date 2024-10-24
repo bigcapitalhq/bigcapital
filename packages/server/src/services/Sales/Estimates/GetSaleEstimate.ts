@@ -3,6 +3,8 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { SaleEstimateTransfromer } from './SaleEstimateTransformer';
 import { SaleEstimateValidators } from './SaleEstimateValidators';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class GetSaleEstimate {
@@ -14,6 +16,9 @@ export class GetSaleEstimate {
 
   @Inject()
   private validators: SaleEstimateValidators;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Retrieve the estimate details with associated entries.
@@ -35,10 +40,18 @@ export class GetSaleEstimate {
     this.validators.validateEstimateExistance(estimate);
 
     // Transformes sale estimate model to POJO.
-    return this.transformer.transform(
+    const transformed = await this.transformer.transform(
       tenantId,
       estimate,
       new SaleEstimateTransfromer()
     );
+    const eventPayload = { tenantId, saleEstimateId: estimateId };
+
+    // Triggers `onSaleEstimateViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.saleEstimate.onViewed,
+      eventPayload
+    );
+    return transformed;
   }
 }
