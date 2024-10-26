@@ -1,7 +1,13 @@
 import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
-import { InvoiceSendMailContent } from './InvoiceSendMailContent';
 import withDrawers from '@/containers/Drawer/withDrawers';
+import React from 'react';
+
+const InvoiceSendMailContent = React.lazy(() =>
+  import('./InvoiceSendMailContent').then((module) => ({
+    default: module.InvoiceSendMailContent,
+  })),
+);
 
 interface InvoiceSendMailDrawerProps {
   name: string;

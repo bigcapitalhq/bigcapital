@@ -1,5 +1,9 @@
 import { Classes, Text } from '@blueprintjs/core';
-import { PaperTemplate, PaperTemplateTotalBorder } from './PaperTemplate';
+import {
+  PaperTemplate,
+  PaperTemplateProps,
+  PaperTemplateTotalBorder,
+} from './PaperTemplate';
 import { Box, Group, Stack } from '@/components';
 import {
   DefaultPdfTemplateTerms,
@@ -23,7 +27,7 @@ interface PaperTax {
   amount: string;
 }
 
-export interface InvoicePaperTemplateProps {
+export interface InvoicePaperTemplateProps extends PaperTemplateProps {
   primaryColor?: string;
   secondaryColor?: string;
 
@@ -177,9 +181,14 @@ export function InvoicePaperTemplate({
   statementLabel = 'Statement',
   showStatement = true,
   statement = DefaultPdfTemplateStatement,
+  ...props
 }: InvoicePaperTemplateProps) {
   return (
-    <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
+    <PaperTemplate
+      primaryColor={primaryColor}
+      secondaryColor={secondaryColor}
+      {...props}
+    >
       <Stack spacing={24}>
         <Group align="start" spacing={10}>
           <Stack flex={1}>

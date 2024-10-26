@@ -1,10 +1,10 @@
 import React from 'react';
 import clsx from 'classnames';
 import { get, isFunction } from 'lodash';
-import { Box, Group, GroupProps } from '@/components';
+import { Box, BoxProps, Group, GroupProps } from '@/components';
 import styles from './InvoicePaperTemplate.module.scss';
 
-export interface PaperTemplateProps {
+export interface PaperTemplateProps extends BoxProps {
   primaryColor?: string;
   secondaryColor?: string;
   children?: React.ReactNode;
@@ -14,13 +14,13 @@ export function PaperTemplate({
   primaryColor,
   secondaryColor,
   children,
+  ...restProps
 }: PaperTemplateProps) {
   return (
-    <div className={styles.root}>
+    <Box {...restProps} className={clsx(styles.root, restProps?.className)}>
       <style>{`:root { --invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor}; }`}</style>
-
       {children}
-    </div>
+    </Box>
   );
 }
 
@@ -118,9 +118,9 @@ PaperTemplate.TotalLine = ({
   );
 };
 
-PaperTemplate.MutedText = () => { };
+PaperTemplate.MutedText = () => {};
 
-PaperTemplate.Text = () => { };
+PaperTemplate.Text = () => {};
 
 PaperTemplate.AddressesGroup = (props: GroupProps) => {
   return (

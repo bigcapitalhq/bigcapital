@@ -3,11 +3,22 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import { css } from '@emotion/css';
 
 const initialValues = {
-  subject: '',
-  message: '',
-  to: [],
+  subject: 'invoice INV-0002 for AED 0.00',
+  message: `Hi Ahmed,
+
+Here’s invoice INV-0002 for AED 0.00
+
+The amount outstanding of AED $100,00 is due on 2 October 2024
+
+View your bill online From your online you can print a PDF or pay your outstanding bills,
+
+If you have any questions, please let us know,
+
+Thanks,
+Mohamed`,
+  to: ['a.bouhuolia@gmail.com'],
   cc: [],
-  bcc: []
+  bcc: [],
 };
 interface InvoiceSendMailFormValues {
   subject: string;
