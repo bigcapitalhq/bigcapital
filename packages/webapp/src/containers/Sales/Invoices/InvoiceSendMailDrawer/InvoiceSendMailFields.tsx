@@ -32,6 +32,18 @@ const createNewItemRenderer = (query, active, handleClick) => {
 // Create new item from the given query string.
 const createNewItemFromQuery = (name) => ({ name });
 
+const styleEmailButton = css`
+  &.bp4-button.bp4-small {
+    width: auto;
+    margin: 0;
+    min-height: 26px;
+    line-height: 26px;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 12px;
+  }
+`;
+
 export function InvoiceSendMailFields() {
   const [showCCField, setShowCCField] = useState<boolean>(false);
   const [showBccField, setShowBccField] = useState<boolean>(false);
@@ -83,12 +95,12 @@ export function InvoiceSendMailFields() {
       spacing={0}
       borderRight="1px solid #dcdcdd"
     >
-      <Stack spacing={0} overflow="auto" flex="1" p={'30px'} className={css`
-        
-        `}>
+      <Stack spacing={0} overflow="auto" flex="1" p={'30px'} className={css``}>
         <FFormGroup label={'To'} name={'to'}>
-          <Stack spacing={0} className={css`
-              > :not(:first-of-type) .bp4-input{
+          <Stack
+            spacing={0}
+            className={css`
+              > :not(:first-of-type) .bp4-input {
                 border-top-color: transparent;
                 border-top-right-radius: 0;
                 border-top-left-radius: 0;
@@ -97,49 +109,41 @@ export function InvoiceSendMailFields() {
                 border-bottom-left-radius: 0;
                 border-bottom-right-radius: 0;
               }
-            `}>
+            `}
+          >
             <FMultiSelect
               items={items}
               name={'to'}
-              placeholder={''}
+              placeholder={'To'}
               popoverProps={{ minimal: true, fill: true }}
               tagInputProps={{
                 tagProps: { round: true, minimal: true, large: true },
                 large: true,
                 rightElement: (
                   <Group
-                    spacing={10}
-                    paddingRight={12}
+                    spacing={0}
+                    paddingRight={'7px'}
+                    paddingTop={'7px'}
                     fontWeight={500}
                     color={'#000'}
                   >
-                    <x.a
-                      href="#"
+                    <Button
                       onClick={handleClickCcBtn}
-                      color="#404854"
-                      fontSize={'12px'}
-                      className={css`
-                        &:hover {
-                          text-decoration: none;
-                        }
-                      `}
+                      minimal
+                      small
+                      className={styleEmailButton}
                     >
                       CC
-                    </x.a>
+                    </Button>
 
-                    <x.a
-                      href="#"
+                    <Button
                       onClick={handleClickBccBtn}
-                      color="#404854"
-                      fontSize={'12px'}
-                      className={css`
-                        &:hover {
-                          text-decoration: none;
-                        }
-                      `}
+                      minimal
+                      small
+                      className={styleEmailButton}
                     >
                       BCC
-                    </x.a>
+                    </Button>
                   </Group>
                 ),
               }}
@@ -154,7 +158,7 @@ export function InvoiceSendMailFields() {
               <FMultiSelect
                 items={items}
                 name={'cc'}
-                placeholder={''}
+                placeholder={'Cc'}
                 popoverProps={{ minimal: true, fill: true }}
                 tagInputProps={{
                   tagProps: { round: true, minimal: true, large: true },
@@ -172,7 +176,7 @@ export function InvoiceSendMailFields() {
               <FMultiSelect
                 items={items}
                 name={'bcc'}
-                placeholder={''}
+                placeholder={'Bcc'}
                 popoverProps={{ minimal: true, fill: true }}
                 tagInputProps={{
                   tagProps: { round: true, minimal: true, large: true },
