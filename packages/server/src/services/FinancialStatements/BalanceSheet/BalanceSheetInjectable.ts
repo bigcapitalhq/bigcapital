@@ -10,6 +10,8 @@ import BalanceSheetStatement from './BalanceSheet';
 import { Tenant } from '@/system/models';
 import BalanceSheetRepository from './BalanceSheetRepository';
 import { BalanceSheetMetaInjectable } from './BalanceSheetMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export default class BalanceSheetStatementService
@@ -20,6 +22,9 @@ export default class BalanceSheetStatementService
 
   @Inject()
   private balanceSheetMeta: BalanceSheetMetaInjectable;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults balance sheet filter query.
@@ -98,6 +103,10 @@ export default class BalanceSheetStatementService
     // Balance sheet meta.
     const meta = await this.balanceSheetMeta.meta(tenantId, filter);
 
+    // Triggers `onBalanceSheetViewed` event.
+    await this.eventPublisher.emitAsync(events.reports.onBalanceSheetViewed, {
+      query,
+    });
     return {
       query: filter,
       data,

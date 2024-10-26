@@ -180,6 +180,7 @@ export default {
    * Sales estimates service.
    */
   saleEstimate: {
+    onViewed: 'onSaleEstimateViewed',
     onPdfViewed: 'onSaleEstimatePdfViewed',
 
     onCreating: 'onSaleEstimateCreating',
@@ -750,5 +751,24 @@ export default {
   stripeWebhooks: {
     onCheckoutSessionCompleted: 'onStripeCheckoutSessionCompleted',
     onAccountUpdated: 'onStripeAccountUpdated',
+  },
+
+  // Reports
+  reports: {
+    onBalanceSheetViewed: 'onBalanceSheetViewed',
+    onTrialBalanceSheetView: 'onTrialBalanceSheetViewed',
+    onProfitLossSheetViewed: 'onProfitLossSheetViewed',
+    onCashflowStatementViewed: 'onCashflowStatementViewed',
+    onGeneralLedgerViewed: 'onGeneralLedgerViewed',
+    onJournalViewed: 'onJounralViewed',
+    onReceivableAgingViewed: 'onReceivableAgingViewed',
+    onPayableAgingViewed: 'onPayableAgingViewed',
+    onCustomerBalanceSummaryViewed: 'onInventoryValuationViewed',
+    onVendorBalanceSummaryViewed: 'onVendorBalanceSummaryViewed',
+    onInventoryValuationViewed: 'onCustomerBalanceSummaryViewed',
+    onCustomerTransactionsViewed: 'onCustomerTransactionsViewed',
+    onVendorTransactionsViewed: 'onVendorTransactionsViewed',
+    onSalesByItemViewed: 'onSalesByItemViewed',
+    onPurchasesByItemViewed: 'onPurchasesByItemViewed',
   },
 };

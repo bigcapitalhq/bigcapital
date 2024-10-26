@@ -13,6 +13,8 @@ import Ledger from '@/services/Accounting/Ledger';
 import TransactionsByCustomersRepository from './TransactionsByCustomersRepository';
 import { Tenant } from '@/system/models';
 import { TransactionsByCustomersMeta } from './TransactionsByCustomersMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 export class TransactionsByCustomersSheet
   implements ITransactionsByCustomersService
@@ -25,6 +27,9 @@ export class TransactionsByCustomersSheet
 
   @Inject()
   private transactionsByCustomersMeta: TransactionsByCustomersMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults balance sheet filter query.
@@ -165,6 +170,15 @@ export class TransactionsByCustomersSheet
     );
 
     const meta = await this.transactionsByCustomersMeta.meta(tenantId, filter);
+
+    // Triggers `onCustomerTransactionsViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.reports.onCustomerTransactionsViewed,
+      {
+        tenantId,
+        query,
+      }
+    );
 
     return {
       data: reportInstance.reportData(),

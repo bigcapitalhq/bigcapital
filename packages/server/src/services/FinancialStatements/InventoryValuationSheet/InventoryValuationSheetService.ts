@@ -11,6 +11,8 @@ import { InventoryValuationSheet } from './InventoryValuationSheet';
 import InventoryService from '@/services/Inventory/Inventory';
 import { Tenant } from '@/system/models';
 import { InventoryValuationMetaInjectable } from './InventoryValuationSheetMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class InventoryValuationSheetService {
@@ -25,6 +27,9 @@ export class InventoryValuationSheetService {
 
   @Inject()
   private inventoryValuationMeta: InventoryValuationMetaInjectable;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults balance sheet filter query.
@@ -115,6 +120,15 @@ export class InventoryValuationSheetService {
 
     // Retrieves the inventorty valuation meta.
     const meta = await this.inventoryValuationMeta.meta(tenantId, filter);
+
+    // Triggers `onInventoryValuationViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.reports.onInventoryValuationViewed,
+      {
+        tenantId,
+        query,
+      }
+    );
 
     return {
       data: inventoryValuationData,

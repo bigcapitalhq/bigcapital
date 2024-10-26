@@ -9,6 +9,7 @@ export const SALE_ESTIMATE_CREATED = 'Sale estimate created';
 export const SALE_ESTIMATE_EDITED = 'Sale estimate edited';
 export const SALE_ESTIMATE_DELETED = 'Sale estimate deleted';
 export const SALE_ESTIMATE_PDF_VIEWED = 'Sale estimate PDF viewed';
+export const SALE_ESTIMATE_VIEWED = 'Sale estimate viewed';
 
 export const PAYMENT_RECEIVED_CREATED = 'Payment received created';
 export const PAYMENT_RECEIVED_EDITED = 'payment received edited';
@@ -47,6 +48,8 @@ export const AUTH_RESET_PASSWORD = 'Auth reset password';
 export const SUBSCRIPTION_CANCELLED = 'Subscription cancelled';
 export const SUBSCRIPTION_RESUMED = 'Subscription resumed';
 export const SUBSCRIPTION_PLAN_CHANGED = 'Subscription plan changed';
+export const SUBSCRIPTION_PAYMENT_SUCCEED = 'Subscription payment succeed';
+export const SUBSCRIPTION_PAYMENT_FAILED = 'Subscription payment failed';
 
 export const CUSTOMER_CREATED = 'Customer created';
 export const CUSTOMER_EDITED = 'Customer edited';
@@ -100,3 +103,21 @@ export const SALE_GROUP = 'Sale';
 export const PAYMENT_GROUP = 'Payment';
 export const BILL_GROUP = 'Bill';
 export const EXPENSE_GROUP = 'Expense';
+
+// # Reports
+export const BALANCE_SHEET_VIEWED = 'Balance sheet viewed';
+export const TRIAL_BALANCE_SHEET_VIEWED = 'Trial balance sheet viewed';
+export const PROFIT_LOSS_SHEET_VIEWED = 'Profit loss sheet viewed';
+export const CASHFLOW_STATEMENT_VIEWED = 'Cashflow statement viewed';
+export const GENERAL_LEDGER_VIEWED = 'General ledger viewed';
+export const JOURNAL_VIEWED = 'Journal viewed';
+export const RECEIVABLE_AGING_VIEWED = 'Receivable aging viewed';
+export const PAYABLE_AGING_VIEWED = 'Payable aging viewed';
+export const CUSTOMER_BALANCE_SUMMARY_VIEWED =
+  'Customer balance summary viewed';
+export const VENDOR_BALANCE_SUMMARY_VIEWED = 'Vendor balance summary viewed';
+export const INVENTORY_VALUATION_VIEWED = 'Inventory valuation viewed';
+export const CUSTOMER_TRANSACTIONS_VIEWED = 'Customer transactions viewed';
+export const VENDOR_TRANSACTIONS_VIEWED = 'Vendor transactions viewed';
+export const SALES_BY_ITEM_VIEWED = 'Sales by item viewed';
+export const PURCHASES_BY_ITEM_VIEWED = 'Purchases by item viewed';

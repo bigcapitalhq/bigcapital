@@ -7,6 +7,8 @@ import FinancialSheet from '../FinancialSheet';
 import { Tenant } from '@/system/models';
 import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
 import { TrialBalanceSheetMeta } from './TrialBalanceSheetMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export default class TrialBalanceSheetService extends FinancialSheet {
@@ -15,6 +17,9 @@ export default class TrialBalanceSheetService extends FinancialSheet {
 
   @Inject()
   private trialBalanceSheetMetaService: TrialBalanceSheetMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults trial balance sheet filter query.
@@ -80,6 +85,15 @@ export default class TrialBalanceSheetService extends FinancialSheet {
 
     // Trial balance sheet meta.
     const meta = await this.trialBalanceSheetMetaService.meta(tenantId, filter);
+
+    // Triggers `onTrialBalanceSheetViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.reports.onTrialBalanceSheetView,
+      {
+        tenantId,
+        query,
+      }
+    );
 
     return {
       data: trialBalanceSheetData,

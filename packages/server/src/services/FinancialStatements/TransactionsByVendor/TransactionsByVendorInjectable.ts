@@ -13,6 +13,8 @@ import Ledger from '@/services/Accounting/Ledger';
 import TransactionsByVendorRepository from './TransactionsByVendorRepository';
 import { Tenant } from '@/system/models';
 import { TransactionsByVendorMeta } from './TransactionsByVendorMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 export class TransactionsByVendorsInjectable
   implements ITransactionsByVendorsService
@@ -25,6 +27,9 @@ export class TransactionsByVendorsInjectable
 
   @Inject()
   private transactionsByVendorMeta: TransactionsByVendorMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults balance sheet filter query.
@@ -170,6 +175,15 @@ export class TransactionsByVendorsInjectable
       i18n
     );
     const meta = await this.transactionsByVendorMeta.meta(tenantId, filter);
+
+    // Triggers `onVendorTransactionsViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.reports.onVendorTransactionsViewed,
+      {
+        tenantId,
+        query,
+      }
+    );
 
     return {
       data: reportInstance.reportData(),
