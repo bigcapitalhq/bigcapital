@@ -8,6 +8,8 @@ import {
   IPurchasesByItemsSheet,
 } from '@/interfaces/PurchasesByItemsSheet';
 import { PurchasesByItemsMeta } from './PurchasesByItemsMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class PurchasesByItemsService {
@@ -16,6 +18,9 @@ export class PurchasesByItemsService {
 
   @Inject()
   private purchasesByItemsMeta: PurchasesByItemsMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults purchases by items filter query.
@@ -91,6 +96,15 @@ export class PurchasesByItemsService {
 
     // Retrieve the purchases by items meta.
     const meta = await this.purchasesByItemsMeta.meta(tenantId, query);
+
+    // Triggers `onPurchasesByItemViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.reports.onPurchasesByItemViewed,
+      {
+        tenantId,
+        query,
+      }
+    );
 
     return {
       data: purchasesByItemsData,

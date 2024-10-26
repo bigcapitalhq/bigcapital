@@ -10,6 +10,8 @@ import { Tenant } from '@/system/models';
 import { mergeQueryWithDefaults } from './utils';
 import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
 import { ProfitLossSheetMeta } from './ProfitLossSheetMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 // Profit/Loss sheet service.
 @Service()
@@ -19,6 +21,9 @@ export default class ProfitLossSheetService {
 
   @Inject()
   private profitLossSheetMeta: ProfitLossSheetMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Retrieve profit/loss sheet statement.
@@ -61,6 +66,15 @@ export default class ProfitLossSheetService {
 
     // Retrieve the profit/loss sheet meta.
     const meta = await this.profitLossSheetMeta.meta(tenantId, filter);
+
+    // Triggers `onProfitLossSheetViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.reports.onProfitLossSheetViewed,
+      {
+        tenantId,
+        query,
+      }
+    );
 
     return {
       query: filter,

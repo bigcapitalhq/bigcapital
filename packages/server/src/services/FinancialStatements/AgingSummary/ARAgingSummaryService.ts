@@ -6,6 +6,8 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import ARAgingSummarySheet from './ARAgingSummarySheet';
 import { Tenant } from '@/system/models';
 import { ARAgingSummaryMeta } from './ARAgingSummaryMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export default class ARAgingSummaryService {
@@ -14,6 +16,9 @@ export default class ARAgingSummaryService {
 
   @Inject()
   private ARAgingSummaryMeta: ARAgingSummaryMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Default report query.
@@ -90,6 +95,15 @@ export default class ARAgingSummaryService {
 
     // Retrieve the aging summary report meta.
     const meta = await this.ARAgingSummaryMeta.meta(tenantId, filter);
+
+    // Triggers `onReceivableAgingViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.reports.onReceivableAgingViewed,
+      {
+        tenantId,
+        query,
+      }
+    );
 
     return {
       data,

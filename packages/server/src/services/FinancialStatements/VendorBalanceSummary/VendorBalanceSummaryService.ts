@@ -15,6 +15,8 @@ import { Tenant } from '@/system/models';
 import { JournalSheetMeta } from '../JournalSheet/JournalSheetMeta';
 
 import { VendorBalanceSummaryMeta } from './VendorBalanceSummaryMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 export class VendorBalanceSummaryService
   implements IVendorBalanceSummaryService
@@ -27,6 +29,9 @@ export class VendorBalanceSummaryService
 
   @Inject()
   private vendorBalanceSummaryMeta: VendorBalanceSummaryMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults balance sheet filter query.
@@ -49,7 +54,7 @@ export class VendorBalanceSummaryService
   }
 
   /**
-   * 
+   *
    * Retrieve the vendors ledger entrjes.
    * @param {number} tenantId -
    * @param {Date|string} date -
@@ -107,10 +112,19 @@ export class VendorBalanceSummaryService
     // Retrieve the vendor balance summary meta.
     const meta = await this.vendorBalanceSummaryMeta.meta(tenantId, filter);
 
+    // Triggers `onVendorBalanceSummaryViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.reports.onVendorBalanceSummaryViewed,
+      {
+        tenantId,
+        query,
+      }
+    );
+
     return {
       data: reportInstance.reportData(),
       query: filter,
-      meta
+      meta,
     };
   }
 }

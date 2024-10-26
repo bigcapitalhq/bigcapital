@@ -7,6 +7,8 @@ import Journal from '@/services/Accounting/JournalPoster';
 import { Tenant } from '@/system/models';
 import { transformToMap } from 'utils';
 import { JournalSheetMeta } from './JournalSheetMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class JournalSheetService {
@@ -15,6 +17,9 @@ export class JournalSheetService {
 
   @Inject()
   private journalSheetMeta: JournalSheetMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Default journal sheet filter queyr.
@@ -100,6 +105,12 @@ export class JournalSheetService {
 
     // Retrieve the journal sheet meta.
     const meta = await this.journalSheetMeta.meta(tenantId, filter);
+
+    // Triggers `onJournalViewed` event.
+    await this.eventPublisher.emitAsync(events.reports.onJournalViewed, {
+      tenantId,
+      query,
+    });
 
     return {
       data: journalSheetData,

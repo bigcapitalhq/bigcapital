@@ -5,6 +5,8 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import SalesByItems from './SalesByItems';
 import { Tenant } from '@/system/models';
 import { SalesByItemsMeta } from './SalesByItemsMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class SalesByItemsReportService {
@@ -13,6 +15,9 @@ export class SalesByItemsReportService {
 
   @Inject()
   private salesByItemsMeta: SalesByItemsMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults balance sheet filter query.
@@ -88,6 +93,12 @@ export class SalesByItemsReportService {
 
     // Retrieve the sales by items meta.
     const meta = await this.salesByItemsMeta.meta(tenantId, query);
+
+    // Triggers `onSalesByItemViewed` event.
+    await this.eventPublisher.emitAsync(events.reports.onSalesByItemViewed, {
+      tenantId,
+      query,
+    });
 
     return {
       data: salesByItemsData,

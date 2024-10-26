@@ -103,3 +103,21 @@ export const SALE_GROUP = 'Sale';
 export const PAYMENT_GROUP = 'Payment';
 export const BILL_GROUP = 'Bill';
 export const EXPENSE_GROUP = 'Expense';
+
+// # Reports
+export const BALANCE_SHEET_VIEWED = 'Balance sheet viewed';
+export const TRIAL_BALANCE_SHEET_VIEWED = 'Trial balance sheet viewed';
+export const PROFIT_LOSS_SHEET_VIEWED = 'Profit loss sheet viewed';
+export const CASHFLOW_STATEMENT_VIEWED = 'Cashflow statement viewed';
+export const GENERAL_LEDGER_VIEWED = 'General ledger viewed';
+export const JOURNAL_VIEWED = 'Journal viewed';
+export const RECEIVABLE_AGING_VIEWED = 'Receivable aging viewed';
+export const PAYABLE_AGING_VIEWED = 'Payable aging viewed';
+export const CUSTOMER_BALANCE_SUMMARY_VIEWED =
+  'Customer balance summary viewed';
+export const VENDOR_BALANCE_SUMMARY_VIEWED = 'Vendor balance summary viewed';
+export const INVENTORY_VALUATION_VIEWED = 'Inventory valuation viewed';
+export const CUSTOMER_TRANSACTIONS_VIEWED = 'Customer transactions viewed';
+export const VENDOR_TRANSACTIONS_VIEWED = 'Vendor transactions viewed';
+export const SALES_BY_ITEM_VIEWED = 'Sales by item viewed';
+export const PURCHASES_BY_ITEM_VIEWED = 'Purchases by item viewed';

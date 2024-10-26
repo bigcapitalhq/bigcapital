@@ -5,6 +5,8 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import GeneralLedgerSheet from '@/services/FinancialStatements/GeneralLedger/GeneralLedger';
 import { GeneralLedgerMeta } from './GeneralLedgerMeta';
 import { GeneralLedgerRepository } from './GeneralLedgerRepository';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class GeneralLedgerService {
@@ -13,6 +15,9 @@ export class GeneralLedgerService {
 
   @Inject()
   private generalLedgerMeta: GeneralLedgerMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults general ledger report filter query.
@@ -71,6 +76,11 @@ export class GeneralLedgerService {
 
     // Retrieve general ledger report metadata.
     const meta = await this.generalLedgerMeta.meta(tenantId, filter);
+
+    // Triggers `onGeneralLedgerViewed` event.
+    await this.eventPublisher.emitAsync(events.reports.onGeneralLedgerViewed, {
+      tenantId,
+    });
 
     return {
       data: reportData,

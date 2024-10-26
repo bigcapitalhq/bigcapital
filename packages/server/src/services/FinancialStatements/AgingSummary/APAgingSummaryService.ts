@@ -6,6 +6,8 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import APAgingSummarySheet from './APAgingSummarySheet';
 import { Tenant } from '@/system/models';
 import { APAgingSummaryMeta } from './APAgingSummaryMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class APAgingSummaryService {
@@ -14,6 +16,9 @@ export class APAgingSummaryService {
 
   @Inject()
   private APAgingSummaryMeta: APAgingSummaryMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Default report query.
@@ -95,6 +100,12 @@ export class APAgingSummaryService {
 
     // Retrieve the aging summary report meta.
     const meta = await this.APAgingSummaryMeta.meta(tenantId, filter);
+
+    // Triggers `onPayableAgingViewed` event.
+    await this.eventPublisher.emitAsync(events.reports.onPayableAgingViewed, {
+      tenantId,
+      query,
+    });
 
     return {
       data,

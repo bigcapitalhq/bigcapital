@@ -13,6 +13,8 @@ import Ledger from '@/services/Accounting/Ledger';
 import CustomerBalanceSummaryRepository from './CustomerBalanceSummaryRepository';
 import { Tenant } from '@/system/models';
 import { CustomerBalanceSummaryMeta } from './CustomerBalanceSummaryMeta';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class CustomerBalanceSummaryService
@@ -23,6 +25,9 @@ export class CustomerBalanceSummaryService
 
   @Inject()
   private customerBalanceSummaryMeta: CustomerBalanceSummaryMeta;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Defaults balance sheet filter query.
@@ -103,6 +108,15 @@ export class CustomerBalanceSummaryService
     );
     // Retrieve the customer balance summary meta.
     const meta = await this.customerBalanceSummaryMeta.meta(tenantId, filter);
+
+    // Triggers `onCustomerBalanceSummaryViewed` event.
+    await this.eventPublisher.emitAsync(
+      events.reports.onCustomerBalanceSummaryViewed,
+      {
+        tenant,
+        query,
+      }
+    );
 
     return {
       data: report.reportData(),
