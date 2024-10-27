@@ -22,6 +22,9 @@ export interface InvoicePaymentEmailProps {
   companyName?: string;
   companyLogoUri?: string;
 
+  // # Colors
+  primaryColor?: string;
+
   // # Invoice amount
   invoiceAmount: string;
 
@@ -61,6 +64,9 @@ export const InvoicePaymentEmail: React.FC<
   companyName,
   companyLogoUri,
 
+  // # Colors
+  primaryColor = 'rgb(0, 82, 204)',
+
   // # Invoice amount
   invoiceAmount,
 
@@ -98,6 +104,19 @@ export const InvoicePaymentEmail: React.FC<
         <Body style={bodyStyle}>
           <Container style={containerStyle}>
             <Section style={mainSectionStyle}>
+              {companyLogoUri && (
+                <Section style={logoSectionStyle}>
+                  <div
+                    style={{
+                      ...companyLogoStyle,
+                      backgroundImage: `url("${companyLogoUri}")`,
+                    }}
+                  >
+                    Image
+                  </div>
+                </Section>
+              )}
+
               <Section style={headerInfoStyle}>
                 <Row>
                   <Heading style={invoiceCompanyNameStyle}>
@@ -125,7 +144,10 @@ export const InvoicePaymentEmail: React.FC<
               <Text style={invoiceMessageStyle}>{invoiceMessage}</Text>
               <Button
                 href={viewInvoiceButtonUrl}
-                style={viewInvoiceButtonStyle}
+                style={{
+                  ...viewInvoiceButtonStyle,
+                  backgroundColor: primaryColor,
+                }}
               >
                 {viewInvoiceButtonLabel}
               </Button>
@@ -232,9 +254,8 @@ const viewInvoiceButtonStyle: CSSProperties = {
   cursor: 'pointer',
   textAlign: 'center',
   fontSize: 16,
-  padding: '0 15px',
-  height: '38px',
-  lineHeight: '38px',
+  padding: '10px 15px',
+  lineHeight: '1',
   backgroundColor: 'rgb(0, 82, 204)',
   color: '#fff',
   borderRadius: '5px',
@@ -293,4 +314,21 @@ const itemLineRowStyle: CSSProperties = {
 const totalsSectionStyle = {
   marginTop: '20px',
   borderTop: '1px solid #D9D9D9',
+};
+
+const logoSectionStyle = {
+  marginBottom: '15px',
+};
+
+const companyLogoStyle = {
+  height: 90,
+  width: 90,
+  borderRadius: '3px',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  textIndent: '-999999px',
+  overflow: 'hidden',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center center',
+  backgroundSize: 'contain',
 };
