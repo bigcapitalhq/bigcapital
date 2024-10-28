@@ -16,6 +16,7 @@ import {
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 import { SelectOptionProps } from '@blueprintjs-formik/select';
+import { useInvoiceMailItems } from './_hooks';
 
 // Create new account renderer.
 const createNewItemRenderer = (query, active, handleClick) => {
@@ -44,20 +45,24 @@ const styleEmailButton = css`
   }
 `;
 
+const fieldsWrapStyle = css`
+  > :not(:first-of-type) .bp4-input {
+    border-top-color: transparent;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+  }
+  > :not(:last-of-type) .bp4-input {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+`;
+
 export function InvoiceSendMailFields() {
   const [showCCField, setShowCCField] = useState<boolean>(false);
   const [showBccField, setShowBccField] = useState<boolean>(false);
 
   const { values, setFieldValue } = useFormikContext();
-
-  const items = chain([...values?.to, ...values?.cc, ...values?.bcc])
-    .filter((email) => !!email?.trim())
-    .uniq()
-    .map((email) => ({
-      value: email,
-      text: email,
-    }))
-    .value();
+  const items = useInvoiceMailItems();
 
   const handleClickCcBtn = (event) => {
     event.preventDefault();
@@ -74,18 +79,43 @@ export function InvoiceSendMailFields() {
   };
 
   const handleCreateToItemSelect = (value: SelectOptionProps) => {
-    const _value = [...values?.to, value?.name];
-    setFieldValue('to', _value);
+    setFieldValue('to', [...values?.to, value?.name]);
   };
 
   const handleCreateCcItemSelect = (value: SelectOptionProps) => {
-    const _value = [...values?.cc, value?.name];
-    setFieldValue('cc', _value);
+    setFieldValue('cc', [...values?.cc, value?.name]);
   };
   const handleCreateBccItemSelect = (value: SelectOptionProps) => {
-    const _value = [...values?.bcc, value?.name];
-    setFieldValue('bcc', _value);
+    setFieldValue('bcc', [...values?.bcc, value?.name]);
   };
+
+  const rightElementsToField = (
+    <Group
+      spacing={0}
+      paddingRight={'7px'}
+      paddingTop={'7px'}
+      fontWeight={500}
+      color={'#000'}
+    >
+      <Button
+        onClick={handleClickCcBtn}
+        minimal
+        small
+        className={styleEmailButton}
+      >
+        CC
+      </Button>
+
+      <Button
+        onClick={handleClickBccBtn}
+        minimal
+        small
+        className={styleEmailButton}
+      >
+        BCC
+      </Button>
+    </Group>
+  );
 
   return (
     <Stack
@@ -95,22 +125,9 @@ export function InvoiceSendMailFields() {
       spacing={0}
       borderRight="1px solid #dcdcdd"
     >
-      <Stack spacing={0} overflow="auto" flex="1" p={'30px'} className={css``}>
+      <Stack spacing={0} overflow="auto" flex="1" p={'30px'}>
         <FFormGroup label={'To'} name={'to'}>
-          <Stack
-            spacing={0}
-            className={css`
-              > :not(:first-of-type) .bp4-input {
-                border-top-color: transparent;
-                border-top-right-radius: 0;
-                border-top-left-radius: 0;
-              }
-              > :not(:last-of-type) .bp4-input {
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-              }
-            `}
-          >
+          <Stack spacing={0} className={fieldsWrapStyle}>
             <FMultiSelect
               items={items}
               name={'to'}
@@ -118,34 +135,8 @@ export function InvoiceSendMailFields() {
               popoverProps={{ minimal: true, fill: true }}
               tagInputProps={{
                 tagProps: { round: true, minimal: true, large: true },
+                rightElement: rightElementsToField,
                 large: true,
-                rightElement: (
-                  <Group
-                    spacing={0}
-                    paddingRight={'7px'}
-                    paddingTop={'7px'}
-                    fontWeight={500}
-                    color={'#000'}
-                  >
-                    <Button
-                      onClick={handleClickCcBtn}
-                      minimal
-                      small
-                      className={styleEmailButton}
-                    >
-                      CC
-                    </Button>
-
-                    <Button
-                      onClick={handleClickBccBtn}
-                      minimal
-                      small
-                      className={styleEmailButton}
-                    >
-                      BCC
-                    </Button>
-                  </Group>
-                ),
               }}
               createNewItemRenderer={createNewItemRenderer}
               createNewItemFromQuery={createNewItemFromQuery}
@@ -252,3 +243,4 @@ function InvoiceSendMailFooter() {
     </Group>
   );
 }
+

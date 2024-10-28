@@ -1,5 +1,11 @@
 // @ts-nocheck
-import { useQueryClient, useMutation, useQuery } from 'react-query';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseMutationOptions,
+  UseMutationResult,
+} from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination, transformToCamelCase } from '@/utils';
 import useApiRequest from '../useRequest';
@@ -312,18 +318,49 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
   );
 }
 
-export function useSendSaleInvoiceMail(props) {
+interface SendSaleInvoiceMailValues {
+  id: number;
+  values: {
+    subject: string;
+    message: string;
+    to: Array<string>;
+    cc?: Array<string>;
+    bcc?: Array<string>;
+    attachInvoice?: boolean;
+  };
+}
+interface SendSaleInvoiceMailResponse {}
+/**
+ * Sends the sale invoice mail.
+ * @param {UseMutationOptions<SendSaleInvoiceMailValues, Error, SendSaleInvoiceMailResponse>}
+ * @returns {UseMutationResult<SendSaleInvoiceMailResponse, Error, SendSaleInvoiceMailValues>}
+ */
+export function useSendSaleInvoiceMail(
+  options?: UseMutationOptions<
+    SendSaleInvoiceMailResponse,
+    Error,
+    SendSaleInvoiceMailValues
+  >,
+): UseMutationResult<
+  SendSaleInvoiceMailResponse,
+  Error,
+  SendSaleInvoiceMailValues
+> {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}/mail`, values),
+  return useMutation<
+    SendSaleInvoiceMailResponse,
+    Error,
+    SendSaleInvoiceMailValues
+  >(
+    (value) => apiRequest.post(`sales/invoices/${value.id}/mail`, value.values),
     {
-      onSuccess: (res, [id, values]) => {
+      onSuccess: (res) => {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
-      ...props,
+      ...options,
     },
   );
 }

@@ -1,6 +1,14 @@
 import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { css } from '@emotion/css';
+import { Intent } from '@blueprintjs/core';
+import { InvoiceSendMailFormValues } from './_types';
+import { InvoiceSendMailFormSchema } from './InvoiceSendMailForm.schema';
+import { useSendSaleInvoiceMail } from '@/hooks/query';
+import { AppToaster } from '@/components';
+import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
+import { useDrawerActions } from '@/hooks/state';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 const initialValues = {
   subject: 'invoice INV-0002 for AED 0.00',
@@ -17,33 +25,40 @@ If you have any questions, please let us know,
 Thanks,
 Mohamed`,
   to: ['a.bouhuolia@gmail.com'],
-  cc: [],
-  bcc: [],
 };
-interface InvoiceSendMailFormValues {
-  subject: string;
-  message: string;
-  to: string;
-  cc: string;
-}
-
-const InvoiceSendMailFormSchema = Yup.object().shape({
-  subject: Yup.string().required('Subject is required'),
-  message: Yup.string().required('Message is required'),
-  to: Yup.string().email('Invalid email').required('To address is required'),
-  cc: Yup.string().email('Invalid email'),
-});
 
 interface InvoiceSendMailFormProps {
   children: React.ReactNode;
 }
 
 export function InvoiceSendMailForm({ children }: InvoiceSendMailFormProps) {
-  //
+  const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
+  const { invoiceId } = useInvoiceSendMailBoot();
+  const { name } = useDrawerContext();
+  const { closeDrawer } = useDrawerActions();
+
   const handleSubmit = (
     values: InvoiceSendMailFormValues,
     { setSubmitting }: FormikHelpers<InvoiceSendMailFormValues>,
-  ) => {};
+  ) => {
+    setSubmitting(true);
+    sendInvoiceMail({ id: invoiceId, values: { ...values } })
+      .then(() => {
+        AppToaster.show({
+          message: 'The invoice mail has been sent to the customer.',
+          intent: Intent.SUCCESS,
+        });
+        setSubmitting(false);
+        closeDrawer(name);
+      })
+      .catch((error) => {
+        setSubmitting(false);
+        AppToaster.show({
+          message: 'Something went wrong!',
+          intent: Intent.SUCCESS,
+        });
+      });
+  };
 
   return (
     <Formik

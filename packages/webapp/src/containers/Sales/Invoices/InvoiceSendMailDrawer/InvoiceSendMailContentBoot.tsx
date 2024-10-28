@@ -6,6 +6,7 @@ import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 interface InvoiceSendMailBootValues {
   invoice: any;
+  invoiceId: number;
   isInvoiceLoading: boolean;
 }
 interface InvoiceSendMailBootProps {
@@ -31,6 +32,7 @@ export const InvoiceSendMailBoot = ({ children }: InvoiceSendMailBootProps) => {
   const value = {
     invoice,
     isInvoiceLoading,
+    invoiceId,
   };
 
   return (
