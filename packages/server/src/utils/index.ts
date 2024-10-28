@@ -406,7 +406,7 @@ export const runningAmount = (amount: number) => {
   };
 };
 
-export const formatSmsMessage = (message, args) => {
+export const formatSmsMessage = (message: string, args) => {
   let formattedMessage = message;
 
   Object.keys(args).forEach((key) => {

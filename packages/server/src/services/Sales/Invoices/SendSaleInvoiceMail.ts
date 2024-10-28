@@ -1,15 +1,23 @@
 import { Inject, Service } from 'typedi';
 import Mail from '@/lib/Mail';
-import { ISaleInvoiceMailSend, SendInvoiceMailDTO } from '@/interfaces';
+import {
+  ISaleInvoiceMailSend,
+  SaleInvoiceMailOptions,
+  SendInvoiceMailDTO,
+} from '@/interfaces';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon';
 import {
   DEFAULT_INVOICE_MAIL_CONTENT,
   DEFAULT_INVOICE_MAIL_SUBJECT,
 } from './constants';
-import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import {
+  parseMailOptions,
+  validateRequiredMailOptions,
+} from '@/services/MailNotification/utils';
 import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { ParsedNumberSearch } from 'libphonenumber-js';
 
 @Service()
 export class SendSaleInvoiceMail {
@@ -57,12 +65,17 @@ export class SendSaleInvoiceMail {
    * @param {number} saleInvoiceId
    * @returns {Promise<SaleInvoiceMailOptions>}
    */
-  public async getMailOption(tenantId: number, saleInvoiceId: number) {
-    return this.invoiceMail.getMailOption(
+  public async getMailOption(
+    tenantId: number,
+    saleInvoiceId: number,
+    defaultSubject: string = DEFAULT_INVOICE_MAIL_SUBJECT,
+    defaultMessage: string = DEFAULT_INVOICE_MAIL_CONTENT
+  ): Promise<SaleInvoiceMailOptions> {
+    return this.invoiceMail.getInvoiceMailOptions(
       tenantId,
       saleInvoiceId,
-      DEFAULT_INVOICE_MAIL_SUBJECT,
-      DEFAULT_INVOICE_MAIL_CONTENT
+      defaultSubject,
+      defaultMessage
     );
   }
 
@@ -78,44 +91,58 @@ export class SendSaleInvoiceMail {
     saleInvoiceId: number,
     messageOptions: SendInvoiceMailDTO
   ) {
-    const defaultMessageOpts = await this.getMailOption(
+    const defaultMessageOptions = await this.getMailOption(
       tenantId,
       saleInvoiceId
     );
-    // Merge message opts with default options and validate the incoming options.
-    const messageOpts = parseAndValidateMailOptions(
-      defaultMessageOpts,
+    // Merges message options with default options and parses the options values.
+    const parsedMessageOptions = parseMailOptions(
+      defaultMessageOptions,
       messageOptions
     );
-    const mail = new Mail()
-      .setSubject(messageOpts.subject)
-      .setTo(messageOpts.to)
-      .setContent(messageOpts.body);
+    // Validates the required mail options.
+    validateRequiredMailOptions(parsedMessageOptions);
 
-    if (messageOpts.attachInvoice) {
-      // Retrieves document buffer of the invoice pdf document.
-      const invoicePdfBuffer = await this.invoicePdf.saleInvoicePdf(
+    const formattedMessageOptions =
+      await this.invoiceMail.formatInvoiceMailOptions(
         tenantId,
-        saleInvoiceId
+        saleInvoiceId,
+        parsedMessageOptions
       );
+    const mail = new Mail()
+      .setSubject(formattedMessageOptions.subject)
+      .setTo(formattedMessageOptions.to)
+      .setContent(formattedMessageOptions.message);
+
+    // Attach invoice document.
+    if (formattedMessageOptions.attachInvoice) {
+      // Retrieves document buffer of the invoice pdf document.
+      const [invoicePdfBuffer, invoiceFilename] =
+        await this.invoicePdf.saleInvoicePdf(tenantId, saleInvoiceId);
+
       mail.setAttachments([
-        { filename: 'invoice.pdf', content: invoicePdfBuffer },
+        { filename: `${invoiceFilename}.pdf`, content: invoicePdfBuffer },
       ]);
     }
-    // Triggers the event `onSaleInvoiceSend`.
-    await this.eventPublisher.emitAsync(events.saleInvoice.onMailSend, {
+
+    const eventPayload = {
       tenantId,
       saleInvoiceId,
       messageOptions,
-    } as ISaleInvoiceMailSend);
+      formattedMessageOptions,
+    } as ISaleInvoiceMailSend;
 
+    // Triggers the event `onSaleInvoiceSend`.
+    await this.eventPublisher.emitAsync(
+      events.saleInvoice.onMailSend,
+      eventPayload
+    );
     await mail.send();
 
     // Triggers the event `onSaleInvoiceSend`.
-    await this.eventPublisher.emitAsync(events.saleInvoice.onMailSent, {
-      tenantId,
-      saleInvoiceId,
-      messageOptions,
-    } as ISaleInvoiceMailSend);
+    await this.eventPublisher.emitAsync(
+      events.saleInvoice.onMailSent,
+      eventPayload
+    );
   }
 }

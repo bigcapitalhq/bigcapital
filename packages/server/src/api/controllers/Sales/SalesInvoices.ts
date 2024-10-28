@@ -179,10 +179,21 @@ export default class SaleInvoicesController extends BaseController {
       '/:id/mail',
       [
         ...this.specificSaleInvoiceValidation,
-        body('subject').isString().optional(),
+        
+        body('subject').isString().optional({ nullable: true }),
+        body('message').isString().optional({ nullable: true }),
+
         body('from').isString().optional(),
-        body('to').isString().optional(),
-        body('body').isString().optional(),
+
+        body('to').isArray().exists(),
+        body('to.*').isString().isEmail().optional(),
+
+        body('cc').isArray().optional({ nullable: true }),
+        body('cc.*').isString().isEmail().optional(),
+
+        body('bcc').isArray().optional({ nullable: true }),
+        body('bcc.*').isString().isEmail().optional(),
+
         body('attach_invoice').optional().isBoolean().toBoolean(),
       ],
       this.validationResult,

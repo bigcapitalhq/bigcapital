@@ -29,7 +29,13 @@ export const useStripeIntegrationEditBoot = () => {
   return context;
 };
 
-export const StripeIntegrationEditBoot: React.FC = ({ children }) => {
+interface StripeIntegrationEditBootProps {
+  children: React.ReactNode;
+}
+
+export const StripeIntegrationEditBoot: React.FC<
+  StripeIntegrationEditBootProps
+> = ({ children }) => {
   const {
     payload: { stripePaymentMethodId },
   } = useDrawerContext();

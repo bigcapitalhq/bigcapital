@@ -4,6 +4,9 @@ export const SALE_INVOICE_DELETED = 'Sale invoice deleted';
 export const SALE_INVOICE_MAIL_DELIVERED = 'Sale invoice mail delivered';
 export const SALE_INVOICE_VIEWED = 'Sale invoice viewed';
 export const SALE_INVOICE_PDF_VIEWED = 'Sale invoice PDF viewed';
+export const SALE_INVOICE_MAIL_SENT = 'Sale invoice mail sent';
+export const SALE_INVOICE_MAIL_REMINDER_SENT =
+  'Sale invoice reminder mail sent';
 
 export const SALE_ESTIMATE_CREATED = 'Sale estimate created';
 export const SALE_ESTIMATE_EDITED = 'Sale estimate edited';

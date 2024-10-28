@@ -234,7 +234,7 @@ export enum SaleInvoiceAction {
 }
 
 export interface SaleInvoiceMailOptions extends CommonMailOptions {
-  attachInvoice: boolean;
+  attachInvoice?: boolean;
 }
 
 export interface SendInvoiceMailDTO extends CommonMailOptionsDTO {
@@ -251,6 +251,7 @@ export interface ISaleInvoiceMailSend {
   tenantId: number;
   saleInvoiceId: number;
   messageOptions: SendInvoiceMailDTO;
+  formattedMessageOptions: SaleInvoiceMailOptions;
 }
 
 export interface ISaleInvoiceMailSent {

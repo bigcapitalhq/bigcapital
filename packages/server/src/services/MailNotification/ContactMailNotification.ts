@@ -4,6 +4,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { MailTenancy } from '@/services/MailTenancy/MailTenancy';
 import { formatSmsMessage } from '@/utils';
 import { Tenant } from '@/system/models';
+import { castArray } from 'lodash';
 
 @Service()
 export class ContactMailNotification {
@@ -14,76 +15,54 @@ export class ContactMailNotification {
   private tenancy: HasTenancyService;
 
   /**
-   * Parses the default message options.
-   * @param {number} tenantId -
-   * @param {number} invoiceId -
-   * @param {string} subject -
-   * @param {string} body -
-   * @returns {Promise<SaleInvoiceMailOptions>}
+   * Gets the default mail address of the given contact.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} invoiceId - Contact id.
+   * @returns {Promise<Pick<CommonMailOptions, 'to' | 'from'>>}
    */
   public async getDefaultMailOptions(
     tenantId: number,
-    contactId: number,
-    subject: string = '',
-    body: string = ''
-  ): Promise<CommonMailOptions> {
+    customerId: number
+  ): Promise<Pick<CommonMailOptions, 'to' | 'from'>> {
     const { Customer } = this.tenancy.models(tenantId);
-    const contact = await Customer.query()
-      .findById(contactId)
+    const customer = await Customer.query()
+      .findById(customerId)
       .throwIfNotFound();
 
-    const toAddresses = contact.contactAddresses;
+    const toAddresses = customer.contactAddresses;
     const fromAddresses = await this.mailTenancy.senders(tenantId);
 
     const toAddress = toAddresses.find((a) => a.primary);
     const fromAddress = fromAddresses.find((a) => a.primary);
 
-    const to = toAddress?.mail || '';
-    const from = fromAddress?.mail || '';
+    const to = toAddress?.mail ? castArray(toAddress?.mail) : [];
+    const from = fromAddress?.mail ? castArray(fromAddress?.mail) : [];
 
-    return {
-      subject,
-      body,
-      to,
-      from,
-      fromAddresses,
-      toAddresses,
-    };
+    return { to, from };
   }
 
   /**
    * Retrieves the mail options of the given contact.
    * @param {number} tenantId - Tenant id.
-   * @param {number} invoiceId - Invoice id.
-   * @param {string} defaultSubject - Default subject text.
-   * @param {string} defaultBody - Default body text.
    * @returns {Promise<CommonMailOptions>}
    */
-  public async getMailOptions(
+  public async parseMailOptions(
     tenantId: number,
-    contactId: number,
-    defaultSubject?: string,
-    defaultBody?: string,
-    formatterData?: Record<string, any>
+    mailOptions: CommonMailOptions,
+    formatterArgs?: Record<string, any>
   ): Promise<CommonMailOptions> {
-    const mailOpts = await this.getDefaultMailOptions(
-      tenantId,
-      contactId,
-      defaultSubject,
-      defaultBody
-    );
     const commonFormatArgs = await this.getCommonFormatArgs(tenantId);
     const formatArgs = {
       ...commonFormatArgs,
-      ...formatterData,
+      ...formatterArgs,
     };
-    const subject = formatSmsMessage(mailOpts.subject, formatArgs);
-    const body = formatSmsMessage(mailOpts.body, formatArgs);
+    const subjectFormatted = formatSmsMessage(mailOptions?.subject, formatArgs);
+    const messageFormatted = formatSmsMessage(mailOptions?.message, formatArgs);
 
     return {
-      ...mailOpts,
-      subject,
-      body,
+      ...mailOptions,
+      subject: subjectFormatted,
+      message: messageFormatted,
     };
   }
 

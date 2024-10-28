@@ -357,7 +357,6 @@ export function useSendSaleInvoiceMail(
     (value) => apiRequest.post(`sales/invoices/${value.id}/mail`, value.values),
     {
       onSuccess: (res) => {
-        // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
       ...options,
