@@ -48,11 +48,14 @@ export class SendSaleInvoiceMailCommon {
         tenantId,
         saleInvoice.customerId
       );
+    const formatArgs = await this.getInvoiceFormatterArgs(tenantId, invoiceId);
+
     return {
       ...contactMailDefaultOptions,
-      attachInvoice: true,
       subject: defaultSubject,
       message: defaultMessage,
+      attachInvoice: true,
+      formatArgs,
     };
   }
 
@@ -103,7 +106,11 @@ export class SendSaleInvoiceMailCommon {
       tenantId,
       invoiceId
     );
+    const commonArgs =
+      await this.contactMailNotification.getCommonFormatArgs(tenantId);
+
     return {
+      ...commonArgs,
       CustomerName: invoice.customer.displayName,
       InvoiceNumber: invoice.invoiceNo,
       InvoiceDueAmount: invoice.dueAmountFormatted,

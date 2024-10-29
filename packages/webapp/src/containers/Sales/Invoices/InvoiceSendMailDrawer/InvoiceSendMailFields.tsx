@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { useState } from 'react';
-import { Button, Intent, MenuItem } from '@blueprintjs/core';
+import { useRef, useState } from 'react';
+import { Button, Intent, MenuItem, Position } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
@@ -9,8 +9,10 @@ import {
   FFormGroup,
   FInputGroup,
   FMultiSelect,
+  FSelect,
   FTextArea,
   Group,
+  Icon,
   Stack,
 } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
@@ -60,6 +62,7 @@ const fieldsWrapStyle = css`
 export function InvoiceSendMailFields() {
   const [showCCField, setShowCCField] = useState<boolean>(false);
   const [showBccField, setShowBccField] = useState<boolean>(false);
+  const textareaRef = useRef(null);
 
   const { values, setFieldValue } = useFormikContext();
   const items = useInvoiceMailItems();
@@ -117,6 +120,30 @@ export function InvoiceSendMailFields() {
     </Group>
   );
 
+  const handleTextareaChange = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const { selectionStart, selectionEnd } = textarea;
+    const insertText = '{Variable}';
+
+    // Insert the text at the cursor position
+    const message =
+      text.substring(0, selectionStart) +
+      insertText +
+      text.substring(selectionEnd);
+
+    setFieldValue('message', message);
+
+    // Move the cursor to the end of the inserted text
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd =
+        selectionStart + insertText.length;
+
+      textarea.focus();
+    }, 0);
+  };
+
   return (
     <Stack
       bg="white"
@@ -144,6 +171,7 @@ export function InvoiceSendMailFields() {
               resetOnQuery
               resetOnSelect
               fill
+              fastField
             />
             {showCCField && (
               <FMultiSelect
@@ -161,6 +189,7 @@ export function InvoiceSendMailFields() {
                 resetOnQuery
                 resetOnSelect
                 fill
+                fastField
               />
             )}
             {showBccField && (
@@ -179,25 +208,62 @@ export function InvoiceSendMailFields() {
                 resetOnQuery
                 resetOnSelect
                 fill
+                fastField
               />
             )}
           </Stack>
         </FFormGroup>
 
         <FFormGroup label={'Submit'} name={'subject'}>
-          <FInputGroup name={'subject'} large />
+          <FInputGroup name={'subject'} large fastField />
         </FFormGroup>
 
         <FFormGroup label={'Message'} name={'message'}>
-          <FTextArea
-            name={'message'}
-            large
-            fill
-            className={css`
-              resize: vertical;
-              min-height: 200px;
-            `}
-          />
+          <Stack spacing={0}>
+            <Group
+              border={'1px solid #ced4da'}
+              borderBottom={0}
+              borderRadius={'3px 3px 0 0'}
+            >
+              <FSelect
+                selectedItem={'customerName'}
+                name={'item'}
+                items={[{ value: 'customerName', text: 'Customer Name' }]}
+                onItemChange={handleTextareaChange}
+                popoverProps={{
+                  fill: false,
+                  position: Position.BOTTOM_LEFT,
+                  minimal: true,
+                }}
+                input={({ activeItem, text, label, value }) => (
+                  <Button
+                    minimal
+                    rightIcon={
+                      <Icon icon={'caret-down-16'} color={'#8F99A8'} />
+                    }
+                  >
+                    {text}
+                  </Button>
+                )}
+                fill={false}
+                fastField
+              />
+            </Group>
+
+            <FTextArea
+              ref={textareaRef}
+              name={'message'}
+              large
+              fill
+              fastField
+              className={css`
+                resize: vertical;
+                min-height: 200px;
+                border-top-right-radius: 0px;
+                border-top-left-radius: 0px;
+              `}
+            />
+          </Stack>
         </FFormGroup>
       </Stack>
 
@@ -243,4 +309,3 @@ function InvoiceSendMailFooter() {
     </Group>
   );
 }
-

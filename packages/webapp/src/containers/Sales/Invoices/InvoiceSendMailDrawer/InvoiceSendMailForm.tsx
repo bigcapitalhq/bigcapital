@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { css } from '@emotion/css';
 import { Intent } from '@blueprintjs/core';
@@ -9,22 +8,14 @@ import { AppToaster } from '@/components';
 import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
 import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { transformToForm } from '@/utils';
 
 const initialValues = {
-  subject: 'invoice INV-0002 for AED 0.00',
-  message: `Hi Ahmed,
-
-Here’s invoice INV-0002 for AED 0.00
-
-The amount outstanding of AED $100,00 is due on 2 October 2024
-
-View your bill online From your online you can print a PDF or pay your outstanding bills,
-
-If you have any questions, please let us know,
-
-Thanks,
-Mohamed`,
-  to: ['a.bouhuolia@gmail.com'],
+  subject: '',
+  message: '',
+  to: [],
+  cc: [],
+  bcc: [],
 };
 
 interface InvoiceSendMailFormProps {
@@ -33,10 +24,14 @@ interface InvoiceSendMailFormProps {
 
 export function InvoiceSendMailForm({ children }: InvoiceSendMailFormProps) {
   const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
-  const { invoiceId } = useInvoiceSendMailBoot();
+  const { invoiceId, invoiceMailOptions } = useInvoiceSendMailBoot();
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
 
+  const _initialValues = {
+    ...initialValues,
+    ...transformToForm(invoiceMailOptions, initialValues),
+  };
   const handleSubmit = (
     values: InvoiceSendMailFormValues,
     { setSubmitting }: FormikHelpers<InvoiceSendMailFormValues>,
@@ -62,7 +57,7 @@ export function InvoiceSendMailForm({ children }: InvoiceSendMailFormProps) {
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={_initialValues}
       validationSchema={InvoiceSendMailFormSchema}
       onSubmit={handleSubmit}
     >

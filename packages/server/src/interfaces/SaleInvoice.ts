@@ -235,6 +235,7 @@ export enum SaleInvoiceAction {
 
 export interface SaleInvoiceMailOptions extends CommonMailOptions {
   attachInvoice?: boolean;
+  formatArgs?: Record<string, any>;
 }
 
 export interface SendInvoiceMailDTO extends CommonMailOptionsDTO {

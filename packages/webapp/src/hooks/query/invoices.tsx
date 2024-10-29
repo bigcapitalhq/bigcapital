@@ -5,6 +5,8 @@ import {
   useQuery,
   UseMutationOptions,
   UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
 } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination, transformToCamelCase } from '@/utils';
@@ -364,17 +366,28 @@ export function useSendSaleInvoiceMail(
   );
 }
 
-export function useSaleInvoiceDefaultOptions(invoiceId, props) {
-  return useRequestQuery(
+export interface GetSaleInvoiceDefaultOptionsResponse {
+  to: Array<string>;
+  from: Array<String>;
+  subject: string;
+  message: string;
+  attachInvoice: boolean;
+  formatArgs: Record<string, string>;
+}
+
+export function useSaleInvoiceDefaultOptions(
+  invoiceId: number,
+  options?: UseQueryOptions<GetSaleInvoiceDefaultOptionsResponse>,
+): UseQueryResult<GetSaleInvoiceDefaultOptionsResponse> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleInvoiceDefaultOptionsResponse>(
     [t.SALE_INVOICE_DEFAULT_OPTIONS, invoiceId],
-    {
-      method: 'get',
-      url: `sales/invoices/${invoiceId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+    () =>
+      apiRequest
+        .get(`/sales/invoices/${invoiceId}/mail`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    options,
   );
 }
 

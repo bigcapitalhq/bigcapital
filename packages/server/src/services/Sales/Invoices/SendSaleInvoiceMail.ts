@@ -15,9 +15,8 @@ import {
   parseMailOptions,
   validateRequiredMailOptions,
 } from '@/services/MailNotification/utils';
-import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { ParsedNumberSearch } from 'libphonenumber-js';
+import events from '@/subscribers/events';
 
 @Service()
 export class SendSaleInvoiceMail {

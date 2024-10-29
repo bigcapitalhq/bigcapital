@@ -1,13 +1,20 @@
 // @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
-import { useInvoice } from '@/hooks/query';
+import {
+  GetSaleInvoiceDefaultOptionsResponse,
+  useInvoice,
+  useSaleInvoiceDefaultOptions,
+} from '@/hooks/query';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 interface InvoiceSendMailBootValues {
   invoice: any;
   invoiceId: number;
   isInvoiceLoading: boolean;
+
+  invoiceMailOptions: GetSaleInvoiceDefaultOptionsResponse | undefined;
+  isInvoiceMailOptionsLoading: boolean;
 }
 interface InvoiceSendMailBootProps {
   children: React.ReactNode;
@@ -21,10 +28,15 @@ export const InvoiceSendMailBoot = ({ children }: InvoiceSendMailBootProps) => {
     payload: { invoiceId },
   } = useDrawerContext();
 
+  // Invoice details.
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
   });
-  const isLoading = isInvoiceLoading;
+  // Invoice mail options.
+  const { data: invoiceMailOptions, isLoading: isInvoiceMailOptionsLoading } =
+    useSaleInvoiceDefaultOptions(invoiceId);
+
+  const isLoading = isInvoiceLoading || isInvoiceMailOptionsLoading;
 
   if (isLoading) {
     return <Spinner size={20} />;
@@ -33,6 +45,8 @@ export const InvoiceSendMailBoot = ({ children }: InvoiceSendMailBootProps) => {
     invoice,
     isInvoiceLoading,
     invoiceId,
+    invoiceMailOptions,
+    isInvoiceMailOptionsLoading,
   };
 
   return (
