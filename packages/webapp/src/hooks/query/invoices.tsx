@@ -320,7 +320,7 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
   );
 }
 
-interface SendSaleInvoiceMailValues {
+export interface SendSaleInvoiceMailValues {
   id: number;
   values: {
     subject: string;
@@ -331,7 +331,7 @@ interface SendSaleInvoiceMailValues {
     attachInvoice?: boolean;
   };
 }
-interface SendSaleInvoiceMailResponse {}
+export interface SendSaleInvoiceMailResponse { }
 /**
  * Sends the sale invoice mail.
  * @param {UseMutationOptions<SendSaleInvoiceMailValues, Error, SendSaleInvoiceMailResponse>}

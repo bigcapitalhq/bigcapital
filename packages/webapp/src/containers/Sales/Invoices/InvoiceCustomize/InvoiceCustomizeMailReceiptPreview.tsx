@@ -1,8 +1,8 @@
 import * as R from 'ramda';
+import { useFormikContext } from 'formik';
 import { InvoicePaymentPagePreviewProps } from '@/containers/PaymentPortal/InvoicePaymentPagePreview';
 import { InvoiceCustomizeFormValues } from './types';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
-import { useFormikContext } from 'formik';
 import { InvoiceMailReceiptPreview } from './InvoiceMailReceiptPreview';
 import { Box } from '@/components';
 

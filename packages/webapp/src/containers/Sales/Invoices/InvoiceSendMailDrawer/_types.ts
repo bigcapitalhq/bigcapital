@@ -4,4 +4,5 @@ export interface InvoiceSendMailFormValues {
   to: string[];
   cc: string[];
   bcc: string[];
+  attachPdf: boolean;
 }

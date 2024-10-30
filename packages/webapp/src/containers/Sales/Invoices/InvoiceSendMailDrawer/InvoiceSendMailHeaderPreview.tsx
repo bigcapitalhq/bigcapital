@@ -1,4 +1,3 @@
-import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
 import { Box, Group, Stack } from '@/components';
 import React from 'react';
@@ -27,17 +26,15 @@ export function InvoiceSendMailHeaderPreview() {
         <Group display="flex" alignItems="center" gap={15}>
           <x.abbr
             role="presentation"
-            className={css`
-              background-color: #daa3e4;
-              color: #3f1946;
-              fill: #daa3e4;
-              height: 40px;
-              width: 40px;
-              line-height: 40px;
-              text-align: center;
-              border-radius: 40px;
-              font-size: 14px;
-            `}
+            w={'40px'}
+            h={'40px'}
+            bg={'#daa3e4'}
+            fill={'#daa3e4'}
+            color={'#3f1946'}
+            lineHeight={'40px'}
+            textAlign={'center'}
+            borderRadius={'40px'}
+            fontSize={'14px'}
           >
             A
           </x.abbr>

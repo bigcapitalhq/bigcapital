@@ -20,7 +20,12 @@ function EstimateCustomizeDrawerRoot({
   payload,
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} payload={payload} size={'100%'}>
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      payload={payload}
+      size={'calc(100% - 10px)'}
+    >
       <DrawerSuspense>
         <EstimateCustomizeDrawerBody />
       </DrawerSuspense>

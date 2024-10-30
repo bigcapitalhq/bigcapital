@@ -1,11 +1,11 @@
 // @ts-nocheck
-import { useRef, useState } from 'react';
 import { Button, Intent, MenuItem, Position } from '@blueprintjs/core';
+import { useRef, useState, useMemo, useCallback } from 'react';
 import { useFormikContext } from 'formik';
+import { SelectOptionProps } from '@blueprintjs-formik/select';
 import { css } from '@emotion/css';
-import { x } from '@xstyled/emotion';
-import { unique, chain } from 'lodash';
 import {
+  FCheckbox,
   FFormGroup,
   FInputGroup,
   FMultiSelect,
@@ -17,7 +17,6 @@ import {
 } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
-import { SelectOptionProps } from '@blueprintjs-formik/select';
 import { useInvoiceMailItems } from './_hooks';
 
 // Create new account renderer.
@@ -62,7 +61,7 @@ const fieldsWrapStyle = css`
 export function InvoiceSendMailFields() {
   const [showCCField, setShowCCField] = useState<boolean>(false);
   const [showBccField, setShowBccField] = useState<boolean>(false);
-  const textareaRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const { values, setFieldValue } = useFormikContext();
   const items = useInvoiceMailItems();
@@ -92,7 +91,7 @@ export function InvoiceSendMailFields() {
     setFieldValue('bcc', [...values?.bcc, value?.name]);
   };
 
-  const rightElementsToField = (
+  const rightElementsToField = useMemo(() => (
     <Group
       spacing={0}
       paddingRight={'7px'}
@@ -118,16 +117,14 @@ export function InvoiceSendMailFields() {
         BCC
       </Button>
     </Group>
-  );
+  ), []);
 
-  const handleTextareaChange = () => {
+  const handleTextareaChange = useCallback((item: SelectOptionProps) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
-    const { selectionStart, selectionEnd } = textarea;
-    const insertText = '{Variable}';
-
-    // Insert the text at the cursor position
+    const { selectionStart, selectionEnd, value: text } = textarea;
+    const insertText = item.value;
     const message =
       text.substring(0, selectionStart) +
       insertText +
@@ -139,10 +136,9 @@ export function InvoiceSendMailFields() {
     setTimeout(() => {
       textarea.selectionStart = textarea.selectionEnd =
         selectionStart + insertText.length;
-
       textarea.focus();
     }, 0);
-  };
+  }, [setFieldValue]);
 
   return (
     <Stack
@@ -228,7 +224,7 @@ export function InvoiceSendMailFields() {
               <FSelect
                 selectedItem={'customerName'}
                 name={'item'}
-                items={[{ value: 'customerName', text: 'Customer Name' }]}
+                items={[{ value: 'CustomerName', text: 'Customer Name' }]}
                 onItemChange={handleTextareaChange}
                 popoverProps={{
                   fill: false,
@@ -251,20 +247,24 @@ export function InvoiceSendMailFields() {
             </Group>
 
             <FTextArea
-              ref={textareaRef}
+              inputRef={textareaRef}
               name={'message'}
               large
               fill
               fastField
               className={css`
                 resize: vertical;
-                min-height: 200px;
+                min-height: 300px;
                 border-top-right-radius: 0px;
                 border-top-left-radius: 0px;
               `}
             />
           </Stack>
         </FFormGroup>
+
+        <Group>
+          <FCheckbox name={'attachPdf'} label={'Attach PDF'} />
+        </Group>
       </Stack>
 
       <InvoiceSendMailFooter />

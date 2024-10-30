@@ -10,12 +10,13 @@ import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { transformToForm } from '@/utils';
 
-const initialValues = {
+const initialValues: InvoiceSendMailFormValues = {
   subject: '',
   message: '',
   to: [],
   cc: [],
   bcc: [],
+  attachPdf: true,
 };
 
 interface InvoiceSendMailFormProps {
@@ -28,7 +29,7 @@ export function InvoiceSendMailForm({ children }: InvoiceSendMailFormProps) {
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
 
-  const _initialValues = {
+  const _initialValues: InvoiceSendMailFormValues = {
     ...initialValues,
     ...transformToForm(invoiceMailOptions, initialValues),
   };
