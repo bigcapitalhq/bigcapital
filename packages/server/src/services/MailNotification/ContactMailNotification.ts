@@ -79,7 +79,7 @@ export class ContactMailNotification {
       .withGraphFetched('metadata');
 
     return {
-      CompanyName: organization.metadata.name,
+      ['Company Name']: organization.metadata.name,
     };
   }
 }

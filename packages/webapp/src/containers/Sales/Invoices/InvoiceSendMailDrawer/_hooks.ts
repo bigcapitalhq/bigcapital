@@ -1,8 +1,9 @@
 import { useFormikContext } from 'formik';
-import { camelCase, chain, defaultTo, mapKeys, upperFirst } from 'lodash';
+import { useMemo } from 'react';
+import { SelectOptionProps } from '@blueprintjs-formik/select';
+import { chain, defaultTo, mapKeys, snakeCase, startCase } from 'lodash';
 import { InvoiceSendMailFormValues } from './_types';
 import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
-import { useMemo } from 'react';
 
 export const useInvoiceMailItems = () => {
   const { values } = useFormikContext<InvoiceSendMailFormValues>();
@@ -19,24 +20,33 @@ export const useInvoiceMailItems = () => {
     .value();
 };
 
-export const useSendInvoiceMailFormatArgs = () => {
+export const useSendInvoiceMailFormatArgs = (): Record<string, string> => {
   const { invoiceMailOptions } = useInvoiceSendMailBoot();
 
   return useMemo(() => {
     return mapKeys(invoiceMailOptions?.formatArgs, (_, key) =>
-      upperFirst(camelCase(key)),
+      startCase(snakeCase(key).replace('_', ' ')),
     );
   }, [invoiceMailOptions]);
 };
 
-export const useSendInvoiceMailSubject = () => {
+export const useSendInvoiceMailSubject = (): string => {
   const { values } = useFormikContext<InvoiceSendMailFormValues>();
   const formatArgs = useSendInvoiceMailFormatArgs();
 
   return formatSmsMessage(values?.subject, formatArgs);
 };
 
-export const useSendInvoiceMailMessage = () => {
+export const useSendInvoiceFormatArgsOptions = (): Array<SelectOptionProps> => {
+  const formatArgs = useSendInvoiceMailFormatArgs();
+
+  return Object.keys(formatArgs).map((key) => ({
+    value: key,
+    text: key,
+  }));
+};
+
+export const useSendInvoiceMailMessage = (): string => {
   const { values } = useFormikContext<InvoiceSendMailFormValues>();
   const formatArgs = useSendInvoiceMailFormatArgs();
 

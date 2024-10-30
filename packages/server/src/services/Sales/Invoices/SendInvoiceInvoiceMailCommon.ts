@@ -106,18 +106,18 @@ export class SendSaleInvoiceMailCommon {
       tenantId,
       invoiceId
     );
-    const commonArgs =
-      await this.contactMailNotification.getCommonFormatArgs(tenantId);
-
+    const commonArgs = await this.contactMailNotification.getCommonFormatArgs(
+      tenantId
+    );
     return {
       ...commonArgs,
-      CustomerName: invoice.customer.displayName,
-      InvoiceNumber: invoice.invoiceNo,
-      InvoiceDueAmount: invoice.dueAmountFormatted,
-      InvoiceDueDate: invoice.dueDateFormatted,
-      InvoiceDate: invoice.invoiceDateFormatted,
-      InvoiceAmount: invoice.totalFormatted,
-      OverdueDays: invoice.overdueDays,
+      ['Customer Name']: invoice.customer.displayName,
+      ['Invoice Number']: invoice.invoiceNo,
+      ['Invoice DueAmount']: invoice.dueAmountFormatted,
+      ['Invoice DueDate']: invoice.dueDateFormatted,
+      ['Invoice Date']: invoice.invoiceDateFormatted,
+      ['Invoice Amount']: invoice.totalFormatted,
+      ['Overdue Days']: invoice.overdueDays,
     };
   };
 }

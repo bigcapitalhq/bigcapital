@@ -17,7 +17,7 @@ import {
 } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
-import { useInvoiceMailItems } from './_hooks';
+import { useInvoiceMailItems, useSendInvoiceFormatArgsOptions } from './_hooks';
 
 // Create new account renderer.
 const createNewItemRenderer = (query, active, handleClick) => {
@@ -65,6 +65,7 @@ export function InvoiceSendMailFields() {
 
   const { values, setFieldValue } = useFormikContext();
   const items = useInvoiceMailItems();
+  const argsOptions = useSendInvoiceFormatArgsOptions();
 
   const handleClickCcBtn = (event) => {
     event.preventDefault();
@@ -124,7 +125,7 @@ export function InvoiceSendMailFields() {
     if (!textarea) return;
 
     const { selectionStart, selectionEnd, value: text } = textarea;
-    const insertText = item.value;
+    const insertText = `{${item.value}}`;
     const message =
       text.substring(0, selectionStart) +
       insertText +
@@ -224,7 +225,7 @@ export function InvoiceSendMailFields() {
               <FSelect
                 selectedItem={'customerName'}
                 name={'item'}
-                items={[{ value: 'CustomerName', text: 'Customer Name' }]}
+                items={argsOptions}
                 onItemChange={handleTextareaChange}
                 popoverProps={{
                   fill: false,
@@ -238,7 +239,7 @@ export function InvoiceSendMailFields() {
                       <Icon icon={'caret-down-16'} color={'#8F99A8'} />
                     }
                   >
-                    {text}
+                    Insert Variable
                   </Button>
                 )}
                 fill={false}
