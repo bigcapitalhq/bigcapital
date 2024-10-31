@@ -179,7 +179,7 @@ export default class SaleInvoicesController extends BaseController {
       '/:id/mail',
       [
         ...this.specificSaleInvoiceValidation,
-        
+
         body('subject').isString().optional({ nullable: true }),
         body('message').isString().optional({ nullable: true }),
 
@@ -201,7 +201,7 @@ export default class SaleInvoicesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
-      '/:id/mail',
+      '/:id/mail/state',
       [...this.specificSaleInvoiceValidation],
       this.validationResult,
       asyncMiddleware(this.getSaleInvoiceMail.bind(this)),
@@ -789,7 +789,7 @@ export default class SaleInvoicesController extends BaseController {
   }
 
   /**
-   * Retrieves the default mail options of the given sale invoice.
+   * Retrieves the mail state of the given sale invoice.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -803,7 +803,7 @@ export default class SaleInvoicesController extends BaseController {
     const { id: invoiceId } = req.params;
 
     try {
-      const data = await this.saleInvoiceApplication.getSaleInvoiceMail(
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMailState(
         tenantId,
         invoiceId
       );

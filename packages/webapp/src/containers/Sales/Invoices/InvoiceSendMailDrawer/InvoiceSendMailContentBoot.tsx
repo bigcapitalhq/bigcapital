@@ -3,18 +3,15 @@ import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
 import {
   GetSaleInvoiceDefaultOptionsResponse,
-  useInvoice,
-  useSaleInvoiceDefaultOptions,
+  useSaleInvoiceMailState,
 } from '@/hooks/query';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 interface InvoiceSendMailBootValues {
-  invoice: any;
   invoiceId: number;
-  isInvoiceLoading: boolean;
 
-  invoiceMailOptions: GetSaleInvoiceDefaultOptionsResponse | undefined;
-  isInvoiceMailOptionsLoading: boolean;
+  invoiceMailState: GetSaleInvoiceDefaultOptionsResponse | undefined;
+  isInvoiceMailState: boolean;
 }
 interface InvoiceSendMailBootProps {
   children: React.ReactNode;
@@ -28,25 +25,21 @@ export const InvoiceSendMailBoot = ({ children }: InvoiceSendMailBootProps) => {
     payload: { invoiceId },
   } = useDrawerContext();
 
-  // Invoice details.
-  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
-    enabled: !!invoiceId,
-  });
   // Invoice mail options.
-  const { data: invoiceMailOptions, isLoading: isInvoiceMailOptionsLoading } =
-    useSaleInvoiceDefaultOptions(invoiceId);
+  const { data: invoiceMailState, isLoading: isInvoiceMailState } =
+    useSaleInvoiceMailState(invoiceId);
 
-  const isLoading = isInvoiceLoading || isInvoiceMailOptionsLoading;
+  const isLoading = isInvoiceMailState;
 
   if (isLoading) {
     return <Spinner size={20} />;
   }
   const value = {
-    invoice,
-    isInvoiceLoading,
     invoiceId,
-    invoiceMailOptions,
-    isInvoiceMailOptionsLoading,
+
+    // # Invoice mail options
+    isInvoiceMailState,
+    invoiceMailState,
   };
 
   return (

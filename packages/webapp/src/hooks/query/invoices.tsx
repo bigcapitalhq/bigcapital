@@ -320,6 +320,8 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
   );
 }
 
+// # Send sale invoice mail.
+// ------------------------------
 export interface SendSaleInvoiceMailValues {
   id: number;
   values: {
@@ -366,16 +368,49 @@ export function useSendSaleInvoiceMail(
   );
 }
 
+// # Get sale invoice default options.
+// --------------------------------------
 export interface GetSaleInvoiceDefaultOptionsResponse {
-  to: Array<string>;
-  from: Array<String>;
-  subject: string;
-  message: string;
-  attachInvoice: boolean;
+  companyName: string;
+
+  dueDate: string;
+  dueDateFormatted: string;
+
+  dueAmount: number;
+  dueAmountFormatted: string;
+
+  entries: Array<{
+    quantity: number;
+    quantityFormatted: string;
+    rate: number;
+    rateFormatted: string;
+    total: number;
+    totalFormatted: string;
+  }>;
   formatArgs: Record<string, string>;
+
+  from: string[];
+  to: string[];
+
+  invoiceDate: string;
+  invoiceDateFormatted: string;
+
+  invoiceNo: string;
+
+  message: string;
+  subject: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
+  total: number;
+  totalFormatted: string;
+
+  attachInvoice: boolean;
+  primaryColor: string;
 }
 
-export function useSaleInvoiceDefaultOptions(
+export function useSaleInvoiceMailState(
   invoiceId: number,
   options?: UseQueryOptions<GetSaleInvoiceDefaultOptionsResponse>,
 ): UseQueryResult<GetSaleInvoiceDefaultOptionsResponse> {
@@ -385,12 +420,14 @@ export function useSaleInvoiceDefaultOptions(
     [t.SALE_INVOICE_DEFAULT_OPTIONS, invoiceId],
     () =>
       apiRequest
-        .get(`/sales/invoices/${invoiceId}/mail`)
+        .get(`/sales/invoices/${invoiceId}/mail/state`)
         .then((res) => transformToCamelCase(res.data?.data)),
     options,
   );
 }
 
+// # Get sale invoice state.
+// -------------------------------------
 export interface GetSaleInvoiceStateResponse {
   defaultTemplateId: number;
 }
@@ -405,6 +442,71 @@ export function useGetSaleInvoiceState(
     () =>
       apiRequest
         .get(`/sales/invoices/state`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
+  );
+}
+
+// # Get sale invoice branding template.
+// --------------------------------------
+export interface GetSaleInvoiceBrandingTemplateResponse {
+  id: number;
+  default: number;
+  predefined: number;
+  resource: string;
+  resourceFormatted: string;
+  templateName: string;
+  updatedAt: string;
+  createdAt: string;
+  createdAtFormatted: string;
+  attributes: {
+    billedToLabel?: string;
+    companyLogoKey?: string | null;
+    companyLogoUri?: string;
+    dateIssueLabel?: string;
+    discountLabel?: string;
+    dueAmountLabel?: string;
+    dueDateLabel?: string;
+    invoiceNumberLabel?: string;
+    itemDescriptionLabel?: string;
+    itemNameLabel?: string;
+    itemRateLabel?: string;
+    itemTotalLabel?: string;
+    paymentMadeLabel?: string;
+    primaryColor?: string;
+    secondaryColor?: string;
+    showCompanyAddress?: boolean;
+    showCompanyLogo?: boolean;
+    showCustomerAddress?: boolean;
+    showDateIssue?: boolean;
+    showDiscount?: boolean;
+    showDueAmount?: boolean;
+    showDueDate?: boolean;
+    showInvoiceNumber?: boolean;
+    showPaymentMade?: boolean;
+    showStatement?: boolean;
+    showSubtotal?: boolean;
+    showTaxes?: boolean;
+    showTermsConditions?: boolean;
+    showTotal?: boolean;
+    statementLabel?: string;
+    subtotalLabel?: string;
+    termsConditionsLabel?: string;
+    totalLabel?: string;
+  };
+}
+
+export function useGetSaleInvoiceBrandingTemplate(
+  invoiceId: number,
+  options?: UseQueryOptions<GetSaleInvoiceBrandingTemplateResponse, Error>,
+): UseQueryResult<GetSaleInvoiceBrandingTemplateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleInvoiceBrandingTemplateResponse, Error>(
+    ['SALE_INVOICE_BRANDING_TEMPLATE', invoiceId],
+    () =>
+      apiRequest
+        .get(`/sales/invoices/${invoiceId}/template`)
         .then((res) => transformToCamelCase(res.data?.data)),
     { ...options },
   );

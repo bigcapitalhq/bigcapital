@@ -7,6 +7,7 @@ import { useDrawerActions } from '@/hooks/state';
 interface ElementCustomizeHeaderProps {
   label?: string;
   children?: React.ReactNode;
+  closeButton?: boolean;
 }
 
 export function InvoiceSendMailHeader({

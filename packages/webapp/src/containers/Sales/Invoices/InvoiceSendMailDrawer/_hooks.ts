@@ -5,6 +5,10 @@ import { chain, defaultTo, mapKeys, snakeCase, startCase } from 'lodash';
 import { InvoiceSendMailFormValues } from './_types';
 import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
 
+export const useSendInvoiceMailForm = () => {
+  return useFormikContext<InvoiceSendMailFormValues>();
+};
+
 export const useInvoiceMailItems = () => {
   const { values } = useFormikContext<InvoiceSendMailFormValues>();
   const cc = values?.cc || [];
@@ -21,13 +25,13 @@ export const useInvoiceMailItems = () => {
 };
 
 export const useSendInvoiceMailFormatArgs = (): Record<string, string> => {
-  const { invoiceMailOptions } = useInvoiceSendMailBoot();
+  const { invoiceMailState } = useInvoiceSendMailBoot();
 
   return useMemo(() => {
-    return mapKeys(invoiceMailOptions?.formatArgs, (_, key) =>
+    return mapKeys(invoiceMailState?.formatArgs, (_, key) =>
       startCase(snakeCase(key).replace('_', ' ')),
     );
-  }, [invoiceMailOptions]);
+  }, [invoiceMailState]);
 };
 
 export const useSendInvoiceMailSubject = (): string => {

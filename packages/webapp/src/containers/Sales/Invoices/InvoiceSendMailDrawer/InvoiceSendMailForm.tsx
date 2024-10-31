@@ -25,13 +25,14 @@ interface InvoiceSendMailFormProps {
 
 export function InvoiceSendMailForm({ children }: InvoiceSendMailFormProps) {
   const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
-  const { invoiceId, invoiceMailOptions } = useInvoiceSendMailBoot();
+  const { invoiceId, invoiceMailState } = useInvoiceSendMailBoot();
+
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
 
   const _initialValues: InvoiceSendMailFormValues = {
     ...initialValues,
-    ...transformToForm(invoiceMailOptions, initialValues),
+    ...transformToForm(invoiceMailState, initialValues),
   };
   const handleSubmit = (
     values: InvoiceSendMailFormValues,

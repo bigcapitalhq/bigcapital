@@ -1,16 +1,8 @@
 import { Inject, Service } from 'typedi';
 import Mail from '@/lib/Mail';
-import {
-  ISaleInvoiceMailSend,
-  SaleInvoiceMailOptions,
-  SendInvoiceMailDTO,
-} from '@/interfaces';
+import { ISaleInvoiceMailSend, SendInvoiceMailDTO } from '@/interfaces';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon';
-import {
-  DEFAULT_INVOICE_MAIL_CONTENT,
-  DEFAULT_INVOICE_MAIL_SUBJECT,
-} from './constants';
 import {
   parseMailOptions,
   validateRequiredMailOptions,
@@ -59,26 +51,6 @@ export class SendSaleInvoiceMail {
   }
 
   /**
-   * Retrieves the mail options of the given sale invoice.
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
-   * @returns {Promise<SaleInvoiceMailOptions>}
-   */
-  public async getMailOption(
-    tenantId: number,
-    saleInvoiceId: number,
-    defaultSubject: string = DEFAULT_INVOICE_MAIL_SUBJECT,
-    defaultMessage: string = DEFAULT_INVOICE_MAIL_CONTENT
-  ): Promise<SaleInvoiceMailOptions> {
-    return this.invoiceMail.getInvoiceMailOptions(
-      tenantId,
-      saleInvoiceId,
-      defaultSubject,
-      defaultMessage
-    );
-  }
-
-  /**
    * Triggers the mail invoice.
    * @param {number} tenantId
    * @param {number} saleInvoiceId
@@ -90,7 +62,7 @@ export class SendSaleInvoiceMail {
     saleInvoiceId: number,
     messageOptions: SendInvoiceMailDTO
   ) {
-    const defaultMessageOptions = await this.getMailOption(
+    const defaultMessageOptions = await this.invoiceMail.getInvoiceMailOptions(
       tenantId,
       saleInvoiceId
     );

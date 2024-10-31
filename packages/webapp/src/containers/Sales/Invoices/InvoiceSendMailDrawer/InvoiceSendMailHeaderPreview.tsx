@@ -1,10 +1,13 @@
+import React, { useMemo } from 'react';
 import { x } from '@xstyled/emotion';
 import { Box, Group, Stack } from '@/components';
-import React from 'react';
-import { useSendInvoiceMailSubject } from './_hooks';
+import { useSendInvoiceMailForm, useSendInvoiceMailSubject } from './_hooks';
+import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
 
 export function InvoiceSendMailHeaderPreview() {
   const mailSubject = useSendInvoiceMailSubject();
+  const { invoiceMailState } = useInvoiceSendMailBoot();
+  const toAddresses = useMailHeaderToAddresses();
 
   return (
     <Stack
@@ -43,12 +46,12 @@ export function InvoiceSendMailHeaderPreview() {
             <Group spacing={2}>
               <Box fontWeight={600}>Ahmed </Box>
               <Box color={'#738091'}>
-                &lt;messaging-service@post.xero.com&gt;
+                &lt;messaging-service@post.bigcapital.app&gt;
               </Box>
             </Group>
 
             <Box fontSize={'sm'} color={'#738091'}>
-              Reply to: Ahmed &lt;a.m.bouhuolia@gmail.com&gt;
+              Reply to: {invoiceMailState?.companyName} {toAddresses};
             </Box>
           </Stack>
         </Group>
@@ -65,8 +68,15 @@ export function InvoiceSendMailPreviewWithHeader({
   return (
     <Box>
       <InvoiceSendMailHeaderPreview />
-
       <Box>{children}</Box>
     </Box>
   );
 }
+
+export const useMailHeaderToAddresses = () => {
+  const {
+    values: { to },
+  } = useSendInvoiceMailForm();
+
+  return useMemo(() => to?.map((email) => '<' + email + '>').join(' '), [to]);
+};

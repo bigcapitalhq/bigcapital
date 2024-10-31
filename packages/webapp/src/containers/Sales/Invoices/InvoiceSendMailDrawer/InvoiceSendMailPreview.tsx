@@ -1,8 +1,18 @@
-import { Tab, Tabs } from '@blueprintjs/core';
+import { lazy, Suspense } from 'react';
 import { css } from '@emotion/css';
+import { Tab, Tabs } from '@blueprintjs/core';
 import { Stack } from '@/components';
-import { InvoiceMailReceiptPreviewConneceted } from './InvoiceMailReceiptPreviewConnected.';
-import { InvoiceSendPdfPreviewConnected } from './InvoiceSendPdfPreviewConnected';
+
+const InvoiceMailReceiptPreviewConneceted = lazy(() =>
+  import('./InvoiceMailReceiptPreviewConnected.').then((module) => ({
+    default: module.InvoiceMailReceiptPreviewConneceted,
+  })),
+);
+const InvoiceSendPdfPreviewConnected = lazy(() =>
+  import('./InvoiceSendPdfPreviewConnected').then((module) => ({
+    default: module.InvoiceSendPdfPreviewConnected,
+  })),
+);
 
 export function InvoiceSendMailPreview() {
   return (
@@ -39,12 +49,20 @@ export function InvoiceSendMailPreview() {
         <Tab
           id={'payment-page'}
           title={'Payment page'}
-          panel={<InvoiceMailReceiptPreviewConneceted />}
+          panel={
+            <Suspense>
+              <InvoiceMailReceiptPreviewConneceted />
+            </Suspense>
+          }
         />
         <Tab
           id="pdf-document"
           title={'PDF document'}
-          panel={<InvoiceSendPdfPreviewConnected />}
+          panel={
+            <Suspense>
+              <InvoiceSendPdfPreviewConnected />
+            </Suspense>
+          }
         />
       </Tabs>
     </Stack>
