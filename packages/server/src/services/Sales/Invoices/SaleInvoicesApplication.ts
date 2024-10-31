@@ -11,6 +11,7 @@ import {
   ISystemUser,
   ITenantUser,
   InvoiceNotificationType,
+  SaleInvoiceMailState,
   SendInvoiceMailDTO,
 } from '@/interfaces';
 import { Inject, Service } from 'typedi';
@@ -29,6 +30,8 @@ import { SendInvoiceMailReminder } from './SendSaleInvoiceMailReminder';
 import { SendSaleInvoiceMail } from './SendSaleInvoiceMail';
 import { GetSaleInvoiceMailReminder } from './GetSaleInvoiceMailReminder';
 import { GetSaleInvoiceState } from './GetSaleInvoiceState';
+import { GetSaleInvoiceBrandTemplate } from './GetSaleInvoiceBrandTemplate';
+import { GetSaleInvoiceMailState } from './GetSaleInvoiceMailState';
 
 @Service()
 export class SaleInvoiceApplication {
@@ -72,7 +75,7 @@ export class SaleInvoiceApplication {
   private sendSaleInvoiceMailService: SendSaleInvoiceMail;
 
   @Inject()
-  private getSaleInvoiceReminderService: GetSaleInvoiceMailReminder;
+  private getSaleInvoiceMailStateService: GetSaleInvoiceMailState;
 
   @Inject()
   private getSaleInvoiceStateService: GetSaleInvoiceState;
@@ -361,10 +364,10 @@ export class SaleInvoiceApplication {
    * Retrieves the default mail options of the given sale invoice.
    * @param {number} tenantId
    * @param {number} saleInvoiceid
-   * @returns {Promise<SendInvoiceMailDTO>}
+   * @returns {Promise<SaleInvoiceMailState>}
    */
-  public getSaleInvoiceMail(tenantId: number, saleInvoiceid: number) {
-    return this.sendSaleInvoiceMailService.getMailOption(
+  public getSaleInvoiceMailState(tenantId: number, saleInvoiceid: number) {
+    return this.getSaleInvoiceMailStateService.getInvoiceMailState(
       tenantId,
       saleInvoiceid
     );

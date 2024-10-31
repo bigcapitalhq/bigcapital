@@ -234,7 +234,32 @@ export enum SaleInvoiceAction {
 }
 
 export interface SaleInvoiceMailOptions extends CommonMailOptions {
-  attachInvoice: boolean;
+  attachInvoice?: boolean;
+  formatArgs?: Record<string, any>;
+}
+
+export interface SaleInvoiceMailState extends SaleInvoiceMailOptions {
+  invoiceNo: string;
+
+  invoiceDate: string;
+  invoiceDateFormatted: string;
+
+  dueDate: string;
+  dueDateFormatted: string;
+
+  total: number;
+  totalFormatted: string;
+
+  subtotal: number;
+  subtotalFormatted: number;
+
+  companyName: string;
+  companyLogoUri: string;
+
+  customerName: string;
+
+  // # Invoice entries
+  entries?: Array<{ label: string; total: string; quantity: string | number }>;
 }
 
 export interface SendInvoiceMailDTO extends CommonMailOptionsDTO {
@@ -251,6 +276,7 @@ export interface ISaleInvoiceMailSend {
   tenantId: number;
   saleInvoiceId: number;
   messageOptions: SendInvoiceMailDTO;
+  formattedMessageOptions: SaleInvoiceMailOptions;
 }
 
 export interface ISaleInvoiceMailSent {

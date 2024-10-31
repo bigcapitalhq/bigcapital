@@ -19,7 +19,12 @@ function ReceiptCustomizeDrawerRoot({
   payload,
 }) {
   return (
-    <Drawer isOpen={isOpen} name={name} size={'100%'} payload={payload}>
+    <Drawer
+      isOpen={isOpen}
+      name={name}
+      payload={payload}
+      size={'calc(100% - 10px)'}
+    >
       <DrawerSuspense>
         <ReceiptCustomizeDrawerBody />
       </DrawerSuspense>

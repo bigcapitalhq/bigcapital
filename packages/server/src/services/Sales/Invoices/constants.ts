@@ -1,19 +1,19 @@
 import config from '@/config';
 
 export const DEFAULT_INVOICE_MAIL_SUBJECT =
-  'Invoice {InvoiceNumber} from {CompanyName}';
+  'Invoice {Invoice Number} from {Company Name}';
 export const DEFAULT_INVOICE_MAIL_CONTENT = `
-<p>Dear {CustomerName}</p>
+<p>Dear {Customer Name}</p>
 <p>Thank you for your business, You can view or print your invoice from attachements.</p>
 <p>
-Invoice <strong>#{InvoiceNumber}</strong><br />
-Due Date : <strong>{InvoiceDueDate}</strong><br />
-Amount   : <strong>{InvoiceAmount}</strong></br />
+Invoice <strong>#{Invoice Number}</strong><br />
+Due Date : <strong>{Invoice Due Date}</strong><br />
+Amount   : <strong>{Invoice Amount}</strong></br />
 </p>
 
 <p>
 <i>Regards</i><br />
-<i>{CompanyName}</i>
+<i>{Company Name}</i>
 </p>
 `;
 

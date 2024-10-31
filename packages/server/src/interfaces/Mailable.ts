@@ -30,18 +30,14 @@ export interface AddressItem {
 }
 
 export interface CommonMailOptions {
-  toAddresses: AddressItem[];
-  fromAddresses: AddressItem[];
-  from: string;
-  to: string | string[];
+  from: Array<string>;
   subject: string;
-  body: string;
+  message: string;
+  to: Array<string>;
+  cc?: Array<string>;
+  bcc?: Array<string>;
   data?: Record<string, any>;
 }
 
-export interface CommonMailOptionsDTO {
-  to?: string | string[];
-  from?: string;
-  subject?: string;
-  body?: string;
+export interface CommonMailOptionsDTO extends Partial<CommonMailOptions> {
 }

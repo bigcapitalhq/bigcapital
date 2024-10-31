@@ -45,7 +45,6 @@ import ProjectBillableEntriesFormDialog from '@/containers/Projects/containers/P
 import TaxRateFormDialog from '@/containers/TaxRates/dialogs/TaxRateFormDialog/TaxRateFormDialog';
 import { DialogsName } from '@/constants/dialogs';
 import InvoiceExchangeRateChangeDialog from '@/containers/Sales/Invoices/InvoiceForm/Dialogs/InvoiceExchangeRateChangeDialog';
-import InvoiceMailDialog from '@/containers/Sales/Invoices/InvoiceMailDialog/InvoiceMailDialog';
 import EstimateMailDialog from '@/containers/Sales/Estimates/EstimateMailDialog/EstimateMailDialog';
 import ReceiptMailDialog from '@/containers/Sales/Receipts/ReceiptMailDialog/ReceiptMailDialog';
 import PaymentMailDialog from '@/containers/Sales/PaymentsReceived/PaymentMailDialog/PaymentMailDialog';
@@ -144,7 +143,6 @@ export default function DialogsContainer() {
       <InvoiceExchangeRateChangeDialog
         dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
       />
-      <InvoiceMailDialog dialogName={DialogsName.InvoiceMail} />
       <EstimateMailDialog dialogName={DialogsName.EstimateMail} />
       <ReceiptMailDialog dialogName={DialogsName.ReceiptMail} />
       <PaymentMailDialog dialogName={DialogsName.PaymentMail} />

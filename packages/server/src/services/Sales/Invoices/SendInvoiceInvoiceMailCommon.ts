@@ -7,6 +7,7 @@ import {
   DEFAULT_INVOICE_MAIL_CONTENT,
   DEFAULT_INVOICE_MAIL_SUBJECT,
 } from './constants';
+import { GetInvoicePaymentMail } from './GetInvoicePaymentMail';
 
 @Service()
 export class SendSaleInvoiceMailCommon {
@@ -19,6 +20,9 @@ export class SendSaleInvoiceMailCommon {
   @Inject()
   private contactMailNotification: ContactMailNotification;
 
+  @Inject()
+  private getInvoicePaymentMail: GetInvoicePaymentMail;
+
   /**
    * Retrieves the mail options.
    * @param {number} tenantId - Tenant id.
@@ -27,11 +31,11 @@ export class SendSaleInvoiceMailCommon {
    * @param {string} defaultBody - Subject body.
    * @returns {Promise<SaleInvoiceMailOptions>}
    */
-  public async getMailOption(
+  public async getInvoiceMailOptions(
     tenantId: number,
     invoiceId: number,
     defaultSubject: string = DEFAULT_INVOICE_MAIL_SUBJECT,
-    defaultBody: string = DEFAULT_INVOICE_MAIL_CONTENT
+    defaultMessage: string = DEFAULT_INVOICE_MAIL_CONTENT
   ): Promise<SaleInvoiceMailOptions> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
@@ -39,19 +43,52 @@ export class SendSaleInvoiceMailCommon {
       .findById(invoiceId)
       .throwIfNotFound();
 
-    const formatterData = await this.formatText(tenantId, invoiceId);
+    const contactMailDefaultOptions =
+      await this.contactMailNotification.getDefaultMailOptions(
+        tenantId,
+        saleInvoice.customerId
+      );
+    const formatArgs = await this.getInvoiceFormatterArgs(tenantId, invoiceId);
 
-    const mailOptions = await this.contactMailNotification.getMailOptions(
-      tenantId,
-      saleInvoice.customerId,
-      defaultSubject,
-      defaultBody,
-      formatterData
-    );
     return {
-      ...mailOptions,
+      ...contactMailDefaultOptions,
+      subject: defaultSubject,
+      message: defaultMessage,
       attachInvoice: true,
+      formatArgs,
     };
+  }
+
+  /**
+   * Formats the given invoice mail options.
+   * @param {number} tenantId
+   * @param {number} invoiceId
+   * @param {SaleInvoiceMailOptions} mailOptions
+   * @returns {Promise<SaleInvoiceMailOptions>}
+   */
+  public async formatInvoiceMailOptions(
+    tenantId: number,
+    invoiceId: number,
+    mailOptions: SaleInvoiceMailOptions
+  ): Promise<SaleInvoiceMailOptions> {
+    const formatterArgs = await this.getInvoiceFormatterArgs(
+      tenantId,
+      invoiceId
+    );
+    const parsedOptions = await this.contactMailNotification.parseMailOptions(
+      tenantId,
+      mailOptions,
+      formatterArgs
+    );
+    const message = await this.getInvoicePaymentMail.getMailTemplate(
+      tenantId,
+      invoiceId,
+      {
+        // # Invoice message
+        invoiceMessage: parsedOptions.message,
+      }
+    );
+    return { ...parsedOptions, message };
   }
 
   /**
@@ -61,7 +98,7 @@ export class SendSaleInvoiceMailCommon {
    * @param {string} text - The given text.
    * @returns {Promise<string>}
    */
-  public formatText = async (
+  public getInvoiceFormatterArgs = async (
     tenantId: number,
     invoiceId: number
   ): Promise<Record<string, string | number>> => {
@@ -69,15 +106,18 @@ export class SendSaleInvoiceMailCommon {
       tenantId,
       invoiceId
     );
-
+    const commonArgs = await this.contactMailNotification.getCommonFormatArgs(
+      tenantId
+    );
     return {
-      CustomerName: invoice.customer.displayName,
-      InvoiceNumber: invoice.invoiceNo,
-      InvoiceDueAmount: invoice.dueAmountFormatted,
-      InvoiceDueDate: invoice.dueDateFormatted,
-      InvoiceDate: invoice.invoiceDateFormatted,
-      InvoiceAmount: invoice.totalFormatted,
-      OverdueDays: invoice.overdueDays,
+      ...commonArgs,
+      ['Customer Name']: invoice.customer.displayName,
+      ['Invoice Number']: invoice.invoiceNo,
+      ['Invoice DueAmount']: invoice.dueAmountFormatted,
+      ['Invoice DueDate']: invoice.dueDateFormatted,
+      ['Invoice Date']: invoice.invoiceDateFormatted,
+      ['Invoice Amount']: invoice.totalFormatted,
+      ['Overdue Days']: invoice.overdueDays,
     };
   };
 }

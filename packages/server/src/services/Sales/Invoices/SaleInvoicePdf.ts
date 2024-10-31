@@ -33,7 +33,7 @@ export class SaleInvoicePdf {
    * Retrieve sale invoice pdf content.
    * @param {number} tenantId - Tenant Id.
    * @param {ISaleInvoice} saleInvoice -
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<[Buffer, string]>}
    */
   public async saleInvoicePdf(
     tenantId: number,

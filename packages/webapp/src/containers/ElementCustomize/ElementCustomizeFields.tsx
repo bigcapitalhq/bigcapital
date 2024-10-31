@@ -37,8 +37,10 @@ export function ElementCustomizeFieldsMain() {
     <Stack spacing={0} className={styles.mainFields}>
       <ElementCustomizeHeader label={'Customize'} />
 
-      <Stack spacing={0} style={{ flex: '1 1 auto', overflow: 'auto' }}>
-        <Box style={{ flex: '1 1' }}>{CustomizeTabPanel}</Box>
+      <Stack spacing={0} flex="1 1 auto" overflow="auto">
+        <Box flex={'1 1'} overflow="auto">
+          {CustomizeTabPanel}
+        </Box>
         <ElementCustomizeFooterActions />
       </Stack>
     </Stack>

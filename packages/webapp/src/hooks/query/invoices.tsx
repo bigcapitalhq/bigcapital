@@ -1,5 +1,13 @@
 // @ts-nocheck
-import { useQueryClient, useMutation, useQuery } from 'react-query';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+} from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination, transformToCamelCase } from '@/utils';
 import useApiRequest from '../useRequest';
@@ -312,36 +320,114 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
   );
 }
 
-export function useSendSaleInvoiceMail(props) {
+// # Send sale invoice mail.
+// ------------------------------
+export interface SendSaleInvoiceMailValues {
+  id: number;
+  values: {
+    subject: string;
+    message: string;
+    to: Array<string>;
+    cc?: Array<string>;
+    bcc?: Array<string>;
+    attachInvoice?: boolean;
+  };
+}
+export interface SendSaleInvoiceMailResponse { }
+/**
+ * Sends the sale invoice mail.
+ * @param {UseMutationOptions<SendSaleInvoiceMailValues, Error, SendSaleInvoiceMailResponse>}
+ * @returns {UseMutationResult<SendSaleInvoiceMailResponse, Error, SendSaleInvoiceMailValues>}
+ */
+export function useSendSaleInvoiceMail(
+  options?: UseMutationOptions<
+    SendSaleInvoiceMailResponse,
+    Error,
+    SendSaleInvoiceMailValues
+  >,
+): UseMutationResult<
+  SendSaleInvoiceMailResponse,
+  Error,
+  SendSaleInvoiceMailValues
+> {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}/mail`, values),
+  return useMutation<
+    SendSaleInvoiceMailResponse,
+    Error,
+    SendSaleInvoiceMailValues
+  >(
+    (value) => apiRequest.post(`sales/invoices/${value.id}/mail`, value.values),
     {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
+      onSuccess: (res) => {
         commonInvalidateQueries(queryClient);
       },
-      ...props,
+      ...options,
     },
   );
 }
 
-export function useSaleInvoiceDefaultOptions(invoiceId, props) {
-  return useRequestQuery(
+// # Get sale invoice default options.
+// --------------------------------------
+export interface GetSaleInvoiceDefaultOptionsResponse {
+  companyName: string;
+
+  dueDate: string;
+  dueDateFormatted: string;
+
+  dueAmount: number;
+  dueAmountFormatted: string;
+
+  entries: Array<{
+    quantity: number;
+    quantityFormatted: string;
+    rate: number;
+    rateFormatted: string;
+    total: number;
+    totalFormatted: string;
+  }>;
+  formatArgs: Record<string, string>;
+
+  from: string[];
+  to: string[];
+
+  invoiceDate: string;
+  invoiceDateFormatted: string;
+
+  invoiceNo: string;
+
+  message: string;
+  subject: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
+  total: number;
+  totalFormatted: string;
+
+  attachInvoice: boolean;
+  primaryColor: string;
+}
+
+export function useSaleInvoiceMailState(
+  invoiceId: number,
+  options?: UseQueryOptions<GetSaleInvoiceDefaultOptionsResponse>,
+): UseQueryResult<GetSaleInvoiceDefaultOptionsResponse> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleInvoiceDefaultOptionsResponse>(
     [t.SALE_INVOICE_DEFAULT_OPTIONS, invoiceId],
-    {
-      method: 'get',
-      url: `sales/invoices/${invoiceId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+    () =>
+      apiRequest
+        .get(`/sales/invoices/${invoiceId}/mail/state`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    options,
   );
 }
 
+// # Get sale invoice state.
+// -------------------------------------
 export interface GetSaleInvoiceStateResponse {
   defaultTemplateId: number;
 }
@@ -356,6 +442,71 @@ export function useGetSaleInvoiceState(
     () =>
       apiRequest
         .get(`/sales/invoices/state`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
+  );
+}
+
+// # Get sale invoice branding template.
+// --------------------------------------
+export interface GetSaleInvoiceBrandingTemplateResponse {
+  id: number;
+  default: number;
+  predefined: number;
+  resource: string;
+  resourceFormatted: string;
+  templateName: string;
+  updatedAt: string;
+  createdAt: string;
+  createdAtFormatted: string;
+  attributes: {
+    billedToLabel?: string;
+    companyLogoKey?: string | null;
+    companyLogoUri?: string;
+    dateIssueLabel?: string;
+    discountLabel?: string;
+    dueAmountLabel?: string;
+    dueDateLabel?: string;
+    invoiceNumberLabel?: string;
+    itemDescriptionLabel?: string;
+    itemNameLabel?: string;
+    itemRateLabel?: string;
+    itemTotalLabel?: string;
+    paymentMadeLabel?: string;
+    primaryColor?: string;
+    secondaryColor?: string;
+    showCompanyAddress?: boolean;
+    showCompanyLogo?: boolean;
+    showCustomerAddress?: boolean;
+    showDateIssue?: boolean;
+    showDiscount?: boolean;
+    showDueAmount?: boolean;
+    showDueDate?: boolean;
+    showInvoiceNumber?: boolean;
+    showPaymentMade?: boolean;
+    showStatement?: boolean;
+    showSubtotal?: boolean;
+    showTaxes?: boolean;
+    showTermsConditions?: boolean;
+    showTotal?: boolean;
+    statementLabel?: string;
+    subtotalLabel?: string;
+    termsConditionsLabel?: string;
+    totalLabel?: string;
+  };
+}
+
+export function useGetSaleInvoiceBrandingTemplate(
+  invoiceId: number,
+  options?: UseQueryOptions<GetSaleInvoiceBrandingTemplateResponse, Error>,
+): UseQueryResult<GetSaleInvoiceBrandingTemplateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleInvoiceBrandingTemplateResponse, Error>(
+    ['SALE_INVOICE_BRANDING_TEMPLATE', invoiceId],
+    () =>
+      apiRequest
+        .get(`/sales/invoices/${invoiceId}/template`)
         .then((res) => transformToCamelCase(res.data?.data)),
     { ...options },
   );

@@ -179,10 +179,21 @@ export default class SaleInvoicesController extends BaseController {
       '/:id/mail',
       [
         ...this.specificSaleInvoiceValidation,
-        body('subject').isString().optional(),
+
+        body('subject').isString().optional({ nullable: true }),
+        body('message').isString().optional({ nullable: true }),
+
         body('from').isString().optional(),
-        body('to').isString().optional(),
-        body('body').isString().optional(),
+
+        body('to').isArray().exists(),
+        body('to.*').isString().isEmail().optional(),
+
+        body('cc').isArray().optional({ nullable: true }),
+        body('cc.*').isString().isEmail().optional(),
+
+        body('bcc').isArray().optional({ nullable: true }),
+        body('bcc.*').isString().isEmail().optional(),
+
         body('attach_invoice').optional().isBoolean().toBoolean(),
       ],
       this.validationResult,
@@ -190,7 +201,7 @@ export default class SaleInvoicesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
-      '/:id/mail',
+      '/:id/mail/state',
       [...this.specificSaleInvoiceValidation],
       this.validationResult,
       asyncMiddleware(this.getSaleInvoiceMail.bind(this)),
@@ -778,7 +789,7 @@ export default class SaleInvoicesController extends BaseController {
   }
 
   /**
-   * Retrieves the default mail options of the given sale invoice.
+   * Retrieves the mail state of the given sale invoice.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -792,7 +803,7 @@ export default class SaleInvoicesController extends BaseController {
     const { id: invoiceId } = req.params;
 
     try {
-      const data = await this.saleInvoiceApplication.getSaleInvoiceMail(
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMailState(
         tenantId,
         invoiceId
       );
