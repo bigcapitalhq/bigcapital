@@ -35,7 +35,10 @@ export class SaleReceiptsPdf {
    * @param {number} saleInvoiceId -
    * @returns {Promise<Buffer>}
    */
-  public async saleReceiptPdf(tenantId: number, saleReceiptId: number) {
+  public async saleReceiptPdf(
+    tenantId: number,
+    saleReceiptId: number
+  ): Promise<[Buffer, string]> {
     const filename = await this.getSaleReceiptFilename(tenantId, saleReceiptId);
 
     const brandingAttributes = await this.getReceiptBrandingAttributes(

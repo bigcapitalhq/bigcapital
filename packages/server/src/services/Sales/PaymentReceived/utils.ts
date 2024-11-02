@@ -21,3 +21,12 @@ export const transformPaymentReceivedToPdfTemplate = (
     customerAddress: contactAddressTextFormat(payment.customer),
   };
 };
+
+export const transformPaymentReceivedToMailDataArgs = (payment: any) => {
+  return {
+    'Customer Name': payment.customer.displayName,
+    'Payment Number': payment.paymentReceiveNo,
+    'Payment Date': payment.formattedPaymentDate,
+    'Payment Amount': payment.formattedAmount,
+  };
+};

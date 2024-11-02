@@ -13,15 +13,19 @@ export const SALE_ESTIMATE_EDITED = 'Sale estimate edited';
 export const SALE_ESTIMATE_DELETED = 'Sale estimate deleted';
 export const SALE_ESTIMATE_PDF_VIEWED = 'Sale estimate PDF viewed';
 export const SALE_ESTIMATE_VIEWED = 'Sale estimate viewed';
+export const SALE_ESTIMATE_MAIL_SENT = 'Sale estimate mail sent';
 
 export const PAYMENT_RECEIVED_CREATED = 'Payment received created';
 export const PAYMENT_RECEIVED_EDITED = 'payment received edited';
 export const PAYMENT_RECEIVED_DELETED = 'Payment received deleted';
 export const PAYMENT_RECEIVED_PDF_VIEWED = 'Payment received PDF viewed';
+export const PAYMENT_RECEIVED_MAIL_SENT = 'Payment received mail sent';
 
 export const SALE_RECEIPT_PDF_VIEWED = 'Sale credit PDF viewed';
+export const SALE_RECEIPT_MAIL_SENT = 'Sale credit mail sent';
 
 export const CREDIT_NOTE_PDF_VIEWED = 'Credit note PDF viewed';
+export const CREDIT_NOTE_MAIL_SENT = 'Credit note mail sent';
 
 export const BILL_CREATED = 'Bill created';
 export const BILL_EDITED = 'Bill edited';

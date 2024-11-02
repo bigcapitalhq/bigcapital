@@ -13,9 +13,10 @@ import {
   SaleReceiptMailOptsDTO,
 } from '@/interfaces';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
-import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import { mergeAndValidateMailOptions } from '@/services/MailNotification/utils';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { transformReceiptToMailDataArgs } from './utils';
 
 @Service()
 export class SaleReceiptMailNotification {
@@ -79,18 +80,19 @@ export class SaleReceiptMailNotification {
       .findById(saleReceiptId)
       .throwIfNotFound();
 
-    const formattedData = await this.textFormatter(tenantId, saleReceiptId);
+    const formatArgs = await this.textFormatterArgs(tenantId, saleReceiptId);
 
-    const mailOpts = await this.contactMailNotification.getMailOptions(
-      tenantId,
-      saleReceipt.customerId,
-      DEFAULT_RECEIPT_MAIL_SUBJECT,
-      DEFAULT_RECEIPT_MAIL_CONTENT,
-      formattedData
-    );
+    const mailOptions =
+      await this.contactMailNotification.getDefaultMailOptions(
+        tenantId,
+        saleReceipt.customerId
+      );
     return {
-      ...mailOpts,
+      ...mailOptions,
+      message: DEFAULT_RECEIPT_MAIL_CONTENT,
+      subject: DEFAULT_RECEIPT_MAIL_SUBJECT,
       attachReceipt: true,
+      formatArgs,
     };
   }
 
@@ -101,7 +103,7 @@ export class SaleReceiptMailNotification {
    * @param {string} text - The given text.
    * @returns {Promise<string>}
    */
-  public textFormatter = async (
+  public textFormatterArgs = async (
     tenantId: number,
     receiptId: number
   ): Promise<Record<string, string>> => {
@@ -109,19 +111,14 @@ export class SaleReceiptMailNotification {
       tenantId,
       receiptId
     );
-    return {
-      CustomerName: receipt.customer.displayName,
-      ReceiptNumber: receipt.receiptNumber,
-      ReceiptDate: receipt.formattedReceiptDate,
-      ReceiptAmount: receipt.formattedAmount,
-    };
+    return transformReceiptToMailDataArgs(receipt);
   };
 
   /**
    * Triggers the mail notification of the given sale receipt.
    * @param {number} tenantId - Tenant id.
    * @param {number} saleReceiptId - Sale receipt id.
-   * @param {SaleReceiptMailOpts} messageDTO - Overrided message options.
+   * @param {SaleReceiptMailOpts} messageDTO - message options.
    * @returns {Promise<void>}
    */
   public async sendMail(
@@ -129,30 +126,45 @@ export class SaleReceiptMailNotification {
     saleReceiptId: number,
     messageOpts: SaleReceiptMailOptsDTO
   ) {
-    const defaultMessageOpts = await this.getMailOptions(
+    const defaultMessageOptions = await this.getMailOptions(
       tenantId,
       saleReceiptId
     );
     // Merges message opts with default options.
-    const parsedMessageOpts = parseAndValidateMailOptions(
-      defaultMessageOpts,
+    const parsedMessageOpts = mergeAndValidateMailOptions(
+      defaultMessageOptions,
       messageOpts
-    );
+    ) as SaleReceiptMailOpts;
+
     const mail = new Mail()
       .setSubject(parsedMessageOpts.subject)
       .setTo(parsedMessageOpts.to)
-      .setContent(parsedMessageOpts.body);
+      .setContent(parsedMessageOpts.message);
 
+    // Attaches the receipt pdf document.
     if (parsedMessageOpts.attachReceipt) {
       // Retrieves document buffer of the receipt pdf document.
-      const receiptPdfBuffer = await this.receiptPdfService.saleReceiptPdf(
-        tenantId,
-        saleReceiptId
-      );
+      const [receiptPdfBuffer, filename] =
+        await this.receiptPdfService.saleReceiptPdf(tenantId, saleReceiptId);
+
       mail.setAttachments([
-        { filename: 'receipt.pdf', content: receiptPdfBuffer },
+        { filename: `${filename}.pdf`, content: receiptPdfBuffer },
       ]);
     }
+    const eventPayload = {
+      tenantId,
+      saleReceiptId,
+      messageOptions: {},
+    };
+    await this.eventPublisher.emitAsync(
+      events.saleReceipt.onMailSend,
+      eventPayload
+    );
     await mail.send();
+
+    await this.eventPublisher.emitAsync(
+      events.saleReceipt.onMailSent,
+      eventPayload
+    );
   }
 }

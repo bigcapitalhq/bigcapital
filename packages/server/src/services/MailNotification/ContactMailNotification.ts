@@ -46,7 +46,7 @@ export class ContactMailNotification {
    * @param {number} tenantId - Tenant id.
    * @returns {Promise<CommonMailOptions>}
    */
-  public async parseMailOptions(
+  public async formatMailOptions(
     tenantId: number,
     mailOptions: CommonMailOptions,
     formatterArgs?: Record<string, any>

@@ -22,3 +22,13 @@ export const transformEstimateToPdfTemplate = (
     customerAddress: contactAddressTextFormat(estimate.customer),
   };
 };
+
+export const transformEstimateToMailDataArgs = (estimate: any) => {
+  return {
+    'Customer Name': estimate.customer.displayName,
+    'Estimate Number': estimate.estimateNumber,
+    'Estimate Date': estimate.formattedEstimateDate,
+    'Estimate Amount': estimate.formattedAmount,
+    'Estimate Expiration Date': estimate.formattedExpirationDate,
+  };
+};

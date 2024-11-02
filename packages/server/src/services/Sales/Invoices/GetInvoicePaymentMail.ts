@@ -21,6 +21,7 @@ export class GetInvoicePaymentMail {
 
   /**
    * Retrieves the mail template attributes of the given invoice.
+   * Invoice template attributes are composed of the invoice and branding template attributes.
    * @param {number} tenantId - Tenant id.
    * @param {number} invoiceId - Invoice id.
    */

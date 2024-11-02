@@ -1,9 +1,12 @@
-import { ISaleReceipt, ISaleReceiptBrandingTemplateAttributes } from "@/interfaces";
-import { contactAddressTextFormat } from "@/utils/address-text-format";
+import {
+  ISaleReceipt,
+  ISaleReceiptBrandingTemplateAttributes,
+} from '@/interfaces';
+import { contactAddressTextFormat } from '@/utils/address-text-format';
 
-
-
-export const transformReceiptToBrandingTemplateAttributes = (saleReceipt: ISaleReceipt): Partial<ISaleReceiptBrandingTemplateAttributes> => {
+export const transformReceiptToBrandingTemplateAttributes = (
+  saleReceipt: ISaleReceipt
+): Partial<ISaleReceiptBrandingTemplateAttributes> => {
   return {
     total: saleReceipt.formattedAmount,
     subtotal: saleReceipt.formattedSubtotal,
@@ -18,4 +21,13 @@ export const transformReceiptToBrandingTemplateAttributes = (saleReceipt: ISaleR
     receiptDate: saleReceipt.formattedReceiptDate,
     customerAddress: contactAddressTextFormat(saleReceipt.customer),
   };
-}
+};
+
+export const transformReceiptToMailDataArgs = (saleReceipt: any) => {
+  return {
+    'Customer Name': saleReceipt.customer.displayName,
+    'Receipt Number': saleReceipt.receiptNumber,
+    'Receipt Date': saleReceipt.formattedReceiptDate,
+    'Receipt Amount': saleReceipt.formattedAmount,
+  };
+};

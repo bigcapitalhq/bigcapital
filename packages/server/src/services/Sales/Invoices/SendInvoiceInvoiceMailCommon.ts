@@ -75,20 +75,22 @@ export class SendSaleInvoiceMailCommon {
       tenantId,
       invoiceId
     );
-    const parsedOptions = await this.contactMailNotification.parseMailOptions(
-      tenantId,
-      mailOptions,
-      formatterArgs
-    );
+    const formattedOptions =
+      await this.contactMailNotification.formatMailOptions(
+        tenantId,
+        mailOptions,
+        formatterArgs
+      );
     const message = await this.getInvoicePaymentMail.getMailTemplate(
       tenantId,
       invoiceId,
       {
         // # Invoice message
-        invoiceMessage: parsedOptions.message,
+        invoiceMessage: formattedOptions.message,
+        preview: formattedOptions.message,
       }
     );
-    return { ...parsedOptions, message };
+    return { ...formattedOptions, message };
   }
 
   /**
@@ -111,13 +113,13 @@ export class SendSaleInvoiceMailCommon {
     );
     return {
       ...commonArgs,
-      ['Customer Name']: invoice.customer.displayName,
-      ['Invoice Number']: invoice.invoiceNo,
-      ['Invoice DueAmount']: invoice.dueAmountFormatted,
-      ['Invoice DueDate']: invoice.dueDateFormatted,
-      ['Invoice Date']: invoice.invoiceDateFormatted,
-      ['Invoice Amount']: invoice.totalFormatted,
-      ['Overdue Days']: invoice.overdueDays,
+      'Customer Name': invoice.customer.displayName,
+      'Invoice Number': invoice.invoiceNo,
+      'Invoice DueAmount': invoice.dueAmountFormatted,
+      'Invoice DueDate': invoice.dueDateFormatted,
+      'Invoice Date': invoice.invoiceDateFormatted,
+      'Invoice Amount': invoice.totalFormatted,
+      'Overdue Days': invoice.overdueDays,
     };
   };
 }
