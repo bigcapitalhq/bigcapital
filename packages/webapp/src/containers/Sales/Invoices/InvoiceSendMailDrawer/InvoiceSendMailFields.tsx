@@ -145,6 +145,7 @@ export function InvoiceSendMailFields() {
     <Stack
       bg="white"
       flex={'1'}
+      maxWidth="720px"
       maxHeight="100%"
       spacing={0}
       borderRight="1px solid #dcdcdd"

@@ -62,7 +62,7 @@ export function PaymentPortal() {
   };
 
   return (
-    <Box className={styles.root}>
+    <Box className={styles.root} my={'40px'} mx={'auto'}>
       <Stack spacing={0} className={styles.body}>
         <Stack>
           <Group spacing={10}>
