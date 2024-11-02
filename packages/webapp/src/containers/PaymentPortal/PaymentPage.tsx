@@ -117,7 +117,6 @@ export function InvoicePaymentPage({
 
   // # Copyright
   copyrightText = `© 2024 Bigcapital Technology, Inc. <br /> All rights reserved.`,
-
   classNames,
 }: PaymentPageProps) {
   return (
