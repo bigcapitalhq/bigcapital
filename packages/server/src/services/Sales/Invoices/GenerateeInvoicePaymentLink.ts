@@ -32,15 +32,14 @@ export class GenerateShareLink {
    */
   async generatePaymentLink(
     tenantId: number,
-    transactionId: number,
-    transactionType: string,
+    saleInvoiceId: number,
     publicity: string = 'private',
     expiryTime: string = ''
   ) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     const foundInvoice = await SaleInvoice.query()
-      .findById(transactionId)
+      .findById(saleInvoiceId)
       .throwIfNotFound();
 
     // Generate unique uuid for sharable link.
@@ -48,8 +47,7 @@ export class GenerateShareLink {
 
     const commonEventPayload = {
       tenantId,
-      transactionId,
-      transactionType,
+      saleInvoiceId,
       publicity,
       expiryTime,
     };
