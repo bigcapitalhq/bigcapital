@@ -213,7 +213,7 @@ export default {
 
     onPreMailSend: 'onSaleEstimatePreMailSend',
     onMailSend: 'onSaleEstimateMailSend',
-    onMailSent: 'onSaleEstimateMailSend',
+    onMailSent: 'onSaleEstimateMailSent',
   },
 
   /**

@@ -13,9 +13,10 @@ import {
 } from './constants';
 import { GetPaymentReceived } from './GetPaymentReceived';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
-import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import { mergeAndValidateMailOptions } from '@/services/MailNotification/utils';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { transformPaymentReceivedToMailDataArgs } from './utils';
 
 @Service()
 export class SendPaymentReceiveMailNotification {
@@ -77,15 +78,19 @@ export class SendPaymentReceiveMailNotification {
       .findById(paymentId)
       .throwIfNotFound();
 
-    const formatterData = await this.textFormatter(tenantId, paymentId);
+    const formatArgs = await this.textFormatter(tenantId, paymentId);
 
-    return this.contactMailNotification.getMailOptions(
-      tenantId,
-      paymentReceive.customerId,
-      DEFAULT_PAYMENT_MAIL_SUBJECT,
-      DEFAULT_PAYMENT_MAIL_CONTENT,
-      formatterData
-    );
+    const mailOptions =
+      await this.contactMailNotification.getDefaultMailOptions(
+        tenantId,
+        paymentReceive.customerId
+      );
+    return {
+      ...mailOptions,
+      subject: DEFAULT_PAYMENT_MAIL_SUBJECT,
+      message: DEFAULT_PAYMENT_MAIL_CONTENT,
+      ...formatArgs,
+    };
   };
 
   /**
@@ -103,12 +108,7 @@ export class SendPaymentReceiveMailNotification {
       tenantId,
       invoiceId
     );
-    return {
-      CustomerName: payment.customer.displayName,
-      PaymentNumber: payment.payment_receive_no,
-      PaymentDate: payment.formattedPaymentDate,
-      PaymentAmount: payment.formattedAmount,
-    };
+    return transformPaymentReceivedToMailDataArgs(payment);
   };
 
   /**
@@ -128,14 +128,31 @@ export class SendPaymentReceiveMailNotification {
       paymentReceiveId
     );
     // Parsed message opts with default options.
-    const parsedMessageOpts = parseAndValidateMailOptions(
+    const parsedMessageOpts = mergeAndValidateMailOptions(
       defaultMessageOpts,
       messageDTO
     );
-    await new Mail()
+    const mail = new Mail()
       .setSubject(parsedMessageOpts.subject)
       .setTo(parsedMessageOpts.to)
-      .setContent(parsedMessageOpts.body)
-      .send();
+      .setContent(parsedMessageOpts.message);
+
+    const eventPayload = {
+      tenantId,
+      paymentReceiveId,
+      messageOptions: parsedMessageOpts,
+    };
+    // Triggers `onPaymentReceiveMailSend` event.
+    await this.eventPublisher.emitAsync(
+      events.paymentReceive.onMailSend,
+      eventPayload
+    );
+    await mail.send();
+
+    // Triggers `onPaymentReceiveMailSent` event.
+    await this.eventPublisher.emitAsync(
+      events.paymentReceive.onMailSent,
+      eventPayload
+    );
   }
 }

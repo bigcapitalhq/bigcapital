@@ -13,9 +13,10 @@ import {
   SaleEstimateMailOptionsDTO,
 } from '@/interfaces';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
-import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import { mergeAndValidateMailOptions } from '@/services/MailNotification/utils';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { transformEstimateToMailDataArgs } from './utils';
 
 @Service()
 export class SendSaleEstimateMail {
@@ -65,23 +66,17 @@ export class SendSaleEstimateMail {
   }
 
   /**
-   * Formates the text of the mail.
+   * Formate the text of the mail.
    * @param {number} tenantId - Tenant id.
    * @param {number} estimateId - Estimate id.
    * @returns {Promise<Record<string, any>>}
    */
-  public formatterData = async (tenantId: number, estimateId: number) => {
+  public formatterArgs = async (tenantId: number, estimateId: number) => {
     const estimate = await this.getSaleEstimateService.getEstimate(
       tenantId,
       estimateId
     );
-    return {
-      CustomerName: estimate.customer.displayName,
-      EstimateNumber: estimate.estimateNumber,
-      EstimateDate: estimate.formattedEstimateDate,
-      EstimateAmount: estimate.formattedAmount,
-      EstimateExpirationDate: estimate.formattedExpirationDate,
-    };
+    return transformEstimateToMailDataArgs(estimate);
   };
 
   /**
@@ -92,7 +87,9 @@ export class SendSaleEstimateMail {
    */
   public getMailOptions = async (
     tenantId: number,
-    saleEstimateId: number
+    saleEstimateId: number,
+    defaultSubject: string = DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT,
+    defaultMessage: string = DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT
   ): Promise<SaleEstimateMailOptions> => {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
@@ -100,20 +97,43 @@ export class SendSaleEstimateMail {
       .findById(saleEstimateId)
       .throwIfNotFound();
 
-    const formatterData = await this.formatterData(tenantId, saleEstimateId);
+    const formatArgs = await this.formatterArgs(tenantId, saleEstimateId);
 
-    const mailOptions = await this.contactMailNotification.getMailOptions(
-      tenantId,
-      saleEstimate.customerId,
-      DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT,
-      DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT,
-      formatterData
-    );
+    const mailOptions =
+      await this.contactMailNotification.getDefaultMailOptions(
+        tenantId,
+        saleEstimate.customerId
+      );
     return {
       ...mailOptions,
-      data: formatterData,
+      message: defaultMessage,
+      subject: defaultSubject,
       attachEstimate: true,
+      formatArgs,
     };
+  };
+
+  /**
+   * Formats the given mail options.
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @param {SaleEstimateMailOptions} mailOptions
+   * @returns {Promise<SaleEstimateMailOptions>}
+   */
+  public formatMailOptions = async (
+    tenantId: number,
+    saleEstimateId: number,
+    mailOptions: SaleEstimateMailOptions
+  ): Promise<SaleEstimateMailOptions> => {
+    const formatterArgs = await this.formatterArgs(tenantId, saleEstimateId);
+
+    const formattedOptions =
+      await this.contactMailNotification.formatMailOptions(
+        tenantId,
+        mailOptions,
+        formatterArgs
+      );
+    return { ...formattedOptions };
   };
 
   /**
@@ -133,27 +153,52 @@ export class SendSaleEstimateMail {
       saleEstimateId
     );
     // Overrides and validates the given mail options.
-    const messageOpts = parseAndValidateMailOptions(
+    const parsedMessageOptions = mergeAndValidateMailOptions(
       localMessageOpts,
       messageOptions
+    ) as SaleEstimateMailOptions;
+
+    const formattedOptions = await this.formatMailOptions(
+      tenantId,
+      saleEstimateId,
+      parsedMessageOptions
     );
     const mail = new Mail()
-      .setSubject(messageOpts.subject)
-      .setTo(messageOpts.to)
-      .setContent(messageOpts.body);
+      .setSubject(formattedOptions.subject)
+      .setTo(formattedOptions.to)
+      .setContent(formattedOptions.message);
 
-    if (messageOpts.attachEstimate) {
-      const estimatePdfBuffer = await this.estimatePdf.getSaleEstimatePdf(
-        tenantId,
-        saleEstimateId
-      );
+    // Attaches the estimate pdf to the mail.
+    if (formattedOptions.attachEstimate) {
+      // Retrieves the estimate pdf and attaches it to the mail.
+      const [estimatePdfBuffer, estimateFilename] =
+        await this.estimatePdf.getSaleEstimatePdf(tenantId, saleEstimateId);
+
       mail.setAttachments([
         {
-          filename: messageOpts.data?.EstimateNumber || 'estimate.pdf',
+          filename: `${estimateFilename}.pdf`,
           content: estimatePdfBuffer,
         },
       ]);
     }
+
+    const eventPayload = {
+      tenantId,
+      saleEstimateId,
+      messageOptions,
+      formattedOptions,
+    };
+    // Triggers `onSaleEstimateMailSend` event.
+    await this.eventPublisher.emitAsync(
+      events.saleEstimate.onMailSend,
+      eventPayload as ISaleEstimateMailPresendEvent
+    );
     await mail.send();
+
+    // Triggers `onSaleEstimateMailSent` event.
+    await this.eventPublisher.emitAsync(
+      events.saleEstimate.onMailSent,
+      eventPayload as ISaleEstimateMailPresendEvent
+    );
   }
 }

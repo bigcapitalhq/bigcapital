@@ -1,16 +1,16 @@
 export const DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT =
-  'Estimate {EstimateNumber} is awaiting your approval';
-export const DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT = `<p>Dear {CustomerName}</p>
+  'Estimate {Estimate Number} is awaiting your approval';
+export const DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT = `<p>Dear {Customer Name}</p>
 <p>Thank you for your business, You can view or print your estimate from attachements.</p>
 <p>
-Estimate <strong>#{EstimateNumber}</strong><br />
-Expiration Date : <strong>{EstimateExpirationDate}</strong><br />
-Amount   : <strong>{EstimateAmount}</strong></br />
+Estimate <strong>#{Estimate Number}</strong><br />
+Expiration Date : <strong>{Estimate Expiration Date}</strong><br />
+Amount   : <strong>{Estimate Amount}</strong></br />
 </p>
 
 <p>
 <i>Regards</i><br />
-<i>{CompanyName}</i>
+<i>{Company Name}</i>
 </p>
 `;
 

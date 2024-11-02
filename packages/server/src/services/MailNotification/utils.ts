@@ -44,3 +44,13 @@ export function validateRequiredMailOptions(
     throw new ServiceError(ERRORS.MAIL_BODY_NOT_FOUND);
   }
 }
+
+export const mergeAndValidateMailOptions = (
+  mailOptions: CommonMailOptions,
+  overridedOptions: Partial<CommonMailOptions>
+): CommonMailOptions => {
+  const parsedMessageOptions = parseMailOptions(mailOptions, overridedOptions);
+  validateRequiredMailOptions(parsedMessageOptions);
+
+  return parsedMessageOptions;
+};

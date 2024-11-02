@@ -3,10 +3,7 @@ import Mail from '@/lib/Mail';
 import { ISaleInvoiceMailSend, SendInvoiceMailDTO } from '@/interfaces';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon';
-import {
-  parseMailOptions,
-  validateRequiredMailOptions,
-} from '@/services/MailNotification/utils';
+import { mergeAndValidateMailOptions } from '@/services/MailNotification/utils';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 
@@ -18,11 +15,11 @@ export class SendSaleInvoiceMail {
   @Inject()
   private invoiceMail: SendSaleInvoiceMailCommon;
 
-  @Inject('agenda')
-  private agenda: any;
-
   @Inject()
   private eventPublisher: EventPublisher;
+
+  @Inject('agenda')
+  private agenda: any;
 
   /**
    * Sends the invoice mail of the given sale invoice.
@@ -67,13 +64,10 @@ export class SendSaleInvoiceMail {
       saleInvoiceId
     );
     // Merges message options with default options and parses the options values.
-    const parsedMessageOptions = parseMailOptions(
+    const parsedMessageOptions = mergeAndValidateMailOptions(
       defaultMessageOptions,
       messageOptions
     );
-    // Validates the required mail options.
-    validateRequiredMailOptions(parsedMessageOptions);
-
     const formattedMessageOptions =
       await this.invoiceMail.formatInvoiceMailOptions(
         tenantId,
