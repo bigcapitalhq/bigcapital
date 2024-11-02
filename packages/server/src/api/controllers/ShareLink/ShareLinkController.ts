@@ -30,7 +30,6 @@ export class ShareLinkController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.generateShareLink.bind(this))
     );
-
     return router;
   }
 
@@ -53,7 +52,6 @@ export class ShareLinkController extends BaseController {
       const link = await this.generateShareLinkService.generatePaymentLink(
         tenantId,
         transactionId,
-        transactionType,
         publicity,
         expiryDate
       );

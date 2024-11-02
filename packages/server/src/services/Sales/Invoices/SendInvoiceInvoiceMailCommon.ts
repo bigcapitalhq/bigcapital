@@ -8,6 +8,7 @@ import {
   DEFAULT_INVOICE_MAIL_SUBJECT,
 } from './constants';
 import { GetInvoicePaymentMail } from './GetInvoicePaymentMail';
+import { GenerateShareLink } from './GenerateeInvoicePaymentLink';
 
 @Service()
 export class SendSaleInvoiceMailCommon {
@@ -22,6 +23,9 @@ export class SendSaleInvoiceMailCommon {
 
   @Inject()
   private getInvoicePaymentMail: GetInvoicePaymentMail;
+
+  @Inject()
+  private generatePaymentLinkService: GenerateShareLink;
 
   /**
    * Retrieves the mail options.
@@ -81,6 +85,13 @@ export class SendSaleInvoiceMailCommon {
         mailOptions,
         formatterArgs
       );
+    // Generates the a new payment link for the given invoice.
+    const paymentLink =
+      await this.generatePaymentLinkService.generatePaymentLink(
+        tenantId,
+        invoiceId,
+        'public'
+      );
     const message = await this.getInvoicePaymentMail.getMailTemplate(
       tenantId,
       invoiceId,
@@ -88,6 +99,9 @@ export class SendSaleInvoiceMailCommon {
         // # Invoice message
         invoiceMessage: formattedOptions.message,
         preview: formattedOptions.message,
+
+        // # Payment link
+        viewInvoiceButtonUrl: paymentLink.link,
       }
     );
     return { ...formattedOptions, message };
