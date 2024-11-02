@@ -135,6 +135,8 @@ export class SendPaymentReceiveMailNotification {
     const mail = new Mail()
       .setSubject(parsedMessageOpts.subject)
       .setTo(parsedMessageOpts.to)
+      .setCC(parsedMessageOpts.cc)
+      .setBCC(parsedMessageOpts.bcc)
       .setContent(parsedMessageOpts.message);
 
     const eventPayload = {

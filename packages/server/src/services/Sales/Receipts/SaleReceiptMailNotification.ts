@@ -139,6 +139,8 @@ export class SaleReceiptMailNotification {
     const mail = new Mail()
       .setSubject(parsedMessageOpts.subject)
       .setTo(parsedMessageOpts.to)
+      .setCC(parsedMessageOpts.cc)
+      .setBCC(parsedMessageOpts.bcc)
       .setContent(parsedMessageOpts.message);
 
     // Attaches the receipt pdf document.
