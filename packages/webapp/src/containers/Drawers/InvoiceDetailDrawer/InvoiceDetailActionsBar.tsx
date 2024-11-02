@@ -47,6 +47,7 @@ function InvoiceDetailActionsBar({
   openAlert,
 
   // #withDrawerActions
+  openDrawer,
   closeDrawer,
 }) {
   const history = useHistory();
@@ -102,8 +103,9 @@ function InvoiceDetailActionsBar({
     openAlert('cancel-bad-debt', { invoiceId });
   };
 
+  // handle send mail button click.
   const handleMailInvoice = () => {
-    openDialog(DialogsName.InvoiceMail, { invoiceId });
+    openDrawer(DRAWERS.INVOICE_SEND_MAIL, { invoiceId });
   };
 
   const handleShareButtonClick = () => {
