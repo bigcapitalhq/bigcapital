@@ -126,7 +126,6 @@ export class SendSaleEstimateMail {
     mailOptions: SaleEstimateMailOptions
   ): Promise<SaleEstimateMailOptions> => {
     const formatterArgs = await this.formatterArgs(tenantId, saleEstimateId);
-
     const formattedOptions =
       await this.contactMailNotification.formatMailOptions(
         tenantId,
@@ -166,6 +165,8 @@ export class SendSaleEstimateMail {
     const mail = new Mail()
       .setSubject(formattedOptions.subject)
       .setTo(formattedOptions.to)
+      .setCC(formattedOptions.cc)
+      .setBCC(formattedOptions.bcc)
       .setContent(formattedOptions.message);
 
     // Attaches the estimate pdf to the mail.

@@ -77,6 +77,8 @@ export class SendSaleInvoiceMail {
     const mail = new Mail()
       .setSubject(formattedMessageOptions.subject)
       .setTo(formattedMessageOptions.to)
+      .setCC(formattedMessageOptions.cc)
+      .setBCC(formattedMessageOptions.bcc)
       .setContent(formattedMessageOptions.message);
 
     // Attach invoice document.
@@ -89,7 +91,6 @@ export class SendSaleInvoiceMail {
         { filename: `${invoiceFilename}.pdf`, content: invoicePdfBuffer },
       ]);
     }
-
     const eventPayload = {
       tenantId,
       saleInvoiceId,

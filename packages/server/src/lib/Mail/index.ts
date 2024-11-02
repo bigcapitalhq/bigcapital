@@ -9,6 +9,8 @@ export default class Mail {
   subject: string = '';
   content: string = '';
   to: string | string[];
+  cc: string | string[];
+  bcc: string | string[];
   from: string = `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`;
   data: { [key: string]: string | number };
   attachments: IMailAttachment[];
@@ -20,6 +22,8 @@ export default class Mail {
     return {
       to: this.to,
       from: this.from,
+      cc: this.cc,
+      bcc: this.bcc,
       subject: this.subject,
       html: this.html,
       attachments: this.attachments,
@@ -60,6 +64,16 @@ export default class Mail {
     return this;
   }
 
+  setCC(cc: string | string[]) {
+    this.cc = cc;
+    return this;
+  }
+
+  setBCC(bcc: string | string[]) {
+    this.bcc = bcc;
+    return this;
+  }
+
   /**
    * Sets from address to the mail.
    * @param {string} from
@@ -72,7 +86,7 @@ export default class Mail {
 
   /**
    * Set attachments to the mail.
-   * @param {IMailAttachment[]} attachments 
+   * @param {IMailAttachment[]} attachments
    * @returns {Mail}
    */
   setAttachments(attachments: IMailAttachment[]) {
