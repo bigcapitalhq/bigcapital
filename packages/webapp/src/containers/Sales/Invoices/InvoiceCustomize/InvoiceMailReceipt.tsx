@@ -93,6 +93,7 @@ export function InvoiceMailReceipt({
             h="90px"
             w="90px"
             mx="auto"
+            borderRadius="3px"
             backgroundRepeat="no-repeat"
             backgroundPosition="center center"
             backgroundSize="contain"

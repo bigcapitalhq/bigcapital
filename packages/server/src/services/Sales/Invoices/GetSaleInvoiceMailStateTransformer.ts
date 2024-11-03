@@ -1,4 +1,3 @@
-import { Transformer } from '@/lib/Transformer/Transformer';
 import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
 import { ItemEntryTransformer } from './ItemEntryTransformer';
 
@@ -11,6 +10,10 @@ export class GetSaleInvoiceMailStateTransformer extends SaleInvoiceTransformer {
     return ['*'];
   };
 
+  /**
+   * Included attributes.
+   * @returns {Array}
+   */
   public includeAttributes = (): string[] => {
     return [
       'invoiceDate',
@@ -39,14 +42,26 @@ export class GetSaleInvoiceMailStateTransformer extends SaleInvoiceTransformer {
     ];
   };
 
+  /**
+   * Retrieves the company name.
+   * @returns {string}
+   */
   protected companyName = () => {
     return this.context.organization.name;
   };
 
+  /**
+   * Retrieves the company logo uri.
+   * @returns {string | null}
+   */
   protected companyLogoUri = (invoice) => {
-    return invoice.pdfTemplate?.attributes?.companyLogoUri;
+    return invoice.pdfTemplate?.companyLogoUri;
   };
 
+  /**
+   * Retrieves the primary color.
+   * @returns {string}
+   */
   protected primaryColor = (invoice) => {
     return invoice.pdfTemplate?.attributes?.primaryColor;
   };

@@ -1,10 +1,9 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { getTransactionTypeLabel } from '@/utils/transactions-types';
-import { getUploadedObjectUri } from '../Attachments/utils';
 
 export class GetPdfTemplateTransformer extends Transformer {
   /**
-   * Includeded attributes.
+   * Included attributes.
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
@@ -44,20 +43,10 @@ export class GetPdfTemplateTransformer extends Transformer {
 
 class GetPdfTemplateAttributesTransformer extends Transformer {
   /**
-   * Includeded attributes.
+   * Included attributes.
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
-    return ['companyLogoUri'];
+    return [];
   };
-
-  /**
-   * Retrieves the company logo uri.
-   * @returns {string}
-   */
-  protected companyLogoUri(template) {
-    return template.companyLogoKey
-      ? getUploadedObjectUri(template.companyLogoKey)
-      : '';
-  }
 }
