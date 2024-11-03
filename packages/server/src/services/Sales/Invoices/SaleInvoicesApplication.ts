@@ -28,9 +28,7 @@ import { GetInvoicePaymentsService } from './GetInvoicePaymentsService';
 import { SaleInvoiceNotifyBySms } from './SaleInvoiceNotifyBySms';
 import { SendInvoiceMailReminder } from './SendSaleInvoiceMailReminder';
 import { SendSaleInvoiceMail } from './SendSaleInvoiceMail';
-import { GetSaleInvoiceMailReminder } from './GetSaleInvoiceMailReminder';
 import { GetSaleInvoiceState } from './GetSaleInvoiceState';
-import { GetSaleInvoiceBrandTemplate } from './GetSaleInvoiceBrandTemplate';
 import { GetSaleInvoiceMailState } from './GetSaleInvoiceMailState';
 
 @Service()
@@ -366,7 +364,10 @@ export class SaleInvoiceApplication {
    * @param {number} saleInvoiceid
    * @returns {Promise<SaleInvoiceMailState>}
    */
-  public getSaleInvoiceMailState(tenantId: number, saleInvoiceid: number) {
+  public getSaleInvoiceMailState(
+    tenantId: number,
+    saleInvoiceid: number
+  ): Promise<SaleInvoiceMailState> {
     return this.getSaleInvoiceMailStateService.getInvoiceMailState(
       tenantId,
       saleInvoiceid

@@ -35,9 +35,12 @@ export class CreditNoteBrandingTemplate {
       ...defaultCreditNoteBrandingAttributes,
       ...commonOrgBrandingAttrs,
     };
-
+    const brandingTemplateAttrs = {
+      ...template.attributes,
+      companyLogoUri: template.companyLogoUri,
+    };
     const attributes = mergePdfTemplateWithDefaultAttributes(
-      template.attributes,
+      brandingTemplateAttrs,
       organizationBrandingAttrs
     );
     return {

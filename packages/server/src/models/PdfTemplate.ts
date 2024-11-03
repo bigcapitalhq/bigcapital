@@ -1,6 +1,9 @@
+import { getUploadedObjectUri } from '@/services/Attachments/utils';
 import TenantModel from 'models/TenantModel';
 
 export class PdfTemplate extends TenantModel {
+  public readonly attributes: Record<string, any>;
+
   /**
    * Table name.
    */
@@ -47,7 +50,17 @@ export class PdfTemplate extends TenantModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return [];
+    return ['companyLogoUri'];
+  }
+
+  /**
+   * Retrieves the company logo uri.
+   * @returns {string}
+   */
+  get companyLogoUri() {
+    return this.attributes.companyLogoKey
+      ? getUploadedObjectUri(this.attributes.companyLogoKey)
+      : '';
   }
 
   /**

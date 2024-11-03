@@ -25,7 +25,7 @@ export function InvoiceMailReceiptPreviewConneceted() {
       <Box px={4} pt={8} pb={16}>
         <InvoiceMailReceiptPreview
           companyName={invoiceMailState?.companyName}
-          // companyLogoUri={invoiceMailState?.companyLogoUri}
+          companyLogoUri={invoiceMailState?.companyLogoUri}
 
           primaryColor={invoiceMailState?.primaryColor}
           total={invoiceMailState?.totalFormatted}

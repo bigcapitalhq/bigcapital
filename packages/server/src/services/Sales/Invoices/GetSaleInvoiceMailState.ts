@@ -18,7 +18,6 @@ export class GetSaleInvoiceMailState {
   /**
    * Retrieves the invoice mail state of the given sale invoice.
    * Invoice mail state includes the mail options, branding attributes and the invoice details.
-   *
    * @param {number} tenantId
    * @param {number} saleInvoiceId
    * @returns {Promise<SaleInvoiceMailState>}
