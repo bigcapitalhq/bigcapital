@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { renderInvoicePaperTemplateHtml } from '@bigcapital/pdf-templates';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
 import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
 import { GetSaleInvoice } from './GetSaleInvoice';
@@ -8,6 +9,7 @@ import { InvoicePdfTemplateAttributes } from '@/interfaces';
 import { SaleInvoicePdfTemplate } from './SaleInvoicePdfTemplate';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { renderInvoicePaymentEmail } from '@bigcapital/email-components';
 
 @Service()
 export class SaleInvoicePdf {
@@ -45,11 +47,16 @@ export class SaleInvoicePdf {
       tenantId,
       invoiceId
     );
-    const htmlContent = await this.templateInjectable.render(
-      tenantId,
-      'modules/invoice-standard',
-      brandingAttributes
-    );
+    // const htmlContent = await this.templateInjectable.render(
+    //   tenantId,
+    //   'modules/invoice-standard',
+    //   brandingAttributes
+    // );
+
+    const htmlContent = renderInvoicePaperTemplateHtml({});
+
+    console.log(htmlContent);
+
     // Converts the given html content to pdf document.
     const buffer = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
@@ -62,7 +69,7 @@ export class SaleInvoicePdf {
       events.saleInvoice.onPdfViewed,
       eventPayload
     );
-    return [buffer, filename];
+    return [htmlContent, filename];
   }
 
   /**
