@@ -3,9 +3,9 @@ import { css } from '@emotion/css';
 import { Tab, Tabs } from '@blueprintjs/core';
 import { Stack } from '@/components';
 
-const InvoiceMailReceiptPreviewConneceted = lazy(() =>
-  import('./InvoiceMailReceiptPreviewConnected.').then((module) => ({
-    default: module.InvoiceMailReceiptPreviewConneceted,
+const InvoiceMailReceiptPreviewConnected = lazy(() =>
+  import('./InvoiceMailReceiptPreviewConnected').then((module) => ({
+    default: module.InvoiceMailReceiptPreviewConnected,
   })),
 );
 const InvoiceSendPdfPreviewConnected = lazy(() =>
@@ -51,7 +51,7 @@ export function InvoiceSendMailPreview() {
           title={'Payment page'}
           panel={
             <Suspense>
-              <InvoiceMailReceiptPreviewConneceted />
+              <InvoiceMailReceiptPreviewConnected />
             </Suspense>
           }
         />
