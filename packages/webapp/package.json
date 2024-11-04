@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@bigcapital/utils": "*",
-    "@blueprintjs-formik/core": "^0.3.6",
+    "@blueprintjs-formik/core": "^0.3.7",
     "@blueprintjs-formik/datetime": "^0.3.7",
     "@blueprintjs-formik/select": "^0.3.5",
     "@blueprintjs/colors": "4.1.19",
