@@ -18,9 +18,14 @@ import {
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 import { useInvoiceMailItems, useSendInvoiceFormatArgsOptions } from './_hooks';
+import { InvoiceSendMailFormValues } from './_types';
 
 // Create new account renderer.
-const createNewItemRenderer = (query, active, handleClick) => {
+const createNewItemRenderer = (
+  query: string,
+  active: boolean,
+  handleClick: React.MouseEventHandler<HTMLElement>,
+) => {
   return (
     <MenuItem
       icon="add"
@@ -32,7 +37,7 @@ const createNewItemRenderer = (query, active, handleClick) => {
 };
 
 // Create new item from the given query string.
-const createNewItemFromQuery = (name) => ({ name });
+const createNewItemFromQuery = (text: string): SelectOptionProps => ({ text });
 
 const styleEmailButton = css`
   &.bp4-button.bp4-small {
@@ -62,19 +67,19 @@ export function InvoiceSendMailFields() {
   const [showCCField, setShowCCField] = useState<boolean>(false);
   const [showBccField, setShowBccField] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } =
+    useFormikContext<InvoiceSendMailFormValues>();
   const items = useInvoiceMailItems();
   const argsOptions = useSendInvoiceFormatArgsOptions();
 
-  const handleClickCcBtn = (event) => {
+  const handleClickCcBtn = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
     setShowCCField(true);
   };
 
-  const handleClickBccBtn = (event) => {
+  const handleClickBccBtn = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -82,64 +87,71 @@ export function InvoiceSendMailFields() {
   };
 
   const handleCreateToItemSelect = (value: SelectOptionProps) => {
-    setFieldValue('to', [...values?.to, value?.name]);
+    setFieldValue('to', [...values?.to, value?.text]);
   };
 
   const handleCreateCcItemSelect = (value: SelectOptionProps) => {
-    setFieldValue('cc', [...values?.cc, value?.name]);
+    setFieldValue('cc', [...values?.cc, value?.text]);
   };
+
   const handleCreateBccItemSelect = (value: SelectOptionProps) => {
-    setFieldValue('bcc', [...values?.bcc, value?.name]);
+    setFieldValue('bcc', [...values?.bcc, value?.text]);
   };
 
-  const rightElementsToField = useMemo(() => (
-    <Group
-      spacing={0}
-      paddingRight={'7px'}
-      paddingTop={'7px'}
-      fontWeight={500}
-      color={'#000'}
-    >
-      <Button
-        onClick={handleClickCcBtn}
-        minimal
-        small
-        className={styleEmailButton}
+  const rightElementsToField = useMemo(
+    () => (
+      <Group
+        spacing={0}
+        paddingRight={'7px'}
+        paddingTop={'7px'}
+        fontWeight={500}
+        color={'#000'}
       >
-        CC
-      </Button>
+        <Button
+          onClick={handleClickCcBtn}
+          minimal
+          small
+          className={styleEmailButton}
+        >
+          CC
+        </Button>
 
-      <Button
-        onClick={handleClickBccBtn}
-        minimal
-        small
-        className={styleEmailButton}
-      >
-        BCC
-      </Button>
-    </Group>
-  ), []);
+        <Button
+          onClick={handleClickBccBtn}
+          minimal
+          small
+          className={styleEmailButton}
+        >
+          BCC
+        </Button>
+      </Group>
+    ),
+    [],
+  );
 
-  const handleTextareaChange = useCallback((item: SelectOptionProps) => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
+  const handleTextareaChange = useCallback(
+    (item: SelectOptionProps) => {
+      const textarea = textareaRef.current;
+      if (!textarea) return;
 
-    const { selectionStart, selectionEnd, value: text } = textarea;
-    const insertText = `{${item.value}}`;
-    const message =
-      text.substring(0, selectionStart) +
-      insertText +
-      text.substring(selectionEnd);
+      const { selectionStart, selectionEnd, value: text } = textarea;
+      const insertText = `{${item.value}}`;
+      const message =
+        text.substring(0, selectionStart) +
+        insertText +
+        text.substring(selectionEnd);
 
-    setFieldValue('message', message);
+      setFieldValue('message', message);
 
-    // Move the cursor to the end of the inserted text
-    setTimeout(() => {
-      textarea.selectionStart = textarea.selectionEnd =
-        selectionStart + insertText.length;
-      textarea.focus();
-    }, 0);
-  }, [setFieldValue]);
+      // Move the cursor to the end of the inserted text
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd =
+          selectionStart + insertText.length;
+        textarea.focus();
+      }, 0);
+    },
+    [setFieldValue],
+  );
 
   return (
     <Stack
@@ -233,7 +245,7 @@ export function InvoiceSendMailFields() {
                   position: Position.BOTTOM_LEFT,
                   minimal: true,
                 }}
-                input={({ activeItem, text, label, value }) => (
+                input={() => (
                   <Button
                     minimal
                     rightIcon={
