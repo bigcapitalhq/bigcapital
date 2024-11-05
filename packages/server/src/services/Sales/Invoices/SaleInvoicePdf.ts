@@ -47,16 +47,9 @@ export class SaleInvoicePdf {
       tenantId,
       invoiceId
     );
-    // const htmlContent = await this.templateInjectable.render(
-    //   tenantId,
-    //   'modules/invoice-standard',
-    //   brandingAttributes
-    // );
-
-    const htmlContent = renderInvoicePaperTemplateHtml({});
-
-    console.log(htmlContent);
-
+    const htmlContent = renderInvoicePaperTemplateHtml({
+      ...brandingAttributes,
+    });
     // Converts the given html content to pdf document.
     const buffer = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
@@ -69,7 +62,7 @@ export class SaleInvoicePdf {
       events.saleInvoice.onPdfViewed,
       eventPayload
     );
-    return [htmlContent, filename];
+    return [buffer, filename];
   }
 
   /**

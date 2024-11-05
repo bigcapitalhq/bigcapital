@@ -243,15 +243,15 @@ export function InvoicePaperTemplate({
                   <Stack spacing={2}>
                     <Text>{data.item}</Text>
                     <Text
-                    // variant={'muted'}
-                    // style={{ fontSize: 12 }}
+                      color={'#5f6b7c'}
+                      fontSize={12}
                     >
                       {data.description}
                     </Text>
                   </Stack>
                 ),
               },
-              { label: lineQuantityLabel, accessor: 'quantity' },
+              { label: lineQuantityLabel, accessor: 'quantity', align: 'right' },
               { label: lineRateLabel, accessor: 'rate', align: 'right' },
               { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}

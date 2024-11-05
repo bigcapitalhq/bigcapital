@@ -20,10 +20,9 @@ export function PaperTemplate({
 }: PaperTemplateProps) {
   return (
     <Box
-      borderRadius="5px"
       backgroundColor="#fff"
       color="#111"
-      boxShadow="inset 0 4px 0px 0 var(--invoice-primary-color), 0 10px 15px rgba(0, 0, 0, 0.05)"
+      boxShadow="inset 0 4px 0px 0 var(--invoice-primary-color)"
       padding="30px 30px"
       fontSize="12px"
       position="relative"
@@ -31,22 +30,20 @@ export function PaperTemplate({
       h="1123px"
       w="794px"
       {...restProps}
-      className={restProps?.className}
+      className={clsx(
+        restProps?.className,
+        css`
+          @media print {
+            width: auto !important;
+            height: auto !important;
+          }
+        `
+      )}
     >
       <style>{`:root { --invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor}; }`}</style>
       {children}
     </Box>
   );
-}
-
-interface PaperTemplateTableProps {
-  columns: Array<{
-    accessor: string | ((data: Record<string, any>) => JSX.Element);
-    label: string;
-    value?: JSX.Element;
-    align?: 'left' | 'center' | 'right';
-  }>;
-  data: Array<Record<string, any>>;
 }
 
 interface PaperTemplateBigTitleProps {
@@ -85,6 +82,16 @@ PaperTemplate.Logo = ({ logoUri }: PaperTemplateLogoProps) => {
     </x.div>
   );
 };
+
+interface PaperTemplateTableProps {
+  columns: Array<{
+    accessor: string | ((data: Record<string, any>) => JSX.Element);
+    label: string;
+    value?: JSX.Element;
+    align?: 'left' | 'center' | 'right';
+  }>;
+  data: Array<Record<string, any>>;
+}
 
 PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
   return (
@@ -133,9 +140,9 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
       <thead>
         <tr>
           {columns.map((col, index) => (
-            <th key={index} align={col.align}>
+            <x.th key={index} textAlign={col.align}>
               {col.label}
-            </th>
+            </x.th>
           ))}
         </tr>
       </thead>
@@ -144,11 +151,11 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
         {data.map((_data: any) => (
           <tr>
             {columns.map((column, index) => (
-              <td align={column.align} key={index}>
+              <x.td textAlign={column.align} key={index}>
                 {isFunction(column?.accessor)
                   ? column?.accessor(_data)
                   : get(_data, column.accessor)}
-              </td>
+              </x.td>
             ))}
           </tr>
         ))}
@@ -183,6 +190,7 @@ const totalBottomBordered = css`
 const totalBottomGrayBordered = css`
   border-bottom: 1px solid #dadada;
 `;
+
 PaperTemplate.TotalLine = ({
   label,
   amount,
@@ -262,7 +270,9 @@ PaperTemplate.TermsItem = ({
 }) => {
   return (
     <Group spacing={12}>
-      <x.div minWidth={'12px'} color={'#333'}>{label}</x.div>
+      <x.div minWidth={'120px'} color={'#333'}>
+        {label}
+      </x.div>
       <x.div>{children}</x.div>
     </Group>
   );

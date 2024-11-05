@@ -1,5 +1,9 @@
-import { x } from '@xstyled/emotion';
+import { SystemProps, x } from '@xstyled/emotion';
 
-export const Text = ({ children }: { children: React.ReactNode }) => {
-  return <x.div>{children}</x.div>;
+export interface TextProps extends SystemProps {
+  children?: React.ReactNode;
+}
+
+export const Text = ({ children, ...restProps }: TextProps) => {
+  return <x.div {...restProps}>{children}</x.div>;
 };
