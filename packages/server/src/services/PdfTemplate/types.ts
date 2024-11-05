@@ -66,7 +66,6 @@ export interface ICreateInvoicePdfTemplateDTO {
   showStatement?: boolean;
 }
 
-
 export interface CommonOrganizationBrandingAttributes {
   companyName?: string;
   primaryColor?: string;

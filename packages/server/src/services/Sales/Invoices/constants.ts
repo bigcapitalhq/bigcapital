@@ -1,20 +1,19 @@
 import config from '@/config';
 
 export const DEFAULT_INVOICE_MAIL_SUBJECT =
-  'Invoice {Invoice Number} from {Company Name}';
-export const DEFAULT_INVOICE_MAIL_CONTENT = `
-<p>Dear {Customer Name}</p>
-<p>Thank you for your business, You can view or print your invoice from attachements.</p>
-<p>
-Invoice <strong>#{Invoice Number}</strong><br />
-Due Date : <strong>{Invoice Due Date}</strong><br />
-Amount   : <strong>{Invoice Amount}</strong></br />
-</p>
+  'Invoice {Invoice Number} from {Company Name} for {Customer Name}';
+export const DEFAULT_INVOICE_MAIL_CONTENT = `Hi {Customer Name},
 
-<p>
-<i>Regards</i><br />
-<i>{Company Name}</i>
-</p>
+Here's invoice # {Invoice Number} for {Invoice Amount}
+
+The amount outstanding of {Invoice Due Amount} is due on {Invoice Due Date}.
+
+From your online payment page you can print a PDF or view your outstanding bills.
+
+If you have any questions, please let us know.
+
+Thanks,
+{Company Name}
 `;
 
 export const DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT =

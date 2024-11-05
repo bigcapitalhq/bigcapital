@@ -33,8 +33,12 @@ export class SaleEstimatePdfTemplate {
       ...defaultEstimatePdfBrandingAttributes,
       ...commonOrgBrandingAttrs,
     };
+    const brandingTemplateAttrs = {
+      ...template.attributes,
+      companyLogoUri: template.companyLogoUri,
+    };
     const attributes = mergePdfTemplateWithDefaultAttributes(
-      template.attributes,
+      brandingTemplateAttrs,
       orgainizationBrandingAttrs
     );
     return {

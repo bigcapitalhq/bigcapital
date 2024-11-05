@@ -372,6 +372,7 @@ export function useSendSaleInvoiceMail(
 // --------------------------------------
 export interface GetSaleInvoiceDefaultOptionsResponse {
   companyName: string;
+  companyLogoUri: string;
 
   dueDate: string;
   dueDateFormatted: string;

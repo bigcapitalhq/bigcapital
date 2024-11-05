@@ -41,7 +41,7 @@ export class GetInvoiceMailTemplateAttributesTransformer extends Transformer {
   };
 
   public companyLogoUri(): string {
-    return this.options.brandingTemplate?.attributes?.companyLogoUri;
+    return this.options.brandingTemplate?.companyLogoUri;
   }
 
   public companyName(): string {
