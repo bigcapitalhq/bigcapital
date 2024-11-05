@@ -32,6 +32,25 @@ export class SaleInvoicePdf {
   private eventPublisher: EventPublisher;
 
   /**
+   * Retrieve sale invoice html content.
+   * @param {number} tenantId - Tenant Id.
+   * @param {ISaleInvoice} saleInvoice -
+   * @returns {Promise<string>}
+   */
+  public async saleInvoiceHtml(
+    tenantId: number,
+    invoiceId: number
+  ): Promise<string> {
+    const brandingAttributes = await this.getInvoiceBrandingAttributes(
+      tenantId,
+      invoiceId
+    );
+    return renderInvoicePaperTemplateHtml({
+      ...brandingAttributes,
+    });
+  }
+
+  /**
    * Retrieve sale invoice pdf content.
    * @param {number} tenantId - Tenant Id.
    * @param {ISaleInvoice} saleInvoice -
@@ -43,13 +62,8 @@ export class SaleInvoicePdf {
   ): Promise<[Buffer, string]> {
     const filename = await this.getInvoicePdfFilename(tenantId, invoiceId);
 
-    const brandingAttributes = await this.getInvoiceBrandingAttributes(
-      tenantId,
-      invoiceId
-    );
-    const htmlContent = renderInvoicePaperTemplateHtml({
-      ...brandingAttributes,
-    });
+    const htmlContent = await this.saleInvoiceHtml(tenantId, invoiceId);
+
     // Converts the given html content to pdf document.
     const buffer = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
