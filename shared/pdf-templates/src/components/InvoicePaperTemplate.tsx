@@ -1,10 +1,8 @@
-import { renderToString } from 'react-dom/server';
 import {
   PaperTemplate,
   PaperTemplateProps,
   PaperTemplateTotalBorder,
 } from './PaperTemplate';
-import { x } from '@xstyled/emotion';
 import { Box } from '../lib/layout/Box';
 import { Text } from '../lib/text/Text';
 import { Stack } from '../lib/layout/Stack';
@@ -17,8 +15,6 @@ import {
   DefaultPdfTemplateAddressBilledTo,
   DefaultPdfTemplateAddressBilledFrom,
 } from './_constants';
-import { PaperTemplateLayout } from './PaperTemplateLayout';
-import createCache from '@emotion/cache';
 
 interface PapaerLine {
   item?: string;
@@ -328,16 +324,3 @@ export function InvoicePaperTemplate({
     </PaperTemplate>
   );
 }
-
-export const renderInvoicePaperTemplateHtml = (
-  props: InvoicePaperTemplateProps
-) => {
-  const key = 'custom';
-  const cache = createCache({ key });
-
-  return renderToString(
-    <PaperTemplateLayout cache={cache}>
-      <InvoicePaperTemplate {...props} />
-    </PaperTemplateLayout>
-  );
-};

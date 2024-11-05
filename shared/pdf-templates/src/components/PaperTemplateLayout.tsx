@@ -1,25 +1,24 @@
 import { CacheProvider, ThemeProvider } from '@emotion/react';
 import { EmotionCache } from '@emotion/cache';
 import { defaultTheme } from '@xstyled/system';
+import { Preflight } from '@xstyled/emotion';
 
 const theme = {
   ...defaultTheme,
 };
-export function PaperTemplateLayout({ cache, children }: {
+export function PaperTemplateLayout({
+  cache,
+  children,
+}: {
   children: React.ReactNode;
   cache: EmotionCache;
 }) {
-  const html = (
-    <CacheProvider value={cache}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </CacheProvider>
-  );
-
   return (
-    <html lang="en">
-      <body>
-        <div id="root">{html}</div>
-      </body>
-    </html>
+    <CacheProvider value={cache}>
+      <ThemeProvider theme={theme}>
+        <Preflight />
+        {children}
+      </ThemeProvider>
+    </CacheProvider>
   );
 }

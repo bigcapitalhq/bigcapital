@@ -2,29 +2,9 @@ import React from 'react';
 import clsx from 'classnames';
 import { get, isFunction } from 'lodash';
 import { x } from '@xstyled/emotion';
+import { css } from '@emotion/css';
 import { Box, BoxProps } from '../lib/layout/Box';
 import { Group, GroupProps } from '../lib/layout/Group';
-
-const styles = {
-  root: 'root',
-  bigTitle: 'bigTitle',
-  logoWrap: 'logoWrap',
-  logoImg: 'logoImg',
-  table: 'table',
-  tableBody: 'tableBody',
-  totals: 'totals',
-  totalsItem: 'totalsItem',
-  totalBottomBordered: 'totalBottomBordered',
-  totalBottomGrayBordered: 'totalBottomGrayBordered',
-  totalsItemLabel: 'totalsItemLabel',
-  totalsItemAmount: 'totalsItemAmount',
-  addressRoot: 'addressRoot',
-  paragraph: 'paragraph',
-  paragraphLabel: 'paragraphLabel',
-  details: 'details',
-  detail: 'detail',
-  detailLabel: 'detailLabel',
-};
 
 export interface PaperTemplateProps extends BoxProps {
   primaryColor?: string;
@@ -51,7 +31,7 @@ export function PaperTemplate({
       h="1123px"
       w="794px"
       {...restProps}
-      className={clsx(styles.root, restProps?.className)}
+      className={restProps?.className}
     >
       <style>{`:root { --invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor}; }`}</style>
       {children}
@@ -76,14 +56,11 @@ interface PaperTemplateBigTitleProps {
 PaperTemplate.BigTitle = ({ title }: PaperTemplateBigTitleProps) => {
   return (
     <x.h1
-      style={{
-        fontSize: '30px',
-        margin: 0,
-        lineHeight: 1,
-        fontWeight: 500,
-        color: '#333',
-      }}
-      className={styles.bigTitle}
+      fontSize={'30px'}
+      margin={0}
+      lineHeight={1}
+      fontWeight={500}
+      color={'#333'}
     >
       {title}
     </x.h1>
@@ -96,15 +73,63 @@ interface PaperTemplateLogoProps {
 
 PaperTemplate.Logo = ({ logoUri }: PaperTemplateLogoProps) => {
   return (
-    <div className={styles.logoWrap}>
-      <img className={styles.logoImg} alt="" src={logoUri} />
-    </div>
+    <x.div overflow={'hidden'}>
+      <x.img
+        width={'100%'}
+        height={'100%'}
+        maxWidth={'260px'}
+        maxHeight={'100px'}
+        alt=""
+        src={logoUri}
+      />
+    </x.div>
   );
 };
 
 PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
   return (
-    <table className={styles.table}>
+    <table
+      className={css`
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+
+        thead th {
+          font-weight: 400;
+          border-bottom: 1px solid #000;
+          padding: 2px 10px;
+          color: #333;
+
+          &.rate,
+          &.total {
+            text-align: right;
+          }
+          &:first-of-type {
+            padding-left: 0;
+          }
+          &:last-of-type {
+            padding-right: 0;
+          }
+        }
+        tbody {
+          td {
+            border-bottom: 1px solid #f6f6f6;
+            padding: 12px 10px;
+
+            &:first-of-type {
+              padding-left: 0;
+            }
+            &:last-of-type {
+              padding-right: 0;
+            }
+            &.rate,
+            &.total {
+              text-align: right;
+            }
+          }
+        }
+      `}
+    >
       <thead>
         <tr>
           {columns.map((col, index) => (
@@ -115,7 +140,7 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
         </tr>
       </thead>
 
-      <tbody className={styles.tableBody}>
+      <tbody>
         {data.map((_data: any) => (
           <tr>
             {columns.map((column, index) => (
@@ -148,8 +173,16 @@ PaperTemplate.Totals = ({ children }: { children: React.ReactNode }) => {
       }}
     >
       {children}
-    </x.div>);
+    </x.div>
+  );
 };
+
+const totalBottomBordered = css`
+  border-bottom: 1px solid #000;
+`;
+const totalBottomGrayBordered = css`
+  border-bottom: 1px solid #dadada;
+`;
 PaperTemplate.TotalLine = ({
   label,
   amount,
@@ -165,23 +198,18 @@ PaperTemplate.TotalLine = ({
     <x.div
       display={'flex'}
       padding={'4px 0'}
-
-      className={clsx(styles.totalsItem, {
-        [styles.totalBottomBordered]: border === PaperTemplateTotalBorder.Dark,
-        [styles.totalBottomGrayBordered]:
-          border === PaperTemplateTotalBorder.Gray,
+      className={clsx({
+        [totalBottomBordered]: border === PaperTemplateTotalBorder.Dark,
+        [totalBottomGrayBordered]: border === PaperTemplateTotalBorder.Gray,
       })}
-      style={style}
     >
       <x.div min-w="160px">{label}</x.div>
-      <x.div flex={'1 1 auto'} textAlign={'right'}>{amount}</x.div>
+      <x.div flex={'1 1 auto'} textAlign={'right'}>
+        {amount}
+      </x.div>
     </x.div>
   );
 };
-
-PaperTemplate.MutedText = () => { };
-
-PaperTemplate.Text = () => { };
 
 PaperTemplate.AddressesGroup = (props: GroupProps) => {
   return (
@@ -189,10 +217,15 @@ PaperTemplate.AddressesGroup = (props: GroupProps) => {
       spacing={10}
       align={'flex-start'}
       {...props}
-      className={styles.addressRoot}
+      className={css`
+        > div {
+          flex: 1;
+        }
+      `}
     />
   );
 };
+
 PaperTemplate.Address = ({ children }: { children: React.ReactNode }) => {
   return <Box>{children}</Box>;
 };
@@ -205,22 +238,16 @@ PaperTemplate.Statement = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className={styles.paragraph}>
-      {label && <div className={styles.paragraphLabel}>{label}</div>}
-      <div>{children}</div>
-    </div>
+    <x.div mb={'20px'}>
+      {label && <x.div color={'#666'}>{label}</x.div>}
+      <x.div>{children}</x.div>
+    </x.div>
   );
 };
 
 PaperTemplate.TermsList = ({ children }: { children: React.ReactNode }) => {
   return (
-    <x.div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px',
-      }}
-    >
+    <x.div display={'flex'} flexDirection={'column'} gap={'4px'}>
       {children}
     </x.div>
   );
@@ -234,9 +261,9 @@ PaperTemplate.TermsItem = ({
   children: React.ReactNode;
 }) => {
   return (
-    <x.div style={{ display: 'flex', flexDirection: 'row', gap: '12px' }}>
-      <x.div style={{ minWidth: '120px', color: '#333' }}>{label}</x.div>
+    <Group spacing={12}>
+      <x.div minWidth={'12px'} color={'#333'}>{label}</x.div>
       <x.div>{children}</x.div>
-    </x.div>
+    </Group>
   );
 };
