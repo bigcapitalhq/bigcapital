@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@bigcapital/utils": "*",
+    "@bigcapital/pdf-templates": "*",
     "@blueprintjs-formik/core": "^0.3.7",
     "@blueprintjs-formik/datetime": "^0.3.7",
     "@blueprintjs-formik/select": "^0.3.5",
