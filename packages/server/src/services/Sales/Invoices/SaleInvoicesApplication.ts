@@ -274,6 +274,19 @@ export class SaleInvoiceApplication {
   }
 
   /**
+   * Retrieves the html content of the given sale invoice.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @returns {Promise<string>}
+   */
+  public saleInvoiceHtml(
+    tenantId: number,
+    saleInvoiceId: number
+  ): Promise<string> {
+    return this.pdfSaleInvoiceService.saleInvoiceHtml(tenantId, saleInvoiceId);
+  }
+
+  /**
    *
    * @param {number} tenantId
    * @param {number} saleInvoiceId

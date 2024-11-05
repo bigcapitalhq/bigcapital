@@ -449,6 +449,7 @@ export default class SaleInvoicesController extends BaseController {
     const acceptType = accept.types([
       ACCEPT_TYPE.APPLICATION_JSON,
       ACCEPT_TYPE.APPLICATION_PDF,
+      ACCEPT_TYPE.APPLICATION_TEXT_HTML,
     ]);
     // Retrieves invoice in PDF format.
     if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
@@ -463,7 +464,13 @@ export default class SaleInvoicesController extends BaseController {
         'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
-      // Retrieves invoice in json format.
+      // Retrieves invoice in html json format.
+    } else if (ACCEPT_TYPE.APPLICATION_TEXT_HTML === acceptType) {
+      const htmlContent = await this.saleInvoiceApplication.saleInvoiceHtml(
+        tenantId,
+        saleInvoiceId
+      );
+      return res.status(200).send({ htmlContent });
     } else {
       const saleInvoice = await this.saleInvoiceApplication.getSaleInvoice(
         tenantId,

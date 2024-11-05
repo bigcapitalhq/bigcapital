@@ -201,6 +201,34 @@ export function usePdfInvoice(invoiceId) {
   });
 }
 
+interface GetInvoiceHtmlResponse {
+  htmlContent: string;
+}
+/**
+ * Retrieves the invoice html content.
+ * @param {number} invoiceId
+ * @param {UseQueryOptions<GetInvoiceHtmlResponse>} options
+ * @returns {UseQueryResult<GetInvoiceHtmlResponse>} 
+ */
+export const useInvoiceHtml = (
+  invoiceId: number,
+  options?: UseQueryOptions<GetInvoiceHtmlResponse>,
+): UseQueryResult<GetInvoiceHtmlResponse> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetInvoiceHtmlResponse>(
+    ['SALE_INVOICE_HTML', invoiceId],
+    () =>
+      apiRequest
+        .get(`sales/invoices/${invoiceId}`, {
+          headers: {
+            Accept: 'application/json+html',
+          },
+        })
+        .then((res) => transformToCamelCase(res.data)),
+  );
+};
+
 /**
  * Retrieve due invoices of the given customer id.
  * @param {number} customerId - Customer id.
