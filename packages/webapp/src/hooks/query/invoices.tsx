@@ -402,6 +402,8 @@ export interface GetSaleInvoiceDefaultOptionsResponse {
   companyName: string;
   companyLogoUri: string;
 
+  customerName: string;
+
   dueDate: string;
   dueDateFormatted: string;
 

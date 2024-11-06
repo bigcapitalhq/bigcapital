@@ -8,6 +8,7 @@ export function InvoiceSendMailHeaderPreview() {
   const mailSubject = useSendInvoiceMailSubject();
   const { invoiceMailState } = useInvoiceSendMailBoot();
   const toAddresses = useMailHeaderToAddresses();
+  const fromAddresses = useMailHeaderFromAddresses();
 
   return (
     <Stack
@@ -44,14 +45,12 @@ export function InvoiceSendMailHeaderPreview() {
 
           <Stack spacing={2}>
             <Group spacing={2}>
-              <Box fontWeight={600}>Ahmed </Box>
-              <Box color={'#738091'}>
-                &lt;messaging-service@post.bigcapital.app&gt;
-              </Box>
+              <Box fontWeight={600}>{invoiceMailState?.companyName} </Box>
+              <Box color={'#738091'}>{fromAddresses}</Box>
             </Group>
 
             <Box fontSize={'sm'} color={'#738091'}>
-              Reply to: {invoiceMailState?.companyName} {toAddresses};
+              Send to: {invoiceMailState?.customerName} {toAddresses};
             </Box>
           </Stack>
         </Group>
@@ -79,4 +78,14 @@ export const useMailHeaderToAddresses = () => {
   } = useSendInvoiceMailForm();
 
   return useMemo(() => to?.map((email) => '<' + email + '>').join(' '), [to]);
+};
+
+export const useMailHeaderFromAddresses = () => {
+  const { invoiceMailState } = useInvoiceSendMailBoot();
+  const from = invoiceMailState?.from;
+
+  return useMemo(
+    () => from?.map((email) => '<' + email + '>').join(', '),
+    [from],
+  );
 };

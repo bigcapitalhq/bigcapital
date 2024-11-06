@@ -11,6 +11,7 @@ export default class Mail {
   to: string | string[];
   cc: string | string[];
   bcc: string | string[];
+  replyTo: string | string[];
   from: string = `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`;
   data: { [key: string]: string | number };
   attachments: IMailAttachment[];
@@ -27,6 +28,7 @@ export default class Mail {
       subject: this.subject,
       html: this.html,
       attachments: this.attachments,
+      replyTo: this.replyTo,
     };
   }
 
@@ -71,6 +73,11 @@ export default class Mail {
 
   setBCC(bcc: string | string[]) {
     this.bcc = bcc;
+    return this;
+  }
+
+  setReplyTo(replyTo: string | string[]) {
+    this.replyTo = replyTo;
     return this;
   }
 
