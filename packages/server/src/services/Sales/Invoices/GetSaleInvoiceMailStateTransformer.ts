@@ -39,7 +39,17 @@ export class GetSaleInvoiceMailStateTransformer extends SaleInvoiceTransformer {
       'companyLogoUri',
 
       'primaryColor',
+
+      'customerName',
     ];
+  };
+
+  /**
+   * Retrieves the customer name of the invoice.
+   * @returns {string}
+   */
+  protected customerName = (invoice) => {
+    return invoice.customer.displayName;
   };
 
   /**

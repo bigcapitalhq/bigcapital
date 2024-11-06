@@ -153,6 +153,13 @@ export function InvoiceSendMailFields() {
     [setFieldValue],
   );
 
+  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Prevent the form from submitting when the user presses the Enter key
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Stack
       bg="white"
@@ -174,6 +181,9 @@ export function InvoiceSendMailFields() {
                 tagProps: { round: true, minimal: true, large: true },
                 rightElement: rightElementsToField,
                 large: true,
+                inputProps: {
+                  onKeyDown: handleTagInputKeyDown,
+                },
               }}
               createNewItemRenderer={createNewItemRenderer}
               createNewItemFromQuery={createNewItemFromQuery}
@@ -192,6 +202,9 @@ export function InvoiceSendMailFields() {
                 tagInputProps={{
                   tagProps: { round: true, minimal: true, large: true },
                   large: true,
+                  inputProps: {
+                    onKeyDown: handleTagInputKeyDown,
+                  },
                 }}
                 createNewItemRenderer={createNewItemRenderer}
                 createNewItemFromQuery={createNewItemFromQuery}
@@ -211,6 +224,9 @@ export function InvoiceSendMailFields() {
                 tagInputProps={{
                   tagProps: { round: true, minimal: true, large: true },
                   large: true,
+                  inputProps: {
+                    onKeyDown: handleTagInputKeyDown,
+                  },
                 }}
                 createNewItemRenderer={createNewItemRenderer}
                 createNewItemFromQuery={createNewItemFromQuery}
@@ -244,6 +260,9 @@ export function InvoiceSendMailFields() {
                   fill: false,
                   position: Position.BOTTOM_LEFT,
                   minimal: true,
+                  inputProps: {
+                    onKeyDown: handleTagInputKeyDown,
+                  },
                 }}
                 input={() => (
                   <Button
