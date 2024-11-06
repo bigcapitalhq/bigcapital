@@ -250,6 +250,7 @@ export function InvoicePaperTemplate({
                     </Text>
                   </Stack>
                 ),
+                thStyle: { width: '60%' },
               },
               { label: lineQuantityLabel, accessor: 'quantity', align: 'right' },
               { label: lineRateLabel, accessor: 'rate', align: 'right' },

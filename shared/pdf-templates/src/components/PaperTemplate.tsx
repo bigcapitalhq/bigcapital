@@ -89,6 +89,7 @@ interface PaperTemplateTableProps {
     label: string;
     value?: JSX.Element;
     align?: 'left' | 'center' | 'right';
+    thStyle?: React.CSSProperties;
   }>;
   data: Array<Record<string, any>>;
 }
@@ -140,7 +141,7 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
       <thead>
         <tr>
           {columns.map((col, index) => (
-            <x.th key={index} textAlign={col.align}>
+            <x.th key={index} textAlign={col.align} style={col.thStyle}>
               {col.label}
             </x.th>
           ))}
@@ -210,6 +211,7 @@ PaperTemplate.TotalLine = ({
         [totalBottomBordered]: border === PaperTemplateTotalBorder.Dark,
         [totalBottomGrayBordered]: border === PaperTemplateTotalBorder.Gray,
       })}
+      style={style}
     >
       <x.div min-w="160px">{label}</x.div>
       <x.div flex={'1 1 auto'} textAlign={'right'}>

@@ -46,7 +46,6 @@ th {
   border-style: solid;
   border-width: 0;
 }
-
 body{
   margin: 0;
   font-size: 1rem;
@@ -57,10 +56,12 @@ body{
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
-
 body, h1, h2, h3, h4, h5, h6{
   font-family: "Open Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+}
+strong {
+  font-weight: 600;
 }
 `;
