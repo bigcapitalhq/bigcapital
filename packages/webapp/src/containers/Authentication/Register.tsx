@@ -99,7 +99,7 @@ function RegisterFooterLinks() {
 
       <AuthFooterLink>
         <Link to={'/auth/send_reset_password'}>
-          <T id={'forget_my_password'} />
+          <T id={'forgot_my_password'} />
         </Link>
       </AuthFooterLink>
     </AuthFooterLinks>
