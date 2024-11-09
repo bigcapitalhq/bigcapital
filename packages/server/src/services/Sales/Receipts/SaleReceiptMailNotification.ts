@@ -115,6 +115,58 @@ export class SaleReceiptMailNotification {
   };
 
   /**
+   * Formats the mail options of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} receiptId
+   * @param {SaleReceiptMailOpts} mailOptions
+   * @returns {Promise<SaleReceiptMailOpts>}
+   */
+  public async formatEstimateMailOptions(
+    tenantId: number,
+    receiptId: number,
+    mailOptions: SaleReceiptMailOpts
+  ): Promise<SaleReceiptMailOpts> {
+    const formatterArgs = await this.textFormatterArgs(tenantId, receiptId);
+    const formattedOptions =
+      (await this.contactMailNotification.formatMailOptions(
+        tenantId,
+        mailOptions,
+        formatterArgs
+      )) as SaleReceiptMailOpts;
+    return formattedOptions;
+  }
+
+  /**
+   * Retrieves the formatted mail options of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @param {SaleReceiptMailOptsDTO} messageOpts
+   * @returns {Promise<SaleReceiptMailOpts>}
+   */
+  public getFormatMailOptions = async (
+    tenantId: number,
+    saleReceiptId: number,
+    messageOpts: SaleReceiptMailOptsDTO
+  ): Promise<SaleReceiptMailOpts> => {
+    const defaultMessageOptions = await this.getMailOptions(
+      tenantId,
+      saleReceiptId
+    );
+    // Merges message opts with default options.
+    const parsedMessageOpts = mergeAndValidateMailOptions(
+      defaultMessageOptions,
+      messageOpts
+    ) as SaleReceiptMailOpts;
+
+    // Formats the message options.
+    return this.formatEstimateMailOptions(
+      tenantId,
+      saleReceiptId,
+      parsedMessageOpts
+    );
+  };
+
+  /**
    * Triggers the mail notification of the given sale receipt.
    * @param {number} tenantId - Tenant id.
    * @param {number} saleReceiptId - Sale receipt id.
@@ -126,25 +178,21 @@ export class SaleReceiptMailNotification {
     saleReceiptId: number,
     messageOpts: SaleReceiptMailOptsDTO
   ) {
-    const defaultMessageOptions = await this.getMailOptions(
+    // Formats the message options.
+    const formattedMessageOptions = await this.getFormatMailOptions(
       tenantId,
-      saleReceiptId
-    );
-    // Merges message opts with default options.
-    const parsedMessageOpts = mergeAndValidateMailOptions(
-      defaultMessageOptions,
+      saleReceiptId,
       messageOpts
-    ) as SaleReceiptMailOpts;
-
+    );
     const mail = new Mail()
-      .setSubject(parsedMessageOpts.subject)
-      .setTo(parsedMessageOpts.to)
-      .setCC(parsedMessageOpts.cc)
-      .setBCC(parsedMessageOpts.bcc)
-      .setContent(parsedMessageOpts.message);
+      .setSubject(formattedMessageOptions.subject)
+      .setTo(formattedMessageOptions.to)
+      .setCC(formattedMessageOptions.cc)
+      .setBCC(formattedMessageOptions.bcc)
+      .setContent(formattedMessageOptions.message);
 
     // Attaches the receipt pdf document.
-    if (parsedMessageOpts.attachReceipt) {
+    if (formattedMessageOptions.attachReceipt) {
       // Retrieves document buffer of the receipt pdf document.
       const [receiptPdfBuffer, filename] =
         await this.receiptPdfService.saleReceiptPdf(tenantId, saleReceiptId);

@@ -22,6 +22,7 @@ interface PaymentMailDialogBootProps {
  */
 function PaymentMailDialogBoot({
   paymentReceiveId,
+  redirectToPaymentsList,
   ...props
 }: PaymentMailDialogBootProps) {
   const { data: mailOptions, isLoading: isMailOptionsLoading } =

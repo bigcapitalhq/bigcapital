@@ -23,22 +23,24 @@ export class ContactMailNotification {
   public async getDefaultMailOptions(
     tenantId: number,
     customerId: number
-  ): Promise<Pick<CommonMailOptions, 'to' | 'from'>> {
+  ): Promise<
+    Pick<CommonMailOptions, 'to' | 'from' | 'toOptions' | 'fromOptions'>
+  > {
     const { Customer } = this.tenancy.models(tenantId);
     const customer = await Customer.query()
       .findById(customerId)
       .throwIfNotFound();
 
-    const toAddresses = customer.contactAddresses;
-    const fromAddresses = await this.mailTenancy.senders(tenantId);
+    const toOptions = customer.contactAddresses;
+    const fromOptions = await this.mailTenancy.senders(tenantId);
 
-    const toAddress = toAddresses.find((a) => a.primary);
-    const fromAddress = fromAddresses.find((a) => a.primary);
+    const toAddress = toOptions.find((a) => a.primary);
+    const fromAddress = fromOptions.find((a) => a.primary);
 
     const to = toAddress?.mail ? castArray(toAddress?.mail) : [];
     const from = fromAddress?.mail ? castArray(fromAddress?.mail) : [];
 
-    return { to, from };
+    return { to, from, toOptions, fromOptions };
   }
 
   /**

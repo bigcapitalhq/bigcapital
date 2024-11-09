@@ -37,7 +37,8 @@ export interface CommonMailOptions {
   cc?: Array<string>;
   bcc?: Array<string>;
   formatArgs?: Record<string, any>;
+  toOptions: Array<AddressItem>;
+  fromOptions: Array<AddressItem>;
 }
 
-export interface CommonMailOptionsDTO extends Partial<CommonMailOptions> {
-}
+export interface CommonMailOptionsDTO extends Partial<CommonMailOptions> {}

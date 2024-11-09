@@ -25,8 +25,8 @@ export function PaymentMailDialogFormContent({
     <Form>
       <div className={Classes.DIALOG_BODY}>
         <MailNotificationForm
-          fromAddresses={mailOptions.from_addresses}
-          toAddresses={mailOptions.to_addresses}
+          fromAddresses={mailOptions.from_options}
+          toAddresses={mailOptions.to_options}
         />
         <AttachFormGroup name={'attachPayment'} inline>
           <FSwitch name={'attachPayment'} label={'Attach Payment'} />

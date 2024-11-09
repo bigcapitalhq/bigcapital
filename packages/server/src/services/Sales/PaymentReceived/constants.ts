@@ -1,15 +1,16 @@
-export const DEFAULT_PAYMENT_MAIL_SUBJECT = 'Payment Received by {CompanyName}';
+export const DEFAULT_PAYMENT_MAIL_SUBJECT =
+  'Payment Received for {Customer Name} from {Company Name}';
 export const DEFAULT_PAYMENT_MAIL_CONTENT = `
-<p>Dear {CustomerName}</p>
+<p>Dear {Customer Name}</p>
 <p>Thank you for your payment. It was a pleasure doing business with you. We look forward to work together again!</p>
 <p>
-Payment Date : <strong>{PaymentDate}</strong><br />
-Amount   : <strong>{PaymentAmount}</strong></br />
+Payment Date : <strong>{Payment Date}</strong><br />
+Amount   : <strong>{Payment Amount}</strong></br />
 </p>
 
 <p>
 <i>Regards</i><br />
-<i>{CompanyName}</i>
+<i>{Company Name}</i>
 </p>
 `;
 
