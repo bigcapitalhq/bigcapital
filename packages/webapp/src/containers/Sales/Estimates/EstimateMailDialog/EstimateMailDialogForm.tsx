@@ -32,7 +32,7 @@ function EstimateMailDialogFormRoot({
   closeDialog,
 }) {
   const { mutateAsync: sendEstimateMail } = useSendSaleEstimateMail();
-  const { mailOptions, saleEstimateId, redirectToEstimatesList } =
+  const { mailOptions, saleEstimateId, } =
     useEstimateMailDialogBoot();
 
   const initialValues = transformMailFormToInitialValues(

@@ -25,8 +25,8 @@ export function EstimateMailDialogFormContent({
     <Form>
       <div className={Classes.DIALOG_BODY}>
         <MailNotificationForm
-          fromAddresses={mailOptions.from_addresses}
-          toAddresses={mailOptions.to_addresses}
+          fromAddresses={mailOptions.from_options}
+          toAddresses={mailOptions.to_options}
         />
         <AttachFormGroup name={'attachEstimate'} inline>
           <FSwitch name={'attachEstimate'} label={'Attach Estimate'} />

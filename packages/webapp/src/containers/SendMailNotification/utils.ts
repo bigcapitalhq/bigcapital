@@ -5,7 +5,7 @@ export const initialMailNotificationValues = {
   from: [],
   to: [],
   subject: '',
-  body: '',
+  message: '',
 };
 
 export interface MailNotificationFormValues {
@@ -26,7 +26,7 @@ export const transformMailFormToRequest = (
 };
 
 /**
- * Transformes the mail options response values to form initial values.
+ * Transforms the mail options response values to form initial values.
  * @param {any} mailOptions
  * @param {MailNotificationFormValues} initialValues
  * @returns {MailNotificationFormValues}
