@@ -38,6 +38,7 @@ export interface GetPdfTemplateValues {}
 
 export interface GetPdfTemplateResponse {
   templateName: string;
+  companyLogoUri?: string | null;
   attributes: Record<string, any>;
   predefined: boolean;
   default: boolean;
