@@ -4,10 +4,10 @@
   "scripts": {
     "dev": "lerna run dev",
     "build": "lerna run build",
-    "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\"",
-    "build:webapp": "lerna run build --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\"",
-    "dev:server": "lerna run dev --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\"",
-    "build:server": "lerna run build --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\"",
+    "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\"",
+    "build:webapp": "lerna run build --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\"",
+    "dev:server": "lerna run dev --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\" --scope \"@bigcapital/email-components\"",
+    "build:server": "lerna run build --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\" --scope \"@bigcapital/email-components\"",
     "serve:server": "lerna run serve --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\"",
     "test:e2e": "playwright test",
     "prepare": "husky install"

@@ -58,7 +58,7 @@ export class PdfTemplate extends TenantModel {
    * @returns {string}
    */
   get companyLogoUri() {
-    return this.attributes.companyLogoKey
+    return this.attributes?.companyLogoKey
       ? getUploadedObjectUri(this.attributes.companyLogoKey)
       : '';
   }

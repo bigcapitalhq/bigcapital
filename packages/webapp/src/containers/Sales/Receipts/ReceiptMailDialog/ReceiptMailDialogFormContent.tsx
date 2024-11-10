@@ -25,8 +25,8 @@ export function ReceiptMailDialogFormContent({
     <Form>
       <div className={Classes.DIALOG_BODY}>
         <MailNotificationForm
-          fromAddresses={mailOptions.from_addresses}
-          toAddresses={mailOptions.to_addresses}
+          fromAddresses={mailOptions.from_options}
+          toAddresses={mailOptions.to_options}
         />
         <AttachFormGroup name={'attachReceipt:'} inline>
           <FSwitch name={'attachReceipt:'} label={'Attach Receipt'} />

@@ -20,9 +20,6 @@ export class SaleInvoicePdf {
   private chromiumlyTenancy: ChromiumlyTenancy;
 
   @Inject()
-  private templateInjectable: TemplateInjectable;
-
-  @Inject()
   private getInvoiceService: GetSaleInvoice;
 
   @Inject()

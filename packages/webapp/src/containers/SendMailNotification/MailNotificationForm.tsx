@@ -66,7 +66,7 @@ export function MailNotificationForm({
         </FFormGroup>
       </HeaderBox>
 
-      <MailMessageEditor name={'body'} />
+      <MailMessageEditor name={'message'} />
     </Box>
   );
 }

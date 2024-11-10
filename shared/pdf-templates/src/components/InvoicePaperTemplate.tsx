@@ -71,10 +71,12 @@ export interface InvoicePaperTemplateProps extends PaperTemplateProps {
   totalLabel?: string;
   total?: string;
 
+  // Discount
   showDiscount?: boolean;
   discountLabel?: string;
   discount?: string;
 
+  // Subtotal
   showSubtotal?: boolean;
   subtotalLabel?: string;
   subtotal?: string;
@@ -85,10 +87,10 @@ export interface InvoicePaperTemplateProps extends PaperTemplateProps {
 
   showTaxes?: boolean;
 
+  // Due Amount
   showDueAmount?: boolean;
-  showBalanceDue?: boolean;
-  balanceDueLabel?: string;
-  balanceDue?: string;
+  dueAmountLabel?: string;
+  dueAmount?: string;
 
   // Footer
   termsConditionsLabel?: string;
@@ -144,7 +146,7 @@ export function InvoicePaperTemplate({
   subtotalLabel = 'Subtotal',
   discountLabel = 'Discount',
   paymentMadeLabel = 'Payment Made',
-  balanceDueLabel = 'Balance Due',
+  dueAmountLabel = 'Balance Due',
 
   // Totals
   showTotal = true,
@@ -153,13 +155,12 @@ export function InvoicePaperTemplate({
   showTaxes = true,
   showPaymentMade = true,
   showDueAmount = true,
-  showBalanceDue = true,
 
   total = '$662.75',
   subtotal = '630.00',
   discount = '0.00',
   paymentMade = '100.00',
-  balanceDue = '$562.75',
+  dueAmount = '$562.75',
 
   // Footer paragraphs.
   termsConditionsLabel = 'Terms & Conditions',
@@ -297,10 +298,10 @@ export function InvoicePaperTemplate({
                 amount={paymentMade}
               />
             )}
-            {showBalanceDue && (
+            {showDueAmount && (
               <PaperTemplate.TotalLine
-                label={balanceDueLabel}
-                amount={balanceDue}
+                label={dueAmountLabel}
+                amount={dueAmount}
                 border={PaperTemplateTotalBorder.Dark}
                 style={{ fontWeight: 500 }}
               />

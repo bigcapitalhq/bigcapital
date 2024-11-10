@@ -19,7 +19,6 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "target": "ESNext",
-    "types": ["vitest/globals"],
     "resolveJsonModule": true,
     "outDir": "dist",
   },

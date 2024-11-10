@@ -4,7 +4,6 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "lint": "eslint .",
-    "preview": "vite preview",
     "storybook:dev": "storybook dev -p 6006",
     "storybook:build": "storybook build"
   },

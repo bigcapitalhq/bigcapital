@@ -112,17 +112,20 @@ export class SendPaymentReceiveMailNotification {
   };
 
   /**
-   * Triggers the mail invoice.
+   * Retrieves the formatted mail options of the given payment receive.
    * @param {number} tenantId
-   * @param {number} saleInvoiceId
+   * @param {number} paymentReceiveId
    * @param {SendInvoiceMailDTO} messageDTO
-   * @returns {Promise<void>}
+   * @returns {Promise<PaymentReceiveMailOpts>}
    */
-  public async sendMail(
+  public getFormattedMailOptions = async (
     tenantId: number,
     paymentReceiveId: number,
     messageDTO: SendInvoiceMailDTO
-  ): Promise<void> {
+  ) => {
+    const formatterArgs = await this.textFormatter(tenantId, paymentReceiveId);
+
+    // Default message options.
     const defaultMessageOpts = await this.getMailOptions(
       tenantId,
       paymentReceiveId
@@ -132,17 +135,43 @@ export class SendPaymentReceiveMailNotification {
       defaultMessageOpts,
       messageDTO
     );
+    // Formats the message options.
+    return this.contactMailNotification.formatMailOptions(
+      tenantId,
+      parsedMessageOpts,
+      formatterArgs
+    );
+  };
+
+  /**
+   * Triggers the mail invoice.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId - Invoice id.
+   * @param {SendInvoiceMailDTO} messageDTO - Message options.
+   * @returns {Promise<void>}
+   */
+  public async sendMail(
+    tenantId: number,
+    paymentReceiveId: number,
+    messageDTO: SendInvoiceMailDTO
+  ): Promise<void> {
+    // Retrieves the formatted mail options.
+    const formattedMessageOptions = await this.getFormattedMailOptions(
+      tenantId,
+      paymentReceiveId,
+      messageDTO
+    );
     const mail = new Mail()
-      .setSubject(parsedMessageOpts.subject)
-      .setTo(parsedMessageOpts.to)
-      .setCC(parsedMessageOpts.cc)
-      .setBCC(parsedMessageOpts.bcc)
-      .setContent(parsedMessageOpts.message);
+      .setSubject(formattedMessageOptions.subject)
+      .setTo(formattedMessageOptions.to)
+      .setCC(formattedMessageOptions.cc)
+      .setBCC(formattedMessageOptions.bcc)
+      .setContent(formattedMessageOptions.message);
 
     const eventPayload = {
       tenantId,
       paymentReceiveId,
-      messageOptions: parsedMessageOpts,
+      messageOptions: formattedMessageOptions,
     };
     // Triggers `onPaymentReceiveMailSend` event.
     await this.eventPublisher.emitAsync(

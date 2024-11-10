@@ -338,21 +338,22 @@ export interface InvoicePdfTemplateAttributes {
   subtotalLabel: string;
   discountLabel: string;
   paymentMadeLabel: string;
-  balanceDueLabel: string;
 
   showTotal: boolean;
   showSubtotal: boolean;
   showDiscount: boolean;
   showTaxes: boolean;
   showPaymentMade: boolean;
-  showDueAmount: boolean;
-  showBalanceDue: boolean;
 
   total: string;
   subtotal: string;
   discount: string;
   paymentMade: string;
-  balanceDue: string;
+
+  // Due Amount
+  dueAmount: string;
+  showDueAmount: boolean;
+  dueAmountLabel: string;
 
   termsConditionsLabel: string;
   showTermsConditions: boolean;

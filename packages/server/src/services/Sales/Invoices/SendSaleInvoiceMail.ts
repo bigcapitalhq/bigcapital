@@ -1,6 +1,10 @@
 import { Inject, Service } from 'typedi';
 import Mail from '@/lib/Mail';
-import { ISaleInvoiceMailSend, SendInvoiceMailDTO } from '@/interfaces';
+import {
+  ISaleInvoiceMailSend,
+  SaleInvoiceMailOptions,
+  SendInvoiceMailDTO,
+} from '@/interfaces';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon';
 import { mergeAndValidateMailOptions } from '@/services/MailNotification/utils';
@@ -48,6 +52,34 @@ export class SendSaleInvoiceMail {
   }
 
   /**
+   * Retrieves the formatted mail options.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @param {SendInvoiceMailDTO} messageOptions
+   * @returns {Promise<SaleInvoiceMailOptions>}
+   */
+  async getFormattedMailOptions(
+    tenantId: number,
+    saleInvoiceId: number,
+    messageOptions: SendInvoiceMailDTO
+  ): Promise<SaleInvoiceMailOptions> {
+    const defaultMessageOptions = await this.invoiceMail.getInvoiceMailOptions(
+      tenantId,
+      saleInvoiceId
+    );
+    // Merges message options with default options and parses the options values.
+    const parsedMessageOptions = mergeAndValidateMailOptions(
+      defaultMessageOptions,
+      messageOptions
+    );
+    return this.invoiceMail.formatInvoiceMailOptions(
+      tenantId,
+      saleInvoiceId,
+      parsedMessageOptions
+    );
+  }
+
+  /**
    * Triggers the mail invoice.
    * @param {number} tenantId
    * @param {number} saleInvoiceId
@@ -59,21 +91,11 @@ export class SendSaleInvoiceMail {
     saleInvoiceId: number,
     messageOptions: SendInvoiceMailDTO
   ) {
-    const defaultMessageOptions = await this.invoiceMail.getInvoiceMailOptions(
+    const formattedMessageOptions = await this.getFormattedMailOptions(
       tenantId,
-      saleInvoiceId
-    );
-    // Merges message options with default options and parses the options values.
-    const parsedMessageOptions = mergeAndValidateMailOptions(
-      defaultMessageOptions,
+      saleInvoiceId,
       messageOptions
     );
-    const formattedMessageOptions =
-      await this.invoiceMail.formatInvoiceMailOptions(
-        tenantId,
-        saleInvoiceId,
-        parsedMessageOptions
-      );
     const mail = new Mail()
       .setSubject(formattedMessageOptions.subject)
       .setTo(formattedMessageOptions.to)

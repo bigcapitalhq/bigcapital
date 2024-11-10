@@ -48,6 +48,7 @@ export const useBrandingTemplateFormInitialValues = <
 
   const brandingAttributes = {
     templateName: pdfTemplate?.templateName,
+    companyLogoUri: pdfTemplate?.companyLogoUri,
     ...pdfTemplate?.attributes,
   };
   return {
@@ -56,14 +57,16 @@ export const useBrandingTemplateFormInitialValues = <
   };
 };
 
-export const useBrandingState = (state?: Partial<BrandingState>): BrandingState => {
+export const useBrandingState = (
+  state?: Partial<BrandingState>,
+): BrandingState => {
   const { brandingTemplateState } = useBrandingTemplateBoot();
 
   return {
     ...brandingTemplateState,
-    ...state
-  }
-}
+    ...state,
+  };
+};
 
 export const getCustomizeDrawerNameFromResource = (resource: string) => {
   const pairs = {
