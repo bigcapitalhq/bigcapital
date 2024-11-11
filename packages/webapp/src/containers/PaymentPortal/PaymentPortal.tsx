@@ -1,5 +1,6 @@
 import { Text, Classes, Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
+import { css } from '@emotion/css';
 import { AppToaster, Box, Group, Stack } from '@/components';
 import { usePaymentPortalBoot } from './PaymentPortalBoot';
 import { useDrawerActions } from '@/hooks/state';
@@ -66,11 +67,11 @@ export function PaymentPortal() {
       <Stack spacing={0} className={styles.body}>
         <Stack>
           <Group spacing={10}>
-            {sharableLinkMeta?.organization?.logoUri && (
+            {sharableLinkMeta?.brandingTemplate?.companyLogoUri && (
               <Box
                 className={styles.companyLogoWrap}
                 style={{
-                  backgroundImage: `url(${sharableLinkMeta?.organization?.logoUri})`,
+                  backgroundImage: `url(${sharableLinkMeta?.brandingTemplate?.companyLogoUri})`,
                 }}
               ></Box>
             )}
@@ -170,7 +171,22 @@ export function PaymentPortal() {
             sharableLinkMeta?.hasStripePaymentMethod && (
               <Button
                 intent={Intent.PRIMARY}
-                className={clsx(styles.footerButton, styles.buyButton)}
+                className={clsx(
+                  styles.footerButton,
+                  styles.buyButton,
+                  css`
+                    &.bp4-button.bp4-intent-primary {
+                      background-color: var(--payment-page-primary-button);
+
+                      &:hover,
+                      &:focus {
+                        background-color: var(
+                          --payment-page-primary-button-hover
+                        );
+                      }
+                    }
+                  `,
+                )}
                 loading={isStripeCheckoutLoading}
                 onClick={handlePayButtonClick}
               >

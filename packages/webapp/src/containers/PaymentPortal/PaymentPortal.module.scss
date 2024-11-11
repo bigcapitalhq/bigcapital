@@ -1,6 +1,11 @@
 
+:root {
+  --payment-page-background-color: #fff;
+  --payment-page-primary-button: #0052cc;
+}
+
 .rootBodyPage {
-  background: #1c1d29;
+  background: var(--payment-page-background-color);
 }
 
 .root {

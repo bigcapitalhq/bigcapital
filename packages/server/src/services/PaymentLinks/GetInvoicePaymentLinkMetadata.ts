@@ -25,7 +25,7 @@ export class GetInvoicePaymentLinkMetadata {
       .findOne('linkId', linkId)
       .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
- 
+
     // Validate the expiry at date.
     if (paymentLink.expiryAt) {
       const currentDate = moment();
@@ -46,6 +46,7 @@ export class GetInvoicePaymentLinkMetadata {
       .withGraphFetched('customer')
       .withGraphFetched('taxes.taxRate')
       .withGraphFetched('paymentMethods.paymentIntegration')
+      .withGraphFetched('pdfTemplate')
       .throwIfNotFound();
 
     return this.transformer.transform(

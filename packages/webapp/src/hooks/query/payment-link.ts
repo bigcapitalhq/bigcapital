@@ -106,6 +106,10 @@ export interface GetInvoicePaymentLinkResponse {
     taxRateAmountFormatted: string;
     taxRateCode: string;
   }>;
+  brandingTemplate: {
+    companyLogoUri: string;
+    primaryColor: string;
+  };
   organization: GetInvoicePaymentLinkOrganizationRes;
   hasStripePaymentMethod: boolean;
   isReceivable: boolean;
