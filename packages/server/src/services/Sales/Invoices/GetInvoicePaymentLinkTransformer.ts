@@ -4,6 +4,7 @@ import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer
 import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
+import { GetPdfTemplateTransformer } from '@/services/PdfTemplate/GetPdfTemplateTransformer';
 
 export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer {
   /**
@@ -45,6 +46,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
       'isReceivable',
       'hasStripePaymentMethod',
       'formattedCustomerAddress',
+      'brandingTemplate',
     ];
   };
 
@@ -60,6 +62,18 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
     return this.item(
       this.context.organization,
       new GetPaymentLinkOrganizationMetaTransformer()
+    );
+  }
+
+  /**
+   * Retrieves the branding template for the payment link.
+   * @param {} invoice
+   * @returns
+   */
+  public brandingTemplate(invoice) {
+    return this.item(
+      invoice.pdfTemplate,
+      new GetInvoicePaymentLinkBrandingTemplate()
     );
   }
 
@@ -114,7 +128,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
 
   /**
    * Retrieves the formatted customer address.
-   * @param invoice 
+   * @param invoice
    * @returns {string}
    */
   protected formattedCustomerAddress(invoice) {
@@ -191,5 +205,19 @@ class GetInvoicePaymentLinkTaxEntryTransformer extends SaleInvoiceTaxEntryTransf
    */
   public includeAttributes = (): string[] => {
     return ['name', 'taxRateCode', 'taxRateAmount', 'taxRateAmountFormatted'];
+  };
+}
+
+class GetInvoicePaymentLinkBrandingTemplate extends GetPdfTemplateTransformer {
+  public includeAttributes = (): string[] => {
+    return ['companyLogoUri', 'primaryColor'];
+  };
+
+  public excludeAttributes = (): string[] => {
+    return ['*'];
+  };
+
+  primaryColor = (template) => {
+    return template.attributes?.primaryColor;
   };
 }
