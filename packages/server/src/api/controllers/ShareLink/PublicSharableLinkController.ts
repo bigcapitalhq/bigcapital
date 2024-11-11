@@ -102,12 +102,13 @@ export class PublicSharableLinkController extends BaseController {
     const { paymentLinkId } = req.params;
 
     try {
-      const pdfContent = await this.paymentLinkApp.getPaymentLinkInvoicePdf(
-        paymentLinkId
-      );
+      const [pdfContent, filename] =
+        await this.paymentLinkApp.getPaymentLinkInvoicePdf(paymentLinkId);
+
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
     } catch (error) {

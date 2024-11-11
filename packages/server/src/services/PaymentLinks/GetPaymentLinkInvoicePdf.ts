@@ -12,9 +12,11 @@ export class GetPaymentLinkInvoicePdf {
    * Retrieves the sale invoice PDF of the given payment link id.
    * @param {number} tenantId
    * @param {number} paymentLinkId
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<Buffer, string>}
    */
-  async getPaymentLinkInvoicePdf(paymentLinkId: string): Promise<Buffer> {
+  async getPaymentLinkInvoicePdf(
+    paymentLinkId: string
+  ): Promise<[Buffer, string]> {
     const paymentLink = await PaymentLink.query()
       .findOne('linkId', paymentLinkId)
       .where('resourceType', 'SaleInvoice')
