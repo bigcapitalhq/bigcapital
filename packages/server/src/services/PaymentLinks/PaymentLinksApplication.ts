@@ -11,7 +11,7 @@ export class PaymentLinksApplication {
 
   @Inject()
   private createInvoiceCheckoutSessionService: CreateInvoiceCheckoutSession;
-  
+
   @Inject()
   private getPaymentLinkInvoicePdfService: GetPaymentLinkInvoicePdf;
 
@@ -45,7 +45,9 @@ export class PaymentLinksApplication {
    * @param {number} paymentLinkId
    * @returns {Promise<Buffer> }
    */
-  public getPaymentLinkInvoicePdf(paymentLinkId: string): Promise<Buffer> {
+  public getPaymentLinkInvoicePdf(
+    paymentLinkId: string
+  ): Promise<[Buffer, string]> {
     return this.getPaymentLinkInvoicePdfService.getPaymentLinkInvoicePdf(
       paymentLinkId
     );
