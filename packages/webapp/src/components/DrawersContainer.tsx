@@ -32,6 +32,7 @@ import { BrandingTemplatesDrawer } from '@/containers/BrandingTemplates/Branding
 
 import { DRAWERS } from '@/constants/drawers';
 import { InvoiceSendMailDrawer } from '@/containers/Sales/Invoices/InvoiceSendMailDrawer/InvoiceSendMailDrawer';
+import { NewSubscriptionDrawer } from '@/containers/Subscriptions/drawers/NewSubscriptionDrawer/NewSubscriptionDrawer';
 
 /**
  * Drawers container of the dashboard.
@@ -72,6 +73,7 @@ export default function DrawersContainer() {
       <TaxRateDetailsDrawer name={DRAWERS.TAX_RATE_DETAILS} />
       <CategorizeTransactionDrawer name={DRAWERS.CATEGORIZE_TRANSACTION} />
       <ChangeSubscriptionPlanDrawer name={DRAWERS.CHANGE_SUBSCARIPTION_PLAN} />
+      <NewSubscriptionDrawer name={DRAWERS.NEW_SUBSCRIPTION_PLANS} />
       <InvoiceCustomizeDrawer name={DRAWERS.INVOICE_CUSTOMIZE} />
       <EstimateCustomizeDrawer name={DRAWERS.ESTIMATE_CUSTOMIZE} />
       <ReceiptCustomizeDrawer name={DRAWERS.RECEIPT_CUSTOMIZE} />

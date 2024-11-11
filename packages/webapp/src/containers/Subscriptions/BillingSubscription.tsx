@@ -2,8 +2,8 @@
 import * as R from 'ramda';
 import clsx from 'classnames';
 import { includes } from 'lodash';
-import { Box, Group, Stack } from '@/components';
 import { Button, Card, Classes, Intent, Text } from '@blueprintjs/core';
+import { Box, Group, Stack } from '@/components';
 import withAlertActions from '../Alert/withAlertActions';
 import styles from './BillingSubscription.module.scss';
 import withDrawerActions from '../Drawer/withDrawerActions';
@@ -18,12 +18,11 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
   if (!mainSubscription) {
     return null;
   }
+  // Handle cancel subscription button click.
   const handleCancelSubBtnClick = () => {
     openAlert('cancel-main-subscription');
   };
-  const handleResumeSubBtnClick = () => {
-    openAlert('resume-main-subscription');
-  };
+  // Handle update payment method button click.
   const handleUpdatePaymentMethod = () => {
     window.LemonSqueezy.Url.Open(
       mainSubscription.lemonUrls?.updatePaymentMethod,
@@ -32,6 +31,10 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
   // Handle upgrade button click.
   const handleUpgradeBtnClick = () => {
     openDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
+  };
+  // Handles renew the expired subscription.
+  const handleNewSubscriptionBtnClick = () => {
+    openDrawer(DRAWERS.NEW_SUBSCRIPTION_PLANS);
   };
 
   return (
@@ -66,50 +69,53 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
       </Text>
 
       <Stack align="flex-start" spacing={8} className={styles.actions}>
-        <Button
-          minimal
-          small
-          inline
-          intent={Intent.PRIMARY}
-          onClick={handleUpgradeBtnClick}
-        >
-          Upgrade the Plan
-        </Button>
-
         {mainSubscription.canceled && (
           <Button
             minimal
             small
             inline
             intent={Intent.PRIMARY}
-            onClick={handleResumeSubBtnClick}
+            onClick={handleNewSubscriptionBtnClick}
           >
-            Resume Subscription
+            Renew Subscription
           </Button>
         )}
         {!mainSubscription.canceled && (
-          <Button
-            minimal
-            small
-            inline
-            intent={Intent.PRIMARY}
-            onClick={handleCancelSubBtnClick}
-          >
-            Cancel Subscription
-          </Button>
+          <>
+            <Button
+              minimal
+              small
+              inline
+              intent={Intent.PRIMARY}
+              onClick={handleUpgradeBtnClick}
+            >
+              Upgrade the Plan
+            </Button>
+
+            <Button
+              minimal
+              small
+              inline
+              intent={Intent.PRIMARY}
+              onClick={handleCancelSubBtnClick}
+            >
+              Cancel Subscription
+            </Button>
+
+            <Button
+              minimal
+              small
+              inline
+              intent={Intent.PRIMARY}
+              onClick={handleUpdatePaymentMethod}
+            >
+              Change Payment Method
+            </Button>
+          </>
         )}
-        <Button
-          minimal
-          small
-          inline
-          intent={Intent.PRIMARY}
-          onClick={handleUpdatePaymentMethod}
-        >
-          Change Payment Method
-        </Button>
       </Stack>
 
-      <Group position={'apart'} style={{ marginTop: 'auto' }}>
+      <Group position={'apart'} mt={'auto'}>
         <Group spacing={4}>
           <Text className={styles.priceAmount}>
             {mainSubscription.planPriceFormatted}
@@ -120,8 +126,8 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
               {mainSubscription.planPeriod === 'month'
                 ? 'mo'
                 : mainSubscription.planPeriod === 'year'
-                ? 'yearly'
-                : ''}
+                  ? 'yearly'
+                  : ''}
             </Text>
           )}
         </Group>
@@ -130,10 +136,10 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
           {mainSubscription.canceled && (
             <Button
               intent={Intent.PRIMARY}
-              onClick={handleResumeSubBtnClick}
+              onClick={handleNewSubscriptionBtnClick}
               className={styles.subscribeButton}
             >
-              Resume Subscription
+              Renew Subscription
             </Button>
           )}
         </Box>
