@@ -31,9 +31,8 @@ export const useReceiptReadonlyEntriesTableColumns = () => {
       },
       {
         Header: intl.get('quantity'),
-        accessor: 'quantity',
-        Cell: FormatNumberCell,
-        width: getColumnWidth(entries, 'quantity', {
+        accessor: 'quantity_formatted',
+        width: getColumnWidth(entries, 'quantity_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),

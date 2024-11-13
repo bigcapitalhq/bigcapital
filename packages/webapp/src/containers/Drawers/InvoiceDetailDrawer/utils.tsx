@@ -54,11 +54,10 @@ export const useInvoiceReadonlyEntriesColumns = () => {
       {
         Header: intl.get('quantity'),
         accessor: 'quantity',
-        Cell: FormatNumberCell,
         align: 'right',
         disableSortBy: true,
         textOverview: true,
-        width: getColumnWidth(entries, 'quantity', {
+        width: getColumnWidth(entries, 'quantity_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),

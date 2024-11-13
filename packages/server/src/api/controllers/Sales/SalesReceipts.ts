@@ -148,7 +148,7 @@ export default class SalesReceiptsController extends BaseController {
       check('entries.*.id').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
-      check('entries.*.quantity').exists().isNumeric().toInt(),
+      check('entries.*.quantity').exists().isNumeric().toFloat(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.discount')
         .optional({ nullable: true })
@@ -392,9 +392,8 @@ export default class SalesReceiptsController extends BaseController {
 
     // Retrieves receipt in pdf format.
     try {
-      const data = await this.saleReceiptsApplication.getSaleReceiptState(
-        tenantId
-      );
+      const data =
+        await this.saleReceiptsApplication.getSaleReceiptState(tenantId);
       return res.status(200).send({ data });
     } catch (error) {
       next(error);
