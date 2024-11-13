@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
-import { sumBy, setWith, toSafeInteger, get, first } from 'lodash';
+import { sumBy, setWith, get, first, toNumber } from 'lodash';
 import {
   updateTableCell,
   repeatValue,
@@ -91,8 +91,8 @@ export function transformToEditForm(manualJournal) {
  * Entries adjustment.
  */
 function adjustmentEntries(entries) {
-  const credit = sumBy(entries, (e) => toSafeInteger(e.credit));
-  const debit = sumBy(entries, (e) => toSafeInteger(e.debit));
+  const credit = sumBy(entries, (e) => toNumber(e.credit));
+  const debit = sumBy(entries, (e) => toNumber(e.debit));
 
   return {
     debit: Math.max(credit - debit, 0),
