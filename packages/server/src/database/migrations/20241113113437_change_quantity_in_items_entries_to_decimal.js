@@ -14,7 +14,7 @@ exports.up = function (knex) {
       table.decimal('quantity', 13, 3).alter();
     })
     .table('items', (table) => {
-      table.decimal('quantityOnHand', 13, 3);
+      table.decimal('quantityOnHand', 13, 3).alter();
     });
 };
 
@@ -34,6 +34,6 @@ exports.down = function (knex) {
       table.integer('quantity').alter();
     })
     .table('items', (table) => {
-      table.integer('quantityOnHand');
+      table.integer('quantityOnHand').alter();
     });
 };
