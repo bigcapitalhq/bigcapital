@@ -1,8 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { FormGroup, NumericInput, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-
 import { CellType } from '@/constants';
 import { CLASSES } from '@/constants/classes';
 
@@ -12,34 +10,41 @@ import { CLASSES } from '@/constants/classes';
 export default function NumericInputCell({
   row: { index },
   column: { id },
-  cell: { value: initialValue },
+  cell: { value: controlledInputValue },
   payload,
-}) {
-  const [value, setValue] = useState(initialValue);
+}: any) {
+  const [valueAsNumber, setValueAsNumber] = useState<number | null>(
+    controlledInputValue || null,
+  );
+  const handleInputValueChange = (
+    valueAsNumber: number,
+    valueAsString: string,
+  ) => {
+    setValueAsNumber(valueAsNumber);
+  };
+  const handleInputBlur = () => {
+    payload.updateData(index, id, valueAsNumber);
+  };
 
-  const handleValueChange = (newValue) => {
-    setValue(newValue);
-  };
-  const onBlur = () => {
-    payload.updateData(index, id, value);
-  };
   useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
+    setValueAsNumber(controlledInputValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controlledInputValue]);
 
   const error = payload.errors?.[index]?.[id];
 
   return (
     <FormGroup
-      intent={error ? Intent.DANGER : null}
+      intent={error ? Intent.DANGER : undefined}
       className={classNames(CLASSES.FILL)}
     >
       <NumericInput
-        value={value}
-        onValueChange={handleValueChange}
-        onBlur={onBlur}
-        fill={true}
+        asyncControl
+        value={controlledInputValue}
+        onValueChange={handleInputValueChange}
+        onBlur={handleInputBlur}
         buttonPosition={'none'}
+        fill
       />
     </FormGroup>
   );
