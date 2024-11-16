@@ -22,7 +22,7 @@ interface AttachmentFileCommon {
   size: number;
   mimeType: string;
 }
-interface AttachmentFileLoaded extends AttachmentFileCommon {}
+interface AttachmentFileLoaded extends AttachmentFileCommon { }
 interface AttachmentFileLoading extends AttachmentFileCommon {
   loading: boolean;
 }
@@ -74,11 +74,11 @@ export function UploadAttachmentsPopoverContent({
   };
   // Uploads the attachments.
   const { mutateAsync: uploadAttachments } = useUploadAttachments({
-    onSuccess: (data) => {
+    onSuccess: (data, formData) => {
       const newLocalFiles = stopLoadingAttachment(
         localFiles,
-        data.config.data.get('internalKey'),
-        data.data.data.key,
+        formData.get('internalKey'),
+        data.key,
       );
       handleFilesChange(newLocalFiles);
       onUploadedChange && onUploadedChange(newLocalFiles);
