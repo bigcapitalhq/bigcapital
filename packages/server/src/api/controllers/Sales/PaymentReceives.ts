@@ -411,9 +411,8 @@ export default class PaymentReceivesController extends BaseController {
     const { tenantId } = req;
 
     try {
-      const data = await this.paymentReceiveApplication.getPaymentReceivedState(
-        tenantId
-      );
+      const data =
+        await this.paymentReceiveApplication.getPaymentReceivedState(tenantId);
       return res.status(200).send({ data });
     } catch (error) {
       next(error);
@@ -471,7 +470,7 @@ export default class PaymentReceivesController extends BaseController {
       ACCEPT_TYPE.APPLICATION_JSON,
       ACCEPT_TYPE.APPLICATION_PDF,
     ]);
-    // Response in pdf format.
+    // Responses pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
       const [pdfContent, filename] =
         await this.paymentReceiveApplication.getPaymentReceivePdf(
@@ -484,7 +483,14 @@ export default class PaymentReceivesController extends BaseController {
         'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
-      // Response in json format.
+      // Responses html format.
+    } else if (ACCEPT_TYPE.APPLICATION_TEXT_HTML === acceptType) {
+      const htmlContent = this.paymentReceiveApplication.getPaymentReceivedHtml(
+        tenantId,
+        paymentReceiveId
+      );
+      return res.status(200).send({ htmlContent });
+      // Responses json format.
     } else {
       const paymentReceive =
         await this.paymentReceiveApplication.getPaymentReceive(

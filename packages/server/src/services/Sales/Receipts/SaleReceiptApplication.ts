@@ -153,6 +153,19 @@ export class SaleReceiptApplication {
   }
 
   /**
+   * Retrieves the given sale receipt html.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @returns {Promise<string>}
+   */
+  public getSaleReceiptHtml(tenantId: number, saleReceiptId: number) {
+    return this.getSaleReceiptPdfService.saleReceiptHtml(
+      tenantId,
+      saleReceiptId
+    );
+  }
+
+  /**
    * Notify receipt customer by SMS of the given sale receipt.
    * @param {number} tenantId
    * @param {number} saleReceiptId

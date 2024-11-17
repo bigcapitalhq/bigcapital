@@ -13,11 +13,8 @@ import DynamicListingService from '@/services/DynamicListing/DynamicListService'
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { SaleEstimatesApplication } from '@/services/Sales/Estimates/SaleEstimatesApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
-const ACCEPT_TYPE = {
-  APPLICATION_PDF: 'application/pdf',
-  APPLICATION_JSON: 'application/json',
-};
 @Service()
 export default class SalesEstimatesController extends BaseController {
   @Inject()
@@ -395,6 +392,7 @@ export default class SalesEstimatesController extends BaseController {
     const acceptType = accept.types([
       ACCEPT_TYPE.APPLICATION_JSON,
       ACCEPT_TYPE.APPLICATION_PDF,
+      ACCEPT_TYPE.APPLICATION_TEXT_HTML,
     ]);
     // Retrieves estimate in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
@@ -410,7 +408,14 @@ export default class SalesEstimatesController extends BaseController {
       });
       res.send(pdfContent);
       // Retrieves estimates in json format.
-    } else {
+    } else if (ACCEPT_TYPE.APPLICATION_TEXT_HTML === acceptType) {
+      const htmlContent =
+        await this.saleEstimatesApplication.getSaleEstimateHtml(
+          tenantId,
+          estimateId
+        );
+      return res.status(200).send({ htmlContent });
+    } else if (ACCEPT_TYPE.APPLICATION_JSON) {
       const estimate = await this.saleEstimatesApplication.getSaleEstimate(
         tenantId,
         estimateId

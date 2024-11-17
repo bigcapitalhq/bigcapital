@@ -353,6 +353,7 @@ export default class SalesReceiptsController extends BaseController {
     const acceptType = accept.types([
       ACCEPT_TYPE.APPLICATION_JSON,
       ACCEPT_TYPE.APPLICATION_PDF,
+      ACCEPT_TYPE.APPLICATION_TEXT_HTML,
     ]);
     // Retrieves receipt in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
@@ -368,6 +369,12 @@ export default class SalesReceiptsController extends BaseController {
       });
       res.send(pdfContent);
       // Retrieves receipt in json format.
+    } else if (ACCEPT_TYPE.APPLICATION_TEXT_HTML === acceptType) {
+      const htmlContent = await this.saleReceiptsApplication.getSaleReceiptHtml(
+        tenantId,
+        saleReceiptId
+      );
+      res.send({ htmlContent });
     } else {
       const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(
         tenantId,

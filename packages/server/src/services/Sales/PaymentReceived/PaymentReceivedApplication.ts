@@ -229,6 +229,22 @@ export class PaymentReceivesApplication {
   };
 
   /**
+   * Retrieves the given payment receive html document.
+   * @param {number} tenantId
+   * @param {number} paymentReceiveId
+   * @returns {Promise<string>}
+   */
+  public getPaymentReceivedHtml = (
+    tenantId: number,
+    paymentReceiveId: number
+  ) => {
+    return this.getPaymentReceivePdfService.getPaymentReceivedHtml(
+      tenantId,
+      paymentReceiveId
+    );
+  };
+
+  /**
    * Retrieves the create/edit initial state of the payment received.
    * @param {number} tenantId - The ID of the tenant.
    * @returns {Promise<IPaymentReceivedState>}

@@ -221,6 +221,18 @@ export class SaleEstimatesApplication {
   }
 
   /**
+   * Retrieve the HTML content of the given sale estimate.
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   */
+  public getSaleEstimateHtml(tenantId: number, saleEstimateId: number) {
+    return this.saleEstimatesPdfService.saleEstimateHtml(
+      tenantId,
+      saleEstimateId
+    );
+  }
+
+  /**
    * Send the reminder mail of the given sale estimate.
    * @param {number} tenantId
    * @param {number} saleEstimateId

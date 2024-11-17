@@ -2,9 +2,9 @@ import { Group, Stack } from '@/components';
 import { Classes } from '@blueprintjs/core';
 import { InvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
 import { InvoiceSendMailForm } from './InvoiceSendMailForm';
-import { InvoiceSendMailHeader } from './InvoiceSendMailHeader';
 import { InvoiceSendMailPreview } from './InvoiceSendMailPreview';
 import { InvoiceSendMailFields } from './InvoiceSendMailFields';
+import { SendMailViewHeader } from '../../Estimates/SendMailViewDrawer/SendMailViewHeader';
 
 export function InvoiceSendMailContent() {
   return (
@@ -12,7 +12,7 @@ export function InvoiceSendMailContent() {
       <InvoiceSendMailBoot>
         <InvoiceSendMailForm>
           <Stack spacing={0} flex={1} overflow="hidden">
-            <InvoiceSendMailHeader label={'Send Invoice Mail'} />
+            <SendMailViewHeader label={'Send Invoice Mail'} />
 
             <Group flex={1} overflow="auto" spacing={0} alignItems={'stretch'}>
               <InvoiceSendMailFields />

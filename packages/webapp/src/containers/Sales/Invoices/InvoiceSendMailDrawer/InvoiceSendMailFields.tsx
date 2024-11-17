@@ -8,157 +8,17 @@ import {
   FCheckbox,
   FFormGroup,
   FInputGroup,
-  FMultiSelect,
-  FSelect,
-  FTextArea,
   Group,
-  Icon,
   Stack,
 } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
-import { useInvoiceMailItems, useSendInvoiceFormatArgsOptions } from './_hooks';
-import { InvoiceSendMailFormValues } from './_types';
-
-// Create new account renderer.
-const createNewItemRenderer = (
-  query: string,
-  active: boolean,
-  handleClick: React.MouseEventHandler<HTMLElement>,
-) => {
-  return (
-    <MenuItem
-      icon="add"
-      text={'Now contact address'}
-      active={active}
-      onClick={handleClick}
-    />
-  );
-};
-
-// Create new item from the given query string.
-const createNewItemFromQuery = (text: string): SelectOptionProps => ({ text });
-
-const styleEmailButton = css`
-  &.bp4-button.bp4-small {
-    width: auto;
-    margin: 0;
-    min-height: 26px;
-    line-height: 26px;
-    padding-top: 0;
-    padding-bottom: 0;
-    font-size: 12px;
-  }
-`;
-
-const fieldsWrapStyle = css`
-  > :not(:first-of-type) .bp4-input {
-    border-top-color: transparent;
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-  }
-  > :not(:last-of-type) .bp4-input {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-`;
+import { useInvoiceMailItems, } from './_hooks';
+import { SendMailViewToAddressField } from '../../Estimates/SendMailViewDrawer/SendMailViewToAddressField';
+import { SendMailViewMessageField } from '../../Estimates/SendMailViewDrawer/SendMailViewMessageField';
 
 export function InvoiceSendMailFields() {
-  const [showCCField, setShowCCField] = useState<boolean>(false);
-  const [showBccField, setShowBccField] = useState<boolean>(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { values, setFieldValue } =
-    useFormikContext<InvoiceSendMailFormValues>();
   const items = useInvoiceMailItems();
-  const argsOptions = useSendInvoiceFormatArgsOptions();
-
-  const handleClickCcBtn = (event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    setShowCCField(true);
-  };
-
-  const handleClickBccBtn = (event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    setShowBccField(true);
-  };
-
-  const handleCreateToItemSelect = (value: SelectOptionProps) => {
-    setFieldValue('to', [...values?.to, value?.text]);
-  };
-
-  const handleCreateCcItemSelect = (value: SelectOptionProps) => {
-    setFieldValue('cc', [...values?.cc, value?.text]);
-  };
-
-  const handleCreateBccItemSelect = (value: SelectOptionProps) => {
-    setFieldValue('bcc', [...values?.bcc, value?.text]);
-  };
-
-  const rightElementsToField = useMemo(
-    () => (
-      <Group
-        spacing={0}
-        paddingRight={'7px'}
-        paddingTop={'7px'}
-        fontWeight={500}
-        color={'#000'}
-      >
-        <Button
-          onClick={handleClickCcBtn}
-          minimal
-          small
-          className={styleEmailButton}
-        >
-          CC
-        </Button>
-
-        <Button
-          onClick={handleClickBccBtn}
-          minimal
-          small
-          className={styleEmailButton}
-        >
-          BCC
-        </Button>
-      </Group>
-    ),
-    [],
-  );
-
-  const handleTextareaChange = useCallback(
-    (item: SelectOptionProps) => {
-      const textarea = textareaRef.current;
-      if (!textarea) return;
-
-      const { selectionStart, selectionEnd, value: text } = textarea;
-      const insertText = `{${item.value}}`;
-      const message =
-        text.substring(0, selectionStart) +
-        insertText +
-        text.substring(selectionEnd);
-
-      setFieldValue('message', message);
-
-      // Move the cursor to the end of the inserted text
-      setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd =
-          selectionStart + insertText.length;
-        textarea.focus();
-      }, 0);
-    },
-    [setFieldValue],
-  );
-
-  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Prevent the form from submitting when the user presses the Enter key
-    if (e.key === 'Enter') {
-      e.preventDefault();
-    }
-  };
 
   return (
     <Stack
@@ -170,130 +30,16 @@ export function InvoiceSendMailFields() {
       borderRight="1px solid #dcdcdd"
     >
       <Stack spacing={0} overflow="auto" flex="1" p={'30px'}>
-        <FFormGroup label={'To'} name={'to'}>
-          <Stack spacing={0} className={fieldsWrapStyle}>
-            <FMultiSelect
-              items={items}
-              name={'to'}
-              placeholder={'To'}
-              popoverProps={{ minimal: true, fill: true }}
-              tagInputProps={{
-                tagProps: { round: true, minimal: true, large: true },
-                rightElement: rightElementsToField,
-                large: true,
-                inputProps: {
-                  onKeyDown: handleTagInputKeyDown,
-                },
-              }}
-              createNewItemRenderer={createNewItemRenderer}
-              createNewItemFromQuery={createNewItemFromQuery}
-              onCreateItemSelect={handleCreateToItemSelect}
-              resetOnQuery
-              resetOnSelect
-              fill
-              fastField
-            />
-            {showCCField && (
-              <FMultiSelect
-                items={items}
-                name={'cc'}
-                placeholder={'Cc'}
-                popoverProps={{ minimal: true, fill: true }}
-                tagInputProps={{
-                  tagProps: { round: true, minimal: true, large: true },
-                  large: true,
-                  inputProps: {
-                    onKeyDown: handleTagInputKeyDown,
-                  },
-                }}
-                createNewItemRenderer={createNewItemRenderer}
-                createNewItemFromQuery={createNewItemFromQuery}
-                onCreateItemSelect={handleCreateCcItemSelect}
-                resetOnQuery
-                resetOnSelect
-                fill
-                fastField
-              />
-            )}
-            {showBccField && (
-              <FMultiSelect
-                items={items}
-                name={'bcc'}
-                placeholder={'Bcc'}
-                popoverProps={{ minimal: true, fill: true }}
-                tagInputProps={{
-                  tagProps: { round: true, minimal: true, large: true },
-                  large: true,
-                  inputProps: {
-                    onKeyDown: handleTagInputKeyDown,
-                  },
-                }}
-                createNewItemRenderer={createNewItemRenderer}
-                createNewItemFromQuery={createNewItemFromQuery}
-                onCreateItemSelect={handleCreateBccItemSelect}
-                resetOnQuery
-                resetOnSelect
-                fill
-                fastField
-              />
-            )}
-          </Stack>
-        </FFormGroup>
-
+        <SendMailViewToAddressField
+          toMultiSelectProps={{ items }}
+          ccMultiSelectProps={{ items }}
+          bccMultiSelectProps={{ items }}
+        />
         <FFormGroup label={'Submit'} name={'subject'}>
           <FInputGroup name={'subject'} large fastField />
         </FFormGroup>
 
-        <FFormGroup label={'Message'} name={'message'}>
-          <Stack spacing={0}>
-            <Group
-              border={'1px solid #ced4da'}
-              borderBottom={0}
-              borderRadius={'3px 3px 0 0'}
-            >
-              <FSelect
-                selectedItem={'customerName'}
-                name={'item'}
-                items={argsOptions}
-                onItemChange={handleTextareaChange}
-                popoverProps={{
-                  fill: false,
-                  position: Position.BOTTOM_LEFT,
-                  minimal: true,
-                  inputProps: {
-                    onKeyDown: handleTagInputKeyDown,
-                  },
-                }}
-                input={() => (
-                  <Button
-                    minimal
-                    rightIcon={
-                      <Icon icon={'caret-down-16'} color={'#8F99A8'} />
-                    }
-                  >
-                    Insert Variable
-                  </Button>
-                )}
-                fill={false}
-                fastField
-              />
-            </Group>
-
-            <FTextArea
-              inputRef={textareaRef}
-              name={'message'}
-              large
-              fill
-              fastField
-              className={css`
-                resize: vertical;
-                min-height: 300px;
-                border-top-right-radius: 0px;
-                border-top-left-radius: 0px;
-              `}
-            />
-          </Stack>
-        </FFormGroup>
+        <SendMailViewMessageField />
 
         <Group>
           <FCheckbox name={'attachPdf'} label={'Attach PDF'} />

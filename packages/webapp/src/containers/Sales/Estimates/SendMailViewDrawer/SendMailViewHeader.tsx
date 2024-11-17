@@ -4,16 +4,16 @@ import { Group, Icon } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 
-interface ElementCustomizeHeaderProps {
+interface SendMailViewHeaderProps {
   label?: string;
   children?: React.ReactNode;
   closeButton?: boolean;
 }
 
-export function InvoiceSendMailHeader({
+export function SendMailViewHeader({
   label,
   closeButton = true,
-}: ElementCustomizeHeaderProps) {
+}: SendMailViewHeaderProps) {
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
 
