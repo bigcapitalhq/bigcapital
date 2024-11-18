@@ -241,7 +241,7 @@ export function useEstimateSMSDetail(estimateId, props, requestProps) {
   );
 }
 
-export function useSendSaleEstimateMail(props) {
+export function useSendSaleEstimateMail(props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
@@ -257,17 +257,18 @@ export function useSendSaleEstimateMail(props) {
   );
 }
 
-export function useSaleEstimateDefaultOptions(estimateId, props) {
-  return useRequestQuery(
-    [t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId],
-    {
-      method: 'get',
-      url: `sales/estimates/${estimateId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+/**
+ * 
+ * @param {number} estimateId 
+ * @param props 
+ * @returns 
+ */
+export function useSaleEstimateMailState(estimateId: number, props?= {}) {
+  const apiRequest = useApiRequest();
+  return useQuery([t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId], () =>
+    apiRequest
+      .get(`sales/estimates/${estimateId}/mail/state`)
+      .then((res) => transformToCamelCase(res.data.data)),
   );
 }
 

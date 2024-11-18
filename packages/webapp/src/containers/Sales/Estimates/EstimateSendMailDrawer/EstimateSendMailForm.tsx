@@ -1,17 +1,17 @@
+// @ts-nocheck
 import { Form, Formik, FormikHelpers } from 'formik';
 import { css } from '@emotion/css';
 import { Intent } from '@blueprintjs/core';
-import { InvoiceSendMailFormValues } from './_types';
-import { InvoiceSendMailFormSchema } from './InvoiceSendMailForm.schema';
-import { useSendSaleInvoiceMail } from '@/hooks/query';
+import { EstimateSendMailFormValues } from './_interfaces';
+import { EstimateSendMailSchema } from './EstimateSendMail.schema';
+import { useSendSaleEstimateMail } from '@/hooks/query';
 import { AppToaster } from '@/components';
-import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
 import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { transformToForm } from '@/utils';
 import { useEstimateSendMailBoot } from './EstimateSendMailBoot';
 
-const initialValues: InvoiceSendMailFormValues = {
+const initialValues: EstimateSendMailFormValues = {
   subject: '',
   message: '',
   to: [],
@@ -20,27 +20,27 @@ const initialValues: InvoiceSendMailFormValues = {
   attachPdf: true,
 };
 
-interface InvoiceSendMailFormProps {
+interface EstimateSendMailFormProps {
   children: React.ReactNode;
 }
 
-export function EstimateSendMailForm({ children }: InvoiceSendMailFormProps) {
-  const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
+export function EstimateSendMailForm({ children }: EstimateSendMailFormProps) {
+  const { mutateAsync: sendEstimateMail } = useSendSaleEstimateMail();
   const { estimateId, estimateMailState } = useEstimateSendMailBoot();
 
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
 
-  const _initialValues: InvoiceSendMailFormValues = {
+  const _initialValues: EstimateSendMailFormValues = {
     ...initialValues,
-    ...transformToForm(invoiceMailState, initialValues),
+    ...transformToForm(estimateMailState, initialValues),
   };
   const handleSubmit = (
-    values: InvoiceSendMailFormValues,
-    { setSubmitting }: FormikHelpers<InvoiceSendMailFormValues>,
+    values: EstimateSendMailFormValues,
+    { setSubmitting }: FormikHelpers<EstimateSendMailFormValues>,
   ) => {
     setSubmitting(true);
-    sendInvoiceMail({ id: invoiceId, values: { ...values } })
+    sendEstimateMail({ id: estimateId, values: { ...values } })
       .then(() => {
         AppToaster.show({
           message: 'The invoice mail has been sent to the customer.',
@@ -61,7 +61,7 @@ export function EstimateSendMailForm({ children }: InvoiceSendMailFormProps) {
   return (
     <Formik
       initialValues={_initialValues}
-      validationSchema={InvoiceSendMailFormSchema}
+      validationSchema={EstimateSendMailSchema}
       onSubmit={handleSubmit}
     >
       <Form

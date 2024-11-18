@@ -32,6 +32,7 @@ import { BrandingTemplatesDrawer } from '@/containers/BrandingTemplates/Branding
 
 import { DRAWERS } from '@/constants/drawers';
 import { InvoiceSendMailDrawer } from '@/containers/Sales/Invoices/InvoiceSendMailDrawer/InvoiceSendMailDrawer';
+import { EstimateSendMailDrawer } from '@/containers/Sales/Estimates/EstimateSendMailDrawer';
 
 /**
  * Drawers container of the dashboard.
@@ -81,6 +82,7 @@ export default function DrawersContainer() {
       />
       <BrandingTemplatesDrawer name={DRAWERS.BRANDING_TEMPLATES} />
       <InvoiceSendMailDrawer name={DRAWERS.INVOICE_SEND_MAIL} />
+      <EstimateSendMailDrawer name={DRAWERS.ESTIMATE_SEND_MAIL} />
     </div>
   );
 }

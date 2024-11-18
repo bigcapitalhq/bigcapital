@@ -1,17 +1,15 @@
-// @ts-nocheck
-import { Button, Intent } from '@blueprintjs/core';
-import { useFormikContext } from 'formik';
-import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from '@/components';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useDrawerActions } from '@/hooks/state';
-import { useInvoiceMailItems, useSendInvoiceFormatArgsOptions } from './_hooks';
-import { SendMailViewToAddressField } from '../../Estimates/SendMailViewDrawer/SendMailViewToAddressField';
-import { SendMailViewMessageField } from '../../Estimates/SendMailViewDrawer/SendMailViewMessageField';
+import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from "@/components";
+import { SendMailViewToAddressField } from "../SendMailViewDrawer/SendMailViewToAddressField";
+import { SendMailViewMessageField } from "../SendMailViewDrawer/SendMailViewMessageField";
+import { Button, Intent } from "@blueprintjs/core";
+import { useFormikContext } from "formik";
+import { useDrawerContext } from "@/components/Drawer/DrawerProvider";
+import { useDrawerActions } from "@/hooks/state";
 
-export function InvoiceSendMailFields() {
-  const items = useInvoiceMailItems();
-  const argsOptions = useSendInvoiceFormatArgsOptions();
+const items: Array<any> = [];
+const argsOptions: Array<any> = [];
 
+export function EstimateSendMailFields() {
   return (
     <Stack>
       <Stack spacing={0} overflow="auto" flex="1" p={'30px'}>
@@ -31,12 +29,13 @@ export function InvoiceSendMailFields() {
         </Group>
       </Stack>
 
-      <InvoiceSendMailFooter />
+      <EstimateSendMailFooter />
     </Stack>
   );
 }
 
-function InvoiceSendMailFooter() {
+
+function EstimateSendMailFooter() {
   const { isSubmitting } = useFormikContext();
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();

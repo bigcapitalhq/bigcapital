@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo, useState } from 'react';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { SelectOptionProps } from '@blueprintjs-formik/select';

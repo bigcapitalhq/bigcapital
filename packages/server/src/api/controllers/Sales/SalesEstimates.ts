@@ -140,10 +140,10 @@ export default class SalesEstimatesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
-      '/:id/mail',
+      '/:id/mail/state',
       [...this.validateSpecificEstimateSchema],
       this.validationResult,
-      asyncMiddleware(this.getSaleEstimateMail.bind(this)),
+      asyncMiddleware(this.getSaleEstimateMailState.bind(this)),
       this.handleServiceErrors
     );
     return router;
@@ -540,18 +540,18 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private getSaleEstimateMail = async (
-    req: Request,
+  private getSaleEstimateMailState = async (
+    req: Request<{ id: number }>,
     res: Response,
     next: NextFunction
   ) => {
     const { tenantId } = req;
-    const { id: invoiceId } = req.params;
+    const { id: estimateId } = req.params;
 
     try {
-      const data = await this.saleEstimatesApplication.getSaleEstimateMail(
+      const data = await this.saleEstimatesApplication.getSaleEstimateMailState(
         tenantId,
-        invoiceId
+        estimateId
       );
       return res.status(200).send({ data });
     } catch (error) {

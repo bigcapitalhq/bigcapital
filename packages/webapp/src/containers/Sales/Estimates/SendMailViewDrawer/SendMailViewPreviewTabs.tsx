@@ -1,6 +1,5 @@
 import { css } from '@emotion/css';
 import { Tabs } from '@blueprintjs/core';
-import { Stack } from '@/components';
 
 interface SendMailViewPreviewTabsProps {
   children: React.ReactNode;
@@ -10,11 +9,10 @@ export function SendMailViewPreviewTabs({
   children,
 }: SendMailViewPreviewTabsProps) {
   return (
-    <Stack bg="#F5F5F5" flex={'1'} maxHeight={'100%'} minWidth="850px">
-      <Tabs
-        id={'preview'}
-        defaultSelectedTabId={'payment-page'}
-        className={css`
+    <Tabs
+      id={'preview'}
+      defaultSelectedTabId={'payment-page'}
+      className={css`
           overflow: hidden;
           flex: 1 1;
           display: flex;
@@ -39,9 +37,8 @@ export function SendMailViewPreviewTabs({
             overflow: auto;
           }
         `}
-      >
-        {children}
-      </Tabs>
-    </Stack>
+    >
+      {children}
+    </Tabs>
   );
 }

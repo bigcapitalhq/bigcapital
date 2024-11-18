@@ -4,9 +4,9 @@ import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';
 
-const EstimateSendMailDrawerProps = React.lazy(() =>
+const EstimateSendMailContent = React.lazy(() =>
   import('./EstimateSendMailContent').then((module) => ({
-    default: module.InvoiceSendMailContent,
+    default: module.EstimateSendMailContent,
   })),
 );
 
@@ -31,7 +31,7 @@ function EstimateSendMailDrawerRoot({
       size={'calc(100% - 10px)'}
     >
       <DrawerSuspense>
-        <EstimateSendMailDrawerProps />
+        <EstimateSendMailContent />
       </DrawerSuspense>
     </Drawer>
   );
