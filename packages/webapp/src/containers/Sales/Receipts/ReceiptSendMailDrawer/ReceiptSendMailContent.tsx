@@ -7,13 +7,13 @@ import { ReceiptSendMailForm } from './ReceiptSendMailForm';
 import { ReceiptSendMailFormFields } from './ReceiptSendMailFormFields';
 import { ReceiptSendMailPreviewTabs } from './ReceiptSendMailPreviewTabs';
 
-export function InvoiceSendMailContent() {
+export function ReceiptSendMailContent() {
   return (
     <Stack className={Classes.DRAWER_BODY}>
       <ReceiptSendMailBoot>
         <ReceiptSendMailForm>
           <SendMailViewLayout
-            header={<SendMailViewHeader label={'Send Invoice Mail'} />}
+            header={<SendMailViewHeader label={'Send Receipt Mail'} />}
             fields={<ReceiptSendMailFormFields />}
             preview={<ReceiptSendMailPreviewTabs />}
           />

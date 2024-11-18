@@ -258,10 +258,10 @@ export function useSendSaleEstimateMail(props = {}) {
 }
 
 /**
- * 
- * @param {number} estimateId 
- * @param props 
- * @returns 
+ *
+ * @param {number} estimateId
+ * @param props
+ * @returns
  */
 export function useSaleEstimateMailState(estimateId: number, props?= {}) {
   const apiRequest = useApiRequest();
@@ -290,3 +290,31 @@ export function useGetSaleEstimatesState(
     { ...options },
   );
 }
+
+interface GetEstimateHtmlResponse {
+  htmlContent: string;
+}
+/**
+ * Retrieves the sale estimate html content.
+ * @param {number} invoiceId
+ * @param {UseQueryOptions<GetEstimateHtmlResponse>} options
+ * @returns {UseQueryResult<GetEstimateHtmlResponse>}
+ */
+export const useGetSaleEstimateHtml = (
+  estimateId: number,
+  options?: UseQueryOptions<GetEstimateHtmlResponse>,
+): UseQueryResult<GetEstimateHtmlResponse> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetEstimateHtmlResponse>(
+    ['SALE_ESTIMATE_HTML', estimateId],
+    () =>
+      apiRequest
+        .get(`sales/estimates/${estimateId}`, {
+          headers: {
+            Accept: 'application/json+html',
+          },
+        })
+        .then((res) => transformToCamelCase(res.data)),
+  );
+};
