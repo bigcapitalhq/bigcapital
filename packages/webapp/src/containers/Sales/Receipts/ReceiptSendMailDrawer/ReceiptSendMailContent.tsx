@@ -1,24 +1,24 @@
 import { Stack } from '@/components';
 import { Classes } from '@blueprintjs/core';
-import { InvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
-import { InvoiceSendMailForm } from './InvoiceSendMailForm';
-import { InvoiceSendMailPreview } from './InvoiceSendMailPreview';
-import { InvoiceSendMailFields } from './InvoiceSendMailFields';
 import { SendMailViewHeader } from '../../Estimates/SendMailViewDrawer/SendMailViewHeader';
 import { SendMailViewLayout } from '../../Estimates/SendMailViewDrawer/SendMailViewLayout';
+import { ReceiptSendMailBoot } from './ReceiptSendMailBoot';
+import { ReceiptSendMailForm } from './ReceiptSendMailForm';
+import { ReceiptSendMailFormFields } from './ReceiptSendMailFormFields';
+import { ReceiptSendMailPreviewTabs } from './ReceiptSendMailPreviewTabs';
 
 export function InvoiceSendMailContent() {
   return (
     <Stack className={Classes.DRAWER_BODY}>
-      <InvoiceSendMailBoot>
-        <InvoiceSendMailForm>
+      <ReceiptSendMailBoot>
+        <ReceiptSendMailForm>
           <SendMailViewLayout
             header={<SendMailViewHeader label={'Send Invoice Mail'} />}
-            fields={<InvoiceSendMailFields />}
-            preview={<InvoiceSendMailPreview />}
+            fields={<ReceiptSendMailFormFields />}
+            preview={<ReceiptSendMailPreviewTabs />}
           />
-        </InvoiceSendMailForm>
-      </InvoiceSendMailBoot>
+        </ReceiptSendMailForm>
+      </ReceiptSendMailBoot>
     </Stack>
   );
 }
