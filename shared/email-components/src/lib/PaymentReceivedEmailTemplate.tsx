@@ -2,6 +2,7 @@ import {
   Button,
   Container,
   Heading,
+  render,
   Row,
   Section,
   Text,
@@ -65,47 +66,58 @@ export const PaymentReceivedEmailTemplate: React.FC<
   viewPaymentButtonLabel = 'View Payment',
   viewPaymentButtonUrl,
 }) => {
-    return (
-      <EmailTemplateLayout preview={preview}>
-        <Container style={containerStyle}>
-          {companyLogoUri && (
-            <Section style={logoSectionStyle}>
-              <div
-                style={{
-                  ...companyLogoStyle,
-                  backgroundImage: `url("${companyLogoUri}")`,
-                }}
-              ></div>
-            </Section>
-          )}
-          <Section style={headerInfoStyle}>
-            <Row>
-              <Heading style={invoiceCompanyNameStyle}>{companyName}</Heading>
-            </Row>
-            <Row>
-              <Text style={paymentAmountStyle}>{total}</Text>
-            </Row>
-            <Row>
-              <Text style={paymentNumberStyle}>
-                {paymentNumberLabel?.replace('{paymentNumber}', paymentNumber)}
-              </Text>
-            </Row>
+  return (
+    <EmailTemplateLayout preview={preview}>
+      <Container style={containerStyle}>
+        {companyLogoUri && (
+          <Section style={logoSectionStyle}>
+            <div
+              style={{
+                ...companyLogoStyle,
+                backgroundImage: `url("${companyLogoUri}")`,
+              }}
+            ></div>
           </Section>
+        )}
+        <Section style={headerInfoStyle}>
+          <Row>
+            <Heading style={invoiceCompanyNameStyle}>{companyName}</Heading>
+          </Row>
+          <Row>
+            <Text style={paymentAmountStyle}>{total}</Text>
+          </Row>
+          <Row>
+            <Text style={paymentNumberStyle}>
+              {paymentNumberLabel?.replace('{paymentNumber}', paymentNumber)}
+            </Text>
+          </Row>
+        </Section>
 
-          <Text style={invoiceMessageStyle}>{message}</Text>
-          <Button
-            href={viewPaymentButtonUrl}
-            style={{
-              ...viewInvoiceButtonStyle,
-              backgroundColor: primaryColor,
-            }}
-          >
-            {viewPaymentButtonLabel}
-          </Button>
-        </Container>
-      </EmailTemplateLayout>
-    );
-  };
+        <Text style={invoiceMessageStyle}>{message}</Text>
+        <Button
+          href={viewPaymentButtonUrl}
+          style={{
+            ...viewInvoiceButtonStyle,
+            backgroundColor: primaryColor,
+          }}
+        >
+          {viewPaymentButtonLabel}
+        </Button>
+      </Container>
+    </EmailTemplateLayout>
+  );
+};
+
+/**
+ * Renders the payment received mail template to string
+ * @param {EstimatePaymentEmailProps} props
+ * @returns {Promise<string>}
+ */
+export const renderPaymentReceivedEmailTemplate = (
+  props: PaymentReceivedEmailTemplateProps
+) => {
+  return render(<PaymentReceivedEmailTemplate {...props} />);
+};
 
 const containerStyle: CSSProperties = {
   backgroundColor: '#fff',

@@ -1,8 +1,8 @@
 import {
   Button,
   Column,
-  Container,
   Heading,
+  render,
   Row,
   Section,
   Text,
@@ -134,6 +134,15 @@ export const CreditNoteEmailTemplate: React.FC<
       </EmailTemplateLayout>
     );
   };
+
+/**
+ * Renders the estimate mail template to string
+ * @param {EstimatePaymentEmailProps} props
+ * @returns {Promise<string>}
+ */
+export const renderCreditNoteEmailTemplate = (props: CreditNoteEmailProps) => {
+  return render(<CreditNoteEmailTemplate {...props} />);
+};
 
 const containerStyle: CSSProperties = {
   backgroundColor: '#fff',

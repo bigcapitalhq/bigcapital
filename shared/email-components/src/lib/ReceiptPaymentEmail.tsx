@@ -1,8 +1,8 @@
 import {
   Button,
   Column,
-  Container,
   Heading,
+  render,
   Row,
   Section,
   Text,
@@ -147,6 +147,17 @@ export const ReceiptEmailTemplate: React.FC<
       </EmailTemplateLayout>
     );
   };
+
+/**
+ * Renders the sale receipt mail template to string
+ * @param {ReceiptEmailTemplateProps} props
+ * @returns {Promise<string>}
+ */
+export const renderReceiptEmailTemplate = (
+  props: ReceiptEmailTemplateProps
+) => {
+  return render(<ReceiptEmailTemplate {...props} />);
+};
 
 const headerInfoStyle: CSSProperties = {
   textAlign: 'center',

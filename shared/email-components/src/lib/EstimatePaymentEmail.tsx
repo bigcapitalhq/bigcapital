@@ -4,6 +4,7 @@ import {
   Column,
   Container,
   Heading,
+  render,
   Row,
   Section,
   Text,
@@ -142,6 +143,17 @@ export const EstimatePaymentEmail: React.FC<
       </EmailTemplateLayout>
     );
   };
+
+/**
+ * Renders the estimate mail template to string
+ * @param {EstimatePaymentEmailProps} props 
+ * @returns {Promise<string>}
+ */
+export const renderEstimateEmailTemplate = (
+  props: EstimatePaymentEmailProps
+) => {
+  return render(<EstimatePaymentEmail {...props} />);
+};
 
 const headerInfoStyle: CSSProperties = {
   textAlign: 'center',
