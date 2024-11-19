@@ -1,10 +1,10 @@
-import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from "@/components";
-import { SendMailViewToAddressField } from "../SendMailViewDrawer/SendMailViewToAddressField";
-import { SendMailViewMessageField } from "../SendMailViewDrawer/SendMailViewMessageField";
-import { Button, Intent } from "@blueprintjs/core";
-import { useFormikContext } from "formik";
-import { useDrawerContext } from "@/components/Drawer/DrawerProvider";
-import { useDrawerActions } from "@/hooks/state";
+import { useFormikContext } from 'formik';
+import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from '@/components';
+import { SendMailViewToAddressField } from '../SendMailViewDrawer/SendMailViewToAddressField';
+import { SendMailViewMessageField } from '../SendMailViewDrawer/SendMailViewMessageField';
+import { Button, Intent } from '@blueprintjs/core';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useDrawerActions } from '@/hooks/state';
 
 const items: Array<any> = [];
 const argsOptions: Array<any> = [];
@@ -33,7 +33,6 @@ export function EstimateSendMailFields() {
     </Stack>
   );
 }
-
 
 function EstimateSendMailFooter() {
   const { isSubmitting } = useFormikContext();
