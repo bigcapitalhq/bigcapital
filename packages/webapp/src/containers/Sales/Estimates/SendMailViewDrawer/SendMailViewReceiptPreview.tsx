@@ -1,12 +1,12 @@
+import { Button, ButtonProps, Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { lighten } from 'polished';
 import { x } from '@xstyled/emotion';
 import { Stack, StackProps } from '@/components';
 
-interface SendMailReceiptProps extends StackProps {
-  children: React.ReactNode;
-}
+export type SendMailReceiptProps = StackProps;
 
 export function SendMailReceipt({
-  children,
   ...restProps
 }: SendMailReceiptProps) {
   return (
@@ -19,7 +19,7 @@ export function SendMailReceipt({
       boxShadow={'0 10px 15px rgba(0, 0, 0, 0.05)'}
       color={'black'}
       {...restProps}
-    ></Stack>
+    />
   );
 }
 
@@ -46,4 +46,36 @@ function SendMailReceiptCompanyLogo({
   );
 }
 
+interface SendMailReceiptTitleProps extends ButtonProps {
+  primaryColor?: string;
+  children: React.ReactNode;
+}
+
+function SendMailReceiptPrimaryButton({
+  primaryColor,
+  ...props
+}: SendMailReceiptTitleProps) {
+  return (
+    <Button
+      large
+      intent={Intent.PRIMARY}
+      className={css`
+        &.bp4-intent-primary {
+          background-color: ${primaryColor};
+
+          &:hover,
+          &:focus {
+            background-color: ${lighten(0.1, primaryColor || '#000')};
+          }
+        }
+        &.bp4-large {
+          min-height: 38px;
+        }
+      `}
+      {...props}
+    />
+  );
+}
+
+SendMailReceipt.PrimaryButton = SendMailReceiptPrimaryButton;
 SendMailReceipt.CompanyLogo = SendMailReceiptCompanyLogo;

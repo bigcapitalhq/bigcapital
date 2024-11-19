@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { SendMailViewPreviewTabs } from '../SendMailViewDrawer/SendMailViewPreviewTabs';
 import { Tab } from '@blueprintjs/core';
 import { EstimateSendPdfPreviewConnected } from './EstimateSendPdfPreviewConnected';
+import { EstimateSendMailReceiptPreview } from './EstimateSendMailReceiptPreview';
 
 export function EstimateSendMailPreviewTabs() {
   return (
@@ -10,7 +11,9 @@ export function EstimateSendMailPreviewTabs() {
         id={'payment-page'}
         title={'Payment page'}
         panel={
-          <Suspense>{/* <InvoiceMailReceiptPreviewConnected /> */}</Suspense>
+          <Suspense>
+            <EstimateSendMailReceiptPreview />
+          </Suspense>
         }
       />
       <Tab

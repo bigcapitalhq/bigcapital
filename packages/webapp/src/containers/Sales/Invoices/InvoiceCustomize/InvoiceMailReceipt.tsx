@@ -41,36 +41,36 @@ export interface InvoiceMailReceiptProps extends StackProps {
 }
 
 export function InvoiceMailReceipt({
-  // Company
+  // # Company
   companyName,
   companyLogoUri,
 
   // # Colors
   primaryColor = 'rgb(0, 82, 204)',
 
-  // Due date
+  // # Due date
   dueDate,
   dueDateLabel = 'Due',
 
-  // Due amount
+  // # Due amount
   dueAmountLabel = 'Due Amount',
   dueAmount,
 
-  // Total
+  // # Total
   total,
   totalLabel = 'Total',
 
-  // Invoice number
+  // # Invoice number
   invoiceNumber,
   invoiceNumberLabel = 'Invoice #',
 
-  // Invoice message
+  // # Invoice message
   message,
 
-  // Invoice items
+  // # Invoice items
   items,
 
-  // View invoice button
+  // # View invoice button
   showViewInvoiceButton = true,
   viewInvoiceButtonLabel = 'View Invoice',
   viewInvoiceButtonOnClick,

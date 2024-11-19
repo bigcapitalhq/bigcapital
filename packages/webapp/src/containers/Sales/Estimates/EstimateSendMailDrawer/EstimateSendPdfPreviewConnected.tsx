@@ -24,7 +24,6 @@ function EstimateSendPdfPreviewIframe() {
   if (isLoading && data) {
     return <Spinner size={20} />;
   }
-
   const iframeSrcDoc = data?.htmlContent;
 
   return <SendMailViewPreviewPdfIframe srcDoc={iframeSrcDoc} />;
