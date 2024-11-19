@@ -9,6 +9,7 @@ import {
   Text,
 } from '@react-email/components';
 import { EmailTemplateLayout } from './EmailTemplateLayout';
+import { EmailTemplate } from './EmailTemplate';
 
 export interface EstimatePaymentEmailProps {
   preview: string;
@@ -79,17 +80,8 @@ export const EstimatePaymentEmail: React.FC<
 }) => {
     return (
       <EmailTemplateLayout preview={preview}>
-        <Container style={containerStyle}>
-          {companyLogoUri && (
-            <Section style={logoSectionStyle}>
-              <div
-                style={{
-                  ...companyLogoStyle,
-                  backgroundImage: `url("${companyLogoUri}")`,
-                }}
-              ></div>
-            </Section>
-          )}
+        <EmailTemplate>
+          {companyLogoUri && <EmailTemplate.CompanyLogo src={companyLogoUri} />}
 
           <Section style={headerInfoStyle}>
             <Row>
@@ -146,20 +138,10 @@ export const EstimatePaymentEmail: React.FC<
               </Column>
             </Row>
           </Section>
-
-        </Container>
+        </EmailTemplate>
       </EmailTemplateLayout>
     );
   };
-
-const containerStyle: CSSProperties = {
-  backgroundColor: '#fff',
-  width: '100%',
-  maxWidth: '500px',
-  padding: '35px 25px',
-  color: '#000',
-  borderRadius: '5px',
-};
 
 const headerInfoStyle: CSSProperties = {
   textAlign: 'center',
@@ -239,21 +221,4 @@ const itemLineRowStyle: CSSProperties = {
 const totalsSectionStyle = {
   marginTop: '20px',
   borderTop: '1px solid #D9D9D9',
-};
-
-const logoSectionStyle = {
-  marginBottom: '15px',
-};
-
-const companyLogoStyle = {
-  height: 90,
-  width: 90,
-  borderRadius: '3px',
-  marginLeft: 'auto',
-  marginRight: 'auto',
-  textIndent: '-999999px',
-  overflow: 'hidden',
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'center center',
-  backgroundSize: 'contain',
 };
