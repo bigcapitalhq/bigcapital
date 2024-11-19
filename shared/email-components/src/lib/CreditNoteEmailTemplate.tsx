@@ -193,7 +193,6 @@ const listItemAmountStyle: CSSProperties = {
 
 const messageStyle: CSSProperties = {
   whiteSpace: 'pre-line',
-  color: '#252A31',
   margin: '0 0 20px 0',
   lineHeight: '20px',
 };

@@ -154,7 +154,6 @@ const viewInvoiceButtonStyle: CSSProperties = {
 
 const invoiceMessageStyle: CSSProperties = {
   whiteSpace: 'pre-line',
-  color: '#252A31',
   margin: '0 0 20px 0',
   lineHeight: '20px',
 };

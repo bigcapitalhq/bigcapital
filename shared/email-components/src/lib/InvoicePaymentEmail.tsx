@@ -175,15 +175,6 @@ export const renderInvoicePaymentEmail = (props: InvoicePaymentEmailProps) => {
   return render(<InvoicePaymentEmail {...props} />);
 };
 
-const containerStyle: CSSProperties = {
-  backgroundColor: '#fff',
-  width: '100%',
-  maxWidth: '500px',
-  padding: '35px 25px',
-  color: '#000',
-  borderRadius: '5px',
-};
-
 const headerInfoStyle: CSSProperties = {
   textAlign: 'center',
   marginBottom: 20,
@@ -236,7 +227,7 @@ const listItemAmountStyle: CSSProperties = {
 
 const invoiceMessageStyle: CSSProperties = {
   whiteSpace: 'pre-line',
-  color: '#252A31',
+  color: '#000',
   margin: '0 0 20px 0',
   lineHeight: '20px',
 };

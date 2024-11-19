@@ -50,7 +50,7 @@ export const EstimatePaymentEmail: React.FC<
   preview,
 
   // # Company
-  companyName,
+  companyName = 'Bigcapital, Inc.',
   companyLogoUri,
 
   // # Colors
@@ -153,11 +153,13 @@ const estimateAmountStyle: CSSProperties = {
   color: '#383E47',
   fontWeight: 500,
 };
+
 const estimateNumberStyle: CSSProperties = {
   margin: 0,
   fontSize: '13px',
   color: '#404854',
 };
+
 const estimateExpirationStyle: CSSProperties = {
   margin: 0,
   fontSize: '13px',
@@ -194,7 +196,6 @@ const listItemAmountStyle: CSSProperties = {
 
 const estimateMessageStyle: CSSProperties = {
   whiteSpace: 'pre-line',
-  color: '#252A31',
   margin: '0 0 20px 0',
   lineHeight: '20px',
 };
