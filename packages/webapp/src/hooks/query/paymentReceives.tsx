@@ -301,3 +301,35 @@ export function usePaymentReceivedState(
     },
   );
 }
+
+interface PaymentReceivedHtmlResponse {
+  htmlContent: string;
+}
+
+/**
+ * Retrieves the html content of the given payment receive.
+ * @param {number} paymentReceivedId
+ * @param {UseQueryOptions<PaymentReceivedHtmlResponse, Error>} options
+ * @returns {UseQueryResult<PaymentReceivedHtmlResponse, Error>}
+ */
+export function useGetPaymentReceiveHtml(
+  paymentReceivedId: number,
+  options?: UseQueryOptions<PaymentReceivedHtmlResponse, Error>,
+): UseQueryResult<PaymentReceivedHtmlResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<PaymentReceivedHtmlResponse, Error>(
+    ['PAYMENT_RECEIVED_HTML', paymentReceivedId],
+    () =>
+      apiRequest
+        .get(`/sales/payment_receives/${paymentReceivedId}`, {
+          headers: {
+            Accept: 'application/json+html',
+          },
+        })
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      ...options,
+    },
+  );
+}

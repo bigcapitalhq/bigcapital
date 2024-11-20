@@ -80,7 +80,7 @@ function PaymentsReceivedDataTable({
 
   // Handle mail send payment receive.
   const handleSendMailPayment = ({ id }) => {
-    openDialog(DialogsName.PaymentMail, { paymentReceiveId: id });
+    openDrawer(DRAWERS.PAYMENT_RECEIVED_SEND_MAIL, { paymentReceivedId: id });
   };
 
   // Handle cell click.

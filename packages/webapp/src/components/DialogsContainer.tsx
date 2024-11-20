@@ -44,7 +44,6 @@ import ProjectBillableEntriesFormDialog from '@/containers/Projects/containers/P
 import TaxRateFormDialog from '@/containers/TaxRates/dialogs/TaxRateFormDialog/TaxRateFormDialog';
 import { DialogsName } from '@/constants/dialogs';
 import InvoiceExchangeRateChangeDialog from '@/containers/Sales/Invoices/InvoiceForm/Dialogs/InvoiceExchangeRateChangeDialog';
-import PaymentMailDialog from '@/containers/Sales/PaymentsReceived/PaymentMailDialog/PaymentMailDialog';
 import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
 import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
 import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
@@ -139,7 +138,6 @@ export default function DialogsContainer() {
       <InvoiceExchangeRateChangeDialog
         dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
       />
-      <PaymentMailDialog dialogName={DialogsName.PaymentMail} />
       <ExportDialog dialogName={DialogsName.Export} />
       <RuleFormDialog dialogName={DialogsName.BankRuleForm} />
       <DisconnectBankAccountDialog
