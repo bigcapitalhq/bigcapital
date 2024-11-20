@@ -269,3 +269,33 @@ export function useGetReceiptState(
     { ...options },
   );
 }
+
+interface GetReceiptHtmlResponse {
+  htmlContent: string;
+}
+
+/**
+ * Retrieves the sale receipt html content.
+ * @param {number} receiptId
+ * @param {UseQueryOptions<string, Error>} options
+ * @returns {UseQueryResult<GetReceiptHtmlResponse, Error>}
+ */
+export const useGetSaleReceiptHtml = (
+  receiptId: number,
+  options?: UseQueryOptions<string, Error>,
+): UseQueryResult<GetReceiptHtmlResponse, Error> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetReceiptHtmlResponse, Error>(
+    ['SALE_RECEIPT_HTML', receiptId],
+    () =>
+      apiRequest
+        .get(`sales/receipts/${receiptId}`, {
+          headers: {
+            Accept: 'application/json+html',
+          },
+        })
+        .then((res) => transformToCamelCase(res.data)),
+    { ...options },
+  );
+};

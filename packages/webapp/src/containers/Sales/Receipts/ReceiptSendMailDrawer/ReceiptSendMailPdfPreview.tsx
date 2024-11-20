@@ -1,28 +1,32 @@
-import { Spinner } from '@blueprintjs/core';
 import { Stack } from '@/components';
-import { InvoiceSendMailPreviewWithHeader } from './InvoiceSendMailHeaderPreview';
-import { useInvoiceHtml } from '@/hooks/query';
+import { ReceiptSendMailPreviewHeader } from './ReceiptSendMailPreviewHeader';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useGetSaleReceiptHtml } from '@/hooks/query';
+import { Spinner } from '@blueprintjs/core';
 import { SendMailViewPreviewPdfIframe } from '../../Estimates/SendMailViewDrawer/SendMailViewPreviewPdfIframe';
 
-export function InvoiceSendPdfPreviewConnected() {
+export function ReceiptSendMailPdfPreview() {
   return (
-    <InvoiceSendMailPreviewWithHeader>
+    <Stack>
+      <ReceiptSendMailPreviewHeader />
+
       <Stack px={4} py={6}>
-        <InvoiceSendPdfPreviewIframe />
+        <ReceiptSendPdfPreviewIframe />
       </Stack>
-    </InvoiceSendMailPreviewWithHeader>
+    </Stack>
   );
 }
 
-function InvoiceSendPdfPreviewIframe() {
+function ReceiptSendPdfPreviewIframe() {
   const { payload } = useDrawerContext();
-  const { data, isLoading } = useInvoiceHtml(payload?.invoiceId);
+  const { data, isLoading } = useGetSaleReceiptHtml(payload?.receiptId);
 
   if (isLoading && data) {
     return <Spinner size={20} />;
   }
   const iframeSrcDoc = data?.htmlContent;
+
+  console.log(data, 'data');
 
   return <SendMailViewPreviewPdfIframe srcDoc={iframeSrcDoc} />;
 }

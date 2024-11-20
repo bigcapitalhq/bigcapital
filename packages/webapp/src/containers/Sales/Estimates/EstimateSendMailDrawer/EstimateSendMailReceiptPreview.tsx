@@ -3,19 +3,17 @@ import { EstimateSendMailReceipt } from './EstimateSendMailReceipt';
 import { EstimateSendMailPreviewHeader } from './EstimateSendMailPreviewHeader';
 import { Stack } from '@/components';
 
-export const EstimateSendMailReceiptPreview = () => {
-  const props = {
-    companyName: 'Bigcapital Technology, Inc.',
-    companyLogoUri: ' ',
+const defaultEstimateMailReceiptProps = {
+  companyName: 'Bigcapital Technology, Inc.',
+  companyLogoUri: ' ',
 
-    message: '',
-    total: '$1,000.00',
-    subtotal: '$1,000.00',
-    estimateNumber: 'INV-0001',
-    expirationDate: '2 Oct 2024',
-    dueAmount: '$1,000.00',
-    items: [{ label: 'Web development', total: '$1000.00', quantity: 1 }],
-    message: `Hi Ahmed Bouhuolia,
+  total: '$1,000.00',
+  subtotal: '$1,000.00',
+  estimateNumber: 'INV-0001',
+  expirationDate: '2 Oct 2024',
+  dueAmount: '$1,000.00',
+  items: [{ label: 'Web development', total: '$1000.00', quantity: 1 }],
+  message: `Hi Ahmed Bouhuolia,
 
 Here's invoice # INV-00002 for $738.30
 
@@ -27,15 +25,15 @@ If you have any questions, please let us know.
 
 Thanks,
 Bigcapital`,
-  };
-
+};
+export const EstimateSendMailReceiptPreview = () => {
   return (
     <Stack>
       <EstimateSendMailPreviewHeader />
 
       <Stack px={4} py={6}>
         <EstimateSendMailReceipt
-          {...props}
+          {...defaultEstimateMailReceiptProps}
           className={css`
             margin: 0 auto;
             border-radius: 5px !important;

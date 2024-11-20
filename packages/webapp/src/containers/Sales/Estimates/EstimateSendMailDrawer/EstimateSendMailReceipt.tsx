@@ -1,6 +1,9 @@
 import { x } from '@xstyled/emotion';
 import { Group, Stack } from '@/components';
-import { SendMailReceipt, SendMailReceiptProps } from '../SendMailViewDrawer/SendMailViewReceiptPreview';
+import {
+  SendMailReceipt,
+  SendMailReceiptProps,
+} from '../SendMailViewDrawer/SendMailViewReceiptPreview';
 
 interface EstimateSendMailReceiptProps extends SendMailReceiptProps {
   // # Company name.

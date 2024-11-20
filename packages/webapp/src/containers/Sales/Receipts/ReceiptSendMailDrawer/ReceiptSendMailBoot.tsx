@@ -2,7 +2,7 @@
 import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useSaleReceiptMailState } from '@/hooks/query';
+import { useSaleInvoiceMailState } from '@/hooks/query';
 
 interface ReceiptSendMailBootValues {
   receiptId: number;
@@ -17,22 +17,20 @@ interface ReceiptSendMailBootProps {
 const ReceiptSendMailContentBootContext =
   createContext<ReceiptSendMailBootValues>({} as ReceiptSendMailBootValues);
 
-export const ReceiptSendMailBoot = ({
-  children,
-}: ReceiptSendMailBootProps) => {
+export const ReceiptSendMailBoot = ({ children }: ReceiptSendMailBootProps) => {
   const {
     payload: { receiptId },
   } = useDrawerContext();
 
   // Receipt mail options.
   const { data: receiptMailState, isLoading: isReceiptMailState } =
-    useSaleReceiptMailState(receiptId);
+    useSaleInvoiceMailState(receiptId);
 
   const isLoading = isReceiptMailState;
 
-  if (isLoading) {
-    return <Spinner size={20} />;
-  }
+  // if (isLoading) {
+  //   return <Spinner size={20} />;
+  // }
   const value = {
     receiptId,
 
