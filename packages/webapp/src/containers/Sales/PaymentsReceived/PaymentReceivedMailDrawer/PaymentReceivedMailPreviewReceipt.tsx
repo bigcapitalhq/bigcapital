@@ -21,7 +21,7 @@ const defaultPaymentReceiptMailProps = {
 
 export function PaymentReceivedMailPreviewReceipt() {
   return (
-    <Stack>
+    <Stack flex={1}>
       <PaymentReceivedMailPreviewHeader />
 
       <Stack px={4} py={6}>

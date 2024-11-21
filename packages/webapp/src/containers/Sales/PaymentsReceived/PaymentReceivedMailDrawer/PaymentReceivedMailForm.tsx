@@ -16,6 +16,7 @@ const initialValues: PaymentReceivedSendMailFormValues = {
   to: [],
   cc: [],
   bcc: [],
+  from: [],
   attachPdf: true,
 };
 

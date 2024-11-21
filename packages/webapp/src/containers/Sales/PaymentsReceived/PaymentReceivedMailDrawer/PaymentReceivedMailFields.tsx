@@ -6,16 +6,15 @@ import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 import { SendMailViewToAddressField } from '../../Estimates/SendMailViewDrawer/SendMailViewToAddressField';
 import { SendMailViewMessageField } from '../../Estimates/SendMailViewDrawer/SendMailViewMessageField';
-
-const items = [];
-const argsOptions = [];
+import { usePaymentReceivedFormatArgsOptions, } from './_hooks';
+import { useSendMailItems } from '../../Estimates/SendMailViewDrawer/hooks';
 
 export function PaymentReceivedSendMailFields() {
-  // const items = useInvoiceMailItems();
-  // const argsOptions = useSendInvoiceFormatArgsOptions();
+  const argsOptions = usePaymentReceivedFormatArgsOptions();
+  const items = useSendMailItems();
 
   return (
-    <Stack>
+    <Stack flex={1}>
       <Stack spacing={0} overflow="auto" flex="1" p={'30px'}>
         <SendMailViewToAddressField
           toMultiSelectProps={{ items }}

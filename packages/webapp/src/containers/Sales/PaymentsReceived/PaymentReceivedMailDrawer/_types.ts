@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { SendMailViewFormValues } from '../../Estimates/SendMailViewDrawer/_types';
 
 export const PaymentReceivedSendMailFormSchema = Yup.object().shape({
   subject: Yup.string().required('Subject is required'),
@@ -10,11 +11,7 @@ export const PaymentReceivedSendMailFormSchema = Yup.object().shape({
   bcc: Yup.array().of(Yup.string().email('Invalid email address')),
 });
 
-export interface PaymentReceivedSendMailFormValues {
-  subject: string;
-  message: string;
-  to: string[];
-  cc: string[];
-  bcc: string[];
+export interface PaymentReceivedSendMailFormValues
+  extends SendMailViewFormValues {
   attachPdf: boolean;
 }

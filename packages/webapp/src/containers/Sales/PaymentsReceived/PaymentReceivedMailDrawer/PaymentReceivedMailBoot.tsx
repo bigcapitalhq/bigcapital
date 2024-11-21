@@ -1,15 +1,15 @@
 import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
 import {
-  PaymentReceivedStateResponse,
-  usePaymentReceivedState,
+  GetPaymentReceivedMailStateResponse,
+  usePaymentReceivedMailState,
 } from '@/hooks/query';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 
 interface PaymentReceivedSendMailBootValues {
   paymentReceivedId: number;
 
-  paymentReceivedMailState: PaymentReceivedStateResponse | undefined;
+  paymentReceivedMailState: GetPaymentReceivedMailStateResponse | undefined;
   isPaymentReceivedStateLoading: boolean;
 }
 interface InvoiceSendMailBootProps {
@@ -31,7 +31,7 @@ export const PaymentReceivedSendMailBoot = ({
   const {
     data: paymentReceivedMailState,
     isLoading: isPaymentReceivedStateLoading,
-  } = usePaymentReceivedState(paymentReceivedId);
+  } = usePaymentReceivedMailState(paymentReceivedId);
 
   const isLoading = isPaymentReceivedStateLoading;
 

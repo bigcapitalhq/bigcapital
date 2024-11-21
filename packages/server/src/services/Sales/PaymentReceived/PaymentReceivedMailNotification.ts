@@ -63,37 +63,6 @@ export class SendPaymentReceiveMailNotification {
   }
 
   /**
-   * Retrieves the default payment mail options.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} paymentReceiveId - Payment receive id.
-   * @returns {Promise<PaymentReceiveMailOpts>}
-   */
-  public getMailOptions = async (
-    tenantId: number,
-    paymentId: number
-  ): Promise<PaymentReceiveMailOpts> => {
-    const { PaymentReceive } = this.tenancy.models(tenantId);
-
-    const paymentReceive = await PaymentReceive.query()
-      .findById(paymentId)
-      .throwIfNotFound();
-
-    const formatArgs = await this.textFormatter(tenantId, paymentId);
-
-    const mailOptions =
-      await this.contactMailNotification.getDefaultMailOptions(
-        tenantId,
-        paymentReceive.customerId
-      );
-    return {
-      ...mailOptions,
-      subject: DEFAULT_PAYMENT_MAIL_SUBJECT,
-      message: DEFAULT_PAYMENT_MAIL_CONTENT,
-      ...formatArgs,
-    };
-  };
-
-  /**
    * Retrieves the formatted text of the given sale invoice.
    * @param {number} tenantId - Tenant id.
    * @param {number} invoiceId - Sale invoice id.

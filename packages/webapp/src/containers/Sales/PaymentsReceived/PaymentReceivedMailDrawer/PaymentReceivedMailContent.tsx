@@ -3,7 +3,6 @@ import { Classes } from '@blueprintjs/core';
 import { PaymentReceivedSendMailBoot } from './PaymentReceivedMailBoot';
 import { PaymentReceivedSendMailForm } from './PaymentReceivedMailForm';
 import { PaymentReceivedSendMailPreview } from './PaymentReceivedMailPreviewTabs';
-// import { InvoiceSendMailFields } from './InvoiceSendMailFields';
 import { SendMailViewHeader } from '../../Estimates/SendMailViewDrawer/SendMailViewHeader';
 import { SendMailViewLayout } from '../../Estimates/SendMailViewDrawer/SendMailViewLayout';
 import { PaymentReceivedSendMailFields } from './PaymentReceivedMailFields';

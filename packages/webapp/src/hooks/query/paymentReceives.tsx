@@ -261,17 +261,32 @@ export function useSendPaymentReceiveMail(props) {
   );
 }
 
-export function usePaymentReceiveDefaultOptions(paymentReceiveId, props) {
-  return useRequestQuery(
+export interface GetPaymentReceivedMailStateResponse {
+  companyName: string;
+  customerName: string;
+  entries: Array<{ paymentAmountFormatted: string }>;
+  from: Array<string>;
+  fromOptions: Array<{ mail: string; label: string; primary: boolean }>;
+  paymentAmountFormatted: string;
+  paymentDate: string;
+  paymentDateFormatted: string;
+  to: Array<string>;
+  toOptions: Array<{ mail: string; label: string; primary: boolean }>;
+  totalFormatted: string;
+}
+
+export function usePaymentReceivedMailState(
+  paymentReceiveId: number,
+  props?: UseQueryOptions<GetPaymentReceivedMailStateResponse, Error>,
+): UseQueryResult<GetPaymentReceivedMailStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetPaymentReceivedMailStateResponse, Error>(
     [t.PAYMENT_RECEIVE_MAIL_OPTIONS, paymentReceiveId],
-    {
-      method: 'get',
-      url: `sales/payment_receives/${paymentReceiveId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+    () =>
+      apiRequest
+        .get(`sales/payment_receives/${paymentReceiveId}/mail`)
+        .then((res) => transformToCamelCase(res.data?.data)),
   );
 }
 

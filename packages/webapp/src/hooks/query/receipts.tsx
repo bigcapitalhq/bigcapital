@@ -237,17 +237,29 @@ export function useSendSaleReceiptMail(props) {
   );
 }
 
-export function useSaleReceiptDefaultOptions(invoiceId, props) {
-  return useRequestQuery(
-    [t.SALE_RECEIPT_MAIL_OPTIONS, invoiceId],
-    {
-      method: 'get',
-      url: `sales/receipts/${invoiceId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+export interface GetSaleReceiptMailStateResponse {
+  attachReceipt: boolean;
+  formatArgs: Record<string, any>;
+  from: string[];
+  fromOptions: Array<{ mail: string; label: string; primary: boolean; }>
+  message: string;
+  subject: string;
+  to: string[];
+  toOptions: Array<{ mail: string; label: string; primary: boolean; }>;
+}
+
+export function useSaleReceiptMailState(
+  receiptId: number,
+  props?: UseQueryOptions<GetSaleReceiptMailStateResponse, Error>,
+): UseQueryResult<GetSaleReceiptMailStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleReceiptMailStateResponse, Error>(
+    [t.SALE_RECEIPT_MAIL_OPTIONS, receiptId],
+    () =>
+      apiRequest
+        .get(`sales/receipts/${receiptId}/mail`)
+        .then((res) => transformToCamelCase(res.data.data)),
   );
 }
 

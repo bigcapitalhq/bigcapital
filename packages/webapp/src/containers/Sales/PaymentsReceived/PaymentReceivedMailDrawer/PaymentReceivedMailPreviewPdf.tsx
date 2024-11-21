@@ -7,7 +7,7 @@ import { PaymentReceivedMailPreviewHeader } from './PaymentReceivedMailPreviewHe
 
 export function PaymentReceivedSendMailPreviewPdf() {
   return (
-    <Stack>
+    <Stack flex={1}>
       <PaymentReceivedMailPreviewHeader />
 
       <Stack px={4} py={6}>

@@ -1,17 +1,19 @@
+import { Button, Intent } from "@blueprintjs/core";
+import { useFormikContext } from "formik";
 import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from "@/components";
 import { SendMailViewToAddressField } from "../../Estimates/SendMailViewDrawer/SendMailViewToAddressField";
 import { SendMailViewMessageField } from "../../Estimates/SendMailViewDrawer/SendMailViewMessageField";
-import { Button, Intent } from "@blueprintjs/core";
 import { useDrawerActions } from "@/hooks/state";
 import { useDrawerContext } from "@/components/Drawer/DrawerProvider";
-import { useFormikContext } from "formik";
-
-const items: Array<any> = [];
-const argsOptions: Array<any> = [];
+import { useSendReceiptFormatArgsOptions } from "./_hooks";
+import { useSendMailItems } from "../../Estimates/SendMailViewDrawer/hooks";
 
 export function ReceiptSendMailFormFields() {
+  const argsOptions = useSendReceiptFormatArgsOptions();
+  const items = useSendMailItems();
+
   return (
-    <Stack>
+    <Stack flex={1}>
       <Stack spacing={0} overflow="auto" flex="1" p={'30px'}>
         <SendMailViewToAddressField
           toMultiSelectProps={{ items }}

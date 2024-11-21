@@ -29,7 +29,7 @@ export default class PaymentReceive extends mixin(TenantModel, [
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['localAmount'];
+    return ['localAmount', 'total'];
   }
 
   /**
@@ -38,6 +38,10 @@ export default class PaymentReceive extends mixin(TenantModel, [
    */
   get localAmount() {
     return this.amount * this.exchangeRate;
+  }
+
+  get total() {
+    return this.paymentAmount;
   }
 
   /**
