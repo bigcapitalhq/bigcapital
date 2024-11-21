@@ -1,5 +1,11 @@
 // @ts-nocheck
-import { useQueryClient, useMutation, useQuery } from 'react-query';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseQueryOptions,
+  UseQueryResult,
+} from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { transformPagination, transformToCamelCase } from '@/utils';
@@ -257,13 +263,36 @@ export function useSendSaleEstimateMail(props = {}) {
   );
 }
 
+export interface SaleEstimateMailStateResponse {
+  attachEstimate: boolean;
+  companyLogoUri: string;
+  companyName: string;
+  customerName: string;
+  entries: Array<any>;
+  estimateDate: string;
+  formatArgs: {
+    customerName: string;
+    estimateAmount: string;
+  };
+  formattedEstimateDate: string;
+  from: Array<string>;
+  fromOptions: Array<any>;
+  message: string;
+  subject: string;
+  to: Array<string>;
+  toOptions: Array<any>;
+}
+
 /**
- *
+ * Retrieves the sale estimate mail state.
  * @param {number} estimateId
- * @param props
- * @returns
+ * @param {UseQueryOptions<SaleEstimateMailStateResponse, Error>} props
+ * @returns {UseQueryResult<SaleEstimateMailStateResponse, Error>}
  */
-export function useSaleEstimateMailState(estimateId: number, props?= {}) {
+export function useSaleEstimateMailState(
+  estimateId: number,
+  props?: UseQueryOptions<SaleEstimateMailStateResponse, Error>,
+): UseQueryResult<SaleEstimateMailStateResponse, Error> {
   const apiRequest = useApiRequest();
   return useQuery([t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId], () =>
     apiRequest

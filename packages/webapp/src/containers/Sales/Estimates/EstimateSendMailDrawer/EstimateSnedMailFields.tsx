@@ -1,17 +1,20 @@
 import { useFormikContext } from 'formik';
+import { Button, Intent } from '@blueprintjs/core';
 import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from '@/components';
 import { SendMailViewToAddressField } from '../SendMailViewDrawer/SendMailViewToAddressField';
 import { SendMailViewMessageField } from '../SendMailViewDrawer/SendMailViewMessageField';
-import { Button, Intent } from '@blueprintjs/core';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
+import { useSendEstimateFormatArgsOptions } from './hooks';
+import { useSendMailItems } from '../SendMailViewDrawer/hooks';
 
-const items: Array<any> = [];
-const argsOptions: Array<any> = [];
 
 export function EstimateSendMailFields() {
+  const argOptions = useSendEstimateFormatArgsOptions();
+  const items = useSendMailItems();
+
   return (
-    <Stack>
+    <Stack flex={1}>
       <Stack spacing={0} overflow="auto" flex="1" p={'30px'}>
         <SendMailViewToAddressField
           toMultiSelectProps={{ items }}
@@ -22,7 +25,7 @@ export function EstimateSendMailFields() {
           <FInputGroup name={'subject'} large fastField />
         </FFormGroup>
 
-        <SendMailViewMessageField argsOptions={argsOptions} />
+        <SendMailViewMessageField argsOptions={argOptions} />
 
         <Group>
           <FCheckbox name={'attachPdf'} label={'Attach PDF'} />
