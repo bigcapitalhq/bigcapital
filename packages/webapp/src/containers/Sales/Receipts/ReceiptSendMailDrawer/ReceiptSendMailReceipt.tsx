@@ -5,7 +5,7 @@ import {
   SendMailReceiptProps,
 } from '../../Estimates/SendMailViewDrawer/SendMailViewReceiptPreview';
 
-interface ReceiptSendMailReceiptProps extends SendMailReceiptProps {
+export interface ReceiptSendMailReceiptProps extends SendMailReceiptProps {
   // # Company name.
   companyLogoUri?: string;
   companyName: string;

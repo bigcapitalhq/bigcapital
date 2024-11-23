@@ -1,23 +1,14 @@
 import { css } from '@emotion/css';
-import { PaymentReceivedMailReceipt } from './PaymentReceivedMailReceipt';
+import { ComponentType, useMemo } from 'react';
+import {
+  PaymentReceivedMailReceipt,
+  PaymentReceivedMailReceiptProps,
+} from './PaymentReceivedMailReceipt';
 import { PaymentReceivedMailPreviewHeader } from './PaymentReceivedMailPreviewHeader';
 import { Stack } from '@/components';
-
-const defaultPaymentReceiptMailProps = {
-  companyName: 'Company Name',
-  companyLogoUri: 'https://via.placeholder.com/150',
-  primaryColor: 'rgb(0, 82, 204)',
-  paymentDate: '2021-01-01',
-  paymentDateLabel: 'Payment Date',
-  total: '100.00',
-  totalLabel: 'Total',
-  paymentNumber: '123456',
-  paymentNumberLabel: 'Payment #',
-  message: 'Thank you for your payment!',
-  subtotal: '100.00',
-  subtotalLabel: 'Subtotal',
-  items: [{ label: 'Invoice 1', total: '100.00' }],
-};
+import { useSendPaymentReceivedtMailMessage } from './_hooks';
+import { usePaymentReceivedSendMailBoot } from './PaymentReceivedMailBoot';
+import { defaultPaymentReceiptMailProps } from './_constants';
 
 export function PaymentReceivedMailPreviewReceipt() {
   return (
@@ -25,8 +16,7 @@ export function PaymentReceivedMailPreviewReceipt() {
       <PaymentReceivedMailPreviewHeader />
 
       <Stack px={4} py={6}>
-        <PaymentReceivedMailReceipt
-          {...defaultPaymentReceiptMailProps}
+        <PaymentReceivedMailReceiptPreviewConnected
           className={css`
             margin: 0 auto;
             border-radius: 5px !important;
@@ -39,3 +29,43 @@ export function PaymentReceivedMailPreviewReceipt() {
     </Stack>
   );
 }
+
+/**
+ * Injects props from invoice mail state into the InvoiceMailReceiptPreview component.
+ */
+const withPaymentReceivedMailReceiptPreviewProps = <
+  P extends PaymentReceivedMailReceiptProps,
+>(
+  WrappedComponent: ComponentType<P & PaymentReceivedMailReceiptProps>,
+) => {
+  return function WithInvoiceMailReceiptPreviewProps(props: P) {
+    const message = useSendPaymentReceivedtMailMessage();
+    const { paymentReceivedMailState } = usePaymentReceivedSendMailBoot();
+
+    const items = useMemo(
+      () =>
+        paymentReceivedMailState?.entries?.map((entry: any) => ({
+          quantity: entry.quantity,
+          total: entry.totalFormatted,
+          label: entry.name,
+        })),
+      [paymentReceivedMailState?.entries],
+    );
+
+    const mailPaymentReceivedPreviewProps = {
+      ...defaultPaymentReceiptMailProps,
+      companyName: paymentReceivedMailState?.companyName,
+      companyLogoUri: paymentReceivedMailState?.companyLogoUri,
+      primaryColor: paymentReceivedMailState?.primaryColor,
+      total: paymentReceivedMailState?.totalFormatted,
+      subtotal: paymentReceivedMailState?.subtotalFormatted,
+      paymentNumber: paymentReceivedMailState?.paymentNumber,
+      items,
+      message,
+    };
+    return <WrappedComponent {...mailPaymentReceivedPreviewProps} {...props} />;
+  };
+};
+
+export const PaymentReceivedMailReceiptPreviewConnected =
+  withPaymentReceivedMailReceiptPreviewProps(PaymentReceivedMailReceipt);

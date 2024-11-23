@@ -26,7 +26,10 @@ export class GetPaymentReceivedMailStateTransformer extends PaymentReceiveTransf
       'total',
       'totalFormatted',
 
-      'paymentNo',
+      'subtotal',
+      'subtotalFormatted',
+
+      'paymentNumber',
 
       'entries',
 
@@ -88,11 +91,50 @@ export class GetPaymentReceivedMailStateTransformer extends PaymentReceiveTransf
   };
 
   /**
+   * Retrieves the payment amount.
+   * @param payment
+   * @returns {number}
+   */
+  protected total = (payment) => {
+    return this.formatNumber(payment.amount, {
+      money: false,
+    });
+  };
+
+  /**
    * Retrieves the formatted payment amount.
    * @returns {string}
    */
   protected totalFormatted = (payment) => {
     return this.formatMoney(payment.total);
+  };
+
+  /**
+   * Retrieves the payment amount.
+   * @param payment
+   * @returns {number}
+   */
+  protected subtotal = (payment) => {
+    return this.formatNumber(payment.amount, {
+      money: false,
+    });
+  };
+
+  /**
+   * Retrieves the formatted payment amount.
+   * @returns {string}
+   */
+  protected subtotalFormatted = (payment) => {
+    return this.formatMoney(payment.total);
+  };
+
+  /**
+   * Retrieves the payment number.
+   * @param payment
+   * @returns {string}
+   */
+  protected paymentNumber = (payment) => {
+    return payment.paymentReceiveNo;
   };
 
   /**

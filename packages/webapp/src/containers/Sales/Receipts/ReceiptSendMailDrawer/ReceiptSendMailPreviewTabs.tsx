@@ -1,8 +1,17 @@
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Tab } from '@blueprintjs/core';
 import { SendMailViewPreviewTabs } from '../../Estimates/SendMailViewDrawer/SendMailViewPreviewTabs';
-import { ReceiptSendMailPreview } from './ReceiptSendMailPreview';
-import { ReceiptSendMailPdfPreview } from './ReceiptSendMailPdfPreview';
+
+const ReceiptSendMailPreview = lazy(() =>
+  import('./ReceiptSendMailPreview').then((module) => ({
+    default: module.ReceiptSendMailPreview,
+  })),
+);
+const ReceiptSendMailPdfPreview = lazy(() =>
+  import('./ReceiptSendMailPdfPreview').then((module) => ({
+    default: module.ReceiptSendMailPdfPreview,
+  })),
+);
 
 export function ReceiptSendMailPreviewTabs() {
   return (

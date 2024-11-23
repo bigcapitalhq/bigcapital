@@ -32,6 +32,7 @@ export class GetPaymentReceivedMailState {
       .findById(paymentId)
       .withGraphFetched('customer')
       .withGraphFetched('entries.invoice')
+      .withGraphFetched('pdfTemplate')
       .throwIfNotFound();
 
     const mailOptions =

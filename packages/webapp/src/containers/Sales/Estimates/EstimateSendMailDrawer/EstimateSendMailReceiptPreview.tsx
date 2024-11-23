@@ -1,39 +1,20 @@
 import { css } from '@emotion/css';
-import { EstimateSendMailReceipt } from './EstimateSendMailReceipt';
+import { ComponentType, useMemo } from 'react';
+import { EstimateSendMailReceipt, EstimateSendMailReceiptProps } from './EstimateSendMailReceipt';
 import { EstimateSendMailPreviewHeader } from './EstimateSendMailPreviewHeader';
 import { Stack } from '@/components';
+import { useEstimateSendMailBoot } from './EstimateSendMailBoot';
+import { useSendEstimateMailMessage } from './hooks';
+import { defaultEstimateMailReceiptProps } from './_constants';
 
-const defaultEstimateMailReceiptProps = {
-  companyName: 'Bigcapital Technology, Inc.',
-  companyLogoUri: ' ',
 
-  total: '$1,000.00',
-  subtotal: '$1,000.00',
-  estimateNumber: 'INV-0001',
-  expirationDate: '2 Oct 2024',
-  dueAmount: '$1,000.00',
-  items: [{ label: 'Web development', total: '$1000.00', quantity: 1 }],
-  message: `Hi Ahmed Bouhuolia,
-
-Here's invoice # INV-00002 for $738.30
-
-The amount outstanding of $737.30 is due on 01 Feb 2023.
-
-From your online payment page you can print a PDF or view your outstanding bills.
-
-If you have any questions, please let us know.
-
-Thanks,
-Bigcapital`,
-};
 export const EstimateSendMailReceiptPreview = () => {
   return (
     <Stack>
       <EstimateSendMailPreviewHeader />
 
       <Stack px={4} py={6}>
-        <EstimateSendMailReceipt
-          {...defaultEstimateMailReceiptProps}
+        <EstimateSendMailReceiptConnected
           className={css`
             margin: 0 auto;
             border-radius: 5px !important;
@@ -46,3 +27,44 @@ export const EstimateSendMailReceiptPreview = () => {
     </Stack>
   );
 };
+
+/**
+ * Injects props from estimate mail state into the `EstimateSendMailReceipt` component.
+ */
+const withEstimateMailReceiptPreviewProps = <
+  P extends EstimateSendMailReceiptProps,
+>(
+  WrappedComponent: ComponentType<P & EstimateSendMailReceiptProps>,
+) => {
+  return function WithInvoiceMailReceiptPreviewProps(props: P) {
+    const { estimateMailState } = useEstimateSendMailBoot();
+    const message = useSendEstimateMailMessage();
+
+    const items = useMemo(
+      () =>
+        estimateMailState?.entries?.map((entry: any) => ({
+          quantity: entry.quantity,
+          total: entry.totalFormatted,
+          label: entry.name,
+        })),
+      [estimateMailState?.entries],
+    );
+
+    const mailReceiptPreviewProps = {
+      ...defaultEstimateMailReceiptProps,
+      companyName: estimateMailState?.companyName,
+      companyLogoUri: estimateMailState?.companyLogoUri,
+      primaryColor: estimateMailState?.primaryColor,
+      total: estimateMailState?.totalFormatted,
+      expirationDate: estimateMailState?.expirationDateFormatted,
+      estimateNumber: estimateMailState?.estimateNumber,
+      estimateDate: estimateMailState?.estimateDateFormatted,
+      items,
+      message
+    };
+    return <WrappedComponent {...mailReceiptPreviewProps} {...props} />;
+  };
+};
+const EstimateSendMailReceiptConnected = withEstimateMailReceiptPreviewProps(
+  EstimateSendMailReceipt
+);

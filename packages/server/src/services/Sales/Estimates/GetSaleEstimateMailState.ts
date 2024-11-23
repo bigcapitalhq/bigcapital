@@ -1,9 +1,10 @@
-import { Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { SendSaleEstimateMail } from './SendSaleEstimateMail';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { GetSaleEstimateMailStateTransformer } from './GetSaleEstimateMailStateTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
+@Service()
 export class GetSaleEstimateMailState {
   @Inject()
   private estimateMail: SendSaleEstimateMail;

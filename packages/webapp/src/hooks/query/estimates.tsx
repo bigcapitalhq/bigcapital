@@ -269,12 +269,27 @@ export interface SaleEstimateMailStateResponse {
   companyName: string;
   customerName: string;
   entries: Array<any>;
+
   estimateDate: string;
+  estimateDateFormatted: string;
+
+  expirationDate: string;
+  expirationDateFormatted: string;
+
+  primaryColor: string;
+
+  total: number;
+  totalFormatted: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
+  estimateNumber: string;
+
   formatArgs: {
     customerName: string;
     estimateAmount: string;
   };
-  formattedEstimateDate: string;
   from: Array<string>;
   fromOptions: Array<any>;
   message: string;

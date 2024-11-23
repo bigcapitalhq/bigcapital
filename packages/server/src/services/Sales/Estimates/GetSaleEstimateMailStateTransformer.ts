@@ -9,7 +9,10 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
   public includeAttributes = (): string[] => {
     return [
       'estimateDate',
-      'formattedEstimateDate',
+      'estimateDateFormatted',
+
+      'expirationDate',
+      'expirationDateFormatted',
 
       'total',
       'totalFormatted',
@@ -17,8 +20,7 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
       'subtotal',
       'subtotalFormatted',
 
-      'estimateNo',
-
+      'estimateNumber',
       'entries',
 
       'companyName',
@@ -62,9 +64,64 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
   };
 
   /**
-   *
-   * @param invoice
+   * Retrieves the estimate number.
+   */
+  protected estimateDateFormatted = (estimate) => {
+    return this.formattedEstimateDate(estimate);
+  };
+
+  /**
+   * Retrieves the expiration date of the estimate.
+   * @param estimate
+   * @returns {string}
+   */
+  protected expirationDateFormatted = (estimate) => {
+    return this.formattedExpirationDate(estimate);
+  };
+
+  /**
+   * Retrieves the total amount of the estimate.
+   * @param estimate
    * @returns
+   */
+  protected total(estimate) {
+    return estimate.amount;
+  }
+
+  /**
+   * Retrieves the subtotal amount of the estimate.
+   * @param estimate
+   * @returns {number}
+   */
+  protected subtotal(estimate) {
+    return estimate.amount;
+  }
+
+  /**
+   * Retrieves the formatted total of the estimate.
+   * @param estimate
+   * @returns {string}
+   */
+  protected totalFormatted(estimate) {
+    return this.formatMoney(estimate.amount, {
+      currencyCode: estimate.currencyCode,
+      money: true,
+    });
+  }
+
+  /**
+   * Retrieves the formatted subtotal of the estimate.
+   * @param estimate
+   * @returns {string}
+   */
+  protected subtotalFormatted = (estimate) => {
+    return this.formatNumber(estimate.amount, { money: false });
+  };
+
+  /**
+   * Retrieves the estimate entries.
+   * @param invoice
+   * @returns {Array}
    */
   protected entries = (invoice) => {
     return this.item(
@@ -92,9 +149,18 @@ class GetSaleEstimateMailStateEntryTransformer extends ItemEntryTransformer {
     return ['*'];
   };
 
+  /**
+   * Item name.
+   * @param entry
+   * @returns
+   */
+  public name = (entry) => {
+    return entry.item.name;
+  };
+
   public includeAttributes = (): string[] => {
     return [
-      'description',
+      'name',
       'quantity',
       'unitPrice',
       'unitPriceFormatted',

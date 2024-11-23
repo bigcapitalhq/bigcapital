@@ -264,15 +264,29 @@ export function useSendPaymentReceiveMail(props) {
 export interface GetPaymentReceivedMailStateResponse {
   companyName: string;
   customerName: string;
+
   entries: Array<{ paymentAmountFormatted: string }>;
+
   from: Array<string>;
   fromOptions: Array<{ mail: string; label: string; primary: boolean }>;
+
   paymentAmountFormatted: string;
+
   paymentDate: string;
   paymentDateFormatted: string;
+
   to: Array<string>;
   toOptions: Array<{ mail: string; label: string; primary: boolean }>;
+
+  total: number;
   totalFormatted: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
+  paymentNumber: string;
+  companyLogoUri?: string;
+  primaryColor?: string;
 }
 
 export function usePaymentReceivedMailState(

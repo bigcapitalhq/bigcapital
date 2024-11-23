@@ -1,22 +1,14 @@
+import { ComponentType } from 'react';
+import { css } from '@emotion/css';
 import { Stack } from '@/components';
 import { ReceiptSendMailPreviewHeader } from './ReceiptSendMailPreviewHeader';
-import { ReceiptSendMailReceipt } from './ReceiptSendMailReceipt';
-import { css } from '@emotion/css';
-
-const defaultReceiptMailProps = {
-  companyLogoUri: 'https://via.placeholder.com/150',
-  companyName: 'Company Name',
-  receiptNumber: '1234',
-  total: '1000',
-  message: 'Thank you for your business!',
-  items: [
-    { label: 'Item 1', quantity: 1, total: '500' },
-    { label: 'Item 2', quantity: 2, total: '500' },
-  ],
-  subtotal: '1000',
-  showViewReceiptButton: true,
-  viewReceiptButtonLabel: 'View Receipt',
-};
+import {
+  ReceiptSendMailReceipt,
+  ReceiptSendMailReceiptProps,
+} from './ReceiptSendMailReceipt';
+import { defaultReceiptMailProps } from './_constants';
+import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
+import { useSendReceiptMailMessage } from './_hooks';
 
 export function ReceiptSendMailPreview() {
   return (
@@ -24,8 +16,7 @@ export function ReceiptSendMailPreview() {
       <ReceiptSendMailPreviewHeader />
 
       <Stack px={4} py={6}>
-        <ReceiptSendMailReceipt
-          {...defaultReceiptMailProps}
+        <ReceiptMailPreviewConnected
           className={css`
             margin: 0 auto;
             border-radius: 5px !important;
@@ -38,3 +29,45 @@ export function ReceiptSendMailPreview() {
     </Stack>
   );
 }
+
+/**
+ * Injects props from receipt mail state into the `ReceiptMailPreviewConnected` component.
+ */
+const withReceiptMailReceiptPreviewProps = <
+  P extends ReceiptSendMailReceiptProps,
+>(
+  WrappedComponent: ComponentType<P & ReceiptSendMailReceiptProps>,
+) => {
+  return function WithInvoiceMailReceiptPreviewProps(props: P) {
+    const message = useSendReceiptMailMessage();
+    const { receiptMailState } = useReceiptSendMailBoot();
+
+    // const items = useMemo(
+    //   () =>
+    //     invoiceMailState?.entries?.map((entry: any) => ({
+    //       quantity: entry.quantity,
+    //       total: entry.totalFormatted,
+    //       label: entry.name,
+    //     })),
+    //   [invoiceMailState?.entries],
+    // );
+
+    const mailReceiptPreviewProps = {
+      ...defaultReceiptMailProps,
+      // companyName: receiptMailState?.companyName,
+      // companyLogoUri: receiptMailState?.companyLogoUri,
+      // primaryColor: receiptMailState?.primaryColor,
+      // total: receiptMailState?.totalFormatted,
+      // dueDate: receiptMailState?.dueDateFormatted,
+      // dueAmount: invoiceMailState?.dueAmountFormatted,
+      // invoiceNumber: invoiceMailState?.invoiceNo,
+      // items,
+      message,
+    };
+    return <WrappedComponent {...mailReceiptPreviewProps} {...props} />;
+  };
+};
+
+export const ReceiptMailPreviewConnected = withReceiptMailReceiptPreviewProps(
+  ReceiptSendMailReceipt,
+);
