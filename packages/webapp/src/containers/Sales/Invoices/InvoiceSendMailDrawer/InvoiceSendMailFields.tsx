@@ -13,7 +13,7 @@ export function InvoiceSendMailFields() {
   const argsOptions = useSendInvoiceFormatArgsOptions();
 
   return (
-    <Stack>
+    <Stack flex={1}>
       <Stack spacing={0} overflow="auto" flex="1" p={'30px'}>
         <SendMailViewToAddressField
           toMultiSelectProps={{ items }}

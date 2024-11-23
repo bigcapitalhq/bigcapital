@@ -30,7 +30,6 @@ import {
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
-import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Estimate read-only details actions bar of the drawer.
@@ -44,6 +43,7 @@ function EstimateDetailActionsBar({
 
   // #withDrawerActions
   closeDrawer,
+  openDrawer
 }) {
   // Estimate details drawer context.
   const { estimateId, estimate } = useEstimateDetailDrawerContext();
@@ -80,7 +80,7 @@ function EstimateDetailActionsBar({
   };
   // Handles the estimate mail dialog.
   const handleMailEstimate = () => {
-    openDialog(DialogsName.EstimateMail, { estimateId });
+    openDrawer(DRAWERS.ESTIMATE_SEND_MAIL, { estimateId });
   };
 
   return (
