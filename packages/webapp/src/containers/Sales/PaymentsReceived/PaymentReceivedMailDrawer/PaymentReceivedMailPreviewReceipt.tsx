@@ -45,9 +45,8 @@ const withPaymentReceivedMailReceiptPreviewProps = <
     const items = useMemo(
       () =>
         paymentReceivedMailState?.entries?.map((entry: any) => ({
-          quantity: entry.quantity,
-          total: entry.totalFormatted,
-          label: entry.name,
+          total: entry.paidAmount,
+          label: entry.invoiceNumber,
         })),
       [paymentReceivedMailState?.entries],
     );

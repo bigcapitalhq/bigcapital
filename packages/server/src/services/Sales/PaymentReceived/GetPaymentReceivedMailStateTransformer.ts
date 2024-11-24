@@ -106,7 +106,7 @@ export class GetPaymentReceivedMailStateTransformer extends PaymentReceiveTransf
    * @returns {string}
    */
   protected totalFormatted = (payment) => {
-    return this.formatMoney(payment.total);
+    return this.formatMoney(payment.amount);
   };
 
   /**
@@ -125,7 +125,7 @@ export class GetPaymentReceivedMailStateTransformer extends PaymentReceiveTransf
    * @returns {string}
    */
   protected subtotalFormatted = (payment) => {
-    return this.formatMoney(payment.total);
+    return this.formatMoney(payment.amount);
   };
 
   /**
@@ -163,7 +163,7 @@ export class GetPaymentReceivedEntryMailState extends PaymentReceivedEntryTransf
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['paymentAmountFormatted'];
+    return ['paidAmount', 'invoiceNumber'];
   };
 
   /**
@@ -172,5 +172,23 @@ export class GetPaymentReceivedEntryMailState extends PaymentReceivedEntryTransf
    */
   public excludeAttributes = (): string[] => {
     return ['*'];
+  };
+
+  /**
+   *
+   * @param entry
+   * @returns {string}
+   */
+  public paidAmount = (entry) => {
+    return this.paymentAmountFormatted(entry);
+  };
+
+  /**
+   *
+   * @param entry
+   * @returns {string}
+   */
+  public invoiceNumber = (entry) => {
+    return entry.invoice.invoiceNo;
   };
 }
