@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import { Intent } from '@blueprintjs/core';
 import { PaymentReceivedSendMailFormSchema } from './_types';
 import { AppToaster } from '@/components';
-import { useSendSaleInvoiceMail } from '@/hooks/query';
+import { useSendPaymentReceiveMail, } from '@/hooks/query';
 import { usePaymentReceivedSendMailBoot } from './PaymentReceivedMailBoot';
 import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
@@ -27,7 +27,7 @@ interface PaymentReceivedSendMailFormProps {
 export function PaymentReceivedSendMailForm({
   children,
 }: PaymentReceivedSendMailFormProps) {
-  const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
+  const { mutateAsync: sendPaymentMail } = useSendPaymentReceiveMail();
   const { paymentReceivedId, paymentReceivedMailState } =
     usePaymentReceivedSendMailBoot();
 
@@ -43,7 +43,7 @@ export function PaymentReceivedSendMailForm({
     { setSubmitting }: FormikHelpers<PaymentReceivedSendMailFormValues>,
   ) => {
     setSubmitting(true);
-    sendInvoiceMail({ id: paymentReceivedId, values: { ...values } })
+    sendPaymentMail([paymentReceivedId, values])
       .then(() => {
         AppToaster.show({
           message: 'The invoice mail has been sent to the customer.',

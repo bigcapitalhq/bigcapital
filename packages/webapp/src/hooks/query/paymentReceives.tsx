@@ -244,7 +244,7 @@ export function usePdfPaymentReceive(paymentReceiveId) {
   return useRequestPdf({ url: `sales/payment_receives/${paymentReceiveId}` });
 }
 
-export function useSendPaymentReceiveMail(props) {
+export function useSendPaymentReceiveMail(props?: any) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 

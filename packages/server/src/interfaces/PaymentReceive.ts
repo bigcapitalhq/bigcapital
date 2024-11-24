@@ -177,7 +177,9 @@ export type IPaymentReceiveGLCommonEntry = Pick<
   | 'branchId'
 >;
 
-export interface PaymentReceiveMailOpts extends CommonMailOptions {}
+export interface PaymentReceiveMailOpts extends CommonMailOptions {
+  attachPdf?: boolean;
+}
 
 export interface PaymentReceiveMailOptsDTO extends CommonMailOptionsDTO {}
 
@@ -238,7 +240,6 @@ export interface PaymentReceivedPdfTemplateAttributes {
   showPaymentReceivedDate: boolean;
   paymentReceivedDateLabel: string;
 }
-
 
 export interface IPaymentReceivedState {
   defaultTemplateId: number;

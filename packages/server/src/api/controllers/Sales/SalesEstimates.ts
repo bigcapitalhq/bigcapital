@@ -130,8 +130,18 @@ export default class SalesEstimatesController extends BaseController {
       [
         ...this.validateSpecificEstimateSchema,
         body('subject').isString().optional(),
+
         body('from').isString().optional(),
-        body('to').isString().optional(),
+
+        body('to').isArray().exists(),
+        body('to.*').isString().isEmail().optional(),
+
+        body('cc').isArray().optional({ nullable: true }),
+        body('cc.*').isString().isEmail().optional(),
+
+        body('bcc').isArray().optional({ nullable: true }),
+        body('bcc.*').isString().isEmail().optional(),
+
         body('body').isString().optional(),
         body('attach_invoice').optional().isBoolean().toBoolean(),
       ],
@@ -567,8 +577,9 @@ export default class SalesEstimatesController extends BaseController {
     const { tenantId } = req;
 
     try {
-      const data =
-        await this.saleEstimatesApplication.getSaleEstimateState(tenantId);
+      const data = await this.saleEstimatesApplication.getSaleEstimateState(
+        tenantId
+      );
       return res.status(200).send({ data });
     } catch (error) {
       next(error);

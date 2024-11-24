@@ -130,9 +130,18 @@ export default class PaymentReceivesController extends BaseController {
       [
         ...this.paymentReceiveValidation,
         body('subject').isString().optional(),
+
         body('from').isString().optional(),
-        body('to').isString().optional(),
-        body('body').isString().optional(),
+
+        body('to').isArray().exists(),
+        body('to.*').isString().isEmail().optional(),
+
+        body('cc').isArray().optional({ nullable: true }),
+        body('cc.*').isString().isEmail().optional(),
+
+        body('bcc').isArray().optional({ nullable: true }),
+        body('bcc.*').isString().isEmail().optional(),
+
         body('attach_invoice').optional().isBoolean().toBoolean(),
       ],
       this.sendPaymentReceiveByMail.bind(this),

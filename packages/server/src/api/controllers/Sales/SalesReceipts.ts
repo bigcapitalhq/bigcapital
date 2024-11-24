@@ -56,8 +56,18 @@ export default class SalesReceiptsController extends BaseController {
       [
         ...this.specificReceiptValidationSchema,
         body('subject').isString().optional(),
+
         body('from').isString().optional(),
-        body('to').isString().optional(),
+
+        body('to').isArray().exists(),
+        body('to.*').isString().isEmail().optional(),
+
+        body('cc').isArray().optional({ nullable: true }),
+        body('cc.*').isString().isEmail().optional(),
+
+        body('bcc').isArray().optional({ nullable: true }),
+        body('bcc.*').isString().isEmail().optional(),
+
         body('body').isString().optional(),
         body('attach_receipt').optional().isBoolean().toBoolean(),
       ],
@@ -399,8 +409,9 @@ export default class SalesReceiptsController extends BaseController {
 
     // Retrieves receipt in pdf format.
     try {
-      const data =
-        await this.saleReceiptsApplication.getSaleReceiptState(tenantId);
+      const data = await this.saleReceiptsApplication.getSaleReceiptState(
+        tenantId
+      );
       return res.status(200).send({ data });
     } catch (error) {
       next(error);

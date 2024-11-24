@@ -4,6 +4,7 @@ import { GetPaymentReceivedMailStateTransformer } from './GetPaymentReceivedMail
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { Inject, Service } from 'typedi';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
+import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
 
 @Service()
 export class GetPaymentReceivedMailState {
@@ -11,7 +12,7 @@ export class GetPaymentReceivedMailState {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private contactMailNotification: ContactMailNotification;
+  private paymentReceivedMail: SendPaymentReceiveMailNotification;
 
   @Inject()
   private transformer: TransformerInjectable;
@@ -35,12 +36,10 @@ export class GetPaymentReceivedMailState {
       .withGraphFetched('pdfTemplate')
       .throwIfNotFound();
 
-    const mailOptions =
-      await this.contactMailNotification.getDefaultMailOptions(
-        tenantId,
-        paymentReceive.customerId
-      );
-
+    const mailOptions = await this.paymentReceivedMail.getMailOptions(
+      tenantId,
+      paymentId
+    );
     const transformed = await this.transformer.transform(
       tenantId,
       paymentReceive,

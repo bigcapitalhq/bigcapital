@@ -40,7 +40,7 @@ export function EstimateSendMailForm({ children }: EstimateSendMailFormProps) {
     { setSubmitting }: FormikHelpers<EstimateSendMailFormValues>,
   ) => {
     setSubmitting(true);
-    sendEstimateMail({ id: estimateId, values: { ...values } })
+    sendEstimateMail([estimateId, values])
       .then(() => {
         AppToaster.show({
           message: 'The invoice mail has been sent to the customer.',

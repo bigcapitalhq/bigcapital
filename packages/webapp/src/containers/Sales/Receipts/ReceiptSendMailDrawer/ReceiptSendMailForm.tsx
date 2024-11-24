@@ -40,7 +40,7 @@ export function ReceiptSendMailForm({ children }: ReceiptSendMailFormProps) {
     { setSubmitting }: FormikHelpers<ReceiptSendMailFormValues>,
   ) => {
     setSubmitting(true);
-    sendReceiptMail({ id: receiptId, values: { ...values } })
+    sendReceiptMail([receiptId, values])
       .then(() => {
         AppToaster.show({
           message: 'The receipt mail has been sent to the customer.',
