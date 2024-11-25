@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from '@/components';

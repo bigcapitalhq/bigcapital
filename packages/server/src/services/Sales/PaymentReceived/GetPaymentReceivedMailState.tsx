@@ -3,7 +3,6 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { GetPaymentReceivedMailStateTransformer } from './GetPaymentReceivedMailStateTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { Inject, Service } from 'typedi';
-import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
 
 @Service()

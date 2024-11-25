@@ -5,6 +5,8 @@ import {
   UseQueryOptions,
   UseQueryResult,
   useQuery,
+  UseMutationOptions,
+  UseMutationResult,
 } from 'react-query';
 import useApiRequest from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
@@ -244,11 +246,45 @@ export function usePdfPaymentReceive(paymentReceiveId) {
   return useRequestPdf({ url: `sales/payment_receives/${paymentReceiveId}` });
 }
 
-export function useSendPaymentReceiveMail(props?: any) {
+interface SendPaymentReceiveMailValues {
+  to: string[] | string;
+  cc?: string[] | string,
+  bcc?: string[] | string,
+  subject: string;
+  message: string;
+  from?: string[] | string;
+  attachPdf?: boolean;
+}
+
+interface SendPaymentReceiveMailResponse {
+  success: boolean;
+  message?: string;
+}
+
+type SendPaymentReceiveMailMutation = UseMutationResult<
+  SendPaymentReceiveMailResponse,
+  Error,
+  [number, SendPaymentReceiveMailValues],
+  unknown
+>;
+
+export function useSendPaymentReceiveMail(
+  props?: Partial<
+    UseMutationOptions<
+      SendPaymentReceiveMailResponse,
+      Error,
+      [number, SendPaymentReceiveMailValues]
+    >
+  >,
+): SendPaymentReceiveMailMutation {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
+  return useMutation<
+    SendPaymentReceiveMailResponse,
+    Error,
+    [number, SendPaymentReceiveMailValues]
+  >(
     ([id, values]) =>
       apiRequest.post(`sales/payment_receives/${id}/mail`, values),
     {
@@ -263,14 +299,15 @@ export function useSendPaymentReceiveMail(props?: any) {
 
 export interface GetPaymentReceivedMailStateResponse {
   companyName: string;
+  companyLogoUri?: string;
+
+  primaryColor?: string;
   customerName: string;
 
-  entries: Array<{ paymentAmountFormatted: string }>;
+  entries: Array<{ invoiceNumber: string; paidAmount: string }>;
 
   from: Array<string>;
   fromOptions: Array<{ mail: string; label: string; primary: boolean }>;
-
-  paymentAmountFormatted: string;
 
   paymentDate: string;
   paymentDateFormatted: string;
@@ -285,8 +322,7 @@ export interface GetPaymentReceivedMailStateResponse {
   subtotalFormatted: string;
 
   paymentNumber: string;
-  companyLogoUri?: string;
-  primaryColor?: string;
+  formatArgs: Record<string, any>;
 }
 
 export function usePaymentReceivedMailState(

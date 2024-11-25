@@ -83,14 +83,6 @@ export class GetPaymentReceivedMailStateTransformer extends PaymentReceiveTransf
   };
 
   /**
-   * Retrieves the formatted payment amount.
-   * @returns {string}
-   */
-  protected paymentAmountFormatted = (payment) => {
-    return this.formatMoney(payment.paymentAmount);
-  };
-
-  /**
    * Retrieves the payment amount.
    * @param payment
    * @returns {number}
@@ -175,7 +167,7 @@ export class GetPaymentReceivedEntryMailState extends PaymentReceivedEntryTransf
   };
 
   /**
-   *
+   * Retrieves the paid amount.
    * @param entry
    * @returns {string}
    */
@@ -184,7 +176,7 @@ export class GetPaymentReceivedEntryMailState extends PaymentReceivedEntryTransf
   };
 
   /**
-   *
+   * Retrieves the invoice number.
    * @param entry
    * @returns {string}
    */
