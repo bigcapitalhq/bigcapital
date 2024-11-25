@@ -22,6 +22,9 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
       'total',
       'totalLabel',
 
+      'subtotal',
+      'subtotalLabel',
+
       'dueAmount',
       'dueAmountLabel',
 
@@ -57,7 +60,7 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
   }
 
   /**
-   * Primary color
+   * Primary color.
    * @returns {string}
    */
   public primaryColor(): string {
@@ -69,7 +72,7 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public estimateNumber(): string {
-    return this.options.estimate.number;
+    return this.options.estimate.estimateNumber;
   }
 
   /**
@@ -77,7 +80,7 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public estimateNumberLabel(): string {
-    return 'Estimate Number';
+    return 'Estimate No: {estimateNumber}';
   }
 
   /**
@@ -85,7 +88,7 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public expirationDate(): string {
-    return this.options.estimate.expirationDate;
+    return this.options.estimate.formattedExpirationDate;
   }
 
   /**
@@ -93,14 +96,14 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public expirationDateLabel(): string {
-    return 'Expiration Date';
+    return 'Expiration Date: {expirationDate}';
   }
 
   /**
    * Estimate total.
    */
   public total(): string {
-    return this.options.estimate.totalFormatted;
+    return this.options.estimate.formattedAmount;
   }
 
   /**
@@ -109,6 +112,21 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    */
   public totalLabel(): string {
     return 'Total';
+  }
+
+  /**
+   * Estimate subtotal.
+   */
+  public subtotal(): string {
+    return this.options.estimate.formattedAmount;
+  }
+
+  /**
+   * Estimate subtotal label.
+   * @returns {string}
+   */
+  public subtotalLabel(): string {
+    return 'Subtotal';
   }
 
   /**

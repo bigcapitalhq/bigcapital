@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Tab, } from '@blueprintjs/core';
+import { Tab } from '@blueprintjs/core';
 import { SendMailViewPreviewTabs } from '../../Estimates/SendMailViewDrawer/SendMailViewPreviewTabs';
 
 const InvoiceMailReceiptPreviewConnected = lazy(() =>

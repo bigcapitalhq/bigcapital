@@ -1,4 +1,5 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { PaymentReceivedEntryTransfromer } from './PaymentReceivedEntryTransformer';
 
 export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer {
   /**
@@ -14,6 +15,7 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
       'totalLabel',
       'paymentNumberLabel',
       'paymentNumber',
+      'items',
     ];
   };
 
@@ -66,8 +68,16 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
   }
 
   /**
+   * Subtotal.
+   * @returns {string}
+   */
+  public subtotal(): string {
+    return this.options.paymentReceived.formattedAmount;
+  }
+
+  /**
    * Payment number label.
-   * @returns
+   * @returns {string}
    */
   public paymentNumberLabel(): string {
     return 'Payment # {paymentNumber}';
@@ -79,5 +89,52 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
    */
   public paymentNumber(): string {
     return this.options.paymentReceived.paymentReceiveNumber;
+  }
+
+  /**
+   * Items.
+   * @returns
+   */
+  public items() {
+    return this.item(
+      this.options.paymentReceived.entries,
+      new GetPaymentReceivedMailTemplateItemAttrsTransformer()
+    );
+  }
+}
+
+class GetPaymentReceivedMailTemplateItemAttrsTransformer extends Transformer {
+  /**
+   * Included attributes.
+   * @returns {Array}
+   */
+  public includeAttributes = () => {
+    return ['label', 'total'];
+  };
+
+  /**
+   * Excluded attributes.
+   * @returns {string[]}
+   */
+  public excludeAttributes = () => {
+    return ['*'];
+  };
+
+  /**
+   *
+   * @param entry
+   * @returns
+   */
+  public label(entry) {
+    return entry.invoice.invoiceNo;
+  }
+
+  /**
+   *
+   * @param entry
+   * @returns
+   */
+  public total(entry) {
+    return entry.paymentAmountFormatted;
   }
 }

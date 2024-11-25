@@ -52,7 +52,7 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
    * @returns {string | null}
    */
   protected companyLogoUri = (invoice) => {
-    return invoice.pdfTemplate?.companyLogoUri;
+    return invoice.pdfTemplate?.companyLogoUri || null;
   };
 
   /**
@@ -60,7 +60,7 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
    * @returns {string}
    */
   protected primaryColor = (invoice) => {
-    return invoice.pdfTemplate?.attributes?.primaryColor;
+    return invoice.pdfTemplate?.attributes?.primaryColor || null;
   };
 
   /**

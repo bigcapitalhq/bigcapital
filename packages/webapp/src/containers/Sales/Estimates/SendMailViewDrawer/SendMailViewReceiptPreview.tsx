@@ -13,7 +13,7 @@ export function SendMailReceipt({
     <Stack
       bg="white"
       w={'100%'}
-      maxWidth={'500px'}
+      maxWidth={'450px'}
       p={'35px 25px'}
       borderRadius={'5px'}
       boxShadow={'0 10px 15px rgba(0, 0, 0, 0.05)'}
