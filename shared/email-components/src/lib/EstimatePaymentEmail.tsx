@@ -26,6 +26,10 @@ export interface EstimatePaymentEmailProps {
   total: string;
   totalLabel?: string;
 
+  // # Subtotal
+  subtotal: string;
+  subtotalLabel?: string;
+
   // # Estimate No#
   estimateNumber?: string;
   estimateNumberLabel?: string;
@@ -57,9 +61,13 @@ export const EstimatePaymentEmail: React.FC<
   // # Colors
   primaryColor = 'rgb(0, 82, 204)',
 
-  // # invoice total
+  // # Total
   total,
   totalLabel = 'Total',
+
+  // # Subtotal
+  subtotal,
+  subtotalLabel = 'Subtotal',
 
   // # Estimate No#
   estimateNumberLabel = 'Estimate No: {estimateNumber}',
@@ -128,6 +136,16 @@ export const EstimatePaymentEmail: React.FC<
                 </Column>
               </Row>
             ))}
+
+            <Row style={totalLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={totalLineItemLabelStyle}>{subtotalLabel}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={totalLineItemAmountStyle}>{subtotal}</Text>
+              </Column>
+            </Row>
 
             <Row style={totalLineRowStyle}>
               <Column width={'50%'}>

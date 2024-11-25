@@ -1,5 +1,6 @@
 import {
   Button,
+  Column,
   Container,
   Heading,
   render,
@@ -24,13 +25,14 @@ export interface PaymentReceivedEmailTemplateProps {
   total: string;
   totalLabel?: string;
 
+  // # Subtotal
+  subtotal: string;
+  subtotalLabel?: string;
+
   // # Items
-  items: Array<{ label: string; quantity: string; rate: string }>;
+  items: Array<{ label: string; total: string }>;
 
-  // # View payment button
-  viewPaymentButtonLabel?: string;
-  viewPaymentButtonUrl?: string;
-
+  // # Payment #
   paymentNumberLabel?: string;
   paymentNumber?: string;
 
@@ -57,56 +59,84 @@ export const PaymentReceivedEmailTemplate: React.FC<
   total = '$1,000.00',
   totalLabel = 'Total',
 
+  // # Subtotal
+  subtotal,
+  subtotalLabel = 'Subtotal',
+
   // # Items
   items,
 
-  message = '',
-
-  // # View invoice button
-  viewPaymentButtonLabel = 'View Payment',
-  viewPaymentButtonUrl,
+  // # Message
+  message,
 }) => {
-  return (
-    <EmailTemplateLayout preview={preview}>
-      <Container style={containerStyle}>
-        {companyLogoUri && (
-          <Section style={logoSectionStyle}>
-            <div
-              style={{
-                ...companyLogoStyle,
-                backgroundImage: `url("${companyLogoUri}")`,
-              }}
-            ></div>
+    return (
+      <EmailTemplateLayout preview={preview}>
+        <Container style={containerStyle}>
+          {companyLogoUri && (
+            <Section style={logoSectionStyle}>
+              <div
+                style={{
+                  ...companyLogoStyle,
+                  backgroundImage: `url("${companyLogoUri}")`,
+                }}
+              ></div>
+            </Section>
+          )}
+          <Section style={headerInfoStyle}>
+            <Row>
+              <Heading style={paymentCompanyNameStyle}>{companyName}</Heading>
+            </Row>
+            <Row>
+              <Text style={paymentAmountStyle}>{total}</Text>
+            </Row>
+            <Row>
+              <Text style={paymentNumberStyle}>
+                {paymentNumberLabel?.replace('{paymentNumber}', paymentNumber)}
+              </Text>
+            </Row>
           </Section>
-        )}
-        <Section style={headerInfoStyle}>
-          <Row>
-            <Heading style={invoiceCompanyNameStyle}>{companyName}</Heading>
-          </Row>
-          <Row>
-            <Text style={paymentAmountStyle}>{total}</Text>
-          </Row>
-          <Row>
-            <Text style={paymentNumberStyle}>
-              {paymentNumberLabel?.replace('{paymentNumber}', paymentNumber)}
-            </Text>
-          </Row>
-        </Section>
 
-        <Text style={invoiceMessageStyle}>{message}</Text>
-        <Button
-          href={viewPaymentButtonUrl}
-          style={{
-            ...viewInvoiceButtonStyle,
-            backgroundColor: primaryColor,
-          }}
-        >
-          {viewPaymentButtonLabel}
-        </Button>
-      </Container>
-    </EmailTemplateLayout>
-  );
-};
+          <Text style={paymentMessageStyle}>{message}</Text>
+
+          <Section style={totalsSectionStyle}>
+            {items.map((item, index) => (
+              <Row key={index} style={itemLineRowStyle}>
+                <Column width={'50%'}>
+                  <Text style={listItemLabelStyle}>{item.label}</Text>
+                </Column>
+
+                <Column width={'50%'}>
+                  <Text style={listItemAmountStyle}>
+                    {item.total}
+                  </Text>
+                </Column>
+              </Row>
+            ))}
+
+            <Row style={totalLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={totalLineItemLabelStyle}>{subtotalLabel}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={totalLineItemAmountStyle}>{subtotal}</Text>
+              </Column>
+            </Row>
+
+            <Row style={totalLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={totalLineItemLabelStyle}>{totalLabel}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={totalLineItemAmountStyle}>{total}</Text>
+              </Column>
+            </Row>
+          </Section>
+        </Container>
+      </EmailTemplateLayout>
+    );
+  };
 
 /**
  * Renders the payment received mail template to string
@@ -132,7 +162,6 @@ const headerInfoStyle: CSSProperties = {
   textAlign: 'center',
   marginBottom: 20,
 };
-const mainSectionStyle: CSSProperties = {};
 
 const paymentAmountStyle: CSSProperties = {
   margin: 0,
@@ -145,26 +174,14 @@ const paymentNumberStyle: CSSProperties = {
   color: '#404854',
 };
 
-const invoiceCompanyNameStyle: CSSProperties = {
+const paymentCompanyNameStyle: CSSProperties = {
   margin: 0,
   fontSize: '18px',
   fontWeight: 500,
   color: '#404854',
 };
 
-const viewInvoiceButtonStyle: CSSProperties = {
-  display: 'block',
-  cursor: 'pointer',
-  textAlign: 'center',
-  fontSize: 16,
-  padding: '10px 15px',
-  lineHeight: '1',
-  backgroundColor: 'rgb(0, 82, 204)',
-  color: '#fff',
-  borderRadius: '5px',
-};
-
-const invoiceMessageStyle: CSSProperties = {
+const paymentMessageStyle: CSSProperties = {
   whiteSpace: 'pre-line',
   margin: '0 0 20px 0',
   lineHeight: '20px',
@@ -185,4 +202,39 @@ const companyLogoStyle = {
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center center',
   backgroundSize: 'contain',
+};
+
+const totalLineRowStyle: CSSProperties = {
+  borderBottom: '1px solid #000',
+  height: 40,
+};
+
+const listItemLabelStyle: CSSProperties = {
+  margin: 0,
+};
+
+const totalLineItemLabelStyle: CSSProperties = {
+  ...listItemLabelStyle,
+  fontWeight: 500,
+};
+
+
+const listItemAmountStyle: CSSProperties = {
+  margin: 0,
+  textAlign: 'right',
+};
+
+const totalLineItemAmountStyle: CSSProperties = {
+  ...listItemAmountStyle,
+  fontWeight: 600,
+};
+
+const itemLineRowStyle: CSSProperties = {
+  borderBottom: '1px solid #D9D9D9',
+  height: 40,
+};
+
+const totalsSectionStyle = {
+  marginTop: '20px',
+  borderTop: '1px solid #D9D9D9',
 };

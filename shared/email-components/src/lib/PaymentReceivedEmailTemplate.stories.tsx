@@ -15,7 +15,11 @@ const Template: StoryFn<PaymentReceivedEmailTemplateProps> = (args) => (
 
 export const Default: StoryFn<PaymentReceivedEmailTemplateProps> =
   Template.bind({
-    message: `Hi Ahmed Bouhuolia,
+
+  });
+
+Default.args = {
+  message: `Hi Ahmed Bouhuolia,
 
 Here's invoice # INV-00005 for $1,000.00
 
@@ -27,6 +31,5 @@ If you have any questions, please let us know.
 
 Thanks,
 Bigcapital`,
-  });
-
-Default.args = {};
+  items: [{ label: 'INV-00001', total: '$1000.00' }]
+};

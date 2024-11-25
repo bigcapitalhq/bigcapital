@@ -24,7 +24,7 @@ EmailTemplate.CompanyLogo = ({ src }: { src: string }) => {
 const containerStyle: CSSProperties = {
   backgroundColor: '#fff',
   width: '100%',
-  maxWidth: '400px',
+  maxWidth: '500px',
   padding: '30px 20px',
   color: '#000',
 };
