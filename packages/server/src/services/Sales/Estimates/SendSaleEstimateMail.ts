@@ -80,7 +80,13 @@ export class SendSaleEstimateMail {
       tenantId,
       estimateId
     );
-    return transformEstimateToMailDataArgs(estimate);
+    const commonArgs = await this.contactMailNotification.getCommonFormatArgs(
+      tenantId
+    );
+    return {
+      ...commonArgs,
+      ...transformEstimateToMailDataArgs(estimate),
+    };
   };
 
   /**

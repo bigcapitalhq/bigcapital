@@ -1,5 +1,4 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { PaymentReceivedEntryTransfromer } from './PaymentReceivedEntryTransformer';
 
 export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer {
   /**
@@ -13,6 +12,8 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
       'primaryColor',
       'total',
       'totalLabel',
+      'subtotal',
+      'subtotalLabel',
       'paymentNumberLabel',
       'paymentNumber',
       'items',
@@ -73,6 +74,14 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
    */
   public subtotal(): string {
     return this.options.paymentReceived.formattedAmount;
+  }
+
+  /**
+   * Subtotal label.
+   * @returns {string}
+   */
+  public subtotalLabel(): string {
+    return 'Subtotal';
   }
 
   /**

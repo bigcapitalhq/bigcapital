@@ -20,6 +20,9 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
       'total',
       'totalLabel',
 
+      'subtotal',
+      'subtotalLabel',
+
       'paidAmount',
       'paidAmountLabel',
 
@@ -64,7 +67,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * @returns {string}
    */
   public receiptNumber(): string {
-    return this.options.receipt.number;
+    return this.options.receipt.receiptNumber;
   }
 
   /**
@@ -72,7 +75,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * @returns {string}
    */
   public receiptNumberLabel(): string {
-    return 'Receipt Number';
+    return 'Receipt # {receiptNumber}';
   }
 
   /**
@@ -95,7 +98,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * Receipt total.
    */
   public total(): string {
-    return this.options.receipt.totalFormatted;
+    return this.options.receipt.formattedAmount;
   }
 
   /**
@@ -104,6 +107,22 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    */
   public totalLabel(): string {
     return 'Total';
+  }
+
+  /**
+   * Receipt subtotal.
+   * @returns {string}
+   */
+  public subtotal(): string {
+    return this.options.receipt.formattedSubtotal;
+  }
+
+  /**
+   * Receipt subtotal label.
+   * @returns {string}
+   */
+  public subtotalLabel(): string {
+    return 'Subtotal';
   }
 
   /**

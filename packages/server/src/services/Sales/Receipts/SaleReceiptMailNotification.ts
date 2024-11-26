@@ -115,7 +115,13 @@ export class SaleReceiptMailNotification {
       tenantId,
       receiptId
     );
-    return transformReceiptToMailDataArgs(receipt);
+    const commonArgs = await this.contactMailNotification.getCommonFormatArgs(
+      tenantId
+    );
+    return {
+      ...commonArgs,
+      ...transformReceiptToMailDataArgs(receipt),
+    };
   };
 
   /**

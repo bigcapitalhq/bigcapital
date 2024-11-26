@@ -14,7 +14,7 @@ import { EmailTemplate } from './EmailTemplate';
 export interface ReceiptEmailTemplateProps {
   preview: string;
 
-  // # Company
+
   companyName?: string;
   companyLogoUri: string;
 
@@ -35,10 +35,6 @@ export interface ReceiptEmailTemplateProps {
   // # Subtotal
   subtotal?: string;
   subtotalLabel?: string;
-
-  // # View receipt button.
-  viewReceiptButtonLabel?: string;
-  viewReceiptButtonUrl?: string;
 
   // # Message
   message?: string;
@@ -68,10 +64,6 @@ export const ReceiptEmailTemplate: React.FC<
   receiptNumberLabel = 'Receipt # {receiptNumber}',
   receiptNumber = 'REC-00001',
 
-  // # View invoice button
-  viewReceiptButtonLabel = 'View Estimate',
-  viewReceiptButtonUrl,
-
   // # Message
   message = '',
 
@@ -87,9 +79,11 @@ export const ReceiptEmailTemplate: React.FC<
             <Row>
               <Heading style={invoiceCompanyNameStyle}>{companyName}</Heading>
             </Row>
+
             <Row>
               <Text style={amountStyle}>{total}</Text>
             </Row>
+
             <Row>
               <Text style={receiptNumberStyle}>
                 {receiptNumberLabel?.replace('{receiptNumber}', receiptNumber)}
@@ -98,15 +92,6 @@ export const ReceiptEmailTemplate: React.FC<
           </Section>
 
           <Text style={messageStyle}>{message}</Text>
-          <Button
-            href={viewReceiptButtonUrl}
-            style={{
-              ...viewInvoiceButtonStyle,
-              backgroundColor: primaryColor,
-            }}
-          >
-            {viewReceiptButtonLabel}
-          </Button>
 
           <Section style={totalsSectionStyle}>
             {items.map((item, index) => (
