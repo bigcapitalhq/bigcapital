@@ -1,18 +1,15 @@
 export const DEFAULT_PAYMENT_MAIL_SUBJECT =
-  'Payment Received for {Customer Name} from {Company Name}';
-export const DEFAULT_PAYMENT_MAIL_CONTENT = `
-<p>Dear {Customer Name}</p>
-<p>Thank you for your payment. It was a pleasure doing business with you. We look forward to work together again!</p>
-<p>
-Payment Date : <strong>{Payment Date}</strong><br />
-Amount   : <strong>{Payment Amount}</strong></br />
-</p>
+  ' Payment Confirmation from {Company Name} – Thank You!';
+export const DEFAULT_PAYMENT_MAIL_CONTENT = `Dear {Customer Name}
 
-<p>
-<i>Regards</i><br />
-<i>{Company Name}</i>
-</p>
-`;
+Thank you for your payment. It was a pleasure doing business with you. We look forward to work together again!
+
+Payment Transaction: {Payment Number}
+Payment Date : {Payment Date}
+Amount : {Payment Amount}
+
+Regards,
+{Company Name}`;
 
 export const ERRORS = {
   PAYMENT_RECEIVE_NO_EXISTS: 'PAYMENT_RECEIVE_NO_EXISTS',

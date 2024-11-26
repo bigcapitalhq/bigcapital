@@ -17,6 +17,7 @@ import { mergeAndValidateMailOptions } from '@/services/MailNotification/utils';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import { transformEstimateToMailDataArgs } from './utils';
+import { GetEstimateMailTemplate } from './GetEstimateMailTemplate';
 
 @Service()
 export class SendSaleEstimateMail {
@@ -32,11 +33,14 @@ export class SendSaleEstimateMail {
   @Inject()
   private contactMailNotification: ContactMailNotification;
 
-  @Inject('agenda')
-  private agenda: any;
+  @Inject()
+  private getEstimateMailTemplate: GetEstimateMailTemplate;
 
   @Inject()
   private eventPublisher: EventPublisher;
+
+  @Inject('agenda')
+  private agenda: any;
 
   /**
    * Triggers the reminder mail of the given sale estimate.
@@ -76,7 +80,13 @@ export class SendSaleEstimateMail {
       tenantId,
       estimateId
     );
-    return transformEstimateToMailDataArgs(estimate);
+    const commonArgs = await this.contactMailNotification.getCommonFormatArgs(
+      tenantId
+    );
+    return {
+      ...commonArgs,
+      ...transformEstimateToMailDataArgs(estimate),
+    };
   };
 
   /**
@@ -132,8 +142,44 @@ export class SendSaleEstimateMail {
         mailOptions,
         formatterArgs
       );
-    return { ...formattedOptions };
+    // Retrieves the estimate mail template.
+    const message = await this.getEstimateMailTemplate.getMailTemplate(
+      tenantId,
+      saleEstimateId,
+      {
+        message: formattedOptions.message,
+        preview: formattedOptions.message,
+      }
+    );
+    return { ...formattedOptions, message };
   };
+
+  /**
+   * Retrieves the formatted mail options.
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @param {SaleEstimateMailOptionsDTO} messageOptions
+   * @returns
+   */
+  public async getFormattedMailOptions(
+    tenantId: number,
+    saleEstimateId: number,
+    messageOptions: SaleEstimateMailOptionsDTO
+  ): Promise<SaleEstimateMailOptions> {
+    const defaultMessageOptions = await this.getMailOptions(
+      tenantId,
+      saleEstimateId
+    );
+    const parsedMessageOptions = mergeAndValidateMailOptions(
+      defaultMessageOptions,
+      messageOptions
+    );
+    return this.formatMailOptions(
+      tenantId,
+      saleEstimateId,
+      parsedMessageOptions
+    );
+  }
 
   /**
    * Sends the mail notification of the given sale estimate.
@@ -147,20 +193,10 @@ export class SendSaleEstimateMail {
     saleEstimateId: number,
     messageOptions: SaleEstimateMailOptionsDTO
   ): Promise<void> {
-    const localMessageOpts = await this.getMailOptions(
-      tenantId,
-      saleEstimateId
-    );
-    // Overrides and validates the given mail options.
-    const parsedMessageOptions = mergeAndValidateMailOptions(
-      localMessageOpts,
-      messageOptions
-    ) as SaleEstimateMailOptions;
-
-    const formattedOptions = await this.formatMailOptions(
+    const formattedOptions = await this.getFormattedMailOptions(
       tenantId,
       saleEstimateId,
-      parsedMessageOptions
+      messageOptions
     );
     const mail = new Mail()
       .setSubject(formattedOptions.subject)
@@ -182,7 +218,6 @@ export class SendSaleEstimateMail {
         },
       ]);
     }
-
     const eventPayload = {
       tenantId,
       saleEstimateId,

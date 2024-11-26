@@ -176,6 +176,7 @@ export default class CreditNote extends mixin(TenantModel, [
     const Branch = require('models/Branch');
     const Document = require('models/Document');
     const Warehouse = require('models/Warehouse');
+    const { PdfTemplate } = require('models/PdfTemplate');
 
     return {
       /**
@@ -264,6 +265,18 @@ export default class CreditNote extends mixin(TenantModel, [
         },
         filter(query) {
           query.where('model_ref', 'CreditNote');
+        },
+      },
+
+      /**
+       * Credit note may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplate,
+        join: {
+          from: 'credit_notes.pdfTemplateId',
+          to: 'pdf_templates.id',
         },
       },
     };

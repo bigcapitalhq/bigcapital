@@ -56,8 +56,18 @@ export default class SalesReceiptsController extends BaseController {
       [
         ...this.specificReceiptValidationSchema,
         body('subject').isString().optional(),
+
         body('from').isString().optional(),
-        body('to').isString().optional(),
+
+        body('to').isArray().exists(),
+        body('to.*').isString().isEmail().optional(),
+
+        body('cc').isArray().optional({ nullable: true }),
+        body('cc.*').isString().isEmail().optional(),
+
+        body('bcc').isArray().optional({ nullable: true }),
+        body('bcc.*').isString().isEmail().optional(),
+
         body('body').isString().optional(),
         body('attach_receipt').optional().isBoolean().toBoolean(),
       ],
@@ -353,6 +363,7 @@ export default class SalesReceiptsController extends BaseController {
     const acceptType = accept.types([
       ACCEPT_TYPE.APPLICATION_JSON,
       ACCEPT_TYPE.APPLICATION_PDF,
+      ACCEPT_TYPE.APPLICATION_TEXT_HTML,
     ]);
     // Retrieves receipt in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
@@ -368,6 +379,12 @@ export default class SalesReceiptsController extends BaseController {
       });
       res.send(pdfContent);
       // Retrieves receipt in json format.
+    } else if (ACCEPT_TYPE.APPLICATION_TEXT_HTML === acceptType) {
+      const htmlContent = await this.saleReceiptsApplication.getSaleReceiptHtml(
+        tenantId,
+        saleReceiptId
+      );
+      res.send({ htmlContent });
     } else {
       const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(
         tenantId,
@@ -392,8 +409,9 @@ export default class SalesReceiptsController extends BaseController {
 
     // Retrieves receipt in pdf format.
     try {
-      const data =
-        await this.saleReceiptsApplication.getSaleReceiptState(tenantId);
+      const data = await this.saleReceiptsApplication.getSaleReceiptState(
+        tenantId
+      );
       return res.status(200).send({ data });
     } catch (error) {
       next(error);
@@ -506,7 +524,7 @@ export default class SalesReceiptsController extends BaseController {
     const { id: receiptId } = req.params;
 
     try {
-      const data = await this.saleReceiptsApplication.getSaleReceiptMail(
+      const data = await this.saleReceiptsApplication.getSaleReceiptMailState(
         tenantId,
         receiptId
       );

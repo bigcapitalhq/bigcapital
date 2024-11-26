@@ -484,6 +484,9 @@ importers:
 
   packages/webapp:
     dependencies:
+      '@bigcapital/email-components':
+        specifier: '*'
+        version: link:../../shared/email-components
       '@bigcapital/pdf-templates':
         specifier: '*'
         version: link:../../shared/pdf-templates

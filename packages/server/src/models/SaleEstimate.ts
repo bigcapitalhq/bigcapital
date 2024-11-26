@@ -184,6 +184,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
     const Branch = require('models/Branch');
     const Warehouse = require('models/Warehouse');
     const Document = require('models/Document');
+    const { PdfTemplate } = require('models/PdfTemplate');
 
     return {
       customer: {
@@ -250,6 +251,18 @@ export default class SaleEstimate extends mixin(TenantModel, [
         },
         filter(query) {
           query.where('model_ref', 'SaleEstimate');
+        },
+      },
+
+      /**
+       * Sale estimate may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplate,
+        join: {
+          from: 'sales_estimates.pdfTemplateId',
+          to: 'pdf_templates.id',
         },
       },
     };

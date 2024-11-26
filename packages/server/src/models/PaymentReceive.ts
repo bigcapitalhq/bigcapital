@@ -29,7 +29,7 @@ export default class PaymentReceive extends mixin(TenantModel, [
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['localAmount'];
+    return ['localAmount', 'total'];
   }
 
   /**
@@ -38,6 +38,10 @@ export default class PaymentReceive extends mixin(TenantModel, [
    */
   get localAmount() {
     return this.amount * this.exchangeRate;
+  }
+
+  get total() {
+    return this.paymentAmount;
   }
 
   /**
@@ -57,6 +61,7 @@ export default class PaymentReceive extends mixin(TenantModel, [
     const Account = require('models/Account');
     const Branch = require('models/Branch');
     const Document = require('models/Document');
+    const { PdfTemplate } = require('models/PdfTemplate');
 
     return {
       customer: {
@@ -129,6 +134,18 @@ export default class PaymentReceive extends mixin(TenantModel, [
         },
         filter(query) {
           query.where('model_ref', 'PaymentReceive');
+        },
+      },
+
+      /**
+       * Payment received may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplate,
+        join: {
+          from: 'payment_receives.pdfTemplateId',
+          to: 'pdf_templates.id',
         },
       },
     };

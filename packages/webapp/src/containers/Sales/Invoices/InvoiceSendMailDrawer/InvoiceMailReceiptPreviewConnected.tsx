@@ -9,14 +9,20 @@ import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
 import { InvoiceSendMailPreviewWithHeader } from './InvoiceSendMailHeaderPreview';
 import { useSendInvoiceMailMessage } from './_hooks';
 
+const invoiceMailReceiptCss = css`
+  margin: 0 auto;
+  border-radius: 5px !important;
+  transform: scale(0.9);
+  transform-origin: top;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05) !important;
+`
+
 export function InvoiceMailReceiptPreviewConnected() {
   return (
     <InvoiceSendMailPreviewWithHeader>
       <Box px={4} pt={8} pb={16}>
         <InvoiceMailReceiptPreviewWithProps
-          className={css`
-            margin: 0 auto;
-          `}
+          className={invoiceMailReceiptCss}
         />
       </Box>
     </InvoiceSendMailPreviewWithHeader>

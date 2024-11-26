@@ -5,6 +5,8 @@ import {
   UseQueryOptions,
   UseQueryResult,
   useQuery,
+  UseMutationOptions,
+  UseMutationResult,
 } from 'react-query';
 import useApiRequest from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
@@ -244,11 +246,45 @@ export function usePdfPaymentReceive(paymentReceiveId) {
   return useRequestPdf({ url: `sales/payment_receives/${paymentReceiveId}` });
 }
 
-export function useSendPaymentReceiveMail(props) {
+interface SendPaymentReceiveMailValues {
+  to: string[] | string;
+  cc?: string[] | string,
+  bcc?: string[] | string,
+  subject: string;
+  message: string;
+  from?: string[] | string;
+  attachPdf?: boolean;
+}
+
+interface SendPaymentReceiveMailResponse {
+  success: boolean;
+  message?: string;
+}
+
+type SendPaymentReceiveMailMutation = UseMutationResult<
+  SendPaymentReceiveMailResponse,
+  Error,
+  [number, SendPaymentReceiveMailValues],
+  unknown
+>;
+
+export function useSendPaymentReceiveMail(
+  props?: Partial<
+    UseMutationOptions<
+      SendPaymentReceiveMailResponse,
+      Error,
+      [number, SendPaymentReceiveMailValues]
+    >
+  >,
+): SendPaymentReceiveMailMutation {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
+  return useMutation<
+    SendPaymentReceiveMailResponse,
+    Error,
+    [number, SendPaymentReceiveMailValues]
+  >(
     ([id, values]) =>
       apiRequest.post(`sales/payment_receives/${id}/mail`, values),
     {
@@ -261,17 +297,46 @@ export function useSendPaymentReceiveMail(props) {
   );
 }
 
-export function usePaymentReceiveDefaultOptions(paymentReceiveId, props) {
-  return useRequestQuery(
+export interface GetPaymentReceivedMailStateResponse {
+  companyName: string;
+  companyLogoUri?: string;
+
+  primaryColor?: string;
+  customerName: string;
+
+  entries: Array<{ invoiceNumber: string; paidAmount: string }>;
+
+  from: Array<string>;
+  fromOptions: Array<{ mail: string; label: string; primary: boolean }>;
+
+  paymentDate: string;
+  paymentDateFormatted: string;
+
+  to: Array<string>;
+  toOptions: Array<{ mail: string; label: string; primary: boolean }>;
+
+  total: number;
+  totalFormatted: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
+  paymentNumber: string;
+  formatArgs: Record<string, any>;
+}
+
+export function usePaymentReceivedMailState(
+  paymentReceiveId: number,
+  props?: UseQueryOptions<GetPaymentReceivedMailStateResponse, Error>,
+): UseQueryResult<GetPaymentReceivedMailStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetPaymentReceivedMailStateResponse, Error>(
     [t.PAYMENT_RECEIVE_MAIL_OPTIONS, paymentReceiveId],
-    {
-      method: 'get',
-      url: `sales/payment_receives/${paymentReceiveId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+    () =>
+      apiRequest
+        .get(`sales/payment_receives/${paymentReceiveId}/mail`)
+        .then((res) => transformToCamelCase(res.data?.data)),
   );
 }
 
@@ -296,6 +361,38 @@ export function usePaymentReceivedState(
       apiRequest
         .get('/sales/payment_receives/state')
         .then((res) => transformToCamelCase(res.data?.data)),
+    {
+      ...options,
+    },
+  );
+}
+
+interface PaymentReceivedHtmlResponse {
+  htmlContent: string;
+}
+
+/**
+ * Retrieves the html content of the given payment receive.
+ * @param {number} paymentReceivedId
+ * @param {UseQueryOptions<PaymentReceivedHtmlResponse, Error>} options
+ * @returns {UseQueryResult<PaymentReceivedHtmlResponse, Error>}
+ */
+export function useGetPaymentReceiveHtml(
+  paymentReceivedId: number,
+  options?: UseQueryOptions<PaymentReceivedHtmlResponse, Error>,
+): UseQueryResult<PaymentReceivedHtmlResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<PaymentReceivedHtmlResponse, Error>(
+    ['PAYMENT_RECEIVED_HTML', paymentReceivedId],
+    () =>
+      apiRequest
+        .get(`/sales/payment_receives/${paymentReceivedId}`, {
+          headers: {
+            Accept: 'application/json+html',
+          },
+        })
+        .then((res) => transformToCamelCase(res.data)),
     {
       ...options,
     },

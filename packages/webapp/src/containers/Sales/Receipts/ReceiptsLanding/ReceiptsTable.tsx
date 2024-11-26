@@ -89,7 +89,7 @@ function ReceiptsDataTable({
 
   // Handle send mail receipt.
   const handleSendMailReceipt = ({ id }) => {
-    openDialog(DialogsName.ReceiptMail, { receiptId: id });
+    openDrawer(DRAWERS.RECEIPT_SEND_MAIL, { receiptId: id });
   };
 
   // Local storage memorizing columns widths.

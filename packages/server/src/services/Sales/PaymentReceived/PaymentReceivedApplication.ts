@@ -20,6 +20,7 @@ import { PaymentReceiveNotifyBySms } from './PaymentReceivedSmsNotify';
 import GetPaymentReceivedPdf from './GetPaymentReceivedPdf';
 import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
 import { GetPaymentReceivedState } from './GetPaymentReceivedState';
+import { GetPaymentReceivedMailState } from './GetPaymentReceivedMailState';
 
 @Service()
 export class PaymentReceivesApplication {
@@ -52,6 +53,9 @@ export class PaymentReceivesApplication {
 
   @Inject()
   private getPaymentReceivedStateService: GetPaymentReceivedState;
+
+  @Inject()
+  private getPaymentReceivedMailStateService: GetPaymentReceivedMailState;
 
   /**
    * Creates a new payment receive.
@@ -204,12 +208,15 @@ export class PaymentReceivesApplication {
 
   /**
    * Retrieves the default mail options of the given payment transaction.
-   * @param {number} tenantId
-   * @param {number} paymentReceiveId
+   * @param {number} tenantId - Tenant id.
+   * @param {number} paymentReceiveId - Payment received id.
    * @returns {Promise<void>}
    */
   public getPaymentMailOptions(tenantId: number, paymentReceiveId: number) {
-    return this.paymentMailNotify.getMailOptions(tenantId, paymentReceiveId);
+    return this.getPaymentReceivedMailStateService.getMailOptions(
+      tenantId,
+      paymentReceiveId
+    );
   }
 
   /**
@@ -223,6 +230,22 @@ export class PaymentReceivesApplication {
     paymentReceiveId: number
   ) => {
     return this.getPaymentReceivePdfService.getPaymentReceivePdf(
+      tenantId,
+      paymentReceiveId
+    );
+  };
+
+  /**
+   * Retrieves the given payment receive html document.
+   * @param {number} tenantId
+   * @param {number} paymentReceiveId
+   * @returns {Promise<string>}
+   */
+  public getPaymentReceivedHtml = (
+    tenantId: number,
+    paymentReceiveId: number
+  ) => {
+    return this.getPaymentReceivePdfService.getPaymentReceivedHtml(
       tenantId,
       paymentReceiveId
     );

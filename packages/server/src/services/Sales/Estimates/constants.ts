@@ -1,18 +1,17 @@
 export const DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT =
   'Estimate {Estimate Number} is awaiting your approval';
-export const DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT = `<p>Dear {Customer Name}</p>
-<p>Thank you for your business, You can view or print your estimate from attachements.</p>
-<p>
-Estimate <strong>#{Estimate Number}</strong><br />
-Expiration Date : <strong>{Estimate Expiration Date}</strong><br />
-Amount   : <strong>{Estimate Amount}</strong></br />
-</p>
+export const DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT = `Hi {Customer Name},
 
-<p>
-<i>Regards</i><br />
-<i>{Company Name}</i>
-</p>
-`;
+Here's estimate # {Estimate Number} for {Estimate Amount}
+
+This estimate is valid until {Estimate Expiration Date}, and we’re happy to discuss any adjustments you or questions may have.
+
+Please find your estimate attached to this email for your reference.
+
+If you have any questions, please let us know.
+
+Thanks,
+{Company Name}`;
 
 export const ERRORS = {
   SALE_ESTIMATE_NOT_FOUND: 'SALE_ESTIMATE_NOT_FOUND',

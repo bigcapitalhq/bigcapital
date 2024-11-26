@@ -17,6 +17,7 @@ import { mergeAndValidateMailOptions } from '@/services/MailNotification/utils';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import { transformReceiptToMailDataArgs } from './utils';
+import { GetSaleReceiptMailTemplate } from './GetSaleReceiptMailTemplate';
 
 @Service()
 export class SaleReceiptMailNotification {
@@ -31,6 +32,9 @@ export class SaleReceiptMailNotification {
 
   @Inject()
   private contactMailNotification: ContactMailNotification;
+
+  @Inject()
+  private getReceiptMailTemplate: GetSaleReceiptMailTemplate;
 
   @Inject()
   private eventPublisher: EventPublisher;
@@ -111,7 +115,13 @@ export class SaleReceiptMailNotification {
       tenantId,
       receiptId
     );
-    return transformReceiptToMailDataArgs(receipt);
+    const commonArgs = await this.contactMailNotification.getCommonFormatArgs(
+      tenantId
+    );
+    return {
+      ...commonArgs,
+      ...transformReceiptToMailDataArgs(receipt),
+    };
   };
 
   /**
@@ -133,7 +143,15 @@ export class SaleReceiptMailNotification {
         mailOptions,
         formatterArgs
       )) as SaleReceiptMailOpts;
-    return formattedOptions;
+
+    const message = await this.getReceiptMailTemplate.getMailTemplate(
+      tenantId,
+      receiptId,
+      {
+        message: formattedOptions.message,
+      }
+    );
+    return { ...formattedOptions, message };
   }
 
   /**
