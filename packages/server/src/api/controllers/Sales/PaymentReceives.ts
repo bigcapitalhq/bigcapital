@@ -481,7 +481,7 @@ export default class PaymentReceivesController extends BaseController {
       ACCEPT_TYPE.APPLICATION_PDF,
       ACCEPT_TYPE.APPLICATION_TEXT_HTML,
     ]);
-    // Responses pdf format.
+    // Responds pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
       const [pdfContent, filename] =
         await this.paymentReceiveApplication.getPaymentReceivePdf(
@@ -494,7 +494,7 @@ export default class PaymentReceivesController extends BaseController {
         'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
-      // Responses html format.
+      // Responds html format.
     } else if (ACCEPT_TYPE.APPLICATION_TEXT_HTML === acceptType) {
       const htmlContent =
         await this.paymentReceiveApplication.getPaymentReceivedHtml(
@@ -502,7 +502,7 @@ export default class PaymentReceivesController extends BaseController {
           paymentReceiveId
         );
       return res.status(200).send({ htmlContent });
-      // Responses json format.
+      // Responds json format.
     } else {
       const paymentReceive =
         await this.paymentReceiveApplication.getPaymentReceive(
