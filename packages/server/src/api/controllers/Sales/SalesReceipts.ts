@@ -524,7 +524,7 @@ export default class SalesReceiptsController extends BaseController {
     const { id: receiptId } = req.params;
 
     try {
-      const data = await this.saleReceiptsApplication.getSaleReceiptMail(
+      const data = await this.saleReceiptsApplication.getSaleReceiptMailState(
         tenantId,
         receiptId
       );

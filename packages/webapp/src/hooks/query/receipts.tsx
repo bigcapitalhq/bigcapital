@@ -239,13 +239,46 @@ export function useSendSaleReceiptMail(props) {
 
 export interface GetSaleReceiptMailStateResponse {
   attachReceipt: boolean;
+
+  closedAtDate: string;
+  closedAtDateFormatted: string;
+
+  companyName: string;
+  customerName: string;
+
   formatArgs: Record<string, any>;
+
   from: string[];
-  fromOptions: Array<{ mail: string; label: string; primary: boolean; }>
+  fromOptions: Array<{ mail: string; label: string; primary: boolean; }>;
   message: string;
+
+  receiptDate: string;
+  receiptDateFormatted: string;
+
   subject: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
   to: string[];
   toOptions: Array<{ mail: string; label: string; primary: boolean; }>;
+
+  total: number;
+  totalFormatted: string;
+
+  companyLogoUri?: string | null;
+  primaryColor?: string | null;
+
+  entries: Array<{
+    name: string;
+    quantity: number;
+    quantityFormatted: string;
+    rate: number;
+    rateFormatted: string;
+    total: number;
+    totalFormatted: string
+  }>,
+  receiptNumber: string;
 }
 
 export function useSaleReceiptMailState(

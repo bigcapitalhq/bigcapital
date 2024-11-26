@@ -18,6 +18,7 @@ import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
 import { SaleReceiptNotifyBySms } from './SaleReceiptNotifyBySms';
 import { SaleReceiptMailNotification } from './SaleReceiptMailNotification';
 import { GetSaleReceiptState } from './GetSaleReceiptState';
+import { GetSaleReceiptMailState } from './GetSaleReceiptMailState';
 
 @Service()
 export class SaleReceiptApplication {
@@ -50,6 +51,9 @@ export class SaleReceiptApplication {
 
   @Inject()
   private getSaleReceiptStateService: GetSaleReceiptState;
+
+  @Inject()
+  private getSaleReceiptMailStateService: GetSaleReceiptMailState;
 
   /**
    * Creates a new sale receipt with associated entries.
@@ -233,5 +237,21 @@ export class SaleReceiptApplication {
    */
   public getSaleReceiptState(tenantId: number): Promise<ISaleReceiptState> {
     return this.getSaleReceiptStateService.getSaleReceiptState(tenantId);
+  }
+
+  /**
+   * Retrieves the mail state of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @returns
+   */
+  public getSaleReceiptMailState(
+    tenantId: number,
+    saleReceiptId: number
+  ): Promise<ISaleReceiptState> {
+    return this.getSaleReceiptMailStateService.getMailState(
+      tenantId,
+      saleReceiptId
+    );
   }
 }

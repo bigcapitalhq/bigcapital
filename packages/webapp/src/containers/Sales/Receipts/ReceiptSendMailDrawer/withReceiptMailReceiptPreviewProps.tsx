@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import { ComponentType, useMemo } from 'react';
 import {
   ReceiptSendMailReceipt,
   ReceiptSendMailReceiptProps,
@@ -19,26 +19,25 @@ export const withReceiptMailReceiptPreviewProps = <
     const message = useSendReceiptMailMessage();
     const { receiptMailState } = useReceiptSendMailBoot();
 
-    // const items = useMemo(
-    //   () =>
-    //     invoiceMailState?.entries?.map((entry: any) => ({
-    //       quantity: entry.quantity,
-    //       total: entry.totalFormatted,
-    //       label: entry.name,
-    //     })),
-    //   [invoiceMailState?.entries],
-    // );
+    const items = useMemo(
+      () =>
+        receiptMailState?.entries?.map((entry: any) => ({
+          quantity: entry.quantity,
+          total: entry.totalFormatted,
+          label: entry.name,
+        })),
+      [receiptMailState?.entries],
+    );
 
     const mailReceiptPreviewProps = {
       ...defaultReceiptMailProps,
-      // companyName: receiptMailState?.companyName,
-      // companyLogoUri: receiptMailState?.companyLogoUri,
-      // primaryColor: receiptMailState?.primaryColor,
-      // total: receiptMailState?.totalFormatted,
-      // dueDate: receiptMailState?.dueDateFormatted,
-      // dueAmount: invoiceMailState?.dueAmountFormatted,
-      // invoiceNumber: invoiceMailState?.invoiceNo,
-      // items,
+      companyName: receiptMailState?.companyName,
+      companyLogoUri: receiptMailState?.companyLogoUri,
+      primaryColor: receiptMailState?.primaryColor,
+      total: receiptMailState?.totalFormatted,
+      subtotal: receiptMailState?.subtotalFormatted,
+      receiptNumber: receiptMailState?.receiptNumber,
+      items,
       message,
     };
     return <WrappedComponent {...mailReceiptPreviewProps} {...props} />;

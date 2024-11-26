@@ -27,11 +27,6 @@ export interface ReceiptSendMailReceiptProps extends SendMailReceiptProps {
   // # Subtotal
   subtotal: string;
   subtotalLabel?: string;
-
-  // # View receipt button
-  showViewReceiptButton?: boolean;
-  viewReceiptButtonLabel?: string;
-  viewReceiptButtonOnClick?: () => void;
 }
 
 export function ReceiptSendMailReceipt({
@@ -55,11 +50,6 @@ export function ReceiptSendMailReceipt({
   subtotal,
   subtotalLabel = 'Subtotal',
 
-  // # View receipt button
-  showViewReceiptButton,
-  viewReceiptButtonLabel,
-  viewReceiptButtonOnClick,
-
   ...rest
 }: ReceiptSendMailReceiptProps) {
   return (
@@ -80,62 +70,57 @@ export function ReceiptSendMailReceipt({
             {receiptNumberLabel} {receiptNumber}
           </x.span>
         </Stack>
+      </Stack>
 
-        {showViewReceiptButton && (
-          <SendMailReceipt.PrimaryButton
-            primaryColor={'#000'}
-            onClick={viewReceiptButtonOnClick}
-          >
-            {viewReceiptButtonLabel}
-          </SendMailReceipt.PrimaryButton>
-        )}
+      <x.p m={0} whiteSpace={'pre-line'} color="#252A31">
+        {message}
+      </x.p>
 
-        <Stack spacing={0}>
-          {items?.map((item, key) => (
-            <Group
-              key={key}
-              h={'40px'}
-              position={'apart'}
-              borderBottomStyle="solid"
-              borderBottomWidth={'1px'}
-              borderBottomColor={'#D9D9D9'}
-              borderTopStyle="solid"
-              borderTopColor={'#D9D9D9'}
-              borderTopWidth={'1px'}
-            >
-              <x.span>{item.label}</x.span>
-              <x.span>
-                {item.quantity} x {item.total}
-              </x.span>
-            </Group>
-          ))}
-
+      <Stack spacing={0}>
+        {items?.map((item, key) => (
           <Group
+            key={key}
             h={'40px'}
             position={'apart'}
             borderBottomStyle="solid"
             borderBottomWidth={'1px'}
-            borderBottomColor={'#000'}
+            borderBottomColor={'#D9D9D9'}
+            borderTopStyle="solid"
+            borderTopColor={'#D9D9D9'}
+            borderTopWidth={'1px'}
           >
-            <x.span fontWeight={500}>{subtotalLabel}</x.span>
-            <x.span fontWeight={600} fontSize={15}>
-              {subtotal}
+            <x.span>{item.label}</x.span>
+            <x.span>
+              {item.quantity} x {item.total}
             </x.span>
           </Group>
+        ))}
 
-          <Group
-            h={'40px'}
-            position={'apart'}
-            borderBottomStyle="solid"
-            borderBottomWidth={'1px'}
-            borderColor={'#000'}
-          >
-            <x.span fontWeight={500}>{totalLabel}</x.span>
-            <x.span fontWeight={600} fontSize={15}>
-              {total}
-            </x.span>
-          </Group>
-        </Stack>
+        <Group
+          h={'40px'}
+          position={'apart'}
+          borderBottomStyle="solid"
+          borderBottomWidth={'1px'}
+          borderBottomColor={'#000'}
+        >
+          <x.span fontWeight={500}>{subtotalLabel}</x.span>
+          <x.span fontWeight={600} fontSize={15}>
+            {subtotal}
+          </x.span>
+        </Group>
+
+        <Group
+          h={'40px'}
+          position={'apart'}
+          borderBottomStyle="solid"
+          borderBottomWidth={'1px'}
+          borderColor={'#000'}
+        >
+          <x.span fontWeight={500}>{totalLabel}</x.span>
+          <x.span fontWeight={600} fontSize={15}>
+            {total}
+          </x.span>
+        </Group>
       </Stack>
     </SendMailReceipt>
   );
