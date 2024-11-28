@@ -17,6 +17,9 @@ export class VendorCreditTransformer extends Transformer {
       'formattedCreatedAt',
       'formattedCreditsRemaining',
       'formattedInvoicedAmount',
+      'discountAmountFormatted',
+      'discountPercentageFormatted',
+      'adjustmentFormatted',
       'entries',
       'attachments',
     ];
@@ -33,7 +36,7 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retireve formatted created at date.
-   * @param vendorCredit 
+   * @param vendorCredit
    * @returns {string}
    */
   protected formattedCreatedAt = (vendorCredit): string => {
@@ -67,6 +70,37 @@ export class VendorCreditTransformer extends Transformer {
    */
   protected formattedCreditsRemaining = (credit) => {
     return formatNumber(credit.creditsRemaining, {
+      currencyCode: credit.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount amount.
+   * @param {IVendorCredit} credit
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (credit): string => {
+    return formatNumber(credit.discountAmount, {
+      currencyCode: credit.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount percentage.
+   * @param {IVendorCredit} credit
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (credit): string => {
+    return credit.discountPercentage ? `${credit.discountPercentage}%` : '';
+  };
+
+  /**
+   * Retrieves the formatted adjustment amount.
+   * @param {IVendorCredit} credit
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (credit): string => {
+    return formatNumber(credit.adjustment, {
       currencyCode: credit.currencyCode,
     });
   };

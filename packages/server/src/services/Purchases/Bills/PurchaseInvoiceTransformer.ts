@@ -24,6 +24,9 @@ export class PurchaseInvoiceTransformer extends Transformer {
       'subtotalLocalFormatted',
       'subtotalExcludingTaxFormatted',
       'taxAmountWithheldLocalFormatted',
+      'discountAmountFormatted',
+      'discountPercentageFormatted',
+      'adjustmentFormatted',
       'totalFormatted',
       'totalLocalFormatted',
       'taxes',
@@ -157,6 +160,39 @@ export class PurchaseInvoiceTransformer extends Transformer {
   protected taxAmountWithheldLocalFormatted = (bill): string => {
     return formatNumber(bill.taxAmountWithheldLocal, {
       currencyCode: this.context.organization.baseCurrency,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount amount.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (bill): string => {
+    return formatNumber(bill.discountAmount, {
+      currencyCode: bill.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount percentage.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (bill): string => {
+    return bill.discountPercentage
+      ? `${bill.discountPercentage}%`
+      : '';
+  };
+
+  /**
+   * Retrieves the formatted adjustment amount.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (bill): string => {
+    return formatNumber(bill.adjustment, {
+      currencyCode: bill.currencyCode,
     });
   };
 

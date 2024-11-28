@@ -105,19 +105,36 @@ export default class Bill extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
    * Invoice total. (Tax included)
    * @returns {number}
    */
   get total() {
-    const discountAmount = this.discountType === DiscountType.Amount
-      ? this.discount
-      : this.subtotal * (this.discount / 100);
-
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
     return this.isInclusiveTax
-      ? this.subtotal - discountAmount - adjustmentAmount
-      : this.subtotal + this.taxAmountWithheld - discountAmount - adjustmentAmount;
+      ? this.subtotal - this.discountAmount - adjustmentAmount
+      : this.subtotal +
+          this.taxAmountWithheld -
+          this.discountAmount -
+          adjustmentAmount;
   }
 
   /**
