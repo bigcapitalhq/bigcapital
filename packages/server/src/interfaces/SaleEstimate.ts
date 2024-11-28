@@ -25,6 +25,11 @@ export interface ISaleEstimate {
 
   branchId?: number;
   warehouseId?: number;
+
+  discountAmount?: number;
+  discountPercentage?: number | null;
+
+  adjustment?: number;
 }
 export interface ISaleEstimateDTO {
   customerId: number;

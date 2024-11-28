@@ -28,7 +28,6 @@ export default class SaleInvoice extends mixin(TenantModel, [
   public discountType: DiscountType;
   public adjustments: number;
 
-
   /**
    * Table name
    */
@@ -72,6 +71,8 @@ export default class SaleInvoice extends mixin(TenantModel, [
       'subtotalExludingTax',
 
       'taxAmountWithheldLocal',
+      'discountAmount',
+
       'total',
       'totalLocal',
 
@@ -131,16 +132,32 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage
+      ? this.discount
+      : null;
+  }
+
+  /**
    * Invoice total. (Tax included)
    * @returns {number}
    */
   get total() {
-    const discountAmount = this.discountType === DiscountType.Amount
-      ? this.discount
-      : this.subtotal * (this.discount / 100);
-
     const adjustmentAmount = defaultTo(this.adjustments, 0);
-    const differencies = discountAmount + adjustmentAmount;
+    const differencies = this.discountAmount + adjustmentAmount;
 
     return this.isInclusiveTax
       ? this.subtotal - differencies
@@ -616,7 +633,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
         join: {
           from: 'sales_invoices.pdfTemplateId',
           to: 'pdf_templates.id',
-        }
+        },
       },
     };
   }

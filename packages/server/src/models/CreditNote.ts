@@ -73,15 +73,31 @@ export default class CreditNote extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage
+      ? this.discount
+      : null;
+  }
+
+  /**
    * Credit note total.
    * @returns {number}
    */
   get total() {
-    const discountAmount = this.discountType === DiscountType.Amount
-      ? this.discount
-      : this.subtotal * (this.discount / 100);
-
-    return this.subtotal - discountAmount - this.adjustment;
+    return this.subtotal - this.discountAmount - this.adjustment;
   }
 
   /**

@@ -14,6 +14,9 @@ export class SaleReceiptTransformer extends Transformer {
   public includeAttributes = (): string[] => {
     return [
       'formattedSubtotal',
+      'discountAmountFormatted',
+      'discountPercentageFormatted',
+      'adjustmentFormatted',
       'formattedAmount',
       'formattedReceiptDate',
       'formattedClosedAtDate',
@@ -66,6 +69,39 @@ export class SaleReceiptTransformer extends Transformer {
    */
   protected formattedAmount = (receipt: ISaleReceipt): string => {
     return formatNumber(receipt.amount, {
+      currencyCode: receipt.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted discount amount.
+   * @param receipt
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (receipt: ISaleReceipt): string => {
+    return formatNumber(receipt.discountAmount, {
+      currencyCode: receipt.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted discount percentage.
+   * @param receipt
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (receipt: ISaleReceipt): string => {
+    return receipt.discountPercentage
+      ? `${receipt.discountPercentage}%`
+      : '';
+  };
+
+  /**
+   * Retrieves formatted adjustment amount.
+   * @param receipt
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (receipt: ISaleReceipt): string => {
+    return this.formatMoney(receipt.adjustment, {
       currencyCode: receipt.currencyCode,
     });
   };

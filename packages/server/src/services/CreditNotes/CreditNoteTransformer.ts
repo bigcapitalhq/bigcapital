@@ -18,6 +18,9 @@ export class CreditNoteTransformer extends Transformer {
       'formattedAmount',
       'formattedCreditsUsed',
       'formattedSubtotal',
+      'discountAmountFormatted',
+      'discountPercentageFormatted',
+      'adjustmentFormatted',
       'entries',
       'attachments',
     ];
@@ -81,6 +84,40 @@ export class CreditNoteTransformer extends Transformer {
    */
   protected formattedSubtotal = (credit): string => {
     return formatNumber(credit.amount, { money: false });
+  };
+
+
+  /**
+   * Retrieves formatted discount amount.
+   * @param credit 
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (credit): string => {
+    return formatNumber(credit.discountAmount, {
+      currencyCode: credit.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted discount percentage.
+   * @param credit 
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (credit): string => {
+    return credit.discountPercentage
+      ? `${credit.discountPercentage}%`
+      : '';
+  };
+
+  /**
+   * Retrieves formatted adjustment amount.
+   * @param credit 
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (credit): string => {
+    return this.formatMoney(credit.adjustment, {
+      currencyCode: credit.currencyCode,
+    });
   };
 
   /**

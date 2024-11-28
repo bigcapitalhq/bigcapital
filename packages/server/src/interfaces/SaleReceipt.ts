@@ -28,6 +28,11 @@ export interface ISaleReceipt {
 
   localAmount?: number;
   entries?: IItemEntry[];
+
+  discountAmount: number;
+  discountPercentage?: number | null;
+  
+  adjustment?: number;
 }
 
 export interface ISalesReceiptsFilter {

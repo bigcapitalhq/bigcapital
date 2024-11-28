@@ -83,8 +83,8 @@ export interface ISaleInvoice {
 }
 
 export enum DiscountType {
-  Percentage = 'Percentage',
-  Amount = 'Amount',
+  Percentage = 'percentage',
+  Amount = 'amount',
 }
 
 export interface ISaleInvoiceDTO {

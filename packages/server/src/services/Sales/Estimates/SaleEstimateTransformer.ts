@@ -18,6 +18,9 @@ export class SaleEstimateTransfromer extends Transformer {
       'formattedDeliveredAtDate',
       'formattedApprovedAtDate',
       'formattedRejectedAtDate',
+      'discountAmountFormatted',
+      'discountPercentageFormatted',
+      'adjustmentFormatted',
       'formattedCreatedAt',
       'entries',
       'attachments',
@@ -96,6 +99,39 @@ export class SaleEstimateTransfromer extends Transformer {
    */
   protected formattedSubtotal = (estimate: ISaleEstimate): string => {
     return formatNumber(estimate.amount, { money: false });
+  };
+
+  /**
+   * Retrieves formatted discount amount.
+   * @param estimate
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (estimate: ISaleEstimate): string => {
+    return formatNumber(estimate.discountAmount, {
+      currencyCode: estimate.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted discount percentage.
+   * @param estimate
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (estimate: ISaleEstimate): string => {
+    return estimate.discountPercentage
+      ? `${estimate.discountPercentage}%`
+      : '';
+  };
+
+  /**
+   * Retrieves formatted adjustment amount.
+   * @param estimate
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (estimate: ISaleEstimate): string => {
+    return this.formatMoney(estimate.adjustment, {
+      currencyCode: estimate.currencyCode,
+    });
   };
 
   /**
