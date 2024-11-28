@@ -281,6 +281,13 @@ export default class SaleInvoicesController extends BaseController {
       check('payment_methods').optional({ nullable: true }).isArray(),
       check('payment_methods.*.payment_integration_id').exists().toInt(),
       check('payment_methods.*.enable').exists().isBoolean(),
+
+      // Discount
+      check('discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('discount_type').optional({ nullable: true }).isString().trim(),
+
+      // Adjustments
+      check('adjustment').optional({ nullable: true }).isArray(),
     ];
   }
 
