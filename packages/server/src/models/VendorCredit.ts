@@ -6,12 +6,20 @@ import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Purchases/VendorCredits/constants';
 import ModelSearchable from './ModelSearchable';
 import VendorCreditMeta from './VendorCredit.Meta';
+import { DiscountType } from '@/interfaces';
 
 export default class VendorCredit extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  public amount: number;
+  public exchangeRate: number;
+  public openedAt: Date;
+  public discount: number;
+  public discountType: DiscountType;
+  public adjustment: number;
+
   /**
    * Table name
    */
@@ -32,6 +40,42 @@ export default class VendorCredit extends mixin(TenantModel, [
    */
   get localAmount() {
     return this.amount * this.exchangeRate;
+  }
+
+  /**
+   * Vendor credit subtotal.
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.amount;
+  }
+
+  /**
+   * Vendor credit subtotal in local currency.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.subtotal * this.exchangeRate;
+  }
+
+  /**
+   * Vendor credit total.
+   * @returns {number}
+   */
+  get total() {
+    const discountAmount = this.discountType === DiscountType.Amount
+      ? this.discount 
+      : this.subtotal * (this.discount / 100);
+
+    return this.subtotal - discountAmount - this.adjustment;
+  }
+
+  /**
+   * Vendor credit total in local currency.
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
   }
 
   /**

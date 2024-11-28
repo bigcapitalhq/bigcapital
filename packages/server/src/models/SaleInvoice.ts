@@ -1,5 +1,5 @@
 import { mixin, Model, raw } from 'objection';
-import { castArray, takeWhile } from 'lodash';
+import { castArray, defaultTo, takeWhile } from 'lodash';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
@@ -7,6 +7,7 @@ import SaleInvoiceMeta from './SaleInvoice.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Sales/Invoices/constants';
 import ModelSearchable from './ModelSearchable';
+import { DiscountType } from '@/interfaces';
 
 export default class SaleInvoice extends mixin(TenantModel, [
   ModelSetting,
@@ -23,6 +24,10 @@ export default class SaleInvoice extends mixin(TenantModel, [
   public writtenoffAt: Date;
   public dueDate: Date;
   public deliveredAt: Date;
+  public discount: number;
+  public discountType: DiscountType;
+  public adjustments: number;
+
 
   /**
    * Table name
@@ -130,9 +135,16 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @returns {number}
    */
   get total() {
+    const discountAmount = this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+
+    const adjustmentAmount = defaultTo(this.adjustments, 0);
+    const differencies = discountAmount + adjustmentAmount;
+
     return this.isInclusiveTax
-      ? this.subtotal
-      : this.subtotal + this.taxAmountWithheld;
+      ? this.subtotal - differencies
+      : this.subtotal + this.taxAmountWithheld - differencies;
   }
 
   /**

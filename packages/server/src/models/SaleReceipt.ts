@@ -5,12 +5,23 @@ import SaleReceiptSettings from './SaleReceipt.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Sales/Receipts/constants';
 import ModelSearchable from './ModelSearchable';
+import { DiscountType } from '@/interfaces';
+import { defaultTo } from 'lodash';
 
 export default class SaleReceipt extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  public amount: number;
+  public exchangeRate: number;
+  public closedAt: Date;
+
+  public discount: number;
+  public discountType: DiscountType;
+
+  public adjustment: number;
+
   /**
    * Table name
    */
@@ -38,6 +49,44 @@ export default class SaleReceipt extends mixin(TenantModel, [
    */
   get localAmount() {
     return this.amount * this.exchangeRate;
+  }
+
+  /**
+   * Receipt subtotal.
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.amount;
+  }
+
+  /**
+   * Receipt subtotal in local currency.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.localAmount;
+  }
+
+  /**
+   * Receipt total.
+   * @returns {number}
+   */
+  get total() {
+    const discountAmount = this.discountType === DiscountType.Amount 
+      ? this.discount 
+      : this.subtotal * (this.discount / 100);
+
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
+
+    return this.subtotal - discountAmount - adjustmentAmount;
+  }
+
+  /**
+   * Receipt total in local currency.
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
   }
 
   /**

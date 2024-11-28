@@ -183,6 +183,13 @@ export default class VendorCreditController extends BaseController {
 
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
+
+      // Discount.
+      check('discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('discount_type').optional({ nullable: true }).isString().trim(),
+
+      // Adjustment.
+      check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),
     ];
   }
 

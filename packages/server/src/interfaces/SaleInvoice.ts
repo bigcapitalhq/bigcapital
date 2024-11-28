@@ -82,6 +82,11 @@ export interface ISaleInvoice {
   paymentMethods?: Array<PaymentIntegrationTransactionLink>;
 }
 
+export enum DiscountType {
+  Percentage = 'Percentage',
+  Amount = 'Amount',
+}
+
 export interface ISaleInvoiceDTO {
   invoiceDate: Date;
   dueDate: Date;
@@ -105,7 +110,7 @@ export interface ISaleInvoiceDTO {
 
   // # Discount
   discount?: number;
-  discountType?: string;
+  discountType?: DiscountType;
 
   // # Adjustments
   adjustments?: string;

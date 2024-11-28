@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { IDynamicListFilter, IItemEntry } from '@/interfaces';
+import { DiscountType, IDynamicListFilter, IItemEntry } from '@/interfaces';
 import { ILedgerEntry } from './Ledger';
 import { AttachmentLinkDTO } from './Attachments';
 
@@ -23,6 +23,9 @@ export interface ICreditNoteNewDTO {
   branchId?: number;
   warehouseId?: number;
   attachments?: AttachmentLinkDTO[];
+  discount?: number;
+  discountType?: DiscountType;
+  adjustment?: number;
 }
 
 export interface ICreditNoteEditDTO {

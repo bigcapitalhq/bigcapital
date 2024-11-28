@@ -1,5 +1,5 @@
 import { Model, raw, mixin } from 'objection';
-import { castArray, difference } from 'lodash';
+import { castArray, defaultTo, difference } from 'lodash';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 import BillSettings from './Bill.Settings';
@@ -7,6 +7,7 @@ import ModelSetting from './ModelSetting';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Purchases/Bills/constants';
 import ModelSearchable from './ModelSearchable';
+import { DiscountType } from '@/interfaces';
 
 export default class Bill extends mixin(TenantModel, [
   ModelSetting,
@@ -20,6 +21,11 @@ export default class Bill extends mixin(TenantModel, [
   public isInclusiveTax: boolean;
   public taxAmountWithheld: number;
   public exchangeRate: number;
+
+  public discount: number;
+  public discountType: DiscountType;
+
+  public adjustment: number;
 
   /**
    * Timestamps columns.
@@ -103,9 +109,15 @@ export default class Bill extends mixin(TenantModel, [
    * @returns {number}
    */
   get total() {
+    const discountAmount = this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
+
     return this.isInclusiveTax
-      ? this.subtotal
-      : this.subtotal + this.taxAmountWithheld;
+      ? this.subtotal - discountAmount - adjustmentAmount
+      : this.subtotal + this.taxAmountWithheld - discountAmount - adjustmentAmount;
   }
 
   /**

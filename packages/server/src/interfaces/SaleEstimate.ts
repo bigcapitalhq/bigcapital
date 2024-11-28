@@ -3,6 +3,7 @@ import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 import { IDynamicListFilterDTO } from '@/interfaces/DynamicFilter';
 import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
 import { AttachmentLinkDTO } from './Attachments';
+import { DiscountType } from './SaleInvoice';
 
 export interface ISaleEstimate {
   id?: number;
@@ -40,6 +41,13 @@ export interface ISaleEstimateDTO {
   branchId?: number;
   warehouseId?: number;
   attachments?: AttachmentLinkDTO[];
+
+  // # Discount
+  discount?: number;
+  discountType?: DiscountType;
+
+  // # Adjustment
+  adjustment?: number;
 }
 
 export interface ISalesEstimatesFilter extends IDynamicListFilterDTO {

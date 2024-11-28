@@ -3,6 +3,7 @@ import { body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import {
   AbilitySubject,
+  DiscountType,
   ISaleEstimateDTO,
   SaleEstimateAction,
   SaleEstimateMailOptionsDTO,
@@ -195,11 +196,21 @@ export default class SalesEstimatesController extends BaseController {
       check('terms_conditions').optional().trim(),
       check('send_to_email').optional().trim(),
 
+      // # Attachments
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
 
-      // Pdf template id.
+      // # Pdf template id.
       check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
+
+      // # Discount
+      check('discount').optional().isNumeric().toFloat(),
+      check('discount_type')
+        .default(DiscountType.Amount)
+        .isIn([DiscountType.Amount, DiscountType.Percentage]),
+
+      // # Adjustment
+      check('adjustment').optional().isNumeric().toFloat(),
     ];
   }
 
