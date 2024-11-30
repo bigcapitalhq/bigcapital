@@ -26,6 +26,17 @@ export function InvoiceDetailTableFooter() {
           value={invoice.subtotal_formatted}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
+        {invoice.discount_amount > 0 && (
+          <TotalLine
+            title={
+              invoice.discount_percentage_formatted
+                ? `Discount [${invoice.discount_percentage_formatted}]`
+                : 'Discount'
+            }
+            value={invoice.discount_amount_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
         {invoice.taxes.map((taxRate) => (
           <TotalLine
             key={taxRate.id}
@@ -34,6 +45,7 @@ export function InvoiceDetailTableFooter() {
             textStyle={TotalLineTextStyle.Regular}
           />
         ))}
+
         <TotalLine
           title={<T id={'invoice.details.total'} />}
           value={invoice.total_formatted}

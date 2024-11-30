@@ -26,14 +26,6 @@ export default class VendorCredit extends mixin(TenantModel, [
   static get tableName() {
     return 'vendor_credits';
   }
-
-  /**
-   * Virtual attributes.
-   */
-  static get virtualAttributes() {
-    return ['localAmount'];
-  }
-
   /**
    * Vendor credit amount in local currency.
    * @returns {number}
@@ -81,9 +73,10 @@ export default class VendorCredit extends mixin(TenantModel, [
    * @returns {number}
    */
   get total() {
-    const discountAmount = this.discountType === DiscountType.Amount
-      ? this.discount 
-      : this.subtotal * (this.discount / 100);
+    const discountAmount =
+      this.discountType === DiscountType.Amount
+        ? this.discount
+        : this.subtotal * (this.discount / 100);
 
     return this.subtotal - discountAmount - this.adjustment;
   }
@@ -182,7 +175,21 @@ export default class VendorCredit extends mixin(TenantModel, [
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['isDraft', 'isPublished', 'isOpen', 'isClosed', 'creditsRemaining'];
+    return [
+      'isDraft',
+      'isPublished',
+      'isOpen',
+      'isClosed',
+
+      'creditsRemaining',
+      'localAmount',
+
+      'discountAmount',
+      'discountPercentage',
+
+      'total',
+      'totalLocal',
+    ];
   }
 
   /**

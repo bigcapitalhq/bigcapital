@@ -53,6 +53,10 @@ export default class Bill extends mixin(TenantModel, [
       'localAllocatedCostAmount',
       'billableAmount',
       'amountLocal',
+
+      'discountAmount',
+      'discountPercentage',
+
       'subtotal',
       'subtotalLocal',
       'subtotalExludingTax',

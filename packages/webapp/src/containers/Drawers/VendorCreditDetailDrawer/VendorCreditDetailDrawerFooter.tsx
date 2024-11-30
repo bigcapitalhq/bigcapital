@@ -25,6 +25,17 @@ export default function VendorCreditDetailDrawerFooter() {
           value={vendorCredit.formatted_subtotal}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
+        {vendorCredit.discount_amount > 0 && (
+          <TotalLine
+            title={
+              bill.discount_percentage_formatted
+                ? `Discount [${bill.discount_percentage_formatted}]`
+                : 'Discount'
+            }
+            value={vendorCredit.discount_amount_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
         <TotalLine
           title={<T id={'vendor_credit.drawer.label_total'} />}
           value={vendorCredit.formatted_amount}
