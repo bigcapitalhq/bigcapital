@@ -70,6 +70,9 @@ export const defaultInvoice = {
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
   attachments: [],
   payment_methods: {},
+  discount: '',
+  discount_type: 'amount',
+  adjustment: '',
 };
 
 // Invoice entry request schema.
@@ -302,6 +305,20 @@ export const useInvoiceSubtotal = () => {
 };
 
 /**
+ * Retrieves the invoice discount amount.
+ * @returns {number}
+ */
+export const useInvoiceDiscountAmount = () => {
+  const { values } = useFormikContext();
+  const subtotal = useInvoiceSubtotal();
+  const discount = parseFloat(values.discount);
+
+  return values?.discount_type === 'percentage'
+    ? (subtotal * discount) / 100
+    : discount;
+};
+
+/**
  * Detarmines whether the invoice has foreign customer.
  * @returns {boolean}
  */
@@ -382,10 +399,12 @@ export const useInvoiceTotal = () => {
   const subtotal = useInvoiceSubtotal();
   const totalTaxAmount = useInvoiceTotalTaxAmount();
   const isExclusiveTax = useIsInvoiceTaxExclusive();
+  const discountAmount = useInvoiceDiscountAmount();
 
-  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(
-    subtotal,
-  );
+  return R.compose(
+    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
+    R.subtract(R.__, discountAmount),
+  )(subtotal);
 };
 
 /**

@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik';
 import * as R from 'ramda';
 import { ExchangeRateInputGroup } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
-import { useCreditNoteIsForeignCustomer, useCreditNoteTotals } from './utils';
+import { useCreditNoteIsForeignCustomer, useCreditNoteSubtotal } from './utils';
 import withSettings from '@/containers/Settings/withSettings';
 import { transactionNumber } from '@/utils';
 import {
@@ -78,13 +78,13 @@ export const CreditNoteSyncIncrementSettingsToForm = R.compose(
  */
 export const CreditNoteExchangeRateSync = R.compose(withDialogActions)(
   ({ openDialog }) => {
-    const { total } = useCreditNoteTotals();
+    const subtotal = useCreditNoteSubtotal();
     const timeout = useRef();
 
     useSyncExRateToForm({
       onSynced: () => {
         // If the total bigger then zero show alert to the user after adjusting entries.
-        if (total > 0) {
+        if (subtotal > 0) {
           clearTimeout(timeout.current);
           timeout.current = setTimeout(() => {
             openDialog(DialogsName.InvoiceExchangeRateChangeNotice);

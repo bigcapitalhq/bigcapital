@@ -53,6 +53,9 @@ export const defaultVendorsCreditNote = {
   currency_code: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
   attachments: [],
+  discount: '',
+  discount_type: 'amount',
+  adjustment: '',
 };
 
 /**
@@ -205,6 +208,75 @@ export const useVendorCrditNoteTotals = () => {
     formattedTotal,
     formattedSubtotal,
   };
+};
+
+/**
+ * Retrieves the vendor credit subtotal.
+ * @returns {number}
+ */
+export const useVendorCreditSubtotal = () => {
+  const {
+    values: { entries },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  return total;
+};
+
+/**
+ * Retrieves the vendor credit discount amount.
+ * @returns {number}
+ */
+export const useVendorCreditDiscountAmount = () => {
+  const { values } = useFormikContext();
+
+  return toSafeNumber(values.discount);
+};
+
+/**
+ * Retrieves the vendor credit adjustment amount.
+ * @returns {number}
+ */
+export const useVendorCreditAdjustment = () => {
+  const { values } = useFormikContext();
+
+  return toSafeNumber(values.adjustment);
+};
+
+/**
+ * Retrieves the vendor credit total.
+ * @returns {number}
+ */
+export const useVendorCreditTotal = () => {
+  const subtotal = useVendorCreditSubtotal();
+  const discountAmount = useVendorCreditDiscountAmount();
+  const adjustment = useVendorCreditAdjustment();
+
+  return subtotal - discountAmount - adjustment;
+};
+
+/**
+ * Retrieves the vendor credit formatted total.
+ * @returns {string}
+ */
+export const useVendorCreditFormattedTotal = () => {
+  const total = useVendorCreditTotal();
+  const currencyCode = useCurrentOrganizationCurrencyCode();
+
+  return formattedAmount(total, currencyCode);
+};
+
+/**
+ * Retrieves the vendor credit formatted subtotal.
+ * @returns {string}
+ */
+export const useVendorCreditFormattedSubtotal = () => {
+  const subtotal = useVendorCreditSubtotal();
+  const currencyCode = useCurrentOrganizationCurrencyCode();
+
+  return formattedAmount(subtotal, currencyCode);
 };
 
 /**

@@ -63,6 +63,8 @@ export const defaultEstimate = {
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
   attachments: [],
   pdf_template_id: '',
+  discount: '',
+  discount_type: 'amount'
 };
 
 const ERRORS = {

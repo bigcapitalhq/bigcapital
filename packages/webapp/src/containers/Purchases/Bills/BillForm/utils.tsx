@@ -13,6 +13,7 @@ import {
   repeatValue,
   orderingLinesIndexes,
   formattedAmount,
+  toSafeNumber,
 } from '@/utils';
 import {
   updateItemsEntriesTotal,
@@ -364,7 +365,27 @@ export const useBillSubtotal = () => {
 };
 
 /**
- * Retreives the bill total tax amount.
+ * Retrieves the bill discount amount.
+ * @returns {number}
+ */
+export const useBillDiscountAmount = () => {
+  const { values } = useFormikContext();
+
+  return toSafeNumber(values.discount);
+};
+
+/**
+ * Retrieves the bill adjustment amount.
+ * @returns {number}
+ */
+export const useBillAdjustmentAmount = () => {
+  const { values } = useFormikContext();
+
+  return toSafeNumber(values.adjustment);
+};
+
+/**
+ * Retrieves the bill total tax amount.
  * @returns {number}
  */
 export const useBillTotalTaxAmount = () => {
@@ -389,15 +410,19 @@ export const useIsBillTaxExclusive = () => {
 };
 
 /**
- * Retreives the bill total.
+ * Retrieves the bill total.
  * @returns {number}
  */
 export const useBillTotal = () => {
   const subtotal = useBillSubtotal();
   const totalTaxAmount = useBillTotalTaxAmount();
   const isExclusiveTax = useIsBillTaxExclusive();
+  const discountAmount = useBillDiscountAmount();
+  const adjustmentAmount = useBillAdjustmentAmount();
 
-  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(
-    subtotal,
-  );
+  return R.compose(
+    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
+    R.subtract(R.__, discountAmount),
+    R.subtract(R.__, adjustmentAmount),
+  )(subtotal);
 };

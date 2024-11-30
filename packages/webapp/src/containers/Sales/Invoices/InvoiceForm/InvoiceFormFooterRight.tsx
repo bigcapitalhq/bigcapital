@@ -9,6 +9,9 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
+  FFormGroup,
+  FInputGroup,
+  FSelect,
 } from '@/components';
 import { useInvoiceAggregatedTaxRates } from './utils';
 import { TaxType } from '@/interfaces/TaxRates';
@@ -18,6 +21,7 @@ import {
   InvoiceSubTotalFormatted,
   InvoiceTotalFormatted,
 } from './components';
+import { Button } from '@blueprintjs/core';
 
 export function InvoiceFormFooterRight() {
   const {
@@ -38,6 +42,31 @@ export function InvoiceFormFooterRight() {
         }
         value={<InvoiceSubTotalFormatted />}
       />
+      <FFormGroup name={'discount'} label={'Discount'} inline>
+        <FInputGroup
+          name={'discount'}
+          rightElement={
+            <FSelect
+              name={'discount_type'}
+              items={[
+                { text: 'USD', value: 'amount' },
+                { text: '%', value: 'percentage' },
+              ]}
+              input={({ text }) => (
+                <Button small minimal>
+                  {text}
+                </Button>
+              )}
+              filterable={false}
+            />
+          }
+        />
+      </FFormGroup>
+
+      <FFormGroup name={'adjustment'} label={'Adjustment'} inline>
+        <FInputGroup name={'adjustment'} />
+      </FFormGroup>
+
       {taxEntries.map((tax, index) => (
         <TotalLine
           key={index}
