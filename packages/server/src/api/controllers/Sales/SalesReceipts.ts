@@ -11,7 +11,7 @@ import {
 import { ServiceError } from '@/exceptions';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { AbilitySubject, SaleReceiptAction } from '@/interfaces';
+import { AbilitySubject, DiscountType, SaleReceiptAction } from '@/interfaces';
 import { SaleReceiptApplication } from '@/services/Sales/Receipts/SaleReceiptApplication';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 
@@ -178,6 +178,12 @@ export default class SalesReceiptsController extends BaseController {
 
       // Pdf template id.
       check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
+
+      // # Discount
+      check('discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('discount_type')
+        .optional({ nullable: true })
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
     ];
   }
 

@@ -1,5 +1,4 @@
 import { Inject, Service } from 'typedi';
-import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
 import { GetSaleReceipt } from './GetSaleReceipt';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
@@ -17,9 +16,6 @@ export class SaleReceiptsPdf {
 
   @Inject()
   private chromiumlyTenancy: ChromiumlyTenancy;
-
-  @Inject()
-  private templateInjectable: TemplateInjectable;
 
   @Inject()
   private getSaleReceiptService: GetSaleReceipt;

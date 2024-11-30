@@ -40,7 +40,21 @@ export default class SaleReceipt extends mixin(TenantModel, [
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['localAmount', 'isClosed', 'isDraft'];
+    return [
+      'localAmount',
+
+      'subtotal',
+      'subtotalLocal',
+
+      'total',
+      'totalLocal',
+
+      'discountAmount',
+      'discountPercentage',
+
+      'isClosed',
+      'isDraft',
+    ];
   }
 
   /**

@@ -43,6 +43,8 @@ export default class SaleEstimate extends mixin(TenantModel, [
   static get virtualAttributes() {
     return [
       'localAmount',
+      'discountAmount',
+      'discountPercentage',
       'isDelivered',
       'isExpired',
       'isConvertedToInvoice',

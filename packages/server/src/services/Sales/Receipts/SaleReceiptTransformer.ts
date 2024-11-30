@@ -13,9 +13,12 @@ export class SaleReceiptTransformer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
-      'formattedSubtotal',
       'discountAmountFormatted',
       'discountPercentageFormatted',
+      'subtotalFormatted',
+      'subtotalLocalFormatted',
+      'totalFormatted',
+      'totalLocalFormatted',
       'adjustmentFormatted',
       'formattedAmount',
       'formattedReceiptDate',
@@ -58,8 +61,37 @@ export class SaleReceiptTransformer extends Transformer {
    * @param {ISaleReceipt} receipt
    * @returns {string}
    */
-  protected formattedSubtotal = (receipt: ISaleReceipt): string => {
-    return formatNumber(receipt.amount, { money: false });
+  protected subtotalFormatted = (receipt: ISaleReceipt): string => {
+    return formatNumber(receipt.subtotal, { money: false });
+  };
+
+  /**
+   * Retrieves the estimate formatted subtotal in local currency.
+   * @param {ISaleReceipt} receipt
+   * @returns {string}
+   */
+  protected subtotalLocalFormatted = (receipt: ISaleReceipt): string => {
+    return formatNumber(receipt.subtotalLocal, {
+      currencyCode: receipt.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the receipt formatted total.
+   * @param receipt
+   * @returns {string}
+   */
+  protected totalFormatted = (receipt: ISaleReceipt): string => {
+    return formatNumber(receipt.total, { money: false });
+  };
+
+  /**
+   * Retrieves the receipt formatted total in local currency.
+   * @param receipt
+   * @returns {string}
+   */
+  protected totalLocalFormatted = (receipt: ISaleReceipt): string => {
+    return formatNumber(receipt.totalLocal, { money: false });
   };
 
   /**
@@ -67,7 +99,7 @@ export class SaleReceiptTransformer extends Transformer {
    * @param {ISaleReceipt} estimate
    * @returns {string}
    */
-  protected formattedAmount = (receipt: ISaleReceipt): string => {
+  protected amountFormatted = (receipt: ISaleReceipt): string => {
     return formatNumber(receipt.amount, {
       currencyCode: receipt.currencyCode,
     });

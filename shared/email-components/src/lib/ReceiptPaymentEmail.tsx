@@ -21,16 +21,20 @@ export interface ReceiptEmailTemplateProps {
   // # Colors
   primaryColor?: string;
 
-  // # Invoice total
-  total: string;
-  totalLabel?: string;
-
   // # Receipt #
   receiptNumber?: string;
   receiptNumberLabel?: string;
 
   // # Items
   items: Array<{ label: string; quantity: string; rate: string }>;
+
+  // # Invoice total
+  total: string;
+  totalLabel?: string;
+
+  // # Discount
+  discount?: string;
+  discountLabel?: string;
 
   // # Subtotal
   subtotal?: string;
@@ -117,7 +121,7 @@ export const ReceiptEmailTemplate: React.FC<
                 <Text style={dueAmountLineItemAmountStyle}>{subtotal}</Text>
               </Column>
             </Row>
-
+            
             <Row style={totalLineRowStyle}>
               <Column width={'50%'}>
                 <Text style={totalLineItemLabelStyle}>{totalLabel}</Text>

@@ -43,8 +43,18 @@ export default class CreditNote extends mixin(TenantModel, [
       'isPublished',
       'isOpen',
       'isClosed',
+
       'creditsRemaining',
       'creditsUsed',
+
+      'subtotal',
+      'subtotalLocal',
+
+      'discountAmount',
+      'discountPercentage',
+
+      'total',
+      'totalLocal',
     ];
   }
 

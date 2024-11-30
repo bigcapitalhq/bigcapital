@@ -48,6 +48,12 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   showTotal?: boolean;
   totalLabel?: string;
 
+  // # Discount
+  discount?: string;
+  showDiscount?: boolean;
+  discountLabel?: string;
+
+  // # Subtotal
   subtotal?: string;
   showSubtotal?: boolean;
   subtotalLabel?: string;
@@ -100,6 +106,11 @@ export function EstimatePaperTemplate({
   total = '$1000.00',
   totalLabel = 'Total',
   showTotal = true,
+
+  // # Discount
+  discount = '0.00',
+  discountLabel = 'Discount',
+  showDiscount = true,
 
   // # Subtotal
   subtotal = '1000/00',
@@ -202,8 +213,8 @@ export function EstimatePaperTemplate({
                     <Text>{data.item}</Text>
                     <Text
                       fontSize={'12px'}
-                    // className={Classes.TEXT_MUTED}
-                    // style={{ fontSize: 12 }}
+                      // className={Classes.TEXT_MUTED}
+                      // style={{ fontSize: 12 }}
                     >
                       {data.description}
                     </Text>
@@ -221,6 +232,12 @@ export function EstimatePaperTemplate({
               <PaperTemplate.TotalLine
                 label={subtotalLabel}
                 amount={subtotal}
+              />
+            )}
+            {showDiscount && discount && (
+              <PaperTemplate.TotalLine
+                label={discountLabel}
+                amount={discount}
               />
             )}
             {showTotal && (

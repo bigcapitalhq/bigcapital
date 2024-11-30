@@ -4,6 +4,7 @@ import { check, param, query } from 'express-validator';
 import {
   AbilitySubject,
   BillAction,
+  DiscountType,
   IBillDTO,
   IBillEditDTO,
 } from '@/interfaces';
@@ -144,8 +145,15 @@ export default class BillsController extends BaseController {
         .isNumeric()
         .toInt(),
 
+      // Attachments
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
+
+      // # Discount
+      check('discount_type')
+        .default(DiscountType.Amount)
+        .isIn([DiscountType.Amount, DiscountType.Percentage]),
+      check('discount').optional().isDecimal().toFloat(),
     ];
   }
 

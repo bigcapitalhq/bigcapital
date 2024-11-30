@@ -29,6 +29,12 @@ export interface ISaleReceipt {
   localAmount?: number;
   entries?: IItemEntry[];
 
+  subtotal?: number;
+  subtotalLocal?: number;
+
+  total?: number;
+  totalLocal?: number;
+
   discountAmount: number;
   discountPercentage?: number | null;
   

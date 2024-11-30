@@ -72,6 +72,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
 
       'taxAmountWithheldLocal',
       'discountAmount',
+      'discountPercentage',
 
       'total',
       'totalLocal',

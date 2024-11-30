@@ -254,18 +254,27 @@ export interface EstimatePdfBrandingAttributes {
   companyAddress: string;
   billedToLabel: string;
 
+  // # Total
   total: string;
   totalLabel: string;
   showTotal: boolean;
 
+  // # Discount
+  discount: string;
+  showDiscount: boolean;
+  discountLabel: string;
+
+  // # Subtotal
   subtotal: string;
   subtotalLabel: string;
   showSubtotal: boolean;
 
+  // # Customer Note
   showCustomerNote: boolean;
   customerNote: string;
   customerNoteLabel: string;
 
+  // # Terms & Conditions
   showTermsConditions: boolean;
   termsConditions: string;
   termsConditionsLabel: string;
