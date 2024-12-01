@@ -1,23 +1,26 @@
 // @ts-nocheck
 import styled from 'styled-components';
+import { useFormikContext } from 'formik';
 import {
   TotalLines,
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-  FFormGroup,
-  FInputGroup,
-  FSelect,
 } from '@/components';
-import { useBillAggregatedTaxRates, useBillTotals } from './utils';
-import { useFormikContext } from 'formik';
+import {
+  useBillAdjustmentAmountFormatted,
+  useBillAggregatedTaxRates,
+  useBillDiscountAmountFormatted,
+  useBillSubtotalFormatted,
+  useBillTotalFormatted,
+  useBillTotals,
+} from './utils';
 import { TaxType } from '@/interfaces/TaxRates';
-import { Button } from '@blueprintjs/core';
+import { AdjustmentTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/AdjustmentTotalLine';
+import { DiscountTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/DiscountTotalLine';
 
 export function BillFormFooterRight() {
   const {
-    formattedSubtotal,
-    formattedTotal,
     formattedDueTotal,
     formattedPaymentTotal,
   } = useBillTotals();
@@ -26,7 +29,11 @@ export function BillFormFooterRight() {
     values: { inclusive_exclusive_tax, currency_code },
   } = useFormikContext();
 
+  const subtotalFormatted = useBillSubtotalFormatted();
+  const totalFormatted = useBillTotalFormatted();
   const taxEntries = useBillAggregatedTaxRates();
+  const discountAmount = useBillDiscountAmountFormatted();
+  const adjustmentAmount = useBillAdjustmentAmountFormatted();
 
   return (
     <BillTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
@@ -38,37 +45,13 @@ export function BillFormFooterRight() {
               : 'Subtotal'}
           </>
         }
-        value={formattedSubtotal}
-        borderStyle={TotalLineBorderStyle.None}
+        value={subtotalFormatted}
       />
-
-      {/* ----------- Discount ----------- */}
-      <FFormGroup name={'discount'} label={'Discount'} inline>
-        <FInputGroup
-          name={'discount'}
-          rightElement={
-            <FSelect
-              name={'discount_type'}
-              items={[
-                { text: 'USD', value: 'amount' },
-                { text: '%', value: 'percentage' },
-              ]}
-              input={({ text }) => (
-                <Button small minimal>
-                  {text}
-                </Button>
-              )}
-              filterable={false}
-            />
-          }
-        />
-      </FFormGroup>
-
-      {/* ----------- Adjustment ----------- */}
-      <FFormGroup name={'adjustment'} label={'Adjustment'} inline>
-        <FInputGroup name={'adjustment'} />
-      </FFormGroup>
-
+      <DiscountTotalLine
+        currencyCode={currency_code}
+        discountAmount={discountAmount}
+      />
+      <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
       {taxEntries.map((tax, index) => (
         <TotalLine
           key={index}
@@ -78,8 +61,8 @@ export function BillFormFooterRight() {
         />
       ))}
       <TotalLine
-        title={`Total (${currency_code})`}
-        value={formattedTotal}
+        title={`TOTAL (${currency_code})`}
+        value={totalFormatted}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />

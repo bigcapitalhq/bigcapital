@@ -196,9 +196,11 @@ export const useCreditNoteSubtotal = () => {
  */
 export const useCreditNoteSubtotalFormatted = () => {
   const subtotal = useCreditNoteSubtotal();
-  const { currency_code: currencyCode } = useFormikContext();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
 
-  return formattedAmount(subtotal, currencyCode, { money: false });
+  return formattedAmount(subtotal, currencyCode, { money: true });
 };
 
 /**
@@ -216,6 +218,19 @@ export const useCreditNoteDiscountAmount = () => {
 };
 
 /**
+ * Retrieves the credit note discount amount formatted.
+ * @returns {string}
+ */
+export const useCreditNoteDiscountAmountFormatted = () => {
+  const discountAmount = useCreditNoteDiscountAmount();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(discountAmount, currencyCode, { money: true });
+};
+
+/**
  * Retrieves the credit note adjustment amount.
  * @returns {number}
  */
@@ -223,6 +238,19 @@ export const useCreditNoteAdjustmentAmount = () => {
   const { values } = useFormikContext();
 
   return toSafeNumber(values.adjustment);
+};
+
+/**
+ * Retrieves the credit note adjustment amount formatted.
+ * @returns {string}
+ */
+export const useCreditNoteAdjustmentFormatted = () => {
+  const adjustmentAmount = useCreditNoteAdjustmentAmount();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(adjustmentAmount, currencyCode, { money: true });
 };
 
 /**
@@ -243,9 +271,11 @@ export const useCreditNoteTotal = () => {
  */
 export const useCreditNoteTotalFormatted = () => {
   const total = useCreditNoteTotal();
-  const { currency_code: currencyCode } = useFormikContext();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
 
-  return formattedAmount(total, currencyCode);
+  return formattedAmount(total, currencyCode, { money: true });
 };
 
 /**

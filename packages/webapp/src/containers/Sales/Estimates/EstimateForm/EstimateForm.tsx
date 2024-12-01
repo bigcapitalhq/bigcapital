@@ -177,7 +177,7 @@ function EstimateForm({
         </PageForm>
 
         {/*------- Dialogs -------*/}
-        <EstimateFormDialogs />
+        {/* <EstimateFormDialogs /> */}
 
         {/*------- Effects -------*/}
         <EstimateIncrementSyncSettingsToForm />

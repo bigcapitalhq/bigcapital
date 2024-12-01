@@ -64,7 +64,7 @@ export const defaultEstimate = {
   attachments: [],
   pdf_template_id: '',
   discount: '',
-  discount_type: 'amount'
+  discount_type: 'amount',
 };
 
 const ERRORS = {
@@ -236,6 +236,107 @@ export const useEstimateTotals = () => {
     formattedTotal,
     formattedSubtotal,
   };
+};
+
+/**
+ * Retrieves the estimate subtotal.
+ * @returns {number}
+ */
+export const useEstimateSubtotal = () => {
+  const {
+    values: { entries },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  return total;
+};
+
+/**
+ * Retrieves the estimate subtotal formatted.
+ * @returns {string}
+ */
+export const useEstimateSubtotalFormatted = () => {
+  const subtotal = useEstimateSubtotal();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(subtotal, currencyCode);
+};
+
+/**
+ * Retrieves the estimate discount amount.
+ * @returns {number}
+ */
+export const useEstimateDiscount = () => {
+  const { values } = useFormikContext();
+  const discountAmount = parseFloat(values.discount);
+
+  return discountAmount;
+};
+
+/**
+ * Retrieves the estimate discount formatted.
+ * @returns {string}
+ */
+export const useEstimateDiscountFormatted = () => {
+  const discount = useEstimateDiscount();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(discount, currencyCode);
+};
+
+/**
+ * Retrieves the estimate adjustment amount.
+ * @returns {number}
+ */
+export const useEstimateAdjustment = () => {
+  const { values } = useFormikContext();
+  const adjustmentAmount = parseFloat(values.adjustment);
+
+  return adjustmentAmount;
+};
+
+/**
+ * Retrieves the estimate adjustment formatted.
+ * @returns {string}
+ */
+export const useEstimateAdjustmentFormatted = () => {
+  const adjustment = useEstimateAdjustment();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(adjustment, currencyCode);
+};
+
+/**
+ * Retrieves the estimate total.
+ * @returns {number}
+ */
+export const useEstimateTotal = () => {
+  const subtotal = useEstimateSubtotal();
+  const discount = useEstimateDiscount();
+  const adjustment = useEstimateAdjustment();
+
+  return subtotal - discount - adjustment;
+};
+
+/**
+ * Retrieves the estimate total formatted.
+ * @returns {string}
+ */
+export const useEstimateTotalFormatted = () => {
+  const total = useEstimateTotal();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(total, currencyCode);
 };
 
 /**

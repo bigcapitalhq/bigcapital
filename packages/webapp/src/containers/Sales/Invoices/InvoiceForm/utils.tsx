@@ -11,6 +11,7 @@ import {
   transformToForm,
   repeatValue,
   defaultFastFieldShouldUpdate,
+  formattedAmount,
 } from '@/utils';
 import { ERROR } from '@/constants/errors';
 import { AppToaster } from '@/components';
@@ -316,6 +317,43 @@ export const useInvoiceDiscountAmount = () => {
   return values?.discount_type === 'percentage'
     ? (subtotal * discount) / 100
     : discount;
+};
+
+/**
+ * Retrieves the invoice discount amount formatted.
+ * @returns {string}
+ */
+export const useInvoiceDiscountAmountFormatted = () => {
+  const discountAmount = useInvoiceDiscountAmount();
+  const {
+    values: { currency_code },
+  } = useFormikContext();
+
+  return formattedAmount(discountAmount, currency_code);
+};
+
+/**
+ * Retrieves the invoice adjustment amount.
+ * @returns {number}
+ */
+export const useInvoiceAdjustmentAmount = () => {
+  const { values } = useFormikContext();
+  const adjustment = parseFloat(values.adjustment);
+
+  return adjustment;
+};
+
+/**
+ * Retrieves the invoice adjustment amount formatted.
+ * @returns {string}
+ */
+export const useInvoiceAdjustmentAmountFormatted = () => {
+  const adjustmentAmount = useInvoiceAdjustmentAmount();
+  const {
+    values: { currency_code },
+  } = useFormikContext();
+
+  return formattedAmount(adjustmentAmount, currency_code);
 };
 
 /**

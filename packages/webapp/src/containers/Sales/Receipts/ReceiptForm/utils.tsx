@@ -10,6 +10,7 @@ import {
   repeatValue,
   transformToForm,
   formattedAmount,
+  toSafeNumber,
 } from '@/utils';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import {
@@ -63,6 +64,9 @@ export const defaultReceipt = {
   entries: [...repeatValue(defaultReceiptEntry, MIN_LINES_NUMBER)],
   attachments: [],
   pdf_template_id: '',
+  discount: '',
+  discount_type: 'amount',
+  adjustment: '',
 };
 
 const ERRORS = {
@@ -247,6 +251,76 @@ export const useReceiptTotals = () => {
     formattedPaymentTotal,
     formattedDueTotal,
   };
+};
+
+/**
+ * Retrieves the receipt subtotal.
+ * @returns {number}
+ */
+export const useReceiptSubtotal = () => {
+  const {
+    values: { entries },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  const subtotal = React.useMemo(() => getEntriesTotal(entries), [entries]);
+
+  return subtotal;
+};
+
+/**
+ * Retrieves the formatted discount amount.
+ * @returns {string}
+ */
+export const useReceiptDiscountAmountFormatted = () => {
+  const { values } = useFormikContext();
+
+  return formattedAmount(values.discount, values.currency_code);
+};
+
+/**
+ * Retrieves the receipt adjustment amount.
+ * @returns {number}
+ */
+export const useReceiptAdjustmentAmount = () => {
+  const { values } = useFormikContext();
+  const adjustment = toSafeNumber(values.adjustment);
+
+  return adjustment;
+};
+
+/**
+ * Retrieves the formatted adjustment amount.
+ * @returns {string}
+ */
+export const useReceiptAdjustmentFormatted = () => {
+  const { values } = useFormikContext();
+  const adjustment = useReceiptAdjustmentAmount();
+
+  return formattedAmount(adjustment, values.currency_code);
+};
+
+/**
+ * Retrieves the receipt total.
+ * @returns {number}
+ */
+export const useReceiptTotal = () => {
+  const subtotal = useReceiptSubtotal();
+  const adjustmentAmount = useReceiptAdjustmentAmount();
+  const discountAmount = useReceiptDiscountAmount();
+
+  return subtotal - discountAmount + adjustmentAmount;
+};
+
+/**
+ * Retrieves the formatted receipt total.
+ * @returns {string}
+ */
+export const useReceiptTotalFormatted = () => {
+  const total = useReceiptTotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(total, values.currency_code);
 };
 
 /**

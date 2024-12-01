@@ -2,18 +2,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-
 import {
   T,
   TotalLines,
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-  FFormGroup,
-  FInputGroup,
-  FSelect,
 } from '@/components';
-import { useInvoiceAggregatedTaxRates } from './utils';
+import {
+  useInvoiceAdjustmentAmountFormatted,
+  useInvoiceAggregatedTaxRates,
+  useInvoiceDiscountAmountFormatted,
+} from './utils';
 import { TaxType } from '@/interfaces/TaxRates';
 import {
   InvoiceDueAmountFormatted,
@@ -21,7 +21,8 @@ import {
   InvoiceSubTotalFormatted,
   InvoiceTotalFormatted,
 } from './components';
-import { Button } from '@blueprintjs/core';
+import { AdjustmentTotalLine } from './AdjustmentTotalLine';
+import { DiscountTotalLine } from './DiscountTotalLine';
 
 export function InvoiceFormFooterRight() {
   const {
@@ -29,6 +30,8 @@ export function InvoiceFormFooterRight() {
   } = useFormikContext();
 
   const taxEntries = useInvoiceAggregatedTaxRates();
+  const adjustmentAmount = useInvoiceAdjustmentAmountFormatted();
+  const discountAmount = useInvoiceDiscountAmountFormatted();
 
   return (
     <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
@@ -42,30 +45,11 @@ export function InvoiceFormFooterRight() {
         }
         value={<InvoiceSubTotalFormatted />}
       />
-      <FFormGroup name={'discount'} label={'Discount'} inline>
-        <FInputGroup
-          name={'discount'}
-          rightElement={
-            <FSelect
-              name={'discount_type'}
-              items={[
-                { text: 'USD', value: 'amount' },
-                { text: '%', value: 'percentage' },
-              ]}
-              input={({ text }) => (
-                <Button small minimal>
-                  {text}
-                </Button>
-              )}
-              filterable={false}
-            />
-          }
-        />
-      </FFormGroup>
-
-      <FFormGroup name={'adjustment'} label={'Adjustment'} inline>
-        <FInputGroup name={'adjustment'} />
-      </FFormGroup>
+      <DiscountTotalLine
+        currencyCode={currency_code}
+        discountAmount={discountAmount}
+      />
+      <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
 
       {taxEntries.map((tax, index) => (
         <TotalLine

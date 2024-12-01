@@ -11,6 +11,7 @@ import {
   transactionNumber,
   orderingLinesIndexes,
   formattedAmount,
+  toSafeNumber,
 } from '@/utils';
 import {
   updateItemsEntriesTotal,
@@ -236,6 +237,19 @@ export const useVendorCreditDiscountAmount = () => {
 };
 
 /**
+ * Retrieves the vendor credit discount amount formatted.
+ * @returns {string}
+ */
+export const useVendorCreditDiscountAmountFormatted = () => {
+  const discountAmount = useVendorCreditDiscountAmount();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(discountAmount, currencyCode);
+};
+
+/**
  * Retrieves the vendor credit adjustment amount.
  * @returns {number}
  */
@@ -243,6 +257,19 @@ export const useVendorCreditAdjustment = () => {
   const { values } = useFormikContext();
 
   return toSafeNumber(values.adjustment);
+};
+
+/**
+ * Retrieves the vendor credit adjustment amount formatted.
+ * @returns {string}
+ */
+export const useVendorCreditAdjustmentAmountFormatted = () => {
+  const adjustmentAmount = useVendorCreditAdjustment();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(adjustmentAmount, currencyCode);
 };
 
 /**
@@ -258,12 +285,14 @@ export const useVendorCreditTotal = () => {
 };
 
 /**
- * Retrieves the vendor credit formatted total.
+ * Retrieves the vendor credit total formatted.
  * @returns {string}
  */
-export const useVendorCreditFormattedTotal = () => {
+export const useVendorCreditTotalFormatted = () => {
   const total = useVendorCreditTotal();
-  const currencyCode = useCurrentOrganizationCurrencyCode();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
 
   return formattedAmount(total, currencyCode);
 };
@@ -275,6 +304,19 @@ export const useVendorCreditFormattedTotal = () => {
 export const useVendorCreditFormattedSubtotal = () => {
   const subtotal = useVendorCreditSubtotal();
   const currencyCode = useCurrentOrganizationCurrencyCode();
+
+  return formattedAmount(subtotal, currencyCode);
+};
+
+/**
+ * Retrieves the vendor credit formatted subtotal.
+ * @returns {string}
+ */
+export const useVendorCreditSubtotalFormatted = () => {
+  const subtotal = useVendorCreditSubtotal();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
 
   return formattedAmount(subtotal, currencyCode);
 };

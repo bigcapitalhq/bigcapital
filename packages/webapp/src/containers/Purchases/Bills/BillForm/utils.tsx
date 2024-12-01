@@ -66,6 +66,13 @@ export const defaultBill = {
   currency_code: '',
   entries: [...repeatValue(defaultBillEntry, MIN_LINES_NUMBER)],
   attachments: [],
+
+  // Adjustment
+  adjustment: '',
+
+  // Discount
+  discount: '',
+  discount_type: 'amount',
 };
 
 export const ERRORS = {
@@ -365,6 +372,17 @@ export const useBillSubtotal = () => {
 };
 
 /**
+ * Retrieves the bill subtotal formatted.
+ * @returns {string}
+ */
+export const useBillSubtotalFormatted = () => {
+  const subtotal = useBillSubtotal();
+  const { currency_code: currencyCode } = useFormikContext();
+
+  return formattedAmount(subtotal, currencyCode);
+};
+
+/**
  * Retrieves the bill discount amount.
  * @returns {number}
  */
@@ -375,6 +393,17 @@ export const useBillDiscountAmount = () => {
 };
 
 /**
+ * Retrieves the bill discount amount formatted.
+ * @returns {string}
+ */
+export const useBillDiscountAmountFormatted = () => {
+  const discountAmount = useBillDiscountAmount();
+  const { currency_code: currencyCode } = useFormikContext();
+
+  return formattedAmount(discountAmount, currencyCode);
+};
+
+/**
  * Retrieves the bill adjustment amount.
  * @returns {number}
  */
@@ -382,6 +411,17 @@ export const useBillAdjustmentAmount = () => {
   const { values } = useFormikContext();
 
   return toSafeNumber(values.adjustment);
+};
+
+/**
+ * Retrieves the bill adjustment amount formatted.
+ * @returns {string}
+ */
+export const useBillAdjustmentAmountFormatted = () => {
+  const adjustmentAmount = useBillAdjustmentAmount();
+  const { currency_code: currencyCode } = useFormikContext();
+
+  return formattedAmount(adjustmentAmount, currencyCode);
 };
 
 /**
@@ -425,4 +465,15 @@ export const useBillTotal = () => {
     R.subtract(R.__, discountAmount),
     R.subtract(R.__, adjustmentAmount),
   )(subtotal);
+};
+
+/**
+ * Retrieves the bill total formatted.
+ * @returns {string}
+ */
+export const useBillTotalFormatted = () => {
+  const total = useBillTotal();
+  const { currency_code: currencyCode } = useFormikContext();
+
+  return formattedAmount(total, currencyCode);
 };

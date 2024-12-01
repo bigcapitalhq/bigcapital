@@ -1,55 +1,35 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { useFormikContext } from 'formik';
+import { T, TotalLines, TotalLine, TotalLineTextStyle } from '@/components';
 import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-  FInputGroup,
-  FFormGroup,
-  FSelect,
-} from '@/components';
-import { useEstimateTotals } from './utils';
-import { Button } from '@blueprintjs/core';
+  useEstimateAdjustmentFormatted,
+  useEstimateDiscountFormatted,
+  useEstimateTotals,
+} from './utils';
+import { AdjustmentTotalLine } from '../../Invoices/InvoiceForm/AdjustmentTotalLine';
+import { DiscountTotalLine } from '../../Invoices/InvoiceForm/DiscountTotalLine';
 
 export function EstimateFormFooterRight() {
   const { formattedSubtotal, formattedTotal } = useEstimateTotals();
+  const {
+    values: { currency_code },
+  } = useFormikContext();
+  const discountAmount = useEstimateDiscountFormatted();
+  const adjustmentAmount = useEstimateAdjustmentFormatted();
 
   return (
     <EstimateTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
         title={<T id={'estimate_form.label.subtotal'} />}
         value={formattedSubtotal}
-        borderStyle={TotalLineBorderStyle.None}
       />
-
-      <FFormGroup name={'discount'} label={'Discount'} inline>
-        <FInputGroup
-          name={'discount'}
-          rightElement={
-            <FSelect
-              name={'discount_type'}
-              items={[
-                { text: 'USD', value: 'amount' },
-                { text: '%', value: 'percentage' },
-              ]}
-              input={({ text }) => (
-                <Button small minimal>
-                  {text}
-                </Button>
-              )}
-              filterable={false}
-            />
-          }
-        />
-      </FFormGroup>
-
-      <FFormGroup name={'adjustment'} label={'Adjustment'} inline>
-        <FInputGroup name={'adjustment'} />
-      </FFormGroup>
-
+      <DiscountTotalLine
+        currencyCode={currency_code}
+        discountAmount={discountAmount}
+      />
+      <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
       <TotalLine
         title={<T id={'estimate_form.label.total'} />}
         value={formattedTotal}
