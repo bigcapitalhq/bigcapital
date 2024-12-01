@@ -10,6 +10,7 @@ import {
   repeatValue,
   transformToForm,
   formattedAmount,
+  toSafeNumber,
 } from '@/utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import {
@@ -272,9 +273,11 @@ export const useEstimateSubtotalFormatted = () => {
  */
 export const useEstimateDiscount = () => {
   const { values } = useFormikContext();
-  const discountAmount = parseFloat(values.discount);
+  const discount = toSafeNumber(values.discount);
 
-  return discountAmount;
+  return values?.discount_type === 'percentage'
+    ? (subtotal * discount) / 100
+    : discount;
 };
 
 /**
@@ -296,7 +299,7 @@ export const useEstimateDiscountFormatted = () => {
  */
 export const useEstimateAdjustment = () => {
   const { values } = useFormikContext();
-  const adjustmentAmount = parseFloat(values.adjustment);
+  const adjustmentAmount = toSafeNumber(values.adjustment);
 
   return adjustmentAmount;
 };

@@ -269,13 +269,39 @@ export const useReceiptSubtotal = () => {
 };
 
 /**
+ * Retrieves the formatted subtotal.
+ * @returns {string}
+ */
+export const useReceiptSubtotalFormatted = () => {
+  const subtotal = useReceiptSubtotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(subtotal, values.currency_code, { money: true });
+};
+
+/**
+ * Retrieves the receipt discount amount.
+ * @returns {number}
+ */
+export const useReceiptDiscountAmount = () => {
+  const { values } = useFormikContext();
+  const subtotal = useReceiptSubtotal();
+  const discount = toSafeNumber(values.discount);
+
+  return values?.discount_type === 'percentage'
+    ? (subtotal * discount) / 100
+    : discount;
+};
+
+/**
  * Retrieves the formatted discount amount.
  * @returns {string}
  */
 export const useReceiptDiscountAmountFormatted = () => {
   const { values } = useFormikContext();
+  const discount = useReceiptDiscountAmount();
 
-  return formattedAmount(values.discount, values.currency_code);
+  return formattedAmount(discount, values.currency_code);
 };
 
 /**
