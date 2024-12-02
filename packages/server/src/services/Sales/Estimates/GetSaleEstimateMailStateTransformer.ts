@@ -20,6 +20,16 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
       'subtotal',
       'subtotalFormatted',
 
+      'discountAmount',
+      'discountAmountFormatted',
+      'discountPercentage',
+      'discountPercentageFormatted',
+      'discountLabel',
+
+      'adjustment',
+      'adjustmentFormatted',
+      'adjustmentLabel',
+
       'estimateNumber',
       'entries',
 
@@ -95,6 +105,17 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
    */
   protected subtotal(estimate) {
     return estimate.amount;
+  }
+
+  /**
+   * Retrieves the discount label of the estimate.
+   * @param estimate
+   * @returns {string}
+   */
+  protected discountLabel(estimate) {
+    return estimate.discountType === 'percentage'
+      ? `Discount [${estimate.discountPercentageFormatted}]`
+      : 'Discount';
   }
 
   /**

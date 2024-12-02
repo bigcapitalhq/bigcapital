@@ -56,9 +56,12 @@ const withInvoiceMailReceiptPreviewProps = <
       companyLogoUri: invoiceMailState?.companyLogoUri,
       primaryColor: invoiceMailState?.primaryColor,
       total: invoiceMailState?.totalFormatted,
+      subtotal: invoiceMailState?.subtotalFormatted,
       dueDate: invoiceMailState?.dueDateFormatted,
       dueAmount: invoiceMailState?.dueAmountFormatted,
       invoiceNumber: invoiceMailState?.invoiceNo,
+      discount: invoiceMailState?.discountAmountFormatted,
+      adjustment: invoiceMailState?.adjustmentFormatted,
       items,
       message,
     };

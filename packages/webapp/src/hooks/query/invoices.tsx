@@ -434,6 +434,15 @@ export interface GetSaleInvoiceDefaultOptionsResponse {
   subtotal: number;
   subtotalFormatted: string;
 
+  discountAmount: number;
+  discountAmountFormatted: string;
+  discountLabel: string;
+  discountPercentage: number;
+  discountPercentageFormatted: string;
+
+  adjustment: number;
+  adjustmentFormatted: string;
+
   total: number;
   totalFormatted: string;
 
