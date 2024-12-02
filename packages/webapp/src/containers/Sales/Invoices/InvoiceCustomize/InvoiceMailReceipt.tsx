@@ -212,10 +212,10 @@ export function InvoiceMailReceipt({
             position="apart"
             borderBottomStyle="solid"
             borderBottomWidth="1px"
-            borderColor="#000"
+            borderColor="#D9D9D9"
           >
-            <x.span fontWeight={500}>{discountLabel}</x.span>
-            <x.span fontWeight={600} fontSize={15}>
+            <x.span>{discountLabel}</x.span>
+            <x.span fontSize={15}>
               {discount}
             </x.span>
           </Group>
@@ -228,10 +228,10 @@ export function InvoiceMailReceipt({
             position="apart"
             borderBottomStyle="solid"
             borderBottomWidth="1px"
-            borderColor="#000"
+            borderColor="#D9D9D9"
           >
-            <x.span fontWeight={500}>{adjustmentLabel}</x.span>
-            <x.span fontWeight={600} fontSize={15}>
+            <x.span>{adjustmentLabel}</x.span>
+            <x.span fontSize={15}>
               {adjustment}
             </x.span>
           </Group>

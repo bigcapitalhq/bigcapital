@@ -133,10 +133,8 @@ export function ReceiptSendMailReceipt({
             borderBottomWidth={'1px'}
             borderBottomColor={'#D9D9D9'}
           >
-            <x.span fontWeight={500}>{discountLabel}</x.span>
-            <x.span fontWeight={600} fontSize={15}>
-              {discount}
-            </x.span>
+            <x.span>{discountLabel}</x.span>
+            <x.span fontSize={15}>{discount}</x.span>
           </Group>
         )}
 
@@ -148,10 +146,8 @@ export function ReceiptSendMailReceipt({
             borderBottomWidth={'1px'}
             borderBottomColor={'#D9D9D9'}
           >
-            <x.span fontWeight={500}>{adjustmentLabel}</x.span>
-            <x.span fontWeight={600} fontSize={15}>
-              {adjustment}
-            </x.span>
+            <x.span>{adjustmentLabel}</x.span>
+            <x.span fontSize={15}>{adjustment}</x.span>
           </Group>
         )}
 
