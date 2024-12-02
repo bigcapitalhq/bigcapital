@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import moment from 'moment';
@@ -64,6 +64,7 @@ export const defaultEstimate = {
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
   attachments: [],
   pdf_template_id: '',
+  adjustment: '',
   discount: '',
   discount_type: 'amount',
 };
@@ -211,35 +212,6 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the estimate totals.
- */
-export const useEstimateTotals = () => {
-  const {
-    values: { entries, currency_code: currencyCode },
-  } = useFormikContext();
-
-  // Retrieves the invoice entries total.
-  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
-
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(total, currencyCode, { money: false }),
-    [total, currencyCode],
-  );
-
-  return {
-    total,
-    formattedTotal,
-    formattedSubtotal,
-  };
-};
-
-/**
  * Retrieves the estimate subtotal.
  * @returns {number}
  */
@@ -249,9 +221,9 @@ export const useEstimateSubtotal = () => {
   } = useFormikContext();
 
   // Retrieves the invoice entries total.
-  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+  const subtotal = useMemo(() => getEntriesTotal(entries), [entries]);
 
-  return total;
+  return subtotal;
 };
 
 /**

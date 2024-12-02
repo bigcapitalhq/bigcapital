@@ -261,58 +261,6 @@ export const useSetPrimaryWarehouseToForm = () => {
 };
 
 /**
- * Retreives the bill totals.
- */
-export const useBillTotals = () => {
-  const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
-
-  // Retrieves the bill subtotal.
-  const subtotal = useBillSubtotal();
-  const total = useBillTotal();
-
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(subtotal, currencyCode, { money: false }),
-    [subtotal, currencyCode],
-  );
-  // Retrieves the payment total.
-  const paymentTotal = React.useMemo(() => 0, []);
-
-  // Retireves the formatted payment total.
-  const formattedPaymentTotal = React.useMemo(
-    () => formattedAmount(paymentTotal, currencyCode),
-    [paymentTotal, currencyCode],
-  );
-  // Retrieves the formatted due total.
-  const dueTotal = React.useMemo(
-    () => total - paymentTotal,
-    [total, paymentTotal],
-  );
-  // Retrieves the formatted due total.
-  const formattedDueTotal = React.useMemo(
-    () => formattedAmount(dueTotal, currencyCode),
-    [dueTotal, currencyCode],
-  );
-
-  return {
-    total,
-    paymentTotal,
-    dueTotal,
-    formattedTotal,
-    formattedSubtotal,
-    formattedPaymentTotal,
-    formattedDueTotal,
-  };
-};
-
-/**
  * Detarmines whether the bill has foreign customer.
  * @returns {boolean}
  */
@@ -377,9 +325,9 @@ export const useBillSubtotal = () => {
  */
 export const useBillSubtotalFormatted = () => {
   const subtotal = useBillSubtotal();
-  const { currency_code: currencyCode } = useFormikContext();
+  const { values} = useFormikContext();
 
-  return formattedAmount(subtotal, currencyCode);
+  return formattedAmount(subtotal, values.currency_code);
 };
 
 /**
@@ -398,9 +346,9 @@ export const useBillDiscountAmount = () => {
  */
 export const useBillDiscountAmountFormatted = () => {
   const discountAmount = useBillDiscountAmount();
-  const { currency_code: currencyCode } = useFormikContext();
+  const { values } = useFormikContext();
 
-  return formattedAmount(discountAmount, currencyCode);
+  return formattedAmount(discountAmount, values.currency_code);
 };
 
 /**
@@ -419,9 +367,9 @@ export const useBillAdjustmentAmount = () => {
  */
 export const useBillAdjustmentAmountFormatted = () => {
   const adjustmentAmount = useBillAdjustmentAmount();
-  const { currency_code: currencyCode } = useFormikContext();
+  const { values } = useFormikContext();
 
-  return formattedAmount(adjustmentAmount, currencyCode);
+  return formattedAmount(adjustmentAmount, values.currency_code);
 };
 
 /**
@@ -436,6 +384,7 @@ export const useBillTotalTaxAmount = () => {
       .filter((entry) => entry.tax_amount)
       .sumBy('tax_amount')
       .value();
+
   }, [values.entries]);
 };
 
@@ -473,7 +422,50 @@ export const useBillTotal = () => {
  */
 export const useBillTotalFormatted = () => {
   const total = useBillTotal();
-  const { currency_code: currencyCode } = useFormikContext();
+  const { values } = useFormikContext();
 
-  return formattedAmount(total, currencyCode);
+  return formattedAmount(total, values.currency_code);
+};
+
+/**
+ * Retrieves the bill paid amount.
+ * @returns {number}
+ */
+export const useBillPaidAmount = () => {
+  const { values } = useFormikContext();
+
+  return toSafeNumber(0);
+};
+
+/**
+ * Retrieves the bill paid amount formatted.
+ * @returns {string}
+ */
+export const useBillPaidAmountFormatted = () => {
+  const paidAmount = useBillPaidAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(paidAmount, values.currency_code);
+};
+
+/**
+ * Retrieves the bill due amount.
+ * @returns {number}
+ */
+export const useBillDueAmount = () => {
+  const total = useBillTotal();
+  const paidAmount = useBillPaidAmount();
+
+  return total - paidAmount;
+};
+
+/**
+ * Retrieves the bill due amount formatted.
+ * @returns {string}
+ */
+export const useBillDueAmountFormatted = () => {
+  const dueAmount = useBillDueAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(dueAmount, values.currency_code);
 };

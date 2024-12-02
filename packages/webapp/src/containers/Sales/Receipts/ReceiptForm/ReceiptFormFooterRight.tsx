@@ -12,19 +12,21 @@ import {
 import {
   useReceiptAdjustmentFormatted,
   useReceiptDiscountAmountFormatted,
+  useReceiptDueAmountFormatted,
+  useReceiptPaidAmountFormatted,
   useReceiptSubtotalFormatted,
   useReceiptTotalFormatted,
-  useReceiptTotals,
 } from './utils';
 import { DiscountTotalLine } from '../../Invoices/InvoiceForm/DiscountTotalLine';
 import { AdjustmentTotalLine } from '../../Invoices/InvoiceForm/AdjustmentTotalLine';
 
 export function ReceiptFormFooterRight() {
-  const { formattedDueTotal, formattedPaymentTotal } = useReceiptTotals();
-
   const {
     values: { currency_code },
   } = useFormikContext();
+
+  const paidAmountFormatted = useReceiptPaidAmountFormatted();
+  const dueAmountFormatted = useReceiptDueAmountFormatted();
 
   const subtotalFormatted = useReceiptSubtotalFormatted();
   const totalFormatted = useReceiptTotalFormatted();
@@ -51,12 +53,12 @@ export function ReceiptFormFooterRight() {
       />
       <TotalLine
         title={<T id={'receipt_form.label.payment_amount'} />}
-        value={formattedPaymentTotal}
+        value={paidAmountFormatted}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'receipt_form.label.due_amount'} />}
-        value={formattedDueTotal}
+        value={dueAmountFormatted}
         textStyle={TotalLineTextStyle.Bold}
       />
     </ReceiptTotalLines>

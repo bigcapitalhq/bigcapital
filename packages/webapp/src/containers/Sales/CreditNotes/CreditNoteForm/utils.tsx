@@ -185,6 +185,7 @@ export const useCreditNoteSubtotal = () => {
   const {
     values: { entries },
   } = useFormikContext();
+
   const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   return total;

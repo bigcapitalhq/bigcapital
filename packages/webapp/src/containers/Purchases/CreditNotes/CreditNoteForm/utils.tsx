@@ -185,32 +185,6 @@ export const useSetPrimaryWarehouseToForm = () => {
   }, [isWarehousesSuccess, setFieldValue, warehouses]);
 };
 
-export const useVendorCrditNoteTotals = () => {
-  const {
-    values: { entries, currency_code: currencyCode },
-  } = useFormikContext();
-
-  // Retrieves the invoice entries total.
-  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
-
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(total, currencyCode, { money: false }),
-    [total, currencyCode],
-  );
-
-  return {
-    total,
-    formattedTotal,
-    formattedSubtotal,
-  };
-};
-
 /**
  * Retrieves the vendor credit subtotal.
  * @returns {number}

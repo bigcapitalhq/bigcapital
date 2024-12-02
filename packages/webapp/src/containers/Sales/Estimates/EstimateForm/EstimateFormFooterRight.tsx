@@ -13,13 +13,13 @@ import { AdjustmentTotalLine } from '../../Invoices/InvoiceForm/AdjustmentTotalL
 import { DiscountTotalLine } from '../../Invoices/InvoiceForm/DiscountTotalLine';
 
 export function EstimateFormFooterRight() {
-  const subtotalFormatted = useEstimateSubtotalFormatted();
-  const totalFormatted = useEstimateTotalFormatted();
   const {
     values: { currency_code },
   } = useFormikContext();
-  const discountAmount = useEstimateDiscountFormatted();
-  const adjustmentAmount = useEstimateAdjustmentFormatted();
+  const subtotalFormatted = useEstimateSubtotalFormatted();
+  const totalFormatted = useEstimateTotalFormatted();
+  const discountAmountFormatted = useEstimateDiscountFormatted();
+  const adjustmentAmountFormatted = useEstimateAdjustmentFormatted();
 
   return (
     <EstimateTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
@@ -29,9 +29,9 @@ export function EstimateFormFooterRight() {
       />
       <DiscountTotalLine
         currencyCode={currency_code}
-        discountAmount={discountAmount}
+        discountAmount={discountAmountFormatted}
       />
-      <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
+      <AdjustmentTotalLine adjustmentAmount={adjustmentAmountFormatted} />
       <TotalLine
         title={<T id={'estimate_form.label.total'} />}
         value={totalFormatted}

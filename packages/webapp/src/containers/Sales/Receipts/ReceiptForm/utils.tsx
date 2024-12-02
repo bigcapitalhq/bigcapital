@@ -203,57 +203,6 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the Receipt totals.
- */
-export const useReceiptTotals = () => {
-  const {
-    values: { entries, currency_code: currencyCode },
-  } = useFormikContext();
-
-  // Retrieves the invoice entries total.
-  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
-
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(total, currencyCode, { money: false }),
-    [total, currencyCode],
-  );
-  // Retrieves the payment total.
-  const paymentTotal = React.useMemo(() => 0, []);
-
-  // Retireves the formatted payment total.
-  const formattedPaymentTotal = React.useMemo(
-    () => formattedAmount(paymentTotal, currencyCode),
-    [paymentTotal, currencyCode],
-  );
-  // Retrieves the formatted due total.
-  const dueTotal = React.useMemo(
-    () => total - paymentTotal,
-    [total, paymentTotal],
-  );
-  // Retrieves the formatted due total.
-  const formattedDueTotal = React.useMemo(
-    () => formattedAmount(dueTotal, currencyCode),
-    [dueTotal, currencyCode],
-  );
-
-  return {
-    total,
-    paymentTotal,
-    dueTotal,
-    formattedTotal,
-    formattedSubtotal,
-    formattedPaymentTotal,
-    formattedDueTotal,
-  };
-};
-
-/**
  * Retrieves the receipt subtotal.
  * @returns {number}
  */
@@ -347,6 +296,47 @@ export const useReceiptTotalFormatted = () => {
   const { values } = useFormikContext();
 
   return formattedAmount(total, values.currency_code);
+};
+
+/**
+ * Retrieves the receipt paid amount.
+ * @returns {number}
+ */
+export const useReceiptPaidAmount = () => {
+  return toSafeNumber(0);
+};
+
+/**
+ * Retrieves the formatted receipt paid amount.
+ * @returns {string}
+ */
+export const useReceiptPaidAmountFormatted = () => {
+  const paidAmount = useReceiptPaidAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(paidAmount, values.currency_code);
+};
+
+/**
+ * Retrieves the receipt due amount.
+ * @returns {number}
+ */
+export const useReceiptDueAmount = () => {
+  const total = useReceiptTotal();
+  const paidAmount = useReceiptPaidAmount();
+
+  return total - paidAmount;
+};
+
+/**
+ * Retrieves the formatted receipt due amount.
+ * @returns {string}
+ */
+export const useReceiptDueAmountFormatted = () => {
+  const dueAmount = useReceiptDueAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(dueAmount, values.currency_code);
 };
 
 /**

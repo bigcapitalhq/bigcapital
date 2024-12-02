@@ -11,9 +11,10 @@ import {
   useBillAdjustmentAmountFormatted,
   useBillAggregatedTaxRates,
   useBillDiscountAmountFormatted,
+  useBillDueAmountFormatted,
+  useBillPaidAmountFormatted,
   useBillSubtotalFormatted,
   useBillTotalFormatted,
-  useBillTotals,
 } from './utils';
 import { TaxType } from '@/interfaces/TaxRates';
 import { AdjustmentTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/AdjustmentTotalLine';
@@ -21,14 +22,11 @@ import { DiscountTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/Disco
 
 export function BillFormFooterRight() {
   const {
-    formattedDueTotal,
-    formattedPaymentTotal,
-  } = useBillTotals();
-
-  const {
     values: { inclusive_exclusive_tax, currency_code },
   } = useFormikContext();
 
+  const dueAmountFormatted = useBillDueAmountFormatted();
+  const paidAmountFormatted = useBillPaidAmountFormatted();
   const subtotalFormatted = useBillSubtotalFormatted();
   const totalFormatted = useBillTotalFormatted();
   const taxEntries = useBillAggregatedTaxRates();
@@ -68,12 +66,12 @@ export function BillFormFooterRight() {
       />
       <TotalLine
         title={'Paid Amount'}
-        value={formattedPaymentTotal}
+        value={paidAmountFormatted}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={'Due Amount'}
-        value={formattedDueTotal}
+        value={dueAmountFormatted}
         textStyle={TotalLineTextStyle.Bold}
       />
     </BillTotalLines>

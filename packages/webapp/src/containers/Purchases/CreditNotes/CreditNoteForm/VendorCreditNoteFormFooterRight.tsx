@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 import { T, TotalLines, TotalLine, TotalLineTextStyle } from '@/components';
 import {
   useVendorCreditAdjustmentAmountFormatted,
-  useVendorCreditDiscountAmount,
+  useVendorCreditDiscountAmountFormatted,
   useVendorCreditSubtotalFormatted,
   useVendorCreditTotalFormatted,
 } from './utils';
@@ -19,8 +19,8 @@ export function VendorCreditNoteFormFooterRight() {
   const totalFormatted = useVendorCreditTotalFormatted();
   const subtotalFormatted = useVendorCreditSubtotalFormatted();
 
-  const discountAmount = useVendorCreditDiscountAmount();
-  const adjustmentAmount = useVendorCreditAdjustmentAmountFormatted();
+  const discountAmountFormatted = useVendorCreditDiscountAmountFormatted();
+  const adjustmentAmountFormatted = useVendorCreditAdjustmentAmountFormatted();
 
   return (
     <VendorCreditNoteTotalLines
@@ -33,9 +33,9 @@ export function VendorCreditNoteFormFooterRight() {
       />
       <DiscountTotalLine
         currencyCode={currency_code}
-        discountAmount={discountAmount}
+        discountAmount={discountAmountFormatted}
       />
-      <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
+      <AdjustmentTotalLine adjustmentAmount={adjustmentAmountFormatted} />
       <TotalLine
         title={<T id={'vendor_credit_form.label.total'} />}
         value={totalFormatted}

@@ -13,14 +13,12 @@ import {
   useInvoiceAdjustmentAmountFormatted,
   useInvoiceAggregatedTaxRates,
   useInvoiceDiscountAmountFormatted,
+  useInvoiceDueAmountFormatted,
+  useInvoicePaidAmountFormatted,
+  useInvoiceSubtotalFormatted,
+  useInvoiceTotalFormatted,
 } from './utils';
 import { TaxType } from '@/interfaces/TaxRates';
-import {
-  InvoiceDueAmountFormatted,
-  InvoicePaidAmountFormatted,
-  InvoiceSubTotalFormatted,
-  InvoiceTotalFormatted,
-} from './components';
 import { AdjustmentTotalLine } from './AdjustmentTotalLine';
 import { DiscountTotalLine } from './DiscountTotalLine';
 
@@ -32,6 +30,10 @@ export function InvoiceFormFooterRight() {
   const taxEntries = useInvoiceAggregatedTaxRates();
   const adjustmentAmount = useInvoiceAdjustmentAmountFormatted();
   const discountAmount = useInvoiceDiscountAmountFormatted();
+  const totalFormatted = useInvoiceTotalFormatted();
+  const subtotalFormatted = useInvoiceSubtotalFormatted();
+  const paidAmountFormatted = useInvoicePaidAmountFormatted();
+  const dueAmountFormatted = useInvoiceDueAmountFormatted();
 
   return (
     <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
@@ -43,7 +45,7 @@ export function InvoiceFormFooterRight() {
               : 'Subtotal'}
           </>
         }
-        value={<InvoiceSubTotalFormatted />}
+        value={subtotalFormatted}
       />
       <DiscountTotalLine
         currencyCode={currency_code}
@@ -61,18 +63,18 @@ export function InvoiceFormFooterRight() {
       ))}
       <TotalLine
         title={`Total (${currency_code})`}
-        value={<InvoiceTotalFormatted />}
+        value={totalFormatted}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
       <TotalLine
         title={<T id={'invoice_form.label.payment_amount'} />}
-        value={<InvoicePaidAmountFormatted />}
+        value={paidAmountFormatted}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'invoice_form.label.due_amount'} />}
-        value={<InvoiceDueAmountFormatted />}
+        value={dueAmountFormatted}
         textStyle={TotalLineTextStyle.Bold}
       />
     </InvoiceTotalLines>

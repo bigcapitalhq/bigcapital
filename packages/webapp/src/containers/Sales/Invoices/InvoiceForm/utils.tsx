@@ -12,6 +12,7 @@ import {
   repeatValue,
   defaultFastFieldShouldUpdate,
   formattedAmount,
+  toSafeNumber,
 } from '@/utils';
 import { ERROR } from '@/constants/errors';
 import { AppToaster } from '@/components';
@@ -306,6 +307,17 @@ export const useInvoiceSubtotal = () => {
 };
 
 /**
+ * Retrieves the invoice subtotal formatted.
+ * @returns {string}
+ */
+export const useInvoiceSubtotalFormatted = () => {
+  const subtotal = useInvoiceSubtotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(subtotal, values.currency_code);
+};
+
+/**
  * Retrieves the invoice discount amount.
  * @returns {number}
  */
@@ -438,11 +450,24 @@ export const useInvoiceTotal = () => {
   const totalTaxAmount = useInvoiceTotalTaxAmount();
   const isExclusiveTax = useIsInvoiceTaxExclusive();
   const discountAmount = useInvoiceDiscountAmount();
+  const adjustmentAmount = useInvoiceAdjustmentAmount();
 
   return R.compose(
     R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
     R.subtract(R.__, discountAmount),
+    R.subtract(R.__, adjustmentAmount),
   )(subtotal);
+};
+
+/**
+ * Retrieves the invoice total formatted.
+ * @returns {string}
+ */
+export const useInvoiceTotalFormatted = () => {
+  const total = useInvoiceTotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(total, values.currency_code);
 };
 
 /**
@@ -452,7 +477,18 @@ export const useInvoiceTotal = () => {
 export const useInvoicePaidAmount = () => {
   const { invoice } = useInvoiceFormContext();
 
-  return invoice?.payment_amount || 0;
+  return toSafeNumber(invoice?.payment_amount);
+};
+
+/**
+ * Retrieves the paid amount of the invoice formatted.
+ * @returns {string}
+ */
+export const useInvoicePaidAmountFormatted = () => {
+  const paidAmount = useInvoicePaidAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(paidAmount, values.currency_code);
 };
 
 /**
@@ -464,6 +500,17 @@ export const useInvoiceDueAmount = () => {
   const paidAmount = useInvoicePaidAmount();
 
   return Math.max(total - paidAmount, 0);
+};
+
+/**
+ * Retrieves the invoice due amount formatted.
+ * @returns {string}
+ */
+export const useInvoiceDueAmountFormatted = () => {
+  const dueAmount = useInvoiceDueAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(dueAmount, values.currency_code);
 };
 
 /**
