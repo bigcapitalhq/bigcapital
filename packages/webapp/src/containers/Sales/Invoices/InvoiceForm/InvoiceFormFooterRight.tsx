@@ -2,7 +2,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-
 import {
   T,
   TotalLines,
@@ -10,14 +9,18 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useInvoiceAggregatedTaxRates } from './utils';
-import { TaxType } from '@/interfaces/TaxRates';
 import {
-  InvoiceDueAmountFormatted,
-  InvoicePaidAmountFormatted,
-  InvoiceSubTotalFormatted,
-  InvoiceTotalFormatted,
-} from './components';
+  useInvoiceAdjustmentAmountFormatted,
+  useInvoiceAggregatedTaxRates,
+  useInvoiceDiscountAmountFormatted,
+  useInvoiceDueAmountFormatted,
+  useInvoicePaidAmountFormatted,
+  useInvoiceSubtotalFormatted,
+  useInvoiceTotalFormatted,
+} from './utils';
+import { TaxType } from '@/interfaces/TaxRates';
+import { AdjustmentTotalLine } from './AdjustmentTotalLine';
+import { DiscountTotalLine } from './DiscountTotalLine';
 
 export function InvoiceFormFooterRight() {
   const {
@@ -25,6 +28,12 @@ export function InvoiceFormFooterRight() {
   } = useFormikContext();
 
   const taxEntries = useInvoiceAggregatedTaxRates();
+  const adjustmentAmount = useInvoiceAdjustmentAmountFormatted();
+  const discountAmount = useInvoiceDiscountAmountFormatted();
+  const totalFormatted = useInvoiceTotalFormatted();
+  const subtotalFormatted = useInvoiceSubtotalFormatted();
+  const paidAmountFormatted = useInvoicePaidAmountFormatted();
+  const dueAmountFormatted = useInvoiceDueAmountFormatted();
 
   return (
     <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
@@ -36,8 +45,14 @@ export function InvoiceFormFooterRight() {
               : 'Subtotal'}
           </>
         }
-        value={<InvoiceSubTotalFormatted />}
+        value={subtotalFormatted}
       />
+      <DiscountTotalLine
+        currencyCode={currency_code}
+        discountAmount={discountAmount}
+      />
+      <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
+
       {taxEntries.map((tax, index) => (
         <TotalLine
           key={index}
@@ -48,18 +63,18 @@ export function InvoiceFormFooterRight() {
       ))}
       <TotalLine
         title={`Total (${currency_code})`}
-        value={<InvoiceTotalFormatted />}
+        value={totalFormatted}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
       <TotalLine
         title={<T id={'invoice_form.label.payment_amount'} />}
-        value={<InvoicePaidAmountFormatted />}
+        value={paidAmountFormatted}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'invoice_form.label.due_amount'} />}
-        value={<InvoiceDueAmountFormatted />}
+        value={dueAmountFormatted}
         textStyle={TotalLineTextStyle.Bold}
       />
     </InvoiceTotalLines>

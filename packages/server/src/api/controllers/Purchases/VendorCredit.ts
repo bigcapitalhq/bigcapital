@@ -3,6 +3,7 @@ import { check, param, query } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import {
   AbilitySubject,
+  DiscountType,
   IVendorCreditCreateDTO,
   IVendorCreditEditDTO,
   VendorCreditAction,
@@ -183,6 +184,16 @@ export default class VendorCreditController extends BaseController {
 
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
+
+      // Discount.
+      check('discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('discount_type')
+        .optional({ nullable: true })
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
+
+      // Adjustment.
+      check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),
     ];
   }
 
@@ -222,6 +233,16 @@ export default class VendorCreditController extends BaseController {
 
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
+
+      // Discount.
+      check('discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('discount_type')
+        .optional({ nullable: true })
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
+
+      // Adjustment.
+      check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),
     ];
   }
 

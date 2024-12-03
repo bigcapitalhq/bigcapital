@@ -11,6 +11,10 @@ export default class PaymentReceive extends mixin(TenantModel, [
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  amount!: number;
+  paymentAmount!: number;
+  exchangeRate!: number;
+
   /**
    * Table name.
    */
@@ -40,6 +44,10 @@ export default class PaymentReceive extends mixin(TenantModel, [
     return this.amount * this.exchangeRate;
   }
 
+  /**
+   * Payment receive total.
+   * @returns {number}
+   */
   get total() {
     return this.paymentAmount;
   }

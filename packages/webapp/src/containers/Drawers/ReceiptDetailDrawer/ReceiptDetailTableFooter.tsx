@@ -25,6 +25,17 @@ export default function ReceiptDetailTableFooter() {
           title={<T id={'receipt.details.subtotal'} />}
           value={receipt.formatted_subtotal}
         />
+        {receipt.discount_amount > 0 && (
+          <TotalLine
+            title={
+              receipt.discount_percentage_formatted
+                ? `Discount [${invoice.discount_percentage_formatted}]`
+                : 'Discount'
+            }
+            value={receipt.discount_amount_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
         <TotalLine
           title={<T id={'receipt.details.total'} />}
           value={receipt.formatted_amount}

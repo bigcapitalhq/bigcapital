@@ -3,6 +3,7 @@ import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
 import { lighten } from 'polished';
 import { Group, Stack, StackProps } from '@/components';
+import { isEmpty } from 'lodash';
 
 export interface InvoiceMailReceiptProps extends StackProps {
   // # Company
@@ -15,6 +16,18 @@ export interface InvoiceMailReceiptProps extends StackProps {
   // # Due date
   dueDate: string;
   dueDateLabel?: string;
+
+  // # Subtotal
+  subtotal: string;
+  subtotalLabel?: string;
+
+  // # Discount amount
+  discount?: string;
+  discountLabel?: string;
+
+  // # Adjustment
+  adjustment?: string;
+  adjustmentLabel?: string;
 
   // # Due amount
   dueAmountLabel?: string;
@@ -52,13 +65,25 @@ export function InvoiceMailReceipt({
   dueDate,
   dueDateLabel = 'Due',
 
-  // # Due amount
-  dueAmountLabel = 'Due Amount',
-  dueAmount,
+  // # Subtotal
+  subtotal,
+  subtotalLabel = 'Subtotal',
+
+  // # Discount amount
+  discount,
+  discountLabel = 'Discount',
+
+  // # Adjustment
+  adjustment,
+  adjustmentLabel = 'Adjustment',
 
   // # Total
   total,
   totalLabel = 'Total',
+
+  // # Due amount
+  dueAmountLabel = 'Due Amount',
+  dueAmount,
 
   // # Invoice number
   invoiceNumber,
@@ -166,6 +191,53 @@ export function InvoiceMailReceipt({
           </Group>
         ))}
 
+        {/*---- Subtotal ----*/}
+        <Group
+          h={'40px'}
+          position={'apart'}
+          borderBottomStyle="solid"
+          borderBottomWidth={'1px'}
+          borderColor={'#000'}
+        >
+          <x.span fontWeight={500}>{subtotalLabel}</x.span>
+          <x.span fontWeight={600} fontSize={15}>
+            {subtotal}
+          </x.span>
+        </Group>
+
+        {/*---- Discount ----*/}
+        {!isEmpty(discount) && (
+          <Group
+            h="40px"
+            position="apart"
+            borderBottomStyle="solid"
+            borderBottomWidth="1px"
+            borderColor="#D9D9D9"
+          >
+            <x.span>{discountLabel}</x.span>
+            <x.span fontSize={15}>
+              {discount}
+            </x.span>
+          </Group>
+        )}
+
+        {/*---- Adjustment ----*/}
+        {!isEmpty(adjustment) && (
+          <Group
+            h="40px"
+            position="apart"
+            borderBottomStyle="solid"
+            borderBottomWidth="1px"
+            borderColor="#D9D9D9"
+          >
+            <x.span>{adjustmentLabel}</x.span>
+            <x.span fontSize={15}>
+              {adjustment}
+            </x.span>
+          </Group>
+        )}
+
+        {/*---- Total ----*/}
         <Group
           h={'40px'}
           position={'apart'}
@@ -179,6 +251,7 @@ export function InvoiceMailReceipt({
           </x.span>
         </Group>
 
+        {/*---- Due amount ----*/}
         <Group
           h={'40px'}
           position={'apart'}

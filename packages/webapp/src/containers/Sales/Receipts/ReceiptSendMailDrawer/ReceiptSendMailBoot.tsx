@@ -2,7 +2,10 @@
 import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { GetSaleReceiptMailStateResponse, useSaleInvoiceMailState, useSaleReceiptMailState } from '@/hooks/query';
+import {
+  GetSaleReceiptMailStateResponse,
+  useSaleReceiptMailState,
+} from '@/hooks/query';
 
 interface ReceiptSendMailBootValues {
   receiptId: number;

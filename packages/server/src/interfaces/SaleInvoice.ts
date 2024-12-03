@@ -82,6 +82,11 @@ export interface ISaleInvoice {
   paymentMethods?: Array<PaymentIntegrationTransactionLink>;
 }
 
+export enum DiscountType {
+  Percentage = 'percentage',
+  Amount = 'amount',
+}
+
 export interface ISaleInvoiceDTO {
   invoiceDate: Date;
   dueDate: Date;
@@ -102,6 +107,13 @@ export interface ISaleInvoiceDTO {
   isInclusiveTax?: boolean;
 
   attachments?: AttachmentLinkDTO[];
+
+  // # Discount
+  discount?: number;
+  discountType?: DiscountType;
+
+  // # Adjustments
+  adjustments?: string;
 }
 
 export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {

@@ -1,6 +1,6 @@
+import { CSSProperties } from 'react';
 import {
   Button,
-  Container,
   Section,
   Heading,
   Text,
@@ -8,7 +8,7 @@ import {
   Column,
   render,
 } from '@react-email/components';
-import { CSSProperties } from 'react';
+import isEmpty from 'lodash.isempty';
 import { EmailTemplateLayout } from './EmailTemplateLayout';
 import { EmailTemplate } from './EmailTemplate';
 
@@ -35,6 +35,18 @@ export interface InvoicePaymentEmailProps {
   // # Invoice due amount
   dueAmount: string;
   dueAmountLabel?: string;
+
+  // # Adjustment
+  adjustment?: string;
+  adjustmentLabel?: string;
+
+  // # Discount
+  discount?: string;
+  discountLabel?: string;
+
+  // # Subtotal
+  subtotal: string;
+  subtotalLabel?: string;
 
   // # Due date
   dueDate: string;
@@ -82,6 +94,18 @@ export const InvoicePaymentEmail: React.FC<
   total,
   totalLabel = 'Total',
 
+  // # Subtotal
+  subtotal,
+  subtotalLabel = 'Subtotal',
+
+  // # Discount
+  discount,
+  discountLabel = 'Discount',
+
+  // # Adjustment
+  adjustment,
+  adjustmentLabel = 'Adjustment',
+
   // # Invoice due amount
   dueAmountLabel = 'Due Amount',
   dueAmount,
@@ -92,84 +116,118 @@ export const InvoicePaymentEmail: React.FC<
 
   items,
 }) => {
-    return (
-      <EmailTemplateLayout preview={preview}>
-        <EmailTemplate>
-          <Section style={mainSectionStyle}>
-            {companyLogoUri && <EmailTemplate.CompanyLogo src={companyLogoUri} />}
+  return (
+    <EmailTemplateLayout preview={preview}>
+      <EmailTemplate>
+        <Section style={mainSectionStyle}>
+          {companyLogoUri && <EmailTemplate.CompanyLogo src={companyLogoUri} />}
 
-            <Section style={headerInfoStyle}>
-              <Row>
-                <Heading style={invoiceCompanyNameStyle}>{companyName}</Heading>
-              </Row>
-              <Row>
-                <Text style={invoiceAmountStyle}>{invoiceAmount}</Text>
-              </Row>
-              <Row>
-                <Text style={invoiceNumberStyle}>
-                  {invoiceNumberLabel?.replace('{invoiceNumber}', invoiceNumber)}
-                </Text>
-              </Row>
-              <Row>
-                <Text style={invoiceDateStyle}>
-                  {dueDateLabel.replace('{dueDate}', dueDate)}
-                </Text>
-              </Row>
-            </Section>
+          <Section style={headerInfoStyle}>
+            <Row>
+              <Heading style={invoiceCompanyNameStyle}>{companyName}</Heading>
+            </Row>
+            <Row>
+              <Text style={invoiceAmountStyle}>{invoiceAmount}</Text>
+            </Row>
+            <Row>
+              <Text style={invoiceNumberStyle}>
+                {invoiceNumberLabel?.replace('{invoiceNumber}', invoiceNumber)}
+              </Text>
+            </Row>
+            <Row>
+              <Text style={invoiceDateStyle}>
+                {dueDateLabel.replace('{dueDate}', dueDate)}
+              </Text>
+            </Row>
+          </Section>
 
-            <Text style={invoiceMessageStyle}>{invoiceMessage}</Text>
-            <Button
-              href={viewInvoiceButtonUrl}
-              style={{
-                ...viewInvoiceButtonStyle,
-                backgroundColor: primaryColor,
-              }}
-            >
-              {viewInvoiceButtonLabel}
-            </Button>
+          <Text style={invoiceMessageStyle}>{invoiceMessage}</Text>
+          <Button
+            href={viewInvoiceButtonUrl}
+            style={{
+              ...viewInvoiceButtonStyle,
+              backgroundColor: primaryColor,
+            }}
+          >
+            {viewInvoiceButtonLabel}
+          </Button>
 
-            <Section style={totalsSectionStyle}>
-              {items.map((item, index) => (
-                <Row key={index} style={itemLineRowStyle}>
-                  <Column width={'50%'}>
-                    <Text style={listItemLabelStyle}>{item.label}</Text>
-                  </Column>
-
-                  <Column width={'50%'}>
-                    <Text style={listItemAmountStyle}>
-                      {item.quantity} x {item.rate}
-                    </Text>
-                  </Column>
-                </Row>
-              ))}
-
-              <Row style={dueAmounLineRowStyle}>
+          <Section style={totalsSectionStyle}>
+            {items.map((item, index) => (
+              <Row key={index} style={itemLineRowStyle}>
                 <Column width={'50%'}>
-                  <Text style={dueAmountLineItemLabelStyle}>
-                    {dueAmountLabel}
+                  <Text style={listItemLabelStyle}>{item.label}</Text>
+                </Column>
+
+                <Column width={'50%'}>
+                  <Text style={listItemAmountStyle}>
+                    {item.quantity} x {item.rate}
                   </Text>
                 </Column>
+              </Row>
+            ))}
+
+            <Row style={totalLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={totalLineItemLabelStyle}>{subtotalLabel}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={totalLineItemAmountStyle}>{subtotal}</Text>
+              </Column>
+            </Row>
+
+            {!isEmpty(discount) && (
+              <Row style={lineRowStyle}>
+                <Column width={'50%'}>
+                  <Text style={listItemLabelStyle}>{discountLabel}</Text>
+                </Column>
 
                 <Column width={'50%'}>
-                  <Text style={dueAmountLineItemAmountStyle}>{dueAmount}</Text>
+                  <Text style={listItemAmountStyle}>{discount}</Text>
                 </Column>
               </Row>
+            )}
 
-              <Row style={totalLineRowStyle}>
+            {!isEmpty(adjustment) && (
+              <Row style={lineRowStyle}>
                 <Column width={'50%'}>
-                  <Text style={totalLineItemLabelStyle}>{totalLabel}</Text>
+                  <Text style={listItemLabelStyle}>{adjustmentLabel}</Text>
                 </Column>
 
                 <Column width={'50%'}>
-                  <Text style={totalLineItemAmountStyle}>{total}</Text>
+                  <Text style={listItemAmountStyle}>{adjustment}</Text>
                 </Column>
               </Row>
-            </Section>
+            )}
+
+            <Row style={totalLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={totalLineItemLabelStyle}>{totalLabel}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={totalLineItemAmountStyle}>{total}</Text>
+              </Column>
+            </Row>
+
+            <Row style={dueAmounLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={dueAmountLineItemLabelStyle}>
+                  {dueAmountLabel}
+                </Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={dueAmountLineItemAmountStyle}>{dueAmount}</Text>
+              </Column>
+            </Row>
           </Section>
-        </EmailTemplate>
-      </EmailTemplateLayout>
-    );
-  };
+        </Section>
+      </EmailTemplate>
+    </EmailTemplateLayout>
+  );
+};
 
 export const renderInvoicePaymentEmail = (props: InvoicePaymentEmailProps) => {
   return render(<InvoicePaymentEmail {...props} />);
@@ -234,6 +292,11 @@ const invoiceMessageStyle: CSSProperties = {
 
 const dueAmounLineRowStyle: CSSProperties = {
   borderBottom: '1px solid #000',
+  height: 40,
+};
+
+const lineRowStyle: CSSProperties = {
+  borderBottom: '1px solid #D9D9D9',
   height: 40,
 };
 

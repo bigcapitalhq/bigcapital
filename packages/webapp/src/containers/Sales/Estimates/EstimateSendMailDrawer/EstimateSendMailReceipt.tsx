@@ -1,4 +1,5 @@
 import { x } from '@xstyled/emotion';
+import { isEmpty } from 'lodash';
 import { Group, Stack } from '@/components';
 import {
   SendMailReceipt,
@@ -13,6 +14,14 @@ export interface EstimateSendMailReceiptProps extends SendMailReceiptProps {
   // # Estimate number.
   estimateNumberLabel?: string;
   estimateNumber: string;
+
+  // # Discount
+  discount?: string;
+  discountLabel?: string;
+
+  // # Adjustment
+  adjustment?: string;
+  adjsutmentLabel?: string;
 
   // # Total.
   total: string;
@@ -47,10 +56,6 @@ export function EstimateSendMailReceipt({
   estimateNumberLabel = 'Estimate #',
   estimateNumber,
 
-  // # Total.
-  total,
-  totalLabel = 'Total',
-
   // # Expiration date.
   expirationDateLabel = 'Expiration Date',
   expirationDate,
@@ -64,6 +69,18 @@ export function EstimateSendMailReceipt({
   // # Subtotal
   subtotal,
   subtotalLabel = 'Subtotal',
+
+  // # Discount
+  discount,
+  discountLabel = 'Discount',
+
+  // # Adjustment
+  adjustment,
+  adjsutmentLabel = 'Adjustment',
+
+  // # Total.
+  total,
+  totalLabel = 'Total',
 
   // # View estimate button
   showViewEstimateButton = true,
@@ -141,6 +158,32 @@ export function EstimateSendMailReceipt({
             {subtotal}
           </x.span>
         </Group>
+
+        {!isEmpty(discount) && (
+          <Group
+            h={'40px'}
+            position={'apart'}
+            borderBottomStyle="solid"
+            borderBottomWidth={'1px'}
+            borderBottomColor={'#D9D9D9'}
+          >
+            <x.span>{discountLabel}</x.span>
+            <x.span fontSize={15}>{discount}</x.span>
+          </Group>
+        )}
+
+        {!isEmpty(adjustment) && (
+          <Group
+            h={'40px'}
+            position={'apart'}
+            borderBottomStyle="solid"
+            borderBottomWidth={'1px'}
+            borderBottomColor={'#D9D9D9'}
+          >
+            <x.span>{adjsutmentLabel}</x.span>
+            <x.span fontSize={15}>{adjustment}</x.span>
+          </Group>
+        )}
 
         <Group
           h={'40px'}

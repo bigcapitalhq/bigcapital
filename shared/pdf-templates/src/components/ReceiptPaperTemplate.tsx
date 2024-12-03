@@ -2,10 +2,7 @@ import { Box } from '../lib/layout/Box';
 import { Text } from '../lib/text/Text';
 import { Stack } from '../lib/layout/Stack';
 import { Group } from '../lib/layout/Group';
-import {
-  PaperTemplate,
-  PaperTemplateProps,
-} from './PaperTemplate';
+import { PaperTemplate, PaperTemplateProps } from './PaperTemplate';
 import {
   DefaultPdfTemplateTerms,
   DefaultPdfTemplateItemDescription,
@@ -32,15 +29,20 @@ export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
 
   billedToLabel?: string;
 
+  // # Subtotal
+  subtotal?: string;
+  showSubtotal?: boolean;
+  subtotalLabel?: string;
+
+  // # Discount
+  discount?: string;
+  showDiscount?: boolean;
+  discountLabel?: string;
+
   // Total
   total?: string;
   showTotal?: boolean;
   totalLabel?: string;
-
-  // Subtotal
-  subtotal?: string;
-  showSubtotal?: boolean;
-  subtotalLabel?: string;
 
   // Customer Note
   showCustomerNote?: boolean;
@@ -99,10 +101,17 @@ export function ReceiptPaperTemplate({
 
   billedToLabel = 'Billed To',
 
+  // # Total
   total = '$1000.00',
   totalLabel = 'Total',
   showTotal = true,
 
+  // # Discount
+  discount = '',
+  discountLabel = 'Discount',
+  showDiscount = true,
+
+  // # Subtotal
   subtotal = '1000/00',
   subtotalLabel = 'Subtotal',
   showSubtotal = true,
@@ -192,8 +201,8 @@ export function ReceiptPaperTemplate({
                     <Text>{data.item}</Text>
                     <Text
                       fontSize={'12px'}
-                    // className={Classes.TEXT_MUTED}
-                    // style={{ fontSize: 12 }}
+                      // className={Classes.TEXT_MUTED}
+                      // style={{ fontSize: 12 }}
                     >
                       {data.description}
                     </Text>
@@ -211,6 +220,12 @@ export function ReceiptPaperTemplate({
               <PaperTemplate.TotalLine
                 label={subtotalLabel}
                 amount={subtotal}
+              />
+            )}
+            {showDiscount && discount && (
+              <PaperTemplate.TotalLine
+                label={discountLabel}
+                amount={discount}
               />
             )}
             {showTotal && (

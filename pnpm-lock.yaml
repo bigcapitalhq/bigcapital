@@ -882,6 +882,12 @@ importers:
       '@react-email/components':
         specifier: 0.0.25
         version: 0.0.25(react-dom@18.3.1)(react@18.3.1)
+      '@types/lodash.isempty':
+        specifier: ^4.4.9
+        version: 4.4.9
+      lodash.isempty:
+        specifier: ^4.4.0
+        version: 4.4.0
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -2504,7 +2510,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.24.5
       '@babel/helper-skip-transparent-expression-wrappers': 7.22.5
       '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.26.0)
     dev: true
@@ -11420,6 +11426,12 @@ packages:
       - tedious
     dev: false
 
+  /@types/lodash.isempty@4.4.9:
+    resolution: {integrity: sha512-DPSFfnT2JmZiAWNWOU8IRZws/Ha6zyGF5m06TydfsY+0dVoQqby2J61Na2QU4YtwiZ+moC6cJS6zWYBJq4wBVw==}
+    dependencies:
+      '@types/lodash': 4.17.13
+    dev: false
+
   /@types/lodash@4.17.13:
     resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
     dev: false
@@ -15958,7 +15970,7 @@ packages:
       postcss-modules-values: 4.0.0(postcss@8.4.47)
       postcss-value-parser: 4.2.0
       semver: 7.6.2
-      webpack: 5.91.0(esbuild@0.23.1)
+      webpack: 5.91.0(esbuild@0.18.20)(webpack-cli@5.1.4)
 
   /css-minimizer-webpack-plugin@3.4.1(esbuild@0.23.1)(webpack@5.91.0):
     resolution: {integrity: sha512-1u6D71zeIfgngN2XNRJefc/hY7Ybsxd74Jm4qngIXyUEk7fss3VUzuHxLAq/R8NAba4QU9OUSaMZlbpRc7bM4Q==}
@@ -31178,7 +31190,7 @@ packages:
     peerDependencies:
       webpack: ^5.0.0
     dependencies:
-      webpack: 5.91.0(esbuild@0.23.1)
+      webpack: 5.91.0(esbuild@0.18.20)(webpack-cli@5.1.4)
 
   /styled-components@5.3.11(@babel/core@7.26.0)(react-dom@18.3.1)(react-is@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-uuzIIfnVkagcVHv9nE0VPlHPSCmXIUGKfJ42LNjxCCTDTL5sgnJ8Z7GZBq0EnLYGln77tPpEpExt2+qa+cZqSw==}
@@ -33492,6 +33504,7 @@ packages:
       - '@swc/core'
       - esbuild
       - uglify-js
+    dev: false
 
   /webpack@5.91.0(esbuild@0.23.1)(webpack-cli@4.10.0):
     resolution: {integrity: sha512-rzVwlLeBWHJbmgTC/8TvAcu5vpJNII+MelQpylD4jNERPwpBJOE2lEcko1zJX3QJeLjTTAnQxn/OJ8bjDzVQaw==}

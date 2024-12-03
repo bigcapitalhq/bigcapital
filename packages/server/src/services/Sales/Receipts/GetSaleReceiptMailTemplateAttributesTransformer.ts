@@ -20,6 +20,12 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
       'total',
       'totalLabel',
 
+      'discount',
+      'discountLabel',
+
+      'adjustment',
+      'adjustmentLabel',
+
       'subtotal',
       'subtotalLabel',
 
@@ -98,7 +104,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * Receipt total.
    */
   public total(): string {
-    return this.options.receipt.formattedAmount;
+    return this.options.receipt.totalFormatted;
   }
 
   /**
@@ -110,11 +116,43 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
   }
 
   /**
+   * Receipt discount.
+   * @returns {string}
+   */
+  public discount(): string {
+    return this.options.receipt?.discountAmountFormatted;
+  }
+
+  /**
+   * Receipt discount label.
+   * @returns {string}
+   */
+  public discountLabel(): string {
+    return 'Discount';
+  }
+
+  /**
+   * Receipt adjustment.
+   * @returns {string}
+   */
+  public adjustment(): string {
+    return this.options.receipt?.adjustmentFormatted;
+  }
+
+  /**
+   * Receipt adjustment label.
+   * @returns {string}
+   */
+  public adjustmentLabel(): string {
+    return 'Adjustment';
+  }
+
+  /**
    * Receipt subtotal.
    * @returns {string}
    */
   public subtotal(): string {
-    return this.options.receipt.formattedSubtotal;
+    return this.options.receipt.subtotalFormatted;
   }
 
   /**

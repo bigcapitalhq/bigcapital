@@ -24,7 +24,7 @@ export class CreateItem {
 
   /**
    * Authorize the creating item.
-   * @param {number} tenantId
+   * @param {number} tenantId 
    * @param {IItemDTO} itemDTO
    */
   async authorize(tenantId: number, itemDTO: IItemDTO) {

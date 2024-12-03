@@ -7,6 +7,7 @@ import {
   Section,
   Text,
 } from '@react-email/components';
+import isEmpty from 'lodash.isempty';
 import { EmailTemplateLayout } from './EmailTemplateLayout';
 import { CSSProperties } from 'react';
 import { EmailTemplate } from './EmailTemplate';
@@ -24,6 +25,18 @@ export interface CreditNoteEmailProps {
   // # Total
   total: string;
   totalLabel?: string;
+
+  // # Subtotal
+  subtotal: string;
+  subtotalLabel?: string;
+
+  // # Adjustment
+  adjustment?: string;
+  adjustmentLabel?: string;
+
+  // # Discount
+  discount?: string;
+  discountLabel?: string;
 
   // # Items
   items: Array<{ label: string; quantity: string; rate: string }>;
@@ -56,6 +69,18 @@ export const CreditNoteEmailTemplate: React.FC<
   total,
   totalLabel = 'Total',
 
+  // # Subtotal
+  subtotal,
+  subtotalLabel = 'Subtotal',
+
+  // # Discount
+  discount,
+  discountLabel = 'Discount',
+
+  // # Adjustment
+  adjustment,
+  adjustmentLabel = 'Adjustment',
+
   // # Credit Note #
   creditNoteNumberLabel = 'Credit Note # {creditNoteNumber}',
   creditNoteNumber = 'CN-00001',
@@ -70,70 +95,104 @@ export const CreditNoteEmailTemplate: React.FC<
   // # Items
   items = [],
 }) => {
-    return (
-      <EmailTemplateLayout preview={preview}>
-        <EmailTemplate>
-          <Section style={mainSectionStyle}>
-            {companyLogoUri && <EmailTemplate.CompanyLogo src={companyLogoUri} />}
+  return (
+    <EmailTemplateLayout preview={preview}>
+      <EmailTemplate>
+        <Section style={mainSectionStyle}>
+          {companyLogoUri && <EmailTemplate.CompanyLogo src={companyLogoUri} />}
 
-            <Section style={headerInfoStyle}>
-              <Row>
-                <Heading style={companyNameStyle}>{companyName}</Heading>
-              </Row>
-              <Row>
-                <Text style={invoiceAmountStyle}>{total}</Text>
-              </Row>
-              <Row>
-                <Text style={creditNumberStyle}>
-                  {creditNoteNumberLabel?.replace(
-                    '{creditNoteNumber}',
-                    creditNoteNumber
-                  )}
-                </Text>
-              </Row>
-            </Section>
-
-            <Text style={messageStyle}>{message}</Text>
-            <Button
-              href={viewButtonUrl}
-              style={{
-                ...viewInvoiceButtonStyle,
-                backgroundColor: primaryColor,
-              }}
-            >
-              {viewButtonLabel}
-            </Button>
-
-            <Section style={totalsSectionStyle}>
-              {items.map((item, index) => (
-                <Row key={index} style={itemLineRowStyle}>
-                  <Column width={'50%'}>
-                    <Text style={listItemLabelStyle}>{item.label}</Text>
-                  </Column>
-
-                  <Column width={'50%'}>
-                    <Text style={listItemAmountStyle}>
-                      {item.quantity} x {item.rate}
-                    </Text>
-                  </Column>
-                </Row>
-              ))}
-
-              <Row style={totalLineRowStyle}>
-                <Column width={'50%'}>
-                  <Text style={totalLineItemLabelStyle}>{totalLabel}</Text>
-                </Column>
-
-                <Column width={'50%'}>
-                  <Text style={totalLineItemAmountStyle}>{total}</Text>
-                </Column>
-              </Row>
-            </Section>
+          <Section style={headerInfoStyle}>
+            <Row>
+              <Heading style={companyNameStyle}>{companyName}</Heading>
+            </Row>
+            <Row>
+              <Text style={invoiceAmountStyle}>{total}</Text>
+            </Row>
+            <Row>
+              <Text style={creditNumberStyle}>
+                {creditNoteNumberLabel?.replace(
+                  '{creditNoteNumber}',
+                  creditNoteNumber
+                )}
+              </Text>
+            </Row>
           </Section>
-        </EmailTemplate>
-      </EmailTemplateLayout>
-    );
-  };
+
+          <Text style={messageStyle}>{message}</Text>
+          <Button
+            href={viewButtonUrl}
+            style={{
+              ...viewInvoiceButtonStyle,
+              backgroundColor: primaryColor,
+            }}
+          >
+            {viewButtonLabel}
+          </Button>
+
+          <Section style={totalsSectionStyle}>
+            {items.map((item, index) => (
+              <Row key={index} style={itemLineRowStyle}>
+                <Column width={'50%'}>
+                  <Text style={listItemLabelStyle}>{item.label}</Text>
+                </Column>
+
+                <Column width={'50%'}>
+                  <Text style={listItemAmountStyle}>
+                    {item.quantity} x {item.rate}
+                  </Text>
+                </Column>
+              </Row>
+            ))}
+
+            <Row style={totalLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={totalLineItemLabelStyle}>{subtotalLabel}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={totalLineItemAmountStyle}>{subtotal}</Text>
+              </Column>
+            </Row>
+
+            {!isEmpty(discount) && (
+              <Row style={itemLineRowStyle}>
+                <Column width={'50%'}>
+                  <Text style={listItemLabelStyle}>{discountLabel}</Text>
+                </Column>
+
+                <Column width={'50%'}>
+                  <Text style={listItemAmountStyle}>{discount}</Text>
+                </Column>
+              </Row>
+            )}
+
+            {!isEmpty(adjustment) && (
+              <Row style={itemLineRowStyle}>
+                <Column width={'50%'}>
+                  <Text style={listItemLabelStyle}>{adjustmentLabel}</Text>
+                </Column>
+
+                <Column width={'50%'}>
+                  <Text style={listItemAmountStyle}>{adjustment}</Text>
+                </Column>
+              </Row>
+            )}
+
+            <Row style={totalLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={totalLineItemLabelStyle}>{totalLabel}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={totalLineItemAmountStyle}>{total}</Text>
+              </Column>
+            </Row>
+          </Section>
+        </Section>
+      </EmailTemplate>
+    </EmailTemplateLayout>
+  );
+};
 
 /**
  * Renders the estimate mail template to string

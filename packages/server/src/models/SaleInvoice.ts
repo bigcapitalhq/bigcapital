@@ -1,5 +1,5 @@
 import { mixin, Model, raw } from 'objection';
-import { castArray, takeWhile } from 'lodash';
+import { castArray, defaultTo, takeWhile } from 'lodash';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
@@ -7,6 +7,7 @@ import SaleInvoiceMeta from './SaleInvoice.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Sales/Invoices/constants';
 import ModelSearchable from './ModelSearchable';
+import { DiscountType } from '@/interfaces';
 
 export default class SaleInvoice extends mixin(TenantModel, [
   ModelSetting,
@@ -23,6 +24,9 @@ export default class SaleInvoice extends mixin(TenantModel, [
   public writtenoffAt: Date;
   public dueDate: Date;
   public deliveredAt: Date;
+  public discount: number;
+  public discountType: DiscountType;
+  public adjustment: number | null;
 
   /**
    * Table name
@@ -67,6 +71,9 @@ export default class SaleInvoice extends mixin(TenantModel, [
       'subtotalExludingTax',
 
       'taxAmountWithheldLocal',
+      'discountAmount',
+      'discountPercentage',
+
       'total',
       'totalLocal',
 
@@ -126,13 +133,36 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage
+      ? this.discount
+      : null;
+  }
+
+  /**
    * Invoice total. (Tax included)
    * @returns {number}
    */
   get total() {
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
+    const differencies = this.discountAmount + adjustmentAmount;
+
     return this.isInclusiveTax
-      ? this.subtotal
-      : this.subtotal + this.taxAmountWithheld;
+      ? this.subtotal - differencies
+      : this.subtotal + this.taxAmountWithheld - differencies;
   }
 
   /**
@@ -604,7 +634,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
         join: {
           from: 'sales_invoices.pdfTemplateId',
           to: 'pdf_templates.id',
-        }
+        },
       },
     };
   }

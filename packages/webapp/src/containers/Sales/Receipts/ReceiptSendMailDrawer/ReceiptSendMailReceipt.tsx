@@ -4,6 +4,7 @@ import {
   SendMailReceipt,
   SendMailReceiptProps,
 } from '../../Estimates/SendMailViewDrawer/SendMailViewReceiptPreview';
+import { isEmpty } from 'lodash';
 
 export interface ReceiptSendMailReceiptProps extends SendMailReceiptProps {
   // # Company name.
@@ -14,10 +15,6 @@ export interface ReceiptSendMailReceiptProps extends SendMailReceiptProps {
   receiptNumberLabel?: string;
   receiptNumber: string;
 
-  // # Total.
-  total: string;
-  totalLabel?: string;
-
   // # Message
   message: string;
 
@@ -27,6 +24,18 @@ export interface ReceiptSendMailReceiptProps extends SendMailReceiptProps {
   // # Subtotal
   subtotal: string;
   subtotalLabel?: string;
+
+  // # Discount
+  discount?: string;
+  discountLabel?: string;
+
+  // # Adjustment
+  adjustment?: string;
+  adjustmentLabel?: string;
+
+  // # Total.
+  total: string;
+  totalLabel?: string;
 }
 
 export function ReceiptSendMailReceipt({
@@ -42,6 +51,14 @@ export function ReceiptSendMailReceipt({
   total,
   totalLabel = 'Total',
 
+  // # Discount
+  discount,
+  discountLabel = 'Discount',
+
+  // # Adjustment
+  adjustment,
+  adjustmentLabel = 'Adjustment',
+
   // # Message
   message,
 
@@ -49,7 +66,6 @@ export function ReceiptSendMailReceipt({
   items,
   subtotal,
   subtotalLabel = 'Subtotal',
-
   ...rest
 }: ReceiptSendMailReceiptProps) {
   return (
@@ -108,6 +124,32 @@ export function ReceiptSendMailReceipt({
             {subtotal}
           </x.span>
         </Group>
+
+        {!isEmpty(discount) && (
+          <Group
+            h={'40px'}
+            position={'apart'}
+            borderBottomStyle="solid"
+            borderBottomWidth={'1px'}
+            borderBottomColor={'#D9D9D9'}
+          >
+            <x.span>{discountLabel}</x.span>
+            <x.span fontSize={15}>{discount}</x.span>
+          </Group>
+        )}
+
+        {!isEmpty(adjustment) && (
+          <Group
+            h={'40px'}
+            position={'apart'}
+            borderBottomStyle="solid"
+            borderBottomWidth={'1px'}
+            borderBottomColor={'#D9D9D9'}
+          >
+            <x.span>{adjustmentLabel}</x.span>
+            <x.span fontSize={15}>{adjustment}</x.span>
+          </Group>
+        )}
 
         <Group
           h={'40px'}

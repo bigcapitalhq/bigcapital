@@ -20,6 +20,16 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
       'subtotal',
       'subtotalFormatted',
 
+      'discountAmount',
+      'discountAmountFormatted',
+      'discountPercentage',
+      'discountPercentageFormatted',
+      'discountLabel',
+
+      'adjustment',
+      'adjustmentFormatted',
+      'adjustmentLabel',
+
       'estimateNumber',
       'entries',
 
@@ -98,15 +108,14 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
   }
 
   /**
-   * Retrieves the formatted total of the estimate.
+   * Retrieves the discount label of the estimate.
    * @param estimate
    * @returns {string}
    */
-  protected totalFormatted(estimate) {
-    return this.formatMoney(estimate.amount, {
-      currencyCode: estimate.currencyCode,
-      money: true,
-    });
+  protected discountLabel(estimate) {
+    return estimate.discountType === 'percentage'
+      ? `Discount [${estimate.discountPercentageFormatted}]`
+      : 'Discount';
   }
 
   /**
@@ -115,7 +124,7 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
    * @returns {string}
    */
   protected subtotalFormatted = (estimate) => {
-    return this.formatNumber(estimate.amount, { money: false });
+    return this.formattedSubtotal(estimate);
   };
 
   /**

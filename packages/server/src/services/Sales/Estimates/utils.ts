@@ -20,6 +20,10 @@ export const transformEstimateToPdfTemplate = (
     customerNote: estimate.note,
     termsConditions: estimate.termsConditions,
     customerAddress: contactAddressTextFormat(estimate.customer),
+    discount: estimate.discountAmountFormatted,
+    discountLabel: estimate.discountPercentageFormatted
+      ? `Discount [${estimate.discountPercentageFormatted}]`
+      : 'Discount',
   };
 };
 

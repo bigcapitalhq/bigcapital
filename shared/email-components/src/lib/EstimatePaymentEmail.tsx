@@ -1,8 +1,8 @@
 import { CSSProperties } from 'react';
+import isEmpty from 'lodash.isempty';
 import {
   Button,
   Column,
-  Container,
   Heading,
   render,
   Row,
@@ -30,7 +30,15 @@ export interface EstimatePaymentEmailProps {
   subtotal: string;
   subtotalLabel?: string;
 
-  // # Estimate No#
+  // # Adjustment
+  adjustment?: string;
+  adjustmentLabel?: string;
+
+  // # Discount
+  discount?: string;
+  discountLabel?: string;
+
+  // # Estimate No.
   estimateNumber?: string;
   estimateNumberLabel?: string;
 
@@ -65,6 +73,14 @@ export const EstimatePaymentEmail: React.FC<
   total,
   totalLabel = 'Total',
 
+  // # Adjustment
+  adjustment,
+  adjustmentLabel = 'Adjustment',
+
+  // # Discount
+  discount,
+  discountLabel = 'Discount',
+
   // # Subtotal
   subtotal,
   subtotalLabel = 'Subtotal',
@@ -87,84 +103,108 @@ export const EstimatePaymentEmail: React.FC<
   // # Items
   items = [],
 }) => {
-    return (
-      <EmailTemplateLayout preview={preview}>
-        <EmailTemplate>
-          {companyLogoUri && <EmailTemplate.CompanyLogo src={companyLogoUri} />}
+  return (
+    <EmailTemplateLayout preview={preview}>
+      <EmailTemplate>
+        {companyLogoUri && <EmailTemplate.CompanyLogo src={companyLogoUri} />}
 
-          <Section style={headerInfoStyle}>
-            <Row>
-              <Heading style={invoiceCompanyNameStyle}>{companyName}</Heading>
+        <Section style={headerInfoStyle}>
+          <Row>
+            <Heading style={invoiceCompanyNameStyle}>{companyName}</Heading>
+          </Row>
+          <Row>
+            <Text style={estimateAmountStyle}>{total}</Text>
+          </Row>
+          <Row>
+            <Text style={estimateNumberStyle}>
+              {estimateNumberLabel?.replace('{estimateNumber}', estimateNumber)}
+            </Text>
+          </Row>
+          <Row>
+            <Text style={estimateExpirationStyle}>
+              {expirationDateLabel.replace('{expirationDate}', expirationDate)}
+            </Text>
+          </Row>
+        </Section>
+
+        <Text style={estimateMessageStyle}>{message}</Text>
+        <Button
+          href={viewEstimateButtonUrl}
+          style={{
+            ...viewEstimateButtonStyle,
+            backgroundColor: primaryColor,
+          }}
+        >
+          {viewEstimateButtonLabel}
+        </Button>
+
+        <Section style={totalsSectionStyle}>
+          {items.map((item, index) => (
+            <Row key={index} style={itemLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={listItemLabelStyle}>{item.label}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={listItemAmountStyle}>
+                  {item.quantity} x {item.rate}
+                </Text>
+              </Column>
             </Row>
-            <Row>
-              <Text style={estimateAmountStyle}>{total}</Text>
-            </Row>
-            <Row>
-              <Text style={estimateNumberStyle}>
-                {estimateNumberLabel?.replace('{estimateNumber}', estimateNumber)}
-              </Text>
-            </Row>
-            <Row>
-              <Text style={estimateExpirationStyle}>
-                {expirationDateLabel.replace('{expirationDate}', expirationDate)}
-              </Text>
-            </Row>
-          </Section>
+          ))}
 
-          <Text style={estimateMessageStyle}>{message}</Text>
-          <Button
-            href={viewEstimateButtonUrl}
-            style={{
-              ...viewEstimateButtonStyle,
-              backgroundColor: primaryColor,
-            }}
-          >
-            {viewEstimateButtonLabel}
-          </Button>
+          <Row style={totalLineRowStyle}>
+            <Column width={'50%'}>
+              <Text style={totalLineItemLabelStyle}>{subtotalLabel}</Text>
+            </Column>
 
-          <Section style={totalsSectionStyle}>
-            {items.map((item, index) => (
-              <Row key={index} style={itemLineRowStyle}>
-                <Column width={'50%'}>
-                  <Text style={listItemLabelStyle}>{item.label}</Text>
-                </Column>
+            <Column width={'50%'}>
+              <Text style={totalLineItemAmountStyle}>{subtotal}</Text>
+            </Column>
+          </Row>
 
-                <Column width={'50%'}>
-                  <Text style={listItemAmountStyle}>
-                    {item.quantity} x {item.rate}
-                  </Text>
-                </Column>
-              </Row>
-            ))}
-
+          {!isEmpty(discount) && (
             <Row style={totalLineRowStyle}>
               <Column width={'50%'}>
-                <Text style={totalLineItemLabelStyle}>{subtotalLabel}</Text>
+                <Text style={listItemLabelStyle}>{discountLabel}</Text>
               </Column>
 
               <Column width={'50%'}>
-                <Text style={totalLineItemAmountStyle}>{subtotal}</Text>
+                <Text style={listItemAmountStyle}>{discount}</Text>
               </Column>
             </Row>
+          )}
 
+          {!isEmpty(adjustment) && (
             <Row style={totalLineRowStyle}>
               <Column width={'50%'}>
-                <Text style={totalLineItemLabelStyle}>{totalLabel}</Text>
+                <Text style={listItemLabelStyle}>{adjustmentLabel}</Text>
               </Column>
 
               <Column width={'50%'}>
-                <Text style={totalLineItemAmountStyle}>{total}</Text>
+                <Text style={listItemAmountStyle}>{adjustment}</Text>
               </Column>
             </Row>
-          </Section>
-        </EmailTemplate>
-      </EmailTemplateLayout>
-    );
-  };
+          )}
+
+          <Row style={totalLineRowStyle}>
+            <Column width={'50%'}>
+              <Text style={totalLineItemLabelStyle}>{totalLabel}</Text>
+            </Column>
+
+            <Column width={'50%'}>
+              <Text style={totalLineItemAmountStyle}>{total}</Text>
+            </Column>
+          </Row>
+        </Section>
+      </EmailTemplate>
+    </EmailTemplateLayout>
+  );
+};
 
 /**
  * Renders the estimate mail template to string
- * @param {EstimatePaymentEmailProps} props 
+ * @param {EstimatePaymentEmailProps} props
  * @returns {Promise<string>}
  */
 export const renderEstimateEmailTemplate = (

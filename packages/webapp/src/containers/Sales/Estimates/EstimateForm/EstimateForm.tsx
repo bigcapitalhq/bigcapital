@@ -160,7 +160,7 @@ function EstimateForm({
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          flex: 1
+          flex: 1,
         })}
       >
         <PageForm flex={1}>

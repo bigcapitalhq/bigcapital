@@ -7,7 +7,7 @@ import * as R from 'ramda';
 
 import { ExchangeRateInputGroup } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
-import { useReceiptIsForeignCustomer, useReceiptTotals } from './utils';
+import { useReceiptIsForeignCustomer, useReceiptTotal } from './utils';
 import { useUpdateEffect } from '@/hooks';
 import { transactionNumber } from '@/utils';
 import withSettings from '@/containers/Settings/withSettings';
@@ -98,7 +98,7 @@ export const ReceiptSyncAutoExRateToForm = R.compose(withDialogActions)(
     // #withDialogActions
     openDialog,
   }) => {
-    const { total } = useReceiptTotals();
+    const total = useReceiptTotal();
     const timeout = useRef();
 
     useSyncExRateToForm({

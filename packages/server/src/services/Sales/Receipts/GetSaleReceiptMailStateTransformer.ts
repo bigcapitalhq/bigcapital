@@ -1,7 +1,9 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { ItemEntryTransformer } from '../Invoices/ItemEntryTransformer';
+import { DiscountType } from '@/interfaces';
+import { SaleReceiptTransformer } from './SaleReceiptTransformer';
 
-export class GetSaleReceiptMailStateTransformer extends Transformer {
+export class GetSaleReceiptMailStateTransformer extends SaleReceiptTransformer {
   /**
    * Exclude these attributes from user object.
    * @returns {Array}
@@ -20,14 +22,28 @@ export class GetSaleReceiptMailStateTransformer extends Transformer {
       'companyLogoUri',
       'primaryColor',
       'customerName',
+
       'total',
       'totalFormatted',
+
+      'discountAmount',
+      'discountAmountFormatted',
+      'discountPercentage',
+      'discountPercentageFormatted',
+      'discountLabel',
+
+      'adjustment',
+      'adjustmentFormatted',
+
       'subtotal',
       'subtotalFormatted',
+
       'receiptDate',
       'receiptDateFormatted',
+
       'closedAtDate',
       'closedAtDateFormatted',
+
       'receiptNumber',
       'entries',
     ];
@@ -86,7 +102,18 @@ export class GetSaleReceiptMailStateTransformer extends Transformer {
   };
 
   /**
-   *
+   * Retrieves the discount label of the estimate.
+   * @param estimate
+   * @returns {string}
+   */
+  protected discountLabel(receipt) {
+    return receipt.discountType === DiscountType.Percentage
+      ? `Discount [${receipt.discountPercentageFormatted}]`
+      : 'Discount';
+  }
+
+  /**
+   * Retrieves the subtotal of the receipt.
    * @param receipt
    * @returns
    */
@@ -95,7 +122,7 @@ export class GetSaleReceiptMailStateTransformer extends Transformer {
   };
 
   /**
-   *
+   * Retrieves the formatted subtotal of the receipt.
    * @param receipt
    * @returns
    */
@@ -106,7 +133,7 @@ export class GetSaleReceiptMailStateTransformer extends Transformer {
   };
 
   /**
-   *
+   * Retrieves the receipt date.
    * @param receipt
    * @returns
    */
@@ -115,7 +142,7 @@ export class GetSaleReceiptMailStateTransformer extends Transformer {
   };
 
   /**
-   *
+   * Retrieves the formatted receipt date.
    * @param {ISaleReceipt} invoice
    * @returns {string}
    */

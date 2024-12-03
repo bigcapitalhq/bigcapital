@@ -28,4 +28,6 @@ If you have any questions, please let us know.
 
 Thanks,
 Bigcapital`,
+  adjustment: '$100.00',
+  discount: '$100.00',
 };

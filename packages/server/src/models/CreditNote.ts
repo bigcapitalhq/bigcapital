@@ -5,12 +5,20 @@ import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/CreditNotes/constants';
 import ModelSearchable from './ModelSearchable';
 import CreditNoteMeta from './CreditNote.Meta';
+import { DiscountType } from '@/interfaces';
 
 export default class CreditNote extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  public amount: number;
+  public exchangeRate: number;
+  public openedAt: Date;
+  public discount: number;
+  public discountType: DiscountType;
+  public adjustment: number;
+
   /**
    * Table name
    */
@@ -35,8 +43,18 @@ export default class CreditNote extends mixin(TenantModel, [
       'isPublished',
       'isOpen',
       'isClosed',
+
       'creditsRemaining',
       'creditsUsed',
+
+      'subtotal',
+      'subtotalLocal',
+
+      'discountAmount',
+      'discountPercentage',
+
+      'total',
+      'totalLocal',
     ];
   }
 
@@ -46,6 +64,58 @@ export default class CreditNote extends mixin(TenantModel, [
    */
   get localAmount() {
     return this.amount * this.exchangeRate;
+  }
+
+  /**
+   * Credit note subtotal.
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.amount;
+  }
+
+  /**
+   * Credit note subtotal in local currency.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.subtotal * this.exchangeRate;
+  }
+
+  /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage
+      ? this.discount
+      : null;
+  }
+
+  /**
+   * Credit note total.
+   * @returns {number}
+   */
+  get total() {
+    return this.subtotal - this.discountAmount - this.adjustment;
+  }
+
+  /**
+   * Credit note total in local currency.
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
   }
 
   /**

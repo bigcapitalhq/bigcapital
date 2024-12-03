@@ -19,9 +19,6 @@ export class SaleEstimatesPdf {
   private chromiumlyTenancy: ChromiumlyTenancy;
 
   @Inject()
-  private templateInjectable: TemplateInjectable;
-
-  @Inject()
   private getSaleEstimate: GetSaleEstimate;
 
   @Inject()
@@ -62,6 +59,7 @@ export class SaleEstimatesPdf {
     // Retireves the sale estimate html.
     const htmlContent = await this.saleEstimateHtml(tenantId, saleEstimateId);
 
+    // Converts the html content to pdf.
     const content = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
       htmlContent

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { useFormikContext } from 'formik';
 import {
   T,
   TotalLines,
@@ -9,37 +9,56 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useReceiptTotals } from './utils';
+import {
+  useReceiptAdjustmentFormatted,
+  useReceiptDiscountAmountFormatted,
+  useReceiptDueAmountFormatted,
+  useReceiptPaidAmountFormatted,
+  useReceiptSubtotalFormatted,
+  useReceiptTotalFormatted,
+} from './utils';
+import { DiscountTotalLine } from '../../Invoices/InvoiceForm/DiscountTotalLine';
+import { AdjustmentTotalLine } from '../../Invoices/InvoiceForm/AdjustmentTotalLine';
 
 export function ReceiptFormFooterRight() {
   const {
-    formattedSubtotal,
-    formattedTotal,
-    formattedDueTotal,
-    formattedPaymentTotal,
-  } = useReceiptTotals();
+    values: { currency_code },
+  } = useFormikContext();
+
+  const paidAmountFormatted = useReceiptPaidAmountFormatted();
+  const dueAmountFormatted = useReceiptDueAmountFormatted();
+
+  const subtotalFormatted = useReceiptSubtotalFormatted();
+  const totalFormatted = useReceiptTotalFormatted();
+
+  const discountAmount = useReceiptDiscountAmountFormatted();
+  const adjustmentAmount = useReceiptAdjustmentFormatted();
 
   return (
     <ReceiptTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
         title={<T id={'receipt_form.label.subtotal'} />}
-        value={formattedSubtotal}
-        borderStyle={TotalLineBorderStyle.None}
+        value={subtotalFormatted}
       />
+      <DiscountTotalLine
+        currencyCode={currency_code}
+        discountAmount={discountAmount}
+      />
+      <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
       <TotalLine
         title={<T id={'receipt_form.label.total'} />}
-        value={formattedTotal}
+        value={totalFormatted}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
       <TotalLine
         title={<T id={'receipt_form.label.payment_amount'} />}
-        value={formattedPaymentTotal}
+        value={paidAmountFormatted}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'receipt_form.label.due_amount'} />}
-        value={formattedDueTotal}
+        value={dueAmountFormatted}
         textStyle={TotalLineTextStyle.Bold}
       />
     </ReceiptTotalLines>

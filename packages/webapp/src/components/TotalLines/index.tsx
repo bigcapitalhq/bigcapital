@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { x } from '@xstyled/emotion';
 export const TotalLineBorderStyle = {
   None: 'None',
   SingleDark: 'SingleDark',
@@ -32,14 +32,14 @@ export function TotalLines({
 
 export function TotalLine({ title, value, borderStyle, textStyle, className }) {
   return (
-    <TotalLineRoot
+    <TotalLinePrimitive
       borderStyle={borderStyle}
       textStyle={textStyle}
       className={className}
     >
       <div class="title">{title}</div>
       <div class="amount">{value}</div>
-    </TotalLineRoot>
+    </TotalLinePrimitive>
   );
 }
 
@@ -63,7 +63,7 @@ export const TotalLinesRoot = styled.div`
   `}
 `;
 
-export const TotalLineRoot = styled.div`
+export const TotalLinePrimitive = styled.div`
   display: table-row;
 
   .amount,
@@ -96,5 +96,17 @@ export const TotalLineRoot = styled.div`
 
   .amount {
     text-align: right;
+    width: 25%;
   }
 `;
+
+const TotalLineAmount = (props) => {
+  return <x.div display={'table-cell'} padding={'8px'} textAlign={'right'} {...props} />;
+};
+
+export const TotalLineTitle = (props) => {
+  return <x.div display={'table-cell'} padding={'8px'} {...props} />;
+};
+
+TotalLinePrimitive.Amount = TotalLineAmount;
+TotalLinePrimitive.Title = TotalLineTitle;

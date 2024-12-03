@@ -28,6 +28,10 @@ export const transformInvoiceToPdfTemplate = (
     subtotal: invoice.subtotalFormatted,
     paymentMade: invoice.paymentAmountFormatted,
     dueAmount: invoice.dueAmountFormatted,
+    discount: invoice.discountAmountFormatted,
+    discountLabel: invoice.discountPercentageFormatted
+      ? `Discount [${invoice.discountPercentageFormatted}]`
+      : 'Discount',
 
     termsConditions: invoice.termsConditions,
     statement: invoice.invoiceMessage,

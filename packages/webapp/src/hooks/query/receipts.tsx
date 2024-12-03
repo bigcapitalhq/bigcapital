@@ -263,6 +263,18 @@ export interface GetSaleReceiptMailStateResponse {
   to: string[];
   toOptions: Array<{ mail: string; label: string; primary: boolean; }>;
 
+  // # Discount
+  discountAmount: number;
+  discountAmountFormatted: string;
+  discountLabel: string;
+  discountPercentage: number | null;
+  discountPercentageFormatted: string;
+
+  // # Adjustment
+  adjustment: number,
+  adjustmentFormatted: string,
+
+  // # Total
   total: number;
   totalFormatted: string;
 
