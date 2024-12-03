@@ -30,4 +30,7 @@ If you have any questions, please let us know.
 
 Thanks,
 Bigcapital`,
+  subtotal: '$1,000.00',
+  discount: '$1,000.00',
+  adjustment: '$1,000.00'
 };

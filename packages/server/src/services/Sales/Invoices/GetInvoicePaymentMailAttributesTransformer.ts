@@ -23,6 +23,15 @@ export class GetInvoiceMailTemplateAttributesTransformer extends Transformer {
       'invoiceNumber',
       'invoiceNumberLabel',
 
+      'subtotal',
+      'subtotalLabel',
+
+      'discount',
+      'discountLabel',
+
+      'adjustment',
+      'adjustmentLabel',
+
       'total',
       'totalLabel',
 
@@ -74,6 +83,30 @@ export class GetInvoiceMailTemplateAttributesTransformer extends Transformer {
 
   public invoiceNumberLabel(): string {
     return 'Invoice # {invoiceNumber}';
+  }
+
+  public subtotal(): string {
+    return this.options.invoice?.subtotalFormatted;
+  }
+
+  public subtotalLabel(): string {
+    return 'Subtotal';
+  }
+
+  public discount(): string {
+    return this.options.invoice?.discountAmountFormatted;
+  }
+
+  public discountLabel(): string {
+    return 'Discount';
+  }
+
+  public adjustment(): string {
+    return this.options.invoice?.adjustmentFormatted;
+  }
+
+  public adjustmentLabel(): string {
+    return 'Adjustment';
   }
 
   public total(): string {

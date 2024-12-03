@@ -21,6 +21,8 @@ export class SaleEstimateTransfromer extends Transformer {
       'discountAmountFormatted',
       'discountPercentageFormatted',
       'adjustmentFormatted',
+      'totalFormatted',
+      'totalLocalFormatted',
       'formattedCreatedAt',
       'entries',
       'attachments',
@@ -130,6 +132,27 @@ export class SaleEstimateTransfromer extends Transformer {
    */
   protected adjustmentFormatted = (estimate: ISaleEstimate): string => {
     return this.formatMoney(estimate.adjustment, {
+      currencyCode: estimate.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted estimate total.
+   * @returns {string}
+   */
+  protected totalFormatted = (estimate: ISaleEstimate): string => {
+    return formatNumber(estimate.total, {
+      currencyCode: estimate.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted estimate total in local currency.
+   * @param estimate
+   * @returns {string}
+   */
+  protected totalLocalFormatted = (estimate: ISaleEstimate): string => {
+    return formatNumber(estimate.totalLocal, {
       currencyCode: estimate.currencyCode,
     });
   };

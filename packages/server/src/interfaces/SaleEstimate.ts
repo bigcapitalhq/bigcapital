@@ -26,6 +26,9 @@ export interface ISaleEstimate {
   branchId?: number;
   warehouseId?: number;
 
+  total?: number;
+  totalLocal?: number;
+
   discountAmount?: number;
   discountPercentage?: number | null;
 
