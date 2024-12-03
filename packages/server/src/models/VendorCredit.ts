@@ -73,12 +73,7 @@ export default class VendorCredit extends mixin(TenantModel, [
    * @returns {number}
    */
   get total() {
-    const discountAmount =
-      this.discountType === DiscountType.Amount
-        ? this.discount
-        : this.subtotal * (this.discount / 100);
-
-    return this.subtotal - discountAmount - this.adjustment;
+    return this.subtotal - this.discountAmount - this.adjustment;
   }
 
   /**
