@@ -26,7 +26,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   public deliveredAt: Date;
   public discount: number;
   public discountType: DiscountType;
-  public adjustments: number;
+  public adjustment: number | null;
 
   /**
    * Table name
@@ -157,7 +157,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @returns {number}
    */
   get total() {
-    const adjustmentAmount = defaultTo(this.adjustments, 0);
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
     const differencies = this.discountAmount + adjustmentAmount;
 
     return this.isInclusiveTax

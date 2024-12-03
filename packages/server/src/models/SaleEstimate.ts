@@ -23,6 +23,14 @@ export default class SaleEstimate extends mixin(TenantModel, [
 
   public adjustment: number;
 
+  public expirationDate!: string;
+  public deliveredAt!: string | null;
+  public approvedAt!: string | null;
+  public rejectedAt!: string | null;
+
+  public convertedToInvoiceId!: number | null;
+  public convertedToInvoiceAt!: string | null;
+
   /**
    * Table name
    */
@@ -45,6 +53,10 @@ export default class SaleEstimate extends mixin(TenantModel, [
       'localAmount',
       'discountAmount',
       'discountPercentage',
+      'total',
+      'totalLocal',
+      'subtotal',
+      'subtotalLocal',
       'isDelivered',
       'isExpired',
       'isConvertedToInvoice',

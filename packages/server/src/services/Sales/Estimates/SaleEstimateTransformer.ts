@@ -141,7 +141,7 @@ export class SaleEstimateTransfromer extends Transformer {
    * @returns {string}
    */
   protected totalFormatted = (estimate: ISaleEstimate): string => {
-    return formatNumber(estimate.total, {
+    return this.formatMoney(estimate.total, {
       currencyCode: estimate.currencyCode,
     });
   };
@@ -152,7 +152,7 @@ export class SaleEstimateTransfromer extends Transformer {
    * @returns {string}
    */
   protected totalLocalFormatted = (estimate: ISaleEstimate): string => {
-    return formatNumber(estimate.totalLocal, {
+    return this.formatMoney(estimate.totalLocal, {
       currencyCode: estimate.currencyCode,
     });
   };

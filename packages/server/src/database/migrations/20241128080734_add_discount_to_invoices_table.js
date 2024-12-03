@@ -6,7 +6,7 @@ exports.up = function (knex) {
   return knex.schema.alterTable('sales_invoices', (table) => {
     table.decimal('discount', 10, 2).nullable().after('credited_amount');
     table.string('discount_type').nullable().after('discount');
-    table.decimal('adjustments', 10, 2).nullable().after('discount_type'); 
+    table.decimal('adjustment', 10, 2).nullable().after('discount_type'); 
   });
 };
 
@@ -18,6 +18,6 @@ exports.down = function (knex) {
   return knex.schema.alterTable('sale_invoices', (table) => {
     table.dropColumn('discount');
     table.dropColumn('discount_type');
-    table.dropColumn('adjustments');
+    table.dropColumn('adjustment');
   });
 };

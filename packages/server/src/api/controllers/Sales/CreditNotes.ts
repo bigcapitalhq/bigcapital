@@ -4,6 +4,7 @@ import { Inject, Service } from 'typedi';
 import {
   AbilitySubject,
   CreditNoteAction,
+  DiscountType,
   ICreditNoteEditDTO,
   ICreditNoteNewDTO,
 } from '@/interfaces';
@@ -253,7 +254,10 @@ export default class PaymentReceivesController extends BaseController {
 
       // Discount.
       check('discount').optional({ nullable: true }).isNumeric().toFloat(),
-      check('discount_type').optional({ nullable: true }).isString().trim(),
+      check('discount_type')
+        .optional({ nullable: true })
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
 
       // Adjustment.
       check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),
@@ -763,8 +767,9 @@ export default class PaymentReceivesController extends BaseController {
     const { tenantId } = req;
 
     try {
-      const data =
-        await this.getCreditNoteStateService.getCreditNoteState(tenantId);
+      const data = await this.getCreditNoteStateService.getCreditNoteState(
+        tenantId
+      );
       return res.status(200).send({ data });
     } catch (error) {
       next(error);

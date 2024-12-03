@@ -11,6 +11,7 @@ import {
   SaleInvoiceAction,
   AbilitySubject,
   SendInvoiceMailDTO,
+  DiscountType,
 } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { SaleInvoiceApplication } from '@/services/Sales/Invoices/SaleInvoicesApplication';
@@ -284,10 +285,13 @@ export default class SaleInvoicesController extends BaseController {
 
       // Discount
       check('discount').optional({ nullable: true }).isNumeric().toFloat(),
-      check('discount_type').optional({ nullable: true }).isString().trim(),
+      check('discount_type')
+        .optional({ nullable: true })
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
 
       // Adjustments
-      check('adjustment').optional({ nullable: true }).isArray(),
+      check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),
     ];
   }
 

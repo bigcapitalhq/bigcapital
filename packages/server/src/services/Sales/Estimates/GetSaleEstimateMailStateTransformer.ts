@@ -119,24 +119,12 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
   }
 
   /**
-   * Retrieves the formatted total of the estimate.
-   * @param estimate
-   * @returns {string}
-   */
-  protected totalFormatted(estimate) {
-    return this.formatMoney(estimate.amount, {
-      currencyCode: estimate.currencyCode,
-      money: true,
-    });
-  }
-
-  /**
    * Retrieves the formatted subtotal of the estimate.
    * @param estimate
    * @returns {string}
    */
   protected subtotalFormatted = (estimate) => {
-    return this.formatNumber(estimate.amount, { money: false });
+    return this.formattedSubtotal(estimate);
   };
 
   /**

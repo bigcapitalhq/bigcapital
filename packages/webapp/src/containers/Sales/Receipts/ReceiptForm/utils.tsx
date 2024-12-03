@@ -284,7 +284,7 @@ export const useReceiptTotal = () => {
   const adjustmentAmount = useReceiptAdjustmentAmount();
   const discountAmount = useReceiptDiscountAmount();
 
-  return subtotal - discountAmount + adjustmentAmount;
+  return subtotal - discountAmount - adjustmentAmount;
 };
 
 /**
