@@ -1,13 +1,12 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
-import { sumBy } from 'lodash';
-import { useFormikContext } from 'formik';
 import { CLASSES } from '@/constants/classes';
 import { PageFormBigNumber } from '@/components';
 
 import BillFormHeaderFields from './BillFormHeaderFields';
+import { useBillTotalFormatted } from './utils';
 
 /**
  * Fill form header.
@@ -22,19 +21,10 @@ function BillFormHeader() {
 }
 
 function BillFormBigTotal() {
-  const {
-    values: { currency_code, entries },
-  } = useFormikContext();
-
-  // Calculate the total due amount of bill entries.
-  const totalDueAmount = useMemo(() => sumBy(entries, 'amount'), [entries]);
+  const totalFormatted = useBillTotalFormatted();
 
   return (
-    <PageFormBigNumber
-      label={intl.get('due_amount')}
-      amount={totalDueAmount}
-      currencyCode={currency_code}
-    />
+    <PageFormBigNumber label={intl.get('due_amount')} amount={totalFormatted} />
   );
 }
 

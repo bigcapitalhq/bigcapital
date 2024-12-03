@@ -23,7 +23,7 @@ export default function ReceiptDetailTableFooter() {
       <ReceiptTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'receipt.details.subtotal'} />}
-          value={receipt.formatted_subtotal}
+          value={receipt.subtotal_formatted}
         />
         {receipt.discount_amount > 0 && (
           <TotalLine
@@ -36,9 +36,16 @@ export default function ReceiptDetailTableFooter() {
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
+        {receipt.adjustment > 0 && (
+          <TotalLine
+            title={'Adjustment'}
+            value={receipt.adjustment_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
         <TotalLine
           title={<T id={'receipt.details.total'} />}
-          value={receipt.formatted_amount}
+          value={receipt.total_formatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />

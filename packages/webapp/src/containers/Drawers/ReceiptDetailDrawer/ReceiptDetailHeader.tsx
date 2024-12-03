@@ -31,7 +31,7 @@ export default function ReceiptDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountReceiptItem label={intl.get('amount')}>
-            <h3 class="big-number">{receipt.formatted_amount}</h3>
+            <h3 class="big-number">{receipt.total_formatted}</h3>
           </AmountReceiptItem>
 
           <StatusReceiptItem>

@@ -325,7 +325,7 @@ export const useBillSubtotal = () => {
  */
 export const useBillSubtotalFormatted = () => {
   const subtotal = useBillSubtotal();
-  const { values} = useFormikContext();
+  const { values } = useFormikContext();
 
   return formattedAmount(subtotal, values.currency_code);
 };
@@ -336,8 +336,12 @@ export const useBillSubtotalFormatted = () => {
  */
 export const useBillDiscountAmount = () => {
   const { values } = useFormikContext();
+  const subtotal = useBillSubtotal();
+  const discount = toSafeNumber(values.discount);
 
-  return toSafeNumber(values.discount);
+  return values?.discount_type === 'percentage'
+    ? (subtotal * discount) / 100
+    : discount;
 };
 
 /**
@@ -384,7 +388,6 @@ export const useBillTotalTaxAmount = () => {
       .filter((entry) => entry.tax_amount)
       .sumBy('tax_amount')
       .value();
-
   }, [values.entries]);
 };
 

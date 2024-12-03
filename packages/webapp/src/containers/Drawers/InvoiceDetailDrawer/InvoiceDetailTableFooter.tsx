@@ -37,6 +37,13 @@ export function InvoiceDetailTableFooter() {
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
+        {invoice.adjustment > 0 && (
+          <TotalLine
+            title="Adjustment"
+            value={invoice.adjustment_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
         {invoice.taxes.map((taxRate) => (
           <TotalLine
             key={taxRate.id}
@@ -45,7 +52,6 @@ export function InvoiceDetailTableFooter() {
             textStyle={TotalLineTextStyle.Regular}
           />
         ))}
-
         <TotalLine
           title={<T id={'invoice.details.total'} />}
           value={invoice.total_formatted}
