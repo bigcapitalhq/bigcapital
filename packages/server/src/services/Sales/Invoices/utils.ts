@@ -1,6 +1,7 @@
 import { pickBy } from 'lodash';
-import { InvoicePdfTemplateAttributes, ISaleInvoice } from '@/interfaces';
+import { ISaleInvoice } from '@/interfaces';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
+import { InvoicePaperTemplateProps } from '@bigcapital/pdf-templates';
 
 export const mergePdfTemplateWithDefaultAttributes = (
   brandingTemplate?: Record<string, any>,
@@ -18,7 +19,7 @@ export const mergePdfTemplateWithDefaultAttributes = (
 
 export const transformInvoiceToPdfTemplate = (
   invoice: ISaleInvoice
-): Partial<InvoicePdfTemplateAttributes> => {
+): Partial<InvoicePaperTemplateProps> => {
   return {
     dueDate: invoice.dueDateFormatted,
     dateIssue: invoice.invoiceDateFormatted,
@@ -29,6 +30,7 @@ export const transformInvoiceToPdfTemplate = (
     paymentMade: invoice.paymentAmountFormatted,
     dueAmount: invoice.dueAmountFormatted,
     discount: invoice.discountAmountFormatted,
+    adjustment: invoice.adjustmentFormatted,
     discountLabel: invoice.discountPercentageFormatted
       ? `Discount [${invoice.discountPercentageFormatted}]`
       : 'Discount',

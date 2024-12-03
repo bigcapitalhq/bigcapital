@@ -239,6 +239,7 @@ export const useJournalTotals = () => {
   const totalDebit = safeSumBy(entries, 'debit');
 
   const total = Math.max(totalCredit, totalDebit);
+  
   // Retrieves the formatted total money.
   const formattedTotal = React.useMemo(
     () => formattedAmount(total, currencyCode),

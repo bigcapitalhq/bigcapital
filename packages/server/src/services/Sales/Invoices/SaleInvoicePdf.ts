@@ -1,10 +1,12 @@
 import { Inject, Service } from 'typedi';
-import { renderInvoicePaperTemplateHtml } from '@bigcapital/pdf-templates';
+import {
+  renderInvoicePaperTemplateHtml,
+  InvoicePaperTemplateProps,
+} from '@bigcapital/pdf-templates';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
 import { GetSaleInvoice } from './GetSaleInvoice';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { transformInvoiceToPdfTemplate } from './utils';
-import { InvoicePdfTemplateAttributes } from '@/interfaces';
 import { SaleInvoicePdfTemplate } from './SaleInvoicePdfTemplate';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
@@ -100,7 +102,7 @@ export class SaleInvoicePdf {
   async getInvoiceBrandingAttributes(
     tenantId: number,
     invoiceId: number
-  ): Promise<InvoicePdfTemplateAttributes> {
+  ): Promise<InvoicePaperTemplateProps> {
     const { PdfTemplate } = this.tenancy.models(tenantId);
 
     const invoice = await this.getInvoiceService.getSaleInvoice(

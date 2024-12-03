@@ -1,9 +1,9 @@
+import { EstimatePaperTemplateProps } from '@bigcapital/pdf-templates';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
-import { EstimatePdfBrandingAttributes } from './constants';
 
 export const transformEstimateToPdfTemplate = (
   estimate
-): Partial<EstimatePdfBrandingAttributes> => {
+): Partial<EstimatePaperTemplateProps> => {
   return {
     expirationDate: estimate.formattedExpirationDate,
     estimateNumebr: estimate.estimateNumber,
@@ -17,6 +17,7 @@ export const transformEstimateToPdfTemplate = (
     })),
     total: estimate.formattedSubtotal,
     subtotal: estimate.formattedSubtotal,
+    adjustment: estimate.adjustmentFormatted,
     customerNote: estimate.note,
     termsConditions: estimate.termsConditions,
     customerAddress: contactAddressTextFormat(estimate.customer),

@@ -1,12 +1,10 @@
-import {
-  ISaleReceipt,
-  ISaleReceiptBrandingTemplateAttributes,
-} from '@/interfaces';
+import { ISaleReceipt } from '@/interfaces';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
+import { ReceiptPaperTemplateProps } from '@bigcapital/pdf-templates';
 
 export const transformReceiptToBrandingTemplateAttributes = (
   saleReceipt: ISaleReceipt
-): Partial<ISaleReceiptBrandingTemplateAttributes> => {
+): Partial<ReceiptPaperTemplateProps> => {
   return {
     total: saleReceipt.totalFormatted,
     subtotal: saleReceipt.subtotalFormatted,
@@ -23,6 +21,7 @@ export const transformReceiptToBrandingTemplateAttributes = (
     discountLabel: saleReceipt.discountPercentageFormatted
       ? `Discount [${saleReceipt.discountPercentageFormatted}]`
       : 'Discount',
+    adjustment: saleReceipt.adjustmentFormatted,
     customerAddress: contactAddressTextFormat(saleReceipt.customer),
   };
 };

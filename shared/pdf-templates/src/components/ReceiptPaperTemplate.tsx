@@ -39,6 +39,11 @@ export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
   showDiscount?: boolean;
   discountLabel?: string;
 
+  // # Adjustment
+  adjustment?: string;
+  showAdjustment?: boolean;
+  adjustmentLabel?: string;
+
   // Total
   total?: string;
   showTotal?: boolean;
@@ -110,6 +115,11 @@ export function ReceiptPaperTemplate({
   discount = '',
   discountLabel = 'Discount',
   showDiscount = true,
+
+  // # Adjustment
+  adjustment = '',
+  adjustmentLabel = 'Adjustment',
+  showAdjustment = true,
 
   // # Subtotal
   subtotal = '1000/00',
@@ -226,6 +236,12 @@ export function ReceiptPaperTemplate({
               <PaperTemplate.TotalLine
                 label={discountLabel}
                 amount={discount}
+              />
+            )}
+            {showAdjustment && adjustment && (
+              <PaperTemplate.TotalLine
+                label={adjustmentLabel}
+                amount={adjustment}
               />
             )}
             {showTotal && (

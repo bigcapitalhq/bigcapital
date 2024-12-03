@@ -8,8 +8,6 @@ export const renderInvoicePaperTemplateHtml = (
   props: InvoicePaperTemplateProps
 ) => {
   return renderSSR(
-    <InvoicePaperTemplate
-      {...props}
-    />
+    <InvoicePaperTemplate {...props} />
   );
 };
