@@ -37,7 +37,7 @@ export function InvoiceDetailTableFooter() {
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
-        {invoice?.adjustment > 0 && (
+        {invoice?.adjustment_formatted && (
           <TotalLine
             title="Adjustment"
             value={invoice.adjustment_formatted}

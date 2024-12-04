@@ -25,7 +25,7 @@ export default function VendorCreditDetailDrawerFooter() {
           value={vendorCredit.formatted_subtotal}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
-        {vendorCredit.discount_amount_formatted && (
+        {vendorCredit?.discount_amount_formatted && (
           <TotalLine
             title={
               vendorCredit.discount_percentage_formatted
@@ -33,6 +33,13 @@ export default function VendorCreditDetailDrawerFooter() {
                 : 'Discount'
             }
             value={vendorCredit.discount_amount_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
+        {vendorCredit?.adjustment_formatted && (
+          <TotalLine
+            title={'Adjustment'}
+            value={vendorCredit.adjustment_formatted}
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
