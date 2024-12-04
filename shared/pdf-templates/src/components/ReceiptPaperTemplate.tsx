@@ -1,8 +1,13 @@
+import isEmpty from 'lodash/isEmpty';
 import { Box } from '../lib/layout/Box';
 import { Text } from '../lib/text/Text';
 import { Stack } from '../lib/layout/Stack';
 import { Group } from '../lib/layout/Group';
-import { PaperTemplate, PaperTemplateProps } from './PaperTemplate';
+import {
+  PaperTemplate,
+  PaperTemplateProps,
+  PaperTemplateTotalBorder,
+} from './PaperTemplate';
 import {
   DefaultPdfTemplateTerms,
   DefaultPdfTemplateItemDescription,
@@ -230,6 +235,8 @@ export function ReceiptPaperTemplate({
               <PaperTemplate.TotalLine
                 label={subtotalLabel}
                 amount={subtotal}
+                border={PaperTemplateTotalBorder.Gray}
+                style={{ fontWeight: 500 }}
               />
             )}
             {showDiscount && discount && (
@@ -245,18 +252,24 @@ export function ReceiptPaperTemplate({
               />
             )}
             {showTotal && (
-              <PaperTemplate.TotalLine label={totalLabel} amount={total} />
+              <PaperTemplate.TotalLine
+                label={totalLabel}
+                amount={total}
+                border={PaperTemplateTotalBorder.Gray}
+                style={{ fontWeight: 500 }}
+              />
             )}
           </PaperTemplate.Totals>
         </Stack>
 
         <Stack spacing={0}>
-          {showCustomerNote && (
+          {showCustomerNote && !isEmpty(customerNote) && (
             <PaperTemplate.Statement label={customerNoteLabel}>
               {customerNote}
             </PaperTemplate.Statement>
           )}
-          {showTermsConditions && (
+
+          {showTermsConditions && !isEmpty(termsConditions) && (
             <PaperTemplate.Statement label={termsConditionsLabel}>
               {termsConditions}
             </PaperTemplate.Statement>

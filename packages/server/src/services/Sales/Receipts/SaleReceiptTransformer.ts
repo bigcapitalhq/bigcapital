@@ -49,7 +49,7 @@ export class SaleReceiptTransformer extends Transformer {
 
   /**
    * Retrieve formatted receipt created at date.
-   * @param receipt 
+   * @param receipt
    * @returns {string}
    */
   protected formattedCreatedAt = (receipt: ISaleReceipt): string => {
@@ -62,7 +62,9 @@ export class SaleReceiptTransformer extends Transformer {
    * @returns {string}
    */
   protected subtotalFormatted = (receipt: ISaleReceipt): string => {
-    return formatNumber(receipt.subtotal, { money: false });
+    return formatNumber(receipt.subtotal, {
+      currencyCode: receipt.currencyCode,
+    });
   };
 
   /**
@@ -82,7 +84,7 @@ export class SaleReceiptTransformer extends Transformer {
    * @returns {string}
    */
   protected totalFormatted = (receipt: ISaleReceipt): string => {
-    return formatNumber(receipt.total, { money: false });
+    return formatNumber(receipt.total, { currencyCode: receipt.currencyCode });
   };
 
   /**
@@ -91,7 +93,9 @@ export class SaleReceiptTransformer extends Transformer {
    * @returns {string}
    */
   protected totalLocalFormatted = (receipt: ISaleReceipt): string => {
-    return formatNumber(receipt.totalLocal, { money: false });
+    return formatNumber(receipt.totalLocal, {
+      currencyCode: receipt.currencyCode,
+    });
   };
 
   /**
@@ -123,9 +127,7 @@ export class SaleReceiptTransformer extends Transformer {
    * @returns {string}
    */
   protected discountPercentageFormatted = (receipt: ISaleReceipt): string => {
-    return receipt.discountPercentage
-      ? `${receipt.discountPercentage}%`
-      : '';
+    return receipt.discountPercentage ? `${receipt.discountPercentage}%` : '';
   };
 
   /**
