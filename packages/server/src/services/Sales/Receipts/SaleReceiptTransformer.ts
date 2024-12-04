@@ -113,6 +113,7 @@ export class SaleReceiptTransformer extends Transformer {
   protected discountAmountFormatted = (receipt: ISaleReceipt): string => {
     return formatNumber(receipt.discountAmount, {
       currencyCode: receipt.currencyCode,
+      excerptZero: true,
     });
   };
 
@@ -135,6 +136,7 @@ export class SaleReceiptTransformer extends Transformer {
   protected adjustmentFormatted = (receipt: ISaleReceipt): string => {
     return this.formatMoney(receipt.adjustment, {
       currencyCode: receipt.currencyCode,
+      excerptZero: true,
     });
   };
 

@@ -25,11 +25,11 @@ export default function EstimateDetailTableFooter() {
           value={estimate.formatted_subtotal}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
-        {estimate.discount_amount > 0 && (
+        {estimate?.discount_amount > 0 && (
           <TotalLine
             title={
               estimate.discount_percentage_formatted
-                ? `Discount [${invoice.discount_percentage_formatted}]`
+                ? `Discount [${estimate.discount_percentage_formatted}]`
                 : 'Discount'
             }
             value={estimate.discount_amount_formatted}
@@ -38,7 +38,7 @@ export default function EstimateDetailTableFooter() {
         )}
         <TotalLine
           title={<T id={'estimate.details.total'} />}
-          value={estimate.formatted_amount}
+          value={estimate.total_formatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />

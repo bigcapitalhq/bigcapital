@@ -25,11 +25,11 @@ export default function VendorCreditDetailDrawerFooter() {
           value={vendorCredit.formatted_subtotal}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
-        {vendorCredit.discount_amount > 0 && (
+        {vendorCredit.discount_amount_formatted && (
           <TotalLine
             title={
-              bill.discount_percentage_formatted
-                ? `Discount [${bill.discount_percentage_formatted}]`
+              vendorCredit.discount_percentage_formatted
+                ? `Discount [${vendorCredit.discount_percentage_formatted}]`
                 : 'Discount'
             }
             value={vendorCredit.discount_amount_formatted}
