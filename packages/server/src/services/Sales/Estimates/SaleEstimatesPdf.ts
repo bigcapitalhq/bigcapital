@@ -1,14 +1,12 @@
 import { Inject, Service } from 'typedi';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
-import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
 import { GetSaleEstimate } from './GetSaleEstimate';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SaleEstimatePdfTemplate } from '../Invoices/SaleEstimatePdfTemplate';
 import { transformEstimateToPdfTemplate } from './utils';
-import { EstimatePdfBrandingAttributes } from './constants';
 import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { renderEstimatePaperTemplateHtml } from '@bigcapital/pdf-templates';
+import { renderEstimatePaperTemplateHtml, EstimatePaperTemplateProps } from '@bigcapital/pdf-templates';
 
 @Service()
 export class SaleEstimatesPdf {
@@ -97,7 +95,7 @@ export class SaleEstimatesPdf {
   async getEstimateBrandingAttributes(
     tenantId: number,
     estimateId: number
-  ): Promise<EstimatePdfBrandingAttributes> {
+  ): Promise<EstimatePaperTemplateProps> {
     const { PdfTemplate } = this.tenancy.models(tenantId);
     const saleEstimate = await this.getSaleEstimate.getEstimate(
       tenantId,

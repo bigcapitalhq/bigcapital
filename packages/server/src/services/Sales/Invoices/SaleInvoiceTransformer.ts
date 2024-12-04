@@ -170,6 +170,7 @@ export class SaleInvoiceTransformer extends Transformer {
   protected discountAmountFormatted = (invoice): string => {
     return formatNumber(invoice.discountAmount, {
       currencyCode: invoice.currencyCode,
+      excerptZero: true,
     });
   };
 
@@ -192,8 +193,9 @@ export class SaleInvoiceTransformer extends Transformer {
   protected adjustmentFormatted = (invoice): string => {
     return this.formatMoney(invoice.adjustment, {
       currencyCode: invoice.currencyCode,
-    })
-  }
+      excerptZero: true,
+    });
+  };
 
   /**
    * Retrieves formatted total in foreign currency.

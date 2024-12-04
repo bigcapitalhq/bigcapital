@@ -42,6 +42,12 @@ export function BillDetailTableFooter() {
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
+        {bill.adjustment > 0 && (
+          <TotalLine
+            title={'Adjustment'}
+            value={bill.adjustment_formatted}
+          />
+        )}
         <TotalLine
           title={<T id={'bill.details.total'} />}
           value={bill.total_formatted}

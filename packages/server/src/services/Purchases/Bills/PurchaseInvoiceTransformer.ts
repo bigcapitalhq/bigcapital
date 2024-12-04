@@ -171,6 +171,7 @@ export class PurchaseInvoiceTransformer extends Transformer {
   protected discountAmountFormatted = (bill): string => {
     return formatNumber(bill.discountAmount, {
       currencyCode: bill.currencyCode,
+      excerptZero: true,
     });
   };
 
@@ -193,6 +194,7 @@ export class PurchaseInvoiceTransformer extends Transformer {
   protected adjustmentFormatted = (bill): string => {
     return formatNumber(bill.adjustment, {
       currencyCode: bill.currencyCode,
+      excerptZero: true,
     });
   };
 

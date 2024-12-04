@@ -8,21 +8,25 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useExpensesTotals } from './utils';
+import {
+  useExpenseSubtotalFormatted,
+  useExpenseTotalFormatted,
+} from './utils';
 
 export function ExpenseFormFooterRight() {
-  const { formattedSubtotal, formattedTotal } = useExpensesTotals();
+  const totalFormatted = useExpenseTotalFormatted();
+  const subtotalFormatted = useExpenseSubtotalFormatted();
 
   return (
     <ExpensesTotalLines>
       <TotalLine
         title={<T id={'expense.label.subtotal'} />}
-        value={formattedSubtotal}
+        value={subtotalFormatted}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'expense.label.total'} />}
-        value={formattedTotal}
+        value={totalFormatted}
         textStyle={TotalLineTextStyle.Bold}
       />
     </ExpensesTotalLines>

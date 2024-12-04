@@ -43,7 +43,7 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   companyAddress?: string;
   billedToLabel?: string;
 
-  // Totals
+  // Total
   total?: string;
   showTotal?: boolean;
   totalLabel?: string;
@@ -52,6 +52,11 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   discount?: string;
   showDiscount?: boolean;
   discountLabel?: string;
+
+  // # Adjustment
+  adjustment?: string;
+  showAdjustment?: boolean;
+  adjustmentLabel?: string;
 
   // # Subtotal
   subtotal?: string;
@@ -116,6 +121,11 @@ export function EstimatePaperTemplate({
   subtotal = '1000/00',
   subtotalLabel = 'Subtotal',
   showSubtotal = true,
+
+  // # Adjustment
+  adjustment = '',
+  showAdjustment = true,
+  adjustmentLabel = 'Adjustment',
 
   // # Customer Note
   showCustomerNote = true,
@@ -238,6 +248,12 @@ export function EstimatePaperTemplate({
               <PaperTemplate.TotalLine
                 label={discountLabel}
                 amount={discount}
+              />
+            )}
+            {showAdjustment && adjustment && (
+              <PaperTemplate.TotalLine
+                label={adjustmentLabel}
+                amount={adjustment}
               />
             )}
             {showTotal && (

@@ -8,10 +8,14 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useJournalTotals } from './utils';
+import {
+  useManualJournalSubtotalFormatted,
+  useManualJournalTotalFormatted,
+} from './utils';
 
 export function MakeJournalFormFooterRight() {
-  const { formattedSubtotal, formattedTotal } = useJournalTotals();
+  const formattedSubtotal = useManualJournalSubtotalFormatted();
+  const formattedTotal = useManualJournalTotalFormatted();
 
   return (
     <MakeJouranlTotalLines>
@@ -29,7 +33,7 @@ export function MakeJournalFormFooterRight() {
   );
 }
 
-const MakeJouranlTotalLines =styled(TotalLines)`
+const MakeJouranlTotalLines = styled(TotalLines)`
   width: 100%;
   color: #555555;
 `;

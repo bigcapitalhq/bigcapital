@@ -30,7 +30,7 @@ export default function CreditNoteDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountItem label={intl.get('amount')}>
-            <span class="big-number">{creditNote.formatted_amount}</span>
+            <span class="big-number">{creditNote.total_formatted}</span>
           </AmountItem>
 
           <StatusItem>

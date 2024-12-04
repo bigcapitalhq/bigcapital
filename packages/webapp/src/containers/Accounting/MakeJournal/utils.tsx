@@ -226,34 +226,73 @@ export const useSetPrimaryBranchToForm = () => {
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
 
-/**
- * Retreives the Journal totals.
- */
-export const useJournalTotals = () => {
-  const {
-    values: { entries, currency_code: currencyCode },
-  } = useFormikContext();
+export const useManualJournalCreditTotal = () => {
+  const { values } = useFormikContext();
+  const totalCredit = safeSumBy(values.entries, 'credit');
 
-  // Retrieves the invoice entries total.
-  const totalCredit = safeSumBy(entries, 'credit');
-  const totalDebit = safeSumBy(entries, 'debit');
+  return totalCredit;
+};
 
-  const total = Math.max(totalCredit, totalDebit);
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(total, currencyCode, { money: false }),
-    [total, currencyCode],
-  );
+export const useManualJournalCreditTotalFormatted = () => {
+  const totalCredit = useManualJournalCreditTotal();
+  const { values } = useFormikContext();
 
-  return {
-    formattedTotal,
-    formattedSubtotal,
-  };
+  return formattedAmount(totalCredit, values.currency_code);
+};
+
+export const useManualJournalDebitTotal = () => {
+  const { values } = useFormikContext();
+  const totalDebit = safeSumBy(values.entries, 'debit');
+
+  return totalDebit;
+};
+
+export const useManualJournalDebitTotalFormatted = () => {
+  const totalDebit = useManualJournalDebitTotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(totalDebit, values.currency_code);
+};
+
+export const useManualJournalSubtotal = () => {
+  const totalCredit = useManualJournalCreditTotal();
+  const totalDebit = useManualJournalDebitTotal();
+
+  return Math.max(totalCredit, totalDebit);
+};
+
+export const useManualJournalSubtotalFormatted = () => {
+  const subtotal = useManualJournalSubtotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(subtotal, values.currency_code);
+};
+
+export const useManualJournalTotalDifference = () => {
+  const totalCredit = useManualJournalCreditTotal();
+  const totalDebit = useManualJournalDebitTotal();
+
+  return Math.abs(totalCredit - totalDebit);
+};
+
+export const useManualJournalTotalDifferenceFormatted = () => {
+  const difference = useManualJournalTotalDifference();
+  const { values } = useFormikContext();
+
+  return formattedAmount(difference, values.currency_code);
+};
+
+export const useManualJournalTotal = () => {
+  const total = useManualJournalSubtotal();
+
+  return total;
+};
+
+export const useManualJournalTotalFormatted = () => {
+  const total = useManualJournalTotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(total, values.currency_code);
 };
 
 /**

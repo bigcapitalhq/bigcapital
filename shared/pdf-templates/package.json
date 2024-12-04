@@ -9,7 +9,7 @@
   },
   "main": "./dist/components.umd.js",
   "module": "./dist/components.es.js",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",

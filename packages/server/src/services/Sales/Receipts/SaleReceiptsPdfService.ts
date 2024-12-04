@@ -1,13 +1,15 @@
 import { Inject, Service } from 'typedi';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
+import {
+  renderReceiptPaperTemplateHtml,
+  ReceiptPaperTemplateProps,
+} from '@bigcapital/pdf-templates';
 import { GetSaleReceipt } from './GetSaleReceipt';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SaleReceiptBrandingTemplate } from './SaleReceiptBrandingTemplate';
 import { transformReceiptToBrandingTemplateAttributes } from './utils';
-import { ISaleReceiptBrandingTemplateAttributes } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
-import { renderReceiptPaperTemplateHtml } from '@bigcapital/pdf-templates';
 
 @Service()
 export class SaleReceiptsPdf {
@@ -90,12 +92,12 @@ export class SaleReceiptsPdf {
    * Retrieves receipt branding attributes.
    * @param {number} tenantId
    * @param {number} receiptId
-   * @returns {Promise<ISaleReceiptBrandingTemplateAttributes>}
+   * @returns {Promise<ReceiptPaperTemplateProps>}
    */
   public async getReceiptBrandingAttributes(
     tenantId: number,
     receiptId: number
-  ): Promise<ISaleReceiptBrandingTemplateAttributes> {
+  ): Promise<ReceiptPaperTemplateProps> {
     const { PdfTemplate } = this.tenancy.models(tenantId);
 
     const saleReceipt = await this.getSaleReceiptService.getSaleReceipt(

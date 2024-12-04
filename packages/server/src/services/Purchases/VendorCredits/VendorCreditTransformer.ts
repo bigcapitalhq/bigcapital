@@ -82,6 +82,7 @@ export class VendorCreditTransformer extends Transformer {
   protected discountAmountFormatted = (credit): string => {
     return formatNumber(credit.discountAmount, {
       currencyCode: credit.currencyCode,
+      excerptZero: true,
     });
   };
 
@@ -102,6 +103,7 @@ export class VendorCreditTransformer extends Transformer {
   protected adjustmentFormatted = (credit): string => {
     return formatNumber(credit.adjustment, {
       currencyCode: credit.currencyCode,
+      excerptZero: true,
     });
   };
 
