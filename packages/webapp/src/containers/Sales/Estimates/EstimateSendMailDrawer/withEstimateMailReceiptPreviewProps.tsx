@@ -36,7 +36,7 @@ export const withEstimateMailReceiptPreviewProps = <
       estimateNumber: estimateMailState?.estimateNumber,
       estimateDate: estimateMailState?.estimateDateFormatted,
       subtotal: estimateMailState?.subtotalFormatted,
-      discount: estimateMailState?.discountFormatted,
+      discount: estimateMailState?.discountAmountFormatted,
       adjustment: estimateMailState?.adjustmentFormatted,
       items,
       message,

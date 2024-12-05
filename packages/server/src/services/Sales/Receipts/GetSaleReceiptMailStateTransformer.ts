@@ -82,21 +82,21 @@ export class GetSaleReceiptMailStateTransformer extends SaleReceiptTransformer {
   };
 
   /**
-   *
+   * Retrieves the total amount.
    * @param receipt
    * @returns
    */
   protected total = (receipt) => {
-    return receipt.amount;
+    return receipt.total;
   };
 
   /**
-   *
+   * Retrieves the formatted total amount.
    * @param receipt
-   * @returns
+   * @returns {string}
    */
   protected totalFormatted = (receipt) => {
-    return this.formatMoney(receipt.amount, {
+    return this.formatMoney(receipt.total, {
       currencyCode: receipt.currencyCode,
     });
   };
@@ -118,7 +118,7 @@ export class GetSaleReceiptMailStateTransformer extends SaleReceiptTransformer {
    * @returns
    */
   protected subtotal = (receipt) => {
-    return receipt.amount;
+    return receipt.subtotal;
   };
 
   /**
@@ -127,7 +127,7 @@ export class GetSaleReceiptMailStateTransformer extends SaleReceiptTransformer {
    * @returns
    */
   protected subtotalFormatted = (receipt) => {
-    return this.formatMoney(receipt.amount, {
+    return this.formatMoney(receipt.subtotal, {
       currencyCode: receipt.currencyCode,
     });
   };
