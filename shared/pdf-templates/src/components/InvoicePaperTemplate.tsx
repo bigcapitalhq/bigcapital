@@ -118,23 +118,27 @@ export interface InvoicePaperTemplateProps extends PaperTemplateProps {
 }
 
 export function InvoicePaperTemplate({
+  // # Colors
   primaryColor,
   secondaryColor,
 
+  // # Company.
   companyName = 'Bigcapital Technology, Inc.',
 
   showCompanyLogo = true,
   companyLogoUri = '',
 
+  // # Due date
   dueDate = 'September 3, 2024',
   dueDateLabel = 'Date due',
   showDueDate = true,
 
+  // # Issue date.
   dateIssue = 'September 3, 2024',
   dateIssueLabel = 'Date of issue',
   showDateIssue = true,
 
-  // dateIssue,
+  // Invoice #,
   invoiceNumberLabel = 'Invoice number',
   invoiceNumber = '346D3D40-0001',
   showInvoiceNumber = true,
@@ -197,6 +201,7 @@ export function InvoicePaperTemplate({
     { label: 'Sample Tax2 (7.00%)', amount: '21.74' },
   ],
 
+  // # Statement
   statementLabel = 'Statement',
   showStatement = true,
   statement = DefaultPdfTemplateStatement,

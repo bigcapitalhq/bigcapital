@@ -413,7 +413,10 @@ export const formatSmsMessage = (message: string, args) => {
     const variable = `{${key}}`;
     const value = _.defaultTo(args[key], '');
 
-    formattedMessage = formattedMessage.replace(variable, value);
+    formattedMessage = formattedMessage.replace(
+      new RegExp(variable, 'g'),
+      value
+    );
   });
   return formattedMessage;
 };

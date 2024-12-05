@@ -16,6 +16,7 @@ import {
   PaperTemplateProps,
   PaperTemplateTotalBorder,
 } from './PaperTemplate';
+import { theme } from '../constants';
 
 export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   // # Company
@@ -173,6 +174,7 @@ export function EstimatePaperTemplate({
   lineRateLabel = 'Rate',
   lineTotalLabel = 'Total',
 }: EstimatePaperTemplateProps) {
+
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
@@ -228,13 +230,13 @@ export function EstimatePaperTemplate({
                     <Text>{data.item}</Text>
                     <Text
                       fontSize={'12px'}
-                      // className={Classes.TEXT_MUTED}
-                      // style={{ fontSize: 12 }}
+                      color={theme.colors['cool-gray-500']}
                     >
                       {data.description}
                     </Text>
                   </Stack>
                 ),
+                thStyle: { width: '60%' },
               },
               { label: lineQuantityLabel, accessor: 'quantity' },
               { label: lineRateLabel, accessor: 'rate', align: 'right' },
