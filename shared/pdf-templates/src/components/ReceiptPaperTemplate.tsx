@@ -16,6 +16,7 @@ import {
   DefaultPdfTemplateAddressBilledTo,
   DefaultPdfTemplateAddressBilledFrom,
 } from './_constants';
+import { theme } from '../constants';
 
 export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
   // # Company logo
@@ -216,8 +217,7 @@ export function ReceiptPaperTemplate({
                     <Text>{data.item}</Text>
                     <Text
                       fontSize={'12px'}
-                      // className={Classes.TEXT_MUTED}
-                      // style={{ fontSize: 12 }}
+                      color={theme.colors['cool-gray-500']}
                     >
                       {data.description}
                     </Text>
@@ -255,7 +255,7 @@ export function ReceiptPaperTemplate({
               <PaperTemplate.TotalLine
                 label={totalLabel}
                 amount={total}
-                border={PaperTemplateTotalBorder.Gray}
+                border={PaperTemplateTotalBorder.Dark}
                 style={{ fontWeight: 500 }}
               />
             )}

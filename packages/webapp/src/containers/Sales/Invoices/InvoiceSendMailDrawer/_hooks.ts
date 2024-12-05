@@ -67,7 +67,7 @@ export const formatSmsMessage = (
     const variable = `{${key}}`;
     const value = defaultTo(args[key], '');
 
-    formattedMessage = formattedMessage.replace(variable, value);
+    formattedMessage = formattedMessage.replaceAll(variable, value);
   });
   return formattedMessage;
 };
