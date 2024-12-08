@@ -259,7 +259,10 @@ export const useVendorCreditTotal = () => {
   const discountAmount = useVendorCreditDiscountAmount();
   const adjustment = useVendorCreditAdjustment();
 
-  return subtotal - discountAmount - adjustment;
+  return R.compose(
+    R.subtract(R.__, discountAmount),
+    R.add(R.__, adjustment),
+  )(subtotal);
 };
 
 /**

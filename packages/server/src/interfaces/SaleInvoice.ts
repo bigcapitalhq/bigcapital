@@ -80,6 +80,11 @@ export interface ISaleInvoice {
   pdfTemplateId?: number;
 
   paymentMethods?: Array<PaymentIntegrationTransactionLink>;
+
+  adjustment?: number;
+
+  discount?: number;
+  discountAmount?: number;
 }
 
 export enum DiscountType {

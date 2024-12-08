@@ -52,10 +52,22 @@ export class BillGLEntries {
       {},
       trx
     );
+    // Find or create other expenses account.
+    const otherExpensesAccount = await accountRepository.findOrCreateOtherExpensesAccount(
+      {},
+      trx
+    );
+    // Find or create purchase discount account.
+    const purchaseDiscountAccount = await accountRepository.findOrCreatePurchaseDiscountAccount(
+      {},
+      trx
+    );
     const billLedger = this.getBillLedger(
       bill,
       APAccount.id,
-      taxPayableAccount.id
+      taxPayableAccount.id,
+      purchaseDiscountAccount.id,
+      otherExpensesAccount.id
     );
     // Commit the GL enties on the storage.
     await this.ledgerStorage.commit(tenantId, billLedger, trx);
@@ -241,6 +253,51 @@ export class BillGLEntries {
   };
 
   /**
+   * Retrieves the purchase discount GL entry.
+   * @param {IBill} bill
+   * @param {number} purchaseDiscountAccountId
+   * @returns {ILedgerEntry}
+   */
+  private getPurchaseDiscountEntry = (
+    bill: IBill,
+    purchaseDiscountAccountId: number
+  ) => {
+    const commonEntry = this.getBillCommonEntry(bill);
+
+    return {
+      ...commonEntry,
+      credit: bill.discountAmount,
+      accountId: purchaseDiscountAccountId,
+      accountNormal: AccountNormal.DEBIT,
+      index: 1,
+      indexGroup: 40,
+    };
+  };
+
+  /**
+   * Retrieves the purchase other charges GL entry.
+   * @param {IBill} bill
+   * @param {number} otherChargesAccountId
+   * @returns {ILedgerEntry}
+   */
+  private getAdjustmentEntry = (
+    bill: IBill,
+    otherExpensesAccountId: number
+  ) => {
+    const commonEntry = this.getBillCommonEntry(bill);
+
+    return {
+      ...commonEntry,
+      debit: bill.adjustment < 0 ? bill.adjustment : 0,
+      credit: bill.adjustment > 0 ? bill.adjustment : 0,
+      accountId: otherExpensesAccountId,
+      accountNormal: AccountNormal.DEBIT,
+      index: 1,
+      indexGroup: 40,
+    };
+  };
+
+  /**
    * Retrieves the given bill GL entries.
    * @param {IBill} bill
    * @param {number} payableAccountId
@@ -249,7 +306,9 @@ export class BillGLEntries {
   private getBillGLEntries = (
     bill: IBill,
     payableAccountId: number,
-    taxPayableAccountId: number
+    taxPayableAccountId: number,
+    purchaseDiscountAccountId: number,
+    otherExpensesAccountId: number
   ): ILedgerEntry[] => {
     const payableEntry = this.getBillPayableEntry(payableAccountId, bill);
 
@@ -262,8 +321,21 @@ export class BillGLEntries {
     );
     const taxEntries = this.getBillTaxEntries(bill, taxPayableAccountId);
 
+    const purchaseDiscountEntry = this.getPurchaseDiscountEntry(
+      bill,
+      purchaseDiscountAccountId
+    );
+    const adjustmentEntry = this.getAdjustmentEntry(bill, otherExpensesAccountId);
+
     // Allocate cost entries journal entries.
-    return [payableEntry, ...itemsEntries, ...landedCostEntries, ...taxEntries];
+    return [
+      payableEntry,
+      ...itemsEntries,
+      ...landedCostEntries,
+      ...taxEntries,
+      purchaseDiscountEntry,
+      adjustmentEntry,
+    ];
   };
 
   /**
@@ -275,14 +347,17 @@ export class BillGLEntries {
   private getBillLedger = (
     bill: IBill,
     payableAccountId: number,
-    taxPayableAccountId: number
+    taxPayableAccountId: number,
+    purchaseDiscountAccountId: number,
+    otherExpensesAccountId: number
   ) => {
     const entries = this.getBillGLEntries(
       bill,
       payableAccountId,
-      taxPayableAccountId
+      taxPayableAccountId,
+      purchaseDiscountAccountId,
+      otherExpensesAccountId
     );
-
     return new Ledger(entries);
   };
 }

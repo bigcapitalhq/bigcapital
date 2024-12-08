@@ -1,6 +1,7 @@
 import { Model, raw, mixin } from 'objection';
 import { castArray, defaultTo, difference } from 'lodash';
 import moment from 'moment';
+import * as R from 'ramda';
 import TenantModel from 'models/TenantModel';
 import BillSettings from './Bill.Settings';
 import ModelSetting from './ModelSetting';
@@ -133,12 +134,11 @@ export default class Bill extends mixin(TenantModel, [
   get total() {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
-    return this.isInclusiveTax
-      ? this.subtotal - this.discountAmount - adjustmentAmount
-      : this.subtotal +
-          this.taxAmountWithheld -
-          this.discountAmount -
-          adjustmentAmount;
+    return R.compose(
+      R.add(adjustmentAmount),
+      R.subtract(this.discountAmount),
+      R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld))
+    )(this.subtotal);
   }
 
   /**

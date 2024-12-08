@@ -299,7 +299,10 @@ export const useEstimateTotal = () => {
   const discount = useEstimateDiscount();
   const adjustment = useEstimateAdjustment();
 
-  return subtotal - discount - adjustment;
+  return R.compose(
+    R.subtract(R.__, discount),
+    R.add(R.__, adjustment),
+  )(subtotal);
 };
 
 /**

@@ -107,7 +107,7 @@ export default class CreditNote extends mixin(TenantModel, [
    * @returns {number}
    */
   get total() {
-    return this.subtotal - this.discountAmount - this.adjustment;
+    return this.subtotal - this.discountAmount + this.adjustment;
   }
 
   /**

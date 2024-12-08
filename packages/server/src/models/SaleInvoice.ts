@@ -1,4 +1,5 @@
 import { mixin, Model, raw } from 'objection';
+import * as R from 'ramda';
 import { castArray, defaultTo, takeWhile } from 'lodash';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
@@ -147,9 +148,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @returns {number | null}
    */
   get discountPercentage(): number | null {
-    return this.discountType === DiscountType.Percentage
-      ? this.discount
-      : null;
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
   }
 
   /**
@@ -158,11 +157,12 @@ export default class SaleInvoice extends mixin(TenantModel, [
    */
   get total() {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
-    const differencies = this.discountAmount + adjustmentAmount;
 
-    return this.isInclusiveTax
-      ? this.subtotal - differencies
-      : this.subtotal + this.taxAmountWithheld - differencies;
+    return R.compose(
+      R.add(adjustmentAmount),
+      R.subtract(R.__, this.discountAmount),
+      R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld))
+    )(this.subtotal);
   }
 
   /**

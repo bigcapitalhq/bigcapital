@@ -455,7 +455,7 @@ export const useInvoiceTotal = () => {
   return R.compose(
     R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
     R.subtract(R.__, discountAmount),
-    R.subtract(R.__, adjustmentAmount),
+    R.add(R.__, adjustmentAmount),
   )(subtotal);
 };
 
