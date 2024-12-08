@@ -110,6 +110,7 @@ export class BillGLEntries {
     return {
       debit: 0,
       credit: 0,
+
       currencyCode: bill.currencyCode,
       exchangeRate: bill.exchangeRate || 1,
 
@@ -281,11 +282,12 @@ export class BillGLEntries {
     otherExpensesAccountId: number
   ) => {
     const commonEntry = this.getBillCommonEntry(bill);
+    const adjustmentAmount = Math.abs(bill.adjustmentLocal);
 
     return {
       ...commonEntry,
-      debit: bill.adjustmentLocal < 0 ? bill.adjustmentLocal : 0,
-      credit: bill.adjustmentLocal > 0 ? bill.adjustmentLocal : 0,
+      debit: bill.adjustmentLocal > 0 ? adjustmentAmount : 0,
+      credit: bill.adjustmentLocal < 0 ? adjustmentAmount : 0,
       accountId: otherExpensesAccountId,
       accountNormal: AccountNormal.DEBIT,
       index: 1,
