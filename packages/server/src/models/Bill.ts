@@ -136,7 +136,7 @@ export default class Bill extends mixin(TenantModel, [
 
     return R.compose(
       R.add(adjustmentAmount),
-      R.subtract(this.discountAmount),
+      R.subtract(R.__, this.discountAmount),
       R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld))
     )(this.subtotal);
   }

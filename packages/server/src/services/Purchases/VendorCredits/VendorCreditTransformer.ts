@@ -20,6 +20,7 @@ export class VendorCreditTransformer extends Transformer {
       'discountAmountFormatted',
       'discountPercentageFormatted',
       'adjustmentFormatted',
+      'totalFormatted',
       'entries',
       'attachments',
     ];
@@ -116,6 +117,15 @@ export class VendorCreditTransformer extends Transformer {
     return formatNumber(credit.invoicedAmount, {
       currencyCode: credit.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the formatted total.
+   * @param {IVendorCredit} credit
+   * @returns {string}
+   */
+  protected totalFormatted = (credit) => {
+    return formatNumber(credit.total, { currencyCode: credit.currencyCode });
   };
 
   /**
