@@ -281,7 +281,7 @@ export class SaleInvoiceGLEntries {
 
     return {
       ...commonEntry,
-      debit: saleInvoice.discountAmount,
+      debit: saleInvoice.discountAmountLocal,
       accountId: discountAccountId,
       accountNormal: AccountNormal.CREDIT,
       index: 1,
@@ -299,12 +299,12 @@ export class SaleInvoiceGLEntries {
     otherChargesAccountId: number
   ): ILedgerEntry => {
     const commonEntry = this.getInvoiceGLCommonEntry(saleInvoice);
-    const adjustmentAmount = Math.abs(saleInvoice.adjustment);
+    const adjustmentAmount = Math.abs(saleInvoice.adjustmentLocal);
 
     return {
       ...commonEntry,
-      debit: saleInvoice.adjustment < 0 ? adjustmentAmount : 0,
-      credit: saleInvoice.adjustment > 0 ? adjustmentAmount : 0,
+      debit: saleInvoice.adjustmentLocal < 0 ? adjustmentAmount : 0,
+      credit: saleInvoice.adjustmentLocal > 0 ? adjustmentAmount : 0,
       accountId: otherChargesAccountId,
       accountNormal: AccountNormal.CREDIT,
       index: 1,

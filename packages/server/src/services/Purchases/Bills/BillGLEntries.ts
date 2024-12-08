@@ -53,15 +53,11 @@ export class BillGLEntries {
       trx
     );
     // Find or create other expenses account.
-    const otherExpensesAccount = await accountRepository.findOrCreateOtherExpensesAccount(
-      {},
-      trx
-    );
+    const otherExpensesAccount =
+      await accountRepository.findOrCreateOtherExpensesAccount({}, trx);
     // Find or create purchase discount account.
-    const purchaseDiscountAccount = await accountRepository.findOrCreatePurchaseDiscountAccount(
-      {},
-      trx
-    );
+    const purchaseDiscountAccount =
+      await accountRepository.findOrCreatePurchaseDiscountAccount({}, trx);
     const billLedger = this.getBillLedger(
       bill,
       APAccount.id,
@@ -266,7 +262,7 @@ export class BillGLEntries {
 
     return {
       ...commonEntry,
-      credit: bill.discountAmount,
+      credit: bill.discountAmountLocal,
       accountId: purchaseDiscountAccountId,
       accountNormal: AccountNormal.DEBIT,
       index: 1,
@@ -288,8 +284,8 @@ export class BillGLEntries {
 
     return {
       ...commonEntry,
-      debit: bill.adjustment < 0 ? bill.adjustment : 0,
-      credit: bill.adjustment > 0 ? bill.adjustment : 0,
+      debit: bill.adjustmentLocal < 0 ? bill.adjustmentLocal : 0,
+      credit: bill.adjustmentLocal > 0 ? bill.adjustmentLocal : 0,
       accountId: otherExpensesAccountId,
       accountNormal: AccountNormal.DEBIT,
       index: 1,
@@ -325,7 +321,10 @@ export class BillGLEntries {
       bill,
       purchaseDiscountAccountId
     );
-    const adjustmentEntry = this.getAdjustmentEntry(bill, otherExpensesAccountId);
+    const adjustmentEntry = this.getAdjustmentEntry(
+      bill,
+      otherExpensesAccountId
+    );
 
     // Allocate cost entries journal entries.
     return [

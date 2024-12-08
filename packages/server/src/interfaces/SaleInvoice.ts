@@ -82,9 +82,11 @@ export interface ISaleInvoice {
   paymentMethods?: Array<PaymentIntegrationTransactionLink>;
 
   adjustment?: number;
+  adjustmentLocal?: number | null;
 
   discount?: number;
   discountAmount?: number;
+  discountAmountLocal?: number | null;
 }
 
 export enum DiscountType {

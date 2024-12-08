@@ -39,6 +39,9 @@ export interface ISaleReceipt {
   discountPercentage?: number | null;
   
   adjustment?: number;
+  adjustmentLocal?: number | null;
+
+  discountAmountLocal?: number | null;
 }
 
 export interface ISalesReceiptsFilter {
