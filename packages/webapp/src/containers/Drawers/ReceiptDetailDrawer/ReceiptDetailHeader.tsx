@@ -5,14 +5,12 @@ import styled from 'styled-components';
 import { defaultTo } from 'lodash';
 
 import {
-  ButtonLink,
   CustomerDrawerLink,
   CommercialDocHeader,
   CommercialDocTopHeader,
   ExchangeRateDetailItem,
   Row,
   Col,
-  FormatDate,
   DetailsMenu,
   DetailItem,
 } from '@/components';
@@ -66,6 +64,7 @@ export default function ReceiptDetailHeader() {
             />
           </DetailsMenu>
         </Col>
+
         <Col xs={6}>
           <DetailsMenu
             direction={'horizantal'}

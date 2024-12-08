@@ -8,7 +8,6 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-  FormatNumber,
 } from '@/components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
@@ -51,8 +50,8 @@ export default function ReceiptDetailTableFooter() {
         />
         <TotalLine
           title={<T id={'receipt.details.payment_amount'} />}
-          value={receipt.formatted_amount}
-          borderStyle={TotalLineBorderStyle.DoubleDark}
+          value={receipt.paid_formatted}
+          borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine
           title={<T id={'receipt.details.due_amount'} />}

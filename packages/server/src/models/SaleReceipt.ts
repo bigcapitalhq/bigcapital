@@ -55,6 +55,9 @@ export default class SaleReceipt extends mixin(TenantModel, [
       'discountAmount',
       'discountPercentage',
 
+      'paid',
+      'paidLocal',
+
       'isClosed',
       'isDraft',
     ];
@@ -128,6 +131,22 @@ export default class SaleReceipt extends mixin(TenantModel, [
    */
   get adjustmentLocal() {
     return this.adjustment * this.exchangeRate;
+  }
+
+  /**
+   * Receipt paid amount.
+   * @returns {number}
+   */
+  get paid() {
+    return this.total;
+  }
+
+  /**
+   * Receipt paid amount in local currency.
+   * @returns {number}
+   */
+  get paidLocal() {
+    return this.paid * this.exchangeRate;
   }
 
   /**
