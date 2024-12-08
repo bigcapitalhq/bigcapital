@@ -53,6 +53,7 @@ export default class SaleReceipt extends mixin(TenantModel, [
       'adjustmentLocal',
 
       'discountAmount',
+      'discountAmountLocal',
       'discountPercentage',
 
       'paid',
@@ -98,13 +99,19 @@ export default class SaleReceipt extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount in local currency.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
    * Discount percentage.
    * @returns {number | null}
    */
   get discountPercentage(): number | null {
-    return this.discountType === DiscountType.Percentage
-      ? this.discount
-      : null;
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
   }
 
   /**

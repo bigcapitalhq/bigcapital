@@ -73,12 +73,14 @@ export default class SaleInvoice extends mixin(TenantModel, [
 
       'taxAmountWithheldLocal',
       'discountAmount',
+      'discountAmountLocal',
       'discountPercentage',
 
       'total',
       'totalLocal',
 
       'writtenoffAmountLocal',
+      'adjustmentLocal',
     ];
   }
 
@@ -144,11 +146,27 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
+   * Local discount amount.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
    * Discount percentage.
    * @returns {number | null}
    */
   get discountPercentage(): number | null {
     return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number | null}
+   */
+  get adjustmentLocal(): number | null {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
   }
 
   /**

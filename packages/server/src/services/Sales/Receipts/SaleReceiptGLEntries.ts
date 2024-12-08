@@ -31,13 +31,27 @@ export class SaleReceiptGLEntries {
     trx?: Knex.Transaction
   ): Promise<void> => {
     const { SaleReceipt } = this.tenancy.models(tenantId);
+    const { accountRepository } = this.tenancy.repositories(tenantId);
 
     const saleReceipt = await SaleReceipt.query(trx)
       .findById(saleReceiptId)
       .withGraphFetched('entries.item');
 
+    // Find or create the discount expense account.
+    const discountAccount = await accountRepository.findOrCreateDiscountAccount(
+      {},
+      trx
+    );
+    // Find or create the other charges account.
+    const otherChargesAccount =
+      await accountRepository.findOrCreateOtherChargesAccount({}, trx);
+
     // Retrieve the income entries ledger.
-    const incomeLedger = this.getIncomeEntriesLedger(saleReceipt);
+    const incomeLedger = this.getIncomeEntriesLedger(
+      saleReceipt,
+      discountAccount.id,
+      otherChargesAccount.id
+    );
 
     // Commits the ledger entries to the storage.
     await this.ledgerStorage.commit(tenantId, incomeLedger, trx);
@@ -87,8 +101,16 @@ export class SaleReceiptGLEntries {
    * @param {ISaleReceipt} saleReceipt
    * @returns {Ledger}
    */
-  private getIncomeEntriesLedger = (saleReceipt: ISaleReceipt): Ledger => {
-    const entries = this.getIncomeGLEntries(saleReceipt);
+  private getIncomeEntriesLedger = (
+    saleReceipt: ISaleReceipt,
+    discountAccountId: number,
+    otherChargesAccountId: number
+  ): Ledger => {
+    const entries = this.getIncomeGLEntries(
+      saleReceipt,
+      discountAccountId,
+      otherChargesAccountId
+    );
 
     return new Ledger(entries);
   };
@@ -161,10 +183,54 @@ export class SaleReceiptGLEntries {
 
     return {
       ...commonEntry,
-      debit: saleReceipt.localAmount,
+      debit: saleReceipt.totalLocal,
       accountId: saleReceipt.depositAccountId,
       index: 1,
       accountNormal: AccountNormal.DEBIT,
+    };
+  };
+
+  /**
+   * Retrieves the discount GL entry.
+   * @param {ISaleReceipt} saleReceipt
+   * @param {number} discountAccountId
+   * @returns {ILedgerEntry}
+   */
+  private getDiscountEntry = (
+    saleReceipt: ISaleReceipt,
+    discountAccountId: number
+  ): ILedgerEntry => {
+    const commonEntry = this.getIncomeGLCommonEntry(saleReceipt);
+
+    return {
+      ...commonEntry,
+      debit: saleReceipt.discountAmount,
+      accountId: discountAccountId,
+      index: 1,
+      accountNormal: AccountNormal.CREDIT,
+    };
+  };
+
+  /**
+   * Retrieves the adjustment GL entry.
+   * @param {ISaleReceipt} saleReceipt
+   * @param {number} adjustmentAccountId
+   * @returns {ILedgerEntry}
+   */
+  private getAdjustmentEntry = (
+    saleReceipt: ISaleReceipt,
+    adjustmentAccountId: number
+  ): ILedgerEntry => {
+    const commonEntry = this.getIncomeGLCommonEntry(saleReceipt);
+    const adjustmentAmount = Math.abs(saleReceipt.adjustment);
+
+    return {
+      ...commonEntry,
+      debit: saleReceipt.adjustment < 0 ? adjustmentAmount : 0,
+      credit: saleReceipt.adjustment > 0 ? adjustmentAmount : 0,
+      accountId: adjustmentAccountId,
+      accountNormal: AccountNormal.CREDIT,
+      index: 1,
     };
   };
 
@@ -173,12 +239,21 @@ export class SaleReceiptGLEntries {
    * @param   {ISaleReceipt} saleReceipt -
    * @returns {ILedgerEntry[]}
    */
-  private getIncomeGLEntries = (saleReceipt: ISaleReceipt): ILedgerEntry[] => {
+  private getIncomeGLEntries = (
+    saleReceipt: ISaleReceipt,
+    discountAccountId: number,
+    otherChargesAccountId: number
+  ): ILedgerEntry[] => {
     const getItemEntry = this.getReceiptIncomeItemEntry(saleReceipt);
 
     const creditEntries = saleReceipt.entries.map(getItemEntry);
     const depositEntry = this.getReceiptDepositEntry(saleReceipt);
+    const discountEntry = this.getDiscountEntry(saleReceipt, discountAccountId);
+    const adjustmentEntry = this.getAdjustmentEntry(
+      saleReceipt,
+      otherChargesAccountId
+    );
 
-    return [depositEntry, ...creditEntries];
+    return [depositEntry, ...creditEntries, discountEntry, adjustmentEntry];
   };
 }

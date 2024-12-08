@@ -15,11 +15,17 @@ export class SaleReceiptTransformer extends Transformer {
     return [
       'discountAmountFormatted',
       'discountPercentageFormatted',
+      'discountAmountLocalFormatted',
+
       'subtotalFormatted',
       'subtotalLocalFormatted',
+
       'totalFormatted',
       'totalLocalFormatted',
+
       'adjustmentFormatted',
+      'adjustmentLocalFormatted',
+
       'formattedAmount',
       'formattedReceiptDate',
       'formattedClosedAtDate',
