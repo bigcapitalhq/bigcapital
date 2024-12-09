@@ -2,6 +2,15 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.22.0]
+
+* feat: estimate, receipt, credit note mail preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/757
+* feat: Add discount to transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/758
+* fix: update financial forms to use new formatted amount utilities and… by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/760
+* fix: total lines style by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/761
+* fix: discount & adjustment sale transactions bugs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/762
+* fix: discount transactions GL entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/763
+
 # [0.21.2]
 
 * hotbug: upload attachments by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/755
