@@ -51,10 +51,13 @@ export default class CreditNote extends mixin(TenantModel, [
       'subtotalLocal',
 
       'discountAmount',
+      'discountAmountLocal',
       'discountPercentage',
 
       'total',
       'totalLocal',
+
+      'adjustmentLocal',
     ];
   }
 
@@ -93,13 +96,27 @@ export default class CreditNote extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount in local currency.
+   * @returns {number}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
    * Discount percentage.
    * @returns {number | null}
    */
   get discountPercentage(): number | null {
-    return this.discountType === DiscountType.Percentage
-      ? this.discount
-      : null;
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number}
+   */
+  get adjustmentLocal() {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
   }
 
   /**
@@ -107,7 +124,7 @@ export default class CreditNote extends mixin(TenantModel, [
    * @returns {number}
    */
   get total() {
-    return this.subtotal - this.discountAmount - this.adjustment;
+    return this.subtotal - this.discountAmount + this.adjustment;
   }
 
   /**

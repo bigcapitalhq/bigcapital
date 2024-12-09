@@ -33,7 +33,7 @@ export default function CreditNoteDetailTableFooter() {
             value={creditNote.discount_amount_formatted}
           />
         )}
-        {creditNote.adjustment > 0 && (
+        {creditNote.adjustment_formatted && (
           <TotalLine
             title={'Adjustment'}
             value={creditNote.adjustment_formatted}

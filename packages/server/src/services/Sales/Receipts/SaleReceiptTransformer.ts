@@ -15,15 +15,22 @@ export class SaleReceiptTransformer extends Transformer {
     return [
       'discountAmountFormatted',
       'discountPercentageFormatted',
+      'discountAmountLocalFormatted',
+
       'subtotalFormatted',
       'subtotalLocalFormatted',
+
       'totalFormatted',
       'totalLocalFormatted',
+
       'adjustmentFormatted',
+      'adjustmentLocalFormatted',
+
       'formattedAmount',
       'formattedReceiptDate',
       'formattedClosedAtDate',
       'formattedCreatedAt',
+      'paidFormatted',
       'entries',
       'attachments',
     ];
@@ -128,6 +135,18 @@ export class SaleReceiptTransformer extends Transformer {
    */
   protected discountPercentageFormatted = (receipt: ISaleReceipt): string => {
     return receipt.discountPercentage ? `${receipt.discountPercentage}%` : '';
+  };
+
+  /**
+   * Retrieves formatted paid amount.
+   * @param receipt
+   * @returns {string}
+   */
+  protected paidFormatted = (receipt: ISaleReceipt): string => {
+    return formatNumber(receipt.paid, {
+      currencyCode: receipt.currencyCode,
+      excerptZero: true,
+    });
   };
 
   /**

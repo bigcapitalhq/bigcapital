@@ -61,6 +61,14 @@ export default class VendorCredit extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount in local currency.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
    * Discount percentage.
    * @returns {number | null}
    */
@@ -69,11 +77,19 @@ export default class VendorCredit extends mixin(TenantModel, [
   }
 
   /**
+   * Adjustment amount in local currency.
+   * @returns {number | null}
+   */
+  get adjustmentLocal() {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
+  }
+
+  /**
    * Vendor credit total.
    * @returns {number}
    */
   get total() {
-    return this.subtotal - this.discountAmount - this.adjustment;
+    return this.subtotal - this.discountAmount + this.adjustment;
   }
 
   /**
@@ -180,7 +196,10 @@ export default class VendorCredit extends mixin(TenantModel, [
       'localAmount',
 
       'discountAmount',
+      'discountAmountLocal',
       'discountPercentage',
+
+      'adjustmentLocal',
 
       'total',
       'totalLocal',

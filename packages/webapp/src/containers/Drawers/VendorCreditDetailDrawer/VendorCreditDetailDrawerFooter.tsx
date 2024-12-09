@@ -45,7 +45,7 @@ export default function VendorCreditDetailDrawerFooter() {
         )}
         <TotalLine
           title={<T id={'vendor_credit.drawer.label_total'} />}
-          value={vendorCredit.formatted_amount}
+          value={vendorCredit.total_formatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
