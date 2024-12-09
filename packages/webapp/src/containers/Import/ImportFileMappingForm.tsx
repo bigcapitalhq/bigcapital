@@ -37,6 +37,11 @@ export function ImportFileMappingForm({
             intent: Intent.DANGER,
           });
         }
+        else if (data.errors.find((e) => e.type === 'AMOUNT_ARE_AND_TAX_RATE_ARE_REQUIRED_IF_ANY_ONE_OF_THEM_SELECTED')) {
+          AppToaster.show({
+            message: 'Amounts Are and Tax Rate are required if any one of them selected',
+            intent: Intent.DANGER,
+          });
         setSubmitting(false);
       });
   };

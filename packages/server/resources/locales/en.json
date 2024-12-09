@@ -283,6 +283,8 @@
   "invoice.field.payment_amount": "Payment amount",
   "invoice.field.due_amount": "Due amount",
   "invoice.field.delivered": "Delivered",
+  "invoice.field.is_inclusive_tax": "Amounts Are",
+  "invoice.field.tax_rate": "Tax Rate",
   "invoice.field.item_name": "Item Name",
   "invoice.field.rate": "Rate",
   "invoice.field.quantity": "Quantity",

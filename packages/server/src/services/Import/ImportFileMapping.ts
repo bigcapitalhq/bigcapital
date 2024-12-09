@@ -74,11 +74,17 @@ export class ImportFileMapping {
       importFile.columnsParsed.map((field) => [field, ''])
     );
     const invalid = [];
+    let isInclusiveThere = 0;
+
 
     // is not empty, is not undefined or map.group
     maps.forEach((map) => {
       let _invalid = true;
 
+
+      if(map.to === 'taxRateId' || map.to === 'isInclusiveTax'){
+        isInclusiveThere = isInclusiveThere+1;
+      }
       if (!map.group && fields[map.to]) {
         _invalid = false;
       }
@@ -94,6 +100,9 @@ export class ImportFileMapping {
     });
     if (invalid.length > 0) {
       throw new ServiceError(ERRORS.INVALID_MAP_ATTRS);
+    }
+    else if(isInclusiveThere == 1) {
+      throw new ServiceError(ERRORS.AMOUNT_ARE_AND_TAX_RATE_ARE_REQUIRED_IF_ANY_ONE_OF_THEM_SELECTED);
     }
   }
 
