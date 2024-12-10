@@ -42,6 +42,12 @@ export function ImportFileMappingForm({
             message: 'Amounts Are and Tax Rate are required if any one of them selected',
             intent: Intent.DANGER,
           });
+          else if (data.errors.find((e) => e.type === 'AN_INVOICE_CAN_HAVE_ONE_AMOUNT_IN_EITHER_TRUE_OR_FALSE')) {
+            AppToaster.show({
+              message: 'An Invoice can have same Amounts In either true or false',
+              intent: Intent.DANGER,
+            });
+          }
         setSubmitting(false);
       });
   };
