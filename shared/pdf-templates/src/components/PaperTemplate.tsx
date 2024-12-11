@@ -90,11 +90,14 @@ interface PaperTemplateTableProps {
     value?: JSX.Element;
     align?: 'left' | 'center' | 'right';
     thStyle?: React.CSSProperties;
+    visible?: boolean;
   }>;
   data: Array<Record<string, any>>;
 }
 
 PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
+  const filteredColumns = columns.filter((col) => col.visible !== false);
+
   return (
     <table
       className={css`
@@ -140,7 +143,7 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
     >
       <thead>
         <tr>
-          {columns.map((col, index) => (
+          {filteredColumns.map((col, index) => (
             <x.th key={index} textAlign={col.align} style={col.thStyle}>
               {col.label}
             </x.th>
@@ -151,7 +154,7 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
       <tbody>
         {data.map((_data: any) => (
           <tr>
-            {columns.map((column, index) => (
+            {filteredColumns.map((column, index) => (
               <x.td textAlign={column.align} key={index}>
                 {isFunction(column?.accessor)
                   ? column?.accessor(_data)

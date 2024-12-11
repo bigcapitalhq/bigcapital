@@ -92,6 +92,10 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   lineQuantityLabel?: string;
   lineRateLabel?: string;
   lineTotalLabel?: string;
+
+  // # Line Discount
+  lineDiscountLabel?: string;
+  showLineDiscount?: boolean;
 }
 
 export function EstimatePaperTemplate({
@@ -173,8 +177,11 @@ export function EstimatePaperTemplate({
   lineQuantityLabel = 'Qty',
   lineRateLabel = 'Rate',
   lineTotalLabel = 'Total',
-}: EstimatePaperTemplateProps) {
 
+  // # Line Discount
+  lineDiscountLabel = 'Discount',
+  showLineDiscount = false,
+}: EstimatePaperTemplateProps) {
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
@@ -240,6 +247,12 @@ export function EstimatePaperTemplate({
               },
               { label: lineQuantityLabel, accessor: 'quantity' },
               { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              {
+                label: lineDiscountLabel,
+                accessor: 'discount',
+                align: 'right',
+                visible: showLineDiscount,
+              },
               { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}
             data={lines}

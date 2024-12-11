@@ -71,8 +71,13 @@ export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
     description: string;
     rate: string;
     quantity: string;
+    discount?: string;
     total: string;
   }>;
+
+  // # Line Discount
+  lineDiscountLabel?: string;
+  showLineDiscount?: boolean;
 
   // Receipt Date.
   receiptDateLabel?: string;
@@ -165,6 +170,10 @@ export function ReceiptPaperTemplate({
   lineQuantityLabel = 'Qty',
   lineRateLabel = 'Rate',
   lineTotalLabel = 'Total',
+
+  // # Line Discount
+  lineDiscountLabel = 'Discount',
+  showLineDiscount = false,
 }: ReceiptPaperTemplateProps) {
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
@@ -226,6 +235,12 @@ export function ReceiptPaperTemplate({
               },
               { label: lineQuantityLabel, accessor: 'quantity' },
               { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              {
+                label: lineDiscountLabel,
+                accessor: 'discount',
+                align: 'right',
+                visible: showLineDiscount,
+              },
               { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}
             data={lines}
