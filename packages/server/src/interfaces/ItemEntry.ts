@@ -13,6 +13,7 @@ export interface IItemEntry {
 
   itemId: number;
   description: string;
+  discountType?: string;
   discount: number;
   quantity: number;
   rate: number;
