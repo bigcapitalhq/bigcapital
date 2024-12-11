@@ -46,7 +46,7 @@ export default class GeneralLedgerSheet extends R.compose(
     this.query = query;
     this.numberFormat = this.query.numberFormat;
     this.repository = repository;
-    this.baseCurrency = this.repository.tenant.metadata.currencyCode;
+    this.baseCurrency = this.repository.tenant.metadata.baseCurrency;
     this.i18n = i18n;
   }
 
