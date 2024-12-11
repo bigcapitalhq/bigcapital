@@ -243,6 +243,10 @@ export default class SaleInvoicesController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
+      check('entries.*.discount_type')
+        .default(DiscountType.Percentage)
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
       check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.tax_code')
         .optional({ nullable: true })

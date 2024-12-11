@@ -19,8 +19,8 @@ export interface IItemEntry {
   amount: number;
 
   total: number;
-  amountInclusingTax: number;
-  amountExludingTax: number;
+  subtotalInclusingTax: number;
+  subtotalExcludingTax: number;
   discountAmount: number;
 
   landedCost: number;

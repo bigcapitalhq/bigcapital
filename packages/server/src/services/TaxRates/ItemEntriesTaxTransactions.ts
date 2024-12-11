@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { keyBy, sumBy } from 'lodash';
 import { ItemEntry } from '@/models';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { IItem, IItemEntry, IItemEntryDTO } from '@/interfaces';
+import { IItemEntry } from '@/interfaces';
 
 @Service()
 export class ItemEntriesTaxTransactions {
