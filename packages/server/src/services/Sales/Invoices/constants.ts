@@ -128,6 +128,8 @@ export const SaleInvoicesSampleData = [
     Quantity: 100,
     Rate: 100,
     Description: 'Description',
+    'Amounts Are': 'True',
+    'Tax Rate': 'Tax18%'
   },
   {
     'Invoice No.': 'B-102',
@@ -143,6 +145,9 @@ export const SaleInvoicesSampleData = [
     Quantity: 200,
     Rate: 50,
     Description: 'Description',
+    'Amounts Are': 'True',
+    'Tax Rate': 'Tax18%'
+    
   },
   {
     'Invoice No.': 'B-103',
@@ -159,6 +164,8 @@ export const SaleInvoicesSampleData = [
     Quantity: 100,
     Rate: 100,
     Description: 'Description',
+    'Amounts Are': 'True',
+    'Tax Rate': 'Tax18%'
   },
 ];
 
