@@ -232,6 +232,7 @@ export function ReceiptPaperTemplate({
                     </Text>
                   </Stack>
                 ),
+                thStyle: { width: '60%' },
               },
               { label: lineQuantityLabel, accessor: 'quantity' },
               { label: lineRateLabel, accessor: 'rate', align: 'right' },

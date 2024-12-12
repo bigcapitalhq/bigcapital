@@ -20,6 +20,8 @@ export interface IItemEntry {
   amount: number;
 
   total: number;
+  totalExcludingTax?: number;
+
   subtotalInclusingTax: number;
   subtotalExcludingTax: number;
   discountAmount: number;

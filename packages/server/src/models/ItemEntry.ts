@@ -69,6 +69,14 @@ export default class ItemEntry extends TenantModel {
   }
 
   /**
+   * Total (excluding tax).
+   * @returns {number}
+   */
+  get totalExcludingTax() {
+    return this.subtotalExcludingTax - this.discountAmount;
+  }
+
+  /**
    * Item entry amount.
    * Amount of item entry that may include or exclude tax.
    * @returns {number}
