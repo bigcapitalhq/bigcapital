@@ -17,15 +17,16 @@ import {
   DefaultPdfTemplateAddressBilledFrom,
 } from './_constants';
 
-interface PapaerLine {
+interface InvoiceLine {
   item?: string;
   description?: string;
   quantity?: string;
   rate?: string;
   total?: string;
+  discount?: string;
 }
 
-interface PaperTax {
+interface InvoiceTaxLine {
   label: string;
   amount: string;
 }
@@ -71,6 +72,10 @@ export interface InvoicePaperTemplateProps extends PaperTemplateProps {
   lineRateLabel?: string;
   lineTotalLabel?: string;
 
+  // # Line Discount
+  lineDiscountLabel?: string;
+  showLineDiscount?: boolean;
+
   // Total
   showTotal?: boolean;
   totalLabel?: string;
@@ -113,8 +118,8 @@ export interface InvoicePaperTemplateProps extends PaperTemplateProps {
   showStatement?: boolean;
   statement?: string;
 
-  lines?: Array<PapaerLine>;
-  taxes?: Array<PaperTax>;
+  lines?: Array<InvoiceLine>;
+  taxes?: Array<InvoiceTaxLine>;
 }
 
 export function InvoicePaperTemplate({
@@ -164,6 +169,10 @@ export function InvoicePaperTemplate({
   adjustmentLabel = 'Adjustment',
   paymentMadeLabel = 'Payment Made',
   dueAmountLabel = 'Balance Due',
+
+  // # Line Discount
+  lineDiscountLabel = 'Discount',
+  showLineDiscount = false,
 
   // Totals
   showTotal = true,
@@ -277,6 +286,12 @@ export function InvoicePaperTemplate({
                 align: 'right',
               },
               { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              {
+                label: lineDiscountLabel,
+                accessor: 'discount',
+                align: 'right',
+                visible: showLineDiscount,
+              },
               { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}
             data={lines}

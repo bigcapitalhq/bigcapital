@@ -127,6 +127,11 @@ export default class BillsController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
+      check('entries.*.discount_type')
+        .default(DiscountType.Percentage)
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
+
       check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.landed_cost')
         .optional({ nullable: true })

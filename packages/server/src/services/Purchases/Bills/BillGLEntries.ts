@@ -139,13 +139,12 @@ export class BillGLEntries {
   private getBillItemEntry = R.curry(
     (bill: IBill, entry: IItemEntry, index: number): ILedgerEntry => {
       const commonJournalMeta = this.getBillCommonEntry(bill);
-
-      const localAmount = bill.exchangeRate * entry.amountExludingTax;
+      const totalLocal = bill.exchangeRate * entry.totalExcludingTax;
       const landedCostAmount = sumBy(entry.allocatedCostEntries, 'cost');
 
       return {
         ...commonJournalMeta,
-        debit: localAmount + landedCostAmount,
+        debit: totalLocal + landedCostAmount,
         accountId:
           ['inventory'].indexOf(entry.item.type) !== -1
             ? entry.item.inventoryAccountId

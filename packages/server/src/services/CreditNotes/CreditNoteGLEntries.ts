@@ -210,11 +210,11 @@ export default class CreditNoteGLEntries {
       index: number
     ): ILedgerEntry => {
       const commonEntry = this.getCreditNoteCommonEntry(creditNote);
-      const localAmount = entry.amount * creditNote.exchangeRate;
+      const totalLocal = entry.totalExcludingTax * creditNote.exchangeRate;
 
       return {
         ...commonEntry,
-        debit: localAmount,
+        debit: totalLocal,
         accountId: entry.sellAccountId || entry.item.sellAccountId,
         note: entry.description,
         index: index + 2,

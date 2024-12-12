@@ -16,7 +16,6 @@ import {
   Icon,
   FormattedMessage as T,
   TextOverviewTooltipCell,
-  FormatNumberCell,
   Choose,
 } from '@/components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
@@ -62,6 +61,18 @@ export const useVendorCreditReadonlyEntriesTableColumns = () => {
         Header: intl.get('rate'),
         accessor: 'rate_formatted',
         width: getColumnWidth(entries, 'rate_formatted', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
+        align: 'right',
+        disableSortBy: true,
+        textOverview: true,
+      },
+      {
+        id: 'discount',
+        Header: 'Discount',
+        accessor: 'discount_formatted',
+        width: getColumnWidth(entries, 'discount_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),

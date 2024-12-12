@@ -143,10 +143,10 @@ export class SaleReceiptGLEntries {
   };
 
   /**
-   * Retrieve receipt income item GL entry.
-   * @param   {ISaleReceipt} saleReceipt -
-   * @param   {IItemEntry} entry -
-   * @param   {number} index -
+   * Retrieve receipt income item G/L entry.
+   * @param {ISaleReceipt} saleReceipt -
+   * @param {IItemEntry} entry -
+   * @param {number} index -
    * @returns {ILedgerEntry}
    */
   private getReceiptIncomeItemEntry = R.curry(
@@ -156,11 +156,11 @@ export class SaleReceiptGLEntries {
       index: number
     ): ILedgerEntry => {
       const commonEntry = this.getIncomeGLCommonEntry(saleReceipt);
-      const itemIncome = entry.amount * saleReceipt.exchangeRate;
+      const totalLocal = entry.totalExcludingTax * saleReceipt.exchangeRate;
 
       return {
         ...commonEntry,
-        credit: itemIncome,
+        credit: totalLocal,
         accountId: entry.item.sellAccountId,
         note: entry.description,
         index: index + 2,
