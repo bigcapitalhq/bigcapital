@@ -5,10 +5,9 @@ import {
   Param,
   Post,
   UsePipes,
-  UseInterceptors,
   UseGuards,
 } from '@nestjs/common';
-import { ZodValidationPipe } from 'src/common/pipes/ZodValidation.pipe';
+import { ZodValidationPipe } from '@/common/pipes/ZodValidation.pipe';
 import { createItemSchema } from './Item.schema';
 import { CreateItemService } from './CreateItem.service';
 import { Item } from './models/Item';

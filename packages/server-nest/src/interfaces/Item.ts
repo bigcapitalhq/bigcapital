@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Knex } from 'knex';
-import { Item } from 'src/modules/Items/models/Item';
+import { Item } from '@/modules/Items/models/Item';
 // import { AbilitySubject } from '@/interfaces';
 // import { IFilterRole } from '@/interfaces/DynamicFilter';
 

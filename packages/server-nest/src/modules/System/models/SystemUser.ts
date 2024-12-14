@@ -1,4 +1,4 @@
-import { BaseModel } from 'src/models/Model';
+import { BaseModel } from '@/models/Model';
 
 export class SystemUser extends BaseModel {
   public readonly firstName: string;

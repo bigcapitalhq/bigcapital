@@ -1,4 +1,4 @@
-import { BaseModel } from 'src/models/Model';
+import { BaseModel } from '@/models/Model';
 
 export class TenantModel extends BaseModel {
   public readonly organizationId: string;

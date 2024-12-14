@@ -4,8 +4,8 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   IItemEventDeletedPayload,
   IItemEventDeletingPayload,
-} from 'src/interfaces/Item';
-import { events } from 'src/common/events/events';
+} from '@/interfaces/Item';
+import { events } from '@/common/events/events';
 import { Item } from './models/Item';
 import { ERRORS } from './Items.constants';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';

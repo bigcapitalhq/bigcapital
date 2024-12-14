@@ -1,4 +1,4 @@
-import { DATATYPES_LENGTH } from 'src/constants/data-types';
+import { DATATYPES_LENGTH } from '@/constants/data-types';
 import z from 'zod';
 
 export const createItemSchema = z

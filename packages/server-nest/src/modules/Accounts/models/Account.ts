@@ -5,7 +5,7 @@ import DependencyGraph from '@/libs/dependency-graph';
 import {
   ACCOUNT_TYPES,
   getAccountsSupportsMultiCurrency,
-} from 'src/constants/accounts';
+} from '@/constants/accounts';
 import { TenantModel } from '@/modules/System/models/TenantModel';
 import { SearchableModel } from '@/modules/Search/SearchableMdel';
 import { CustomViewBaseModel } from '@/modules/CustomViews/CustomViewBaseModel';

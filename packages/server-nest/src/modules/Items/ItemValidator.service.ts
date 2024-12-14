@@ -3,9 +3,9 @@ import {
   ACCOUNT_PARENT_TYPE,
   ACCOUNT_ROOT_TYPE,
   ACCOUNT_TYPE,
-} from 'src/constants/accounts';
+} from '@/constants/accounts';
 import { ServiceError } from './ServiceError';
-import { IItem, IItemDTO } from 'src/interfaces/Item';
+import { IItem, IItemDTO } from '@/interfaces/Item';
 import { ERRORS } from './Items.constants';
 import { Item } from './models/Item';
 import { Account } from '../Accounts/models/Account';
