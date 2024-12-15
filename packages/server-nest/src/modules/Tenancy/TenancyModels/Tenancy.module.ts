@@ -4,10 +4,9 @@ import { TENANCY_DB_CONNECTION } from '../TenancyDB/TenancyDB.constants';
 
 import { Item } from '../../../modules/Items/models/Item';
 import { Account } from '@/modules/Accounts/models/Account';
-import { TenantModel } from '@/modules/System/models/TenantModel';
-import { TenantMetadata } from '@/modules/System/models/TenantMetadataModel';
+import { ItemEntry } from '@/modules/Items/models/ItemEntry';
 
-const models = [Item, Account, TenantModel, TenantMetadata];
+const models = [Item, Account, ItemEntry];
 
 const modelProviders = models.map((model) => {
   return {

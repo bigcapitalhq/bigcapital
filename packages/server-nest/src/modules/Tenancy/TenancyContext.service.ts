@@ -36,8 +36,8 @@ export class TenancyContext {
   }
 
   /**
-   *
-   * @returns
+   * Retrieves the current system user.
+   * @returns {Promise<SystemUser>}
    */
   getSystemUser() {
     // Get the user from the request headers.

@@ -98,4 +98,48 @@ export class ItemsController extends TenantController {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItem(itemId);
   }
+
+  /**
+   * Retrieves the item associated invoices transactions.
+   * @param {string} id
+   * @returns {Promise<any>}
+   */
+  @Get(':id/invoices')
+  async getItemInvoicesTransactions(@Param('id') id: string): Promise<any> {
+    const itemId = parseInt(id, 10);
+    return this.itemsApplication.getItemInvoicesTransactions(itemId);
+  }
+
+  /**
+   * Retrieves the item associated bills transactions.
+   * @param {string} id
+   * @returns {Promise<any>}
+   */
+  @Get(':id/bills')
+  async getItemBillTransactions(@Param('id') id: string): Promise<any> {
+    const itemId = parseInt(id, 10);
+    return this.itemsApplication.getItemBillTransactions(itemId);
+  }
+
+  /**
+   * Retrieves the item associated estimates transactions.
+   * @param {string} id
+   * @returns {Promise<any>}
+   */
+  @Get(':id/estimates')
+  async getItemEstimatesTransactions(@Param('id') id: string): Promise<any> {
+    const itemId = parseInt(id, 10);
+    return this.itemsApplication.getItemEstimatesTransactions(itemId);
+  }
+
+  /**
+   * Retrieves the item associated receipts transactions.
+   * @param {string} id
+   * @returns {Promise<any>}
+   */
+  @Get(':id/receipts')
+  async getItemReceiptTransactions(@Param('id') id: string): Promise<any> {
+    const itemId = parseInt(id, 10);
+    return this.itemsApplication.getItemReceiptsTransactions(itemId);
+  }
 }

@@ -29,6 +29,8 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from '../Auth/Jwt.guard';
 import { UserIpInterceptor } from '@/interceptors/user-ip.interceptor';
 import { TenancyGlobalMiddleware } from '../Tenancy/TenancyGlobal.middleware';
+import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+import { TransformerModule } from '../Transformer/Transformer.module';
 
 @Module({
   imports: [
@@ -100,6 +102,7 @@ import { TenancyGlobalMiddleware } from '../Tenancy/TenancyGlobal.middleware';
     },
     AppService,
     JwtStrategy,
+    
   ],
 })
 export class AppModule {

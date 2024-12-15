@@ -47,9 +47,7 @@ export class TenantMetadata extends BaseModel {
   /**
    * Table name.
    */
-  static get tableName() {
-    return 'tenants_metadata';
-  }
+  static tableName = 'tenants_metadata';
 
   /**
    * Virtual attributes.

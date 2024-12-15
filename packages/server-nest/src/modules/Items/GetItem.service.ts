@@ -8,7 +8,7 @@ import { ItemTransformer } from './Item.transformer';
 @Injectable()
 export class GetItemService {
   constructor(
-    @Inject(Item)
+    @Inject(Item.name)
     private itemModel: typeof Item,
     private eventEmitter2: EventEmitter2,
     private transformerInjectable: TransformerInjectable,

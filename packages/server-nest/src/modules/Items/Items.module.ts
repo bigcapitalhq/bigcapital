@@ -9,6 +9,9 @@ import { EditItemService } from './EditItem.service';
 import { InactivateItem } from './InactivateItem.service';
 import { ActivateItemService } from './ActivateItem.service';
 import { ItemsApplicationService } from './ItemsApplication.service';
+import { ItemTransactionsService } from './ItemTransactions.service';
+import { GetItemService } from './GetItem.service';
+import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 
 @Module({
   imports: [TenancyDatabaseModule],
@@ -21,7 +24,10 @@ import { ItemsApplicationService } from './ItemsApplication.service';
     ActivateItemService,
     DeleteItemService,
     ItemsApplicationService,
+    GetItemService,
+    ItemTransactionsService,
     TenancyContext,
+    TransformerInjectable,
   ],
 })
 export class ItemsModule {}

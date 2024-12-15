@@ -7,7 +7,10 @@ import { Knex } from 'knex';
 import { InactivateItem } from './InactivateItem.service';
 import { ActivateItemService } from './ActivateItem.service';
 import { GetItemService } from './GetItem.service';
+import { ItemTransactionsService } from './ItemTransactions.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ItemsApplicationService {
   constructor(
     private readonly createItemService: CreateItemService,
@@ -16,6 +19,7 @@ export class ItemsApplicationService {
     private readonly activateItemService: ActivateItemService,
     private readonly inactivateItemService: InactivateItem,
     private readonly getItemService: GetItemService,
+    private readonly itemTransactionsService: ItemTransactionsService,
   ) {}
 
   /**
@@ -80,5 +84,41 @@ export class ItemsApplicationService {
    */
   async getItem(itemId: number): Promise<any> {
     return this.getItemService.getItem(itemId);
+  }
+
+  /**
+   * Retrieves the item associated invoices transactions.
+   * @param {number} itemId
+   * @returns {Promise<any>}
+   */
+  async getItemInvoicesTransactions(itemId: number): Promise<any> {
+    return this.itemTransactionsService.getItemInvoicesTransactions(itemId);
+  }
+
+  /**
+   * Retrieves the item associated bills transactions.
+   * @param {number} itemId
+   * @returns {Promise<any>}
+   */
+  async getItemBillTransactions(itemId: number): Promise<any> {
+    return this.itemTransactionsService.getItemBillTransactions(itemId);
+  }
+
+  /**
+   * Retrieves the item associated estimates transactions.
+   * @param {number} itemId
+   * @returns {Promise<any>}
+   */
+  async getItemEstimatesTransactions(itemId: number): Promise<any> {
+    return this.itemTransactionsService.getItemEstimateTransactions(itemId);
+  }
+
+  /**
+   * Retrieves the item associated receipts transactions.
+   * @param {number} itemId
+   * @returns {Promise<any>}
+   */
+  async getItemReceiptsTransactions(itemId: number): Promise<any> {
+    return this.itemTransactionsService.getItemReceiptTransactions(itemId);
   }
 }

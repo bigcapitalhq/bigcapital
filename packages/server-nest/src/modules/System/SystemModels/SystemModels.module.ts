@@ -6,9 +6,12 @@ import { TenantModel } from '@/modules/System/models/TenantModel';
 import { SystemKnexConnection } from '../SystemDB/SystemDB.constants';
 import { SystemModelsConnection } from './SystemModels.constants';
 import { SystemUser } from '../models/SystemUser';
+import { TenantMetadata } from '../models/TenantMetadataModel';
 
-const models = [SystemUser, PlanSubscription, TenantModel];
+const models = [SystemUser, PlanSubscription, TenantModel, TenantMetadata];
+
 const modelProviders = models.map((model) => {
+  console.log(model.name, model, 'model.name');
   return {
     provide: model.name,
     useValue: model,
@@ -23,7 +26,7 @@ const providers = [
     useFactory: async (systemKnex: Knex) => {
       Model.knex(systemKnex);
     },
-  },
+  }
 ];
 
 @Global()

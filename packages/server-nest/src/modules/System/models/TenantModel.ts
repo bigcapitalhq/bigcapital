@@ -2,20 +2,19 @@ import { BaseModel } from '@/models/Model';
 import { Model } from 'objection';
 import { TenantMetadata } from './TenantMetadataModel';
 
+
 export class TenantModel extends BaseModel {
   public readonly organizationId: string;
   public readonly initializedAt: string;
   public readonly seededAt: boolean;
   public readonly builtAt: string;
-  public readonly metadata: TenantMetadata;
+  public readonly metadata: any;
 
   /**
    * Table name.
    */
-  static get tableName() {
-    return 'tenants';
-  }
-
+  static tableName = 'tenants';
+  
   /**
    * Relations mappings.
    */

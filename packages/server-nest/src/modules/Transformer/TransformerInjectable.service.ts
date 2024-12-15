@@ -1,6 +1,6 @@
 import { I18nService } from 'nestjs-i18n';
 import { Transformer } from './Transformer';
-import { Injectable } from '@nestjs/common';
+import { Global, Injectable } from '@nestjs/common';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TransformerContext } from './Transformer.types';
 
