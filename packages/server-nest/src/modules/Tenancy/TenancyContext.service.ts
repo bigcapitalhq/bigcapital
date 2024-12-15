@@ -17,13 +17,22 @@ export class TenancyContext {
 
   /**
    * Get the current tenant.
+   * @param {boolean} withMetadata - If true, the tenant metadata will be fetched.
    * @returns
    */
-  getTenant() {
+  getTenant(withMetadata: boolean = false) {
     // Get the tenant from the request headers.
     const organizationId = this.cls.get('organizationId');
 
-    return this.systemTenantModel.query().findOne({ organizationId });
+    if (!organizationId) {
+      throw new Error('Tenant not found');
+    }
+    const query = this.systemTenantModel.query().findOne({ organizationId });
+
+    if (withMetadata) {
+      query.withGraphFetched('metadata');
+    }
+    return query;
   }
 
   /**

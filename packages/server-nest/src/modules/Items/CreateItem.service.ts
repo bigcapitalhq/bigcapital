@@ -7,7 +7,6 @@ import { events } from '@/common/events/events';
 import { ItemsValidators } from './ItemValidator.service';
 import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CreateItemService {
@@ -90,17 +89,17 @@ export class CreateItemService {
   /**
    * Creates a new item.
    * @param {IItemDTO} itemDTO
-   * @return {Promise<IItem>}
+   * @return {Promise<number>} - The created item id.
    */
   public async createItem(
     itemDTO: IItemDTO,
     trx?: Knex.Transaction,
-  ): Promise<Item> {
+  ): Promise<number> {
     // Authorize the item before creating.
     await this.authorize(itemDTO);
 
     // Creates a new item with associated transactions under unit-of-work envirement.
-    return this.uow.withTransaction<Item>(async (trx: Knex.Transaction) => {
+    return this.uow.withTransaction<number>(async (trx: Knex.Transaction) => {
       const itemInsert = this.transformNewItemDTOToModel(itemDTO);
 
       // Inserts a new item and fetch the created item.
@@ -114,7 +113,7 @@ export class CreateItemService {
         trx,
       } as IItemEventCreatedPayload);
 
-      return item;
+      return item.id;
     }, trx);
   }
 }

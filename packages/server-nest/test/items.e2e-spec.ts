@@ -16,4 +16,51 @@ describe('Items (e2e)', () => {
       })
       .expect(201);
   });
+
+  it('/items/:id (POST)', async () => {
+    const item = {
+      name: faker.commerce.productName(),
+      type: 'service',
+    };
+    return request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', '4064541lv40nhca')
+      .send({
+        name: faker.commerce.productName(),
+        type: 'service',
+      })
+      .expect(201);
+  });
+
+  it('/items/:id/inactivate (PATCH)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', '4064541lv40nhca')
+      .send({
+        name: faker.commerce.productName(),
+        type: 'service',
+      });
+    const itemId = response.body.id;
+
+    return request(app.getHttpServer())
+      .patch(`/items/${itemId}/inactivate`)
+      .set('organization-id', '4064541lv40nhca')
+      .expect(200);
+  });
+
+  it('/items/:id/activate (PATCH)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', '4064541lv40nhca')
+      .send({
+        name: faker.commerce.productName(),
+        type: 'service',
+      });
+    const itemId = response.body.id;
+
+    return request(app.getHttpServer())
+      .patch(`/items/${itemId}/activate`)
+      .set('organization-id', '4064541lv40nhca')
+      .expect(200);
+  });
 });

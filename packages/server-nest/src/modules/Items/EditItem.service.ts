@@ -100,14 +100,15 @@ export class EditItemService {
 
   /**
    * Edits the item metadata.
-   * @param {number} itemId
-   * @param {IItemDTO} itemDTO
+   * @param {number} itemId - The item id.
+   * @param {IItemDTO} itemDTO - The item DTO.
+   * @return {Promise<number>} - The updated item id.
    */
   public async editItem(
     itemId: number,
     itemDTO: IItemDTO,
     trx?: Knex.Transaction,
-  ): Promise<Item> {
+  ): Promise<number> {
     // Validates the given item existance on the storage.
     const oldItem = await this.itemModel
       .query()
@@ -121,7 +122,7 @@ export class EditItemService {
     const itemModel = this.transformEditItemDTOToModel(itemDTO, oldItem);
 
     // Edits the item with associated transactions under unit-of-work environment.
-    return this.uow.withTransaction<Item>(async (trx: Knex.Transaction) => {
+    return this.uow.withTransaction<number>(async (trx: Knex.Transaction) => {
       // Updates the item on the storage and fetches the updated one.
       const newItem = await this.itemModel
         .query(trx)
@@ -137,7 +138,7 @@ export class EditItemService {
       // Triggers `onItemEdited` event.
       await this.eventEmitter.emitAsync(events.item.onEdited, eventPayload);
 
-      return newItem;
+      return newItem.id;
     }, trx);
   }
 }
