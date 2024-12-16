@@ -27,7 +27,7 @@ export default {
       relationKey: 'customer',
 
       relationEntityLabel: 'display_name',
-      relationEntityKey: 'id',
+      relationEntityKey: 'display_name',
     },
     invoice_date: {
       name: 'invoice.field.invoice_date',
