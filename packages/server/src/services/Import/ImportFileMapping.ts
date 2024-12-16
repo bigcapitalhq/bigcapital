@@ -7,8 +7,9 @@ import {
 } from './interfaces';
 import ResourceService from '../Resource/ResourceService';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './_utils';
+import { ERRORS,readImportFile } from './_utils';
 import { Import } from '@/system/models';
+import { parseSheetData } from './sheet_utils';
 
 @Service()
 export class ImportFileMapping {
@@ -40,6 +41,7 @@ export class ImportFileMapping {
 
     // Validate the date format mapping.
     this.validateDateFormatMapping(tenantId, importFile.resource, maps);
+    await this.validateDataForTax(tenantId, importFile);
 
     const mappingStringified = JSON.stringify(maps);
 
@@ -74,11 +76,17 @@ export class ImportFileMapping {
       importFile.columnsParsed.map((field) => [field, ''])
     );
     const invalid = [];
+    let isInclusiveThere = 0;
+
 
     // is not empty, is not undefined or map.group
     maps.forEach((map) => {
       let _invalid = true;
 
+
+      if(map.to === 'taxRateId' || map.to === 'isInclusiveTax'){
+        isInclusiveThere = isInclusiveThere+1;
+      }
       if (!map.group && fields[map.to]) {
         _invalid = false;
       }
@@ -94,6 +102,9 @@ export class ImportFileMapping {
     });
     if (invalid.length > 0) {
       throw new ServiceError(ERRORS.INVALID_MAP_ATTRS);
+    }
+    else if(isInclusiveThere == 1) {
+      throw new ServiceError(ERRORS.AMOUNT_ARE_AND_TAX_RATE_ARE_REQUIRED_IF_ANY_ONE_OF_THEM_SELECTED);
     }
   }
 
@@ -152,5 +163,30 @@ export class ImportFileMapping {
         }
       }
     });
+  }
+  private async validateDataForTax(tenantId: number,
+    importFile: any,
+    )
+  {
+    const buffer = await readImportFile(importFile.filename);
+    const [sheetData, sheetColumns] = parseSheetData(buffer);
+    if(importFile.resource === "SaleInvoice")
+    {
+      let invoiceNo = "";
+      let isInvoiceTaxInclusive;
+      const Count = sheetData.length;
+      for (let i = 0; i < Count; i++) {
+        if (sheetData[i]['Amounts Are'])
+          {
+          invoiceNo = sheetData[i]['Invoice No.'];
+          isInvoiceTaxInclusive = sheetData[i]['Amounts Are'];
+          for (let j = i + 1; j < Count; j++) {
+            if (invoiceNo === sheetData[j]['Invoice No.'] && isInvoiceTaxInclusive !== sheetData[j]['Amounts Are']) {
+              throw new ServiceError(ERRORS.AN_INVOICE_CAN_HAVE_ONE_AMOUNT_IN_EITHER_TRUE_OR_FALSE);
+            }
+          }
+        }
+      }
+  }
   }
 }

@@ -19,9 +19,9 @@ export default class TaxRate extends mixin(TenantModel, [
   /**
    * Soft delete query builder.
    */
-  static get QueryBuilder() {
-    return SoftDeleteQueryBuilder;
-  }
+  // static get QueryBuilder() {
+  //   return SoftDeleteQueryBuilder;
+  // }
 
   /**
    * Timestamps columns.

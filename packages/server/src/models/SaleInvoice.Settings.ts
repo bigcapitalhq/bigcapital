@@ -27,7 +27,7 @@ export default {
       relationKey: 'customer',
 
       relationEntityLabel: 'display_name',
-      relationEntityKey: 'id',
+      relationEntityKey: 'display_name',
     },
     invoice_date: {
       name: 'invoice.field.invoice_date',
@@ -246,6 +246,11 @@ export default {
       fieldType: 'text',
       printable: false,
     },
+    isInclusiveTax: {
+      name: 'invoice.field.is_inclusive_tax',
+      fieldType: 'boolean',
+      printable: false,
+    },
     entries: {
       name: 'invoice.field.entries',
       fieldType: 'collection',
@@ -260,6 +265,12 @@ export default {
           relationImportMatch: ['name', 'code'],
           required: true,
           importHint: 'Matches the item name or code.',
+        },
+        taxRateId: {
+          name: 'invoice.field.tax_rate',
+          fieldType: 'relation',
+          relationModel: 'TaxRate',
+          relationImportMatch: ['name', 'code'],
         },
         rate: {
           name: 'invoice.field.rate',
