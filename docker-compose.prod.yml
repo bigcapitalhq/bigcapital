@@ -20,14 +20,20 @@ services:
 
   webapp:
     container_name: bigcapital-webapp
-    image: bigcapitalhq/webapp:latest
+    build:
+      context: ./
+      dockerfile: packages/webapp/Dockerfile
+    #image: bigcapitalhq/webapp:latest
     restart: on-failure
     networks:
       - bigcapital_network
 
   server:
     container_name: bigcapital-server
-    image: bigcapitalhq/server:latest
+    build:
+      context: ./
+      dockerfile: packages/server/Dockerfile
+    #image: bigcapitalhq/server:latest
     expose:
       - '3000'
     links:
