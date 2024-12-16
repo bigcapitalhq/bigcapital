@@ -31,6 +31,7 @@ import { UserIpInterceptor } from '@/interceptors/user-ip.interceptor';
 import { TenancyGlobalMiddleware } from '../Tenancy/TenancyGlobal.middleware';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { TransformerModule } from '../Transformer/Transformer.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
 
 @Module({
   imports: [
@@ -85,6 +86,7 @@ import { TransformerModule } from '../Transformer/Transformer.module';
     TenancyDatabaseModule,
     TenancyModelsModule,
     ItemsModule,
+    AccountsModule
   ],
   controllers: [AppController],
   providers: [

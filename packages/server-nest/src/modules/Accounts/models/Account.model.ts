@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-import { mixin, Model } from 'objection';
+// import { mixin, Model } from 'objection';
 import { castArray } from 'lodash';
 import DependencyGraph from '@/libs/dependency-graph';
 import {
@@ -7,9 +7,9 @@ import {
   getAccountsSupportsMultiCurrency,
 } from '@/constants/accounts';
 import { TenantModel } from '@/modules/System/models/TenantModel';
-import { SearchableModel } from '@/modules/Search/SearchableMdel';
-import { CustomViewBaseModel } from '@/modules/CustomViews/CustomViewBaseModel';
-import { ModelSettings } from '@/modules/Settings/ModelSettings';
+// import { SearchableModel } from '@/modules/Search/SearchableMdel';
+// import { CustomViewBaseModel } from '@/modules/CustomViews/CustomViewBaseModel';
+// import { ModelSettings } from '@/modules/Settings/ModelSettings';
 import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';
 // import AccountSettings from './Account.Settings';
 // import { DEFAULT_VIEWS } from '@/modules/Accounts/constants';
@@ -17,12 +17,24 @@ import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';
 // import { flatToNestedArray } from 'utils';
 
 // @ts-expect-error
-export class Account extends mixin(TenantModel, [
-  ModelSettings,
-  CustomViewBaseModel,
-  SearchableModel,
-]) {
+// export class AccountModel extends mixin(TenantModel, [
+//   ModelSettings,
+//   CustomViewBaseModel,
+//   SearchableModel,
+// ]) {
+
+export class AccountModel extends TenantModel {
+  name: string;
+  slug: string;
+  code: string;
+  index: number;
   accountType: string;
+  predefined: boolean;
+  currencyCode: string;
+  active: boolean;
+  bankBalance: number;
+  lastFeedsUpdatedAt: string | null;
+  amount: number;
 
   /**
    * Table name.
@@ -113,7 +125,7 @@ export class Account extends mixin(TenantModel, [
    * Model modifiers.
    */
   static get modifiers() {
-    const TABLE_NAME = Account.tableName;
+    const TABLE_NAME = AccountModel.tableName;
 
     return {
       /**

@@ -3,10 +3,11 @@ import { Global, Module, Scope } from '@nestjs/common';
 import { TENANCY_DB_CONNECTION } from '../TenancyDB/TenancyDB.constants';
 
 import { Item } from '../../../modules/Items/models/Item';
-import { Account } from '@/modules/Accounts/models/Account';
+import { AccountModel } from '@/modules/Accounts/models/Account.model';
 import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 
-const models = [Item, Account, ItemEntry];
+const models = [Item, AccountModel, ItemEntry, AccountTransaction];
 
 const modelProviders = models.map((model) => {
   return {

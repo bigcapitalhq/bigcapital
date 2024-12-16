@@ -1,4 +1,5 @@
 import { Transformer } from '../Transformer/Transformer';
+import { Item } from './models/Item';
 // import { GetItemWarehouseTransformer } from '@/services/Warehouses/Items/GettItemWarehouseTransformer';
 
 export class ItemTransformer extends Transformer {
@@ -20,7 +21,7 @@ export class ItemTransformer extends Transformer {
    * @param {IItem} item
    * @returns {string}
    */
-  public typeFormatted(item): string {
+  public typeFormatted(item: Item): string {
     return this.context.i18n.t(`item.field.type.${item.type}`);
   }
 
@@ -29,7 +30,7 @@ export class ItemTransformer extends Transformer {
    * @param item
    * @returns {string}
    */
-  public sellPriceFormatted(item): string {
+  public sellPriceFormatted(item: Item): string {
     return this.formatNumber(item.sellPrice, {
       currencyCode: this.context.organization.baseCurrency,
     });
@@ -40,7 +41,7 @@ export class ItemTransformer extends Transformer {
    * @param item
    * @returns {string}
    */
-  public costPriceFormatted(item): string {
+  public costPriceFormatted(item: Item): string {
     return this.formatNumber(item.costPrice, {
       currencyCode: this.context.organization.baseCurrency,
     });
