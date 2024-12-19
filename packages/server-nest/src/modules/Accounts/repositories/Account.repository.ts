@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { TenantRepository } from '@/common/repository/TenantRepository';
 import { TENANCY_DB_CONNECTION } from '@/modules/Tenancy/TenancyDB/TenancyDB.constants';
-import { AccountModel } from '../models/Account.model';
+import { Account } from '../models/Account.model';
 // import { TenantMetadata } from '@/modules/System/models/TenantMetadataModel';
 // import { IAccount } from '../Accounts.types';
 // import {
@@ -20,8 +20,8 @@ export class AccountRepository extends TenantRepository {
   /**
    * Gets the repository's model.
    */
-  get model(): typeof AccountModel {
-    return AccountModel.bindKnex(this.tenantDBKnex);
+  get model(): typeof Account {
+    return Account.bindKnex(this.tenantDBKnex);
   }
 
   /**

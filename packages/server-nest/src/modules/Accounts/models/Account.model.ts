@@ -18,13 +18,13 @@ import { Model } from 'objection';
 // import { flatToNestedArray } from 'utils';
 
 // @ts-expect-error
-// export class AccountModel extends mixin(TenantModel, [
+// export class Account extends mixin(TenantModel, [
 //   ModelSettings,
 //   CustomViewBaseModel,
 //   SearchableModel,
 // ]) {
 
-export class AccountModel extends TenantModel {
+export class Account extends TenantModel {
   name: string;
   slug: string;
   code: string;
@@ -126,7 +126,7 @@ export class AccountModel extends TenantModel {
    * Model modifiers.
    */
   static get modifiers() {
-    const TABLE_NAME = AccountModel.tableName;
+    const TABLE_NAME = Account.tableName;
 
     return {
       /**

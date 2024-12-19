@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 // import { IAccountEventDeletedPayload } from '@/interfaces';
 import { CommandAccountValidators } from './CommandAccountValidators.service';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
@@ -11,7 +11,7 @@ import { IAccountEventDeletedPayload } from './Accounts.types';
 @Injectable()
 export class DeleteAccount {
   constructor(
-    @Inject(AccountModel.name) private accountModel: typeof AccountModel,
+    @Inject(Account.name) private accountModel: typeof Account,
     private eventEmitter: EventEmitter2,
     private uow: UnitOfWork,
     private validator: CommandAccountValidators,
@@ -21,7 +21,7 @@ export class DeleteAccount {
    * Authorize account delete.
    * @param {number} accountId - Account id.
    */
-  private authorize = async (accountId: number, oldAccount: AccountModel) => {
+  private authorize = async (accountId: number, oldAccount: Account) => {
     // Throw error if the account was predefined.
     this.validator.throwErrorIfAccountPredefined(oldAccount);
   };

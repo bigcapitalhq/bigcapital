@@ -4,7 +4,7 @@ import {
 } from './Accounts.types';
 import { AccountTransactionTransformer } from './AccountTransaction.transformer';
 import { AccountTransaction } from './models/AccountTransaction.model';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 
@@ -16,8 +16,8 @@ export class GetAccountTransactionsService {
     @Inject(AccountTransaction.name)
     private readonly accountTransaction: typeof AccountTransaction,
 
-    @Inject(AccountModel.name)
-    private readonly account: typeof AccountModel,
+    @Inject(Account.name)
+    private readonly account: typeof Account,
   ) {}
 
   /**

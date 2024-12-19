@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 // import { IDynamicListFilterDTO } from '@/interfaces/DynamicFilter';
 
 export enum AccountNormal {
@@ -42,26 +42,26 @@ export interface IAccountEventCreatingPayload {
   trx: Knex.Transaction;
 }
 export interface IAccountEventCreatedPayload {
-  account: AccountModel;
+  account: Account;
   accountId: number;
   trx: Knex.Transaction;
 }
 
 export interface IAccountEventEditedPayload {
-  account: AccountModel;
-  oldAccount: AccountModel;
+  account: Account;
+  oldAccount: Account;
   trx: Knex.Transaction;
 }
 
 export interface IAccountEventDeletedPayload {
   accountId: number;
-  oldAccount: AccountModel;
+  oldAccount: Account;
   trx: Knex.Transaction;
 }
 
 export interface IAccountEventDeletePayload {
   trx: Knex.Transaction;
-  oldAccount: AccountModel;
+  oldAccount: Account;
 }
 
 export interface IAccountEventActivatedPayload {

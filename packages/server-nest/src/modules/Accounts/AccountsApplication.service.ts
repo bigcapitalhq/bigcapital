@@ -4,7 +4,7 @@ import { CreateAccountService } from './CreateAccount.service';
 import { DeleteAccount } from './DeleteAccount.service';
 import { EditAccount } from './EditAccount.service';
 import { CreateAccountDTO } from './CreateAccount.dto';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 import { EditAccountDTO } from './EditAccount.dto';
 import { GetAccount } from './GetAccount.service';
 import { ActivateAccount } from './ActivateAccount.service';
@@ -37,7 +37,7 @@ export class AccountsApplication {
   public createAccount = (
     accountDTO: CreateAccountDTO,
     trx?: Knex.Transaction,
-  ): Promise<AccountModel> => {
+  ): Promise<Account> => {
     return this.createAccountService.createAccount(accountDTO, trx);
   };
 

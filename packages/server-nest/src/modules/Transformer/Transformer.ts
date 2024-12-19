@@ -165,7 +165,7 @@ export class Transformer {
    * @param {string} format
    * @returns {string}
    */
-  protected formatDate(date: string, format?: string) {
+  protected formatDate(date: string | Date, format?: string) {
     // Use the export date format if the async operation is in exporting,
     // otherwise use the given or default format.
     const _format = this.context.exportAls.isExport

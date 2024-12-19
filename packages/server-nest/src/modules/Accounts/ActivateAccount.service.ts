@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { IAccountEventActivatedPayload } from './Accounts.types';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 import { AccountRepository } from './repositories/Account.repository';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -13,8 +13,8 @@ export class ActivateAccount {
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
 
-    @Inject(AccountModel.name)
-    private readonly accountModel: typeof AccountModel,
+    @Inject(Account.name)
+    private readonly accountModel: typeof Account,
     private readonly accountRepository: AccountRepository,
   ) {}
 

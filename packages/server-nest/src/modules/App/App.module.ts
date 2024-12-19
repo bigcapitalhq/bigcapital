@@ -32,6 +32,7 @@ import { TenancyGlobalMiddleware } from '../Tenancy/TenancyGlobal.middleware';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { TransformerModule } from '../Transformer/Transformer.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { ExpensesModule } from '../Expenses/Expenses.module';
 
 @Module({
   imports: [
@@ -86,7 +87,8 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     TenancyDatabaseModule,
     TenancyModelsModule,
     ItemsModule,
-    AccountsModule
+    AccountsModule,
+    ExpensesModule,
   ],
   controllers: [AppController],
   providers: [

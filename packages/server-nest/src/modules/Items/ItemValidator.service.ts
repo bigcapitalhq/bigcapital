@@ -8,13 +8,13 @@ import { ServiceError } from './ServiceError';
 import { IItem, IItemDTO } from '@/interfaces/Item';
 import { ERRORS } from './Items.constants';
 import { Item } from './models/Item';
-import { AccountModel } from '../Accounts/models/Account.model';
+import { Account } from '../Accounts/models/Account.model';
 
 @Injectable()
 export class ItemsValidators {
   constructor(
     @Inject(Item.name) private itemModel: typeof Item,
-    @Inject(AccountModel.name) private accountModel: typeof AccountModel,
+    @Inject(Account.name) private accountModel: typeof Account,
     @Inject(Item.name) private taxRateModel: typeof Item,
     @Inject(Item.name) private itemEntryModel: typeof Item,
     @Inject(Item.name) private itemCategoryModel: typeof Item,

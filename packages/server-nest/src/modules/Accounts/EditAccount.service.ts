@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { CommandAccountValidators } from './CommandAccountValidators.service';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
@@ -14,8 +14,8 @@ export class EditAccount {
     private readonly uow: UnitOfWork,
     private readonly validator: CommandAccountValidators,
 
-    @Inject(AccountModel.name)
-    private readonly accountModel: typeof AccountModel,
+    @Inject(Account.name)
+    private readonly accountModel: typeof Account,
   ) {}
 
   /**
@@ -27,7 +27,7 @@ export class EditAccount {
   private authorize = async (
     accountId: number,
     accountDTO: EditAccountDTO,
-    oldAccount: AccountModel,
+    oldAccount: Account,
   ) => {
     // Validate account name uniquiness.
     await this.validator.validateAccountNameUniquiness(
@@ -64,7 +64,7 @@ export class EditAccount {
   public async editAccount(
     accountId: number,
     accountDTO: EditAccountDTO,
-  ): Promise<AccountModel> {
+  ): Promise<Account> {
     // Retrieve the old account or throw not found service error.
     const oldAccount = await this.accountModel
       .query()

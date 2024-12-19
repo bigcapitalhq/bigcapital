@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AccountTransformer } from './Account.transformer';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 import { AccountRepository } from './repositories/Account.repository';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -9,8 +9,8 @@ import { events } from '@/common/events/events';
 @Injectable()
 export class GetAccount {
   constructor(
-    @Inject(AccountModel.name)
-    private readonly accountModel: typeof AccountModel,
+    @Inject(Account.name)
+    private readonly accountModel: typeof Account,
     private readonly accountRepository: AccountRepository,
     private readonly transformer: TransformerInjectable,
     private readonly eventEmitter: EventEmitter2,

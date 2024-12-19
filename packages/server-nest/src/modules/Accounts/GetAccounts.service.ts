@@ -8,7 +8,7 @@
 // import { DynamicListService } from '../DynamicListing/DynamicListService';
 // import { AccountTransformer } from './Account.transformer';
 // import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
-// import { AccountModel } from './models/Account.model';
+// import { Account } from './models/Account.model';
 // import { AccountRepository } from './repositories/Account.repository';
 
 // @Injectable()
@@ -16,7 +16,7 @@
 //   constructor(
 //     private readonly dynamicListService: DynamicListService,
 //     private readonly transformerService: TransformerInjectable,
-//     private readonly accountModel: typeof AccountModel,
+//     private readonly accountModel: typeof Account,
 //     private readonly accountRepository: AccountRepository,
 //   ) {}
 

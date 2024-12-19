@@ -11,7 +11,7 @@ import {
   CreateAccountParams,
 } from './Accounts.types';
 import { CommandAccountValidators } from './CommandAccountValidators.service';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { events } from '@/common/events/events';
@@ -20,8 +20,8 @@ import { CreateAccountDTO } from './CreateAccount.dto';
 @Injectable()
 export class CreateAccountService {
   constructor(
-    @Inject(AccountModel.name)
-    private readonly accountModel: typeof AccountModel,
+    @Inject(Account.name)
+    private readonly accountModel: typeof Account,
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly validator: CommandAccountValidators,
@@ -102,7 +102,7 @@ export class CreateAccountService {
     accountDTO: CreateAccountDTO,
     trx?: Knex.Transaction,
     params: CreateAccountParams = { ignoreUniqueName: false },
-  ): Promise<AccountModel> => {
+  ): Promise<Account> => {
     // Retrieves the given tenant metadata.
     const tenant = await this.tenancyContext.getTenant(true);
 

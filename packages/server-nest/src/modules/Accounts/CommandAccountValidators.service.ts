@@ -4,7 +4,7 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 // import AccountTypesUtils from '@/lib/AccountTypes';
 import { ServiceError } from '../Items/ServiceError';
 import { ERRORS, MAX_ACCOUNTS_CHART_DEPTH } from './constants';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 import { AccountRepository } from './repositories/Account.repository';
 import { AccountTypesUtils } from './utils/AccountType.utils';
 import { CreateAccountDTO } from './CreateAccount.dto';
@@ -13,16 +13,16 @@ import { EditAccountDTO } from './EditAccount.dto';
 @Injectable({ scope: Scope.REQUEST })
 export class CommandAccountValidators {
   constructor(
-    @Inject(AccountModel.name)
-    private readonly accountModel: typeof AccountModel,
+    @Inject(Account.name)
+    private readonly accountModel: typeof Account,
     private readonly accountRepository: AccountRepository,
   ) {}
 
   /**
    * Throws error if the account was prefined.
-   * @param {AccountModel} account
+   * @param {Account} account
    */
-  public throwErrorIfAccountPredefined(account: AccountModel) {
+  public throwErrorIfAccountPredefined(account: Account) {
     if (account.predefined) {
       throw new ServiceError(ERRORS.ACCOUNT_PREDEFINED);
     }
@@ -31,12 +31,12 @@ export class CommandAccountValidators {
   /**
    * Diff account type between new and old account, throw service error
    * if they have different account type.
-   * @param {AccountModel|CreateAccountDTO|EditAccountDTO} oldAccount
-   * @param {AccountModel|CreateAccountDTO|EditAccountDTO} newAccount
+   * @param {Account|CreateAccountDTO|EditAccountDTO} oldAccount
+   * @param {Account|CreateAccountDTO|EditAccountDTO} newAccount
    */
   public async isAccountTypeChangedOrThrowError(
-    oldAccount: AccountModel | CreateAccountDTO | EditAccountDTO,
-    newAccount: AccountModel | CreateAccountDTO | EditAccountDTO,
+    oldAccount: Account | CreateAccountDTO | EditAccountDTO,
+    newAccount: Account | CreateAccountDTO | EditAccountDTO,
   ) {
     if (oldAccount.accountType !== newAccount.accountType) {
       throw new ServiceError(ERRORS.ACCOUNT_TYPE_NOT_ALLOWED_TO_CHANGE);
@@ -155,13 +155,13 @@ export class CommandAccountValidators {
    * Validates the account DTO currency code whether equals the currency code of
    * parent account.
    * @param {CreateAccountDTO | EditAccountDTO} accountDTO
-   * @param {AccountModel} parentAccount
+   * @param {Account} parentAccount
    * @param {string} baseCurrency -
    * @throws {ServiceError(ERRORS.ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT)}
    */
   public validateCurrentSameParentAccount = (
     accountDTO: CreateAccountDTO | EditAccountDTO,
-    parentAccount: AccountModel,
+    parentAccount: Account,
     baseCurrency: string,
   ) => {
     // If the account DTO currency not assigned and the parent account has no base currency.
@@ -187,7 +187,7 @@ export class CommandAccountValidators {
    */
   public throwErrorIfParentHasDiffType(
     accountDTO: CreateAccountDTO | EditAccountDTO,
-    parentAccount: AccountModel,
+    parentAccount: Account,
   ) {
     if (accountDTO.accountType !== parentAccount.accountType) {
       throw new ServiceError(ERRORS.PARENT_ACCOUNT_HAS_DIFFERENT_TYPE);

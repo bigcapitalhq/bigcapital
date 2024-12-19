@@ -1,5 +1,5 @@
 import { Transformer } from '../Transformer/Transformer';
-import { AccountModel } from './models/Account.model';
+import { Account } from './models/Account.model';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
 import { assocDepthLevelToObjectTree } from '@/utils/assoc-depth-level-to-object-tree';
 import { nestedArrayToFlatten } from '@/utils/nested-array-to-flatten';
@@ -35,7 +35,7 @@ export class AccountTransformer extends Transformer {
    * @param {IAccount} account -
    * @returns {string}
    */
-  public flattenName = (account: AccountModel): string => {
+  public flattenName = (account: Account): string => {
     const parentDependantsIds = this.options.accountsGraph.dependantsOf(
       account.id,
     );
@@ -51,7 +51,7 @@ export class AccountTransformer extends Transformer {
    * @param {IAccount} invoice
    * @returns {string}
    */
-  protected formattedAmount = (account: AccountModel): string => {
+  protected formattedAmount = (account: Account): string => {
     return this.formatNumber(account.amount, {
       currencyCode: account.currencyCode,
     });
@@ -59,10 +59,10 @@ export class AccountTransformer extends Transformer {
 
   /**
    * Retrieves the formatted bank balance.
-   * @param {AccountModel} account
+   * @param {Account} account
    * @returns {string}
    */
-  protected bankBalanceFormatted = (account: AccountModel): string => {
+  protected bankBalanceFormatted = (account: Account): string => {
     return this.formatNumber(account.bankBalance, {
       currencyCode: account.currencyCode,
     });
@@ -73,7 +73,7 @@ export class AccountTransformer extends Transformer {
    * @param {IAccount} account
    * @returns {string}
    */
-  protected lastFeedsUpdatedAtFormatted = (account: AccountModel): string => {
+  protected lastFeedsUpdatedAtFormatted = (account: Account): string => {
     return account.lastFeedsUpdatedAt
       ? this.formatDate(account.lastFeedsUpdatedAt)
       : '';
@@ -84,7 +84,7 @@ export class AccountTransformer extends Transformer {
    * @param account
    * @returns {boolean}
    */
-  protected isFeedsPaused = (account: AccountModel): boolean => {
+  protected isFeedsPaused = (account: Account): boolean => {
     // return account.plaidItem?.isPaused || false;
 
     return false;
@@ -94,7 +94,7 @@ export class AccountTransformer extends Transformer {
    * Retrieves formatted account type label.
    * @returns {string}
    */
-  protected accountTypeLabel = (account: AccountModel): string => {
+  protected accountTypeLabel = (account: Account): string => {
     return this.context.i18n.t(account.accountTypeLabel);
   };
 
@@ -102,7 +102,7 @@ export class AccountTransformer extends Transformer {
    * Retrieves formatted account normal.
    * @returns {string}
    */
-  protected accountNormalFormatted = (account: AccountModel): string => {
+  protected accountNormalFormatted = (account: Account): string => {
     return this.context.i18n.t(account.accountNormalFormatted);
   };
 
@@ -111,7 +111,7 @@ export class AccountTransformer extends Transformer {
    * @param {IAccount[]}
    * @returns {IAccount[]}
    */
-  protected postCollectionTransform = (accounts: AccountModel[]) => {
+  protected postCollectionTransform = (accounts: Account[]) => {
     // Transfom the flatten to accounts tree.
     const transformed = flatToNestedArray(accounts, {
       id: 'id',
