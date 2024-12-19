@@ -1,20 +1,8 @@
 import { Knex } from 'knex';
 import { Injectable } from '@nestjs/common';
-// import {
-//   IAccount,
-//   IAccountCreateDTO,
-//   IAccountEditDTO,
-//   IAccountResponse,
-//   IAccountsFilter,
-//   IAccountsTransactionsFilter,
-//   IFilterMeta,
-//   IGetAccountTransactionPOJO,
-// } from '@/interfaces';
 import { CreateAccountService } from './CreateAccount.service';
 import { DeleteAccount } from './DeleteAccount.service';
 import { EditAccount } from './EditAccount.service';
-// import { GetAccounts } from './GetAccounts.service';
-// import { GetAccountTransactions } from './GetAccountTransactions.service';
 import { CreateAccountDTO } from './CreateAccount.dto';
 import { AccountModel } from './models/Account.model';
 import { EditAccountDTO } from './EditAccount.dto';
@@ -31,8 +19,8 @@ import {
 export class AccountsApplication {
   constructor(
     private readonly createAccountService: CreateAccountService,
-    private readonly deleteAccountService: DeleteAccount,
     private readonly editAccountService: EditAccount,
+    private readonly deleteAccountService: DeleteAccount,
     private readonly activateAccountService: ActivateAccount,
     private readonly getAccountTypesService: GetAccountTypesService,
     private readonly getAccountService: GetAccount,

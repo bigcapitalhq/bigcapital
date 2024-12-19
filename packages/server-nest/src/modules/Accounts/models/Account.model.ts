@@ -11,6 +11,7 @@ import { TenantModel } from '@/modules/System/models/TenantModel';
 // import { CustomViewBaseModel } from '@/modules/CustomViews/CustomViewBaseModel';
 // import { ModelSettings } from '@/modules/Settings/ModelSettings';
 import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';
+import { Model } from 'objection';
 // import AccountSettings from './Account.Settings';
 // import { DEFAULT_VIEWS } from '@/modules/Accounts/constants';
 // import { buildFilterQuery, buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
@@ -204,50 +205,50 @@ export class AccountModel extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    // const AccountTransaction = require('models/AccountTransaction');
-    // const Item = require('models/Item');
+    const { AccountTransaction } = require('./AccountTransaction.model');
+    const { Item } = require('../../Items/models/Item');
     // const InventoryAdjustment = require('models/InventoryAdjustment');
     // const ManualJournalEntry = require('models/ManualJournalEntry');
     // const Expense = require('models/Expense');
     // const ExpenseEntry = require('models/ExpenseCategory');
     // const ItemEntry = require('models/ItemEntry');
     // const UncategorizedTransaction = require('models/UncategorizedCashflowTransaction');
-    // const PlaidItem = require('models/PlaidItem');
+    const { PlaidItem } = require('../../Banking/models/PlaidItem.model');
 
     return {
-      //   /**
-      //    * Account model may has many transactions.
-      //    */
-      //   transactions: {
-      //     relation: Model.HasManyRelation,
-      //     modelClass: AccountTransaction.default,
-      //     join: {
-      //       from: 'accounts.id',
-      //       to: 'accounts_transactions.accountId',
-      //     },
-      //   },
-      //   /**
-      //    *
-      //    */
-      //   itemsCostAccount: {
-      //     relation: Model.HasManyRelation,
-      //     modelClass: Item.default,
-      //     join: {
-      //       from: 'accounts.id',
-      //       to: 'items.costAccountId',
-      //     },
-      //   },
-      //   /**
-      //    *
-      //    */
-      //   itemsSellAccount: {
-      //     relation: Model.HasManyRelation,
-      //     modelClass: Item.default,
-      //     join: {
-      //       from: 'accounts.id',
-      //       to: 'items.sellAccountId',
-      //     },
-      //   },
+      /**
+       * Account model may has many transactions.
+       */
+      transactions: {
+        relation: Model.HasManyRelation,
+        modelClass: AccountTransaction,
+        join: {
+          from: 'accounts.id',
+          to: 'accounts_transactions.accountId',
+        },
+      },
+      /**
+       * Account may has many items as cost account.
+       */
+      itemsCostAccount: {
+        relation: Model.HasManyRelation,
+        modelClass: Item,
+        join: {
+          from: 'accounts.id',
+          to: 'items.costAccountId',
+        },
+      },
+      /**
+       * Account may has many items as sell account.
+       */
+      itemsSellAccount: {
+        relation: Model.HasManyRelation,
+        modelClass: Item,
+        join: {
+          from: 'accounts.id',
+          to: 'items.sellAccountId',
+        },
+      },
       //   /**
       //    *
       //    */
@@ -328,17 +329,17 @@ export class AccountModel extends TenantModel {
       //       query.where('categorized', false);
       //     },
       //   },
-      //   /**
-      //    * Account model may belongs to a Plaid item.
-      //    */
-      //   plaidItem: {
-      //     relation: Model.BelongsToOneRelation,
-      //     modelClass: PlaidItem.default,
-      //     join: {
-      //       from: 'accounts.plaidItemId',
-      //       to: 'plaid_items.plaidItemId',
-      //     },
-      //   },
+      /**
+       * Account model may belongs to a Plaid item.
+       */
+      plaidItem: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PlaidItem,
+        join: {
+          from: 'accounts.plaidItemId',
+          to: 'plaid_items.plaidItemId',
+        },
+      },
     };
   }
 

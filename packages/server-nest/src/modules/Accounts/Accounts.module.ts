@@ -32,7 +32,6 @@ import { GetAccountTransactionsService } from './GetAccountTransactions.service'
     ActivateAccount,
     GetAccountTypesService,
     GetAccountTransactionsService,
-    // GetAccountsService,
   ],
 })
 export class AccountsModule {}

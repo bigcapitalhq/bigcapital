@@ -4,20 +4,19 @@
 //   IAccountsFilter,
 //   IAccountResponse,
 //   IFilterMeta,
-// } from '@/interfaces';
-// import { DynamicListingService } from '@/services/DynamicListing/DynamicListService';
+// } from './Accounts.types';
+// import { DynamicListService } from '../DynamicListing/DynamicListService';
 // import { AccountTransformer } from './Account.transformer';
-// import { TransformerService } from '@/lib/Transformer/TransformerService';
-// import { flatToNestedArray } from '@/utils';
-// import { Account } from './Account.model';
+// import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+// import { AccountModel } from './models/Account.model';
 // import { AccountRepository } from './repositories/Account.repository';
 
 // @Injectable()
 // export class GetAccountsService {
 //   constructor(
-//     private readonly dynamicListService: DynamicListingService,
-//     private readonly transformerService: TransformerService,
-//     private readonly accountModel: typeof Account,
+//     private readonly dynamicListService: DynamicListService,
+//     private readonly transformerService: TransformerInjectable,
+//     private readonly accountModel: typeof AccountModel,
 //     private readonly accountRepository: AccountRepository,
 //   ) {}
 

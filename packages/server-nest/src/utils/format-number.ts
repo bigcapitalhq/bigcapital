@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import accounting from 'accounting';
-import Currencies from 'js-money/lib/currency';
+import { get } from 'lodash';
+import * as accounting from 'accounting';
+import * as Currencies from 'js-money/lib/currency';
 
 const getNegativeFormat = (formatName) => {
   switch (formatName) {
@@ -12,7 +12,7 @@ const getNegativeFormat = (formatName) => {
 };
 
 const getCurrencySign = (currencyCode) => {
-  return _.get(Currencies, `${currencyCode}.symbol`);
+  return get(Currencies, `${currencyCode}.symbol`);
 };
 
 export const formatNumber = (

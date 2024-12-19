@@ -1,11 +1,9 @@
-// import { IAccountsStructureType } from './Accounts.types';
-// import {
-//   assocDepthLevelToObjectTree,
-//   flatToNestedArray,
-//   nestedArrayToFlatten,
-// } from 'utils';
 import { Transformer } from '../Transformer/Transformer';
 import { AccountModel } from './models/Account.model';
+import { flatToNestedArray } from '@/utils/flat-to-nested-array';
+import { assocDepthLevelToObjectTree } from '@/utils/assoc-depth-level-to-object-tree';
+import { nestedArrayToFlatten } from '@/utils/nested-array-to-flatten';
+import { IAccountsStructureType } from './Accounts.types';
 
 export class AccountTransformer extends Transformer {
   /**
@@ -113,20 +111,20 @@ export class AccountTransformer extends Transformer {
    * @param {IAccount[]}
    * @returns {IAccount[]}
    */
-  // protected postCollectionTransform = (accounts: AccountModel[]) => {
-  //   // Transfom the flatten to accounts tree.
-  //   const transformed = flatToNestedArray(accounts, {
-  //     id: 'id',
-  //     parentId: 'parentAccountId',
-  //   });
-  //   // Associate `accountLevel` attr to indicate object depth.
-  //   const transformed2 = assocDepthLevelToObjectTree(
-  //     transformed,
-  //     1,
-  //     'accountLevel',
-  //   );
-  //   return this.options.structure === IAccountsStructureType.Flat
-  //     ? nestedArrayToFlatten(transformed2)
-  //     : transformed2;
-  // };
+  protected postCollectionTransform = (accounts: AccountModel[]) => {
+    // Transfom the flatten to accounts tree.
+    const transformed = flatToNestedArray(accounts, {
+      id: 'id',
+      parentId: 'parentAccountId',
+    });
+    // Associate `accountLevel` attr to indicate object depth.
+    const transformed2 = assocDepthLevelToObjectTree(
+      transformed,
+      1,
+      'accountLevel',
+    );
+    return this.options.structure === IAccountsStructureType.Flat
+      ? nestedArrayToFlatten(transformed2)
+      : transformed2;
+  };
 }
