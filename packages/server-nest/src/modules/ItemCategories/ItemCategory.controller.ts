@@ -9,8 +9,10 @@ import {
 } from '@nestjs/common';
 import { ItemCategoryApplication } from './ItemCategory.application';
 import { IItemCategoryOTD } from './ItemCategory.interfaces';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('item-categories')
+@PublicRoute()
 export class ItemCategoryController {
   constructor(
     private readonly itemCategoryApplication: ItemCategoryApplication,

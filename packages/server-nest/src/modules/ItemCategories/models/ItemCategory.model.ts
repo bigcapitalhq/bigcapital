@@ -5,6 +5,15 @@ import { Model, mixin } from 'objection';
 // import ItemCategorySettings from './ItemCategory.Settings';
 
 export class ItemCategory extends BaseModel {
+  name!: string;
+  description!: string;
+
+  costAccountId!: number;
+  sellAccountId!: number;
+  inventoryAccountId!: number;
+
+  userId!: number;
+
   /**
    * Table name.
    */
@@ -58,6 +67,6 @@ export class ItemCategory extends BaseModel {
    * Model meta.
    */
   // static get meta() {
-    // return ItemCategorySettings;
+  // return ItemCategorySettings;
   // }
 }

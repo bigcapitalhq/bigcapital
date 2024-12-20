@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './modules/App/App.module';
 import { ClsMiddleware } from 'nestjs-cls';
+import { AppModule } from './modules/App/App.module';
+import './utils/moment-mysql';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

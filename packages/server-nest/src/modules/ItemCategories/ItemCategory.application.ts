@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { IItemCategoryOTD } from './ItemCategory.interfaces';
 import { CreateItemCategoryService } from './commands/CreateItemCategory.service';
 import { DeleteItemCategoryService } from './commands/DeleteItemCategory.service';
 import { EditItemCategoryService } from './commands/EditItemCategory.service';
 import { GetItemCategoryService } from './queries/GetItemCategory.service';
 
+@Injectable()
 export class ItemCategoryApplication {
   constructor(
     private readonly createItemCategoryService: CreateItemCategoryService,

@@ -20,7 +20,7 @@ export class CreateExpense {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private eventPublisher: EventPublisher;
+private eventPublisher: EventPublisher;
 
   @Inject()
   private uow: UnitOfWork;

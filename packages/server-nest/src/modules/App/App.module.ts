@@ -33,6 +33,7 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { TransformerModule } from '../Transformer/Transformer.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { ExpensesModule } from '../Expenses/Expenses.module';
+import { ItemCategoryModule } from '../ItemCategories/ItemCategory.module';
 
 @Module({
   imports: [
@@ -87,6 +88,7 @@ import { ExpensesModule } from '../Expenses/Expenses.module';
     TenancyDatabaseModule,
     TenancyModelsModule,
     ItemsModule,
+    ItemCategoryModule,
     AccountsModule,
     ExpensesModule,
   ],
@@ -106,7 +108,6 @@ import { ExpensesModule } from '../Expenses/Expenses.module';
     },
     AppService,
     JwtStrategy,
-    
   ],
 })
 export class AppModule {

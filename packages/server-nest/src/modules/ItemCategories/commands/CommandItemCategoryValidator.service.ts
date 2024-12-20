@@ -1,10 +1,11 @@
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ItemCategory } from '../models/ItemCategory.model';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
 import { ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from '@/constants/accounts';
 
+@Injectable()
 export class CommandItemCategoryValidatorService {
   constructor(
     @Inject(ItemCategory.name)

@@ -7,7 +7,7 @@ import {
 } from '../interfaces/Expenses.interface';
 import { CommandExpenseValidator } from './CommandExpenseValidator.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ExpenseDTOTransformer } from './ExpenseDTOTransformer';
+import { ExpenseDTOTransformer } from './CommandExpenseDTO.transformer';
 // import { EntriesService } from '@/services/Entries';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Account } from '@/modules/Accounts/models/Account.model';

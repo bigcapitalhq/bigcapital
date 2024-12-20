@@ -10,12 +10,14 @@ import { SystemUser } from '@/modules/System/models/SystemUser';
 import { Knex } from 'knex';
 import { ItemCategory } from '../models/ItemCategory.model';
 import { Inject } from '@nestjs/common';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 export class EditItemCategoryService {
   constructor(
     private readonly uow: UnitOfWork,
     private readonly validator: CommandItemCategoryValidatorService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly tenancyContext: TenancyContext,
     @Inject(ItemCategory.name)
     private readonly itemCategoryModel: typeof ItemCategory,
   ) {}
@@ -29,7 +31,7 @@ export class EditItemCategoryService {
   public async editItemCategory(
     itemCategoryId: number,
     itemCategoryOTD: IItemCategoryOTD,
-  ): Promise<IItemCategory> {
+  ): Promise<ItemCategory> {
     // Retrieve the item category from the storage.
     const oldItemCategory = await this.itemCategoryModel
       .query()
@@ -52,11 +54,14 @@ export class EditItemCategoryService {
         itemCategoryOTD.inventoryAccountId,
       );
     }
+    // Retrieves the authorized user.
+    const authorizedUser = await this.tenancyContext.getSystemUser();
+
     const itemCategoryObj = this.transformOTDToObject(
       itemCategoryOTD,
       authorizedUser,
     );
-    //
+    // Creates item category under unit-of-work evnirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       //
       const itemCategory = await ItemCategory.query().patchAndFetchById(

@@ -6,8 +6,19 @@ import { Item } from '../../../modules/Items/models/Item';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ItemEntry } from '@/modules/Items/models/ItemEntry';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
+import { Expense } from '@/modules/Expenses/models/Expense.model';
+import ExpenseCategory from '@/modules/Expenses/models/ExpenseCategory.model';
+import { ItemCategory } from '@/modules/ItemCategories/models/ItemCategory.model';
 
-const models = [Item, Account, ItemEntry, AccountTransaction];
+const models = [
+  Item,
+  Account,
+  ItemEntry,
+  AccountTransaction,
+  Expense,
+  ExpenseCategory,
+  ItemCategory,
+];
 
 const modelProviders = models.map((model) => {
   return {

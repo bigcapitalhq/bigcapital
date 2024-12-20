@@ -26,12 +26,15 @@ export class CreateItemCategoryService {
    * Transforms OTD to model object.
    * @param {IItemCategoryOTD} itemCategoryOTD
    * @param {ISystemUser} authorizedUser
+   * @returns {ItemCategory}
    */
   private transformOTDToObject(
     itemCategoryOTD: IItemCategoryOTD,
-    authorizedUser: SystemUser,
-  ): ItemCategory {
-    return { ...itemCategoryOTD, userId: authorizedUser.id };
+  ): Partial<ItemCategory> {
+    return {
+      ...itemCategoryOTD,
+      // userId: authorizedUser.id
+    };
   }
   /**
    * Inserts a new item category.
@@ -58,10 +61,8 @@ export class CreateItemCategoryService {
         itemCategoryOTD.inventoryAccountId,
       );
     }
-    const itemCategoryObj = this.transformOTDToObject(
-      itemCategoryOTD,
-      authorizedUser,
-    );
+    const itemCategoryObj = this.transformOTDToObject(itemCategoryOTD);
+
     // Creates item category under unit-of-work evnirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Inserts the item category.

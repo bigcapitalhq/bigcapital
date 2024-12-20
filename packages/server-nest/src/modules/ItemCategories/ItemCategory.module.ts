@@ -6,6 +6,9 @@ import { EditItemCategoryService } from './commands/EditItemCategory.service';
 import { GetItemCategoryService } from './queries/GetItemCategory.service';
 import { ItemCategoryApplication } from './ItemCategory.application';
 import { ItemCategoryController } from './ItemCategory.controller';
+import { CommandItemCategoryValidatorService } from './commands/CommandItemCategoryValidator.service';
+import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Module({
   imports: [TenancyDatabaseModule],
@@ -16,6 +19,9 @@ import { ItemCategoryController } from './ItemCategory.controller';
     GetItemCategoryService,
     DeleteItemCategoryService,
     ItemCategoryApplication,
+    CommandItemCategoryValidatorService,
+    TransformerInjectable,
+    TenancyContext
   ],
 })
 export class ItemCategoryModule {}

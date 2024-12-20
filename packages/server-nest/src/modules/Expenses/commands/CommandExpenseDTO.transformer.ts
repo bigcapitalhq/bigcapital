@@ -7,7 +7,6 @@ import {
   IExpenseEditDTO,
 } from '../interfaces/Expenses.interface';
 // import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
-// import { TenantMetadata } from '@/system/models';
 import { Injectable } from '@nestjs/common';
 import { Expense } from '../models/Expense.model';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
@@ -86,7 +85,7 @@ export class ExpenseDTOTransformer {
    */
   public expenseCreateDTO = async (
     expenseDTO: IExpenseCreateDTO,
-  ): Promise<Expense> => {
+  ): Promise<Partial<Expense>> => {
     const initialDTO = this.expenseDTOToModel(expenseDTO);
     const tenant = await this.tenancyContext.getTenant(true);
 

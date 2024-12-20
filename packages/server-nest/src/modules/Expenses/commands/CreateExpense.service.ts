@@ -6,7 +6,7 @@ import {
   IExpenseCreatingPayload,
 } from '../interfaces/Expenses.interface';
 import { CommandExpenseValidator } from './CommandExpenseValidator.service';
-import { ExpenseDTOTransformer } from './ExpenseDTOTransformer';
+import { ExpenseDTOTransformer } from './CommandExpenseDTO.transformer';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { Expense } from '@/modules/Expenses/models/Expense.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
