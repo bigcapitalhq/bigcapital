@@ -7,6 +7,10 @@ import { ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from '@/constants/accounts';
 
 @Injectable()
 export class CommandItemCategoryValidatorService {
+  /**
+   * @param {typeof ItemCategory} itemCategoryModel - Item category model.
+   * @param {typeof Account} accountModel - Account model.
+   */
   constructor(
     @Inject(ItemCategory.name)
     private readonly itemCategoryModel: typeof ItemCategory,

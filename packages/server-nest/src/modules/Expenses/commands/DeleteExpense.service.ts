@@ -13,6 +13,13 @@ import {
 
 @Injectable()
 export class DeleteExpense {
+  /**
+   * @param {EventEmitter2} eventEmitter - Event emitter.
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {CommandExpenseValidator} validator - Command expense validator.
+   * @param {typeof Expense} expenseModel - Expense model.
+   * @param {typeof ExpenseCategory} expenseCategoryModel - Expense category model.
+   */
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,

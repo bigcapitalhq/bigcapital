@@ -7,6 +7,12 @@ import { GetItemCategoryService } from './queries/GetItemCategory.service';
 
 @Injectable()
 export class ItemCategoryApplication {
+  /**
+   * @param {CreateItemCategoryService} createItemCategoryService - Create item category service.
+   * @param {EditItemCategoryService} editItemCategoryService - Edit item category service.
+   * @param {GetItemCategoryService} getItemCategoryService - Get item category service.
+   * @param {DeleteItemCategoryService} deleteItemCategoryService - Delete item category service.
+   */
   constructor(
     private readonly createItemCategoryService: CreateItemCategoryService,
     private readonly editItemCategoryService: EditItemCategoryService,

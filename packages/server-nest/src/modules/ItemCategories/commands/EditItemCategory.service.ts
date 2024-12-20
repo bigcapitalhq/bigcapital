@@ -13,6 +13,13 @@ import { Inject } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 export class EditItemCategoryService {
+  /**
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {CommandItemCategoryValidatorService} validator - Command item category validator service.
+   * @param {EventEmitter2} eventEmitter - Event emitter.
+   * @param {TenancyContext} tenancyContext - Tenancy context.
+   * @param {typeof ItemCategory} itemCategoryModel - Item category model.
+   */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly validator: CommandItemCategoryValidatorService,
@@ -21,6 +28,7 @@ export class EditItemCategoryService {
     @Inject(ItemCategory.name)
     private readonly itemCategoryModel: typeof ItemCategory,
   ) {}
+
   /**
    * Edits item category.
    * @param {number} tenantId

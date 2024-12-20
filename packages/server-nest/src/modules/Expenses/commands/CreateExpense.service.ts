@@ -15,6 +15,14 @@ import { events } from '@/common/events/events';
 
 @Injectable()
 export class CreateExpense {
+  /**
+   * @param {EventEmitter2} eventEmitter - Event emitter.
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {CommandExpenseValidator} validator - Command expense validator.
+   * @param {ExpenseDTOTransformer} transformDTO - Expense DTO transformer.
+   * @param {typeof Account} accountModel - Account model.
+   * @param {typeof Expense} expenseModel - Expense model.
+   */
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,

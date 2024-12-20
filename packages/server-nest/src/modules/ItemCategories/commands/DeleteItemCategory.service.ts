@@ -10,6 +10,12 @@ import { Item } from '@/modules/Items/models/Item';
 
 @Injectable()
 export class DeleteItemCategoryService {
+  /**
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {CommandItemCategoryValidatorService} validator - Command item category validator service.
+   * @param {EventEmitter2} eventEmitter - Event emitter.
+   * @param {typeof ItemCategory} itemCategoryModel - Item category model.
+   */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly validator: CommandItemCategoryValidatorService,

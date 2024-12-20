@@ -6,6 +6,10 @@ import { TransformerContext } from './Transformer.types';
 
 @Injectable()
 export class TransformerInjectable {
+  /**
+   * @param {TenancyContext} tenancyContext - Tenancy context.
+   * @param {I18nService} i18n - I18n service.
+   */
   constructor(
     private readonly tenancyContext: TenancyContext,
     private readonly i18n: I18nService,

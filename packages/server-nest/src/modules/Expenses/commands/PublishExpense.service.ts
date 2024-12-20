@@ -12,6 +12,12 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class PublishExpense {
+  /**
+   * @param {EventEmitter2} eventPublisher - Event emitter.
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {CommandExpenseValidator} validator - Command expense validator.
+   * @param {typeof Expense} expenseModel - Expense model.
+   */
   constructor(
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,

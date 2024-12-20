@@ -3,6 +3,9 @@ import { ItemCategory } from '../models/ItemCategory.model';
 
 @Injectable()
 export class GetItemCategoryService {
+  /**
+   * @param {typeof ItemCategory} itemCategoryModel - Item category model.
+   */
   constructor(
     @Inject(ItemCategory.name)
     private readonly itemCategoryModel: typeof ItemCategory,
