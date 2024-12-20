@@ -35,6 +35,7 @@ import { AccountsModule } from '../Accounts/Accounts.module';
 import { ExpensesModule } from '../Expenses/Expenses.module';
 import { ItemCategoryModule } from '../ItemCategories/ItemCategory.module';
 import { TaxRatesModule } from '../TaxRates/TaxRate.module';
+import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 
 @Module({
   imports: [
@@ -92,7 +93,8 @@ import { TaxRatesModule } from '../TaxRates/TaxRate.module';
     ItemCategoryModule,
     AccountsModule,
     ExpensesModule,
-    TaxRatesModule
+    TaxRatesModule,
+    PdfTemplatesModule,
   ],
   controllers: [AppController],
   providers: [

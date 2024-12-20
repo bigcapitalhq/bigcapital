@@ -10,6 +10,7 @@ import { Expense } from '@/modules/Expenses/models/Expense.model';
 import ExpenseCategory from '@/modules/Expenses/models/ExpenseCategory.model';
 import { ItemCategory } from '@/modules/ItemCategories/models/ItemCategory.model';
 import { TaxRateModel } from '@/modules/TaxRates/models/TaxRate.model';
+import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
 
 const models = [
   Item,
@@ -19,7 +20,8 @@ const models = [
   Expense,
   ExpenseCategory,
   ItemCategory,
-  TaxRateModel
+  TaxRateModel,
+  PdfTemplateModel
 ];
 
 const modelProviders = models.map((model) => {
