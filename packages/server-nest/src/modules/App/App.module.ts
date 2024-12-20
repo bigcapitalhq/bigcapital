@@ -34,6 +34,7 @@ import { TransformerModule } from '../Transformer/Transformer.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { ExpensesModule } from '../Expenses/Expenses.module';
 import { ItemCategoryModule } from '../ItemCategories/ItemCategory.module';
+import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { ItemCategoryModule } from '../ItemCategories/ItemCategory.module';
     ItemCategoryModule,
     AccountsModule,
     ExpensesModule,
+    TaxRatesModule
   ],
   controllers: [AppController],
   providers: [
