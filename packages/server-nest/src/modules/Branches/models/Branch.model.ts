@@ -1,7 +1,7 @@
-import { Model, mixin } from 'objection';
-import TenantModel from 'models/TenantModel';
-import BranchMetadata from './Branch.settings';
-import ModelSetting from './ModelSetting';
+// import { Model, mixin } from 'objection';
+// import TenantModel from 'models/TenantModel';
+// import BranchMetadata from './Branch.settings';
+// import ModelSetting from './ModelSetting';
 import { BaseModel } from '@/models/Model';
 
 export class Branch extends BaseModel{
@@ -186,7 +186,7 @@ export class Branch extends BaseModel{
   /**
    * Model settings.
    */
-  static get meta() {
-    return BranchMetadata;
-  }
+  // static get meta() {
+  //   return BranchMetadata;
+  // }
 }

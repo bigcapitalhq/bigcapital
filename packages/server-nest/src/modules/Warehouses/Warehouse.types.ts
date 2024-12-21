@@ -38,7 +38,6 @@ export interface ICreateWarehouseDTO {
 export interface IEditWarehouseDTO {
   name: string;
   code: string;
-
   city: string;
   country: string;
   address: string;

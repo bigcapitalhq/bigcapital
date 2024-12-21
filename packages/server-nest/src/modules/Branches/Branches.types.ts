@@ -1,13 +1,9 @@
 import { Knex } from 'knex';
-
-export interface IBranch {
-  id?: number;
-}
+import { Branch } from './models/Branch.model';
 
 export interface ICreateBranchDTO {
   name: string;
   code: string;
-
   primary?: boolean;
 }
 export interface IEditBranchDTO {
@@ -15,7 +11,7 @@ export interface IEditBranchDTO {
 }
 
 export interface IBranchCreatePayload {
-  tenantId: number;
+  // tenantId: number;
   createBranchDTO: ICreateBranchDTO;
   trx: Knex.Transaction;
 }
@@ -33,18 +29,18 @@ export interface IBranchesActivatePayload {
 }
 export interface IBranchesActivatedPayload {
   // tenantId: number;
-  primaryBranch: IBranch;
+  primaryBranch: Branch;
   trx: Knex.Transaction;
 }
 
 export interface IBranchMarkAsPrimaryPayload {
   // tenantId: number;
-  oldBranch: IBranch;
+  oldBranch: Branch;
   trx: Knex.Transaction;
 }
 export interface IBranchMarkedAsPrimaryPayload {
   // tenantId: number;
-  oldBranch: IBranch;
-  markedBranch: IBranch;
+  oldBranch: Branch;
+  markedBranch: Branch;
   trx: Knex.Transaction;
 }

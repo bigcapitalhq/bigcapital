@@ -39,11 +39,10 @@ export class DeleteItemService {
     const oldItem = await this.itemModel
       .query()
       .findById(itemId)
-      .throwIfNotFound()
-      // @ts-expect-error
-      .queryAndThrowIfHasRelations({
-        type: ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTIONS,
-      });
+      .throwIfNotFound();
+      // .queryAndThrowIfHasRelations({
+      //   type: ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTIONS,
+      // });
 
     // Delete item in unit of work.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {

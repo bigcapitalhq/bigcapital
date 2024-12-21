@@ -1,4 +1,4 @@
-import { IBranch, ICreateBranchDTO, IEditBranchDTO } from './Branches.types';
+import { ICreateBranchDTO, IEditBranchDTO } from './Branches.types';
 import { ActivateBranches } from './commands/ActivateBranchesFeature.service';
 import {
   CreateBranchService,
@@ -39,7 +39,7 @@ export class BranchesApplication {
    * @param {number} branchId - Branch id.
    * @returns {Promise<IBranch>}
    */
-  public getBranch = (branchId: number): Promise<IBranch> => {
+  public getBranch = (branchId: number): Promise<Branch> => {
     return this.getBranchService.getBranch(branchId);
   };
 

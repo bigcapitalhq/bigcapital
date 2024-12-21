@@ -11,8 +11,8 @@ import { GetOrganizationBrandingAttributesService } from './queries/GetOrganizat
 export class PdfTemplateApplication {
   constructor(
     private readonly createPdfTemplateService: CreatePdfTemplateService,
-    private readonly deletePdfTemplateService: DeletePdfTemplateService,
     private readonly getPdfTemplateService: GetPdfTemplateService,
+    private readonly deletePdfTemplateService: DeletePdfTemplateService,
     // private readonly getPdfTemplatesService: GetPdfTemplatesService,
     private readonly editPdfTemplateService: EditPdfTemplateService,
     private readonly assignPdfTemplateDefaultService: AssignPdfTemplateDefaultService,

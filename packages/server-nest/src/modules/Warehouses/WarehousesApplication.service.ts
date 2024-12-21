@@ -3,7 +3,7 @@ import {
   IEditWarehouseDTO,
   IWarehouse,
 } from './Warehouse.types';
-import { ActivateWarehousesService } from './commands/ActivateWarehouses';
+import { ActivateWarehousesService } from './commands/ActivateWarehouses.service';
 import { CreateWarehouse } from './commands/CreateWarehouse.service';
 import { DeleteWarehouseService } from './commands/DeleteWarehouse.service';
 import { EditWarehouse } from './commands/EditWarehouse.service';
@@ -92,10 +92,7 @@ export class WarehousesApplication {
    * @param   {number} tenantId -
    * @returns {Promise<IWarehouse>}
    */
-  public markWarehousePrimary = (
-    tenantId: number,
-    warehouseId: number,
-  ): Promise<IWarehouse> => {
+  public markWarehousePrimary = (warehouseId: number): Promise<IWarehouse> => {
     return this.markWarehousePrimaryService.markAsPrimary(warehouseId);
   };
 

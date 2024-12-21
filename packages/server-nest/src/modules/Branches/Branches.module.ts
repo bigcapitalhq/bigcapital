@@ -11,6 +11,8 @@ import { GetBranchService } from './queries/GetBranch.service';
 import { GetBranchesService } from './queries/GetBranches.service';
 import { ActivateBranches } from './commands/ActivateBranchesFeature.service';
 import { BranchesApplication } from './BranchesApplication.service';
+import { BranchesSettingsService } from './BranchesSettings';
+import { BranchCommandValidator } from './commands/BranchCommandValidator.service';
 
 @Module({
   imports: [TenancyDatabaseModule],
@@ -24,8 +26,10 @@ import { BranchesApplication } from './BranchesApplication.service';
     MarkBranchAsPrimaryService,
     ActivateBranches,
     BranchesApplication,
+    BranchesSettingsService,
     TenancyContext,
     TransformerInjectable,
+    BranchCommandValidator
   ],
 })
 export class BranchesModule {}

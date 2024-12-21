@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import { IBranchDeletedPayload, IBranchDeletePayload } from './Branch.types';
+import { IBranchDeletedPayload, IBranchDeletePayload } from '../Branches.types';
 import { BranchCommandValidator } from './BranchCommandValidator.service';
 import { ERRORS } from '../constants';
 import { Branch } from '../models/Branch.model';
@@ -37,10 +37,10 @@ export class DeleteBranchService {
     const oldBranch = await this.branchModel
       .query()
       .findById(branchId)
-      .throwIfNotFound()
-      .queryAndThrowIfHasRelations({
-        type: ERRORS.BRANCH_HAS_ASSOCIATED_TRANSACTIONS,
-      });
+      .throwIfNotFound();
+      // .queryAndThrowIfHasRelations({
+      //   type: ERRORS.BRANCH_HAS_ASSOCIATED_TRANSACTIONS,
+      // });
 
     // Authorize the branch before deleting.
     await this.authorize(branchId);

@@ -2,6 +2,7 @@ import * as F from 'fp-ts/function';
 import * as R from 'ramda';
 import { SearchableModel } from '@/modules/Search/SearchableMdel';
 import { BaseModel } from '@/models/Model';
+import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 // import { TenantModel } from '@/modules/System/models/TenantModel';
 
 // const Extend = R.compose(SearchableModel)(TenantModel);
@@ -20,6 +21,8 @@ export class Item extends BaseModel {
   public readonly costAccountId: number;
   public readonly inventoryAccountId: number;
   public readonly categoryId: number;
+
+  public readonly warehouse!: Warehouse;
 
   static get tableName() {
     return 'items';

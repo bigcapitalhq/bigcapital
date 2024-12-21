@@ -11,6 +11,9 @@ import ExpenseCategory from '@/modules/Expenses/models/ExpenseCategory.model';
 import { ItemCategory } from '@/modules/ItemCategories/models/ItemCategory.model';
 import { TaxRateModel } from '@/modules/TaxRates/models/TaxRate.model';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
+import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
+import { ItemWarehouseQuantity } from '@/modules/Warehouses/models/ItemWarehouseQuantity';
+import { Branch } from '@/modules/Branches/models/Branch.model';
 
 const models = [
   Item,
@@ -21,7 +24,10 @@ const models = [
   ExpenseCategory,
   ItemCategory,
   TaxRateModel,
-  PdfTemplateModel
+  PdfTemplateModel,
+  Warehouse,
+  ItemWarehouseQuantity,
+  Branch,
 ];
 
 const modelProviders = models.map((model) => {

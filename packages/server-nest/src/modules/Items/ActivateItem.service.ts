@@ -1,9 +1,9 @@
+import { Knex } from 'knex';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Inject, Injectable } from '@nestjs/common';
 import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
-import { Knex } from 'knex';
 
 @Injectable()
 export class ActivateItemService {

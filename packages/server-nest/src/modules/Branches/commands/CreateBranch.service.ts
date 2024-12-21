@@ -5,7 +5,6 @@ import {
   IBranchCreatePayload,
   ICreateBranchDTO,
 } from '../Branches.types';
-import { BranchCommandValidator } from './BranchCommandValidator.service';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Branch } from '../models/Branch.model';
@@ -13,10 +12,14 @@ import { events } from '@/common/events/events';
 
 @Injectable()
 export class CreateBranchService {
+  /**
+   * @param {UnitOfWork} uow - Unit of Work for tenant database transactions.
+   * @param {EventEmitter2} eventPublisher - Event emitter for publishing branch creation events.
+   * @param {typeof Branch} branchModel - The Branch model class for database operations.
+   */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
-    private readonly validator: BranchCommandValidator,
 
     @Inject(Branch.name)
     private readonly branchModel: typeof Branch,

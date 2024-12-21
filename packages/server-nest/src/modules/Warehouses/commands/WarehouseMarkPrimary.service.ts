@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import {
   IWarehouseMarkAsPrimaryPayload,
@@ -12,6 +12,7 @@ import { events } from '@/common/events/events';
 @Injectable()
 export class WarehouseMarkPrimary {
   constructor(
+    @Inject(Warehouse.name)
     private readonly warehouseModel: typeof Warehouse,
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,

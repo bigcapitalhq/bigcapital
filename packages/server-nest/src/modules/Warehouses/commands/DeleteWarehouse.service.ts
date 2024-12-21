@@ -47,10 +47,10 @@ export class DeleteWarehouseService {
     const oldWarehouse = await this.warehouseModel
       .query()
       .findById(warehouseId)
-      .throwIfNotFound()
-      .queryAndThrowIfHasRelations({
-        type: ERRORS.WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS,
-      });
+      .throwIfNotFound();
+    // .queryAndThrowIfHasRelations({
+    //   type: ERRORS.WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS,
+    // });
 
     // Validates the given warehouse before deleting.
     await this.authorize(warehouseId);

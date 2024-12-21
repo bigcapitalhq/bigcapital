@@ -47,7 +47,7 @@ export class EditWarehouse {
   public editWarehouse = async (
     warehouseId: number,
     warehouseDTO: IEditWarehouseDTO,
-  ): Promise<IWarehouse> => {
+  ): Promise<Warehouse> => {
     // Authorize the warehouse DTO before editing.
     await this.authorize(warehouseDTO, warehouseId);
 

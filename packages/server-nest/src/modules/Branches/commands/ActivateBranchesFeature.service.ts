@@ -8,7 +8,7 @@ import {
   IBranchesActivatePayload,
 } from '../Branches.types';
 import { CreateBranchService } from './CreateBranch.service';
-import { BranchesSettings } from '../BranchesSettings';
+import { BranchesSettingsService } from '../BranchesSettings';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Branch } from '../models/Branch.model';
@@ -20,7 +20,7 @@ export class ActivateBranches {
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
     private readonly createBranch: CreateBranchService,
-    private readonly branchesSettings: BranchesSettings,
+    private readonly branchesSettings: BranchesSettingsService,
     private readonly i18n: I18nService,
 
     @Inject(Branch.name)

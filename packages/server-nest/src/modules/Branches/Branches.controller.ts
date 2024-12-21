@@ -9,8 +9,10 @@ import {
 } from '@nestjs/common';
 import { BranchesApplication } from './BranchesApplication.service';
 import { ICreateBranchDTO, IEditBranchDTO } from './Branches.types';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('branches')
+@PublicRoute()
 export class BranchesController {
   constructor(private readonly branchesApplication: BranchesApplication) {}
 

@@ -129,7 +129,7 @@ export interface IItemEditDTO extends IItemDTO {}
 // }
 
 export interface IItemEventCreatedPayload {
-  tenantId: number;
+  // tenantId: number;
   item: Item;
   itemId: number;
   trx: Knex.Transaction;
@@ -143,15 +143,15 @@ export interface IItemEventEditedPayload {
 }
 
 export interface IItemEventDeletingPayload {
-  tenantId: number;
+  // tenantId: number;
   trx: Knex.Transaction;
-  oldItem: IItem;
+  oldItem: Item;
 }
 
 export interface IItemEventDeletedPayload {
-  tenantId: number;
-  oldItem: IItem;
+  // tenantId: number;
   itemId: number;
+  oldItem: Item;
   trx: Knex.Transaction;
 }
 

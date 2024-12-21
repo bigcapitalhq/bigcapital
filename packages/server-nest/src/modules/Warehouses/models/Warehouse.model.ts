@@ -1,22 +1,16 @@
 // import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
+import { Item } from '@/modules/Items/models/Item';
 
 export class Warehouse extends BaseModel {
-  date!: Date;
-
-  fromWarehouseId!: number;
-  toWarehouseId!: number;
-
-  reason!: string;
-  transactionNumber!: string;
-
-  transferInitiatedAt!: Date;
-  transferDeliveredAt!: Date;
-
-  isInitiated!: boolean;
-  isTransferred!: boolean;
-
+  name!: string;
+  code!: string;
+  city!: string;
+  country!: string;
+  address!: string;
   primary!: boolean;
+
+  items!: Item[];
 
   /**
    * Table name.

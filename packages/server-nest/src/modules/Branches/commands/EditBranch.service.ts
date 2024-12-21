@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import {
   IBranchEditedPayload,
@@ -13,6 +13,7 @@ import { events } from '@/common/events/events';
 @Injectable()
 export class EditBranchService {
   constructor(
+    @Inject(Branch.name)
     private readonly branchModel: typeof Branch,
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
