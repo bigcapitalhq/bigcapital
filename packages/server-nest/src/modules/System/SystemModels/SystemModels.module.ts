@@ -11,7 +11,6 @@ import { TenantMetadata } from '../models/TenantMetadataModel';
 const models = [SystemUser, PlanSubscription, TenantModel, TenantMetadata];
 
 const modelProviders = models.map((model) => {
-  console.log(model.name, model, 'model.name');
   return {
     provide: model.name,
     useValue: model,

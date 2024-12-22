@@ -1,11 +1,10 @@
+import { Injectable, Inject } from '@nestjs/common';
+import { Knex } from 'knex';
 import { sumBy, difference, map } from 'lodash';
-import { Inject, Service } from 'typedi';
 import { IItemEntry, IItemEntryDTO, IItem } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { ItemEntry } from '@/models';
+import { Item, ItemEntry } from '@/models';
 import { entriesAmountDiff } from 'utils';
-import { Knex } from 'knex';
 
 const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -14,38 +13,36 @@ const ERRORS = {
   NOT_SELL_ABLE_ITEMS: 'NOT_SELL_ABLE_ITEMS',
 };
 
-@Service()
+@Injectable()
 export default class ItemsEntriesService {
-  @Inject()
-  private tenancy: TenancyService;
+  constructor(
+    @Inject(Item.name)
+    private readonly itemModel: typeof Item,
+    @Inject(ItemEntry.name)
+    private readonly itemEntryModel: typeof ItemEntry,
+    private readonly itemRepository: any, // Replace 'any' with proper repository type
+  ) {}
 
   /**
    * Retrieve the inventory items entries of the reference id and type.
-   * @param {number} tenantId
    * @param {string} referenceType
    * @param {string} referenceId
    * @return {Promise<IItemEntry[]>}
    */
   public async getInventoryEntries(
-    tenantId: number,
     referenceType: string,
     referenceId: number
   ): Promise<IItemEntry[]> {
-    const { Item, ItemEntry } = this.tenancy.models(tenantId);
-
-    const itemsEntries = await ItemEntry.query()
+    const itemsEntries = await this.itemEntryModel.query()
       .where('reference_type', referenceType)
       .where('reference_id', referenceId);
 
-    // Inventory items.
-    const inventoryItems = await Item.query()
+    const inventoryItems = await this.itemModel.query()
       .whereIn('id', map(itemsEntries, 'itemId'))
       .where('type', 'inventory');
 
-    // Inventory items ids.
     const inventoryItemsIds = map(inventoryItems, 'id');
 
-    // Filtering the inventory items entries.
     const inventoryItemsEntries = itemsEntries.filter(
       (itemEntry) => inventoryItemsIds.indexOf(itemEntry.itemId) !== -1
     );
@@ -58,15 +55,12 @@ export default class ItemsEntriesService {
    * @returns {IItemEntry[]}
    */
   public async filterInventoryEntries(
-    tenantId: number,
     entries: IItemEntry[],
     trx?: Knex.Transaction
   ): Promise<IItemEntry[]> {
-    const { Item } = this.tenancy.models(tenantId);
     const entriesItemsIds = entries.map((e) => e.itemId);
 
-    // Retrieve entries inventory items.
-    const inventoryItems = await Item.query(trx)
+    const inventoryItems = await this.itemModel.query(trx)
       .whereIn('id', entriesItemsIds)
       .where('type', 'inventory');
 
@@ -79,17 +73,14 @@ export default class ItemsEntriesService {
   /**
    * Validates the entries items ids.
    * @async
-   * @param {number} tenantId -
-   * @param {IItemEntryDTO} itemEntries -
+   * @param {IItemEntryDTO[]} itemEntries -
    */
   public async validateItemsIdsExistance(
-    tenantId: number,
     itemEntries: IItemEntryDTO[]
   ) {
-    const { Item } = this.tenancy.models(tenantId);
     const itemsIds = itemEntries.map((e) => e.itemId);
 
-    const foundItems = await Item.query().whereIn('id', itemsIds);
+    const foundItems = await this.itemModel.query().whereIn('id', itemsIds);
 
     const foundItemsIds = foundItems.map((item: IItem) => item.id);
     const notFoundItemsIds = difference(itemsIds, foundItemsIds);
@@ -102,22 +93,19 @@ export default class ItemsEntriesService {
 
   /**
    * Validates the entries ids existance on the storage.
-   * @param {number} tenantId -
    * @param {number} billId -
    * @param {IItemEntry[]} billEntries -
    */
   public async validateEntriesIdsExistance(
-    tenantId: number,
     referenceId: number,
     referenceType: string,
     billEntries: IItemEntryDTO[]
   ) {
-    const { ItemEntry } = this.tenancy.models(tenantId);
     const entriesIds = billEntries
       .filter((e: IItemEntry) => e.id)
       .map((e: IItemEntry) => e.id);
 
-    const storedEntries = await ItemEntry.query()
+    const storedEntries = await this.itemEntryModel.query()
       .whereIn('reference_id', [referenceId])
       .whereIn('reference_type', [referenceType]);
 
@@ -133,13 +121,11 @@ export default class ItemsEntriesService {
    * Validate the entries items that not purchase-able.
    */
   public async validateNonPurchasableEntriesItems(
-    tenantId: number,
     itemEntries: IItemEntryDTO[]
   ) {
-    const { Item } = this.tenancy.models(tenantId);
     const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
 
-    const purchasbleItems = await Item.query()
+    const purchasbleItems = await this.itemModel.query()
       .where('purchasable', true)
       .whereIn('id', itemsIds);
 
@@ -155,13 +141,11 @@ export default class ItemsEntriesService {
    * Validate the entries items that not sell-able.
    */
   public async validateNonSellableEntriesItems(
-    tenantId: number,
     itemEntries: IItemEntryDTO[]
   ) {
-    const { Item } = this.tenancy.models(tenantId);
     const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
 
-    const sellableItems = await Item.query()
+    const sellableItems = await this.itemModel.query()
       .where('sellable', true)
       .whereIn('id', itemsIds);
 
@@ -175,16 +159,13 @@ export default class ItemsEntriesService {
 
   /**
    * Changes items quantity from the given items entries the new and old onces.
-   * @param {number} tenantId
-   * @param {IItemEntry} entries - Items entries.
-   * @param {IItemEntry} oldEntries - Old items entries.
+   * @param {IItemEntry[]} entries - Items entries.
+   * @param {IItemEntry[]} oldEntries - Old items entries.
    */
   public async changeItemsQuantity(
-    tenantId: number,
     entries: IItemEntry[],
     oldEntries?: IItemEntry[]
   ): Promise<void> {
-    const { itemRepository } = this.tenancy.repositories(tenantId);
     const opers = [];
 
     const diffEntries = entriesAmountDiff(
@@ -194,7 +175,7 @@ export default class ItemsEntriesService {
       'itemId'
     );
     diffEntries.forEach((entry: IItemEntry) => {
-      const changeQuantityOper = itemRepository.changeNumber(
+      const changeQuantityOper = this.itemRepository.changeNumber(
         { id: entry.itemId, type: 'inventory' },
         'quantityOnHand',
         entry.quantity
@@ -206,27 +187,22 @@ export default class ItemsEntriesService {
 
   /**
    * Increment items quantity from the given items entries.
-   * @param {number} tenantId - Tenant id.
-   * @param {IItemEntry} entries - Items entries.
+   * @param {IItemEntry[]} entries - Items entries.
    */
   public async incrementItemsEntries(
-    tenantId: number,
     entries: IItemEntry[]
   ): Promise<void> {
-    return this.changeItemsQuantity(tenantId, entries);
+    return this.changeItemsQuantity(entries);
   }
 
   /**
    * Decrement items quantity from the given items entries.
-   * @param {number} tenantId - Tenant id.
-   * @param {IItemEntry} entries - Items entries.
+   * @param {IItemEntry[]} entries - Items entries.
    */
   public async decrementItemsQuantity(
-    tenantId: number,
     entries: IItemEntry[]
   ): Promise<void> {
     return this.changeItemsQuantity(
-      tenantId,
       entries.map((entry) => ({
         ...entry,
         quantity: entry.quantity * -1,
@@ -237,12 +213,10 @@ export default class ItemsEntriesService {
   /**
    * Sets the cost/sell accounts to the invoice entries.
    */
-  public setItemsEntriesDefaultAccounts(tenantId: number) {
-    return async (entries: IItemEntry[]) =>   {
-      const { Item } = this.tenancy.models(tenantId);
-
+  public setItemsEntriesDefaultAccounts() {
+    return async (entries: IItemEntry[]) => {
       const entriesItemsIds = entries.map((e) => e.itemId);
-      const items = await Item.query().whereIn('id', entriesItemsIds);
+      const items = await this.itemModel.query().whereIn('id', entriesItemsIds);
 
       return entries.map((entry) => {
         const item = items.find((i) => i.id === entry.itemId);

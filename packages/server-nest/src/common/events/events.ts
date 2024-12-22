@@ -213,6 +213,8 @@ export const events = {
     onPreMailSend: 'onSaleEstimatePreMailSend',
     onMailSend: 'onSaleEstimateMailSend',
     onMailSent: 'onSaleEstimateMailSend',
+
+    onViewed: 'onSaleEstimateViewed',
   },
 
   /**

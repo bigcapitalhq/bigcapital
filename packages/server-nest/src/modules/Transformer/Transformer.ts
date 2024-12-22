@@ -7,8 +7,8 @@ import { TransformerContext } from './Transformer.types';
 
 const EXPORT_DTE_FORMAT = 'YYYY-MM-DD';
 
-export class Transformer {
-  public context: TransformerContext;
+export class Transformer<T = {}, ExtraContext = {}> {
+  public context: ExtraContext & TransformerContext;
   public options: Record<string, any>;
 
   /**
@@ -88,7 +88,7 @@ export class Transformer {
       // sortObjectKeysAlphabetically,
       this.transform,
       R.when(this.hasExcludeAttributes, this.excludeAttributesTransformed),
-      this.includeAttributesTransformed
+      this.includeAttributesTransformed,
     )(normlizedItem);
   };
 
@@ -119,7 +119,7 @@ export class Transformer {
     return attributes
       .filter(
         (attribute) =>
-          isFunction(this[attribute]) || !isUndefined(item[attribute])
+          isFunction(this[attribute]) || !isUndefined(item[attribute]),
       )
       .reduce((acc, attribute: string) => {
         acc[attribute] = isFunction(this[attribute])
@@ -216,7 +216,7 @@ export class Transformer {
   public item(
     obj: Record<string, any>,
     transformer: Transformer,
-    options?: any
+    options?: any,
   ) {
     transformer.setOptions(options);
     transformer.setContext(this.context);

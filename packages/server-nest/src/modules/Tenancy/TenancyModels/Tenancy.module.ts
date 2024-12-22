@@ -14,6 +14,9 @@ import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { ItemWarehouseQuantity } from '@/modules/Warehouses/models/ItemWarehouseQuantity';
 import { Branch } from '@/modules/Branches/models/Branch.model';
+import { SaleEstimate } from '@/modules/SaleEstimates/models/SaleEstimate';
+import { Customer } from '@/modules/Customers/models/Customer';
+import { Contact } from '@/modules/Contacts/models/Contact';
 
 const models = [
   Item,
@@ -28,6 +31,9 @@ const models = [
   Warehouse,
   ItemWarehouseQuantity,
   Branch,
+  SaleEstimate,
+  Customer,
+  Contact
 ];
 
 const modelProviders = models.map((model) => {

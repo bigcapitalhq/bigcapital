@@ -38,6 +38,8 @@ import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
+import { SaleEstimatesModule } from '../SaleEstimates/SaleEstimates.module';
+import { SerializeInterceptor } from '@/common/interceptors/serialize.interceptor';
 
 @Module({
   imports: [
@@ -99,9 +101,14 @@ import { WarehousesModule } from '../Warehouses/Warehouses.module';
     PdfTemplatesModule,
     BranchesModule,
     WarehousesModule,
+    SaleEstimatesModule,
   ],
   controllers: [AppController],
   providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SerializeInterceptor,
+    },
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

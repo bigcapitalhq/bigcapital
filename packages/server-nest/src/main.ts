@@ -3,6 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ClsMiddleware } from 'nestjs-cls';
 import { AppModule } from './modules/App/App.module';
 import './utils/moment-mysql';
+import { ServiceErrorFilter } from './common/filters/service-error.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +21,8 @@ async function bootstrap() {
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);
+
+  app.useGlobalFilters(new ServiceErrorFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }

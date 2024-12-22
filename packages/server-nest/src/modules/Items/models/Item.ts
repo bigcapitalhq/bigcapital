@@ -21,6 +21,13 @@ export class Item extends BaseModel {
   public readonly costAccountId: number;
   public readonly inventoryAccountId: number;
   public readonly categoryId: number;
+  public readonly pictureUri: string;
+  public readonly sellAccountId: number;
+  public readonly sellDescription: string;
+  public readonly purchaseDescription: string;
+  public readonly landedCost: boolean;
+  public readonly note: string;
+  public readonly userId: number;
 
   public readonly warehouse!: Warehouse;
 
