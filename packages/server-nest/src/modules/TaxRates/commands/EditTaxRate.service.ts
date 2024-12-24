@@ -14,6 +14,12 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class EditTaxRateService {
+  /**
+   * @param {EventEmitter2} eventEmitter - The event emitter.
+   * @param {UnitOfWork} uow - The unit of work.
+   * @param {CommandTaxRatesValidators} validators - The tax rates validators.
+   * @param {typeof TaxRateModel} taxRateModel - The tax rate model.
+   */
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
@@ -73,6 +79,12 @@ export class EditTaxRateService {
     }
   }
 
+  /**
+   * Edits the given tax rate.
+   * @param {number} taxRateId - The tax rate id.
+   * @param {IEditTaxRateDTO} editTaxRateDTO - The tax rate data to edit.
+   * @returns {Promise<ITaxRate>}
+   */
   public async editTaxRate(
     taxRateId: number,
     editTaxRateDTO: IEditTaxRateDTO

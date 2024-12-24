@@ -23,6 +23,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   public writtenoffAt: Date;
   public dueDate: Date;
   public deliveredAt: Date;
+  public pdfTemplateId: number;
 
   /**
    * Table name

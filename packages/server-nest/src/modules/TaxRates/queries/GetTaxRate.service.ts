@@ -6,6 +6,11 @@ import { CommandTaxRatesValidators } from '../commands/CommandTaxRatesValidator.
 
 @Injectable()
 export class GetTaxRateService {
+  /**
+   * @param {typeof TaxRateModel} taxRateModel - The tax rate model.
+   * @param {CommandTaxRatesValidators} validators - The tax rates validators.
+   * @param {TransformerInjectable} transformer - The transformer.
+   */
   constructor(
     @Inject(TaxRateModel.name)
     private readonly taxRateModel: typeof TaxRateModel,

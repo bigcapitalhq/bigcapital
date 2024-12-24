@@ -29,7 +29,6 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from '../Auth/Jwt.guard';
 import { UserIpInterceptor } from '@/interceptors/user-ip.interceptor';
 import { TenancyGlobalMiddleware } from '../Tenancy/TenancyGlobal.middleware';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { TransformerModule } from '../Transformer/Transformer.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { ExpensesModule } from '../Expenses/Expenses.module';
@@ -40,6 +39,11 @@ import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { SaleEstimatesModule } from '../SaleEstimates/SaleEstimates.module';
 import { SerializeInterceptor } from '@/common/interceptors/serialize.interceptor';
+import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
+import { CustomersModule } from '../Customers/Customers.module';
+import { VendorsModule } from '../Vendors/Vendors.module';
+import { BillsModule } from '../Bills/Bills.module';
+import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
 
 @Module({
   imports: [
@@ -93,6 +97,8 @@ import { SerializeInterceptor } from '@/common/interceptors/serialize.intercepto
     }),
     TenancyDatabaseModule,
     TenancyModelsModule,
+    ChromiumlyTenancyModule,
+    TransformerModule,
     ItemsModule,
     ItemCategoryModule,
     AccountsModule,
@@ -101,7 +107,11 @@ import { SerializeInterceptor } from '@/common/interceptors/serialize.intercepto
     PdfTemplatesModule,
     BranchesModule,
     WarehousesModule,
+    CustomersModule,
+    VendorsModule,
     SaleEstimatesModule,
+    BillsModule,
+    BillPaymentsModule,
   ],
   controllers: [AppController],
   providers: [

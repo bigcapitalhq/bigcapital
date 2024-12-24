@@ -12,6 +12,12 @@ import { events } from '@/common/events/events';
 
 @Injectable()
 export class ActivateTaxRateService {
+  /**
+   * @param {EventEmitter2} eventEmitter - The event emitter.
+   * @param {UnitOfWork} uow - The unit of work.
+   * @param {CommandTaxRatesValidators} validators - The tax rates validators.
+   * @param {typeof TaxRateModel} taxRateModel - The tax rate model.
+   */
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,

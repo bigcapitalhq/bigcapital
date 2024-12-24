@@ -28,8 +28,9 @@ export class Customer extends BaseModel{
   currencyCode: string;
 
   openingBalance: number;
-  openingBalanceAt: Date;
+  openingBalanceAt: Date | string;
   openingBalanceExchangeRate: number;
+  openingBalanceBranchId?: number;
 
   salutation?: string;
   firstName?: string;

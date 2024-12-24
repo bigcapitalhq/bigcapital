@@ -9,6 +9,9 @@ export class ItemEntry extends BaseModel {
   public quantity: number;
   public rate: number;
   public isInclusiveTax: number;
+  public itemId: number;
+  public costAccountId: number;
+  public taxRateId: number;
 
   /**
    * Table name.

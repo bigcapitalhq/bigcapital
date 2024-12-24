@@ -17,6 +17,9 @@ import { Branch } from '@/modules/Branches/models/Branch.model';
 import { SaleEstimate } from '@/modules/SaleEstimates/models/SaleEstimate';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { Contact } from '@/modules/Contacts/models/Contact';
+import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
+import { DocumentLink } from '@/modules/ChromiumlyTenancy/models/DocumentLink';
+import { Vendor } from '@/modules/Vendors/models/Vendor';
 
 const models = [
   Item,
@@ -33,7 +36,10 @@ const models = [
   Branch,
   SaleEstimate,
   Customer,
-  Contact
+  Contact,
+  Document,
+  DocumentLink,
+  Vendor
 ];
 
 const modelProviders = models.map((model) => {

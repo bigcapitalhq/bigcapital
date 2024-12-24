@@ -213,23 +213,21 @@ export class ItemsEntriesService {
   /**
    * Sets the cost/sell accounts to the invoice entries.
    */
-  public setItemsEntriesDefaultAccounts() {
-    return async (entries: ItemEntry[]) => {
-      const entriesItemsIds = entries.map((e) => e.itemId);
-      const items = await this.itemModel.query().whereIn('id', entriesItemsIds);
+  public async setItemsEntriesDefaultAccounts(entries: ItemEntry[]) {
+    const entriesItemsIds = entries.map((e) => e.itemId);
+    const items = await this.itemModel.query().whereIn('id', entriesItemsIds);
 
-      return entries.map((entry) => {
-        const item = items.find((i) => i.id === entry.itemId);
+    return entries.map((entry) => {
+      const item = items.find((i) => i.id === entry.itemId);
 
-        return {
-          ...entry,
-          sellAccountId: entry.sellAccountId || item.sellAccountId,
-          ...(item.type === 'inventory' && {
-            costAccountId: entry.costAccountId || item.costAccountId,
-          }),
-        };
-      });
-    };
+      return {
+        ...entry,
+        sellAccountId: entry.sellAccountId || item.sellAccountId,
+        ...(item.type === 'inventory' && {
+          costAccountId: entry.costAccountId || item.costAccountId,
+        }),
+      };
+    });
   }
 
   /**

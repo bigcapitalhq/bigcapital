@@ -9,6 +9,9 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 
 @Injectable()
 export class CommandTaxRatesValidators {
+  /**
+   * @param {typeof TaxRateModel} taxRateModel - The tax rate model.
+   */
   constructor(
     @Inject(TaxRateModel.name)
     private readonly taxRateModel: typeof TaxRateModel,

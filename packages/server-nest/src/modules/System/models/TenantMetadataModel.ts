@@ -1,9 +1,9 @@
-// import {
-//   defaultOrganizationAddressFormat,
-//   organizationAddressTextFormat,
-// } from '@/utils/address-text-format';
 import { BaseModel } from '@/models/Model';
-// import { findByIsoCountryCode } from '@bigcapital/utils';
+import {
+  defaultOrganizationAddressFormat,
+  organizationAddressTextFormat,
+} from '@/utils/address-text-format';
+import { findByIsoCountryCode } from '@bigcapital/utils';
 // import { getUploadedObjectUri } from '../../services/Attachments/utils';
 
 export class TenantMetadata extends BaseModel {
@@ -56,30 +56,30 @@ export class TenantMetadata extends BaseModel {
     return ['logoUri'];
   }
 
-  // /**
-  //  * Organization logo url.
-  //  * @returns {string | null}
-  //  */
+  /**
+   * Organization logo url.
+   * @returns {string | null}
+   */
   // public get logoUri() {
-  //   return this.logoKey ? getUploadedObjectUri(this.logoKey) : null;
+  // return this.logoKey ? getUploadedObjectUri(this.logoKey) : null;
   // }
 
   // /**
   //  * Retrieves the organization address formatted text.
   //  * @returns {string}
   //  */
-  // public get addressTextFormatted() {
-  //   const addressCountry = findByIsoCountryCode(this.location);
+  public get addressTextFormatted() {
+    const addressCountry = findByIsoCountryCode(this.location);
 
-  //   return organizationAddressTextFormat(defaultOrganizationAddressFormat, {
-  //     organizationName: this.name,
-  //     address1: this.address?.address1,
-  //     address2: this.address?.address2,
-  //     state: this.address?.stateProvince,
-  //     city: this.address?.city,
-  //     postalCode: this.address?.postalCode,
-  //     phone: this.address?.phone,
-  //     country: addressCountry?.name ?? '',
-  //   });
-  // }
+    return organizationAddressTextFormat(defaultOrganizationAddressFormat, {
+      organizationName: this.name,
+      address1: this.address?.address1,
+      address2: this.address?.address2,
+      state: this.address?.stateProvince,
+      city: this.address?.city,
+      postalCode: this.address?.postalCode,
+      phone: this.address?.phone,
+      country: addressCountry?.name ?? '',
+    });
+  }
 }
