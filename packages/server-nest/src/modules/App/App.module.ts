@@ -45,6 +45,7 @@ import { SaleEstimatesModule } from '../SaleEstimates/SaleEstimates.module';
 import { BillsModule } from '../Bills/Bills.module';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
 import { SaleReceiptsModule } from '../SaleReceipts/SaleReceipts.module';
+import { ManualJournalsModule } from '../ManualJournals/ManualJournals.module';
 // import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
 
 @Module({
@@ -115,6 +116,7 @@ import { SaleReceiptsModule } from '../SaleReceipts/SaleReceipts.module';
     SaleEstimatesModule,
     SaleReceiptsModule,
     BillsModule,
+    ManualJournalsModule
     // BillPaymentsModule,
   ],
   controllers: [AppController],

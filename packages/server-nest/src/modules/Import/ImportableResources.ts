@@ -6,7 +6,7 @@ import { CustomersImportable } from '../Contacts/Customers/CustomersImportable';
 import { VendorsImportable } from '../Contacts/Vendors/VendorsImportable';
 import { ItemsImportable } from '../Items/ItemsImportable';
 import { ItemCategoriesImportable } from '../ItemCategories/ItemCategoriesImportable';
-import { ManualJournalImportable } from '../ManualJournals/ManualJournalsImport';
+import { ManualJournalImportable } from '../ManualJournals/commands/ManualJournalsImport';
 import { BillsImportable } from '../Purchases/Bills/BillsImportable';
 import { ExpensesImportable } from '../Expenses/ExpensesImportable';
 import { SaleInvoicesImportable } from '../Sales/Invoices/SaleInvoicesImportable';

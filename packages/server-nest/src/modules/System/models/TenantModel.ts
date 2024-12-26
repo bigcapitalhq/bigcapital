@@ -8,7 +8,7 @@ export class TenantModel extends BaseModel {
   public readonly initializedAt: string;
   public readonly seededAt: boolean;
   public readonly builtAt: string;
-  public readonly metadata: any;
+  public readonly metadata: TenantMetadata;
 
   /**
    * Table name.

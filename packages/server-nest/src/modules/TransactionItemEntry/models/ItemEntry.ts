@@ -1,4 +1,3 @@
-import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
 import {
   getExlusiveTaxAmount,

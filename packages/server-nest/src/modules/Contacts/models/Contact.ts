@@ -132,13 +132,13 @@ export class Contact extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const SaleEstimate = require('models/SaleEstimate');
-    const SaleReceipt = require('models/SaleReceipt');
-    const SaleInvoice = require('models/SaleInvoice');
-    const PaymentReceive = require('models/PaymentReceive');
-    const Bill = require('models/Bill');
-    const BillPayment = require('models/BillPayment');
-    const AccountTransaction = require('models/AccountTransaction');
+    const { SaleEstimate } = require('../../SaleEstimates/models/SaleEstimate');
+    const { SaleReceipt } = require('../../SaleReceipts/models/SaleReceipt');
+    const { SaleInvoice } = require('../../SaleInvoices/models/SaleInvoice');
+    const { PaymentReceived } = require('../../PaymentReceived/models/PaymentReceived');
+    const { Bill } = require('../../Bills/models/Bill');
+    const { BillPayment } = require('../../BillPayments/models/BillPayment');
+    const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
 
     return {
       /**
@@ -146,7 +146,7 @@ export class Contact extends BaseModel {
        */
       salesInvoices: {
         relation: Model.HasManyRelation,
-        modelClass: SaleInvoice.default,
+        modelClass: SaleInvoice,
         join: {
           from: 'contacts.id',
           to: 'sales_invoices.customerId',
@@ -158,7 +158,7 @@ export class Contact extends BaseModel {
        */
       salesEstimates: {
         relation: Model.HasManyRelation,
-        modelClass: SaleEstimate.default,
+        modelClass: SaleEstimate,
         join: {
           from: 'contacts.id',
           to: 'sales_estimates.customerId',
@@ -170,7 +170,7 @@ export class Contact extends BaseModel {
        */
       salesReceipts: {
         relation: Model.HasManyRelation,
-        modelClass: SaleReceipt.default,
+        modelClass: SaleReceipt,
         join: {
           from: 'contacts.id',
           to: 'sales_receipts.customerId',
@@ -182,7 +182,7 @@ export class Contact extends BaseModel {
        */
       paymentReceives: {
         relation: Model.HasManyRelation,
-        modelClass: PaymentReceive.default,
+        modelClass: PaymentReceived,
         join: {
           from: 'contacts.id',
           to: 'payment_receives.customerId',
@@ -194,7 +194,7 @@ export class Contact extends BaseModel {
        */
       bills: {
         relation: Model.HasManyRelation,
-        modelClass: Bill.default,
+        modelClass: Bill,
         join: {
           from: 'contacts.id',
           to: 'bills.vendorId',
@@ -206,7 +206,7 @@ export class Contact extends BaseModel {
        */
       billPayments: {
         relation: Model.HasManyRelation,
-        modelClass: BillPayment.default,
+        modelClass: BillPayment,
         join: {
           from: 'contacts.id',
           to: 'bills_payments.vendorId',
@@ -218,7 +218,7 @@ export class Contact extends BaseModel {
        */
       accountsTransactions: {
         relation: Model.HasManyRelation,
-        modelClass: AccountTransaction.default,
+        modelClass: AccountTransaction,
         join: {
           from: 'contacts.id',
           to: 'accounts_transactions.contactId',

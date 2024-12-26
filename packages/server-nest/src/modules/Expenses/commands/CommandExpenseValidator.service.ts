@@ -30,9 +30,9 @@ export class CommandExpenseValidator {
   /**
    * Retrieve expense accounts or throw error in case one of the given accounts
    * not found not the storage.
-   * @param   {number} tenantId
-   * @param   {number} expenseAccountsIds
-   * @throws  {ServiceError}
+   * @param {Array<Account>} tenantId
+   * @param {number} expenseAccountsIds
+   * @throws {ServiceError}
    * @returns {Promise<IAccount[]>}
    */
   public validateExpensesAccountsExistance(

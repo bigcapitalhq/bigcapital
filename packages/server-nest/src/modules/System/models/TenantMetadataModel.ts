@@ -7,18 +7,19 @@ import { findByIsoCountryCode } from '@bigcapital/utils';
 // import { getUploadedObjectUri } from '../../services/Attachments/utils';
 
 export class TenantMetadata extends BaseModel {
-  baseCurrency!: string;
-  name!: string;
-  tenantId!: number;
-  industry!: string;
-  location!: string;
-  language!: string;
-  timezone!: string;
-  dateFormat!: string;
-  fiscalYear!: string;
-  primaryColor!: string;
-  logoKey!: string;
-  address!: Record<string, any>;
+  public baseCurrency!: string;
+  public name!: string;
+  public tenantId!: number;
+  public industry!: string;
+  public location!: string;
+  public language!: string;
+  public timezone!: string;
+  public dateFormat!: string;
+  public fiscalYear!: string;
+  public primaryColor!: string;
+  public logoKey!: string;
+  public logoUri!: string;
+  public address!: Record<string, any>;
 
   /**
    * Json schema.

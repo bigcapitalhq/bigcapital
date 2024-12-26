@@ -32,6 +32,8 @@ import { CreditNoteAppliedInvoice } from '@/modules/CreditNotes/models/CreditNot
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 import { PaymentLink } from '@/modules/PaymentLinks/models/PaymentLink';
 import { SaleReceipt } from '@/modules/SaleReceipts/models/SaleReceipt';
+import { ManualJournal } from '@/modules/ManualJournals/models/ManualJournal';
+import { ManualJournalEntry } from '@/modules/ManualJournals/models/ManualJournalEntry';
 
 const models = [
   Item,
@@ -63,7 +65,9 @@ const models = [
   CreditNoteAppliedInvoice,
   CreditNote,
   PaymentLink,
-  SaleReceipt
+  SaleReceipt,
+  ManualJournal,
+  ManualJournalEntry
 ];
 
 const modelProviders = models.map((model) => {

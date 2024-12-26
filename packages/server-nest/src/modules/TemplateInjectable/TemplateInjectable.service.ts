@@ -21,7 +21,8 @@ export class TemplateInjectable {
 
     return templateRender(filename, {
       organizationName: organization.metadata.name,
-      organizationEmail: organization.metadata.email,
+      // @todo email
+      organizationEmail: '',
       __: this.i18n.t,
       ...options,
     });

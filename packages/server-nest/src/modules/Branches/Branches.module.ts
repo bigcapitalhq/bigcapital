@@ -14,6 +14,7 @@ import { BranchesApplication } from './BranchesApplication.service';
 import { BranchesSettingsService } from './BranchesSettings';
 import { BranchCommandValidator } from './commands/BranchCommandValidator.service';
 import { BranchTransactionDTOTransformer } from './integrations/BranchTransactionDTOTransform';
+import { ManualJournalBranchesDTOTransformer } from './integrations/ManualJournals/ManualJournalDTOTransformer.service';
 
 @Module({
   imports: [TenancyDatabaseModule],
@@ -31,8 +32,13 @@ import { BranchTransactionDTOTransformer } from './integrations/BranchTransactio
     TenancyContext,
     TransformerInjectable,
     BranchCommandValidator,
-    BranchTransactionDTOTransformer
+    BranchTransactionDTOTransformer,
+    ManualJournalBranchesDTOTransformer,
   ],
-  exports: [BranchTransactionDTOTransformer],
+  exports: [
+    BranchesSettingsService,
+    BranchTransactionDTOTransformer,
+    ManualJournalBranchesDTOTransformer,
+  ],
 })
 export class BranchesModule {}
