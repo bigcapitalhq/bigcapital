@@ -1,15 +1,14 @@
 import { Knex } from 'knex';
-import { IBill } from './Bill';
-import { AttachmentLinkDTO } from './Attachments';
+import { Bill } from '@/modules/Bills/models/Bill';
 import { BillPayment } from '../models/BillPayment';
+import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 
 export interface IBillPaymentEntry {
   id?: number;
   billPaymentId: number;
   billId: number;
   paymentAmount: number;
-
-  bill?: IBill;
+  bill?: Bill;
 }
 
 export interface IBillPayment {
@@ -39,6 +38,7 @@ export interface IBillPaymentEntryDTO {
 
 export interface IBillPaymentDTO {
   vendorId: number;
+  amount: number;
   paymentAccountId: number;
   paymentNumber?: string;
   paymentDate: Date;
@@ -96,7 +96,7 @@ export interface IBillPaymentEventEditedPayload {
 }
 
 export interface IBillPaymentEventDeletedPayload {
-  // tenantId: number;  
+  // tenantId: number;
   billPaymentId: number;
   oldBillPayment: BillPayment;
   trx: Knex.Transaction;

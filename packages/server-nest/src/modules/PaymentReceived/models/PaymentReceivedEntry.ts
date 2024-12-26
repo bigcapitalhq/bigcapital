@@ -1,10 +1,14 @@
 import { BaseModel } from '@/models/Model';
-import { Model, mixin } from 'objection';
+import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
+import { Model } from 'objection';
 
 export class PaymentReceivedEntry extends BaseModel {
   paymentReceiveId: number;
   invoiceId: number;
   paymentAmount: number;
+  index: number;
+
+  invoice?: SaleInvoice;
 
   /**
    * Table name
@@ -24,15 +28,15 @@ export class PaymentReceivedEntry extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const PaymentReceive = require('models/PaymentReceive');
-    const SaleInvoice = require('models/SaleInvoice');
+    const { PaymentReceived } = require('./PaymentReceived');
+    const { SaleInvoice } = require('../../SaleInvoices/models/SaleInvoice');
 
     return {
       /**
        */
       payment: {
         relation: Model.BelongsToOneRelation,
-        modelClass: PaymentReceive.default,
+        modelClass: PaymentReceived,
         join: {
           from: 'payment_receives_entries.paymentReceiveId',
           to: 'payment_receives.id',
@@ -44,7 +48,7 @@ export class PaymentReceivedEntry extends BaseModel {
        */
       invoice: {
         relation: Model.BelongsToOneRelation,
-        modelClass: SaleInvoice.default,
+        modelClass: SaleInvoice,
         join: {
           from: 'payment_receives_entries.invoiceId',
           to: 'sales_invoices.id',

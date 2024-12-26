@@ -12,8 +12,8 @@ export class SaleReceiptValidators {
    * @param {typeof Account} accountModel - Account model.
    */
   constructor(
-    @Inject(SaleReceipt) private saleReceiptModel: typeof SaleReceipt,
-    @Inject(Account) private accountModel: typeof Account,
+    @Inject(SaleReceipt.name) private saleReceiptModel: typeof SaleReceipt,
+    @Inject(Account.name) private accountModel: typeof Account,
   ) {}
 
   /**

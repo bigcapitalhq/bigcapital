@@ -19,7 +19,7 @@ export class DeleteCustomer {
   constructor(
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
-    @Inject(Customer.name) private contactModel: typeof Customer,
+    @Inject(Customer.name) private customerModel: typeof Customer,
   ) {}
 
   /**
@@ -31,10 +31,9 @@ export class DeleteCustomer {
     customerId: number,
   ): Promise<void> {
     // Retrieve the customer or throw not found service error.
-    const oldCustomer = await this.contactModel
+    const oldCustomer = await this.customerModel
       .query()
       .findById(customerId)
-      .modify('customer')
       .throwIfNotFound();
       // .queryAndThrowIfHasRelations({
       //   type: ERRORS.CUSTOMER_HAS_TRANSACTIONS,
@@ -49,7 +48,7 @@ export class DeleteCustomer {
     // Deletes the customer and associated entities under UOW transaction.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Delete the customer from the storage.
-      await this.contactModel.query(trx).findById(customerId).delete();
+      await this.customerModel.query(trx).findById(customerId).delete();
 
       // Throws `onCustomerDeleted` event.
       await this.eventPublisher.emitAsync(events.customers.onDeleted, {

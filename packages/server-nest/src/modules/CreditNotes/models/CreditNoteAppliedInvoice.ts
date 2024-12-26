@@ -24,13 +24,13 @@ export class CreditNoteAppliedInvoice extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const SaleInvoice = require('models/SaleInvoice');
-    const CreditNote = require('models/CreditNote');
+    const { SaleInvoice } = require('../../SaleInvoices/models/SaleInvoice');
+    const { CreditNote } = require('../../CreditNotes/models/CreditNote');
 
     return {
       saleInvoice: {
         relation: Model.BelongsToOneRelation,
-        modelClass: SaleInvoice.default,
+        modelClass: SaleInvoice,
         join: {
           from: 'credit_note_applied_invoice.invoiceId',
           to: 'sales_invoices.id',
@@ -39,7 +39,7 @@ export class CreditNoteAppliedInvoice extends BaseModel {
 
       creditNote: {
         relation: Model.BelongsToOneRelation,
-        modelClass: CreditNote.default,
+        modelClass: CreditNote,
         join: {
           from: 'credit_note_applied_invoice.creditNoteId',
           to: 'credit_notes.id',

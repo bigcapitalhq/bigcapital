@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
 
 @Injectable()
 export class CommandSaleInvoiceValidators {
-  constructor(private readonly saleInvoiceModel: typeof SaleInvoice) {}
+  constructor(
+    @Inject(SaleInvoice.name)
+    private readonly saleInvoiceModel: typeof SaleInvoice,
+  ) {}
 
   /**
    * Validates the given invoice is existance.

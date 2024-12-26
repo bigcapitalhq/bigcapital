@@ -9,8 +9,15 @@ import { EditPdfTemplateService } from './commands/EditPdfTemplate.service';
 import { PdfTemplateApplication } from './PdfTemplate.application';
 import { PdfTemplatesController } from './PdfTemplates.controller';
 import { GetPdfTemplateService } from './queries/GetPdfTemplate.service';
+import { BrandingTemplateDTOTransformer } from './BrandingTemplateDTOTransformer';
+import { GetOrganizationBrandingAttributesService } from './queries/GetOrganizationBrandingAttributes.service';
 
 @Module({
+  exports: [
+    GetPdfTemplateService,
+    BrandingTemplateDTOTransformer,
+    GetOrganizationBrandingAttributesService,
+  ],
   imports: [TenancyDatabaseModule],
   controllers: [PdfTemplatesController],
   providers: [
@@ -22,6 +29,8 @@ import { GetPdfTemplateService } from './queries/GetPdfTemplate.service';
     AssignPdfTemplateDefaultService,
     TenancyContext,
     TransformerInjectable,
+    BrandingTemplateDTOTransformer,
+    GetOrganizationBrandingAttributesService,
   ],
 })
 export class PdfTemplatesModule {}

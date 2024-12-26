@@ -18,7 +18,6 @@ export class GetVendorService {
     const vendor = await this.vendorModel
       .query()
       .findById(vendorId)
-      .modify('vendor')
       .throwIfNotFound();
 
     // Transformes the vendor.

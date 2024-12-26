@@ -37,13 +37,15 @@ import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
-import { SaleEstimatesModule } from '../SaleEstimates/SaleEstimates.module';
 import { SerializeInterceptor } from '@/common/interceptors/serialize.interceptor';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
 import { CustomersModule } from '../Customers/Customers.module';
 import { VendorsModule } from '../Vendors/Vendors.module';
+import { SaleEstimatesModule } from '../SaleEstimates/SaleEstimates.module';
 import { BillsModule } from '../Bills/Bills.module';
-import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
+import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
+import { SaleReceiptsModule } from '../SaleReceipts/SaleReceipts.module';
+// import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
 
 @Module({
   imports: [
@@ -109,9 +111,11 @@ import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
     WarehousesModule,
     CustomersModule,
     VendorsModule,
+    SaleInvoicesModule,
     SaleEstimatesModule,
+    SaleReceiptsModule,
     BillsModule,
-    BillPaymentsModule,
+    // BillPaymentsModule,
   ],
   controllers: [AppController],
   providers: [

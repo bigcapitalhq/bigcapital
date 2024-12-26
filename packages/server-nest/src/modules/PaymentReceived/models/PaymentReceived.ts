@@ -6,6 +6,7 @@ import { Model, mixin } from 'objection';
 // import { DEFAULT_VIEWS } from '@/services/Sales/PaymentReceived/constants';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
+import { PaymentReceivedEntry } from './PaymentReceivedEntry';
 
 export class PaymentReceived extends BaseModel {
   customerId: number;
@@ -24,6 +25,8 @@ export class PaymentReceived extends BaseModel {
 
   createdAt: string;
   updatedAt: string;
+
+  entries?: PaymentReceivedEntry[];
 
   /**
    * Table name.
@@ -65,17 +68,17 @@ export class PaymentReceived extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
-    const AccountTransaction = require('models/AccountTransaction');
-    const Customer = require('models/Customer');
-    const Account = require('models/Account');
-    const Branch = require('models/Branch');
-    const Document = require('models/Document');
+    const { PaymentReceivedEntry } = require('./PaymentReceivedEntry');
+    const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
+    const { Customer } = require('../../Customers/models/Customer');
+    const { Account } = require('../../Accounts/models/Account.model');
+    const { Branch } = require('../../Branches/models/Branch.model');
+    // const Document = require('../../Documents/models/Document');
 
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Customer.default,
+        modelClass: Customer,
         join: {
           from: 'payment_receives.customerId',
           to: 'contacts.id',
@@ -84,17 +87,19 @@ export class PaymentReceived extends BaseModel {
           query.where('contact_service', 'customer');
         },
       },
+
       depositAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: Account,
         join: {
           from: 'payment_receives.depositAccountId',
           to: 'accounts.id',
         },
       },
+
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: PaymentReceiveEntry.default,
+        modelClass: PaymentReceivedEntry,
         join: {
           from: 'payment_receives.id',
           to: 'payment_receives_entries.paymentReceiveId',
@@ -103,9 +108,10 @@ export class PaymentReceived extends BaseModel {
           query.orderBy('index', 'ASC');
         },
       },
+
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: AccountTransaction.default,
+        modelClass: AccountTransaction,
         join: {
           from: 'payment_receives.id',
           to: 'accounts_transactions.referenceId',
@@ -120,7 +126,7 @@ export class PaymentReceived extends BaseModel {
        */
       branch: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Branch.default,
+        modelClass: Branch,
         join: {
           from: 'payment_receives.branchId',
           to: 'branches.id',
@@ -130,21 +136,21 @@ export class PaymentReceived extends BaseModel {
       /**
        * Payment transaction may has many attached attachments.
        */
-      attachments: {
-        relation: Model.ManyToManyRelation,
-        modelClass: Document.default,
-        join: {
-          from: 'payment_receives.id',
-          through: {
-            from: 'document_links.modelId',
-            to: 'document_links.documentId',
-          },
-          to: 'documents.id',
-        },
-        filter(query) {
-          query.where('model_ref', 'PaymentReceive');
-        },
-      },
+      // attachments: {
+      //   relation: Model.ManyToManyRelation,
+      //   modelClass: Document.default,
+      //   join: {
+      //     from: 'payment_receives.id',
+      //     through: {
+      //       from: 'document_links.modelId',
+      //       to: 'document_links.documentId',
+      //     },
+      //     to: 'documents.id',
+      //   },
+      //   filter(query) {
+      //     query.where('model_ref', 'PaymentReceive');
+      //   },
+      // },
     };
   }
 

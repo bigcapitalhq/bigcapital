@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { Inject, Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
-import composeAsync from 'async/compose';
+import * as composeAsync from 'async/compose';
 import {
   IPaymentReceivedCreateDTO,
   IPaymentReceivedEditDTO,
@@ -78,6 +78,6 @@ export class PaymentReceiveDTOTransformer {
 
     return R.compose(
       this.branchDTOTransform.transformDTO<PaymentReceived>
-    )(initialAsyncDTO);
+    )(initialAsyncDTO) as PaymentReceived;
   }
 }

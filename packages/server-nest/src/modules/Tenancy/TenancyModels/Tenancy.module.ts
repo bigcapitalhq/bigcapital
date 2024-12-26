@@ -7,7 +7,7 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { ItemEntry } from '@/modules/Items/models/ItemEntry';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { Expense } from '@/modules/Expenses/models/Expense.model';
-import ExpenseCategory from '@/modules/Expenses/models/ExpenseCategory.model';
+import { ExpenseCategory } from '@/modules/Expenses/models/ExpenseCategory.model';
 import { ItemCategory } from '@/modules/ItemCategories/models/ItemCategory.model';
 import { TaxRateModel } from '@/modules/TaxRates/models/TaxRate.model';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
@@ -20,6 +20,18 @@ import { Contact } from '@/modules/Contacts/models/Contact';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { DocumentLink } from '@/modules/ChromiumlyTenancy/models/DocumentLink';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
+import { Bill } from '@/modules/Bills/models/Bill';
+import { BillPayment } from '@/modules/BillPayments/models/BillPayment';
+import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
+import { BillLandedCostEntry } from '@/modules/BillLandedCosts/models/BillLandedCostEntry';
+import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
+import { VendorCreditAppliedBill } from '@/modules/VendorCredit/models/VendorCreditAppliedBill';
+import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
+import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
+import { CreditNoteAppliedInvoice } from '@/modules/CreditNotes/models/CreditNoteAppliedInvoice';
+import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
+import { PaymentLink } from '@/modules/PaymentLinks/models/PaymentLink';
+import { SaleReceipt } from '@/modules/SaleReceipts/models/SaleReceipt';
 
 const models = [
   Item,
@@ -39,7 +51,19 @@ const models = [
   Contact,
   Document,
   DocumentLink,
-  Vendor
+  Vendor,
+  Bill,
+  BillPayment,
+  BillPaymentEntry,
+  BillLandedCost,
+  BillLandedCostEntry,
+  VendorCreditAppliedBill,
+  SaleInvoice,
+  PaymentReceivedEntry,
+  CreditNoteAppliedInvoice,
+  CreditNote,
+  PaymentLink,
+  SaleReceipt
 ];
 
 const modelProviders = models.map((model) => {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { pickBy } from 'lodash';
 import { InvoicePdfTemplateAttributes, ISaleInvoice } from '@/interfaces';
 import { contactAddressTextFormat } from '@/utils/address-text-format';

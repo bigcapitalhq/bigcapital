@@ -208,23 +208,23 @@ export class SaleEstimate extends BaseModel {
    */
   static get relationMappings() {
     const { ItemEntry } = require('../../Items/models/ItemEntry');
-    // const Customer = require('models/Customer');
-    // const Branch = require('models/Branch');
-    // const Warehouse = require('models/Warehouse');
-    // const Document = require('models/Document');
+    const { Customer } = require('../../Customers/models/Customer');
+    const { Branch } = require('../../Branches/models/Branch.model');
+    const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
+    const { Document } = require('../../ChromiumlyTenancy/models/Document');
 
     return {
-      //   customer: {
-      //     relation: Model.BelongsToOneRelation,
-      //     modelClass: Customer.default,
-      //     join: {
-      //       from: 'sales_estimates.customerId',
-      //       to: 'contacts.id',
-      //     },
-      //     filter(query) {
-      //       query.where('contact_service', 'customer');
-      //     },
-      //   },
+      customer: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Customer,
+        join: {
+          from: 'sales_estimates.customerId',
+          to: 'contacts.id',
+        },
+        filter(query) {
+          query.where('contact_service', 'customer');
+        },
+      },
       entries: {
         relation: Model.HasManyRelation,
         modelClass: ItemEntry,
@@ -239,48 +239,48 @@ export class SaleEstimate extends BaseModel {
         },
       },
 
-      //   /**
-      //    * Sale estimate may belongs to branch.
-      //    */
-      //   branch: {
-      //     relation: Model.BelongsToOneRelation,
-      //     modelClass: Branch.default,
-      //     join: {
-      //       from: 'sales_estimates.branchId',
-      //       to: 'branches.id',
-      //     },
-      //   },
+      /**
+       * Sale estimate may belongs to branch.
+       */
+      branch: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Branch,
+        join: {
+          from: 'sales_estimates.branchId',
+          to: 'branches.id',
+        },
+      },
 
-      //   /**
-      //    * Sale estimate may has associated warehouse.
-      //    */
-      //   warehouse: {
-      //     relation: Model.BelongsToOneRelation,
-      //     modelClass: Warehouse.default,
-      //     join: {
-      //       from: 'sales_estimates.warehouseId',
-      //       to: 'warehouses.id',
-      //     },
-      //   },
+      /**
+       * Sale estimate may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse,
+        join: {
+          from: 'sales_estimates.warehouseId',
+          to: 'warehouses.id',
+        },
+      },
 
-      //   /**
-      //    * Sale estimate transaction may has many attached attachments.
-      //    */
-      //   attachments: {
-      //     relation: Model.ManyToManyRelation,
-      //     modelClass: Document.default,
-      //     join: {
-      //       from: 'sales_estimates.id',
-      //       through: {
-      //         from: 'document_links.modelId',
-      //         to: 'document_links.documentId',
-      //       },
-      //       to: 'documents.id',
-      //     },
-      //     filter(query) {
-      //       query.where('model_ref', 'SaleEstimate');
-      //     },
-      // },
+      /**
+       * Sale estimate transaction may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document,
+        join: {
+          from: 'sales_estimates.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'SaleEstimate');
+        },
+      },
     };
   }
 

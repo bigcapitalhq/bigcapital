@@ -1,6 +1,6 @@
 
 import { Transformer } from '@/modules/Transformer/Transformer';
-import ExpenseCategory from '../models/ExpenseCategory.model';
+import { ExpenseCategory } from '../models/ExpenseCategory.model';
 
 export class ExpenseCategoryTransformer extends Transformer {
   /**

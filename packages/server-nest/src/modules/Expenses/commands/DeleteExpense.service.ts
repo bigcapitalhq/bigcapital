@@ -4,7 +4,7 @@ import { CommandExpenseValidator } from './CommandExpenseValidator.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Expense } from '../models/Expense.model';
-import ExpenseCategory from '../models/ExpenseCategory.model';
+import { ExpenseCategory } from '../models/ExpenseCategory.model';
 import { events } from '@/common/events/events';
 import {
   IExpenseEventDeletePayload,

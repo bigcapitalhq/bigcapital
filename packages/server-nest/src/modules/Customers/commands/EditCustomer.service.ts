@@ -23,7 +23,7 @@ export class EditCustomer {
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
     private customerDTO: CreateEditCustomerDTO,
-    @Inject(Customer.name) private contactModel: typeof Customer,
+    @Inject(Customer.name) private customerModel: typeof Customer,
   ) {}
 
   /**
@@ -37,10 +37,9 @@ export class EditCustomer {
     customerDTO: ICustomerEditDTO,
   ): Promise<Customer> {
     // Retrieve the customer or throw not found error.
-    const oldCustomer = await this.contactModel
+    const oldCustomer = await this.customerModel
       .query()
       .findById(customerId)
-      .modify('customer')
       .throwIfNotFound();
 
     // Transforms the given customer DTO to object.
@@ -56,7 +55,7 @@ export class EditCustomer {
       } as ICustomerEventEditingPayload);
 
       // Edits the customer details on the storage.
-      const customer = await this.contactModel
+      const customer = await this.customerModel
         .query()
         .updateAndFetchById(customerId, {
           ...customerObj,

@@ -170,7 +170,7 @@ export class Vendor extends BaseModel {
     return {
       bills: {
         relation: Model.HasManyRelation,
-        modelClass: Bill.default,
+        modelClass: Bill,
         join: {
           from: 'contacts.id',
           to: 'bills.vendorId',
@@ -178,7 +178,7 @@ export class Vendor extends BaseModel {
       },
       overdueBills: {
         relation: Model.HasManyRelation,
-        modelClass: Bill.default,
+        modelClass: Bill,
         join: {
           from: 'contacts.id',
           to: 'bills.vendorId',

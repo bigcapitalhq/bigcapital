@@ -1,8 +1,9 @@
 import { Knex } from 'knex';
 import { IItemEntryDTO } from '../TransactionItemEntry/ItemEntry.types';
 import { AttachmentLinkDTO } from '../Attachments/Attachments.types';
-import SaleInvoice from './models/SaleInvoice';
-import { SystemUser } from '../System/models/SystemUser';
+import { SaleInvoice } from './models/SaleInvoice';
+// import SaleInvoice from './models/SaleInvoice';
+// import { SystemUser } from '../System/models/SystemUser';
 // import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
 // import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
 // import { IDynamicListFilter } from '@/interfaces/DynamicFilter';

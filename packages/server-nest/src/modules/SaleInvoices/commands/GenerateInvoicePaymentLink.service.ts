@@ -16,8 +16,8 @@ export class GenerateShareLink {
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
     private transformer: TransformerInjectable,
-    @Inject(SaleInvoice) private saleInvoiceModel: typeof SaleInvoice,
-    @Inject(PaymentLink) private paymentLinkModel: typeof PaymentLink,
+    @Inject(SaleInvoice.name) private saleInvoiceModel: typeof SaleInvoice,
+    @Inject(PaymentLink.name) private paymentLinkModel: typeof PaymentLink,
   ) {}
 
   /**

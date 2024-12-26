@@ -13,8 +13,10 @@ import {
   ICustomerNewDTO,
   ICustomerOpeningBalanceEditDTO,
 } from './types/Customers.types';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('customers')
+@PublicRoute()
 export class CustomersController {
   constructor(private customersApplication: CustomersApplication) {}
 

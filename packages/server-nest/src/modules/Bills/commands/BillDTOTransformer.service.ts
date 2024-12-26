@@ -1,16 +1,16 @@
+import { Inject, Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
 import moment from 'moment';
-import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
+import * as composeAsync from 'async/compose';
 import { formatDateFields } from '@/utils/format-date-fields';
-import composeAsync from 'async/compose';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { ItemEntry } from '@/modules/Items/models/ItemEntry';
 import { Item } from '@/modules/Items/models/Item';
+import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { ItemEntriesTaxTransactions } from '@/modules/TaxRates/ItemEntriesTaxTransactions.service';
 import { IBillDTO } from '../Bills.types';
-import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Bill } from '../models/Bill';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
@@ -23,8 +23,8 @@ export class BillDTOTransformer {
     private taxDTOTransformer: ItemEntriesTaxTransactions,
     private tenancyContext: TenancyContext,
 
-    @Inject(ItemEntry) private itemEntryModel: typeof ItemEntry,
-    @Inject(Item) private itemModel: typeof Item,
+    @Inject(ItemEntry.name) private itemEntryModel: typeof ItemEntry,
+    @Inject(Item.name) private itemModel: typeof Item,
   ) {}
 
   /**
@@ -44,7 +44,9 @@ export class BillDTOTransformer {
   private getBillLandedCostAmount(billDTO: IBillDTO): number {
     const costEntries = billDTO.entries.filter((entry) => entry.landedCost);
 
-    return this.getBillEntriesTotal(costEntries);
+    // return this.getBillEntriesTotal(costEntries);
+
+    return 0;
   }
 
   /**
@@ -57,7 +59,7 @@ export class BillDTOTransformer {
     billDTO: IBillDTO,
     vendor: Vendor,
     oldBill?: Bill,
-  ) {
+  ): Promise<Bill> {
     const amount = sumBy(billDTO.entries, (e) =>
       this.itemEntryModel.calcAmount(e),
     );
@@ -112,9 +114,9 @@ export class BillDTOTransformer {
     return R.compose(
       // Associates tax amount withheld to the model.
       this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
-      this.branchDTOTransform.transformDTO,
-      this.warehouseDTOTransform.transformDTO,
-    )(initialDTO);
+      this.branchDTOTransform.transformDTO<Bill>,
+      this.warehouseDTOTransform.transformDTO<Bill>,
+    )(initialDTO) as Bill;
   }
 
   /**

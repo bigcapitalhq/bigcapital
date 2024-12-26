@@ -12,6 +12,7 @@ import { ItemsApplicationService } from './ItemsApplication.service';
 import { ItemTransactionsService } from './ItemTransactions.service';
 import { GetItemService } from './GetItem.service';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+import { ItemsEntriesService } from './ItemsEntries.service';
 
 @Module({
   imports: [TenancyDatabaseModule],
@@ -28,6 +29,8 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
     ItemTransactionsService,
     TenancyContext,
     TransformerInjectable,
+    ItemsEntriesService
   ],
+  exports: [ItemsEntriesService]
 })
 export class ItemsModule {}

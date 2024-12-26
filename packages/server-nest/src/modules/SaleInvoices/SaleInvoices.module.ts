@@ -16,10 +16,33 @@ import { GetSaleInvoicesPayable } from './queries/GetSaleInvoicesPayable.service
 import { GetSaleInvoiceState } from './queries/GetSaleInvoiceState.service';
 import { SaleInvoicePdf } from './queries/SaleInvoicePdf.service';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
+import { ItemsEntriesService } from '../Items/ItemsEntries.service';
+import { CommandSaleInvoiceValidators } from './commands/CommandSaleInvoiceValidators.service';
+import { CommandSaleInvoiceDTOTransformer } from './commands/CommandSaleInvoiceDTOTransformer.service';
+import { SaleEstimateValidators } from '../SaleEstimates/commands/SaleEstimateValidators.service';
+import { UnlinkConvertedSaleEstimate } from '../SaleEstimates/commands/UnlinkConvertedSaleEstimate.service';
+import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
+import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
+import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
+import { SaleInvoicePdfTemplate } from './queries/SaleInvoicePdfTemplate.service';
+import { WriteoffSaleInvoice } from './commands/WriteoffSaleInvoice.service';
+import { GetInvoicePaymentsService } from './queries/GetInvoicePayments.service';
+import { BranchesModule } from '../Branches/Branches.module';
+import { WarehousesModule } from '../Warehouses/Warehouses.module';
+import { TaxRatesModule } from '../TaxRates/TaxRate.module';
+import { SaleInvoicesController } from './SaleInvoices.controller';
 
 @Module({
-  imports: [TenancyDatabaseModule],
-  controllers: [],
+  imports: [
+    TenancyDatabaseModule,
+    PdfTemplatesModule,
+    AutoIncrementOrdersModule,
+    ChromiumlyTenancyModule,
+    BranchesModule,
+    WarehousesModule,
+    TaxRatesModule,
+  ],
+  controllers: [SaleInvoicesController],
   providers: [
     CreateSaleInvoice,
     EditSaleInvoice,
@@ -37,6 +60,14 @@ import { SaleInvoiceApplication } from './SaleInvoices.application';
     SaleInvoiceApplication,
     TenancyContext,
     TransformerInjectable,
+    ItemsEntriesService,
+    CommandSaleInvoiceValidators,
+    CommandSaleInvoiceDTOTransformer,
+    SaleEstimateValidators,
+    UnlinkConvertedSaleEstimate,
+    SaleInvoicePdfTemplate,
+    WriteoffSaleInvoice,
+    GetInvoicePaymentsService,
   ],
 })
 export class SaleInvoicesModule {}

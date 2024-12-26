@@ -53,7 +53,7 @@ export interface IBillCreatedPayload {
   // tenantId: number;
   bill: Bill;
   billDTO: IBillDTO;
-  billId: number;
+  // billId: number;
   trx?: Knex.Transaction;
 }
 

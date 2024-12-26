@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Bill } from '../models/Bill';
 
 @Injectable()
 export class GetDueBills {
-  constructor(private billModel: typeof Bill) {}
+  constructor(
+    @Inject(Bill.name)
+    private billModel: typeof Bill,
+  ) {}
 
   /**
    * Retrieve all due bills or for specific given vendor id.

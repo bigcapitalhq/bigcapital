@@ -13,6 +13,9 @@ export class ItemEntry extends BaseModel {
   public costAccountId: number;
   public taxRateId: number;
 
+  public landedCost!: boolean;
+  public allocatedCostAmount!: number;
+
   /**
    * Table name.
    * @returns {string}

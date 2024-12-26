@@ -1,6 +1,6 @@
 import { mixin, Model, raw } from 'objection';
 import { castArray, takeWhile } from 'lodash';
-import moment from 'moment';
+import moment, { MomentInput, unitOfTime } from 'moment';
 // import TenantModel from 'models/TenantModel';
 // import ModelSetting from './ModelSetting';
 // import SaleInvoiceMeta from './SaleInvoice.Settings';
@@ -9,17 +9,17 @@ import moment from 'moment';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
 
-export class SaleInvoice extends BaseModel{
+export class SaleInvoice extends BaseModel {
   public taxAmountWithheld: number;
   public balance: number;
   public paymentAmount: number;
   public exchangeRate: number;
-  
+
   public creditedAmount: number;
   public isInclusiveTax: boolean;
-  
+
   public dueDate: Date;
-  public deliveredAt: Date;
+  public deliveredAt: Date | string;
   public currencyCode: string;
   public invoiceDate: Date;
 
@@ -262,13 +262,18 @@ export class SaleInvoice extends BaseModel{
             COALESCE(PAYMENT_AMOUNT, 0) -
             COALESCE(WRITTENOFF_AMOUNT, 0) -
             COALESCE(CREDITED_AMOUNT, 0) > 0
-        `)
+        `),
         );
       },
       /**
        * Filters the invoices between the given date range.
        */
-      filterDateRange(query, startDate, endDate, type = 'day') {
+      filterDateRange(
+        query,
+        startDate: MomentInput,
+        endDate?: MomentInput,
+        type: unitOfTime.StartOf = 'day',
+      ) {
         const dateFormat = 'YYYY-MM-DD';
         const fromDate = moment(startDate).startOf(type).format(dateFormat);
         const toDate = moment(endDate).endOf(type).format(dateFormat);
@@ -418,213 +423,221 @@ export class SaleInvoice extends BaseModel{
   /**
    * Relationship mapping.
    */
-  // static get relationMappings() {
-  //   const AccountTransaction = require('models/AccountTransaction');
-  //   const ItemEntry = require('models/ItemEntry');
-  //   const Customer = require('models/Customer');
-  //   const InventoryCostLotTracker = require('models/InventoryCostLotTracker');
-  //   const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
-  //   const Branch = require('models/Branch');
-  //   const Warehouse = require('models/Warehouse');
-  //   const Account = require('models/Account');
-  //   const TaxRateTransaction = require('models/TaxRateTransaction');
-  //   const Document = require('models/Document');
-  //   const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
-  //   const {
-  //     TransactionPaymentServiceEntry,
-  //   } = require('models/TransactionPaymentServiceEntry');
-  //   const { PdfTemplate } = require('models/PdfTemplate');
+  static get relationMappings() {
+    const {
+      AccountTransaction,
+    } = require('../../Accounts/models/AccountTransaction.model');
+    const {
+      ItemEntry,
+    } = require('../../TransactionItemEntry/models/ItemEntry');
+    const { Customer } = require('../../Customers/models/Customer');
+    // const InventoryCostLotTracker = require('models/InventoryCostLotTracker');
+    const {
+      PaymentReceivedEntry,
+    } = require('../../PaymentReceived/models/PaymentReceivedEntry');
+    const { Branch } = require('../../Branches/models/Branch.model');
+    const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
+    const { Account } = require('../../Accounts/models/Account.model');
+    // const TaxRateTransaction = require('../../Tax');
+    const { Document } = require('../../ChromiumlyTenancy/models/Document');
+    // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
+    const {
+      TransactionPaymentServiceEntry,
+    } = require('../../PaymentServices/models/TransactionPaymentServiceEntry.model');
+    const {
+      PdfTemplateModel,
+    } = require('../../PdfTemplate/models/PdfTemplate');
 
-  //   return {
-  //     /**
-  //      * Sale invoice associated entries.
-  //      */
-  //     entries: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: ItemEntry.default,
-  //       join: {
-  //         from: 'sales_invoices.id',
-  //         to: 'items_entries.referenceId',
-  //       },
-  //       filter(builder) {
-  //         builder.where('reference_type', 'SaleInvoice');
-  //         builder.orderBy('index', 'ASC');
-  //       },
-  //     },
+    return {
+      /**
+       * Sale invoice associated entries.
+       */
+      entries: {
+        relation: Model.HasManyRelation,
+        modelClass: ItemEntry,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'items_entries.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleInvoice');
+          builder.orderBy('index', 'ASC');
+        },
+      },
 
-  //     /**
-  //      * Belongs to customer model.
-  //      */
-  //     customer: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Customer.default,
-  //       join: {
-  //         from: 'sales_invoices.customerId',
-  //         to: 'contacts.id',
-  //       },
-  //       filter(query) {
-  //         query.where('contact_service', 'Customer');
-  //       },
-  //     },
+      /**
+       * Belongs to customer model.
+       */
+      customer: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Customer,
+        join: {
+          from: 'sales_invoices.customerId',
+          to: 'contacts.id',
+        },
+        filter(query) {
+          query.where('contact_service', 'Customer');
+        },
+      },
 
-  //     /**
-  //      * Invoice has associated account transactions.
-  //      */
-  //     transactions: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: AccountTransaction.default,
-  //       join: {
-  //         from: 'sales_invoices.id',
-  //         to: 'accounts_transactions.referenceId',
-  //       },
-  //       filter(builder) {
-  //         builder.where('reference_type', 'SaleInvoice');
-  //       },
-  //     },
+      /**
+       * Invoice has associated account transactions.
+       */
+      transactions: {
+        relation: Model.HasManyRelation,
+        modelClass: AccountTransaction,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'accounts_transactions.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleInvoice');
+        },
+      },
 
-  //     /**
-  //      * Invoice may has associated cost transactions.
-  //      */
-  //     costTransactions: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: InventoryCostLotTracker.default,
-  //       join: {
-  //         from: 'sales_invoices.id',
-  //         to: 'inventory_cost_lot_tracker.transactionId',
-  //       },
-  //       filter(builder) {
-  //         builder.where('transaction_type', 'SaleInvoice');
-  //       },
-  //     },
+      /**
+       * Invoice may has associated cost transactions.
+       */
+      // costTransactions: {
+      //   relation: Model.HasManyRelation,
+      //   modelClass: InventoryCostLotTracker.default,
+      //   join: {
+      //     from: 'sales_invoices.id',
+      //     to: 'inventory_cost_lot_tracker.transactionId',
+      //   },
+      //   filter(builder) {
+      //     builder.where('transaction_type', 'SaleInvoice');
+      //   },
+      // },
 
-  //     /**
-  //      * Invoice may has associated payment entries.
-  //      */
-  //     paymentEntries: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: PaymentReceiveEntry.default,
-  //       join: {
-  //         from: 'sales_invoices.id',
-  //         to: 'payment_receives_entries.invoiceId',
-  //       },
-  //     },
+      /**
+       * Invoice may has associated payment entries.
+       */
+      paymentEntries: {
+        relation: Model.HasManyRelation,
+        modelClass: PaymentReceivedEntry,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'payment_receives_entries.invoiceId',
+        },
+      },
 
-  //     /**
-  //      * Invoice may has associated branch.
-  //      */
-  //     branch: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Branch.default,
-  //       join: {
-  //         from: 'sales_invoices.branchId',
-  //         to: 'branches.id',
-  //       },
-  //     },
+      /**
+       * Invoice may has associated branch.
+       */
+      branch: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Branch,
+        join: {
+          from: 'sales_invoices.branchId',
+          to: 'branches.id',
+        },
+      },
 
-  //     /**
-  //      * Invoice may has associated warehouse.
-  //      */
-  //     warehouse: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Warehouse.default,
-  //       join: {
-  //         from: 'sales_invoices.warehouseId',
-  //         to: 'warehouses.id',
-  //       },
-  //     },
+      /**
+       * Invoice may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse,
+        join: {
+          from: 'sales_invoices.warehouseId',
+          to: 'warehouses.id',
+        },
+      },
 
-  //     /**
-  //      * Invoice may has associated written-off expense account.
-  //      */
-  //     writtenoffExpenseAccount: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Account.default,
-  //       join: {
-  //         from: 'sales_invoices.writtenoffExpenseAccountId',
-  //         to: 'accounts.id',
-  //       },
-  //     },
+      /**
+       * Invoice may has associated written-off expense account.
+       */
+      writtenoffExpenseAccount: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Account,
+        join: {
+          from: 'sales_invoices.writtenoffExpenseAccountId',
+          to: 'accounts.id',
+        },
+      },
 
-  //     /**
-  //      * Invoice may has associated tax rate transactions.
-  //      */
-  //     taxes: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: TaxRateTransaction.default,
-  //       join: {
-  //         from: 'sales_invoices.id',
-  //         to: 'tax_rate_transactions.referenceId',
-  //       },
-  //       filter(builder) {
-  //         builder.where('reference_type', 'SaleInvoice');
-  //       },
-  //     },
+      /**
+       * Invoice may has associated tax rate transactions.
+       */
+      // taxes: {
+      //   relation: Model.HasManyRelation,
+      //   modelClass: TaxRateTransaction.default,
+      //   join: {
+      //     from: 'sales_invoices.id',
+      //     to: 'tax_rate_transactions.referenceId',
+      //   },
+      //   filter(builder) {
+      //     builder.where('reference_type', 'SaleInvoice');
+      //   },
+      // },
 
-  //     /**
-  //      * Sale invoice transaction may has many attached attachments.
-  //      */
-  //     attachments: {
-  //       relation: Model.ManyToManyRelation,
-  //       modelClass: Document.default,
-  //       join: {
-  //         from: 'sales_invoices.id',
-  //         through: {
-  //           from: 'document_links.modelId',
-  //           to: 'document_links.documentId',
-  //         },
-  //         to: 'documents.id',
-  //       },
-  //       filter(query) {
-  //         query.where('model_ref', 'SaleInvoice');
-  //       },
-  //     },
+      /**
+       * Sale invoice transaction may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document,
+        join: {
+          from: 'sales_invoices.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'SaleInvoice');
+        },
+      },
 
-  //     /**
-  //      * Sale invocie may belongs to matched bank transaction.
-  //      */
-  //     matchedBankTransaction: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: MatchedBankTransaction,
-  //       join: {
-  //         from: 'sales_invoices.id',
-  //         to: 'matched_bank_transactions.referenceId',
-  //       },
-  //       filter(query) {
-  //         query.where('reference_type', 'SaleInvoice');
-  //       },
-  //     },
+      /**
+       * Sale invocie may belongs to matched bank transaction.
+       */
+      // matchedBankTransaction: {
+      //   relation: Model.HasManyRelation,
+      //   modelClass: MatchedBankTransaction,
+      //   join: {
+      //     from: 'sales_invoices.id',
+      //     to: 'matched_bank_transactions.referenceId',
+      //   },
+      //   filter(query) {
+      //     query.where('reference_type', 'SaleInvoice');
+      //   },
+      // },
 
-  //     /**
-  //      * Sale invoice may belongs to payment methods entries.
-  //      */
-  //     paymentMethods: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: TransactionPaymentServiceEntry,
-  //       join: {
-  //         from: 'sales_invoices.id',
-  //         to: 'transactions_payment_methods.referenceId',
-  //       },
-  //       beforeInsert: (model) => {
-  //         model.referenceType = 'SaleInvoice';
-  //       },
-  //       filter: (query) => {
-  //         query.where('reference_type', 'SaleInvoice');
-  //       },
-  //     },
+      /**
+       * Sale invoice may belongs to payment methods entries.
+       */
+      paymentMethods: {
+        relation: Model.HasManyRelation,
+        modelClass: TransactionPaymentServiceEntry,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'transactions_payment_methods.referenceId',
+        },
+        beforeInsert: (model) => {
+          model.referenceType = 'SaleInvoice';
+        },
+        filter: (query) => {
+          query.where('reference_type', 'SaleInvoice');
+        },
+      },
 
-  //     /**
-  //      * Sale invoice may belongs to pdf branding template.
-  //      */
-  //     pdfTemplate: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: PdfTemplate,
-  //       join: {
-  //         from: 'sales_invoices.pdfTemplateId',
-  //         to: 'pdf_templates.id',
-  //       }
-  //     },
-  //   };
-  // }
+      /**
+       * Sale invoice may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplateModel,
+        join: {
+          from: 'sales_invoices.pdfTemplateId',
+          to: 'pdf_templates.id',
+        },
+      },
+    };
+  }
 
   /**
    * Change payment amount.
@@ -642,9 +655,9 @@ export class SaleInvoice extends BaseModel{
   /**
    * Sale invoice meta.
    */
-  static get meta() {
-    return SaleInvoiceMeta;
-  }
+  // static get meta() {
+  //   return SaleInvoiceMeta;
+  // }
 
   static dueAmountFieldSortQuery(query, role) {
     query.modify('sortByDueAmount', role.order);
@@ -653,9 +666,9 @@ export class SaleInvoice extends BaseModel{
   /**
    * Retrieve the default custom views, roles and columns.
    */
-  static get defaultViews() {
-    return DEFAULT_VIEWS;
-  }
+  // static get defaultViews() {
+  //   return DEFAULT_VIEWS;
+  // }
 
   /**
    * Model searchable.

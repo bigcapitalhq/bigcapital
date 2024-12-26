@@ -47,7 +47,7 @@ export class SaleInvoicePdf {
   public async getSaleInvoicePdf(invoiceId: number): Promise<[Buffer, string]> {
     const filename = await this.getInvoicePdfFilename(invoiceId);
 
-    const htmlContent = await this.saleInvoiceHtml(invoiceId);
+    const htmlContent = await this.getSaleInvoiceHtml(invoiceId);
 
     // Converts the given html content to pdf document.
     const buffer = await this.chromiumlyTenancy.convertHtmlContent(htmlContent);

@@ -8,6 +8,7 @@ import moment from 'moment';
 // import { DEFAULT_VIEWS } from '@/services/Purchases/Bills/constants';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
+import { ItemEntry } from '@/modules/Items/models/ItemEntry';
 
 export class Bill extends BaseModel{
   public amount: number;
@@ -31,8 +32,13 @@ export class Bill extends BaseModel{
   public openedAt: Date | string;
   public userId: number;
 
+  public branchId: number;
+  public warehouseId: number;
+
   public createdAt: Date;
   public updatedAt: Date | null;
+
+  public entries?: ItemEntry[];
 
   /**
    * Timestamps columns.
@@ -410,125 +416,125 @@ export class Bill extends BaseModel{
   /**
    * Relationship mapping.
    */
-  static get relationMappings() {
-    const Vendor = require('models/Vendor');
-    const ItemEntry = require('models/ItemEntry');
-    const BillLandedCost = require('models/BillLandedCost');
-    const Branch = require('models/Branch');
-    const Warehouse = require('models/Warehouse');
-    const TaxRateTransaction = require('models/TaxRateTransaction');
-    const Document = require('models/Document');
-    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
+  // static get relationMappings() {
+  //   const Vendor = require('models/Vendor');
+  //   const ItemEntry = require('models/ItemEntry');
+  //   const BillLandedCost = require('models/BillLandedCost');
+  //   const Branch = require('models/Branch');
+  //   const Warehouse = require('models/Warehouse');
+  //   const TaxRateTransaction = require('models/TaxRateTransaction');
+  //   const Document = require('models/Document');
+  //   const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
-    return {
-      vendor: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: Vendor.default,
-        join: {
-          from: 'bills.vendorId',
-          to: 'contacts.id',
-        },
-        filter(query) {
-          query.where('contact_service', 'vendor');
-        },
-      },
+  //   return {
+  //     vendor: {
+  //       relation: Model.BelongsToOneRelation,
+  //       modelClass: Vendor.default,
+  //       join: {
+  //         from: 'bills.vendorId',
+  //         to: 'contacts.id',
+  //       },
+  //       filter(query) {
+  //         query.where('contact_service', 'vendor');
+  //       },
+  //     },
 
-      entries: {
-        relation: Model.HasManyRelation,
-        modelClass: ItemEntry.default,
-        join: {
-          from: 'bills.id',
-          to: 'items_entries.referenceId',
-        },
-        filter(builder) {
-          builder.where('reference_type', 'Bill');
-          builder.orderBy('index', 'ASC');
-        },
-      },
+  //     entries: {
+  //       relation: Model.HasManyRelation,
+  //       modelClass: ItemEntry.default,
+  //       join: {
+  //         from: 'bills.id',
+  //         to: 'items_entries.referenceId',
+  //       },
+  //       filter(builder) {
+  //         builder.where('reference_type', 'Bill');
+  //         builder.orderBy('index', 'ASC');
+  //       },
+  //     },
 
-      locatedLandedCosts: {
-        relation: Model.HasManyRelation,
-        modelClass: BillLandedCost.default,
-        join: {
-          from: 'bills.id',
-          to: 'bill_located_costs.billId',
-        },
-      },
+  //     locatedLandedCosts: {
+  //       relation: Model.HasManyRelation,
+  //       modelClass: BillLandedCost.default,
+  //       join: {
+  //         from: 'bills.id',
+  //         to: 'bill_located_costs.billId',
+  //       },
+  //     },
 
-      /**
-       * Bill may belongs to associated branch.
-       */
-      branch: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: Branch.default,
-        join: {
-          from: 'bills.branchId',
-          to: 'branches.id',
-        },
-      },
+  //     /**
+  //      * Bill may belongs to associated branch.
+  //      */
+  //     branch: {
+  //       relation: Model.BelongsToOneRelation,
+  //       modelClass: Branch.default,
+  //       join: {
+  //         from: 'bills.branchId',
+  //         to: 'branches.id',
+  //       },
+  //     },
 
-      /**
-       * Bill may has associated warehouse.
-       */
-      warehouse: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: Warehouse.default,
-        join: {
-          from: 'bills.warehouseId',
-          to: 'warehouses.id',
-        },
-      },
+  //     /**
+  //      * Bill may has associated warehouse.
+  //      */
+  //     warehouse: {
+  //       relation: Model.BelongsToOneRelation,
+  //       modelClass: Warehouse.default,
+  //       join: {
+  //         from: 'bills.warehouseId',
+  //         to: 'warehouses.id',
+  //       },
+  //     },
 
-      /**
-       * Bill may has associated tax rate transactions.
-       */
-      taxes: {
-        relation: Model.HasManyRelation,
-        modelClass: TaxRateTransaction.default,
-        join: {
-          from: 'bills.id',
-          to: 'tax_rate_transactions.referenceId',
-        },
-        filter(builder) {
-          builder.where('reference_type', 'Bill');
-        },
-      },
+  //     /**
+  //      * Bill may has associated tax rate transactions.
+  //      */
+  //     taxes: {
+  //       relation: Model.HasManyRelation,
+  //       modelClass: TaxRateTransaction.default,
+  //       join: {
+  //         from: 'bills.id',
+  //         to: 'tax_rate_transactions.referenceId',
+  //       },
+  //       filter(builder) {
+  //         builder.where('reference_type', 'Bill');
+  //       },
+  //     },
 
-      /**
-       * Bill may has many attached attachments.
-       */
-      attachments: {
-        relation: Model.ManyToManyRelation,
-        modelClass: Document.default,
-        join: {
-          from: 'bills.id',
-          through: {
-            from: 'document_links.modelId',
-            to: 'document_links.documentId',
-          },
-          to: 'documents.id',
-        },
-        filter(query) {
-          query.where('model_ref', 'Bill');
-        },
-      },
+  //     /**
+  //      * Bill may has many attached attachments.
+  //      */
+  //     attachments: {
+  //       relation: Model.ManyToManyRelation,
+  //       modelClass: Document.default,
+  //       join: {
+  //         from: 'bills.id',
+  //         through: {
+  //           from: 'document_links.modelId',
+  //           to: 'document_links.documentId',
+  //         },
+  //         to: 'documents.id',
+  //       },
+  //       filter(query) {
+  //         query.where('model_ref', 'Bill');
+  //       },
+  //     },
 
-      /**
-       * Bill may belongs to matched bank transaction.
-       */
-      matchedBankTransaction: {
-        relation: Model.HasManyRelation,
-        modelClass: MatchedBankTransaction,
-        join: {
-          from: 'bills.id',
-          to: 'matched_bank_transactions.referenceId',
-        },
-        filter(query) {
-          query.where('reference_type', 'Bill');
-        },
-      },
-    };
-  }
+  //     /**
+  //      * Bill may belongs to matched bank transaction.
+  //      */
+  //     matchedBankTransaction: {
+  //       relation: Model.HasManyRelation,
+  //       modelClass: MatchedBankTransaction,
+  //       join: {
+  //         from: 'bills.id',
+  //         to: 'matched_bank_transactions.referenceId',
+  //       },
+  //       filter(query) {
+  //         query.where('reference_type', 'Bill');
+  //       },
+  //     },
+  //   };
+  // }
 
   /**
    * Retrieve the not found bills ids as array that associated to the given vendor.

@@ -1,7 +1,6 @@
-import { Inject, Service } from 'typedi';
 import { omit } from 'lodash';
 import { ERRORS } from '../constants';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Bill } from '../../Bills/models/Bill';
 import { BillPayment } from '../models/BillPayment';
 import { IBillReceivePageEntry } from '../types/BillPayments.types';

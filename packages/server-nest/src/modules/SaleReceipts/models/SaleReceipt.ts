@@ -119,18 +119,18 @@ export class SaleReceipt extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Customer = require('@/modules/Customers/models/Customer');
-    const Account = require('@/modules/Accounts/models/Account.model');
-    const AccountTransaction = require('@/modules/AccountsTransactions/models/AccountTransaction.model');
-    const ItemEntry = require('@/modules/ItemsEntries/models/ItemEntry');
-    const Branch = require('@/modules/Branches/models/Branch');
-    const Document = require('@/modules/Documents/models/Document');
-    const Warehouse = require('@/modules/Warehouses/models/Warehouse');
+    const { Customer } = require('../../Customers/models/Customer');
+    const { Account } = require('../../Accounts/models/Account.model');
+    const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
+    const { ItemEntry } = require('../../TransactionItemEntry/models/ItemEntry');
+    const { Branch } = require('../../Branches/models/Branch.model');
+    const { Document } = require('../../ChromiumlyTenancy/models/Document');
+    const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
 
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Customer.default,
+        modelClass: Customer,
         join: {
           from: 'sales_receipts.customerId',
           to: 'contacts.id',
@@ -142,7 +142,7 @@ export class SaleReceipt extends BaseModel {
 
       depositAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: Account,
         join: {
           from: 'sales_receipts.depositAccountId',
           to: 'accounts.id',
@@ -151,7 +151,7 @@ export class SaleReceipt extends BaseModel {
 
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: ItemEntry.default,
+        modelClass: ItemEntry,
         join: {
           from: 'sales_receipts.id',
           to: 'items_entries.referenceId',
@@ -164,7 +164,7 @@ export class SaleReceipt extends BaseModel {
 
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: AccountTransaction.default,
+        modelClass: AccountTransaction,
         join: {
           from: 'sales_receipts.id',
           to: 'accounts_transactions.referenceId',
@@ -179,7 +179,7 @@ export class SaleReceipt extends BaseModel {
        */
       branch: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Branch.default,
+        modelClass: Branch,
         join: {
           from: 'sales_receipts.branchId',
           to: 'branches.id',
@@ -191,7 +191,7 @@ export class SaleReceipt extends BaseModel {
        */
       warehouse: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Warehouse.default,
+        modelClass: Warehouse,
         join: {
           from: 'sales_receipts.warehouseId',
           to: 'warehouses.id',
@@ -203,7 +203,7 @@ export class SaleReceipt extends BaseModel {
        */
       attachments: {
         relation: Model.ManyToManyRelation,
-        modelClass: Document.default,
+        modelClass: Document,
         join: {
           from: 'sales_receipts.id',
           through: {

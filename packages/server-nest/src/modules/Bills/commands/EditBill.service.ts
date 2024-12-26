@@ -12,7 +12,8 @@ import { BillDTOTransformer } from './BillDTOTransformer.service';
 import { Bill } from '../models/Bill';
 import { events } from '@/common/events/events';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
-
+import { Knex } from 'knex';
+import { TransactionLandedCostEntriesService } from '@/modules/BillLandedCosts/TransactionLandedCostEntries.service';
 
 @Injectable()
 export class EditBillService {
@@ -21,7 +22,7 @@ export class EditBillService {
     private itemsEntriesService: ItemsEntriesService,
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
-    private entriesService: ItemEntries,
+    private transactionLandedCostEntries: TransactionLandedCostEntriesService,
     private transformerDTO: BillDTOTransformer,
     @Inject(Bill.name) private billModel: typeof Bill,
     @Inject(Vendor.name) private contactModel: typeof Vendor,
@@ -97,12 +98,12 @@ export class EditBillService {
       oldBill.paymentAmount
     );
     // Validate landed cost entries that have allocated cost could not be deleted.
-    await this.entriesService.validateLandedCostEntriesNotDeleted(
+    await this.transactionLandedCostEntries.validateLandedCostEntriesNotDeleted(
       oldBill.entries,
       billObj.entries
     );
     // Validate new landed cost entries should be bigger than new entries.
-    await this.entriesService.validateLocatedCostEntriesSmallerThanNewEntries(
+    await this.transactionLandedCostEntries.validateLocatedCostEntriesSmallerThanNewEntries(
       oldBill.entries,
       billObj.entries  
     );

@@ -6,6 +6,9 @@ import { Model, mixin } from 'objection';
 // import { DEFAULT_VIEWS } from '@/services/Sales/PaymentReceived/constants';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
+import { BillPaymentEntry } from './BillPaymentEntry';
+import { Vendor } from '@/modules/Vendors/models/Vendor';
+import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 
 export class BillPayment extends BaseModel{
   vendorId: number;
@@ -22,6 +25,12 @@ export class BillPayment extends BaseModel{
 
   createdAt?: Date;
   updatedAt?: Date;
+
+  branchId?: number;
+
+  entries?: BillPaymentEntry[];
+  vendor?: Vendor;
+  attachments?: Document[];
 
   /**
    * Table name

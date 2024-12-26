@@ -55,7 +55,7 @@ export class DeleteBill {
       } as IBillEventDeletingPayload);
 
       // Delete all associated bill entries.
-      await ItemEntry.query(trx)
+      await this.itemEntryModel.query(trx)
         .where('reference_type', 'Bill')
         .where('reference_id', billId)
         .delete();

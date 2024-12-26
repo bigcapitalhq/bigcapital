@@ -23,7 +23,7 @@ export class BillsApplication {
     private deleteBillService: DeleteBill,
     private getDueBillsService: GetDueBills,
     private openBillService: OpenBillService,
-    private getBillPaymentsService: GetBillPayments,
+    // private getBillPaymentsService: GetBillPayments,
   ) {}
 
   /**
@@ -99,7 +99,7 @@ export class BillsApplication {
    * @param {number} tenantId
    * @param {number} billId
    */
-  public getBillPayments(billId: number) {
-    return this.getBillPaymentsService.getBillPayments(billId);
-  }
+  // public getBillPayments(billId: number) {
+  //   return this.getBillPaymentsService.getBillPayments(billId);
+  // }
 }

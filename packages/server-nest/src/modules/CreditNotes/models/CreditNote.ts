@@ -181,12 +181,12 @@ export class CreditNote extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const AccountTransaction = require('models/AccountTransaction');
-    const ItemEntry = require('models/ItemEntry');
-    const Customer = require('models/Customer');
-    const Branch = require('models/Branch');
-    const Document = require('models/Document');
-    const Warehouse = require('models/Warehouse');
+    const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
+    const { ItemEntry } = require('../../TransactionItemEntry/models/ItemEntry');
+    const { Customer } = require('../../Customers/models/Customer');
+    const { Branch } = require('../../Branches/models/Branch.model');
+    const { Document } = require('../../ChromiumlyTenancy/models/Document');
+    const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
 
     return {
       /**
@@ -194,7 +194,7 @@ export class CreditNote extends BaseModel {
        */
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: ItemEntry.default,
+        modelClass: ItemEntry,
         join: {
           from: 'credit_notes.id',
           to: 'items_entries.referenceId',
@@ -210,7 +210,7 @@ export class CreditNote extends BaseModel {
        */
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Customer.default,
+        modelClass: Customer,
         join: {
           from: 'credit_notes.customerId',
           to: 'contacts.id',
@@ -225,7 +225,7 @@ export class CreditNote extends BaseModel {
        */
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: AccountTransaction.default,
+        modelClass: AccountTransaction,
         join: {
           from: 'credit_notes.id',
           to: 'accounts_transactions.referenceId',
@@ -240,7 +240,7 @@ export class CreditNote extends BaseModel {
        */
       branch: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Branch.default,
+        modelClass: Branch,
         join: {
           from: 'credit_notes.branchId',
           to: 'branches.id',
@@ -252,7 +252,7 @@ export class CreditNote extends BaseModel {
        */
       warehouse: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Warehouse.default,
+        modelClass: Warehouse,
         join: {
           from: 'credit_notes.warehouseId',
           to: 'warehouses.id',
@@ -264,7 +264,7 @@ export class CreditNote extends BaseModel {
        */
       attachments: {
         relation: Model.ManyToManyRelation,
-        modelClass: Document.default,
+        modelClass: Document,
         join: {
           from: 'credit_notes.id',
           through: {

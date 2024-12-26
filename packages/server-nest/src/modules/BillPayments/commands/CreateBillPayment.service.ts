@@ -58,7 +58,7 @@ export class CreateBillPaymentService {
   public async createBillPayment(
     billPaymentDTO: IBillPaymentDTO,
     trx?: Knex.Transaction,
-  ): Promise<IBillPayment> {
+  ): Promise<BillPayment> {
     const tenantMeta = await this.tenancyContext.getTenant(true);
 
     // Retrieves the payment vendor or throw not found error.

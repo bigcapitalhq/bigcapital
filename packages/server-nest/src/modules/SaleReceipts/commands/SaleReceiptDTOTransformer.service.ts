@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
 import { sumBy, omit } from 'lodash';
-import composeAsync from 'async/compose';
+import * as composeAsync from 'async/compose';
 import moment from 'moment';
 import { SaleReceiptIncrement } from './SaleReceiptIncrement.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
@@ -18,6 +18,15 @@ import { Customer } from '@/modules/Customers/models/Customer';
 
 @Injectable()
 export class SaleReceiptDTOTransformer {
+  /**
+   * @param {ItemsEntriesService} itemsEntriesService - Items entries service.
+   * @param {BranchTransactionDTOTransformer} branchDTOTransform - Branch transaction DTO transformer.
+   * @param {WarehouseTransactionDTOTransform} warehouseDTOTransform - Warehouse transaction DTO transformer.
+   * @param {SaleReceiptValidators} validators - Sale receipt validators.
+   * @param {SaleReceiptIncrement} receiptIncrement - Sale receipt increment.
+   * @param {BrandingTemplateDTOTransformer} brandingTemplatesTransformer - Branding template DTO transformer.
+   * @param {typeof ItemEntry} itemEntryModel - Item entry model.
+   */
   constructor(
     private readonly itemsEntriesService: ItemsEntriesService,
     private readonly branchDTOTransform: BranchTransactionDTOTransformer,
@@ -60,10 +69,9 @@ export class SaleReceiptDTOTransformer {
       reference_type: 'SaleReceipt',
       ...entry,
     }));
-
     const asyncEntries = await composeAsync(
       // Sets default cost and sell account to receipt items entries.
-      this.itemsEntriesService.setItemsEntriesDefaultAccounts(),
+      this.itemsEntriesService.setItemsEntriesDefaultAccounts,
     )(initialEntries);
 
     const entries = R.compose(
@@ -97,6 +105,6 @@ export class SaleReceiptDTOTransformer {
     return R.compose(
       this.branchDTOTransform.transformDTO<SaleReceipt>,
       this.warehouseDTOTransform.transformDTO<SaleReceipt>,
-    )(initialAsyncDTO);
+    )(initialAsyncDTO) as SaleReceipt;
   }
 }

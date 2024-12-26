@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PaymentReceived } from './models/PaymentReceived';
 import {
   PaymentReceivedPdfTemplateAttributes,

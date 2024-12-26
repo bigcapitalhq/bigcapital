@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { Bill } from '../../Bills/models/Bill';
 import { IBillPaymentEntryDTO } from '../types/BillPayments.types';
+import { entriesAmountDiff } from '@/utils/entries-amount-diff';
+import Objection from 'objection';
 
 @Injectable()
 export class BillPaymentBillSync {
-  constructor(private readonly bill: typeof Bill) {}
+  constructor(
+    @Inject(Bill.name)
+    private readonly bill: typeof Bill
+  ) {}
 
   /**
    * Saves bills payment amount changes different.
@@ -18,7 +23,7 @@ export class BillPaymentBillSync {
     oldPaymentMadeEntries?: IBillPaymentEntryDTO[],
     trx?: Knex.Transaction,
   ): Promise<void> {
-    const opers: Promise<void>[] = [];
+    const opers: Objection.QueryBuilder<Bill, Bill[]>[] = [];
 
     const diffEntries = entriesAmountDiff(
       paymentMadeEntries,

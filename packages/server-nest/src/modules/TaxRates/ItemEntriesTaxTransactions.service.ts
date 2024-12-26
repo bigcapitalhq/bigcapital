@@ -15,7 +15,7 @@ export class ItemEntriesTaxTransactions {
    * @param model
    * @returns
    */
-  public assocTaxAmountWithheldFromEntries(model: any) {
+  public assocTaxAmountWithheldFromEntries = (model: any) => {
     const entries = model.entries.map((entry) =>
       this.itemEntryModel.fromJson(entry),
     );

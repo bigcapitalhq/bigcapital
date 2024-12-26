@@ -1,8 +1,7 @@
-import { Inject, Service } from 'typedi';
+import { Inject, Injectable } from '@nestjs/common';
 import { omit } from 'lodash';
 import { IPaymentReceivePageEntry } from '../types/PaymentReceived.types';
 import { ERRORS } from '../constants';
-import { Injectable } from '@nestjs/common';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { ServiceError } from '@/modules/Items/ServiceError';

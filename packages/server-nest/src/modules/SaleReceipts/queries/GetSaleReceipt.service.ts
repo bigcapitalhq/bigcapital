@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SaleReceiptTransformer } from './SaleReceiptTransformer';
 import { SaleReceiptValidators } from '../commands/SaleReceiptValidators.service';
 import { SaleReceipt } from '../models/SaleReceipt';
@@ -7,6 +7,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 @Injectable()
 export class GetSaleReceipt {
   constructor(
+    @Inject(SaleReceipt.name)
     private readonly saleReceiptModel: typeof SaleReceipt,
     private readonly transformer: TransformerInjectable,
     private readonly validators: SaleReceiptValidators,
@@ -26,11 +27,11 @@ export class GetSaleReceipt {
       .withGraphFetched('depositAccount')
       .withGraphFetched('branch')
       .withGraphFetched('attachments')
-      .throwIfNotFound()
+      .throwIfNotFound();
 
     return this.transformer.transform(
       saleReceipt,
-      new SaleReceiptTransformer()
+      new SaleReceiptTransformer(),
     );
   }
 }

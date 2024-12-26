@@ -10,6 +10,7 @@ import { EditTaxRateService } from './commands/EditTaxRate.service';
 import { CommandTaxRatesValidators } from './commands/CommandTaxRatesValidator.service';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TaxRatesApplication } from './TaxRate.application';
+import { ItemEntriesTaxTransactions } from './ItemEntriesTaxTransactions.service';
 
 @Module({
   imports: [],
@@ -24,7 +25,9 @@ import { TaxRatesApplication } from './TaxRate.application';
     CommandTaxRatesValidators,
     TransformerInjectable,
     TenancyContext,
-    TaxRatesApplication
+    TaxRatesApplication,
+    ItemEntriesTaxTransactions
   ],
+  exports: [ItemEntriesTaxTransactions],
 })
 export class TaxRatesModule {}

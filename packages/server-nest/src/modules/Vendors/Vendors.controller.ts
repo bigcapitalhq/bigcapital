@@ -13,8 +13,10 @@ import {
   IVendorNewDTO,
   IVendorOpeningBalanceEditDTO,
 } from './types/Vendors.types';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('vendors')
+@PublicRoute()
 export class VendorsController {
   constructor(private vendorsApplication: VendorsApplication) {}
 

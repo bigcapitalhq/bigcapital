@@ -1,12 +1,17 @@
 import { Model } from 'objection';
 // import TenantModel from 'models/TenantModel';
 import { BaseModel } from '@/models/Model';
+import { Bill } from '@/modules/Bills/models/Bill';
+import { BillPayment } from './BillPayment';
 
 export class BillPaymentEntry extends BaseModel {
   public billPaymentId: number;
   public billId: number;
   public paymentAmount: number;
   public index: number;
+
+  bill?: Bill;
+  payment?: BillPayment;
 
   /**
    * Table name
@@ -32,7 +37,7 @@ export class BillPaymentEntry extends BaseModel {
     return {
       payment: {
         relation: Model.BelongsToOneRelation,
-        modelClass: BillPayment.default,
+        modelClass: BillPayment,
         join: {
           from: 'bills_payments_entries.billPaymentId',
           to: 'bills_payments.id',
@@ -40,7 +45,7 @@ export class BillPaymentEntry extends BaseModel {
       },
       bill: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Bill.default,
+        modelClass: Bill,
         join: {
           from: 'bills_payments_entries.billId',
           to: 'bills.id',

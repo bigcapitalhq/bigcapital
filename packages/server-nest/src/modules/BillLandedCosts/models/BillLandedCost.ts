@@ -4,15 +4,15 @@ import { lowerCase } from 'lodash';
 import { BaseModel } from '@/models/Model';
 
 export class BillLandedCost extends BaseModel {
-  amount: number;
-  fromTransactionId: number;
-  fromTransactionType: string;
-  fromTransactionEntryId: number;
-  allocationMethod: string;
-  costAccountId: number;
-  description: string;
-  billId: number;
-  exchangeRate: number;
+  amount!: number;
+  fromTransactionId!: number;
+  fromTransactionType!: string;
+  fromTransactionEntryId!: number;
+  allocationMethod!: string;
+  costAccountId!: number;
+  description!: string;
+  billId!: number;
+  exchangeRate!: number;
 
   /**
    * Table name
@@ -60,15 +60,19 @@ export class BillLandedCost extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const BillLandedCostEntry = require('models/BillLandedCostEntry');
-    const Bill = require('models/Bill');
-    const ItemEntry = require('models/ItemEntry');
-    const ExpenseCategory = require('models/ExpenseCategory');
+    const { BillLandedCostEntry } = require('./BillLandedCostEntry');
+    const { Bill } = require('../../Bills/models/Bill');
+    const {
+      ItemEntry,
+    } = require('../../TransactionItemEntry/models/ItemEntry');
+    const {
+      ExpenseCategory,
+    } = require('../../Expenses/models/ExpenseCategory.model');
 
     return {
       bill: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Bill.default,
+        modelClass: Bill,
         join: {
           from: 'bill_located_costs.billId',
           to: 'bills.id',
@@ -76,7 +80,7 @@ export class BillLandedCost extends BaseModel {
       },
       allocateEntries: {
         relation: Model.HasManyRelation,
-        modelClass: BillLandedCostEntry.default,
+        modelClass: BillLandedCostEntry,
         join: {
           from: 'bill_located_costs.id',
           to: 'bill_located_cost_entries.billLocatedCostId',
@@ -84,7 +88,7 @@ export class BillLandedCost extends BaseModel {
       },
       allocatedFromBillEntry: {
         relation: Model.BelongsToOneRelation,
-        modelClass: ItemEntry.default,
+        modelClass: ItemEntry,
         join: {
           from: 'bill_located_costs.fromTransactionEntryId',
           to: 'items_entries.id',
@@ -92,7 +96,7 @@ export class BillLandedCost extends BaseModel {
       },
       allocatedFromExpenseEntry: {
         relation: Model.BelongsToOneRelation,
-        modelClass: ExpenseCategory.default,
+        modelClass: ExpenseCategory,
         join: {
           from: 'bill_located_costs.fromTransactionEntryId',
           to: 'expense_transaction_categories.id',

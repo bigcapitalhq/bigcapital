@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateBillPaymentService } from './commands/CreateBillPayment.service';
 import { DeleteBillPayment } from './commands/DeleteBillPayment.service';
 import { EditBillPayment } from './commands/EditBillPayment.service';
-import { GetBillPayments } from './GetBillPayments';
+// import { GetBillPayments } from './GetBillPayments';
 import { GetBillPayment } from './queries/GetBillPayment.service';
 import { GetPaymentBills } from './queries/GetPaymentBills.service';
 import { IBillPaymentDTO } from './types/BillPayments.types';
@@ -17,7 +17,7 @@ export class BillPaymentsApplication {
     private createBillPaymentService: CreateBillPaymentService,
     private deleteBillPaymentService: DeleteBillPayment,
     private editBillPaymentService: EditBillPayment,
-    private getBillPaymentsService: GetBillPayments,
+    // private getBillPaymentsService: GetBillPayments,
     private getBillPaymentService: GetBillPayment,
     private getPaymentBillsService: GetPaymentBills,
   ) {}

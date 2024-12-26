@@ -14,22 +14,23 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
 import { events } from '@/common/events/events';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
-import CreditNoteAppliedInvoice from '@/modules/CreditNotes/models/CreditNoteAppliedInvoice';
+import { CreditNoteAppliedInvoice } from '@/modules/CreditNotes/models/CreditNoteAppliedInvoice';
 
 @Injectable()
 export class DeleteSaleInvoice {
   constructor(
-    @Inject(PaymentReceivedEntry)
-    private paymentReceivedEntryModel: typeof PaymentReceivedEntry,
-
-    @Inject(CreditNoteAppliedInvoice)
-    private creditNoteAppliedInvoiceModel: typeof CreditNoteAppliedInvoice,
-
-    @Inject(SaleInvoice)
-    private saleInvoiceModel: typeof SaleInvoice,
     private unlockEstimateFromInvoice: UnlinkConvertedSaleEstimate,
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
+
+    @Inject(PaymentReceivedEntry.name)
+    private paymentReceivedEntryModel: typeof PaymentReceivedEntry,
+
+    @Inject(CreditNoteAppliedInvoice.name)
+    private creditNoteAppliedInvoiceModel: typeof CreditNoteAppliedInvoice,
+
+    @Inject(SaleInvoice.name)
+    private saleInvoiceModel: typeof SaleInvoice,
   ) {}
 
   /**
@@ -41,8 +42,8 @@ export class DeleteSaleInvoice {
     const entries = await this.paymentReceivedEntryModel
       .query()
       .where('invoice_id', saleInvoiceId);
-    
-      if (entries.length > 0) {
+
+    if (entries.length > 0) {
       throw new ServiceError(ERRORS.INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES);
     }
     return entries;

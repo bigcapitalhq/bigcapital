@@ -4,8 +4,8 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Global()
 @Module({
-  providers: [TransformerInjectable],
+  providers: [TransformerInjectable, TenancyContext],
   exports: [TransformerInjectable],
-  imports: [TenancyContext],
+  imports: [],
 })
 export class TransformerModule {}

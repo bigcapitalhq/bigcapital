@@ -6,6 +6,8 @@ import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 import { Item } from '@/modules/Items/models/Item';
 import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
+import { VendorCreditAppliedBill } from '@/modules/VendorCredit/models/VendorCreditAppliedBill';
+import { transformToMap } from '@/utils/transform-to-key';
 
 @Injectable()
 export class BillsValidators {

@@ -1,10 +1,10 @@
 import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
 
-export default class ExpenseCategory extends BaseModel {
+export class ExpenseCategory extends BaseModel {
   amount!: number;
   allocatedCostAmount!: number;
-  
+
   /**
    * Table name
    */
@@ -31,12 +31,12 @@ export default class ExpenseCategory extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
-    
+    const { Account } = require('../../Accounts/models/Account.model');
+
     return {
       expenseAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: Account,
         join: {
           from: 'expense_transaction_categories.expenseAccountId',
           to: 'accounts.id',

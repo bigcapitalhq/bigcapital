@@ -4,5 +4,6 @@ import { ChromiumlyTenancy } from './ChromiumlyTenancy.service';
 
 @Module({
   providers: [ChromiumlyHtmlConvert, ChromiumlyTenancy],
+  exports: [ChromiumlyHtmlConvert, ChromiumlyTenancy],
 })
 export class ChromiumlyTenancyModule {}

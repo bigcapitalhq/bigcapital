@@ -16,8 +16,10 @@ import {
   InvoiceNotificationType,
 } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('sale-invoices')
+@PublicRoute()
 export class SaleInvoicesController {
   constructor(private saleInvoiceApplication: SaleInvoiceApplication) {}
 

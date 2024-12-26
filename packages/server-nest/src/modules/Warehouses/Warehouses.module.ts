@@ -16,6 +16,7 @@ import { ActivateWarehousesService } from './commands/ActivateWarehouses.service
 import { CreateInitialWarehouse } from './commands/CreateInitialWarehouse.service';
 import { WarehousesSettings } from './WarehousesSettings';
 import { I18nContext } from 'nestjs-i18n';
+import { WarehouseTransactionDTOTransform } from './Integrations/WarehouseTransactionDTOTransform';
 
 @Module({
   imports: [TenancyDatabaseModule],
@@ -36,6 +37,8 @@ import { I18nContext } from 'nestjs-i18n';
     I18nContext,
     TenancyContext,
     TransformerInjectable,
+    WarehouseTransactionDTOTransform
   ],
+  exports: [WarehouseTransactionDTOTransform],
 })
 export class WarehousesModule {}
