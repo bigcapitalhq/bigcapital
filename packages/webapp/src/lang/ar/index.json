@@ -1,4 +1,5 @@
 {
+  "branding": "Branding",
   "hello_world": "مرحبا بالعالم",
   "email_or_phone_number": "البريد الإلكتروني أو رقم الهاتف",
   "password": "كلمه السر",
@@ -1048,6 +1049,7 @@
   "none": "",
   "english": "English",
   "arabic": "العربية",
+  "french": "Français",
   "just_a_moment_we_re_calculating_your_cost_transactions": "لحظة واحدة! نحن نحسب معاملات التكلفة الخاصة بك ، هذا لا يستغرق الكثير من الوقت ، يرجى التحقق بعد فترة.",
   "refresh": "",
   "total_name": "إجمالي {name}",

@@ -29,7 +29,7 @@ export const MONTHS = [
   'december',
 ];
 
-export const ACCEPTED_LOCALES = ['en', 'ar'];
+export const ACCEPTED_LOCALES = ['en', 'ar', 'fr'];
 
 export const ERRORS = {
   TENANT_DATABASE_UPGRADED: 'TENANT_DATABASE_UPGRADED',

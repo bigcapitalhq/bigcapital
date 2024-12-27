@@ -1,4 +1,5 @@
 {
+  "branding": "Branding",
   "email_or_phone_number": "Email or phone number",
   "password": "Password",
   "login": "Login",
@@ -1040,6 +1041,7 @@
   "libyan_diner": "Libyan Diner",
   "english": "English",
   "arabic": "Arabic",
+  "french": "Français",
   "just_a_moment_we_re_calculating_your_cost_transactions": "Just a moment! We're calculating your cost transactions and this doesn't take much time. Please check after some time.",
   "refresh": "Refresh",
   "total_name": "Total {name}",
