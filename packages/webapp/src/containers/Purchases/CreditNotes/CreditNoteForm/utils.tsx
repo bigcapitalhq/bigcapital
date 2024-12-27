@@ -206,8 +206,12 @@ export const useVendorCreditSubtotal = () => {
  */
 export const useVendorCreditDiscountAmount = () => {
   const { values } = useFormikContext();
+  const subtotal = useVendorCreditSubtotal();
+  const discount = toSafeNumber(values.discount);
 
-  return toSafeNumber(values.discount);
+  return values.discount_type === 'percentage'
+    ? (subtotal * discount) / 100
+    : discount;
 };
 
 /**
@@ -255,7 +259,10 @@ export const useVendorCreditTotal = () => {
   const discountAmount = useVendorCreditDiscountAmount();
   const adjustment = useVendorCreditAdjustment();
 
-  return subtotal - discountAmount - adjustment;
+  return R.compose(
+    R.subtract(R.__, discountAmount),
+    R.add(R.__, adjustment),
+  )(subtotal);
 };
 
 /**

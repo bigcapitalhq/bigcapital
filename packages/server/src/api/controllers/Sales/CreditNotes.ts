@@ -239,6 +239,10 @@ export default class PaymentReceivesController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
+      check('entries.*.discount_type')
+        .default(DiscountType.Percentage)
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
       check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.warehouse_id')
         .optional({ nullable: true })

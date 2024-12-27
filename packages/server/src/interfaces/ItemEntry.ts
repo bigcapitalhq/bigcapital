@@ -13,14 +13,17 @@ export interface IItemEntry {
 
   itemId: number;
   description: string;
+  discountType?: string;
   discount: number;
   quantity: number;
   rate: number;
   amount: number;
 
   total: number;
-  amountInclusingTax: number;
-  amountExludingTax: number;
+  totalExcludingTax?: number;
+
+  subtotalInclusingTax: number;
+  subtotalExcludingTax: number;
   discountAmount: number;
 
   landedCost: number;

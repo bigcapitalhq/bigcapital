@@ -1,3 +1,14 @@
+export const OtherExpensesAccount = {
+  name: 'Other Expenses',
+  slug: 'other-expenses',
+  account_type: 'other-expense',
+  code: '40011',
+  description: '',
+  active: 1,
+  index: 1,
+  predefined: 1,
+};
+
 export const TaxPayableAccount = {
   name: 'Tax Payable',
   slug: 'tax-payable',
@@ -39,8 +50,38 @@ export const StripeClearingAccount = {
   code: '100020',
   active: true,
   index: 1,
-  predefined: true, 
-}
+  predefined: true,
+};
+
+export const DiscountExpenseAccount = {
+  name: 'Discount',
+  slug: 'discount',
+  account_type: 'other-income',
+  code: '40008',
+  active: true,
+  index: 1,
+  predefined: true,
+};
+
+export const PurchaseDiscountAccount = {
+  name: 'Purchase Discount',
+  slug: 'purchase-discount',
+  account_type: 'other-expense',
+  code: '40009',
+  active: true,
+  index: 1,
+  predefined: true,
+};
+
+export const OtherChargesAccount = {
+  name: 'Other Charges',
+  slug: 'other-charges',
+  account_type: 'other-income',
+  code: '40010',
+  active: true,
+  index: 1,
+  predefined: true,
+};
 
 export default [
   {
@@ -231,17 +272,7 @@ export default [
   },
 
   // Expenses
-  {
-    name: 'Other Expenses',
-    slug: 'other-expenses',
-    account_type: 'other-expense',
-    parent_account_id: null,
-    code: '40001',
-    description: '',
-    active: 1,
-    index: 1,
-    predefined: 1,
-  },
+  OtherExpensesAccount,
   {
     name: 'Cost of Goods Sold',
     slug: 'cost-of-goods-sold',
@@ -358,4 +389,7 @@ export default [
   },
   UnearnedRevenueAccount,
   PrepardExpenses,
+  DiscountExpenseAccount,
+  PurchaseDiscountAccount,
+  OtherChargesAccount,
 ];

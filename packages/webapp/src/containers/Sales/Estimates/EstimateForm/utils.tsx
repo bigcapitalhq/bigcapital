@@ -245,6 +245,7 @@ export const useEstimateSubtotalFormatted = () => {
  */
 export const useEstimateDiscount = () => {
   const { values } = useFormikContext();
+  const subtotal = useEstimateSubtotal();
   const discount = toSafeNumber(values.discount);
 
   return values?.discount_type === 'percentage'
@@ -298,7 +299,10 @@ export const useEstimateTotal = () => {
   const discount = useEstimateDiscount();
   const adjustment = useEstimateAdjustment();
 
-  return subtotal - discount - adjustment;
+  return R.compose(
+    R.subtract(R.__, discount),
+    R.add(R.__, adjustment),
+  )(subtotal);
 };
 
 /**

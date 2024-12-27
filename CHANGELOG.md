@@ -2,6 +2,66 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.22.0]
+
+* feat: estimate, receipt, credit note mail preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/757
+* feat: Add discount to transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/758
+* fix: update financial forms to use new formatted amount utilities and… by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/760
+* fix: total lines style by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/761
+* fix: discount & adjustment sale transactions bugs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/762
+* fix: discount transactions GL entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/763
+
+# [0.21.2]
+
+* hotbug: upload attachments by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/755
+
+# [0.21.1]
+
+* fix: download invoice document on payment page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/750
+* fix: attach branding template attrs to payment page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/751
+* fix: make manual entries adjust decimal credit/debit amounts by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/754
+* feat: allow quantity of entries accept decimal value by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/753
+
+# [0.21.0]
+
+* fix: Credit and debit totals not balancing when decimal values are used by @nklmantey in https://github.com/bigcapitalhq/bigcapital/pull/722
+* docs: add nklmantey as a contributor for bug by @allcontributors in https://github.com/bigcapitalhq/bigcapital/pull/725
+* feat: track more services events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/721
+* feat: Invoice mail receipt preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/723
+* fix: change the send mail button on invoice drawer by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/730
+* refactor: notification mail services by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/731
+* fix: attach payment link in sending invoice mail receipt by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/732
+* fix: send invoice drawer layout by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/733
+* fix: hook up cc and bcc fields to mail sender by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/734
+* fix: company logo does not show up in mail receipt preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/736
+* fix: change default invoice mail message by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/737
+* fix: typing invoice send mail fields by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/738
+* fix: clean up ivnoice mail receipt preview component by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/739
+* feat: add shared package to pdf templates to render in the server and… by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/735
+* feat: getting invoice preview on send mail view by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/740
+* fix: style SSR invoice paper template by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/741
+* fix: send invoice receipt addresses by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/742
+* fix: due invoice server invoice by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/744
+* fix: `BIG-265` forgot password text by @ibutiti in https://github.com/bigcapitalhq/bigcapital/pull/745
+* Crims on sv translation by @Crims-on in https://github.com/bigcapitalhq/bigcapital/pull/671
+* feat: Added Spanish language to the App 🇪🇸 by @angelosorno in https://github.com/bigcapitalhq/bigcapital/pull/530
+* fix: mail services by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/746
+* fix: company logo of the template by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/747
+* fix: monorepo dependencies scope by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/748
+
+# [0.20.6] 
+
+* fix: Import category column of item resource by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/710
+* fix: Parse the uppercase values in importing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/711
+* chore: Move i18nApply localization to the account transformer by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/713
+* fix: Sync Plaid credit card account type by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/714
+* fix: Sync account normal of cashflow GL entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/715
+* feat: Add quantity column to pdf templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/716
+* feat: Pre-line invoice statements by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/717
+* feat: Invoice number in downloaded pdf document by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/718
+* feat: Track events of pdf documents views by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/719
+* fix: Customer note does not appear in pdf document by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/720
+
 # [0.20.5]
 
 * fix: Disable tabs of the pdf customization if the first field not filed up by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/701

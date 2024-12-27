@@ -1,6 +1,12 @@
 import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
 import { getExlusiveTaxAmount, getInclusiveTaxAmount } from '@/utils/taxRate';
+import { DiscountType } from '@/interfaces';
+
+// Subtotal (qty * rate) (tax inclusive)
+// Subtotal Tax Exclusive (Subtotal - Tax Amount)
+// Discount (Is percentage ? amount * discount : discount)
+// Total (Subtotal - Discount)
 
 export default class ItemEntry extends TenantModel {
   public taxRate: number;
@@ -8,7 +14,7 @@ export default class ItemEntry extends TenantModel {
   public quantity: number;
   public rate: number;
   public isInclusiveTax: number;
-
+  public discountType: DiscountType;
   /**
    * Table name.
    * @returns {string}
@@ -31,10 +37,24 @@ export default class ItemEntry extends TenantModel {
    */
   static get virtualAttributes() {
     return [
+      // Amount (qty * rate)
       'amount',
+
       'taxAmount',
-      'amountExludingTax',
-      'amountInclusingTax',
+
+      // Subtotal (qty * rate) + (tax inclusive)
+      'subtotalInclusingTax',
+
+      // Subtotal Tax Exclusive (Subtotal - Tax Amount)
+      'subtotalExcludingTax',
+
+      // Subtotal (qty * rate) + (tax inclusive)
+      'subtotal',
+
+      // Discount (Is percentage ? amount * discount : discount)
+      'discountAmount',
+
+      // Total (Subtotal - Discount)
       'total',
     ];
   }
@@ -45,7 +65,15 @@ export default class ItemEntry extends TenantModel {
    * @returns {number}
    */
   get total() {
-    return this.amountInclusingTax;
+    return this.subtotal - this.discountAmount;
+  }
+
+  /**
+   * Total (excluding tax).
+   * @returns {number}
+   */
+  get totalExcludingTax() {
+    return this.subtotalExcludingTax - this.discountAmount;
   }
 
   /**
@@ -58,18 +86,26 @@ export default class ItemEntry extends TenantModel {
   }
 
   /**
+   * Subtotal amount (tax inclusive).
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.subtotalInclusingTax;
+  }
+
+  /**
    * Item entry amount including tax.
    * @returns {number}
    */
-  get amountInclusingTax() {
+  get subtotalInclusingTax() {
     return this.isInclusiveTax ? this.amount : this.amount + this.taxAmount;
   }
 
   /**
-   * Item entry amount excluding tax.
+   * Subtotal amount (tax exclusive).
    * @returns {number}
    */
-  get amountExludingTax() {
+  get subtotalExcludingTax() {
     return this.isInclusiveTax ? this.amount - this.taxAmount : this.amount;
   }
 
@@ -78,7 +114,9 @@ export default class ItemEntry extends TenantModel {
    * @returns {number}
    */
   get discountAmount() {
-    return this.amount * (this.discount / 100);
+    return this.discountType === DiscountType.Percentage
+      ? this.amount * (this.discount / 100)
+      : this.discount;
   }
 
   /**

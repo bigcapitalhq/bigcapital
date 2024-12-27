@@ -187,6 +187,11 @@ export default class SalesEstimatesController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
+      check('entries.*.discount_type')
+        .default(DiscountType.Percentage)
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
+
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
         .isNumeric()
@@ -204,13 +209,13 @@ export default class SalesEstimatesController extends BaseController {
       check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
 
       // # Discount
-      check('discount').optional().isNumeric().toFloat(),
+      check('discount').optional({ nullable: true }).isNumeric().toFloat(),
       check('discount_type')
         .default(DiscountType.Amount)
         .isIn([DiscountType.Amount, DiscountType.Percentage]),
 
       // # Adjustment
-      check('adjustment').optional().isNumeric().toFloat(),
+      check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),
     ];
   }
 

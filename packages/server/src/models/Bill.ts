@@ -1,6 +1,7 @@
 import { Model, raw, mixin } from 'objection';
 import { castArray, defaultTo, difference } from 'lodash';
 import moment from 'moment';
+import * as R from 'ramda';
 import TenantModel from 'models/TenantModel';
 import BillSettings from './Bill.Settings';
 import ModelSetting from './ModelSetting';
@@ -55,7 +56,10 @@ export default class Bill extends mixin(TenantModel, [
       'amountLocal',
 
       'discountAmount',
+      'discountAmountLocal',
       'discountPercentage',
+
+      'adjustmentLocal',
 
       'subtotal',
       'subtotalLocal',
@@ -119,11 +123,28 @@ export default class Bill extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount in local currency.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
+  /**
    * Discount percentage.
    * @returns {number | null}
    */
   get discountPercentage(): number | null {
     return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number | null}
+   */
+  get adjustmentLocal() {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
   }
 
   /**
@@ -133,12 +154,11 @@ export default class Bill extends mixin(TenantModel, [
   get total() {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
-    return this.isInclusiveTax
-      ? this.subtotal - this.discountAmount - adjustmentAmount
-      : this.subtotal +
-          this.taxAmountWithheld -
-          this.discountAmount -
-          adjustmentAmount;
+    return R.compose(
+      R.add(adjustmentAmount),
+      R.subtract(R.__, this.discountAmount),
+      R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld))
+    )(this.subtotal);
   }
 
   /**

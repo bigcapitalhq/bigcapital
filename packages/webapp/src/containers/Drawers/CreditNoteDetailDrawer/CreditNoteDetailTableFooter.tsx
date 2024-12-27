@@ -21,6 +21,7 @@ export default function CreditNoteDetailTableFooter() {
         <TotalLine
           title={<T id={'credit_note.drawer.label_subtotal'} />}
           value={creditNote.formatted_subtotal}
+          borderStyle={TotalLineBorderStyle.SingleDark}
         />
         {creditNote.discount_amount > 0 && (
           <TotalLine
@@ -30,7 +31,12 @@ export default function CreditNoteDetailTableFooter() {
                 : 'Discount'
             }
             value={creditNote.discount_amount_formatted}
-            borderStyle={TotalLineBorderStyle.Dark}
+          />
+        )}
+        {creditNote.adjustment_formatted && (
+          <TotalLine
+            title={'Adjustment'}
+            value={creditNote.adjustment_formatted}
           />
         )}
         <TotalLine

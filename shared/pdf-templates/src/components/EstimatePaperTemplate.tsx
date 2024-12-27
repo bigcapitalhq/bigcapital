@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import { Box } from '../lib/layout/Box';
 import { Text } from '../lib/text/Text';
 import { Stack } from '../lib/layout/Stack';
@@ -10,7 +11,12 @@ import {
   DefaultPdfTemplateAddressBilledTo,
   DefaultPdfTemplateAddressBilledFrom,
 } from './_constants';
-import { PaperTemplate, PaperTemplateProps } from './PaperTemplate';
+import {
+  PaperTemplate,
+  PaperTemplateProps,
+  PaperTemplateTotalBorder,
+} from './PaperTemplate';
+import { theme } from '../constants';
 
 export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   // # Company
@@ -43,7 +49,7 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   companyAddress?: string;
   billedToLabel?: string;
 
-  // Totals
+  // Total
   total?: string;
   showTotal?: boolean;
   totalLabel?: string;
@@ -52,6 +58,11 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   discount?: string;
   showDiscount?: boolean;
   discountLabel?: string;
+
+  // # Adjustment
+  adjustment?: string;
+  showAdjustment?: boolean;
+  adjustmentLabel?: string;
 
   // # Subtotal
   subtotal?: string;
@@ -81,6 +92,10 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   lineQuantityLabel?: string;
   lineRateLabel?: string;
   lineTotalLabel?: string;
+
+  // # Line Discount
+  lineDiscountLabel?: string;
+  showLineDiscount?: boolean;
 }
 
 export function EstimatePaperTemplate({
@@ -116,6 +131,11 @@ export function EstimatePaperTemplate({
   subtotal = '1000/00',
   subtotalLabel = 'Subtotal',
   showSubtotal = true,
+
+  // # Adjustment
+  adjustment = '',
+  showAdjustment = true,
+  adjustmentLabel = 'Adjustment',
 
   // # Customer Note
   showCustomerNote = true,
@@ -157,6 +177,10 @@ export function EstimatePaperTemplate({
   lineQuantityLabel = 'Qty',
   lineRateLabel = 'Rate',
   lineTotalLabel = 'Total',
+
+  // # Line Discount
+  lineDiscountLabel = 'Discount',
+  showLineDiscount = false,
 }: EstimatePaperTemplateProps) {
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
@@ -213,16 +237,22 @@ export function EstimatePaperTemplate({
                     <Text>{data.item}</Text>
                     <Text
                       fontSize={'12px'}
-                      // className={Classes.TEXT_MUTED}
-                      // style={{ fontSize: 12 }}
+                      color={theme.colors['cool-gray-500']}
                     >
                       {data.description}
                     </Text>
                   </Stack>
                 ),
+                thStyle: { width: '60%' },
               },
               { label: lineQuantityLabel, accessor: 'quantity' },
               { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              {
+                label: lineDiscountLabel,
+                accessor: 'discount',
+                align: 'right',
+                visible: showLineDiscount,
+              },
               { label: lineTotalLabel, accessor: 'total', align: 'right' },
             ]}
             data={lines}
@@ -232,27 +262,40 @@ export function EstimatePaperTemplate({
               <PaperTemplate.TotalLine
                 label={subtotalLabel}
                 amount={subtotal}
+                border={PaperTemplateTotalBorder.Gray}
+                style={{ fontWeight: 500 }}
               />
             )}
-            {showDiscount && discount && (
+            {showDiscount && !isEmpty(discount) && (
               <PaperTemplate.TotalLine
                 label={discountLabel}
                 amount={discount}
               />
             )}
+            {showAdjustment && !isEmpty(adjustment) && (
+              <PaperTemplate.TotalLine
+                label={adjustmentLabel}
+                amount={adjustment}
+              />
+            )}
             {showTotal && (
-              <PaperTemplate.TotalLine label={totalLabel} amount={total} />
+              <PaperTemplate.TotalLine
+                label={totalLabel}
+                amount={total}
+                border={PaperTemplateTotalBorder.Dark}
+                style={{ fontWeight: 500 }}
+              />
             )}
           </PaperTemplate.Totals>
         </Stack>
 
         <Stack spacing={0}>
-          {showCustomerNote && (
+          {showCustomerNote && !isEmpty(customerNote) && (
             <PaperTemplate.Statement label={customerNoteLabel}>
               {customerNote}
             </PaperTemplate.Statement>
           )}
-          {showTermsConditions && (
+          {showTermsConditions && !isEmpty(termsConditions) && (
             <PaperTemplate.Statement label={termsConditionsLabel}>
               {termsConditions}
             </PaperTemplate.Statement>

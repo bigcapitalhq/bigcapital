@@ -284,8 +284,8 @@ export interface SaleEstimateMailStateResponse {
   subtotal: number;
   subtotalFormatted: string;
 
-  discount: number;
-  discountFormatted: string;
+  discountAmount: number;
+  discountAmountFormatted: string;
   discountLabel: string;
   discountPercentage: number | null;
   discountPercentageFormatted: string;

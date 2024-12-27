@@ -18,11 +18,18 @@ export class CreditNoteTransformer extends Transformer {
       'formattedAmount',
       'formattedCreditsUsed',
       'formattedSubtotal',
+
       'discountAmountFormatted',
+      'discountAmountLocalFormatted',
+
       'discountPercentageFormatted',
+
       'adjustmentFormatted',
+      'adjustmentLocalFormatted',
+
       'totalFormatted',
       'totalLocalFormatted',
+
       'entries',
       'attachments',
     ];
@@ -39,7 +46,7 @@ export class CreditNoteTransformer extends Transformer {
 
   /**
    * Retrieve formatted created at date.
-   * @param credit 
+   * @param credit
    * @returns {string}
    */
   protected formattedCreatedAt = (credit): string => {
@@ -90,40 +97,64 @@ export class CreditNoteTransformer extends Transformer {
 
   /**
    * Retrieves formatted discount amount.
-   * @param credit 
+   * @param credit
    * @returns {string}
    */
   protected discountAmountFormatted = (credit): string => {
     return formatNumber(credit.discountAmount, {
       currencyCode: credit.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount amount in local currency.
+   * @param {ICreditNote} credit
+   * @returns {string}
+   */
+  protected discountAmountLocalFormatted = (credit): string => {
+    return formatNumber(credit.discountAmountLocal, {
+      currencyCode: credit.currencyCode,
+      excerptZero: true,
     });
   };
 
   /**
    * Retrieves formatted discount percentage.
-   * @param credit 
+   * @param credit
    * @returns {string}
    */
   protected discountPercentageFormatted = (credit): string => {
-    return credit.discountPercentage
-      ? `${credit.discountPercentage}%`
-      : '';
+    return credit.discountPercentage ? `${credit.discountPercentage}%` : '';
   };
 
   /**
    * Retrieves formatted adjustment amount.
-   * @param credit 
+   * @param credit
    * @returns {string}
    */
   protected adjustmentFormatted = (credit): string => {
     return this.formatMoney(credit.adjustment, {
       currencyCode: credit.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves the formatted adjustment amount in local currency.
+   * @param {ICreditNote} credit
+   * @returns {string}
+   */
+  protected adjustmentLocalFormatted = (credit): string => {
+    return formatNumber(credit.adjustmentLocal, {
+      currencyCode: this.context.organization.baseCurrency,
+      excerptZero: true,
     });
   };
 
   /**
    * Retrieves the formatted total.
-   * @param credit 
+   * @param credit
    * @returns {string}
    */
   protected totalFormatted = (credit): string => {
@@ -134,7 +165,7 @@ export class CreditNoteTransformer extends Transformer {
 
   /**
    * Retrieves the formatted total in local currency.
-   * @param credit 
+   * @param credit
    * @returns {string}
    */
   protected totalLocalFormatted = (credit): string => {

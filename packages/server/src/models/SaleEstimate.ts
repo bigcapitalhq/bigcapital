@@ -116,7 +116,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
   get total() {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
-    return this.subtotal - this.discountAmount - adjustmentAmount;
+    return this.subtotal - this.discountAmount + adjustmentAmount;
   }
 
   /**

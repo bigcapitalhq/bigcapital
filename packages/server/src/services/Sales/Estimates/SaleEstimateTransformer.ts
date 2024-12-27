@@ -111,6 +111,7 @@ export class SaleEstimateTransfromer extends Transformer {
   protected discountAmountFormatted = (estimate: ISaleEstimate): string => {
     return formatNumber(estimate.discountAmount, {
       currencyCode: estimate.currencyCode,
+      excerptZero: true,
     });
   };
 
@@ -133,6 +134,7 @@ export class SaleEstimateTransfromer extends Transformer {
   protected adjustmentFormatted = (estimate: ISaleEstimate): string => {
     return this.formatMoney(estimate.adjustment, {
       currencyCode: estimate.currencyCode,
+      excerptZero: true,
     });
   };
 

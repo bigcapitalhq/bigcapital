@@ -1,11 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useFormikContext } from 'formik';
 import CreditNoteFormHeaderFields from './CreditNoteFormHeaderFields';
-
-import { getEntriesTotal } from '@/containers/Entries/utils';
 import { Group, PageFormBigNumber } from '@/components';
+import { useCreditNoteTotalFormatted } from './utils';
 
 /**
  * Credit note header.
@@ -31,18 +29,12 @@ function CreditNoteFormHeader() {
  * @returns {React.ReactNode}
  */
 function CreditNoteFormBigNumber() {
-  const {
-    values: { entries, currency_code },
-  } = useFormikContext();
-
-  // Calculate the total amount.
-  const totalAmount = React.useMemo(() => getEntriesTotal(entries), [entries]);
+  const totalFormatted = useCreditNoteTotalFormatted();
 
   return (
     <PageFormBigNumber
       label={intl.get('credit_note.label_amount_to_credit')}
-      amount={totalAmount}
-      currencyCode={currency_code}
+      amount={totalFormatted}
     />
   );
 }

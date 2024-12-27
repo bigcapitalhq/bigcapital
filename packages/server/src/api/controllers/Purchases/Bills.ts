@@ -127,6 +127,11 @@ export default class BillsController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
+      check('entries.*.discount_type')
+        .default(DiscountType.Percentage)
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
+
       check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.landed_cost')
         .optional({ nullable: true })
@@ -153,7 +158,7 @@ export default class BillsController extends BaseController {
       check('discount_type')
         .default(DiscountType.Amount)
         .isIn([DiscountType.Amount, DiscountType.Percentage]),
-      check('discount').optional().isDecimal().toFloat(),
+      check('discount').optional({ nullable: true }).isDecimal().toFloat(),
 
       // # Adjustment
       check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),
@@ -204,7 +209,7 @@ export default class BillsController extends BaseController {
       check('discount_type')
         .default(DiscountType.Amount)
         .isIn([DiscountType.Amount, DiscountType.Percentage]),
-      check('discount').optional().isDecimal().toFloat(),
+      check('discount').optional({ nullable: true }).isDecimal().toFloat(),
 
       // # Adjustment
       check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),

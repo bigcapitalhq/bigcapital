@@ -324,7 +324,7 @@ export const useInvoiceSubtotalFormatted = () => {
 export const useInvoiceDiscountAmount = () => {
   const { values } = useFormikContext();
   const subtotal = useInvoiceSubtotal();
-  const discount = parseFloat(values.discount);
+  const discount = toSafeNumber(values.discount);
 
   return values?.discount_type === 'percentage'
     ? (subtotal * discount) / 100
@@ -350,7 +350,7 @@ export const useInvoiceDiscountAmountFormatted = () => {
  */
 export const useInvoiceAdjustmentAmount = () => {
   const { values } = useFormikContext();
-  const adjustment = parseFloat(values.adjustment);
+  const adjustment = toSafeNumber(values.adjustment);
 
   return adjustment;
 };
@@ -455,7 +455,7 @@ export const useInvoiceTotal = () => {
   return R.compose(
     R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
     R.subtract(R.__, discountAmount),
-    R.subtract(R.__, adjustmentAmount),
+    R.add(adjustmentAmount),
   )(subtotal);
 };
 

@@ -56,7 +56,7 @@ export default class VendorCreditGLEntries {
 
     return {
       ...commonEntity,
-      debit: vendorCredit.localAmount,
+      debit: vendorCredit.totalLocal,
       accountId: APAccountId,
       contactId: vendorCredit.vendorId,
       accountNormal: AccountNormal.CREDIT,
@@ -77,11 +77,11 @@ export default class VendorCreditGLEntries {
       index: number
     ): ILedgerEntry => {
       const commonEntity = this.getVendorCreditGLCommonEntry(vendorCredit);
-      const localAmount = entry.amount * vendorCredit.exchangeRate;
+      const totalLocal = entry.totalExcludingTax * vendorCredit.exchangeRate;
 
       return {
         ...commonEntity,
-        credit: localAmount,
+        credit: totalLocal,
         index: index + 2,
         itemId: entry.itemId,
         itemQuantity: entry.quantity,
@@ -95,6 +95,52 @@ export default class VendorCreditGLEntries {
   );
 
   /**
+   * Retrieves the vendor credit discount GL entry.
+   * @param {IVendorCredit} vendorCredit
+   * @param {number} discountAccountId
+   * @returns {ILedgerEntry}
+   */
+  public getDiscountEntry = (
+    vendorCredit: IVendorCredit,
+    purchaseDiscountAccountId: number
+  ) => {
+    const commonEntry = this.getVendorCreditGLCommonEntry(vendorCredit);
+
+    return {
+      ...commonEntry,
+      debit: vendorCredit.discountAmountLocal,
+      accountId: purchaseDiscountAccountId,
+      accountNormal: AccountNormal.DEBIT,
+      index: 1,
+      indexGroup: 40,
+    };
+  };
+
+  /**
+   * Retrieves the vendor credit adjustment GL entry.
+   * @param {IVendorCredit} vendorCredit
+   * @param {number} adjustmentAccountId
+   * @returns {ILedgerEntry}
+   */
+  public getAdjustmentEntry = (
+    vendorCredit: IVendorCredit,
+    otherExpensesAccountId: number
+  ) => {
+    const commonEntry = this.getVendorCreditGLCommonEntry(vendorCredit);
+    const adjustmentAmount = Math.abs(vendorCredit.adjustmentLocal);
+
+    return {
+      ...commonEntry,
+      credit: vendorCredit.adjustmentLocal > 0 ? adjustmentAmount : 0,
+      debit: vendorCredit.adjustmentLocal < 0 ? adjustmentAmount : 0,
+      accountId: otherExpensesAccountId,
+      accountNormal: AccountNormal.DEBIT,
+      index: 1,
+      indexGroup: 40,
+    };
+  };
+
+  /**
    * Retrieve the vendor credit GL entries.
    * @param  {IVendorCredit} vendorCredit -
    * @param  {number} receivableAccount -
@@ -102,7 +148,9 @@ export default class VendorCreditGLEntries {
    */
   public getVendorCreditGLEntries = (
     vendorCredit: IVendorCredit,
-    payableAccountId: number
+    payableAccountId: number,
+    purchaseDiscountAccountId: number,
+    otherExpensesAccountId: number
   ): ILedgerEntry[] => {
     const payableEntry = this.getVendorCreditPayableGLEntry(
       vendorCredit,
@@ -111,7 +159,15 @@ export default class VendorCreditGLEntries {
     const getItemEntry = this.getVendorCreditGLItemEntry(vendorCredit);
     const itemsEntries = vendorCredit.entries.map(getItemEntry);
 
-    return [payableEntry, ...itemsEntries];
+    const discountEntry = this.getDiscountEntry(
+      vendorCredit,
+      purchaseDiscountAccountId
+    );
+    const adjustmentEntry = this.getAdjustmentEntry(
+      vendorCredit,
+      otherExpensesAccountId
+    );
+    return [payableEntry, discountEntry, adjustmentEntry, ...itemsEntries];
   };
 
   /**
@@ -158,10 +214,17 @@ export default class VendorCreditGLEntries {
       {},
       trx
     );
+    const purchaseDiscountAccount =
+      await accountRepository.findOrCreatePurchaseDiscountAccount({}, trx);
+
+    const otherExpensesAccount =
+      await accountRepository.findOrCreateOtherExpensesAccount({}, trx);
     // Saves the vendor credit GL entries.
     const ledgerEntries = this.getVendorCreditGLEntries(
       vendorCredit,
-      APAccount.id
+      APAccount.id,
+      purchaseDiscountAccount.id,
+      otherExpensesAccount.id
     );
     const ledger = new Ledger(ledgerEntries);
 

@@ -263,7 +263,10 @@ export const useCreditNoteTotal = () => {
   const discountAmount = useCreditNoteDiscountAmount();
   const adjustmentAmount = useCreditNoteAdjustmentAmount();
 
-  return subtotal - discountAmount - adjustmentAmount;
+  return R.compose(
+    R.subtract(R.__, discountAmount),
+    R.add(R.__, adjustmentAmount),
+  )(subtotal);
 };
 
 /**

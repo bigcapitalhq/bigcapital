@@ -9,15 +9,18 @@ import {
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { transformLedgerEntryToTransaction } from './utils';
 
+// Filter the blank entries.
+const filterBlankEntry = (entry: ILedgerEntry) => Boolean(entry.credit || entry.debit);
+
 @Service()
 export class LedgerEntriesStorage {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
   /**
    * Saves entries of the given ledger.
-   * @param   {number} tenantId
-   * @param   {ILedger} ledger
-   * @param   {Knex.Transaction} knex
+   * @param {number} tenantId
+   * @param {ILedger} ledger
+   * @param {Knex.Transaction} knex
    * @returns {Promise<void>}
    */
   public saveEntries = async (
@@ -26,7 +29,7 @@ export class LedgerEntriesStorage {
     trx?: Knex.Transaction
   ) => {
     const saveEntryQueue = async.queue(this.saveEntryTask, 10);
-    const entries = ledger.getEntries();
+    const entries = ledger.filter(filterBlankEntry).getEntries();
 
     entries.forEach((entry) => {
       saveEntryQueue.push({ tenantId, entry, trx });
@@ -57,8 +60,8 @@ export class LedgerEntriesStorage {
 
   /**
    * Saves the ledger entry to the account transactions repository.
-   * @param   {number} tenantId
-   * @param   {ILedgerEntry} entry
+   * @param {number} tenantId
+   * @param {ILedgerEntry} entry
    * @returns {Promise<void>}
    */
   private saveEntry = async (

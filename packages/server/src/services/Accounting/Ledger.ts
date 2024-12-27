@@ -238,6 +238,7 @@ export default class Ledger implements ILedger {
     return {
       credit: defaultTo(entry.credit, 0),
       debit: defaultTo(entry.debit, 0),
+
       exchangeRate: entry.exchangeRate,
       currencyCode: entry.currencyCode,
 

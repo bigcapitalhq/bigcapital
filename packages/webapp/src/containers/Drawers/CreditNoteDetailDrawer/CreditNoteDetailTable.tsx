@@ -22,6 +22,10 @@ export default function CreditNoteDetailTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={entries}
+      initialHiddenColumns={
+        // If any entry has no discount, hide the discount column.
+        entries?.some((e) => e.discount_formatted) ? [] : ['discount']
+      }
       className={'table-constrant'}
     />
   );

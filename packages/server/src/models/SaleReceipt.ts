@@ -49,8 +49,15 @@ export default class SaleReceipt extends mixin(TenantModel, [
       'total',
       'totalLocal',
 
+      'adjustment',
+      'adjustmentLocal',
+
       'discountAmount',
+      'discountAmountLocal',
       'discountPercentage',
+
+      'paid',
+      'paidLocal',
 
       'isClosed',
       'isDraft',
@@ -92,13 +99,19 @@ export default class SaleReceipt extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount in local currency.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
    * Discount percentage.
    * @returns {number | null}
    */
   get discountPercentage(): number | null {
-    return this.discountType === DiscountType.Percentage
-      ? this.discount
-      : null;
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
   }
 
   /**
@@ -108,7 +121,7 @@ export default class SaleReceipt extends mixin(TenantModel, [
   get total() {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
-    return this.subtotal - this.discountAmount - adjustmentAmount;
+    return this.subtotal - this.discountAmount + adjustmentAmount;
   }
 
   /**
@@ -117,6 +130,30 @@ export default class SaleReceipt extends mixin(TenantModel, [
    */
   get totalLocal() {
     return this.total * this.exchangeRate;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number}
+   */
+  get adjustmentLocal() {
+    return this.adjustment * this.exchangeRate;
+  }
+
+  /**
+   * Receipt paid amount.
+   * @returns {number}
+   */
+  get paid() {
+    return this.total;
+  }
+
+  /**
+   * Receipt paid amount in local currency.
+   * @returns {number}
+   */
+  get paidLocal() {
+    return this.paid * this.exchangeRate;
   }
 
   /**

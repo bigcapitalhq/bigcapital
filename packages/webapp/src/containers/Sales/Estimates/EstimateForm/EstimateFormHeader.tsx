@@ -1,12 +1,10 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
-import { useFormikContext } from 'formik';
-import { x } from '@xstyled/emotion';
 
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
-import { getEntriesTotal } from '@/containers/Entries/utils';
 import { Group, PageFormBigNumber } from '@/components';
+import { useEstimateTotalFormatted } from './utils';
 
 // Estimate form top header.
 function EstimateFormHeader() {
@@ -29,19 +27,10 @@ function EstimateFormHeader() {
  * @returns {React.ReactNode}
  */
 function EstimateFormBigTotal() {
-  const {
-    values: { entries, currency_code },
-  } = useFormikContext();
-
-  // Calculate the total due amount of bill entries.
-  const totalDueAmount = useMemo(() => getEntriesTotal(entries), [entries]);
+  const totalFormatted = useEstimateTotalFormatted();
 
   return (
-    <PageFormBigNumber
-      label={intl.get('amount')}
-      amount={totalDueAmount}
-      currencyCode={currency_code}
-    />
+    <PageFormBigNumber label={intl.get('amount')} amount={totalFormatted} />
   );
 }
 

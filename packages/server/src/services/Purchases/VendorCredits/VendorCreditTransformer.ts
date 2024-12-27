@@ -17,9 +17,15 @@ export class VendorCreditTransformer extends Transformer {
       'formattedCreatedAt',
       'formattedCreditsRemaining',
       'formattedInvoicedAmount',
+
       'discountAmountFormatted',
       'discountPercentageFormatted',
+      'discountAmountLocalFormatted',
+
       'adjustmentFormatted',
+      'adjustmentLocalFormatted',
+
+      'totalFormatted',
       'entries',
       'attachments',
     ];
@@ -82,6 +88,19 @@ export class VendorCreditTransformer extends Transformer {
   protected discountAmountFormatted = (credit): string => {
     return formatNumber(credit.discountAmount, {
       currencyCode: credit.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount amount in local currency.
+   * @param {IVendorCredit} credit
+   * @returns {string}
+   */
+  protected discountAmountLocalFormatted = (credit): string => {
+    return formatNumber(credit.discountAmountLocal, {
+      currencyCode: this.context.organization.baseCurrency,
+      excerptZero: true,
     });
   };
 
@@ -102,6 +121,19 @@ export class VendorCreditTransformer extends Transformer {
   protected adjustmentFormatted = (credit): string => {
     return formatNumber(credit.adjustment, {
       currencyCode: credit.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves the formatted adjustment amount in local currency.
+   * @param {IVendorCredit} credit
+   * @returns {string}
+   */
+  protected adjustmentLocalFormatted = (credit): string => {
+    return formatNumber(credit.adjustmentLocal, {
+      currencyCode: this.context.organization.baseCurrency,
+      excerptZero: true,
     });
   };
 
@@ -114,6 +146,15 @@ export class VendorCreditTransformer extends Transformer {
     return formatNumber(credit.invoicedAmount, {
       currencyCode: credit.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the formatted total.
+   * @param {IVendorCredit} credit
+   * @returns {string}
+   */
+  protected totalFormatted = (credit) => {
+    return formatNumber(credit.total, { currencyCode: credit.currencyCode });
   };
 
   /**
