@@ -9,12 +9,12 @@ export default [
     href: '/preferences/general',
   },
   {
-    text: 'Branding',
+    text: <T id={'branding'} />,
     disabled: false,
     href: '/preferences/branding',
   },
   {
-    text: 'Billing',
+    text: <T id={'billing'} />,
     href: '/preferences/billing',
   },
   {
@@ -22,7 +22,7 @@ export default [
     href: '/preferences/users',
   },
   {
-    text: 'Payment Methods',
+    text: <T id={'payment_methods'} />,
     href: '/preferences/payment-methods'
   },
   {
