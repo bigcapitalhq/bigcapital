@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ERRORS } from '../constants';
-import { RefundVendorCredit } from '../../models/RefundVendorCredit';
 import { Account } from '@/modules/Accounts/models/Account.model';
-import { VendorCredit } from '../../models/VendorCredit';
+import { RefundVendorCredit } from '../models/RefundVendorCredit';
+import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { ServiceError } from '@/modules/Items/ServiceError';
 
 @Injectable()

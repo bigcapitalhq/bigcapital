@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IRefundCreditNote } from '../types/CreditNotes.types';
 import { RefundCreditNote } from '../models/RefundCreditNote';
-import { RefundCreditNoteTransformer } from './RefundCreditNoteTransformer';
+import { RefundCreditNoteTransformer } from '../../CreditNotes/queries/RefundCreditNoteTransformer';
 
 @Injectable()
 export class GetRefundCreditNoteTransaction {
@@ -24,7 +23,7 @@ export class GetRefundCreditNoteTransaction {
    */
   public async getRefundCreditTransaction(
     refundCreditId: number
-  ): Promise<IRefundCreditNote> {
+  ): Promise<RefundCreditNote> {
     const refundCreditNote = await this.refundCreditNoteModel
       .query()
       .findById(refundCreditId)

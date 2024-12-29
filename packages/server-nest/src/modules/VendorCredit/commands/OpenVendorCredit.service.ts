@@ -65,7 +65,7 @@ export class OpenVendorCreditService {
       const vendorCredit = await this.vendorCreditModel
         .query(trx)
         .findById(vendorCreditId)
-        .update({
+        .updateAndFetchById(vendorCreditId, {
           openedAt: new Date(),
         });
       // Triggers `onVendorCreditOpened` event.

@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import RefundCreditNoteTransformer from './RefundCreditNoteTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { RefundCreditNote } from '../models/RefundCreditNote';
-import { IRefundCreditNotePOJO } from '../types/CreditNotes.types';
+import { RefundCreditNoteTransformer } from '@/modules/CreditNotes/queries/RefundCreditNoteTransformer';
+import { IRefundCreditNotePOJO } from '../types/CreditNoteRefunds.types';
 
 @Injectable()
 export class ListCreditNoteRefunds {

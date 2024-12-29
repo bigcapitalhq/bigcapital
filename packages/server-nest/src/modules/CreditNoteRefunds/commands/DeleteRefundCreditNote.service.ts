@@ -4,18 +4,17 @@ import { Knex } from 'knex';
 import {
   IRefundCreditNoteDeletedPayload,
   IRefundCreditNoteDeletingPayload,
-  IRefundVendorCreditDeletedPayload,
-} from '../types/CreditNotes.types';
+} from '../types/CreditNoteRefunds.types';
 import { RefundCreditNote } from '../models/RefundCreditNote';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 
 @Injectable()
-export default class DeleteRefundCreditNote {
+export class DeleteRefundCreditNoteService {
   /**
-   * @param {UnitOfWork} uow
-   * @param {EventEmitter2} eventPublisher
-   * @param {typeof RefundCreditNoteModel} refundCreditNoteModel
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {EventEmitter2} eventPublisher - Event emitter.
+   * @param {typeof RefundCreditNote} refundCreditNoteModel - Refund credit note model.
    */
   constructor(
     private readonly uow: UnitOfWork,
@@ -27,8 +26,8 @@ export default class DeleteRefundCreditNote {
 
   /**
    * Retrieve the credit note graph.
-   * @param {number} refundCreditId
-   * @returns
+   * @param {number} refundCreditId - Refund credit note ID.
+   * @returns {Promise<void>}
    */
   public deleteCreditNoteRefund = async (refundCreditId: number) => {
     // Retrieve the old credit note or throw not found service error.
@@ -56,7 +55,6 @@ export default class DeleteRefundCreditNote {
         events.creditNote.onRefundDeleting,
         eventPayload,
       );
-
       // Deletes the refund credit note graph from the storage.
       await this.refundCreditNoteModel
         .query(trx)
@@ -66,7 +64,7 @@ export default class DeleteRefundCreditNote {
       // Triggers `onCreditNoteRefundDeleted` event.
       await this.eventPublisher.emitAsync(
         events.creditNote.onRefundDeleted,
-        eventPayload as IRefundVendorCreditDeletedPayload,
+        eventPayload as IRefundCreditNoteDeletedPayload,
       );
     });
   };

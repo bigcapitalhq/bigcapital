@@ -49,7 +49,6 @@ export class OpenCreditNoteService {
     // Sales the credit note transactions with associated entries.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       const eventPayload = {
-        creditNoteId,
         oldCreditNote,
         trx,
       } as ICreditNoteOpeningPayload;
@@ -62,8 +61,7 @@ export class OpenCreditNoteService {
       // Saves the credit note graph to the storage.
       const creditNote = await this.creditNoteModel
         .query(trx)
-        .findById(creditNoteId)
-        .update({
+        .updateAndFetchById(creditNoteId, {
           openedAt: new Date(),
         });
       // Triggers `onCreditNoteOpened` event.
@@ -77,10 +75,10 @@ export class OpenCreditNoteService {
   };
 
   /**
-   *
-   * @param creditNote
+   * Throws an error if the given credit note is already open.
+   * @param {CreditNote} creditNote -
    */
-  public throwErrorIfAlreadyOpen = (creditNote) => {
+  public throwErrorIfAlreadyOpen = (creditNote: CreditNote) => {
     if (creditNote.openedAt) {
       throw new ServiceError(ERRORS.CREDIT_NOTE_ALREADY_OPENED);
     }

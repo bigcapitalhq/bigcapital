@@ -6,10 +6,10 @@ import {
 } from '../types/CreditNotes.types';
 import { ERRORS } from '../constants';
 import { CreditNote } from '../models/CreditNote';
-import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
+import { CreditNoteAppliedInvoice } from '../../CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
 import {
   RefundCreditNote as RefundCreditNoteModel,
-} from '../models/RefundCreditNote';
+} from '../../CreditNoteRefunds/models/RefundCreditNote';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ItemEntry } from '@/modules/Items/models/ItemEntry';

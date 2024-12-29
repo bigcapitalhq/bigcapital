@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { CreditNotePdfTemplateAttributes, ICreditNote } from '@/interfaces';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
 

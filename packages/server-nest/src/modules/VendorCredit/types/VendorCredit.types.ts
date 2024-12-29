@@ -1,6 +1,9 @@
-import { DiscountType, IDynamicListFilter, IItemEntry, IItemEntryDTO } from '@/interfaces';
 import { Knex } from 'knex';
 import { VendorCredit } from '../models/VendorCredit';
+import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
+import { IRefundVendorCreditDTO } from '@/modules/VendorCreditsRefund/types/VendorCreditRefund.types';
+import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
+import { DiscountType } from '@/common/types/Discount';
 
 export enum VendorCreditAction {
   Create = 'Create',
@@ -10,25 +13,14 @@ export enum VendorCreditAction {
   Refund = 'Refund',
 }
 
-
 export interface IVendorCreditEntryDTO extends IItemEntryDTO {}
 
-export interface IRefundVendorCredit {
-  id?: number | null;
-  date: Date;
-  referenceNo: string;
-  amount: number;
-  currencyCode: string;
-  exchangeRate: number;
-  depositAccountId: number;
-  description: string;
-  vendorCreditId: number;
-  createdAt: Date | null;
-  userId: number;
-  branchId?: number;
-
-  vendorCredit?: VendorCredit
-}
+// export interface IVendorCreditsQueryDTO extends IDynamicListFilter {
+//   page: number;
+//   pageSize: number;
+//   searchKeyword?: string;
+//   filterQuery?: (q: any) => void;
+// }
 
 export interface IVendorCreditDTO {
   vendorId: number;
@@ -53,13 +45,12 @@ export interface IVendorCreditDTO {
 export interface IVendorCreditCreateDTO extends IVendorCreditDTO {}
 export interface IVendorCreditEditDTO extends IVendorCreditDTO {}
 export interface IVendorCreditCreatePayload {
-  // tenantId: number;
   refundVendorCreditDTO: IRefundVendorCreditDTO;
-  vendorCreditId: number;
 }
 
+// Create Vendor Credit Events
+// ------------------------
 export interface IVendorCreditCreatingPayload {
-  // tenantId: number;
   vendorCredit: VendorCredit;
   vendorCreditId: number;
   vendorCreditCreateDTO: IVendorCreditCreateDTO;
@@ -74,26 +65,22 @@ export interface IVendorCreditCreatedPayload {
 }
 
 export interface IVendorCreditCreatedPayload {}
+
+// Delete Vendor Credit Events
+// ------------------------
 export interface IVendorCreditDeletedPayload {
   trx: Knex.Transaction;
-  // tenantId: number;
   vendorCreditId: number;
   oldVendorCredit: VendorCredit;
 }
 
 export interface IVendorCreditDeletingPayload {
   trx: Knex.Transaction;
-  // tenantId: number;
   oldVendorCredit: VendorCredit;
 }
 
-export interface IVendorCreditsQueryDTO extends IDynamicListFilter {
-  page: number;
-  pageSize: number;
-  searchKeyword?: string;
-  filterQuery?: (q: any) => void;
-}
-
+// Edit Vendor Credit Events
+// ------------------------
 export interface IVendorCreditEditingPayload {
   // tenantId: number;
   oldVendorCredit: VendorCredit;
@@ -105,64 +92,18 @@ export interface IVendorCreditEditedPayload {
   // tenantId: number;
   oldVendorCredit: VendorCredit;
   vendorCredit: VendorCredit;
-  vendorCreditId: number;
+  // vendorCreditId: number;
   vendorCreditDTO: IVendorCreditEditDTO;
   trx: Knex.Transaction;
 }
-
-export interface IRefundVendorCreditDTO {
-  amount: number;
-  exchangeRate?: number;
-  depositAccountId: number;
-  description: string;
-  date: Date;
-  branchId?: number;
-}
-
-export interface IRefundVendorCreditDeletedPayload {
-  trx: Knex.Transaction;
-  refundCreditId: number;
-  oldRefundCredit: IRefundVendorCredit;
-  // tenantId: number;
-}
-
-export interface IRefundVendorCreditDeletePayload {
-  trx: Knex.Transaction;
-  refundCreditId: number;
-  oldRefundCredit: IRefundVendorCredit;
-  // tenantId: number;
-}
-export interface IRefundVendorCreditDeletingPayload {
-  trx: Knex.Transaction;
-  refundCreditId: number;
-  oldRefundCredit: IRefundVendorCredit;
-  // tenantId: number;
-}
-
-export interface IRefundVendorCreditCreatingPayload {
-  trx: Knex.Transaction;
-  vendorCredit: VendorCredit;
-  refundVendorCreditDTO: IRefundVendorCreditDTO;
-  // tenantId: number;
-}
-
-export interface IRefundVendorCreditCreatedPayload {
-  refundVendorCredit: IRefundVendorCredit;
-  vendorCredit: VendorCredit;
-  trx: Knex.Transaction;
-  // tenantId: number;
-}
-export interface IRefundVendorCreditPOJO {}
 
 export interface IApplyCreditToBillEntryDTO {
   amount: number;
   billId: number;
 }
 
-export interface IApplyCreditToBillsDTO {
-  entries: IApplyCreditToBillEntryDTO[];
-}
-
+// Open Vendor Credit Events
+// ------------------------
 export interface IVendorCreditOpenedPayload {
   // tenantId: number;
   vendorCreditId: number;
@@ -181,49 +122,4 @@ export interface IVendorCreditOpeningPayload {
   vendorCreditId: number;
   oldVendorCredit: VendorCredit;
   trx: Knex.Transaction;
-}
-
-export interface IVendorCreditApplyToBillsCreatedPayload {
-  // tenantId: number;
-  vendorCredit: VendorCredit;
-  vendorCreditAppliedBills: IVendorCreditAppliedBill[];
-  trx: Knex.Transaction;
-}
-export interface IVendorCreditApplyToBillsCreatingPayload {
-  trx: Knex.Transaction;
-}
-export interface IVendorCreditApplyToBillsCreatePayload {
-  trx: Knex.Transaction;
-}
-export interface IVendorCreditApplyToBillDeletedPayload {
-  // tenantId: number;
-  vendorCredit: VendorCredit;
-  oldCreditAppliedToBill: IVendorCreditAppliedBill;
-  trx: Knex.Transaction;
-}
-
-export interface IVendorCreditApplyToInvoiceDTO {
-  amount: number;
-  billId: number;
-}
-
-export interface IVendorCreditApplyToInvoicesDTO {
-  entries: IVendorCreditApplyToInvoiceDTO[];
-}
-
-export interface IVendorCreditApplyToInvoiceModel {
-  billId: number;
-  amount: number;
-  vendorCreditId: number;
-}
-
-export interface IVendorCreditApplyToInvoicesModel {
-  entries: IVendorCreditApplyToInvoiceModel[];
-  amount: number;
-}
-
-export interface IVendorCreditAppliedBill {
-  billId: number;
-  amount: number;
-  vendorCreditId: number;
 }

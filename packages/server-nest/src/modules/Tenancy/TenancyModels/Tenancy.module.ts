@@ -28,12 +28,15 @@ import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost'
 import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
-import { CreditNoteAppliedInvoice } from '@/modules/CreditNotes/models/CreditNoteAppliedInvoice';
+import { CreditNoteAppliedInvoice } from '@/modules/CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 import { PaymentLink } from '@/modules/PaymentLinks/models/PaymentLink';
 import { SaleReceipt } from '@/modules/SaleReceipts/models/SaleReceipt';
 import { ManualJournal } from '@/modules/ManualJournals/models/ManualJournal';
 import { ManualJournalEntry } from '@/modules/ManualJournals/models/ManualJournalEntry';
+import { RefundCreditNote } from '@/modules/CreditNoteRefunds/models/RefundCreditNote';
+import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
+import { RefundVendorCredit } from '@/modules/VendorCreditsRefund/models/RefundVendorCredit';
 
 const models = [
   Item,
@@ -64,10 +67,15 @@ const models = [
   PaymentReceivedEntry,
   CreditNoteAppliedInvoice,
   CreditNote,
+  RefundCreditNote,
   PaymentLink,
   SaleReceipt,
   ManualJournal,
-  ManualJournalEntry
+  ManualJournalEntry,
+  VendorCredit,
+  VendorCreditAppliedBill,
+  RefundVendorCredit,
+
 ];
 
 const modelProviders = models.map((model) => {

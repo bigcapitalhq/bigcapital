@@ -1,10 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreditNote } from '../models/CreditNote';
-import { ERRORS } from '../constants';
+import { CreditNote } from '../../CreditNotes/models/CreditNote';
+import { ERRORS } from '../../CreditNotes/constants';
 import { ServiceError } from '@/modules/Items/ServiceError';
 
 @Injectable()
 export class DeleteCustomerLinkedCreditNoteService {
+  /**
+   * @param {typeof CreditNote} creditNoteModel - Credit note model.
+   */
   constructor(
     @Inject(CreditNote.name)
     private readonly creditNoteModel: typeof CreditNote,

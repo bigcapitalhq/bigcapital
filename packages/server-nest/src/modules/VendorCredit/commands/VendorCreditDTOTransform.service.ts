@@ -16,7 +16,6 @@ import { VendorCreditAutoIncrementService } from './VendorCreditAutoIncrement.se
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { Injectable } from '@nestjs/common';
 
-
 @Injectable()
 export class VendorCreditDTOTransformService {
   /**
@@ -29,7 +28,7 @@ export class VendorCreditDTOTransformService {
     private itemsEntriesService: ItemsEntriesService,
     private branchDTOTransform: BranchTransactionDTOTransformer,
     private warehouseDTOTransform: WarehouseTransactionDTOTransform,
-    private vendorCreditAutoIncrement: VendorCreditAutoIncrementService
+    private vendorCreditAutoIncrement: VendorCreditAutoIncrementService,
   ) {}
 
   /**
@@ -42,11 +41,11 @@ export class VendorCreditDTOTransformService {
   public transformCreateEditDTOToModel = (
     vendorCreditDTO: IVendorCreditCreateDTO | IVendorCreditEditDTO,
     vendorCurrencyCode: string,
-    oldVendorCredit?: VendorCredit
+    oldVendorCredit?: VendorCredit,
   ): VendorCredit => {
     // Calculates the total amount of items entries.
     const amount = this.itemsEntriesService.getTotalItemsEntries(
-      vendorCreditDTO.entries
+      vendorCreditDTO.entries,
     );
     const entries = R.compose(
       // Associate the default index to each item entry.
@@ -56,7 +55,7 @@ export class VendorCreditDTOTransformService {
       R.map((entry: IVendorCreditEntryDTO) => ({
         referenceType: 'VendorCredit',
         ...entry,
-      }))
+      })),
     )(vendorCreditDTO.entries);
 
     // Retreive the next vendor credit number.
@@ -81,8 +80,9 @@ export class VendorCreditDTOTransformService {
         }),
     };
     return R.compose(
+      VendorCredit.fromJson<VendorCredit>,
       this.branchDTOTransform.transformDTO<VendorCredit>,
-      this.warehouseDTOTransform.transformDTO<VendorCredit>(
+      this.warehouseDTOTransform.transformDTO<VendorCredit>,
     )(initialDTO);
   };
 
@@ -93,7 +93,7 @@ export class VendorCreditDTOTransformService {
    */
   public validateCreditRemainingAmount = (
     vendorCredit: VendorCredit,
-    amount: number
+    amount: number,
   ) => {
     if (vendorCredit.creditsRemaining < amount) {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_HAS_NO_REMAINING_AMOUNT);

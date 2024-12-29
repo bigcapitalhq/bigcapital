@@ -1,3 +1,9 @@
+import { DiscountType } from '@/common/types/Discount';
+import { BaseModel } from '@/models/Model';
+import { Branch } from '@/modules/Branches/models/Branch.model';
+import { Customer } from '@/modules/Customers/models/Customer';
+import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { mixin, Model, raw } from 'objection';
 // import TenantModel from 'models/TenantModel';
 // import ModelSetting from './ModelSetting';
@@ -5,22 +11,32 @@ import { mixin, Model, raw } from 'objection';
 // import { DEFAULT_VIEWS } from '@/services/CreditNotes/constants';
 // import ModelSearchable from './ModelSearchable';
 // import CreditNoteMeta from './CreditNote.Meta';
-import { BaseModel } from '@/models/Model';
+// import { DiscountType } from '@/interfaces';
 
 export class CreditNote extends BaseModel {
-  customerId: number;
-  creditNoteDate: Date;
-  creditNoteNumber: string;
-  referenceNo: string;
-  amount: number;
-  exchangeRate: number;
-  refundedAmount: number;
-  invoicesAmount: number;
-  currencyCode: string;
-  note: string;
-  termsConditions: string;
-  openedAt: Date;
-  userId: number;
+  public amount: number;
+  public exchangeRate: number;
+  public openedAt: Date;
+  public discount: number;
+  public discountType: DiscountType;
+  public adjustment: number;
+  public refundedAmount: number;
+  public invoicesAmount: number;
+  public creditNoteDate: Date;
+  public creditNoteNumber: string;
+  public currencyCode: string;
+  public customerId: number;
+
+  public branchId: number;
+  public warehouseId: number;
+
+  public customer!: Customer;
+  public entries!: ItemEntry[];
+
+  public branch!: Branch;
+  public warehouse!: Warehouse;
+
+
 
   /**
    * Table name
@@ -46,8 +62,21 @@ export class CreditNote extends BaseModel {
       'isPublished',
       'isOpen',
       'isClosed',
+
       'creditsRemaining',
       'creditsUsed',
+
+      'subtotal',
+      'subtotalLocal',
+
+      'discountAmount',
+      'discountAmountLocal',
+      'discountPercentage',
+
+      'total',
+      'totalLocal',
+
+      'adjustmentLocal',
     ];
   }
 
@@ -57,6 +86,72 @@ export class CreditNote extends BaseModel {
    */
   get localAmount() {
     return this.amount * this.exchangeRate;
+  }
+
+  /**
+   * Credit note subtotal.
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.amount;
+  }
+
+  /**
+   * Credit note subtotal in local currency.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.subtotal * this.exchangeRate;
+  }
+
+  /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount amount in local currency.
+   * @returns {number}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number}
+   */
+  get adjustmentLocal() {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
+  }
+
+  /**
+   * Credit note total.
+   * @returns {number}
+   */
+  get total() {
+    return this.subtotal - this.discountAmount + this.adjustment;
+  }
+
+  /**
+   * Credit note total in local currency.
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
   }
 
   /**
@@ -98,6 +193,9 @@ export class CreditNote extends BaseModel {
     return Math.max(this.amount - this.refundedAmount - this.invoicesAmount, 0);
   }
 
+  /**
+   * Retrieve the credits used.
+   */
   get creditsUsed() {
     return this.refundedAmount + this.invoicesAmount;
   }
@@ -128,7 +226,7 @@ export class CreditNote extends BaseModel {
         query
           .where(
             raw(`COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) <
-            COALESCE(AMOUNT)`)
+            COALESCE(AMOUNT)`),
           )
           .modify('published');
       },
@@ -140,7 +238,7 @@ export class CreditNote extends BaseModel {
         query
           .where(
             raw(`COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) =
-            COALESCE(AMOUNT)`)
+            COALESCE(AMOUNT)`),
           )
           .modify('published');
       },
@@ -171,7 +269,7 @@ export class CreditNote extends BaseModel {
        */
       sortByStatus(query, order) {
         query.orderByRaw(
-          `COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) = COALESCE(AMOUNT) ${order}`
+          `COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) = COALESCE(AMOUNT) ${order}`,
         );
       },
     };
@@ -181,12 +279,15 @@ export class CreditNote extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
-    const { ItemEntry } = require('../../TransactionItemEntry/models/ItemEntry');
+    const {
+      AccountTransaction,
+    } = require('../../Accounts/models/AccountTransaction.model');
+    const { ItemEntry } = require('../../Items/models/ItemEntry');
     const { Customer } = require('../../Customers/models/Customer');
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
+    const { PdfTemplate } = require('../../PdfTemplate/models/PdfTemplate');
 
     return {
       /**
@@ -277,12 +378,24 @@ export class CreditNote extends BaseModel {
           query.where('model_ref', 'CreditNote');
         },
       },
+
+      /**
+       * Credit note may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplate,
+        join: {
+          from: 'credit_notes.pdfTemplateId',
+          to: 'pdf_templates.id',
+        },
+      },
     };
   }
 
-  /**
-   * Sale invoice meta.
-   */
+  // /**
+  //  * Sale invoice meta.
+  //  */
   // static get meta() {
   //   return CreditNoteMeta;
   // }

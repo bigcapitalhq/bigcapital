@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ERRORS } from '../constants';
+import { ERRORS } from '../../CreditNotes/constants';
 import { RefundCreditNote } from '../models/RefundCreditNote';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { Account } from '@/modules/Accounts/models/Account.model';

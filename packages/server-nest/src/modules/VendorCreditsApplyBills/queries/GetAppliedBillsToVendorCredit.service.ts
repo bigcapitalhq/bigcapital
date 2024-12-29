@@ -8,6 +8,8 @@ import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 export class GetAppliedBillsToVendorCreditService {
   constructor(
     private readonly transformer: TransformerInjectable,
+
+    @Inject(VendorCreditAppliedBill.name)
     private readonly vendorCreditAppliedBillModel: typeof VendorCreditAppliedBill,
 
     @Inject(VendorCredit.name)

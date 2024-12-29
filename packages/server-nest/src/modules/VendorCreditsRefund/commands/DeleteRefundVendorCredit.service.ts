@@ -1,12 +1,12 @@
 import { Knex } from 'knex';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   IRefundVendorCreditDeletedPayload,
   IRefundVendorCreditDeletePayload,
   IRefundVendorCreditDeletingPayload,
-} from '@/modules/VendorCredit/types/VendorCredit.types';
-import { Inject, Injectable } from '@nestjs/common';
-import { RefundVendorCredit } from '../../models/RefundVendorCredit';
-import { RefundVendorCreditService } from './RefundVendorCredit.service';
+} from '../types/VendorCreditRefund.types';
+import { RefundVendorCredit } from '../models/RefundVendorCredit';
+// import { RefundVendorCreditService } from './RefundVendorCredit.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
@@ -24,8 +24,7 @@ export class DeleteRefundVendorCreditService {
 
     @Inject(RefundVendorCredit.name)
     private readonly refundVendorCreditModel: typeof RefundVendorCredit,
-  ) {
-  }
+  ) {}
 
   /**
    * Deletes the refund vendor credit.
@@ -33,12 +32,14 @@ export class DeleteRefundVendorCreditService {
    * @returns {Promise<void>}
    */
   public async deleteRefundVendorCreditRefund(
-    refundCreditId: number
+    refundCreditId: number,
   ): Promise<void> {
     // Retrieve the old credit note or throw not found service error.
-    const oldRefundCredit = await this.getRefundVendorCreditOrThrowError(
-      refundCreditId
-    );
+    const oldRefundCredit = await this.refundVendorCreditModel
+      .query()
+      .findById(refundCreditId)
+      .throwIfNotFound();
+
     // Triggers `onVendorCreditRefundDelete` event.
     await this.eventPublisher.emitAsync(events.vendorCredit.onRefundDelete, {
       refundCreditId,
@@ -56,7 +57,7 @@ export class DeleteRefundVendorCreditService {
       // Triggers `onVendorCreditRefundDeleting` event.
       await this.eventPublisher.emitAsync(
         events.vendorCredit.onRefundDeleting,
-        eventPayload
+        eventPayload,
       );
       // Deletes the refund vendor credit graph from the storage.
       await this.refundVendorCreditModel
@@ -67,7 +68,7 @@ export class DeleteRefundVendorCreditService {
       // Triggers `onVendorCreditRefundDeleted` event.
       await this.eventPublisher.emitAsync(
         events.vendorCredit.onRefundDeleted,
-        eventPayload as IRefundVendorCreditDeletedPayload
+        eventPayload as IRefundVendorCreditDeletedPayload,
       );
     });
   }

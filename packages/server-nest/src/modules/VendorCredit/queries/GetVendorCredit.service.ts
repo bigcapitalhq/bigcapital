@@ -1,13 +1,17 @@
+import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { VendorCreditTransformer } from './VendorCreditTransformer';
 import { ERRORS } from '../constants';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { VendorCredit } from '../models/VendorCredit';
 import { ServiceError } from '@/modules/Items/ServiceError';
-import { Knex } from 'knex';
 
 @Injectable()
-export default class GetVendorCreditService {
+export class GetVendorCreditService {
+  /**
+   * @param {typeof VendorCredit} vendorCreditModel - Vendor credit model.
+   * @param {TransformerInjectable} transformer - Transformer service.
+   */
   constructor(
     @Inject(VendorCredit.name)
     private readonly vendorCreditModel: typeof VendorCredit,
@@ -15,20 +19,18 @@ export default class GetVendorCreditService {
   ) {}
 
   /**
-   * Retrieve the given vendor credit.
+   * Retrieves the given vendor credit.
    * @param {number} vendorCreditId - Vendor credit id.
+   * @param {Knex.Transaction} trx - Knex transaction.
    */
-  public async getVendorCredit(
-    vendorCreditId: number,
-    trx?: Knex.Transaction,
-  ) {
+  public async getVendorCredit(vendorCreditId: number, trx?: Knex.Transaction) {
     // Retrieve the vendor credit model graph.
     const vendorCredit = await this.vendorCreditModel
-      .query()
+      .query(trx)
       .findById(vendorCreditId)
       .withGraphFetched('entries.item')
       .withGraphFetched('vendor')
-      .withGraphFetched('branch') 
+      .withGraphFetched('branch')
       .withGraphFetched('attachments');
 
     if (!vendorCredit) {
@@ -36,7 +38,7 @@ export default class GetVendorCreditService {
     }
     return this.transformer.transform(
       vendorCredit,
-      new VendorCreditTransformer()
+      new VendorCreditTransformer(),
     );
   }
 }

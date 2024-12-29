@@ -10,16 +10,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class SaleEstimate extends BaseModel {
-  constructor(
-    private readonly itemEntryModel: typeof ItemEntry,
-    private readonly customerModel: typeof Customer,
-    private readonly branchModel: typeof Branch,
-    private readonly warehouseModel: typeof Warehouse,
-    private readonly documentModel: typeof Document,
-  ) {
-    super();
-  }
-
   exchangeRate!: number;
   amount!: number;
 
@@ -216,64 +206,64 @@ export class SaleEstimate extends BaseModel {
   /**
    * Relationship mapping.
    */
-  static get relationMappings() {
-    return {
-      customer: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: this.customerModel,
-        join: {
-          from: 'sales_estimates.customerId',
-          to: 'contacts.id',
-        },
-        filter(query) {
-          query.where('contact_service', 'customer');
-        },
-      },
-      entries: {
-        relation: Model.HasManyRelation,
-        modelClass: this.itemEntryModel,
-        join: {
-          from: 'sales_estimates.id',
-          to: 'items_entries.referenceId',
-        },
-        filter(builder) {
-          builder.where('reference_type', 'SaleEstimate');
-          builder.orderBy('index', 'ASC');
-        },
-      },
-      branch: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: this.branchModel,
-        join: {
-          from: 'sales_estimates.branchId',
-          to: 'branches.id',
-        },
-      },
-      warehouse: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: this.warehouseModel,
-        join: {
-          from: 'sales_estimates.warehouseId',
-          to: 'warehouses.id',
-        },
-      },
-      attachments: {
-        relation: Model.ManyToManyRelation,
-        modelClass: this.documentModel,
-        join: {
-          from: 'sales_estimates.id',
-          through: {
-            from: 'document_links.modelId',
-            to: 'document_links.documentId',
-          },
-          to: 'documents.id',
-        },
-        filter(query) {
-          query.where('model_ref', 'SaleEstimate');
-        },
-      },
-    };
-  }
+  // static get relationMappings() {
+  //   return {
+  //     customer: {
+  //       relation: Model.BelongsToOneRelation,
+  //       modelClass: this.customerModel,
+  //       join: {
+  //         from: 'sales_estimates.customerId',
+  //         to: 'contacts.id',
+  //       },
+  //       filter(query) {
+  //         query.where('contact_service', 'customer');
+  //       },
+  //     },
+  //     entries: {
+  //       relation: Model.HasManyRelation,
+  //       modelClass: this.itemEntryModel,
+  //       join: {
+  //         from: 'sales_estimates.id',
+  //         to: 'items_entries.referenceId',
+  //       },
+  //       filter(builder) {
+  //         builder.where('reference_type', 'SaleEstimate');
+  //         builder.orderBy('index', 'ASC');
+  //       },
+  //     },
+  //     branch: {
+  //       relation: Model.BelongsToOneRelation,
+  //       modelClass: this.branchModel,
+  //       join: {
+  //         from: 'sales_estimates.branchId',
+  //         to: 'branches.id',
+  //       },
+  //     },
+  //     warehouse: {
+  //       relation: Model.BelongsToOneRelation,
+  //       modelClass: this.warehouseModel,
+  //       join: {
+  //         from: 'sales_estimates.warehouseId',
+  //         to: 'warehouses.id',
+  //       },
+  //     },
+  //     attachments: {
+  //       relation: Model.ManyToManyRelation,
+  //       modelClass: this.documentModel,
+  //       join: {
+  //         from: 'sales_estimates.id',
+  //         through: {
+  //           from: 'document_links.modelId',
+  //           to: 'document_links.documentId',
+  //         },
+  //         to: 'documents.id',
+  //       },
+  //       filter(query) {
+  //         query.where('model_ref', 'SaleEstimate');
+  //       },
+  //     },
+  //   };
+  // }
 
   /**
    * Model settings.

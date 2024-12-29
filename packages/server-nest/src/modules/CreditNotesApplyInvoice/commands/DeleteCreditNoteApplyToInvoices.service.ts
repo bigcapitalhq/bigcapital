@@ -1,16 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { IApplyCreditToInvoicesDeletedPayload } from '../types/CreditNotes.types';
+import { IApplyCreditToInvoicesDeletedPayload } from '../types/CreditNoteApplyInvoice.types';
 import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
-import { CreditNote } from '../models/CreditNote';
-import { ERRORS } from '../constants';
+import { CreditNote } from '../../CreditNotes/models/CreditNote';
+import { ERRORS } from '../../CreditNotes/constants';
 
 @Injectable()
 export default class DeleteCreditNoteApplyToInvoices {
+  /**
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {EventEmitter2} eventPublisher - Event emitter.
+   * @param {typeof CreditNoteAppliedInvoice} creditNoteAppliedInvoiceModel - Credit note applied invoice model.
+   * @param {typeof CreditNote} creditNoteModel - Credit note model.
+   */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,

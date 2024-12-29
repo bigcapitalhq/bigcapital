@@ -38,6 +38,7 @@
     "@types/passport-local": "^1.0.38",
     "@types/ramda": "^0.30.2",
     "accounting": "^0.4.1",
+    "bluebird": "^3.7.2",
     "async": "^3.2.0",
     "axios": "^1.6.0",
     "form-data": "^4.0.0",

@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   ICreditNoteCreatedPayload,
   ICreditNoteCreatingPayload,
@@ -15,13 +15,25 @@ import { events } from '@/common/events/events';
 
 @Injectable()
 export class CreateCreditNoteService {
+  /**
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {ItemsEntriesService} itemsEntriesService - Items entries service.
+   * @param {EventEmitter2} eventPublisher - Event emitter.
+   * @param {typeof CreditNote} creditNoteModel - Credit note model.
+   * @param {typeof Contact} contactModel - Contact model.
+   * @param {CommandCreditNoteDTOTransform} commandCreditNoteDTOTransform - Command credit note DTO transform service.
+   */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly itemsEntriesService: ItemsEntriesService,
     private readonly eventPublisher: EventEmitter2,
-    private readonly creditNoteModel: typeof CreditNote,
-    private readonly contactModel: typeof Contact,
     private readonly commandCreditNoteDTOTransform: CommandCreditNoteDTOTransform,
+
+    @Inject(CreditNote.name)
+    private readonly creditNoteModel: typeof CreditNote,
+
+    @Inject(Contact.name)
+    private readonly contactModel: typeof Contact,
   ) {}
 
   /**

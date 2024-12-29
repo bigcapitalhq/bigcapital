@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
-import { IRefundVendorCredit } from '../../types/VendorCredit.types';
-import { VendorCredit } from '../../models/VendorCredit';
+import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
+import { RefundVendorCredit } from '../models/RefundVendorCredit';
 
 @Injectable()
 export class RefundSyncVendorCreditBalance {
@@ -12,11 +12,11 @@ export class RefundSyncVendorCreditBalance {
 
   /**
    * Increment vendor credit refunded amount.
-   * @param {IRefundVendorCredit} refundCreditNote -
+   * @param {RefundVendorCredit} refundCreditNote -
    * @param {Knex.Transaction} trx -
    */
   public async incrementVendorCreditRefundAmount(
-    refundVendorCredit: IRefundVendorCredit,
+    refundVendorCredit: RefundVendorCredit,
     trx?: Knex.Transaction
   ): Promise<void> {
     await this.vendorCreditModel
@@ -26,11 +26,11 @@ export class RefundSyncVendorCreditBalance {
 
   /**
    * Decrement vendor credit refunded amount.
-   * @param {IRefundVendorCredit} refundCreditNote
+   * @param {RefundVendorCredit} refundCreditNote
    * @param {Knex.Transaction} trx
    */
   public async decrementVendorCreditRefundAmount(
-    refundVendorCredit: IRefundVendorCredit,
+    refundVendorCredit: RefundVendorCredit,
     trx?: Knex.Transaction
   ): Promise<void> {
     await this.vendorCreditModel

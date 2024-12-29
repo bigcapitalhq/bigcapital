@@ -19,6 +19,8 @@ export class DeleteApplyVendorCreditToBillService {
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
+    
+    @Inject(VendorCreditAppliedBill.name)
     private readonly vendorCreditAppliedBillModel: typeof VendorCreditAppliedBill,
 
     @Inject(VendorCredit.name)

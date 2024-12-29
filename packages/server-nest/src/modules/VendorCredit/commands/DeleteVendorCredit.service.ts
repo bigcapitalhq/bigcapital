@@ -11,7 +11,7 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { VendorCreditAppliedBill } from '../../VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ServiceError } from '@/modules/Items/ServiceError';
-import { RefundVendorCredit } from '../models/RefundVendorCredit';
+import { RefundVendorCredit } from '../../VendorCreditsRefund/models/RefundVendorCredit';
 import { events } from '@/common/events/events';
 
 @Injectable()
@@ -25,10 +25,14 @@ export class DeleteVendorCreditService {
    * @param {typeof VendorCreditAppliedBill} vendorCreditAppliedBillModel - The vendor credit applied bill model.
    */
   constructor(
-    private vendorCreditModel: typeof VendorCredit,
-    private itemEntryModel: typeof ItemEntry,
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
+
+    @Inject(ItemEntry.name)
+    private itemEntryModel: typeof ItemEntry,
+
+    @Inject(VendorCredit.name)
+    private vendorCreditModel: typeof VendorCredit,
 
     @Inject(RefundVendorCredit.name)
     private refundVendorCreditModel: typeof RefundVendorCredit,
@@ -46,7 +50,7 @@ export class DeleteVendorCreditService {
     trx?: Knex.Transaction,
   ) => {
     // Retrieve the old vendor credit.
-    const oldVendorCredit = await this.refundVendorCreditModel
+    const oldVendorCredit = await this.vendorCreditModel
       .query()
       .findById(vendorCreditId)
       .throwIfNotFound();

@@ -5,7 +5,7 @@ import { mixin, Model } from 'objection';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
-import { CreditNote } from './CreditNote';
+import { CreditNote } from '../../CreditNotes/models/CreditNote';
 
 export class CreditNoteAppliedInvoice extends BaseModel {
   public amount: number;

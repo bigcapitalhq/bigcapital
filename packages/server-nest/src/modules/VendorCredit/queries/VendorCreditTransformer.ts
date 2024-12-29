@@ -1,6 +1,7 @@
 import { AttachmentTransformer } from "@/modules/Attachments/Attachment.transformer";
 import { ItemEntryTransformer } from "@/modules/TransactionItemEntry/ItemEntry.transformer";
 import { Transformer } from "@/modules/Transformer/Transformer";
+import { VendorCredit } from "../models/VendorCredit";
 
 export class VendorCreditTransformer extends Transformer {
   /**
@@ -31,28 +32,28 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retrieve formatted vendor credit date.
-   * @param {IVendorCredit} credit
+   * @param {VendorCredit} credit
    * @returns {String}
    */
-  protected formattedVendorCreditDate = (vendorCredit): string => {
+  protected formattedVendorCreditDate = (vendorCredit: VendorCredit): string => {
     return this.formatDate(vendorCredit.vendorCreditDate);
   };
 
   /**
    * Retireve formatted created at date.
-   * @param vendorCredit
+   * @param {VendorCredit} vendorCredit
    * @returns {string}
    */
-  protected formattedCreatedAt = (vendorCredit): string => {
+  protected formattedCreatedAt = (vendorCredit: VendorCredit): string => {
     return this.formatDate(vendorCredit.createdAt);
   };
 
   /**
    * Retrieve formatted vendor credit amount.
-   * @param {IVendorCredit} credit
+   * @param {VendorCredit} credit
    * @returns {string}
    */
-  protected formattedAmount = (vendorCredit): string => {
+  protected formattedAmount = (vendorCredit: VendorCredit): string => {
     return this.formatNumber(vendorCredit.amount, {
       currencyCode: vendorCredit.currencyCode,
     });
@@ -60,19 +61,19 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retrieves the vendor credit formatted subtotal.
-   * @param {IVendorCredit} vendorCredit
+   * @param {VendorCredit} vendorCredit
    * @returns {string}
    */
-  protected formattedSubtotal = (vendorCredit): string => {
+  protected formattedSubtotal = (vendorCredit: VendorCredit): string => {
     return this.formatNumber(vendorCredit.amount, { money: false });
   };
 
   /**
    * Retrieve formatted credits remaining.
-   * @param {IVendorCredit} credit
+   * @param {VendorCredit} credit
    * @returns {string}
    */
-  protected formattedCreditsRemaining = (credit) => {
+  protected formattedCreditsRemaining = (credit: VendorCredit): string => {
     return this.formatNumber(credit.creditsRemaining, {
       currencyCode: credit.currencyCode,
     });
@@ -92,7 +93,7 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retrieves the formatted discount amount in local currency.
-   * @param {IVendorCredit} credit
+   * @param {VendorCredit} credit
    * @returns {string}
    */
   protected discountAmountLocalFormatted = (credit): string => {
@@ -104,7 +105,7 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retrieves the formatted discount percentage.
-   * @param {IVendorCredit} credit
+   * @param {VendorCredit} credit
    * @returns {string}
    */
   protected discountPercentageFormatted = (credit): string => {
@@ -113,7 +114,7 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retrieves the formatted adjustment amount.
-   * @param {IVendorCredit} credit
+   * @param {VendorCredit} credit
    * @returns {string}
    */
   protected adjustmentFormatted = (credit): string => {
@@ -125,10 +126,10 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retrieves the formatted adjustment amount in local currency.
-   * @param {IVendorCredit} credit
+   * @param {VendorCredit} credit
    * @returns {string}
    */
-  protected adjustmentLocalFormatted = (credit): string => {
+  protected adjustmentLocalFormatted = (credit: VendorCredit): string => {
     return this.formatNumber(credit.adjustmentLocal, {
       currencyCode: this.context.organization.baseCurrency,
       excerptZero: true,
@@ -140,7 +141,7 @@ export class VendorCreditTransformer extends Transformer {
    * @param credit
    * @returns {string}
    */
-  protected formattedInvoicedAmount = (credit) => {
+  protected formattedInvoicedAmount = (credit: VendorCredit): string => {
     return this.formatNumber(credit.invoicedAmount, {
       currencyCode: credit.currencyCode,
     });
@@ -148,10 +149,10 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retrieves the formatted total.
-   * @param {IVendorCredit} credit
+   * @param {VendorCredit} credit
    * @returns {string}
    */
-  protected totalFormatted = (credit) => {
+  protected totalFormatted = (credit: VendorCredit): string => {
     return this.formatNumber(credit.total, {
       currencyCode: credit.currencyCode,
     });
@@ -159,10 +160,10 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retrieves the entries of the bill.
-   * @param {IVendorCredit} vendorCredit
+   * @param {VendorCredit} vendorCredit
    * @returns {}
    */
-  protected entries = (vendorCredit) => {
+  protected entries = (vendorCredit: VendorCredit) => {
     return this.item(vendorCredit.entries, new ItemEntryTransformer(), {
       currencyCode: vendorCredit.currencyCode,
     });
@@ -170,10 +171,10 @@ export class VendorCreditTransformer extends Transformer {
 
   /**
    * Retrieves the vendor credit attachments.
-   * @param {IVendorCredit} invoice
+   * @param {VendorCredit} invoice
    * @returns
    */
-  protected attachments = (vendorCredit) => {
+  protected attachments = (vendorCredit: VendorCredit) => {
     return this.item(vendorCredit.attachments, new AttachmentTransformer());
   };
 }

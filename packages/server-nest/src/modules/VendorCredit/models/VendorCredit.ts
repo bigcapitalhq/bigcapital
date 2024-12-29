@@ -6,24 +6,45 @@ import { Model, raw, mixin } from 'objection';
 // import { DEFAULT_VIEWS } from '@/services/Purchases/VendorCredits/constants';
 // import ModelSearchable from './ModelSearchable';
 // import VendorCreditMeta from './VendorCredit.Meta';
+// import { DiscountType } from '@/interfaces';
+import { Vendor } from '@/modules/Vendors/models/Vendor';
+import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
+import { Branch } from '@/modules/Branches/models/Branch.model';
+import { ItemEntry } from '@/modules/Items/models/ItemEntry';
 import { BaseModel } from '@/models/Model';
+import { DiscountType } from '@/common/types/Discount';
 
 export class VendorCredit extends BaseModel {
   vendorId: number;
   amount: number;
   currencyCode: string;
+
   vendorCreditDate: Date;
   vendorCreditNumber: string;
+
   referenceNo: string;
   refundedAmount: number;
   invoicedAmount: number;
+  adjustment: number;
   exchangeRate: number;
   note: string;
   openedAt: Date;
   userId: number;
 
+  discount: number;
+  discountType: DiscountType;
+
   branchId: number;
   warehouseId: number;
+
+  vendor?: Vendor;
+  warehouse?: Warehouse;
+  branch?: Branch;
+  entries?: ItemEntry[];
+  attachments?: Document[];
+
+  createdAt: Date;
+  updatedAt: Date;
 
   /**
    * Table name
@@ -31,13 +52,78 @@ export class VendorCredit extends BaseModel {
   static get tableName() {
     return 'vendor_credits';
   }
-
   /**
    * Vendor credit amount in local currency.
    * @returns {number}
    */
   get localAmount() {
     return this.amount * this.exchangeRate;
+  }
+
+  /**
+   * Vendor credit subtotal.
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.amount;
+  }
+
+  /**
+   * Vendor credit subtotal in local currency.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.subtotal * this.exchangeRate;
+  }
+
+  /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount amount in local currency.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number | null}
+   */
+  get adjustmentLocal() {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
+  }
+
+  /**
+   * Vendor credit total.
+   * @returns {number}
+   */
+  get total() {
+    return this.subtotal - this.discountAmount + this.adjustment;
+  }
+
+  /**
+   * Vendor credit total in local currency.
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
   }
 
   /**
@@ -127,12 +213,22 @@ export class VendorCredit extends BaseModel {
    */
   static get virtualAttributes() {
     return [
-      'localAmount',
       'isDraft',
       'isPublished',
       'isOpen',
       'isClosed',
+
       'creditsRemaining',
+      'localAmount',
+
+      'discountAmount',
+      'discountAmountLocal',
+      'discountPercentage',
+
+      'adjustmentLocal',
+
+      'total',
+      'totalLocal',
     ];
   }
 

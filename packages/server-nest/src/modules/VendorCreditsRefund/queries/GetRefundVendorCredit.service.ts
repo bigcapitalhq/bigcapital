@@ -1,6 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { RefundVendorCreditTransformer } from '../commands/RefundVendorCreditTransformer';
-import { RefundVendorCredit, RefundVendorCredit as RefundVendorCreditModel } from '../../models/RefundVendorCredit';
+import {
+  RefundVendorCredit,
+  RefundVendorCredit as RefundVendorCreditModel,
+} from '../models/RefundVendorCredit';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 
 @Injectable()
@@ -11,9 +14,10 @@ export class GetRefundVendorCreditService {
    */
   constructor(
     private readonly transformer: TransformerInjectable,
+
+    @Inject(RefundVendorCredit.name)
     private readonly refundVendorCreditModel: typeof RefundVendorCreditModel,
-  ) {
-  }
+  ) {}
 
   /**
    * Retrieve refund vendor credit transaction.

@@ -1,19 +1,11 @@
 import { Knex } from 'knex';
-import { DiscountType, IDynamicListFilter, IItemEntry } from '@/interfaces';
-import { ILedgerEntry } from './Ledger';
-import { AttachmentLinkDTO } from './Attachments';
 import { CreditNote } from '../models/CreditNote';
-import { RefundCreditNote } from '../models/RefundCreditNote';
+import { RefundCreditNote } from '../../CreditNoteRefunds/models/RefundCreditNote';
+import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
+import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 
-export interface ICreditNoteEntryNewDTO {
-  index?: number;
-  itemId: number;
-  rate: number;
-  quantity: number;
-  discount: number;
-  description: string;
-  warehouseId?: number;
-}
+export interface ICreditNoteEntryNewDTO extends IItemEntryDTO {}
+
 export interface ICreditNoteNewDTO {
   customerId: number;
   exchangeRate?: number;
@@ -26,7 +18,7 @@ export interface ICreditNoteNewDTO {
   warehouseId?: number;
   attachments?: AttachmentLinkDTO[];
   discount?: number;
-  discountType?: DiscountType;
+  // discountType?: DiscountType;
   adjustment?: number;
 }
 
@@ -41,34 +33,6 @@ export interface ICreditNoteEditDTO {
   branchId?: number;
   warehouseId?: number;
   attachments?: AttachmentLinkDTO[];
-}
-
-export interface ICreditNoteEntry extends IItemEntry {}
-
-export interface ICreditNote {
-  id?: number;
-  customerId: number;
-  amount: number;
-  refundedAmount: number;
-  currencyCode: string;
-  exchangeRate: number;
-  creditNoteDate: Date;
-  creditNoteNumber: string;
-  referenceNo?: string;
-  // note?: string;
-  openedAt: Date | null;
-  entries: ICreditNoteEntry[];
-  isOpen: boolean;
-  isClosed: boolean;
-  isDraft: boolean;
-  isPublished: boolean;
-  creditsRemaining: number;
-  localAmount?: number;
-  branchId?: number;
-  warehouseId: number;
-  createdAt?: Date;
-  termsConditions: string;
-  note: string;
 }
 
 export enum CreditNoteAction {
@@ -102,37 +66,28 @@ export interface ICreditNoteEditingPayload {
 export interface ICreditNoteEditedPayload {
   trx: Knex.Transaction;
   oldCreditNote: CreditNote;
-  // creditNoteId: number;
   creditNote: CreditNote;
   creditNoteEditDTO: ICreditNoteEditDTO;
-  // tenantId: number;
 }
 
 export interface ICreditNoteCreatedPayload {
-  // tenantId: number;
   creditNoteDTO: ICreditNoteNewDTO;
   creditNote: CreditNote;
-  // creditNoteId: number;
   trx: Knex.Transaction;
 }
 
 export interface ICreditNoteCreatingPayload {
-  // tenantId: number;
   creditNoteDTO: ICreditNoteNewDTO;
   trx: Knex.Transaction;
 }
 
 export interface ICreditNoteOpeningPayload {
-  tenantId: number;
-  creditNoteId: number;
   oldCreditNote: CreditNote;
   trx: Knex.Transaction;
 }
 
 export interface ICreditNoteOpenedPayload {
-  // tenantId: number;
   creditNote: CreditNote;
-  // creditNoteId: number;
   oldCreditNote: CreditNote;
   trx: Knex.Transaction;
 }
@@ -141,11 +96,11 @@ export interface ICreditNotesQueryDTO {
   filterQuery?: (query: any) => void;
 }
 
-export interface ICreditNotesQueryDTO extends IDynamicListFilter {
-  page: number;
-  pageSize: number;
-  searchKeyword?: string;
-}
+// export interface ICreditNotesQueryDTO extends IDynamicListFilter {
+//   page: number;
+//   pageSize: number;
+//   searchKeyword?: string;
+// }
 
 export interface ICreditNoteRefundDTO {
   fromAccountId: number;
@@ -157,96 +112,22 @@ export interface ICreditNoteRefundDTO {
   branchId?: number;
 }
 
-export interface ICreditNoteApplyInvoiceDTO {
-  entries: { invoiceId: number; amount: number }[];
-}
-export interface IRefundCreditNotePOJO {
-  formattedAmount: string;
-}
-
-export interface IRefundCreditNoteDeletedPayload {
-  trx: Knex.Transaction;
-  refundCreditId: number;
-  oldRefundCredit: RefundCreditNote;
-  tenantId: number;
-}
-
-export interface IRefundCreditNoteDeletingPayload {
-  trx: Knex.Transaction;
-  refundCreditId: number;
-  oldRefundCredit: RefundCreditNote;
-  // tenantId: number;
-}
-
-export interface IRefundCreditNoteCreatingPayload {
-  trx: Knex.Transaction;
-  creditNote: CreditNote;
-  newCreditNoteDTO: ICreditNoteRefundDTO;
-  // tenantId: number;
-}
-
-export interface IRefundCreditNoteCreatedPayload {
-  trx: Knex.Transaction;
-  refundCreditNote: RefundCreditNote;
-  creditNote: CreditNote;
-  // tenantId: number;
-}
-
-export interface IRefundCreditNoteOpenedPayload {
-  // tenantId: number;
-  creditNoteId: number;
-  oldCreditNote: CreditNote;
-  trx: Knex.Transaction;
-}
-
-export interface IApplyCreditToInvoiceEntryDTO {
-  amount: number;
-  invoiceId: number;
-}
-
-export interface IApplyCreditToInvoicesDTO {
-  entries: IApplyCreditToInvoiceEntryDTO[];
-}
-
-export interface IApplyCreditToInvoicesCreatedPayload {
-  trx: Knex.Transaction;
-  creditNote: ICreditNote;
-  creditNoteAppliedInvoices: ICreditNoteAppliedToInvoice[];
-  // tenantId: number;
-}
-export interface IApplyCreditToInvoicesDeletedPayload {
-  trx: Knex.Transaction;
-  creditNote: ICreditNote;
-  creditNoteAppliedToInvoice: ICreditNoteAppliedToInvoice;
-  // tenantId: number;
-}
-
-export interface ICreditNoteAppliedToInvoice {
-  invoiceId: number;
-  amount: number;
-  creditNoteId: number;
-}
-export interface ICreditNoteAppliedToInvoiceModel {
-  amount: number;
-  entries: ICreditNoteAppliedToInvoice[];
-}
-
-export type ICreditNoteGLCommonEntry = Pick<
-  ILedgerEntry,
-  | 'date'
-  | 'userId'
-  | 'currencyCode'
-  | 'exchangeRate'
-  | 'transactionType'
-  | 'transactionId'
-  | 'transactionNumber'
-  | 'referenceNumber'
-  | 'createdAt'
-  | 'indexGroup'
-  | 'credit'
-  | 'debit'
-  | 'branchId'
->;
+// export type ICreditNoteGLCommonEntry = Pick<
+//   ILedgerEntry,
+//   | 'date'
+//   | 'userId'
+//   | 'currencyCode'
+//   | 'exchangeRate'
+//   | 'transactionType'
+//   | 'transactionId'
+//   | 'transactionNumber'
+//   | 'referenceNumber'
+//   | 'createdAt'
+//   | 'indexGroup'
+//   | 'credit'
+//   | 'debit'
+//   | 'branchId'
+// >;
 
 export interface CreditNotePdfTemplateAttributes {
   // # Primary color

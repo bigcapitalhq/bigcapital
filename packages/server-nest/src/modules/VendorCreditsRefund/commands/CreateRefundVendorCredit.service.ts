@@ -3,21 +3,22 @@ import { Knex } from 'knex';
 import * as R from 'ramda';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
-  IRefundVendorCredit,
   IRefundVendorCreditCreatedPayload,
   IRefundVendorCreditCreatingPayload,
   IRefundVendorCreditDTO,
-  IVendorCreditCreatePayload,
-} from '@/modules/VendorCredit/types/VendorCredit.types';
+} from '../types/VendorCreditRefund.types';
 import { Account } from '@/modules/Accounts/models/Account.model';
-import { VendorCredit } from '../../models/VendorCredit';
+import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
-import { RefundVendorCredit } from '../../models/RefundVendorCredit';
+import { RefundVendorCredit } from '../models/RefundVendorCredit';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
+import { IVendorCreditCreatePayload } from '@/modules/VendorCredit/types/VendorCredit.types';
 import { events } from '@/common/events/events';
+import { ServiceError } from '@/modules/Items/ServiceError';
+import { ERRORS } from '../constants';
 
 @Injectable()
-export class CreateRefundVendorCredit  {
+export class CreateRefundVendorCredit {
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
@@ -31,8 +32,7 @@ export class CreateRefundVendorCredit  {
 
     @Inject(VendorCredit.name)
     private readonly vendorCreditModel: typeof VendorCredit,
-  ) {
-  }
+  ) {}
 
   /**
    * Creates a refund vendor credit.
@@ -42,22 +42,24 @@ export class CreateRefundVendorCredit  {
    */
   public createRefund = async (
     vendorCreditId: number,
-    refundVendorCreditDTO: IRefundVendorCreditDTO
-  ): Promise<IRefundVendorCredit> => {
+    refundVendorCreditDTO: IRefundVendorCreditDTO,
+  ): Promise<RefundVendorCredit> => {
     // Retrieve the vendor credit or throw not found service error.
-    const vendorCredit = await this.vendorCreditModel.query()
+    const vendorCredit = await this.vendorCreditModel
+      .query()
       .findById(vendorCreditId)
       .throwIfNotFound();
 
     // Retrieve the deposit account or throw not found service error.
-    const depositAccount = await this.accountModel.query()
+    const depositAccount = await this.accountModel
+      .query()
       .findById(refundVendorCreditDTO.depositAccountId)
       .throwIfNotFound();
 
     // Validate vendor credit has remaining credit.
     this.validateVendorCreditRemainingCredit(
       vendorCredit,
-      refundVendorCreditDTO.amount
+      refundVendorCreditDTO.amount,
     );
     // Validate refund deposit account type.
     this.validateRefundDepositAccountType(depositAccount);
@@ -70,7 +72,7 @@ export class CreateRefundVendorCredit  {
 
     const refundCreditObj = this.transformDTOToModel(
       vendorCredit,
-      refundVendorCreditDTO
+      refundVendorCreditDTO,
     );
     // Saves refund vendor credit with associated transactions.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
@@ -83,12 +85,13 @@ export class CreateRefundVendorCredit  {
       // Triggers `onVendorCreditRefundCreating` event.
       await this.eventPublisher.emitAsync(
         events.vendorCredit.onRefundCreating,
-        eventPayload as IRefundVendorCreditCreatingPayload
+        eventPayload as IRefundVendorCreditCreatingPayload,
       );
       // Inserts refund vendor credit to the storage layer.
-      const refundVendorCredit =
-        await this.refundVendorCreditModel.query().insertAndFetch(refundCreditObj);
-        
+      const refundVendorCredit = await this.refundVendorCreditModel
+        .query()
+        .insertAndFetch(refundCreditObj);
+
       // Triggers `onVendorCreditCreated` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onRefundCreated, {
         ...eventPayload,
@@ -101,13 +104,13 @@ export class CreateRefundVendorCredit  {
 
   /**
    * Transformes the refund DTO to refund vendor credit model.
-   * @param   {IVendorCredit} vendorCredit -
-   * @param   {IRefundVendorCreditDTO} vendorCreditDTO
+   * @param {IVendorCredit} vendorCredit -
+   * @param {IRefundVendorCreditDTO} vendorCreditDTO
    * @returns {IRefundVendorCredit}
    */
   public transformDTOToModel = (
     vendorCredit: VendorCredit,
-    vendorCreditDTO: IRefundVendorCreditDTO
+    vendorCreditDTO: IRefundVendorCreditDTO,
   ) => {
     const initialDTO = {
       vendorCreditId: vendorCredit.id,
@@ -115,8 +118,32 @@ export class CreateRefundVendorCredit  {
       currencyCode: vendorCredit.currencyCode,
       exchangeRate: vendorCreditDTO.exchangeRate || 1,
     };
-    return R.compose(this.branchDTOTransform.transformDTO())(
-      initialDTO
-    );
+    return R.compose(this.branchDTOTransform.transformDTO)(initialDTO);
   };
+
+  /**
+   * Validate the deposit refund account type.
+   * @param {IAccount} account
+   */
+  public validateRefundDepositAccountType(account: Account) {
+    const supportedTypes = ['bank', 'cash', 'fixed-asset'];
+
+    if (supportedTypes.indexOf(account.accountType) === -1) {
+      throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_INVALID_TYPE);
+    }
+  }
+
+  /**
+   * Validate vendor credit has remaining credits.
+   * @param {IVendorCredit} vendorCredit
+   * @param {number} amount
+   */
+  public validateVendorCreditRemainingCredit(
+    vendorCredit: VendorCredit,
+    amount: number,
+  ) {
+    if (vendorCredit.creditsRemaining < amount) {
+      throw new ServiceError(ERRORS.VENDOR_CREDIT_HAS_NO_CREDITS_REMAINING);
+    }
+  }
 }

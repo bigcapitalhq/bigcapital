@@ -4,6 +4,9 @@ import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 
 @Injectable()
 export class ApplyVendorCreditSyncInvoicedService {
+  /**
+   * @param {typeof VendorCredit} vendorCreditModel - The vendor credit model.
+   */
   constructor(
     @Inject(VendorCredit.name)
     private readonly vendorCreditModel: typeof VendorCredit,

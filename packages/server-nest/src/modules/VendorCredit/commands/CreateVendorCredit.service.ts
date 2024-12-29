@@ -11,6 +11,7 @@ import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
+import { VendorCreditDTOTransformService } from './VendorCreditDTOTransform.service';
 
 @Injectable()
 export class CreateVendorCreditService {
@@ -25,6 +26,7 @@ export class CreateVendorCreditService {
     private readonly uow: UnitOfWork,
     private readonly itemsEntriesService: ItemsEntriesService,
     private readonly eventPublisher: EventEmitter2,
+    private readonly vendorCreditDTOTransformService: VendorCreditDTOTransformService,
 
     @Inject(VendorCredit.name)
     private readonly vendorCreditModel: typeof VendorCredit,
@@ -45,7 +47,6 @@ export class CreateVendorCreditService {
     await this.eventPublisher.emitAsync(events.vendorCredit.onCreate, {
       vendorCreditCreateDTO,
     });
-
     // Retrieve the given vendor or throw not found service error.
     const vendor = await this.vendorModel
       .query()
@@ -56,12 +57,12 @@ export class CreateVendorCreditService {
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       vendorCreditCreateDTO.entries,
     );
-
     // Transforms the credit DTO to storage layer.
-    const vendorCreditModel = this.transformCreateEditDTOToModel(
-      vendorCreditCreateDTO,
-      vendor.currencyCode,
-    );
+    const vendorCreditModel =
+      this.vendorCreditDTOTransformService.transformCreateEditDTOToModel(
+        vendorCreditCreateDTO,
+        vendor.currencyCode,
+      );
     // Saves the vendor credit transactions under UOW environment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Triggers `onVendorCreditCreating` event.

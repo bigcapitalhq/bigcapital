@@ -14,7 +14,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
 import { events } from '@/common/events/events';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
-import { CreditNoteAppliedInvoice } from '@/modules/CreditNotes/models/CreditNoteAppliedInvoice';
+import { CreditNoteAppliedInvoice } from '@/modules/CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
 
 @Injectable()
 export class DeleteSaleInvoice {

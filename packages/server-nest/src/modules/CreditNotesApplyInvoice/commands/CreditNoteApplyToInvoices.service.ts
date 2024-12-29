@@ -2,20 +2,20 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { sumBy } from 'lodash';
 import {
-  ICreditNoteAppliedToInvoice,
   ICreditNoteAppliedToInvoiceModel,
   IApplyCreditToInvoicesDTO,
   IApplyCreditToInvoicesCreatedPayload,
-  ICreditNote,
-} from '../types/CreditNotes.types';
-import { ERRORS } from '../constants';
+} from '../types/CreditNoteApplyInvoice.types';
+import { ERRORS } from '../../CreditNotes/constants';
 import { PaymentReceivedValidators } from '@/modules/PaymentReceived/commands/PaymentReceivedValidators.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
 import { events } from '@/common/events/events';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
+import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
+import { CommandCreditNoteDTOTransform } from '@/modules/CreditNotes/commands/CommandCreditNoteDTOTransform.service';
 
 @Injectable()
 export class CreditNoteApplyToInvoices {
@@ -29,9 +29,13 @@ export class CreditNoteApplyToInvoices {
     private readonly paymentReceiveValidators: PaymentReceivedValidators,
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
+    private readonly creditNoteDTOTransform: CommandCreditNoteDTOTransform,
 
     @Inject(CreditNoteAppliedInvoice.name)
     private readonly creditNoteAppliedInvoiceModel: typeof CreditNoteAppliedInvoice,
+
+    @Inject(CreditNote.name)
+    private readonly creditNoteModel: typeof CreditNote,
   ) {}
 
   /**
@@ -42,9 +46,12 @@ export class CreditNoteApplyToInvoices {
   public async applyCreditNoteToInvoices(
     creditNoteId: number,
     applyCreditToInvoicesDTO: IApplyCreditToInvoicesDTO,
-  ): Promise<ICreditNoteAppliedToInvoice[]> {
+  ): Promise<CreditNoteAppliedInvoice[]> {
     // Saves the credit note or throw not found service error.
-    const creditNote = await this.getCreditNoteOrThrowError(creditNoteId);
+    const creditNote = await this.creditNoteModel
+      .query()
+      .findById(creditNoteId)
+      .throwIfNotFound();
 
     // Retrieve the applied invoices that associated to the credit note customer.
     const appliedInvoicesEntries =
@@ -58,18 +65,16 @@ export class CreditNoteApplyToInvoices {
       applyCreditToInvoicesDTO,
       creditNote,
     );
-
     // Validate invoices has remaining amount to apply.
     this.validateInvoicesRemainingAmount(
       appliedInvoicesEntries,
       creditNoteAppliedModel.amount,
     );
     // Validate the credit note remaining amount.
-    this.validateCreditRemainingAmount(
+    this.creditNoteDTOTransform.validateCreditRemainingAmount(
       creditNote,
       creditNoteAppliedModel.amount,
     );
-
     // Creates credit note apply to invoice transaction.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Saves the credit note apply to invoice graph to the storage layer.
@@ -99,7 +104,7 @@ export class CreditNoteApplyToInvoices {
    */
   private transformApplyDTOToModel = (
     applyDTO: IApplyCreditToInvoicesDTO,
-    creditNote: ICreditNote,
+    creditNote: CreditNote,
   ): ICreditNoteAppliedToInvoiceModel => {
     const entries = applyDTO.entries.map((entry) => ({
       invoiceId: entry.invoiceId,

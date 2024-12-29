@@ -1,11 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreditNoteWithInvoicesToApplyTransformer } from '../commands/CreditNoteWithInvoicesToApplyTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
-import { GetCreditNote } from './GetCreditNote.service';
+import { GetCreditNote } from '../../CreditNotes/queries/GetCreditNote.service';
+import { CreditNoteWithInvoicesToApplyTransformer } from './CreditNoteWithInvoicesToApplyTransformer';
 
 @Injectable()
 export class GetCreditNoteAssociatedInvoicesToApply {
+  /**
+   * @param {TransformerInjectable} transformer - Transformer service.
+   * @param {GetCreditNote} getCreditNote - Get credit note service.
+   * @param {typeof SaleInvoice} saleInvoiceModel - Sale invoice model.
+   */
   constructor(
     private transformer: TransformerInjectable,
     private getCreditNote: GetCreditNote,

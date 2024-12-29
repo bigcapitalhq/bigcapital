@@ -5,7 +5,7 @@ import { Model, mixin } from 'objection';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
 import { Account } from '@/modules/Accounts/models/Account.model';
-import { VendorCredit } from './VendorCredit';
+import { VendorCredit } from '../../VendorCredit/models/VendorCredit';
 
 export class RefundVendorCredit extends BaseModel {
   public vendorCreditId!: number;

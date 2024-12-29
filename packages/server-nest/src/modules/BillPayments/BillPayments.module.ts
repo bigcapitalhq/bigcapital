@@ -25,8 +25,9 @@ import { BranchesSettingsService } from '../Branches/BranchesSettings';
     CommandBillPaymentDTOTransformer,
     BranchTransactionDTOTransformer,
     BranchesSettingsService,
-    TenancyContext
+    TenancyContext,
   ],
+  exports: [BillPaymentValidators],
   controllers: [],
 })
 export class BillPaymentsModule {}

@@ -2,13 +2,19 @@ import { Knex } from 'knex';
 import { CreateVendorCreditService } from './commands/CreateVendorCredit.service';
 import { DeleteVendorCreditService } from './commands/DeleteVendorCredit.service';
 import { EditVendorCreditService } from './commands/EditVendorCredit.service';
-import GetVendorCreditService from './queries/GetVendorCredit.service';
+import { GetVendorCreditService } from './queries/GetVendorCredit.service';
 import { IVendorCreditEditDTO } from './types/VendorCredit.types';
 import { IVendorCreditCreateDTO } from './types/VendorCredit.types';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class VendorCreditsApplicationService {
+  /**
+   * @param {CreateVendorCreditService} createVendorCreditService - Create vendor credit service.
+   * @param {EditVendorCreditService} editVendorCreditService - Edit vendor credit service.
+   * @param {DeleteVendorCreditService} deleteVendorCreditService - Delete vendor credit service.
+   * @param {GetVendorCreditService} getVendorCreditService - Get vendor credit service.
+   */
   constructor(
     private readonly createVendorCreditService: CreateVendorCreditService,
     private readonly editVendorCreditService: EditVendorCreditService,

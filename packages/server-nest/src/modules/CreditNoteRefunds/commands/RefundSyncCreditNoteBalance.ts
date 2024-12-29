@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
-import { CreditNote } from '../models/CreditNote';
+import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 
 @Injectable()
-export class RefundSyncCreditNoteBalance {
+export class RefundSyncCreditNoteBalanceService {
   /**
    * @param {typeof CreditNote} creditNoteModel - The credit note model.
    */

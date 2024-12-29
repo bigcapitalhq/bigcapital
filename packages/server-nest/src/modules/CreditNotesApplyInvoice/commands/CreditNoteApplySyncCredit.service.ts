@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
-import { CreditNote } from '../models/CreditNote';
+import { CreditNote } from '../../CreditNotes/models/CreditNote';
 
 @Injectable()
 export class CreditNoteApplySyncCredit {

@@ -5,7 +5,6 @@ import * as R from 'ramda';
 import composeAsync from 'async/compose';
 import { ERRORS } from '../constants';
 import {
-  ICreditNote,
   ICreditNoteEditDTO,
   ICreditNoteEntryNewDTO,
   ICreditNoteNewDTO,
@@ -92,9 +91,9 @@ export class CommandCreditNoteDTOTransform {
     )(initialDTO);
 
     return R.compose(
-      this.branchDTOTransform.transformDTO<ICreditNote>,
-      this.warehouseDTOTransform.transformDTO<ICreditNote>,
-    )(initialAsyncDTO);
+      this.branchDTOTransform.transformDTO<CreditNote>,
+      this.warehouseDTOTransform.transformDTO<CreditNote>,
+    )(initialAsyncDTO) as CreditNote;
   };
 
   /**

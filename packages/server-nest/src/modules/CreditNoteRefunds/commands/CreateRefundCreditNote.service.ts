@@ -4,14 +4,14 @@ import {
   ICreditNoteRefundDTO,
   IRefundCreditNoteCreatedPayload,
   IRefundCreditNoteCreatingPayload,
-} from '../types/CreditNotes.types';
+} from '../types/CreditNoteRefunds.types';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
-import { RefundCreditNote } from '../models/RefundCreditNote';
+import { RefundCreditNote } from '@/modules/CreditNoteRefunds/models/RefundCreditNote';
+import { CommandCreditNoteDTOTransform } from '@/modules/CreditNotes/commands/CommandCreditNoteDTOTransform.service';
+import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 import { events } from '@/common/events/events';
-import { CommandCreditNoteDTOTransform } from './CommandCreditNoteDTOTransform.service';
-import { CreditNote } from '../models/CreditNote';
 
 @Injectable()
 export class CreateRefundCreditNoteService {
@@ -63,9 +63,9 @@ export class CreateRefundCreditNoteService {
       newCreditNoteDTO.amount,
     );
     // Validate the refund withdrawal account type.
-    this.commandCreditNoteDTOTransform.validateRefundWithdrawwalAccountType(
-      fromAccount,
-    );
+    // this.commandCreditNoteDTOTransform.validateRefundWithdrawwalAccountType(
+    //   fromAccount,
+    // );
     // Creates a refund credit note transaction.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Triggers `onCreditNoteRefundCreating` event.
@@ -102,7 +102,7 @@ export class CreateRefundCreditNoteService {
   private transformDTOToModel = (
     creditNote: CreditNote,
     creditNoteDTO: ICreditNoteRefundDTO,
-  ): RefundCreditNote => {
+  ): Partial<RefundCreditNote> => {
     return {
       creditNoteId: creditNote.id,
       currencyCode: creditNote.currencyCode,

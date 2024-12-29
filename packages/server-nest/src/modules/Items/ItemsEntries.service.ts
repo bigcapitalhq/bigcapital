@@ -235,7 +235,7 @@ export class ItemsEntriesService {
    * @param {ItemEntry[]} entries - Items entries.
    * @returns {number}
    */
-  public getTotalItemsEntries(entries: ItemEntry[]): number {
+  public getTotalItemsEntries(entries: IItemEntryDTO[]): number {
     return sumBy(entries, (e) => ItemEntry.calcAmount(e));
   }
 

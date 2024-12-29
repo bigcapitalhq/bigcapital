@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreditNoteAppliedInvoiceTransformer } from './CreditNoteAppliedInvoiceTransformer';
-import { CreditNote } from '../models/CreditNote';
+import { CreditNote } from '../../CreditNotes/models/CreditNote';
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
 

@@ -12,6 +12,15 @@ import { events } from '@/common/events/events';
 
 @Injectable()
 export class GetCreditNotePdf {
+  /**
+   * @param {ChromiumlyTenancy} chromiumlyTenancy - Chromiumly tenancy service.
+   * @param {TemplateInjectable} templateInjectable - Template injectable service.
+   * @param {GetCreditNote} getCreditNoteService - Get credit note service.
+   * @param {CreditNoteBrandingTemplate} creditNoteBrandingTemplate - Credit note branding template service.
+   * @param {EventEmitter2} eventPublisher - Event publisher service.
+   * @param {typeof CreditNote} creditNoteModel - Credit note model.
+   * @param {typeof PdfTemplateModel} pdfTemplateModel - Pdf template model.
+   */
   constructor(
     private readonly chromiumlyTenancy: ChromiumlyTenancy,
     private readonly templateInjectable: TemplateInjectable,

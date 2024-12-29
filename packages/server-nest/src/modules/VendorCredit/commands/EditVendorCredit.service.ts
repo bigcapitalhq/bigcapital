@@ -10,6 +10,8 @@ import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { VendorCredit } from '../models/VendorCredit';
 import { Contact } from '@/modules/Contacts/models/Contact';
 import { events } from '@/common/events/events';
+import { Knex } from 'knex';
+import { VendorCreditDTOTransformService } from './VendorCreditDTOTransform.service';
 
 @Injectable()
 export class EditVendorCreditService {
@@ -24,6 +26,7 @@ export class EditVendorCreditService {
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly itemsEntriesService: ItemsEntriesService,
+    private readonly vendorCreditDTOTransform: VendorCreditDTOTransformService,
 
     @Inject(VendorCredit.name)
     private readonly vendorCreditModel: typeof VendorCredit,
@@ -69,11 +72,12 @@ export class EditVendorCreditService {
       vendorCreditDTO.entries,
     );
     // Transformes edit DTO to model storage layer.
-    const vendorCreditModel = this.transformCreateEditDTOToModel(
-      vendorCreditDTO,
-      vendor.currencyCode,
-      oldVendorCredit,
-    );
+    const vendorCreditModel =
+      this.vendorCreditDTOTransform.transformCreateEditDTOToModel(
+        vendorCreditDTO,
+        vendor.currencyCode,
+        oldVendorCredit,
+      );
     // Edits the vendor credit graph under unit-of-work envirement.
     return this.uow.withTransaction(async (trx) => {
       // Triggers `onVendorCreditEditing` event.
@@ -94,7 +98,6 @@ export class EditVendorCreditService {
       await this.eventPublisher.emitAsync(events.vendorCredit.onEdited, {
         oldVendorCredit,
         vendorCredit,
-        vendorCreditId,
         vendorCreditDTO,
         trx,
       } as IVendorCreditEditedPayload);

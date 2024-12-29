@@ -46,10 +46,12 @@ import { BillsModule } from '../Bills/Bills.module';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
 import { SaleReceiptsModule } from '../SaleReceipts/SaleReceipts.module';
 import { ManualJournalsModule } from '../ManualJournals/ManualJournals.module';
-import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
 import { CreditNotesModule } from '../CreditNotes/CreditNotes.module';
+import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
 import { VendorCreditApplyBillsModule } from '../VendorCreditsApplyBills/VendorCreditApplyBills.module';
-// import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
+import { VendorCreditsRefundModule } from '../VendorCreditsRefund/VendorCreditsRefund.module';
+import { CreditNoteRefundsModule } from '../CreditNoteRefunds/CreditNoteRefunds.module';
+import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
 
 @Module({
   imports: [
@@ -120,10 +122,12 @@ import { VendorCreditApplyBillsModule } from '../VendorCreditsApplyBills/VendorC
     SaleReceiptsModule,
     BillsModule,
     ManualJournalsModule,
+    CreditNotesModule,
     VendorCreditsModule,
     VendorCreditApplyBillsModule,
-    CreditNotesModule,
-    // BillPaymentsModule,
+    VendorCreditsRefundModule,
+    CreditNoteRefundsModule,
+    BillPaymentsModule,
   ],
   controllers: [AppController],
   providers: [

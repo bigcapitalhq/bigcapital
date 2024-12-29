@@ -14,6 +14,8 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { events } from '@/common/events/events';
+import { VendorCreditDTOTransformService } from '@/modules/VendorCredit/commands/VendorCreditDTOTransform.service';
 
 @Injectable()
 export class ApplyVendorCreditToBillsService {
@@ -28,6 +30,9 @@ export class ApplyVendorCreditToBillsService {
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
     private readonly billPaymentValidators: BillPaymentValidators,
+    private readonly vendorCreditDTOTransform: VendorCreditDTOTransformService,
+
+    @Inject(VendorCreditAppliedBill.name)
     private readonly vendorCreditAppliedBillModel: typeof VendorCreditAppliedBill,
 
     @Inject(VendorCredit.name)
@@ -68,11 +73,10 @@ export class ApplyVendorCreditToBillsService {
       vendorCreditAppliedModel.amount,
     );
     // Validate vendor credit remaining credit amount.
-    this.validateCreditRemainingAmount(
+    this.vendorCreditDTOTransform.validateCreditRemainingAmount(
       vendorCredit,
       vendorCreditAppliedModel.amount,
     );
-
     // Saves vendor credit applied to bills under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Inserts vendor credit applied to bills graph to the storage layer.
