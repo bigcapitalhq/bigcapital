@@ -24,7 +24,6 @@ import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
-import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Receipt details actions bar.
@@ -39,6 +38,7 @@ function ReceiptDetailActionBar({
 
   // #withDrawerActions
   closeDrawer,
+  openDrawer
 }) {
   const history = useHistory();
   const { receiptId } = useReceiptDetailDrawerContext();
@@ -61,8 +61,9 @@ function ReceiptDetailActionBar({
   const handleNotifyViaSMS = () => {
     openDialog('notify-receipt-via-sms', { receiptId });
   };
+  // Handle receipt mail action.
   const handleReceiptMail = () => {
-    openDialog(DialogsName.ReceiptMail, { receiptId });
+    openDrawer(DRAWERS.RECEIPT_SEND_MAIL, { receiptId });
   };
 
   return (

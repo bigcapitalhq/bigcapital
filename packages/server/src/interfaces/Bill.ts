@@ -3,6 +3,7 @@ import { IDynamicListFilterDTO } from './DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 import { IBillLandedCost } from './LandedCost';
 import { AttachmentLinkDTO } from './Attachments';
+import { DiscountType } from './SaleInvoice';
 
 export interface IBillDTO {
   vendorId: number;
@@ -22,6 +23,13 @@ export interface IBillDTO {
   projectId?: number;
   isInclusiveTax?: boolean;
   attachments?: AttachmentLinkDTO[];
+
+  // # Discount
+  discount?: number;
+  discountType?: DiscountType;
+
+  // # Adjustment
+  adjustment?: number;
 }
 
 export interface IBillEditDTO {

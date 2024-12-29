@@ -107,7 +107,7 @@ function EstimatesDataTable({
 
   // Handle mail send estimate.
   const handleMailSendEstimate = ({ id }) => {
-    openDialog(DialogsName.EstimateMail, { estimateId: id });
+    openDrawer(DRAWERS.ESTIMATE_SEND_MAIL, { estimateId: id });
   }
 
   // Local storage memorizing columns widths.

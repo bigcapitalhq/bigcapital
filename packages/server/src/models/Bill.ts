@@ -1,12 +1,14 @@
 import { Model, raw, mixin } from 'objection';
-import { castArray, difference } from 'lodash';
+import { castArray, defaultTo, difference } from 'lodash';
 import moment from 'moment';
+import * as R from 'ramda';
 import TenantModel from 'models/TenantModel';
 import BillSettings from './Bill.Settings';
 import ModelSetting from './ModelSetting';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Purchases/Bills/constants';
 import ModelSearchable from './ModelSearchable';
+import { DiscountType } from '@/interfaces';
 
 export default class Bill extends mixin(TenantModel, [
   ModelSetting,
@@ -20,6 +22,11 @@ export default class Bill extends mixin(TenantModel, [
   public isInclusiveTax: boolean;
   public taxAmountWithheld: number;
   public exchangeRate: number;
+
+  public discount: number;
+  public discountType: DiscountType;
+
+  public adjustment: number;
 
   /**
    * Timestamps columns.
@@ -47,6 +54,13 @@ export default class Bill extends mixin(TenantModel, [
       'localAllocatedCostAmount',
       'billableAmount',
       'amountLocal',
+
+      'discountAmount',
+      'discountAmountLocal',
+      'discountPercentage',
+
+      'adjustmentLocal',
+
       'subtotal',
       'subtotalLocal',
       'subtotalExludingTax',
@@ -99,13 +113,52 @@ export default class Bill extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount amount in local currency.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number | null}
+   */
+  get adjustmentLocal() {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
+  }
+
+  /**
    * Invoice total. (Tax included)
    * @returns {number}
    */
   get total() {
-    return this.isInclusiveTax
-      ? this.subtotal
-      : this.subtotal + this.taxAmountWithheld;
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
+
+    return R.compose(
+      R.add(adjustmentAmount),
+      R.subtract(R.__, this.discountAmount),
+      R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld))
+    )(this.subtotal);
   }
 
   /**

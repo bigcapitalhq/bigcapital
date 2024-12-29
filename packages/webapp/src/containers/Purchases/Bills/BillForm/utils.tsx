@@ -13,6 +13,7 @@ import {
   repeatValue,
   orderingLinesIndexes,
   formattedAmount,
+  toSafeNumber,
 } from '@/utils';
 import {
   updateItemsEntriesTotal,
@@ -65,6 +66,13 @@ export const defaultBill = {
   currency_code: '',
   entries: [...repeatValue(defaultBillEntry, MIN_LINES_NUMBER)],
   attachments: [],
+
+  // Adjustment
+  adjustment: '',
+
+  // Discount
+  discount: '',
+  discount_type: 'amount',
 };
 
 export const ERRORS = {
@@ -253,58 +261,6 @@ export const useSetPrimaryWarehouseToForm = () => {
 };
 
 /**
- * Retreives the bill totals.
- */
-export const useBillTotals = () => {
-  const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
-
-  // Retrieves the bill subtotal.
-  const subtotal = useBillSubtotal();
-  const total = useBillTotal();
-
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(subtotal, currencyCode, { money: false }),
-    [subtotal, currencyCode],
-  );
-  // Retrieves the payment total.
-  const paymentTotal = React.useMemo(() => 0, []);
-
-  // Retireves the formatted payment total.
-  const formattedPaymentTotal = React.useMemo(
-    () => formattedAmount(paymentTotal, currencyCode),
-    [paymentTotal, currencyCode],
-  );
-  // Retrieves the formatted due total.
-  const dueTotal = React.useMemo(
-    () => total - paymentTotal,
-    [total, paymentTotal],
-  );
-  // Retrieves the formatted due total.
-  const formattedDueTotal = React.useMemo(
-    () => formattedAmount(dueTotal, currencyCode),
-    [dueTotal, currencyCode],
-  );
-
-  return {
-    total,
-    paymentTotal,
-    dueTotal,
-    formattedTotal,
-    formattedSubtotal,
-    formattedPaymentTotal,
-    formattedDueTotal,
-  };
-};
-
-/**
  * Detarmines whether the bill has foreign customer.
  * @returns {boolean}
  */
@@ -364,7 +320,64 @@ export const useBillSubtotal = () => {
 };
 
 /**
- * Retreives the bill total tax amount.
+ * Retrieves the bill subtotal formatted.
+ * @returns {string}
+ */
+export const useBillSubtotalFormatted = () => {
+  const subtotal = useBillSubtotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(subtotal, values.currency_code);
+};
+
+/**
+ * Retrieves the bill discount amount.
+ * @returns {number}
+ */
+export const useBillDiscountAmount = () => {
+  const { values } = useFormikContext();
+  const subtotal = useBillSubtotal();
+  const discount = toSafeNumber(values.discount);
+
+  return values?.discount_type === 'percentage'
+    ? (subtotal * discount) / 100
+    : discount;
+};
+
+/**
+ * Retrieves the bill discount amount formatted.
+ * @returns {string}
+ */
+export const useBillDiscountAmountFormatted = () => {
+  const discountAmount = useBillDiscountAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(discountAmount, values.currency_code);
+};
+
+/**
+ * Retrieves the bill adjustment amount.
+ * @returns {number}
+ */
+export const useBillAdjustmentAmount = () => {
+  const { values } = useFormikContext();
+
+  return toSafeNumber(values.adjustment);
+};
+
+/**
+ * Retrieves the bill adjustment amount formatted.
+ * @returns {string}
+ */
+export const useBillAdjustmentAmountFormatted = () => {
+  const adjustmentAmount = useBillAdjustmentAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(adjustmentAmount, values.currency_code);
+};
+
+/**
+ * Retrieves the bill total tax amount.
  * @returns {number}
  */
 export const useBillTotalTaxAmount = () => {
@@ -389,15 +402,73 @@ export const useIsBillTaxExclusive = () => {
 };
 
 /**
- * Retreives the bill total.
+ * Retrieves the bill total.
  * @returns {number}
  */
 export const useBillTotal = () => {
   const subtotal = useBillSubtotal();
   const totalTaxAmount = useBillTotalTaxAmount();
   const isExclusiveTax = useIsBillTaxExclusive();
+  const discountAmount = useBillDiscountAmount();
+  const adjustmentAmount = useBillAdjustmentAmount();
 
-  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(
-    subtotal,
-  );
+  return R.compose(
+    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
+    R.subtract(R.__, discountAmount),
+    R.add(R.__, adjustmentAmount),
+  )(subtotal);
+};
+
+/**
+ * Retrieves the bill total formatted.
+ * @returns {string}
+ */
+export const useBillTotalFormatted = () => {
+  const total = useBillTotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(total, values.currency_code);
+};
+
+/**
+ * Retrieves the bill paid amount.
+ * @returns {number}
+ */
+export const useBillPaidAmount = () => {
+  const { values } = useFormikContext();
+
+  return toSafeNumber(0);
+};
+
+/**
+ * Retrieves the bill paid amount formatted.
+ * @returns {string}
+ */
+export const useBillPaidAmountFormatted = () => {
+  const paidAmount = useBillPaidAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(paidAmount, values.currency_code);
+};
+
+/**
+ * Retrieves the bill due amount.
+ * @returns {number}
+ */
+export const useBillDueAmount = () => {
+  const total = useBillTotal();
+  const paidAmount = useBillPaidAmount();
+
+  return total - paidAmount;
+};
+
+/**
+ * Retrieves the bill due amount formatted.
+ * @returns {string}
+ */
+export const useBillDueAmountFormatted = () => {
+  const dueAmount = useBillDueAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(dueAmount, values.currency_code);
 };

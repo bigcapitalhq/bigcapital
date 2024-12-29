@@ -1,9 +1,9 @@
 import { Spinner } from '@blueprintjs/core';
-import { css } from '@emotion/css';
 import { Stack } from '@/components';
 import { InvoiceSendMailPreviewWithHeader } from './InvoiceSendMailHeaderPreview';
 import { useInvoiceHtml } from '@/hooks/query';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { SendMailViewPreviewPdfIframe } from '../../Estimates/SendMailViewDrawer/SendMailViewPreviewPdfIframe';
 
 export function InvoiceSendPdfPreviewConnected() {
   return (
@@ -24,18 +24,5 @@ function InvoiceSendPdfPreviewIframe() {
   }
   const iframeSrcDoc = data?.htmlContent;
 
-  return (
-    <iframe
-      title={'invoice-pdf-preview'}
-      srcDoc={iframeSrcDoc}
-      className={css`
-        height: 1123px;
-        width: 794px;
-        border: 0;
-        border-radius: 5px;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
-        margin: 0 auto;
-      `}
-    />
-  );
+  return <SendMailViewPreviewPdfIframe srcDoc={iframeSrcDoc} />;
 }

@@ -11,6 +11,8 @@ import {
   transformToForm,
   repeatValue,
   defaultFastFieldShouldUpdate,
+  formattedAmount,
+  toSafeNumber,
 } from '@/utils';
 import { ERROR } from '@/constants/errors';
 import { AppToaster } from '@/components';
@@ -70,6 +72,9 @@ export const defaultInvoice = {
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
   attachments: [],
   payment_methods: {},
+  discount: '',
+  discount_type: 'amount',
+  adjustment: '',
 };
 
 // Invoice entry request schema.
@@ -302,6 +307,68 @@ export const useInvoiceSubtotal = () => {
 };
 
 /**
+ * Retrieves the invoice subtotal formatted.
+ * @returns {string}
+ */
+export const useInvoiceSubtotalFormatted = () => {
+  const subtotal = useInvoiceSubtotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(subtotal, values.currency_code);
+};
+
+/**
+ * Retrieves the invoice discount amount.
+ * @returns {number}
+ */
+export const useInvoiceDiscountAmount = () => {
+  const { values } = useFormikContext();
+  const subtotal = useInvoiceSubtotal();
+  const discount = toSafeNumber(values.discount);
+
+  return values?.discount_type === 'percentage'
+    ? (subtotal * discount) / 100
+    : discount;
+};
+
+/**
+ * Retrieves the invoice discount amount formatted.
+ * @returns {string}
+ */
+export const useInvoiceDiscountAmountFormatted = () => {
+  const discountAmount = useInvoiceDiscountAmount();
+  const {
+    values: { currency_code },
+  } = useFormikContext();
+
+  return formattedAmount(discountAmount, currency_code);
+};
+
+/**
+ * Retrieves the invoice adjustment amount.
+ * @returns {number}
+ */
+export const useInvoiceAdjustmentAmount = () => {
+  const { values } = useFormikContext();
+  const adjustment = toSafeNumber(values.adjustment);
+
+  return adjustment;
+};
+
+/**
+ * Retrieves the invoice adjustment amount formatted.
+ * @returns {string}
+ */
+export const useInvoiceAdjustmentAmountFormatted = () => {
+  const adjustmentAmount = useInvoiceAdjustmentAmount();
+  const {
+    values: { currency_code },
+  } = useFormikContext();
+
+  return formattedAmount(adjustmentAmount, currency_code);
+};
+
+/**
  * Detarmines whether the invoice has foreign customer.
  * @returns {boolean}
  */
@@ -382,10 +449,25 @@ export const useInvoiceTotal = () => {
   const subtotal = useInvoiceSubtotal();
   const totalTaxAmount = useInvoiceTotalTaxAmount();
   const isExclusiveTax = useIsInvoiceTaxExclusive();
+  const discountAmount = useInvoiceDiscountAmount();
+  const adjustmentAmount = useInvoiceAdjustmentAmount();
 
-  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(
-    subtotal,
-  );
+  return R.compose(
+    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
+    R.subtract(R.__, discountAmount),
+    R.add(adjustmentAmount),
+  )(subtotal);
+};
+
+/**
+ * Retrieves the invoice total formatted.
+ * @returns {string}
+ */
+export const useInvoiceTotalFormatted = () => {
+  const total = useInvoiceTotal();
+  const { values } = useFormikContext();
+
+  return formattedAmount(total, values.currency_code);
 };
 
 /**
@@ -395,7 +477,18 @@ export const useInvoiceTotal = () => {
 export const useInvoicePaidAmount = () => {
   const { invoice } = useInvoiceFormContext();
 
-  return invoice?.payment_amount || 0;
+  return toSafeNumber(invoice?.payment_amount);
+};
+
+/**
+ * Retrieves the paid amount of the invoice formatted.
+ * @returns {string}
+ */
+export const useInvoicePaidAmountFormatted = () => {
+  const paidAmount = useInvoicePaidAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(paidAmount, values.currency_code);
 };
 
 /**
@@ -407,6 +500,17 @@ export const useInvoiceDueAmount = () => {
   const paidAmount = useInvoicePaidAmount();
 
   return Math.max(total - paidAmount, 0);
+};
+
+/**
+ * Retrieves the invoice due amount formatted.
+ * @returns {string}
+ */
+export const useInvoiceDueAmountFormatted = () => {
+  const dueAmount = useInvoiceDueAmount();
+  const { values } = useFormikContext();
+
+  return formattedAmount(dueAmount, values.currency_code);
 };
 
 /**

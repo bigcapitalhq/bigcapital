@@ -1,5 +1,6 @@
 import { mixin, Model, raw } from 'objection';
-import { castArray, takeWhile } from 'lodash';
+import * as R from 'ramda';
+import { castArray, defaultTo, takeWhile } from 'lodash';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
@@ -7,6 +8,7 @@ import SaleInvoiceMeta from './SaleInvoice.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Sales/Invoices/constants';
 import ModelSearchable from './ModelSearchable';
+import { DiscountType } from '@/interfaces';
 
 export default class SaleInvoice extends mixin(TenantModel, [
   ModelSetting,
@@ -24,6 +26,9 @@ export default class SaleInvoice extends mixin(TenantModel, [
   public dueDate: Date;
   public deliveredAt: Date;
   public pdfTemplateId: number;
+  public discount: number;
+  public discountType: DiscountType;
+  public adjustment: number | null;
 
   /**
    * Table name
@@ -68,10 +73,15 @@ export default class SaleInvoice extends mixin(TenantModel, [
       'subtotalExludingTax',
 
       'taxAmountWithheldLocal',
+      'discountAmount',
+      'discountAmountLocal',
+      'discountPercentage',
+
       'total',
       'totalLocal',
 
       'writtenoffAmountLocal',
+      'adjustmentLocal',
     ];
   }
 
@@ -127,13 +137,51 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Local discount amount.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number | null}
+   */
+  get adjustmentLocal(): number | null {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
+  }
+
+  /**
    * Invoice total. (Tax included)
    * @returns {number}
    */
   get total() {
-    return this.isInclusiveTax
-      ? this.subtotal
-      : this.subtotal + this.taxAmountWithheld;
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
+
+    return R.compose(
+      R.add(adjustmentAmount),
+      R.subtract(R.__, this.discountAmount),
+      R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld))
+    )(this.subtotal);
   }
 
   /**
@@ -605,7 +653,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
         join: {
           from: 'sales_invoices.pdfTemplateId',
           to: 'pdf_templates.id',
-        }
+        },
       },
     };
   }

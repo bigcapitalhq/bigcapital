@@ -12,6 +12,7 @@ import {
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
+import { SaleReceipt } from '@/models';
 
 @Service()
 export default class CreditNoteGLEntries {
@@ -29,11 +30,15 @@ export default class CreditNoteGLEntries {
    */
   private getCreditNoteGLedger = (
     creditNote: ICreditNote,
-    receivableAccount: number
+    receivableAccount: number,
+    discountAccount: number,
+    adjustmentAccount: number
   ): Ledger => {
     const ledgerEntries = this.getCreditNoteGLEntries(
       creditNote,
-      receivableAccount
+      receivableAccount,
+      discountAccount,
+      adjustmentAccount
     );
     return new Ledger(ledgerEntries);
   };
@@ -49,9 +54,16 @@ export default class CreditNoteGLEntries {
     tenantId: number,
     creditNote: ICreditNote,
     payableAccount: number,
+    discountAccount: number,
+    adjustmentAccount: number,
     trx?: Knex.Transaction
   ): Promise<void> => {
-    const ledger = this.getCreditNoteGLedger(creditNote, payableAccount);
+    const ledger = this.getCreditNoteGLedger(
+      creditNote,
+      payableAccount,
+      discountAccount,
+      adjustmentAccount
+    );
 
     await this.ledgerStorage.commit(tenantId, ledger, trx);
   };
@@ -98,11 +110,18 @@ export default class CreditNoteGLEntries {
     const ARAccount = await accountRepository.findOrCreateAccountReceivable(
       creditNoteWithItems.currencyCode
     );
+    const discountAccount = await accountRepository.findOrCreateDiscountAccount(
+      {}
+    );
+    const adjustmentAccount =
+      await accountRepository.findOrCreateOtherChargesAccount({});
     // Saves the credit note GL entries.
     await this.saveCreditNoteGLEntries(
       tenantId,
       creditNoteWithItems,
       ARAccount.id,
+      discountAccount.id,
+      adjustmentAccount.id,
       trx
     );
   };
@@ -169,7 +188,7 @@ export default class CreditNoteGLEntries {
 
     return {
       ...commonEntry,
-      credit: creditNote.localAmount,
+      credit: creditNote.totalLocal,
       accountId: ARAccountId,
       contactId: creditNote.customerId,
       index: 1,
@@ -191,11 +210,11 @@ export default class CreditNoteGLEntries {
       index: number
     ): ILedgerEntry => {
       const commonEntry = this.getCreditNoteCommonEntry(creditNote);
-      const localAmount = entry.amount * creditNote.exchangeRate;
+      const totalLocal = entry.totalExcludingTax * creditNote.exchangeRate;
 
       return {
         ...commonEntry,
-        debit: localAmount,
+        debit: totalLocal,
         accountId: entry.sellAccountId || entry.item.sellAccountId,
         note: entry.description,
         index: index + 2,
@@ -207,6 +226,50 @@ export default class CreditNoteGLEntries {
   );
 
   /**
+   * Retrieves the credit note discount entry.
+   * @param {ICreditNote} creditNote
+   * @param {number} discountAccountId
+   * @returns {ILedgerEntry}
+   */
+  private getDiscountEntry = (
+    creditNote: ICreditNote,
+    discountAccountId: number
+  ): ILedgerEntry => {
+    const commonEntry = this.getCreditNoteCommonEntry(creditNote);
+
+    return {
+      ...commonEntry,
+      credit: creditNote.discountAmountLocal,
+      accountId: discountAccountId,
+      index: 1,
+      accountNormal: AccountNormal.CREDIT,
+    };
+  };
+
+  /**
+   * Retrieves the credit note adjustment entry.
+   * @param {ICreditNote} creditNote
+   * @param {number} adjustmentAccountId
+   * @returns {ILedgerEntry}
+   */
+  private getAdjustmentEntry = (
+    creditNote: ICreditNote,
+    adjustmentAccountId: number
+  ): ILedgerEntry => {
+    const commonEntry = this.getCreditNoteCommonEntry(creditNote);
+    const adjustmentAmount = Math.abs(creditNote.adjustmentLocal);
+
+    return {
+      ...commonEntry,
+      credit: creditNote.adjustmentLocal < 0 ? adjustmentAmount : 0,
+      debit: creditNote.adjustmentLocal > 0 ? adjustmentAmount : 0,
+      accountId: adjustmentAccountId,
+      accountNormal: AccountNormal.CREDIT,
+      index: 1,
+    };
+  };
+
+  /**
    * Retrieve the credit note GL entries.
    * @param   {ICreditNote} creditNote - Credit note.
    * @param   {IAccount} receivableAccount - Receviable account.
@@ -214,13 +277,21 @@ export default class CreditNoteGLEntries {
    */
   public getCreditNoteGLEntries = (
     creditNote: ICreditNote,
-    ARAccountId: number
+    ARAccountId: number,
+    discountAccountId: number,
+    adjustmentAccountId: number
   ): ILedgerEntry[] => {
     const AREntry = this.getCreditNoteAREntry(creditNote, ARAccountId);
 
     const getItemEntry = this.getCreditNoteItemEntry(creditNote);
     const itemsEntries = creditNote.entries.map(getItemEntry);
 
-    return [AREntry, ...itemsEntries];
+    const discountEntry = this.getDiscountEntry(creditNote, discountAccountId);
+    const adjustmentEntry = this.getAdjustmentEntry(
+      creditNote,
+      adjustmentAccountId
+    );
+
+    return [AREntry, discountEntry, adjustmentEntry, ...itemsEntries];
   };
 }

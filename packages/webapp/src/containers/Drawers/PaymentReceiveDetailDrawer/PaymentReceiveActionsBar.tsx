@@ -28,7 +28,6 @@ import {
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
-import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Payment receive actions bar.
@@ -39,6 +38,7 @@ function PaymentsReceivedActionsBar({
 
   // #withDrawerActions
   closeDrawer,
+  openDrawer,
 
   // #withDialogActions
   openDialog,
@@ -69,8 +69,11 @@ function PaymentsReceivedActionsBar({
     openDialog('payment-pdf-preview', { paymentReceiveId });
   };
 
+  // Handle mail action.
   const handleMailPaymentReceive = () => {
-    openDialog(DialogsName.PaymentMail, { paymentReceiveId });
+    openDrawer(DRAWERS.PAYMENT_RECEIVED_SEND_MAIL, {
+      paymentReceivedId: paymentReceiveId,
+    });
   };
 
   return (

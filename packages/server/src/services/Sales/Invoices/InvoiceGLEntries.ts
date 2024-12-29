@@ -44,18 +44,31 @@ export class SaleInvoiceGLEntries {
 
     // Find or create the A/R account.
     const ARAccount = await accountRepository.findOrCreateAccountReceivable(
-      saleInvoice.currencyCode, {}, trx
+      saleInvoice.currencyCode,
+      {},
+      trx
     );
     // Find or create tax payable account.
     const taxPayableAccount = await accountRepository.findOrCreateTaxPayable(
       {},
       trx
     );
+    // Find or create the discount expense account.
+    const discountAccount = await accountRepository.findOrCreateDiscountAccount(
+      {},
+      trx
+    );
+    // Find or create the other charges account.
+    const otherChargesAccount =
+      await accountRepository.findOrCreateOtherChargesAccount({}, trx);
+
     // Retrieves the ledger of the invoice.
     const ledger = this.getInvoiceGLedger(
       saleInvoice,
       ARAccount.id,
-      taxPayableAccount.id
+      taxPayableAccount.id,
+      discountAccount.id,
+      otherChargesAccount.id
     );
     // Commits the ledger entries to the storage as UOW.
     await this.ledegrRepository.commit(tenantId, ledger, trx);
@@ -107,12 +120,16 @@ export class SaleInvoiceGLEntries {
   public getInvoiceGLedger = (
     saleInvoice: ISaleInvoice,
     ARAccountId: number,
-    taxPayableAccountId: number
+    taxPayableAccountId: number,
+    discountAccountId: number,
+    otherChargesAccountId: number
   ): ILedger => {
     const entries = this.getInvoiceGLEntries(
       saleInvoice,
       ARAccountId,
-      taxPayableAccountId
+      taxPayableAccountId,
+      discountAccountId,
+      otherChargesAccountId
     );
     return new Ledger(entries);
   };
@@ -127,6 +144,7 @@ export class SaleInvoiceGLEntries {
   ): Partial<ILedgerEntry> => ({
     credit: 0,
     debit: 0,
+
     currencyCode: saleInvoice.currencyCode,
     exchangeRate: saleInvoice.exchangeRate,
 
@@ -181,7 +199,7 @@ export class SaleInvoiceGLEntries {
       index: number
     ): ILedgerEntry => {
       const commonEntry = this.getInvoiceGLCommonEntry(saleInvoice);
-      const localAmount = entry.amountExludingTax * saleInvoice.exchangeRate;
+      const localAmount = entry.totalExcludingTax * saleInvoice.exchangeRate;
 
       return {
         ...commonEntry,
@@ -250,6 +268,50 @@ export class SaleInvoiceGLEntries {
   };
 
   /**
+   * Retrieves the invoice discount GL entry.
+   * @param {ISaleInvoice} saleInvoice
+   * @param {number} discountAccountId
+   * @returns {ILedgerEntry}
+   */
+  private getInvoiceDiscountEntry = (
+    saleInvoice: ISaleInvoice,
+    discountAccountId: number
+  ): ILedgerEntry => {
+    const commonEntry = this.getInvoiceGLCommonEntry(saleInvoice);
+
+    return {
+      ...commonEntry,
+      debit: saleInvoice.discountAmountLocal,
+      accountId: discountAccountId,
+      accountNormal: AccountNormal.CREDIT,
+      index: 1,
+    } as ILedgerEntry;
+  };
+
+  /**
+   * Retrieves the invoice adjustment GL entry.
+   * @param {ISaleInvoice} saleInvoice
+   * @param {number} adjustmentAccountId
+   * @returns {ILedgerEntry}
+   */
+  private getAdjustmentEntry = (
+    saleInvoice: ISaleInvoice,
+    otherChargesAccountId: number
+  ): ILedgerEntry => {
+    const commonEntry = this.getInvoiceGLCommonEntry(saleInvoice);
+    const adjustmentAmount = Math.abs(saleInvoice.adjustmentLocal);
+
+    return {
+      ...commonEntry,
+      debit: saleInvoice.adjustmentLocal < 0 ? adjustmentAmount : 0,
+      credit: saleInvoice.adjustmentLocal > 0 ? adjustmentAmount : 0,
+      accountId: otherChargesAccountId,
+      accountNormal: AccountNormal.CREDIT,
+      index: 1,
+    };
+  };
+
+  /**
    * Retrieves the invoice GL entries.
    * @param {ISaleInvoice} saleInvoice
    * @param {number} ARAccountId
@@ -258,7 +320,9 @@ export class SaleInvoiceGLEntries {
   public getInvoiceGLEntries = (
     saleInvoice: ISaleInvoice,
     ARAccountId: number,
-    taxPayableAccountId: number
+    taxPayableAccountId: number,
+    discountAccountId: number,
+    otherChargesAccountId: number
   ): ILedgerEntry[] => {
     const receivableEntry = this.getInvoiceReceivableEntry(
       saleInvoice,
@@ -271,6 +335,20 @@ export class SaleInvoiceGLEntries {
       saleInvoice,
       taxPayableAccountId
     );
-    return [receivableEntry, ...creditEntries, ...taxEntries];
+    const discountEntry = this.getInvoiceDiscountEntry(
+      saleInvoice,
+      discountAccountId
+    );
+    const adjustmentEntry = this.getAdjustmentEntry(
+      saleInvoice,
+      otherChargesAccountId
+    );
+    return [
+      receivableEntry,
+      ...creditEntries,
+      ...taxEntries,
+      discountEntry,
+      adjustmentEntry,
+    ];
   };
 }

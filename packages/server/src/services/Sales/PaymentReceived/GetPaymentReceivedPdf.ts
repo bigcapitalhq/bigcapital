@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
+import { renderPaymentReceivedPaperTemplateHtml } from '@bigcapital/pdf-templates';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
-import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
 import { GetPaymentReceived } from './GetPaymentReceived';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { PaymentReceivedBrandingTemplate } from './PaymentReceivedBrandingTemplate';
 import { transformPaymentReceivedToPdfTemplate } from './utils';
 import { PaymentReceivedPdfTemplateAttributes } from '@/interfaces';
-import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export default class GetPaymentReceivedPdf {
@@ -16,9 +16,6 @@ export default class GetPaymentReceivedPdf {
 
   @Inject()
   private chromiumlyTenancy: ChromiumlyTenancy;
-
-  @Inject()
-  private templateInjectable: TemplateInjectable;
 
   @Inject()
   private getPaymentService: GetPaymentReceived;
@@ -30,6 +27,23 @@ export default class GetPaymentReceivedPdf {
   private eventPublisher: EventPublisher;
 
   /**
+   * Retrieves payment received html content.
+   * @param {number} tenantId
+   * @param {number} paymentReceivedId
+   * @returns {Promise<string>}
+   */
+  public async getPaymentReceivedHtml(
+    tenantId: number,
+    paymentReceivedId: number
+  ): Promise<string> {
+    const brandingAttributes = await this.getPaymentBrandingAttributes(
+      tenantId,
+      paymentReceivedId
+    );
+    return renderPaymentReceivedPaperTemplateHtml(brandingAttributes);
+  }
+
+  /**
    * Retrieve sale invoice pdf content.
    * @param {number} tenantId -
    * @param {IPaymentReceived} paymentReceive -
@@ -39,14 +53,9 @@ export default class GetPaymentReceivedPdf {
     tenantId: number,
     paymentReceivedId: number
   ): Promise<[Buffer, string]> {
-    const brandingAttributes = await this.getPaymentBrandingAttributes(
+    const htmlContent = await this.getPaymentReceivedHtml(
       tenantId,
       paymentReceivedId
-    );
-    const htmlContent = await this.templateInjectable.render(
-      tenantId,
-      'modules/payment-receive-standard',
-      brandingAttributes
     );
     const filename = await this.getPaymentReceivedFilename(
       tenantId,

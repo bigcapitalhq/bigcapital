@@ -80,6 +80,18 @@ export interface ISaleInvoice {
   pdfTemplateId?: number;
 
   paymentMethods?: Array<PaymentIntegrationTransactionLink>;
+
+  adjustment?: number;
+  adjustmentLocal?: number | null;
+
+  discount?: number;
+  discountAmount?: number;
+  discountAmountLocal?: number | null;
+}
+
+export enum DiscountType {
+  Percentage = 'percentage',
+  Amount = 'amount',
 }
 
 export interface ISaleInvoiceDTO {
@@ -102,6 +114,13 @@ export interface ISaleInvoiceDTO {
   isInclusiveTax?: boolean;
 
   attachments?: AttachmentLinkDTO[];
+
+  // # Discount
+  discount?: number;
+  discountType?: DiscountType;
+
+  // # Adjustments
+  adjustments?: string;
 }
 
 export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {

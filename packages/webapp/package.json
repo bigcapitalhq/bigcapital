@@ -5,6 +5,7 @@
   "dependencies": {
     "@bigcapital/utils": "*",
     "@bigcapital/pdf-templates": "*",
+    "@bigcapital/email-components": "*",
     "@blueprintjs-formik/core": "^0.3.7",
     "@blueprintjs-formik/datetime": "^0.3.7",
     "@blueprintjs-formik/select": "^0.3.5",

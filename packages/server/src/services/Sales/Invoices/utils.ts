@@ -1,6 +1,7 @@
 import { pickBy } from 'lodash';
-import { InvoicePdfTemplateAttributes, ISaleInvoice } from '@/interfaces';
+import { ISaleInvoice } from '@/interfaces';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
+import { InvoicePaperTemplateProps } from '@bigcapital/pdf-templates';
 
 export const mergePdfTemplateWithDefaultAttributes = (
   brandingTemplate?: Record<string, any>,
@@ -18,7 +19,7 @@ export const mergePdfTemplateWithDefaultAttributes = (
 
 export const transformInvoiceToPdfTemplate = (
   invoice: ISaleInvoice
-): Partial<InvoicePdfTemplateAttributes> => {
+): Partial<InvoicePaperTemplateProps> => {
   return {
     dueDate: invoice.dueDateFormatted,
     dateIssue: invoice.invoiceDateFormatted,
@@ -28,6 +29,11 @@ export const transformInvoiceToPdfTemplate = (
     subtotal: invoice.subtotalFormatted,
     paymentMade: invoice.paymentAmountFormatted,
     dueAmount: invoice.dueAmountFormatted,
+    discount: invoice.discountAmountFormatted,
+    adjustment: invoice.adjustmentFormatted,
+    discountLabel: invoice.discountPercentageFormatted
+      ? `Discount [${invoice.discountPercentageFormatted}]`
+      : 'Discount',
 
     termsConditions: invoice.termsConditions,
     statement: invoice.invoiceMessage,
@@ -37,13 +43,14 @@ export const transformInvoiceToPdfTemplate = (
       description: entry.description,
       rate: entry.rateFormatted,
       quantity: entry.quantityFormatted,
+      discount: entry.discountFormatted,
       total: entry.totalFormatted,
     })),
     taxes: invoice.taxes.map((tax) => ({
       label: tax.name,
       amount: tax.taxRateAmountFormatted,
     })),
-
+    showLineDiscount: invoice.entries.some((entry) => entry.discountFormatted),
     customerAddress: contactAddressTextFormat(invoice.customer),
   };
 };

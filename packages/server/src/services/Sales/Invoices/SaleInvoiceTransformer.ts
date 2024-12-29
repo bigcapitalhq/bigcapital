@@ -3,6 +3,7 @@ import { formatNumber } from 'utils';
 import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
 import { ItemEntryTransformer } from './ItemEntryTransformer';
 import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
+import { DiscountType } from '@/interfaces';
 
 export class SaleInvoiceTransformer extends Transformer {
   /**
@@ -23,6 +24,9 @@ export class SaleInvoiceTransformer extends Transformer {
       'subtotalExludingTaxFormatted',
       'taxAmountWithheldFormatted',
       'taxAmountWithheldLocalFormatted',
+      'discountAmountFormatted',
+      'discountPercentageFormatted',
+      'adjustmentFormatted',
       'totalFormatted',
       'totalLocalFormatted',
       'taxes',
@@ -155,6 +159,41 @@ export class SaleInvoiceTransformer extends Transformer {
   protected taxAmountWithheldLocalFormatted = (invoice): string => {
     return formatNumber(invoice.taxAmountWithheldLocal, {
       currencyCode: this.context.organization.baseCurrency,
+    });
+  };
+
+  /**
+   * Retrieves formatted discount amount.
+   * @param invoice
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (invoice): string => {
+    return formatNumber(invoice.discountAmount, {
+      currencyCode: invoice.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves formatted discount percentage.
+   * @param invoice
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (invoice): string => {
+    return invoice.discountType === DiscountType.Percentage
+      ? `${invoice.discount}%`
+      : '';
+  };
+
+  /**
+   * Retrieves formatted adjustment amount.
+   * @param invoice 
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (invoice): string => {
+    return this.formatMoney(invoice.adjustment, {
+      currencyCode: invoice.currencyCode,
+      excerptZero: true,
     });
   };
 

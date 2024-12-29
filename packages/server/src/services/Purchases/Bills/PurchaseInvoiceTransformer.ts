@@ -20,10 +20,21 @@ export class PurchaseInvoiceTransformer extends Transformer {
       'formattedBalance',
       'formattedDueAmount',
       'formattedExchangeRate',
+
       'subtotalFormatted',
       'subtotalLocalFormatted',
+
       'subtotalExcludingTaxFormatted',
       'taxAmountWithheldLocalFormatted',
+
+      'discountAmountFormatted',
+      'discountAmountLocalFormatted',
+
+      'discountPercentageFormatted',
+
+      'adjustmentFormatted',
+      'adjustmentLocalFormatted',
+
       'totalFormatted',
       'totalLocalFormatted',
       'taxes',
@@ -157,6 +168,63 @@ export class PurchaseInvoiceTransformer extends Transformer {
   protected taxAmountWithheldLocalFormatted = (bill): string => {
     return formatNumber(bill.taxAmountWithheldLocal, {
       currencyCode: this.context.organization.baseCurrency,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount amount.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (bill): string => {
+    return formatNumber(bill.discountAmount, {
+      currencyCode: bill.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount amount in local currency.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected discountAmountLocalFormatted = (bill): string => {
+    return formatNumber(bill.discountAmountLocal, {
+      currencyCode: this.context.organization.baseCurrency,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount percentage.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (bill): string => {
+    return bill.discountPercentage ? `${bill.discountPercentage}%` : '';
+  };
+
+  /**
+   * Retrieves the formatted adjustment amount.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (bill): string => {
+    return formatNumber(bill.adjustment, {
+      currencyCode: bill.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves the formatted adjustment amount in local currency.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected adjustmentLocalFormatted = (bill): string => {
+    return formatNumber(bill.adjustmentLocal, {
+      currencyCode: this.context.organization.baseCurrency,
+      excerptZero: true,
     });
   };
 

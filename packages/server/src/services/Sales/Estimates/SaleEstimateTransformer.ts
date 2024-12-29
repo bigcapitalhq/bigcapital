@@ -18,6 +18,11 @@ export class SaleEstimateTransfromer extends Transformer {
       'formattedDeliveredAtDate',
       'formattedApprovedAtDate',
       'formattedRejectedAtDate',
+      'discountAmountFormatted',
+      'discountPercentageFormatted',
+      'adjustmentFormatted',
+      'totalFormatted',
+      'totalLocalFormatted',
       'formattedCreatedAt',
       'entries',
       'attachments',
@@ -96,6 +101,62 @@ export class SaleEstimateTransfromer extends Transformer {
    */
   protected formattedSubtotal = (estimate: ISaleEstimate): string => {
     return formatNumber(estimate.amount, { money: false });
+  };
+
+  /**
+   * Retrieves formatted discount amount.
+   * @param estimate
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (estimate: ISaleEstimate): string => {
+    return formatNumber(estimate.discountAmount, {
+      currencyCode: estimate.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves formatted discount percentage.
+   * @param estimate
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (estimate: ISaleEstimate): string => {
+    return estimate.discountPercentage
+      ? `${estimate.discountPercentage}%`
+      : '';
+  };
+
+  /**
+   * Retrieves formatted adjustment amount.
+   * @param estimate
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (estimate: ISaleEstimate): string => {
+    return this.formatMoney(estimate.adjustment, {
+      currencyCode: estimate.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves the formatted estimate total.
+   * @returns {string}
+   */
+  protected totalFormatted = (estimate: ISaleEstimate): string => {
+    return this.formatMoney(estimate.total, {
+      currencyCode: estimate.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted estimate total in local currency.
+   * @param estimate
+   * @returns {string}
+   */
+  protected totalLocalFormatted = (estimate: ISaleEstimate): string => {
+    return this.formatMoney(estimate.totalLocal, {
+      currencyCode: estimate.currencyCode,
+    });
   };
 
   /**

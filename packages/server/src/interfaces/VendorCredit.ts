@@ -1,4 +1,4 @@
-import { IDynamicListFilter, IItemEntry, IItemEntryDTO } from '@/interfaces';
+import { DiscountType, IDynamicListFilter, IItemEntry, IItemEntryDTO } from '@/interfaces';
 import { Knex } from 'knex';
 import { AttachmentLinkDTO } from './Attachments';
 
@@ -63,6 +63,11 @@ export interface IVendorCreditDTO {
   branchId?: number;
   warehouseId?: number;
   attachments?: AttachmentLinkDTO[];
+
+  discount?: number;
+  discountType?: DiscountType;
+  
+  adjustment?: number;
 }
 
 export interface IVendorCreditCreateDTO extends IVendorCreditDTO {}

@@ -130,9 +130,18 @@ export default class PaymentReceivesController extends BaseController {
       [
         ...this.paymentReceiveValidation,
         body('subject').isString().optional(),
+
         body('from').isString().optional(),
-        body('to').isString().optional(),
-        body('body').isString().optional(),
+
+        body('to').isArray().exists(),
+        body('to.*').isString().isEmail().optional(),
+
+        body('cc').isArray().optional({ nullable: true }),
+        body('cc.*').isString().isEmail().optional(),
+
+        body('bcc').isArray().optional({ nullable: true }),
+        body('bcc.*').isString().isEmail().optional(),
+
         body('attach_invoice').optional().isBoolean().toBoolean(),
       ],
       this.sendPaymentReceiveByMail.bind(this),
@@ -470,8 +479,9 @@ export default class PaymentReceivesController extends BaseController {
     const acceptType = accept.types([
       ACCEPT_TYPE.APPLICATION_JSON,
       ACCEPT_TYPE.APPLICATION_PDF,
+      ACCEPT_TYPE.APPLICATION_TEXT_HTML,
     ]);
-    // Response in pdf format.
+    // Responds pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
       const [pdfContent, filename] =
         await this.paymentReceiveApplication.getPaymentReceivePdf(
@@ -484,7 +494,15 @@ export default class PaymentReceivesController extends BaseController {
         'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
-      // Response in json format.
+      // Responds html format.
+    } else if (ACCEPT_TYPE.APPLICATION_TEXT_HTML === acceptType) {
+      const htmlContent =
+        await this.paymentReceiveApplication.getPaymentReceivedHtml(
+          tenantId,
+          paymentReceiveId
+        );
+      return res.status(200).send({ htmlContent });
+      // Responds json format.
     } else {
       const paymentReceive =
         await this.paymentReceiveApplication.getPaymentReceive(

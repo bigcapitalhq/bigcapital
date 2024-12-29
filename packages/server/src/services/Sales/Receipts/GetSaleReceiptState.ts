@@ -8,7 +8,7 @@ export class GetSaleReceiptState {
   private tenancy: HasTenancyService;
 
   /**
-   * Retireves the sale receipt state.
+   * Retrieves the sale receipt state.
    * @param {Number} tenantId -
    * @return {Promise<ISaleReceiptState>}
    */

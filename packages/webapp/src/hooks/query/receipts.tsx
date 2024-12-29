@@ -237,17 +237,74 @@ export function useSendSaleReceiptMail(props) {
   );
 }
 
-export function useSaleReceiptDefaultOptions(invoiceId, props) {
-  return useRequestQuery(
-    [t.SALE_RECEIPT_MAIL_OPTIONS, invoiceId],
-    {
-      method: 'get',
-      url: `sales/receipts/${invoiceId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+export interface GetSaleReceiptMailStateResponse {
+  attachReceipt: boolean;
+
+  closedAtDate: string;
+  closedAtDateFormatted: string;
+
+  companyName: string;
+  customerName: string;
+
+  formatArgs: Record<string, any>;
+
+  from: string[];
+  fromOptions: Array<{ mail: string; label: string; primary: boolean; }>;
+  message: string;
+
+  receiptDate: string;
+  receiptDateFormatted: string;
+
+  subject: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
+  to: string[];
+  toOptions: Array<{ mail: string; label: string; primary: boolean; }>;
+
+  // # Discount
+  discountAmount: number;
+  discountAmountFormatted: string;
+  discountLabel: string;
+  discountPercentage: number | null;
+  discountPercentageFormatted: string;
+
+  // # Adjustment
+  adjustment: number,
+  adjustmentFormatted: string,
+
+  // # Total
+  total: number;
+  totalFormatted: string;
+
+  companyLogoUri?: string | null;
+  primaryColor?: string | null;
+
+  entries: Array<{
+    name: string;
+    quantity: number;
+    quantityFormatted: string;
+    rate: number;
+    rateFormatted: string;
+    total: number;
+    totalFormatted: string
+  }>,
+  receiptNumber: string;
+}
+
+export function useSaleReceiptMailState(
+  receiptId: number,
+  props?: UseQueryOptions<GetSaleReceiptMailStateResponse, Error>,
+): UseQueryResult<GetSaleReceiptMailStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleReceiptMailStateResponse, Error>(
+    [t.SALE_RECEIPT_MAIL_OPTIONS, receiptId],
+    () =>
+      apiRequest
+        .get(`sales/receipts/${receiptId}/mail`)
+        .then((res) => transformToCamelCase(res.data.data)),
   );
 }
 
@@ -269,3 +326,33 @@ export function useGetReceiptState(
     { ...options },
   );
 }
+
+interface GetReceiptHtmlResponse {
+  htmlContent: string;
+}
+
+/**
+ * Retrieves the sale receipt html content.
+ * @param {number} receiptId
+ * @param {UseQueryOptions<string, Error>} options
+ * @returns {UseQueryResult<GetReceiptHtmlResponse, Error>}
+ */
+export const useGetSaleReceiptHtml = (
+  receiptId: number,
+  options?: UseQueryOptions<string, Error>,
+): UseQueryResult<GetReceiptHtmlResponse, Error> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetReceiptHtmlResponse, Error>(
+    ['SALE_RECEIPT_HTML', receiptId],
+    () =>
+      apiRequest
+        .get(`sales/receipts/${receiptId}`, {
+          headers: {
+            Accept: 'application/json+html',
+          },
+        })
+        .then((res) => transformToCamelCase(res.data)),
+    { ...options },
+  );
+};

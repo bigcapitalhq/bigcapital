@@ -11,7 +11,7 @@ import {
 import { ServiceError } from '@/exceptions';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { AbilitySubject, SaleReceiptAction } from '@/interfaces';
+import { AbilitySubject, DiscountType, SaleReceiptAction } from '@/interfaces';
 import { SaleReceiptApplication } from '@/services/Sales/Receipts/SaleReceiptApplication';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 
@@ -56,8 +56,18 @@ export default class SalesReceiptsController extends BaseController {
       [
         ...this.specificReceiptValidationSchema,
         body('subject').isString().optional(),
+
         body('from').isString().optional(),
-        body('to').isString().optional(),
+
+        body('to').isArray().exists(),
+        body('to.*').isString().isEmail().optional(),
+
+        body('cc').isArray().optional({ nullable: true }),
+        body('cc.*').isString().isEmail().optional(),
+
+        body('bcc').isArray().optional({ nullable: true }),
+        body('bcc.*').isString().isEmail().optional(),
+
         body('body').isString().optional(),
         body('attach_receipt').optional().isBoolean().toBoolean(),
       ],
@@ -148,12 +158,17 @@ export default class SalesReceiptsController extends BaseController {
       check('entries.*.id').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
-      check('entries.*.quantity').exists().isNumeric().toInt(),
+      check('entries.*.quantity').exists().isNumeric().toFloat(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.discount')
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
+      check('entries.*.discount_type')
+        .default(DiscountType.Percentage)
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
+
       check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
@@ -166,8 +181,18 @@ export default class SalesReceiptsController extends BaseController {
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
 
-      // Pdf template id.
+      // # Pdf template
       check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
+
+      // # Discount
+      check('discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('discount_type')
+        .optional({ nullable: true })
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
+
+      // # Adjustment
+      check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),
     ];
   }
 
@@ -353,6 +378,7 @@ export default class SalesReceiptsController extends BaseController {
     const acceptType = accept.types([
       ACCEPT_TYPE.APPLICATION_JSON,
       ACCEPT_TYPE.APPLICATION_PDF,
+      ACCEPT_TYPE.APPLICATION_TEXT_HTML,
     ]);
     // Retrieves receipt in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
@@ -368,6 +394,12 @@ export default class SalesReceiptsController extends BaseController {
       });
       res.send(pdfContent);
       // Retrieves receipt in json format.
+    } else if (ACCEPT_TYPE.APPLICATION_TEXT_HTML === acceptType) {
+      const htmlContent = await this.saleReceiptsApplication.getSaleReceiptHtml(
+        tenantId,
+        saleReceiptId
+      );
+      res.send({ htmlContent });
     } else {
       const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(
         tenantId,
@@ -507,7 +539,7 @@ export default class SalesReceiptsController extends BaseController {
     const { id: receiptId } = req.params;
 
     try {
-      const data = await this.saleReceiptsApplication.getSaleReceiptMail(
+      const data = await this.saleReceiptsApplication.getSaleReceiptMailState(
         tenantId,
         receiptId
       );

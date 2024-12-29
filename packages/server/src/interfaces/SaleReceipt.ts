@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { IItemEntry } from './ItemEntry';
 import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
 import { AttachmentLinkDTO } from './Attachments';
+import { DiscountType } from './SaleInvoice';
 
 export interface ISaleReceipt {
   id?: number;
@@ -27,6 +28,20 @@ export interface ISaleReceipt {
 
   localAmount?: number;
   entries?: IItemEntry[];
+
+  subtotal?: number;
+  subtotalLocal?: number;
+
+  total?: number;
+  totalLocal?: number;
+
+  discountAmount: number;
+  discountPercentage?: number | null;
+  
+  adjustment?: number;
+  adjustmentLocal?: number | null;
+
+  discountAmountLocal?: number | null;
 }
 
 export interface ISalesReceiptsFilter {
@@ -47,6 +62,11 @@ export interface ISaleReceiptDTO {
   entries: any[];
   branchId?: number;
   attachments?: AttachmentLinkDTO[];
+
+  discount?: number;
+  discountType?: DiscountType;
+  
+  adjustment?: number;
 }
 
 export interface ISalesReceiptsService {

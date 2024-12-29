@@ -3,6 +3,7 @@ import { body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import {
   AbilitySubject,
+  DiscountType,
   ISaleEstimateDTO,
   SaleEstimateAction,
   SaleEstimateMailOptionsDTO,
@@ -13,11 +14,8 @@ import DynamicListingService from '@/services/DynamicListing/DynamicListService'
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { SaleEstimatesApplication } from '@/services/Sales/Estimates/SaleEstimatesApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
-const ACCEPT_TYPE = {
-  APPLICATION_PDF: 'application/pdf',
-  APPLICATION_JSON: 'application/json',
-};
 @Service()
 export default class SalesEstimatesController extends BaseController {
   @Inject()
@@ -133,8 +131,18 @@ export default class SalesEstimatesController extends BaseController {
       [
         ...this.validateSpecificEstimateSchema,
         body('subject').isString().optional(),
+
         body('from').isString().optional(),
-        body('to').isString().optional(),
+
+        body('to').isArray().exists(),
+        body('to.*').isString().isEmail().optional(),
+
+        body('cc').isArray().optional({ nullable: true }),
+        body('cc.*').isString().isEmail().optional(),
+
+        body('bcc').isArray().optional({ nullable: true }),
+        body('bcc.*').isString().isEmail().optional(),
+
         body('body').isString().optional(),
         body('attach_invoice').optional().isBoolean().toBoolean(),
       ],
@@ -143,10 +151,10 @@ export default class SalesEstimatesController extends BaseController {
       this.handleServiceErrors
     );
     router.get(
-      '/:id/mail',
+      '/:id/mail/state',
       [...this.validateSpecificEstimateSchema],
       this.validationResult,
-      asyncMiddleware(this.getSaleEstimateMail.bind(this)),
+      asyncMiddleware(this.getSaleEstimateMailState.bind(this)),
       this.handleServiceErrors
     );
     return router;
@@ -172,13 +180,18 @@ export default class SalesEstimatesController extends BaseController {
       check('entries').exists().isArray({ min: 1 }),
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
-      check('entries.*.quantity').exists().isNumeric().toInt(),
+      check('entries.*.quantity').exists().isNumeric().toFloat(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.discount')
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
+      check('entries.*.discount_type')
+        .default(DiscountType.Percentage)
+        .isString()
+        .isIn([DiscountType.Percentage, DiscountType.Amount]),
+
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
         .isNumeric()
@@ -188,11 +201,21 @@ export default class SalesEstimatesController extends BaseController {
       check('terms_conditions').optional().trim(),
       check('send_to_email').optional().trim(),
 
+      // # Attachments
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
 
-      // Pdf template id.
+      // # Pdf template id.
       check('pdf_template_id').optional({ nullable: true }).isNumeric().toInt(),
+
+      // # Discount
+      check('discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('discount_type')
+        .default(DiscountType.Amount)
+        .isIn([DiscountType.Amount, DiscountType.Percentage]),
+
+      // # Adjustment
+      check('adjustment').optional({ nullable: true }).isNumeric().toFloat(),
     ];
   }
 
@@ -395,6 +418,7 @@ export default class SalesEstimatesController extends BaseController {
     const acceptType = accept.types([
       ACCEPT_TYPE.APPLICATION_JSON,
       ACCEPT_TYPE.APPLICATION_PDF,
+      ACCEPT_TYPE.APPLICATION_TEXT_HTML,
     ]);
     // Retrieves estimate in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
@@ -410,7 +434,14 @@ export default class SalesEstimatesController extends BaseController {
       });
       res.send(pdfContent);
       // Retrieves estimates in json format.
-    } else {
+    } else if (ACCEPT_TYPE.APPLICATION_TEXT_HTML === acceptType) {
+      const htmlContent =
+        await this.saleEstimatesApplication.getSaleEstimateHtml(
+          tenantId,
+          estimateId
+        );
+      return res.status(200).send({ htmlContent });
+    } else if (ACCEPT_TYPE.APPLICATION_JSON) {
       const estimate = await this.saleEstimatesApplication.getSaleEstimate(
         tenantId,
         estimateId
@@ -535,18 +566,18 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private getSaleEstimateMail = async (
-    req: Request,
+  private getSaleEstimateMailState = async (
+    req: Request<{ id: number }>,
     res: Response,
     next: NextFunction
   ) => {
     const { tenantId } = req;
-    const { id: invoiceId } = req.params;
+    const { id: estimateId } = req.params;
 
     try {
-      const data = await this.saleEstimatesApplication.getSaleEstimateMail(
+      const data = await this.saleEstimatesApplication.getSaleEstimateMailState(
         tenantId,
-        invoiceId
+        estimateId
       );
       return res.status(200).send({ data });
     } catch (error) {

@@ -1,10 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useFormikContext } from 'formik';
 import { Group, PageFormBigNumber } from '@/components';
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
-import { useInvoiceDueAmount } from './utils';
+import { useInvoiceTotalFormatted } from './utils';
 
 /**
  * Invoice form header section.
@@ -29,19 +28,11 @@ function InvoiceFormHeader() {
  * @returns {React.ReactNode}
  */
 function InvoiceFormBigTotal() {
-  const {
-    values: { currency_code },
-  } = useFormikContext();
-
   // Calculate the total due amount of invoice entries.
-  const totalDueAmount = useInvoiceDueAmount();
+  const totalFormatted = useInvoiceTotalFormatted();
 
   return (
-    <PageFormBigNumber
-      label={intl.get('due_amount')}
-      amount={totalDueAmount}
-      currencyCode={currency_code}
-    />
+    <PageFormBigNumber label={intl.get('due_amount')} amount={totalFormatted} />
   );
 }
 export default InvoiceFormHeader;

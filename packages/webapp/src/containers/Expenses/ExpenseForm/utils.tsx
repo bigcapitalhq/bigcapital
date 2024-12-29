@@ -166,30 +166,52 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the Journal totals.
+ * Retrieves the expense subtotal.
+ * @returns {number}
  */
-export const useExpensesTotals = () => {
+export const useExpenseSubtotal = () => {
   const {
-    values: { categories, currency_code: currencyCode },
+    values: { categories },
   } = useFormikContext();
 
-  const total = sumBy(categories, 'amount');
+  // Calculates the expense entries amount.
+  return React.useMemo(() => sumBy(categories, 'amount'), [categories]);
+};
 
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(total, currencyCode, { money: false }),
-    [total, currencyCode],
-  );
+/**
+ * Retrieves the expense subtotal formatted.
+ * @returns {string}
+ */
+export const useExpenseSubtotalFormatted = () => {
+  const subtotal = useExpenseSubtotal();
+  const {
+    values: { currency_code },
+  } = useFormikContext();
 
-  return {
-    formattedTotal,
-    formattedSubtotal,
-  };
+  return formattedAmount(subtotal, currency_code);
+};
+
+/**
+ * Retrieves the expense total.
+ * @returns {number}
+ */
+export const useExpenseTotal = () => {
+  const subtotal = useExpenseSubtotal();
+
+  return subtotal;
+};
+
+/**
+ * Retrieves the expense total formatted.
+ * @returns {string}
+ */
+export const useExpenseTotalFormatted = () => {
+  const total = useExpenseTotal();
+  const {
+    values: { currency_code },
+  } = useFormikContext();
+
+  return formattedAmount(total, currency_code);
 };
 
 /**

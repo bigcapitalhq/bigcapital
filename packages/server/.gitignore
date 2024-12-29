@@ -4,5 +4,5 @@ stdout.log
 /dist
 /build
 /public/imports
-
 dist
+newrelic_agent.log

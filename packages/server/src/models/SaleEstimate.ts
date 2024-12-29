@@ -7,12 +7,30 @@ import ModelSetting from './ModelSetting';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Sales/Estimates/constants';
 import ModelSearchable from './ModelSearchable';
+import { DiscountType } from '@/interfaces';
+import { defaultTo } from 'lodash';
 
 export default class SaleEstimate extends mixin(TenantModel, [
   ModelSetting,
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  public amount: number;
+  public exchangeRate: number;
+
+  public discount: number;
+  public discountType: DiscountType;
+
+  public adjustment: number;
+
+  public expirationDate!: string;
+  public deliveredAt!: string | null;
+  public approvedAt!: string | null;
+  public rejectedAt!: string | null;
+
+  public convertedToInvoiceId!: number | null;
+  public convertedToInvoiceAt!: string | null;
+
   /**
    * Table name
    */
@@ -33,6 +51,12 @@ export default class SaleEstimate extends mixin(TenantModel, [
   static get virtualAttributes() {
     return [
       'localAmount',
+      'discountAmount',
+      'discountPercentage',
+      'total',
+      'totalLocal',
+      'subtotal',
+      'subtotalLocal',
       'isDelivered',
       'isExpired',
       'isConvertedToInvoice',
@@ -47,6 +71,60 @@ export default class SaleEstimate extends mixin(TenantModel, [
    */
   get localAmount() {
     return this.amount * this.exchangeRate;
+  }
+
+  /**
+   * Estimate subtotal.
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.amount;;
+  }
+
+  /**
+   * Estimate subtotal in local currency.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.localAmount;
+  }
+
+  /**
+   * Discount amount.
+   * @returns {number}
+   */ 
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage
+      ? this.discount
+      : null;
+  }
+
+  /**
+   * Estimate total.
+   * @returns {number}
+   */
+  get total() {
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
+
+    return this.subtotal - this.discountAmount + adjustmentAmount;
+  }
+
+  /**
+   * Estimate total in local currency.
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
   }
 
   /**
@@ -184,6 +262,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
     const Branch = require('models/Branch');
     const Warehouse = require('models/Warehouse');
     const Document = require('models/Document');
+    const { PdfTemplate } = require('models/PdfTemplate');
 
     return {
       customer: {
@@ -250,6 +329,18 @@ export default class SaleEstimate extends mixin(TenantModel, [
         },
         filter(query) {
           query.where('model_ref', 'SaleEstimate');
+        },
+      },
+
+      /**
+       * Sale estimate may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplate,
+        join: {
+          from: 'sales_estimates.pdfTemplateId',
+          to: 'pdf_templates.id',
         },
       },
     };

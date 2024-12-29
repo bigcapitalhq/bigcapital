@@ -5,14 +5,12 @@ import styled from 'styled-components';
 import { defaultTo } from 'lodash';
 
 import {
-  ButtonLink,
   CustomerDrawerLink,
   CommercialDocHeader,
   CommercialDocTopHeader,
   ExchangeRateDetailItem,
   Row,
   Col,
-  FormatDate,
   DetailsMenu,
   DetailItem,
 } from '@/components';
@@ -31,7 +29,7 @@ export default function ReceiptDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountReceiptItem label={intl.get('amount')}>
-            <h3 class="big-number">{receipt.formatted_amount}</h3>
+            <h3 class="big-number">{receipt.total_formatted}</h3>
           </AmountReceiptItem>
 
           <StatusReceiptItem>
@@ -66,6 +64,7 @@ export default function ReceiptDetailHeader() {
             />
           </DetailsMenu>
         </Col>
+
         <Col xs={6}>
           <DetailsMenu
             direction={'horizantal'}

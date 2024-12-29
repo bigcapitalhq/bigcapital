@@ -11,7 +11,6 @@ import QuickPaymentMadeFormDialog from '@/containers/Dialogs/QuickPaymentMadeFor
 import AllocateLandedCostDialog from '@/containers/Dialogs/AllocateLandedCostDialog';
 import InvoicePdfPreviewDialog from '@/containers/Dialogs/InvoicePdfPreviewDialog';
 import EstimatePdfPreviewDialog from '@/containers/Dialogs/EstimatePdfPreviewDialog';
-import ReceiptPdfPreviewDialog from '@/containers/Dialogs/ReceiptPdfPreviewDialog';
 import MoneyInDialog from '@/containers/CashFlow/MoneyInDialog';
 import MoneyOutDialog from '@/containers/CashFlow/MoneyOutDialog';
 import BadDebtDialog from '@/containers/Dialogs/BadDebtDialog';
@@ -45,9 +44,6 @@ import ProjectBillableEntriesFormDialog from '@/containers/Projects/containers/P
 import TaxRateFormDialog from '@/containers/TaxRates/dialogs/TaxRateFormDialog/TaxRateFormDialog';
 import { DialogsName } from '@/constants/dialogs';
 import InvoiceExchangeRateChangeDialog from '@/containers/Sales/Invoices/InvoiceForm/Dialogs/InvoiceExchangeRateChangeDialog';
-import EstimateMailDialog from '@/containers/Sales/Estimates/EstimateMailDialog/EstimateMailDialog';
-import ReceiptMailDialog from '@/containers/Sales/Receipts/ReceiptMailDialog/ReceiptMailDialog';
-import PaymentMailDialog from '@/containers/Sales/PaymentsReceived/PaymentMailDialog/PaymentMailDialog';
 import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
 import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
 import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
@@ -81,7 +77,6 @@ export default function DialogsContainer() {
       />
       <InvoicePdfPreviewDialog dialogName={DialogsName.InvoicePdfForm} />
       <EstimatePdfPreviewDialog dialogName={DialogsName.EstimatePdfForm} />
-      <ReceiptPdfPreviewDialog dialogName={DialogsName.ReceiptPdfForm} />
       <MoneyInDialog dialogName={DialogsName.MoneyInForm} />
       <MoneyOutDialog dialogName={DialogsName.MoneyOutForm} />
 
@@ -143,9 +138,6 @@ export default function DialogsContainer() {
       <InvoiceExchangeRateChangeDialog
         dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
       />
-      <EstimateMailDialog dialogName={DialogsName.EstimateMail} />
-      <ReceiptMailDialog dialogName={DialogsName.ReceiptMail} />
-      <PaymentMailDialog dialogName={DialogsName.PaymentMail} />
       <ExportDialog dialogName={DialogsName.Export} />
       <RuleFormDialog dialogName={DialogsName.BankRuleForm} />
       <DisconnectBankAccountDialog

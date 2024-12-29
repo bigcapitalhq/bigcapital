@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import moment from 'moment';
@@ -10,6 +10,7 @@ import {
   repeatValue,
   transformToForm,
   formattedAmount,
+  toSafeNumber,
 } from '@/utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import {
@@ -63,6 +64,9 @@ export const defaultEstimate = {
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
   attachments: [],
   pdf_template_id: '',
+  adjustment: '',
+  discount: '',
+  discount_type: 'amount',
 };
 
 const ERRORS = {
@@ -208,32 +212,110 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the estimate totals.
+ * Retrieves the estimate subtotal.
+ * @returns {number}
  */
-export const useEstimateTotals = () => {
+export const useEstimateSubtotal = () => {
   const {
-    values: { entries, currency_code: currencyCode },
+    values: { entries },
   } = useFormikContext();
 
   // Retrieves the invoice entries total.
-  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+  const subtotal = useMemo(() => getEntriesTotal(entries), [entries]);
 
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(total, currencyCode, { money: false }),
-    [total, currencyCode],
-  );
+  return subtotal;
+};
 
-  return {
-    total,
-    formattedTotal,
-    formattedSubtotal,
-  };
+/**
+ * Retrieves the estimate subtotal formatted.
+ * @returns {string}
+ */
+export const useEstimateSubtotalFormatted = () => {
+  const subtotal = useEstimateSubtotal();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(subtotal, currencyCode);
+};
+
+/**
+ * Retrieves the estimate discount amount.
+ * @returns {number}
+ */
+export const useEstimateDiscount = () => {
+  const { values } = useFormikContext();
+  const subtotal = useEstimateSubtotal();
+  const discount = toSafeNumber(values.discount);
+
+  return values?.discount_type === 'percentage'
+    ? (subtotal * discount) / 100
+    : discount;
+};
+
+/**
+ * Retrieves the estimate discount formatted.
+ * @returns {string}
+ */
+export const useEstimateDiscountFormatted = () => {
+  const discount = useEstimateDiscount();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(discount, currencyCode);
+};
+
+/**
+ * Retrieves the estimate adjustment amount.
+ * @returns {number}
+ */
+export const useEstimateAdjustment = () => {
+  const { values } = useFormikContext();
+  const adjustmentAmount = toSafeNumber(values.adjustment);
+
+  return adjustmentAmount;
+};
+
+/**
+ * Retrieves the estimate adjustment formatted.
+ * @returns {string}
+ */
+export const useEstimateAdjustmentFormatted = () => {
+  const adjustment = useEstimateAdjustment();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(adjustment, currencyCode);
+};
+
+/**
+ * Retrieves the estimate total.
+ * @returns {number}
+ */
+export const useEstimateTotal = () => {
+  const subtotal = useEstimateSubtotal();
+  const discount = useEstimateDiscount();
+  const adjustment = useEstimateAdjustment();
+
+  return R.compose(
+    R.subtract(R.__, discount),
+    R.add(R.__, adjustment),
+  )(subtotal);
+};
+
+/**
+ * Retrieves the estimate total formatted.
+ * @returns {string}
+ */
+export const useEstimateTotalFormatted = () => {
+  const total = useEstimateTotal();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(total, currencyCode);
 };
 
 /**

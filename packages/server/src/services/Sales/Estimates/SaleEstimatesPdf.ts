@@ -1,13 +1,12 @@
 import { Inject, Service } from 'typedi';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
-import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
 import { GetSaleEstimate } from './GetSaleEstimate';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SaleEstimatePdfTemplate } from '../Invoices/SaleEstimatePdfTemplate';
 import { transformEstimateToPdfTemplate } from './utils';
-import { EstimatePdfBrandingAttributes } from './constants';
 import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { renderEstimatePaperTemplateHtml, EstimatePaperTemplateProps } from '@bigcapital/pdf-templates';
 
 @Service()
 export class SaleEstimatesPdf {
@@ -18,9 +17,6 @@ export class SaleEstimatesPdf {
   private chromiumlyTenancy: ChromiumlyTenancy;
 
   @Inject()
-  private templateInjectable: TemplateInjectable;
-
-  @Inject()
   private getSaleEstimate: GetSaleEstimate;
 
   @Inject()
@@ -28,6 +24,22 @@ export class SaleEstimatesPdf {
 
   @Inject()
   private eventPublisher: EventPublisher;
+
+  /**
+   * Retrieve sale estimate html content.
+   * @param {number} tenantId -
+   * @param {number} invoiceId -
+   */
+  public async saleEstimateHtml(
+    tenantId: number,
+    estimateId: number
+  ): Promise<string> {
+    const brandingAttributes = await this.getEstimateBrandingAttributes(
+      tenantId,
+      estimateId
+    );
+    return renderEstimatePaperTemplateHtml({ ...brandingAttributes });
+  }
 
   /**
    * Retrieve sale invoice pdf content.
@@ -42,15 +54,10 @@ export class SaleEstimatesPdf {
       tenantId,
       saleEstimateId
     );
-    const brandingAttributes = await this.getEstimateBrandingAttributes(
-      tenantId,
-      saleEstimateId
-    );
-    const htmlContent = await this.templateInjectable.render(
-      tenantId,
-      'modules/estimate-regular',
-      brandingAttributes
-    );
+    // Retireves the sale estimate html.
+    const htmlContent = await this.saleEstimateHtml(tenantId, saleEstimateId);
+
+    // Converts the html content to pdf.
     const content = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
       htmlContent
@@ -88,7 +95,7 @@ export class SaleEstimatesPdf {
   async getEstimateBrandingAttributes(
     tenantId: number,
     estimateId: number
-  ): Promise<EstimatePdfBrandingAttributes> {
+  ): Promise<EstimatePaperTemplateProps> {
     const { PdfTemplate } = this.tenancy.models(tenantId);
     const saleEstimate = await this.getSaleEstimate.getEstimate(
       tenantId,
