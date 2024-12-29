@@ -14,7 +14,7 @@ import { SaleEstimatesImportable } from '../Sales/Estimates/SaleEstimatesImporta
 import { BillPaymentsImportable } from '../Purchases/BillPayments/BillPaymentsImportable';
 import { VendorCreditsImportable } from '../Purchases/VendorCredits/VendorCreditsImportable';
 import { PaymentsReceivedImportable } from '../Sales/PaymentReceived/PaymentsReceivedImportable';
-import { CreditNotesImportable } from '../CreditNotes/CreditNotesImportable';
+import { CreditNotesImportable } from '../CreditNotes/commands/CreditNotesImportable';
 import { SaleReceiptsImportable } from '../Sales/Receipts/SaleReceiptsImportable';
 import { TaxRatesImportable } from '../TaxRates/TaxRatesImportable';
 

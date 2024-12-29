@@ -1,25 +1,30 @@
-import { mixin, Model } from 'objection';
+import { Model, mixin } from 'objection';
 // import TenantModel from 'models/TenantModel';
 // import ModelSetting from './ModelSetting';
 // import CustomViewBaseModel from './CustomViewBaseModel';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
-import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
-import { CreditNote } from './CreditNote';
 
-export class CreditNoteAppliedInvoice extends BaseModel {
-  public amount: number;
-  public creditNoteId: number;
-  public invoiceId: number;
-
-  public saleInvoice!: SaleInvoice;
-  public creditNote!: CreditNote;
+export class RefundCreditNote extends BaseModel{
+  date: Date;
+  referenceNo: string;
+  amount: number;
+  currencyCode: string;
+  exchangeRate: number;
+  fromAccountId: number;
+  description: string;
+  creditNoteId: number;
+  
+  userId?: number;
+  branchId?: number;
+  
+  createdAt?: Date | null;
 
   /**
-   * Table name
+   * Table name.
    */
   static get tableName() {
-    return 'credit_note_applied_invoice';
+    return 'refund_credit_note_transactions';
   }
 
   /**
@@ -33,24 +38,23 @@ export class CreditNoteAppliedInvoice extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const { SaleInvoice } = require('../../SaleInvoices/models/SaleInvoice');
+    const { Account } = require('../../Accounts/models/Account.model');
     const { CreditNote } = require('../../CreditNotes/models/CreditNote');
 
     return {
-      saleInvoice: {
+      fromAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: SaleInvoice,
+        modelClass: Account,
         join: {
-          from: 'credit_note_applied_invoice.invoiceId',
-          to: 'sales_invoices.id',
+          from: 'refund_credit_note_transactions.fromAccountId',
+          to: 'accounts.id',
         },
       },
-
       creditNote: {
         relation: Model.BelongsToOneRelation,
         modelClass: CreditNote,
         join: {
-          from: 'credit_note_applied_invoice.creditNoteId',
+          from: 'refund_credit_note_transactions.creditNoteId',
           to: 'credit_notes.id',
         },
       },

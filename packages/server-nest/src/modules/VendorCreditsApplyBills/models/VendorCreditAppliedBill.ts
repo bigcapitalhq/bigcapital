@@ -1,11 +1,20 @@
-import { mixin, Model } from 'objection';
+import { Model } from 'objection';
 // import TenantModel from 'models/TenantModel';
 // import ModelSetting from './ModelSetting';
 // import CustomViewBaseModel from './CustomViewBaseModel';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
+import { VendorCredit } from '../../VendorCredit/models/VendorCredit';
+import { Bill } from '@/modules/Bills/models/Bill';
 
 export class VendorCreditAppliedBill extends BaseModel {
+  public amount!: number;
+  public billId!: number;
+  public vendorCreditId!: number;
+
+  public vendorCredit!: VendorCredit;
+  public bill!: Bill;
+
   /**
    * Table name
    */
@@ -16,7 +25,7 @@ export class VendorCreditAppliedBill extends BaseModel {
   /**
    * Timestamps columns.
    */
-  get timestamps() {
+  public get timestamps() {
     return ['created_at', 'updated_at'];
   }
 

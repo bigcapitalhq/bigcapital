@@ -1,15 +1,25 @@
 import { BaseModel } from '@/models/Model';
 import moment from 'moment';
 import { Model } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import { defaultToTransform } from 'utils';
-// import SaleEstimateSettings from './SaleEstimate.Settings';
-// import ModelSetting from './ModelSetting';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Sales/Estimates/constants';
-// import ModelSearchable from './ModelSearchable';
+import { ItemEntry } from '../../Items/models/ItemEntry';
+import { Customer } from '../../Customers/models/Customer';
+import { Branch } from '../../Branches/models/Branch.model';
+import { Warehouse } from '../../Warehouses/models/Warehouse.model';
+import { Document } from '../../ChromiumlyTenancy/models/Document';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class SaleEstimate extends BaseModel {
+  constructor(
+    private readonly itemEntryModel: typeof ItemEntry,
+    private readonly customerModel: typeof Customer,
+    private readonly branchModel: typeof Branch,
+    private readonly warehouseModel: typeof Warehouse,
+    private readonly documentModel: typeof Document,
+  ) {
+    super();
+  }
+
   exchangeRate!: number;
   amount!: number;
 
@@ -207,16 +217,10 @@ export class SaleEstimate extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const { ItemEntry } = require('../../Items/models/ItemEntry');
-    const { Customer } = require('../../Customers/models/Customer');
-    const { Branch } = require('../../Branches/models/Branch.model');
-    const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
-    const { Document } = require('../../ChromiumlyTenancy/models/Document');
-
     return {
       customer: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Customer,
+        modelClass: this.customerModel,
         join: {
           from: 'sales_estimates.customerId',
           to: 'contacts.id',
@@ -227,8 +231,7 @@ export class SaleEstimate extends BaseModel {
       },
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: ItemEntry,
-
+        modelClass: this.itemEntryModel,
         join: {
           from: 'sales_estimates.id',
           to: 'items_entries.referenceId',
@@ -238,37 +241,25 @@ export class SaleEstimate extends BaseModel {
           builder.orderBy('index', 'ASC');
         },
       },
-
-      /**
-       * Sale estimate may belongs to branch.
-       */
       branch: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Branch,
+        modelClass: this.branchModel,
         join: {
           from: 'sales_estimates.branchId',
           to: 'branches.id',
         },
       },
-
-      /**
-       * Sale estimate may has associated warehouse.
-       */
       warehouse: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Warehouse,
+        modelClass: this.warehouseModel,
         join: {
           from: 'sales_estimates.warehouseId',
           to: 'warehouses.id',
         },
       },
-
-      /**
-       * Sale estimate transaction may has many attached attachments.
-       */
       attachments: {
         relation: Model.ManyToManyRelation,
-        modelClass: Document,
+        modelClass: this.documentModel,
         join: {
           from: 'sales_estimates.id',
           through: {

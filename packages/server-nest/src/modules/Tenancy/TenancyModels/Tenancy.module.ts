@@ -25,7 +25,7 @@ import { BillPayment } from '@/modules/BillPayments/models/BillPayment';
 import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
 import { BillLandedCostEntry } from '@/modules/BillLandedCosts/models/BillLandedCostEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
-import { VendorCreditAppliedBill } from '@/modules/VendorCredit/models/VendorCreditAppliedBill';
+import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
 import { CreditNoteAppliedInvoice } from '@/modules/CreditNotes/models/CreditNoteAppliedInvoice';

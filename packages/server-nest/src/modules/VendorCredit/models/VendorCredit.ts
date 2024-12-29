@@ -22,6 +22,9 @@ export class VendorCredit extends BaseModel {
   openedAt: Date;
   userId: number;
 
+  branchId: number;
+  warehouseId: number;
+
   /**
    * Table name
    */
@@ -183,83 +186,85 @@ export class VendorCredit extends BaseModel {
   /**
    * Relationship mapping.
    */
-  // static get relationMappings() {
-  //   const Vendor = require('models/Vendor');
-  //   const ItemEntry = require('models/ItemEntry');
-  //   const Branch = require('models/Branch');
-  //   const Document = require('models/Document');
-  //   const Warehouse = require('models/Warehouse');
+  static get relationMappings() {
+    const { Vendor } = require('../../Vendors/models/Vendor');
+    const {
+      ItemEntry,
+    } = require('../../TransactionItemEntry/models/ItemEntry');
+    const { Branch } = require('../../Branches/models/Branch.model');
+    const { Document } = require('../../ChromiumlyTenancy/models/Document');
+    const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
 
-  //   return {
-  //     vendor: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Vendor.default,
-  //       join: {
-  //         from: 'vendor_credits.vendorId',
-  //         to: 'contacts.id',
-  //       },
-  //       filter(query) {
-  //         query.where('contact_service', 'vendor');
-  //       },
-  //     },
+    return {
+      vendor: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Vendor,
+        join: {
+          from: 'vendor_credits.vendorId',
+          to: 'contacts.id',
+        },
+        filter(query) {
+          query.where('contact_service', 'vendor');
+        },
+      },
 
-  //     entries: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: ItemEntry.default,
-  //       join: {
-  //         from: 'vendor_credits.id',
-  //         to: 'items_entries.referenceId',
-  //       },
-  //       filter(builder) {
-  //         builder.where('reference_type', 'VendorCredit');
-  //         builder.orderBy('index', 'ASC');
-  //       },
-  //     },
+      entries: {
+        relation: Model.HasManyRelation,
+        modelClass: ItemEntry,
+        join: {
+          from: 'vendor_credits.id',
+          to: 'items_entries.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'VendorCredit');
+          builder.orderBy('index', 'ASC');
+        },
+      },
 
-  //     /**
-  //      * Vendor credit may belongs to branch.
-  //      */
-  //     branch: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Branch.default,
-  //       join: {
-  //         from: 'vendor_credits.branchId',
-  //         to: 'branches.id',
-  //       },
-  //     },
+      /**
+       * Vendor credit may belongs to branch.
+       */
+      branch: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Branch,
+        join: {
+          from: 'vendor_credits.branchId',
+          to: 'branches.id',
+        },
+      },
 
-  //     /**
-  //      * Vendor credit may has associated warehouse.
-  //      */
-  //     warehouse: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Warehouse.default,
-  //       join: {
-  //         from: 'vendor_credits.warehouseId',
-  //         to: 'warehouses.id',
-  //       },
-  //     },
+      /**
+       * Vendor credit may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse,
+        join: {
+          from: 'vendor_credits.warehouseId',
+          to: 'warehouses.id',
+        },
+      },
 
-  //     /**
-  //      * Vendor credit may has many attached attachments.
-  //      */
-  //     attachments: {
-  //       relation: Model.ManyToManyRelation,
-  //       modelClass: Document.default,
-  //       join: {
-  //         from: 'vendor_credits.id',
-  //         through: {
-  //           from: 'document_links.modelId',
-  //           to: 'document_links.documentId',
-  //         },
-  //         to: 'documents.id',
-  //       },
-  //       filter(query) {
-  //         query.where('model_ref', 'VendorCredit');
-  //       },
-  //     },
-  //   };
-  // }
+      /**
+       * Vendor credit may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document,
+        join: {
+          from: 'vendor_credits.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'VendorCredit');
+        },
+      },
+    };
+  }
 
   /**
    *

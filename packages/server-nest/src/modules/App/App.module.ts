@@ -46,6 +46,9 @@ import { BillsModule } from '../Bills/Bills.module';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
 import { SaleReceiptsModule } from '../SaleReceipts/SaleReceipts.module';
 import { ManualJournalsModule } from '../ManualJournals/ManualJournals.module';
+import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
+import { CreditNotesModule } from '../CreditNotes/CreditNotes.module';
+import { VendorCreditApplyBillsModule } from '../VendorCreditsApplyBills/VendorCreditApplyBills.module';
 // import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
 
 @Module({
@@ -116,7 +119,10 @@ import { ManualJournalsModule } from '../ManualJournals/ManualJournals.module';
     SaleEstimatesModule,
     SaleReceiptsModule,
     BillsModule,
-    ManualJournalsModule
+    ManualJournalsModule,
+    VendorCreditsModule,
+    VendorCreditApplyBillsModule,
+    CreditNotesModule,
     // BillPaymentsModule,
   ],
   controllers: [AppController],
