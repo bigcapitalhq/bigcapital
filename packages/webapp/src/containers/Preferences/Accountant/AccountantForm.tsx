@@ -46,7 +46,7 @@ export default function AccountantForm() {
           <FCheckbox
             inline={true}
             label={
-              <T id={'make_account_code_required_when_create_a_new_accounts'} />
+              <T id={'require_account_codes_when_creating_new_accounts'} />
             }
             name={'accounts.accountCodeRequired'}
           />
@@ -62,7 +62,7 @@ export default function AccountantForm() {
             inline={true}
             label={
               <T
-                id={'should_account_code_be_unique_when_create_a_new_account'}
+                id={'require_account_codes_to_be_unique'}
               />
             }
             name={'accounts.accountCodeUnique'}
