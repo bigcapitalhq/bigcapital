@@ -10,6 +10,8 @@ import { ExpenseDTOTransformer } from './commands/CommandExpenseDTO.transformer'
 import { CommandExpenseValidator } from './commands/CommandExpenseValidator.service';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+import { ExpensesWriteGLSubscriber } from './subscribers/ExpenseGLEntries.subscriber';
+import { ExpenseGLEntriesStorageService } from './subscribers/ExpenseGLEntriesStorage.sevice';
 
 @Module({
   imports: [],
@@ -24,7 +26,9 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
     GetExpenseService,
     ExpensesApplication,
     TenancyContext,
-    TransformerInjectable
+    TransformerInjectable,
+    ExpensesWriteGLSubscriber,
+    ExpenseGLEntriesStorageService,
   ],
 })
 export class ExpensesModule {}

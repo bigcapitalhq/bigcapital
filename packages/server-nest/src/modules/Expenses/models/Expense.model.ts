@@ -8,6 +8,8 @@ import { Model, mixin, raw } from 'objection';
 // import ModelSearchable from './ModelSearchable';
 import moment from 'moment';
 import { BaseModel } from '@/models/Model';
+import { ExpenseCategory } from './ExpenseCategory.model';
+import { Account } from '@/modules/Accounts/models/Account.model';
 
 export class Expense extends BaseModel {
   // ModelSetting,
@@ -31,6 +33,9 @@ export class Expense extends BaseModel {
   invoicedAmount: number;
   branchId!: number;
   createdAt!: Date;
+
+  categories!: ExpenseCategory[];
+  paymentAccount!: Account;
 
   /**
    * Table name

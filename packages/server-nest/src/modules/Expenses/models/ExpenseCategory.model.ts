@@ -2,8 +2,11 @@ import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
 
 export class ExpenseCategory extends BaseModel {
-  amount!: number;
-  allocatedCostAmount!: number;
+  public amount!: number;
+  public allocatedCostAmount!: number;
+  public expenseAccountId!: number;
+  public projectId!: number;
+  public description!: string;
 
   /**
    * Table name
