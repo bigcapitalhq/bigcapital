@@ -292,6 +292,9 @@ export class VendorCredit extends BaseModel {
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
 
     return {
+      /**
+       * Vendor credit may belongs to vendor.
+       */
       vendor: {
         relation: Model.BelongsToOneRelation,
         modelClass: Vendor,
@@ -304,6 +307,9 @@ export class VendorCredit extends BaseModel {
         },
       },
 
+      /**
+       * Vendor credit may has many item entries.
+       */
       entries: {
         relation: Model.HasManyRelation,
         modelClass: ItemEntry,

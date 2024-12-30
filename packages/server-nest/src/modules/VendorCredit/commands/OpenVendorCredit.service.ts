@@ -10,6 +10,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { VendorCredit } from '../models/VendorCredit';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { Knex } from 'knex';
 
 @Injectable()
 export class OpenVendorCreditService {
@@ -32,6 +33,7 @@ export class OpenVendorCreditService {
    */
   public openVendorCredit = async (
     vendorCreditId: number,
+    trx?: Knex.Transaction,
   ): Promise<VendorCredit> => {
     // Retrieve the vendor credit or throw not found service error.
     const oldVendorCredit = await this.vendorCreditModel
@@ -75,7 +77,7 @@ export class OpenVendorCreditService {
       } as IVendorCreditOpenedPayload);
 
       return vendorCredit;
-    });
+    }, trx);
   };
 
   /**

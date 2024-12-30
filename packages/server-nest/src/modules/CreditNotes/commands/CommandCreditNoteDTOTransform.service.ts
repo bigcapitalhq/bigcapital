@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import moment from 'moment';
 import { omit } from 'lodash';
+import * as moment from 'moment';
+import * as composeAsync from 'async/compose';
 import * as R from 'ramda';
-import composeAsync from 'async/compose';
 import { ERRORS } from '../constants';
 import {
   ICreditNoteEditDTO,

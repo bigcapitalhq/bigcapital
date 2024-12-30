@@ -4,8 +4,10 @@ import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { VendorCreditsRefundApplication } from './VendorCreditsRefund.application';
 import { IRefundVendorCreditDTO } from './types/VendorCreditRefund.types';
 import { RefundVendorCredit } from './models/RefundVendorCredit';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('vendor-credits')
+@PublicRoute()
 export class VendorCreditsRefundController {
   constructor(
     private readonly vendorCreditsRefundApplication: VendorCreditsRefundApplication,

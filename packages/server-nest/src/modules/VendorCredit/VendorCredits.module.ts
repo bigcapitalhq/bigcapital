@@ -15,6 +15,7 @@ import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { VendorCreditsApplicationService } from './VendorCreditsApplication.service';
+import { OpenVendorCreditService } from './commands/OpenVendorCredit.service';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { VendorCreditsApplicationService } from './VendorCreditsApplication.serv
     GetRefundVendorCreditService,
     GetVendorCreditService,
     VendorCreditsApplicationService,
+    OpenVendorCreditService
   ],
   exports: [
     CreateVendorCreditService,
@@ -45,6 +47,7 @@ import { VendorCreditsApplicationService } from './VendorCreditsApplication.serv
     GetRefundVendorCreditService,
     GetVendorCreditService,
     VendorCreditsApplicationService,
+    OpenVendorCreditService
   ],
   controllers: [VendorCreditsController],
 })

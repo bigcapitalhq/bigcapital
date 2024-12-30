@@ -80,10 +80,9 @@ export class VendorCreditDTOTransformService {
         }),
     };
     return R.compose(
-      VendorCredit.fromJson<VendorCredit>,
       this.branchDTOTransform.transformDTO<VendorCredit>,
       this.warehouseDTOTransform.transformDTO<VendorCredit>,
-    )(initialDTO);
+    )(initialDTO) as VendorCredit;
   };
 
   /**

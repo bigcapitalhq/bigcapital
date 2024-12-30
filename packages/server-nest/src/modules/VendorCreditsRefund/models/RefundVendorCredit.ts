@@ -38,7 +38,7 @@ export class RefundVendorCredit extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const { VendorCredit } = require('./VendorCredit');
+    const { VendorCredit } = require('../../VendorCredit/models/VendorCredit');
     const { Account } = require('../../Accounts/models/Account.model');
 
     return {

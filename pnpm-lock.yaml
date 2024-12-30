@@ -544,6 +544,9 @@ importers:
       axios:
         specifier: ^1.6.0
         version: 1.7.7
+      bluebird:
+        specifier: ^3.7.2
+        version: 3.7.2
       bull:
         specifier: ^4.16.3
         version: 4.16.4
@@ -16906,7 +16909,7 @@ packages:
       postcss-modules-values: 4.0.0(postcss@8.4.47)
       postcss-value-parser: 4.2.0
       semver: 7.6.2
-      webpack: 5.91.0(esbuild@0.18.20)(webpack-cli@5.1.4)
+      webpack: 5.91.0(esbuild@0.23.1)
 
   /css-loader@6.11.0(webpack@5.96.1):
     resolution: {integrity: sha512-CTJ+AEQJjq5NzLga5pE39qdiSV56F8ywCIsqNIRF0r7BDgWsN25aazToqAFg7ZrtA/U016xudB3ffgweORxX7g==}
@@ -32291,7 +32294,7 @@ packages:
     peerDependencies:
       webpack: ^5.0.0
     dependencies:
-      webpack: 5.91.0(esbuild@0.18.20)(webpack-cli@5.1.4)
+      webpack: 5.91.0(esbuild@0.23.1)
 
   /style-loader@3.3.4(webpack@5.96.1):
     resolution: {integrity: sha512-0WqXzrsMTyb8yjZJHDqwmnwRJvhALK9LfRtRc6B4UTWe8AijYLZYZ9thuJTZc2VfQWINADW/j+LiJnfy2RoC1w==}
@@ -34736,7 +34739,6 @@ packages:
       - '@swc/core'
       - esbuild
       - uglify-js
-    dev: false
 
   /webpack@5.91.0(esbuild@0.23.1)(webpack-cli@4.10.0):
     resolution: {integrity: sha512-rzVwlLeBWHJbmgTC/8TvAcu5vpJNII+MelQpylD4jNERPwpBJOE2lEcko1zJX3QJeLjTTAnQxn/OJ8bjDzVQaw==}

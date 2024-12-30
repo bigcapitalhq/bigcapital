@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
 import * as R from 'ramda';
 import * as moment from 'moment';
+import '../../../utils/moment-mysql';
 import * as composeAsync from 'async/compose';
 import {
   ISaleInvoiceCreateDTO,
@@ -23,6 +24,17 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class CommandSaleInvoiceDTOTransformer {
+  /**
+   * @param {BranchTransactionDTOTransformer} branchDTOTransform - Branch transaction DTO transformer.
+   * @param {WarehouseTransactionDTOTransform} warehouseDTOTransform - Warehouse transaction DTO transformer.
+   * @param {ItemsEntriesService} itemsEntriesService - Items entries service.
+   * @param {CommandSaleInvoiceValidators} validators - Command sale invoice validators.
+   * @param {SaleInvoiceIncrement} invoiceIncrement - Sale invoice increment.
+   * @param {ItemEntriesTaxTransactions} taxDTOTransformer - Item entries tax transactions.
+   * @param {BrandingTemplateDTOTransformer} brandingTemplatesTransformer - Branding template DTO transformer.
+   * @param {TenancyContext} tenancyContext - Tenancy context.
+   * @param {SaleInvoice} saleInvoiceModel - Sale invoice model.
+   */
   constructor(
     private branchDTOTransform: BranchTransactionDTOTransformer,
     private warehouseDTOTransform: WarehouseTransactionDTOTransform,

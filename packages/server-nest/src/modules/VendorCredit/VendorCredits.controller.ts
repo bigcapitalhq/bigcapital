@@ -1,8 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { VendorCreditsApplicationService } from './VendorCreditsApplication.service';
-import { IVendorCreditCreateDTO, IVendorCreditEditDTO } from './types/VendorCredit.types';
+import {
+  IVendorCreditCreateDTO,
+  IVendorCreditEditDTO,
+} from './types/VendorCredit.types';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('vendor-credits')
+@PublicRoute()
 export class VendorCreditsController {
   constructor(
     private readonly vendorCreditsApplication: VendorCreditsApplicationService,
@@ -13,7 +26,12 @@ export class VendorCreditsController {
     return this.vendorCreditsApplication.createVendorCredit(dto);
   }
 
-  @Put(':id') 
+  @Put(':id/open')
+  async openVendorCredit(@Param('id') vendorCreditId: number) {
+    return this.vendorCreditsApplication.openVendorCredit(vendorCreditId);
+  }
+
+  @Put(':id')
   async editVendorCredit(
     @Param('id') vendorCreditId: number,
     @Body() dto: IVendorCreditEditDTO,

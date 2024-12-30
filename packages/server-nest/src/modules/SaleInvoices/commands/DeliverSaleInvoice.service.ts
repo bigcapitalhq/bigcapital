@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import moment from 'moment';
+import * as moment from 'moment';
 import {
   ISaleInvoiceDeliveringPayload,
   ISaleInvoiceEventDeliveredPayload,

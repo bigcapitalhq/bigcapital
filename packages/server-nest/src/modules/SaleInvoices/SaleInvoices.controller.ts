@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -57,6 +58,7 @@ export class SaleInvoicesController {
   }
 
   @Post(':id/deliver')
+  @HttpCode(200)
   deliverSaleInvoice(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.deliverSaleInvoice(id);
   }
@@ -67,6 +69,7 @@ export class SaleInvoicesController {
   }
 
   @Post(':id/writeoff')
+  @HttpCode(200)
   writeOff(
     @Param('id', ParseIntPipe) id: number,
     @Body() writeoffDTO: ISaleInvoiceWriteoffDTO,
@@ -75,6 +78,7 @@ export class SaleInvoicesController {
   }
 
   @Post(':id/cancel-writeoff')
+  @HttpCode(200)
   cancelWrittenoff(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.cancelWrittenoff(id);
   }

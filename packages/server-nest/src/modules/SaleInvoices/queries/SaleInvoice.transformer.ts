@@ -184,31 +184,31 @@ export class SaleInvoiceTransformer extends Transformer {
    * Retrieve the taxes lines of sale invoice.
    * @param {ISaleInvoice} invoice
    */
-  // protected taxes = (invoice: SaleInvoice) => {
-  //   return this.item(invoice.taxes, new SaleInvoiceTaxEntryTransformer(), {
-  //     subtotal: invoice.subtotal,
-  //     isInclusiveTax: invoice.isInclusiveTax,
-  //     currencyCode: invoice.currencyCode,
-  //   });
-  // };
+  protected taxes = (invoice: SaleInvoice) => {
+    return this.item(invoice.taxes, new SaleInvoiceTaxEntryTransformer(), {
+      subtotal: invoice.subtotal,
+      isInclusiveTax: invoice.isInclusiveTax,
+      currencyCode: invoice.currencyCode,
+    });
+  };
 
   /**
    * Retrieves the entries of the sale invoice.
    * @param {ISaleInvoice} invoice
    * @returns {}
    */
-  // protected entries = (invoice: SaleInvoice) => {
-  //   return this.item(invoice.entries, new ItemEntryTransformer(), {
-  //     currencyCode: invoice.currencyCode,
-  //   });
-  // };
+  protected entries = (invoice: SaleInvoice) => {
+    return this.item(invoice.entries, new ItemEntryTransformer(), {
+      currencyCode: invoice.currencyCode,
+    });
+  };
 
   /**
    * Retrieves the sale invoice attachments.
    * @param {ISaleInvoice} invoice
    * @returns
    */
-  // protected attachments = (invoice: SaleInvoice) => {
-  //   return this.item(invoice.attachments, new AttachmentTransformer());
-  // };
+  protected attachments = (invoice: SaleInvoice) => {
+    return this.item(invoice.attachments, new AttachmentTransformer());
+  };
 }

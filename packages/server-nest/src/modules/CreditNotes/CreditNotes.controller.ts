@@ -4,8 +4,10 @@ import {
   ICreditNoteEditDTO,
   ICreditNoteNewDTO,
 } from './types/CreditNotes.types';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('credit-notes')
+@PublicRoute()
 export class CreditNotesController {
   /**
    * @param {CreditNoteApplication} creditNoteApplication - The credit note application service.
@@ -28,7 +30,7 @@ export class CreditNotesController {
     );
   }
 
-  @Post(':id/open')
+  @Put(':id/open')
   openCreditNote(@Param('id') creditNoteId: number) {
     return this.creditNoteApplication.openCreditNote(creditNoteId);
   }

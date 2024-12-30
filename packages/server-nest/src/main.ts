@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ClsMiddleware } from 'nestjs-cls';
-import { AppModule } from './modules/App/App.module';
 import './utils/moment-mysql';
+import { AppModule } from './modules/App/App.module';
 import { ServiceErrorFilter } from './common/filters/service-error.filter';
 
 async function bootstrap() {

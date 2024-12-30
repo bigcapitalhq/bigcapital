@@ -1,6 +1,7 @@
 import { mixin, Model, raw } from 'objection';
 import { castArray, takeWhile } from 'lodash';
-import moment, { MomentInput, unitOfTime } from 'moment';
+import * as moment from 'moment';
+import { MomentInput, unitOfTime } from 'moment';
 // import TenantModel from 'models/TenantModel';
 // import ModelSetting from './ModelSetting';
 // import SaleInvoiceMeta from './SaleInvoice.Settings';
@@ -8,6 +9,9 @@ import moment, { MomentInput, unitOfTime } from 'moment';
 // import { DEFAULT_VIEWS } from '@/services/Sales/Invoices/constants';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
+import { TaxRateTransaction } from '@/modules/TaxRates/models/TaxRateTransaction.model';
+import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 
 export class SaleInvoice extends BaseModel {
   public taxAmountWithheld: number;
@@ -39,7 +43,9 @@ export class SaleInvoice extends BaseModel {
   public branchId: number;
   public warehouseId: number;
 
-  // public taxes: TaxRateTransaction[];
+  public taxes: TaxRateTransaction[];
+  public entries: ItemEntry[];
+  public attachments: Document[];
 
   /**
    * Table name
@@ -438,7 +444,7 @@ export class SaleInvoice extends BaseModel {
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
     const { Account } = require('../../Accounts/models/Account.model');
-    // const TaxRateTransaction = require('../../Tax');
+    const { TaxRateTransaction } = require('../../TaxRates/models/TaxRateTransaction.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
     const {
@@ -561,17 +567,17 @@ export class SaleInvoice extends BaseModel {
       /**
        * Invoice may has associated tax rate transactions.
        */
-      // taxes: {
-      //   relation: Model.HasManyRelation,
-      //   modelClass: TaxRateTransaction.default,
-      //   join: {
-      //     from: 'sales_invoices.id',
-      //     to: 'tax_rate_transactions.referenceId',
-      //   },
-      //   filter(builder) {
-      //     builder.where('reference_type', 'SaleInvoice');
-      //   },
-      // },
+      taxes: {
+        relation: Model.HasManyRelation,
+        modelClass: TaxRateTransaction,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'tax_rate_transactions.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleInvoice');
+        },
+      },
 
       /**
        * Sale invoice transaction may has many attached attachments.

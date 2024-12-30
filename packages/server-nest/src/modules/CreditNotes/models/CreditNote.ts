@@ -287,7 +287,7 @@ export class CreditNote extends BaseModel {
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
-    const { PdfTemplate } = require('../../PdfTemplate/models/PdfTemplate');
+    const { PdfTemplateModel } = require('../../PdfTemplate/models/PdfTemplate');
 
     return {
       /**
@@ -384,7 +384,7 @@ export class CreditNote extends BaseModel {
        */
       pdfTemplate: {
         relation: Model.BelongsToOneRelation,
-        modelClass: PdfTemplate,
+        modelClass: PdfTemplateModel,
         join: {
           from: 'credit_notes.pdfTemplateId',
           to: 'pdf_templates.id',
