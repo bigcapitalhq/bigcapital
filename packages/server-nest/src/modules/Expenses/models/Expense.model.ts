@@ -36,6 +36,7 @@ export class Expense extends BaseModel {
 
   categories!: ExpenseCategory[];
   paymentAccount!: Account;
+  attachments!: Document[];
 
   /**
    * Table name

@@ -2,6 +2,7 @@ import { Transformer } from '@/modules/Transformer/Transformer';
 import { ExpenseCategoryTransformer } from './ExpenseCategory.transformer';
 // import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
 import { Expense } from '../models/Expense.model';
+import { AttachmentTransformer } from '@/modules/Attachments/Attachment.transformer';
 
 export class ExpenseTransfromer extends Transformer {
   /**
@@ -23,7 +24,7 @@ export class ExpenseTransfromer extends Transformer {
 
   /**
    * Retrieve formatted expense amount.
-   * @param {IExpense} expense
+   * @param {Expense} expense - Expense.
    * @returns {string}
    */
   protected formattedAmount = (expense: Expense): string => {
@@ -34,7 +35,7 @@ export class ExpenseTransfromer extends Transformer {
 
   /**
    * Retrieve formatted expense landed cost amount.
-   * @param {IExpense} expense
+   * @param {Expense} expense - Expense.
    * @returns {string}
    */
   protected formattedLandedCostAmount = (expense: Expense): string => {
@@ -45,7 +46,7 @@ export class ExpenseTransfromer extends Transformer {
 
   /**
    * Retrieve formatted allocated cost amount.
-   * @param {IExpense} expense
+   * @param {Expense} expense - Expense.
    * @returns {string}
    */
   protected formattedAllocatedCostAmount = (expense: Expense): string => {
@@ -56,7 +57,7 @@ export class ExpenseTransfromer extends Transformer {
 
   /**
    * Retriecve fromatted date.
-   * @param {IExpense} expense
+   * @param {Expense} expense - Expense.
    * @returns {string}
    */
   protected formattedDate = (expense: Expense): string => {
@@ -65,39 +66,39 @@ export class ExpenseTransfromer extends Transformer {
 
   /**
    * Retrieve formatted created at date.
-   * @param {IExpense} expense 
+   * @param {Expense} expense - Expense.
    * @returns {string}
    */
   protected formattedCreatedAt = (expense: Expense): string => {
     return this.formatDate(expense.createdAt);
-  }
+  };
 
   /**
    * Retrieves the transformed expense categories.
-   * @param {IExpense} expense
-   * @returns {}
+   * @param {Expense} expense - Expense.
+   * @returns
    */
   protected categories = (expense: Expense) => {
-    // return this.item(expense.categories, new ExpenseCategoryTransformer(), {
-    //   currencyCode: expense.currencyCode,
-    // });
+    return this.item(expense.categories, new ExpenseCategoryTransformer(), {
+      currencyCode: expense.currencyCode,
+    });
   };
 
   /**
    * Retrieves the sale invoice attachments.
-   * @param {ISaleInvoice} invoice
+   * @param {Expense} expense - Expense.
    * @returns
    */
   protected attachments = (expense: Expense) => {
-    // return this.item(expense.attachments, new AttachmentTransformer());
+    return this.item(expense.attachments, new AttachmentTransformer());
   };
 
   /**
    * Retrieve formatted published at date.
-   * @param {IExpense} expense 
+   * @param {Expense} expense - Expense.
    * @returns {string}
    */
   protected formattedPublishedAt = (expense: Expense): string => {
     return this.formatDate(expense.publishedAt);
-  }
+  };
 }
