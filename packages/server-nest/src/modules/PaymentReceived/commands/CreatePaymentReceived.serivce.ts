@@ -45,7 +45,6 @@ export class CreatePaymentReceivedService {
     // Validate customer existance.
     const paymentCustomer = await this.customer
       .query()
-      .modify('customer')
       .findById(paymentReceiveDTO.customerId)
       .throwIfNotFound();
 

@@ -1,7 +1,6 @@
 import { Knex } from 'knex';
 import {
   IBillPaymentDTO,
-  IBillPayment,
   IBillPaymentEventCreatedPayload,
   IBillPaymentCreatingPayload,
 } from '../types/BillPayments.types';

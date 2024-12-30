@@ -11,6 +11,7 @@ import { CommandBillPaymentDTOTransformer } from './commands/CommandBillPaymentD
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { BranchTransactionDTOTransformer } from '../Branches/integrations/BranchTransactionDTOTransform';
 import { BranchesSettingsService } from '../Branches/BranchesSettings';
+import { BillPaymentsController } from './BillPayments.controller';
 
 @Module({
   providers: [
@@ -28,6 +29,6 @@ import { BranchesSettingsService } from '../Branches/BranchesSettings';
     TenancyContext,
   ],
   exports: [BillPaymentValidators],
-  controllers: [],
+  controllers: [BillPaymentsController],
 })
 export class BillPaymentsModule {}

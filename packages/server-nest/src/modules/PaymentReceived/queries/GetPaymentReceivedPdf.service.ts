@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetPaymentReceived } from './GetPaymentReceived.service';
+import { GetPaymentReceivedService } from './GetPaymentReceived.service';
 import { PaymentReceivedBrandingTemplate } from './PaymentReceivedBrandingTemplate.service';
 import { transformPaymentReceivedToPdfTemplate } from '../utils';
 
@@ -16,7 +16,7 @@ export default class GetPaymentReceivedPdf {
   constructor(
     private chromiumlyTenancy: ChromiumlyTenancy,
     private templateInjectable: TemplateInjectable,
-    private getPaymentService: GetPaymentReceived,
+    private getPaymentService: GetPaymentReceivedService,
     private paymentBrandingTemplateService: PaymentReceivedBrandingTemplate,
     private eventPublisher: EventEmitter2,
 

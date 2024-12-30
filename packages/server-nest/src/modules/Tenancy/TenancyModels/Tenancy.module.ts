@@ -37,6 +37,7 @@ import { ManualJournalEntry } from '@/modules/ManualJournals/models/ManualJourna
 import { RefundCreditNote } from '@/modules/CreditNoteRefunds/models/RefundCreditNote';
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { RefundVendorCredit } from '@/modules/VendorCreditsRefund/models/RefundVendorCredit';
+import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceived';
 
 const models = [
   Item,
@@ -64,7 +65,6 @@ const models = [
   BillLandedCostEntry,
   VendorCreditAppliedBill,
   SaleInvoice,
-  PaymentReceivedEntry,
   CreditNoteAppliedInvoice,
   CreditNote,
   RefundCreditNote,
@@ -75,7 +75,8 @@ const models = [
   VendorCredit,
   VendorCreditAppliedBill,
   RefundVendorCredit,
-
+  PaymentReceived,
+  PaymentReceivedEntry
 ];
 
 const modelProviders = models.map((model) => {

@@ -3,8 +3,6 @@ import { sumBy, difference } from 'lodash';
 import {
   IBillPaymentDTO,
   IBillPaymentEntryDTO,
-  IBillPayment,
-  IBillPaymentEntry,
 } from '../types/BillPayments.types';
 import { ERRORS } from '../constants';
 import { Bill } from '../../Bills/models/Bill';
@@ -140,7 +138,7 @@ export class BillPaymentValidators {
    */
   public async validateBillsDueAmount(
     billPaymentEntries: IBillPaymentEntryDTO[],
-    oldPaymentEntries: IBillPaymentEntry[] = [],
+    oldPaymentEntries: BillPaymentEntry[] = [],
   ) {
     const billsIds = billPaymentEntries.map(
       (entry: IBillPaymentEntryDTO) => entry.billId,
@@ -187,7 +185,7 @@ export class BillPaymentValidators {
    */
   public async validateEntriesIdsExistance(
     billPaymentId: number,
-    billPaymentEntries: IBillPaymentEntry[],
+    billPaymentEntries: BillPaymentEntry[],
   ) {
     const entriesIds = billPaymentEntries
       .filter((entry: any) => entry.id)

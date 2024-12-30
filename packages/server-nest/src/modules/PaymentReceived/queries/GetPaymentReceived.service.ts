@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ERRORS } from '../constants';
 import { PaymentReceiveTransfromer } from './PaymentReceivedTransformer';
 import { PaymentReceived } from '../models/PaymentReceived';
@@ -6,10 +6,12 @@ import { TransformerInjectable } from '../../Transformer/TransformerInjectable.s
 import { ServiceError } from '../../Items/ServiceError';
 
 @Injectable()
-export class GetPaymentReceived {
+export class GetPaymentReceivedService {
   constructor(
-    private readonly paymentReceiveModel: typeof PaymentReceived,
     private readonly transformer: TransformerInjectable,
+
+    @Inject(PaymentReceived.name)
+    private readonly paymentReceiveModel: typeof PaymentReceived,
   ) {}
 
   /**

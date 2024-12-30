@@ -8,29 +8,29 @@ import {
 } from './types/PaymentReceived.types';
 import { Injectable } from '@nestjs/common';
 import { CreatePaymentReceivedService } from './commands/CreatePaymentReceived.serivce';
-import { EditPaymentReceived } from './commands/EditPaymentReceived.service';
-import { DeletePaymentReceived } from './commands/DeletePaymentReceived.service';
+import { EditPaymentReceivedService } from './commands/EditPaymentReceived.service';
+import { DeletePaymentReceivedService } from './commands/DeletePaymentReceived.service';
 // import { GetPaymentReceives } from './queries/GetPaymentsReceived.service';
-import { GetPaymentReceived } from './queries/GetPaymentReceived.service';
+import { GetPaymentReceivedService } from './queries/GetPaymentReceived.service';
 import { GetPaymentReceivedInvoices } from './queries/GetPaymentReceivedInvoices.service';
 // import { PaymentReceiveNotifyBySms } from './PaymentReceivedSmsNotify';
 import GetPaymentReceivedPdf from './queries/GetPaymentReceivedPdf.service';
 // import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
-import { GetPaymentReceivedState } from './queries/GetPaymentReceivedState.service';
+import { GetPaymentReceivedStateService } from './queries/GetPaymentReceivedState.service';
 
 @Injectable()
 export class PaymentReceivesApplication {
   constructor(
     private createPaymentReceivedService: CreatePaymentReceivedService,
-    private editPaymentReceivedService: EditPaymentReceived,
-    private deletePaymentReceivedService: DeletePaymentReceived,
+    private editPaymentReceivedService: EditPaymentReceivedService,
+    private deletePaymentReceivedService: DeletePaymentReceivedService,
     // private getPaymentsReceivedService: GetPaymentReceives,
-    private getPaymentReceivedService: GetPaymentReceived,
+    private getPaymentReceivedService: GetPaymentReceivedService,
     private getPaymentReceiveInvoicesService: GetPaymentReceivedInvoices,
     // private paymentSmsNotify: PaymentReceiveNotifyBySms,
     // private paymentMailNotify: SendPaymentReceiveMailNotification,
     private getPaymentReceivePdfService: GetPaymentReceivedPdf,
-    private getPaymentReceivedStateService: GetPaymentReceivedState,
+    private getPaymentReceivedStateService: GetPaymentReceivedStateService,
   ) {}
 
   /**

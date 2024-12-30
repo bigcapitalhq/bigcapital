@@ -1,10 +1,13 @@
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IPaymentReceivedState } from '../types/PaymentReceived.types';
 
 @Injectable()
-export class GetPaymentReceivedState {
-  constructor(private pdfTemplateModel: typeof PdfTemplateModel) {}
+export class GetPaymentReceivedStateService {
+  constructor(
+    @Inject(PdfTemplateModel.name)
+    private pdfTemplateModel: typeof PdfTemplateModel,
+  ) {}
 
   /**
    * Retrieves the create/edit initial state of the payment received.

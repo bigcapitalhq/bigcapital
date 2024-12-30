@@ -15,7 +15,7 @@ import { Customer } from '@/modules/Customers/models/Customer';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
-export class EditPaymentReceived {
+export class EditPaymentReceivedService {
   constructor(
     private readonly transformer: PaymentReceiveDTOTransformer,
     private readonly validators: PaymentReceivedValidators,
@@ -23,7 +23,7 @@ export class EditPaymentReceived {
     private readonly uow: UnitOfWork,
     private readonly tenancyContext: TenancyContext,
 
-    @Inject(PaymentReceived)
+    @Inject(PaymentReceived.name)
     private readonly paymentReceiveModel: typeof PaymentReceived,
 
     @Inject(Customer.name)

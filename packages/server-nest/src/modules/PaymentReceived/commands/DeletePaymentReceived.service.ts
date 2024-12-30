@@ -2,14 +2,22 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
+import { events } from '@/common/events/events';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { PaymentReceivedEntry } from '../models/PaymentReceivedEntry';
-import { events } from '@/common/events/events';
-import { IPaymentReceivedDeletingPayload } from '../types/PaymentReceived.types';
-import { IPaymentReceivedDeletedPayload } from '../types/PaymentReceived.types';
+import {
+  IPaymentReceivedDeletingPayload,
+  IPaymentReceivedDeletedPayload,
+} from '../types/PaymentReceived.types';
 
 @Injectable()
-export class DeletePaymentReceived {
+export class DeletePaymentReceivedService {
+  /**
+   * @param {EventEmitter2} eventPublisher - Event emitter.
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {typeof PaymentReceived} paymentReceiveModel - Payment received model.
+   * @param {typeof PaymentReceivedEntry} paymentReceiveEntryModel - Payment received entry model.
+   */
   constructor(
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,

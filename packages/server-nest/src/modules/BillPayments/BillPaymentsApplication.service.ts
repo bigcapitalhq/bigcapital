@@ -15,11 +15,11 @@ import { IBillPaymentDTO } from './types/BillPayments.types';
 export class BillPaymentsApplication {
   constructor(
     private createBillPaymentService: CreateBillPaymentService,
-    private deleteBillPaymentService: DeleteBillPayment,
     private editBillPaymentService: EditBillPayment,
-    // private getBillPaymentsService: GetBillPayments,
+    private deleteBillPaymentService: DeleteBillPayment,
     private getBillPaymentService: GetBillPayment,
     private getPaymentBillsService: GetPaymentBills,
+    // private getBillPaymentsService: GetBillPayments,
   ) {}
 
   /**

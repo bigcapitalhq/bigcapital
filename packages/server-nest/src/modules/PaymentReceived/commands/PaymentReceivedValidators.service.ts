@@ -243,6 +243,7 @@ export class PaymentReceivedValidators {
     depositAccountId: number
   ): Promise<Account> {
     const depositAccount = await this.accountModel.query().findById(depositAccountId);
+
     if (!depositAccount) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
     }

@@ -8,6 +8,10 @@ export class GetPaymentReceivedInvoices {
   constructor(
     @Inject(PaymentReceived.name)
     private paymentReceiveModel: typeof PaymentReceived,
+
+    @Inject(SaleInvoice.name)
+    private saleInvoiceModel: typeof SaleInvoice,
+
     private validators: PaymentReceivedValidators,
   ) {}
 
@@ -28,10 +32,10 @@ export class GetPaymentReceivedInvoices {
     const paymentReceiveInvoicesIds = paymentReceive.entries.map(
       (entry) => entry.invoiceId,
     );
-    const saleInvoices = await SaleInvoice.query().whereIn(
-      'id',
-      paymentReceiveInvoicesIds,
-    );
+    const saleInvoices = await this.saleInvoiceModel
+      .query()
+      .whereIn('id', paymentReceiveInvoicesIds);
+
     return saleInvoices;
   }
 }
