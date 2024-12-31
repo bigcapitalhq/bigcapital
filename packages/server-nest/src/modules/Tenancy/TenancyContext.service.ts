@@ -35,6 +35,12 @@ export class TenancyContext {
     return query;
   }
 
+  async getTenantMetadata() {
+    const tenant = await this.getTenant(true);
+
+    return tenant?.metadata;
+  }
+
   /**
    * Retrieves the current system user.
    * @returns {Promise<SystemUser>}

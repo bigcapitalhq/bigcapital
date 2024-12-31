@@ -23,8 +23,8 @@ export class CreateSaleInvoice {
     private readonly validators: CommandSaleInvoiceValidators,
     private readonly transformerDTO: CommandSaleInvoiceDTOTransformer,
     private readonly eventPublisher: EventEmitter2,
-    private readonly uow: UnitOfWork,
     private readonly commandEstimateValidators: SaleEstimateValidators,
+    private readonly uow: UnitOfWork,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: typeof SaleInvoice,

@@ -53,6 +53,7 @@ import { VendorCreditsRefundModule } from '../VendorCreditsRefund/VendorCreditsR
 import { CreditNoteRefundsModule } from '../CreditNoteRefunds/CreditNoteRefunds.module';
 import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
 import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.module';
+import { LedgerModule } from '../Ledger/Ledger.module';
 
 @Module({
   imports: [
@@ -130,6 +131,7 @@ import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.modu
     CreditNoteRefundsModule,
     BillPaymentsModule,
     PaymentsReceivedModule,
+    LedgerModule,
   ],
   controllers: [AppController],
   providers: [

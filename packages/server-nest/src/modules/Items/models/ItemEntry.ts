@@ -2,6 +2,7 @@ import { Model } from 'objection';
 // import TenantModel from 'models/TenantModel';
 // import { getExlusiveTaxAmount, getInclusiveTaxAmount } from '@/utils/taxRate';
 import { BaseModel } from '@/models/Model';
+import { Item } from './Item';
 
 export class ItemEntry extends BaseModel {
   public taxRate: number;
@@ -12,9 +13,13 @@ export class ItemEntry extends BaseModel {
   public itemId: number;
   public costAccountId: number;
   public taxRateId: number;
+  public sellAccountId: number;
+  public description: string;
 
   public landedCost!: boolean;
   public allocatedCostAmount!: number;
+
+  public item!: Item;
 
   /**
    * Table name.

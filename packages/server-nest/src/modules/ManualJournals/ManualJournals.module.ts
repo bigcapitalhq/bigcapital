@@ -12,9 +12,12 @@ import { BranchesModule } from '../Branches/Branches.module';
 import { ManualJournalsController } from './ManualJournals.controller';
 import { ManualJournalsApplication } from './ManualJournalsApplication.service';
 import { GetManualJournal } from './queries/GetManualJournal.service';
+import { ManualJournalWriteGLSubscriber } from './commands/ManualJournalGLEntriesSubscriber';
+import { ManualJournalGLEntries } from './commands/ManualJournalGLEntries';
+import { LedgerModule } from '../Ledger/Ledger.module';
 
 @Module({
-  imports: [BranchesModule],
+  imports: [BranchesModule, LedgerModule],
   controllers: [ManualJournalsController],
   providers: [
     TenancyContext,
@@ -28,7 +31,9 @@ import { GetManualJournal } from './queries/GetManualJournal.service';
     ManualJournalBranchesDTOTransformer,
     AutoIncrementOrdersService,
     ManualJournalsApplication,
-    GetManualJournal
+    GetManualJournal,
+    ManualJournalGLEntries,
+    ManualJournalWriteGLSubscriber
   ],
 })
 export class ManualJournalsModule {}

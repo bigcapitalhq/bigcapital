@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/modules/App/App.module';
 
@@ -10,6 +10,8 @@ beforeAll(async () => {
   }).compile();
 
   app = moduleFixture.createNestApplication();
+  app.useLogger(new Logger());
+
   await app.init();
 });
 

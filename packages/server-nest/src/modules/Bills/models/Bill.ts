@@ -9,6 +9,7 @@ import moment from 'moment';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
 import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 
 export class Bill extends BaseModel{
   public amount: number;
@@ -34,12 +35,13 @@ export class Bill extends BaseModel{
 
   public branchId: number;
   public warehouseId: number;
+  public projectId: number;
 
   public createdAt: Date;
   public updatedAt: Date | null;
 
   public entries?: ItemEntry[];
-
+  public locatedLandedCosts?: BillLandedCost[];
   /**
    * Timestamps columns.
    */

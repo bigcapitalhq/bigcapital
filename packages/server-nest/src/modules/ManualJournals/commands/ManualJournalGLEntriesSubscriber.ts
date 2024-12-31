@@ -1,131 +1,102 @@
-// import { Inject } from 'typedi';
-// import { EventSubscriber } from 'event-dispatch';
-// import {
-//   IManualJournalEventCreatedPayload,
-//   IManualJournalEventEditedPayload,
-//   IManualJournalEventPublishedPayload,
-//   IManualJournalEventDeletedPayload,
-// } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { ManualJournalGLEntries } from './ManualJournalGLEntries';
-// import { AutoIncrementManualJournal } from './AutoIncrementManualJournal.service';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import {
+  IManualJournalEventCreatedPayload,
+  IManualJournalEventEditedPayload,
+  IManualJournalEventPublishedPayload,
+  IManualJournalEventDeletedPayload,
+} from '../types/ManualJournals.types';
+import { ManualJournalGLEntries } from './ManualJournalGLEntries';
+import { AutoIncrementManualJournal } from './AutoIncrementManualJournal.service';
+import { events } from '@/common/events/events';
 
-// @EventSubscriber()
-// export class ManualJournalWriteGLSubscriber {
-//   @Inject()
-//   private manualJournalGLEntries: ManualJournalGLEntries;
+@Injectable()
+export class ManualJournalWriteGLSubscriber {
+  /**
+   * @param {ManualJournalGLEntries} manualJournalGLEntries - The manual journal GL entries service.
+   * @param {AutoIncrementManualJournal} manualJournalAutoIncrement - The manual journal auto increment service.
+   */
+  constructor(
+    private manualJournalGLEntries: ManualJournalGLEntries,
+    private manualJournalAutoIncrement: AutoIncrementManualJournal,
+  ) {}
 
-//   @Inject()
-//   private manualJournalAutoIncrement: AutoIncrementManualJournal;
+  /**
+   * Handle manual journal created event.
+   * @param {IManualJournalEventCreatedPayload} payload -
+   * @returns {Promise<void>}
+   */
+  @OnEvent(events.manualJournals.onCreated)
+  public async handleWriteJournalEntriesOnCreated({
+    manualJournal,
+    trx,
+  }: IManualJournalEventCreatedPayload) {
+    // Ingore writing manual journal journal entries in case was not published.
+    if (!manualJournal.publishedAt) return;
 
-//   /**
-//    * Attaches events with handlers.
-//    * @param bus
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.manualJournals.onCreated,
-//       this.handleWriteJournalEntriesOnCreated
-//     );
-//     bus.subscribe(
-//       events.manualJournals.onCreated,
-//       this.handleJournalNumberIncrement
-//     );
-//     bus.subscribe(
-//       events.manualJournals.onEdited,
-//       this.handleRewriteJournalEntriesOnEdited
-//     );
-//     bus.subscribe(
-//       events.manualJournals.onPublished,
-//       this.handleWriteJournalEntriesOnPublished
-//     );
-//     bus.subscribe(
-//       events.manualJournals.onDeleted,
-//       this.handleRevertJournalEntries
-//     );
-//   }
+    await this.manualJournalGLEntries.createManualJournalGLEntries(
+      manualJournal.id,
+      trx,
+    );
+  }
 
-//   /**
-//    * Handle manual journal created event.
-//    * @param {IManualJournalEventCreatedPayload} payload -
-//    * @returns {Promise<void>}
-//    */
-//   private handleWriteJournalEntriesOnCreated = async ({
-//     tenantId,
-//     manualJournal,
-//     trx,
-//   }: IManualJournalEventCreatedPayload) => {
-//     // Ingore writing manual journal journal entries in case was not published.
-//     if (!manualJournal.publishedAt) return;
+  /**
+   * Handles the manual journal next number increment once the journal be created.
+   * @param {IManualJournalEventCreatedPayload} payload -
+   * @return {Promise<void>}
+   */
+  @OnEvent(events.manualJournals.onCreated)
+  public async handleJournalNumberIncrement({}: IManualJournalEventCreatedPayload) {
+    await this.manualJournalAutoIncrement.incrementNextJournalNumber();
+  }
 
-//     await this.manualJournalGLEntries.createManualJournalGLEntries(
-//       tenantId,
-//       manualJournal.id,
-//       trx
-//     );
-//   };
+  /**
+   * Handle manual journal edited event.
+   * @param {IManualJournalEventEditedPayload}
+   * @return {Promise<void>}
+   */
+  @OnEvent(events.manualJournals.onEdited)
+  public async handleRewriteJournalEntriesOnEdited({
+    manualJournal,
+    oldManualJournal,
+    trx,
+  }: IManualJournalEventEditedPayload) {
+    if (manualJournal.publishedAt) {
+      await this.manualJournalGLEntries.editManualJournalGLEntries(
+        manualJournal.id,
+        trx,
+      );
+    }
+  }
 
-//   /**
-//    * Handles the manual journal next number increment once the journal be created.
-//    * @param {IManualJournalEventCreatedPayload} payload -
-//    * @return {Promise<void>}
-//    */
-//   private handleJournalNumberIncrement = async ({
-//     tenantId,
-//   }: IManualJournalEventCreatedPayload) => {
-//     await this.manualJournalAutoIncrement.incrementNextJournalNumber(tenantId);
-//   };
+  /**
+   * Handles writing journal entries once the manula journal publish.
+   * @param {IManualJournalEventPublishedPayload} payload -
+   * @return {Promise<void>}
+   */
+  @OnEvent(events.manualJournals.onPublished)
+  public async handleWriteJournalEntriesOnPublished({
+    manualJournal,
+    trx,
+  }: IManualJournalEventPublishedPayload) {
+    await this.manualJournalGLEntries.createManualJournalGLEntries(
+      manualJournal.id,
+      trx,
+    );
+  }
 
-//   /**
-//    * Handle manual journal edited event.
-//    * @param {IManualJournalEventEditedPayload}
-//    * @return {Promise<void>}
-//    */
-//   private handleRewriteJournalEntriesOnEdited = async ({
-//     tenantId,
-//     manualJournal,
-//     oldManualJournal,
-//     trx,
-//   }: IManualJournalEventEditedPayload) => {
-//     if (manualJournal.publishedAt) {
-//       await this.manualJournalGLEntries.editManualJournalGLEntries(
-//         tenantId,
-//         manualJournal.id,
-//         trx
-//       );
-//     }
-//   };
-
-//   /**
-//    * Handles writing journal entries once the manula journal publish.
-//    * @param {IManualJournalEventPublishedPayload} payload -
-//    * @return {Promise<void>}
-//    */
-//   private handleWriteJournalEntriesOnPublished = async ({
-//     tenantId,
-//     manualJournal,
-//     trx,
-//   }: IManualJournalEventPublishedPayload) => {
-//     await this.manualJournalGLEntries.createManualJournalGLEntries(
-//       tenantId,
-//       manualJournal.id,
-//       trx
-//     );
-//   };
-
-//   /**
-//    * Handle manual journal deleted event.
-//    * @param {IManualJournalEventDeletedPayload} payload -
-//    */
-//   private handleRevertJournalEntries = async ({
-//     tenantId,
-//     manualJournalId,
-//     trx,
-//   }: IManualJournalEventDeletedPayload) => {
-//     await this.manualJournalGLEntries.revertManualJournalGLEntries(
-//       tenantId,
-//       manualJournalId,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Handle manual journal deleted event.
+   * @param {IManualJournalEventDeletedPayload} payload -
+   */
+  @OnEvent(events.manualJournals.onDeleted)
+  public async handleRevertJournalEntries({
+    manualJournalId,
+    trx,
+  }: IManualJournalEventDeletedPayload) {
+    await this.manualJournalGLEntries.revertManualJournalGLEntries(
+      manualJournalId,
+      trx,
+    );
+  }
+}

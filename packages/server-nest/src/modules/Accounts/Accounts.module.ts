@@ -33,5 +33,8 @@ import { GetAccountTransactionsService } from './GetAccountTransactions.service'
     GetAccountTypesService,
     GetAccountTransactionsService,
   ],
+  exports: [
+    AccountRepository
+  ]
 })
 export class AccountsModule {}

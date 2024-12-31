@@ -1,20 +1,37 @@
 import { Model, raw } from 'objection';
-import moment from 'moment';
+import moment, { unitOfTime } from 'moment';
 import { isEmpty, castArray } from 'lodash';
 import { BaseModel } from '@/models/Model';
+import { Account } from './Account.model';
 // import { getTransactionTypeLabel } from '@/utils/transactions-types';
 
 export class AccountTransaction extends BaseModel {
   referenceType: string;
   referenceId: number;
+  accountId: number;
+  contactId: number;
   credit: number;
   debit: number;
   exchangeRate: number;
   taxRate: number;
-  date: string;
+  date: Date | string;
   transactionType: string;
   currencyCode: string;
   referenceTypeFormatted: string;
+  transactionNumber!: string;
+  referenceNumber!: string;
+  note!: string;
+
+  index!: number;
+  indexGroup!: number;
+
+  taxRateId!: number;
+
+  branchId!: number;
+  userId!: number;
+  itemId!: number;
+  projectId!: number;
+  account: Account;
 
   /**
    * Table name
@@ -61,153 +78,184 @@ export class AccountTransaction extends BaseModel {
   //   return getTransactionTypeLabel(this.referenceType, this.transactionType);
   // }
 
-  // /**
-  //  * Model modifiers.
-  //  */
-  // static get modifiers() {
-  //   return {
-  //     /**
-  //      * Filters accounts by the given ids.
-  //      * @param {Query} query
-  //      * @param {number[]} accountsIds
-  //      */
-  //     filterAccounts(query, accountsIds) {
-  //       if (Array.isArray(accountsIds) && accountsIds.length > 0) {
-  //         query.whereIn('account_id', accountsIds);
-  //       }
-  //     },
-  //     filterTransactionTypes(query, types) {
-  //       if (Array.isArray(types) && types.length > 0) {
-  //         query.whereIn('reference_type', types);
-  //       } else if (typeof types === 'string') {
-  //         query.where('reference_type', types);
-  //       }
-  //     },
-  //     filterDateRange(query, startDate, endDate, type = 'day') {
-  //       const dateFormat = 'YYYY-MM-DD';
-  //       const fromDate = moment(startDate).startOf(type).format(dateFormat);
-  //       const toDate = moment(endDate).endOf(type).format(dateFormat);
+  /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      /**
+       * Filters accounts by the given ids.
+       * @param {Query} query
+       * @param {number[]} accountsIds
+       */
+      filterAccounts(query, accountsIds) {
+        if (Array.isArray(accountsIds) && accountsIds.length > 0) {
+          query.whereIn('account_id', accountsIds);
+        }
+      },
 
-  //       if (startDate) {
-  //         query.where('date', '>=', fromDate);
-  //       }
-  //       if (endDate) {
-  //         query.where('date', '<=', toDate);
-  //       }
-  //     },
-  //     filterAmountRange(query, fromAmount, toAmount) {
-  //       if (fromAmount) {
-  //         query.andWhere((q) => {
-  //           q.where('credit', '>=', fromAmount);
-  //           q.orWhere('debit', '>=', fromAmount);
-  //         });
-  //       }
-  //       if (toAmount) {
-  //         query.andWhere((q) => {
-  //           q.where('credit', '<=', toAmount);
-  //           q.orWhere('debit', '<=', toAmount);
-  //         });
-  //       }
-  //     },
-  //     sumationCreditDebit(query) {
-  //       query.select(['accountId']);
+      /**
+       * Filters the transaction types.
+       * @param {Query} query
+       * @param {string[]} types
+       */
+      filterTransactionTypes(query, types) {
+        if (Array.isArray(types) && types.length > 0) {
+          query.whereIn('reference_type', types);
+        } else if (typeof types === 'string') {
+          query.where('reference_type', types);
+        }
+      },
 
-  //       query.sum('credit as credit');
-  //       query.sum('debit as debit');
-  //       query.groupBy('account_id');
-  //     },
-  //     filterContactType(query, contactType) {
-  //       query.where('contact_type', contactType);
-  //     },
-  //     filterContactIds(query, contactIds) {
-  //       query.whereIn('contact_id', contactIds);
-  //     },
-  //     openingBalance(query, fromDate) {
-  //       query.modify('filterDateRange', null, fromDate);
-  //       query.modify('sumationCreditDebit');
-  //     },
-  //     closingBalance(query, toDate) {
-  //       query.modify('filterDateRange', null, toDate);
-  //       query.modify('sumationCreditDebit');
-  //     },
-  //     contactsOpeningBalance(
-  //       query,
-  //       openingDate,
-  //       receivableAccounts,
-  //       customersIds
-  //     ) {
-  //       // Filter by date.
-  //       query.modify('filterDateRange', null, openingDate);
+      /**
+       * Filters the date range.
+       * @param {Query} query
+       * @param {moment.MomentInput} startDate
+       * @param {moment.MomentInput} endDate
+       * @param {unitOfTime.StartOf} type
+       */
+      filterDateRange(
+        query,
+        startDate: moment.MomentInput,
+        endDate: moment.MomentInput,
+        type: unitOfTime.StartOf = 'day',
+      ) {
+        const dateFormat = 'YYYY-MM-DD';
+        const fromDate = moment(startDate).startOf(type).format(dateFormat);
+        const toDate = moment(endDate).endOf(type).format(dateFormat);
 
-  //       // Filter by customers.
-  //       query.whereNot('contactId', null);
-  //       query.whereIn('accountId', castArray(receivableAccounts));
+        if (startDate) {
+          query.where('date', '>=', fromDate);
+        }
+        if (endDate) {
+          query.where('date', '<=', toDate);
+        }
+      },
 
-  //       if (!isEmpty(customersIds)) {
-  //         query.whereIn('contactId', castArray(customersIds));
-  //       }
-  //       // Group by the contact transactions.
-  //       query.groupBy('contactId');
-  //       query.sum('credit as credit');
-  //       query.sum('debit as debit');
-  //       query.select('contactId');
-  //     },
-  //     creditDebitSummation(query) {
-  //       query.sum('credit as credit');
-  //       query.sum('debit as debit');
-  //     },
-  //     groupByDateFormat(query, groupType = 'month') {
-  //       const groupBy = {
-  //         day: '%Y-%m-%d',
-  //         month: '%Y-%m',
-  //         year: '%Y',
-  //       };
-  //       const dateFormat = groupBy[groupType];
+      /**
+       * Filters the amount range.
+       * @param {Query} query
+       * @param {number} fromAmount
+       * @param {number} toAmount
+       */
+      filterAmountRange(query, fromAmount, toAmount) {
+        if (fromAmount) {
+          query.andWhere((q) => {
+            q.where('credit', '>=', fromAmount);
+            q.orWhere('debit', '>=', fromAmount);
+          });
+        }
+        if (toAmount) {
+          query.andWhere((q) => {
+            q.where('credit', '<=', toAmount);
+            q.orWhere('debit', '<=', toAmount);
+          });
+        }
+      },
+      sumationCreditDebit(query) {
+        query.select(['accountId']);
 
-  //       query.select(raw(`DATE_FORMAT(DATE, '${dateFormat}')`).as('date'));
-  //       query.groupByRaw(`DATE_FORMAT(DATE, '${dateFormat}')`);
-  //     },
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.groupBy('account_id');
+      },
+      filterContactType(query, contactType) {
+        query.where('contact_type', contactType);
+      },
+      filterContactIds(query, contactIds) {
+        query.whereIn('contact_id', contactIds);
+      },
+      openingBalance(query, fromDate) {
+        query.modify('filterDateRange', null, fromDate);
+        query.modify('sumationCreditDebit');
+      },
+      closingBalance(query, toDate) {
+        query.modify('filterDateRange', null, toDate);
+        query.modify('sumationCreditDebit');
+      },
+      contactsOpeningBalance(
+        query,
+        openingDate,
+        receivableAccounts,
+        customersIds,
+      ) {
+        // Filter by date.
+        query.modify('filterDateRange', null, openingDate);
 
-  //     filterByBranches(query, branchesIds) {
-  //       const formattedBranchesIds = castArray(branchesIds);
+        // Filter by customers.
+        query.whereNot('contactId', null);
+        query.whereIn('accountId', castArray(receivableAccounts));
 
-  //       query.whereIn('branchId', formattedBranchesIds);
-  //     },
+        if (!isEmpty(customersIds)) {
+          query.whereIn('contactId', castArray(customersIds));
+        }
+        // Group by the contact transactions.
+        query.groupBy('contactId');
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.select('contactId');
+      },
+      creditDebitSummation(query) {
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+      },
+      groupByDateFormat(query, groupType = 'month') {
+        const groupBy = {
+          day: '%Y-%m-%d',
+          month: '%Y-%m',
+          year: '%Y',
+        };
+        const dateFormat = groupBy[groupType];
 
-  //     filterByProjects(query, projectsIds) {
-  //       const formattedProjectsIds = castArray(projectsIds);
+        query.select(raw(`DATE_FORMAT(DATE, '${dateFormat}')`).as('date'));
+        query.groupByRaw(`DATE_FORMAT(DATE, '${dateFormat}')`);
+      },
 
-  //       query.whereIn('projectId', formattedProjectsIds);
-  //     },
-  //   };
-  // }
+      filterByBranches(query, branchesIds) {
+        const formattedBranchesIds = castArray(branchesIds);
 
-  // /**
-  //  * Relationship mapping.
-  //  */
-  // static get relationMappings() {
-  //   const Account = require('models/Account');
-  //   const Contact = require('models/Contact');
+        query.whereIn('branchId', formattedBranchesIds);
+      },
 
-  //   return {
-  //     account: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Account.default,
-  //       join: {
-  //         from: 'accounts_transactions.accountId',
-  //         to: 'accounts.id',
-  //       },
-  //     },
-  //     contact: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Contact.default,
-  //       join: {
-  //         from: 'accounts_transactions.contactId',
-  //         to: 'contacts.id',
-  //       },
-  //     },
-  //   };
-  // }
+      filterByProjects(query, projectsIds) {
+        const formattedProjectsIds = castArray(projectsIds);
+
+        query.whereIn('projectId', formattedProjectsIds);
+      },
+
+      filterByReference(query, referenceId: number, referenceType: string) {
+        query.where('reference_id', referenceId);
+        query.where('reference_type', referenceType);
+      },
+    };
+  }
+
+  /**
+   * Relationship mapping.
+   */
+  static get relationMappings() {
+    const { Account } = require('./Account.model');
+    const { Contact } = require('../../Contacts/models/Contact');
+
+    return {
+      account: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Account,
+        join: {
+          from: 'accounts_transactions.accountId',
+          to: 'accounts.id',
+        },
+      },
+      contact: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Contact,
+        join: {
+          from: 'accounts_transactions.contactId',
+          to: 'contacts.id',
+        },
+      },
+    };
+  }
 
   /**
    * Prevents mutate base currency since the model is not empty.

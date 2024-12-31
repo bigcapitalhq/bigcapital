@@ -17,6 +17,7 @@ import { ItemEntriesTaxTransactions } from '../TaxRates/ItemEntriesTaxTransactio
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { BillsController } from './Bills.controller';
 import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
+import { BillGLEntriesSubscriber } from './subscribers/BillGLEntriesSubscriber';
 
 @Module({
   imports: [BillLandedCostsModule],
@@ -36,7 +37,8 @@ import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module
     DeleteBill,
     BillDTOTransformer,
     BillsValidators,
-    ItemsEntriesService
+    ItemsEntriesService,
+    BillGLEntriesSubscriber
   ],
   controllers: [BillsController],
 })

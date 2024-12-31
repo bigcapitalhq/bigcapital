@@ -1,8 +1,9 @@
-import { IAccountTransaction, ILedgerEntry } from '@/interfaces';
+import { AccountTransaction } from "../Accounts/models/AccountTransaction.model";
+import { ILedgerEntry } from "./types/Ledger.types";
 
 export const transformLedgerEntryToTransaction = (
   entry: ILedgerEntry
-): IAccountTransaction => {
+): Partial<AccountTransaction> => {
   return {
     date: entry.date,
 
@@ -33,7 +34,7 @@ export const transformLedgerEntryToTransaction = (
     itemId: entry.itemId,
     projectId: entry.projectId,
 
-    costable: entry.costable,
+    // costable: entry.costable,
 
     taxRateId: entry.taxRateId,
     taxRate: entry.taxRate,

@@ -31,6 +31,8 @@ import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 import { SaleInvoicesController } from './SaleInvoices.controller';
+import { InvoiceGLEntriesSubscriber } from './subscribers/InvoiceGLEntriesSubscriber';
+import { SaleInvoiceGLEntries } from './ledger/InvoiceGLEntries';
 
 @Module({
   imports: [
@@ -68,6 +70,8 @@ import { SaleInvoicesController } from './SaleInvoices.controller';
     SaleInvoicePdfTemplate,
     WriteoffSaleInvoice,
     GetInvoicePaymentsService,
+    SaleInvoiceGLEntries,
+    InvoiceGLEntriesSubscriber,
   ],
 })
 export class SaleInvoicesModule {}

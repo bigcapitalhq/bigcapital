@@ -39,6 +39,7 @@ export class SaleInvoice extends BaseModel {
   public referenceNo: string;
 
   public pdfTemplateId: number;
+  public userId: number;
 
   public branchId: number;
   public warehouseId: number;

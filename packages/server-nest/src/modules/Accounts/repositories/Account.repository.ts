@@ -3,19 +3,26 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { TenantRepository } from '@/common/repository/TenantRepository';
 import { TENANCY_DB_CONNECTION } from '@/modules/Tenancy/TenancyDB/TenancyDB.constants';
 import { Account } from '../models/Account.model';
-// import { TenantMetadata } from '@/modules/System/models/TenantMetadataModel';
-// import { IAccount } from '../Accounts.types';
-// import {
-//   PrepardExpenses,
-//   StripeClearingAccount,
-//   TaxPayableAccount,
-//   UnearnedRevenueAccount,
-// } from '../Accounts.constants';
+import { I18nService } from 'nestjs-i18n';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import {
+  PrepardExpenses,
+  StripeClearingAccount,
+  TaxPayableAccount,
+  UnearnedRevenueAccount,
+} from '../Accounts.constants';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AccountRepository extends TenantRepository {
-  @Inject(TENANCY_DB_CONNECTION)
-  private readonly tenantDBKnex: Knex;
+  constructor(
+    private readonly i18n: I18nService,
+    private readonly tenancyContext: TenancyContext,
+
+    @Inject(TENANCY_DB_CONNECTION)
+    private readonly tenantDBKnex: Knex,
+  ) {
+    super();
+  }
 
   /**
    * Gets the repository's model.
@@ -107,185 +114,274 @@ export class AccountRepository extends TenantRepository {
     return results;
   }
 
-  // /**
-  //  *
-  //  * @param {string} currencyCode
-  //  * @param extraAttrs
-  //  * @param trx
-  //  * @returns
-  //  */
-  // findOrCreateAccountReceivable = async (
-  //   currencyCode: string = '',
-  //   extraAttrs = {},
-  //   trx?: Knex.Transaction,
-  // ) => {
-  //   let result = await this.model
-  //     .query(trx)
-  //     .onBuild((query) => {
-  //       if (currencyCode) {
-  //         query.where('currencyCode', currencyCode);
-  //       }
-  //       query.where('accountType', 'accounts-receivable');
-  //     })
-  //     .first();
+  /**
+   *
+   * @param {string} currencyCode
+   * @param extraAttrs
+   * @param trx
+   * @returns
+   */
+  findOrCreateAccountReceivable = async (
+    currencyCode: string = '',
+    extraAttrs = {},
+    trx?: Knex.Transaction,
+  ) => {
+    let result = await this.model
+      .query(trx)
+      .onBuild((query) => {
+        if (currencyCode) {
+          query.where('currencyCode', currencyCode);
+        }
+        query.where('accountType', 'accounts-receivable');
+      })
+      .first();
 
-  //   if (!result) {
-  //     result = await this.model.query(trx).insertAndFetch({
-  //       name: this.i18n.__('account.accounts_receivable.currency', {
-  //         currency: currencyCode,
-  //       }),
-  //       accountType: 'accounts-receivable',
-  //       currencyCode,
-  //       active: 1,
-  //       ...extraAttrs,
-  //     });
-  //   }
-  //   return result;
-  // };
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        name: this.i18n.t('account.accounts_receivable.currency', {
+          args: { currency: currencyCode },
+        }),
+        accountType: 'accounts-receivable',
+        currencyCode,
+        active: 1,
+        ...extraAttrs,
+      });
+    }
+    return result;
+  };
 
-  // /**
-  //  * Find or create tax payable account.
-  //  * @param {Record<string, string>}extraAttrs
-  //  * @param {Knex.Transaction} trx
-  //  * @returns
-  //  */
-  // async findOrCreateTaxPayable(
-  //   extraAttrs: Record<string, string> = {},
-  //   trx?: Knex.Transaction,
-  // ) {
-  //   let result = await this.model
-  //     .query(trx)
-  //     .findOne({ slug: TaxPayableAccount.slug, ...extraAttrs });
+  /**
+   * Find or create tax payable account.
+   * @param {Record<string, string>}extraAttrs
+   * @param {Knex.Transaction} trx
+   * @returns
+   */
+  async findOrCreateTaxPayable(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction,
+  ) {
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: TaxPayableAccount.slug, ...extraAttrs });
 
-  //   if (!result) {
-  //     result = await this.model.query(trx).insertAndFetch({
-  //       ...TaxPayableAccount,
-  //       ...extraAttrs,
-  //     });
-  //   }
-  //   return result;
-  // }
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...TaxPayableAccount,
+        ...extraAttrs,
+      });
+    }
+    return result;
+  }
 
-  // findOrCreateAccountsPayable = async (
-  //   currencyCode: string = '',
-  //   extraAttrs = {},
-  //   trx?: Knex.Transaction,
-  // ) => {
-  //   let result = await this.model
-  //     .query(trx)
-  //     .onBuild((query) => {
-  //       if (currencyCode) {
-  //         query.where('currencyCode', currencyCode);
-  //       }
-  //       query.where('accountType', 'accounts-payable');
-  //     })
-  //     .first();
+  findOrCreateAccountsPayable = async (
+    currencyCode: string = '',
+    extraAttrs = {},
+    trx?: Knex.Transaction,
+  ) => {
+    let result = await this.model
+      .query(trx)
+      .onBuild((query) => {
+        if (currencyCode) {
+          query.where('currencyCode', currencyCode);
+        }
+        query.where('accountType', 'accounts-payable');
+      })
+      .first();
 
-  //   if (!result) {
-  //     result = await this.model.query(trx).insertAndFetch({
-  //       name: this.i18n.__('account.accounts_payable.currency', {
-  //         currency: currencyCode,
-  //       }),
-  //       accountType: 'accounts-payable',
-  //       currencyCode,
-  //       active: 1,
-  //       ...extraAttrs,
-  //     });
-  //   }
-  //   return result;
-  // };
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        name: this.i18n.t('account.accounts_payable.currency', {
+          args: { currency: currencyCode },
+        }),
+        accountType: 'accounts-payable',
+        currencyCode,
+        active: 1,
+        ...extraAttrs,
+      });
+    }
+    return result;
+  };
 
-  // /**
-  //  * Finds or creates the unearned revenue.
-  //  * @param {Record<string, string>} extraAttrs
-  //  * @param {Knex.Transaction} trx
-  //  * @returns
-  //  */
-  // public async findOrCreateUnearnedRevenue(
-  //   extraAttrs: Record<string, string> = {},
-  //   trx?: Knex.Transaction,
-  // ) {
-  //   // Retrieves the given tenant metadata.
-  //   const tenantMeta = await TenantMetadata.query().findOne({
-  //     tenantId: this.tenantId,
-  //   });
-  //   const _extraAttrs = {
-  //     currencyCode: tenantMeta.baseCurrency,
-  //     ...extraAttrs,
-  //   };
-  //   let result = await this.model
-  //     .query(trx)
-  //     .findOne({ slug: UnearnedRevenueAccount.slug, ..._extraAttrs });
+  /**
+   * Finds or creates the unearned revenue.
+   * @param {Record<string, string>} extraAttrs
+   * @param {Knex.Transaction} trx
+   * @returns
+   */
+  public async findOrCreateUnearnedRevenue(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction,
+  ) {
+    const tenantMeta = await this.tenancyContext.getTenantMetadata();
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: UnearnedRevenueAccount.slug, ..._extraAttrs });
 
-  //   if (!result) {
-  //     result = await this.model.query(trx).insertAndFetch({
-  //       ...UnearnedRevenueAccount,
-  //       ..._extraAttrs,
-  //     });
-  //   }
-  //   return result;
-  // }
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...UnearnedRevenueAccount,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
 
-  // /**
-  //  * Finds or creates the prepard expenses account.
-  //  * @param {Record<string, string>} extraAttrs
-  //  * @param {Knex.Transaction} trx
-  //  * @returns
-  //  */
-  // public async findOrCreatePrepardExpenses(
-  //   extraAttrs: Record<string, string> = {},
-  //   trx?: Knex.Transaction,
-  // ) {
-  //   // Retrieves the given tenant metadata.
-  //   const tenantMeta = await TenantMetadata.query().findOne({
-  //     tenantId: this.tenantId,
-  //   });
-  //   const _extraAttrs = {
-  //     currencyCode: tenantMeta.baseCurrency,
-  //     ...extraAttrs,
-  //   };
+  /**
+   * Finds or creates the prepard expenses account.
+   * @param {Record<string, string>} extraAttrs
+   * @param {Knex.Transaction} trx
+   * @returns
+   */
+  public async findOrCreatePrepardExpenses(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction,
+  ) {
+    const tenantMeta = await this.tenancyContext.getTenantMetadata();
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
 
-  //   let result = await this.model
-  //     .query(trx)
-  //     .findOne({ slug: PrepardExpenses.slug, ..._extraAttrs });
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: PrepardExpenses.slug, ..._extraAttrs });
 
-  //   if (!result) {
-  //     result = await this.model.query(trx).insertAndFetch({
-  //       ...PrepardExpenses,
-  //       ..._extraAttrs,
-  //     });
-  //   }
-  //   return result;
-  // }
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...PrepardExpenses,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
 
-  // /**
-  //  * Finds or creates the stripe clearing account.
-  //  * @param {Record<string, string>} extraAttrs
-  //  * @param {Knex.Transaction} trx
-  //  * @returns
-  //  */
-  // public async findOrCreateStripeClearing(
-  //   extraAttrs: Record<string, string> = {},
-  //   trx?: Knex.Transaction,
-  // ) {
-  //   // Retrieves the given tenant metadata.
-  //   const tenantMeta = await TenantMetadata.query().findOne({
-  //     tenantId: this.tenantId,
-  //   });
-  //   const _extraAttrs = {
-  //     currencyCode: tenantMeta.baseCurrency,
-  //     ...extraAttrs,
-  //   };
-  //   let result = await this.model
-  //     .query(trx)
-  //     .findOne({ slug: StripeClearingAccount.slug, ..._extraAttrs });
+  /**
+   * Finds or creates the stripe clearing account.
+   * @param {Record<string, string>} extraAttrs
+   * @param {Knex.Transaction} trx
+   * @returns
+   */
+  public async findOrCreateStripeClearing(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction,
+  ) {
+    const tenantMeta = await this.tenancyContext.getTenantMetadata();
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: StripeClearingAccount.slug, ..._extraAttrs });
 
-  //   if (!result) {
-  //     result = await this.model.query(trx).insertAndFetch({
-  //       ...StripeClearingAccount,
-  //       ..._extraAttrs,
-  //     });
-  //   }
-  //   return result;
-  // }
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...StripeClearingAccount,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
+
+  /**
+   * Finds or creates the discount expense account.
+   * @param {Record<string, string>} extraAttrs
+   * @param {Knex.Transaction} trx
+   * @returns
+   */
+  public async findOrCreateDiscountAccount(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction,
+  ) {
+    const tenantMeta = await this.tenancyContext.getTenantMetadata();
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
+
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: DiscountExpenseAccount.slug, ..._extraAttrs });
+
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...DiscountExpenseAccount,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
+
+  public async findOrCreatePurchaseDiscountAccount(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction,
+  ) {
+    const tenantMeta = await this.tenancyContext.getTenantMetadata();
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
+
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: PurchaseDiscountAccount.slug, ..._extraAttrs });
+
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...PurchaseDiscountAccount,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
+
+  public async findOrCreateOtherChargesAccount(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction,
+  ) {
+    const tenantMeta = await this.tenancyContext.getTenantMetadata();
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
+
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: OtherChargesAccount.slug, ..._extraAttrs });
+
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...OtherChargesAccount,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
+
+  public async findOrCreateOtherExpensesAccount(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction,
+  ) {
+    const tenantMeta = await this.tenancyContext.getTenantMetadata();
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
+
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: OtherExpensesAccount.slug, ..._extraAttrs });
+
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...OtherExpensesAccount,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
 }

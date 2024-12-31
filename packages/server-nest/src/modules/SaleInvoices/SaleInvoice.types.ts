@@ -117,6 +117,7 @@ export interface ISaleInvoiceDeletePayload {
   // tenantId: number;
   oldSaleInvoice: SaleInvoice;
   saleInvoiceId: number;
+  trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceDeletingPayload {

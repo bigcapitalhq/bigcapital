@@ -18,6 +18,8 @@ import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectab
 import { GetCreditNote } from './queries/GetCreditNote.service';
 import { CreditNoteBrandingTemplate } from './queries/CreditNoteBrandingTemplate.service';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
+import CreditNoteGLEntries from './commands/CreditNoteGLEntries';
+import CreditNoteGLEntriesSubscriber from './subscribers/CreditNoteGLEntriesSubscriber';
 
 @Module({
   imports: [
@@ -40,7 +42,9 @@ import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementO
     CreditNoteAutoIncrementService,
     GetCreditNoteState,
     CreditNoteApplication,
-    CreditNoteBrandingTemplate
+    CreditNoteBrandingTemplate,
+    CreditNoteGLEntries,
+    CreditNoteGLEntriesSubscriber
   ],
   exports: [
     CreateCreditNoteService,

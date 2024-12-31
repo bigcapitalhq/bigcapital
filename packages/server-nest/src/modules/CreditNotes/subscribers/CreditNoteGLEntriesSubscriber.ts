@@ -1,113 +1,78 @@
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import {
-//   ICreditNoteCreatedPayload,
-//   ICreditNoteDeletedPayload,
-//   ICreditNoteEditedPayload,
-//   ICreditNoteOpenedPayload,
-// } from '@/interfaces';
-// import CreditNoteGLEntries from '../commands/CreditNoteGLEntries';
+import {
+  ICreditNoteCreatedPayload,
+  ICreditNoteDeletedPayload,
+  ICreditNoteEditedPayload,
+  ICreditNoteOpenedPayload,
+} from '../types/CreditNotes.types';
+import CreditNoteGLEntries from '../commands/CreditNoteGLEntries';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export default class CreditNoteGLEntriesSubscriber {
-//   @Inject()
-//   private creditNoteGLEntries: CreditNoteGLEntries;
+@Injectable()
+export default class CreditNoteGLEntriesSubscriber {
+  constructor(private readonly creditNoteGLEntries: CreditNoteGLEntries) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    * @param bus
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.creditNote.onCreated,
-//       this.writeGlEntriesOnceCreditNoteCreated
-//     );
-//     bus.subscribe(
-//       events.creditNote.onOpened,
-//       this.writeGLEntriesOnceCreditNoteOpened
-//     );
-//     bus.subscribe(
-//       events.creditNote.onEdited,
-//       this.editVendorCreditGLEntriesOnceEdited
-//     );
-//     bus.subscribe(
-//       events.creditNote.onDeleted,
-//       this.revertGLEntriesOnceCreditNoteDeleted
-//     );
-//   }
+  /**
+   * Writes the GL entries once the credit note transaction created or open.
+   * @param {ICreditNoteCreatedPayload|ICreditNoteOpenedPayload} payload -
+   */
+  @OnEvent(events.creditNote.onCreated)
+  public async writeGlEntriesOnceCreditNoteCreated({
+    creditNote,
+    trx,
+  }: ICreditNoteCreatedPayload | ICreditNoteOpenedPayload) {
+    // Can't continue if the credit note is not published yet.
+    if (!creditNote.isPublished) return;
 
-//   /**
-//    * Writes the GL entries once the credit note transaction created or open.
-//    * @private
-//    * @param {ICreditNoteCreatedPayload|ICreditNoteOpenedPayload} payload -
-//    */
-//   private writeGlEntriesOnceCreditNoteCreated = async ({
-//     tenantId,
-//     creditNote,
-//     creditNoteId,
-//     trx,
-//   }: ICreditNoteCreatedPayload | ICreditNoteOpenedPayload) => {
-//     // Can't continue if the credit note is not published yet.
-//     if (!creditNote.isPublished) return;
+    await this.creditNoteGLEntries.createVendorCreditGLEntries(
+      creditNote.id,
+      trx,
+    );
+  }
 
-//     await this.creditNoteGLEntries.createVendorCreditGLEntries(
-//       tenantId,
-//       creditNoteId,
-//       trx
-//     );
-//   };
+  /**
+   * Writes the GL entries once the vendor credit transaction opened.
+   * @param {ICreditNoteOpenedPayload} payload
+   */
+  @OnEvent(events.creditNote.onOpened)
+  public async writeGLEntriesOnceCreditNoteOpened({
+    creditNote,
+    trx,
+  }: ICreditNoteOpenedPayload) {
+    await this.creditNoteGLEntries.createVendorCreditGLEntries(
+      creditNote.id,
+      trx,
+    );
+  }
 
-//   /**
-//    * Writes the GL entries once the vendor credit transaction opened.
-//    * @param {ICreditNoteOpenedPayload} payload
-//    */
-//   private writeGLEntriesOnceCreditNoteOpened = async ({
-//     tenantId,
-//     creditNoteId,
-//     trx,
-//   }: ICreditNoteOpenedPayload) => {
-//     await this.creditNoteGLEntries.createVendorCreditGLEntries(
-//       tenantId,
-//       creditNoteId,
-//       trx
-//     );
-//   };
+  /**
+   * Reverts GL entries once credit note deleted.
+   */
+  @OnEvent(events.creditNote.onDeleted)
+  public async revertGLEntriesOnceCreditNoteDeleted({
+    oldCreditNote,
+    creditNoteId,
+    trx,
+  }: ICreditNoteDeletedPayload) {
+    // Can't continue if the credit note is not published yet.
+    if (!oldCreditNote.isPublished) return;
 
-//   /**
-//    * Reverts GL entries once credit note deleted.
-//    */
-//   private revertGLEntriesOnceCreditNoteDeleted = async ({
-//     tenantId,
-//     oldCreditNote,
-//     creditNoteId,
-//     trx,
-//   }: ICreditNoteDeletedPayload) => {
-//     // Can't continue if the credit note is not published yet.
-//     if (!oldCreditNote.isPublished) return;
+    await this.creditNoteGLEntries.revertVendorCreditGLEntries(creditNoteId);
+  }
 
-//     await this.creditNoteGLEntries.revertVendorCreditGLEntries(
-//       tenantId,
-//       creditNoteId
-//     );
-//   };
+  /**
+   * Edits vendor credit associated GL entries once the transaction edited.
+   * @param {ICreditNoteEditedPayload} payload -
+   */
+  @OnEvent(events.creditNote.onEdited)
+  public async editVendorCreditGLEntriesOnceEdited({
+    creditNote,
+    trx,
+  }: ICreditNoteEditedPayload) {
+    // Can't continue if the credit note is not published yet.
+    if (!creditNote.isPublished) return;
 
-//   /**
-//    * Edits vendor credit associated GL entries once the transaction edited.
-//    * @param {ICreditNoteEditedPayload} payload -
-//    */
-//   private editVendorCreditGLEntriesOnceEdited = async ({
-//     tenantId,
-//     creditNote,
-//     creditNoteId,
-//     trx,
-//   }: ICreditNoteEditedPayload) => {
-//     // Can't continue if the credit note is not published yet.
-//     if (!creditNote.isPublished) return;
-
-//     await this.creditNoteGLEntries.editVendorCreditGLEntries(
-//       tenantId,
-//       creditNoteId,
-//       trx
-//     );
-//   };
-// }
+    await this.creditNoteGLEntries.editVendorCreditGLEntries(creditNote.id, trx);
+  }
+}

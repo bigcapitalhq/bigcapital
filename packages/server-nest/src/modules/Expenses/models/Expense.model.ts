@@ -203,21 +203,28 @@ export class Expense extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    // const Account = require('models/Account');
+    const { Account } = require('../../Accounts/models/Account.model');
     const { ExpenseCategory } = require('./ExpenseCategory.model');
-    // const Document = require('models/Document');
-    // const Branch = require('models/Branch');
+    const { Document } = require('../../ChromiumlyTenancy/models/Document');
+    const { Branch } = require('../../Branches/models/Branch.model');
     // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
     return {
-      // paymentAccount: {
-      //   relation: Model.BelongsToOneRelation,
-      //   modelClass: Account.default,
-      //   join: {
-      //     from: 'expenses_transactions.paymentAccountId',
-      //     to: 'accounts.id',
-      //   },
-      // },
+      /**
+       * Expense transaction may belongs to a payment account.
+       */
+      paymentAccount: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Account,
+        join: {
+          from: 'expenses_transactions.paymentAccountId',
+          to: 'accounts.id',
+        },
+      },
+
+      /**
+       * Expense transaction may has many expense categories.
+       */
       categories: {
         relation: Model.HasManyRelation,
         modelClass: ExpenseCategory,
@@ -233,33 +240,33 @@ export class Expense extends BaseModel {
       /**
        * Expense transction may belongs to a branch.
        */
-      // branch: {
-      //   relation: Model.BelongsToOneRelation,
-      //   modelClass: Branch.default,
-      //   join: {
-      //     from: 'expenses_transactions.branchId',
-      //     to: 'branches.id',
-      //   },
-      // },
+      branch: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Branch,
+        join: {
+          from: 'expenses_transactions.branchId',
+          to: 'branches.id',
+        },
+      },
 
-      // /**
-      //  * Expense transaction may has many attached attachments.
-      //  */
-      // attachments: {
-      //   relation: Model.ManyToManyRelation,
-      //   modelClass: Document.default,
-      //   join: {
-      //     from: 'expenses_transactions.id',
-      //     through: {
-      //       from: 'document_links.modelId',
-      //       to: 'document_links.documentId',
-      //     },
-      //     to: 'documents.id',
-      //   },
-      //   filter(query) {
-      //     query.where('model_ref', 'Expense');
-      //   },
-      // },
+      /**
+       * Expense transaction may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document,
+        join: {
+          from: 'expenses_transactions.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'Expense');
+        },
+      },
 
       // /**
       //  * Expense may belongs to matched bank transaction.

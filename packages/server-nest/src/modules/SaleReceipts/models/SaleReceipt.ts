@@ -6,6 +6,11 @@ import { Model, mixin } from 'objection';
 // import { DEFAULT_VIEWS } from '@/services/Sales/Receipts/constants';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
+import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { Customer } from '@/modules/Customers/models/Customer';
+import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
+import { Branch } from '@/modules/Branches/models/Branch.model';
+import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 
 export class SaleReceipt extends BaseModel {
   amount: number;
@@ -27,6 +32,12 @@ export class SaleReceipt extends BaseModel {
   createdAt: Date;
   updatedAt: Date | null;
 
+  customer!: Customer;
+  entries!: ItemEntry[];
+  transactions!: AccountTransaction[];
+  branch!: Branch;
+  warehouse!: Warehouse;
+ 
   /**
    * Table name
    */

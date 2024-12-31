@@ -1,17 +1,26 @@
 import { Knex } from 'knex';
+import { Inject, Injectable } from '@nestjs/common';
 import { ILedger } from './types/Ledger.types';
 import { LedgerContactsBalanceStorage } from './LedgerContactStorage.service';
 import { LedegrAccountsStorage } from './LedgetAccountStorage.service';
 import { LedgerEntriesStorageService } from './LedgerEntriesStorage.service';
+import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
 import { Ledger } from './Ledger';
-import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class LedgerStorageService {
+  /**
+   * @param {LedgerContactsBalanceStorage} ledgerContactsBalance - Ledger contacts balance storage.
+   * @param {LedegrAccountsStorage} ledgerAccountsBalance - Ledger accounts balance storage.
+   * @param {LedgerEntriesStorageService} ledgerEntriesService - Ledger entries storage service.
+   */
   constructor(
     private ledgerContactsBalance: LedgerContactsBalanceStorage,
     private ledgerAccountsBalance: LedegrAccountsStorage,
     private ledgerEntriesService: LedgerEntriesStorageService,
+
+    @Inject(AccountTransaction.name)
+    private accountTransactionModel: typeof AccountTransaction,
   ) {}
 
   /**
@@ -43,10 +52,7 @@ export class LedgerStorageService {
    * @param {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
-  public delete = async (
-    ledger: ILedger,
-    trx?: Knex.Transaction,
-  ) => {
+  public delete = async (ledger: ILedger, trx?: Knex.Transaction) => {
     const tasks = [
       // Deletes the ledger entries.
       this.ledgerEntriesService.deleteEntries(ledger, trx),
@@ -61,9 +67,10 @@ export class LedgerStorageService {
   };
 
   /**
-   * @param {number | number[]} referenceId
-   * @param {string | string[]} referenceType
-   * @param {Knex.Transaction} trx
+   * Deletes the ledger entries by the given reference.
+   * @param {number | number[]} referenceId - The reference ID.
+   * @param {string | string[]} referenceType - The reference type.
+   * @param {Knex.Transaction} trx - The knex transaction.
    */
   public deleteByReference = async (
     referenceId: number | number[],
@@ -71,15 +78,15 @@ export class LedgerStorageService {
     trx?: Knex.Transaction,
   ) => {
     // Retrieves the transactions of the given reference.
-    const transactions =
-      await transactionsRepository.getTransactionsByReference(
-        referenceId,
-        referenceType,
-      );
+    const transactions = await this.accountTransactionModel
+      .query(trx)
+      .modify('filterByReference', referenceId, referenceType)
+      .withGraphFetched('account');
+
     // Creates a new ledger from transaction and reverse the entries.
     const reversedLedger = Ledger.fromTransactions(transactions).reverse();
 
     // Deletes and reverts the balances.
-    await this.delete(tenantId, reversedLedger, trx);
+    await this.delete(reversedLedger, trx);
   };
 }

@@ -24,7 +24,7 @@ export class LedgerContactsBalanceStorage {
   ) {}
 
   /**
-   * 
+   * Saves the contacts balance.
    * @param {ILedger} ledger
    * @param {Knex.Transaction} trx
    * @returns {Promise<void>}
@@ -48,7 +48,7 @@ export class LedgerContactsBalanceStorage {
   };
 
   /**
-   *
+   * Saves the contact balance.
    * @param {ISaleContactsBalanceQueuePayload} task
    * @returns {Promise<void>}
    */
@@ -67,7 +67,6 @@ export class LedgerContactsBalanceStorage {
    * @returns {Promise<(entry: ILedgerEntry) => boolean>}
    */
   private filterARAPLedgerEntris = async (
-    tenantId: number,
     trx?: Knex.Transaction,
   ): Promise<(entry: ILedgerEntry) => boolean> => {
     const ARAPAccounts = await this.accountModel
@@ -91,14 +90,11 @@ export class LedgerContactsBalanceStorage {
    * @returns {Promise<void>}
    */
   private saveContactBalance = async (
-    tenantId: number,
     ledger: ILedger,
     contactId: number,
     trx?: Knex.Transaction,
   ): Promise<void> => {
     const contact = await this.contactModel.query(trx).findById(contactId);
-
-    // Retrieves the given tenant metadata.
     const tenant = await this.tenancyContext.getTenant(true);
 
     // Detarmines whether the contact has foreign currency.
@@ -106,10 +102,7 @@ export class LedgerContactsBalanceStorage {
       contact.currencyCode !== tenant?.metadata.baseCurrency;
 
     // Filters the ledger base on the given contact id.
-    const filterARAPLedgerEntris = await this.filterARAPLedgerEntris(
-      tenantId,
-      trx,
-    );
+    const filterARAPLedgerEntris = await this.filterARAPLedgerEntris(trx);
     const contactLedger = ledger
       // Filter entries only that have contact id.
       .whereContactId(contactId)
@@ -122,27 +115,25 @@ export class LedgerContactsBalanceStorage {
           .getForeignClosingBalance()
       : contactLedger.getClosingBalance();
 
-    await this.changeContactBalance(tenantId, contactId, closingBalance, trx);
+    await this.changeContactBalance(contactId, closingBalance, trx);
   };
 
   /**
-   *
-   * @param {number} tenantId
-   * @param {number} contactId
-   * @param {number} change
-   * @returns
+   * Changes the contact receiable/payable balance.
+   * @param {number} contactId - The contact ID.
+   * @param {number} change - The change amount.
+   * @returns {Promise<void>}
    */
   private changeContactBalance = (
-    tenantId: number,
     contactId: number,
     change: number,
     trx?: Knex.Transaction,
   ) => {
-    return this.contactModel.changeAmount(
-      { id: contactId },
-      'balance',
-      change,
-      trx,
-    );
+    // return this.contactModel.changeAmount(
+    //   { id: contactId },
+    //   'balance',
+    //   change,
+    //   trx,
+    // );
   };
 }

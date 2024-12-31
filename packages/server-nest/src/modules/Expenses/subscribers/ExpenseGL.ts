@@ -77,7 +77,7 @@ export class ExpenseGL {
         index: index + 2,
         projectId: category.projectId,
       };
-    }
+    },
   );
 
   /**
@@ -88,8 +88,9 @@ export class ExpenseGL {
     const getCategoryEntry = this.getExpenseGLCategoryEntry();
 
     const paymentEntry = this.getExpenseGLPaymentEntry();
-    const categoryEntries = this.expense.categories.map(getCategoryEntry);
-
+    const categoryEntries = this.expense.categories.map((category, index) =>
+      getCategoryEntry(category, index),
+    );
     return [paymentEntry, ...categoryEntries];
   };
 

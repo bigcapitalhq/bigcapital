@@ -20,6 +20,8 @@ import { SaleReceiptIncrement } from './commands/SaleReceiptIncrement.service';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
 import { SaleReceiptsController } from './SaleReceipts.controller';
+import { SaleReceiptGLEntriesSubscriber } from './subscribers/SaleReceiptGLEntriesSubscriber';
+import { SaleReceiptGLEntries } from './ledger/SaleReceiptGLEntries';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -46,6 +48,8 @@ import { SaleReceiptsController } from './SaleReceipts.controller';
     SaleReceiptDTOTransformer,
     SaleReceiptBrandingTemplate,
     SaleReceiptIncrement,
+    SaleReceiptGLEntries,
+    SaleReceiptGLEntriesSubscriber
   ],
 })
 export class SaleReceiptsModule {}

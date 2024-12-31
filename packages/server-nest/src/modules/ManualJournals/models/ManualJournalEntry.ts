@@ -1,5 +1,8 @@
 import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
+import { Account } from '@/modules/Accounts/models/Account.model';
+import { Contact } from '@/modules/Contacts/models/Contact';
+import { Branch } from '@/modules/Branches/models/Branch.model';
 
 export class ManualJournalEntry extends BaseModel {
   index: number;
@@ -11,6 +14,10 @@ export class ManualJournalEntry extends BaseModel {
 
   branchId!: number;
   projectId?: number;
+
+  contact?: Contact;
+  account?: Account;
+  branch?: Branch;
 
   /**
    * Table name.

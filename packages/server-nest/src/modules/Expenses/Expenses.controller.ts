@@ -12,8 +12,10 @@ import {
   IExpenseCreateDTO,
   IExpenseEditDTO,
 } from './interfaces/Expenses.interface';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('expenses')
+@PublicRoute()
 export class ExpensesController {
   constructor(private readonly expensesApplication: ExpensesApplication) {}
 

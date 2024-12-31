@@ -1,6 +1,9 @@
 import moment from 'moment';
 import { defaultTo, sumBy, uniqBy } from 'lodash';
-import { IAccountTransaction, ILedger, ILedgerEntry } from '@/interfaces';
+import { ILedger } from './types/Ledger.types';
+import { ILedgerEntry } from './types/Ledger.types';
+import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
+import { IAccountTransaction } from '@/interfaces/Account';
 
 export class Ledger implements ILedger {
   readonly entries: ILedgerEntry[];
@@ -225,7 +228,7 @@ export class Ledger implements ILedger {
    * @param   {IAccountTransaction[]} entries
    * @returns {ILedgerEntry[]}
    */
-  static mappingTransactions(entries: IAccountTransaction[]): ILedgerEntry[] {
+  static mappingTransactions(entries: AccountTransaction[]): ILedgerEntry[] {
     return entries.map(this.mapTransaction);
   }
 
@@ -234,7 +237,7 @@ export class Ledger implements ILedger {
    * @param   {IAccountTransaction} entry
    * @returns {ILedgerEntry}
    */
-  static mapTransaction(entry: IAccountTransaction): ILedgerEntry {
+  static mapTransaction(entry: AccountTransaction): ILedgerEntry {
     return {
       credit: defaultTo(entry.credit, 0),
       debit: defaultTo(entry.debit, 0),
@@ -274,7 +277,7 @@ export class Ledger implements ILedger {
    * @param {IAccountTransaction[]} transactions
    * @returns {ILedger}
    */
-  static fromTransactions(transactions: IAccountTransaction[]): Ledger {
+  static fromTransactions(transactions: AccountTransaction[]): Ledger {
     const entries = Ledger.mappingTransactions(transactions);
     return new Ledger(entries);
   }

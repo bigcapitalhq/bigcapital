@@ -12,9 +12,12 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { ExpensesWriteGLSubscriber } from './subscribers/ExpenseGLEntries.subscriber';
 import { ExpenseGLEntriesStorageService } from './subscribers/ExpenseGLEntriesStorage.sevice';
+import { ExpenseGLEntriesService } from './subscribers/ExpenseGLEntries.service';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { BranchesModule } from '../Branches/Branches.module';
 
 @Module({
-  imports: [],
+  imports: [LedgerModule, BranchesModule],
   controllers: [ExpensesController],
   providers: [
     CreateExpense,
@@ -29,6 +32,7 @@ import { ExpenseGLEntriesStorageService } from './subscribers/ExpenseGLEntriesSt
     TransformerInjectable,
     ExpensesWriteGLSubscriber,
     ExpenseGLEntriesStorageService,
+    ExpenseGLEntriesService
   ],
 })
 export class ExpensesModule {}

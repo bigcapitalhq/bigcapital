@@ -1,21 +1,24 @@
+import { Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as R from 'ramda';
 import {
   IExpenseCreateDTO,
-  IExpenseCommonDTO,
   IExpenseEditDTO,
 } from '../interfaces/Expenses.interface';
-// import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
-import { Injectable } from '@nestjs/common';
+import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { Expense } from '../models/Expense.model';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class ExpenseDTOTransformer {
+  /**
+   * @param {BranchTransactionDTOTransformer} branchDTOTransform - Branch transaction DTO transformer.
+   * @param {TenancyContext} tenancyContext - Tenancy context.
+   */
   constructor(
-    // private readonly branchDTOTransform: BranchTransactionDTOTransform;
+    private readonly branchDTOTransform: BranchTransactionDTOTransformer,
     private readonly tenancyContext: TenancyContext,
   ) {}
 
@@ -50,7 +53,6 @@ export class ExpenseDTOTransformer {
    */
   private expenseDTOToModel(
     expenseDTO: IExpenseCreateDTO | IExpenseEditDTO,
-    // user?: ISystemUser
   ): Expense {
     const landedCostAmount = this.getExpenseLandedCostAmount(expenseDTO);
     const totalAmount = this.getExpenseCategoriesTotal(expenseDTO.categories);
@@ -72,10 +74,9 @@ export class ExpenseDTOTransformer {
           }
         : {}),
     };
-    return initialDTO;
-    // return R.compose(this.branchDTOTransform.transformDTO<IExpense>(tenantId))(
-    // initialDTO
-    // );
+    return R.compose(this.branchDTOTransform.transformDTO<Expense>)(
+      initialDTO,
+    ) as Expense;
   }
 
   /**

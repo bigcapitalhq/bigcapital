@@ -8,6 +8,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { Account } from '../Accounts/models/Account.model';
 import { AccountRepository } from '../Accounts/repositories/Account.repository';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Injectable()
 export class LedegrAccountsStorage {
@@ -16,10 +17,12 @@ export class LedegrAccountsStorage {
    * @param {AccountRepository} accountRepository -
    */
   constructor(
+    private tenancyContext: TenancyContext,
+
     @Inject(Account.name)
     private accountModel: typeof Account,
 
-    @Inject(AccountRepository.name)
+    @Inject(AccountRepository)
     private accountRepository: AccountRepository,
   ) {}
 
@@ -43,7 +46,7 @@ export class LedegrAccountsStorage {
   };
 
   /**
-   *
+   * Finds the dependant accounts ids.
    * @param {number[]} accountsIds
    * @returns {number[]}
    */
@@ -60,9 +63,9 @@ export class LedegrAccountsStorage {
 
   /**
    * Atomic mutation for accounts balances.
-   * @param   {number} tenantId
-   * @param   {ILedger} ledger
-   * @param   {Knex.Transaction} trx -
+   * @param {number} tenantId
+   * @param {ILedger} ledger
+   * @param {Knex.Transaction} trx -
    * @returns {Promise<void>}
    */
   public saveAccountsBalance = async (
@@ -95,9 +98,9 @@ export class LedegrAccountsStorage {
   private saveAccountBalanceTask = async (
     task: ISaveAccountsBalanceQueuePayload,
   ): Promise<void> => {
-    const { tenantId, ledger, accountId, trx } = task;
+    const { ledger, accountId, trx } = task;
 
-    await this.saveAccountBalanceFromLedger(tenantId, ledger, accountId, trx);
+    await this.saveAccountBalanceFromLedger(ledger, accountId, trx);
   };
 
   /**
@@ -109,7 +112,6 @@ export class LedegrAccountsStorage {
    * @returns {Promise<void>}
    */
   private saveAccountBalanceFromLedger = async (
-    tenantId: number,
     ledger: ILedger,
     accountId: number,
     trx?: Knex.Transaction,
@@ -120,10 +122,11 @@ export class LedegrAccountsStorage {
     const accountLedger = ledger.whereAccountId(accountId);
 
     // Retrieves the given tenant metadata.
-    const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
+    const tenant = await this.tenancyContext.getTenant(true);
 
     // Detarmines whether the account has foreign currency.
-    const isAccountForeign = account.currencyCode !== tenantMeta.baseCurrency;
+    const isAccountForeign =
+      account.currencyCode !== tenant.metadata?.baseCurrency;
 
     // Calculates the closing foreign balance by the given currency if account was has
     // foreign currency otherwise get closing balance.
@@ -133,7 +136,7 @@ export class LedegrAccountsStorage {
           .getForeignClosingBalance()
       : accountLedger.getClosingBalance();
 
-    await this.saveAccountBalance(tenantId, accountId, closingBalance, trx);
+    await this.saveAccountBalance(accountId, closingBalance, trx);
   };
 
   /**
@@ -156,11 +159,11 @@ export class LedegrAccountsStorage {
       .whereNull('amount')
       .patch({ amount: 0 });
 
-    await this.accountModel.changeAmount(
-      { id: accountId },
-      'amount',
-      change,
-      trx,
-    );
+    // await this.accountModel.changeAmount(
+    //   { id: accountId },
+    //   'amount',
+    //   change,
+    //   trx,
+    // );
   };
 }
