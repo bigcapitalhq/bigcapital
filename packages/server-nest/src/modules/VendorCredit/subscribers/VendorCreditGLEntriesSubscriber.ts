@@ -1,110 +1,83 @@
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import {
-//   IVendorCreditCreatedPayload,
-//   IVendorCreditDeletedPayload,
-//   IVendorCreditEditedPayload,
-//   IVendorCreditOpenedPayload,
-// } from '@/interfaces';
-// import VendorCreditGLEntries from '../commands/VendorCreditGLEntries';
+import { Injectable } from '@nestjs/common';
+import {
+  IVendorCreditCreatedPayload,
+  IVendorCreditDeletedPayload,
+  IVendorCreditEditedPayload,
+  IVendorCreditOpenedPayload,
+} from '../types/VendorCredit.types';
+import { OnEvent } from '@nestjs/event-emitter';
+import { VendorCreditGLEntries } from '../commands/VendorCreditGLEntries';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export default class VendorCreditGlEntriesSubscriber {
-//   @Inject()
-//   private vendorCreditGLEntries: VendorCreditGLEntries;
+@Injectable()
+export class VendorCreditGlEntriesSubscriber {
+  constructor(public readonly vendorCreditGLEntries: VendorCreditGLEntries) {}
 
-//   /***
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.vendorCredit.onCreated,
-//       this.writeGLEntriesOnceVendorCreditCreated
-//     );
-//     bus.subscribe(
-//       events.vendorCredit.onOpened,
-//       this.writeGLEntgriesOnceVendorCreditOpened
-//     );
-//     bus.subscribe(
-//       events.vendorCredit.onEdited,
-//       this.editGLEntriesOnceVendorCreditEdited
-//     );
-//     bus.subscribe(
-//       events.vendorCredit.onDeleted,
-//       this.revertGLEntriesOnceDeleted
-//     );
-//   }
+  /**
+   * Writes GL entries of vendor credit once the transaction created.
+   * @param {IVendorCreditCreatedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onCreated)
+  public async writeGLEntriesOnceVendorCreditCreated({
+    vendorCredit,
+    trx,
+  }: IVendorCreditCreatedPayload): Promise<void> {
+    // Can't continue if the vendor credit is not open yet.
+    if (!vendorCredit.isPublished) return;
 
-//   /**
-//    * Writes GL entries of vendor credit once the transaction created.
-//    * @param {IVendorCreditCreatedPayload} payload -
-//    */
-//   private writeGLEntriesOnceVendorCreditCreated = async ({
-//     tenantId,
-//     vendorCredit,
-//     trx,
-//   }: IVendorCreditCreatedPayload): Promise<void> => {
-//     // Can't continue if the vendor credit is not open yet.
-//     if (!vendorCredit.isPublished) return;
+    await this.vendorCreditGLEntries.writeVendorCreditGLEntries(
+      vendorCredit.id,
+      trx,
+    );
+  }
 
-//     await this.vendorCreditGLEntries.writeVendorCreditGLEntries(
-//       tenantId,
-//       vendorCredit.id,
-//       trx
-//     );
-//   };
+  /**
+   * Writes Gl entries of vendor credit once the transaction opened.
+   * @param {IVendorCreditOpenedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onOpened)
+  public async writeGLEntgriesOnceVendorCreditOpened({
+    vendorCreditId,
+    trx,
+  }: IVendorCreditOpenedPayload): Promise<void> {
+    await this.vendorCreditGLEntries.writeVendorCreditGLEntries(
+      vendorCreditId,
+      trx,
+    );
+  }
 
-//   /**
-//    * Writes Gl entries of vendor credit once the transaction opened.
-//    * @param {IVendorCreditOpenedPayload} payload -
-//    */
-//   private writeGLEntgriesOnceVendorCreditOpened = async ({
-//     tenantId,
-//     vendorCreditId,
-//     trx,
-//   }: IVendorCreditOpenedPayload) => {
-//     await this.vendorCreditGLEntries.writeVendorCreditGLEntries(
-//       tenantId,
-//       vendorCreditId,
-//       trx
-//     );
-//   };
+  /**
+   * Edits associated GL entries once vendor credit edited.
+   * @param {IVendorCreditEditedPayload} payload
+   */
+  @OnEvent(events.vendorCredit.onEdited)
+  public async editGLEntriesOnceVendorCreditEdited({
+    vendorCredit,
+    trx,
+  }: IVendorCreditEditedPayload): Promise<void> {
+    // Can't continue if the vendor credit is not open yet.
+    if (!vendorCredit.isPublished) return;
 
-//   /**
-//    * Edits associated GL entries once vendor credit edited.
-//    * @param {IVendorCreditEditedPayload} payload
-//    */
-//   private editGLEntriesOnceVendorCreditEdited = async ({
-//     tenantId,
-//     vendorCreditId,
-//     vendorCredit,
-//     trx,
-//   }: IVendorCreditEditedPayload) => {
-//     // Can't continue if the vendor credit is not open yet.
-//     if (!vendorCredit.isPublished) return;
+    await this.vendorCreditGLEntries.rewriteVendorCreditGLEntries(
+      vendorCredit.id,
+      trx,
+    );
+  }
 
-//     await this.vendorCreditGLEntries.rewriteVendorCreditGLEntries(
-//       tenantId,
-//       vendorCreditId,
-//       trx
-//     );
-//   };
+  /**
+   * Reverts the GL entries once vendor credit deleted.
+   * @param {IVendorCreditDeletedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onDeleted)
+  public async revertGLEntriesOnceDeleted({
+    vendorCreditId,
+    oldVendorCredit,
+  }: IVendorCreditDeletedPayload): Promise<void> {
+    // Can't continue of the vendor credit is not open yet.
+    if (!oldVendorCredit.isPublished) return;
 
-//   /**
-//    * Reverts the GL entries once vendor credit deleted.
-//    * @param {IVendorCreditDeletedPayload} payload -
-//    */
-//   private revertGLEntriesOnceDeleted = async ({
-//     vendorCreditId,
-//     tenantId,
-//     oldVendorCredit,
-//   }: IVendorCreditDeletedPayload): Promise<void> => {
-//     // Can't continue of the vendor credit is not open yet.
-//     if (!oldVendorCredit.isPublished) return;
-
-//     await this.vendorCreditGLEntries.revertVendorCreditGLEntries(
-//       tenantId,
-//       vendorCreditId
-//     );
-//   };
-// }
+    await this.vendorCreditGLEntries.revertVendorCreditGLEntries(
+      vendorCreditId,
+    );
+  }
+}

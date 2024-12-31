@@ -6,6 +6,9 @@ import { ILedger } from '@/modules/Ledger/types/Ledger.types';
 
 @Injectable()
 export class ExpenseGLEntriesService {
+  /**
+   * @param {typeof Expense} expense - Expense model.
+   */
   constructor(
     @Inject(Expense.name)
     private readonly expense: typeof Expense,
@@ -33,7 +36,7 @@ export class ExpenseGLEntriesService {
 
   /**
    * Retrieves the given expense ledger.
-   * @param {IExpense} expense
+   * @param {Expense} expense - Expense model.
    * @returns {ILedger}
    */
   public getExpenseLedger = (expense: Expense): ILedger => {

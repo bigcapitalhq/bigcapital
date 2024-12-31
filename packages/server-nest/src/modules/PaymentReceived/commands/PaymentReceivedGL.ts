@@ -18,16 +18,31 @@ export class PaymentReceivedGL {
     this.paymentReceived = paymentReceived;
   }
 
+  /**
+   * Sets the A/R account ID.
+   * @param {number} ARAccountId - A/R account ID.
+   * @returns {PaymentReceivedGL}
+   */
   setARAccountId(ARAccountId: number) {
     this.ARAccountId = ARAccountId;
     return this;
   }
 
+  /**
+   * Sets the exchange gain/loss account ID.
+   * @param {number} exchangeGainOrLossAccountId - Exchange gain/loss account ID.
+   * @returns {PaymentReceivedGL}
+   */
   setExchangeGainOrLossAccountId(exchangeGainOrLossAccountId: number) {
     this.exchangeGainOrLossAccountId = exchangeGainOrLossAccountId;
     return this;
   }
 
+  /**
+   * Sets the base currency code.
+   * @param {string} baseCurrencyCode - Base currency code.
+   * @returns {PaymentReceivedGL}
+   */
   setBaseCurrencyCode(baseCurrencyCode: string) {
     this.baseCurrencyCode = baseCurrencyCode;
     return this;
@@ -177,5 +192,5 @@ export class PaymentReceivedGL {
    */
   public getLedger = (): Ledger => {
     return new Ledger(this.GLEntries());
-  };  
+  };
 }

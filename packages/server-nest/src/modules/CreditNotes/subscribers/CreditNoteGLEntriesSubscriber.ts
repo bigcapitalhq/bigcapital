@@ -4,13 +4,13 @@ import {
   ICreditNoteEditedPayload,
   ICreditNoteOpenedPayload,
 } from '../types/CreditNotes.types';
-import CreditNoteGLEntries from '../commands/CreditNoteGLEntries';
+import { CreditNoteGLEntries } from '../commands/CreditNoteGLEntries';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
 
 @Injectable()
-export default class CreditNoteGLEntriesSubscriber {
+export class CreditNoteGLEntriesSubscriber {
   constructor(private readonly creditNoteGLEntries: CreditNoteGLEntries) {}
 
   /**

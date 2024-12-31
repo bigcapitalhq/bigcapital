@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { PaymentReceivesController } from './PaymentsReceived.controller';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
 import { CreatePaymentReceivedService } from './commands/CreatePaymentReceived.serivce';
@@ -8,7 +7,7 @@ import { EditPaymentReceivedService } from './commands/EditPaymentReceived.servi
 import { GetPaymentReceivedStateService } from './queries/GetPaymentReceivedState.service';
 import { GetPaymentReceivedService } from './queries/GetPaymentReceived.service';
 import { GetPaymentReceivedInvoices } from './queries/GetPaymentReceivedInvoices.service';
-import GetPaymentReceivedPdf from './queries/GetPaymentReceivedPdf.service';
+import { GetPaymentReceivedPdfService } from './queries/GetPaymentReceivedPdf.service';
 import { PaymentReceivedValidators } from './commands/PaymentReceivedValidators.service';
 import { PaymentReceiveDTOTransformer } from './commands/PaymentReceivedDTOTransformer';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
@@ -20,6 +19,11 @@ import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
+import { PaymentReceivedAutoIncrementSubscriber } from './subscribers/PaymentReceivedAutoIncrementSubscriber';
+import { PaymentReceivedGLEntriesSubscriber } from './subscribers/PaymentReceivedGLEntriesSubscriber';
+import { PaymentReceivedGLEntries } from './commands/PaymentReceivedGLEntries';
+import { PaymentReceivedSyncInvoicesSubscriber } from './subscribers/PaymentReceivedSyncInvoices';
+import { PaymentReceivedInvoiceSync } from './commands/PaymentReceivedInvoiceSync.service';
 
 @Module({
   controllers: [PaymentReceivesController],
@@ -31,12 +35,17 @@ import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementO
     GetPaymentReceivedStateService,
     GetPaymentReceivedService,
     GetPaymentReceivedInvoices,
-    GetPaymentReceivedPdf,
+    GetPaymentReceivedPdfService,
     PaymentReceivedValidators,
     PaymentReceiveDTOTransformer,
     PaymentReceivedBrandingTemplate,
     PaymentReceivedIncrement,
+    PaymentReceivedGLEntries,
     TenancyContext,
+    PaymentReceivedInvoiceSync,
+    PaymentReceivedAutoIncrementSubscriber,
+    PaymentReceivedGLEntriesSubscriber,
+    PaymentReceivedSyncInvoicesSubscriber,
   ],
   exports: [PaymentReceivesApplication],
   imports: [
@@ -45,7 +54,7 @@ import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementO
     BranchesModule,
     WarehousesModule,
     PdfTemplatesModule,
-    AutoIncrementOrdersModule
+    AutoIncrementOrdersModule,
   ],
 })
 export class PaymentsReceivedModule {}

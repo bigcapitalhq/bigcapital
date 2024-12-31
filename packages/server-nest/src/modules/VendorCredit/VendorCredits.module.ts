@@ -16,6 +16,8 @@ import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { VendorCreditsApplicationService } from './VendorCreditsApplication.service';
 import { OpenVendorCreditService } from './commands/OpenVendorCredit.service';
+import { VendorCreditGlEntriesSubscriber } from './subscribers/VendorCreditGLEntriesSubscriber';
+import { VendorCreditGLEntries } from './commands/VendorCreditGLEntries';
 
 @Module({
   imports: [
@@ -36,7 +38,9 @@ import { OpenVendorCreditService } from './commands/OpenVendorCredit.service';
     GetRefundVendorCreditService,
     GetVendorCreditService,
     VendorCreditsApplicationService,
-    OpenVendorCreditService
+    OpenVendorCreditService,
+    VendorCreditGLEntries,
+    VendorCreditGlEntriesSubscriber,
   ],
   exports: [
     CreateVendorCreditService,

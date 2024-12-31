@@ -62,7 +62,7 @@ export interface ILedgerEntry {
   taxRate?: number;
 
   entryId?: number;
-  createdAt?: Date;
+  createdAt?: Date | string;
 
   costable?: boolean;
 }

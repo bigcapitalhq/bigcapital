@@ -12,7 +12,7 @@ import { events } from '@/common/events/events';
 @Injectable()
 export class ExpensesWriteGLSubscriber {
   /**
-   * @param {ExpenseGLEntriesStorageService} expenseGLEntries -
+   * @param {ExpenseGLEntriesStorageService} expenseGLEntries - Expense GL entries storage service.
    */
   constructor(
     private readonly expenseGLEntries: ExpenseGLEntriesStorageService,

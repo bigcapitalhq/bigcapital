@@ -18,8 +18,8 @@ import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectab
 import { GetCreditNote } from './queries/GetCreditNote.service';
 import { CreditNoteBrandingTemplate } from './queries/CreditNoteBrandingTemplate.service';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
-import CreditNoteGLEntries from './commands/CreditNoteGLEntries';
-import CreditNoteGLEntriesSubscriber from './subscribers/CreditNoteGLEntriesSubscriber';
+import { CreditNoteGLEntries } from './commands/CreditNoteGLEntries';
+import { CreditNoteGLEntriesSubscriber } from './subscribers/CreditNoteGLEntriesSubscriber';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import CreditNoteGLEntriesSubscriber from './subscribers/CreditNoteGLEntriesSubs
     PdfTemplatesModule,
     ChromiumlyTenancyModule,
     TemplateInjectableModule,
-    AutoIncrementOrdersModule
+    AutoIncrementOrdersModule,
   ],
   providers: [
     CreateCreditNoteService,
@@ -44,12 +44,12 @@ import CreditNoteGLEntriesSubscriber from './subscribers/CreditNoteGLEntriesSubs
     CreditNoteApplication,
     CreditNoteBrandingTemplate,
     CreditNoteGLEntries,
-    CreditNoteGLEntriesSubscriber
+    CreditNoteGLEntriesSubscriber,
   ],
   exports: [
     CreateCreditNoteService,
     GetCreditNote,
-    CommandCreditNoteDTOTransform, 
+    CommandCreditNoteDTOTransform,
     EditCreditNoteService,
     OpenCreditNoteService,
     DeleteCreditNoteService,
@@ -57,7 +57,7 @@ import CreditNoteGLEntriesSubscriber from './subscribers/CreditNoteGLEntriesSubs
     CreditNoteAutoIncrementService,
     GetCreditNoteState,
     CreditNoteApplication,
-    CreditNoteBrandingTemplate
+    CreditNoteBrandingTemplate,
   ],
   controllers: [CreditNotesController],
 })

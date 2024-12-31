@@ -12,7 +12,7 @@ import { PaymentReceivedPdfTemplateAttributes } from '../types/PaymentReceived.t
 import { events } from '@/common/events/events';
 
 @Injectable()
-export default class GetPaymentReceivedPdf {
+export class GetPaymentReceivedPdfService {
   constructor(
     private chromiumlyTenancy: ChromiumlyTenancy,
     private templateInjectable: TemplateInjectable,

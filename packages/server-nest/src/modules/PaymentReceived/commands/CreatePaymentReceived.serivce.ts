@@ -33,7 +33,7 @@ export class CreatePaymentReceivedService {
   /**
    * Creates a new payment receive and store it to the storage
    * with associated invoices payment and journal transactions.
-   * @param {IPaymentReceivedCreateDTO} paymentReceiveDTO
+   * @param {IPaymentReceivedCreateDTO} paymentReceiveDTO - Payment receive create DTO.
    * @param {Knex.Transaction} trx - Database transaction.
    */
   public async createPaymentReceived(

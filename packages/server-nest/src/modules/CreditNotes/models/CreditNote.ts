@@ -24,6 +24,7 @@ export class CreditNote extends BaseModel {
   public invoicesAmount: number;
   public creditNoteDate: Date;
   public creditNoteNumber: string;
+  public referenceNo: string;
   public currencyCode: string;
   public customerId: number;
 
