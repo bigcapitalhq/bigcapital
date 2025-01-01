@@ -18,6 +18,8 @@ import { VendorCreditsApplicationService } from './VendorCreditsApplication.serv
 import { OpenVendorCreditService } from './commands/OpenVendorCredit.service';
 import { VendorCreditGlEntriesSubscriber } from './subscribers/VendorCreditGLEntriesSubscriber';
 import { VendorCreditGLEntries } from './commands/VendorCreditGLEntries';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { VendorCreditGLEntries } from './commands/VendorCreditGLEntries';
     AutoIncrementOrdersModule,
     BranchesModule,
     WarehousesModule,
+    LedgerModule,
+    AccountsModule
   ],
   providers: [
     CreateVendorCreditService,

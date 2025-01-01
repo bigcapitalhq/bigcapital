@@ -4,7 +4,7 @@ import { ItemEstimateTransactionTransformer } from './ItemEstimatesTransaction.t
 import { ItemBillTransactionTransformer } from './ItemBillsTransactions.transformer';
 import { ItemReceiptTransactionTransformer } from './ItemReceiptsTransactions.transformer';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
-import { ItemEntry } from './models/ItemEntry';
+import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
 
 @Injectable()
 export class ItemTransactionsService {

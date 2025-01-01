@@ -20,6 +20,8 @@ import { CreditNoteBrandingTemplate } from './queries/CreditNoteBrandingTemplate
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
 import { CreditNoteGLEntries } from './commands/CreditNoteGLEntries';
 import { CreditNoteGLEntriesSubscriber } from './subscribers/CreditNoteGLEntriesSubscriber';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { CreditNoteGLEntriesSubscriber } from './subscribers/CreditNoteGLEntries
     ChromiumlyTenancyModule,
     TemplateInjectableModule,
     AutoIncrementOrdersModule,
+    LedgerModule,
+    AccountsModule
   ],
   providers: [
     CreateCreditNoteService,

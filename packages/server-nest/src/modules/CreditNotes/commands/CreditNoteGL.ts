@@ -2,7 +2,7 @@ import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { CreditNote } from '../models/CreditNote';
 import { AccountNormal } from '@/interfaces/Account';
 import { Ledger } from '@/modules/Ledger/Ledger';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 
 export class CreditNoteGL {
   creditNoteModel: CreditNote;
@@ -111,7 +111,6 @@ export class CreditNoteGL {
       note: entry.description,
       index: index + 2,
       itemId: entry.itemId,
-      itemQuantity: entry.quantity,
       accountNormal: AccountNormal.CREDIT,
     };
   }

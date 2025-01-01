@@ -1,8 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { defaultPaymentReceivedPdfTemplateAttributes } from '../constants';
 import { GetPdfTemplateService } from '../../PdfTemplate/queries/GetPdfTemplate.service';
 import { GetOrganizationBrandingAttributesService } from '../../PdfTemplate/queries/GetOrganizationBrandingAttributes.service';
-import { PdfTemplateModel } from '../../PdfTemplate/models/PdfTemplate';
 import { mergePdfTemplateWithDefaultAttributes } from '../../SaleInvoices/utils';
 
 @Injectable()
@@ -10,9 +9,6 @@ export class PaymentReceivedBrandingTemplate {
   constructor(
     private readonly getPdfTemplateService: GetPdfTemplateService,
     private readonly getOrgBrandingAttributes: GetOrganizationBrandingAttributesService,
-
-    @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplateModel: typeof PdfTemplateModel,
   ) {}
 
   /**

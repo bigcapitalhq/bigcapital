@@ -1,4 +1,5 @@
 import { Model, mixin } from 'objection';
+import { defaultTo } from 'ramda';
 // import TenantModel from 'models/TenantModel';
 // import ModelSetting from './ModelSetting';
 // import SaleReceiptSettings from './SaleReceipt.Settings';
@@ -6,11 +7,12 @@ import { Model, mixin } from 'objection';
 // import { DEFAULT_VIEWS } from '@/services/Sales/Receipts/constants';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { Branch } from '@/modules/Branches/models/Branch.model';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
+import { DiscountType } from '@/common/types/Discount';
 
 export class SaleReceipt extends BaseModel {
   amount: number;
@@ -26,8 +28,14 @@ export class SaleReceipt extends BaseModel {
   statement: string;
   closedAt: Date | string;
 
+  discountType: DiscountType;
+  discount: number;
+  adjustment: number;
+
   branchId: number;
   warehouseId: number;
+
+  userId: number;
 
   createdAt: Date;
   updatedAt: Date | null;
@@ -37,7 +45,7 @@ export class SaleReceipt extends BaseModel {
   transactions!: AccountTransaction[];
   branch!: Branch;
   warehouse!: Warehouse;
- 
+
   /**
    * Table name
    */
@@ -56,7 +64,28 @@ export class SaleReceipt extends BaseModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['localAmount', 'isClosed', 'isDraft'];
+    return [
+      'localAmount',
+
+      'subtotal',
+      'subtotalLocal',
+
+      'total',
+      'totalLocal',
+
+      'adjustment',
+      'adjustmentLocal',
+
+      'discountAmount',
+      'discountAmountLocal',
+      'discountPercentage',
+
+      'paid',
+      'paidLocal',
+
+      'isClosed',
+      'isDraft',
+    ];
   }
 
   /**
@@ -65,6 +94,90 @@ export class SaleReceipt extends BaseModel {
    */
   get localAmount() {
     return this.amount * this.exchangeRate;
+  }
+
+  /**
+   * Receipt subtotal.
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.amount;
+  }
+
+  /**
+   * Receipt subtotal in local currency.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.localAmount;
+  }
+
+  /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount amount in local currency.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Receipt total.
+   * @returns {number}
+   */
+  get total() {
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
+
+    return this.subtotal - this.discountAmount + adjustmentAmount;
+  }
+
+  /**
+   * Receipt total in local currency.
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number}
+   */
+  get adjustmentLocal() {
+    return this.adjustment * this.exchangeRate;
+  }
+
+  /**
+   * Receipt paid amount.
+   * @returns {number}
+   */
+  get paid() {
+    return this.total;
+  }
+
+  /**
+   * Receipt paid amount in local currency.
+   * @returns {number}
+   */
+  get paidLocal() {
+    return this.paid * this.exchangeRate;
   }
 
   /**
@@ -132,8 +245,12 @@ export class SaleReceipt extends BaseModel {
   static get relationMappings() {
     const { Customer } = require('../../Customers/models/Customer');
     const { Account } = require('../../Accounts/models/Account.model');
-    const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
-    const { ItemEntry } = require('../../TransactionItemEntry/models/ItemEntry');
+    const {
+      AccountTransaction,
+    } = require('../../Accounts/models/AccountTransaction.model');
+    const {
+      ItemEntry,
+    } = require('../../TransactionItemEntry/models/ItemEntry');
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');

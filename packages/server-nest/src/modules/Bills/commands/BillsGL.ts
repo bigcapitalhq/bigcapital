@@ -1,6 +1,6 @@
 import { sumBy } from 'lodash';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Bill } from '../models/Bill';
 import { AccountNormal } from '@/modules/Accounts/Accounts.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
@@ -85,7 +85,6 @@ export class BillGL {
       index: index + 1,
       indexGroup: 10,
       itemId: entry.itemId,
-      itemQuantity: entry.quantity,
       accountNormal: AccountNormal.DEBIT,
     };
   }

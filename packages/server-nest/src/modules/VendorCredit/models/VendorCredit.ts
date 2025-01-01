@@ -10,7 +10,7 @@ import { Model, raw, mixin } from 'objection';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { Branch } from '@/modules/Branches/models/Branch.model';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { BaseModel } from '@/models/Model';
 import { DiscountType } from '@/common/types/Discount';
 

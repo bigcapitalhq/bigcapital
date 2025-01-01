@@ -9,7 +9,7 @@ import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { SaleReceiptValidators } from './SaleReceiptValidators.service';
 import { BrandingTemplateDTOTransformer } from '@/modules/PdfTemplate/BrandingTemplateDTOTransformer';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { formatDateFields } from '@/utils/format-date-fields';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { SaleReceipt } from '../models/SaleReceipt';

@@ -18,9 +18,12 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { BillsController } from './Bills.controller';
 import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
 import { BillGLEntriesSubscriber } from './subscribers/BillGLEntriesSubscriber';
+import { BillGLEntries } from './commands/BillsGLEntries';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
 
 @Module({
-  imports: [BillLandedCostsModule],
+  imports: [BillLandedCostsModule, LedgerModule, AccountsModule],
   providers: [
     TenancyContext,
     BillsApplication,
@@ -37,8 +40,9 @@ import { BillGLEntriesSubscriber } from './subscribers/BillGLEntriesSubscriber';
     DeleteBill,
     BillDTOTransformer,
     BillsValidators,
+    BillGLEntries,
     ItemsEntriesService,
-    BillGLEntriesSubscriber
+    BillGLEntriesSubscriber,
   ],
   controllers: [BillsController],
 })

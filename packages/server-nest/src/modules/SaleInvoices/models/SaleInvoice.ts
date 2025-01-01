@@ -1,7 +1,9 @@
-import { mixin, Model, raw } from 'objection';
-import { castArray, takeWhile } from 'lodash';
+import { Model, raw } from 'objection';
+import { castArray } from 'lodash';
 import * as moment from 'moment';
+import * as R from 'ramda';
 import { MomentInput, unitOfTime } from 'moment';
+import { defaultTo } from 'ramda';
 // import TenantModel from 'models/TenantModel';
 // import ModelSetting from './ModelSetting';
 // import SaleInvoiceMeta from './SaleInvoice.Settings';
@@ -10,8 +12,9 @@ import { MomentInput, unitOfTime } from 'moment';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
 import { TaxRateTransaction } from '@/modules/TaxRates/models/TaxRateTransaction.model';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
+import { DiscountType } from '@/common/types/Discount';
 
 export class SaleInvoice extends BaseModel {
   public taxAmountWithheld: number;
@@ -33,6 +36,10 @@ export class SaleInvoice extends BaseModel {
   public writtenoffExpenseAccountId: number;
   public writtenoffAmount: number;
   public writtenoffAt: Date;
+
+  public discountType: DiscountType;
+  public discount: number;
+  public adjustment: number;
 
   public customerId: number;
   public invoiceNo: string;
@@ -91,10 +98,15 @@ export class SaleInvoice extends BaseModel {
       'subtotalExludingTax',
 
       'taxAmountWithheldLocal',
+      'discountAmount',
+      'discountAmountLocal',
+      'discountPercentage',
+
       'total',
       'totalLocal',
 
       'writtenoffAmountLocal',
+      'adjustmentLocal',
     ];
   }
 
@@ -150,13 +162,51 @@ export class SaleInvoice extends BaseModel {
   }
 
   /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Local discount amount.
+   * @returns {number | null}
+   */
+  get discountAmountLocal() {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number | null}
+   */
+  get adjustmentLocal(): number | null {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
+  }
+
+  /**
    * Invoice total. (Tax included)
    * @returns {number}
    */
   get total() {
-    return this.isInclusiveTax
-      ? this.subtotal
-      : this.subtotal + this.taxAmountWithheld;
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
+
+    return R.compose(
+      R.add(adjustmentAmount),
+      R.subtract(R.__, this.discountAmount),
+      R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld)),
+    )(this.subtotal);
   }
 
   /**
@@ -445,7 +495,9 @@ export class SaleInvoice extends BaseModel {
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
     const { Account } = require('../../Accounts/models/Account.model');
-    const { TaxRateTransaction } = require('../../TaxRates/models/TaxRateTransaction.model');
+    const {
+      TaxRateTransaction,
+    } = require('../../TaxRates/models/TaxRateTransaction.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
     const {

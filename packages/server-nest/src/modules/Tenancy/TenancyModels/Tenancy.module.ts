@@ -4,7 +4,7 @@ import { TENANCY_DB_CONNECTION } from '../TenancyDB/TenancyDB.constants';
 
 import { Item } from '../../../modules/Items/models/Item';
 import { Account } from '@/modules/Accounts/models/Account.model';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { Expense } from '@/modules/Expenses/models/Expense.model';
 import { ExpenseCategory } from '@/modules/Expenses/models/ExpenseCategory.model';

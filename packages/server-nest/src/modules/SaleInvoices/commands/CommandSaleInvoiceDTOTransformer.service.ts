@@ -12,7 +12,7 @@ import { Customer } from '@/modules/Customers/models/Customer';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators.service';
 import { SaleInvoiceIncrement } from './SaleInvoiceIncrement.service';
 import { BrandingTemplateDTOTransformer } from '@/modules/PdfTemplate/BrandingTemplateDTOTransformer';

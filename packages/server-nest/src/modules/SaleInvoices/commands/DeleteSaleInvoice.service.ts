@@ -5,7 +5,7 @@ import {
   ISaleInvoiceDeletedPayload,
   ISaleInvoiceDeletingPayload,
 } from '../SaleInvoice.types';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { UnlinkConvertedSaleEstimate } from '@/modules/SaleEstimates/commands/UnlinkConvertedSaleEstimate.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';

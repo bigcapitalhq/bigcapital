@@ -4,7 +4,7 @@ import { AccountNormal } from '@/modules/Accounts/Accounts.types';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { SaleReceipt } from '../models/SaleReceipt';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 
 export class SaleReceiptGL {
   private saleReceipt: SaleReceipt;
@@ -82,7 +82,7 @@ export class SaleReceiptGL {
         note: entry.description,
         index: index + 2,
         itemId: entry.itemId,
-        itemQuantity: entry.quantity,
+        // itemQuantity: entry.quantity,
         accountNormal: AccountNormal.CREDIT,
       };
     },

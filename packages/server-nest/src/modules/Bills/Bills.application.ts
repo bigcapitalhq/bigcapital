@@ -19,10 +19,10 @@ export class BillsApplication {
     private createBillService: CreateBill,
     private editBillService: EditBillService,
     private getBillService: GetBill,
-    // private getBillsService: GetBills,
     private deleteBillService: DeleteBill,
     private getDueBillsService: GetDueBills,
     private openBillService: OpenBillService,
+    // private getBillsService: GetBills,
     // private getBillPaymentsService: GetBillPayments,
   ) {}
 

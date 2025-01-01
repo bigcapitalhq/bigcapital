@@ -6,7 +6,7 @@ import * as composeAsync from 'async/compose';
 import { formatDateFields } from '@/utils/format-date-fields';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Item } from '@/modules/Items/models/Item';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { ItemEntriesTaxTransactions } from '@/modules/TaxRates/ItemEntriesTaxTransactions.service';

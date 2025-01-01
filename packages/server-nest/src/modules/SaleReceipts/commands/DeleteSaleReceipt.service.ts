@@ -8,7 +8,7 @@ import { SaleReceiptValidators } from './SaleReceiptValidators.service';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { events } from '@/common/events/events';
 
 @Injectable()

@@ -14,7 +14,7 @@ import { DeletePaymentReceivedService } from './commands/DeletePaymentReceived.s
 import { GetPaymentReceivedService } from './queries/GetPaymentReceived.service';
 import { GetPaymentReceivedInvoices } from './queries/GetPaymentReceivedInvoices.service';
 // import { PaymentReceiveNotifyBySms } from './PaymentReceivedSmsNotify';
-import GetPaymentReceivedPdf from './queries/GetPaymentReceivedPdf.service';
+import { GetPaymentReceivedPdfService } from './queries/GetPaymentReceivedPdf.service';
 // import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
 import { GetPaymentReceivedStateService } from './queries/GetPaymentReceivedState.service';
 
@@ -29,7 +29,7 @@ export class PaymentReceivesApplication {
     private getPaymentReceiveInvoicesService: GetPaymentReceivedInvoices,
     // private paymentSmsNotify: PaymentReceiveNotifyBySms,
     // private paymentMailNotify: SendPaymentReceiveMailNotification,
-    private getPaymentReceivePdfService: GetPaymentReceivedPdf,
+    private getPaymentReceivePdfService: GetPaymentReceivedPdfService,
     private getPaymentReceivedStateService: GetPaymentReceivedStateService,
   ) {}
 

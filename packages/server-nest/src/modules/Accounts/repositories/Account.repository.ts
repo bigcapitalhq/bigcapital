@@ -6,7 +6,11 @@ import { Account } from '../models/Account.model';
 import { I18nService } from 'nestjs-i18n';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import {
+  DiscountExpenseAccount,
+  OtherChargesAccount,
+  OtherExpensesAccount,
   PrepardExpenses,
+  PurchaseDiscountAccount,
   StripeClearingAccount,
   TaxPayableAccount,
   UnearnedRevenueAccount,
@@ -371,7 +375,6 @@ export class AccountRepository extends TenantRepository {
       currencyCode: tenantMeta.baseCurrency,
       ...extraAttrs,
     };
-
     let result = await this.model
       .query(trx)
       .findOne({ slug: OtherExpensesAccount.slug, ..._extraAttrs });

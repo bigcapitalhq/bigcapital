@@ -24,6 +24,8 @@ import { PaymentReceivedGLEntriesSubscriber } from './subscribers/PaymentReceive
 import { PaymentReceivedGLEntries } from './commands/PaymentReceivedGLEntries';
 import { PaymentReceivedSyncInvoicesSubscriber } from './subscribers/PaymentReceivedSyncInvoices';
 import { PaymentReceivedInvoiceSync } from './commands/PaymentReceivedInvoiceSync.service';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
 
 @Module({
   controllers: [PaymentReceivesController],
@@ -55,6 +57,8 @@ import { PaymentReceivedInvoiceSync } from './commands/PaymentReceivedInvoiceSyn
     WarehousesModule,
     PdfTemplatesModule,
     AutoIncrementOrdersModule,
+    LedgerModule,
+    AccountsModule
   ],
 })
 export class PaymentsReceivedModule {}

@@ -22,6 +22,8 @@ import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementO
 import { SaleReceiptsController } from './SaleReceipts.controller';
 import { SaleReceiptGLEntriesSubscriber } from './subscribers/SaleReceiptGLEntriesSubscriber';
 import { SaleReceiptGLEntries } from './ledger/SaleReceiptGLEntries';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -32,7 +34,9 @@ import { SaleReceiptGLEntries } from './ledger/SaleReceiptGLEntries';
     BranchesModule,
     WarehousesModule,
     PdfTemplatesModule,
-    AutoIncrementOrdersModule
+    AutoIncrementOrdersModule,
+    LedgerModule,
+    AccountsModule
   ],
   providers: [
     TenancyContext,

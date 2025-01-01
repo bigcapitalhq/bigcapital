@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { keyBy, sumBy } from 'lodash';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { TaxRateModel } from './models/TaxRate.model';
 
 @Injectable()

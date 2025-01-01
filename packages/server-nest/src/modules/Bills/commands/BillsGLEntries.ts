@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { Bill } from '../models/Bill';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { BillGL } from './BillsGL';
 
 @Injectable()
@@ -15,6 +15,8 @@ export class BillGLEntries {
   constructor(
     private readonly ledgerStorage: LedgerStorageService,
     private readonly accountRepository: AccountRepository,
+
+    @Inject(Bill.name)
     private readonly billModel: typeof Bill,
   ) {}
 

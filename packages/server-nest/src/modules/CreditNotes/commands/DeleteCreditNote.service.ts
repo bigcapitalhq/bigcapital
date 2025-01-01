@@ -12,7 +12,7 @@ import {
 } from '../../CreditNoteRefunds/models/RefundCreditNote';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { events } from '@/common/events/events';
 

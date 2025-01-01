@@ -1,4 +1,4 @@
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { VendorCredit } from '../models/VendorCredit';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { AccountNormal } from '@/interfaces/Account';
@@ -96,7 +96,7 @@ export class VendorCreditGL {
       credit: totalLocal,
       index: index + 2,
       itemId: entry.itemId,
-      itemQuantity: entry.quantity,
+      // itemQuantity: entry.quantity,
       accountId:
         'inventory' === entry.item.type
           ? entry.item.inventoryAccountId
@@ -156,6 +156,10 @@ export class VendorCreditGL {
     return [payableEntry, discountEntry, adjustmentEntry, ...itemsEntries];
   }
 
+  /**
+   * Retrieves the vendor credit ledger.
+   * @returns {Ledger}
+   */
   public getVendorCreditLedger(): Ledger {
     const entries = this.getVendorCreditGLEntries();
     return new Ledger(entries);

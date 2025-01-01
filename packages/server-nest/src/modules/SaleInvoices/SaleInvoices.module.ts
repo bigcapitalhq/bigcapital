@@ -33,6 +33,8 @@ import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 import { SaleInvoicesController } from './SaleInvoices.controller';
 import { InvoiceGLEntriesSubscriber } from './subscribers/InvoiceGLEntriesSubscriber';
 import { SaleInvoiceGLEntries } from './ledger/InvoiceGLEntries';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { SaleInvoiceGLEntries } from './ledger/InvoiceGLEntries';
     BranchesModule,
     WarehousesModule,
     TaxRatesModule,
+    LedgerModule,
+    AccountsModule
   ],
   controllers: [SaleInvoicesController],
   providers: [

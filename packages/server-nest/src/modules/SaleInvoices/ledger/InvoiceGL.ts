@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import { ILedger } from '@/modules/Ledger/types/Ledger.types';
 import { AccountNormal } from '@/modules/Accounts/Accounts.types';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { SaleInvoice } from '../models/SaleInvoice';
 
@@ -116,7 +116,6 @@ export class InvoiceGL {
         note: entry.description,
         index: index + 2,
         itemId: entry.itemId,
-        itemQuantity: entry.quantity,
         accountNormal: AccountNormal.CREDIT,
         taxRateId: entry.taxRateId,
         taxRate: entry.taxRate,
@@ -149,7 +148,7 @@ export class InvoiceGL {
    * Retrieves the invoice discount GL entry.
    * @returns {ILedgerEntry}
    */
-  private getInvoiceDiscountEntry = (): ILedgerEntry => {
+  private get invoiceDiscountEntry(): ILedgerEntry {
     const commonEntry = this.invoiceGLCommonEntry;
 
     return {
@@ -165,7 +164,7 @@ export class InvoiceGL {
    * Retrieves the invoice adjustment GL entry.
    * @returns {ILedgerEntry}
    */
-  private getAdjustmentEntry = (): ILedgerEntry => {
+  private get adjustmentEntry(): ILedgerEntry {
     const commonEntry = this.invoiceGLCommonEntry;
     const adjustmentAmount = Math.abs(this.saleInvoice.adjustmentLocal);
 
@@ -184,24 +183,19 @@ export class InvoiceGL {
    * @returns {ILedgerEntry[]}
    */
   public getInvoiceGLEntries = (): ILedgerEntry[] => {
-    const receivableEntry = this.invoiceReceivableEntry;
     const creditEntries = this.saleInvoice.entries.map(
-      this.getInvoiceItemEntry,
+      (entry, index) => this.getInvoiceItemEntry(entry, index),
     );
-
     const taxEntries = this.saleInvoice.entries
       .filter((entry) => entry.taxAmount > 0)
-      .map(this.getInvoiceTaxEntry);
-
-    const discountEntry = this.getInvoiceDiscountEntry();
-    const adjustmentEntry = this.getAdjustmentEntry();
+      .map((entry, index) => this.getInvoiceTaxEntry(entry, index));
 
     return [
       this.invoiceReceivableEntry,
       ...creditEntries,
       ...taxEntries,
-      discountEntry,
-      adjustmentEntry,
+      this.invoiceDiscountEntry,
+      this.adjustmentEntry,
     ];
   };
 

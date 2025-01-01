@@ -1,7 +1,7 @@
 import { BaseModel } from '@/models/Model';
 import moment from 'moment';
 import { Model } from 'objection';
-import { ItemEntry } from '../../Items/models/ItemEntry';
+import { ItemEntry } from '../../TransactionItemEntry/models/ItemEntry';
 import { Customer } from '../../Customers/models/Customer';
 import { Branch } from '../../Branches/models/Branch.model';
 import { Warehouse } from '../../Warehouses/models/Warehouse.model';

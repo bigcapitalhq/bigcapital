@@ -18,12 +18,10 @@ export class LedegrAccountsStorage {
    */
   constructor(
     private tenancyContext: TenancyContext,
+    private accountRepository: AccountRepository,
 
     @Inject(Account.name)
     private accountModel: typeof Account,
-
-    @Inject(AccountRepository)
-    private accountRepository: AccountRepository,
   ) {}
 
   /**

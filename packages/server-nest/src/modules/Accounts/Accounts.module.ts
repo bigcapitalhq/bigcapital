@@ -13,7 +13,6 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { ActivateAccount } from './ActivateAccount.service';
 import { GetAccountTypesService } from './GetAccountTypes.service';
 import { GetAccountTransactionsService } from './GetAccountTransactions.service';
-// import { EditAccount } from './EditAccount.service';
 // import { GetAccountsService } from './GetAccounts.service';
 
 @Module({

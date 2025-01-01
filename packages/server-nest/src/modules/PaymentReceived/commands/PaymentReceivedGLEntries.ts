@@ -7,6 +7,7 @@ import { AccountRepository } from '@/modules/Accounts/repositories/Account.repos
 import { Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { Account } from '@/modules/Accounts/models/Account.model';
 
 @Injectable()
 export class PaymentReceivedGLEntries {
@@ -98,7 +99,8 @@ export class PaymentReceivedGLEntries {
     // Exchange gain/loss account.
     const exGainLossAccount = await this.accountRepository.findBySlug(
       'exchange-grain-loss'
-    );
+    ) as Account;
+
     const paymentReceivedGL = new PaymentReceivedGL(paymentReceive)
       .setARAccountId(receivableAccount.id)
       .setExchangeGainOrLossAccountId(exGainLossAccount.id)

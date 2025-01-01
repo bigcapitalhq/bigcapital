@@ -24,6 +24,7 @@ export class EditBillService {
     private eventPublisher: EventEmitter2,
     private transactionLandedCostEntries: TransactionLandedCostEntriesService,
     private transformerDTO: BillDTOTransformer,
+
     @Inject(Bill.name) private billModel: typeof Bill,
     @Inject(Vendor.name) private contactModel: typeof Vendor,
   ) {}

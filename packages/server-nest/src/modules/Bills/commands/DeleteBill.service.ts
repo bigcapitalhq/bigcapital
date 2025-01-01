@@ -8,7 +8,7 @@ import {
 import { BillsValidators } from './BillsValidators.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Bill } from '../models/Bill';
 
 @Injectable()

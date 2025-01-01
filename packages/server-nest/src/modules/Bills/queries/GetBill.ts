@@ -8,6 +8,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 export class GetBill {
   constructor(
     @Inject(Bill.name) private billModel: typeof Bill,
+
     private transformer: TransformerInjectable,
     private validators: BillsValidators,
   ) {}

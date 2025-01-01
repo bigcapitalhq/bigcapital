@@ -2,7 +2,7 @@ import { DiscountType } from '@/common/types/Discount';
 import { BaseModel } from '@/models/Model';
 import { Branch } from '@/modules/Branches/models/Branch.model';
 import { Customer } from '@/modules/Customers/models/Customer';
-import { ItemEntry } from '@/modules/Items/models/ItemEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { mixin, Model, raw } from 'objection';
 // import TenantModel from 'models/TenantModel';
@@ -28,6 +28,8 @@ export class CreditNote extends BaseModel {
   public currencyCode: string;
   public customerId: number;
 
+  public userId: number;
+
   public branchId: number;
   public warehouseId: number;
 
@@ -37,7 +39,8 @@ export class CreditNote extends BaseModel {
   public branch!: Branch;
   public warehouse!: Warehouse;
 
-
+  public createdAt!: Date | string;
+  public updatedAt!: Date | string;
 
   /**
    * Table name
