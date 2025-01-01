@@ -35,6 +35,8 @@ import { InvoiceGLEntriesSubscriber } from './subscribers/InvoiceGLEntriesSubscr
 import { SaleInvoiceGLEntries } from './ledger/InvoiceGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import SaleInvoiceWriteoffSubscriber from './subscribers/SaleInvoiceWriteoffSubscriber';
+import { SaleInvoiceWriteoffGLStorage } from './commands/writeoff/SaleInvoiceWriteoffGLStorage';
 
 @Module({
   imports: [
@@ -76,6 +78,8 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     GetInvoicePaymentsService,
     SaleInvoiceGLEntries,
     InvoiceGLEntriesSubscriber,
+    SaleInvoiceWriteoffGLStorage,
+    SaleInvoiceWriteoffSubscriber
   ],
 })
 export class SaleInvoicesModule {}

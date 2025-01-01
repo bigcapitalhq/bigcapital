@@ -15,6 +15,7 @@ import { TaxRateTransaction } from '@/modules/TaxRates/models/TaxRateTransaction
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { DiscountType } from '@/common/types/Discount';
+import { Account } from '@/modules/Accounts/models/Account.model';
 
 export class SaleInvoice extends BaseModel {
   public taxAmountWithheld: number;
@@ -51,9 +52,10 @@ export class SaleInvoice extends BaseModel {
   public branchId: number;
   public warehouseId: number;
 
-  public taxes: TaxRateTransaction[];
-  public entries: ItemEntry[];
-  public attachments: Document[];
+  public taxes!: TaxRateTransaction[];
+  public entries!: ItemEntry[];
+  public attachments!: Document[];
+  public writtenoffExpenseAccount!: Account;
 
   /**
    * Table name
