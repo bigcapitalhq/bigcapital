@@ -23,7 +23,7 @@ const makeManualJournalRequest = () => ({
   ],
 });
 
-describe('Manual Journals (e2e)', () => {
+describe.only('Manual Journals (e2e)', () => {
   it('/manual-journals (POST)', () => {
     return request(app.getHttpServer())
       .post('/manual-journals')
@@ -78,7 +78,7 @@ describe('Manual Journals (e2e)', () => {
       .expect(200);
   });
 
-  it('/manual-journals/:id/publish (POST)', async () => {
+  it('/manual-journals/:id/publish (PUT)', async () => {
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
       .set('organization-id', '4064541lv40nhca')
@@ -87,7 +87,7 @@ describe('Manual Journals (e2e)', () => {
     const journalId = response.body.id;
 
     return request(app.getHttpServer())
-      .post(`/manual-journals/${journalId}/publish`)
+      .put(`/manual-journals/${journalId}/publish`)
       .set('organization-id', '4064541lv40nhca')
       .send()
       .expect(200);

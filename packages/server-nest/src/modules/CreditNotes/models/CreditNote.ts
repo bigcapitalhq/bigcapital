@@ -286,12 +286,16 @@ export class CreditNote extends BaseModel {
     const {
       AccountTransaction,
     } = require('../../Accounts/models/AccountTransaction.model');
-    const { ItemEntry } = require('../../Items/models/ItemEntry');
+    const {
+      ItemEntry,
+    } = require('../../TransactionItemEntry/models/ItemEntry');
     const { Customer } = require('../../Customers/models/Customer');
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
-    const { PdfTemplateModel } = require('../../PdfTemplate/models/PdfTemplate');
+    const {
+      PdfTemplateModel,
+    } = require('../../PdfTemplate/models/PdfTemplate');
 
     return {
       /**

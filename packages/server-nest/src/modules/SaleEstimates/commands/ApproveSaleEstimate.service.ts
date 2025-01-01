@@ -5,7 +5,7 @@ import {
 } from '../types/SaleEstimates.types';
 import { ERRORS } from '../constants';
 import { Knex } from 'knex';
-import moment from 'moment';
+import * as moment from 'moment';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { SaleEstimate } from '../models/SaleEstimate';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -52,8 +52,7 @@ export class ApproveSaleEstimateService {
       // Update estimate as approved.
       const saleEstimate = await this.saleEstimateModel
         .query(trx)
-        .where('id', saleEstimateId)
-        .patchAndFetch({
+        .patchAndFetchById(saleEstimateId, {
           approvedAt: moment().toMySqlDateTime(),
           rejectedAt: null,
         });

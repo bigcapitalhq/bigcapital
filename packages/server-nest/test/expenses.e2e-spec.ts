@@ -16,10 +16,7 @@ const makeExpenseRequest = () => ({
       description: faker.lorem.sentence(),
     },
   ],
-  // currencyCode: faker.finance.currencyCode(),
-  // userId: faker.number.int({ min: 1, max: 100 }),
-  // payeeId: faker.number.int({ min: 1, max: 100 }),
-  // branchId: faker.number.int({ min: 1, max: 100 }),
+  branchId: 1,
 });
 
 describe('Expenses (e2e)', () => {
@@ -29,6 +26,21 @@ describe('Expenses (e2e)', () => {
       .set('organization-id', '4064541lv40nhca')
       .send(makeExpenseRequest())
       .expect(201);
+  });
+
+  it('/expenses/:id (PUT)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/expenses')
+      .set('organization-id', '4064541lv40nhca')
+      .send(makeExpenseRequest());
+
+    const expenseId = response.body.id;
+
+    return request(app.getHttpServer())
+      .put(`/expenses/${expenseId}`)
+      .set('organization-id', '4064541lv40nhca')
+      .send(makeExpenseRequest())
+      .expect(200);
   });
 
   it('/expenses/:id (GET)', async () => {

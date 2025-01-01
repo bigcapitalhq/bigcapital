@@ -18,7 +18,7 @@ import {
 import { SaleEstimate } from './models/SaleEstimate';
 import { PublicRoute } from '../Auth/Jwt.guard';
 
-@Controller('sales/estimates')
+@Controller('sale-estimates')
 @PublicRoute()
 export class SaleEstimatesController {
   /**
@@ -53,9 +53,9 @@ export class SaleEstimatesController {
     return this.saleEstimatesApplication.deleteSaleEstimate(estimateId);
   }
 
-  @Get(':id')
-  public getSaleEstimate(@Param('id', ParseIntPipe) estimateId: number) {
-    return this.saleEstimatesApplication.getSaleEstimate(estimateId);
+  @Get('state')
+  public getSaleEstimateState() {
+    return this.saleEstimatesApplication.getSaleEstimateState();
   }
 
   // @Get()
@@ -70,14 +70,14 @@ export class SaleEstimatesController {
     return this.saleEstimatesApplication.deliverSaleEstimate(saleEstimateId);
   }
 
-  @Post(':id/approve')
+  @Put(':id/approve')
   public approveSaleEstimate(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ): Promise<void> {
     return this.saleEstimatesApplication.approveSaleEstimate(saleEstimateId);
   }
 
-  @Post(':id/reject')
+  @Put(':id/reject')
   public rejectSaleEstimate(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ): Promise<void> {
@@ -125,8 +125,8 @@ export class SaleEstimatesController {
     return this.saleEstimatesApplication.getSaleEstimateMail(saleEstimateId);
   }
 
-  @Get('state')
-  public getSaleEstimateState() {
-    return this.saleEstimatesApplication.getSaleEstimateState();
+  @Get(':id')
+  public getSaleEstimate(@Param('id', ParseIntPipe) estimateId: number) {
+    return this.saleEstimatesApplication.getSaleEstimate(estimateId);
   }
 }

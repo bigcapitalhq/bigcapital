@@ -206,65 +206,95 @@ export class SaleEstimate extends BaseModel {
   /**
    * Relationship mapping.
    */
-  // static get relationMappings() {
-  //   return {
-  //     customer: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: this.customerModel,
-  //       join: {
-  //         from: 'sales_estimates.customerId',
-  //         to: 'contacts.id',
-  //       },
-  //       filter(query) {
-  //         query.where('contact_service', 'customer');
-  //       },
-  //     },
-  //     entries: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: this.itemEntryModel,
-  //       join: {
-  //         from: 'sales_estimates.id',
-  //         to: 'items_entries.referenceId',
-  //       },
-  //       filter(builder) {
-  //         builder.where('reference_type', 'SaleEstimate');
-  //         builder.orderBy('index', 'ASC');
-  //       },
-  //     },
-  //     branch: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: this.branchModel,
-  //       join: {
-  //         from: 'sales_estimates.branchId',
-  //         to: 'branches.id',
-  //       },
-  //     },
-  //     warehouse: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: this.warehouseModel,
-  //       join: {
-  //         from: 'sales_estimates.warehouseId',
-  //         to: 'warehouses.id',
-  //       },
-  //     },
-  //     attachments: {
-  //       relation: Model.ManyToManyRelation,
-  //       modelClass: this.documentModel,
-  //       join: {
-  //         from: 'sales_estimates.id',
-  //         through: {
-  //           from: 'document_links.modelId',
-  //           to: 'document_links.documentId',
-  //         },
-  //         to: 'documents.id',
-  //       },
-  //       filter(query) {
-  //         query.where('model_ref', 'SaleEstimate');
-  //       },
-  //     },
-  //   };
-  // }
+  static get relationMappings() {
+    const { ItemEntry } = require('../../TransactionItemEntry/models/ItemEntry');
+    const { Customer } = require('../../Customers/models/Customer');
+    const { Branch } = require('../../Branches/models/Branch.model');
+    const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
+    const { Document } = require('../../ChromiumlyTenancy/models/Document');
+    const { PdfTemplateModel } = require('../../PdfTemplate/models/PdfTemplate');
 
+    return {
+      customer: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Customer,
+        join: {
+          from: 'sales_estimates.customerId',
+          to: 'contacts.id',
+        },
+        filter(query) {
+          query.where('contact_service', 'customer');
+        },
+      },
+      entries: {
+        relation: Model.HasManyRelation,
+        modelClass: ItemEntry,
+        join: {
+          from: 'sales_estimates.id',
+          to: 'items_entries.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleEstimate');
+          builder.orderBy('index', 'ASC');
+        },
+      },
+
+      /**
+       * Sale estimate may belongs to branch.
+       */
+      branch: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Branch,
+        join: {
+          from: 'sales_estimates.branchId',
+          to: 'branches.id',
+        },
+      },
+
+      /**
+       * Sale estimate may has associated warehouse.
+       */
+      warehouse: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Warehouse,
+        join: {
+          from: 'sales_estimates.warehouseId',
+          to: 'warehouses.id',
+        },
+      },
+
+      /**
+       * Sale estimate transaction may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document,
+        join: {
+          from: 'sales_estimates.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'SaleEstimate');
+        },
+      },
+
+      /**
+       * Sale estimate may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplateModel,
+        join: {
+          from: 'sales_estimates.pdfTemplateId',
+          to: 'pdf_templates.id',
+        },
+      },
+    };
+  }
   /**
    * Model settings.
    */

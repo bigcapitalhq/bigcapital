@@ -296,6 +296,14 @@ export class SaleInvoice extends BaseModel {
   }
 
   /**
+   * Written-off amount in local currency.
+   * @returns {number}
+   */
+  get writtenoffAmountLocal() {
+    return this.writtenoffAmount * this.exchangeRate;
+  }
+
+  /**
    * Retrieve the overdue days in number.
    * @return {number|null}
    */

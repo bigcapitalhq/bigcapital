@@ -75,6 +75,8 @@ export class ManualJournalGL {
    * @returns {ILedgerEntry[]}
    */
   public getManualJournalGLEntries = (): ILedgerEntry[] => {
-    return this.manualJournal.entries.map(this.getManualJournalEntry).flat();
+    return this.manualJournal.entries
+      .map((entry) => this.getManualJournalEntry(entry))
+      .flat();
   };
 }

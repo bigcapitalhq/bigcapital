@@ -38,7 +38,6 @@ export class ItemEntry extends BaseModel {
   item: Item;
   allocatedCostEntries: BillLandedCostEntry[];
 
-
   /**
    * Table name.
    * @returns {string}
@@ -180,8 +179,8 @@ export class ItemEntry extends BaseModel {
     const { Bill } = require('../../Bills/models/Bill');
     const { SaleReceipt } = require('../../SaleReceipts/models/SaleReceipt');
     const { SaleEstimate } = require('../../SaleEstimates/models/SaleEstimate');
-    const { Expense } = require('../../Expenses/models/Expense.model');
-    const { TaxRate } = require('../../TaxRates/models/TaxRate.model');
+    const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
+    // const { Expense } = require('../../Expenses/models/Expense.model');
     // const ProjectTask = require('models/Task');
 
     return {
@@ -282,7 +281,7 @@ export class ItemEntry extends BaseModel {
        */
       tax: {
         relation: Model.HasOneRelation,
-        modelClass: TaxRate,
+        modelClass: TaxRateModel,
         join: {
           from: 'items_entries.taxRateId',
           to: 'tax_rates.id',

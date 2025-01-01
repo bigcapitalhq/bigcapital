@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -37,7 +39,8 @@ export class ManualJournalsController {
     return this.manualJournalsApplication.deleteManualJournal(manualJournalId);
   }
 
-  @Post(':id/publish')
+  @Put(':id/publish')
+  @HttpCode(HttpStatus.OK)
   public publishManualJournal(@Param('id') manualJournalId: number) {
     return this.manualJournalsApplication.publishManualJournal(manualJournalId);
   }

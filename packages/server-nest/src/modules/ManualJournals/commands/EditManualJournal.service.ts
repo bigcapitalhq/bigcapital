@@ -26,9 +26,8 @@ export class EditManualJournal {
 
   /**
    * Authorize the manual journal editing.
-   * @param {number} tenantId
-   * @param {number} manualJournalId
-   * @param {IManualJournalDTO} manualJournalDTO
+   * @param {number} manualJournalId - Manual journal id.
+   * @param {IManualJournalDTO} manualJournalDTO - Manual journal DTO.
    */
   private authorize = async (
     manualJournalId: number,
@@ -81,10 +80,8 @@ export class EditManualJournal {
 
   /**
    * Edits jouranl entries.
-   * @param {number} tenantId
-   * @param {number} manualJournalId
-   * @param {IMakeJournalDTO} manualJournalDTO
-   * @param {ISystemUser} authorizedUser
+   * @param {number} manualJournalId - Manual journal id.
+   * @param {IMakeJournalDTO} manualJournalDTO - Manual journal DTO.
    */
   public async editJournalEntries(
     manualJournalId: number,
@@ -94,7 +91,8 @@ export class EditManualJournal {
     oldManualJournal: ManualJournal;
   }> {
     // Validates the manual journal existance on the storage.
-    const oldManualJournal = await ManualJournal.query()
+    const oldManualJournal = await this.manualJournalModel
+      .query()
       .findById(manualJournalId)
       .throwIfNotFound();
 
@@ -121,7 +119,8 @@ export class EditManualJournal {
         ...manualJournalObj,
       });
       // Retrieve the given manual journal with associated entries after modifications.
-      const manualJournal = await this.manualJournalModel.query(trx)
+      const manualJournal = await this.manualJournalModel
+        .query(trx)
         .findById(manualJournalId)
         .withGraphFetched('entries');
 
