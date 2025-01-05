@@ -12,7 +12,7 @@ export interface IBillPaymentDTO {
   amount: number;
   paymentAccountId: number;
   paymentNumber?: string;
-  paymentDate: Date;
+  paymentDate: Date | string;
   exchangeRate?: number;
   statement: string;
   reference: string;

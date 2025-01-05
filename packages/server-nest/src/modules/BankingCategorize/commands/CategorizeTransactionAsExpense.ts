@@ -4,8 +4,6 @@ import {
 } from '@/interfaces';
 import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
-import { Expense } from '@/modules/Expenses/models/Expense.model';
 import { BankTransaction } from '@/modules/BankingTransactions/models/BankTransaction';
 import { CreateExpense } from '@/modules/Expenses/commands/CreateExpense.service';
 import { Inject } from '@nestjs/common';
@@ -20,12 +18,6 @@ export class CategorizeTransactionAsExpense {
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
     private readonly createExpenseService: CreateExpense,
-
-    @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
-
-    @Inject(Expense.name)
-    private readonly expenseModel: typeof Expense,
 
     @Inject(BankTransaction.name)
     private readonly bankTransactionModel: typeof BankTransaction,

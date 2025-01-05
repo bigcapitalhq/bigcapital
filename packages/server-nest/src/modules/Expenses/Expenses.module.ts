@@ -19,6 +19,9 @@ import { BranchesModule } from '../Branches/Branches.module';
 @Module({
   imports: [LedgerModule, BranchesModule],
   controllers: [ExpensesController],
+  exports: [
+    CreateExpense,
+  ],
   providers: [
     CreateExpense,
     ExpenseDTOTransformer,

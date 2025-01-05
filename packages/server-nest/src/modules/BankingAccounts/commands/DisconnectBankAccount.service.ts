@@ -13,7 +13,6 @@ import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-
 import { PLAID_CLIENT } from '@/modules/Plaid/Plaid.module';
 
 @Injectable()

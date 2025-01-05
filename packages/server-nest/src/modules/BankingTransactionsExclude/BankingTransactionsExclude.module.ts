@@ -7,8 +7,10 @@ import { ExcludeBankTransactionsService } from './commands/ExcludeBankTransactio
 import { UnexcludeBankTransactionsService } from './commands/UnexcludeBankTransactions.service';
 import { DecrementUncategorizedTransactionOnExclude } from './subscribers/DecrementUncategorizedTransactionOnExclude';
 import { BankingTransactionsExcludeController } from './BankingTransactionsExclude.controller';
+import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 
 @Module({
+  imports: [BankingTransactionsModule],
   providers: [
     ExcludeBankTransactionsApplication,
     ExcludeBankTransactionService,

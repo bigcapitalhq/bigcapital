@@ -15,9 +15,11 @@ import { PLAID_CLIENT } from '@/modules/Plaid/Plaid.module';
 @Injectable()
 export class PlaidUpdateTransactions {
   constructor(
-    private readonly plaidItemModel: typeof PlaidItem,
     private readonly plaidSync: PlaidSyncDb,
     private readonly uow: UnitOfWork,
+
+    @Inject(PlaidItem.name)
+    private readonly plaidItemModel: typeof PlaidItem,
 
     @Inject(PLAID_CLIENT)
     private readonly plaidClient: PlaidApi,

@@ -46,10 +46,8 @@ export class PaymentReceivesApplication {
 
   /**
    * Edit details the given payment receive with associated entries.
-   * @param {number} tenantId
-   * @param {number} paymentReceiveId
-   * @param {IPaymentReceivedEditDTO} paymentReceiveDTO
-   * @param {ISystemUser} authorizedUser
+   * @param {number} paymentReceiveId - Payment receive id.
+   * @param {IPaymentReceivedEditDTO} paymentReceiveDTO - Payment receive data.
    * @returns
    */
   public editPaymentReceive(

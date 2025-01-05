@@ -10,6 +10,7 @@ import { BankRuleCondition } from './models/BankRuleCondition';
 import { BankRule } from './models/BankRule';
 import { BankRulesController } from './BankRules.controller';
 import { UnlinkBankRuleOnDeleteBankRuleSubscriber } from './events/UnlinkBankRuleOnDeleteBankRule';
+import { DeleteBankRulesService } from './commands/DeleteBankRules.service';
 
 const models = [
   RegisterTenancyModel(BankRule),
@@ -24,11 +25,12 @@ const models = [
     CreateBankRuleService,
     EditBankRuleService,
     DeleteBankRuleService,
+    DeleteBankRulesService,
     GetBankRuleService,
     GetBankRulesService,
     BankRulesApplication,
     UnlinkBankRuleOnDeleteBankRuleSubscriber
   ],
-  exports: [...models],
+  exports: [...models, DeleteBankRuleService, DeleteBankRulesService],
 })
 export class BankRulesModule {}

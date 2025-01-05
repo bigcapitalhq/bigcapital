@@ -49,7 +49,7 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     PaymentReceivedGLEntriesSubscriber,
     PaymentReceivedSyncInvoicesSubscriber,
   ],
-  exports: [PaymentReceivesApplication],
+  exports: [PaymentReceivesApplication, CreatePaymentReceivedService],
   imports: [
     ChromiumlyTenancyModule,
     TemplateInjectableModule,

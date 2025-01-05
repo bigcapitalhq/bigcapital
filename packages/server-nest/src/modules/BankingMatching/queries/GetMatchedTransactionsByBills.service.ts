@@ -1,4 +1,3 @@
-import { initialize } from 'objection';
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { first } from 'lodash';

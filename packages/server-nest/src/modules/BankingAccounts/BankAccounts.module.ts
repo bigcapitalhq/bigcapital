@@ -7,17 +7,21 @@ import { PauseBankAccountFeeds } from './commands/PauseBankAccountFeeds.service'
 import { DeleteUncategorizedTransactionsOnAccountDeleting } from './subscribers/DeleteUncategorizedTransactionsOnAccountDeleting';
 import { DisconnectPlaidItemOnAccountDeleted } from './subscribers/DisconnectPlaidItemOnAccountDeleted';
 import { BankAccountsController } from './BankAccounts.controller';
+import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
+import { PlaidModule } from '../Plaid/Plaid.module';
+import { BankRulesModule } from '../BankRules/BankRules.module';
 
 @Module({
-  imports: [
+  imports: [BankingPlaidModule, PlaidModule, BankRulesModule],
+  providers: [
     DisconnectBankAccountService,
     RefreshBankAccountService,
     ResumeBankAccountFeedsService,
     PauseBankAccountFeeds,
-    DeleteUncategorizedTransactionsOnAccountDeleting,
+    // DeleteUncategorizedTransactionsOnAccountDeleting,
     DisconnectPlaidItemOnAccountDeleted,
+    BankAccountsApplication
   ],
-  providers: [BankAccountsApplication],
   exports: [BankAccountsApplication],
   controllers: [BankAccountsController],
 })

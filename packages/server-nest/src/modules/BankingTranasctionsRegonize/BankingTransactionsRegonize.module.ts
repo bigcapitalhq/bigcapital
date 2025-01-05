@@ -5,10 +5,13 @@ import { GetAutofillCategorizeTransactionService } from './queries/GetAutofillCa
 import { RevertRecognizedTransactionsService } from './commands/RevertRecognizedTransactions.service';
 import { RecognizeTranasctionsService } from './commands/RecognizeTranasctions.service';
 import { TriggerRecognizedTransactionsSubscriber } from './events/TriggerRecognizedTransactions';
+import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
+import { BankRulesModule } from '../BankRules/BankRules.module';
 
 const models = [RegisterTenancyModel(RecognizedBankTransaction)];
 
 @Module({
+  imports: [BankingTransactionsModule, BankRulesModule],
   providers: [
     ...models,
     GetAutofillCategorizeTransactionService,

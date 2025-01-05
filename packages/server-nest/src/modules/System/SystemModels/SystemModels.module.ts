@@ -18,7 +18,7 @@ const modelProviders = models.map((model) => {
 });
 
 export const InjectSystemModel = (model: typeof Model) => ({
-  value: model,
+  useValue: model,
   provide: model.name,
 });
 

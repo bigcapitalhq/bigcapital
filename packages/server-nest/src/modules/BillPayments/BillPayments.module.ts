@@ -35,7 +35,7 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     BillPaymentGLEntries,
     BillPaymentGLEntriesSubscriber,
   ],
-  exports: [BillPaymentValidators],
+  exports: [BillPaymentValidators, CreateBillPaymentService],
   controllers: [BillPaymentsController],
 })
 export class BillPaymentsModule {}

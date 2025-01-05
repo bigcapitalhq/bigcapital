@@ -54,8 +54,8 @@ export class MatchTransactionsTypes {
       const instance = MatchTransactionsTypesRegistry.getInstance();
 
       this.registered.forEach((registered) => {
-        const serviceInstanace = Container.get(registered.service);
-        instance.register(registered.type, serviceInstanace);
+        // const serviceInstanace = Container.get(registered.service);
+        // instance.register(registered.type, serviceInstanace);
       });
       MatchTransactionsTypes.registry = instance;
     }

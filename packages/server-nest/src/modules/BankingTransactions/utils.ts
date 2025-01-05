@@ -9,6 +9,7 @@ import {
 } from './constants';
 import { ICashflowNewCommandDTO } from './types/BankingTransactions.types';
 import { UncategorizedBankTransaction } from './models/UncategorizedBankTransaction';
+import { ICategorizeCashflowTransactioDTO } from '../BankingCategorize/types/BankingCategorize.types';
 import { ServiceError } from '../Items/ServiceError';
 
 /**
@@ -50,7 +51,7 @@ export const getCashflowAccountTransactionsTypes = () => {
  */
 export const transformCategorizeTransToCashflow = (
   uncategorizeTransactions: Array<UncategorizedBankTransaction>,
-  categorizeDTO: ICategorizeBankTransactionDTO,
+  categorizeDTO: ICategorizeCashflowTransactioDTO,
 ): ICashflowNewCommandDTO => {
   const uncategorizeTransaction = first(uncategorizeTransactions);
   const amount = sumBy(uncategorizeTransactions, 'amount');

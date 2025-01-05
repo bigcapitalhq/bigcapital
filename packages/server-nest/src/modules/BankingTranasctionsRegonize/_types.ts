@@ -3,9 +3,7 @@ export interface RevertRecognizedTransactionsCriteria {
   accountId?: number;
 }
 
-
 export interface RecognizeTransactionsCriteria {
   batch?: string;
   accountId?: number;
 }
-

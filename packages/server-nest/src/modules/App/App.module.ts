@@ -56,6 +56,9 @@ import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.modu
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { BankRulesModule } from '../BankRules/BankRules.module';
 import { BankAccountsModule } from '../BankingAccounts/BankAccounts.module';
+import { BankingTransactionsExcludeModule } from '../BankingTransactionsExclude/BankingTransactionsExclude.module';
+import { BankingTransactionsRegonizeModule } from '../BankingTranasctionsRegonize/BankingTransactionsRegonize.module';
+import { BankingMatchingModule } from '../BankingMatching/BankingMatching.module';
 
 @Module({
   imports: [
@@ -134,9 +137,11 @@ import { BankAccountsModule } from '../BankingAccounts/BankAccounts.module';
     BillPaymentsModule,
     PaymentsReceivedModule,
     LedgerModule,
-
     BankAccountsModule,
     BankRulesModule,
+    BankingTransactionsExcludeModule,
+    BankingTransactionsRegonizeModule,
+    // BankingMatchingModule
   ],
   controllers: [AppController],
   providers: [

@@ -11,6 +11,15 @@ import { PreventDeleteTransactionOnDeleteSubscriber } from './subscribers/Preven
 import { ValidateDeleteBankAccountTransactions } from './commands/ValidateDeleteBankAccountTransactions.service';
 import { BankTransactionGLEntriesService } from './commands/BankTransactionGLEntries';
 import { BankingTransactionsApplication } from './BankingTransactionsApplication.service';
+import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { DeleteCashflowTransaction } from './commands/DeleteCashflowTransaction.service';
+import { CreateBankTransactionService } from './commands/CreateBankTransaction.service';
+import { GetBankTransactionService } from './queries/GetBankTransaction.service';
+import { CommandBankTransactionValidator } from './commands/CommandCasflowValidator.service';
+import { BranchTransactionDTOTransformer } from '../Branches/integrations/BranchTransactionDTOTransform';
+import { BranchesModule } from '../Branches/Branches.module';
+import { RemovePendingUncategorizedTransaction } from './commands/RemovePendingUncategorizedTransaction.service';
 
 const models = [
   RegisterTenancyModel(UncategorizedBankTransaction),
@@ -19,7 +28,8 @@ const models = [
 ];
 
 @Module({
-  exports: [
+  imports: [AutoIncrementOrdersModule, LedgerModule, BranchesModule],
+  providers: [
     BankTransactionAutoIncrement,
     BankTransactionGLEntriesService,
     ValidateDeleteBankAccountTransactions,
@@ -28,8 +38,14 @@ const models = [
     DeleteCashflowTransactionOnUncategorizeSubscriber,
     PreventDeleteTransactionOnDeleteSubscriber,
     BankingTransactionsApplication,
+    DeleteCashflowTransaction,
+    CreateBankTransactionService,
+    GetBankTransactionService,
+    CommandBankTransactionValidator,
+    BranchTransactionDTOTransformer,
+    RemovePendingUncategorizedTransaction,
     ...models,
   ],
-  providers: [...models],
+  exports: [...models, RemovePendingUncategorizedTransaction],
 })
 export class BankingTransactionsModule {}
