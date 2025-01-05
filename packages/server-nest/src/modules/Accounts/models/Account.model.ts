@@ -12,6 +12,7 @@ import { TenantModel } from '@/modules/System/models/TenantModel';
 // import { ModelSettings } from '@/modules/Settings/ModelSettings';
 import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';
 import { Model } from 'objection';
+import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
 // import AccountSettings from './Account.Settings';
 // import { DEFAULT_VIEWS } from '@/modules/Accounts/constants';
 // import { buildFilterQuery, buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
@@ -25,17 +26,20 @@ import { Model } from 'objection';
 // ]) {
 
 export class Account extends TenantModel {
-  name: string;
-  slug: string;
-  code: string;
-  index: number;
-  accountType: string;
-  predefined: boolean;
-  currencyCode: string;
-  active: boolean;
-  bankBalance: number;
-  lastFeedsUpdatedAt: string | null;
-  amount: number;
+  public name!: string;
+  public slug!: string;
+  public code!: string;
+  public index!: number;
+  public accountType!: string;
+  public predefined!: boolean;
+  public currencyCode!: string;
+  public active!: boolean;
+  public bankBalance!: number;
+  public lastFeedsUpdatedAt!: string | null;
+  public amount!: number;
+  public plaidItemId!: number;
+
+  public plaidItem!: PlaidItem;
 
   /**
    * Table name.

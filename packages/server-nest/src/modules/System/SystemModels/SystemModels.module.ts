@@ -17,6 +17,11 @@ const modelProviders = models.map((model) => {
   };
 });
 
+export const InjectSystemModel = (model: typeof Model) => ({
+  value: model,
+  provide: model.name,
+});
+
 const providers = [
   ...modelProviders,
   {
@@ -25,7 +30,7 @@ const providers = [
     useFactory: async (systemKnex: Knex) => {
       Model.knex(systemKnex);
     },
-  }
+  },
 ];
 
 @Global()

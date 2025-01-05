@@ -1,0 +1,57 @@
+import { Injectable } from '@nestjs/common';
+import { DisconnectBankAccountService } from './commands/DisconnectBankAccount.service';
+import { RefreshBankAccountService } from './commands/RefreshBankAccount.service';
+import { ResumeBankAccountFeedsService } from './commands/ResumeBankAccountFeeds.service';
+import { PauseBankAccountFeeds } from './commands/PauseBankAccountFeeds.service';
+
+@Injectable()
+export class BankAccountsApplication {
+  constructor(
+    private disconnectBankAccountService: DisconnectBankAccountService,
+    private readonly refreshBankAccountService: RefreshBankAccountService,
+    private readonly resumeBankAccountFeedsService: ResumeBankAccountFeedsService,
+    private readonly pauseBankAccountFeedsService: PauseBankAccountFeeds,
+  ) {}
+
+  /**
+   * Disconnects the given bank account.
+   * @param {number} bankAccountId - Bank account identifier.
+   * @returns {Promise<void>}
+   */
+  async disconnectBankAccount(bankAccountId: number) {
+    return this.disconnectBankAccountService.disconnectBankAccount(
+      bankAccountId,
+    );
+  }
+
+  /**
+   * Refresh the bank transactions of the given bank account.
+   * @param {number} bankAccountId - Bank account identifier.
+   * @returns {Promise<void>}
+   */
+  async refreshBankAccount(bankAccountId: number) {
+    return this.refreshBankAccountService.refreshBankAccount(bankAccountId);
+  }
+
+  /**
+   * Pauses the feeds sync of the given bank account.
+   * @param {number} bankAccountId - Bank account identifier.
+   * @returns {Promise<void>}
+   */
+  async pauseBankAccount(bankAccountId: number) {
+    return this.pauseBankAccountFeedsService.pauseBankAccountFeeds(
+      bankAccountId,
+    );
+  }
+
+  /**
+   * Resumes the feeds sync of the given bank account.
+   * @param {number} bankAccountId - Bank account identifier.
+   * @returns {Promise<void>}
+   */
+  async resumeBankAccount(bankAccountId: number) {
+    return this.resumeBankAccountFeedsService.resumeBankAccountFeeds(
+      bankAccountId,
+    );
+  }
+}

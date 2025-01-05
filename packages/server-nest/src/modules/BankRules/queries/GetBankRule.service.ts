@@ -1,0 +1,30 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { GetBankRuleTransformer } from './GetBankRuleTransformer';
+import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
+import { BankRule } from '../models/BankRule';
+import { GetBankRulesTransformer } from './GetBankRulesTransformer';
+
+@Injectable()
+export class GetBankRuleService {
+  constructor(
+    @Inject(BankRule.name) private bankRuleModel: typeof BankRule,
+    private transformer: TransformerInjectable,
+  ) {}
+
+  /**
+   * Retrieves the bank rule.
+   * @param {number} ruleId
+   * @returns {Promise<any>}
+   */
+  async getBankRule(ruleId: number): Promise<any> {
+    const bankRule = await this.bankRuleModel
+      .query()
+      .findById(ruleId)
+      .withGraphFetched('conditions');
+
+    return this.transformer.transform(
+      bankRule,
+      new GetBankRulesTransformer()
+    );
+  }
+}

@@ -1,7 +1,7 @@
 import Container, { Service } from 'typedi';
 import { AccountsImportable } from '../Accounts/AccountsImportable';
 import { ImportableRegistry } from './ImportableRegistry';
-import { UncategorizedTransactionsImportable } from '../Cashflow/UncategorizedTransactionsImportable';
+import { UncategorizedTransactionsImportable } from '../BankingCategorize/commands/UncategorizedTransactionsImportable';
 import { CustomersImportable } from '../Contacts/Customers/CustomersImportable';
 import { VendorsImportable } from '../Contacts/Vendors/VendorsImportable';
 import { ItemsImportable } from '../Items/ItemsImportable';

@@ -8,6 +8,7 @@ import {
   UseGuards,
   Patch,
   Get,
+  Put,
 } from '@nestjs/common';
 import { ZodValidationPipe } from '@/common/pipes/ZodValidation.pipe';
 import { createItemSchema } from './Item.schema';
@@ -38,7 +39,7 @@ export class ItemsController extends TenantController {
    * @param editItemDto - The item DTO.
    * @returns The updated item id.
    */
-  @Post(':id')
+  @Put(':id')
   @UsePipes(new ZodValidationPipe(createItemSchema))
   async editItem(
     @Param('id') id: string,
@@ -75,6 +76,8 @@ export class ItemsController extends TenantController {
    */
   @Patch(':id/inactivate')
   async inactivateItem(@Param('id') id: string): Promise<void> {
+    console.log(id, 'XXXXXX');
+
     const itemId = parseInt(id, 10);
     return this.itemsApplication.inactivateItem(itemId);
   }

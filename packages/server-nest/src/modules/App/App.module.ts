@@ -54,6 +54,8 @@ import { CreditNoteRefundsModule } from '../CreditNoteRefunds/CreditNoteRefunds.
 import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
 import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.module';
 import { LedgerModule } from '../Ledger/Ledger.module';
+import { BankRulesModule } from '../BankRules/BankRules.module';
+import { BankAccountsModule } from '../BankingAccounts/BankAccounts.module';
 
 @Module({
   imports: [
@@ -132,6 +134,9 @@ import { LedgerModule } from '../Ledger/Ledger.module';
     BillPaymentsModule,
     PaymentsReceivedModule,
     LedgerModule,
+
+    BankAccountsModule,
+    BankRulesModule,
   ],
   controllers: [AppController],
   providers: [

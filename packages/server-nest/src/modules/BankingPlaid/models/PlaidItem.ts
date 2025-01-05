@@ -2,6 +2,11 @@ import { BaseModel } from '@/models/Model';
 
 export class PlaidItem extends BaseModel {
   pausedAt: Date;
+  plaidAccessToken: string;
+  lastCursor?: string;
+  tenantId: number;
+  plaidItemId: string;
+  plaidInstitutionId: string;
 
   /**
    * Table name.

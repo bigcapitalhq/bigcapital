@@ -2,6 +2,13 @@ import TenantModel from 'models/TenantModel';
 import { Model } from 'objection';
 
 export class RecognizedBankTransaction extends TenantModel {
+  public bankRuleId!: number;
+  public uncategorizedTransactionId!: number;
+  public assignedCategory!: string;
+  public assignedAccountId!: number;
+  public assignedPayee!: string;
+  public assignedMemo!: string;
+
   /**
    * Table name.
    */

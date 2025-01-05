@@ -38,6 +38,8 @@ import { RefundCreditNote } from '@/modules/CreditNoteRefunds/models/RefundCredi
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { RefundVendorCredit } from '@/modules/VendorCreditsRefund/models/RefundVendorCredit';
 import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceived';
+import { BaseModel } from '@/models/Model';
+import { Model } from 'objection';
 
 const models = [
   Item,
@@ -79,16 +81,23 @@ const models = [
   PaymentReceivedEntry
 ];
 
-const modelProviders = models.map((model) => {
+/**
+ * Decorator factory that registers a model with the tenancy system.
+ * @param model The model class to register
+ */
+export function RegisterTenancyModel(model: typeof Model) {
   return {
     provide: model.name,
-    inject: [TENANCY_DB_CONNECTION],
+    inject: [TENANCY_DB_CONNECTION], 
     scope: Scope.REQUEST,
     useFactory: async (tenantKnex: Knex) => {
       return model.bindKnex(tenantKnex);
-    },
+    }
   };
-});
+}
+
+// Register all models using the decorator
+const modelProviders = models.map((model) => RegisterTenancyModel(model));
 
 @Global()
 @Module({

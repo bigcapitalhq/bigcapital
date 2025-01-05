@@ -529,6 +529,9 @@ importers:
       '@nestjs/throttler':
         specifier: ^6.2.1
         version: 6.2.1(@nestjs/common@10.4.7)(@nestjs/core@10.4.7)(reflect-metadata@0.2.2)
+      '@supercharge/promise-pool':
+        specifier: ^3.2.0
+        version: 3.2.0
       '@types/passport-local':
         specifier: ^1.0.38
         version: 1.0.38
@@ -616,6 +619,9 @@ importers:
       passport-local:
         specifier: ^1.0.0
         version: 1.0.0
+      plaid:
+        specifier: ^10.3.0
+        version: 10.9.0
       pug:
         specifier: ^3.0.2
         version: 3.0.2
@@ -637,9 +643,15 @@ importers:
       strategy:
         specifier: ^1.1.1
         version: 1.1.1
+      uniqid:
+        specifier: ^5.2.0
+        version: 5.4.0
       uuid:
         specifier: ^10.0.0
         version: 10.0.0
+      yup:
+        specifier: ^0.28.1
+        version: 0.28.5
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -665,6 +677,9 @@ importers:
       '@types/supertest':
         specifier: ^6.0.0
         version: 6.0.2
+      '@types/yup':
+        specifier: ^0.29.13
+        version: 0.29.14
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.0.0
         version: 8.11.0(@typescript-eslint/parser@8.11.0)(eslint@9.13.0)(typescript@5.6.3)
@@ -2751,7 +2766,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.24.5
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.24.5
       '@babel/helper-skip-transparent-expression-wrappers': 7.22.5
       '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.24.5)
     dev: false
@@ -12620,7 +12635,6 @@ packages:
 
   /@types/yup@0.29.14:
     resolution: {integrity: sha512-Ynb/CjHhE/Xp/4bhHmQC4U1Ox+I2OpfRYF3dnNgQqn1cHa6LK3H1wJMNPT02tSVZA6FYuXE2ITORfbnb6zBCSA==}
-    dev: false
 
   /@typescript-eslint/eslint-plugin@2.34.0(@typescript-eslint/parser@2.34.0)(eslint@8.57.0)(typescript@4.9.5):
     resolution: {integrity: sha512-4zY3Z88rEE99+CNvTbXSyovv2z9PNOVffTWD2W8QF5s2prBQtwN2zadqERcrHpcR7O/+KMI3fcTAmUUhK/iQcQ==}
