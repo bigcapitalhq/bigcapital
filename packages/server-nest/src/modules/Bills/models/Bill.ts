@@ -8,11 +8,11 @@ import * as R from 'ramda';
 // import CustomViewBaseModel from './CustomViewBaseModel';
 // import { DEFAULT_VIEWS } from '@/services/Purchases/Bills/constants';
 // import ModelSearchable from './ModelSearchable';
-import { BaseModel } from '@/models/Model';
+import { BaseModel, PaginationQueryBuilderType } from '@/models/Model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { DiscountType } from '@/common/types/Discount';
-import { Knex } from 'knex';
+import type { Knex, QueryBuilder } from 'knex';
 
 export class Bill extends BaseModel {
   public amount: number;
@@ -482,6 +482,7 @@ export class Bill extends BaseModel {
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
+    const { TaxRateTransaction } = require('../../TaxRates/models/TaxRateTransaction.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
@@ -549,7 +550,7 @@ export class Bill extends BaseModel {
        */
       taxes: {
         relation: Model.HasManyRelation,
-        modelClass: TaxRateModel,
+        modelClass: TaxRateTransaction,
         join: {
           from: 'bills.id',
           to: 'tax_rate_transactions.referenceId',
@@ -616,8 +617,13 @@ export class Bill extends BaseModel {
     return notFoundBillsIds;
   }
 
-  static changePaymentAmount(billId, amount, trx: Knex.Transaction) {
+  static changePaymentAmount(
+    billId: number,
+    amount: number,
+    trx: Knex.Transaction,
+  ) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
+
     return this.query(trx)
       .where('id', billId)
       [changeMethod]('payment_amount', Math.abs(amount));

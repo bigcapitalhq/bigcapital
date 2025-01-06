@@ -80,10 +80,9 @@ export class PlaidSyncDb {
     item: PlaidItem,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    const transformToPlaidAccounts = transformPlaidAccountToCreateAccount(
-      item,
-      institution,
-    );
+    const transformToPlaidAccounts = R.curry(
+      transformPlaidAccountToCreateAccount,
+    )(item, institution);
     const accountCreateDTOs = R.map(transformToPlaidAccounts)(plaidAccounts);
 
     await bluebird.map(
@@ -112,7 +111,7 @@ export class PlaidSyncDb {
       .throwIfNotFound();
 
     // Transformes the Plaid transactions to cashflow create DTOs.
-    const transformTransaction = transformPlaidTrxsToCashflowCreate(
+    const transformTransaction = R.curry(transformPlaidTrxsToCashflowCreate)(
       cashflowAccount.id,
     );
     const uncategorizedTransDTOs =

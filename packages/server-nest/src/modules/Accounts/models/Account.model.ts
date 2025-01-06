@@ -217,7 +217,7 @@ export class Account extends TenantModel {
     // const ExpenseEntry = require('models/ExpenseCategory');
     // const ItemEntry = require('models/ItemEntry');
     // const UncategorizedTransaction = require('models/UncategorizedCashflowTransaction');
-    const { PlaidItem } = require('../../Banking/models/PlaidItem.model');
+    const { PlaidItem } = require('../../BankingPlaid/models/PlaidItem');
 
     return {
       /**

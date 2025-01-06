@@ -7,7 +7,10 @@ import { Model } from 'objection';
 // import { CASHFLOW_DIRECTION } from '@/services/Cashflow/constants';
 // import { getCashflowTransactionFormattedType } from '@/utils/transactions-types';
 import { BaseModel } from '@/models/Model';
-import { getCashflowAccountTransactionsTypes, getCashflowTransactionType } from '../utils';
+import {
+  getCashflowAccountTransactionsTypes,
+  getCashflowTransactionType,
+} from '../utils';
 import { CASHFLOW_DIRECTION, CASHFLOW_TRANSACTION_TYPE } from '../constants';
 import { BankTransactionLine } from './BankTransactionLine';
 import { Account } from '@/modules/Accounts/models/Account.model';
@@ -159,10 +162,14 @@ export class BankTransaction extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const CashflowTransactionLine = require('models/CashflowTransactionLine');
-    const AccountTransaction = require('models/AccountTransaction');
-    const Account = require('models/Account');
-    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
+    const { BankTransactionLine } = require('./BankTransactionLine');
+    const {
+      AccountTransaction,
+    } = require('../../Accounts/models/AccountTransaction.model');
+    const { Account } = require('../../Accounts/models/Account.model');
+    const {
+      MatchedBankTransaction,
+    } = require('../../BankingMatching/models/MatchedBankTransaction');
 
     return {
       /**
@@ -170,7 +177,7 @@ export class BankTransaction extends BaseModel {
        */
       entries: {
         relation: Model.HasManyRelation,
-        modelClass: CashflowTransactionLine.default,
+        modelClass: BankTransactionLine,
         join: {
           from: 'cashflow_transactions.id',
           to: 'cashflow_transaction_lines.cashflowTransactionId',
@@ -185,7 +192,7 @@ export class BankTransaction extends BaseModel {
        */
       transactions: {
         relation: Model.HasManyRelation,
-        modelClass: AccountTransaction.default,
+        modelClass: AccountTransaction,
         join: {
           from: 'cashflow_transactions.id',
           to: 'accounts_transactions.referenceId',
@@ -200,7 +207,7 @@ export class BankTransaction extends BaseModel {
        */
       cashflowAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: Account,
         join: {
           from: 'cashflow_transactions.cashflowAccountId',
           to: 'accounts.id',
@@ -212,7 +219,7 @@ export class BankTransaction extends BaseModel {
        */
       creditAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: Account,
         join: {
           from: 'cashflow_transactions.creditAccountId',
           to: 'accounts.id',

@@ -9,13 +9,13 @@ export interface IBillPaymentEntryDTO {
 
 export interface IBillPaymentDTO {
   vendorId: number;
-  amount: number;
+  amount?: number;
   paymentAccountId: number;
   paymentNumber?: string;
   paymentDate: Date | string;
   exchangeRate?: number;
-  statement: string;
-  reference: string;
+  statement?: string;
+  reference?: string;
   entries: IBillPaymentEntryDTO[];
   branchId?: number;
   attachments?: AttachmentLinkDTO[];

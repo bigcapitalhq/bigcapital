@@ -22,9 +22,8 @@ export class CreateBankRuleService {
   /**
    * Transforms the DTO to model.
    * @param {ICreateBankRuleDTO} createDTO
-   * @returns
    */
-  private transformDTO(createDTO: ICreateBankRuleDTO): Partial<BankRule> {
+  private transformDTO(createDTO: ICreateBankRuleDTO) {
     return {
       ...createDTO,
     };
@@ -33,19 +32,21 @@ export class CreateBankRuleService {
   /**
    * Creates a new bank rule.
    * @param {ICreateBankRuleDTO} createRuleDTO
-   * @returns {Promise<void>}
+   * @returns {Promise<BankRule>}
    */
-  public async createBankRule(createRuleDTO: ICreateBankRuleDTO): Promise<void> {
+  public async createBankRule(
+    createRuleDTO: ICreateBankRuleDTO,
+  ): Promise<BankRule> {
     const transformDTO = this.transformDTO(createRuleDTO);
 
-    await this.uow.withTransaction(async (trx: Knex.Transaction) => {
+    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Triggers `onBankRuleCreating` event.
       await this.eventPublisher.emitAsync(events.bankRules.onCreating, {
         createRuleDTO,
         trx,
       } as IBankRuleEventCreatingPayload);
 
-      const bankRule = await this.bankRuleModel.query(trx).upsertGraph({
+      const bankRule = await this.bankRuleModel.query(trx).upsertGraphAndFetch({
         ...transformDTO,
       });
       // Triggers `onBankRuleCreated` event.

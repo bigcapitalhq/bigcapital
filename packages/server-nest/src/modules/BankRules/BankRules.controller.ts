@@ -9,15 +9,18 @@ import {
 } from '@nestjs/common';
 import { BankRulesApplication } from './BankRulesApplication';
 import { ICreateBankRuleDTO, IEditBankRuleDTO } from './types';
+import { PublicRoute } from '../Auth/Jwt.guard';
+import { BankRule } from './models/BankRule';
 
 @Controller('banking/rules')
+@PublicRoute()
 export class BankRulesController {
   constructor(private readonly bankRulesApplication: BankRulesApplication) {}
 
   @Post()
   async createBankRule(
     @Body() createRuleDTO: ICreateBankRuleDTO,
-  ): Promise<void> {
+  ): Promise<BankRule> {
     return this.bankRulesApplication.createBankRule(createRuleDTO);
   }
 

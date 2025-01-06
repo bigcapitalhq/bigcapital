@@ -1,5 +1,4 @@
-import { QueryBuilder } from 'objection';
-import Objection, { Model, Page } from 'objection';
+import { QueryBuilder, Model } from 'objection';
 
 interface PaginationResult<M extends Model> {
   results: M[];
@@ -10,13 +9,19 @@ interface PaginationResult<M extends Model> {
   };
 }
 
-class PaginationQueryBuilder<
-  M extends Model,
-  R = M[],
-> extends Model.QueryBuilder<M, R> {
-  pagination(page: number, pageSize: number): QueryBuilder<M, PaginationResult<M>> {
-    // @ts-ignore
-    return super.page(page, pageSize).runAfter(({ results, total }) => {
+export type PaginationQueryBuilderType<M extends Model> = QueryBuilder<
+  M,
+  PaginationResult<M>
+>;
+
+class PaginationQueryBuilder<M extends Model, R = M[]> extends QueryBuilder<
+  M,
+  R
+> {
+  pagination(page: number, pageSize: number): PaginationQueryBuilderType<M> {
+    const query = super.page(page, pageSize);
+    
+    return query.runAfter(({ results, total }) => {
       return {
         results,
         pagination: {
@@ -25,7 +30,7 @@ class PaginationQueryBuilder<
           pageSize,
         },
       };
-    });
+    }) as unknown as PaginationQueryBuilderType<M>;
   }
 }
 

@@ -20,7 +20,8 @@ export class GetBankRuleService {
     const bankRule = await this.bankRuleModel
       .query()
       .findById(ruleId)
-      .withGraphFetched('conditions');
+      .withGraphFetched('conditions')
+      .withGraphFetched('assignAccount');
 
     return this.transformer.transform(
       bankRule,

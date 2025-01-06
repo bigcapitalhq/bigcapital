@@ -213,7 +213,7 @@ export class ItemsEntriesService {
   /**
    * Sets the cost/sell accounts to the invoice entries.
    */
-  public setItemsEntriesDefaultAccounts = async (entries: ItemEntry[]) => {
+  public setItemsEntriesDefaultAccounts = async (entries: IItemEntryDTO[]) => {
     const entriesItemsIds = entries.map((e) => e.itemId);
     const items = await this.itemModel.query().whereIn('id', entriesItemsIds);
 

@@ -1,8 +1,8 @@
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
-import { initialize } from 'objection';
 import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';
 import { Inject, Injectable } from '@nestjs/common';
 import { UncategorizedTransactionTransformer } from '../../BankingCategorize/commands/UncategorizedTransaction.transformer';
+import { IGetUncategorizedTransactionsQuery } from '../types/BankingTransactions.types';
 
 @Injectable()
 export class GetUncategorizedTransactions {

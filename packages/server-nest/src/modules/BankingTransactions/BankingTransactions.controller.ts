@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { BankingTransactionsApplication } from './BankingTransactionsApplication.service';
 import { ICashflowNewCommandDTO } from './types/BankingTransactions.types';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('banking/transactions')
+@PublicRoute()
 export class BankingTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,

@@ -16,7 +16,7 @@ import { CreateUncategorizedTransactionDTO } from '../BankingCategorize/types/Ba
  * @returns {string}
  */
 const getAccountTypeFromPlaidAccountType = (
-  plaidAccountType: PlaidAccountType
+  plaidAccountType: PlaidAccountType,
 ) => {
   if (plaidAccountType === PlaidAccountType.Credit) {
     return ACCOUNT_TYPE.CREDIT_CARD;
@@ -31,26 +31,24 @@ const getAccountTypeFromPlaidAccountType = (
  * @param {PlaidAccount} plaidAccount - Plaid account.
  * @returns {IAccountCreateDTO}
  */
-export const transformPlaidAccountToCreateAccount = R.curry(
-  (
-    item: PlaidItem,
-    institution: PlaidInstitution,
-    plaidAccount: PlaidAccount
-  ): IAccountCreateDTO => {
-    return {
-      name: `${institution.name} - ${plaidAccount.name}`,
-      code: '',
-      description: plaidAccount.official_name,
-      currencyCode: plaidAccount.balances.iso_currency_code,
-      accountType: getAccountTypeFromPlaidAccountType(plaidAccount.type),
-      active: true,
-      bankBalance: plaidAccount.balances.current,
-      accountMask: plaidAccount.mask,
-      plaidAccountId: plaidAccount.account_id,
-      plaidItemId: item.item_id,
-    };
-  }
-);
+export const transformPlaidAccountToCreateAccount = (
+  item: PlaidItem,
+  institution: PlaidInstitution,
+  plaidAccount: PlaidAccount,
+): IAccountCreateDTO => {
+  return {
+    name: `${institution.name} - ${plaidAccount.name}`,
+    code: '',
+    description: plaidAccount.official_name,
+    currencyCode: plaidAccount.balances.iso_currency_code,
+    accountType: getAccountTypeFromPlaidAccountType(plaidAccount.type),
+    active: true,
+    bankBalance: plaidAccount.balances.current,
+    accountMask: plaidAccount.mask,
+    plaidAccountId: plaidAccount.account_id,
+    plaidItemId: item.item_id,
+  };
+};
 
 /**
  * Transformes the plaid transaction to cashflow create DTO.
@@ -59,10 +57,9 @@ export const transformPlaidAccountToCreateAccount = R.curry(
  * @param {PlaidTransaction} plaidTranasction - Plaid transaction.
  * @returns {CreateUncategorizedTransactionDTO}
  */
-export const transformPlaidTrxsToCashflowCreate = R.curry(
-  (
+export const transformPlaidTrxsToCashflowCreate = (
     cashflowAccountId: number,
-    plaidTranasction: PlaidTransactionBase
+    plaidTranasction: PlaidTransactionBase,
   ): CreateUncategorizedTransactionDTO => {
     return {
       date: plaidTranasction.date,
@@ -81,5 +78,4 @@ export const transformPlaidTrxsToCashflowCreate = R.curry(
       pending: plaidTranasction.pending,
       pendingPlaidTransactionId: plaidTranasction.pending_transaction_id,
     };
-  }
-);
+  };

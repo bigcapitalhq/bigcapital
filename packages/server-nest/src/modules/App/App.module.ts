@@ -140,10 +140,10 @@ import { BankingTransactionsModule } from '../BankingTransactions/BankingTransac
     LedgerModule,
     BankAccountsModule,
     BankRulesModule,
-    BankingTransactionsExcludeModule,
-    BankingTransactionsRegonizeModule,
-    BankingMatchingModule,
     BankingTransactionsModule,
+    // BankingTransactionsExcludeModule,
+    // BankingTransactionsRegonizeModule,
+    // BankingMatchingModule,
   ],
   controllers: [AppController],
   providers: [

@@ -5,6 +5,7 @@ import { EditBankRuleService } from './commands/EditBankRule.service';
 import { GetBankRuleService } from './queries/GetBankRule.service';
 import { GetBankRulesService } from './queries/GetBankRules.service';
 import { ICreateBankRuleDTO, IEditBankRuleDTO } from './types';
+import { BankRule } from './models/BankRule';
 
 @Injectable()
 export class BankRulesApplication {
@@ -21,7 +22,9 @@ export class BankRulesApplication {
    * @param {ICreateBankRuleDTO} createRuleDTO - Bank rule data.
    * @returns {Promise<void>}
    */
-  public createBankRule(createRuleDTO: ICreateBankRuleDTO): Promise<void> {
+  public createBankRule(
+    createRuleDTO: ICreateBankRuleDTO,
+  ): Promise<BankRule> {
     return this.createBankRuleService.createBankRule(createRuleDTO);
   }
 

@@ -5,12 +5,12 @@ import { PaymentReceived } from '../models/PaymentReceived';
 export interface IPaymentReceivedCreateDTO {
   customerId: number;
   paymentDate: Date | string;
-  amount: number;
-  exchangeRate: number;
-  referenceNo: string;
+  amount?: number;
+  exchangeRate?: number;
+  referenceNo?: string;
   depositAccountId: number;
   paymentReceiveNo?: string;
-  statement: string;
+  statement?: string;
   entries: IPaymentReceivedEntryDTO[];
 
   branchId?: number;

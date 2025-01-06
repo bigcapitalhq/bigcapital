@@ -22,12 +22,12 @@ export class BankTransactionLine extends BaseModel{
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
+    const { Account } = require('../../Accounts/models/Account.model');
 
     return {
       cashflowAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: Account,
         join: {
           from: 'cashflow_transaction_lines.cashflowAccountId',
           to: 'accounts.id',
@@ -35,7 +35,7 @@ export class BankTransactionLine extends BaseModel{
       },
       creditAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: Account,
         join: {
           from: 'cashflow_transaction_lines.creditAccountId',
           to: 'accounts.id',

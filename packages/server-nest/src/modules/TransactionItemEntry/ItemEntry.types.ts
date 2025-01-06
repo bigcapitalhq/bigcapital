@@ -7,6 +7,9 @@ export interface IItemEntryDTO {
   landedCost?: boolean;
   warehouseId?: number;
 
+  sellAccountId?: number;
+  costAccountId?: number; 
+
   projectRefId?: number;
   projectRefType?: ProjectLinkRefType;
   projectRefInvoicedAmount?: number;

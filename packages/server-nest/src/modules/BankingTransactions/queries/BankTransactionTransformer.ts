@@ -32,7 +32,7 @@ export class BankTransactionTransformer extends Transformer {
    * @returns {string}
    */
   protected transactionTypeFormatted = (transaction) => {
-    return this.context.i18n.t(transaction.transactionTypeFormatted);
+    return this.context.i18n.t(transaction.transactionType);
   };
 
   /**

@@ -34,9 +34,11 @@ export class RecognizedBankTransaction extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const UncategorizedCashflowTransaction = require('./UncategorizedCashflowTransaction');
-    const Account = require('./Account');
-    const { BankRule } = require('./BankRule');
+    const {
+      UncategorizedBankTransaction,
+    } = require('../../BankingTransactions/models/UncategorizedBankTransaction');
+    const { Account } = require('../../Accounts/models/Account.model');
+    const { BankRule } = require('../../BankRules/models/BankRule');
 
     return {
       /**
@@ -44,7 +46,7 @@ export class RecognizedBankTransaction extends BaseModel {
        */
       uncategorizedTransactions: {
         relation: Model.HasManyRelation,
-        modelClass: UncategorizedCashflowTransaction.default,
+        modelClass: UncategorizedBankTransaction,
         join: {
           from: 'recognized_bank_transactions.uncategorizedTransactionId',
           to: 'uncategorized_cashflow_transactions.id',
@@ -56,7 +58,7 @@ export class RecognizedBankTransaction extends BaseModel {
        */
       assignAccount: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: Account,
         join: {
           from: 'recognized_bank_transactions.assignedAccountId',
           to: 'accounts.id',

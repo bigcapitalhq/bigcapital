@@ -195,11 +195,11 @@ export class UncategorizedBankTransaction extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
+    const { Account } = require('../../Accounts/models/Account.model');
     const {
       RecognizedBankTransaction,
-    } = require('models/RecognizedBankTransaction');
-    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
+    } = require('../../BankingTranasctionsRegonize/models/RecognizedBankTransaction');
+    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
 
     return {
       /**
@@ -207,7 +207,7 @@ export class UncategorizedBankTransaction extends BaseModel {
        */
       account: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Account.default,
+        modelClass: Account,
         join: {
           from: 'uncategorized_cashflow_transactions.accountId',
           to: 'accounts.id',
