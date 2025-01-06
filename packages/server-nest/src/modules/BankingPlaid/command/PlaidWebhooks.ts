@@ -133,7 +133,7 @@ export class PlaidWebooks {
   ): Promise<void> {
     switch (webhookCode) {
       case 'WEBHOOK_UPDATE_ACKNOWLEDGED':
-        this.serverLogAndEmitSocket('is updated', plaidItemId, error);
+        this.serverLogAndEmitSocket('is updated', webhookCode, plaidItemId);
         break;
       case 'ERROR': {
         break;

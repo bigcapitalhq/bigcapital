@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
+import { BaseModel } from '@/models/Model';
 
 @Injectable()
 export class GetBankAccountSummary {
@@ -33,6 +34,10 @@ export class GetBankAccountSummary {
       // Only the not categorized.
       q.modify('notCategorized');
     };
+
+    interface UncategorizedTransactionsCount {
+      total: number;
+    }
 
     // Retrieves the uncategorized transactions count of the given bank account.
     const uncategorizedTranasctionsCount =
@@ -79,6 +84,7 @@ export class GetBankAccountSummary {
         q.count('uncategorized_cashflow_transactions.id as total');
         q.first();
       });
+
     // Retrieves the pending transactions count.
     const pendingTransactionsCount =
       await this.uncategorizedBankTransactionModel.query().onBuild((q) => {
@@ -91,9 +97,13 @@ export class GetBankAccountSummary {
       });
 
     const totalUncategorizedTransactions =
+      // @ts-ignore
       uncategorizedTranasctionsCount?.total || 0;
+    // @ts-ignore
     const totalRecognizedTransactions = recognizedTransactionsCount?.total || 0;
+    // @ts-ignore
     const totalExcludedTransactions = excludedTransactionsCount?.total || 0;
+    // @ts-ignore
     const totalPendingTransactions = pendingTransactionsCount?.total || 0;
 
     return {

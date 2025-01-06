@@ -70,13 +70,15 @@ export class TriggerRecognizedTransactionsSubscriber {
   @OnEvent(events.import.onImportCommitted)
   private async triggerRecognizeTransactionsOnImportCommitted({
     importId,
-  }: IImportFileCommitedEventPayload) {
-    const importFile = await Import.query().findOne({ importId });
-    const batch = importFile.paramsParsed.batch;
-    const payload = { transactionsCriteria: { batch } };
 
-    // Cannot continue if the imported resource is not bank account transactions.
-    if (importFile.resource !== 'UncategorizedCashflowTransaction') return;
+    // @ts-ignore
+  }: IImportFileCommitedEventPayload) {
+    // const importFile = await Import.query().findOne({ importId });
+    // const batch = importFile.paramsParsed.batch;
+    // const payload = { transactionsCriteria: { batch } };
+
+    // // Cannot continue if the imported resource is not bank account transactions.
+    // if (importFile.resource !== 'UncategorizedCashflowTransaction') return;
 
     // await this.agenda.now('recognize-uncategorized-transactions-job', payload);
   }

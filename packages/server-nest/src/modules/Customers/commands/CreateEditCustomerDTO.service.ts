@@ -1,7 +1,6 @@
 import moment from 'moment';
 import { defaultTo, omit, isEmpty } from 'lodash';
 import { Injectable } from '@nestjs/common';
-import { Customer } from '../models/Customer';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ICustomerEditDTO, ICustomerNewDTO } from '../types/Customers.types';
 import { ContactService } from '@/modules/Contacts/types/Contacts.types';
@@ -20,7 +19,7 @@ export class CreateEditCustomerDTO {
    */
   private transformCommonDTO = (
     customerDTO: ICustomerNewDTO | ICustomerEditDTO,
-  ): Partial<Customer> => {
+  ) => {
     return {
       ...omit(customerDTO, ['customerType']),
       contactType: customerDTO.customerType,

@@ -4,7 +4,7 @@ import { PaymentReceived } from '../models/PaymentReceived';
 
 export interface IPaymentReceivedCreateDTO {
   customerId: number;
-  paymentDate: Date;
+  paymentDate: Date | string;
   amount: number;
   exchangeRate: number;
   referenceNo: string;

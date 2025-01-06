@@ -30,18 +30,15 @@ export class BankingMatchingApplication {
 
   /**
    * Matches the given uncategorized transaction with the given system transaction.
-   * @param {number} tenantId
    * @param {number} uncategorizedTransactionId
    * @param {IMatchTransactionDTO} matchTransactionsDTO
    * @returns {Promise<void>}
    */
   public matchTransaction(
-    tenantId: number,
     uncategorizedTransactionId: number | Array<number>,
     matchedTransactions: Array<IMatchTransactionDTO>
   ): Promise<void> {
     return this.matchTransactionService.matchTransaction(
-      tenantId,
       uncategorizedTransactionId,
       matchedTransactions
     );
@@ -49,16 +46,13 @@ export class BankingMatchingApplication {
 
   /**
    * Unmatch the given matched transaction.
-   * @param {number} tenantId
-   * @param {number} uncategorizedTransactionId
+   * @param {number} uncategorizedTransactionId - Uncategorized transaction id.
    * @returns {Promise<void>}
    */
   public unmatchMatchedTransaction(
-    tenantId: number,
     uncategorizedTransactionId: number
   ) {
     return this.unmatchMatchedTransactionService.unmatchMatchedTransaction(
-      tenantId,
       uncategorizedTransactionId
     );
   }

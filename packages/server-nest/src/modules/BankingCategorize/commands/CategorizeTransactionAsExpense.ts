@@ -1,7 +1,3 @@
-import {
-  CategorizeTransactionAsExpenseDTO,
-  ICashflowTransactionCategorizedPayload,
-} from '@/interfaces';
 import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BankTransaction } from '@/modules/BankingTransactions/models/BankTransaction';
@@ -10,7 +6,10 @@ import { Inject } from '@nestjs/common';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
-import { ICashflowTransactionUncategorizedPayload } from '../types/BankingCategorize.types';
+import {
+  ICashflowTransactionCategorizedPayload,
+  ICategorizeCashflowTransactioDTO,
+} from '../types/BankingCategorize.types';
 
 @Injectable()
 export class CategorizeTransactionAsExpense {
@@ -30,7 +29,7 @@ export class CategorizeTransactionAsExpense {
    */
   public async categorize(
     cashflowTransactionId: number,
-    transactionDTO: CategorizeTransactionAsExpenseDTO,
+    transactionDTO: ICategorizeCashflowTransactioDTO,
   ) {
     const transaction = await this.bankTransactionModel
       .query()
@@ -46,7 +45,12 @@ export class CategorizeTransactionAsExpense {
         } as ICashflowTransactionCategorizedPayload,
       );
       // Creates a new expense transaction.
-      const expenseTransaction = await this.createExpenseService.newExpense({});
+      // TODO: the DTO is not complete, we need to add the missing properties.
+      // @ts-ignore
+      const expenseTransaction = await this.createExpenseService.newExpense({
+        // ...transactionDTO,
+        // publishedAt: transaction.publishedAt,
+      });
 
       // Updates the item on the storage and fetches the updated once.
       const cashflowTransaction = await this.bankTransactionModel
@@ -62,7 +66,7 @@ export class CategorizeTransactionAsExpense {
         {
           cashflowTransaction,
           trx,
-        } as ICashflowTransactionUncategorizedPayload,
+        },
       );
     });
   }

@@ -20,6 +20,7 @@ import { CommandBankTransactionValidator } from './commands/CommandCasflowValida
 import { BranchTransactionDTOTransformer } from '../Branches/integrations/BranchTransactionDTOTransform';
 import { BranchesModule } from '../Branches/Branches.module';
 import { RemovePendingUncategorizedTransaction } from './commands/RemovePendingUncategorizedTransaction.service';
+import { BankingTransactionsController } from './BankingTransactions.controller';
 
 const models = [
   RegisterTenancyModel(UncategorizedBankTransaction),
@@ -29,6 +30,7 @@ const models = [
 
 @Module({
   imports: [AutoIncrementOrdersModule, LedgerModule, BranchesModule],
+  controllers: [BankingTransactionsController],
   providers: [
     BankTransactionAutoIncrement,
     BankTransactionGLEntriesService,

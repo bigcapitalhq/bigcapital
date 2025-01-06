@@ -7,8 +7,8 @@ import { Model } from 'objection';
 // import { CASHFLOW_DIRECTION } from '@/services/Cashflow/constants';
 // import { getCashflowTransactionFormattedType } from '@/utils/transactions-types';
 import { BaseModel } from '@/models/Model';
-import { getCashflowTransactionType } from '../utils';
-import { CASHFLOW_DIRECTION } from '../constants';
+import { getCashflowAccountTransactionsTypes, getCashflowTransactionType } from '../utils';
+import { CASHFLOW_DIRECTION, CASHFLOW_TRANSACTION_TYPE } from '../constants';
 import { BankTransactionLine } from './BankTransactionLine';
 import { Account } from '@/modules/Accounts/models/Account.model';
 
@@ -27,8 +27,14 @@ export class BankTransaction extends BaseModel {
   cashflowAccountId: number;
   creditAccountId: number;
 
+  categorizeRefType: string;
+  categorizeRefId: number;
+  uncategorized: boolean;
+
   branchId: number;
   userId: number;
+
+  publishedAt: Date;
 
   entries: BankTransactionLine[];
   cashflowAccount: Account;
@@ -92,7 +98,9 @@ export class BankTransaction extends BaseModel {
   // }
 
   get typeMeta() {
-    return getCashflowTransactionType(this.transactionType);
+    return getCashflowTransactionType(
+      this.transactionType as CASHFLOW_TRANSACTION_TYPE,
+    );
   }
 
   /**

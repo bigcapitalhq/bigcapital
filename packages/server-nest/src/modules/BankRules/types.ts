@@ -11,7 +11,7 @@ export enum BankRuleConditionComparator {
   Contains = 'contains',
   Equals = 'equals',
   Equal = 'equal',
-  NotContain = 'not_contain',
+  NotContain = 'not_contains',
   Bigger = 'bigger',
   BiggerOrEqual = 'bigger_or_equal',
   Smaller = 'smaller',
@@ -59,19 +59,21 @@ export enum BankRuleAssignCategory {
   OwnerDrawings = 'OwnerDrawings',
 }
 
+export type BankRuleComparator =
+  | 'contains'
+  | 'equals'
+  | 'not_contains'
+  | 'equal'
+  | 'bigger'
+  | 'bigger_or_equal'
+  | 'smaller'
+  | 'smaller_or_equal';
+
 export interface IBankRuleConditionDTO {
   id?: number;
   field: string;
-  comparator:
-    | 'contains'
-    | 'equals'
-    | 'not_contains'
-    | 'equal'
-    | 'bigger'
-    | 'bigger_or_equal'
-    | 'smaller'
-    | 'smaller_or_equal';
-  value: number;
+  comparator: BankRuleComparator;
+  value: string;
 }
 
 export interface IBankRuleCommonDTO {

@@ -23,7 +23,7 @@ export class EditBankRuleService {
    * @param createDTO
    * @returns
    */
-  private transformDTO(createDTO: IEditBankRuleDTO): Partial<BankRule> {
+  private transformDTO(createDTO: IEditBankRuleDTO) {
     return {
       ...createDTO,
     };
@@ -59,7 +59,6 @@ export class EditBankRuleService {
         ...tranformDTO,
         id: ruleId,
       });
-      
       // Triggers `onBankRuleEdited` event.
       await this.eventPublisher.emitAsync(events.bankRules.onEdited, {
         oldBankRule,

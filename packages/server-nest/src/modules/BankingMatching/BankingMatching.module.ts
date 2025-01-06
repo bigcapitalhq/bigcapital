@@ -19,10 +19,14 @@ import { BankingTransactionsModule } from '../BankingTransactions/BankingTransac
 import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.module';
 import { MatchBankTransactions } from './commands/MatchTransactions';
 import { MatchTransactionsTypes } from './commands/MatchTransactionsTypes';
+import { GetMatchedTransactionsByManualJournals } from './queries/GetMatchedTransactionsByManualJournals.service';
+import { ValidateTransactionMatched } from './commands/ValidateTransactionsMatched.service';
+import { BankingMatchingController } from './BankingMatching.controller';
 
 const models = [RegisterTenancyModel(MatchedBankTransaction)];
 
 @Module({
+  controllers: [BankingMatchingController],
   imports: [
     BillPaymentsModule,
     BankingTransactionsModule,
@@ -30,12 +34,14 @@ const models = [RegisterTenancyModel(MatchedBankTransaction)];
   ],
   providers: [
     ...models,
+    ValidateTransactionMatched,
     MatchBankTransactions,
     MatchTransactionsTypes,
     GetMatchedTransactionsByBills,
     GetMatchedTransactionsByCashflow,
     GetMatchedTransactionsByExpenses,
     GetMatchedTransactionsByInvoices,
+    GetMatchedTransactionsByManualJournals,
     BankingMatchingApplication,
     GetMatchedTransactions,
     UnmatchMatchedBankTransaction,

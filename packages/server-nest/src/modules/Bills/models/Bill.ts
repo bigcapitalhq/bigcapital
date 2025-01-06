@@ -12,6 +12,7 @@ import { BaseModel } from '@/models/Model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { DiscountType } from '@/common/types/Discount';
+import { Knex } from 'knex';
 
 export class Bill extends BaseModel {
   public amount: number;
@@ -615,7 +616,7 @@ export class Bill extends BaseModel {
     return notFoundBillsIds;
   }
 
-  static changePaymentAmount(billId, amount, trx) {
+  static changePaymentAmount(billId, amount, trx: Knex.Transaction) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
     return this.query(trx)
       .where('id', billId)

@@ -1,9 +1,10 @@
+import { BankTransaction } from "@/modules/BankingTransactions/models/BankTransaction";
 import { UncategorizedBankTransaction } from "@/modules/BankingTransactions/models/UncategorizedBankTransaction";
 import { Knex } from "knex";
 
 export interface ICashflowTransactionCategorizedPayload {
   uncategorizedTransactions: Array<UncategorizedBankTransaction>;
-  cashflowTransaction: UncategorizedBankTransaction;
+  cashflowTransaction: BankTransaction;
   oldUncategorizedTransactions: Array<UncategorizedBankTransaction>;
   categorizeDTO: any;
   trx: Knex.Transaction;

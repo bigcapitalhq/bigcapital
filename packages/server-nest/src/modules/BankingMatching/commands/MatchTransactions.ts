@@ -108,7 +108,6 @@ export class MatchBankTransactions {
    * @returns {Promise<void>}
    */
   public async matchTransaction(
-    tenantId: number,
     uncategorizedTransactionId: number | Array<number>,
     matchedTransactions: Array<IMatchTransactionDTO>,
   ): Promise<void> {

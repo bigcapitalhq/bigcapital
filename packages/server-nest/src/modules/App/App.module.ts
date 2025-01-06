@@ -59,6 +59,7 @@ import { BankAccountsModule } from '../BankingAccounts/BankAccounts.module';
 import { BankingTransactionsExcludeModule } from '../BankingTransactionsExclude/BankingTransactionsExclude.module';
 import { BankingTransactionsRegonizeModule } from '../BankingTranasctionsRegonize/BankingTransactionsRegonize.module';
 import { BankingMatchingModule } from '../BankingMatching/BankingMatching.module';
+import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 
 @Module({
   imports: [
@@ -141,7 +142,8 @@ import { BankingMatchingModule } from '../BankingMatching/BankingMatching.module
     BankRulesModule,
     BankingTransactionsExcludeModule,
     BankingTransactionsRegonizeModule,
-    // BankingMatchingModule
+    BankingMatchingModule,
+    BankingTransactionsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,10 +1,11 @@
 import { BaseModel } from '@/models/Model';
+import { BankRuleComparator } from '../types';
 
 export class BankRuleCondition extends BaseModel {
   public id!: number;
   public bankRuleId!: number;
   public field!: string;
-  public comparator!: string;
+  public comparator!: BankRuleComparator;
   public value!: string;
 
   /**

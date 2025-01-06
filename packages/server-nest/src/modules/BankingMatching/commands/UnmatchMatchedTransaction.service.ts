@@ -21,12 +21,10 @@ export class UnmatchMatchedBankTransaction {
    * @returns {Promise<void>}
    */
   public unmatchMatchedTransaction(
-    tenantId: number,
     uncategorizedTransactionId: number,
   ): Promise<void> {
     return this.uow.withTransaction(async (trx) => {
       await this.eventPublisher.emitAsync(events.bankMatch.onUnmatching, {
-        tenantId,
         uncategorizedTransactionId,
         trx,
       } as IBankTransactionUnmatchingEventPayload);
@@ -37,7 +35,6 @@ export class UnmatchMatchedBankTransaction {
         .delete();
 
       await this.eventPublisher.emitAsync(events.bankMatch.onUnmatched, {
-        tenantId,
         uncategorizedTransactionId,
         trx,
       } as IBankTransactionUnmatchingEventPayload);
