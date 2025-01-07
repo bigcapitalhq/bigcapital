@@ -18,10 +18,8 @@ export class GetInventoryAdjustmentService {
     const inventoryAdjustment = await InventoryAdjustment.query()
       .findById(inventoryAdjustmentId)
       .withGraphFetched('entries.item')
-      .withGraphFetched('adjustmentAccount');
-
-    // Throw not found if the given adjustment transaction not exists.
-    this.throwIfAdjustmentNotFound(inventoryAdjustment);
+      .withGraphFetched('adjustmentAccount')
+      .throwIfNotFound();
 
     return this.transformer.transform(
       inventoryAdjustment,

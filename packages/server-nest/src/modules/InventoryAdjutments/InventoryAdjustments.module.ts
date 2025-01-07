@@ -5,25 +5,30 @@ import { InventoryAdjustmentEntry } from './models/InventoryAdjustmentEntry';
 import { CreateQuickInventoryAdjustmentService } from './commands/CreateQuickInventoryAdjustment.service';
 import { PublishInventoryAdjustmentService } from './commands/PublishInventoryAdjustment.service';
 import { GetInventoryAdjustmentService } from './queries/GetInventoryAdjustment.service';
-import { GetInventoryAdjustmentsService } from './queries/GetInventoryAdjustments.service';
+// import { GetInventoryAdjustmentsService } from './queries/GetInventoryAdjustments.service';
 import { DeleteInventoryAdjustmentService } from './commands/DeleteInventoryAdjustment.service';
 import { InventoryAdjustmentsApplicationService } from './InventoryAdjustmentsApplication.service';
 import { InventoryAdjustmentsController } from './InventoryAdjustments.controller';
+import { BranchesModule } from '../Branches/Branches.module';
+import { WarehousesModule } from '../Warehouses/Warehouses.module';
+import { InventoryAdjustmentsGLSubscriber } from './subscribers/InventoryAdjustmentGL.subscriber';
 
 const models = [
   RegisterTenancyModel(InventoryAdjustment),
   RegisterTenancyModel(InventoryAdjustmentEntry),
 ];
 @Module({
+  imports: [BranchesModule, WarehousesModule],
   controllers: [InventoryAdjustmentsController],
   providers: [
     ...models,
     CreateQuickInventoryAdjustmentService,
     PublishInventoryAdjustmentService,
-    GetInventoryAdjustmentsService,
+    // GetInventoryAdjustmentsService,
     GetInventoryAdjustmentService,
     DeleteInventoryAdjustmentService,
     InventoryAdjustmentsApplicationService,
+    InventoryAdjustmentsGLSubscriber,
   ],
   exports: [...models],
 })

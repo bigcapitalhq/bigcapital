@@ -1,8 +1,18 @@
 import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
+import { Item } from '@/modules/Items/models/Item';
 // import TenantModel from 'models/TenantModel';
 
 export class InventoryAdjustmentEntry extends BaseModel {
+  adjustmentId!: number;
+  index!: number;
+  itemId!: number;
+  quantity!: number;
+  cost!: number;
+  value!: number;
+
+  item!: Item;
+
   /**
    * Table name.
    */

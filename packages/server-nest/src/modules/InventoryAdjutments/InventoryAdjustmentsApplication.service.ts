@@ -4,6 +4,7 @@ import { PublishInventoryAdjustmentService } from './commands/PublishInventoryAd
 import { CreateQuickInventoryAdjustmentService } from './commands/CreateQuickInventoryAdjustment.service';
 import { IQuickInventoryAdjustmentDTO } from './types/InventoryAdjustments.types';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
+import { GetInventoryAdjustmentService } from './queries/GetInventoryAdjustment.service';
 
 @Injectable()
 export class InventoryAdjustmentsApplicationService {
@@ -11,7 +12,21 @@ export class InventoryAdjustmentsApplicationService {
     private readonly createQuickInventoryAdjustmentService: CreateQuickInventoryAdjustmentService,
     private readonly deleteInventoryAdjustmentService: DeleteInventoryAdjustmentService,
     private readonly publishInventoryAdjustmentService: PublishInventoryAdjustmentService,
+    private readonly getInventoryAdjustmentService: GetInventoryAdjustmentService,
   ) {}
+
+  /**
+   * Retrieves the inventory adjustment transaction.
+   * @param {number} inventoryAdjustmentId - Inventory adjustment id.
+   * @returns {Promise<InventoryAdjustment>}
+   */
+  public async getInventoryAdjustment(
+    inventoryAdjustmentId: number,
+  ): Promise<InventoryAdjustment> {
+    return this.getInventoryAdjustmentService.getInventoryAdjustment(
+      inventoryAdjustmentId,
+    );
+  }
 
   /**
    * Creates a quick inventory adjustment transaction.

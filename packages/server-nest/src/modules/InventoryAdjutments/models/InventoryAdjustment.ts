@@ -3,6 +3,7 @@ import { Model, mixin } from 'objection';
 // import InventoryAdjustmentSettings from './InventoryAdjustment.Settings';
 // import ModelSetting from './ModelSetting';
 import { BaseModel } from '@/models/Model';
+import { InventoryAdjustmentEntry } from './InventoryAdjustmentEntry';
 
 export class InventoryAdjustment extends BaseModel {
   date!: string;
@@ -16,6 +17,10 @@ export class InventoryAdjustment extends BaseModel {
 
   branchId!: number;
   warehouseId!: number;
+
+  createdAt!: Date | string;
+
+  entries: InventoryAdjustmentEntry[];
 
   /**
    * Table name

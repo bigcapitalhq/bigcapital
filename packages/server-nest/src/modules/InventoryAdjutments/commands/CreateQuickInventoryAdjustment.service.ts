@@ -17,21 +17,20 @@ import { Item } from '@/modules/Items/models/Item';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 export class CreateQuickInventoryAdjustmentService {
   constructor(
     @Inject(InventoryAdjustment.name)
     private readonly inventoryAdjustmentModel: typeof InventoryAdjustment,
-    
-    @Inject(InventoryAdjustmentEntry.name)
-    private readonly inventoryAdjustmentEntryModel: typeof InventoryAdjustmentEntry,
-    
+
     @Inject(Item.name)
     private readonly itemModel: typeof Item,
-    
+
     @Inject(Account.name)
     private readonly accountModel: typeof Account,
-    
+
+    private readonly tenancyContext: TenancyContext,
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly warehouseDTOTransform: WarehouseTransactionDTOTransform,
@@ -43,9 +42,10 @@ export class CreateQuickInventoryAdjustmentService {
    * @param  {IQuickInventoryAdjustmentDTO} adjustmentDTO -
    * @return {IInventoryAdjustment}
    */
-  private transformQuickAdjToModel(
+  private async transformQuickAdjToModel(
     adjustmentDTO: IQuickInventoryAdjustmentDTO,
-  ): InventoryAdjustment {
+  ): Promise<InventoryAdjustment> {
+    const authorizedUser = await this.tenancyContext.getSystemUser();
     const entries = [
       {
         index: 1,
@@ -104,7 +104,8 @@ export class CreateQuickInventoryAdjustmentService {
 
     // Transform the DTO to inventory adjustment model.
     const invAdjustmentObject =
-      this.transformQuickAdjToModel(quickAdjustmentDTO);
+      await this.transformQuickAdjToModel(quickAdjustmentDTO);
+
     // Writes inventory adjustment transaction with associated transactions
     // under unit-of-work envirment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {

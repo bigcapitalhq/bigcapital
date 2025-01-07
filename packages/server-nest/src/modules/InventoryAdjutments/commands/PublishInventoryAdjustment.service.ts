@@ -18,9 +18,6 @@ export class PublishInventoryAdjustmentService {
 
     @Inject(InventoryAdjustment.name)
     private readonly inventoryAdjustmentModel: typeof InventoryAdjustment,
-
-    @Inject(InventoryAdjustmentEntry.name)
-    private readonly inventoryAdjustmentEntryModel: typeof InventoryAdjustmentEntry,
   ) {}
 
   /**
