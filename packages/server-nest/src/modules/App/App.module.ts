@@ -62,6 +62,7 @@ import { BankingMatchingModule } from '../BankingMatching/BankingMatching.module
 import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 import { TransactionsLockingModule } from '../TransactionsLocking/TransactionsLocking.module';
 import { SettingsModule } from '../Settings/Settings.module';
+import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdjustments.module';
 
 @Module({
   imports: [
@@ -147,7 +148,8 @@ import { SettingsModule } from '../Settings/Settings.module';
     BankingTransactionsRegonizeModule,
     BankingMatchingModule,
     TransactionsLockingModule,
-    SettingsModule
+    SettingsModule,
+    InventoryAdjustmentsModule
   ],
   controllers: [AppController],
   providers: [
