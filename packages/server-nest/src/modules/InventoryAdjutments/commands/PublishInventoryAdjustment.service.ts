@@ -1,14 +1,13 @@
-import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
+import { Knex } from 'knex';
 import { Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
-import { InventoryAdjustmentEntry } from '../models/InventoryAdjustmentEntry';
 import {
   IInventoryAdjustmentEventPublishedPayload,
   IInventoryAdjustmentPublishingPayload,
 } from '../types/InventoryAdjustments.types';
 import { events } from '@/common/events/events';
-import { Knex } from 'knex';
 import { ServiceError } from '@/modules/Items/ServiceError';
 
 export class PublishInventoryAdjustmentService {
@@ -22,8 +21,7 @@ export class PublishInventoryAdjustmentService {
 
   /**
    * Publish the inventory adjustment transaction.
-   * @param {number} tenantId
-   * @param {number} inventoryAdjustmentId
+   * @param {number} inventoryAdjustmentId - Inventory adjustment ID.
    */
   public async publishInventoryAdjustment(
     inventoryAdjustmentId: number,

@@ -4,7 +4,6 @@ import * as R from 'ramda';
 import { omit } from 'lodash';
 import { events } from '@/common/events/events';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
-import { InventoryAdjustmentEntry } from '../models/InventoryAdjustmentEntry';
 import {
   IInventoryAdjustmentCreatingPayload,
   IInventoryAdjustmentEventCreatedPayload,

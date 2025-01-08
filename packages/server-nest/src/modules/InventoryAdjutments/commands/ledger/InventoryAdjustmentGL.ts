@@ -13,7 +13,12 @@ export class InventoryAdjustmentsGL {
     this.inventoryAdjustment = inventoryAdjustmentModel;
   }
 
-  setBaseCurrency(baseCurrency: string) {
+  /**
+   * Sets the base currency.
+   * @param {string} baseCurrency - Base currency.
+   * @returns {InventoryAdjustmentsGL}
+   */
+  public setBaseCurrency(baseCurrency: string) {
     this.baseCurrency = baseCurrency;
     return this;
   }

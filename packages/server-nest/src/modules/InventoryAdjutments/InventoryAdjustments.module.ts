@@ -12,13 +12,15 @@ import { InventoryAdjustmentsController } from './InventoryAdjustments.controlle
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { InventoryAdjustmentsGLSubscriber } from './subscribers/InventoryAdjustmentGL.subscriber';
+import { InventoryAdjustmentsGLEntries } from './commands/ledger/InventoryAdjustmentsGLEntries';
+import { LedgerModule } from '../Ledger/Ledger.module';
 
 const models = [
   RegisterTenancyModel(InventoryAdjustment),
   RegisterTenancyModel(InventoryAdjustmentEntry),
 ];
 @Module({
-  imports: [BranchesModule, WarehousesModule],
+  imports: [BranchesModule, WarehousesModule, LedgerModule],
   controllers: [InventoryAdjustmentsController],
   providers: [
     ...models,
@@ -29,6 +31,7 @@ const models = [
     DeleteInventoryAdjustmentService,
     InventoryAdjustmentsApplicationService,
     InventoryAdjustmentsGLSubscriber,
+    InventoryAdjustmentsGLEntries,
   ],
   exports: [...models],
 })

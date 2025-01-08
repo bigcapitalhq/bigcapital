@@ -63,6 +63,8 @@ import { BankingTransactionsModule } from '../BankingTransactions/BankingTransac
 import { TransactionsLockingModule } from '../TransactionsLocking/TransactionsLocking.module';
 import { SettingsModule } from '../Settings/Settings.module';
 import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdjustments.module';
+import { EventTrackerModule } from '../EventsTracker/EventTracker.module';
+import { PostHogModule } from '../EventsTracker/postHog.module';
 
 @Module({
   imports: [
@@ -149,7 +151,9 @@ import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdju
     BankingMatchingModule,
     TransactionsLockingModule,
     SettingsModule,
-    InventoryAdjustmentsModule
+    InventoryAdjustmentsModule,
+    PostHogModule,
+    EventTrackerModule,
   ],
   controllers: [AppController],
   providers: [
