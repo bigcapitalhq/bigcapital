@@ -14,6 +14,7 @@ import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { InventoryAdjustmentsGLSubscriber } from './subscribers/InventoryAdjustmentGL.subscriber';
 import { InventoryAdjustmentsGLEntries } from './commands/ledger/InventoryAdjustmentsGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 const models = [
   RegisterTenancyModel(InventoryAdjustment),
@@ -32,6 +33,7 @@ const models = [
     InventoryAdjustmentsApplicationService,
     InventoryAdjustmentsGLSubscriber,
     InventoryAdjustmentsGLEntries,
+    TenancyContext,
   ],
   exports: [...models],
 })

@@ -1,7 +1,7 @@
 import {
-  ITransactionsLockingSchema,
   TransactionsLockingGroup,
-} from '@/interfaces';
+  ITransactionsLockingSchema,
+} from './types/TransactionsLocking.types';
 
 export const ERRORS = {
   TRANSACTIONS_DATE_LOCKED: 'TRANSACTIONS_DATE_LOCKED',
@@ -30,7 +30,7 @@ export const TRANSACTIONS_LOCKING_SCHEMA = [
 ] as ITransactionsLockingSchema[];
 
 export function getTransactionsLockingSchemaMeta(
-  module: TransactionsLockingGroup
+  module: TransactionsLockingGroup,
 ): ITransactionsLockingSchema {
   return TRANSACTIONS_LOCKING_SCHEMA.find((schema) => schema.module === module);
 }

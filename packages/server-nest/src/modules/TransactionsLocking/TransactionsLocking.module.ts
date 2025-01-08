@@ -10,8 +10,10 @@ import { PurchasesTransactionLockingGuardSubscriber } from './subscribers/Purcha
 import { SalesTransactionLockingGuardSubscriber } from './subscribers/SalesTransactionLockingGuardSubscriber';
 import { QueryTransactionsLocking } from './queries/QueryTransactionsLocking';
 import { TransactionsLockingController } from './TransactionsLocking.controller';
+import { SettingsModule } from '../Settings/Settings.module';
 
 @Module({
+  imports: [SettingsModule],
   providers: [
     TransactionsLockingService,
     FinancialTransactionLocking,

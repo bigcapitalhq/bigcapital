@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { Inject } from '@nestjs/common';
 import * as R from 'ramda';
+import * as moment from 'moment';
 import { omit } from 'lodash';
 import { events } from '@/common/events/events';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
@@ -17,6 +18,7 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { ERRORS } from '../constants/InventoryAdjustments.constants';
 
 export class CreateQuickInventoryAdjustmentService {
   constructor(
@@ -80,7 +82,6 @@ export class CreateQuickInventoryAdjustmentService {
 
   /**
    * Creates a quick inventory adjustment for specific item.
-   * @param {number} tenantId - Tenant id.
    * @param {IQuickInventoryAdjustmentDTO} quickAdjustmentDTO - qucik adjustment DTO.
    */
   public async createQuickAdjustment(
@@ -119,7 +120,7 @@ export class CreateQuickInventoryAdjustmentService {
       // Saves the inventory adjustment with associated entries to the storage.
       const inventoryAdjustment = await this.inventoryAdjustmentModel
         .query(trx)
-        .upsertGraph({
+        .upsertGraphAndFetch({
           ...invAdjustmentObject,
         });
       // Triggers `onInventoryAdjustmentQuickCreated` event.

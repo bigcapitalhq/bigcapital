@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import * as moment from 'moment';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
 import {
@@ -9,6 +10,7 @@ import {
 } from '../types/InventoryAdjustments.types';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { ERRORS } from '../constants/InventoryAdjustments.constants';
 
 export class PublishInventoryAdjustmentService {
   constructor(
@@ -47,11 +49,15 @@ export class PublishInventoryAdjustmentService {
       );
 
       // Publish the inventory adjustment transaction.
-      await InventoryAdjustment.query().findById(inventoryAdjustmentId).patch({
-        publishedAt: moment().toMySqlDateTime(),
-      });
+      await this.inventoryAdjustmentModel
+        .query()
+        .findById(inventoryAdjustmentId)
+        .patch({
+          publishedAt: moment().toMySqlDateTime(),
+        });
       // Retrieve the inventory adjustment after the modification.
-      const inventoryAdjustment = await InventoryAdjustment.query()
+      const inventoryAdjustment = await this.inventoryAdjustmentModel
+        .query()
         .findById(inventoryAdjustmentId)
         .withGraphFetched('entries');
 

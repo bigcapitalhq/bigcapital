@@ -1,7 +1,7 @@
 import { Model } from 'objection';
 import { omit, isEmpty } from 'lodash';
 import { IMetadata, IMetaQuery, IMetableStore } from './types';
-import { itemsStartWith } from 'utils';
+import { itemsStartWith } from '@/utils/items-start-with';
 
 export class MetableStore implements IMetableStore {
   metadata: IMetadata[];
@@ -23,7 +23,7 @@ export class MetableStore implements IMetableStore {
    */
   setExtraColumns(columns: string[]): void {
     this.extraColumns = columns;
-  }
+}
 
   /**
    * Find the given metadata key.
@@ -120,6 +120,7 @@ export class MetableStore implements IMetableStore {
         key,
         ...extraColumns,
         _markAsInserted: true,
+        group: 'default',
       });
     }
   }
@@ -166,11 +167,11 @@ export class MetableStore implements IMetableStore {
    * Parse the metadata to the collection.
    * @param {Array} collection -
    */
-  mapMetadataToCollection(metadata: IMetadata[], parseType: string = 'parse') {
-    return metadata.map((model) =>
-      this.mapMetadataToCollection(model, parseType)
-    );
-  }
+  // mapMetadataToCollection(metadata: IMetadata[], parseType: string = 'parse') {
+  //   return metadata.map((model) =>
+  //     this.mapMetadataToCollection(model, parseType)
+  //   );
+  // }
 
   /**
    * Load metadata to the metable collection.
@@ -198,12 +199,12 @@ export class MetableStore implements IMetableStore {
    * Static method to load metadata to the collection.
    * @param {Array} meta
    */
-  static from(meta) {
-    const collection = new MetableCollection();
-    collection.from(meta);
+  // static from(meta) {
+  //   const collection = new MetableCollection();
+  //   collection.from(meta);
 
-    return collection;
-  }
+  //   return collection;
+  // }
 
   /**
    * Reset the momerized metadata.

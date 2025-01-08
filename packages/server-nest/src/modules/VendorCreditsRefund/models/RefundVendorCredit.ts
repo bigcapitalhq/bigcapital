@@ -16,6 +16,7 @@ export class RefundVendorCredit extends BaseModel {
   public depositAccountId!: number;
   public description!: string;
   public branchId!: number;
+  public date!: Date;
 
   public vendorCredit!: VendorCredit;
   public depositAccount!: Account;

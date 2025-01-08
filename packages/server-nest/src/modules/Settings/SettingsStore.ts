@@ -10,7 +10,7 @@ export class SettingsStore extends MetableDBStore {
   constructor(repository: EntityRepository, config: any = SettingsOptions) {
     super(config);
 
-    // this.setExtraColumns(['group']);
+    this.setExtraColumns(['group']);
     this.setRepository(repository);
   }
 }

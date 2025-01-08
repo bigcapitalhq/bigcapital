@@ -40,7 +40,7 @@ export class ItemsController extends TenantController {
    * @returns The updated item id.
    */
   @Put(':id')
-  @UsePipes(new ZodValidationPipe(createItemSchema))
+  // @UsePipes(new ZodValidationPipe(createItemSchema))
   async editItem(
     @Param('id') id: string,
     @Body() editItemDto: any,
@@ -55,7 +55,7 @@ export class ItemsController extends TenantController {
    * @returns The created item id.
    */
   @Post()
-  @UsePipes(new ZodValidationPipe(createItemSchema))
+  // @UsePipes(new ZodValidationPipe(createItemSchema))
   async createItem(@Body() createItemDto: any): Promise<number> {
     return this.createItemService.createItem(createItemDto);
   }

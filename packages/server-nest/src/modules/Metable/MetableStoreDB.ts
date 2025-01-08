@@ -1,8 +1,9 @@
 import { IMetadata, IMetableStoreStorage } from './types';
 import { MetableStore } from './MetableStore';
-import { isBlank, parseBoolean } from 'utils';
 import { MetableConfig } from './MetableConfig';
 import { EntityRepository } from '@/common/repository/EntityRepository';
+import { isBlank } from '@/utils/is-blank';
+import { parseBoolean } from '@/utils/parse-boolean';
 
 export class MetableDBStore
   extends MetableStore
@@ -72,10 +73,10 @@ export class MetableDBStore
   /**
    * Saves the modified, deleted and insert metadata.
    */
-  save() {
+  async save() {
     this.validateStoreIsLoaded();
 
-    return Promise.all([
+    await Promise.all([
       this.saveUpdated(this.metadata),
       this.saveDeleted(this.metadata),
       this.saveInserted(this.metadata),

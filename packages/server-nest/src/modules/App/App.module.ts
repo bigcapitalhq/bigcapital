@@ -152,8 +152,8 @@ import { PostHogModule } from '../EventsTracker/postHog.module';
     TransactionsLockingModule,
     SettingsModule,
     InventoryAdjustmentsModule,
-    PostHogModule,
-    EventTrackerModule,
+    // PostHogModule,
+    // EventTrackerModule,
   ],
   controllers: [AppController],
   providers: [

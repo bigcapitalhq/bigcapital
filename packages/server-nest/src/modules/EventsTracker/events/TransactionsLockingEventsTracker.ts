@@ -1,4 +1,3 @@
-import { ITransactionsLockingPartialUnlocked } from '@/interfaces';
 import {
   SUBSCRIPTION_CANCELLED,
   SUBSCRIPTION_PAYMENT_FAILED,

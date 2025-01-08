@@ -1,4 +1,4 @@
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 // import TenantModel from 'models/TenantModel';
 // import InventoryAdjustmentSettings from './InventoryAdjustment.Settings';
 // import ModelSetting from './ModelSetting';

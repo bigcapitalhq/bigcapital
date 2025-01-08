@@ -4,7 +4,6 @@ import {
   TransactionsLockingGroup,
   TransactionsLockingType,
 } from './types/TransactionsLocking.types';
-import { parseDate } from 'utils';
 import { Inject, Injectable } from '@nestjs/common';
 import { SettingsStore } from '../Settings/SettingsStore';
 import { SETTINGS } from '../Settings/Settings.module';
@@ -159,3 +158,7 @@ export class TransactionsLockingRepository {
     });
   }
 }
+
+export const parseDate = (date: string) => {
+  return date ? moment(date).utcOffset(0).format('YYYY-MM-DD') : '';
+};

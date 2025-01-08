@@ -15,5 +15,6 @@ export const SETTINGS = 'SETTINGS';
       inject: [SettingRepository],
     },
   ],
+  exports: [SETTINGS]
 })
 export class SettingsModule {}

@@ -1,6 +1,7 @@
 import { TransactionsLockingGroup } from '../types/TransactionsLocking.types';
 import { Injectable } from '@nestjs/common';
 import { TransactionsLockingGuard } from './TransactionsLockingGuard';
+import { MomentInput } from 'moment';
 
 @Injectable()
 export class SalesTransactionLockingGuard {
@@ -13,7 +14,7 @@ export class SalesTransactionLockingGuard {
    * @param {Date} transactionDate - The transaction date.
    */
   public transactionLockingGuard = async (
-    transactionDate: Date
+    transactionDate: MomentInput
   ) => {
     await this.transactionLockingGuardService.transactionsLockingGuard(
       transactionDate,

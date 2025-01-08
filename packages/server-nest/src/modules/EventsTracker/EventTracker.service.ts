@@ -1,13 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PostHog } from 'posthog-node';
-import { EventMessage } from 'posthog-node/src/types';
+// import { PostHog, EventMessage } from 'posthog-node';
 import { POSTHOG } from './postHog.module';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
+interface EventMessage {
+  distinctId 
+}
 @Injectable()
 export class EventTrackerService {
   constructor(
-    @Inject(POSTHOG) private readonly posthog: PostHog,
+    @Inject(POSTHOG) private readonly posthog: any,
     private readonly tenancyContext: TenancyContext,
   ) {}
 
@@ -15,7 +17,7 @@ export class EventTrackerService {
    * Track tenant an event.
    * @param event - The event to track.
    */
-  public async trackEvent(event: Omit<EventMessage, 'distinctId'>) {
+  public async trackEvent(event: any) {
     // Cannot continue if the Posthog not configured.
     if (!this.posthog) return;
 

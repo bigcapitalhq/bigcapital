@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment, { MomentInput } from 'moment';
 import { Injectable } from '@nestjs/common';
 import { TransactionsLockingGroup } from '../types/TransactionsLocking.types';
 import { TransactionsLockingRepository } from '../TransactionsLockingRepository';
@@ -18,7 +18,7 @@ export class TransactionsLockingGuard {
    * @returns {boolean}
    */
   public isTransactionsLocking = (
-    transactionDate: Date,
+    transactionDate: MomentInput,
     lockingGroup: string = TransactionsLockingGroup.All
   ): boolean => {
     const { isEnabled, unlockFromDate, unlockToDate, lockToDate } =
@@ -49,7 +49,7 @@ export class TransactionsLockingGuard {
    * @throws {ServiceError}
    */
   public validateTransactionsLocking = (
-    transactionDate: Date,
+    transactionDate: MomentInput,
     lockingGroup: TransactionsLockingGroup
   ) => {
     const isLocked = this.isTransactionsLocking(
@@ -83,7 +83,7 @@ export class TransactionsLockingGuard {
    * @param {Date} transactionDate - The transaction date.
    */
   public transactionsLockingGuard = (
-    transactionDate: Date,
+    transactionDate: MomentInput,
     moduleType: TransactionsLockingGroup
   ) => {
     const lockingType =
