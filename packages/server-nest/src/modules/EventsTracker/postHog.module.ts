@@ -1,24 +1,27 @@
 import { Module } from '@nestjs/common';
-// import { PostHog } from 'posthog-node';
+import { PostHog } from 'posthog-node';
 import { EventTrackerService } from './EventTracker.service';
 import { ConfigService } from '@nestjs/config';
-
-export const POSTHOG = 'PostHog';
+import { POSTHOG_PROVIDER } from './PostHog.constants';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Module({
   providers: [
     EventTrackerService,
+    TenancyContext,
     {
-      provide: POSTHOG,
+      provide: POSTHOG_PROVIDER,
       useFactory: (configService: ConfigService) => {
-
+        if (configService.get('posthog.apiKey')) {
+          return new PostHog(configService.get('posthog.apiKey'), {
+            host: configService.get('posthog.host'),
+          });
+        }
+        return null;
       },
-        // new PostHog(configService.get('posthog.apiKey'), {
-        //   host: configService.get('posthog.host'),
-        // }),
       inject: [ConfigService],
     },
   ],
-  exports: [EventTrackerService],
+  exports: [EventTrackerService, POSTHOG_PROVIDER],
 })
 export class PostHogModule {}
