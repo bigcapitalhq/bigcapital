@@ -1,6 +1,6 @@
 import { EntityRepository } from '@/common/repository/EntityRepository';
-import { MetableDBStore } from '../Metable/MetableStoreDB';
 import { SettingsOptions } from '@/constants/metable-options';
+import { MetableDBStore } from '../Metable/MetableStoreDB';
 
 export class SettingsStore extends MetableDBStore {
   /**
@@ -13,4 +13,5 @@ export class SettingsStore extends MetableDBStore {
     this.setExtraColumns(['group']);
     this.setRepository(repository);
   }
+
 }

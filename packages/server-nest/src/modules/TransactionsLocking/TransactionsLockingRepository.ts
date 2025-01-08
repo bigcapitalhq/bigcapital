@@ -6,12 +6,12 @@ import {
 } from './types/TransactionsLocking.types';
 import { Inject, Injectable } from '@nestjs/common';
 import { SettingsStore } from '../Settings/SettingsStore';
-import { SETTINGS } from '../Settings/Settings.module';
+import { SETTINGS_PROVIDER } from '../Settings/Settings.types';
 
 @Injectable()
 export class TransactionsLockingRepository {
   constructor(
-    @Inject(SETTINGS) private readonly settingsStore: SettingsStore,
+    @Inject(SETTINGS_PROVIDER) private readonly settingsStore: SettingsStore,
   ) {}
 
   /**

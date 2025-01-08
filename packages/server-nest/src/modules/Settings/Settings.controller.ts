@@ -1,16 +1,20 @@
-import { Controller, Get } from '@nestjs/common';
-import { Inject } from '@nestjs/common';
-import { SETTINGS } from './Settings.module';
-import { SettingsStore } from './SettingsStore';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { SettingsApplicationService } from './SettingsApplication.service';
+import { ISettingsDTO } from './Settings.types';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('settings')
+@PublicRoute()
 export class SettingsController {
   constructor(
-    @Inject(SETTINGS) private readonly settingsStore: SettingsStore,
+    private readonly settingsApplicationService: SettingsApplicationService,
   ) {}
 
-  @Get('')
-  async getSettings() {
-    return this.settingsStore.all();
+  @Post('')
+  async saveSettings(@Body() settingsDTO: ISettingsDTO) {
+    return this.settingsApplicationService.saveSettings(settingsDTO);
   }
+
+  @Get('')
+  async getSettings() {}
 }
