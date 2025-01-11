@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import { isUndefined } from 'lodash';
 import {
   ITransactionMeta,

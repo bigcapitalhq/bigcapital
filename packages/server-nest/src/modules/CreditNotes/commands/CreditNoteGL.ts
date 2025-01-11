@@ -162,9 +162,9 @@ export class CreditNoteGL {
   public getCreditNoteGLEntries(): ILedgerEntry[] {
     const AREntry = this.creditNoteAREntry;
 
-    const getItemEntry = this.getCreditNoteItemEntry;
-    const itemsEntries = this.creditNoteModel.entries.map(getItemEntry);
-
+    const itemsEntries = this.creditNoteModel.entries.map((entry, index) =>
+      this.getCreditNoteItemEntry(entry, index),
+    );
     const discountEntry = this.discountEntry;
     const adjustmentEntry = this.adjustmentEntry;
 

@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app } from './init-app-test';
+import { app, orgainzationId } from './init-app-test';
 
 const createOwnerContributionTransaction = () => ({
   date: '2024-01-01',
@@ -22,7 +22,7 @@ describe('Banking Transactions (e2e)', () => {
   it('/banking/transactions (POST)', () => {
     return request(app.getHttpServer())
       .post('/banking/transactions')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(createOwnerContributionTransaction())
       .expect(201);
   });
@@ -31,7 +31,7 @@ describe('Banking Transactions (e2e)', () => {
     const transaction = createOwnerContributionTransaction();
     const response = await request(app.getHttpServer())
       .post('/banking/transactions')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(transaction)
       .expect(201);
 
@@ -39,7 +39,7 @@ describe('Banking Transactions (e2e)', () => {
 
     return request(app.getHttpServer())
       .get(`/banking/transactions/${transactionId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 
@@ -47,7 +47,7 @@ describe('Banking Transactions (e2e)', () => {
     const transaction = createOwnerContributionTransaction();
     const response = await request(app.getHttpServer())
       .post('/banking/transactions')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(transaction)
       .expect(201);
 
@@ -55,7 +55,7 @@ describe('Banking Transactions (e2e)', () => {
 
     return request(app.getHttpServer())
       .delete(`/banking/transactions/${transactionId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 });

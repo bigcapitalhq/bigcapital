@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app } from './init-app-test';
+import { app, orgainzationId } from './init-app-test';
 
 const makeManualJournalRequest = () => ({
   date: '2022-06-01',
@@ -27,7 +27,7 @@ describe.only('Manual Journals (e2e)', () => {
   it('/manual-journals (POST)', () => {
     return request(app.getHttpServer())
       .post('/manual-journals')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(makeManualJournalRequest())
       .expect(201);
   });
@@ -35,14 +35,14 @@ describe.only('Manual Journals (e2e)', () => {
   it('/manual-journals/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(makeManualJournalRequest());
 
     const journalId = response.body.id;
 
     return request(app.getHttpServer())
       .delete(`/manual-journals/${journalId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send()
       .expect(200);
   });
@@ -50,14 +50,14 @@ describe.only('Manual Journals (e2e)', () => {
   it('/manual-journals/:id (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(makeManualJournalRequest());
 
     const journalId = response.body.id;
 
     return request(app.getHttpServer())
       .get(`/manual-journals/${journalId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send()
       .expect(200);
   });
@@ -66,14 +66,14 @@ describe.only('Manual Journals (e2e)', () => {
     const manualJournal = makeManualJournalRequest();
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(manualJournal);
 
     const journalId = response.body.id;
 
     return request(app.getHttpServer())
       .put(`/manual-journals/${journalId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(manualJournal)
       .expect(200);
   });
@@ -81,14 +81,14 @@ describe.only('Manual Journals (e2e)', () => {
   it('/manual-journals/:id/publish (PUT)', async () => {
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(makeManualJournalRequest());
 
     const journalId = response.body.id;
 
     return request(app.getHttpServer())
       .put(`/manual-journals/${journalId}/publish`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send()
       .expect(200);
   });

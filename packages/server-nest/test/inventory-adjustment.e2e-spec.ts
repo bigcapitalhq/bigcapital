@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app } from './init-app-test';
+import { app, orgainzationId } from './init-app-test';
 
 export const createInventoryAdjustment = ({ itemId }) => ({
   date: '2020-01-01',
@@ -28,7 +28,7 @@ describe('Inventory Adjustments (e2e)', () => {
   it('/inventory-adjustments/quick (POST)', async () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(makeItemRequest())
       .expect(201);
 
@@ -36,7 +36,7 @@ describe('Inventory Adjustments (e2e)', () => {
 
     return request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(createInventoryAdjustment({ itemId }))
       .expect(201);
   });
@@ -44,7 +44,7 @@ describe('Inventory Adjustments (e2e)', () => {
   it('/inventory-adjustments/:id (DELETE)', async () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(makeItemRequest())
       .expect(201);
 
@@ -52,7 +52,7 @@ describe('Inventory Adjustments (e2e)', () => {
 
     const inventoryAdjustmentResponse = await request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(createInventoryAdjustment({ itemId }))
       .expect(201);
 
@@ -60,21 +60,21 @@ describe('Inventory Adjustments (e2e)', () => {
 
     return request(app.getHttpServer())
       .delete(`/inventory-adjustments/${inventoryAdjustmentId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 
   it('/inventory-adjustments/:id (GET)', async () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(makeItemRequest())
       .expect(201);
 
     const itemId = itemResponse.text;
     const inventoryAdjustmentResponse = await request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(createInventoryAdjustment({ itemId }))
       .expect(201);
 
@@ -82,21 +82,21 @@ describe('Inventory Adjustments (e2e)', () => {
 
     return request(app.getHttpServer())
       .get(`/inventory-adjustments/${inventoryAdjustmentId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 
   it('/inventory-adjustments/:id/publish (POST)', async () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(makeItemRequest())
       .expect(201);
 
     const itemId = itemResponse.text;
     const inventoryAdjustmentResponse = await request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send({
         ...createInventoryAdjustment({ itemId }),
         publish: false,
@@ -107,7 +107,7 @@ describe('Inventory Adjustments (e2e)', () => {
 
     return request(app.getHttpServer())
       .put(`/inventory-adjustments/${inventoryAdjustmentId}/publish`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 });

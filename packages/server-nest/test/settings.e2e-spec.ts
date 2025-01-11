@@ -1,5 +1,5 @@
 import * as request from 'supertest';
-import { app } from './init-app-test';
+import { app, orgainzationId } from './init-app-test';
 
 const makeSettingsRequest = () => ({
   options: [
@@ -20,7 +20,7 @@ describe('Settings (e2e)', () => {
   it('/settings (PUT)', () => {
     return request(app.getHttpServer())
       .put('/settings')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(makeSettingsRequest())
       .expect(200);
   });
@@ -28,7 +28,7 @@ describe('Settings (e2e)', () => {
   it('/settings (GET)', () => {
     return request(app.getHttpServer())
       .get('/settings')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 });

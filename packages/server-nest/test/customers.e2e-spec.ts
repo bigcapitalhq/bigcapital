@@ -1,12 +1,12 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app } from './init-app-test';
+import { app, orgainzationId } from './init-app-test';
 
 describe('Customers (e2e)', () => {
   it('/customers (POST)', () => {
     return request(app.getHttpServer())
       .post('/customers')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send({
         customerType: 'business',
         displayName: faker.commerce.productName(),
@@ -20,7 +20,7 @@ describe('Customers (e2e)', () => {
   it('/customers/:id (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/customers')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send({
         customerType: 'business',
         displayName: faker.commerce.productName(),
@@ -32,14 +32,14 @@ describe('Customers (e2e)', () => {
 
     return request(app.getHttpServer())
       .get(`/customers/${customerId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 
   it('/customers/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .post('/customers')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send({
         customerType: 'business',
         displayName: faker.commerce.productName(),
@@ -51,14 +51,14 @@ describe('Customers (e2e)', () => {
 
     return request(app.getHttpServer())
       .delete(`/customers/${customerId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 
   it('/customers/:id (PUT)', async () => {
     const response = await request(app.getHttpServer())
       .post('/customers')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send({
         customerType: 'business',
         displayName: faker.commerce.productName(),
@@ -70,7 +70,7 @@ describe('Customers (e2e)', () => {
 
     return request(app.getHttpServer())
       .put(`/customers/${customerId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send({
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),

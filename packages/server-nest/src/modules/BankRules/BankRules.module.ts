@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CreateBankRuleService } from './commands/CreateBankRule.service';
 import { EditBankRuleService } from './commands/EditBankRule.service';
 import { DeleteBankRuleService } from './commands/DeleteBankRule.service';
@@ -11,6 +11,7 @@ import { BankRule } from './models/BankRule';
 import { BankRulesController } from './BankRules.controller';
 import { UnlinkBankRuleOnDeleteBankRuleSubscriber } from './events/UnlinkBankRuleOnDeleteBankRule';
 import { DeleteBankRulesService } from './commands/DeleteBankRules.service';
+import { BankingTransactionsRegonizeModule } from '../BankingTranasctionsRegonize/BankingTransactionsRegonize.module';
 
 const models = [
   RegisterTenancyModel(BankRule),
@@ -19,7 +20,7 @@ const models = [
 
 @Module({
   controllers: [BankRulesController],
-  imports: [],
+  imports: [forwardRef(() => BankingTransactionsRegonizeModule)],
   providers: [
     ...models,
     CreateBankRuleService,

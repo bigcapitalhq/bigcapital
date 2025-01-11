@@ -6,7 +6,9 @@ import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class UnlinkBankRuleOnDeleteBankRuleSubscriber {
-  private revertRecognizedTransactionsService: RevertRecognizedTransactionsService;
+  constructor(
+    private readonly revertRecognizedTransactionsService: RevertRecognizedTransactionsService,
+  ) {}
 
   /**
    * Unlinks the bank rule out of recognized transactions.
@@ -17,7 +19,7 @@ export class UnlinkBankRuleOnDeleteBankRuleSubscriber {
     oldBankRule,
   }: IBankRuleEventDeletingPayload) {
     await this.revertRecognizedTransactionsService.revertRecognizedTransactions(
-      oldBankRule.id
+      oldBankRule.id,
     );
   }
 }

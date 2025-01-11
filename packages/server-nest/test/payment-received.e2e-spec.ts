@@ -1,9 +1,13 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app } from './init-app-test';
+import { app, orgainzationId } from './init-app-test';
+
+let invoice;
+let customerId;
+let itemId;
 
 const requestPaymentReceivedBody = (invoiceId: number) => ({
-  customerId: 2,
+  customerId: customerId,
   paymentDate: '2023-01-01',
   exchangeRate: 1,
   referenceNo: faker.string.uuid(),
@@ -15,7 +19,7 @@ const requestPaymentReceivedBody = (invoiceId: number) => ({
 });
 
 const requestSaleInvoiceBody = () => ({
-  customerId: 2,
+  customerId: customerId,
   invoiceDate: '2023-01-01',
   dueDate: '2023-02-01',
   invoiceNo: faker.string.uuid(),
@@ -28,7 +32,7 @@ const requestSaleInvoiceBody = () => ({
   entries: [
     {
       index: 1,
-      itemId: 1001,
+      itemId: itemId,
       quantity: 100,
       rate: 1000,
       description: 'Item description...',
@@ -36,22 +40,43 @@ const requestSaleInvoiceBody = () => ({
   ],
 });
 
-let invoice;
-
-beforeEach(async () => {
-  const response = await request(app.getHttpServer())
-    .post('/sale-invoices')
-    .set('organization-id', '4064541lv40nhca')
-    .send(requestSaleInvoiceBody());
-
-  invoice = response.body;
-});
-
 describe('Payment Received (e2e)', () => {
+  beforeAll(async () => {
+    const customer = await request(app.getHttpServer())
+      .post('/customers')
+      .set('organization-id', orgainzationId)
+      .send({ displayName: 'Test Customer' });
+
+    customerId = customer.body.id;
+
+    const item = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .send({
+        name: faker.commerce.productName(),
+        sellable: true,
+        purchasable: true,
+        sellAccountId: 1026,
+        costAccountId: 1019,
+        costPrice: 100,
+        sellPrice: 100,
+      });
+    itemId = parseInt(item.text, 10);
+  });
+
+  beforeEach(async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .send(requestSaleInvoiceBody());
+
+    invoice = response.body;
+  });
+
   it('/payments-received (POST)', () => {
     return request(app.getHttpServer())
       .post('/payments-received')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(requestPaymentReceivedBody(invoice.id))
       .expect(201);
   });
@@ -59,49 +84,49 @@ describe('Payment Received (e2e)', () => {
   it('/payments-received/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .post('/payments-received')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(requestPaymentReceivedBody(invoice.id));
 
     const paymentReceivedId = response.body.id;
 
     return request(app.getHttpServer())
       .delete(`/payments-received/${paymentReceivedId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 
   it('/payments-received/:id (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/payments-received')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(requestPaymentReceivedBody(invoice.id));
 
     const paymentReceivedId = response.body.id;
 
     return request(app.getHttpServer())
       .get(`/payments-received/${paymentReceivedId}`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 
   it('/payments-received/:id/invoices (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/payments-received')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .send(requestPaymentReceivedBody(invoice.id));
 
     const paymentReceivedId = response.body.id;
 
     return request(app.getHttpServer())
       .get(`/payments-received/${paymentReceivedId}/invoices`)
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 
   it('/payments-received/state (GET)', () => {
     return request(app.getHttpServer())
       .get('/payments-received/state')
-      .set('organization-id', '4064541lv40nhca')
+      .set('organization-id', orgainzationId)
       .expect(200);
   });
 });

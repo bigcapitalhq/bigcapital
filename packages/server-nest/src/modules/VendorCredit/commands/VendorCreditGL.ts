@@ -147,9 +147,9 @@ export class VendorCreditGL {
    */
   public getVendorCreditGLEntries(): ILedgerEntry[] {
     const payableEntry = this.vendorCreditPayableGLEntry;
-    const getItemEntry = this.getVendorCreditGLItemEntry;
-    const itemsEntries = this.vendorCredit.entries.map(getItemEntry);
-
+    const itemsEntries = this.vendorCredit.entries.map((entry, index) =>
+      this.getVendorCreditGLItemEntry(entry, index),
+    );
     const discountEntry = this.discountEntry;
     const adjustmentEntry = this.adjustmentEntry;
 

@@ -5,8 +5,10 @@ import { ITransactionsLockingAllDTO } from './types/TransactionsLocking.types';
 import { ICancelTransactionsLockingDTO } from './types/TransactionsLocking.types';
 import { ITransactionLockingPartiallyDTO } from './types/TransactionsLocking.types';
 import { QueryTransactionsLocking } from './queries/QueryTransactionsLocking';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('transactions-locking')
+@PublicRoute()
 export class TransactionsLockingController {
   constructor(
     private readonly transactionsLockingService: TransactionsLockingService,
@@ -74,13 +76,15 @@ export class TransactionsLockingController {
     };
   }
 
-  // @Get(':module')
-  // async getTransactionLockingMeta(@Param('module') module: string) {
-  //   return await this.queryTransactionsLocking.getTransactionsLocking(module);
-  // }
-
-  @Get()
+  @Get('/')
   async getTransactionLockingMetaList() {
     return await this.queryTransactionsLocking.getTransactionsLockingAll();
+  }
+
+  @Get(':module')
+  async getTransactionLockingMeta(@Param('module') module: string) {
+    return await this.queryTransactionsLocking.getTransactionsLockingModuleMeta(
+      module as TransactionsLockingGroup,
+    );
   }
 }

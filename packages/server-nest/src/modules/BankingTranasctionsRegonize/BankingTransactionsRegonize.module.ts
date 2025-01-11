@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { RecognizedBankTransaction } from './models/RecognizedBankTransaction';
 import { GetAutofillCategorizeTransactionService } from './queries/GetAutofillCategorizeTransaction.service';
@@ -11,7 +11,7 @@ import { BankRulesModule } from '../BankRules/BankRules.module';
 const models = [RegisterTenancyModel(RecognizedBankTransaction)];
 
 @Module({
-  imports: [BankingTransactionsModule, BankRulesModule],
+  imports: [BankingTransactionsModule, forwardRef(() => BankRulesModule)],
   providers: [
     ...models,
     GetAutofillCategorizeTransactionService,
