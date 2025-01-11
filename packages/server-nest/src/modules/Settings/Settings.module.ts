@@ -5,17 +5,24 @@ import { SettingsApplicationService } from './SettingsApplication.service';
 import { SaveSettingsService } from './commands/SaveSettings.service';
 import { SettingsController } from './Settings.controller';
 import { SETTINGS_PROVIDER } from './Settings.types';
+import { GetSettingsService } from './queries/GetSettings.service';
 
 @Module({
   providers: [
     SettingRepository,
     {
       provide: SETTINGS_PROVIDER,
-      useFactory: (settingRepository: SettingRepository) => {
-        return new SettingsStore(settingRepository);
+      useFactory: async (settingRepository: SettingRepository) => {
+        const settings = new SettingsStore(settingRepository);
+
+        // Load settings from database.
+        await settings.load();
+
+        return settings;
       },
       inject: [SettingRepository],
     },
+    GetSettingsService,
     SettingsApplicationService,
     SaveSettingsService,
   ],

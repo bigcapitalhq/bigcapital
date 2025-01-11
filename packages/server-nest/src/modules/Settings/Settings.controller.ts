@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { SettingsApplicationService } from './SettingsApplication.service';
 import { ISettingsDTO } from './Settings.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
@@ -10,11 +10,13 @@ export class SettingsController {
     private readonly settingsApplicationService: SettingsApplicationService,
   ) {}
 
-  @Post('')
+  @Put('')
   async saveSettings(@Body() settingsDTO: ISettingsDTO) {
     return this.settingsApplicationService.saveSettings(settingsDTO);
   }
 
   @Get('')
-  async getSettings() {}
+  async getSettings() {
+    return this.settingsApplicationService.getSettings();
+  }
 }
