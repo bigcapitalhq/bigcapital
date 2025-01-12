@@ -2,14 +2,14 @@ import * as R from 'ramda';
 import { Injectable } from '@nestjs/common';
 import validator from 'is-my-json-valid';
 import { IFilterRole } from './DynamicFilter/DynamicFilter.types';
-import { DynamicListAbstract } from './DynamicListAbstract';
 import { DynamicFilterAdvancedFilter } from './DynamicFilter/DynamicFilterAdvancedFilter';
 import { ERRORS } from './constants';
 import { ServiceError } from '../Items/ServiceError';
 import { BaseModel } from '@/models/Model';
+import { DynamicFilterRoleAbstractor } from './DynamicFilter/DynamicFilterRoleAbstractor';
 
 @Injectable()
-export class DynamicListFilterRoles extends DynamicListAbstract {
+export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
   /**
    * Validates filter roles schema.
    * @param {IFilterRole[]} filterRoles - Filter roles.

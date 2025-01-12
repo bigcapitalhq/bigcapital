@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
 import {
@@ -47,6 +48,11 @@ export class PaymentReceivesController {
     return this.paymentReceivesApplication.deletePaymentReceive(
       paymentReceiveId,
     );
+  }
+
+  @Get()
+  public getPaymentsReceived(@Query() filterDTO: IPaymentsReceivedFilter) {
+    return this.paymentReceivesApplication.getPaymentsReceived(filterDTO);
   }
 
   @Get('state')

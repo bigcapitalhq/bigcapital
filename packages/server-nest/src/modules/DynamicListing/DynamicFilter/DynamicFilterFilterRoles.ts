@@ -1,8 +1,6 @@
-import { DynamicFilterAbstractor } from './DynamicFilterRoleAbstractor';
-import { IFilterRole } from '@/interfaces';
+import { DynamicFilterRoleAbstractor } from './DynamicFilterRoleAbstractor';
 
-export class DynamicFilterFilterRoles extends DynamicFilterAbstractor {
-  private filterRoles: IFilterRole[];
+export class DynamicFilterFilterRoles extends DynamicFilterRoleAbstractor {
   /**
    * On initialize filter roles.
    */
@@ -28,14 +26,14 @@ export class DynamicFilterFilterRoles extends DynamicFilterAbstractor {
   /**
    * Builds database query of view roles.
    */
-  protected buildQuery() {
+  public buildQuery() {
     const logicExpression = this.buildLogicExpression();
 
     return (builder) => {
       this.buildFilterQuery(
         this.model,
         this.filterRoles,
-        logicExpression
+        logicExpression,
       )(builder);
     };
   }

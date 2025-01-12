@@ -1,7 +1,9 @@
-import { Model as ObjectionModel } from 'objection';
+import { BaseModel } from "@/models/Model";
+;
+type GConstructor<T = {}> = new (...args: any[]) => T;
 
-export const CustomViewBaseModel = (Model) =>
-  class extends Model {
+export const CustomViewBaseModelMixin = <T extends GConstructor<BaseModel>>(Model: T) =>
+  class CustomViewBaseModel extends Model {
     /**
      * Retrieve the default custom views, roles and columns.
      */

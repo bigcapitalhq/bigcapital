@@ -622,6 +622,9 @@ importers:
       plaid:
         specifier: ^10.3.0
         version: 10.9.0
+      pluralize:
+        specifier: ^8.0.0
+        version: 8.0.0
       posthog-node:
         specifier: ^4.3.2
         version: 4.3.2

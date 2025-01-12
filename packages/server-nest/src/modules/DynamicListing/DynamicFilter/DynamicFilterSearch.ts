@@ -3,7 +3,6 @@ import { DynamicFilterFilterRoles } from './DynamicFilterFilterRoles';
 
 export class DynamicFilterSearch extends DynamicFilterFilterRoles {
   private searchKeyword: string;
-  private filterRoles: IFilterRole[];
 
   /**
    * Constructor method.

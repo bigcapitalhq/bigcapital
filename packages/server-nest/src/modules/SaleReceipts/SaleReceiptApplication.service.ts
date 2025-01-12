@@ -8,7 +8,14 @@ import { CloseSaleReceipt } from './commands/CloseSaleReceipt.service';
 import { DeleteSaleReceipt } from './commands/DeleteSaleReceipt.service';
 import { GetSaleReceipt } from './queries/GetSaleReceipt.service';
 import { EditSaleReceipt } from './commands/EditSaleReceipt.service';
-import { ISaleReceiptDTO, ISaleReceiptState } from './types/SaleReceipts.types';
+import {
+  ISaleReceiptDTO,
+  ISaleReceiptState,
+  ISalesReceiptsFilter,
+} from './types/SaleReceipts.types';
+import { GetSaleReceiptsService } from './queries/GetSaleReceipts.service';
+import { SaleReceipt } from './models/SaleReceipt';
+import { IPaginationMeta } from '@/interfaces/Model';
 
 @Injectable()
 export class SaleReceiptApplication {
@@ -17,7 +24,7 @@ export class SaleReceiptApplication {
     private editSaleReceiptService: EditSaleReceipt,
     private getSaleReceiptService: GetSaleReceipt,
     private deleteSaleReceiptService: DeleteSaleReceipt,
-    // private getSaleReceiptsService: GetSaleReceipts,
+    private getSaleReceiptsService: GetSaleReceiptsService,
     private closeSaleReceiptService: CloseSaleReceipt,
     private getSaleReceiptPdfService: SaleReceiptsPdfService,
     // private saleReceiptNotifyBySmsService: SaleReceiptNotifyBySms,
@@ -74,20 +81,16 @@ export class SaleReceiptApplication {
 
   /**
    * Retrieve sales receipts paginated and filterable list.
-   * @param {number} tenantId
    * @param {ISalesReceiptsFilter} filterDTO
    * @returns
    */
-  // public async getSaleReceipts(
-  //   tenantId: number,
-  //   filterDTO: ISalesReceiptsFilter,
-  // ): Promise<{
-  //   data: ISaleReceipt[];
-  //   pagination: IPaginationMeta;
-  //   filterMeta: IFilterMeta;
-  // }> {
-  //   return this.getSaleReceiptsService.getSaleReceipts(tenantId, filterDTO);
-  // }
+  public async getSaleReceipts(filterDTO: ISalesReceiptsFilter): Promise<{
+    data: SaleReceipt[];
+    pagination: IPaginationMeta;
+    filterMeta: IFilterMeta;
+  }> {
+    return this.getSaleReceiptsService.getSaleReceipts(filterDTO);
+  }
 
   /**
    * Closes the given sale receipt.
@@ -106,9 +109,7 @@ export class SaleReceiptApplication {
    * @returns
    */
   public getSaleReceiptPdf(tenantId: number, saleReceiptId: number) {
-    return this.getSaleReceiptPdfService.saleReceiptPdf(
-      saleReceiptId,
-    );
+    return this.getSaleReceiptPdfService.saleReceiptPdf(saleReceiptId);
   }
 
   /**

@@ -24,6 +24,8 @@ import { SaleReceiptGLEntriesSubscriber } from './subscribers/SaleReceiptGLEntri
 import { SaleReceiptGLEntries } from './ledger/SaleReceiptGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { SaleReceiptInventoryTransactionsSubscriber } from './inventory/SaleReceiptWriteInventoryTransactions';
+import { GetSaleReceiptsService } from './queries/GetSaleReceipts.service';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -53,7 +55,9 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     SaleReceiptBrandingTemplate,
     SaleReceiptIncrement,
     SaleReceiptGLEntries,
-    SaleReceiptGLEntriesSubscriber
+    SaleReceiptGLEntriesSubscriber,
+    SaleReceiptInventoryTransactionsSubscriber,
+    GetSaleReceiptsService
   ],
 })
 export class SaleReceiptsModule {}

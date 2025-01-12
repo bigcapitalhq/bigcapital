@@ -18,11 +18,11 @@ export enum IAccountsStructureType {
 }
 
 // export interface IAccountsFilter extends IDynamicListFilterDTO {
-//   stringifiedFilterRoles?: string;
-//   onlyInactive: boolean;
-//   structure?: IAccountsStructureType;
 // }
-export interface IAccountsFilter {}
+export interface IAccountsFilter {
+  onlyInactive: boolean;
+  structure?: IAccountsStructureType;
+}
 export interface IAccountType {
   label: string;
   key: string;
@@ -88,7 +88,4 @@ export interface CreateAccountParams {
   ignoreUniqueName: boolean;
 }
 
-
-export interface IGetAccountTransactionPOJO {
-  
-}
+export interface IGetAccountTransactionPOJO {}

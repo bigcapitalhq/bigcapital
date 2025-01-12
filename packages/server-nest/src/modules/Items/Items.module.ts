@@ -13,9 +13,11 @@ import { ItemTransactionsService } from './ItemTransactions.service';
 import { GetItemService } from './GetItem.service';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { ItemsEntriesService } from './ItemsEntries.service';
+import { GetItemsService } from './GetItems.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 
 @Module({
-  imports: [TenancyDatabaseModule],
+  imports: [TenancyDatabaseModule, DynamicListModule],
   controllers: [ItemsController],
   providers: [
     ItemsValidators,
@@ -26,6 +28,7 @@ import { ItemsEntriesService } from './ItemsEntries.service';
     DeleteItemService,
     ItemsApplicationService,
     GetItemService,
+    GetItemsService,
     ItemTransactionsService,
     TenancyContext,
     TransformerInjectable,

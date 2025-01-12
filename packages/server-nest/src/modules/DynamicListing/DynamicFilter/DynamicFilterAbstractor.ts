@@ -2,8 +2,8 @@ import { BaseModel } from '@/models/Model';
 import { IDynamicFilter } from './DynamicFilter.types';
 
 export class DynamicFilterAbstractor {
-  model: BaseModel;
-  dynamicFilters: IDynamicFilter[];
+  public model: typeof BaseModel;
+  public dynamicFilters: IDynamicFilter[];
 
   /**
    * Extract relation table name from relation.

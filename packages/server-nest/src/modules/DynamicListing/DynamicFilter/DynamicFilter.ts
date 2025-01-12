@@ -1,17 +1,15 @@
 import { forEach } from 'lodash';
 import { DynamicFilterAbstractor } from './DynamicFilterAbstractor';
-import { IDynamicFilter, IFilterRole, IModel } from '@/interfaces';
+import { IDynamicFilter, IFilterRole } from './DynamicFilter.types';
 import { BaseModel } from '@/models/Model';
+import { DynamicFilterRoleAbstractor } from './DynamicFilterRoleAbstractor';
 
 export class DynamicFilter extends DynamicFilterAbstractor {
-  private model: BaseModel;
-  private dynamicFilters: IDynamicFilter[];
-
   /**
    * Constructor.
    * @param {String} tableName -
    */
-  constructor(model: BaseModel) {
+  constructor(model: typeof BaseModel) {
     super();
 
     this.model = model;
@@ -22,7 +20,7 @@ export class DynamicFilter extends DynamicFilterAbstractor {
    * Registers the given dynamic filter.
    * @param {IDynamicFilter} filterRole - Filter role.
    */
-  public setFilter = (dynamicFilter: IDynamicFilter) => {
+  public setFilter = (dynamicFilter: DynamicFilterRoleAbstractor) => {
     dynamicFilter.setModel(this.model);
     dynamicFilter.onInitialize();
 

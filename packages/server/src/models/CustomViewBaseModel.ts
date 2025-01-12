@@ -14,6 +14,10 @@ export default (Model) =>
       return this.defaultViews.find((view) => view.slug === viewSlug) || null;
     }
 
+    /**
+     * Retrieve the default views.
+     * @returns {IView[]}
+     */
     static getDefaultViews() {
       return this.defaultViews;
     }

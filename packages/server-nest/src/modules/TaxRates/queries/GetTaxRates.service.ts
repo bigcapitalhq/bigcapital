@@ -1,32 +1,24 @@
-// import { Inject, Service } from 'typedi';
-// import HasTenancyService from '../Tenancy/TenancyService';
-// import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
-// import { TaxRateTransformer } from './TaxRate.transformer';
+import { Inject, Injectable } from '@nestjs/common';
+import { TaxRateTransformer } from './TaxRate.transformer';
+import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
+import { TaxRateModel } from '../models/TaxRate.model';
 
-// @Service()
-// export class GetTaxRatesService {
-//   @Inject()
-//   private tenancy: HasTenancyService;
+@Injectable()
+export class GetTaxRatesService {
+  constructor(
+    private transformer: TransformerInjectable,
+    @Inject(TaxRateModel.name) private taxRateModel: typeof TaxRateModel,
+  ) {}
 
-//   @Inject()
-//   private transformer: TransformerInjectable;
+  /**
+   * Retrieves the tax rates list.
+   * @returns {Promise<ITaxRate[]>}
+   */
+  public async getTaxRates() {
+    // Retrieves the tax rates.
+    const taxRates = await this.taxRateModel.query().orderBy('name', 'ASC');
 
-//   /**
-//    * Retrieves the tax rates list.
-//    * @param {number} tenantId
-//    * @returns {Promise<ITaxRate[]>}
-//    */
-//   public async getTaxRates(tenantId: number) {
-//     const { TaxRate } = this.tenancy.models(tenantId);
-
-//     // Retrieves the tax rates.
-//     const taxRates = await TaxRate.query().orderBy('name', 'ASC');
-
-//     // Transforms the tax rates.
-//     return this.transformer.transform(
-//       tenantId,
-//       taxRates,
-//       new TaxRateTransformer()
-//     );
-//   }
-// }
+    // Transforms the tax rates.
+    return this.transformer.transform(taxRates, new TaxRateTransformer());
+  }
+}

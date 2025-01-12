@@ -7,6 +7,7 @@ import { IVendorCreditEditDTO } from './types/VendorCredit.types';
 import { IVendorCreditCreateDTO } from './types/VendorCredit.types';
 import { Injectable } from '@nestjs/common';
 import { OpenVendorCreditService } from './commands/OpenVendorCredit.service';
+import { GetVendorCreditsService } from './queries/GetVendorCredits.service';
 
 @Injectable()
 export class VendorCreditsApplicationService {
@@ -22,6 +23,7 @@ export class VendorCreditsApplicationService {
     private readonly deleteVendorCreditService: DeleteVendorCreditService,
     private readonly getVendorCreditService: GetVendorCreditService,
     private readonly openVendorCreditService: OpenVendorCreditService,
+    private readonly getVendorCreditsService: GetVendorCreditsService,
   ) {}
 
   /**
@@ -77,5 +79,14 @@ export class VendorCreditsApplicationService {
 
   getVendorCredit(vendorCreditId: number, trx?: Knex.Transaction) {
     return this.getVendorCreditService.getVendorCredit(vendorCreditId, trx);
+  }
+
+  /**
+   * Retrieves the paginated filterable vendor credits list.
+   * @param {IVendorCreditsQueryDTO} query 
+   * @returns {}
+   */
+  getVendorCredits(query: IVendorCreditsQueryDTO) {
+    return this.getVendorCreditsService.getVendorCredits(query);
   }
 }

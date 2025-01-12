@@ -7,6 +7,7 @@ import { ActivateTaxRateService } from './commands/ActivateTaxRate.service';
 import { InactivateTaxRateService } from './commands/InactivateTaxRate';
 import { Injectable } from '@nestjs/common';
 import { ICreateTaxRateDTO, IEditTaxRateDTO } from './TaxRates.types';
+import { GetTaxRatesService } from './queries/GetTaxRates.service';
 
 @Injectable()
 export class TaxRatesApplication {
@@ -17,7 +18,7 @@ export class TaxRatesApplication {
     private readonly getTaxRateService: GetTaxRateService,
     private readonly activateTaxRateService: ActivateTaxRateService,
     private readonly inactivateTaxRateService: InactivateTaxRateService,
-    // private readonly getTaxRatesService: GetTaxRatesService,
+    private readonly getTaxRatesService: GetTaxRatesService,
   ) {}
 
   /**
@@ -56,17 +57,16 @@ export class TaxRatesApplication {
    * @param {number} taxRateId
    * @returns {Promise<ITaxRate>}
    */
-  public getTaxRate(tenantId: number, taxRateId: number) {
+  public getTaxRate(taxRateId: number) {
     return this.getTaxRateService.getTaxRate(taxRateId);
   }
 
   /**
    * Retrieves the tax rates list.
-   * @param {number} tenantId
    * @returns {Promise<ITaxRate[]>}
    */
-  public getTaxRates(tenantId: number) {
-    // return this.getTaxRatesService.getTaxRates(tenantId);
+  public getTaxRates() {
+    return this.getTaxRatesService.getTaxRates();
   }
 
   /**

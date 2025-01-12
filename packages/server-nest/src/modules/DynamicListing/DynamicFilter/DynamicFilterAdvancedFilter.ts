@@ -2,8 +2,6 @@ import { IFilterRole } from './DynamicFilter.types';
 import { DynamicFilterFilterRoles } from './DynamicFilterFilterRoles';
 
 export class DynamicFilterAdvancedFilter extends DynamicFilterFilterRoles {
-  private filterRoles: IFilterRole[];
-
   /**
    * Constructor method.
    * @param {Array} filterRoles -

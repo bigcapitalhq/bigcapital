@@ -140,8 +140,9 @@ export interface IModelMeta {
 
   print?: IModelPrintMeta;
 
-  fields: { [key: string]: IModelMetaField };
-  columns: { [key: string]: IModelMetaColumn };
+  fields: Record<string, IModelMetaField>;
+  fields2: Record<string, IModelMetaField2>;
+  columns: Record<string, IModelMetaColumn>;
 }
 
 // ----

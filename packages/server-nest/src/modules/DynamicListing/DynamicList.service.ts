@@ -1,18 +1,15 @@
 import { castArray, isEmpty } from 'lodash';
-import {
-  IDynamicListFilter,
-  IDynamicListService,
-} from './DynamicFilter/DynamicFilter.types';
-import { DynamicListSortBy } from './DynamicListSortBy';
-import { DynamicListSearch } from './DynamicListSearch';
-import { DynamicListCustomView } from './DynamicListCustomView';
+import { IDynamicListFilter } from './DynamicFilter/DynamicFilter.types';
+import { DynamicListSortBy } from './DynamicListSortBy.service';
+import { DynamicListSearch } from './DynamicListSearch.service';
+import { DynamicListCustomView } from './DynamicListCustomView.service';
 import { Injectable } from '@nestjs/common';
-import { DynamicListFilterRoles } from './DynamicListFilterRoles';
+import { DynamicListFilterRoles } from './DynamicListFilterRoles.service';
 import { DynamicFilter } from './DynamicFilter';
 import { BaseModel } from '@/models/Model';
 
 @Injectable()
-export class DynamicListService implements IDynamicListService {
+export class DynamicListService {
   constructor(
     private dynamicListFilterRoles: DynamicListFilterRoles,
     private dynamicListSearch: DynamicListSearch,
@@ -44,7 +41,10 @@ export class DynamicListService implements IDynamicListService {
    * @param {IModel} model - Model.
    * @param {IDynamicListFilter} filter - Dynamic filter DTO.
    */
-  public dynamicList = async (model: BaseModel, filter: IDynamicListFilter) => {
+  public dynamicList = async (
+    model: typeof BaseModel,
+    filter: IDynamicListFilter,
+  ) => {
     const dynamicFilter = new DynamicFilter(model);
 
     // Parses the filter object.
@@ -90,7 +90,9 @@ export class DynamicListService implements IDynamicListService {
    * Parses stringified filter roles.
    * @param {string} stringifiedFilterRoles - Stringified filter roles.
    */
-  public parseStringifiedFilter = (filterRoles: IDynamicListFilter) => {
+  public parseStringifiedFilter<T extends IDynamicListFilter>(
+    filterRoles: T,
+  ): T {
     return {
       ...filterRoles,
       filterRoles: filterRoles.stringifiedFilterRoles

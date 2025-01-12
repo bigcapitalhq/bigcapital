@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { DynamicListAbstract } from './DynamicListAbstract';
 import { DynamicFilterSearch } from './DynamicFilter/DynamicFilterSearch';
+import { DynamicListServiceAbstract } from './DynamicListServiceAbstract';
 
 @Injectable()
-export class DynamicListSearch extends DynamicListAbstract {
+export class DynamicListSearch extends DynamicListServiceAbstract {
   /**
    * Dynamic list filter roles.
    * @param {string} searchKeyword - Search keyword.

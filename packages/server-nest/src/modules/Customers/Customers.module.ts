@@ -7,7 +7,7 @@ import { CreateCustomer } from './commands/CreateCustomer.service';
 import { CustomerValidators } from './commands/CustomerValidators.service';
 import { EditCustomer } from './commands/EditCustomer.service';
 import { EditOpeningBalanceCustomer } from './commands/EditOpeningBalanceCustomer.service';
-import { GetCustomerService } from './commands/GetCustomer.service';
+import { GetCustomerService } from './queries/GetCustomer.service';
 import { CreateEditCustomerDTO } from './commands/CreateEditCustomerDTO.service';
 import { CustomersController } from './Customers.controller';
 import { CustomersApplication } from './CustomersApplication.service';
@@ -29,6 +29,7 @@ import { DeleteCustomer } from './commands/DeleteCustomer.service';
     DeleteCustomer,
     TenancyContext,
     TransformerInjectable,
+    GetCustomerService
   ],
 })
 export class CustomersModule {}

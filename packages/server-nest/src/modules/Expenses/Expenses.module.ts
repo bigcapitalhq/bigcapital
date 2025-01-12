@@ -15,6 +15,7 @@ import { ExpenseGLEntriesStorageService } from './subscribers/ExpenseGLEntriesSt
 import { ExpenseGLEntriesService } from './subscribers/ExpenseGLEntries.service';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { BranchesModule } from '../Branches/Branches.module';
+import { GetExpensesService } from './queries/GetExpenses.service';
 
 @Module({
   imports: [LedgerModule, BranchesModule],
@@ -35,7 +36,9 @@ import { BranchesModule } from '../Branches/Branches.module';
     TransformerInjectable,
     ExpensesWriteGLSubscriber,
     ExpenseGLEntriesStorageService,
-    ExpenseGLEntriesService
+    ExpenseGLEntriesService,
+    GetExpensesService,
   ],
 })
 export class ExpensesModule {}
+

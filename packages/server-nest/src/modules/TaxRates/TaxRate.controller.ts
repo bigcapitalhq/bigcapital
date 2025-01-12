@@ -35,16 +35,13 @@ export class TaxRatesController {
   }
 
   @Get(':id')
-  public getTaxRate(
-    @Param('tenantId') tenantId: number,
-    @Param('id') taxRateId: number,
-  ) {
-    return this.taxRatesApplication.getTaxRate(tenantId, taxRateId);
+  public getTaxRate(@Param('id') taxRateId: number) {
+    return this.taxRatesApplication.getTaxRate(taxRateId);
   }
 
   @Get()
-  public getTaxRates(@Param('tenantId') tenantId: number) {
-    return this.taxRatesApplication.getTaxRates(tenantId);
+  public getTaxRates() {
+    return this.taxRatesApplication.getTaxRates();
   }
 
   @Put(':id/activate')

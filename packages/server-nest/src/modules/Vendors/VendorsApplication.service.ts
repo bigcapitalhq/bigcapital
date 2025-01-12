@@ -10,6 +10,7 @@ import {
   IVendorNewDTO,
   IVendorOpeningBalanceEditDTO,
 } from './types/Vendors.types';
+import { GetVendorsService } from './queries/GetVendors.service';
 
 @Injectable()
 export class VendorsApplication {
@@ -19,7 +20,7 @@ export class VendorsApplication {
     private deleteVendorService: DeleteVendorService,
     private editOpeningBalanceService: EditOpeningBalanceVendorService,
     private getVendorService: GetVendorService,
-    // private getVendorsService: GetVendors,
+    private getVendorsService: GetVendorsService,
   ) {}
 
   /**
@@ -77,11 +78,10 @@ export class VendorsApplication {
 
   /**
    * Retrieves the vendors paginated list.
-   * @param   {number} tenantId
    * @param   {IVendorsFilter} filterDTO
-   * @returns
+   * @returns {Promise<{vendors: Vendor[], pagination: IPaginationMeta, filterMeta: IFilterMeta}>>}
    */
-  // public getVendors = (tenantId: number, filterDTO: IVendorsFilter) => {
-  // return this.getVendorsService.getVendorsList(tenantId, filterDTO);
-  // };
+  public getVendors = (filterDTO: IVendorsFilter) => {
+    return this.getVendorsService.getVendorsList(filterDTO);
+  };
 }

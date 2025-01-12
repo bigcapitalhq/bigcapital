@@ -4,6 +4,7 @@ import { Knex } from 'knex';
 import { SaleEstimate } from '../models/SaleEstimate';
 import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
+import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 
 export interface ISaleEstimateDTO {
   customerId: number;
@@ -22,10 +23,10 @@ export interface ISaleEstimateDTO {
   attachments?: AttachmentLinkDTO[];
 }
 
-// export interface ISalesEstimatesFilter extends IDynamicListFilterDTO {
-//   stringifiedFilterRoles?: string;
-//   filterQuery?: (q: any) => void;
-// }
+export interface ISalesEstimatesFilter extends IDynamicListFilter {
+  stringifiedFilterRoles?: string;
+  filterQuery?: (q: any) => void;
+}
 
 export interface ISaleEstimateCreatedPayload {
   // tenantId: number;

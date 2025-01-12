@@ -1,17 +1,14 @@
-
 import { CreateBill } from './commands/CreateBill.service';
 import { EditBillService } from './commands/EditBill.service';
 import { GetBill } from './queries/GetBill';
 // import { GetBills } from './queries/GetBills';
 import { DeleteBill } from './commands/DeleteBill.service';
-import {
-  IBillDTO,
-  IBillEditDTO,
-} from './Bills.types';
+import { IBillDTO, IBillEditDTO } from './Bills.types';
 import { GetDueBills } from './queries/GetDueBills.service';
 import { OpenBillService } from './commands/OpenBill.service';
 import { GetBillPayments } from './queries/GetBillPayments';
 import { Injectable } from '@nestjs/common';
+import { GetBillsService } from './queries/GetBills.service';
 
 @Injectable()
 export class BillsApplication {
@@ -22,7 +19,7 @@ export class BillsApplication {
     private deleteBillService: DeleteBill,
     private getDueBillsService: GetDueBills,
     private openBillService: OpenBillService,
-    // private getBillsService: GetBills,
+    private getBillsService: GetBillsService,
     // private getBillPaymentsService: GetBillPayments,
   ) {}
 
@@ -56,14 +53,11 @@ export class BillsApplication {
 
   /**
    * Retrieve bills data table list.
-   * @param {number} tenantId -
    * @param {IBillsFilter} billsFilter -
    */
-  // public getBills(
-  //   filterDTO: IBillsFilter,
-  // ) {
-  //   return this.getBillsService.getBills(filterDTO);
-  // }
+  public getBills(filterDTO: IBillsFilter) {
+    return this.getBillsService.getBills(filterDTO);
+  }
 
   /**
    * Retrieves the given bill details.

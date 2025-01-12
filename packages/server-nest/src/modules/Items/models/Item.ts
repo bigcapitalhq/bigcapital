@@ -1,13 +1,19 @@
-import * as F from 'fp-ts/function';
 import * as R from 'ramda';
-import { SearchableModel } from '@/modules/Search/SearchableMdel';
 import { BaseModel } from '@/models/Model';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
-// import { TenantModel } from '@/modules/System/models/TenantModel';
+import { CustomViewBaseModelMixin } from '@/modules/CustomViews/CustomViewBaseModel';
+import { SearchableBaseModelMixin } from '@/modules/DynamicListing/models/SearchableBaseModel';
+import { ResourceableModelMixin } from '@/modules/Resource/models/ResourcableModel';
+import { MetadataModelMixin } from '@/modules/DynamicListing/models/MetadataModel';
 
-// const Extend = R.compose(SearchableModel)(TenantModel);
+const ExtendedItem = R.pipe(
+  CustomViewBaseModelMixin,
+  SearchableBaseModelMixin,
+  ResourceableModelMixin,
+  MetadataModelMixin
+)(BaseModel);
 
-export class Item extends BaseModel {
+export class Item extends ExtendedItem {
   public readonly quantityOnHand: number;
   public readonly name: string;
   public readonly active: boolean;

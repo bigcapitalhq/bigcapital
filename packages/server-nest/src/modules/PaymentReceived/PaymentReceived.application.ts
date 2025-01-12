@@ -17,6 +17,7 @@ import { GetPaymentReceivedInvoices } from './queries/GetPaymentReceivedInvoices
 import { GetPaymentReceivedPdfService } from './queries/GetPaymentReceivedPdf.service';
 // import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
 import { GetPaymentReceivedStateService } from './queries/GetPaymentReceivedState.service';
+import { GetPaymentsReceivedService } from './queries/GetPaymentsReceived.service';
 
 @Injectable()
 export class PaymentReceivesApplication {
@@ -24,7 +25,7 @@ export class PaymentReceivesApplication {
     private createPaymentReceivedService: CreatePaymentReceivedService,
     private editPaymentReceivedService: EditPaymentReceivedService,
     private deletePaymentReceivedService: DeletePaymentReceivedService,
-    // private getPaymentsReceivedService: GetPaymentReceives,
+    private getPaymentsReceivedService: GetPaymentsReceivedService,
     private getPaymentReceivedService: GetPaymentReceivedService,
     private getPaymentReceiveInvoicesService: GetPaymentReceivedInvoices,
     // private paymentSmsNotify: PaymentReceiveNotifyBySms,
@@ -77,19 +78,9 @@ export class PaymentReceivesApplication {
    * @param {IPaymentsReceivedFilter} filterDTO
    * @returns
    */
-  // public async getPaymentReceives(
-  //   tenantId: number,
-  //   filterDTO: IPaymentsReceivedFilter,
-  // ): Promise<{
-  //   paymentReceives: IPaymentReceived[];
-  //   pagination: IPaginationMeta;
-  //   filterMeta: IFilterMeta;
-  // }> {
-  //   return this.getPaymentsReceivedService.getPaymentReceives(
-  //     tenantId,
-  //     filterDTO,
-  //   );
-  // }
+  public async getPaymentsReceived(filterDTO: IPaymentsReceivedFilter) {
+    return this.getPaymentsReceivedService.getPaymentReceives(filterDTO);
+  }
 
   /**
    * Retrieves the given payment receive.

@@ -1,12 +1,13 @@
 import { FIELD_TYPE } from './constants';
 import { DynamicFilterAbstractor } from './DynamicFilterAbstractor';
+import { DynamicFilterRoleAbstractor } from './DynamicFilterRoleAbstractor';
 
 interface ISortRole {
   fieldKey: string;
   order: string;
 }
 
-export class DynamicFilterSortBy extends DynamicFilterAbstractor {
+export class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
   private sortRole: ISortRole = {};
 
   /**
@@ -36,7 +37,7 @@ export class DynamicFilterSortBy extends DynamicFilterAbstractor {
    * @param field
    * @returns {string}
    */
-  private getFieldComparatorRelationColumn = (field): string => {
+  protected getFieldComparatorRelationColumn(field: any): string {
     const relation = this.model.relationMappings[field.relationKey];
 
     if (relation) {
@@ -46,7 +47,7 @@ export class DynamicFilterSortBy extends DynamicFilterAbstractor {
       return `${relationModel.tableName}.${relationField.column}`;
     }
     return '';
-  };
+  }
 
   /**
    * Retrieve the comparator field column.

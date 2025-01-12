@@ -7,7 +7,9 @@ import { GetExpenseService } from './queries/GetExpense.service';
 import {
   IExpenseCreateDTO,
   IExpenseEditDTO,
+  IExpensesFilter,
 } from './interfaces/Expenses.interface';
+import { GetExpensesService } from './queries/GetExpenses.service';
 
 @Injectable()
 export class ExpensesApplication {
@@ -17,7 +19,7 @@ export class ExpensesApplication {
     private readonly deleteExpenseService: DeleteExpense,
     private readonly publishExpenseService: PublishExpense,
     private readonly getExpenseService: GetExpenseService,
-    // private readonly getExpensesService: GetExpenseService,
+    private readonly getExpensesService: GetExpensesService,
   ) {}
 
   /**
@@ -66,12 +68,11 @@ export class ExpensesApplication {
     return this.getExpenseService.getExpense(expenseId);
   };
 
-  // /**
-  //  * Retrieve expenses paginated list.
-  //  * @param  {number} tenantId
-  //  * @param  {IExpensesFilter} expensesFilter
-  //  */
-  // public getExpenses = (tenantId: number, filterDTO: IExpensesFilter) => {
-  //   return this.getExpensesService.getExpensesList(tenantId, filterDTO);
-  // };
+  /**
+   * Retrieve expenses paginated list.
+   * @param  {IExpensesFilter} expensesFilter
+   */
+  public getExpenses = (filterDTO: IExpensesFilter) => {
+    return this.getExpensesService.getExpensesList(filterDTO);
+  };
 }

@@ -20,6 +20,9 @@ import { VendorCreditGlEntriesSubscriber } from './subscribers/VendorCreditGLEnt
 import { VendorCreditGLEntries } from './commands/VendorCreditGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import VendorCreditInventoryTransactionsSubscriber from './subscribers/VendorCreditInventoryTransactionsSusbcriber';
+import { VendorCreditInventoryTransactions } from './commands/VendorCreditInventoryTransactions';
+import { GetVendorCreditsService } from './queries/GetVendorCredits.service';
 
 @Module({
   imports: [
@@ -41,10 +44,13 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     VendorCreditAutoIncrementService,
     GetRefundVendorCreditService,
     GetVendorCreditService,
+    GetVendorCreditsService,
     VendorCreditsApplicationService,
     OpenVendorCreditService,
     VendorCreditGLEntries,
     VendorCreditGlEntriesSubscriber,
+    VendorCreditInventoryTransactions,
+    VendorCreditInventoryTransactionsSubscriber
   ],
   exports: [
     CreateVendorCreditService,

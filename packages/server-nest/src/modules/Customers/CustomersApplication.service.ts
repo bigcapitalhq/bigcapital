@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GetCustomerService } from './commands/GetCustomer.service';
+import { GetCustomerService } from './queries/GetCustomer.service';
 import { CreateCustomer } from './commands/CreateCustomer.service';
 import { EditCustomer } from './commands/EditCustomer.service';
 import { DeleteCustomer } from './commands/DeleteCustomer.service';

@@ -21,6 +21,8 @@ import { BillGLEntriesSubscriber } from './subscribers/BillGLEntriesSubscriber';
 import { BillGLEntries } from './commands/BillsGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { BillWriteInventoryTransactionsSubscriber } from './subscribers/BillWriteInventoryTransactionsSubscriber';
+import { BillInventoryTransactions } from './commands/BillInventoryTransactions';
 
 @Module({
   imports: [BillLandedCostsModule, LedgerModule, AccountsModule],
@@ -43,6 +45,8 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     BillGLEntries,
     ItemsEntriesService,
     BillGLEntriesSubscriber,
+    BillInventoryTransactions,
+    BillWriteInventoryTransactionsSubscriber,
   ],
   controllers: [BillsController],
 })

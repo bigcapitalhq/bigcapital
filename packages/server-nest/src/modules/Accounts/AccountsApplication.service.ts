@@ -11,9 +11,12 @@ import { ActivateAccount } from './ActivateAccount.service';
 import { GetAccountTypesService } from './GetAccountTypes.service';
 import { GetAccountTransactionsService } from './GetAccountTransactions.service';
 import {
+  IAccountsFilter,
   IAccountsTransactionsFilter,
   IGetAccountTransactionPOJO,
 } from './Accounts.types';
+import { GetAccountsService } from './GetAccounts.service';
+import { IFilterMeta } from '@/interfaces/Model';
 
 @Injectable()
 export class AccountsApplication {
@@ -24,8 +27,8 @@ export class AccountsApplication {
     private readonly activateAccountService: ActivateAccount,
     private readonly getAccountTypesService: GetAccountTypesService,
     private readonly getAccountService: GetAccount,
-    // private readonly getAccountsService: GetAccounts,
     private readonly getAccountTransactionsService: GetAccountTransactionsService,
+    private readonly getAccountsService: GetAccountsService,
   ) {}
 
   /**
@@ -96,17 +99,16 @@ export class AccountsApplication {
     return this.getAccountTypesService.getAccountsTypes();
   };
 
-  // /**
-  //  * Retrieves the accounts list.
-  //  * @param {number} tenantId
-  //  * @param {IAccountsFilter} filterDTO
-  //  * @returns {Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }>}
-  //  */
-  // public getAccounts = (
-  //   filterDTO: IAccountsFilter,
-  // ): Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }> => {
-  //   return this.getAccountsService.getAccountsList(filterDTO);
-  // };
+  /**
+   * Retrieves the accounts list.
+   * @param {IAccountsFilter} filterDTO - Filter DTO.
+   * @returns {Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }>}
+   */
+  public getAccounts = (
+    filterDTO: IAccountsFilter,
+  ): Promise<{ accounts: Account[]; filterMeta: IFilterMeta }> => {
+    return this.getAccountsService.getAccountsList(filterDTO);
+  };
 
   /**
    * Retrieves the given account transactions.

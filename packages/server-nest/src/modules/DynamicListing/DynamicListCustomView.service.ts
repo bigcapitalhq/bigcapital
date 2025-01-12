@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { DynamicListAbstract } from './DynamicListAbstract';
 import { ERRORS } from './constants';
 import { DynamicFilterViews } from './DynamicFilter';
 import { ServiceError } from '../Items/ServiceError';
 import { BaseModel } from '@/models/Model';
+import { DynamicListServiceAbstract } from './DynamicListServiceAbstract';
 
 @Injectable()
-export class DynamicListCustomView extends DynamicListAbstract {
+export class DynamicListCustomView extends DynamicListServiceAbstract {
   /**
    * Retreive custom view or throws error not found.
    * @param {number} tenantId
@@ -30,7 +30,7 @@ export class DynamicListCustomView extends DynamicListAbstract {
    * Dynamic list custom view.
    * @param {IModel} model
    * @param {number} customViewId
-   * @returns
+   * @returns {DynamicFilterRoleAbstractor}
    */
   public dynamicListCustomView = async (
     dynamicFilter: any,
@@ -40,6 +40,7 @@ export class DynamicListCustomView extends DynamicListAbstract {
 
     // Retrieve the custom view or throw not found.
     const view = await this.getCustomViewOrThrowError(customViewSlug, model);
+
     return new DynamicFilterViews(view);
   };
 }

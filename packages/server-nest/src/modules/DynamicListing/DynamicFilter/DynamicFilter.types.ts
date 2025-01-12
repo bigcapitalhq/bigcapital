@@ -1,10 +1,10 @@
 import { BaseModel } from '@/models/Model';
-// import { IModel, ISortOrder } from "./Model";
 
 export type ISortOrder = 'DESC' | 'ASC';
 
 export interface IDynamicFilter {
-  setModel(model: BaseModel): void;
+  setModel(model: typeof BaseModel): void;
+  onInitialize(): void;
   buildQuery(): void;
   getResponseMeta();
 }
@@ -20,7 +20,7 @@ export interface IDynamicListFilter {
   filterRoles?: IFilterRole[];
   columnSortBy: ISortOrder;
   sortOrder: string;
-  stringifiedFilterRoles: string;
+  stringifiedFilterRoles?: string;
   searchKeyword?: string;
   viewSlug?: string;
 }

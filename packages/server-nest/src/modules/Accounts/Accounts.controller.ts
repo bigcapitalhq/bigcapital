@@ -12,7 +12,7 @@ import { AccountsApplication } from './AccountsApplication.service';
 import { CreateAccountDTO } from './CreateAccount.dto';
 import { EditAccountDTO } from './EditAccount.dto';
 import { PublicRoute } from '../Auth/Jwt.guard';
-import { IAccountsTransactionsFilter } from './Accounts.types';
+import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
 // import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
 // import { ZodValidationPipe } from '@/common/pipes/ZodValidation.pipe';
 
@@ -64,9 +64,9 @@ export class AccountsController {
     return this.accountsApplication.getAccount(id);
   }
 
-  // @Get()
-  // async getAccounts(@Query() filter: IAccountsFilter) {
-  //   return this.accountsApplication.getAccounts(filter);
-  // }
+  @Get()
+  async getAccounts(@Query() filter: IAccountsFilter) {
+    return this.accountsApplication.getAccounts(filter);
+  }
 
 }

@@ -15,6 +15,8 @@ import { InventoryAdjustmentsGLSubscriber } from './subscribers/InventoryAdjustm
 import { InventoryAdjustmentsGLEntries } from './commands/ledger/InventoryAdjustmentsGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { InventoryAdjustmentInventoryTransactionsSubscriber } from './inventory/InventoryAdjustmentInventoryTransactionsSubscriber';
+import { InventoryAdjustmentInventoryTransactions } from './inventory/InventoryAdjustmentInventoryTransactions';
 
 const models = [
   RegisterTenancyModel(InventoryAdjustment),
@@ -34,6 +36,8 @@ const models = [
     InventoryAdjustmentsGLSubscriber,
     InventoryAdjustmentsGLEntries,
     TenancyContext,
+    InventoryAdjustmentInventoryTransactionsSubscriber,
+    InventoryAdjustmentInventoryTransactions
   ],
   exports: [...models],
 })

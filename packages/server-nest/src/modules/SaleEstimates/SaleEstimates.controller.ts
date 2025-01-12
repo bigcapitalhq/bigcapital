@@ -58,10 +58,10 @@ export class SaleEstimatesController {
     return this.saleEstimatesApplication.getSaleEstimateState();
   }
 
-  // @Get()
-  // public getSaleEstimates(@Query() filterDTO: ISalesEstimatesFilter) {
-  //   return this.saleEstimatesApplication.getSaleEstimates(filterDTO);
-  // }
+  @Get()
+  public getSaleEstimates(@Query() filterDTO: ISalesEstimatesFilter) {
+    return this.saleEstimatesApplication.getSaleEstimates(filterDTO);
+  }
 
   @Post(':id/deliver')
   public deliverSaleEstimate(

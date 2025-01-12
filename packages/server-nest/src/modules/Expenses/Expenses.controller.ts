@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ExpensesApplication } from './ExpensesApplication.service';
 import {
@@ -13,6 +14,7 @@ import {
   IExpenseEditDTO,
 } from './interfaces/Expenses.interface';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { IExpensesFilter } from './Expenses.types';
 
 @Controller('expenses')
 @PublicRoute()
@@ -57,6 +59,14 @@ export class ExpensesController {
   @Post(':id/publish')
   public publishExpense(@Param('id') expenseId: number) {
     return this.expensesApplication.publishExpense(expenseId);
+  }
+
+  /**
+   * Get the expense transaction details.
+   */
+  @Get('')
+  public getExpenses(@Query() filterDTO: IExpensesFilter) {
+    return this.expensesApplication.getExpenses(filterDTO);
   }
 
   /**

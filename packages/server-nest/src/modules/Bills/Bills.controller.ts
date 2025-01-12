@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Get,
+  Query,
 } from '@nestjs/common';
 import { BillsApplication } from './Bills.application';
 import { IBillDTO, IBillEditDTO } from './Bills.types';
@@ -29,6 +30,11 @@ export class BillsController {
   @Delete(':id')
   deleteBill(@Param('id') billId: number) {
     return this.billsApplication.deleteBill(billId);
+  }
+
+  @Get()
+  getBills(@Query() filterDTO: IBillsFilter) {
+    return this.billsApplication.getBills(filterDTO);
   }
 
   @Get(':id')

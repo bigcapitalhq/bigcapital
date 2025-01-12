@@ -4,6 +4,7 @@ import { CreateBankTransactionService } from './commands/CreateBankTransaction.s
 import { GetBankTransactionService } from './queries/GetBankTransaction.service';
 import { ICashflowNewCommandDTO } from './types/BankingTransactions.types';
 import { Injectable } from '@nestjs/common';
+import { GetBankAccountsService } from './queries/GetBankAccounts.service';
 
 @Injectable()
 export class BankingTransactionsApplication {
@@ -11,7 +12,7 @@ export class BankingTransactionsApplication {
     private readonly createTransactionService: CreateBankTransactionService,
     private readonly deleteTransactionService: DeleteCashflowTransaction,
     private readonly getCashflowTransactionService: GetBankTransactionService,
-    // private readonly getCashflowAccountsService: GetBankingAccountsServic,
+    private readonly getBankAccountsService: GetBankAccountsService,
   ) {}
 
   /**
@@ -48,11 +49,8 @@ export class BankingTransactionsApplication {
   /**
    * Retrieves the cashflow accounts.
    * @param {ICashflowAccountsFilter} filterDTO
-   * @returns
    */
-  public getCashflowAccounts(
-    // filterDTO: ICashflowAccountsFilter,
-  ) {
-    // return this.getCashflowAccountsService.getCashflowAccounts(filterDTO);
+  public getBankAccounts(filterDTO: ICashflowAccountsFilter) {
+    return this.getBankAccountsService.getBankAccounts(filterDTO);
   }
 }

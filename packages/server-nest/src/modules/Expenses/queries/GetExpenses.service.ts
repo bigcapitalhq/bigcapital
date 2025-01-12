@@ -1,81 +1,70 @@
-// import { Service, Inject } from 'typedi';
-// import * as R from 'ramda';
-// import {
-//   IExpensesFilter,
-//   IExpense,
-//   IPaginationMeta,
-//   IFilterMeta,
-// } from '@/interfaces';
-// import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
-// import { ExpenseTransfromer } from './Expense.transformer';
-// import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import * as R from 'ramda';
+import { ExpenseTransfromer } from './Expense.transformer';
+import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
+import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { IExpensesFilter, IPaginationMeta } from '../Expenses.types';
+import { Expense } from '../models/Expense.model';
+import { IFilterMeta } from '@/interfaces/Model';
 
-// @Service()
-// export class GetExpenses {
-//   @Inject()
-//   private dynamicListService: DynamicListingService;
+@Injectable()
+export class GetExpensesService {
+  constructor(
+    private readonly transformer: TransformerInjectable,
+    private readonly dynamicListService: DynamicListService,
 
-//   @Inject()
-//   private tenancy: HasTenancyService;
+    @Inject(Expense.name)
+    private readonly expense: typeof Expense,
+  ) {}
 
-//   @Inject()
-//   private transformer: TransformerInjectable;
+  /**
+   * Retrieve expenses paginated list.
+   * @param  {IExpensesFilter} expensesFilter
+   * @return {IExpense[]}
+   */
+  public async getExpensesList(
+    filterDTO: IExpensesFilter
+  ): Promise<{
+    expenses: Expense[];
+    pagination: IPaginationMeta;
+    filterMeta: IFilterMeta;
+  }> {
+    // Parses list filter DTO.
+    const filter = this.parseListFilterDTO(filterDTO);
 
-//   /**
-//    * Retrieve expenses paginated list.
-//    * @param  {number} tenantId
-//    * @param  {IExpensesFilter} expensesFilter
-//    * @return {IExpense[]}
-//    */
-//   public getExpensesList = async (
-//     tenantId: number,
-//     filterDTO: IExpensesFilter
-//   ): Promise<{
-//     expenses: IExpense[];
-//     pagination: IPaginationMeta;
-//     filterMeta: IFilterMeta;
-//   }> => {
-//     const { Expense } = this.tenancy.models(tenantId);
+    // Dynamic list service.
+    const dynamicList = await this.dynamicListService.dynamicList(
+      this.expense,
+      filter
+    );
+    // Retrieves the paginated results.
+    const { results, pagination } = await this.expense.query()
+      .onBuild((builder) => {
+        builder.withGraphFetched('paymentAccount');
+        builder.withGraphFetched('categories.expenseAccount');
 
-//     // Parses list filter DTO.
-//     const filter = this.parseListFilterDTO(filterDTO);
+        dynamicList.buildQuery()(builder);
+        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
+      })
+      .pagination(filter.page - 1, filter.pageSize);
 
-//     // Dynamic list service.
-//     const dynamicList = await this.dynamicListService.dynamicList(
-//       tenantId,
-//       Expense,
-//       filter
-//     );
-//     // Retrieves the paginated results.
-//     const { results, pagination } = await Expense.query()
-//       .onBuild((builder) => {
-//         builder.withGraphFetched('paymentAccount');
-//         builder.withGraphFetched('categories.expenseAccount');
+    // Transformes the expenses models to POJO.
+    const expenses = await this.transformer.transform(
+      results,
+      new ExpenseTransfromer()
+    );
+    return {
+      expenses,
+      pagination,
+      filterMeta: dynamicList.getResponseMeta(),
+    };
+  };
 
-//         dynamicList.buildQuery()(builder);
-//         filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
-//       })
-//       .pagination(filter.page - 1, filter.pageSize);
-
-//     // Transformes the expenses models to POJO.
-//     const expenses = await this.transformer.transform(
-//       tenantId,
-//       results,
-//       new ExpenseTransfromer()
-//     );
-//     return {
-//       expenses,
-//       pagination,
-//       filterMeta: dynamicList.getResponseMeta(),
-//     };
-//   };
-
-//   /**
-//    * Parses filter DTO of expenses list.
-//    * @param filterDTO -
-//    */
-//   private parseListFilterDTO(filterDTO) {
-//     return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
-//   }
-// }
+  /**
+   * Parses filter DTO of expenses list.
+   * @param filterDTO -
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
+  }
+}

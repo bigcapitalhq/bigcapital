@@ -13,7 +13,11 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { ActivateAccount } from './ActivateAccount.service';
 import { GetAccountTypesService } from './GetAccountTypes.service';
 import { GetAccountTransactionsService } from './GetAccountTransactions.service';
+import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { BankAccount } from '../BankingTransactions/models/BankAccount';
 // import { GetAccountsService } from './GetAccounts.service';
+
+const models = [RegisterTenancyModel(BankAccount)];
 
 @Module({
   imports: [TenancyDatabaseModule],
@@ -31,10 +35,8 @@ import { GetAccountTransactionsService } from './GetAccountTransactions.service'
     ActivateAccount,
     GetAccountTypesService,
     GetAccountTransactionsService,
+    ...models,
   ],
-  exports: [
-    AccountRepository,
-    CreateAccountService,
-  ]
+  exports: [AccountRepository, CreateAccountService, ...models],
 })
 export class AccountsModule {}

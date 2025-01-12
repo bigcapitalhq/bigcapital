@@ -1,93 +1,69 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import {
-//   IVendorCreditCreatedPayload,
-//   IVendorCreditDeletedPayload,
-//   IVendorCreditEditedPayload,
-// } from '@/interfaces';
-// import VendorCreditInventoryTransactions from '../commands/VendorCreditInventoryTransactions';
+import {
+  IVendorCreditCreatedPayload,
+  IVendorCreditDeletedPayload,
+  IVendorCreditEditedPayload,
+} from '../types/VendorCredit.types';
+import { VendorCreditInventoryTransactions } from '../commands/VendorCreditInventoryTransactions';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export default class VendorCreditInventoryTransactionsSubscriber {
-//   @Inject()
-//   private inventoryTransactions: VendorCreditInventoryTransactions;
+@Injectable()
+export default class VendorCreditInventoryTransactionsSubscriber {
+  constructor(
+    private readonly inventoryTransactions: VendorCreditInventoryTransactions,
+  ) {}
+  /**
+   * Writes inventory transactions once vendor created created.
+   * @param {IVendorCreditCreatedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onCreated)
+  @OnEvent(events.vendorCredit.onOpened)
+  public async writeInventoryTransactionsOnceCreated({
+    vendorCredit,
+    trx,
+  }: IVendorCreditCreatedPayload) {
+    // Can't continue if vendor credit is not opened.
+    if (!vendorCredit.openedAt) return null;
 
-//   /**
-//    * Attaches events with handlers.
-//    * @param bus
-//    */
-//   attach(bus) {
-//     bus.subscribe(
-//       events.vendorCredit.onCreated,
-//       this.writeInventoryTransactionsOnceCreated
-//     );
-//     bus.subscribe(
-//       events.vendorCredit.onOpened,
-//       this.writeInventoryTransactionsOnceCreated
-//     );
-//     bus.subscribe(
-//       events.vendorCredit.onEdited,
-//       this.rewriteInventroyTransactionsOnceEdited
-//     );
-//     bus.subscribe(
-//       events.vendorCredit.onDeleted,
-//       this.revertInventoryTransactionsOnceDeleted
-//     );
-//   }
+    await this.inventoryTransactions.createInventoryTransactions(
+      vendorCredit,
+      trx,
+    );
+  }
 
-//   /**
-//    * Writes inventory transactions once vendor created created.
-//    * @param {IVendorCreditCreatedPayload} payload -
-//    */
-//   private writeInventoryTransactionsOnceCreated = async ({
-//     tenantId,
-//     vendorCredit,
-//     trx,
-//   }: IVendorCreditCreatedPayload) => {
-//     // Can't continue if vendor credit is not opened.
-//     if (!vendorCredit.openedAt) return null;
+  /**
+   * Rewrites inventory transactions once vendor credit edited.
+   * @param {IVendorCreditEditedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onEdited)
+  public async rewriteInventroyTransactionsOnceEdited({
+    vendorCreditId,
+    vendorCredit,
+    trx,
+  }: IVendorCreditEditedPayload) {
+    // Can't continue if vendor credit is not opened.
+    if (!vendorCredit.openedAt) return null;
 
-//     await this.inventoryTransactions.createInventoryTransactions(
-//       tenantId,
-//       vendorCredit,
-//       trx
-//     );
-//   };
+    await this.inventoryTransactions.editInventoryTransactions(
+      vendorCreditId,
+      vendorCredit,
+      trx,
+    );
+  }
 
-//   /**
-//    * Rewrites inventory transactions once vendor credit edited.
-//    * @param {IVendorCreditEditedPayload} payload -
-//    */
-//   private rewriteInventroyTransactionsOnceEdited = async ({
-//     tenantId,
-//     vendorCreditId,
-//     vendorCredit,
-//     trx,
-//   }: IVendorCreditEditedPayload) => {
-//     // Can't continue if vendor credit is not opened.
-//     if (!vendorCredit.openedAt) return null;
-
-//     await this.inventoryTransactions.editInventoryTransactions(
-//       tenantId,
-//       vendorCreditId,
-//       vendorCredit,
-//       trx
-//     );
-//   };
-
-//   /**
-//    * Reverts inventory transactions once vendor credit deleted.
-//    * @param {IVendorCreditDeletedPayload} payload -
-//    */
-//   private revertInventoryTransactionsOnceDeleted = async ({
-//     tenantId,
-//     vendorCreditId,
-//     trx,
-//   }: IVendorCreditDeletedPayload) => {
-//     await this.inventoryTransactions.deleteInventoryTransactions(
-//       tenantId,
-//       vendorCreditId,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Reverts inventory transactions once vendor credit deleted.
+   * @param {IVendorCreditDeletedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onDeleted)
+  public async revertInventoryTransactionsOnceDeleted({
+    vendorCreditId,
+    trx,
+  }: IVendorCreditDeletedPayload) {
+    await this.inventoryTransactions.deleteInventoryTransactions(
+      vendorCreditId,
+      trx,
+    );
+  }
+}

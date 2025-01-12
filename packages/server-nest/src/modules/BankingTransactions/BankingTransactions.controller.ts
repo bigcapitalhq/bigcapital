@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { BankingTransactionsApplication } from './BankingTransactionsApplication.service';
 import { ICashflowNewCommandDTO } from './types/BankingTransactions.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
@@ -9,6 +17,11 @@ export class BankingTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,
   ) {}
+
+  @Get('')
+  async getBankAccounts(@Query() filterDTO: ICashflowAccountsFilter) {
+    return this.bankingTransactionsApplication.getBankAccounts(filterDTO);
+  }
 
   @Post()
   async createTransaction(@Body() transactionDTO: ICashflowNewCommandDTO) {

@@ -9,6 +9,8 @@ import { ActivateItemService } from './ActivateItem.service';
 import { GetItemService } from './GetItem.service';
 import { ItemTransactionsService } from './ItemTransactions.service';
 import { Injectable } from '@nestjs/common';
+import { GetItemsService } from './GetItems.service';
+import { IItemsFilter } from './types/Items.types';
 
 @Injectable()
 export class ItemsApplicationService {
@@ -19,6 +21,7 @@ export class ItemsApplicationService {
     private readonly activateItemService: ActivateItemService,
     private readonly inactivateItemService: InactivateItem,
     private readonly getItemService: GetItemService,
+    private readonly getItemsService: GetItemsService,
     private readonly itemTransactionsService: ItemTransactionsService,
   ) {}
 
@@ -84,6 +87,14 @@ export class ItemsApplicationService {
    */
   async getItem(itemId: number): Promise<any> {
     return this.getItemService.getItem(itemId);
+  }
+
+  /**
+   * Retrieves the paginated filterable items list.
+   * @param {IItemsFilter} filterDTO 
+   */
+  async getItems(filterDTO: IItemsFilter) {
+    return this.getItemsService.getItems(filterDTO)
   }
 
   /**

@@ -21,6 +21,7 @@ import { RejectSaleEstimateService } from './commands/RejectSaleEstimate.service
 import { GetSaleEstimateState } from './queries/GetSaleEstimateState.service';
 import { Injectable } from '@nestjs/common';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
+import { GetSaleEstimatesService } from './queries/GetSaleEstimates.service';
 
 @Injectable()
 export class SaleEstimatesApplication {
@@ -29,7 +30,7 @@ export class SaleEstimatesApplication {
     private readonly editSaleEstimateService: EditSaleEstimate,
     private readonly deleteSaleEstimateService: DeleteSaleEstimate,
     private readonly getSaleEstimateService: GetSaleEstimate,
-    // private readonly getSaleEstimatesService: GetSaleEstimates,
+    private readonly getSaleEstimatesService: GetSaleEstimatesService,
     private readonly deliverSaleEstimateService: DeliverSaleEstimateService,
     private readonly approveSaleEstimateService: ApproveSaleEstimateService,
     private readonly rejectSaleEstimateService: RejectSaleEstimateService,
@@ -80,9 +81,9 @@ export class SaleEstimatesApplication {
    * @param {ISalesEstimatesFilter} filterDTO - Sales estimates filter DTO.
    * @returns
    */
-  // public getSaleEstimates(filterDTO: ISalesEstimatesFilter) {
-  // return this.getSaleEstimatesService.getEstimates(filterDTO);
-  // }
+  public getSaleEstimates(filterDTO: ISalesEstimatesFilter) {
+    return this.getSaleEstimatesService.getEstimates(filterDTO);
+  }
 
   /**
    * Deliver the given sale estimate.
@@ -148,8 +149,7 @@ export class SaleEstimatesApplication {
    * @param {number} saleEstimateId - Sale estimate ID.
    * @returns {Promise<void>}
    */
-  public sendSaleEstimateMail() // saleEstimateId: number,
-  // saleEstimateMailOpts: SaleEstimateMailOptionsDTO,
+  public sendSaleEstimateMail() // saleEstimateMailOpts: SaleEstimateMailOptionsDTO, // saleEstimateId: number,
   {
     // return this.sendEstimateMailService.triggerMail(
     //   saleEstimateId,

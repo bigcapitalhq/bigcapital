@@ -4,6 +4,7 @@ import { CreateItemCategoryService } from './commands/CreateItemCategory.service
 import { DeleteItemCategoryService } from './commands/DeleteItemCategory.service';
 import { EditItemCategoryService } from './commands/EditItemCategory.service';
 import { GetItemCategoryService } from './queries/GetItemCategory.service';
+import { GetItemCategoriesService } from './queries/GetItemCategories.service';
 
 @Injectable()
 export class ItemCategoryApplication {
@@ -18,6 +19,7 @@ export class ItemCategoryApplication {
     private readonly editItemCategoryService: EditItemCategoryService,
     private readonly getItemCategoryService: GetItemCategoryService,
     private readonly deleteItemCategoryService: DeleteItemCategoryService,
+    private readonly getItemCategoriesService: GetItemCategoriesService,
   ) {}
 
   /**
@@ -68,5 +70,14 @@ export class ItemCategoryApplication {
    */
   public deleteItemCategory(itemCategoryId: number) {
     return this.deleteItemCategoryService.deleteItemCategory(itemCategoryId);
+  }
+
+  /**
+   * Retrieves the item categories list.
+   * @param {IItemCategoriesFilter} filterDTO - The item categories filter DTO.
+   * @returns {Promise<IItemCategory[]>}
+   */
+  public getItemCategories(filterDTO: IItemCategoriesFilter) {
+    return this.getItemCategoriesService.getItemCategories(filterDTO);
   }
 }

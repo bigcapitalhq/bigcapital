@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import ResourceService from '@/services/Resource/ResourceService';
 import { BaseModel } from '@/models/Model';
 import { View } from './models/View.model';
 

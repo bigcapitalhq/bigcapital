@@ -1,18 +1,19 @@
 import moment from 'moment';
 import * as R from 'ramda';
-import { IFilterRole, IDynamicFilter, } from './DynamicFilter.types';
+import { IFilterRole, IDynamicFilter } from './DynamicFilter.types';
 import Parser from '@/libs/logic-evaluation/Parser';
 import { Lexer } from '@/libs/logic-evaluation/Lexer';
 import DynamicFilterQueryParser from './DynamicFilterQueryParser';
 import { COMPARATOR_TYPE, FIELD_TYPE } from './constants';
 import { BaseModel } from '@/models/Model';
+import { IMetadataModel } from '../models/MetadataModel';
 
-export abstract class DynamicFilterAbstractor
-  implements IDynamicFilter
-{
+type MetadataModel = typeof BaseModel & IMetadataModel;
+
+export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
   protected filterRoles: IFilterRole[] = [];
   protected tableName: string;
-  protected model: BaseModel;
+  protected model: MetadataModel;
   protected responseMeta: { [key: string]: any } = {};
   public relationFields = [];
 
@@ -20,7 +21,7 @@ export abstract class DynamicFilterAbstractor
    * Sets model the dynamic filter service.
    * @param {IModel} model
    */
-  public setModel(model: BaseModel) {
+  public setModel(model: MetadataModel) {
     this.model = model;
     this.tableName = model.tableName;
   }
@@ -46,9 +47,9 @@ export abstract class DynamicFilterAbstractor
    * @return {Function}
    */
   protected buildFilterRolesQuery = (
-    model: IModel,
+    model: typeof BaseModel,
     roles: IFilterRole[],
-    logicExpression: string = ''
+    logicExpression: string = '',
   ) => {
     const rolesIndexSet = this.convertRolesMapByIndex(model, roles);
 
@@ -67,7 +68,7 @@ export abstract class DynamicFilterAbstractor
 
   /**
    * Parses the logic expression to base expression.
-   * @param {string} logicExpression - 
+   * @param {string} logicExpression -
    * @return {string}
    */
   private parseLogicExpression(logicExpression: string): string {
@@ -84,9 +85,9 @@ export abstract class DynamicFilterAbstractor
    * @param {String} logicExpression - Logic expression.
    */
   protected buildFilterQuery = (
-    model: IModel,
+    model: typeof BaseModel,
     roles: IFilterRole[],
-    logicExpression: string
+    logicExpression: string,
   ) => {
     const basicExpression = this.parseLogicExpression(logicExpression);
 
@@ -98,7 +99,7 @@ export abstract class DynamicFilterAbstractor
   /**
    * Retrieve relation column of comparator fieldز
    */
-  private getFieldComparatorRelationColumn(field) {
+  protected getFieldComparatorRelationColumn(field: any): string {
     const relation = this.model.relationMappings[field.relationKey];
 
     if (relation) {
@@ -128,7 +129,7 @@ export abstract class DynamicFilterAbstractor
    * @param {IModel} model -
    * @param {Object} role -
    */
-  protected buildRoleQuery = (model: BaseModel, role: IFilterRole) => {
+  protected buildRoleQuery = (model: MetadataModel, role: IFilterRole) => {
     const field = model.getField(role.fieldKey);
     const comparatorColumn = this.getFieldComparatorColumn(field);
 
@@ -160,7 +161,7 @@ export abstract class DynamicFilterAbstractor
    */
   protected booleanRoleQueryBuilder = (
     role: IFilterRole,
-    comparatorColumn: string
+    comparatorColumn: string,
   ) => {
     switch (role.comparator) {
       case COMPARATOR_TYPE.EQUALS:
@@ -187,7 +188,7 @@ export abstract class DynamicFilterAbstractor
    */
   protected numberRoleQueryBuilder = (
     role: IFilterRole,
-    comparatorColumn: string
+    comparatorColumn: string,
   ) => {
     switch (role.comparator) {
       case COMPARATOR_TYPE.EQUALS:
@@ -230,7 +231,7 @@ export abstract class DynamicFilterAbstractor
    */
   protected textRoleQueryBuilder = (
     role: IFilterRole,
-    comparatorColumn: string
+    comparatorColumn: string,
   ) => {
     switch (role.comparator) {
       case COMPARATOR_TYPE.EQUAL:
@@ -266,7 +267,6 @@ export abstract class DynamicFilterAbstractor
         return (builder) => {
           builder.where(comparatorColumn, 'LIKE', `%${role.value}`);
         };
-
     }
   };
 
@@ -278,7 +278,7 @@ export abstract class DynamicFilterAbstractor
    */
   protected dateQueryBuilder = (
     role: IFilterRole,
-    comparatorColumn: string
+    comparatorColumn: string,
   ) => {
     switch (role.comparator) {
       case COMPARATOR_TYPE.AFTER:
@@ -302,12 +302,12 @@ export abstract class DynamicFilterAbstractor
   protected dateQueryInComparator = (
     role: IFilterRole,
     comparatorColumn: string,
-    builder
+    builder,
   ) => {
     const hasTimeFormat = moment(
       role.value,
       'YYYY-MM-DD HH:MM',
-      true
+      true,
     ).isValid();
     const dateFormat = 'YYYY-MM-DD HH:MM:SS';
 
@@ -332,13 +332,13 @@ export abstract class DynamicFilterAbstractor
   protected dateQueryAfterBeforeComparator = (
     role: IFilterRole,
     comparatorColumn: string,
-    builder
+    builder,
   ) => {
     const comparator = role.comparator === COMPARATOR_TYPE.BEFORE ? '<' : '>';
     const hasTimeFormat = moment(
       role.value,
       'YYYY-MM-DD HH:MM',
-      true
+      true,
     ).isValid();
     const targetDate = moment(role.value);
     const dateFormat = 'YYYY-MM-DD HH:MM:SS';
@@ -355,16 +355,14 @@ export abstract class DynamicFilterAbstractor
   };
 
   /**
-   * Registers relation field if the given field was relation type
-   * and not registered.
+   * Registers relation field if the given field was relation type and not registered.
    * @param {string} fieldKey - Field key.
    */
   protected setRelationIfRelationField = (fieldKey: string): void => {
     const field = this.model.getField(fieldKey);
     const isAlreadyRegistered = this.relationFields.some(
-      (field) => field === fieldKey
+      (field) => field === fieldKey,
     );
-
     if (
       !isAlreadyRegistered &&
       field &&
@@ -385,4 +383,11 @@ export abstract class DynamicFilterAbstractor
    * On initialize the registered dynamic filter.
    */
   onInitialize() {}
+
+  buildQuery(): void {
+    throw new Error('Method not implemented.');
+  }
+  getResponseMeta() {
+    throw new Error('Method not implemented.');
+  }
 }

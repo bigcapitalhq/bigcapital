@@ -70,8 +70,6 @@ export interface IBillEditingPayload {
   trx: Knex.Transaction;
 }
 export interface IBillEditedPayload {
-  // tenantId: number;
-  // billId: number;
   oldBill: Bill;
   bill: Bill;
   billDTO: IBillDTO;

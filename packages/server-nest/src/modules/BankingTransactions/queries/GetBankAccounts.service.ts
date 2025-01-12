@@ -1,61 +1,52 @@
-// import { Service, Inject } from 'typedi';
-// import { ICashflowAccount, ICashflowAccountsFilter } from '@/interfaces';
-// import { CashflowAccountTransformer } from './queries/BankAccountTransformer';
-// import TenancyService from '@/services/Tenancy/TenancyService';
-// import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-// import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
-// import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { Injectable, Inject } from '@nestjs/common';
+import { BankAccount } from '../models/BankAccount';
+import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
+import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
+import { CashflowAccountTransformer } from './BankAccountTransformer';
+import { ACCOUNT_TYPE } from '@/constants/accounts';
 
-// @Service()
-// export default class GetCashflowAccountsService {
-//   @Inject()
-//   private tenancy: TenancyService;
+@Injectable()
+export class GetBankAccountsService {
+  constructor(
+    private readonly dynamicListService: DynamicListService,
+    private readonly transformer: TransformerInjectable,
 
-//   @Inject()
-//   private dynamicListService: DynamicListingService;
+    @Inject(BankAccount.name)
+    private readonly bankAccountModel: typeof BankAccount
+  ) {}
 
-//   @Inject()
-//   private transformer: TransformerInjectable;
+  /**
+   * Retrieve the cash flow accounts.
+   * @param {ICashflowAccountsFilter} filterDTO - Filter DTO.
+   * @returns {ICashflowAccount[]}
+   */
+  public async getBankAccounts(
+    filterDTO: ICashflowAccountsFilter,
+  ): Promise<BankAccount[]> {
+    // Parsees accounts list filter DTO.
+    const filter = this.dynamicListService.parseStringifiedFilter(filterDTO);
 
-//   /**
-//    * Retrieve the cash flow accounts.
-//    * @param {number} tenantId - Tenant id.
-//    * @param {ICashflowAccountsFilter} filterDTO - Filter DTO.
-//    * @returns {ICashflowAccount[]}
-//    */
-//   public async getCashflowAccounts(
-//     tenantId: number,
-//     filterDTO: ICashflowAccountsFilter
-//   ): Promise<{ cashflowAccounts: ICashflowAccount[] }> {
-//     const { CashflowAccount } = this.tenancy.models(tenantId);
+    // Dynamic list service.
+    const dynamicList = await this.dynamicListService.dynamicList(
+      BankAccount,
+      filter,
+    );
+    // Retrieve accounts model based on the given query.
+    const accounts = await this.bankAccountModel.query().onBuild((builder) => {
+      dynamicList.buildQuery()(builder);
 
-//     // Parsees accounts list filter DTO.
-//     const filter = this.dynamicListService.parseStringifiedFilter(filterDTO);
-
-//     // Dynamic list service.
-//     const dynamicList = await this.dynamicListService.dynamicList(
-//       tenantId,
-//       CashflowAccount,
-//       filter
-//     );
-//     // Retrieve accounts model based on the given query.
-//     const accounts = await CashflowAccount.query().onBuild((builder) => {
-//       dynamicList.buildQuery()(builder);
-
-//       builder.whereIn('account_type', [
-//         ACCOUNT_TYPE.BANK,
-//         ACCOUNT_TYPE.CASH,
-//         ACCOUNT_TYPE.CREDIT_CARD,
-//       ]);
-//       builder.modify('inactiveMode', filter.inactiveMode);
-//     });
-//     // Retrieves the transformed accounts.
-//     const transformed = await this.transformer.transform(
-//       tenantId,
-//       accounts,
-//       new CashflowAccountTransformer()
-//     );
-
-//     return transformed;
-//   }
-// }
+      builder.whereIn('account_type', [
+        ACCOUNT_TYPE.BANK,
+        ACCOUNT_TYPE.CASH,
+        ACCOUNT_TYPE.CREDIT_CARD,
+      ]);
+      builder.modify('inactiveMode', filter.inactiveMode);
+    });
+    // Retrieves the transformed accounts.
+    const transformed = await this.transformer.transform(
+      accounts,
+      new CashflowAccountTransformer(),
+    );
+    return transformed;
+  }
+}

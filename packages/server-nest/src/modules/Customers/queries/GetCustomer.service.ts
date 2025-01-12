@@ -1,6 +1,6 @@
 
 import { Inject, Injectable } from '@nestjs/common';
-import { CustomerTransfromer } from '../queries/CustomerTransformer';
+import { CustomerTransfromer } from './CustomerTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Customer } from '../models/Customer';
 

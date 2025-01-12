@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { VendorsApplication } from './VendorsApplication.service';
 import {
@@ -19,6 +20,11 @@ import { PublicRoute } from '../Auth/Jwt.guard';
 @PublicRoute()
 export class VendorsController {
   constructor(private vendorsApplication: VendorsApplication) {}
+
+  @Get()
+  getVendors(@Query() filterDTO: IVendorsFilter) {
+    return this.vendorsApplication.getVendors(filterDTO);
+  }
 
   @Get(':id')
   getVendor(@Param('id') vendorId: number) {
