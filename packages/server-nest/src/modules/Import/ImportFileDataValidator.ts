@@ -1,10 +1,11 @@
-import { Service } from 'typedi';
+
 import { ImportInsertError, ResourceMetaFieldsMap } from './interfaces';
 import { ERRORS, convertFieldsToYupValidation } from './_utils';
-import { IModelMeta } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
+import { Injectable } from '@nestjs/common';
+import { IModelMeta } from '@/interfaces/Model';
+import { ServiceError } from '../Items/ServiceError';
 
-@Service()
+@Injectable()
 export class ImportFileDataValidator {
   /**
    * Validates the given resource is importable.

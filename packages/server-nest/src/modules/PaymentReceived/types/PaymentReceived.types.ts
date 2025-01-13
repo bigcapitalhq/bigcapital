@@ -1,6 +1,7 @@
 import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 import { Knex } from 'knex';
 import { PaymentReceived } from '../models/PaymentReceived';
+import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 
 export interface IPaymentReceivedCreateDTO {
   customerId: number;
@@ -39,10 +40,10 @@ export interface IPaymentReceivedEntryDTO {
   paymentAmount: number;
 }
 
-// export interface IPaymentsReceivedFilter extends IDynamicListFilterDTO {
-//   stringifiedFilterRoles?: string;
-//   filterQuery?: (trx: Knex.Transaction) => void;
-// }
+export interface IPaymentsReceivedFilter extends IDynamicListFilter {
+  stringifiedFilterRoles?: string;
+  filterQuery?: (trx: Knex.Transaction) => void;
+}
 
 export interface IPaymentReceivePageEntry {
   invoiceId: number;

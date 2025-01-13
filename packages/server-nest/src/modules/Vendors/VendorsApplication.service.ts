@@ -9,6 +9,7 @@ import {
   IVendorEditDTO,
   IVendorNewDTO,
   IVendorOpeningBalanceEditDTO,
+  IVendorsFilter,
 } from './types/Vendors.types';
 import { GetVendorsService } from './queries/GetVendors.service';
 
@@ -78,10 +79,10 @@ export class VendorsApplication {
 
   /**
    * Retrieves the vendors paginated list.
-   * @param   {IVendorsFilter} filterDTO
-   * @returns {Promise<{vendors: Vendor[], pagination: IPaginationMeta, filterMeta: IFilterMeta}>>}
+   * @param {IVendorsFilter} filterDTO
+   * @returns {Promise<{ vendors: Vendor[], pagination: IPaginationMeta, filterMeta: IFilterMeta }>>}
    */
-  public getVendors = (filterDTO: IVendorsFilter) => {
+  public getVendors(filterDTO: IVendorsFilter) {
     return this.getVendorsService.getVendorsList(filterDTO);
   };
 }

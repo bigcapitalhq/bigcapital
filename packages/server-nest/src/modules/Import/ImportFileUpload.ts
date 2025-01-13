@@ -1,4 +1,3 @@
-import { Inject, Service } from 'typedi';
 import {
   deleteImportFile,
   getResourceColumns,
@@ -6,23 +5,21 @@ import {
   sanitizeResourceName,
   validateSheetEmpty,
 } from './_utils';
-import ResourceService from '../Resource/ResourceService';
+import { ResourceService } from '../Resource/ResourceService';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileUploadPOJO } from './interfaces';
 import { Import } from '@/system/models';
 import { parseSheetData } from './sheet_utils';
+import { Injectable } from '@nestjs/common';
 
-@Service()
+@Injectable()
 export class ImportFileUploadService {
-  @Inject()
-  private resourceService: ResourceService;
-
-  @Inject()
-  private importFileCommon: ImportFileCommon;
-
-  @Inject()
-  private importValidator: ImportFileDataValidator;
+  constructor(
+    private resourceService: ResourceService,
+    private importFileCommon: ImportFileCommon,
+    private importValidator: ImportFileDataValidator,
+  ) {}
 
   /**
    * Imports the specified file for the given resource.
@@ -34,17 +31,16 @@ export class ImportFileUploadService {
    * @returns {Promise<ImportFileUploadPOJO>}
    */
   public async import(
-    tenantId: number,
     resourceName: string,
     filename: string,
-    params: Record<string, number | string>
+    params: Record<string, number | string>,
   ): Promise<ImportFileUploadPOJO> {
     try {
       return await this.importUnhandled(
         tenantId,
         resourceName,
         filename,
-        params
+        params,
       );
     } catch (err) {
       deleteImportFile(filename);
@@ -61,16 +57,12 @@ export class ImportFileUploadService {
    * @returns {Promise<ImportFileUploadPOJO>}
    */
   public async importUnhandled(
-    tenantId: number,
     resourceName: string,
     filename: string,
-    params: Record<string, number | string>
+    params: Record<string, number | string>,
   ): Promise<ImportFileUploadPOJO> {
     const resource = sanitizeResourceName(resourceName);
-    const resourceMeta = this.resourceService.getResourceMeta(
-      tenantId,
-      resource
-    );
+    const resourceMeta = this.resourceService.getResourceMeta(resource);
     // Throw service error if the resource does not support importing.
     this.importValidator.validateResourceImportable(resourceMeta);
 
@@ -107,7 +99,7 @@ export class ImportFileUploadService {
     });
     const resourceColumnsMap = this.resourceService.getResourceFields2(
       tenantId,
-      resource
+      resource,
     );
     const resourceColumns = getResourceColumns(resourceColumnsMap);
 

@@ -3,6 +3,8 @@
 import { Knex } from 'knex';
 import { Vendor } from '../models/Vendor';
 import { IContactAddressDTO } from '@/modules/Contacts/types/Contacts.types';
+import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 
 // ----------------------------------
 export interface IVendorNewDTO extends IContactAddressDTO {
@@ -43,11 +45,17 @@ export interface IVendorEditDTO extends IContactAddressDTO {
   active?: boolean;
 }
 
-// export interface IVendorsFilter extends IDynamicListFilter {
-//   stringifiedFilterRoles?: string;
-//   page?: number;
-//   pageSize?: number;
-// }
+export interface IVendorsFilter extends IDynamicListFilter {
+  stringifiedFilterRoles?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface GetVendorsResponse {
+  vendors: Vendor[];
+  pagination: IPaginationMeta;
+  filterMeta: IFilterMeta;
+}
 
 // Vendor Events.
 // ----------------------------------

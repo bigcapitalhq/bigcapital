@@ -1,19 +1,18 @@
+import { Injectable } from '@nestjs/common';
 import { fromPairs, isUndefined } from 'lodash';
-import { Inject, Service } from 'typedi';
 import {
   ImportDateFormats,
   ImportFileMapPOJO,
   ImportMappingAttr,
 } from './interfaces';
-import ResourceService from '../Resource/ResourceService';
-import { ServiceError } from '@/exceptions';
+import { ResourceService } from '../Resource/ResourceService';
+import { ServiceError } from '../Items/ServiceError';
 import { ERRORS } from './_utils';
-import { Import } from '@/system/models';
+import { Import } from './models/Import';
 
-@Service()
+@Injectable()
 export class ImportFileMapping {
-  @Inject()
-  private resource: ResourceService;
+  constructor(private readonly resource: ResourceService) {}
 
   /**
    * Mapping the excel sheet columns with resource columns.
@@ -22,16 +21,15 @@ export class ImportFileMapping {
    * @param {ImportMappingAttr} maps
    */
   public async mapping(
-    tenantId: number,
     importId: string,
-    maps: ImportMappingAttr[]
+    maps: ImportMappingAttr[],
   ): Promise<ImportFileMapPOJO> {
     const importFile = await Import.query()
       .findOne('filename', importId)
       .throwIfNotFound();
 
     // Invalidate the from/to map attributes.
-    this.validateMapsAttrs(tenantId, importFile, maps);
+    this.validateMapsAttrs(importFile, maps);
 
     // @todo validate the required fields.
 
@@ -39,7 +37,7 @@ export class ImportFileMapping {
     this.validateDuplicatedMapAttrs(maps);
 
     // Validate the date format mapping.
-    this.validateDateFormatMapping(tenantId, importFile.resource, maps);
+    this.validateDateFormatMapping(importFile.resource, maps);
 
     const mappingStringified = JSON.stringify(maps);
 
@@ -61,17 +59,10 @@ export class ImportFileMapping {
    * @param {ImportMappingAttr[]} maps
    * @throws {ServiceError(ERRORS.INVALID_MAP_ATTRS)}
    */
-  private validateMapsAttrs(
-    tenantId: number,
-    importFile: any,
-    maps: ImportMappingAttr[]
-  ) {
-    const fields = this.resource.getResourceFields2(
-      tenantId,
-      importFile.resource
-    );
+  private validateMapsAttrs(importFile: any, maps: ImportMappingAttr[]) {
+    const fields = this.resource.getResourceFields2(importFile.resource);
     const columnsMap = fromPairs(
-      importFile.columnsParsed.map((field) => [field, ''])
+      importFile.columnsParsed.map((field) => [field, '']),
     );
     const invalid = [];
 
@@ -130,14 +121,10 @@ export class ImportFileMapping {
    * @param {ImportMappingAttr[]} maps
    */
   private validateDateFormatMapping(
-    tenantId: number,
     resource: string,
-    maps: ImportMappingAttr[]
+    maps: ImportMappingAttr[],
   ) {
-    const fields = this.resource.getResourceImportableFields(
-      tenantId,
-      resource
-    );
+    const fields = this.resource.getResourceImportableFields(resource);
     // @todo Validate date type of the nested fields.
     maps.forEach((map) => {
       if (

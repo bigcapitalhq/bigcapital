@@ -1,16 +1,11 @@
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '../Tenancy/TenancyService';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { Import } from './models/Import';
 import { ImportFileMetaTransformer } from './ImportFileMetaTransformer';
-import { Import } from '@/system/models';
+import { Injectable } from '@nestjs/common';
+import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 
-@Service()
+@Injectable()
 export class ImportFileMeta {
-  @Inject()
-  private tenancy: HasTenancyService;
-
-  @Inject()
-  private transformer: TransformerInjectable;
+  constructor(private readonly transformer: TransformerInjectable) {}
 
   /**
    * Retrieves the import meta of the given import model id.
@@ -18,16 +13,15 @@ export class ImportFileMeta {
    * @param {number} importId
    * @returns {}
    */
-  async getImportMeta(tenantId: number, importId: string) {
+  async getImportMeta(importId: string) {
     const importFile = await Import.query()
       .where('tenantId', tenantId)
       .findOne('importId', importId);
 
     // Retrieves the transformed accounts collection.
     return this.transformer.transform(
-      tenantId,
       importFile,
-      new ImportFileMetaTransformer()
+      new ImportFileMetaTransformer(),
     );
   }
 }

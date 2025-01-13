@@ -1,25 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { Bill } from '../models/Bill';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { BillTransformer } from './Bill.transformer';
+import { IBillsFilter } from '../Bills.types';
 
 @Injectable()
 export class GetBillsService {
   constructor(
     private transformer: TransformerInjectable,
     private dynamicListService: DynamicListService,
+
+    @Inject(Bill.name) private billModel: typeof Bill,
   ) {}
 
   /**
    * Retrieve bills data table list.
-   * @param {IBillsFilter} billsFilter -
+   * @param {IBillsFilter} billsFilter - 
    */
-  public async getBills(
-    filterDTO: IBillsFilter,
-  ): Promise<{
+  public async getBills(filterDTO: IBillsFilter): Promise<{
     bills: Bill;
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
@@ -32,7 +33,8 @@ export class GetBillsService {
       Bill,
       filter,
     );
-    const { results, pagination } = await Bill.query()
+    const { results, pagination } = await this.billModel
+      .query()
       .onBuild((builder) => {
         builder.withGraphFetched('vendor');
         builder.withGraphFetched('entries.item');

@@ -1,64 +1,46 @@
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '../Tenancy/TenancyService';
 import { ImportFilePreviewPOJO } from './interfaces';
 import { ImportFileProcess } from './ImportFileProcess';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import events from '@/subscribers/events';
-import { IImportFileCommitedEventPayload } from '@/interfaces/Import';
 import { ImportAls } from './ImportALS';
+import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
 
-@Service()
+@Injectable()
 export class ImportFileProcessCommit {
-  @Inject()
-  private tenancy: HasTenancyService;
-
-  @Inject()
-  private importFile: ImportFileProcess;
-
-  @Inject()
-  private importAls: ImportAls;
-
-  @Inject()
-  private eventPublisher: EventPublisher;
+  constructor(
+    private readonly importFile: ImportFileProcess,
+    private readonly importAls: ImportAls,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   /**
    * Commits the imported file under ALS.
-   * @param {number} tenantId
-   * @param {string} importId
+   * @param {string} importId - The import ID.
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
-  public commit(
-    tenantId: number,
-    importId: string
-  ): Promise<ImportFilePreviewPOJO> {
+  public commit(importId: string): Promise<ImportFilePreviewPOJO> {
     return this.importAls.runCommit<Promise<ImportFilePreviewPOJO>>(() =>
-      this.commitAlsRun(tenantId, importId)
+      this.commitAlsRun(importId),
     );
   }
 
   /**
    * Commits the imported file.
-   * @param {number} tenantId
-   * @param {number} importId
+   * @param {number} importId - The import ID.
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
-  public async commitAlsRun(
-    tenantId: number,
-    importId: string
-  ): Promise<ImportFilePreviewPOJO> {
-    const knex = this.tenancy.knex(tenantId);
+  public async commitAlsRun(importId: string): Promise<ImportFilePreviewPOJO> {
     const trx = await knex.transaction({ isolationLevel: 'read uncommitted' });
 
-    const meta = await this.importFile.import(tenantId, importId, trx);
+    const meta = await this.importFile.import(importId, trx);
 
     // Commit the successed transaction.
     await trx.commit();
 
     // Triggers `onImportFileCommitted` event.
-    await this.eventPublisher.emitAsync(events.import.onImportCommitted, {
+    await this.eventEmitter.emitAsync(events.import.onImportCommitted, {
       meta,
       importId,
-      tenantId,
     } as IImportFileCommitedEventPayload);
 
     return meta;

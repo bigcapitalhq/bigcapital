@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { OPERATION } from '@/libs/logic-evaluation/Parser';
 
 export default class QueryParser {

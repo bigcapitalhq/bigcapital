@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { IItemEntryDTO } from '../TransactionItemEntry/ItemEntry.types';
 import { AttachmentLinkDTO } from '../Attachments/Attachments.types';
 import { Bill } from './models/Bill';
+import { IDynamicListFilter } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
 
 export interface IBillDTO {
   vendorId: number;
@@ -42,12 +43,12 @@ export interface IBillEditDTO {
   attachments?: AttachmentLinkDTO[];
 }
 
-// export interface IBillsFilter extends IDynamicListFilterDTO {
-//   stringifiedFilterRoles?: string;
-//   page: number;
-//   pageSize: number;
-//   filterQuery?: (q: any) => void;
-// }
+export interface IBillsFilter extends IDynamicListFilter {
+  stringifiedFilterRoles?: string;
+  page: number;
+  pageSize: number;
+  filterQuery?: (q: any) => void;
+}
 
 export interface IBillCreatedPayload {
   // tenantId: number;

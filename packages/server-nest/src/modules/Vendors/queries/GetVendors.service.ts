@@ -1,13 +1,19 @@
 import * as R from 'ramda';
+import { Inject, Injectable } from '@nestjs/common';
 import { Vendor } from '../models/Vendor';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
-import { Inject, Injectable } from '@nestjs/common';
-import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { VendorTransfromer } from './VendorTransformer';
+import { GetVendorsResponse, IVendorsFilter } from '../types/Vendors.types';
 
 @Injectable()
 export class GetVendorsService {
+  /**
+   * Constructor method.
+   * @param {DynamicListService} dynamicListService
+   * @param {TransformerInjectable} transformer
+   * @param {typeof Vendor} vendorModel
+   */
   constructor(
     private dynamicListService: DynamicListService,
     private transformer: TransformerInjectable,
@@ -18,12 +24,11 @@ export class GetVendorsService {
   /**
    * Retrieve vendors datatable list.
    * @param {IVendorsFilter} vendorsFilter - Vendors filter.
+   * @returns {Promise<GetVendorsResponse>}
    */
-  public async getVendorsList(filterDTO: IVendorsFilter): Promise<{
-    vendors: Vendor[];
-    pagination: IPaginationMeta;
-    filterMeta: IFilterMeta;
-  }> {
+  public async getVendorsList(
+    filterDTO: IVendorsFilter,
+  ): Promise<GetVendorsResponse> {
     // Parses vendors list filter DTO.
     const filter = this.parseVendorsListFilterDTO(filterDTO);
 

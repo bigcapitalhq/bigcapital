@@ -158,10 +158,7 @@ export class PaymentReceivesApplication {
    * @param {PaymentReceive} paymentReceive
    * @returns
    */
-  public getPaymentReceivePdf = (
-    tenantId: number,
-    paymentReceiveId: number,
-  ) => {
+  public getPaymentReceivePdf = (paymentReceiveId: number) => {
     return this.getPaymentReceivePdfService.getPaymentReceivePdf(
       paymentReceiveId,
     );

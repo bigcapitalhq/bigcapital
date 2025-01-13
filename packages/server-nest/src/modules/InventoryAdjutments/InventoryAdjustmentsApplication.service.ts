@@ -2,9 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { DeleteInventoryAdjustmentService } from './commands/DeleteInventoryAdjustment.service';
 import { PublishInventoryAdjustmentService } from './commands/PublishInventoryAdjustment.service';
 import { CreateQuickInventoryAdjustmentService } from './commands/CreateQuickInventoryAdjustment.service';
-import { IQuickInventoryAdjustmentDTO } from './types/InventoryAdjustments.types';
+import {
+  IInventoryAdjustmentsFilter,
+  IQuickInventoryAdjustmentDTO,
+} from './types/InventoryAdjustments.types';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { GetInventoryAdjustmentService } from './queries/GetInventoryAdjustment.service';
+import { GetInventoryAdjustmentsService } from './queries/GetInventoryAdjustments.service';
+import { IPaginationMeta } from '@/interfaces/Model';
 
 @Injectable()
 export class InventoryAdjustmentsApplicationService {
@@ -13,6 +18,7 @@ export class InventoryAdjustmentsApplicationService {
     private readonly deleteInventoryAdjustmentService: DeleteInventoryAdjustmentService,
     private readonly publishInventoryAdjustmentService: PublishInventoryAdjustmentService,
     private readonly getInventoryAdjustmentService: GetInventoryAdjustmentService,
+    private readonly getInventoryAdjustmentsService: GetInventoryAdjustmentsService,
   ) {}
 
   /**
@@ -61,6 +67,21 @@ export class InventoryAdjustmentsApplicationService {
   ): Promise<void> {
     return this.publishInventoryAdjustmentService.publishInventoryAdjustment(
       inventoryAdjustmentId,
+    );
+  }
+
+  /**
+   * Retrieves the inventory adjustments paginated list.
+   * @param {IInventoryAdjustmentsFilter} adjustmentsFilter - Inventory adjustments filter.
+   */
+  public async getInventoryAdjustments(
+    filterDTO: IInventoryAdjustmentsFilter,
+  ): Promise<{
+    inventoryAdjustments: InventoryAdjustment[];
+    pagination: IPaginationMeta;
+  }> {
+    return this.getInventoryAdjustmentsService.getInventoryAdjustments(
+      filterDTO,
     );
   }
 }

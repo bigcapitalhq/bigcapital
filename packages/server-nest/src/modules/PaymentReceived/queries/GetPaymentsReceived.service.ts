@@ -5,6 +5,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
+import { IPaymentsReceivedFilter } from '../types/PaymentReceived.types';
 
 @Injectable()
 export class GetPaymentsReceivedService {
@@ -18,7 +19,7 @@ export class GetPaymentsReceivedService {
 
   /**
    * Retrieve payment receives paginated and filterable list.
-   * @param {IPaymentsReceivedFilter} paymentReceivesFilter
+   * @param {IPaymentsReceivedFilter} filterDTO
    */
   public async getPaymentReceives(filterDTO: IPaymentsReceivedFilter): Promise<{
     paymentReceives: PaymentReceived[];

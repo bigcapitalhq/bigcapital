@@ -6,11 +6,16 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { InventoryAdjustmentsApplicationService } from './InventoryAdjustmentsApplication.service';
-import { IQuickInventoryAdjustmentDTO } from './types/InventoryAdjustments.types';
+import {
+  IInventoryAdjustmentsFilter,
+  IQuickInventoryAdjustmentDTO,
+} from './types/InventoryAdjustments.types';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { IPaginationMeta } from '@/interfaces/Model';
 
 @Controller('inventory-adjustments')
 @PublicRoute()
@@ -34,6 +39,18 @@ export class InventoryAdjustmentsController {
   ): Promise<void> {
     return this.inventoryAdjustmentsApplicationService.deleteInventoryAdjustment(
       inventoryAdjustmentId,
+    );
+  }
+
+  @Get()
+  public async getInventoryAdjustments(
+    @Query() filterDTO: IInventoryAdjustmentsFilter,
+  ): Promise<{
+    inventoryAdjustments: InventoryAdjustment[];
+    pagination: IPaginationMeta;
+  }> {
+    return this.inventoryAdjustmentsApplicationService.getInventoryAdjustments(
+      filterDTO,
     );
   }
 

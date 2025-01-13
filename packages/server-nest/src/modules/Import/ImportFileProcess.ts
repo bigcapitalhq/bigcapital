@@ -1,29 +1,23 @@
-import { Inject, Service } from 'typedi';
 import { chain } from 'lodash';
 import { Knex } from 'knex';
-import { ServiceError } from '@/exceptions';
 import { ERRORS, getUnmappedSheetColumns, readImportFile } from './_utils';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataTransformer } from './ImportFileDataTransformer';
-import ResourceService from '../Resource/ResourceService';
-import UnitOfWork from '../UnitOfWork';
 import { ImportFilePreviewPOJO } from './interfaces';
-import { Import } from '@/system/models';
 import { parseSheetData } from './sheet_utils';
+import { Injectable } from '@nestjs/common';
+import { ResourceService } from '../Resource/ResourceService';
+import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
+import { ServiceError } from '../Items/ServiceError';
 
-@Service()
+@Injectable()
 export class ImportFileProcess {
-  @Inject()
-  private resource: ResourceService;
-
-  @Inject()
-  private importCommon: ImportFileCommon;
-
-  @Inject()
-  private importParser: ImportFileDataTransformer;
-
-  @Inject()
-  private uow: UnitOfWork;
+  constructor(
+    private readonly resource: ResourceService,
+    private readonly importCommon: ImportFileCommon,
+    private readonly importParser: ImportFileDataTransformer,
+    private readonly uow: UnitOfWork,
+  ) {}
 
   /**
    * Preview the imported file results before commiting the transactions.
@@ -32,9 +26,8 @@ export class ImportFileProcess {
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
   public async import(
-    tenantId: number,
     importId: string,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<ImportFilePreviewPOJO> {
     const importFile = await Import.query()
       .findOne('importId', importId)
@@ -51,7 +44,7 @@ export class ImportFileProcess {
     const [sheetData, sheetColumns] = parseSheetData(buffer);
 
     const resource = importFile.resource;
-    const resourceFields = this.resource.getResourceFields2(tenantId, resource);
+    const resourceFields = this.resource.getResourceFields2(resource);
 
     // Runs the importing operation with ability to return errors that will happen.
     const [successedImport, failedImport, allData] =
@@ -64,18 +57,18 @@ export class ImportFileProcess {
             importFile,
             resourceFields,
             sheetData,
-            trx
+            trx,
           );
           const [successedImport, failedImport] =
             await this.importCommon.import(
               tenantId,
               importFile,
               parsedData,
-              trx
+              trx,
             );
           return [successedImport, failedImport, parsedData];
         },
-        trx
+        trx,
       );
     const mapping = importFile.mappingParsed;
     const errors = chain(failedImport)

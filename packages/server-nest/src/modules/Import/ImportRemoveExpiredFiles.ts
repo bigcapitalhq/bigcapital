@@ -1,10 +1,10 @@
 import moment from 'moment';
 import bluebird from 'bluebird';
-import { Import } from '@/system/models';
 import { deleteImportFile } from './_utils';
-import { Service } from 'typedi';
+import { Injectable } from '@nestjs/common';
+import { Import } from './models/Import';
 
-@Service()
+@Injectable()
 export class ImportDeleteExpiredFiles {
   /**
    * Delete expired files.

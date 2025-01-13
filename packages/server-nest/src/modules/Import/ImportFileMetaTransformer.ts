@@ -1,4 +1,4 @@
-import { Transformer } from '@/lib/Transformer/Transformer';
+import { Transformer } from '../Transformer/Transformer';
 
 export class ImportFileMetaTransformer extends Transformer {
   /**
@@ -11,9 +11,9 @@ export class ImportFileMetaTransformer extends Transformer {
 
   public excludeAttributes = (): string[] => {
     return ['id', 'filename', 'columns', 'mappingParsed', 'mapping'];
-  }
+  };
 
   map(importFile) {
-    return  importFile.mappingParsed;
+    return importFile.mappingParsed;
   }
 }

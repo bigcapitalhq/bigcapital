@@ -1,4 +1,3 @@
-import { Inject, Service } from 'typedi';
 import bluebird from 'bluebird';
 import { isUndefined, pickBy, set } from 'lodash';
 import { Knex } from 'knex';
@@ -11,17 +10,15 @@ import {
   sanitizeSheetData,
   getMapToPath,
 } from './_utils';
-import ResourceService from '../Resource/ResourceService';
-import HasTenancyService from '../Tenancy/TenancyService';
+import { ResourceService } from '../Resource/ResourceService';
 import { CurrencyParsingDTOs } from './_constants';
+import { Injectable } from '@nestjs/common';
 
-@Service()
+@Injectable()
 export class ImportFileDataTransformer {
-  @Inject()
-  private resource: ResourceService;
-
-  @Inject()
-  private tenancy: HasTenancyService;
+  constructor(
+    private readonly resource: ResourceService,
+  ) {}
 
   /**
    * Parses the given sheet data before passing to the service layer.
@@ -30,7 +27,6 @@ export class ImportFileDataTransformer {
    * @param {}
    */
   public async parseSheetData(
-    tenantId: number,
     importFile: any,
     importableFields: ResourceMetaFieldsMap,
     data: Record<string, unknown>[],
@@ -46,13 +42,11 @@ export class ImportFileDataTransformer {
     );
     // Parse the mapped sheet values.
     const parsedValues = await this.parseExcelValues(
-      tenantId,
       importableFields,
       mappedDTOs,
       trx
     );
     const aggregateValues = this.aggregateParsedValues(
-      tenantId,
       importFile.resource,
       parsedValues
     );
@@ -66,13 +60,12 @@ export class ImportFileDataTransformer {
    * @param {Record<string, any>} parsedData
    * @returns {Record<string, any>[]}
    */
-  public aggregateParsedValues = (
-    tenantId: number,
+  public aggregateParsedValues(
     resourceName: string,
     parsedData: Record<string, any>[]
-  ): Record<string, any>[] => {
+  ): Record<string, any>[] {
     let _value = parsedData;
-    const meta = this.resource.getResourceMeta(tenantId, resourceName);
+    const meta = this.resource.getResourceMeta(resourceName);
 
     if (meta.importAggregator === 'group') {
       _value = aggregate(
@@ -113,7 +106,6 @@ export class ImportFileDataTransformer {
    * @returns {Record<string, any>}
    */
   public async parseExcelValues(
-    tenantId: number,
     fields: ResourceMetaFieldsMap,
     valueDTOs: Record<string, any>[],
     trx?: Knex.Transaction

@@ -2,6 +2,10 @@ import * as R from 'ramda';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { ItemCategory } from '../models/ItemCategory.model';
 import { Inject } from '@nestjs/common';
+import {
+  GetItemCategoriesResponse,
+  IItemCategoriesFilter,
+} from '../ItemCategory.interfaces';
 
 export class GetItemCategoriesService {
   constructor(
@@ -25,12 +29,12 @@ export class GetItemCategoriesService {
 
   /**
    * Retrieve item categories list.
-   * @param {number} tenantId
-   * @param filter
+   * @param {IItemCategoriesFilter} filterDTO
+   * @returns {Promise<GetItemCategoriesResponse>}
    */
   public async getItemCategories(
     filterDTO: IItemCategoriesFilter,
-  ): Promise<{ itemCategories: ItemCategory[]; filterMeta: IFilterMeta }> {
+  ): Promise<GetItemCategoriesResponse> {
     // Parses list filter DTO.
     const filter = this.parsesListFilterDTO(filterDTO);
 

@@ -1,7 +1,7 @@
-import { Service } from 'typedi';
 import { AsyncLocalStorage } from 'async_hooks';
+import { Injectable } from '@nestjs/common';
 
-@Service()
+@Injectable()
 export class ImportAls {
   private als: AsyncLocalStorage<Map<string, any>>;
 

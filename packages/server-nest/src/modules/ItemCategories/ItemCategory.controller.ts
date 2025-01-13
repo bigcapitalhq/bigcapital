@@ -6,9 +6,14 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ItemCategoryApplication } from './ItemCategory.application';
-import { IItemCategoryOTD } from './ItemCategory.interfaces';
+import {
+  GetItemCategoriesResponse,
+  IItemCategoriesFilter,
+  IItemCategoryOTD,
+} from './ItemCategory.interfaces';
 import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('item-categories')
@@ -27,6 +32,13 @@ export class ItemCategoryController {
       tenantId,
       itemCategoryDTO,
     );
+  }
+
+  @Get()
+  async getItemCategories(
+    @Query() filterDTO: IItemCategoriesFilter,
+  ): Promise<GetItemCategoriesResponse> {
+    return this.itemCategoryApplication.getItemCategories(filterDTO);
   }
 
   @Put(':id')

@@ -1,8 +1,18 @@
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CreditNoteApplication } from './CreditNoteApplication.service';
 import {
   ICreditNoteEditDTO,
   ICreditNoteNewDTO,
+  ICreditNotesQueryDTO,
 } from './types/CreditNotes.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 
@@ -17,6 +27,11 @@ export class CreditNotesController {
   @Post()
   createCreditNote(@Body() creditNoteDTO: ICreditNoteNewDTO) {
     return this.creditNoteApplication.createCreditNote(creditNoteDTO);
+  }
+
+  @Get()
+  getCreditNotes(@Query() creditNotesQuery: ICreditNotesQueryDTO) {
+    return this.creditNoteApplication.getCreditNotes(creditNotesQuery);
   }
 
   @Put(':id')

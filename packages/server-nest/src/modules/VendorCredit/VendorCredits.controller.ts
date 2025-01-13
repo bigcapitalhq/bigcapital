@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { VendorCreditsApplicationService } from './VendorCreditsApplication.service';
 import {
@@ -29,6 +30,11 @@ export class VendorCreditsController {
   @Put(':id/open')
   async openVendorCredit(@Param('id') vendorCreditId: number) {
     return this.vendorCreditsApplication.openVendorCredit(vendorCreditId);
+  }
+
+  @Get()
+  async getVendorCredits(@Query() filterDTO: IVendorCreditsFilter) {
+    return this.vendorCreditsApplication.getVendorCredits(filterDTO);
   }
 
   @Put(':id')

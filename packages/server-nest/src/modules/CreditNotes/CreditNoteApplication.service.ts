@@ -7,7 +7,9 @@ import { GetCreditNotePdf } from './queries/GetCreditNotePdf.serivce';
 import {
   ICreditNoteEditDTO,
   ICreditNoteNewDTO,
+  ICreditNotesQueryDTO,
 } from './types/CreditNotes.types';
+import { GetCreditNotesService } from './queries/GetCreditNotes.service';
 
 @Injectable()
 export class CreditNoteApplication {
@@ -17,6 +19,7 @@ export class CreditNoteApplication {
     private openCreditNoteService: OpenCreditNoteService,
     private deleteCreditNoteService: DeleteCreditNoteService,
     private getCreditNotePdfService: GetCreditNotePdf,
+    private getCreditNotesService: GetCreditNotesService,
   ) {}
 
   /**
@@ -66,5 +69,14 @@ export class CreditNoteApplication {
    */
   getCreditNotePdf(creditNoteId: number) {
     return this.getCreditNotePdfService.getCreditNotePdf(creditNoteId);
+  }
+
+  /**
+   * Retrieves the credit notes list.
+   * @param {ICreditNotesQueryDTO} creditNotesQuery
+   * @returns {Promise<GetCreditNotesResponse>}
+   */
+  getCreditNotes(creditNotesQuery: ICreditNotesQueryDTO) {
+    return this.getCreditNotesService.getCreditNotesList(creditNotesQuery);
   }
 }

@@ -1,6 +1,8 @@
 import { Knex } from 'knex';
 import { Customer } from '../models/Customer';
 import { IContactAddressDTO } from '@/modules/Contacts/types/Contacts.types';
+import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 
 // Customer Interfaces.
 // ----------------------------------
@@ -47,12 +49,17 @@ export interface ICustomerEditDTO extends IContactAddressDTO {
   active?: boolean;
 }
 
-// export interface ICustomersFilter extends IDynamicListFilter {
-//   stringifiedFilterRoles?: string;
-//   page?: number;
-//   pageSize?: number;
-// }
+export interface ICustomersFilter extends IDynamicListFilter {
+  stringifiedFilterRoles?: string;
+  page?: number;
+  pageSize?: number;
+}
 
+export interface GetCustomersResponse {
+  customers: Customer[];
+  pagination: IPaginationMeta;
+  filterMeta: IFilterMeta;
+}
 // Customer Events.
 // ----------------------------------
 export interface ICustomerEventCreatedPayload {

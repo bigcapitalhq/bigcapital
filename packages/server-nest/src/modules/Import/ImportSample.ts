@@ -1,22 +1,21 @@
 import XLSX from 'xlsx';
-import { Inject, Service } from 'typedi';
 import { ImportableResources } from './ImportableResources';
 import { sanitizeResourceName } from './_utils';
+import { Injectable } from '@nestjs/common';
 
-@Service()
+@Injectable()
 export class ImportSampleService {
-  @Inject()
-  private importable: ImportableResources;
+  constructor(
+    private readonly importable: ImportableResources,
+  ) {}
 
   /**
    * Retrieves the sample sheet of the given resource.
-   * @param {number} tenantId
    * @param {string} resource
    * @param {string} format
    * @returns {Buffer | string}
    */
   public sample(
-    tenantId: number,
     resource: string,
     format: 'csv' | 'xlsx'
   ): Buffer | string {

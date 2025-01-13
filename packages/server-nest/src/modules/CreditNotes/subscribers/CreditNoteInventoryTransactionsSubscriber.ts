@@ -11,7 +11,7 @@ import { CreditNoteInventoryTransactions } from '../commands/CreditNotesInventor
 @Injectable()
 export class CreditNoteInventoryTransactionsSubscriber {
   constructor(
-    private readonly inventoryTransactions: CreditNoteInventoryTransactions;
+    private readonly inventoryTransactions: CreditNoteInventoryTransactions,
   ) {}
 
   /**
@@ -30,9 +30,9 @@ export class CreditNoteInventoryTransactionsSubscriber {
 
     await this.inventoryTransactions.createInventoryTransactions(
       creditNote,
-      trx
+      trx,
     );
-  };
+  }
 
   /**
    * Rewrites inventory transactions once credit note edited.
@@ -48,11 +48,11 @@ export class CreditNoteInventoryTransactionsSubscriber {
     if (!creditNote.isOpen) return;
 
     await this.inventoryTransactions.editInventoryTransactions(
-      creditNoteId,
+      creditNote.id,
       creditNote,
-      trx
+      trx,
     );
-  };
+  }
 
   /**
    * Reverts inventory transactions once credit note deleted.
@@ -67,8 +67,8 @@ export class CreditNoteInventoryTransactionsSubscriber {
     if (!oldCreditNote.isOpen) return;
 
     await this.inventoryTransactions.deleteInventoryTransactions(
-      creditNoteId,
-      trx
+      oldCreditNote.id,
+      trx,
     );
-  };
+  }
 }

@@ -3,8 +3,11 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
 import { Customer } from '../models/Customer';
-import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { CustomerTransfromer } from './CustomerTransformer';
+import {
+  GetCustomersResponse,
+  ICustomersFilter,
+} from '../types/Customers.types';
 
 @Injectable()
 export class GetCustomers {
@@ -26,12 +29,11 @@ export class GetCustomers {
   /**
    * Retrieve customers paginated list.
    * @param {ICustomersFilter} filter - Cusotmers filter.
+   * @returns {Promise<GetCustomersResponse>}
    */
-  public async getCustomersList(filterDTO: ICustomersFilter): Promise<{
-    customers: Customer[];
-    pagination: IPaginationMeta;
-    filterMeta: IFilterMeta;
-  }> {
+  public async getCustomersList(
+    filterDTO: ICustomersFilter,
+  ): Promise<GetCustomersResponse> {
     // Parses customers list filter DTO.
     const filter = this.parseCustomersListFilterDTO(filterDTO);
 
