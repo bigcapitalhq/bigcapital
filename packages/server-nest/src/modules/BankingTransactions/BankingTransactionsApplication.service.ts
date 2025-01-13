@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { DeleteCashflowTransaction } from './commands/DeleteCashflowTransaction.service';
 import { CreateBankTransactionService } from './commands/CreateBankTransaction.service';
 import { GetBankTransactionService } from './queries/GetBankTransaction.service';
-import { ICashflowNewCommandDTO } from './types/BankingTransactions.types';
+import { IBankAccountsFilter, ICashflowNewCommandDTO } from './types/BankingTransactions.types';
 import { Injectable } from '@nestjs/common';
 import { GetBankAccountsService } from './queries/GetBankAccounts.service';
 
@@ -48,9 +48,9 @@ export class BankingTransactionsApplication {
 
   /**
    * Retrieves the cashflow accounts.
-   * @param {ICashflowAccountsFilter} filterDTO
+   * @param {IBankAccountsFilter} filterDTO
    */
-  public getBankAccounts(filterDTO: ICashflowAccountsFilter) {
+  public getBankAccounts(filterDTO: IBankAccountsFilter) {
     return this.getBankAccountsService.getBankAccounts(filterDTO);
   }
 }

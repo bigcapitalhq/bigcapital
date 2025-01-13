@@ -13,6 +13,7 @@ import {
   IVendorEditDTO,
   IVendorNewDTO,
   IVendorOpeningBalanceEditDTO,
+  IVendorsFilter,
 } from './types/Vendors.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 

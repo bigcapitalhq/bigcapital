@@ -4,6 +4,7 @@ import { VendorCreditTransformer } from './VendorCreditTransformer';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { VendorCredit } from '../models/VendorCredit';
+import { IVendorCreditsQueryDTO } from '../types/VendorCredit.types';
 
 @Injectable()
 export class GetVendorCreditsService {

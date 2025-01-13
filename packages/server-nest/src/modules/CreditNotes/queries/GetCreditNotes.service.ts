@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
-import { ICreditNotesQueryDTO } from '../types/CreditNotes.types';
+import { GetCreditNotesResponse, ICreditNotesQueryDTO } from '../types/CreditNotes.types';
 import { CreditNote } from '../models/CreditNote';
 import { CreditNoteTransformer } from './CreditNoteTransformer';
 import { Inject } from '@nestjs/common';

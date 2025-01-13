@@ -4,6 +4,7 @@ import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 import { IRefundVendorCreditDTO } from '@/modules/VendorCreditsRefund/types/VendorCreditRefund.types';
 import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 import { DiscountType } from '@/common/types/Discount';
+import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 
 export enum VendorCreditAction {
   Create = 'Create',
@@ -15,12 +16,12 @@ export enum VendorCreditAction {
 
 export interface IVendorCreditEntryDTO extends IItemEntryDTO {}
 
-// export interface IVendorCreditsQueryDTO extends IDynamicListFilter {
-//   page: number;
-//   pageSize: number;
-//   searchKeyword?: string;
-//   filterQuery?: (q: any) => void;
-// }
+export interface IVendorCreditsQueryDTO extends IDynamicListFilter {
+  page: number;
+  pageSize: number;
+  searchKeyword?: string;
+  filterQuery?: (q: any) => void;
+}
 
 export interface IVendorCreditDTO {
   vendorId: number;

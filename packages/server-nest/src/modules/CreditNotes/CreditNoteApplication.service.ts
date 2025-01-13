@@ -14,12 +14,12 @@ import { GetCreditNotesService } from './queries/GetCreditNotes.service';
 @Injectable()
 export class CreditNoteApplication {
   constructor(
-    private createCreditNoteService: CreateCreditNoteService,
-    private editCreditNoteService: EditCreditNoteService,
-    private openCreditNoteService: OpenCreditNoteService,
-    private deleteCreditNoteService: DeleteCreditNoteService,
-    private getCreditNotePdfService: GetCreditNotePdf,
-    private getCreditNotesService: GetCreditNotesService,
+    private readonly createCreditNoteService: CreateCreditNoteService,
+    private readonly editCreditNoteService: EditCreditNoteService,
+    private readonly openCreditNoteService: OpenCreditNoteService,
+    private readonly deleteCreditNoteService: DeleteCreditNoteService,
+    private readonly getCreditNotePdfService: GetCreditNotePdf,
+    private readonly getCreditNotesService: GetCreditNotesService,
   ) {}
 
   /**

@@ -3,6 +3,8 @@ import { CreditNote } from '../models/CreditNote';
 import { RefundCreditNote } from '../../CreditNoteRefunds/models/RefundCreditNote';
 import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
+import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
+import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 
 export interface ICreditNoteEntryNewDTO extends IItemEntryDTO {}
 
@@ -91,16 +93,11 @@ export interface ICreditNoteOpenedPayload {
   oldCreditNote: CreditNote;
   trx: Knex.Transaction;
 }
-
-export interface ICreditNotesQueryDTO {
-  filterQuery?: (query: any) => void;
+export interface ICreditNotesQueryDTO extends IDynamicListFilter {
+  page: number;
+  pageSize: number;
+  searchKeyword?: string;
 }
-
-// export interface ICreditNotesQueryDTO extends IDynamicListFilter {
-//   page: number;
-//   pageSize: number;
-//   searchKeyword?: string;
-// }
 
 export interface ICreditNoteRefundDTO {
   fromAccountId: number;
@@ -128,6 +125,12 @@ export interface ICreditNoteRefundDTO {
 //   | 'debit'
 //   | 'branchId'
 // >;
+
+export interface GetCreditNotesResponse {
+  creditNotes: CreditNote[];
+  pagination: IPaginationMeta;
+  filterMeta: IFilterMeta;
+}
 
 export interface CreditNotePdfTemplateAttributes {
   // # Primary color

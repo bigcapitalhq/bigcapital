@@ -5,6 +5,7 @@ import { Knex } from 'knex';
 // import { AttachmentLinkDTO } from './Attachments';
 import { ManualJournal } from '../models/ManualJournal';
 import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
+import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 
 export interface IManualJournalEntryDTO {
   index: number;
@@ -31,11 +32,11 @@ export interface IManualJournalDTO {
   attachments?: AttachmentLinkDTO[];
 }
 
-// export interface IManualJournalsFilter extends IDynamicListFilterDTO {
-//   stringifiedFilterRoles?: string;
-//   page: number;
-//   pageSize: number;
-// }
+export interface IManualJournalsFilter extends IDynamicListFilter {
+  stringifiedFilterRoles?: string;
+  page: number;
+  pageSize: number;
+}
 
 export interface IManualJournalEventPublishedPayload {
   // tenantId: number;

@@ -6,6 +6,7 @@ import { EditBillPayment } from './commands/EditBillPayment.service';
 import { GetBillPayment } from './queries/GetBillPayment.service';
 import { GetPaymentBills } from './queries/GetPaymentBills.service';
 import { IBillPaymentDTO } from './types/BillPayments.types';
+import { GetBillPayments } from '../Bills/queries/GetBillPayments';
 
 /**
  * Bill payments application.

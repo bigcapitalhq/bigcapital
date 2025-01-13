@@ -4,6 +4,8 @@ import {
   // IPaginationMeta,
   // IPaymentReceivedSmsDetails,
   ISaleEstimateDTO,
+  ISalesEstimatesFilter,
+  SaleEstimateMailOptionsDTO,
   // ISalesEstimatesFilter,
   // SaleEstimateMailOptions,
   // SaleEstimateMailOptionsDTO,
@@ -16,12 +18,12 @@ import { DeliverSaleEstimateService } from './commands/DeliverSaleEstimate.servi
 import { ApproveSaleEstimateService } from './commands/ApproveSaleEstimate.service';
 import { RejectSaleEstimateService } from './commands/RejectSaleEstimate.service';
 // import { SaleEstimateNotifyBySms } from './commands/SaleEstimateSmsNotify';
-// import { SaleEstimatesPdf } from './queries/SaleEstimatesPdf';
-// import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
+import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
 import { GetSaleEstimateState } from './queries/GetSaleEstimateState.service';
+import { GetSaleEstimatesService } from './queries/GetSaleEstimates.service';
 import { Injectable } from '@nestjs/common';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
-import { GetSaleEstimatesService } from './queries/GetSaleEstimates.service';
+import { GetSaleEstimatePdf } from './queries/GetSaleEstimatePdf';
 
 @Injectable()
 export class SaleEstimatesApplication {
@@ -34,10 +36,10 @@ export class SaleEstimatesApplication {
     private readonly deliverSaleEstimateService: DeliverSaleEstimateService,
     private readonly approveSaleEstimateService: ApproveSaleEstimateService,
     private readonly rejectSaleEstimateService: RejectSaleEstimateService,
-    // private readonly saleEstimateNotifyBySmsService: SaleEstimateNotifyBySms,
-    // private readonly saleEstimatesPdfService: SaleEstimatesPdf,
-    // private readonly sendEstimateMailService: SendSaleEstimateMail,
+    private readonly sendEstimateMailService: SendSaleEstimateMail,
     private readonly getSaleEstimateStateService: GetSaleEstimateState,
+    private readonly saleEstimatesPdfService: GetSaleEstimatePdf,
+    // private readonly saleEstimateNotifyBySmsService: SaleEstimateNotifyBySms,
   ) {}
 
   /**
@@ -136,25 +138,28 @@ export class SaleEstimatesApplication {
   /**
    * Retrieve the PDF content of the given sale estimate.
    * @param {number} saleEstimateId - Sale estimate ID.
-   * @returns
+   * @returns {Promise<[Buffer, string]>}
    */
   public getSaleEstimatePdf(saleEstimateId: number) {
-    // return this.saleEstimatesPdfService.getSaleEstimatePdf(
-    //   saleEstimateId,
-    // );
+    return this.saleEstimatesPdfService.getSaleEstimatePdf(
+      saleEstimateId,
+    );
   }
 
   /**
    * Send the reminder mail of the given sale estimate.
    * @param {number} saleEstimateId - Sale estimate ID.
+   * @param {SaleEstimateMailOptionsDTO} saleEstimateMailOpts - Sale estimate mail options.
    * @returns {Promise<void>}
    */
-  public sendSaleEstimateMail() // saleEstimateMailOpts: SaleEstimateMailOptionsDTO, // saleEstimateId: number,
-  {
-    // return this.sendEstimateMailService.triggerMail(
-    //   saleEstimateId,
-    //   saleEstimateMailOpts,
-    // );
+  public sendSaleEstimateMail(
+    saleEstimateId: number,
+    saleEstimateMailOpts: SaleEstimateMailOptionsDTO,
+  ) {
+    return this.sendEstimateMailService.triggerMail(
+      saleEstimateId,
+      saleEstimateMailOpts,
+    );
   }
 
   /**
@@ -163,9 +168,9 @@ export class SaleEstimatesApplication {
    * @returns {Promise<SaleEstimateMailOptions>}
    */
   public getSaleEstimateMail(saleEstimateId: number) {
-    // return this.sendEstimateMailService.getMailOptions(
-    //   saleEstimateId,
-    // );
+    return this.sendEstimateMailService.getMailOptions(
+      saleEstimateId,
+    );
   }
 
   /**

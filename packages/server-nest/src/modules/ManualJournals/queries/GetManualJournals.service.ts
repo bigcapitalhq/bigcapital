@@ -5,6 +5,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { ManualJournal } from '../models/ManualJournal';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
+import { IManualJournalsFilter } from '../types/ManualJournals.types';
 
 @Injectable()
 export class GetManualJournals {
@@ -26,7 +27,6 @@ export class GetManualJournals {
 
   /**
    * Retrieve manual journals datatable list.
-   * @param {number} tenantId -
    * @param {IManualJournalsFilter} filter -
    */
   public getManualJournals = async (
@@ -44,7 +44,8 @@ export class GetManualJournals {
       ManualJournal,
       filter,
     );
-    const { results, pagination } = await this.manualJournalModel.query()
+    const { results, pagination } = await this.manualJournalModel
+      .query()
       .onBuild((builder) => {
         dynamicService.buildQuery()(builder);
         builder.withGraphFetched('entries.account');

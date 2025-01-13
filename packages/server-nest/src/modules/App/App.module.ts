@@ -65,6 +65,7 @@ import { SettingsModule } from '../Settings/Settings.module';
 import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdjustments.module';
 import { PostHogModule } from '../EventsTracker/postHog.module';
 import { EventTrackerModule } from '../EventsTracker/EventTracker.module';
+import { MailModule } from '../Mail/Mail.module';
 
 @Module({
   imports: [
@@ -120,6 +121,7 @@ import { EventTrackerModule } from '../EventsTracker/EventTracker.module';
     TenancyModelsModule,
     ChromiumlyTenancyModule,
     TransformerModule,
+    MailModule,
     ItemsModule,
     ItemCategoryModule,
     AccountsModule,

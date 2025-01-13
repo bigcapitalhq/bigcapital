@@ -5,6 +5,8 @@ import { SaleEstimate } from '../models/SaleEstimate';
 import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import { CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
+import { CommonMailOptions } from '@/modules/MailNotification/MailNotification.types';
 
 export interface ISaleEstimateDTO {
   customerId: number;
@@ -104,19 +106,18 @@ export interface ISaleEstimateApprovedEvent {
   trx: Knex.Transaction;
 }
 
-// export interface SaleEstimateMailOptions extends CommonMailOptions {
-//   attachEstimate?: boolean;
-// }
+export interface SaleEstimateMailOptions extends CommonMailOptions {
+  attachEstimate?: boolean;
+}
 
-// export interface SaleEstimateMailOptionsDTO extends CommonMailOptionsDTO {
-//   attachEstimate?: boolean;
-// }
+export interface SaleEstimateMailOptionsDTO extends CommonMailOptionsDTO {
+  attachEstimate?: boolean;
+}
 
-// export interface ISaleEstimateMailPresendEvent {
-//   // tenantId: number;
-//   saleEstimateId: number;
-//   messageOptions: SaleEstimateMailOptionsDTO;
-// }
+export interface ISaleEstimateMailPresendEvent {
+  saleEstimateId: number;
+  messageOptions: SaleEstimateMailOptionsDTO;
+}
 
 export interface ISaleEstimateState {
   defaultTemplateId: number;

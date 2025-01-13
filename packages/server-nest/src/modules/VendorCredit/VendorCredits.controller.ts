@@ -12,6 +12,7 @@ import { VendorCreditsApplicationService } from './VendorCreditsApplication.serv
 import {
   IVendorCreditCreateDTO,
   IVendorCreditEditDTO,
+  IVendorCreditsQueryDTO,
 } from './types/VendorCredit.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 
@@ -33,7 +34,7 @@ export class VendorCreditsController {
   }
 
   @Get()
-  async getVendorCredits(@Query() filterDTO: IVendorCreditsFilter) {
+  async getVendorCredits(@Query() filterDTO: IVendorCreditsQueryDTO) {
     return this.vendorCreditsApplication.getVendorCredits(filterDTO);
   }
 

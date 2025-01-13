@@ -3,6 +3,8 @@ import { Knex } from 'knex';
 // import { CommonMailOptions, CommonMailOptionsDTO } from '../SaleInvoices/types/Mailable';
 import { AttachmentLinkDTO } from '../../Attachments/Attachments.types';
 import { SaleReceipt } from '../models/SaleReceipt';
+import { CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
+import { CommonMailOptions } from '@/modules/MailNotification/MailNotification.types';
 
 export interface ISalesReceiptsFilter {
   filterQuery?: (query: any) => void;
@@ -92,19 +94,19 @@ export interface ISaleReceiptDeletingPayload {
   trx: Knex.Transaction;
 }
 
-// export interface SaleReceiptMailOpts extends CommonMailOptions {
-//   attachReceipt: boolean;
-// }
+export interface SaleReceiptMailOpts extends CommonMailOptions {
+  attachReceipt: boolean;
+}
 
-// export interface SaleReceiptMailOptsDTO extends CommonMailOptionsDTO {
-//   attachReceipt?: boolean;
-// }
+export interface SaleReceiptMailOptsDTO extends CommonMailOptionsDTO {
+  attachReceipt?: boolean;
+}
 
-// export interface ISaleReceiptMailPresend {
-//   tenantId: number;
-//   saleReceiptId: number;
-//   messageOptions: SaleReceiptMailOptsDTO;
-// }
+export interface ISaleReceiptMailPresend {
+  tenantId: number;
+  saleReceiptId: number;
+  messageOptions: SaleReceiptMailOptsDTO;
+}
 
 export interface ISaleReceiptBrandingTemplateAttributes {
   primaryColor: string;
@@ -161,7 +163,6 @@ export interface ISaleReceiptBrandingTemplateAttributes {
   showReceiptDate: boolean;
   receiptDateLabel: string;
 }
-
 
 export interface ISaleReceiptState {
   defaultTemplateId: number;

@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 import { castArray } from 'lodash';
-import moment from 'moment';
+import moment, { unitOfTime } from 'moment';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { SaleReceipt } from '@/modules/SaleReceipts/models/SaleReceipt';
 import { Item } from '@/modules/Items/models/Item';
@@ -55,7 +55,7 @@ export class InventoryCostLotTracker extends BaseModel {
         query.groupBy('date');
         query.groupBy('item_id');
       },
-      filterDateRange(query, startDate, endDate, type = 'day') {
+      filterDateRange(query, startDate, endDate, type: unitOfTime.StartOf = 'day') {
         const dateFormat = 'YYYY-MM-DD';
         const fromDate = moment(startDate).startOf(type).format(dateFormat);
         const toDate = moment(endDate).endOf(type).format(dateFormat);

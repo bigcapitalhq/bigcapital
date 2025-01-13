@@ -8,7 +8,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { BankingTransactionsApplication } from './BankingTransactionsApplication.service';
-import { ICashflowNewCommandDTO } from './types/BankingTransactions.types';
+import {
+  IBankAccountsFilter,
+  ICashflowNewCommandDTO,
+} from './types/BankingTransactions.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('banking/transactions')
@@ -19,7 +22,7 @@ export class BankingTransactionsController {
   ) {}
 
   @Get('')
-  async getBankAccounts(@Query() filterDTO: ICashflowAccountsFilter) {
+  async getBankAccounts(@Query() filterDTO: IBankAccountsFilter) {
     return this.bankingTransactionsApplication.getBankAccounts(filterDTO);
   }
 

@@ -23,6 +23,7 @@ import { SaleEstimatesApplication } from './SaleEstimates.application';
 import { DeleteSaleEstimate } from './commands/DeleteSaleEstimate.service';
 import { GetSaleEstimate } from './queries/GetSaleEstimate.service';
 import { GetSaleEstimateState } from './queries/GetSaleEstimateState.service';
+import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
 // import { SaleEstimateNotifyBySms } from './commands/SaleEstimateSmsNotify';
 // import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
 //
@@ -51,9 +52,9 @@ import { GetSaleEstimateState } from './queries/GetSaleEstimateState.service';
     SaleEstimateDTOTransformer,
     TenancyContext,
     TransformerInjectable,
-    SaleEstimatesApplication
+    SaleEstimatesApplication,
+    SendSaleEstimateMail,
     // SaleEstimateNotifyBySms,
-    // SendSaleEstimateMail,p
   ],
 })
 export class SaleEstimatesModule {}

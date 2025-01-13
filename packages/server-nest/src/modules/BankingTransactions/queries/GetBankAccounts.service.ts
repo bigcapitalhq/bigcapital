@@ -4,6 +4,7 @@ import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { CashflowAccountTransformer } from './BankAccountTransformer';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
+import { IBankAccountsFilter } from '../types/BankingTransactions.types';
 
 @Injectable()
 export class GetBankAccountsService {
@@ -12,7 +13,7 @@ export class GetBankAccountsService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(BankAccount.name)
-    private readonly bankAccountModel: typeof BankAccount
+    private readonly bankAccountModel: typeof BankAccount,
   ) {}
 
   /**
@@ -21,7 +22,7 @@ export class GetBankAccountsService {
    * @returns {ICashflowAccount[]}
    */
   public async getBankAccounts(
-    filterDTO: ICashflowAccountsFilter,
+    filterDTO: IBankAccountsFilter,
   ): Promise<BankAccount[]> {
     // Parsees accounts list filter DTO.
     const filter = this.dynamicListService.parseStringifiedFilter(filterDTO);

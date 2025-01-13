@@ -18,7 +18,7 @@ export class GetBillsService {
 
   /**
    * Retrieve bills data table list.
-   * @param {IBillsFilter} billsFilter - 
+   * @param {IBillsFilter} billsFilter -
    */
   public async getBills(filterDTO: IBillsFilter): Promise<{
     bills: Bill;

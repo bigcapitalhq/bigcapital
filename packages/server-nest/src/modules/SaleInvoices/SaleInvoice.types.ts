@@ -2,6 +2,8 @@ import { Knex } from 'knex';
 import { IItemEntryDTO } from '../TransactionItemEntry/ItemEntry.types';
 import { AttachmentLinkDTO } from '../Attachments/Attachments.types';
 import { SaleInvoice } from './models/SaleInvoice';
+import { IDynamicListFilter } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
+import { CommonMailOptionsDTO } from '../MailNotification/MailNotification.types';
 // import SaleInvoice from './models/SaleInvoice';
 // import { SystemUser } from '../System/models/SystemUser';
 // import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
@@ -66,12 +68,12 @@ export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {
 
 export interface ISaleInvoiceEditDTO extends ISaleInvoiceDTO {}
 
-// export interface ISalesInvoicesFilter extends IDynamicListFilter {
-//   page: number;
-//   pageSize: number;
-//   searchKeyword?: string;
-//   filterQuery?: (q: Knex.QueryBuilder) => void;
-// }
+export interface ISalesInvoicesFilter extends IDynamicListFilter {
+  page: number;
+  pageSize: number;
+  searchKeyword?: string;
+  filterQuery?: (q: Knex.QueryBuilder) => void;
+}
 
 export interface ISaleInvoiceWriteoffDTO {
   expenseAccountId: number;
@@ -212,28 +214,25 @@ export enum SaleInvoiceAction {
 //   entries?: Array<{ label: string; total: string; quantity: string | number }>;
 // }
 
-// export interface SendInvoiceMailDTO extends CommonMailOptionsDTO {
-//   attachInvoice?: boolean;
-// }
+export interface SendInvoiceMailDTO extends CommonMailOptionsDTO {
+  attachInvoice?: boolean;
+}
 
-// export interface ISaleInvoiceNotifyPayload {
-//   tenantId: number;
-//   saleInvoiceId: number;
-//   messageDTO: SendInvoiceMailDTO;
-// }
+export interface ISaleInvoiceNotifyPayload {
+  saleInvoiceId: number;
+  messageDTO: SendInvoiceMailDTO;
+}
 
-// export interface ISaleInvoiceMailSend {
-//   tenantId: number;
-//   saleInvoiceId: number;
-//   messageOptions: SendInvoiceMailDTO;
-//   formattedMessageOptions: SaleInvoiceMailOptions;
-// }
+export interface ISaleInvoiceMailSend {
+  saleInvoiceId: number;
+  messageOptions: SendInvoiceMailDTO;
+  // formattedMessageOptions: SaleInvoiceMailOptions;
+}
 
-// export interface ISaleInvoiceMailSent {
-//   tenantId: number;
-//   saleInvoiceId: number;
-//   messageOptions: SendInvoiceMailDTO;
-// }
+export interface ISaleInvoiceMailSent {
+  saleInvoiceId: number;
+  messageOptions: SendInvoiceMailDTO;
+}
 
 // Invoice Pdf Document
 export interface InvoicePdfLine {

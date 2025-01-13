@@ -532,6 +532,9 @@ importers:
       '@supercharge/promise-pool':
         specifier: ^3.2.0
         version: 3.2.0
+      '@types/nodemailer':
+        specifier: ^6.4.17
+        version: 6.4.17
       '@types/passport-local':
         specifier: ^1.0.38
         version: 1.0.38
@@ -577,6 +580,9 @@ importers:
       fp-ts:
         specifier: ^2.16.9
         version: 2.16.9
+      is-my-json-valid:
+        specifier: ^2.20.5
+        version: 2.20.6
       js-money:
         specifier: ^0.6.3
         version: 0.6.3
@@ -604,6 +610,9 @@ importers:
       nestjs-i18n:
         specifier: ^10.4.9
         version: 10.5.0(@nestjs/common@10.4.7)(@nestjs/core@10.4.7)(class-validator@0.14.1)(rxjs@7.8.1)
+      nodemailer:
+        specifier: ^6.3.0
+        version: 6.9.13
       object-hash:
         specifier: ^2.0.3
         version: 2.2.0
@@ -12327,6 +12336,12 @@ packages:
 
   /@types/node@8.10.66:
     resolution: {integrity: sha512-tktOkFUA4kXx2hhhrB8bIFb5TbwzS4uOhKEmwiD+NoiL0qtP2OQ9mFldbgD4dV1djrlBYP6eBuQZiWjuHUpqFw==}
+    dev: false
+
+  /@types/nodemailer@6.4.17:
+    resolution: {integrity: sha512-I9CCaIp6DTldEg7vyUTZi8+9Vo0hi1/T8gv3C89yk1rSAAzoKQ8H8ki/jBYJSFoH/BisgLP8tkZMlQ91CIquww==}
+    dependencies:
+      '@types/node': 20.5.1
     dev: false
 
   /@types/normalize-package-data@2.4.4:
