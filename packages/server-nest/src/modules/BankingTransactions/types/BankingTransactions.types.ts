@@ -1,6 +1,6 @@
-import { Knex } from "knex";
-import { UncategorizedBankTransaction } from "../models/UncategorizedBankTransaction";
-import { BankTransaction } from "../models/BankTransaction";
+import { Knex } from 'knex';
+import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';
+import { BankTransaction } from '../models/BankTransaction';
 
 export interface IPendingTransactionRemovingEventPayload {
   uncategorizedTransactionId: number;
@@ -47,6 +47,13 @@ export interface ICashflowCommandDTO {
 export interface ICashflowNewCommandDTO extends ICashflowCommandDTO {
   plaidAccountId?: string;
   uncategorizedTransactionId?: number;
+}
+
+export interface IBankAccountsFilter {
+  inactiveMode: boolean;
+  stringifiedFilterRoles?: string;
+  sortOrder: string;
+  columnSortBy: string;
 }
 
 export enum CashflowDirection {

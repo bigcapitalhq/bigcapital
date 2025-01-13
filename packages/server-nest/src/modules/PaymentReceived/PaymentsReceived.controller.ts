@@ -78,11 +78,10 @@ export class PaymentReceivesController {
 
   @Get(':id/pdf')
   public getPaymentReceivePdf(
-    @Param('id', ParseIntPipe) paymentReceiveId: number,
+    @Param('id', ParseIntPipe) paymentReceivedId: number,
   ) {
     return this.paymentReceivesApplication.getPaymentReceivePdf(
-      1,
-      paymentReceiveId,
+      paymentReceivedId,
     );
   }
 }

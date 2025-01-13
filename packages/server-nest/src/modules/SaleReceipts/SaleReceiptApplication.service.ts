@@ -12,10 +12,12 @@ import {
   ISaleReceiptDTO,
   ISaleReceiptState,
   ISalesReceiptsFilter,
+  SaleReceiptMailOpts,
 } from './types/SaleReceipts.types';
 import { GetSaleReceiptsService } from './queries/GetSaleReceipts.service';
 import { SaleReceipt } from './models/SaleReceipt';
-import { IPaginationMeta } from '@/interfaces/Model';
+import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
+import { SaleReceiptMailNotification } from './commands/SaleReceiptMailNotification';
 
 @Injectable()
 export class SaleReceiptApplication {
@@ -28,8 +30,8 @@ export class SaleReceiptApplication {
     private closeSaleReceiptService: CloseSaleReceipt,
     private getSaleReceiptPdfService: SaleReceiptsPdfService,
     // private saleReceiptNotifyBySmsService: SaleReceiptNotifyBySms,
-    // private saleReceiptNotifyByMailService: SaleReceiptMailNotification,
     private getSaleReceiptStateService: GetSaleReceiptState,
+    private saleReceiptNotifyByMailService: SaleReceiptMailNotification,
   ) {}
 
   /**
@@ -158,19 +160,14 @@ export class SaleReceiptApplication {
 
   /**
    * Retrieves the default mail options of the given sale receipt.
-   * @param {number} tenantId
-   * @param {number} saleReceiptId
+   * @param {number} saleReceiptId - Sale receipt identifier.
    * @returns {Promise<SaleReceiptMailOpts>}
    */
-  // public getSaleReceiptMail(
-  //   tenantId: number,
-  //   saleReceiptId: number,
-  // ): Promise<SaleReceiptMailOpts> {
-  //   return this.saleReceiptNotifyByMailService.getMailOptions(
-  //     tenantId,
-  //     saleReceiptId,
-  //   );
-  // }
+  public getSaleReceiptMail(
+    saleReceiptId: number,
+  ): Promise<SaleReceiptMailOpts> {
+    return this.saleReceiptNotifyByMailService.getMailOptions(saleReceiptId);
+  }
 
   /**
    * Retrieves the current state of the sale receipt.

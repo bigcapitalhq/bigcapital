@@ -26,6 +26,7 @@ import { PaymentReceivedSyncInvoicesSubscriber } from './subscribers/PaymentRece
 import { PaymentReceivedInvoiceSync } from './commands/PaymentReceivedInvoiceSync.service';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { SendPaymentReceiveMailNotification } from './commands/PaymentReceivedMailNotification';
 
 @Module({
   controllers: [PaymentReceivesController],
@@ -48,6 +49,7 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     PaymentReceivedAutoIncrementSubscriber,
     PaymentReceivedGLEntriesSubscriber,
     PaymentReceivedSyncInvoicesSubscriber,
+    SendPaymentReceiveMailNotification
   ],
   exports: [PaymentReceivesApplication, CreatePaymentReceivedService],
   imports: [

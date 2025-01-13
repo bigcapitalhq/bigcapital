@@ -1,80 +1,65 @@
-// import { Inject, Service } from 'typedi';
-// import * as R from 'ramda';
-// import {
-//   IFilterMeta,
-//   IPaginationMeta,
-//   ISaleInvoice,
-//   ISalesInvoicesFilter,
-// } from '@/interfaces';
-// import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
-// import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-// import { SaleInvoiceTransformer } from './SaleInvoice.transformer';
+import * as R from 'ramda';
+import { SaleInvoiceTransformer } from './SaleInvoice.transformer';
+import { Injectable } from '@nestjs/common';
+import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
+import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
+import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
+import { SaleInvoice } from '../models/SaleInvoice';
+import { ISalesInvoicesFilter } from '../SaleInvoice.types';
 
-// @Service()
-// export class GetSaleInvoices {
-//   @Inject()
-//   private tenancy: HasTenancyService;
+@Injectable()
+export class GetSaleInvoicesService {
+  constructor(
+    private readonly dynamicListService: DynamicListService,
+    private readonly transformer: TransformerInjectable,
+  ) {}
 
-//   @Inject()
-//   private dynamicListService: DynamicListingService;
+  /**
+   * Retrieve sales invoices filterable and paginated list.
+   * @param {ISalesInvoicesFilter} filterDTO -
+   * @returns {Promise<{ salesInvoices: SaleInvoice[]; pagination: IPaginationMeta; filterMeta: IFilterMeta; }>}
+   */
+  public async getSaleInvoices(filterDTO: ISalesInvoicesFilter): Promise<{
+    salesInvoices: SaleInvoice[];
+    pagination: IPaginationMeta;
+    filterMeta: IFilterMeta;
+  }> {
+    // Parses stringified filter roles.
+    const filter = this.parseListFilterDTO(filterDTO);
 
-//   @Inject()
-//   private transformer: TransformerInjectable;
+    // Dynamic list service.
+    const dynamicFilter = await this.dynamicListService.dynamicList(
+      SaleInvoice,
+      filter,
+    );
+    const { results, pagination } = await SaleInvoice.query()
+      .onBuild((builder) => {
+        builder.withGraphFetched('entries.item');
+        builder.withGraphFetched('customer');
+        dynamicFilter.buildQuery()(builder);
+        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
+      })
+      .pagination(filter.page - 1, filter.pageSize);
 
-//   /**
-//    * Retrieve sales invoices filterable and paginated list.
-//    * @param {Request} req
-//    * @param {Response} res
-//    * @param {NextFunction} next
-//    */
-//   public async getSaleInvoices(
-//     filterDTO: ISalesInvoicesFilter
-//   ): Promise<{
-//     salesInvoices: ISaleInvoice[];
-//     pagination: IPaginationMeta;
-//     filterMeta: IFilterMeta;
-//   }> {
-//     const { SaleInvoice } = this.tenancy.models(tenantId);
+    // Retrieves the transformed sale invoices.
+    const salesInvoices = await this.transformer.transform(
+      results,
+      new SaleInvoiceTransformer(),
+    );
 
-//     // Parses stringified filter roles.
-//     const filter = this.parseListFilterDTO(filterDTO);
+    return {
+      salesInvoices,
+      pagination,
+      filterMeta: dynamicFilter.getResponseMeta(),
+    };
+  }
 
-//     // Dynamic list service.
-//     const dynamicFilter = await this.dynamicListService.dynamicList(
-//       tenantId,
-//       SaleInvoice,
-//       filter
-//     );
-//     const { results, pagination } = await SaleInvoice.query()
-//       .onBuild((builder) => {
-//         builder.withGraphFetched('entries.item');
-//         builder.withGraphFetched('customer');
-//         dynamicFilter.buildQuery()(builder);
-//         filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
-//       })
-//       .pagination(filter.page - 1, filter.pageSize);
-
-//     // Retrieves the transformed sale invoices.
-//     const salesInvoices = await this.transformer.transform(
-//       tenantId,
-//       results,
-//       new SaleInvoiceTransformer()
-//     );
-
-//     return {
-//       salesInvoices,
-//       pagination,
-//       filterMeta: dynamicFilter.getResponseMeta(),
-//     };
-//   }
-
-//   /**
-//    * Parses the sale invoice list filter DTO.
-//    * @param filterDTO
-//    * @returns
-//    */
-//   private parseListFilterDTO(filterDTO) {
-//     return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
-//   }
-// }
+  /**
+   * Parses the sale invoice list filter DTO.
+   * @param filterDTO
+   * @returns
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
+  }
+}

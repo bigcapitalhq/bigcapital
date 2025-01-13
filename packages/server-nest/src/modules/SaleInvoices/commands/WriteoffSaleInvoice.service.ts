@@ -16,6 +16,12 @@ import { ServiceError } from '../../Items/ServiceError';
 
 @Injectable()
 export class WriteoffSaleInvoice {
+  /**
+   * @param {EventEmitter2} eventPublisher - Event emitter.
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {CommandSaleInvoiceValidators} validators - Command sale invoice validators.
+   * @param {typeof SaleInvoice} saleInvoiceModel - Sale invoice model.
+   */
   constructor(
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,

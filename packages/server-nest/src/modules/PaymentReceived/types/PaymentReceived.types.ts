@@ -2,6 +2,7 @@ import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 import { Knex } from 'knex';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import { CommonMailOptions, CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
 
 export interface IPaymentReceivedCreateDTO {
   customerId: number;
@@ -144,15 +145,12 @@ export enum PaymentReceiveAction {
 //   | 'branchId'
 // >;
 
-// export interface PaymentReceiveMailOpts extends CommonMailOptions {}
-
-// export interface PaymentReceiveMailOptsDTO extends CommonMailOptionsDTO {}
-
-// export interface PaymentReceiveMailPresendEvent {
-//   tenantId: number;
-//   paymentReceiveId: number;
-//   messageOptions: PaymentReceiveMailOptsDTO;
-// }
+export interface PaymentReceiveMailOpts extends CommonMailOptions {}
+export interface PaymentReceiveMailOptsDTO extends CommonMailOptionsDTO {}
+export interface PaymentReceiveMailPresendEvent {
+  paymentReceiveId: number;
+  messageOptions: PaymentReceiveMailOptsDTO;
+}
 
 export interface PaymentReceivedPdfLineItem {
   item: string;

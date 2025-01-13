@@ -38,7 +38,7 @@ export default class VendorCreditInventoryTransactionsSubscriber {
    */
   @OnEvent(events.vendorCredit.onEdited)
   public async rewriteInventroyTransactionsOnceEdited({
-    vendorCreditId,
+    oldVendorCredit,
     vendorCredit,
     trx,
   }: IVendorCreditEditedPayload) {
@@ -46,7 +46,7 @@ export default class VendorCreditInventoryTransactionsSubscriber {
     if (!vendorCredit.openedAt) return null;
 
     await this.inventoryTransactions.editInventoryTransactions(
-      vendorCreditId,
+      oldVendorCredit.id,
       vendorCredit,
       trx,
     );

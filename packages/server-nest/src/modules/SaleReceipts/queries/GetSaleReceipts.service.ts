@@ -1,11 +1,11 @@
 import * as R from 'ramda';
-import { SaleReceiptTransformer } from './SaleReceiptTransformer';
 import { Inject, Injectable } from '@nestjs/common';
+import { SaleReceiptTransformer } from './SaleReceiptTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
+import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { ISalesReceiptsFilter } from '../types/SaleReceipts.types';
 import { SaleReceipt } from '../models/SaleReceipt';
-import { IPaginationMeta } from '@/interfaces/Model';
 
 interface GetSaleReceiptsSettings {
   fetchEntriesGraph?: boolean;
@@ -22,8 +22,7 @@ export class GetSaleReceiptsService {
 
   /**
    * Retrieve sales receipts paginated and filterable list.
-   * @param {number} tenantId
-   * @param {ISaleReceiptFilter} salesReceiptsFilter
+   * @param {ISalesReceiptsFilter} salesReceiptsFilter - Sales receipts filter.
    */
   public async getSaleReceipts(filterDTO: ISalesReceiptsFilter): Promise<{
     data: SaleReceipt[];

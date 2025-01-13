@@ -1,14 +1,14 @@
 import { CreateBill } from './commands/CreateBill.service';
 import { EditBillService } from './commands/EditBill.service';
 import { GetBill } from './queries/GetBill';
-// import { GetBills } from './queries/GetBills';
 import { DeleteBill } from './commands/DeleteBill.service';
-import { IBillDTO, IBillEditDTO } from './Bills.types';
+import { IBillDTO, IBillEditDTO, IBillsFilter } from './Bills.types';
 import { GetDueBills } from './queries/GetDueBills.service';
 import { OpenBillService } from './commands/OpenBill.service';
-import { GetBillPayments } from './queries/GetBillPayments';
 import { Injectable } from '@nestjs/common';
 import { GetBillsService } from './queries/GetBills.service';
+// import { GetBillPayments } from './queries/GetBillPayments';
+// import { GetBills } from './queries/GetBills';
 
 @Injectable()
 export class BillsApplication {

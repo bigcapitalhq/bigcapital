@@ -1,220 +1,192 @@
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
-// import { Inject, Service } from 'typedi';
-// import Mail from '@/lib/Mail';
-// import { GetSaleReceipt } from '../queries/GetSaleReceipt';
-// import { SaleReceiptsPdf } from '../queries/SaleReceiptsPdfService';
-// import {
-//   DEFAULT_RECEIPT_MAIL_CONTENT,
-//   DEFAULT_RECEIPT_MAIL_SUBJECT,
-// } from '../constants';
-// import {
-//   ISaleReceiptMailPresend,
-//   SaleReceiptMailOpts,
-//   SaleReceiptMailOptsDTO,
-// } from '@/interfaces';
-// import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
-// import { mergeAndValidateMailOptions } from '@/services/MailNotification/utils';
-// import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-// import events from '@/subscribers/events';
-// import { transformReceiptToMailDataArgs } from '../utils';
+import {
+  DEFAULT_RECEIPT_MAIL_CONTENT,
+  DEFAULT_RECEIPT_MAIL_SUBJECT,
+} from '../constants';
+import { mergeAndValidateMailOptions } from '@/modules/MailNotification/utils';
+import { transformReceiptToMailDataArgs } from '../utils';
+import { Injectable } from '@nestjs/common';
+import { GetSaleReceipt } from '../queries/GetSaleReceipt.service';
+import { SaleReceiptsPdfService } from '../queries/SaleReceiptsPdf.service';
+import { ContactMailNotification } from '@/modules/MailNotification/ContactMailNotification';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import {
+  ISaleReceiptMailPresend,
+  SaleReceiptMailOpts,
+  SaleReceiptMailOptsDTO,
+} from '../types/SaleReceipts.types';
+import { SaleReceipt } from '../models/SaleReceipt';
+import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
+import { Mail } from '@/modules/Mail/Mail';
 
-// @Service()
-// export class SaleReceiptMailNotification {
-//   @Inject()
-//   private tenancy: HasTenancyService;
+@Injectable()
+export class SaleReceiptMailNotification {
+  /**
+   * @param {GetSaleReceipt} getSaleReceiptService - Get sale receipt service.
+   * @param {SaleReceiptsPdfService} receiptPdfService - Sale receipt pdf service.
+   * @param {ContactMailNotification} contactMailNotification - Contact mail notification service.
+   * @param {EventEmitter2} eventEmitter - Event emitter.
+   * @param {MailTransporter} mailTransporter - Mail transporter service.
+   */
+  constructor(
+    private readonly getSaleReceiptService: GetSaleReceipt,
+    private readonly receiptPdfService: SaleReceiptsPdfService,
+    private readonly contactMailNotification: ContactMailNotification,
+    private readonly eventEmitter: EventEmitter2,
+    private readonly mailTransporter: MailTransporter,
+  ) {}
 
-//   @Inject()
-//   private getSaleReceiptService: GetSaleReceipt;
+  /**
+   * Sends the receipt mail of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @param {SaleReceiptMailOptsDTO} messageDTO
+   */
+  public async triggerMail(
+    saleReceiptId: number,
+    messageOptions: SaleReceiptMailOptsDTO,
+  ) {
+    const payload = {
+      saleReceiptId,
+      messageOpts: messageOptions,
+    };
+    // await this.agenda.now('sale-receipt-mail-send', payload);
 
-//   @Inject()
-//   private receiptPdfService: SaleReceiptsPdf;
+    // Triggers the event `onSaleReceiptPreMailSend`.
+    await this.eventEmitter.emitAsync(events.saleReceipt.onPreMailSend, {
+      saleReceiptId,
+      messageOptions,
+    } as ISaleReceiptMailPresend);
+  }
 
-//   @Inject()
-//   private contactMailNotification: ContactMailNotification;
+  /**
+   * Retrieves the mail options of the given sale receipt.
+   * @param {number} saleReceiptId
+   * @returns {Promise<SaleReceiptMailOptsDTO>}
+   */
+  public async getMailOptions(
+    saleReceiptId: number,
+  ): Promise<SaleReceiptMailOpts> {
+    const saleReceipt = await SaleReceipt.query()
+      .findById(saleReceiptId)
+      .throwIfNotFound();
 
-//   @Inject()
-//   private eventPublisher: EventPublisher;
+    const formatArgs = await this.textFormatterArgs(saleReceiptId);
+    const mailOptions =
+      await this.contactMailNotification.getDefaultMailOptions(
+        saleReceipt.customerId,
+      );
+    return {
+      ...mailOptions,
+      message: DEFAULT_RECEIPT_MAIL_CONTENT,
+      subject: DEFAULT_RECEIPT_MAIL_SUBJECT,
+      attachReceipt: true,
+      formatArgs,
+    };
+  }
 
-//   @Inject('agenda')
-//   private agenda: any;
+  /**
+   * Retrieves the formatted text of the given sale receipt.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} receiptId - Sale receipt id.
+   * @param {string} text - The given text.
+   * @returns {Promise<string>}
+   */
+  public textFormatterArgs = async (
+    receiptId: number,
+  ): Promise<Record<string, string>> => {
+    const receipt = await this.getSaleReceiptService.getSaleReceipt(receiptId);
 
-//   /**
-//    * Sends the receipt mail of the given sale receipt.
-//    * @param {number} tenantId
-//    * @param {number} saleReceiptId
-//    * @param {SaleReceiptMailOptsDTO} messageDTO
-//    */
-//   public async triggerMail(
-//     tenantId: number,
-//     saleReceiptId: number,
-//     messageOptions: SaleReceiptMailOptsDTO
-//   ) {
-//     const payload = {
-//       tenantId,
-//       saleReceiptId,
-//       messageOpts: messageOptions,
-//     };
-//     await this.agenda.now('sale-receipt-mail-send', payload);
+    return transformReceiptToMailDataArgs(receipt);
+  };
 
-//     // Triggers the event `onSaleReceiptPreMailSend`.
-//     await this.eventPublisher.emitAsync(events.saleReceipt.onPreMailSend, {
-//       tenantId,
-//       saleReceiptId,
-//       messageOptions,
-//     } as ISaleReceiptMailPresend);
-//   }
+  /**
+   * Formats the mail options of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} receiptId
+   * @param {SaleReceiptMailOpts} mailOptions
+   * @returns {Promise<SaleReceiptMailOpts>}
+   */
+  public async formatEstimateMailOptions(
+    receiptId: number,
+    mailOptions: SaleReceiptMailOpts,
+  ): Promise<SaleReceiptMailOpts> {
+    const formatterArgs = await this.textFormatterArgs(receiptId);
+    const formattedOptions =
+      (await this.contactMailNotification.formatMailOptions(
+        mailOptions,
+        formatterArgs,
+      )) as SaleReceiptMailOpts;
+    return formattedOptions;
+  }
 
-//   /**
-//    * Retrieves the mail options of the given sale receipt.
-//    * @param {number} tenantId
-//    * @param {number} saleReceiptId
-//    * @returns {Promise<SaleReceiptMailOptsDTO>}
-//    */
-//   public async getMailOptions(
-//     tenantId: number,
-//     saleReceiptId: number
-//   ): Promise<SaleReceiptMailOpts> {
-//     const { SaleReceipt } = this.tenancy.models(tenantId);
+  /**
+   * Retrieves the formatted mail options of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @param {SaleReceiptMailOptsDTO} messageOpts
+   * @returns {Promise<SaleReceiptMailOpts>}
+   */
+  public getFormatMailOptions = async (
+    saleReceiptId: number,
+    messageOpts: SaleReceiptMailOptsDTO,
+  ): Promise<SaleReceiptMailOpts> => {
+    const defaultMessageOptions = await this.getMailOptions(saleReceiptId);
+    // Merges message opts with default options.
+    const parsedMessageOpts = mergeAndValidateMailOptions(
+      defaultMessageOptions,
+      messageOpts,
+    ) as SaleReceiptMailOpts;
 
-//     const saleReceipt = await SaleReceipt.query()
-//       .findById(saleReceiptId)
-//       .throwIfNotFound();
+    // Formats the message options.
+    return this.formatEstimateMailOptions(saleReceiptId, parsedMessageOpts);
+  };
 
-//     const formatArgs = await this.textFormatterArgs(tenantId, saleReceiptId);
+  /**
+   * Triggers the mail notification of the given sale receipt.
+   * @param {number} saleReceiptId - Sale receipt id.
+   * @param {SaleReceiptMailOpts} messageDTO - message options.
+   * @returns {Promise<void>}
+   */
+  public async sendMail(
+    saleReceiptId: number,
+    messageOpts: SaleReceiptMailOptsDTO,
+  ) {
+    // Formats the message options.
+    const formattedMessageOptions = await this.getFormatMailOptions(
+      saleReceiptId,
+      messageOpts,
+    );
+    const mail = new Mail()
+      .setSubject(formattedMessageOptions.subject)
+      .setTo(formattedMessageOptions.to)
+      .setCC(formattedMessageOptions.cc)
+      .setBCC(formattedMessageOptions.bcc)
+      .setContent(formattedMessageOptions.message);
 
-//     const mailOptions =
-//       await this.contactMailNotification.getDefaultMailOptions(
-//         tenantId,
-//         saleReceipt.customerId
-//       );
-//     return {
-//       ...mailOptions,
-//       message: DEFAULT_RECEIPT_MAIL_CONTENT,
-//       subject: DEFAULT_RECEIPT_MAIL_SUBJECT,
-//       attachReceipt: true,
-//       formatArgs,
-//     };
-//   }
+    // Attaches the receipt pdf document.
+    if (formattedMessageOptions.attachReceipt) {
+      // Retrieves document buffer of the receipt pdf document.
+      const [receiptPdfBuffer, filename] =
+        await this.receiptPdfService.saleReceiptPdf(saleReceiptId);
 
-//   /**
-//    * Retrieves the formatted text of the given sale receipt.
-//    * @param {number} tenantId - Tenant id.
-//    * @param {number} receiptId - Sale receipt id.
-//    * @param {string} text - The given text.
-//    * @returns {Promise<string>}
-//    */
-//   public textFormatterArgs = async (
-//     tenantId: number,
-//     receiptId: number
-//   ): Promise<Record<string, string>> => {
-//     const receipt = await this.getSaleReceiptService.getSaleReceipt(
-//       tenantId,
-//       receiptId
-//     );
-//     return transformReceiptToMailDataArgs(receipt);
-//   };
+      mail.setAttachments([
+        { filename: `${filename}.pdf`, content: receiptPdfBuffer },
+      ]);
+    }
+    const eventPayload = {
+      saleReceiptId,
+      messageOptions: {},
+    };
+    await this.eventEmitter.emitAsync(
+      events.saleReceipt.onMailSend,
+      eventPayload,
+    );
+    await this.mailTransporter.send(mail);
 
-//   /**
-//    * Formats the mail options of the given sale receipt.
-//    * @param {number} tenantId
-//    * @param {number} receiptId
-//    * @param {SaleReceiptMailOpts} mailOptions
-//    * @returns {Promise<SaleReceiptMailOpts>}
-//    */
-//   public async formatEstimateMailOptions(
-//     tenantId: number,
-//     receiptId: number,
-//     mailOptions: SaleReceiptMailOpts
-//   ): Promise<SaleReceiptMailOpts> {
-//     const formatterArgs = await this.textFormatterArgs(tenantId, receiptId);
-//     const formattedOptions =
-//       (await this.contactMailNotification.formatMailOptions(
-//         tenantId,
-//         mailOptions,
-//         formatterArgs
-//       )) as SaleReceiptMailOpts;
-//     return formattedOptions;
-//   }
-
-//   /**
-//    * Retrieves the formatted mail options of the given sale receipt.
-//    * @param {number} tenantId
-//    * @param {number} saleReceiptId
-//    * @param {SaleReceiptMailOptsDTO} messageOpts
-//    * @returns {Promise<SaleReceiptMailOpts>}
-//    */
-//   public getFormatMailOptions = async (
-//     tenantId: number,
-//     saleReceiptId: number,
-//     messageOpts: SaleReceiptMailOptsDTO
-//   ): Promise<SaleReceiptMailOpts> => {
-//     const defaultMessageOptions = await this.getMailOptions(
-//       tenantId,
-//       saleReceiptId
-//     );
-//     // Merges message opts with default options.
-//     const parsedMessageOpts = mergeAndValidateMailOptions(
-//       defaultMessageOptions,
-//       messageOpts
-//     ) as SaleReceiptMailOpts;
-
-//     // Formats the message options.
-//     return this.formatEstimateMailOptions(
-//       tenantId,
-//       saleReceiptId,
-//       parsedMessageOpts
-//     );
-//   };
-
-//   /**
-//    * Triggers the mail notification of the given sale receipt.
-//    * @param {number} tenantId - Tenant id.
-//    * @param {number} saleReceiptId - Sale receipt id.
-//    * @param {SaleReceiptMailOpts} messageDTO - message options.
-//    * @returns {Promise<void>}
-//    */
-//   public async sendMail(
-//     tenantId: number,
-//     saleReceiptId: number,
-//     messageOpts: SaleReceiptMailOptsDTO
-//   ) {
-//     // Formats the message options.
-//     const formattedMessageOptions = await this.getFormatMailOptions(
-//       tenantId,
-//       saleReceiptId,
-//       messageOpts
-//     );
-//     const mail = new Mail()
-//       .setSubject(formattedMessageOptions.subject)
-//       .setTo(formattedMessageOptions.to)
-//       .setCC(formattedMessageOptions.cc)
-//       .setBCC(formattedMessageOptions.bcc)
-//       .setContent(formattedMessageOptions.message);
-
-//     // Attaches the receipt pdf document.
-//     if (formattedMessageOptions.attachReceipt) {
-//       // Retrieves document buffer of the receipt pdf document.
-//       const [receiptPdfBuffer, filename] =
-//         await this.receiptPdfService.saleReceiptPdf(tenantId, saleReceiptId);
-
-//       mail.setAttachments([
-//         { filename: `${filename}.pdf`, content: receiptPdfBuffer },
-//       ]);
-//     }
-//     const eventPayload = {
-//       tenantId,
-//       saleReceiptId,
-//       messageOptions: {},
-//     };
-//     await this.eventPublisher.emitAsync(
-//       events.saleReceipt.onMailSend,
-//       eventPayload
-//     );
-//     await mail.send();
-
-//     await this.eventPublisher.emitAsync(
-//       events.saleReceipt.onMailSent,
-//       eventPayload
-//     );
-//   }
-// }
+    await this.eventEmitter.emitAsync(
+      events.saleReceipt.onMailSent,
+      eventPayload,
+    );
+  }
+}

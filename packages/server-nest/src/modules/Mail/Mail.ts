@@ -1,9 +1,9 @@
 import * as fs from 'fs';
-import Mustache from 'mustache';
-import path from 'path';
-import { IMailAttachment } from '@/interfaces';
+import * as Mustache from 'mustache';
+import * as path from 'path';
+import { IMailAttachment } from './Mail.types';
 
-export default class Mail {
+export class Mail {
   view: string;
   subject: string = '';
   content: string = '';

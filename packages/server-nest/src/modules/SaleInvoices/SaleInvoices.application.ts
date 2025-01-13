@@ -18,7 +18,9 @@ import {
   ISaleInvoiceCreateDTO,
   ISaleInvoiceEditDTO,
   ISaleInvoiceWriteoffDTO,
+  ISalesInvoicesFilter,
 } from './SaleInvoice.types';
+import { GetSaleInvoicesService } from './queries/GetSaleInvoices';
 
 @Injectable()
 export class SaleInvoiceApplication {
@@ -26,18 +28,18 @@ export class SaleInvoiceApplication {
     private createSaleInvoiceService: CreateSaleInvoice,
     private deleteSaleInvoiceService: DeleteSaleInvoice,
     private getSaleInvoiceService: GetSaleInvoice,
-    // private getSaleInvoicesService: GetSaleInvoices,
+    private getSaleInvoicesService: GetSaleInvoicesService,
     private editSaleInvoiceService: EditSaleInvoice,
     private deliverSaleInvoiceService: DeliverSaleInvoice,
     private getReceivableSaleInvoicesService: GetSaleInvoicesPayable,
     private writeoffInvoiceService: WriteoffSaleInvoice,
     private getInvoicePaymentsService: GetInvoicePaymentsService,
     private pdfSaleInvoiceService: SaleInvoicePdf,
+    private getSaleInvoiceStateService: GetSaleInvoiceState,
     // private invoiceSms: SaleInvoiceNotifyBySms,
-    // private sendInvoiceReminderService: SendInvoiceMailReminder,
+    private sendInvoiceReminderService: SendInvoiceMailReminder,
     // private sendSaleInvoiceMailService: SendSaleInvoiceMail,
     // private getSaleInvoiceMailStateService: GetSaleInvoiceMailState,
-    private getSaleInvoiceStateService: GetSaleInvoiceState,
   ) {}
 
   /**
@@ -77,13 +79,12 @@ export class SaleInvoiceApplication {
 
   /**
    * Retrieves the given sale invoice details.
-   * @param {number} tenantId
    * @param {ISalesInvoicesFilter} filterDTO
-   * @returns
+   * @returns {Promise<{ salesInvoices: SaleInvoice[]; pagination: IPaginationMeta; filterMeta: IFilterMeta; }>}
    */
-  // public getSaleInvoices(filterDTO: ISalesInvoicesFilter) {
-  //   return this.getSaleInvoicesService.getSaleInvoices(filterDTO);
-  // }
+  public getSaleInvoices(filterDTO: ISalesInvoicesFilter) {
+    return this.getSaleInvoicesService.getSaleInvoices(filterDTO);
+  }
 
   /**
    * Retrieves sale invoice details.

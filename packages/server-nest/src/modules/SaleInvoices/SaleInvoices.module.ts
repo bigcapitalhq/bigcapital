@@ -8,8 +8,6 @@ import { DeliverSaleInvoice } from './commands/DeliverSaleInvoice.service';
 import { EditSaleInvoice } from './commands/EditSaleInvoice.service';
 import { GenerateShareLink } from './commands/GenerateInvoicePaymentLink.service';
 import { SaleInvoiceIncrement } from './commands/SaleInvoiceIncrement.service';
-// import { SendSaleInvoiceMail } from './commands/SendSaleInvoiceMail';
-// import { SendSaleInvoiceReminderMailJob } from './commands/SendSaleInvoiceMailReminderJob';
 import { GetInvoicePaymentMail } from './queries/GetInvoicePaymentMail.service';
 import { GetSaleInvoice } from './queries/GetSaleInvoice.service';
 import { GetSaleInvoicesPayable } from './queries/GetSaleInvoicesPayable.service';
@@ -37,6 +35,10 @@ import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import SaleInvoiceWriteoffSubscriber from './subscribers/SaleInvoiceWriteoffSubscriber';
 import { SaleInvoiceWriteoffGLStorage } from './commands/writeoff/SaleInvoiceWriteoffGLStorage';
+import { InvoiceInventoryTransactions } from './commands/inventory/InvoiceInventoryTransactions';
+import { SendSaleEstimateMail } from '../SaleEstimates/commands/SendSaleEstimateMail';
+import { SendInvoiceMailReminder } from './commands/SendSaleInvoiceMailReminder';
+import { MailModule } from '../Mail/Mail.module';
 
 @Module({
   imports: [
@@ -48,7 +50,8 @@ import { SaleInvoiceWriteoffGLStorage } from './commands/writeoff/SaleInvoiceWri
     WarehousesModule,
     TaxRatesModule,
     LedgerModule,
-    AccountsModule
+    AccountsModule,
+    MailModule,
   ],
   controllers: [SaleInvoicesController],
   providers: [
@@ -57,7 +60,6 @@ import { SaleInvoiceWriteoffGLStorage } from './commands/writeoff/SaleInvoiceWri
     DeleteSaleInvoice,
     GetSaleInvoicesPayable,
     DeliverSaleInvoice,
-    // SendSaleInvoiceMail,
     GenerateShareLink,
     GetInvoicePaymentMail,
     SaleInvoiceIncrement,
@@ -79,7 +81,10 @@ import { SaleInvoiceWriteoffGLStorage } from './commands/writeoff/SaleInvoiceWri
     SaleInvoiceGLEntries,
     InvoiceGLEntriesSubscriber,
     SaleInvoiceWriteoffGLStorage,
-    SaleInvoiceWriteoffSubscriber
+    SaleInvoiceWriteoffSubscriber,
+    InvoiceInventoryTransactions,
+    SendSaleEstimateMail,
+    SendInvoiceMailReminder,
   ],
 })
 export class SaleInvoicesModule {}

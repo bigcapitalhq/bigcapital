@@ -2,6 +2,7 @@ import {
   IPaymentReceivedCreateDTO,
   IPaymentReceivedEditDTO,
   IPaymentReceivedSmsDetails,
+  IPaymentsReceivedFilter,
   // IPaymentsReceivedFilter,
   // ISystemUser,
   // PaymentReceiveMailOptsDTO,

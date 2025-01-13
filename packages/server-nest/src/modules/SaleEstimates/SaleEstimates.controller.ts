@@ -12,8 +12,8 @@ import {
 import { SaleEstimatesApplication } from './SaleEstimates.application';
 import {
   ISaleEstimateDTO,
-  // ISalesEstimatesFilter,
-  // SaleEstimateMailOptionsDTO,
+  ISalesEstimatesFilter,
+  SaleEstimateMailOptionsDTO,
 } from './types/SaleEstimates.types';
 import { SaleEstimate } from './models/SaleEstimate';
 import { PublicRoute } from '../Auth/Jwt.guard';
@@ -107,16 +107,16 @@ export class SaleEstimatesController {
     return this.saleEstimatesApplication.getSaleEstimatePdf(saleEstimateId);
   }
 
-  // @Post(':id/mail')
-  // public sendSaleEstimateMail(
-  //   @Param('id', ParseIntPipe) saleEstimateId: number,
-  //   @Body() mailOptions: SaleEstimateMailOptionsDTO,
-  // ) {
-  //   return this.saleEstimatesApplication.sendSaleEstimateMail(
-  //     saleEstimateId,
-  //     mailOptions,
-  //   );
-  // }
+  @Post(':id/mail')
+  public sendSaleEstimateMail(
+    @Param('id', ParseIntPipe) saleEstimateId: number,
+    @Body() mailOptions: SaleEstimateMailOptionsDTO,
+  ) {
+    return this.saleEstimatesApplication.sendSaleEstimateMail(
+      saleEstimateId,
+      mailOptions,
+    );
+  }
 
   @Get(':id/mail')
   public getSaleEstimateMail(

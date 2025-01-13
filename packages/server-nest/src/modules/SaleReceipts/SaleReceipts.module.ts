@@ -26,6 +26,7 @@ import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { SaleReceiptInventoryTransactionsSubscriber } from './inventory/SaleReceiptWriteInventoryTransactions';
 import { GetSaleReceiptsService } from './queries/GetSaleReceipts.service';
+import { SaleReceiptMailNotification } from './commands/SaleReceiptMailNotification';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -57,7 +58,8 @@ import { GetSaleReceiptsService } from './queries/GetSaleReceipts.service';
     SaleReceiptGLEntries,
     SaleReceiptGLEntriesSubscriber,
     SaleReceiptInventoryTransactionsSubscriber,
-    GetSaleReceiptsService
+    GetSaleReceiptsService,
+    SaleReceiptMailNotification
   ],
 })
 export class SaleReceiptsModule {}
