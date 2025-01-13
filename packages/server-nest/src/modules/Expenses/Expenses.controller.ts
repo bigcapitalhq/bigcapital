@@ -15,8 +15,10 @@ import {
 } from './interfaces/Expenses.interface';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { IExpensesFilter } from './Expenses.types';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('expenses')
+@ApiTags('expenses')
 @PublicRoute()
 export class ExpensesController {
   constructor(private readonly expensesApplication: ExpensesApplication) {}
@@ -26,6 +28,7 @@ export class ExpensesController {
    * @param {IExpenseCreateDTO} expenseDTO
    */
   @Post()
+  @ApiOperation({ summary: 'Create a new expense transaction.' })
   public createExpense(@Body() expenseDTO: IExpenseCreateDTO) {
     return this.expensesApplication.createExpense(expenseDTO);
   }
@@ -36,6 +39,7 @@ export class ExpensesController {
    * @param {IExpenseEditDTO} expenseDTO
    */
   @Put(':id')
+  @ApiOperation({ summary: 'Edit the given expense transaction.' })
   public editExpense(
     @Param('id') expenseId: number,
     @Body() expenseDTO: IExpenseEditDTO,
@@ -48,6 +52,7 @@ export class ExpensesController {
    * @param {number} expenseId
    */
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete the given expense transaction.' })
   public deleteExpense(@Param('id') expenseId: number) {
     return this.expensesApplication.deleteExpense(expenseId);
   }
@@ -57,6 +62,7 @@ export class ExpensesController {
    * @param {number} expenseId
    */
   @Post(':id/publish')
+  @ApiOperation({ summary: 'Publish the given expense transaction.' })
   public publishExpense(@Param('id') expenseId: number) {
     return this.expensesApplication.publishExpense(expenseId);
   }
@@ -65,6 +71,7 @@ export class ExpensesController {
    * Get the expense transaction details.
    */
   @Get('')
+  @ApiOperation({ summary: 'Get the expense transaction details.' })
   public getExpenses(@Query() filterDTO: IExpensesFilter) {
     return this.expensesApplication.getExpenses(filterDTO);
   }
@@ -74,6 +81,7 @@ export class ExpensesController {
    * @param {number} expenseId
    */
   @Get(':id')
+  @ApiOperation({ summary: 'Get the expense transaction details.' })
   public getExpense(@Param('id') expenseId: number) {
     return this.expensesApplication.getExpense(expenseId);
   }

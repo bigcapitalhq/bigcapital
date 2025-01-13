@@ -1,9 +1,11 @@
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { ICreditNoteRefundDTO } from '../CreditNotes/types/CreditNotes.types';
 import { CreditNotesRefundsApplication } from './CreditNotesRefundsApplication.service';
 import { RefundCreditNote } from './models/RefundCreditNote';
 
 @Controller('credit-notes')
+@ApiTags('credit-notes-refunds')
 export class CreditNoteRefundsController {
   constructor(
     private readonly creditNotesRefundsApplication: CreditNotesRefundsApplication,
@@ -16,6 +18,7 @@ export class CreditNoteRefundsController {
    * @returns {Promise<RefundCreditNote>}
    */
   @Post(':creditNoteId/refunds')
+  @ApiOperation({ summary: 'Create a refund for the given credit note.' })
   createRefundCreditNote(
     @Param('creditNoteId') creditNoteId: number,
     @Body() creditNoteDTO: ICreditNoteRefundDTO,
@@ -32,6 +35,7 @@ export class CreditNoteRefundsController {
    * @returns {Promise<void>}
    */
   @Delete('refunds/:refundCreditId')
+  @ApiOperation({ summary: 'Delete a refund for the given credit note.' })
   deleteRefundCreditNote(
     @Param('refundCreditId') refundCreditId: number,
   ): Promise<void> {

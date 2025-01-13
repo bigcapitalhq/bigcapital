@@ -1,3 +1,4 @@
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -13,11 +14,13 @@ import { PublicRoute } from '../Auth/Jwt.guard';
 import { BankRule } from './models/BankRule';
 
 @Controller('banking/rules')
+@ApiTags('bank-rules')
 @PublicRoute()
 export class BankRulesController {
   constructor(private readonly bankRulesApplication: BankRulesApplication) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new bank rule.' })
   async createBankRule(
     @Body() createRuleDTO: ICreateBankRuleDTO,
   ): Promise<BankRule> {
@@ -25,6 +28,7 @@ export class BankRulesController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Edit the given bank rule.' })
   async editBankRule(
     @Param('id') ruleId: number,
     @Body() editRuleDTO: IEditBankRuleDTO,
@@ -33,16 +37,19 @@ export class BankRulesController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete the given bank rule.' })
   async deleteBankRule(@Param('id') ruleId: number): Promise<void> {
     return this.bankRulesApplication.deleteBankRule(ruleId);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieves the bank rule details.' })
   async getBankRule(@Param('id') ruleId: number): Promise<any> {
     return this.bankRulesApplication.getBankRule(ruleId);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Retrieves the bank rules.' })
   async getBankRules(): Promise<any> {
     return this.bankRulesApplication.getBankRules();
   }

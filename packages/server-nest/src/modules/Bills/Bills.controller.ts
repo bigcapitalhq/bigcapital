@@ -1,3 +1,4 @@
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   Controller,
   Post,
@@ -9,45 +10,54 @@ import {
   Query,
 } from '@nestjs/common';
 import { BillsApplication } from './Bills.application';
-import { IBillDTO, IBillEditDTO } from './Bills.types';
+import { IBillDTO, IBillEditDTO, IBillsFilter } from './Bills.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 
+
 @Controller('bills')
+@ApiTags('bills')
 @PublicRoute()
 export class BillsController {
   constructor(private billsApplication: BillsApplication) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new bill.' })
   createBill(@Body() billDTO: IBillDTO) {
     return this.billsApplication.createBill(billDTO);
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Edit the given bill.' })
   editBill(@Param('id') billId: number, @Body() billDTO: IBillEditDTO) {
     return this.billsApplication.editBill(billId, billDTO);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete the given bill.' })
   deleteBill(@Param('id') billId: number) {
     return this.billsApplication.deleteBill(billId);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Retrieves the bills.' })
   getBills(@Query() filterDTO: IBillsFilter) {
     return this.billsApplication.getBills(filterDTO);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieves the bill details.' })
   getBill(@Param('id') billId: number) {
     return this.billsApplication.getBill(billId);
   }
 
   @Post(':id/open')
+  @ApiOperation({ summary: 'Open the given bill.' })
   openBill(@Param('id') billId: number) {
     return this.billsApplication.openBill(billId);
   }
 
   @Get('due')
+  @ApiOperation({ summary: 'Retrieves the due bills.' })
   getDueBills(@Body('vendorId') vendorId?: number) {
     return this.billsApplication.getDueBills(vendorId);
   }

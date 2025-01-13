@@ -30,9 +30,9 @@ export class BranchesApplication {
    * @param   {number} tenantId
    * @returns {IBranch}
    */
-  // public getBranches = (): Promise<Branch[]> => {
-  //   // return this.getBranchesService.getBranches(tenantId);
-  // };
+  public getBranches = (): Promise<Branch[]> => {
+    return this.getBranchesService.getBranches();
+  };
 
   /**
    * Retrieves the given branch details.

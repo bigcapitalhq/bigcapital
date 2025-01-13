@@ -14,23 +14,28 @@ import {
   ICustomerOpeningBalanceEditDTO,
 } from './types/Customers.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('customers')
+@ApiTags('customers')
 @PublicRoute()
 export class CustomersController {
   constructor(private customersApplication: CustomersApplication) {}
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieves the customer details.' })
   getCustomer(@Param('id') customerId: number) {
     return this.customersApplication.getCustomer(customerId);
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create a new customer.' })
   createCustomer(@Body() customerDTO: ICustomerNewDTO) {
     return this.customersApplication.createCustomer(customerDTO);
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Edit the given customer.' })
   editCustomer(
     @Param('id') customerId: number,
     @Body() customerDTO: ICustomerEditDTO,
@@ -39,11 +44,13 @@ export class CustomersController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete the given customer.' })
   deleteCustomer(@Param('id') customerId: number) {
     return this.customersApplication.deleteCustomer(customerId);
   }
 
   @Put(':id/opening-balance')
+  @ApiOperation({ summary: 'Edit the opening balance of the given customer.' })
   editOpeningBalance(
     @Param('id') customerId: number,
     @Body() openingBalanceDTO: ICustomerOpeningBalanceEditDTO,

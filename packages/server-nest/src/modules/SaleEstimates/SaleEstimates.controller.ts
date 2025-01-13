@@ -1,3 +1,4 @@
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -19,6 +20,7 @@ import { SaleEstimate } from './models/SaleEstimate';
 import { PublicRoute } from '../Auth/Jwt.guard';
 
 @Controller('sale-estimates')
+@ApiTags('sale-estimates')
 @PublicRoute()
 export class SaleEstimatesController {
   /**
@@ -29,6 +31,7 @@ export class SaleEstimatesController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new sale estimate.' })
   public createSaleEstimate(
     @Body() estimateDTO: ISaleEstimateDTO,
   ): Promise<SaleEstimate> {
@@ -36,6 +39,7 @@ export class SaleEstimatesController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Edit the given sale estimate.' })
   public editSaleEstimate(
     @Param('id', ParseIntPipe) estimateId: number,
     @Body() estimateDTO: ISaleEstimateDTO,
@@ -47,6 +51,7 @@ export class SaleEstimatesController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete the given sale estimate.' })
   public deleteSaleEstimate(
     @Param('id', ParseIntPipe) estimateId: number,
   ): Promise<void> {
@@ -54,16 +59,19 @@ export class SaleEstimatesController {
   }
 
   @Get('state')
+  @ApiOperation({ summary: 'Retrieves the sale estimate state.' })
   public getSaleEstimateState() {
     return this.saleEstimatesApplication.getSaleEstimateState();
   }
 
   @Get()
+  @ApiOperation({ summary: 'Retrieves the sale estimates.' })
   public getSaleEstimates(@Query() filterDTO: ISalesEstimatesFilter) {
     return this.saleEstimatesApplication.getSaleEstimates(filterDTO);
   }
 
   @Post(':id/deliver')
+  @ApiOperation({ summary: 'Deliver the given sale estimate.' })
   public deliverSaleEstimate(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ): Promise<void> {
@@ -71,6 +79,7 @@ export class SaleEstimatesController {
   }
 
   @Put(':id/approve')
+  @ApiOperation({ summary: 'Approve the given sale estimate.' })
   public approveSaleEstimate(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ): Promise<void> {
@@ -78,6 +87,7 @@ export class SaleEstimatesController {
   }
 
   @Put(':id/reject')
+  @ApiOperation({ summary: 'Reject the given sale estimate.' })
   public rejectSaleEstimate(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ): Promise<void> {
@@ -85,6 +95,7 @@ export class SaleEstimatesController {
   }
 
   @Post(':id/notify-sms')
+  @ApiOperation({ summary: 'Notify the given sale estimate by SMS.' })
   public notifySaleEstimateBySms(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ) {
@@ -94,6 +105,7 @@ export class SaleEstimatesController {
   }
 
   @Get(':id/sms-details')
+  @ApiOperation({ summary: 'Retrieves the sale estimate SMS details.' })
   public getSaleEstimateSmsDetails(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ) {
@@ -103,11 +115,13 @@ export class SaleEstimatesController {
   }
 
   @Get(':id/pdf')
+  @ApiOperation({ summary: 'Retrieves the sale estimate PDF.' })
   public getSaleEstimatePdf(@Param('id', ParseIntPipe) saleEstimateId: number) {
     return this.saleEstimatesApplication.getSaleEstimatePdf(saleEstimateId);
   }
 
   @Post(':id/mail')
+  @ApiOperation({ summary: 'Send the given sale estimate by mail.' })
   public sendSaleEstimateMail(
     @Param('id', ParseIntPipe) saleEstimateId: number,
     @Body() mailOptions: SaleEstimateMailOptionsDTO,
@@ -119,6 +133,7 @@ export class SaleEstimatesController {
   }
 
   @Get(':id/mail')
+  @ApiOperation({ summary: 'Retrieves the sale estimate mail details.' })
   public getSaleEstimateMail(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ) {
@@ -126,6 +141,7 @@ export class SaleEstimatesController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieves the sale estimate details.' })
   public getSaleEstimate(@Param('id', ParseIntPipe) estimateId: number) {
     return this.saleEstimatesApplication.getSaleEstimate(estimateId);
   }

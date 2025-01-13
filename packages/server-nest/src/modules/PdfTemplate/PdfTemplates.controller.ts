@@ -1,14 +1,27 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { PdfTemplateApplication } from './PdfTemplate.application';
 import { ICreateInvoicePdfTemplateDTO, IEditPdfTemplateDTO } from './types';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('pdf-templates')
+@ApiTags('pdf-templates')
 @PublicRoute()
 export class PdfTemplatesController {
-  constructor(private readonly pdfTemplateApplication: PdfTemplateApplication) {}
+  constructor(
+    private readonly pdfTemplateApplication: PdfTemplateApplication,
+  ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new PDF template.' })
   async createPdfTemplate(
     @Body('templateName') templateName: string,
     @Body('resource') resource: string,
@@ -22,21 +35,25 @@ export class PdfTemplatesController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete the given PDF template.' })
   async deletePdfTemplate(@Param('id') templateId: number) {
     return this.pdfTemplateApplication.deletePdfTemplate(templateId);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieves the PDF template details.' })
   async getPdfTemplate(@Param('id') templateId: number) {
     return this.pdfTemplateApplication.getPdfTemplate(templateId);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Retrieves the PDF templates.' })
   async getPdfTemplates(@Body('resource') resource: string) {
     return this.pdfTemplateApplication.getPdfTemplates(resource);
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Edit the given PDF template.' })
   async editPdfTemplate(
     @Param('id') templateId: number,
     @Body() editDTO: IEditPdfTemplateDTO,
@@ -45,6 +62,7 @@ export class PdfTemplatesController {
   }
 
   @Put(':id/assign-default')
+  @ApiOperation({ summary: 'Assign the given PDF template as default.' })
   async assignPdfTemplateAsDefault(@Param('id') templateId: number) {
     return this.pdfTemplateApplication.assignPdfTemplateAsDefault(templateId);
   }

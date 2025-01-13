@@ -5,8 +5,10 @@ import { VendorCreditsRefundApplication } from './VendorCreditsRefund.applicatio
 import { IRefundVendorCreditDTO } from './types/VendorCreditRefund.types';
 import { RefundVendorCredit } from './models/RefundVendorCredit';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('vendor-credits')
+@ApiTags('vendor-credits-refunds')
 @PublicRoute()
 export class VendorCreditsRefundController {
   constructor(
@@ -20,6 +22,7 @@ export class VendorCreditsRefundController {
    * @returns {Promise<RefundVendorCredit>}
    */
   @Post(':vendorCreditId/refunds')
+  @ApiOperation({ summary: 'Create a refund for the given vendor credit.' })
   public async createRefundVendorCredit(
     @Param('vendorCreditId') vendorCreditId: string,
     @Body() refundVendorCreditDTO: IRefundVendorCreditDTO,
@@ -36,6 +39,7 @@ export class VendorCreditsRefundController {
    * @returns {Promise<void>}
    */
   @Delete('refunds/:refundCreditId')
+  @ApiOperation({ summary: 'Delete a refund for the given vendor credit.' })
   public async deleteRefundVendorCredit(
     @Param('refundCreditId') refundCreditId: string,
   ): Promise<void> {

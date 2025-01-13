@@ -13,8 +13,10 @@ import {
   ICashflowNewCommandDTO,
 } from './types/BankingTransactions.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('banking/transactions')
+@ApiTags('banking-transactions')
 @PublicRoute()
 export class BankingTransactionsController {
   constructor(
