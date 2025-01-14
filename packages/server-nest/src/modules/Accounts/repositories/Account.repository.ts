@@ -147,7 +147,7 @@ export class AccountRepository extends TenantRepository {
         }),
         accountType: 'accounts-receivable',
         currencyCode,
-        active: 1,
+        active: true,
         ...extraAttrs,
       });
     }
@@ -199,7 +199,7 @@ export class AccountRepository extends TenantRepository {
         }),
         accountType: 'accounts-payable',
         currencyCode,
-        active: 1,
+        active: true,
         ...extraAttrs,
       });
     }

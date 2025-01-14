@@ -48,7 +48,9 @@ export class CashflowAccountTransformer extends Transformer {
    * @returns {string}
    */
   protected lastFeedsUpdatedAtFormatted(account: Account): string {
-    return this.formatDate(account.lastFeedsUpdatedAt);
+    return account.lastFeedsUpdatedAt
+      ? this.formatDate(account.lastFeedsUpdatedAt)
+      : '';
   }
 
   /**
@@ -57,6 +59,8 @@ export class CashflowAccountTransformer extends Transformer {
    * @returns {string}
    */
   protected lastFeedsUpdatedFromNow(account: Account): string {
-    return this.formatDateFromNow(account.lastFeedsUpdatedAt);
+    return account.lastFeedsUpdatedAt
+      ? this.formatDateFromNow(account.lastFeedsUpdatedAt)
+      : '';
   }
 }

@@ -1,5 +1,9 @@
 import { ISortOrder } from '@/interfaces/Model';
+import { BaseModel } from '@/models/Model';
+import { ICustomViewBaseModel } from '@/modules/CustomViews/CustomViewBaseModel';
 import { IFilterRole } from '../DynamicFilter/DynamicFilter.types';
+import { IMetadataModel } from '../models/MetadataModel';
+import { ISearchableBaseModel } from '../models/SearchableBaseModel';
 
 export interface IDynamicListFilter {
   customViewId?: number;
@@ -9,3 +13,8 @@ export interface IDynamicListFilter {
   stringifiedFilterRoles: string;
   searchKeyword?: string;
 }
+
+export type MetableModel = typeof BaseModel &
+  IMetadataModel &
+  ISearchableBaseModel &
+  ICustomViewBaseModel;

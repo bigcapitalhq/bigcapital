@@ -11,7 +11,7 @@ const defaultModelMeta = {
   fields2: {},
 };
 
-export interface IMetadataModel extends BaseModel {
+export interface IMetadataModel {
   meta: IModelMeta;
   parsedMeta: IModelMeta;
   fields: { [key: string]: IModelMetaField };

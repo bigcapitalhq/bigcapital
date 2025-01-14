@@ -1,30 +1,30 @@
 export const OtherExpensesAccount = {
   name: 'Other Expenses',
   slug: 'other-expenses',
-  account_type: 'other-expense',
+  accountType: 'other-expense',
   code: '40011',
   description: '',
-  active: 1,
+  active: true,
   index: 1,
-  predefined: 1,
+  predefined: true,
 };
 
 export const TaxPayableAccount = {
   name: 'Tax Payable',
   slug: 'tax-payable',
-  account_type: 'tax-payable',
+  accountType: 'tax-payable',
   code: '20006',
   description: '',
-  active: 1,
+  active: true,
   index: 1,
-  predefined: 1,
+  predefined: true,
 };
 
 export const UnearnedRevenueAccount = {
   name: 'Unearned Revenue',
   slug: 'unearned-revenue',
-  account_type: 'other-current-liability',
-  parent_account_id: null,
+  accountType: 'other-current-liability',
+  parentAccountId: null,
   code: '50005',
   active: true,
   index: 1,
@@ -34,8 +34,8 @@ export const UnearnedRevenueAccount = {
 export const PrepardExpenses = {
   name: 'Prepaid Expenses',
   slug: 'prepaid-expenses',
-  account_type: 'other-current-asset',
-  parent_account_id: null,
+  accountType: 'other-current-asset',
+  parentAccountId: null,
   code: '100010',
   active: true,
   index: 1,
@@ -45,8 +45,8 @@ export const PrepardExpenses = {
 export const StripeClearingAccount = {
   name: 'Stripe Clearing',
   slug: 'stripe-clearing',
-  account_type: 'other-current-asset',
-  parent_account_id: null,
+  accountType: 'other-current-asset',
+  parentAccountId: null,
   code: '100020',
   active: true,
   index: 1,
@@ -56,7 +56,7 @@ export const StripeClearingAccount = {
 export const DiscountExpenseAccount = {
   name: 'Discount',
   slug: 'discount',
-  account_type: 'other-income',
+  accountType: 'other-income',
   code: '40008',
   active: true,
   index: 1,
@@ -66,7 +66,7 @@ export const DiscountExpenseAccount = {
 export const PurchaseDiscountAccount = {
   name: 'Purchase Discount',
   slug: 'purchase-discount',
-  account_type: 'other-expense',
+  accountType: 'other-expense',
   code: '40009',
   active: true,
   index: 1,
@@ -76,7 +76,7 @@ export const PurchaseDiscountAccount = {
 export const OtherChargesAccount = {
   name: 'Other Charges',
   slug: 'other-charges',
-  account_type: 'other-income',
+  accountType: 'other-income',
   code: '40010',
   active: true,
   index: 1,
@@ -87,7 +87,7 @@ export const SeedAccounts = [
   {
     name: 'Bank Account',
     slug: 'bank-account',
-    account_type: 'bank',
+    accountType: 'bank',
     code: '10001',
     description: '',
     active: 1,

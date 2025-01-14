@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { VendorCreditApplyBillsApplicationService } from './VendorCreditApplyBillsApplication.service';
 import { IVendorCreditApplyToInvoicesDTO } from './types/VendorCreditApplyBills.types';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('vendor-credits')
+@ApiTags('vendor-credits-apply-bills')
 export class VendorCreditApplyBillsController {
   constructor(
     private readonly vendorCreditApplyBillsApplication: VendorCreditApplyBillsApplicationService,

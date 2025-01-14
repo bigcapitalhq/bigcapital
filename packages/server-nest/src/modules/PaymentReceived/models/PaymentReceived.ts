@@ -1,14 +1,8 @@
-import { Model, mixin } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import ModelSetting from './ModelSetting';
-// import PaymentReceiveSettings from './PaymentReceive.Settings';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Sales/PaymentReceived/constants';
-// import ModelSearchable from './ModelSearchable';
-import { BaseModel } from '@/models/Model';
+import { Model } from 'objection';
 import { PaymentReceivedEntry } from './PaymentReceivedEntry';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class PaymentReceived extends BaseModel {
+export class PaymentReceived extends TenantBaseModel {
   customerId: number;
   paymentDate: string;
   amount: number;
@@ -69,7 +63,9 @@ export class PaymentReceived extends BaseModel {
    */
   static get relationMappings() {
     const { PaymentReceivedEntry } = require('./PaymentReceivedEntry');
-    const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
+    const {
+      AccountTransaction,
+    } = require('../../Accounts/models/AccountTransaction.model');
     const { Customer } = require('../../Customers/models/Customer');
     const { Account } = require('../../Accounts/models/Account.model');
     const { Branch } = require('../../Branches/models/Branch.model');

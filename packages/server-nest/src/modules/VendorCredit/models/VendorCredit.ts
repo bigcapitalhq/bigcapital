@@ -1,20 +1,12 @@
-import { Model, raw, mixin } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import BillSettings from './Bill.Settings';
-// import ModelSetting from './ModelSetting';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Purchases/VendorCredits/constants';
-// import ModelSearchable from './ModelSearchable';
-// import VendorCreditMeta from './VendorCredit.Meta';
-// import { DiscountType } from '@/interfaces';
+import { Model, raw } from 'objection';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { Branch } from '@/modules/Branches/models/Branch.model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
-import { BaseModel } from '@/models/Model';
 import { DiscountType } from '@/common/types/Discount';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class VendorCredit extends BaseModel {
+export class VendorCredit extends TenantBaseModel {
   vendorId: number;
   amount: number;
   currencyCode: string;

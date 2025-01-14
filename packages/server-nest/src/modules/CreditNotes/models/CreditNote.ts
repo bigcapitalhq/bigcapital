@@ -2,18 +2,12 @@ import { DiscountType } from '@/common/types/Discount';
 import { BaseModel } from '@/models/Model';
 import { Branch } from '@/modules/Branches/models/Branch.model';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { mixin, Model, raw } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import ModelSetting from './ModelSetting';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/CreditNotes/constants';
-// import ModelSearchable from './ModelSearchable';
-// import CreditNoteMeta from './CreditNote.Meta';
-// import { DiscountType } from '@/interfaces';
 
-export class CreditNote extends BaseModel {
+export class CreditNote extends TenantBaseModel {
   public amount: number;
   public exchangeRate: number;
   public openedAt: Date;

@@ -7,10 +7,10 @@ import { Model, mixin } from 'objection';
 // import { DEFAULT_VIEWS } from '@/services/ManualJournals/constants';
 // import ModelSearchable from './ModelSearchable';
 import { ManualJournalEntry } from './ManualJournalEntry';
-import { BaseModel } from '@/models/Model';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class ManualJournal extends BaseModel {
+export class ManualJournal extends TenantBaseModel {
   date: Date;
   journalNumber: string;
   journalType: string;

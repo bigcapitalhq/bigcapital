@@ -19,7 +19,7 @@ export interface IDynamicListFilter {
   customViewId?: number;
   filterRoles?: IFilterRole[];
   columnSortBy: ISortOrder;
-  sortOrder: string;
+  sortOrder: ISortOrder;
   stringifiedFilterRoles?: string;
   searchKeyword?: string;
   viewSlug?: string;

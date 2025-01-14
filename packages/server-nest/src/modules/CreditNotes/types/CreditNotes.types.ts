@@ -5,6 +5,7 @@ import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 
 export interface ICreditNoteEntryNewDTO extends IItemEntryDTO {}
 
@@ -97,6 +98,7 @@ export interface ICreditNotesQueryDTO extends IDynamicListFilter {
   page: number;
   pageSize: number;
   searchKeyword?: string;
+  filterQuery?: (builder: Knex.QueryBuilder) => void;
 }
 
 export interface ICreditNoteRefundDTO {
@@ -109,22 +111,22 @@ export interface ICreditNoteRefundDTO {
   branchId?: number;
 }
 
-// export type ICreditNoteGLCommonEntry = Pick<
-//   ILedgerEntry,
-//   | 'date'
-//   | 'userId'
-//   | 'currencyCode'
-//   | 'exchangeRate'
-//   | 'transactionType'
-//   | 'transactionId'
-//   | 'transactionNumber'
-//   | 'referenceNumber'
-//   | 'createdAt'
-//   | 'indexGroup'
-//   | 'credit'
-//   | 'debit'
-//   | 'branchId'
-// >;
+export type ICreditNoteGLCommonEntry = Pick<
+  ILedgerEntry,
+  | 'date'
+  | 'userId'
+  | 'currencyCode'
+  | 'exchangeRate'
+  | 'transactionType'
+  | 'transactionId'
+  | 'transactionNumber'
+  | 'referenceNumber'
+  | 'createdAt'
+  | 'indexGroup'
+  | 'credit'
+  | 'debit'
+  | 'branchId'
+>;
 
 export interface GetCreditNotesResponse {
   creditNotes: CreditNote[];

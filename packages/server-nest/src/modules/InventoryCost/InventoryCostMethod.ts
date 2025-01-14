@@ -1,21 +1,14 @@
 import { omit } from 'lodash';
-import { Container } from 'typedi';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { IInventoryLotCost } from '@/interfaces';
+import { InventoryCostLotTracker } from './models/InventoryCostLotTracker';
+import { Inject } from '@nestjs/common';
+import { Knex } from 'knex';
 
-export default class InventoryCostMethod {
-  tenancy: TenancyService;
-  tenantModels: any;
-
-  /**
-   * Constructor method.
-   * @param {number} tenantId - The given tenant id.
-   */
-  constructor(tenantId: number, startingDate: Date, itemId: number) {
-    const tenancyService = Container.get(TenancyService);
-
-    this.tenantModels = tenancyService.models(tenantId);
-  }
+export class InventoryCostMethod {
+  constructor(
+    @Inject(InventoryCostLotTracker.name)
+    private readonly inventoryCostLotTracker: typeof InventoryCostLotTracker
+  ) {}
+  
 
   /**
    * Stores the inventory lots costs transactions in bulk.
@@ -23,19 +16,19 @@ export default class InventoryCostMethod {
    * @return {Promise[]}
    */
   public storeInventoryLotsCost(
-    costLotsTransactions: IInventoryLotCost[]
+    costLotsTransactions: InventoryCostLotTracker[],
+    trx: Knex.Transaction
   ): Promise<object> {
-    const { InventoryCostLotTracker } = this.tenantModels;
     const opers: any = [];
 
     costLotsTransactions.forEach((transaction: any) => {
       if (transaction.lotTransId && transaction.decrement) {
-        const decrementOper = InventoryCostLotTracker.query(this.trx)
+        const decrementOper = this.inventoryCostLotTracker.query(trx)
           .where('id', transaction.lotTransId)
           .decrement('remaining', transaction.decrement);
         opers.push(decrementOper);
       } else if (!transaction.lotTransId) {
-        const operation = InventoryCostLotTracker.query(this.trx).insert({
+        const operation = this.inventoryCostLotTracker.query(trx).insert({
           ...omit(transaction, ['decrement', 'invTransId', 'lotTransId']),
         });
         opers.push(operation);

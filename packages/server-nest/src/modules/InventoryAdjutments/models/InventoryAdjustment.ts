@@ -1,11 +1,8 @@
 import { Model } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import InventoryAdjustmentSettings from './InventoryAdjustment.Settings';
-// import ModelSetting from './ModelSetting';
-import { BaseModel } from '@/models/Model';
 import { InventoryAdjustmentEntry } from './InventoryAdjustmentEntry';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class InventoryAdjustment extends BaseModel {
+export class InventoryAdjustment extends TenantBaseModel {
   date!: string;
   type!: string;
   adjustmentAccountId!: number;
@@ -32,28 +29,28 @@ export class InventoryAdjustment extends BaseModel {
   /**
    * Timestamps columns.
    */
-  get timestamps() {
+  get timestamps(): Array<string> {
     return ['created_at'];
   }
 
   /**
    * Virtual attributes.
    */
-  static get virtualAttributes() {
+  static get virtualAttributes(): Array<string> {
     return ['formattedType', 'inventoryDirection', 'isPublished'];
   }
 
   /**
    * Retrieve formatted adjustment type.
    */
-  get formattedType() {
+  get formattedType(): string {
     return InventoryAdjustment.getFormattedType(this.type);
   }
 
   /**
    * Retrieve formatted reference type.
    */
-  get inventoryDirection() {
+  get inventoryDirection(): string {
     return InventoryAdjustment.getInventoryDirection(this.type);
   }
 
@@ -61,7 +58,7 @@ export class InventoryAdjustment extends BaseModel {
    * Detarmines whether the adjustment is published.
    * @return {boolean}
    */
-  get isPublished() {
+  get isPublished(): boolean {
     return !!this.publishedAt;
   }
 

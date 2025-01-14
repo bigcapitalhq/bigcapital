@@ -1,6 +1,10 @@
 import { IFilterRole } from './DynamicFilter.types';
 import { DynamicFilterFilterRoles } from './DynamicFilterFilterRoles';
 
+export interface IDynamicFilterSearchResponseMeta {
+  searchKeyword: string;
+}
+
 export class DynamicFilterSearch extends DynamicFilterFilterRoles {
   private searchKeyword: string;
 
@@ -23,7 +27,7 @@ export class DynamicFilterSearch extends DynamicFilterFilterRoles {
 
   /**
    * Retrieve the filter roles from model search roles.
-   * @param {string} searchKeyword 
+   * @param {string} searchKeyword
    * @returns {IFilterRole[]}
    */
   private getModelSearchFilterRoles(searchKeyword: string): IFilterRole[] {
@@ -37,10 +41,20 @@ export class DynamicFilterSearch extends DynamicFilterFilterRoles {
   }
 
   /**
-   * 
+   * Sets the response meta.
    */
   setResponseMeta() {
     this.responseMeta = {
+      searchKeyword: this.searchKeyword,
+    };
+  }
+
+  /**
+   * Retrieves the response meta.
+   * @returns {IDynamicFilterSearchResponseMeta}
+   */
+  public getResponseMeta(): IDynamicFilterSearchResponseMeta {
+    return {
       searchKeyword: this.searchKeyword,
     };
   }

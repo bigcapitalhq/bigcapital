@@ -13,32 +13,29 @@ import { TenantModel } from '@/modules/System/models/TenantModel';
 import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';
 import { Model } from 'objection';
 import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 // import AccountSettings from './Account.Settings';
 // import { DEFAULT_VIEWS } from '@/modules/Accounts/constants';
 // import { buildFilterQuery, buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
 // import { flatToNestedArray } from 'utils';
 
-// @ts-expect-error
-// export class Account extends mixin(TenantModel, [
-//   ModelSettings,
-//   CustomViewBaseModel,
-//   SearchableModel,
-// ]) {
 
-export class Account extends TenantModel {
+export class Account extends TenantBaseModel {
   public name!: string;
   public slug!: string;
   public code!: string;
   public index!: number;
   public accountType!: string;
+  public parentAccountId!: number | null;
   public predefined!: boolean;
   public currencyCode!: string;
   public active!: boolean;
   public bankBalance!: number;
-  public lastFeedsUpdatedAt!: string | null;
+  public lastFeedsUpdatedAt!: string | Date | null;
   public amount!: number;
   public plaidItemId!: number;
-
+  public plaidAccountId!: string | null;
+  public isFeedsActive!: boolean;
   public plaidItem!: PlaidItem;
 
   /**
@@ -73,11 +70,11 @@ export class Account extends TenantModel {
   /**
    * Account normal.
    */
-  get accountNormal() {
+  get accountNormal(): string {
     return AccountTypesUtils.getType(this.accountType, 'normal');
   }
 
-  get accountNormalFormatted() {
+  get accountNormalFormatted(): string {
     const paris = {
       credit: 'Credit',
       debit: 'Debit',
@@ -88,35 +85,35 @@ export class Account extends TenantModel {
   /**
    * Retrieve account type label.
    */
-  get accountTypeLabel() {
+  get accountTypeLabel(): string {
     return AccountTypesUtils.getType(this.accountType, 'label');
   }
 
   /**
    * Retrieve account parent type.
    */
-  get accountParentType() {
+  get accountParentType(): string {
     return AccountTypesUtils.getType(this.accountType, 'parentType');
   }
 
   /**
    * Retrieve account root type.
    */
-  get accountRootType() {
+  get accountRootType(): string {
     return AccountTypesUtils.getType(this.accountType, 'rootType');
   }
 
   /**
    * Retrieve whether the account is balance sheet account.
    */
-  get isBalanceSheetAccount() {
+  get isBalanceSheetAccount(): boolean {
     return this.isBalanceSheet();
   }
 
   /**
    * Retrieve whether the account is profit/loss sheet account.
    */
-  get isPLSheet() {
+  get isPLSheet(): boolean {
     return this.isProfitLossSheet();
   }
   /**

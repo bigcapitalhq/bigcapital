@@ -6,6 +6,7 @@ import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { ISalesInvoicesFilter } from '../SaleInvoice.types';
+import { Knex } from 'knex';
 
 @Injectable()
 export class GetSaleInvoicesService {
@@ -36,8 +37,9 @@ export class GetSaleInvoicesService {
       .onBuild((builder) => {
         builder.withGraphFetched('entries.item');
         builder.withGraphFetched('customer');
+
         dynamicFilter.buildQuery()(builder);
-        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
+        filterDTO?.filterQuery?.(builder as any);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

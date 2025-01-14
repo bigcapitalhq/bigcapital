@@ -47,7 +47,6 @@ export class PlaidSyncDb {
 
   /**
    * Syncs the Plaid bank account.
-   * @param {number} tenantId
    * @param {IAccountCreateDTO} createBankAccountDTO
    * @param {Knex.Transaction} trx
    * @returns {Promise<void>}
@@ -70,7 +69,6 @@ export class PlaidSyncDb {
 
   /**
    * Syncs the plaid accounts to the system accounts.
-   * @param {number} tenantId Tenant ID.
    * @param {PlaidAccount[]} plaidAccounts
    * @returns {Promise<void>}
    */
@@ -94,7 +92,6 @@ export class PlaidSyncDb {
 
   /**
    * Synsc the Plaid transactions to the system GL entries.
-   * @param {number} tenantId - Tenant ID.
    * @param {number} plaidAccountId - Plaid account ID.
    * @param {PlaidTransaction[]} plaidTranasctions - Plaid transactions
    * @return {Promise<void>}
@@ -136,7 +133,6 @@ export class PlaidSyncDb {
 
   /**
    * Syncs the accounts transactions in paraller under controlled concurrency.
-   * @param {number} tenantId
    * @param {PlaidTransaction[]} plaidTransactions
    * @return {Promise<void>}
    */
@@ -188,7 +184,6 @@ export class PlaidSyncDb {
 
   /**
    * Syncs the Plaid item last transaction cursor.
-   * @param {number} tenantId - Tenant ID.
    * @param {string} itemId - Plaid item ID.
    * @param {string} lastCursor - Last transaction cursor.
    * @return {Promise<void>}
@@ -206,8 +201,7 @@ export class PlaidSyncDb {
 
   /**
    * Updates the last feeds updated at of the given Plaid accounts ids.
-   * @param {number} tenantId
-   * @param {string[]} plaidAccountIds
+   * @param {string[]} plaidAccountIds - Plaid accounts ids.
    * @return {Promise<void>}
    */
   public async updateLastFeedsUpdatedAt(
@@ -224,9 +218,8 @@ export class PlaidSyncDb {
 
   /**
    * Updates the accounts feed active status of the given Plaid accounts ids.
-   * @param {number} tenantId
-   * @param {number[]} plaidAccountIds
-   * @param {boolean} isFeedsActive
+   * @param {number[]} plaidAccountIds - Plaid accounts ids.
+   * @param {boolean} isFeedsActive - Feeds active status.
    * @returns {Promise<void>}
    */
   public async updateAccountsFeedsActive(

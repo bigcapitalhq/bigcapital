@@ -1,8 +1,12 @@
 import { BaseModel } from '@/models/Model';
 import { IModelMeta } from '@/interfaces/Model';
-import { ISearchRole } from '../DynamicFilter.types';
+import { ISearchRole } from '../DynamicFilter/DynamicFilter.types';
 
 type GConstructor<T = {}> = new (...args: any[]) => T;
+
+export interface ISearchableBaseModel {
+  searchRoles: ISearchRole[];
+}
 
 export const SearchableBaseModelMixin = <T extends GConstructor<BaseModel>>(
   Model: T,
@@ -11,7 +15,7 @@ export const SearchableBaseModelMixin = <T extends GConstructor<BaseModel>>(
     /**
      * Searchable model.
      */
-    static get searchable(): IModelMeta {
+    static get searchable(): boolean {
       throw true;
     }
 

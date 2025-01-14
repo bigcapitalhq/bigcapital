@@ -4,10 +4,11 @@ import { ERRORS } from './constants';
 import { DynamicFilterSortBy } from './DynamicFilter';
 import { ServiceError } from '../Items/ServiceError';
 import { BaseModel } from '@/models/Model';
-import { DynamicFilterRoleAbstractor } from './DynamicFilter/DynamicFilterRoleAbstractor';
+import { DynamicFilterAbstractor } from './DynamicFilter/DynamicFilterAbstractor';
+import { MetableModel } from './types/DynamicList.types';
 
 @Injectable()
-export class DynamicListSortBy extends DynamicFilterRoleAbstractor {
+export class DynamicListSortBy extends DynamicFilterAbstractor {
   /**
    * Dynamic list sort by.
    * @param {BaseModel} model
@@ -16,7 +17,7 @@ export class DynamicListSortBy extends DynamicFilterRoleAbstractor {
    * @returns {DynamicFilterSortBy}
    */
   public dynamicSortBy(
-    model: BaseModel,
+    model: MetableModel,
     columnSortBy: string,
     sortOrder: ISortOrder,
   ) {

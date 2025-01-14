@@ -164,7 +164,7 @@ export class Bill extends BaseModel {
    * Adjustment amount in local currency.
    * @returns {number | null}
    */
-  get adjustmentLocal() {
+  get adjustmentLocal(): number | null {
     return this.adjustment ? this.adjustment * this.exchangeRate : null;
   }
 
@@ -172,7 +172,7 @@ export class Bill extends BaseModel {
    * Invoice total. (Tax included)
    * @returns {number}
    */
-  get total() {
+  get total(): number {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
     return R.compose(
@@ -186,7 +186,7 @@ export class Bill extends BaseModel {
    * Invoice total in local currency. (Tax included)
    * @returns {number}
    */
-  get totalLocal() {
+  get totalLocal(): number {
     return this.total * this.exchangeRate;
   }
 

@@ -1,7 +1,7 @@
 import { castArray, isEmpty } from 'lodash';
-import { ServiceError } from '@/exceptions';
-import { CommonMailOptions } from '@/interfaces';
 import { ERRORS } from './constants';
+import { CommonMailOptions } from './MailNotification.types';
+import { ServiceError } from '../Items/ServiceError';
 
 /**
  * Merges the mail options with incoming options.

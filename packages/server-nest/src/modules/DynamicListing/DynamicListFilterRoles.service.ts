@@ -3,10 +3,10 @@ import { Injectable } from '@nestjs/common';
 import validator from 'is-my-json-valid';
 import { IFilterRole } from './DynamicFilter/DynamicFilter.types';
 import { DynamicFilterAdvancedFilter } from './DynamicFilter/DynamicFilterAdvancedFilter';
-import { ERRORS } from './constants';
-import { ServiceError } from '../Items/ServiceError';
-import { BaseModel } from '@/models/Model';
 import { DynamicFilterRoleAbstractor } from './DynamicFilter/DynamicFilterRoleAbstractor';
+import { MetableModel } from './types/DynamicList.types';
+import { ServiceError } from '../Items/ServiceError';
+import { ERRORS } from './constants';
 
 @Injectable()
 export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
@@ -34,12 +34,12 @@ export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
 
   /**
    * Retrieve filter roles fields key that not exists on the given model.
-   * @param {BaseModel} model
+   * @param {MetableModel} model
    * @param {IFilterRole} filterRoles
    * @returns {string[]}
    */
   private getFilterRolesFieldsNotExist = (
-    model: BaseModel,
+    model: MetableModel,
     filterRoles: IFilterRole[],
   ): string[] => {
     return filterRoles
@@ -49,12 +49,12 @@ export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
 
   /**
    * Validates existance the fields of filter roles.
-   * @param {BaseModel} model
+   * @param {MetableModel} model
    * @param {IFilterRole[]} filterRoles
    * @throws {ServiceError}
    */
   private validateFilterRolesFieldsExistance = (
-    model: BaseModel,
+    model: MetableModel,
     filterRoles: IFilterRole[],
   ) => {
     const invalidFieldsKeys = this.getFilterRolesFieldsNotExist(
@@ -82,12 +82,12 @@ export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
 
   /**
    * Dynamic list filter roles.
-   * @param {BaseModel} model
-   * @param {IFilterRole[]} filterRoles
+   * @param {MetableModel} model - Metable model.
+   * @param {IFilterRole[]} filterRoles - Filter roles.
    * @returns {DynamicFilterFilterRoles}
    */
   public dynamicList = (
-    model: BaseModel,
+    model: MetableModel,
     filterRoles: IFilterRole[],
   ): DynamicFilterAdvancedFilter => {
     const filterRolesParsed = R.compose(this.incrementFilterRolesIndex)(

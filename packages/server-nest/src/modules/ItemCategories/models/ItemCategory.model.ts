@@ -1,10 +1,7 @@
-import { BaseModel } from '@/models/Model';
-import { Model, mixin } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import ModelSetting from './ModelSetting';
-// import ItemCategorySettings from './ItemCategory.Settings';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { Model } from 'objection';
 
-export class ItemCategory extends BaseModel {
+export class ItemCategory extends TenantBaseModel {
   name!: string;
   description!: string;
 

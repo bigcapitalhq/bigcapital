@@ -39,7 +39,7 @@ export class GetCreditNotesService {
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
-      CreditNote,
+      this.creditNoteModel,
       filter,
     );
     const { results, pagination } = await this.creditNoteModel
@@ -47,8 +47,9 @@ export class GetCreditNotesService {
       .onBuild((builder) => {
         builder.withGraphFetched('entries.item');
         builder.withGraphFetched('customer');
+
         dynamicFilter.buildQuery()(builder);
-        creditNotesQuery?.filterQuery && creditNotesQuery?.filterQuery(builder);
+        creditNotesQuery?.filterQuery?.(builder as any);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

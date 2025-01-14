@@ -1,9 +1,10 @@
 import { toSafeInteger } from 'lodash';
-import { IInventoryTransaction, IItemsQuantityChanges } from '@/interfaces';
+import { IItemsQuantityChanges } from './types/InventoryCost.types';
 import { Knex } from 'knex';
 import { Inject } from '@nestjs/common';
 import { Item } from '../Items/models/Item';
 import { Injectable } from '@nestjs/common';
+import { InventoryTransaction } from './models/InventoryTransaction';
 
 /**
  * Syncs the inventory transactions with inventory items quantity.
@@ -11,8 +12,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class InventoryItemsQuantitySyncService {
   constructor(
-    @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    @Inject(Item.name) private readonly itemModel: typeof Item,
   ) {}
 
   /**
@@ -21,12 +21,14 @@ export class InventoryItemsQuantitySyncService {
    * @return {IInventoryTransaction[]}
    */
   public reverseInventoryTransactions(
-    inventroyTransactions: IInventoryTransaction[],
-  ): IInventoryTransaction[] {
-    return inventroyTransactions.map((transaction) => ({
-      ...transaction,
-      direction: transaction.direction === 'OUT' ? 'IN' : 'OUT',
-    }));
+    inventroyTransactions: InventoryTransaction[],
+  ): InventoryTransaction[] {
+    return inventroyTransactions.map((transaction) => {
+      const cloned = transaction.$clone();
+      cloned.direction = cloned.direction === 'OUT' ? 'IN' : 'OUT';
+
+      return cloned;
+    });
   }
 
   /**
@@ -35,7 +37,7 @@ export class InventoryItemsQuantitySyncService {
    * @return {IItemsQuantityChanges[]}
    */
   public getReverseItemsQuantityChanges(
-    inventroyTransactions: IInventoryTransaction[],
+    inventroyTransactions: InventoryTransaction[],
   ): IItemsQuantityChanges[] {
     const reversedTransactions = this.reverseInventoryTransactions(
       inventroyTransactions,
@@ -49,12 +51,12 @@ export class InventoryItemsQuantitySyncService {
    * @return {IItemsQuantityChanges[]}
    */
   public getItemsQuantityChanges(
-    inventroyTransactions: IInventoryTransaction[],
+    inventroyTransactions: InventoryTransaction[],
   ): IItemsQuantityChanges[] {
     const balanceMap: { [itemId: number]: number } = {};
 
     inventroyTransactions.forEach(
-      (inventoryTransaction: IInventoryTransaction) => {
+      (inventoryTransaction: InventoryTransaction) => {
         const { itemId, direction, quantity } = inventoryTransaction;
 
         if (!balanceMap[itemId]) {

@@ -180,7 +180,7 @@ export class Transformer<T = {}, ExtraContext = {}> {
    * @param {string} date
    * @returns {string}
    */
-  protected formatDateFromNow(date: string) {
+  protected formatDateFromNow(date: moment.MomentInput) {
     return date ? moment(date).fromNow(true) : '';
   }
 

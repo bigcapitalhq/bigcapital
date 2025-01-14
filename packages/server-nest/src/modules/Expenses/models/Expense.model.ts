@@ -1,22 +1,10 @@
-import { Model, mixin, raw } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import { viewRolesBuilder } from '@/lib/ViewRolesBuilder';
-// import ModelSetting from './ModelSetting';
-// import ExpenseSettings from './Expense.Settings';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Expenses/constants';
-// import ModelSearchable from './ModelSearchable';
+import { Model, raw } from 'objection';
 import moment from 'moment';
-import { BaseModel } from '@/models/Model';
 import { ExpenseCategory } from './ExpenseCategory.model';
 import { Account } from '@/modules/Accounts/models/Account.model';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class Expense extends BaseModel {
-  // ModelSetting,
-  // CustomViewBaseModel,
-  // ModelSearchable,
-  // ]) {
-
+export class Expense extends TenantBaseModel {
   totalAmount!: number;
   currencyCode!: string;
   exchangeRate!: number;

@@ -3,7 +3,6 @@ import { CreateSaleInvoice } from './commands/CreateSaleInvoice.service';
 import { DeleteSaleInvoice } from './commands/DeleteSaleInvoice.service';
 import { GetSaleInvoice } from './queries/GetSaleInvoice.service';
 import { EditSaleInvoice } from './commands/EditSaleInvoice.service';
-// import { GetSaleInvoices } from './queries/GetSaleInvoices';
 import { DeliverSaleInvoice } from './commands/DeliverSaleInvoice.service';
 import { GetSaleInvoicesPayable } from './queries/GetSaleInvoicesPayable.service';
 import { WriteoffSaleInvoice } from './commands/WriteoffSaleInvoice.service';
@@ -11,16 +10,18 @@ import { SaleInvoicePdf } from './queries/SaleInvoicePdf.service';
 import { GetInvoicePaymentsService } from './queries/GetInvoicePayments.service';
 // import { SaleInvoiceNotifyBySms } from './SaleInvoiceNotifyBySms';
 // import { SendInvoiceMailReminder } from './commands/SendSaleInvoiceMailReminder';
-// import { SendSaleInvoiceMail } from './commands/SendSaleInvoiceMail';
 import { GetSaleInvoiceState } from './queries/GetSaleInvoiceState.service';
-// import { GetSaleInvoiceMailState } from './queries/GetSaleInvoiceMailState.service';
+import { GetSaleInvoiceMailState } from './queries/GetSaleInvoiceMailState.service';
 import {
   ISaleInvoiceCreateDTO,
   ISaleInvoiceEditDTO,
   ISaleInvoiceWriteoffDTO,
   ISalesInvoicesFilter,
+  SaleInvoiceMailState,
+  SendInvoiceMailDTO,
 } from './SaleInvoice.types';
 import { GetSaleInvoicesService } from './queries/GetSaleInvoices';
+import { SendSaleInvoiceMail } from './commands/SendSaleInvoiceMail';
 
 @Injectable()
 export class SaleInvoiceApplication {
@@ -36,10 +37,9 @@ export class SaleInvoiceApplication {
     private getInvoicePaymentsService: GetInvoicePaymentsService,
     private pdfSaleInvoiceService: SaleInvoicePdf,
     private getSaleInvoiceStateService: GetSaleInvoiceState,
+    private sendSaleInvoiceMailService: SendSaleInvoiceMail,
+    private getSaleInvoiceMailStateService: GetSaleInvoiceMailState,
     // private invoiceSms: SaleInvoiceNotifyBySms,
-    private sendInvoiceReminderService: SendInvoiceMailReminder,
-    // private sendSaleInvoiceMailService: SendSaleInvoiceMail,
-    // private getSaleInvoiceMailStateService: GetSaleInvoiceMailState,
   ) {}
 
   /**
@@ -176,6 +176,22 @@ export class SaleInvoiceApplication {
   }
 
   /**
+   * Sends the invoice mail of the given sale invoice.
+   * @param {number} saleInvoiceId - Sale invoice id.
+   * @param {SendInvoiceMailDTO} messageDTO - Message data.
+   * @returns {Promise<void>}
+   */
+  public sendSaleInvoiceMail(
+    saleInvoiceId: number,
+    messageDTO: SendInvoiceMailDTO,
+  ) {
+    return this.sendSaleInvoiceMailService.triggerMail(
+      saleInvoiceId,
+      messageDTO,
+    );
+  }
+
+  /**
    *
    * @param {number} tenantId
    * @param {number} saleInvoiceId
@@ -224,52 +240,15 @@ export class SaleInvoiceApplication {
   // }
 
   /**
-   * Sends reminder of the given invoice to the invoice's customer.
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
-   * @returns {}
-   */
-  // public sendSaleInvoiceMailReminder(
-  //   tenantId: number,
-  //   saleInvoiceId: number,
-  //   messageDTO: SendInvoiceMailDTO,
-  // ) {
-  //   return this.sendInvoiceReminderService.triggerMail(
-  //     tenantId,
-  //     saleInvoiceId,
-  //     messageDTO,
-  //   );
-  // }
-
-  /**
-   * Sends the invoice mail of the given sale invoice.
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
-   * @param {SendInvoiceMailDTO} messageDTO
-   * @returns {Promise<void>}
-   */
-  // public sendSaleInvoiceMail(
-  //   tenantId: number,
-  //   saleInvoiceId: number,
-  //   messageDTO: SendInvoiceMailDTO,
-  // ) {
-  //   return this.sendSaleInvoiceMailService.triggerMail(
-  //     tenantId,
-  //     saleInvoiceId,
-  //     messageDTO,
-  //   );
-  // }
-
-  /**
    * Retrieves the default mail options of the given sale invoice.
    * @param {number} saleInvoiceid
    * @returns {Promise<SaleInvoiceMailState>}
    */
-  // public getSaleInvoiceMailState(
-  //   saleInvoiceid: number,
-  // ): Promise<SaleInvoiceMailState> {
-  //   return this.getSaleInvoiceMailStateService.getInvoiceMailState(
-  //     saleInvoiceid,
-  //   );
-  // }
+  public getSaleInvoiceMailState(
+    saleInvoiceid: number,
+  ): Promise<SaleInvoiceMailState> {
+    return this.getSaleInvoiceMailStateService.getInvoiceMailState(
+      saleInvoiceid,
+    );
+  }
 }

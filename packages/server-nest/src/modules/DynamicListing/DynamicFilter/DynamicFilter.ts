@@ -1,15 +1,18 @@
 import { forEach } from 'lodash';
 import { DynamicFilterAbstractor } from './DynamicFilterAbstractor';
-import { IDynamicFilter, IFilterRole } from './DynamicFilter.types';
-import { BaseModel } from '@/models/Model';
+import { IFilterRole } from './DynamicFilter.types';
 import { DynamicFilterRoleAbstractor } from './DynamicFilterRoleAbstractor';
+import { MetableModel } from '../types/DynamicList.types';
 
-export class DynamicFilter extends DynamicFilterAbstractor {
+export class DynamicFilter<R extends {}> extends DynamicFilterAbstractor {
+  public model: MetableModel;
+  public dynamicFilters: DynamicFilterRoleAbstractor[];
+
   /**
    * Constructor.
-   * @param {String} tableName -
+   * @param {MetableModel} model - Metable model.
    */
-  constructor(model: typeof BaseModel) {
+  constructor(model: MetableModel) {
     super();
 
     this.model = model;
@@ -29,7 +32,7 @@ export class DynamicFilter extends DynamicFilterAbstractor {
 
   /**
    * Retrieve dynamic filter build queries.
-   * @returns
+   * @returns {Function[]}
    */
   private dynamicFiltersBuildQuery = () => {
     return this.dynamicFilters.map((filter) => {
@@ -72,16 +75,16 @@ export class DynamicFilter extends DynamicFilterAbstractor {
   /**
    * Retrieve response metadata from all filters adapters.
    */
-  public getResponseMeta = () => {
+  public getResponseMeta = (): R => {
     const responseMeta = {};
 
     this.dynamicFilters.forEach((filter) => {
-      const { responseMeta: filterMeta } = filter;
+      const filterMeta = filter.getResponseMeta();
 
       forEach(filterMeta, (value, key) => {
         responseMeta[key] = value;
       });
     });
-    return responseMeta;
+    return responseMeta as R;
   };
 }

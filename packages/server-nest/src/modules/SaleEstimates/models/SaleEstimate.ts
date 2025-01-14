@@ -1,15 +1,10 @@
-import { BaseModel } from '@/models/Model';
 import moment from 'moment';
 import { Model } from 'objection';
-import { ItemEntry } from '../../TransactionItemEntry/models/ItemEntry';
-import { Customer } from '../../Customers/models/Customer';
-import { Branch } from '../../Branches/models/Branch.model';
-import { Warehouse } from '../../Warehouses/models/Warehouse.model';
-import { Document } from '../../ChromiumlyTenancy/models/Document';
 import { Injectable } from '@nestjs/common';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
-export class SaleEstimate extends BaseModel {
+export class SaleEstimate extends TenantBaseModel {
   exchangeRate!: number;
   amount!: number;
 
@@ -207,12 +202,16 @@ export class SaleEstimate extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const { ItemEntry } = require('../../TransactionItemEntry/models/ItemEntry');
+    const {
+      ItemEntry,
+    } = require('../../TransactionItemEntry/models/ItemEntry');
     const { Customer } = require('../../Customers/models/Customer');
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
-    const { PdfTemplateModel } = require('../../PdfTemplate/models/PdfTemplate');
+    const {
+      PdfTemplateModel,
+    } = require('../../PdfTemplate/models/PdfTemplate');
 
     return {
       customer: {

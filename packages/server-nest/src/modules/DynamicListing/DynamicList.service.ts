@@ -6,7 +6,8 @@ import { DynamicListCustomView } from './DynamicListCustomView.service';
 import { Injectable } from '@nestjs/common';
 import { DynamicListFilterRoles } from './DynamicListFilterRoles.service';
 import { DynamicFilter } from './DynamicFilter';
-import { BaseModel } from '@/models/Model';
+import { MetableModel } from './types/DynamicList.types';
+import { IFilterMeta } from '@/interfaces/Model';
 
 @Injectable()
 export class DynamicListService {
@@ -19,10 +20,13 @@ export class DynamicListService {
 
   /**
    * Parses filter DTO.
-   * @param {IMode} model -
-   * @param {} filterDTO -
+   * @param {MetableModel} model - Metable model.
+   * @param {IDynamicListFilter} filterDTO - Dynamic list filter DTO.
    */
-  private parseFilterObject = (model, filterDTO) => {
+  private parseFilterObject = (
+    model: MetableModel,
+    filterDTO: IDynamicListFilter,
+  ) => {
     return {
       // Merges the default properties with filter object.
       ...(model.defaultSort
@@ -37,15 +41,14 @@ export class DynamicListService {
 
   /**
    * Dynamic listing.
-   * @param {number} tenantId - Tenant id.
-   * @param {IModel} model - Model.
+   * @param {IModel} model - Metable model.
    * @param {IDynamicListFilter} filter - Dynamic filter DTO.
    */
   public dynamicList = async (
-    model: typeof BaseModel,
+    model: MetableModel,
     filter: IDynamicListFilter,
   ) => {
-    const dynamicFilter = new DynamicFilter(model);
+    const dynamicFilter = new DynamicFilter<IFilterMeta>(model);
 
     // Parses the filter object.
     const parsedFilter = this.parseFilterObject(model, filter);
@@ -99,5 +102,5 @@ export class DynamicListService {
         ? castArray(JSON.parse(filterRoles.stringifiedFilterRoles))
         : [],
     };
-  };
+  }
 }

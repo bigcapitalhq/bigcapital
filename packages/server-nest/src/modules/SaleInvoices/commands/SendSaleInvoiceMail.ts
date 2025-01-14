@@ -4,7 +4,7 @@ import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon.servic
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { mergeAndValidateMailOptions } from '@/modules/MailNotification/utils';
-import { SendInvoiceMailDTO } from '../SaleInvoice.types';
+import { SaleInvoiceMailOptions, SendInvoiceMailDTO } from '../SaleInvoice.types';
 import { ISaleInvoiceMailSend } from '../SaleInvoice.types';
 import { Mail } from '@/modules/Mail/Mail';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';

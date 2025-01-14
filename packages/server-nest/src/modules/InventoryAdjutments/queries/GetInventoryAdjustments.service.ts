@@ -31,7 +31,7 @@ export class GetInventoryAdjustmentsService {
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
-      InventoryAdjustment,
+      this.inventoryAdjustmentModel,
       filter,
     );
     const { results, pagination } = await this.inventoryAdjustmentModel

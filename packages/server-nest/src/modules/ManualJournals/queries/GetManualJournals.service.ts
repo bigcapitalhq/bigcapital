@@ -41,7 +41,7 @@ export class GetManualJournals {
 
     // Dynamic service.
     const dynamicService = await this.dynamicListService.dynamicList(
-      ManualJournal,
+      this.manualJournalModel,
       filter,
     );
     const { results, pagination } = await this.manualJournalModel

@@ -29,7 +29,7 @@ export class GetBankAccountsService {
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
-      BankAccount,
+      this.bankAccountModel,
       filter,
     );
     // Retrieve accounts model based on the given query.

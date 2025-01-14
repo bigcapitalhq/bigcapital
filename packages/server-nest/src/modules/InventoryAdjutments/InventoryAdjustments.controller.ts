@@ -16,8 +16,10 @@ import {
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { IPaginationMeta } from '@/interfaces/Model';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('inventory-adjustments')
+@ApiTags('inventory-adjustments')
 @PublicRoute()
 export class InventoryAdjustmentsController {
   constructor(
@@ -25,6 +27,7 @@ export class InventoryAdjustmentsController {
   ) {}
 
   @Post('quick')
+  @ApiOperation({ summary: 'Create a quick inventory adjustment.' })
   public async createQuickInventoryAdjustment(
     @Body() quickAdjustmentDTO: IQuickInventoryAdjustmentDTO,
   ): Promise<InventoryAdjustment> {
@@ -34,6 +37,7 @@ export class InventoryAdjustmentsController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete the given inventory adjustment.' })
   public async deleteInventoryAdjustment(
     @Param('id') inventoryAdjustmentId: number,
   ): Promise<void> {
@@ -43,6 +47,7 @@ export class InventoryAdjustmentsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Retrieves the inventory adjustments.' })
   public async getInventoryAdjustments(
     @Query() filterDTO: IInventoryAdjustmentsFilter,
   ): Promise<{
@@ -55,6 +60,7 @@ export class InventoryAdjustmentsController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieves the inventory adjustment details.' })
   public async getInventoryAdjustment(
     @Param('id') inventoryAdjustmentId: number,
   ): Promise<InventoryAdjustment> {
@@ -64,6 +70,7 @@ export class InventoryAdjustmentsController {
   }
 
   @Put(':id/publish')
+  @ApiOperation({ summary: 'Publish the given inventory adjustment.' })
   public async publishInventoryAdjustment(
     @Param('id') inventoryAdjustmentId: number,
   ): Promise<void> {

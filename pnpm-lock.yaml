@@ -713,6 +713,9 @@ importers:
       jest:
         specifier: ^29.5.0
         version: 29.7.0(@types/node@20.5.1)(ts-node@10.9.2)
+      mustache:
+        specifier: ^3.0.3
+        version: 3.2.1
       prettier:
         specifier: ^3.0.0
         version: 3.3.3
@@ -25664,7 +25667,6 @@ packages:
     resolution: {integrity: sha512-RERvMFdLpaFfSRIEe632yDm5nsd0SDKn8hGmcUwswnyiE5mtdZLDybtHAz6hjJhawokF0hXvGLtx9mrQfm6FkA==}
     engines: {npm: '>=1.4.0'}
     hasBin: true
-    dev: false
 
   /mustache@4.2.0:
     resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}

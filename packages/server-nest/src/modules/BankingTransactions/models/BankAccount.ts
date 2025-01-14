@@ -1,11 +1,11 @@
 /* eslint-disable global-require */
-import { mixin, Model } from 'objection';
+import { Model } from 'objection';
 import { castArray } from 'lodash';
-import { BaseModel } from '@/models/Model';
 import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';
 import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class BankAccount extends BaseModel {
+export class BankAccount extends TenantBaseModel {
   public name!: string;
   public slug!: string;
   public code!: string;

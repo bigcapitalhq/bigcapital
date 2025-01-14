@@ -26,7 +26,10 @@ export const OPERATION = {
 //   grouped?: boolean;
 // };
 
-export default class Parser {
+export class Parser {
+  public index: number;
+  public blockLevel: number;
+  public token: string[];
 
   constructor(token) {
     this.index = -1;

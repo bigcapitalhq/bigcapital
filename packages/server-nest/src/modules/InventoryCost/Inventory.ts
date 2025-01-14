@@ -27,11 +27,7 @@ import InventoryCostMethod from './InventoryCostMethod';
 export class InventoryService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
-    private readonly itemsEntriesService: ItemsEntriesService,
     private readonly uow: UnitOfWork,
-
-    @Inject(Item.name)
-    private readonly itemModel: typeof Item,
 
     @Inject(InventoryTransaction.name)
     private readonly inventoryTransactionModel: typeof InventoryTransaction,
@@ -340,7 +336,7 @@ export class InventoryService {
 
   /**
    * Mark item cost computing is running.
-   * @param {boolean} isRunning - 
+   * @param {boolean} isRunning -
    */
   async markItemsCostComputeRunning(isRunning: boolean = true) {
     this.settings.set({

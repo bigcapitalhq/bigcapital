@@ -1,19 +1,7 @@
-import * as R from 'ramda';
-import { BaseModel } from '@/models/Model';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
-import { CustomViewBaseModelMixin } from '@/modules/CustomViews/CustomViewBaseModel';
-import { SearchableBaseModelMixin } from '@/modules/DynamicListing/models/SearchableBaseModel';
-import { ResourceableModelMixin } from '@/modules/Resource/models/ResourcableModel';
-import { MetadataModelMixin } from '@/modules/DynamicListing/models/MetadataModel';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-const ExtendedItem = R.pipe(
-  CustomViewBaseModelMixin,
-  SearchableBaseModelMixin,
-  ResourceableModelMixin,
-  MetadataModelMixin
-)(BaseModel);
-
-export class Item extends ExtendedItem {
+export class Item extends TenantBaseModel{
   public readonly quantityOnHand: number;
   public readonly name: string;
   public readonly active: boolean;

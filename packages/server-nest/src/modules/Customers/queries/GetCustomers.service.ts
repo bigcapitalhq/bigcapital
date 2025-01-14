@@ -38,7 +38,7 @@ export class GetCustomers {
     const filter = this.parseCustomersListFilterDTO(filterDTO);
 
     const dynamicList = await this.dynamicListService.dynamicList(
-      Customer,
+      this.customerModel,
       filter,
     );
     const { results, pagination } = await this.customerModel

@@ -4,6 +4,7 @@ import { MailTenancy } from '../MailTenancy/MailTenancy.service';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { Customer } from '../Customers/models/Customer';
 import { CommonMailOptions } from './MailNotification.types';
+import { formatMessage } from '@/utils/format-message';
 
 @Injectable()
 export class ContactMailNotification {
@@ -56,8 +57,8 @@ export class ContactMailNotification {
       ...commonFormatArgs,
       ...formatterArgs,
     };
-    const subjectFormatted = formatSmsMessage(mailOptions?.subject, formatArgs);
-    const messageFormatted = formatSmsMessage(mailOptions?.message, formatArgs);
+    const subjectFormatted = formatMessage(mailOptions?.subject, formatArgs);
+    const messageFormatted = formatMessage(mailOptions?.message, formatArgs);
 
     return {
       ...mailOptions,

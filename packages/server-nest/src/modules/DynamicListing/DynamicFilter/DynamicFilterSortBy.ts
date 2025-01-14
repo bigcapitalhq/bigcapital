@@ -1,5 +1,4 @@
 import { FIELD_TYPE } from './constants';
-import { DynamicFilterAbstractor } from './DynamicFilterAbstractor';
 import { DynamicFilterRoleAbstractor } from './DynamicFilterRoleAbstractor';
 
 interface ISortRole {
@@ -8,7 +7,10 @@ interface ISortRole {
 }
 
 export class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
-  private sortRole: ISortRole = {};
+  private sortRole: ISortRole = {
+    fieldKey: '',
+    order: '',
+  };
 
   /**
    * Constructor method.
@@ -22,7 +24,6 @@ export class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
       fieldKey: sortByFieldKey,
       order: sortDirection,
     };
-    this.setResponseMeta();
   }
 
   /**
@@ -54,7 +55,7 @@ export class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
    * @param {IModel} field
    * @returns {string}
    */
-  private getFieldComparatorColumn = (field): string => {
+  getFieldComparatorColumn = (field) => {
     return field.fieldType === FIELD_TYPE.RELATION
       ? this.getFieldComparatorRelationColumn(field)
       : `${this.tableName}.${field.column}`;
@@ -84,10 +85,10 @@ export class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
   /**
    * Sets response meta.
    */
-  public setResponseMeta() {
-    this.responseMeta = {
-      sortOrder: this.sortRole.fieldKey,
-      sortBy: this.sortRole.order,
+  public getResponseMeta(): ISortRole {
+    return {
+      fieldKey: this.sortRole.fieldKey,
+      order: this.sortRole.order,
     };
   }
 }

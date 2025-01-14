@@ -1,27 +1,26 @@
 import moment from 'moment';
 import * as R from 'ramda';
 import { IFilterRole, IDynamicFilter } from './DynamicFilter.types';
-import Parser from '@/libs/logic-evaluation/Parser';
+import { Parser } from '@/libs/logic-evaluation/Parser';
 import { Lexer } from '@/libs/logic-evaluation/Lexer';
-import DynamicFilterQueryParser from './DynamicFilterQueryParser';
+import { DynamicFilterQueryParser } from './DynamicFilterQueryParser';
 import { COMPARATOR_TYPE, FIELD_TYPE } from './constants';
 import { BaseModel } from '@/models/Model';
-import { IMetadataModel } from '../models/MetadataModel';
-
-type MetadataModel = typeof BaseModel & IMetadataModel;
+import { MetableModel } from '../types/DynamicList.types';
+import { Knex } from 'knex';
 
 export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
-  protected filterRoles: IFilterRole[] = [];
-  protected tableName: string;
-  protected model: MetadataModel;
-  protected responseMeta: { [key: string]: any } = {};
+  public filterRoles: IFilterRole[] = [];
+  public tableName: string;
+  public model: MetableModel;
+  public responseMeta: { [key: string]: any } = {};
   public relationFields = [];
 
   /**
    * Sets model the dynamic filter service.
    * @param {IModel} model
    */
-  public setModel(model: MetadataModel) {
+  public setModel(model: MetableModel) {
     this.model = model;
     this.tableName = model.tableName;
   }
@@ -118,7 +117,7 @@ export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
    * @param {IModel} model -
    * @param {} -
    */
-  private getFieldComparatorColumn = (field) => {
+  protected getFieldComparatorColumn = (field) => {
     return field.fieldType === FIELD_TYPE.RELATION
       ? this.getFieldComparatorRelationColumn(field)
       : `${this.tableName}.${field.column}`;
@@ -129,7 +128,7 @@ export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
    * @param {IModel} model -
    * @param {Object} role -
    */
-  protected buildRoleQuery = (model: MetadataModel, role: IFilterRole) => {
+  protected buildRoleQuery = (model: MetableModel, role: IFilterRole) => {
     const field = model.getField(role.fieldKey);
     const comparatorColumn = this.getFieldComparatorColumn(field);
 
@@ -384,10 +383,17 @@ export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
    */
   onInitialize() {}
 
-  buildQuery(): void {
+  /**
+   * Builds the query.
+   */
+  buildQuery(): (builder: Knex.QueryBuilder) => void {
     throw new Error('Method not implemented.');
   }
+
+  /**
+   * Retrieves the response meta.
+   */
   getResponseMeta() {
     throw new Error('Method not implemented.');
-  }
+  } 
 }

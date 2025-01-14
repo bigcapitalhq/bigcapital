@@ -41,7 +41,7 @@ export class DeleteAccount {
     await this.accountModel
       .query(trx)
       .whereIn('parent_account_id', accountsIds)
-      .patch({ parent_account_id: null });
+      .patch({ parentAccountId: null });
   }
 
   /**

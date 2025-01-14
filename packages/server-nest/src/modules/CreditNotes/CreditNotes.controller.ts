@@ -15,8 +15,10 @@ import {
   ICreditNotesQueryDTO,
 } from './types/CreditNotes.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('credit-notes')
+@ApiTags('credit-notes')
 @PublicRoute()
 export class CreditNotesController {
   /**

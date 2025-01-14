@@ -13,10 +13,10 @@ export class GetAccountsService {
   constructor(
     private readonly dynamicListService: DynamicListService,
     private readonly transformerService: TransformerInjectable,
+    private readonly accountRepository: AccountRepository,
 
     @Inject(Account.name)
     private readonly accountModel: typeof Account,
-    private readonly accountRepository: AccountRepository,
   ) {}
 
   /**

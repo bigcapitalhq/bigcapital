@@ -1,5 +1,4 @@
-import { Model, mixin } from 'objection';
-import { BaseModel } from '@/models/Model';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 // import TenantModel from 'models/TenantModel';
 // import PaginationQueryBuilder from './Pagination';
 // import ModelSetting from './ModelSetting';
@@ -20,7 +19,7 @@ import { BaseModel } from '@/models/Model';
 //   }
 // }
 
-export class Customer extends BaseModel{
+export class Customer extends TenantBaseModel{
   contactService: string;
   contactType: string;
 

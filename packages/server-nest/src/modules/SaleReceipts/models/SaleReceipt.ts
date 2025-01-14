@@ -1,11 +1,6 @@
-import { Model, mixin } from 'objection';
-import { defaultTo } from 'ramda';
-// import TenantModel from 'models/TenantModel';
-// import ModelSetting from './ModelSetting';
-// import SaleReceiptSettings from './SaleReceipt.Settings';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Sales/Receipts/constants';
-// import ModelSearchable from './ModelSearchable';
+import { Model } from 'objection';
+import { defaultTo } from 'lodash';
+import * as R from 'ramda';
 import { BaseModel } from '@/models/Model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Customer } from '@/modules/Customers/models/Customer';
@@ -13,38 +8,48 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { Branch } from '@/modules/Branches/models/Branch.model';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { DiscountType } from '@/common/types/Discount';
+import { MetadataModelMixin } from '@/modules/DynamicListing/models/MetadataModel';
+import { ResourceableModelMixin } from '@/modules/Resource/models/ResourcableModel';
+import { CustomViewBaseModelMixin } from '@/modules/CustomViews/CustomViewBaseModel';
+import { SearchableBaseModelMixin } from '@/modules/DynamicListing/models/SearchableBaseModel';
 
-export class SaleReceipt extends BaseModel {
-  amount: number;
-  exchangeRate: number;
-  currencyCode: string;
-  depositAccountId: number;
-  customerId: number;
-  receiptDate: Date;
-  receiptNumber: string;
-  referenceNo: string;
-  sendToEmail: string;
-  receiptMessage: string;
-  statement: string;
-  closedAt: Date | string;
+const ExtendedModel = R.pipe(
+  CustomViewBaseModelMixin,
+  SearchableBaseModelMixin,
+  ResourceableModelMixin,
+  MetadataModelMixin,
+)(BaseModel);
 
-  discountType: DiscountType;
-  discount: number;
-  adjustment: number;
+export class SaleReceipt extends ExtendedModel {
+  public amount!: number;
+  public exchangeRate!: number;
+  public currencyCode!: string;
+  public depositAccountId!: number;
+  public customerId!: number;
+  public receiptDate!: Date;
+  public receiptNumber!: string;
+  public referenceNo!: string;
+  public sendToEmail!: string;
+  public receiptMessage!: string;
+  public statement!: string;
+  public closedAt!: Date | string;
+  public discountType!: DiscountType;
+  public discount!: number;
+  public adjustment!: number;
 
-  branchId: number;
-  warehouseId: number;
+  public branchId!: number;
+  public warehouseId!: number;
 
-  userId: number;
+  public userId!: number;
 
-  createdAt: Date;
-  updatedAt: Date | null;
+  public createdAt!: Date;
+  public updatedAt!: Date | null;
 
-  customer!: Customer;
-  entries!: ItemEntry[];
-  transactions!: AccountTransaction[];
-  branch!: Branch;
-  warehouse!: Warehouse;
+  public customer!: Customer;
+  public entries!: ItemEntry[];
+  public transactions!: AccountTransaction[];
+  public branch!: Branch;
+  public warehouse!: Warehouse;
 
   /**
    * Table name
@@ -142,7 +147,7 @@ export class SaleReceipt extends BaseModel {
    * Receipt total.
    * @returns {number}
    */
-  get total() {
+  get total(): number {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
     return this.subtotal - this.discountAmount + adjustmentAmount;
@@ -256,6 +261,9 @@ export class SaleReceipt extends BaseModel {
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
 
     return {
+      /**
+       * Sale receipt may has a customer.
+       */
       customer: {
         relation: Model.BelongsToOneRelation,
         modelClass: Customer,
@@ -268,6 +276,9 @@ export class SaleReceipt extends BaseModel {
         },
       },
 
+      /**
+       * Sale receipt may has a deposit account.
+       */
       depositAccount: {
         relation: Model.BelongsToOneRelation,
         modelClass: Account,
@@ -277,6 +288,9 @@ export class SaleReceipt extends BaseModel {
         },
       },
 
+      /**
+       * Sale receipt may has many items entries.
+       */
       entries: {
         relation: Model.HasManyRelation,
         modelClass: ItemEntry,
@@ -290,6 +304,9 @@ export class SaleReceipt extends BaseModel {
         },
       },
 
+      /**
+       * Sale receipt may has many transactions.
+       */
       transactions: {
         relation: Model.HasManyRelation,
         modelClass: AccountTransaction,

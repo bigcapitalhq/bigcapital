@@ -1,13 +1,13 @@
-import { BaseModel } from '@/models/Model';
 import { IDynamicFilter } from './DynamicFilter.types';
+import { MetableModel } from '../types/DynamicList.types';
 
 export class DynamicFilterAbstractor {
-  public model: typeof BaseModel;
+  public model: MetableModel;
   public dynamicFilters: IDynamicFilter[];
 
   /**
    * Extract relation table name from relation.
-   * @param {String} column -
+   * @param {String} column - Column name
    * @return {String} - join relation table.
    */
   protected getTableFromRelationColumn = (column: string) => {

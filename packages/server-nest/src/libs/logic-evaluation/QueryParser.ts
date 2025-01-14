@@ -1,6 +1,9 @@
 import { OPERATION } from './Parser';
 
-export default class QueryParser {
+export class QueryParser {
+  public tree: any;
+  public queries: any;
+  public query: any;
 
   constructor(tree, queries) {
     this.tree = tree;

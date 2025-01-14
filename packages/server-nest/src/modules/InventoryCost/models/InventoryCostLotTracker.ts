@@ -55,7 +55,16 @@ export class InventoryCostLotTracker extends BaseModel {
         query.groupBy('date');
         query.groupBy('item_id');
       },
-      filterDateRange(query, startDate, endDate, type: unitOfTime.StartOf = 'day') {
+
+      /**
+       * Filters transactions by the given date range.
+       */
+      filterDateRange(
+        query,
+        startDate,
+        endDate,
+        type: unitOfTime.StartOf = 'day',
+      ) {
         const dateFormat = 'YYYY-MM-DD';
         const fromDate = moment(startDate).startOf(type).format(dateFormat);
         const toDate = moment(endDate).endOf(type).format(dateFormat);
@@ -71,7 +80,7 @@ export class InventoryCostLotTracker extends BaseModel {
       /**
        * Filters transactions by the given branches.
        */
-      filterByBranches(query, branchesIds) {
+      filterByBranches(query, branchesIds: number | Array<number>) {
         const formattedBranchesIds = castArray(branchesIds);
 
         query.whereIn('branchId', formattedBranchesIds);
@@ -80,7 +89,7 @@ export class InventoryCostLotTracker extends BaseModel {
       /**
        * Filters transactions by the given warehosues.
        */
-      filterByWarehouses(query, branchesIds) {
+      filterByWarehouses(query, branchesIds: number | Array<number>) {
         const formattedWarehousesIds = castArray(branchesIds);
 
         query.whereIn('warehouseId', formattedWarehousesIds);
@@ -92,15 +101,17 @@ export class InventoryCostLotTracker extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Item = require('models/Item');
-    const SaleInvoice = require('models/SaleInvoice');
-    const ItemEntry = require('models/ItemEntry');
-    const SaleReceipt = require('models/SaleReceipt');
+    const { Item } = require('../../Items/models/Item');
+    const { SaleInvoice } = require('../../SaleInvoices/models/SaleInvoice');
+    const {
+      ItemEntry,
+    } = require('../../TransactionItemEntry/models/ItemEntry');
+    const { SaleReceipt } = require('../../SaleReceipts/models/SaleReceipt');
 
     return {
       item: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Item.default,
+        modelClass: Item,
         join: {
           from: 'inventory_cost_lot_tracker.itemId',
           to: 'items.id',
@@ -108,7 +119,7 @@ export class InventoryCostLotTracker extends BaseModel {
       },
       invoice: {
         relation: Model.BelongsToOneRelation,
-        modelClass: SaleInvoice.default,
+        modelClass: SaleInvoice,
         join: {
           from: 'inventory_cost_lot_tracker.transactionId',
           to: 'sales_invoices.id',
@@ -116,7 +127,7 @@ export class InventoryCostLotTracker extends BaseModel {
       },
       itemEntry: {
         relation: Model.BelongsToOneRelation,
-        modelClass: ItemEntry.default,
+        modelClass: ItemEntry,
         join: {
           from: 'inventory_cost_lot_tracker.entryId',
           to: 'items_entries.id',
@@ -124,7 +135,7 @@ export class InventoryCostLotTracker extends BaseModel {
       },
       receipt: {
         relation: Model.BelongsToOneRelation,
-        modelClass: SaleReceipt.default,
+        modelClass: SaleReceipt,
         join: {
           from: 'inventory_cost_lot_tracker.transactionId',
           to: 'sales_receipts.id',

@@ -30,7 +30,7 @@ export class GetBillsService {
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
-      Bill,
+      this.billModel,
       filter,
     );
     const { results, pagination } = await this.billModel

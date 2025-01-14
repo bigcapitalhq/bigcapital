@@ -1,17 +1,17 @@
-import { IInventoryItemCostMeta } from '@/interfaces';
-import { Service, Inject } from 'typedi';
+import { Injectable } from '@nestjs/common';
 import { InventoryItemCostService } from './InventoryCosts.service';
+import { IInventoryItemCostMeta } from './types/InventoryCost.types';
 
-@Service()
+@Injectable()
 export class InventoryCostApplication {
-  @Inject()
-  inventoryCost: InventoryItemCostService;
+  constructor(
+    private readonly inventoryCost: InventoryItemCostService,
+  ) {}
 
   /**
    * Retrieves the items inventory valuation list.
-   * @param   {number} tenantId
-   * @param   {number[]} itemsId
-   * @param   {Date} date
+   * @param {number[]} itemsId
+   * @param {Date} date
    * @returns {Promise<IInventoryItemCostMeta[]>}
    */
   public getItemsInventoryValuationList = async (
@@ -19,7 +19,6 @@ export class InventoryCostApplication {
     date: Date
   ): Promise<IInventoryItemCostMeta[]> => {
     const itemsMap = await this.inventoryCost.getItemsInventoryValuation(
-      tenantId,
       itemsId,
       date
     );

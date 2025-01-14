@@ -1,8 +1,9 @@
 import { Transporter } from 'nodemailer';
 import { Mail } from './Mail';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { MAIL_TRANSPORTER_PROVIDER } from './Mail.constants';
 
+@Injectable()
 export class MailTransporter {
   constructor(
     @Inject(MAIL_TRANSPORTER_PROVIDER)

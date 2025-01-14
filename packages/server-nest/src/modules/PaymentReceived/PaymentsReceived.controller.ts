@@ -13,10 +13,13 @@ import { PaymentReceivesApplication } from './PaymentReceived.application';
 import {
   IPaymentReceivedCreateDTO,
   IPaymentReceivedEditDTO,
+  IPaymentsReceivedFilter,
 } from './types/PaymentReceived.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('payments-received')
+@ApiTags('payments-received')
 @PublicRoute()
 export class PaymentReceivesController {
   constructor(private paymentReceivesApplication: PaymentReceivesApplication) {}

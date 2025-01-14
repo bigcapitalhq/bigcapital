@@ -106,10 +106,12 @@ export class InventoryTransaction extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Item = require('models/Item');
-    const ItemEntry = require('models/ItemEntry');
-    const InventoryTransactionMeta = require('models/InventoryTransactionMeta');
-    const InventoryCostLots = require('models/InventoryCostLotTracker');
+    const { Item } = require('../../Items/models/Item');
+    const {
+      ItemEntry,
+    } = require('../../TransactionItemEntry/models/ItemEntry');
+    const { InventoryTransactionMeta } = require('./InventoryTransactionMeta');
+    const { InventoryCostLotTracker } = require('./InventoryCostLotTracker');
 
     return {
       // Transaction meta.
@@ -124,7 +126,7 @@ export class InventoryTransaction extends BaseModel {
       // Item cost aggregated.
       itemCostAggregated: {
         relation: Model.HasOneRelation,
-        modelClass: InventoryCostLots.default,
+        modelClass: InventoryCostLotTracker,
         join: {
           from: 'inventory_transactions.itemId',
           to: 'inventory_cost_lot_tracker.itemId',
@@ -138,7 +140,7 @@ export class InventoryTransaction extends BaseModel {
       },
       costLotAggregated: {
         relation: Model.HasOneRelation,
-        modelClass: InventoryCostLots.default,
+        modelClass: InventoryCostLotTracker,
         join: {
           from: 'inventory_transactions.id',
           to: 'inventory_cost_lot_tracker.inventoryTransactionId',
@@ -151,7 +153,7 @@ export class InventoryTransaction extends BaseModel {
       },
       item: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Item.default,
+        modelClass: Item,
         join: {
           from: 'inventory_transactions.itemId',
           to: 'items.id',
@@ -159,7 +161,7 @@ export class InventoryTransaction extends BaseModel {
       },
       itemEntry: {
         relation: Model.BelongsToOneRelation,
-        modelClass: ItemEntry.default,
+        modelClass: ItemEntry,
         join: {
           from: 'inventory_transactions.entryId',
           to: 'items_entries.id',

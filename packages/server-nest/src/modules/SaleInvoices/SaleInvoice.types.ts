@@ -3,7 +3,10 @@ import { IItemEntryDTO } from '../TransactionItemEntry/ItemEntry.types';
 import { AttachmentLinkDTO } from '../Attachments/Attachments.types';
 import { SaleInvoice } from './models/SaleInvoice';
 import { IDynamicListFilter } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
-import { CommonMailOptionsDTO } from '../MailNotification/MailNotification.types';
+import {
+  CommonMailOptions,
+  CommonMailOptionsDTO,
+} from '../MailNotification/MailNotification.types';
 // import SaleInvoice from './models/SaleInvoice';
 // import { SystemUser } from '../System/models/SystemUser';
 // import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
@@ -185,34 +188,34 @@ export enum SaleInvoiceAction {
   NotifyBySms = 'NotifyBySms',
 }
 
-// export interface SaleInvoiceMailOptions extends CommonMailOptions {
-//   attachInvoice?: boolean;
-//   formatArgs?: Record<string, any>;
-// }
+export interface SaleInvoiceMailOptions extends CommonMailOptions {
+  attachInvoice?: boolean;
+  formatArgs?: Record<string, any>;
+}
 
-// export interface SaleInvoiceMailState extends SaleInvoiceMailOptions {
-//   invoiceNo: string;
+export interface SaleInvoiceMailState extends SaleInvoiceMailOptions {
+  invoiceNo: string;
 
-//   invoiceDate: string;
-//   invoiceDateFormatted: string;
+  invoiceDate: string;
+  invoiceDateFormatted: string;
 
-//   dueDate: string;
-//   dueDateFormatted: string;
+  dueDate: string;
+  dueDateFormatted: string;
 
-//   total: number;
-//   totalFormatted: string;
+  total: number;
+  totalFormatted: string;
 
-//   subtotal: number;
-//   subtotalFormatted: number;
+  subtotal: number;
+  subtotalFormatted: number;
 
-//   companyName: string;
-//   companyLogoUri: string;
+  companyName: string;
+  companyLogoUri: string;
 
-//   customerName: string;
+  customerName: string;
 
-//   // # Invoice entries
-//   entries?: Array<{ label: string; total: string; quantity: string | number }>;
-// }
+  // # Invoice entries
+  entries?: Array<{ label: string; total: string; quantity: string | number }>;
+}
 
 export interface SendInvoiceMailDTO extends CommonMailOptionsDTO {
   attachInvoice?: boolean;

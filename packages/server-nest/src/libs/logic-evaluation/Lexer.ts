@@ -7,6 +7,10 @@ const OperationType = {
 };
 
 export class Lexer {
+  public currentIndex: number;
+  public input: string;
+  public tokenList: string[];
+
   // operation table
   static get optable() {
     return {

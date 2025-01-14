@@ -4,20 +4,15 @@ import * as moment from 'moment';
 import * as R from 'ramda';
 import { MomentInput, unitOfTime } from 'moment';
 import { defaultTo } from 'ramda';
-// import TenantModel from 'models/TenantModel';
-// import ModelSetting from './ModelSetting';
-// import SaleInvoiceMeta from './SaleInvoice.Settings';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Sales/Invoices/constants';
-// import ModelSearchable from './ModelSearchable';
-import { BaseModel } from '@/models/Model';
 import { TaxRateTransaction } from '@/modules/TaxRates/models/TaxRateTransaction.model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { DiscountType } from '@/common/types/Discount';
 import { Account } from '@/modules/Accounts/models/Account.model';
+import { ISearchRole } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class SaleInvoice extends BaseModel {
+export class SaleInvoice extends TenantBaseModel{
   public taxAmountWithheld: number;
   public balance: number;
   public paymentAmount: number;
@@ -749,11 +744,11 @@ export class SaleInvoice extends BaseModel {
   /**
    * Model search attributes.
    */
-  static get searchRoles() {
+  static get searchRoles(): ISearchRole[] {
     return [
       { fieldKey: 'invoice_no', comparator: 'contains' },
-      { condition: 'or', fieldKey: 'reference_no', comparator: 'contains' },
-      { condition: 'or', fieldKey: 'amount', comparator: 'equals' },
+      // { condition: 'or', fieldKey: 'reference_no', comparator: 'contains' },
+      // { condition: 'or', fieldKey: 'amount', comparator: 'equals' },
     ];
   }
 

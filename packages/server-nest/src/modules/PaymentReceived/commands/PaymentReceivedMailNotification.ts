@@ -3,7 +3,7 @@ import {
   DEFAULT_PAYMENT_MAIL_CONTENT,
   DEFAULT_PAYMENT_MAIL_SUBJECT,
 } from '../constants';
-import { transformPaymentReceivedToMailDataArgs } from './utils';
+import { transformPaymentReceivedToMailDataArgs } from '../utils';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { ContactMailNotification } from '@/modules/MailNotification/ContactMailNotification';
@@ -14,16 +14,19 @@ import { PaymentReceiveMailOptsDTO } from '../types/PaymentReceived.types';
 import { PaymentReceiveMailOpts } from '../types/PaymentReceived.types';
 import { PaymentReceiveMailPresendEvent } from '../types/PaymentReceived.types';
 import { SendInvoiceMailDTO } from '@/modules/SaleInvoices/SaleInvoice.types';
+import { Mail } from '@/modules/Mail/Mail';
+import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
 
 @Injectable()
 export class SendPaymentReceiveMailNotification {
   constructor(
-    private getPaymentService: GetPaymentReceivedService,
-    private contactMailNotification: ContactMailNotification,
-    private eventEmitter: EventEmitter2,
+    private readonly getPaymentService: GetPaymentReceivedService,
+    private readonly contactMailNotification: ContactMailNotification,
+    private readonly eventEmitter: EventEmitter2,
+    private readonly mailTransport: MailTransporter,
 
     @Inject(PaymentReceived.name)
-    private paymentReceiveModel: typeof PaymentReceived,
+    private readonly paymentReceiveModel: typeof PaymentReceived,
   ) {}
 
   /**
@@ -148,7 +151,7 @@ export class SendPaymentReceiveMailNotification {
       events.paymentReceive.onMailSend,
       eventPayload,
     );
-    await mail.send();
+    await this.mailTransport.send(mail);
 
     // Triggers `onPaymentReceiveMailSent` event.
     await this.eventEmitter.emitAsync(

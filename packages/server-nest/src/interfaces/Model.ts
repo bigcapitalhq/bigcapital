@@ -39,6 +39,8 @@ export interface IModelMetaFieldCommon {
   order?: number;
   unique?: number;
   dataTransferObjectKey?: string;
+  filterCustomQuery?: Function;
+  sortCustomQuery?: Function;
 }
 
 export interface IModelMetaFieldText {

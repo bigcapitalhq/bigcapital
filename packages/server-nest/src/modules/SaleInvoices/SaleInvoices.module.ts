@@ -37,7 +37,6 @@ import SaleInvoiceWriteoffSubscriber from './subscribers/SaleInvoiceWriteoffSubs
 import { SaleInvoiceWriteoffGLStorage } from './commands/writeoff/SaleInvoiceWriteoffGLStorage';
 import { InvoiceInventoryTransactions } from './commands/inventory/InvoiceInventoryTransactions';
 import { SendSaleEstimateMail } from '../SaleEstimates/commands/SendSaleEstimateMail';
-import { SendInvoiceMailReminder } from './commands/SendSaleInvoiceMailReminder';
 import { MailModule } from '../Mail/Mail.module';
 
 @Module({
@@ -84,7 +83,6 @@ import { MailModule } from '../Mail/Mail.module';
     SaleInvoiceWriteoffSubscriber,
     InvoiceInventoryTransactions,
     SendSaleEstimateMail,
-    SendInvoiceMailReminder,
   ],
 })
 export class SaleInvoicesModule {}
