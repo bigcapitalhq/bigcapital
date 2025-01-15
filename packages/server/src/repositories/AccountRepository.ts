@@ -6,7 +6,7 @@ import {
   DiscountExpenseAccount,
   OtherChargesAccount,
   OtherExpensesAccount,
-  PrepardExpenses,
+  PrepaidExpenses,
   PurchaseDiscountAccount,
   StripeClearingAccount,
   TaxPayableAccount,
@@ -222,12 +222,12 @@ export default class AccountRepository extends TenantRepository {
   }
 
   /**
-   * Finds or creates the prepard expenses account.
+   * Finds or creates the prepaid expenses account.
    * @param {Record<string, string>} extraAttrs
    * @param {Knex.Transaction} trx
    * @returns
    */
-  public async findOrCreatePrepardExpenses(
+  public async findOrCreatePrepaidExpenses(
     extraAttrs: Record<string, string> = {},
     trx?: Knex.Transaction
   ) {
@@ -242,11 +242,11 @@ export default class AccountRepository extends TenantRepository {
 
     let result = await this.model
       .query(trx)
-      .findOne({ slug: PrepardExpenses.slug, ..._extraAttrs });
+      .findOne({ slug: PrepaidExpenses.slug, ..._extraAttrs });
 
     if (!result) {
       result = await this.model.query(trx).insertAndFetch({
-        ...PrepardExpenses,
+        ...PrepaidExpenses,
         ..._extraAttrs,
       });
     }
