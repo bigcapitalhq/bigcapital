@@ -8,12 +8,14 @@ import {
   Patch,
   Get,
   Put,
+  Query,
 } from '@nestjs/common';
 import { TenantController } from '../Tenancy/Tenant.controller';
 import { SubscriptionGuard } from '../Subscription/interceptors/Subscription.guard';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ItemsApplicationService } from './ItemsApplication.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { IItemsFilter } from './types/Items.types';
 
 @Controller('/items')
 @UseGuards(SubscriptionGuard)
@@ -22,6 +24,16 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
     super();
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Retrieves the item list.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item list has been successfully retrieved.',
+  })
+  async getItems(@Query() filterDTO: IItemsFilter): Promise<any> {
+    return this.itemsApplication.getItems(filterDTO);
   }
 
   /**
@@ -36,6 +48,7 @@ export class ItemsController extends TenantController {
     status: 200,
     description: 'The item has been successfully updated.',
   })
+  @ApiResponse({ status: 404, description: 'The item not found.' })
   // @UsePipes(new ZodValidationPipe(createItemSchema))
   async editItem(
     @Param('id') id: string,
@@ -52,6 +65,10 @@ export class ItemsController extends TenantController {
    */
   @Post()
   @ApiOperation({ summary: 'Create a new item (product or service).' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item has been successfully created.',
+  })
   // @UsePipes(new ZodValidationPipe(createItemSchema))
   async createItem(@Body() createItemDto: any): Promise<number> {
     return this.itemsApplication.createItem(createItemDto);
@@ -63,6 +80,11 @@ export class ItemsController extends TenantController {
    */
   @Delete(':id')
   @ApiOperation({ summary: 'Delete the given item (product or service).' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item has been successfully deleted.',
+  })
+  @ApiResponse({ status: 404, description: 'The item not found.' })
   async deleteItem(@Param('id') id: string): Promise<void> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.deleteItem(itemId);
@@ -74,6 +96,11 @@ export class ItemsController extends TenantController {
    */
   @Patch(':id/inactivate')
   @ApiOperation({ summary: 'Inactivate the given item (product or service).' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item has been successfully inactivated.',
+  })
+  @ApiResponse({ status: 404, description: 'The item not found.' })
   async inactivateItem(@Param('id') id: string): Promise<void> {
     console.log(id, 'XXXXXX');
 
@@ -87,6 +114,11 @@ export class ItemsController extends TenantController {
    */
   @Patch(':id/activate')
   @ApiOperation({ summary: 'Activate the given item (product or service).' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item has been successfully activated.',
+  })
+  @ApiResponse({ status: 404, description: 'The item not found.' })
   async activateItem(@Param('id') id: string): Promise<void> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.activateItem(itemId);
@@ -98,6 +130,11 @@ export class ItemsController extends TenantController {
    */
   @Get(':id')
   @ApiOperation({ summary: 'Get the given item (product or service).' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item has been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The item not found.' })
   async getItem(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItem(itemId);
@@ -109,7 +146,9 @@ export class ItemsController extends TenantController {
    * @returns {Promise<any>}
    */
   @Get(':id/invoices')
-  @ApiOperation({ summary: 'Retrieves the item associated invoices transactions.' })
+  @ApiOperation({
+    summary: 'Retrieves the item associated invoices transactions.',
+  })
   async getItemInvoicesTransactions(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItemInvoicesTransactions(itemId);
@@ -121,7 +160,9 @@ export class ItemsController extends TenantController {
    * @returns {Promise<any>}
    */
   @Get(':id/bills')
-  @ApiOperation({ summary: 'Retrieves the item associated bills transactions.' })
+  @ApiOperation({
+    summary: 'Retrieves the item associated bills transactions.',
+  })
   async getItemBillTransactions(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItemBillTransactions(itemId);
@@ -133,7 +174,14 @@ export class ItemsController extends TenantController {
    * @returns {Promise<any>}
    */
   @Get(':id/estimates')
-  @ApiOperation({ summary: 'Retrieves the item associated estimates transactions.' })
+  @ApiOperation({
+    summary: 'Retrieves the item associated estimates transactions.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The item associated estimate transactions have been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The item not found.' })
   async getItemEstimatesTransactions(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItemEstimatesTransactions(itemId);
@@ -145,7 +193,14 @@ export class ItemsController extends TenantController {
    * @returns {Promise<any>}
    */
   @Get(':id/receipts')
-  @ApiOperation({ summary: 'Retrieves the item associated receipts transactions.' })
+  @ApiOperation({
+    summary: 'Retrieves the item associated receipts transactions.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The item associated receipts transactions have been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The item not found.' })
   async getItemReceiptTransactions(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItemReceiptsTransactions(itemId);
