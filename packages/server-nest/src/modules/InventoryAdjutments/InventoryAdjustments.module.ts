@@ -18,13 +18,20 @@ import { InventoryAdjustmentInventoryTransactions } from './inventory/InventoryA
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 
 const models = [
   RegisterTenancyModel(InventoryAdjustment),
   RegisterTenancyModel(InventoryAdjustmentEntry),
 ];
 @Module({
-  imports: [BranchesModule, WarehousesModule, LedgerModule, DynamicListModule],
+  imports: [
+    BranchesModule,
+    WarehousesModule,
+    LedgerModule,
+    DynamicListModule,
+    InventoryCostModule,
+  ],
   controllers: [InventoryAdjustmentsController],
   providers: [
     ...models,
@@ -38,7 +45,7 @@ const models = [
     InventoryAdjustmentsGLEntries,
     TenancyContext,
     InventoryAdjustmentInventoryTransactionsSubscriber,
-    InventoryAdjustmentInventoryTransactions
+    InventoryAdjustmentInventoryTransactions,
   ],
   exports: [...models],
 })

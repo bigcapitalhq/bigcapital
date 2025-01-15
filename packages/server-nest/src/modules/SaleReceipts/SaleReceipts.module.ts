@@ -27,6 +27,11 @@ import { AccountsModule } from '../Accounts/Accounts.module';
 import { SaleReceiptInventoryTransactionsSubscriber } from './inventory/SaleReceiptWriteInventoryTransactions';
 import { GetSaleReceiptsService } from './queries/GetSaleReceipts.service';
 import { SaleReceiptMailNotification } from './commands/SaleReceiptMailNotification';
+import { SaleReceiptInventoryTransactions } from './inventory/SaleReceiptInventoryTransactions';
+import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { MailModule } from '../Mail/Mail.module';
+import { MailNotificationModule } from '../MailNotification/MailNotification.module';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -39,7 +44,11 @@ import { SaleReceiptMailNotification } from './commands/SaleReceiptMailNotificat
     PdfTemplatesModule,
     AutoIncrementOrdersModule,
     LedgerModule,
-    AccountsModule
+    AccountsModule,
+    InventoryCostModule,
+    DynamicListModule,
+    MailModule,
+    MailNotificationModule
   ],
   providers: [
     TenancyContext,
@@ -57,9 +66,10 @@ import { SaleReceiptMailNotification } from './commands/SaleReceiptMailNotificat
     SaleReceiptIncrement,
     SaleReceiptGLEntries,
     SaleReceiptGLEntriesSubscriber,
-    SaleReceiptInventoryTransactionsSubscriber,
     GetSaleReceiptsService,
-    SaleReceiptMailNotification
+    SaleReceiptMailNotification,
+    SaleReceiptInventoryTransactions,
+    SaleReceiptInventoryTransactionsSubscriber,
   ],
 })
 export class SaleReceiptsModule {}

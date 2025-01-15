@@ -22,8 +22,8 @@ const models = [
     InventoryCostGLStorage,
     InventoryItemsQuantitySyncService,
     InventoryCostMethod,
-    InventoryTransactionsService
+    InventoryTransactionsService,
   ],
-  exports: [...models],
+  exports: [...models, InventoryTransactionsService],
 })
 export class InventoryCostModule {}

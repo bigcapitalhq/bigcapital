@@ -27,9 +27,13 @@ import { PaymentReceivedInvoiceSync } from './commands/PaymentReceivedInvoiceSyn
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { SendPaymentReceiveMailNotification } from './commands/PaymentReceivedMailNotification';
+import { GetPaymentsReceivedService } from './queries/GetPaymentsReceived.service';
+import { MailNotificationModule } from '../MailNotification/MailNotification.module';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { MailModule } from '../Mail/Mail.module';
 
 @Module({
-  controllers: [PaymentReceivesController],
+  controllers: [PaymentReceivesController,],
   providers: [
     PaymentReceivesApplication,
     CreatePaymentReceivedService,
@@ -49,7 +53,8 @@ import { SendPaymentReceiveMailNotification } from './commands/PaymentReceivedMa
     PaymentReceivedAutoIncrementSubscriber,
     PaymentReceivedGLEntriesSubscriber,
     PaymentReceivedSyncInvoicesSubscriber,
-    SendPaymentReceiveMailNotification
+    SendPaymentReceiveMailNotification,
+    GetPaymentsReceivedService
   ],
   exports: [PaymentReceivesApplication, CreatePaymentReceivedService],
   imports: [
@@ -60,7 +65,10 @@ import { SendPaymentReceiveMailNotification } from './commands/PaymentReceivedMa
     PdfTemplatesModule,
     AutoIncrementOrdersModule,
     LedgerModule,
-    AccountsModule
+    AccountsModule,
+    MailNotificationModule,
+    DynamicListModule,
+    MailModule
   ],
 })
 export class PaymentsReceivedModule {}

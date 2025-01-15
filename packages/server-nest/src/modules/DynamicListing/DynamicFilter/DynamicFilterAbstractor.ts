@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { IDynamicFilter } from './DynamicFilter.types';
 import { MetableModel } from '../types/DynamicList.types';
 

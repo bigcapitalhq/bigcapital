@@ -1,14 +1,18 @@
-import { IInventoryTransactionsDeletedPayload, TInventoryTransactionDirection } from './types/InventoryCost.types';
+// @ts-nocheck
+import { Knex } from 'knex';
+import { Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import {
+  IInventoryTransactionsDeletedPayload,
+  TInventoryTransactionDirection,
+} from './types/InventoryCost.types';
 import { InventoryCostLotTracker } from './models/InventoryCostLotTracker';
 import { InventoryTransaction } from './models/InventoryTransaction';
-import { Knex } from 'knex';
 import { events } from '@/common/events/events';
 import { IInventoryTransactionsCreatedPayload } from './types/InventoryCost.types';
-import { transformItemEntriesToInventory } from "./utils";
+import { transformItemEntriesToInventory } from './utils';
 import { IItemEntryTransactionType } from '../TransactionItemEntry/ItemEntry.types';
 import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
-import { Inject } from '@nestjs/common';
 
 export class InventoryTransactionsService {
   constructor(

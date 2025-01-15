@@ -41,7 +41,7 @@ export class GetPaymentsReceivedService {
         builder.withGraphFetched('depositAccount');
 
         dynamicList.buildQuery()(builder);
-        filterDTO?.filterQuery && filterDTO.filterQuery(builder);
+        filterDTO?.filterQuery && filterDTO.filterQuery(builder as any);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

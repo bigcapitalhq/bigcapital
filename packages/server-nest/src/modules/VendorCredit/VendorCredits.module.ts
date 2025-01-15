@@ -23,6 +23,8 @@ import { AccountsModule } from '../Accounts/Accounts.module';
 import VendorCreditInventoryTransactionsSubscriber from './subscribers/VendorCreditInventoryTransactionsSusbcriber';
 import { VendorCreditInventoryTransactions } from './commands/VendorCreditInventoryTransactions';
 import { GetVendorCreditsService } from './queries/GetVendorCredits.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 
 @Module({
   imports: [
@@ -34,7 +36,9 @@ import { GetVendorCreditsService } from './queries/GetVendorCredits.service';
     BranchesModule,
     WarehousesModule,
     LedgerModule,
-    AccountsModule
+    AccountsModule,
+    DynamicListModule,
+    InventoryCostModule
   ],
   providers: [
     CreateVendorCreditService,

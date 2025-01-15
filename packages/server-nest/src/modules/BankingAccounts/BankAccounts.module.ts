@@ -10,9 +10,17 @@ import { BankAccountsController } from './BankAccounts.controller';
 import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 import { PlaidModule } from '../Plaid/Plaid.module';
 import { BankRulesModule } from '../BankRules/BankRules.module';
+import { BankingTransactionsRegonizeModule } from '../BankingTranasctionsRegonize/BankingTransactionsRegonize.module';
+import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 
 @Module({
-  imports: [BankingPlaidModule, PlaidModule, BankRulesModule],
+  imports: [
+    BankingPlaidModule,
+    PlaidModule,
+    BankRulesModule,
+    BankingTransactionsRegonizeModule,
+    BankingTransactionsModule,
+  ],
   providers: [
     DisconnectBankAccountService,
     RefreshBankAccountService,
@@ -20,7 +28,7 @@ import { BankRulesModule } from '../BankRules/BankRules.module';
     PauseBankAccountFeeds,
     DeleteUncategorizedTransactionsOnAccountDeleting,
     DisconnectPlaidItemOnAccountDeleted,
-    BankAccountsApplication
+    BankAccountsApplication,
   ],
   exports: [BankAccountsApplication],
   controllers: [BankAccountsController],

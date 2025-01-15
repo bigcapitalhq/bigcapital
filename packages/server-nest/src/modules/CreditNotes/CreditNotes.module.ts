@@ -22,6 +22,8 @@ import { CreditNoteGLEntries } from './commands/CreditNoteGLEntries';
 import { CreditNoteGLEntriesSubscriber } from './subscribers/CreditNoteGLEntriesSubscriber';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { GetCreditNotesService } from './queries/GetCreditNotes.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 
 @Module({
   imports: [
@@ -33,7 +35,8 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     TemplateInjectableModule,
     AutoIncrementOrdersModule,
     LedgerModule,
-    AccountsModule
+    AccountsModule,
+    DynamicListModule
   ],
   providers: [
     CreateCreditNoteService,
@@ -43,6 +46,7 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     OpenCreditNoteService,
     DeleteCreditNoteService,
     GetCreditNotePdf,
+    GetCreditNotesService,
     CreditNoteAutoIncrementService,
     GetCreditNoteState,
     CreditNoteApplication,

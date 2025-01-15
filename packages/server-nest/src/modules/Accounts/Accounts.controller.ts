@@ -24,6 +24,7 @@ export class AccountsController {
   constructor(private readonly accountsApplication: AccountsApplication) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create an account' })
   async createAccount(@Body() accountDTO: CreateAccountDTO) {
     return this.accountsApplication.createAccount(accountDTO);
   }

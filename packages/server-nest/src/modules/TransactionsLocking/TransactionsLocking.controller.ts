@@ -6,8 +6,11 @@ import { ICancelTransactionsLockingDTO } from './types/TransactionsLocking.types
 import { ITransactionLockingPartiallyDTO } from './types/TransactionsLocking.types';
 import { QueryTransactionsLocking } from './queries/QueryTransactionsLocking';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { ApiOperation } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('transactions-locking')
+@ApiTags('Transactions Locking')
 @PublicRoute()
 export class TransactionsLockingController {
   constructor(
@@ -16,6 +19,7 @@ export class TransactionsLockingController {
   ) {}
 
   @Put('lock')
+  @ApiOperation({ summary: 'Lock all transactions for a module or all modules' })
   async commandTransactionsLocking(
     @Body('module') module: TransactionsLockingGroup,
     @Body() transactionLockingDTO: ITransactionsLockingAllDTO,
@@ -32,6 +36,7 @@ export class TransactionsLockingController {
   }
 
   @Put('cancel-lock')
+  @ApiOperation({ summary: 'Cancel all transactions locking for a module or all modules' })
   async cancelTransactionLocking(
     @Body('module') module: TransactionsLockingGroup,
     @Body() cancelLockingDTO: ICancelTransactionsLockingDTO,
@@ -47,6 +52,7 @@ export class TransactionsLockingController {
   }
 
   @Put('unlock-partial')
+  @ApiOperation({ summary: 'Partial unlock all transactions locking for a module or all modules' })
   async unlockTransactionsLockingBetweenPeriod(
     @Body('module') module: TransactionsLockingGroup,
     @Body() unlockDTO: ITransactionLockingPartiallyDTO,
@@ -63,6 +69,7 @@ export class TransactionsLockingController {
   }
 
   @Put('cancel-unlock-partial')
+  @ApiOperation({ summary: 'Cancel partial unlocking all transactions locking for a module or all modules' })
   async cancelPartialUnlocking(
     @Body('module') module: TransactionsLockingGroup,
   ) {
@@ -77,11 +84,13 @@ export class TransactionsLockingController {
   }
 
   @Get('/')
+  @ApiOperation({ summary: 'Get all transactions locking meta' })
   async getTransactionLockingMetaList() {
     return await this.queryTransactionsLocking.getTransactionsLockingAll();
   }
 
   @Get(':module')
+  @ApiOperation({ summary: 'Get transactions locking meta for a module' })
   async getTransactionLockingMeta(@Param('module') module: string) {
     return await this.queryTransactionsLocking.getTransactionsLockingModuleMeta(
       module as TransactionsLockingGroup,

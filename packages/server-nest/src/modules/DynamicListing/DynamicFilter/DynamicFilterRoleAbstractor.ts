@@ -1,3 +1,4 @@
+// @ts-nocheck
 import moment from 'moment';
 import * as R from 'ramda';
 import { IFilterRole, IDynamicFilter } from './DynamicFilter.types';

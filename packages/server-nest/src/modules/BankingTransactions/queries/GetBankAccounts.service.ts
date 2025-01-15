@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Injectable, Inject } from '@nestjs/common';
 import { BankAccount } from '../models/BankAccount';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';

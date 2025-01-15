@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Knex } from 'knex';
 import { Injectable } from '@nestjs/common';
 import { VendorCredit } from '../models/VendorCredit';

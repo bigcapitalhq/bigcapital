@@ -10,7 +10,7 @@ import {
 import { WarehousesApplication } from './WarehousesApplication.service';
 import { ICreateWarehouseDTO, IEditWarehouseDTO } from './Warehouse.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('warehouses')
 @ApiTags('warehouses')
@@ -19,6 +19,7 @@ export class WarehousesController {
   constructor(private warehousesApplication: WarehousesApplication) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a warehouse' })
   createWarehouse(@Body() createWarehouseDTO: ICreateWarehouseDTO) {
     return this.warehousesApplication.createWarehouse(createWarehouseDTO);
   }
@@ -35,31 +36,37 @@ export class WarehousesController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a warehouse' })
   deleteWarehouse(@Param('id') warehouseId: string) {
     return this.warehousesApplication.deleteWarehouse(Number(warehouseId));
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a warehouse' })
   getWarehouse(@Param('id') warehouseId: string) {
     return this.warehousesApplication.getWarehouse(Number(warehouseId));
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all warehouses' })
   getWarehouses() {
     return this.warehousesApplication.getWarehouses();
   }
 
   @Post('activate')
+  @ApiOperation({ summary: 'Activate a warehouse' })
   activateWarehouses() {
     return this.warehousesApplication.activateWarehouses();
   }
 
   @Post(':id/mark-primary')
+  @ApiOperation({ summary: 'Mark a warehouse as primary' })
   markWarehousePrimary(@Param('id') warehouseId: string) {
     return this.warehousesApplication.markWarehousePrimary(Number(warehouseId));
   }
 
   @Get('items/:itemId')
+  @ApiOperation({ summary: 'Get item warehouses' })
   getItemWarehouses(@Param('itemId') itemId: string) {
     return this.warehousesApplication.getItemWarehouses(Number(itemId));
   }

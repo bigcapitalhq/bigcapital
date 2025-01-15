@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Knex } from 'knex';
 import { Bill } from '../models/Bill';
 import { Inject, Injectable } from '@nestjs/common';

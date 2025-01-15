@@ -33,11 +33,17 @@ import { InvoiceGLEntriesSubscriber } from './subscribers/InvoiceGLEntriesSubscr
 import { SaleInvoiceGLEntries } from './ledger/InvoiceGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
-import SaleInvoiceWriteoffSubscriber from './subscribers/SaleInvoiceWriteoffSubscriber';
+import { SaleInvoiceWriteoffSubscriber } from './subscribers/SaleInvoiceWriteoffSubscriber';
 import { SaleInvoiceWriteoffGLStorage } from './commands/writeoff/SaleInvoiceWriteoffGLStorage';
 import { InvoiceInventoryTransactions } from './commands/inventory/InvoiceInventoryTransactions';
-import { SendSaleEstimateMail } from '../SaleEstimates/commands/SendSaleEstimateMail';
 import { MailModule } from '../Mail/Mail.module';
+import { GetSaleInvoicesService } from './queries/GetSaleInvoices';
+import { SendSaleInvoiceMail } from './commands/SendSaleInvoiceMail';
+import { GetSaleInvoiceMailState } from './queries/GetSaleInvoiceMailState.service';
+import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
+import { SendSaleInvoiceMailCommon } from './commands/SendInvoiceInvoiceMailCommon.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { MailNotificationModule } from '../MailNotification/MailNotification.module';
 
 @Module({
   imports: [
@@ -51,6 +57,9 @@ import { MailModule } from '../Mail/Mail.module';
     LedgerModule,
     AccountsModule,
     MailModule,
+    MailNotificationModule,
+    InventoryCostModule,
+    DynamicListModule
   ],
   controllers: [SaleInvoicesController],
   providers: [
@@ -82,7 +91,10 @@ import { MailModule } from '../Mail/Mail.module';
     SaleInvoiceWriteoffGLStorage,
     SaleInvoiceWriteoffSubscriber,
     InvoiceInventoryTransactions,
-    SendSaleEstimateMail,
+    SendSaleInvoiceMail,
+    GetSaleInvoicesService,
+    GetSaleInvoiceMailState,
+    SendSaleInvoiceMailCommon
   ],
 })
 export class SaleInvoicesModule {}

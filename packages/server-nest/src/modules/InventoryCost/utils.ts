@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { chain } from 'lodash';
 import { pick } from 'lodash';
 import { IItemEntryTransactionType } from '../TransactionItemEntry/ItemEntry.types';

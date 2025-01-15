@@ -1,14 +1,15 @@
+// @ts-nocheck
 import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import { InventoryService } from '@/modules/InventoryCost/Inventory';
-import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { SaleReceipt } from '../models/SaleReceipt';
+import { InventoryTransactionsService } from '@/modules/InventoryCost/InventoryTransactions.service';
+import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 
 @Injectable()
 export class SaleReceiptInventoryTransactions {
   constructor(
     private readonly itemsEntriesService: ItemsEntriesService,
-    private readonly inventoryService: InventoryService,
+    private readonly inventoryService: InventoryTransactionsService,
   ) {}
 
   /**

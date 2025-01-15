@@ -8,7 +8,7 @@ import { SaleInvoiceWriteoffGLStorage } from '../commands/writeoff/SaleInvoiceWr
 import { events } from '@/common/events/events';
 
 @Injectable()
-export default class SaleInvoiceWriteoffSubscriber {
+export class SaleInvoiceWriteoffSubscriber {
   constructor(private readonly writeGLStorage: SaleInvoiceWriteoffGLStorage) {}
 
   /**

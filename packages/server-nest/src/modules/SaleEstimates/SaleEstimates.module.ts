@@ -31,6 +31,8 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
 import { MailModule } from '../Mail/Mail.module';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
 import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
+import { SaleEstimatePdfTemplate } from '../SaleInvoices/queries/SaleEstimatePdfTemplate.service';
+import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 // import { SaleEstimateNotifyBySms } from './commands/SaleEstimateSmsNotify';
 
 @Module({
@@ -40,7 +42,8 @@ import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectab
     MailNotificationModule,
     MailModule,
     ChromiumlyTenancyModule,
-    TemplateInjectableModule
+    TemplateInjectableModule,
+    PdfTemplatesModule
   ],
   controllers: [SaleEstimatesController],
   providers: [
@@ -69,6 +72,7 @@ import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectab
     SaleEstimatesApplication,
     SendSaleEstimateMail,
     GetSaleEstimatePdf,
+    SaleEstimatePdfTemplate
     // SaleEstimateNotifyBySms,
   ],
 })
