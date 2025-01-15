@@ -31,7 +31,7 @@ export const UnearnedRevenueAccount = {
   predefined: true,
 };
 
-export const PrepardExpenses = {
+export const PrepaidExpenses = {
   name: 'Prepaid Expenses',
   slug: 'prepaid-expenses',
   account_type: 'other-current-asset',
@@ -388,7 +388,7 @@ export default [
     predefined: 0,
   },
   UnearnedRevenueAccount,
-  PrepardExpenses,
+  PrepaidExpenses,
   DiscountExpenseAccount,
   PurchaseDiscountAccount,
   OtherChargesAccount,
