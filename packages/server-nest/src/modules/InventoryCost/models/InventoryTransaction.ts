@@ -4,8 +4,9 @@ import moment, { unitOfTime } from 'moment';
 import { BaseModel } from '@/models/Model';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
 import { TInventoryTransactionDirection } from '../types/InventoryCost.types';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class InventoryTransaction extends BaseModel {
+export class InventoryTransaction extends TenantBaseModel {
   date: Date | string;
   direction: TInventoryTransactionDirection;
   itemId: number;
@@ -39,7 +40,7 @@ export class InventoryTransaction extends BaseModel {
    * Retrieve formatted reference type.
    * @return {string}
    */
-  get transcationTypeFormatted() {
+  get transcationTypeFormatted(): string {
     return getTransactionTypeLabel(this.transactionType);
   }
 

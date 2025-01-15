@@ -1,11 +1,4 @@
-/* eslint-disable global-require */
 import { Model } from 'objection';
-// import {
-//   getCashflowAccountTransactionsTypes,
-//   getCashflowTransactionType,
-// } from '@/services/Cashflow/utils';
-// import { CASHFLOW_DIRECTION } from '@/services/Cashflow/constants';
-// import { getCashflowTransactionFormattedType } from '@/utils/transactions-types';
 import { BaseModel } from '@/models/Model';
 import {
   getCashflowAccountTransactionsTypes,

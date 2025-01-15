@@ -16,9 +16,10 @@ import { ExpenseGLEntriesService } from './subscribers/ExpenseGLEntries.service'
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { GetExpensesService } from './queries/GetExpenses.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 
 @Module({
-  imports: [LedgerModule, BranchesModule],
+  imports: [LedgerModule, BranchesModule, DynamicListModule],
   controllers: [ExpensesController],
   exports: [
     CreateExpense,

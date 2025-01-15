@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
 import * as moment from 'moment';
 import { omit } from 'lodash';
@@ -20,6 +20,7 @@ import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrati
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ERRORS } from '../constants/InventoryAdjustments.constants';
 
+@Injectable()
 export class CreateQuickInventoryAdjustmentService {
   constructor(
     @Inject(InventoryAdjustment.name)

@@ -6,6 +6,8 @@ import { InventoryTransaction } from './models/InventoryTransaction';
 import { InventoryCostGLBeforeWriteSubscriber } from './subscribers/InventoryCostGLBeforeWriteSubscriber';
 import { InventoryItemsQuantitySyncService } from './InventoryItemsQuantitySync.service';
 import { InventoryCostMethod } from './InventoryCostMethod';
+import { InventoryTransactionsService } from './InventoryTransactions.service';
+import { LedgerModule } from '../Ledger/Ledger.module';
 
 const models = [
   RegisterTenancyModel(InventoryCostLotTracker),
@@ -13,12 +15,14 @@ const models = [
 ];
 
 @Module({
+  imports: [LedgerModule],
   providers: [
     ...models,
     InventoryCostGLBeforeWriteSubscriber,
     InventoryCostGLStorage,
     InventoryItemsQuantitySyncService,
     InventoryCostMethod,
+    InventoryTransactionsService
   ],
   exports: [...models],
 })

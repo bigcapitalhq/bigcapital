@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import * as moment from 'moment';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
@@ -12,6 +12,7 @@ import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants/InventoryAdjustments.constants';
 
+@Injectable()
 export class PublishInventoryAdjustmentService {
   constructor(
     private readonly eventEmitter: EventEmitter2,

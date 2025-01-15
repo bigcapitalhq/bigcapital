@@ -23,9 +23,18 @@ import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { BillWriteInventoryTransactionsSubscriber } from './subscribers/BillWriteInventoryTransactionsSubscriber';
 import { BillInventoryTransactions } from './commands/BillInventoryTransactions';
+import { GetBillsService } from './queries/GetBills.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 
 @Module({
-  imports: [BillLandedCostsModule, LedgerModule, AccountsModule],
+  imports: [
+    BillLandedCostsModule,
+    LedgerModule,
+    AccountsModule,
+    DynamicListModule,
+    InventoryCostModule,
+  ],
   providers: [
     TenancyContext,
     BillsApplication,
@@ -39,6 +48,7 @@ import { BillInventoryTransactions } from './commands/BillInventoryTransactions'
     GetDueBills,
     OpenBillService,
     GetBill,
+    GetBillsService,
     DeleteBill,
     BillDTOTransformer,
     BillsValidators,

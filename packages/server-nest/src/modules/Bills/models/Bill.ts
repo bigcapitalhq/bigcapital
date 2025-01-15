@@ -13,8 +13,9 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { DiscountType } from '@/common/types/Discount';
 import type { Knex, QueryBuilder } from 'knex';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class Bill extends BaseModel {
+export class Bill extends TenantBaseModel {
   public amount: number;
   public paymentAmount: number;
   public landedCostAmount: number;
@@ -95,7 +96,7 @@ export class Bill extends BaseModel {
    * Invoice amount in base currency.
    * @returns {number}
    */
-  get amountLocal() {
+  get amountLocal(): number {
     return this.amount * this.exchangeRate;
   }
 
@@ -103,7 +104,7 @@ export class Bill extends BaseModel {
    * Subtotal. (Tax inclusive) if the tax inclusive is enabled.
    * @returns {number}
    */
-  get subtotal() {
+  get subtotal(): number {
     return this.amount;
   }
 
@@ -111,7 +112,7 @@ export class Bill extends BaseModel {
    * Subtotal in base currency. (Tax inclusive) if the tax inclusive is enabled.
    * @returns {number}
    */
-  get subtotalLocal() {
+  get subtotalLocal(): number {
     return this.amountLocal;
   }
 
@@ -119,7 +120,7 @@ export class Bill extends BaseModel {
    * Sale invoice amount excluding tax.
    * @returns {number}
    */
-  get subtotalExcludingTax() {
+  get subtotalExcludingTax(): number {
     return this.isInclusiveTax
       ? this.subtotal - this.taxAmountWithheld
       : this.subtotal;
@@ -129,7 +130,7 @@ export class Bill extends BaseModel {
    * Tax amount withheld in base currency.
    * @returns {number}
    */
-  get taxAmountWithheldLocal() {
+  get taxAmountWithheldLocal(): number {
     return this.taxAmountWithheld * this.exchangeRate;
   }
 
@@ -137,7 +138,7 @@ export class Bill extends BaseModel {
    * Discount amount.
    * @returns {number}
    */
-  get discountAmount() {
+  get discountAmount(): number {
     return this.discountType === DiscountType.Amount
       ? this.discount
       : this.subtotal * (this.discount / 100);
@@ -147,7 +148,7 @@ export class Bill extends BaseModel {
    * Discount amount in local currency.
    * @returns {number | null}
    */
-  get discountAmountLocal() {
+  get discountAmountLocal(): number | null {
     return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
   }
 
@@ -188,6 +189,132 @@ export class Bill extends BaseModel {
    */
   get totalLocal(): number {
     return this.total * this.exchangeRate;
+  }
+
+  /**
+   * Invoice amount in organization base currency.
+   * @deprecated
+   * @returns {number}
+   */
+  get localAmount(): number {
+    return this.amountLocal;
+  }
+
+  /**
+   * Retrieves the local allocated cost amount.
+   * @returns {number}
+   */
+  get localAllocatedCostAmount(): number {
+    return this.allocatedCostAmount * this.exchangeRate;
+  }
+
+  /**
+   * Retrieves the local landed cost amount.
+   * @returns {number}
+   */
+  get localLandedCostAmount(): number {
+    return this.landedCostAmount * this.exchangeRate;
+  }
+
+  /**
+   * Retrieves the local unallocated cost amount.
+   * @returns {number}
+   */
+  get localUnallocatedCostAmount(): number {
+    return this.unallocatedCostAmount * this.exchangeRate;
+  }
+
+  /**
+   * Retrieve the balance of bill.
+   * @return {number}
+   */
+  get balance(): number {
+    return this.paymentAmount + this.creditedAmount;
+  }
+
+  /**
+   * Due amount of the given.
+   * @return {number}
+   */
+  get dueAmount(): number {
+    return Math.max(this.total - this.balance, 0);
+  }
+
+  /**
+   * Detarmine whether the bill is open.
+   * @return {boolean}
+   */
+  get isOpen(): boolean {
+    return !!this.openedAt;
+  }
+
+  /**
+   * Deetarmine whether the bill paid partially.
+   * @return {boolean}
+   */
+  get isPartiallyPaid(): boolean {
+    return this.dueAmount !== this.total && this.dueAmount > 0;
+  }
+
+  /**
+   * Deetarmine whether the bill paid fully.
+   * @return {boolean}
+   */
+  get isFullyPaid(): boolean {
+    return this.dueAmount === 0;
+  }
+
+  /**
+   * Detarmines whether the bill paid fully or partially.
+   * @return {boolean}
+   */
+  get isPaid(): boolean {
+    return this.isPartiallyPaid || this.isFullyPaid;
+  }
+
+  /**
+   * Retrieve the remaining days in number
+   * @return {number|null}
+   */
+  get remainingDays(): number | null {
+    const currentMoment = moment();
+    const dueDateMoment = moment(this.dueDate);
+
+    return Math.max(dueDateMoment.diff(currentMoment, 'days'), 0);
+  }
+
+  /**
+   * Retrieve the overdue days in number.
+   * @return {number|null}
+   */
+  get overdueDays(): number | null {
+    const currentMoment = moment();
+    const dueDateMoment = moment(this.dueDate);
+
+    return Math.max(currentMoment.diff(dueDateMoment, 'days'), 0);
+  }
+
+  /**
+   * Detarmines the due date is over.
+   * @return {boolean}
+   */
+  get isOverdue(): boolean {
+    return this.overdueDays > 0;
+  }
+
+  /**
+   * Retrieve the unallocated cost amount.
+   * @return {number}
+   */
+  get unallocatedCostAmount(): number {
+    return Math.max(this.landedCostAmount - this.allocatedCostAmount, 0);
+  }
+
+  /**
+   * Retrieves the calculated amount which have not been invoiced.
+   */
+  get billableAmount(): number {
+    return Math.max(this.total - this.invoicedAmount, 0);
   }
 
   /**
@@ -336,132 +463,6 @@ export class Bill extends BaseModel {
   }
 
   /**
-   * Invoice amount in organization base currency.
-   * @deprecated
-   * @returns {number}
-   */
-  get localAmount() {
-    return this.amountLocal;
-  }
-
-  /**
-   * Retrieves the local allocated cost amount.
-   * @returns {number}
-   */
-  get localAllocatedCostAmount() {
-    return this.allocatedCostAmount * this.exchangeRate;
-  }
-
-  /**
-   * Retrieves the local landed cost amount.
-   * @returns {number}
-   */
-  get localLandedCostAmount() {
-    return this.landedCostAmount * this.exchangeRate;
-  }
-
-  /**
-   * Retrieves the local unallocated cost amount.
-   * @returns {number}
-   */
-  get localUnallocatedCostAmount() {
-    return this.unallocatedCostAmount * this.exchangeRate;
-  }
-
-  /**
-   * Retrieve the balance of bill.
-   * @return {number}
-   */
-  get balance() {
-    return this.paymentAmount + this.creditedAmount;
-  }
-
-  /**
-   * Due amount of the given.
-   * @return {number}
-   */
-  get dueAmount() {
-    return Math.max(this.total - this.balance, 0);
-  }
-
-  /**
-   * Detarmine whether the bill is open.
-   * @return {boolean}
-   */
-  get isOpen() {
-    return !!this.openedAt;
-  }
-
-  /**
-   * Deetarmine whether the bill paid partially.
-   * @return {boolean}
-   */
-  get isPartiallyPaid() {
-    return this.dueAmount !== this.total && this.dueAmount > 0;
-  }
-
-  /**
-   * Deetarmine whether the bill paid fully.
-   * @return {boolean}
-   */
-  get isFullyPaid() {
-    return this.dueAmount === 0;
-  }
-
-  /**
-   * Detarmines whether the bill paid fully or partially.
-   * @return {boolean}
-   */
-  get isPaid() {
-    return this.isPartiallyPaid || this.isFullyPaid;
-  }
-
-  /**
-   * Retrieve the remaining days in number
-   * @return {number|null}
-   */
-  get remainingDays() {
-    const currentMoment = moment();
-    const dueDateMoment = moment(this.dueDate);
-
-    return Math.max(dueDateMoment.diff(currentMoment, 'days'), 0);
-  }
-
-  /**
-   * Retrieve the overdue days in number.
-   * @return {number|null}
-   */
-  get overdueDays() {
-    const currentMoment = moment();
-    const dueDateMoment = moment(this.dueDate);
-
-    return Math.max(currentMoment.diff(dueDateMoment, 'days'), 0);
-  }
-
-  /**
-   * Detarmines the due date is over.
-   * @return {boolean}
-   */
-  get isOverdue() {
-    return this.overdueDays > 0;
-  }
-
-  /**
-   * Retrieve the unallocated cost amount.
-   * @return {number}
-   */
-  get unallocatedCostAmount() {
-    return Math.max(this.landedCostAmount - this.allocatedCostAmount, 0);
-  }
-
-  /**
-   * Retrieves the calculated amount which have not been invoiced.
-   */
-  get billableAmount() {
-    return Math.max(this.total - this.invoicedAmount, 0);
-  }
-
-  /**
    * Bill model settings.
    */
   // static get meta() {
@@ -482,7 +483,9 @@ export class Bill extends BaseModel {
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
-    const { TaxRateTransaction } = require('../../TaxRates/models/TaxRateTransaction.model');
+    const {
+      TaxRateTransaction,
+    } = require('../../TaxRates/models/TaxRateTransaction.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 

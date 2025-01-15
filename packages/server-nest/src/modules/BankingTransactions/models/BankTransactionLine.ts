@@ -1,9 +1,8 @@
 /* eslint-disable global-require */
 import { Model } from 'objection';
-// import TenantModel from 'models/TenantModel';
-import { BaseModel } from '@/models/Model';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class BankTransactionLine extends BaseModel{
+export class BankTransactionLine extends TenantBaseModel{
   /**
    * Table name.
    */
@@ -16,6 +15,14 @@ export class BankTransactionLine extends BaseModel{
    */
   static get timestamps() {
     return ['createdAt', 'updatedAt'];
+  }
+
+  /**
+   * Determine whether the model is resourceable.
+   * @returns {boolean}
+   */
+  static get resourceable(): boolean {
+    return false;
   }
 
   /**

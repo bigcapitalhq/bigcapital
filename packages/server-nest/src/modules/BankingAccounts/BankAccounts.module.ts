@@ -18,7 +18,7 @@ import { BankRulesModule } from '../BankRules/BankRules.module';
     RefreshBankAccountService,
     ResumeBankAccountFeedsService,
     PauseBankAccountFeeds,
-    // DeleteUncategorizedTransactionsOnAccountDeleting,
+    DeleteUncategorizedTransactionsOnAccountDeleting,
     DisconnectPlaidItemOnAccountDeleted,
     BankAccountsApplication
   ],

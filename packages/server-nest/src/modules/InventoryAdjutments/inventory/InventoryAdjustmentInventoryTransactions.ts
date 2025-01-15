@@ -1,13 +1,13 @@
+import { Injectable } from "@nestjs/common";
 import { Knex } from "knex";
 import { InventoryAdjustment } from "../models/InventoryAdjustment";
 import { InventoryTransaction } from "@/modules/InventoryCost/models/InventoryTransaction";
-import { InventoryService } from "@/modules/InventoryCost/Inventory";
-import { Injectable } from "@nestjs/common";
+import { InventoryTransactionsService } from "@/modules/InventoryCost/InventoryTransactions.service";
 
 @Injectable()
 export class InventoryAdjustmentInventoryTransactions {
   constructor(
-    private readonly inventoryService: InventoryService
+    private readonly inventoryService: InventoryTransactionsService 
   ) {}
   
   /**

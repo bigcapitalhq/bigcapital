@@ -11,6 +11,7 @@ import { CommandTaxRatesValidators } from './commands/CommandTaxRatesValidator.s
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TaxRatesApplication } from './TaxRate.application';
 import { ItemEntriesTaxTransactions } from './ItemEntriesTaxTransactions.service';
+import { GetTaxRatesService } from './queries/GetTaxRates.service';
 
 @Module({
   imports: [],
@@ -20,6 +21,7 @@ import { ItemEntriesTaxTransactions } from './ItemEntriesTaxTransactions.service
     EditTaxRateService,
     DeleteTaxRateService,
     GetTaxRateService,
+    GetTaxRatesService,
     ActivateTaxRateService,
     InactivateTaxRateService,
     CommandTaxRatesValidators,

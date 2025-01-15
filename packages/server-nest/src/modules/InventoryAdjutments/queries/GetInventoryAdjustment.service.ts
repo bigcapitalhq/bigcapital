@@ -1,8 +1,9 @@
+import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
 import { InventoryAdjustmentTransformer } from '../InventoryAdjustmentTransformer';
-import { Inject } from '@nestjs/common';
 
+@Injectable()
 export class GetInventoryAdjustmentService {
   constructor(
     private readonly transformer: TransformerInjectable,

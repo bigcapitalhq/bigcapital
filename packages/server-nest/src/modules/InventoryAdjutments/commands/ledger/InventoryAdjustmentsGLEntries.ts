@@ -1,10 +1,11 @@
 import { Knex } from 'knex';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { LedgerStorageService } from '../../../Ledger/LedgerStorage.service';
 import { InventoryAdjustment } from '../../models/InventoryAdjustment';
 import { TenancyContext } from '../../../Tenancy/TenancyContext.service';
 import { InventoryAdjustmentsGL } from './InventoryAdjustmentGL';
 
+@Injectable()
 export class InventoryAdjustmentsGLEntries {
   constructor(
     private readonly ledgerStorage: LedgerStorageService,

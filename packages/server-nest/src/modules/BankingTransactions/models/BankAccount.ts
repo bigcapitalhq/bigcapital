@@ -45,7 +45,7 @@ export class BankAccount extends TenantBaseModel {
   /**
    * Retrieve account type label.
    */
-  get accountTypeLabel() {
+  get accountTypeLabel(): string {
     return AccountTypesUtils.getType(this.accountType, 'label');
   }
 

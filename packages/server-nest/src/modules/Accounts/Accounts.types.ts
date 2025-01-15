@@ -41,6 +41,7 @@ export interface IAccountEventCreatingPayload {
   accountDTO: any;
   trx: Knex.Transaction;
 }
+
 export interface IAccountEventCreatedPayload {
   account: Account;
   accountId: number;

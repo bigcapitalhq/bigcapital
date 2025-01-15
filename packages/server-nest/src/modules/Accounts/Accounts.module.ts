@@ -15,12 +15,14 @@ import { GetAccountTypesService } from './GetAccountTypes.service';
 import { GetAccountTransactionsService } from './GetAccountTransactions.service';
 import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { BankAccount } from '../BankingTransactions/models/BankAccount';
+import { GetAccountsService } from './GetAccounts.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 // import { GetAccountsService } from './GetAccounts.service';
 
 const models = [RegisterTenancyModel(BankAccount)];
 
 @Module({
-  imports: [TenancyDatabaseModule],
+  imports: [TenancyDatabaseModule, DynamicListModule],
   controllers: [AccountsController],
   providers: [
     AccountsApplication,
@@ -35,6 +37,7 @@ const models = [RegisterTenancyModel(BankAccount)];
     ActivateAccount,
     GetAccountTypesService,
     GetAccountTransactionsService,
+    GetAccountsService,
     ...models,
   ],
   exports: [AccountRepository, CreateAccountService, ...models],

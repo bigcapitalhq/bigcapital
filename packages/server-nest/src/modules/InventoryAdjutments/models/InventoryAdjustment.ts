@@ -3,21 +3,21 @@ import { InventoryAdjustmentEntry } from './InventoryAdjustmentEntry';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
 export class InventoryAdjustment extends TenantBaseModel {
-  date!: string;
-  type!: string;
-  adjustmentAccountId!: number;
-  reason?: string;
-  referenceNo!: string;
-  description?: string;
-  userId!: number;
-  publishedAt?: string;
+  public readonly date!: string;
+  public readonly type!: string;
+  public readonly adjustmentAccountId!: number;
+  public readonly reason?: string;
+  public readonly referenceNo!: string;
+  public readonly description?: string;
+  public readonly userId!: number;
+  public readonly publishedAt?: string;
 
-  branchId!: number;
-  warehouseId!: number;
+  public readonly branchId!: number;
+  public readonly warehouseId!: number;
 
-  createdAt!: Date | string;
+  public readonly createdAt!: Date | string;
 
-  entries: InventoryAdjustmentEntry[];
+  public readonly entries: InventoryAdjustmentEntry[];
 
   /**
    * Table name

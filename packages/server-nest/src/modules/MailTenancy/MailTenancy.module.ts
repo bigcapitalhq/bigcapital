@@ -3,7 +3,7 @@ import { MailTenancy } from './MailTenancy.service';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Module({
-  imports: [],
   providers: [MailTenancy, TenancyContext],
+  exports: [MailTenancy],
 })
 export class MailTenancyModule {}

@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
 import { IPaginationMeta } from '@/interfaces/Model';
 import { InventoryAdjustmentTransformer } from '../InventoryAdjustmentTransformer';
@@ -7,9 +7,10 @@ import { IInventoryAdjustmentsFilter } from '../types/InventoryAdjustments.types
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 
+@Injectable()
 export class GetInventoryAdjustmentsService {
   constructor(
-    public readonly transformer: TransformerInjectable,
+    private readonly transformer: TransformerInjectable,
     private readonly dynamicListService: DynamicListService,
 
     @Inject(InventoryAdjustment.name)

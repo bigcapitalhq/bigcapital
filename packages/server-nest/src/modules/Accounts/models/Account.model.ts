@@ -33,9 +33,10 @@ export class Account extends TenantBaseModel {
   public bankBalance!: number;
   public lastFeedsUpdatedAt!: string | Date | null;
   public amount!: number;
-  public plaidItemId!: number;
+  public plaidItemId!: string;
   public plaidAccountId!: string | null;
   public isFeedsActive!: boolean;
+  public isSyncingOwner!: boolean;
   public plaidItem!: PlaidItem;
 
   /**

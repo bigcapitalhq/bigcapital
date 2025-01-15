@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
@@ -10,6 +10,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { InventoryAdjustmentEntry } from '../models/InventoryAdjustmentEntry';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
 
+@Injectable()
 export class DeleteInventoryAdjustmentService {
   constructor(
     private readonly eventEmitter: EventEmitter2,

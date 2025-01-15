@@ -24,11 +24,24 @@ import { DeleteSaleEstimate } from './commands/DeleteSaleEstimate.service';
 import { GetSaleEstimate } from './queries/GetSaleEstimate.service';
 import { GetSaleEstimateState } from './queries/GetSaleEstimateState.service';
 import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
+import { GetSaleEstimatesService } from './queries/GetSaleEstimates.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { GetSaleEstimatePdf } from './queries/GetSaleEstimatePdf';
+import { MailNotificationModule } from '../MailNotification/MailNotification.module';
+import { MailModule } from '../Mail/Mail.module';
+import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
+import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
 // import { SaleEstimateNotifyBySms } from './commands/SaleEstimateSmsNotify';
-// import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
-//
+
 @Module({
-  imports: [TenancyDatabaseModule],
+  imports: [
+    TenancyDatabaseModule,
+    DynamicListModule,
+    MailNotificationModule,
+    MailModule,
+    ChromiumlyTenancyModule,
+    TemplateInjectableModule
+  ],
   controllers: [SaleEstimatesController],
   providers: [
     AutoIncrementOrdersService,
@@ -39,6 +52,7 @@ import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
     EditSaleEstimate,
     DeleteSaleEstimate,
     GetSaleEstimate,
+    GetSaleEstimatesService,
     GetSaleEstimateState,
     ApproveSaleEstimateService,
     DeliverSaleEstimateService,
@@ -54,6 +68,7 @@ import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
     TransformerInjectable,
     SaleEstimatesApplication,
     SendSaleEstimateMail,
+    GetSaleEstimatePdf,
     // SaleEstimateNotifyBySms,
   ],
 })

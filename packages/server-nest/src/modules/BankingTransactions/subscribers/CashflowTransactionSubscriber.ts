@@ -6,7 +6,7 @@ import { events } from '@/common/events/events';
 import { ICommandCashflowCreatedPayload, ICommandCashflowDeletedPayload } from '../types/BankingTransactions.types';
 
 @Injectable()
-export default class BankingTransactionGLEntriesSubscriber {
+export class BankingTransactionGLEntriesSubscriber {
   /**
    * @param {BankTransactionGLEntriesService} bankTransactionGLEntries - Bank transaction GL entries service.
    * @param {BankTransactionAutoIncrement} cashflowTransactionAutoIncrement - Cashflow transaction auto increment service.

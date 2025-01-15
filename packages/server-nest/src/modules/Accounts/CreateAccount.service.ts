@@ -1,14 +1,11 @@
-
 import { Inject, Injectable } from '@nestjs/common';
 import { kebabCase } from 'lodash';
 import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
-  // IAccount,
-  // IAccountEventCreatedPayload,
-  // IAccountCreateDTO,
   IAccountEventCreatingPayload,
   CreateAccountParams,
+  IAccountEventCreatedPayload,
 } from './Accounts.types';
 import { CommandAccountValidators } from './CommandAccountValidators.service';
 import { Account } from './models/Account.model';
@@ -16,6 +13,7 @@ import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { events } from '@/common/events/events';
 import { CreateAccountDTO } from './CreateAccount.dto';
+import { PartialModelObject } from 'objection';
 
 @Injectable()
 export class CreateAccountService {
@@ -80,7 +78,7 @@ export class CreateAccountService {
   private transformDTOToModel = (
     createAccountDTO: CreateAccountDTO,
     baseCurrency: string,
-  ) => {
+  ): PartialModelObject<Account> => {
     return {
       ...createAccountDTO,
       slug: kebabCase(createAccountDTO.name),
@@ -127,11 +125,11 @@ export class CreateAccountService {
         ...accountInputModel,
       });
       // Triggers `onAccountCreated` event.
-      // await this.eventEmitter.emitAsync(events.accounts.onCreated, {
-      //   account,
-      //   accountId: account.id,
-      //   trx,
-      // } as IAccountEventCreatedPayload);
+      await this.eventEmitter.emitAsync(events.accounts.onCreated, {
+        account,
+        accountId: account.id,
+        trx,
+      } as IAccountEventCreatedPayload);
 
       return account;
     }, trx);
