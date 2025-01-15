@@ -119,4 +119,41 @@ describe('Sale Estimates (e2e)', () => {
       .set('organization-id', orgainzationId)
       .expect(200);
   });
+
+  it('/sale-estimates (GET)', async () => {
+    return request(app.getHttpServer())
+      .get('/sale-estimates')
+      .set('organization-id', orgainzationId)
+      .expect(200);
+  });
+
+  it('/sale-estimates/:id/mail (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-estimates')
+      .set('organization-id', orgainzationId)
+      .send(makeEstimateRequest());
+
+    return request(app.getHttpServer())
+      .get(`/sale-estimates/${response.body.id}/mail`)
+      .set('organization-id', orgainzationId)
+      .expect(200);
+  });
+
+  it('/sale-estimates/:id/mail (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-estimates')
+      .set('organization-id', orgainzationId)
+      .send(makeEstimateRequest());
+
+    return request(app.getHttpServer())
+      .post(`/sale-estimates/${response.body.id}/mail`)
+      .set('organization-id', orgainzationId)
+      .send({
+        subject: 'Email subject from here',
+        to: 'a.bouhuolia@gmail.com',
+        body: 'asfdasdf',
+        attachInvoice: false,
+      })
+      .expect(200);
+  });
 });

@@ -16,7 +16,7 @@ import {
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { IPaginationMeta } from '@/interfaces/Model';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('inventory-adjustments')
 @ApiTags('inventory-adjustments')
@@ -28,6 +28,10 @@ export class InventoryAdjustmentsController {
 
   @Post('quick')
   @ApiOperation({ summary: 'Create a quick inventory adjustment.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The inventory adjustment has been successfully created.',
+  })
   public async createQuickInventoryAdjustment(
     @Body() quickAdjustmentDTO: IQuickInventoryAdjustmentDTO,
   ): Promise<InventoryAdjustment> {
@@ -38,6 +42,10 @@ export class InventoryAdjustmentsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete the given inventory adjustment.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The inventory adjustment has been successfully deleted.',
+  })
   public async deleteInventoryAdjustment(
     @Param('id') inventoryAdjustmentId: number,
   ): Promise<void> {
@@ -48,6 +56,10 @@ export class InventoryAdjustmentsController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the inventory adjustments.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The inventory adjustments have been successfully retrieved.',
+  })
   public async getInventoryAdjustments(
     @Query() filterDTO: IInventoryAdjustmentsFilter,
   ): Promise<{
@@ -61,6 +73,11 @@ export class InventoryAdjustmentsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieves the inventory adjustment details.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The inventory adjustment details have been successfully retrieved.',
+  })
   public async getInventoryAdjustment(
     @Param('id') inventoryAdjustmentId: number,
   ): Promise<InventoryAdjustment> {
@@ -71,6 +88,10 @@ export class InventoryAdjustmentsController {
 
   @Put(':id/publish')
   @ApiOperation({ summary: 'Publish the given inventory adjustment.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The inventory adjustment has been successfully published.',
+  })
   public async publishInventoryAdjustment(
     @Param('id') inventoryAdjustmentId: number,
   ): Promise<void> {

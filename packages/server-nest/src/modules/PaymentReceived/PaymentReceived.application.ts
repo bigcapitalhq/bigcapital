@@ -1,24 +1,19 @@
 import {
   IPaymentReceivedCreateDTO,
   IPaymentReceivedEditDTO,
-  IPaymentReceivedSmsDetails,
   IPaymentsReceivedFilter,
-  // IPaymentsReceivedFilter,
-  // ISystemUser,
-  // PaymentReceiveMailOptsDTO,
+  PaymentReceiveMailOptsDTO,
 } from './types/PaymentReceived.types';
 import { Injectable } from '@nestjs/common';
 import { CreatePaymentReceivedService } from './commands/CreatePaymentReceived.serivce';
 import { EditPaymentReceivedService } from './commands/EditPaymentReceived.service';
 import { DeletePaymentReceivedService } from './commands/DeletePaymentReceived.service';
-// import { GetPaymentReceives } from './queries/GetPaymentsReceived.service';
 import { GetPaymentReceivedService } from './queries/GetPaymentReceived.service';
 import { GetPaymentReceivedInvoices } from './queries/GetPaymentReceivedInvoices.service';
-// import { PaymentReceiveNotifyBySms } from './PaymentReceivedSmsNotify';
 import { GetPaymentReceivedPdfService } from './queries/GetPaymentReceivedPdf.service';
-// import { SendPaymentReceiveMailNotification } from './PaymentReceivedMailNotification';
 import { GetPaymentReceivedStateService } from './queries/GetPaymentReceivedState.service';
 import { GetPaymentsReceivedService } from './queries/GetPaymentsReceived.service';
+import { SendPaymentReceiveMailNotification } from './commands/PaymentReceivedMailNotification';
 
 @Injectable()
 export class PaymentReceivesApplication {
@@ -29,8 +24,7 @@ export class PaymentReceivesApplication {
     private getPaymentsReceivedService: GetPaymentsReceivedService,
     private getPaymentReceivedService: GetPaymentReceivedService,
     private getPaymentReceiveInvoicesService: GetPaymentReceivedInvoices,
-    // private paymentSmsNotify: PaymentReceiveNotifyBySms,
-    // private paymentMailNotify: SendPaymentReceiveMailNotification,
+    private sendPaymentReceiveMailNotification: SendPaymentReceiveMailNotification,
     private getPaymentReceivePdfService: GetPaymentReceivedPdfService,
     private getPaymentReceivedStateService: GetPaymentReceivedStateService,
   ) {}
@@ -104,54 +98,31 @@ export class PaymentReceivesApplication {
   }
 
   /**
-   * Notify customer via sms about payment receive details.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} paymentReceiveid - Payment receive id.
-   */
-  // public notifyPaymentBySms(tenantId: number, paymentReceiveid: number) {
-  //   return this.paymentSmsNotify.notifyBySms(tenantId, paymentReceiveid);
-  // }
-
-  /**
-   * Retrieve the SMS details of the given invoice.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} paymentReceiveid - Payment receive id.
-   */
-  // public getPaymentSmsDetails = async (
-  //   tenantId: number,
-  //   paymentReceiveId: number,
-  // ): Promise<IPaymentReceivedSmsDetails> => {
-  //   return this.paymentSmsNotify.smsDetails(tenantId, paymentReceiveId);
-  // };
-
-  /**
    * Notify customer via mail about payment receive details.
-   * @param {number} tenantId
    * @param {number} paymentReceiveId
-   * @param {IPaymentReceiveMailOpts} messageOpts
+   * @param {PaymentReceiveMailOptsDTO} messageOpts
    * @returns {Promise<void>}
    */
-  // public notifyPaymentByMail(
-  //   tenantId: number,
-  //   paymentReceiveId: number,
-  //   messageOpts: PaymentReceiveMailOptsDTO,
-  // ): Promise<void> {
-  //   return this.paymentMailNotify.triggerMail(
-  //     tenantId,
-  //     paymentReceiveId,
-  //     messageOpts,
-  //   );
-  // }
+  public notifyPaymentByMail(
+    paymentReceiveId: number,
+    messageOpts: PaymentReceiveMailOptsDTO,
+  ): Promise<void> {
+    return this.sendPaymentReceiveMailNotification.triggerMail(
+      paymentReceiveId,
+      messageOpts,
+    );
+  }
 
   /**
    * Retrieves the default mail options of the given payment transaction.
-   * @param {number} tenantId
-   * @param {number} paymentReceiveId
+   * @param {number} paymentReceiveId - Payment receive id.
    * @returns {Promise<void>}
    */
-  // public getPaymentMailOptions(tenantId: number, paymentReceiveId: number) {
-  //   return this.paymentMailNotify.getMailOptions(tenantId, paymentReceiveId);
-  // }
+  public getPaymentMailOptions(paymentReceiveId: number) {
+    return this.sendPaymentReceiveMailNotification.getMailOptions(
+      paymentReceiveId,
+    );
+  }
 
   /**
    * Retrieve pdf content of the given payment receive.

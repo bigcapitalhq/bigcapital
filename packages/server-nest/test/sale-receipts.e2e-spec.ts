@@ -90,6 +90,13 @@ describe('Sale Receipts (e2e)', () => {
       .expect(200);
   });
 
+  it('/sale-receipts (GET)', async () => {
+    return request(app.getHttpServer())
+      .get('/sale-receipts')
+      .set('organization-id', orgainzationId)
+      .expect(200);
+  });
+
   it('/sale-receipts/:id (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-receipts')
@@ -100,6 +107,18 @@ describe('Sale Receipts (e2e)', () => {
 
     return request(app.getHttpServer())
       .get(`/sale-receipts/${receiptId}`)
+      .set('organization-id', orgainzationId)
+      .expect(200);
+  });
+
+  it('/sale-receipts/:id/mail (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-receipts')
+      .set('organization-id', orgainzationId)
+      .send(makeReceiptRequest());
+
+    return request(app.getHttpServer())
+      .get(`/sale-receipts/${response.body.id}/mail`)
       .set('organization-id', orgainzationId)
       .expect(200);
   });

@@ -84,6 +84,18 @@ describe('Sale Invoices (e2e)', () => {
       .expect(200);
   });
 
+  it('/sale-invoices (GET)', async () => {
+    await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .send(requestSaleInvoiceBody());
+
+    return request(app.getHttpServer())
+      .get('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .expect(200);
+  });
+
   it('/sale-invoices/:id (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
@@ -170,6 +182,36 @@ describe('Sale Invoices (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/sale-invoices/${response.body.id}/deliver`)
       .set('organization-id', orgainzationId)
+      .expect(200);
+  });
+
+  it('/sale-invoices/:id/mail-state (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .send(requestSaleInvoiceBody());
+
+    return request(app.getHttpServer())
+      .get(`/sale-invoices/${response.body.id}/mail-state`)
+      .set('organization-id', orgainzationId)
+      .expect(200);
+  });
+
+  it('/sale-invoices/:id/mail (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .send(requestSaleInvoiceBody());
+
+    return request(app.getHttpServer())
+      .put(`/sale-invoices/${response.body.id}/mail`)
+      .set('organization-id', orgainzationId)
+      .send({
+        subject: 'Email subject from here',
+        to: 'a.bouhuolia@gmail.com',
+        body: 'asfdasdf',
+        attachInvoice: false,
+      })
       .expect(200);
   });
 });

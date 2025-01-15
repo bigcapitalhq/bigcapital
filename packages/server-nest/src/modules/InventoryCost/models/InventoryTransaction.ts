@@ -118,7 +118,7 @@ export class InventoryTransaction extends TenantBaseModel {
       // Transaction meta.
       meta: {
         relation: Model.HasOneRelation,
-        modelClass: InventoryTransactionMeta.default,
+        modelClass: InventoryTransactionMeta,
         join: {
           from: 'inventory_transactions.id',
           to: 'inventory_transaction_meta.inventoryTransactionId',

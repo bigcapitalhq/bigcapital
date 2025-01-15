@@ -14,11 +14,13 @@ import {
   ISaleInvoiceCreateDTO,
   ISaleInvoiceEditDTO,
   ISaleInvoiceWriteoffDTO,
-  InvoiceNotificationType,
+  ISalesInvoicesFilter,
+  SaleInvoiceMailState,
+  SendInvoiceMailDTO,
 } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
 import { PublicRoute } from '../Auth/Jwt.guard';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('sale-invoices')
 @ApiTags('sale-invoices')
@@ -28,12 +30,33 @@ export class SaleInvoicesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new sale invoice.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Sale invoice created successfully',
+  })
   createSaleInvoice(@Body() saleInvoiceDTO: ISaleInvoiceCreateDTO) {
     return this.saleInvoiceApplication.createSaleInvoice(saleInvoiceDTO);
   }
 
+  @Put(':id/mail')
+  @ApiOperation({ summary: 'Send the sale invoice mail.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale invoice mail sent successfully',
+  })
+  sendSaleInvoiceMail(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() messageDTO: SendInvoiceMailDTO,
+  ) {
+    return this.saleInvoiceApplication.sendSaleInvoiceMail(id, messageDTO);
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Edit the given sale invoice.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale invoice edited successfully',
+  })
   editSaleInvoice(
     @Param('id', ParseIntPipe) id: number,
     @Body() saleInvoiceDTO: ISaleInvoiceEditDTO,
@@ -47,10 +70,11 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.deleteSaleInvoice(id);
   }
 
-  // @Get()
-  // getSaleInvoices(@Query() filterDTO: ISalesInvoicesFilter) {
-  // return this.saleInvoiceApplication.getSaleInvoices(filterDTO);
-  // }
+  @Get()
+  @ApiOperation({ summary: 'Retrieves the sale invoices.' })
+  getSaleInvoices(@Query() filterDTO: ISalesInvoicesFilter) {
+    return this.saleInvoiceApplication.getSaleInvoices(filterDTO);
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieves the sale invoice details.' })
@@ -111,58 +135,15 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.saleInvoiceHtml(id);
   }
 
-  @Post(':id/notify-sms')
-  @ApiOperation({ summary: 'Notify the sale invoice by SMS.' })
-  notifySaleInvoiceBySms(
+  @Get(':id/mail-state')
+  @ApiOperation({ summary: 'Retrieves the sale invoice mail state.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale invoice mail state retrieved successfully',
+  })
+  getSaleInvoiceMailState(
     @Param('id', ParseIntPipe) id: number,
-    @Body('type') notificationType: InvoiceNotificationType,
-  ) {
-    // return this.saleInvoiceApplication.notifySaleInvoiceBySms(
-    //   id,
-    //   notificationType,
-    // );
+  ): Promise<SaleInvoiceMailState> {
+    return this.saleInvoiceApplication.getSaleInvoiceMailState(id);
   }
-
-  // @Post(':id/sms-details')
-  // getSaleInvoiceSmsDetails(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() smsDetailsDTO: ISaleInvoiceSmsDetailsDTO,
-  // ) {
-  //   // return this.saleInvoiceApplication.getSaleInvoiceSmsDetails(
-  //   //   id,
-  //   //   smsDetailsDTO,
-  //   // );
-  // }
-
-  @Get(':id/mail-reminder')
-  @ApiOperation({ summary: 'Retrieves the sale invoice mail reminder.' })
-  getSaleInvoiceMailReminder(@Param('id', ParseIntPipe) id: number) {
-    // return this.saleInvoiceApplication.getSaleInvoiceMailReminder(tenantId, id);
-  }
-
-  // @Post(':id/mail-reminder')
-  // sendSaleInvoiceMailReminder(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() messageDTO: SendInvoiceMailDTO,
-  // ) {
-  //   // return this.saleInvoiceApplication.sendSaleInvoiceMailReminder(
-  //   //   id,
-  //   //   messageDTO,
-  //   // );
-  // }
-
-  // @Post(':id/mail')
-  // sendSaleInvoiceMail(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() messageDTO: SendInvoiceMailDTO,
-  // ) {
-  //   // return this.saleInvoiceApplication.sendSaleInvoiceMail(id, messageDTO);
-  // }
-
-  // @Get(':id/mail-state')
-  // getSaleInvoiceMailState(
-  //   @Param('id', ParseIntPipe) id: number,
-  // ): Promise<SaleInvoiceMailState> {
-  //   // return this.saleInvoiceApplication.getSaleInvoiceMailState(id);
-  // }
 }

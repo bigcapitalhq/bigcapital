@@ -1,9 +1,10 @@
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -32,6 +33,10 @@ export class SaleEstimatesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new sale estimate.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale estimate created successfully',
+  })
   public createSaleEstimate(
     @Body() estimateDTO: ISaleEstimateDTO,
   ): Promise<SaleEstimate> {
@@ -40,6 +45,14 @@ export class SaleEstimatesController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Edit the given sale estimate.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale estimate edited successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Sale estimate not found',
+  })
   public editSaleEstimate(
     @Param('id', ParseIntPipe) estimateId: number,
     @Body() estimateDTO: ISaleEstimateDTO,
@@ -52,6 +65,14 @@ export class SaleEstimatesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete the given sale estimate.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale estimate deleted successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Sale estimate not found',
+  })
   public deleteSaleEstimate(
     @Param('id', ParseIntPipe) estimateId: number,
   ): Promise<void> {
@@ -60,18 +81,30 @@ export class SaleEstimatesController {
 
   @Get('state')
   @ApiOperation({ summary: 'Retrieves the sale estimate state.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale estimate state retrieved successfully',
+  })
   public getSaleEstimateState() {
     return this.saleEstimatesApplication.getSaleEstimateState();
   }
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the sale estimates.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale estimates retrieved successfully',
+  })
   public getSaleEstimates(@Query() filterDTO: ISalesEstimatesFilter) {
     return this.saleEstimatesApplication.getSaleEstimates(filterDTO);
   }
 
   @Post(':id/deliver')
   @ApiOperation({ summary: 'Deliver the given sale estimate.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale estimate delivered successfully',
+  })
   public deliverSaleEstimate(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ): Promise<void> {
@@ -121,6 +154,7 @@ export class SaleEstimatesController {
   }
 
   @Post(':id/mail')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Send the given sale estimate by mail.' })
   public sendSaleEstimateMail(
     @Param('id', ParseIntPipe) saleEstimateId: number,

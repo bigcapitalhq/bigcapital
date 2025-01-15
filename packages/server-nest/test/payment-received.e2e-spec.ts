@@ -129,4 +129,37 @@ describe('Payment Received (e2e)', () => {
       .set('organization-id', orgainzationId)
       .expect(200);
   });
+
+  it('/payments-received/:id/mail (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/payments-received')
+      .set('organization-id', orgainzationId)
+      .send(requestPaymentReceivedBody(invoice.id));
+
+    const paymentReceivedId = response.body.id;
+
+    return request(app.getHttpServer())
+      .post(`/payments-received/${paymentReceivedId}/mail`)
+      .set('organization-id', orgainzationId)
+      .send({
+        subject: 'Email subject from here',
+        to: 'a.bouhuolia@gmail.com',
+        body: 'asfdasdf',
+      })
+      .expect(200);
+  });
+
+  it('/payments-received/:id/mail (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/payments-received')
+      .set('organization-id', orgainzationId)
+      .send(requestPaymentReceivedBody(invoice.id));
+
+    const paymentReceivedId = response.body.id;
+
+    return request(app.getHttpServer())
+      .get(`/payments-received/${paymentReceivedId}/mail`)
+      .set('organization-id', orgainzationId)
+      .expect(200);
+  });
 });

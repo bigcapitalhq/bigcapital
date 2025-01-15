@@ -4,7 +4,7 @@ import {
 } from '../constants';
 import { mergeAndValidateMailOptions } from '@/modules/MailNotification/utils';
 import { transformReceiptToMailDataArgs } from '../utils';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { GetSaleReceipt } from '../queries/GetSaleReceipt.service';
 import { SaleReceiptsPdfService } from '../queries/SaleReceiptsPdf.service';
 import { ContactMailNotification } from '@/modules/MailNotification/ContactMailNotification';
@@ -34,6 +34,9 @@ export class SaleReceiptMailNotification {
     private readonly contactMailNotification: ContactMailNotification,
     private readonly eventEmitter: EventEmitter2,
     private readonly mailTransporter: MailTransporter,
+
+    @Inject(SaleReceipt.name)
+    private readonly saleReceiptModel: typeof SaleReceipt
   ) {}
 
   /**
@@ -67,7 +70,7 @@ export class SaleReceiptMailNotification {
   public async getMailOptions(
     saleReceiptId: number,
   ): Promise<SaleReceiptMailOpts> {
-    const saleReceipt = await SaleReceipt.query()
+    const saleReceipt = await this.saleReceiptModel.query()
       .findById(saleReceiptId)
       .throwIfNotFound();
 

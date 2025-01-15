@@ -13,7 +13,7 @@ import { TenantController } from '../Tenancy/Tenant.controller';
 import { SubscriptionGuard } from '../Subscription/interceptors/Subscription.guard';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ItemsApplicationService } from './ItemsApplication.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/items')
 @UseGuards(SubscriptionGuard)
@@ -32,6 +32,10 @@ export class ItemsController extends TenantController {
    */
   @Put(':id')
   @ApiOperation({ summary: 'Edit the given item (product or service).' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item has been successfully updated.',
+  })
   // @UsePipes(new ZodValidationPipe(createItemSchema))
   async editItem(
     @Param('id') id: string,

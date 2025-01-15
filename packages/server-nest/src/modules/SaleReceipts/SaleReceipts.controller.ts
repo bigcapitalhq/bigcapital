@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -23,6 +24,20 @@ export class SaleReceiptsController {
   @ApiOperation({ summary: 'Create a new sale receipt.' })
   createSaleReceipt(@Body() saleReceiptDTO: ISaleReceiptDTO) {
     return this.saleReceiptApplication.createSaleReceipt(saleReceiptDTO);
+  }
+
+  @Put(':id/mail')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Send the sale receipt mail.' })
+  sendSaleReceiptMail(@Param('id', ParseIntPipe) id: number) {
+    return this.saleReceiptApplication.getSaleReceiptMail(id);
+  }
+
+  @Get(':id/mail')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Retrieves the sale receipt mail.' })
+  getSaleReceiptMail(@Param('id', ParseIntPipe) id: number) {
+    return this.saleReceiptApplication.getSaleReceiptMail(id);
   }
 
   @Put(':id')
