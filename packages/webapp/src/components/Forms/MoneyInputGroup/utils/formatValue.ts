@@ -34,10 +34,15 @@ type Props = {
    * Prefix
    */
   prefix?: string;
+
+  /**
+   * Suffix
+   */
+  suffix?: string;
 };
 
 /**
- * Format value with decimal separator, group separator and prefix
+ * Format value with decimal separator, group separator, prefix, and suffix
  */
 export const formatValue = (props: Props): string => {
   const {
@@ -46,6 +51,7 @@ export const formatValue = (props: Props): string => {
     decimalSeparator = '.',
     turnOffSeparators = false,
     prefix,
+    suffix,
   } = props;
 
   if (_value === '' || _value === undefined) {
@@ -75,5 +81,7 @@ export const formatValue = (props: Props): string => {
       ? `${decimalSeparator}`
       : '';
 
-  return `${includeNegative}${includePrefix}${formattedInt}${includeDecimals}`;
+  const includeSuffix = suffix ? suffix : '';
+
+  return `${includeNegative}${includePrefix}${formattedInt}${includeDecimals}${includeSuffix}`;
 };
