@@ -1,13 +1,13 @@
 import { Knex } from 'knex';
 import { Injectable } from '@nestjs/common';
 import { VendorCredit } from '../models/VendorCredit';
-import { InventoryService } from '@/modules/InventoryCost/Inventory';
+import { InventoryTransactionsService } from '@/modules/InventoryCost/InventoryTransactions.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 
 @Injectable()
 export class VendorCreditInventoryTransactions {
   constructor(
-    private readonly inventoryService: InventoryService,
+    private readonly inventoryService: InventoryTransactionsService,
     private readonly itemsEntriesService: ItemsEntriesService
   ) {}
 

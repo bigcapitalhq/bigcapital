@@ -1,4 +1,4 @@
-import { InventoryService } from '@/modules/InventoryCost/Inventory';
+import { InventoryTransactionsService } from '@/modules/InventoryCost/InventoryTransactions.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
@@ -8,7 +8,7 @@ import { SaleInvoice } from '../../models/SaleInvoice';
 export class InvoiceInventoryTransactions {
   constructor(
     private readonly itemsEntriesService: ItemsEntriesService,
-    private readonly inventoryService: InventoryService,
+    private readonly inventoryService: InventoryTransactionsService,
   ) {}
 
   /**

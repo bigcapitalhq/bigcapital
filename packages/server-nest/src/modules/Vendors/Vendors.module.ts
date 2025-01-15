@@ -12,9 +12,11 @@ import { VendorValidators } from './commands/VendorValidators';
 import { VendorsApplication } from './VendorsApplication.service';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { VendorsController } from './Vendors.controller';
+import { GetVendorsService } from './queries/GetVendors.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 
 @Module({
-  imports: [TenancyDatabaseModule],
+  imports: [TenancyDatabaseModule, DynamicListModule],
   controllers: [VendorsController],
   providers: [
     ActivateVendorService,
@@ -23,6 +25,7 @@ import { VendorsController } from './Vendors.controller';
     EditVendorService,
     EditOpeningBalanceVendorService,
     GetVendorService,
+    GetVendorsService,
     VendorValidators,
     DeleteVendorService,
     VendorsApplication,

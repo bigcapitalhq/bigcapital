@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InventoryItemCostService } from './InventoryCosts.service';
+// import { InventoryItemCostService } from './InventoryCosts.service';
 import { IInventoryItemCostMeta } from './types/InventoryCost.types';
 
 @Injectable()
 export class InventoryCostApplication {
   constructor(
-    private readonly inventoryCost: InventoryItemCostService,
+    // private readonly inventoryCost: InventoryItemCostService,
   ) {}
 
   /**
@@ -17,11 +17,11 @@ export class InventoryCostApplication {
   public getItemsInventoryValuationList = async (
     itemsId: number[],
     date: Date
-  ): Promise<IInventoryItemCostMeta[]> => {
-    const itemsMap = await this.inventoryCost.getItemsInventoryValuation(
-      itemsId,
-      date
-    );
-    return [...itemsMap.values()];
+  ): Promise<any> => {
+    // const itemsMap = await this.inventoryCost.getItemsInventoryValuation(
+    //   itemsId,
+    //   date
+    // );
+    // return [...itemsMap.values()];
   };
 }

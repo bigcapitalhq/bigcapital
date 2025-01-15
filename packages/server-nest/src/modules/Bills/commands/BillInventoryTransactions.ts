@@ -1,16 +1,16 @@
 import { Knex } from 'knex';
 import { Bill } from '../models/Bill';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
-import { InventoryService } from '@/modules/InventoryCost/Inventory';
-
+import { InventoryTransactionsService } from '@/modules/InventoryCost/InventoryTransactions.service';
 @Injectable()
 export class BillInventoryTransactions {
   constructor(
     private readonly itemsEntriesService: ItemsEntriesService,
-    private readonly inventoryService: InventoryService,
+    private readonly inventoryTransactionsService: InventoryTransactionsService,
 
-    private readonly bill: typeof Bill
+    @Inject(Bill.name)
+    private readonly bill: typeof Bill,
   ) {}
 
   /**
@@ -21,19 +21,18 @@ export class BillInventoryTransactions {
   public async recordInventoryTransactions(
     billId: number,
     override?: boolean,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     // Retireve bill with assocaited entries and allocated cost entries.
-    
-    const bill = await this.bill.query(trx)
+
+    const bill = await this.bill
+      .query(trx)
       .findById(billId)
       .withGraphFetched('entries.allocatedCostEntries');
 
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =
-      await this.itemsEntriesService.filterInventoryEntries(
-        bill.entries
-      );
+      await this.itemsEntriesService.filterInventoryEntries(bill.entries);
     const transaction = {
       transactionId: bill.id,
       transactionType: 'Bill',
@@ -46,10 +45,10 @@ export class BillInventoryTransactions {
 
       warehouseId: bill.warehouseId,
     };
-    await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
+    await this.inventoryTransactionsService.recordInventoryTransactionsFromItemsEntries(
       transaction,
       override,
-      trx
+      trx,
     );
   }
 
@@ -61,13 +60,13 @@ export class BillInventoryTransactions {
    */
   public async revertInventoryTransactions(
     billId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
     // Deletes the inventory transactions by the given reference id and type.
-    await this.inventoryService.deleteInventoryTransactions(
+    await this.inventoryTransactionsService.deleteInventoryTransactions(
       billId,
       'Bill',
-      trx
+      trx,
     );
   }
 }
