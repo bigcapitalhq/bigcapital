@@ -664,6 +664,9 @@ importers:
       uuid:
         specifier: ^10.0.0
         version: 10.0.0
+      xlsx:
+        specifier: ^0.18.5
+        version: 0.18.5
       yup:
         specifier: ^0.28.1
         version: 0.28.5

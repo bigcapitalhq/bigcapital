@@ -66,6 +66,7 @@ import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdju
 import { PostHogModule } from '../EventsTracker/postHog.module';
 import { EventTrackerModule } from '../EventsTracker/EventTracker.module';
 import { MailModule } from '../Mail/Mail.module';
+import { FinancialStatementsModule } from '../FinancialStatements/FinancialStatements.module';
 
 @Module({
   imports: [
@@ -156,6 +157,7 @@ import { MailModule } from '../Mail/Mail.module';
     InventoryAdjustmentsModule,
     PostHogModule,
     EventTrackerModule,
+    FinancialStatementsModule,
   ],
   controllers: [AppController],
   providers: [

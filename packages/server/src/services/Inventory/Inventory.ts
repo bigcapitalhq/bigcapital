@@ -251,7 +251,6 @@ export default class InventoryService {
 
   /**
    * Records the inventory transactions from items entries that have (inventory) type.
-   *
    * @param {number} tenantId
    * @param {number} transactionId
    * @param {string} transactionType
