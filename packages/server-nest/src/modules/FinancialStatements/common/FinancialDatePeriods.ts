@@ -3,14 +3,16 @@ import { memoize } from 'lodash';
 import {
   IAccountTransactionsGroupBy,
   IFinancialDatePeriodsUnit,
-  IFinancialSheetTotalPeriod,
   IFormatNumberSettings,
 } from '../types/Report.types';
 import { dateRangeFromToCollection } from '@/utils/date-range-collection';
 import { FinancialDateRanges } from './FinancialDateRanges';
-import { Constructor } from '@/common/types/Constructor';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from './FinancialSheet';
 
-export const FinancialDatePeriods = <T extends Constructor>(Base: T) =>
+export const FinancialDatePeriods = <T extends GConstructor<FinancialSheet>>(
+  Base: T,
+) =>
   class extends R.compose(FinancialDateRanges)(Base) {
     /**
      * Retrieves the date ranges from the given from date to the given to date.
@@ -19,9 +21,9 @@ export const FinancialDatePeriods = <T extends Constructor>(Base: T) =>
      * @param {string} unit
      */
     public getDateRanges = memoize(
-      (fromDate: Date, toDate: Date, unit: string) => {
+      (fromDate: Date, toDate: Date, unit: moment.unitOfTime.StartOf) => {
         return dateRangeFromToCollection(fromDate, toDate, unit);
-      }
+      },
     );
 
     /**
@@ -35,7 +37,7 @@ export const FinancialDatePeriods = <T extends Constructor>(Base: T) =>
       total: number,
       fromDate: Date,
       toDate: Date,
-      overrideSettings?: IFormatNumberSettings
+      overrideSettings?: IFormatNumberSettings,
     ): IFinancialSheetTotalPeriod => {
       return {
         fromDate: this.getDateMeta(fromDate),
@@ -55,7 +57,7 @@ export const FinancialDatePeriods = <T extends Constructor>(Base: T) =>
       total: number,
       fromDate: Date,
       toDate: Date,
-      overrideSettings: IFormatNumberSettings = {}
+      overrideSettings: IFormatNumberSettings = {},
     ) => {
       return this.getDatePeriodMeta(total, fromDate, toDate, {
         money: true,
@@ -79,8 +81,8 @@ export const FinancialDatePeriods = <T extends Constructor>(Base: T) =>
           node: any,
           fromDate: Date,
           toDate: Date,
-          index: number
-        ) => any
+          index: number,
+        ) => any,
       ) => {
         const curriedCallback = R.curry(callback)(node);
         // Retrieves memorized date ranges.
@@ -88,7 +90,7 @@ export const FinancialDatePeriods = <T extends Constructor>(Base: T) =>
         return dateRanges.map((dateRange, index) => {
           return curriedCallback(dateRange.fromDate, dateRange.toDate, index);
         });
-      }
+      },
     );
     /**
      * Retrieve the accounts transactions group type from display columns by.
@@ -96,7 +98,7 @@ export const FinancialDatePeriods = <T extends Constructor>(Base: T) =>
      * @returns {IAccountTransactionsGroupBy}
      */
     public getGroupByFromDisplayColumnsBy = (
-      columnsBy: IFinancialDatePeriodsUnit
+      columnsBy: IFinancialDatePeriodsUnit,
     ): IAccountTransactionsGroupBy => {
       const paris = {
         week: IAccountTransactionsGroupBy.Day,

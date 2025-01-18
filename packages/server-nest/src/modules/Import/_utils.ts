@@ -336,7 +336,7 @@ export const valueParser =
  * @param {string} key - Mapped key path. formats: `group.key` or `key`.
  * @returns {string}
  */
-export const parseKey = R.curry(
+export const parseKey: R.Curry<string> = R.curry(
   (fields: { [key: string]: IModelMetaField2 }, key: string) => {
     const fieldKey = getFieldKey(key);
     const field = fields[fieldKey];

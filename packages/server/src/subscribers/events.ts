@@ -771,4 +771,5 @@ export default {
     onSalesByItemViewed: 'onSalesByItemViewed',
     onPurchasesByItemViewed: 'onPurchasesByItemViewed',
   },
+  
 };

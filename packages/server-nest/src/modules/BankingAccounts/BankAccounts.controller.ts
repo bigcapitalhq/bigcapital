@@ -1,6 +1,6 @@
 import { Controller, Param, Post } from '@nestjs/common';
 import { BankAccountsApplication } from './BankAccountsApplication.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('banking/accounts')
 @ApiTags('banking-accounts')
@@ -11,6 +11,14 @@ export class BankAccountsController {
   @ApiOperation({
     summary: 'Disconnect the bank connection of the given bank account.',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'Bank account disconnected successfully.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Bank account not found.',
+  })
   async disconnectBankAccount(@Param('id') bankAccountId: number) {
     return this.bankAccountsApplication.disconnectBankAccount(bankAccountId);
   }
@@ -18,6 +26,14 @@ export class BankAccountsController {
   @Post(':id/refresh')
   @ApiOperation({
     summary: 'Refresh the bank account transactions.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Bank account transactions refreshed successfully.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Bank account not found.',
   })
   async refreshBankAccount(@Param('id') bankAccountId: number) {
     return this.bankAccountsApplication.refreshBankAccount(bankAccountId);
@@ -27,6 +43,14 @@ export class BankAccountsController {
   @ApiOperation({
     summary: 'Pause transactions syncing of the given bank account.',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'Bank account transactions paused successfully.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Bank account not found.',
+  })
   async pauseBankAccount(@Param('id') bankAccountId: number) {
     return this.bankAccountsApplication.pauseBankAccount(bankAccountId);
   }
@@ -34,6 +58,14 @@ export class BankAccountsController {
   @Post(':id/resume')
   @ApiOperation({
     summary: 'Resume transactions syncing of the given bank account.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Bank account transactions resumed successfully.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Bank account not found.',
   })
   async resumeBankAccount(@Param('id') bankAccountId: number) {
     return this.bankAccountsApplication.resumeBankAccount(bankAccountId);

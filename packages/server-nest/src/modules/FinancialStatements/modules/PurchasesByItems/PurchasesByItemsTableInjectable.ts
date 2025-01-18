@@ -2,7 +2,7 @@ import {
   IPurchasesByItemsReportQuery,
   IPurchasesByItemsTable,
 } from './types/PurchasesByItems.types';
-import { PurchasesByItemsService } from './PurchasesByItemsService';
+import { PurchasesByItemsService } from './PurchasesByItems.service';
 import { PurchasesByItemsTable } from './PurchasesByItemsTable';
 import { Injectable } from '@nestjs/common';
 
@@ -14,9 +14,8 @@ export class PurchasesByItemsTableInjectable {
 
   /**
    * Retrieves the purchases by items table format.
-   * @param {number} tenantId
-   * @param {IPurchasesByItemsReportQuery} filter
-   * @returns {Promise<IPurchasesByItemsTable>}
+   * @param {IPurchasesByItemsReportQuery} filter - The filter to be used.
+   * @returns {Promise<IPurchasesByItemsTable>} - The purchases by items table.
    */
   public async table(
     filter: IPurchasesByItemsReportQuery,

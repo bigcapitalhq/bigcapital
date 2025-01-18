@@ -1,20 +1,21 @@
 import moment from 'moment';
 import {
-  ICashFlowStatementTotal,
   IFormatNumberSettings,
   INumberFormatQuery,
+  
 } from '../types/Report.types';
 import { formatNumber } from '@/utils/format-number';
+import { IFinancialTableTotal } from '../types/Table.types';
 
-export default class FinancialSheet {
-  readonly numberFormat: INumberFormatQuery = {
+export class FinancialSheet {
+  public numberFormat: INumberFormatQuery = {
     precision: 2,
     divideOn1000: false,
     showZero: false,
     formatMoney: 'total',
     negativeFormat: 'mines',
   };
-  readonly baseCurrency: string;
+  public baseCurrency: string;
 
   /**
    * Transformes the number format query to settings
@@ -109,7 +110,7 @@ export default class FinancialSheet {
   protected getAmountMeta(
     amount: number,
     overrideSettings?: IFormatNumberSettings
-  ): ICashFlowStatementTotal {
+  ): IFinancialTableTotal {
     return {
       amount,
       formattedAmount: this.formatNumber(amount, overrideSettings),
@@ -125,7 +126,7 @@ export default class FinancialSheet {
   protected getTotalAmountMeta(
     amount: number,
     title?: string
-  ): ICashFlowStatementTotal {
+  ): IFinancialTableTotal {
     return {
       ...(title ? { title } : {}),
       amount,

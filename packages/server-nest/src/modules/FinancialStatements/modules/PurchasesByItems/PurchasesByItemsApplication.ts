@@ -6,11 +6,17 @@ import {
   IPurchasesByItemsTable,
 } from './types/PurchasesByItems.types';
 import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
-import { PurchasesByItemsService } from './PurchasesByItemsService';
+import { PurchasesByItemsService } from './PurchasesByItems.service';
 import { PurchasesByItemsPdf } from './PurchasesByItemsPdf';
 
 @Injectable()
 export class PurchasesByItemsApplication {
+  /**
+   * @param {PurchasesByItemsService} purchasesByItemsSheetService - Purchases by items sheet service.
+   * @param {PurchasesByItemsTableInjectable} purchasesByItemsTableService - Purchases by items table service.
+   * @param {PurchasesByItemsExport} purchasesByItemsExportService - Purchases by items export service.
+   * @param {PurchasesByItemsPdf} purchasesByItemsPdfService - Purchases by items pdf service.
+   */
   constructor(
     private readonly purchasesByItemsSheetService: PurchasesByItemsService,
     private readonly purchasesByItemsTableService: PurchasesByItemsTableInjectable,
@@ -21,7 +27,7 @@ export class PurchasesByItemsApplication {
   /**
    * Retrieves the purchases by items in json format.
    * @param {IPurchasesByItemsReportQuery} query
-   * @returns
+   * @returns {Promise<IPurchasesByItemsSheet>}
    */
   public sheet(
     query: IPurchasesByItemsReportQuery,

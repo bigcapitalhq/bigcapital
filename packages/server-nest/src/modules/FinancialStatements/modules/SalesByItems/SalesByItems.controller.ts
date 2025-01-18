@@ -1,0 +1,57 @@
+import { Body, Controller, Get, Headers, Query, Req, Res } from '@nestjs/common';
+import { ISalesByItemsReportQuery } from './SalesByItems.types';
+import { AcceptType } from '@/constants/accept-type';
+import { SalesByItemsApplication } from './SalesByItemsApplication';
+import { Response } from 'express';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+
+@Controller('/reports/sales-by-items')
+@ApiTags('reports')
+export class SalesByItemsController {
+  constructor(private readonly salesByItemsApp: SalesByItemsApplication) {}
+
+  @Get()
+  @ApiResponse({ status: 200, description: 'Sales by items report' })
+  public async salesByitems(
+    @Query() filter: ISalesByItemsReportQuery,
+    @Res() res: Response,
+    @Headers('accept') acceptHeader: string,
+  ) {
+    // Retrieves the csv format.
+    if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+      const buffer = await this.salesByItemsApp.csv(filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+      res.setHeader('Content-Type', 'text/csv');
+
+      return res.send(buffer);
+      // Retrieves the json table format.
+    } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+      const table = await this.salesByItemsApp.table(filter);
+
+      return res.status(200).send(table);
+      // Retrieves the xlsx format.
+    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+      const buffer = this.salesByItemsApp.xlsx(filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+      return res.send(buffer);
+      // Retrieves the json format.
+    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+      const pdfContent = await this.salesByItemsApp.pdf(filter);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      return res.send(pdfContent);
+    } else {
+      const sheet = await this.salesByItemsApp.sheet(filter);
+      return res.status(200).send(sheet);
+    }
+  }
+}

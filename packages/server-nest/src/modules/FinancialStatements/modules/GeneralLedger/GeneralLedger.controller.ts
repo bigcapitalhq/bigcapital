@@ -1,0 +1,61 @@
+import { Controller, Get } from '@nestjs/common';
+import { Headers, Query, Res } from '@nestjs/common';
+import { IGeneralLedgerSheetQuery } from './GeneralLedger.types';
+import { GeneralLedgerApplication } from './GeneralLedgerApplication';
+import { AcceptType } from '@/constants/accept-type';
+import { Response } from 'express';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+
+@Controller('/reports/general-ledger')
+@ApiTags('reports')
+export class GeneralLedgerController {
+  constructor(
+    private readonly generalLedgerApplication: GeneralLedgerApplication,
+  ) {}
+
+  @Get()
+  @ApiResponse({ status: 200, description: 'General ledger report' })
+  public async getGeneralLedger(
+    @Query() query: IGeneralLedgerSheetQuery,
+    @Res() res: Response,
+    @Headers('accept') acceptHeader: string,
+  ) {
+    // Retrieves the table format.
+    if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+      const table = await this.generalLedgerApplication.table(query);
+
+      return res.status(200).send(table);
+      // Retrieves the csv format.
+    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+      const buffer = await this.generalLedgerApplication.csv(query);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+      res.setHeader('Content-Type', 'text/csv');
+
+      return res.send(buffer);
+      // Retrieves the xlsx format.
+    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+      const buffer = await this.generalLedgerApplication.xlsx(query);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+      return res.send(buffer);
+      // Retrieves the pdf format.
+    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+      const pdfContent = await this.generalLedgerApplication.pdf(query);
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      return res.send(pdfContent);
+      // Retrieves the json format.
+    } else {
+      const sheet = await this.generalLedgerApplication.sheet(query);
+
+      return res.status(200).send(sheet);
+    }
+  }
+}

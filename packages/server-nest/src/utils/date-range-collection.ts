@@ -4,7 +4,7 @@ export const dateRangeCollection = (
   fromDate,
   toDate,
   addType: moment.unitOfTime.StartOf = 'day',
-  increment = 1,
+  increment: number = 1,
 ) => {
   const collection = [];
   const momentFromDate = moment(fromDate);
@@ -26,7 +26,7 @@ export const dateRangeCollection = (
   for (
     let i = momentFromDate;
     i.isBefore(toDate, addType) || i.isSame(toDate, addType);
-    i.add(increment, `${addType}s`)
+    i.add(increment, `${addType}s` as moment.unitOfTime.DurationConstructor)
   ) {
     collection.push(i.endOf(addType).format(dateFormat));
   }
@@ -37,7 +37,7 @@ export const dateRangeFromToCollection = (
   fromDate: moment.MomentInput,
   toDate: moment.MomentInput,
   addType: moment.unitOfTime.StartOf = 'day',
-  increment = 1,
+  increment: number = 1,
 ) => {
   const collection = [];
   const momentFromDate = moment(fromDate);
@@ -46,7 +46,7 @@ export const dateRangeFromToCollection = (
   for (
     let i = momentFromDate;
     i.isBefore(toDate, addType) || i.isSame(toDate, addType);
-    i.add(increment, `${addType}s`)
+    i.add(increment, `${addType}s` as moment.unitOfTime.DurationConstructor)
   ) {
     collection.push({
       fromDate: i.startOf(addType).format(dateFormat),

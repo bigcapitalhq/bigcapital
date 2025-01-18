@@ -1,14 +1,17 @@
 import moment from 'moment';
 import { IDateRange, IFinancialDatePeriodsUnit } from '../types/Report.types';
-import { Constructor } from '@/common/types/Constructor';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from './FinancialSheet';
 
-export const FinancialDateRanges = <T extends Constructor>(Base: T) =>
+export const FinancialDateRanges = <T extends GConstructor<FinancialSheet>>(
+  Base: T,
+) =>
   class extends Base {
     /**
      * Retrieve previous period (PP) date of the given date.
-     * @param   {Date} fromDate -
-     * @param   {Date} toDate -
-     * @param   {IFinancialDatePeriodsUnit} unit -
+     * @param {Date} date - Date.
+     * @param {number} value - Value.
+     * @param {IFinancialDatePeriodsUnit} unit - Unit of time.
      * @returns {Date}
      */
     public getPreviousPeriodDate = (
@@ -20,10 +23,10 @@ export const FinancialDateRanges = <T extends Constructor>(Base: T) =>
     };
 
     /**
-     * Retrieves the different
+     * Retrieves the different between two dates.
      * @param {Date} fromDate
      * @param {Date} toDate
-     * @returns
+     * @returns {number}
      */
     public getPreviousPeriodDiff = (fromDate: Date, toDate: Date) => {
       return moment(toDate).diff(fromDate, 'days') + 1;
@@ -31,8 +34,11 @@ export const FinancialDateRanges = <T extends Constructor>(Base: T) =>
 
     /**
      * Retrieves the periods period dates.
-     * @param {Date} fromDate -
-     * @param {Date} toDate -
+     * @param {Date} fromDate - From date.
+     * @param {Date} toDate - To date.
+     * @param {IFinancialDatePeriodsUnit} unit - Unit of time.
+     * @param {number} amount - Amount of time.
+     * @returns {IDateRange}
      */
     public getPreviousPeriodDateRange = (
       fromDate: Date,
@@ -65,9 +71,9 @@ export const FinancialDateRanges = <T extends Constructor>(Base: T) =>
 
     /**
      * Retrieves the previous period (PP) date range of date periods columns.
-     * @param   {Date} fromDate -
-     * @param   {Date} toDate -
-     * @param   {IFinancialDatePeriodsUnit}
+     * @param {Date} fromDate - From date.
+     * @param {Date} toDate - To date.
+     * @param {IFinancialDatePeriodsUnit} unit - Unit of time.
      * @returns {IDateRange}
      */
     public getPPDatePeriodDateRange = (

@@ -15,6 +15,19 @@ const getCurrencySign = (currencyCode) => {
   return get(Currencies, `${currencyCode}.symbol`);
 };
 
+export interface IFormatNumberSettings {
+  precision?: number;
+  divideOn1000?: boolean;
+  excerptZero?: boolean;
+  negativeFormat?: string;
+  thousand?: string;
+  decimal?: string;
+  zeroSign?: string;
+  money?: boolean;
+  currencyCode?: string;
+  symbol?: string;
+}
+
 export const formatNumber = (
   balance,
   {
@@ -28,7 +41,7 @@ export const formatNumber = (
     money = true,
     currencyCode,
     symbol = '',
-  },
+  }: IFormatNumberSettings,
 ) => {
   const formattedSymbol = getCurrencySign(currencyCode);
   const negForamt = getNegativeFormat(negativeFormat);

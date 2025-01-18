@@ -1,9 +1,12 @@
 import * as R from 'ramda';
 import { get, isEmpty } from 'lodash';
-import { Constructor } from '@/common/types/Constructor';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from './FinancialSheet';
 
-export const FinancialHorizTotals = <T extends Constructor>(Base: T) =>
-  class extends Base {
+export const FinancialHorizTotals = <T extends GConstructor<FinancialSheet>>(
+  Base: T,
+) =>
+  class FinancialHorizTotals extends Base {
     /**
      *
      */

@@ -4,16 +4,20 @@ import {
   mapValuesDeepReverse,
   mapValuesDeep,
   mapValues,
-  condense,
   filterDeep,
   reduceDeep,
   findValueDeep,
   filterNodesDeep,
-} from 'utils/deepdash';
-import { Constructor } from '@/common/types/Constructor';
+} from '@/utils/deepdash';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from './FinancialSheet';
 
-export const FinancialSheetStructure = <T extends Constructor>(Base: T) =>
-  class extends Base {
+export const FinancialSheetStructure = <
+  T extends GConstructor<FinancialSheet>,
+>(
+  Base: T
+) =>
+  class FinancialSheetStructure extends Base {
     /**
      *
      * @param nodes

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TableSheetPdf } from '../../TableSheetPdf';
+import { TableSheetPdf } from '../../common/TableSheetPdf';
 import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
 import { IPurchasesByItemsReportQuery } from './types/PurchasesByItems.types';
 import { HtmlTableCustomCss } from './_types';

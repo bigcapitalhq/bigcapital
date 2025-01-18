@@ -7,7 +7,7 @@ import {
   IPurchasesByItemsSheetData,
   IPurchasesByItemsTotal,
 } from './types/PurchasesByItems.types';
-import FinancialSheet from '../../common/FinancialSheet';
+import { FinancialSheet } from '../../common/FinancialSheet';
 import { transformToMapBy } from '@/utils/transform-to-map-by';
 import { Item } from '@/modules/Items/models/Item';
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
@@ -48,7 +48,7 @@ export class PurchasesByItems extends FinancialSheet{
     cost: number;
     average: number;
   } {
-    const transaction = this.itemsTransactions.get(itemId);
+    const transaction = this.itemsTransactions.get(itemId.toString());
 
     const quantity = get(transaction, 'quantity', 0);
     const cost = get(transaction, 'cost', 0);
@@ -105,14 +105,17 @@ export class PurchasesByItems extends FinancialSheet{
       id: item.id,
       name: item.name,
       code: item.code,
+
       quantityPurchased: meta.quantity,
       purchaseCost: meta.cost,
       averageCostPrice: meta.average,
+      
       quantityPurchasedFormatted: this.formatNumber(meta.quantity, {
         money: false,
       }),
       purchaseCostFormatted: this.formatNumber(meta.cost),
       averageCostPriceFormatted: this.formatNumber(meta.average),
+      
       currencyCode: this.baseCurrency,
     };
   };

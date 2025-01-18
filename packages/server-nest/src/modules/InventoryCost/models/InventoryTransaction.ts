@@ -1,7 +1,6 @@
 import { Model, raw } from 'objection';
 import { castArray } from 'lodash';
-import moment, { unitOfTime } from 'moment';
-import { BaseModel } from '@/models/Model';
+import * as moment from 'moment';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
 import { TInventoryTransactionDirection } from '../types/InventoryCost.types';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
@@ -53,7 +52,7 @@ export class InventoryTransaction extends TenantBaseModel {
         query,
         startDate,
         endDate,
-        type: unitOfTime.StartOf = 'day',
+        type: moment.unitOfTime.StartOf = 'day',
       ) {
         const dateFormat = 'YYYY-MM-DD';
         const fromDate = moment(startDate).startOf(type).format(dateFormat);

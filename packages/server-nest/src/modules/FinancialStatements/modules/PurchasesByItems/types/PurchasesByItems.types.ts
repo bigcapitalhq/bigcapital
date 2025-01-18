@@ -23,15 +23,16 @@ export interface IPurchasesByItemsItem {
   id: number;
   name: string;
   code: string;
-  soldCost: number;
 
-  averageSellPrice: number;
-  averageSellPriceFormatted: string;
+  purchaseCost: number;
+  purchaseCostFormatted: string;
+
+  averageCostPrice: number;
+  averageCostPriceFormatted: string;
   
   quantityPurchased: number;
   quantityPurchasedFormatted: string;
 
-  soldCostFormatted: string;
   currencyCode: string;
 }
 

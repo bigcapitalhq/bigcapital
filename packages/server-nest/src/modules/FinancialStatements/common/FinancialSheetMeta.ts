@@ -4,10 +4,7 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class FinancialSheetMeta {
-  constructor(
-    private readonly inventoryService: InventoryService,
-    private readonly tenancyContext: TenancyContext,
-  ) {}
+  constructor(private readonly tenancyContext: TenancyContext) {}
 
   /**
    * Retrieves the common meta data of the financial sheet.
@@ -20,8 +17,10 @@ export class FinancialSheetMeta {
     const baseCurrency = tenantMetadata.baseCurrency;
     const dateFormat = tenantMetadata.dateFormat;
 
-    const isCostComputeRunning =
-      this.inventoryService.isItemsCostComputeRunning(tenantId);
+    // const isCostComputeRunning =
+    //   this.inventoryService.isItemsCostComputeRunning();
+
+    const isCostComputeRunning = false;
 
     return {
       organizationName,

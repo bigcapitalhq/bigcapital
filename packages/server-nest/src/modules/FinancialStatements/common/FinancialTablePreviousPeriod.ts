@@ -1,8 +1,18 @@
 import moment from 'moment';
-import { ITableColumn, IDateRange, ITableColumnAccessor } from '../types/Table.types';
+import { ITableColumn, ITableColumnAccessor } from '../types/Table.types';
+import { IDateRange } from '../types/Report.types';
+import { Constructor, GConstructor } from '@/common/types/Constructor';
+import { I18nService } from 'nestjs-i18n';
+import { FinancialSheet } from './FinancialSheet';
 
-export const FinancialTablePreviousPeriod = (Base) =>
+export const FinancialTablePreviousPeriod = <
+  T extends GConstructor<FinancialSheet>,
+>(
+  Base: T,
+) =>
   class extends Base {
+    public readonly i18n: I18nService;
+
     getTotalPreviousPeriod = () => {
       return this.query.PPToDate;
     };
@@ -24,8 +34,8 @@ export const FinancialTablePreviousPeriod = (Base) =>
 
       return {
         key: 'previous_period',
-        label: this.i18n.__(`financial_sheet.previoud_period_date`, {
-          date: PPFormatted,
+        label: this.i18n.t(`financial_sheet.previoud_period_date`, {
+          args: { date: PPFormatted, }
         }),
       };
     };
@@ -37,7 +47,7 @@ export const FinancialTablePreviousPeriod = (Base) =>
     public getPreviousPeriodChangeColumn = (): ITableColumn => {
       return {
         key: 'previous_period_change',
-        label: this.i18n.__('fianncial_sheet.previous_period_change'),
+        label: this.i18n.t('fianncial_sheet.previous_period_change'),
       };
     };
 
@@ -48,7 +58,7 @@ export const FinancialTablePreviousPeriod = (Base) =>
     public getPreviousPeriodPercentageColumn = (): ITableColumn => {
       return {
         key: 'previous_period_percentage',
-        label: this.i18n.__('financial_sheet.previous_period_percentage'),
+        label: this.i18n.t('financial_sheet.previous_period_percentage'),
       };
     };
 

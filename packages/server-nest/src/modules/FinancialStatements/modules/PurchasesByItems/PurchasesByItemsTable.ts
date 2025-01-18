@@ -8,7 +8,7 @@ import {
 import { ITableColumn, ITableColumnAccessor, ITableRow } from '../../types/Table.types';
 import { FinancialTable } from '../../common/FinancialTable';
 import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
-import FinancialSheet from '../../common/FinancialSheet';
+import { FinancialSheet } from '../../common/FinancialSheet';
 import { tableRowMapper } from '../../utils/Table.utils';
 
 export class PurchasesByItemsTable extends R.compose(

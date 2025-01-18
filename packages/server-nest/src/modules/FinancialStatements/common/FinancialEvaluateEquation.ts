@@ -1,12 +1,16 @@
 import * as mathjs from 'mathjs';
 import * as R from 'ramda';
-import { compose } from 'lodash/fp';
 import { omit, get, mapValues } from 'lodash';
 import { FinancialSheetStructure } from './FinancialSheetStructure';
-import { Constructor } from '@/common/types/Constructor';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from './FinancialSheet';
 
-export const FinancialEvaluateEquation = <T extends Constructor>(Base: T) =>
-  class extends compose(FinancialSheetStructure)(Base) {
+export const FinancialEvaluateEquation = <
+  T extends GConstructor<FinancialSheet>,
+>(
+  Base: T
+) =>
+  class FinancialEvaluateEquation extends R.compose(FinancialSheetStructure)(Base) {
     /**
      * Evauluate equaation string with the given scope table.
      * @param {string} equation -
@@ -34,7 +38,6 @@ export const FinancialEvaluateEquation = <T extends Constructor>(Base: T) =>
           }
           return acc;
         },
-        {}
       );
     };
 

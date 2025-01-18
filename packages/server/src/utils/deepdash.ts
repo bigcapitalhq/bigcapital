@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import deepdash from 'deepdash';
+import * as _ from 'lodash';
+import * as deepdash from 'deepdash';
 
 const {
   condense,
@@ -24,7 +24,7 @@ const {
   reduceDeep,
   someDeep,
   iteratee,
-} = deepdash(_);
+} = deepdash.default(_);
 
 const mapValuesDeepReverse = (nodes, callback, config?) => {
   const clonedNodes = _.clone(nodes);

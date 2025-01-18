@@ -110,8 +110,8 @@ export class ImportFileDataTransformer {
     valueDTOs: Record<string, any>[],
     trx?: Knex.Transaction
   ): Promise<Record<string, any>[]> {
-    const tenantModels = this.tenancy.models(tenantId);
-    const _valueParser = valueParser(fields, tenantModels, trx);
+    // const tenantModels = this.tenancy.models(tenantId);
+    const _valueParser = valueParser(fields, {}, trx);
     const _keyParser = parseKey(fields);
 
     const parseAsync = async (valueDTO) => {

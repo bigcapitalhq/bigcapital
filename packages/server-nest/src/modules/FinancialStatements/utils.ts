@@ -1,19 +1,19 @@
 import { kebabCase } from 'lodash';
-import { ITableRow } from '@/interfaces';
+import { ITableRow } from './types/Table.types';
 
 export const formatNumber = (balance, { noCents, divideOn1000 }): string => {
   let formattedBalance: number = parseFloat(balance);
 
   if (noCents) {
-    formattedBalance = parseInt(formattedBalance, 10);
+    formattedBalance = parseInt(formattedBalance.toString(), 10);
   }
   if (divideOn1000) {
     formattedBalance /= 1000;
   }
-  return formattedBalance;
+  return formattedBalance.toString();
 };
 
-export const tableClassNames = (rows: ITableRow[]) => {
+export const tableClassNames = (rows: ITableRow[]): ITableRow[] => {
   return rows.map((row) => {
     const classNames =
       row?.rowTypes?.map((rowType) => `row-type--${kebabCase(rowType)}`) || [];

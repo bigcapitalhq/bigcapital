@@ -2,10 +2,21 @@ import * as R from 'ramda';
 import { isEmpty, clone, cloneDeep, omit } from 'lodash';
 import { increment } from '@/utils/increment';
 import { ITableRow, ITableColumn } from '../types/Table.types';
-import { IROW_TYPE } from './BalanceSheet/constants';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheetStructure } from './FinancialSheetStructure';
+import { I18nService } from 'nestjs-i18n';
+import { FinancialSheet } from './FinancialSheet';
 
-export const FinancialTable = (Base) =>
-  class extends Base {
+enum IROW_TYPE {
+  TOTAL = 'TOTAL',
+}
+
+export const FinancialTable = <T extends GConstructor<FinancialSheet>>(
+  Base: T
+) =>
+  class extends R.pipe(FinancialSheetStructure)(Base) {
+    public readonly i18n: I18nService;
+
     /**
      * Table columns cell indexing.
      * @param   {ITableColumn[]} columns
@@ -23,13 +34,15 @@ export const FinancialTable = (Base) =>
       });
     };
 
-    addTotalRow = (node: ITableRow) => {
+    public addTotalRow = (node: ITableRow) => {
       const clonedNode = clone(node);
 
       if (clonedNode.children) {
         const cells = cloneDeep(node.cells);
-        cells[0].value = this.i18n.__('financial_sheet.total_row', {
-          value: cells[0].value,
+        cells[0].value = this.i18n.t('financial_sheet.total_row', {
+          args: {
+            value: cells[0].value,
+          },
         });
 
         clonedNode.children.push({

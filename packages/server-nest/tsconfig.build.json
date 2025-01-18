@@ -5,11 +5,13 @@
     "test",
     "dist",
     "**/*spec.ts",
-    // "./src/modules/DynamicListing/**/*.ts",
+    "./src/modules/DynamicListing/**/*.ts",
     "./src/modules/Import/**/*.ts",
     "./src/modules/Export/**/*.ts",
     "./src/modules/DynamicListing",
     "./src/modules/DynamicListing/**/*.ts",
+    "./src/modules/FinancialStatements/**/*.ts",
+    // "./src/modules/FinancialStatements/modules/BalanceSheet/**.ts",
     "./src/modules/Views",
     "./src/modules/Expenses/subscribers"
   ]

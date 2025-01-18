@@ -1,18 +1,32 @@
 import moment from 'moment';
 import { ITableColumn, ITableColumnAccessor } from '../types/Table.types';
 import { IDateRange } from '../types/Report.types';
+import { GConstructor } from '@/common/types/Constructor';
+import { I18nService } from 'nestjs-i18n';
+import { FinancialSheet } from './FinancialSheet';
 
-export const FinancialTablePreviousYear = (Base) =>
+export const FinancialTablePreviousYear = <
+  T extends GConstructor<FinancialSheet>,
+>(
+  Base: T,
+) =>
   class extends Base {
-    getTotalPreviousYear = () => {
+    public readonly i18n: I18nService;
+
+    /**
+     * Retrieves the total previous year date.
+     * @returns {Date}
+     */
+    public getTotalPreviousYear = () => {
       return this.query.PYToDate;
     };
+
     // ------------------------------------
     // # Columns.
     // ------------------------------------
     /**
      * Retrive previous year total column.
-     * @param   {DateRange} previousYear -
+     * @param {DateRange} previousYear -
      * @returns {ITableColumn}
      */
     public getPreviousYearTotalColumn = (
@@ -23,8 +37,8 @@ export const FinancialTablePreviousYear = (Base) =>
 
       return {
         key: 'previous_year',
-        label: this.i18n.__('financial_sheet.previous_year_date', {
-          date: PYFormatted,
+        label: this.i18n.t('financial_sheet.previous_year_date', {
+          args: { date: PYFormatted },
         }),
       };
     };
@@ -36,7 +50,7 @@ export const FinancialTablePreviousYear = (Base) =>
     public getPreviousYearChangeColumn = (): ITableColumn => {
       return {
         key: 'previous_year_change',
-        label: this.i18n.__('financial_sheet.previous_year_change'),
+        label: this.i18n.t('financial_sheet.previous_year_change'),
       };
     };
 
@@ -47,7 +61,7 @@ export const FinancialTablePreviousYear = (Base) =>
     public getPreviousYearPercentageColumn = (): ITableColumn => {
       return {
         key: 'previous_year_percentage',
-        label: this.i18n.__('financial_sheet.previous_year_percentage'),
+        label: this.i18n.t('financial_sheet.previous_year_percentage'),
       };
     };
 
@@ -89,7 +103,7 @@ export const FinancialTablePreviousYear = (Base) =>
 
     /**
      * Retrieves previous year total horizontal column accessor.
-     * @param   {number} index
+     * @param {number} index - Index.
      * @returns {ITableColumnAccessor}
      */
     public getPreviousYearTotalHorizAccessor = (
@@ -103,7 +117,7 @@ export const FinancialTablePreviousYear = (Base) =>
 
     /**
      * Retrieves previous previous year change horizontal column accessor.
-     * @param   {number} index
+     * @param {number} index
      * @returns {ITableColumnAccessor}
      */
     public getPreviousYearChangeHorizAccessor = (
@@ -117,7 +131,7 @@ export const FinancialTablePreviousYear = (Base) =>
 
     /**
      * Retrieves previous year percentage horizontal column accessor.
-     * @param   {number} index
+     * @param {number} index
      * @returns {ITableColumnAccessor}
      */
     public getPreviousYearPercentageHorizAccessor = (

@@ -4,6 +4,7 @@ import { ILedger } from './types/Ledger.types';
 import { ILedgerEntry } from './types/Ledger.types';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
 import { IAccountTransaction } from '@/interfaces/Account';
+import { ModelObject } from 'objection';
 
 export class Ledger implements ILedger {
   readonly entries: ILedgerEntry[];
@@ -71,7 +72,8 @@ export class Ledger implements ILedger {
 
     return this.filter(
       (entry) =>
-        fromDateParsed.isBefore(entry.date) || fromDateParsed.isSame(entry.date)
+        fromDateParsed.isBefore(entry.date) ||
+        fromDateParsed.isSame(entry.date),
     );
   }
 
@@ -85,7 +87,7 @@ export class Ledger implements ILedger {
 
     return this.filter(
       (entry) =>
-        toDateParsed.isAfter(entry.date) || toDateParsed.isSame(entry.date)
+        toDateParsed.isAfter(entry.date) || toDateParsed.isSame(entry.date),
     );
   }
 
@@ -191,7 +193,7 @@ export class Ledger implements ILedger {
    */
   public getAccountsIds = (): number[] => {
     return uniqBy(this.entries, 'accountId').map(
-      (e: ILedgerEntry) => e.accountId
+      (e: ILedgerEntry) => e.accountId,
     );
   };
 
@@ -222,22 +224,21 @@ export class Ledger implements ILedger {
   // ---------------------------------
   // # STATIC METHODS.
   // ----------------------------------
-
   /**
    * Mappes the account transactions to ledger entries.
    * @param   {IAccountTransaction[]} entries
    * @returns {ILedgerEntry[]}
    */
-  static mappingTransactions(entries: AccountTransaction[]): ILedgerEntry[] {
+  static mappingTransactions(entries: ModelObject<AccountTransaction>[]): ILedgerEntry[] {
     return entries.map(this.mapTransaction);
   }
 
   /**
    * Mappes the account transaction to ledger entry.
-   * @param   {IAccountTransaction} entry
+   * @param {IAccountTransaction} entry - Account transaction.
    * @returns {ILedgerEntry}
    */
-  static mapTransaction(entry: AccountTransaction): ILedgerEntry {
+  static mapTransaction(entry: ModelObject<AccountTransaction>): ILedgerEntry {
     return {
       credit: defaultTo(entry.credit, 0),
       debit: defaultTo(entry.debit, 0),
@@ -277,7 +278,9 @@ export class Ledger implements ILedger {
    * @param {IAccountTransaction[]} transactions
    * @returns {ILedger}
    */
-  static fromTransactions(transactions: AccountTransaction[]): Ledger {
+  static fromTransactions(
+    transactions: Array<ModelObject<AccountTransaction>>,
+  ): Ledger {
     const entries = Ledger.mappingTransactions(transactions);
     return new Ledger(entries);
   }

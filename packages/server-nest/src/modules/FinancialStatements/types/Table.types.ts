@@ -11,6 +11,8 @@ export interface ITableCell {
 
 export type ITableRow = {
   cells: ITableCell[];
+  rowTypes?: Array<any>
+  id?: string;
 };
 
 export interface ITableColumn {
@@ -37,4 +39,10 @@ export interface ITableData {
 
 export interface IFinancialTable {
   table: ITableData;
+}
+
+export interface IFinancialTableTotal {
+    amount: number;
+    formattedAmount: string;
+    currencyCode: string;
 }

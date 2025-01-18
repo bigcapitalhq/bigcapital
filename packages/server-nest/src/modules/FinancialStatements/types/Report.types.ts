@@ -70,3 +70,44 @@ export interface IDateRange {
   fromDate: Date;
   toDate: Date;
 }
+
+interface FinancialDateMeta {
+  date: Date;
+  formattedDate: string;
+}
+
+interface IFinancialSheetTotal {
+    amount: number;
+    formattedAmount: string;
+    currencyCode: string;
+}
+
+interface IFinancialSheetPercentage {
+  amount: number;
+  formattedAmount: string;
+}
+
+export interface IFinancialNodeWithPreviousPeriod {
+  previousPeriodFromDate?: FinancialDateMeta;
+  previousPeriodToDate?: FinancialDateMeta;
+
+  previousPeriod?: IFinancialSheetTotal;
+  previousPeriodChange?: IFinancialSheetTotal;
+  previousPeriodPercentage?: IFinancialSheetPercentage;
+}
+export interface IFinancialNodeWithPreviousYear {
+  previousYearFromDate: FinancialDateMeta;
+  previousYearToDate: FinancialDateMeta;
+
+  previousYear?: IFinancialSheetTotal;
+  previousYearChange?: IFinancialSheetTotal;
+  previousYearPercentage?: IFinancialSheetPercentage;
+}
+export interface IFinancialCommonNode {
+  total: IFinancialSheetTotal;
+}
+export interface IFinancialCommonHorizDatePeriodNode {
+  fromDate: FinancialDateMeta;
+  toDate: FinancialDateMeta;
+  total: IFinancialSheetTotal;
+}

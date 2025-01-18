@@ -14,6 +14,7 @@ import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';
 import { Model } from 'objection';
 import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { flatToNestedArray } from '@/utils/flat-to-nested-array';
 // import AccountSettings from './Account.Settings';
 // import { DEFAULT_VIEWS } from '@/modules/Accounts/constants';
 // import { buildFilterQuery, buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
@@ -406,10 +407,10 @@ export class Account extends TenantBaseModel {
    * @param {Object} options
    */
   static toNestedArray(accounts, options = { children: 'children' }) {
-    // return flatToNestedArray(accounts, {
-    //   id: 'id',
-    //   parentId: 'parentAccountId',
-    // });
+    return flatToNestedArray(accounts, {
+      id: 'id',
+      parentId: 'parentAccountId',
+    });
   }
 
   /**
