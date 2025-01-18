@@ -14,8 +14,15 @@ import { TenantController } from '../Tenancy/Tenant.controller';
 import { SubscriptionGuard } from '../Subscription/interceptors/Subscription.guard';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ItemsApplicationService } from './ItemsApplication.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { IItemsFilter } from './types/Items.types';
+import { IItemDTO } from '@/interfaces/Item';
 
 @Controller('/items')
 @UseGuards(SubscriptionGuard)
@@ -31,6 +38,67 @@ export class ItemsController extends TenantController {
   @ApiResponse({
     status: 200,
     description: 'The item list has been successfully retrieved.',
+  })
+  @ApiQuery({
+    name: 'customViewId',
+    required: false,
+    type: Number,
+    description: 'Custom view ID for filtering',
+  })
+  @ApiQuery({
+    name: 'filterRoles',
+    required: false,
+    type: Array,
+    description: 'Array of filter roles',
+  })
+  @ApiQuery({
+    name: 'columnSortBy',
+    required: false,
+    type: String,
+    description: 'Column sort direction',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    required: false,
+    type: String,
+    enum: ['DESC', 'ASC'],
+    description: 'Sort order direction',
+  })
+  @ApiQuery({
+    name: 'stringifiedFilterRoles',
+    required: false,
+    type: String,
+    description: 'Stringified filter roles',
+  })
+  @ApiQuery({
+    name: 'searchKeyword',
+    required: false,
+    type: String,
+    description: 'Search keyword',
+  })
+  @ApiQuery({
+    name: 'viewSlug',
+    required: false,
+    type: String,
+    description: 'View slug for filtering',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number for pagination',
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    type: Number,
+    description: 'Number of items per page',
+  })
+  @ApiQuery({
+    name: 'inactiveMode',
+    required: false,
+    type: Boolean,
+    description: 'Filter for inactive items',
   })
   async getItems(@Query() filterDTO: IItemsFilter): Promise<any> {
     return this.itemsApplication.getItems(filterDTO);
@@ -52,7 +120,7 @@ export class ItemsController extends TenantController {
   // @UsePipes(new ZodValidationPipe(createItemSchema))
   async editItem(
     @Param('id') id: string,
-    @Body() editItemDto: any,
+    @Body() editItemDto: IItemDTO,
   ): Promise<number> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.editItem(itemId, editItemDto);
@@ -70,7 +138,7 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully created.',
   })
   // @UsePipes(new ZodValidationPipe(createItemSchema))
-  async createItem(@Body() createItemDto: any): Promise<number> {
+  async createItem(@Body() createItemDto: IItemDTO): Promise<number> {
     return this.itemsApplication.createItem(createItemDto);
   }
 
@@ -85,6 +153,12 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The item id',
+  })
   async deleteItem(@Param('id') id: string): Promise<void> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.deleteItem(itemId);
@@ -101,6 +175,12 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully inactivated.',
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The item id',
+  })
   async inactivateItem(@Param('id') id: string): Promise<void> {
     console.log(id, 'XXXXXX');
 
@@ -119,6 +199,12 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully activated.',
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The item id',
+  })
   async activateItem(@Param('id') id: string): Promise<void> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.activateItem(itemId);
@@ -135,6 +221,12 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully retrieved.',
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The item id',
+  })
   async getItem(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItem(itemId);
@@ -149,6 +241,17 @@ export class ItemsController extends TenantController {
   @ApiOperation({
     summary: 'Retrieves the item associated invoices transactions.',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'The item associated invoices transactions have been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The item not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The item id',
+  })
   async getItemInvoicesTransactions(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItemInvoicesTransactions(itemId);
@@ -162,6 +265,18 @@ export class ItemsController extends TenantController {
   @Get(':id/bills')
   @ApiOperation({
     summary: 'Retrieves the item associated bills transactions.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The item associated bills transactions have been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The item not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The item id',
   })
   async getItemBillTransactions(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
@@ -179,9 +294,16 @@ export class ItemsController extends TenantController {
   })
   @ApiResponse({
     status: 200,
-    description: 'The item associated estimate transactions have been successfully retrieved.',
+    description:
+      'The item associated estimate transactions have been successfully retrieved.',
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The item id',
+  })
   async getItemEstimatesTransactions(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItemEstimatesTransactions(itemId);
@@ -198,9 +320,16 @@ export class ItemsController extends TenantController {
   })
   @ApiResponse({
     status: 200,
-    description: 'The item associated receipts transactions have been successfully retrieved.',
+    description:
+      'The item associated receipts transactions have been successfully retrieved.',
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The item id',
+  })
   async getItemReceiptTransactions(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItemReceiptsTransactions(itemId);

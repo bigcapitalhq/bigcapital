@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { BillPaymentsApplication } from './BillPaymentsApplication.service';
 import { IBillPaymentDTO } from './types/BillPayments.types';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('bill-payments')
 @ApiTags('bill-payments')
@@ -24,6 +24,12 @@ export class BillPaymentsController {
 
   @Delete(':billPaymentId')
   @ApiOperation({ summary: 'Delete the given bill payment.' })
+  @ApiParam({
+    name: 'billPaymentId',
+    required: true,
+    type: Number,
+    description: 'The bill payment id',
+  })
   public deleteBillPayment(@Param('billPaymentId') billPaymentId: string) {
     return this.billPaymentsApplication.deleteBillPayment(
       Number(billPaymentId),
@@ -32,6 +38,12 @@ export class BillPaymentsController {
 
   @Put(':billPaymentId')
   @ApiOperation({ summary: 'Edit the given bill payment.' })
+  @ApiParam({
+    name: 'billPaymentId',
+    required: true,
+    type: Number,
+    description: 'The bill payment id',
+  })
   public editBillPayment(
     @Param('billPaymentId') billPaymentId: string,
     @Body() billPaymentDTO: IBillPaymentDTO,
@@ -44,12 +56,24 @@ export class BillPaymentsController {
 
   @Get(':billPaymentId')
   @ApiOperation({ summary: 'Retrieves the bill payment details.' })
+  @ApiParam({
+    name: 'billPaymentId',
+    required: true,
+    type: Number,
+    description: 'The bill payment id',
+  })
   public getBillPayment(@Param('billPaymentId') billPaymentId: string) {
     return this.billPaymentsApplication.getBillPayment(Number(billPaymentId));
   }
 
   @Get(':billPaymentId/bills')
   @ApiOperation({ summary: 'Retrieves the bills of the given bill payment.' })
+  @ApiParam({
+    name: 'billPaymentId',
+    required: true,
+    type: Number,
+    description: 'The bill payment id',
+  })
   public getPaymentBills(@Param('billPaymentId') billPaymentId: string) {
     return this.billPaymentsApplication.getPaymentBills(Number(billPaymentId));
   }

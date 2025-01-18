@@ -35,6 +35,7 @@ export class CustomerBalanceSummaryService {
       await this.reportRepository.getCustomersTransactions(asDate);
     const commonProps = { accountNormal: 'debit', date: asDate };
 
+    // @ts-ignore
     return R.map(R.merge(commonProps))(transactions);
   }
 

@@ -94,6 +94,7 @@ export class CustomerBalanceSummaryTable {
       { key: 'name', value: this.i18n.t('Total') },
       { key: 'total', accessor: 'total.formattedAmount' },
     ];
+    // @ts-ignore
     return R.compose(
       R.concat(columns),
       R.when(
@@ -142,6 +143,7 @@ export class CustomerBalanceSummaryTable {
       },
       { key: 'total', label: this.i18n.t('contact_summary_balance.total') },
     ];
+    // @ts-ignore
     return R.compose(
       R.when(
         R.always(this.query.percentageColumn),

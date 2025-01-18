@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import {
   ISalesByItemsItem,
+  ISalesByItemsSheetData,
   ISalesByItemsTotal,
 } from './SalesByItems.types';
 import { ROW_TYPE } from './constants';
@@ -14,13 +15,13 @@ export class SalesByItemsTable extends R.compose(
   FinancialTable,
   FinancialSheetStructure
 )(FinancialSheet) {
-  private readonly data: ISalesByItemsSheetStatement;
+  private readonly data: ISalesByItemsSheetData;
 
   /**
    * Constructor method.
    * @param {ISalesByItemsSheetStatement} data
    */
-  constructor(data: ISalesByItemsSheetStatement) {
+  constructor(data: ISalesByItemsSheetData) {
     super();
     this.data = data;
   }

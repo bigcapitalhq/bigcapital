@@ -86,6 +86,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
   private getCustomersSection = (
     customers: ModelObject<Customer>[]
   ): ICustomerBalanceSummaryCustomer[] => {
+    // @ts-ignore
     return R.compose(
       R.when(this.isCustomersPostFilter, this.contactsFilter),
       R.when(

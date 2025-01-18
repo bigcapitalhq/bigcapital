@@ -1,19 +1,12 @@
 import { CreateSaleEstimate } from './commands/CreateSaleEstimate.service';
 import {
-  // IFilterMeta,
-  // IPaginationMeta,
-  // IPaymentReceivedSmsDetails,
   ISaleEstimateDTO,
   ISalesEstimatesFilter,
   SaleEstimateMailOptionsDTO,
-  // ISalesEstimatesFilter,
-  // SaleEstimateMailOptions,
-  // SaleEstimateMailOptionsDTO,
 } from './types/SaleEstimates.types';
 import { EditSaleEstimate } from './commands/EditSaleEstimate.service';
 import { DeleteSaleEstimate } from './commands/DeleteSaleEstimate.service';
 import { GetSaleEstimate } from './queries/GetSaleEstimate.service';
-// import { GetSaleEstimates } from './queries/GetSaleEstimates';
 import { DeliverSaleEstimateService } from './commands/DeliverSaleEstimate.service';
 import { ApproveSaleEstimateService } from './commands/ApproveSaleEstimate.service';
 import { RejectSaleEstimateService } from './commands/RejectSaleEstimate.service';
@@ -22,7 +15,6 @@ import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
 import { GetSaleEstimateState } from './queries/GetSaleEstimateState.service';
 import { GetSaleEstimatesService } from './queries/GetSaleEstimates.service';
 import { Injectable } from '@nestjs/common';
-import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { GetSaleEstimatePdf } from './queries/GetSaleEstimatePdf';
 
 @Injectable()
@@ -141,9 +133,7 @@ export class SaleEstimatesApplication {
    * @returns {Promise<[Buffer, string]>}
    */
   public getSaleEstimatePdf(saleEstimateId: number) {
-    return this.saleEstimatesPdfService.getSaleEstimatePdf(
-      saleEstimateId,
-    );
+    return this.saleEstimatesPdfService.getSaleEstimatePdf(saleEstimateId);
   }
 
   /**
@@ -168,9 +158,7 @@ export class SaleEstimatesApplication {
    * @returns {Promise<SaleEstimateMailOptions>}
    */
   public getSaleEstimateMail(saleEstimateId: number) {
-    return this.sendEstimateMailService.getMailOptions(
-      saleEstimateId,
-    );
+    return this.sendEstimateMailService.getMailOptions(saleEstimateId);
   }
 
   /**

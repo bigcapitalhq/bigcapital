@@ -168,7 +168,8 @@ export class GeneralLedgerTable extends R.compose(
 
   /**
    * Maps the given transaction node to table row.
-   * @param {IGeneralLedgerSheetAccountTransaction} transaction
+   * @param {IGeneralLedgerSheetAccount} account - Account.
+   * @param {IGeneralLedgerSheetAccountTransaction} transaction - Transaction.
    * @returns {ITableRow}
    */
   private transactionMapper = R.curry(
@@ -195,6 +196,7 @@ export class GeneralLedgerTable extends R.compose(
   ): ITableRow[] => {
     const transactionMapper = this.transactionMapper(account);
 
+    // @ts-ignore
     return R.map(transactionMapper)(account.transactions);
   };
 
@@ -279,6 +281,7 @@ export class GeneralLedgerTable extends R.compose(
     const isAppendClosingSubaccounts = () =>
       account.children?.length > 0 && !!account.closingBalanceSubaccounts;
 
+    // @ts-ignore
     const children = R.compose(
       R.when(
         isAppendClosingSubaccounts,

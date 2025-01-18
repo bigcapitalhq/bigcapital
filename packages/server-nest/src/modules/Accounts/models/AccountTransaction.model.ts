@@ -6,32 +6,32 @@ import { Account } from './Account.model';
 // import { getTransactionTypeLabel } from '@/utils/transactions-types';
 
 export class AccountTransaction extends BaseModel {
-  referenceType: string;
-  referenceId: number;
-  accountId: number;
-  contactId: number;
-  credit: number;
-  debit: number;
-  exchangeRate: number;
-  taxRate: number;
-  date: Date | string;
-  transactionType: string;
-  currencyCode: string;
-  referenceTypeFormatted: string;
-  transactionNumber!: string;
-  referenceNumber!: string;
-  note!: string;
+  public readonly referenceType: string;
+  public readonly referenceId: number;
+  public readonly accountId: number;
+  public readonly contactId: number;
+  public readonly credit: number;
+  public readonly debit: number;
+  public readonly exchangeRate: number;
+  public readonly taxRate: number;
+  public readonly date: Date | string;
+  public readonly transactionType: string;
+  public readonly currencyCode: string;
+  public readonly referenceTypeFormatted: string;
+  public readonly transactionNumber!: string;
+  public readonly referenceNumber!: string;
+  public readonly note!: string;
 
-  index!: number;
-  indexGroup!: number;
+  public readonly index!: number;
+  public readonly indexGroup!: number;
 
-  taxRateId!: number;
+  public readonly taxRateId!: number;
 
-  branchId!: number;
-  userId!: number;
-  itemId!: number;
-  projectId!: number;
-  account: Account;
+  public readonly branchId!: number;
+  public readonly userId!: number;
+  public readonly itemId!: number;
+  public readonly projectId!: number;
+  public readonly account: Account;
 
   /**
    * Table name

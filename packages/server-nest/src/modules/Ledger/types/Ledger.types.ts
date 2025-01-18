@@ -30,8 +30,11 @@ export interface ILedger {
 }
 
 export interface ILedgerEntry {
+  id?: number;
+
   credit: number;
   debit: number;
+
   currencyCode: string;
   exchangeRate: number;
 

@@ -20,10 +20,20 @@ import {
 } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
 import { PublicRoute } from '../Auth/Jwt.guard';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('sale-invoices')
 @ApiTags('sale-invoices')
+@ApiHeader({
+  name: 'organization-id',
+  description: 'The organization id',
+  required: true,
+})
+@ApiHeader({
+  name: 'x-access-token',
+  description: 'The authentication token',
+  required: true,
+})
 @PublicRoute()
 export class SaleInvoicesController {
   constructor(private saleInvoiceApplication: SaleInvoiceApplication) {}
@@ -44,6 +54,13 @@ export class SaleInvoicesController {
     status: 200,
     description: 'Sale invoice mail sent successfully',
   })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   sendSaleInvoiceMail(
     @Param('id', ParseIntPipe) id: number,
     @Body() messageDTO: SendInvoiceMailDTO,
@@ -57,6 +74,13 @@ export class SaleInvoicesController {
     status: 200,
     description: 'Sale invoice edited successfully',
   })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   editSaleInvoice(
     @Param('id', ParseIntPipe) id: number,
     @Body() saleInvoiceDTO: ISaleInvoiceEditDTO,
@@ -66,36 +90,91 @@ export class SaleInvoicesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete the given sale invoice.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice has been successfully deleted.',
+  })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   deleteSaleInvoice(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.deleteSaleInvoice(id);
   }
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the sale invoices.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoices have been successfully retrieved.',
+  })
   getSaleInvoices(@Query() filterDTO: ISalesInvoicesFilter) {
     return this.saleInvoiceApplication.getSaleInvoices(filterDTO);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieves the sale invoice details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice details have been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   getSaleInvoice(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.getSaleInvoice(id);
   }
 
   @Get(':id/state')
   @ApiOperation({ summary: 'Retrieves the sale invoice state.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice state has been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
   getSaleInvoiceState() {
     return this.saleInvoiceApplication.getSaleInvoiceState();
   }
 
   @Post(':id/deliver')
   @ApiOperation({ summary: 'Deliver the given sale invoice.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice has been successfully marked asdelivered.',
+  })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   @HttpCode(200)
   deliverSaleInvoice(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.deliverSaleInvoice(id);
   }
 
   @Get('receivable/:customerId?')
+  @ApiOperation({ summary: 'Retrieves the receivable sale invoices.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The receivable sale invoices have been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The customer not found.' })
+  @ApiParam({
+    name: 'customerId',
+    required: false,
+    type: Number,
+    description: 'The customer id',
+  })
   getReceivableSaleInvoices(@Param('customerId') customerId?: number) {
     return this.saleInvoiceApplication.getReceivableSaleInvoices(customerId);
   }
@@ -103,6 +182,17 @@ export class SaleInvoicesController {
   @Post(':id/writeoff')
   @ApiOperation({ summary: 'Write off the given sale invoice.' })
   @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice has been successfully written off.',
+  })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   writeOff(
     @Param('id', ParseIntPipe) id: number,
     @Body() writeoffDTO: ISaleInvoiceWriteoffDTO,
@@ -112,6 +202,18 @@ export class SaleInvoicesController {
 
   @Post(':id/cancel-writeoff')
   @ApiOperation({ summary: 'Cancel the written off sale invoice.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The sale invoice has been successfully marked as not written off.',
+  })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   @HttpCode(200)
   cancelWrittenoff(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.cancelWrittenoff(id);
@@ -119,18 +221,39 @@ export class SaleInvoicesController {
 
   @Get(':id/payments')
   @ApiOperation({ summary: 'Retrieves the sale invoice payments.' })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   getInvoicePayments(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.getInvoicePayments(id);
   }
 
   @Get(':id/pdf')
   @ApiOperation({ summary: 'Retrieves the sale invoice PDF.' })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   saleInvoicePdf(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.saleInvoicePdf(id);
   }
 
   @Get(':id/html')
   @ApiOperation({ summary: 'Retrieves the sale invoice HTML.' })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
   saleInvoiceHtml(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.saleInvoiceHtml(id);
   }
@@ -140,6 +263,13 @@ export class SaleInvoicesController {
   @ApiResponse({
     status: 200,
     description: 'Sale invoice mail state retrieved successfully',
+  })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
   })
   getSaleInvoiceMailState(
     @Param('id', ParseIntPipe) id: number,

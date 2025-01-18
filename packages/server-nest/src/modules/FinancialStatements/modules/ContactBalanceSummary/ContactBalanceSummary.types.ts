@@ -19,6 +19,7 @@ export interface IContactBalanceSummaryPercentage {
 }
 
 export interface IContactBalanceSummaryContact {
+  id: number;
   total: IContactBalanceSummaryAmount;
   percentageOfColumn?: IContactBalanceSummaryPercentage;
 }

@@ -10,7 +10,7 @@ import {
 import { ManualJournalsApplication } from './ManualJournalsApplication.service';
 import { IManualJournalDTO } from './types/ManualJournals.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('manual-journals')
 @ApiTags('manual-journals')
@@ -31,6 +31,12 @@ export class ManualJournalsController {
     description: 'The manual journal has been successfully edited.',
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The manual journal id',
+  })
   public editManualJournal(
     @Param('id') manualJournalId: number,
     @Body() manualJournalDTO: IManualJournalDTO,
@@ -48,6 +54,12 @@ export class ManualJournalsController {
     description: 'The manual journal has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The manual journal id',
+  })
   public deleteManualJournal(@Param('id') manualJournalId: number) {
     return this.manualJournalsApplication.deleteManualJournal(manualJournalId);
   }
@@ -59,6 +71,12 @@ export class ManualJournalsController {
     description: 'The manual journal has been successfully published.',
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The manual journal id',
+  })
   public publishManualJournal(@Param('id') manualJournalId: number) {
     return this.manualJournalsApplication.publishManualJournal(manualJournalId);
   }
@@ -70,6 +88,12 @@ export class ManualJournalsController {
     description: 'The manual journal details have been successfully retrieved.',
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The manual journal id',
+  })
   public getManualJournal(@Param('id') manualJournalId: number) {
     return this.manualJournalsApplication.getManualJournal(manualJournalId);
   }

@@ -1,17 +1,17 @@
-import { IFinancialSheetCommonMeta } from "../../types/Report.types";
+import { IFinancialSheetCommonMeta, INumberFormatQuery } from "../../types/Report.types";
 import { IFinancialTable } from "../../types/Table.types";
 
 export interface IGeneralLedgerSheetQuery {
   fromDate: Date | string;
   toDate: Date | string;
   basis: string;
-  numberFormat: {
-    noCents: boolean;
-    divideOn1000: boolean;
-  };
+  numberFormat: IGeneralLedgerNumberFormat;
   noneTransactions: boolean;
   accountsIds: number[];
   branchesIds?: number[];
+}
+
+export interface IGeneralLedgerNumberFormat extends INumberFormatQuery{
 }
 
 export interface IGeneralLedgerSheetAccountTransaction {

@@ -12,7 +12,7 @@ export class GeneralLedgerTableInjectable {
 
   /**
    * Retrieves the G/L table.
-   * @param {IGeneralLedgerSheetQuery} query
+   * @param {IGeneralLedgerSheetQuery} query - general ledger query.
    * @returns {Promise<IGeneralLedgerTableData>}
    */
   public async table(

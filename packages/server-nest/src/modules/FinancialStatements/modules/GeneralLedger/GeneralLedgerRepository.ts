@@ -78,6 +78,7 @@ export class GeneralLedgerRepository {
    * Initialize the accounts.
    */
   public async initAccounts() {
+    // @ts-ignore
     this.accounts = await this.accountRepository
       .all()
       .orderBy('name', 'ASC');
@@ -170,7 +171,7 @@ export class GeneralLedgerRepository {
 
       return R.concat(childrenIds, parentIds);
     });
-
+    // @ts-ignore\
     this.accountNodeInclude = R.compose(
       R.uniq,
       R.flatten,

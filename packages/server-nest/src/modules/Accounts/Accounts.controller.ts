@@ -13,7 +13,7 @@ import { CreateAccountDTO } from './CreateAccount.dto';
 import { EditAccountDTO } from './EditAccount.dto';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 // import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
 // import { ZodValidationPipe } from '@/common/pipes/ZodValidation.pipe';
 
@@ -39,6 +39,13 @@ export class AccountsController {
     status: 200,
     description: 'The account has been successfully updated.',
   })
+  @ApiResponse({ status: 404, description: 'The account not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The account id',
+  })
   async editAccount(
     @Param('id', ParseIntPipe) id: number,
     @Body() accountDTO: EditAccountDTO,
@@ -52,6 +59,13 @@ export class AccountsController {
     status: 200,
     description: 'The account has been successfully deleted.',
   })
+  @ApiResponse({ status: 404, description: 'The account not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The account id',
+  })
   async deleteAccount(@Param('id', ParseIntPipe) id: number) {
     return this.accountsApplication.deleteAccount(id);
   }
@@ -62,12 +76,30 @@ export class AccountsController {
     status: 200,
     description: 'The account has been successfully activated.',
   })
+  @ApiResponse({ status: 404, description: 'The account not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The account id',
+  })
   async activateAccount(@Param('id', ParseIntPipe) id: number) {
     return this.accountsApplication.activateAccount(id);
   }
 
   @Post(':id/inactivate')
   @ApiOperation({ summary: 'Inactivate the given account.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The account has been successfully inactivated.',
+  })
+  @ApiResponse({ status: 404, description: 'The account not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The account id',
+  })
   async inactivateAccount(@Param('id', ParseIntPipe) id: number) {
     return this.accountsApplication.inactivateAccount(id);
   }
@@ -97,6 +129,13 @@ export class AccountsController {
   @ApiResponse({
     status: 200,
     description: 'The account details have been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The account not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The account id',
   })
   async getAccount(@Param('id', ParseIntPipe) id: number) {
     return this.accountsApplication.getAccount(id);
