@@ -1,6 +1,6 @@
 export interface IColumnMapperMeta {
   key: string;
-  accessor?: string;
+  accessor?: string | ((value: any) => string);
   value?: string;
 }
 
@@ -11,7 +11,7 @@ export interface ITableCell {
 
 export type ITableRow = {
   cells: ITableCell[];
-  rowTypes?: Array<any>
+  rowTypes?: Array<any>;
   id?: string;
 };
 
@@ -42,7 +42,7 @@ export interface IFinancialTable {
 }
 
 export interface IFinancialTableTotal {
-    amount: number;
-    formattedAmount: string;
-    currencyCode: string;
+  amount: number;
+  formattedAmount: string;
+  currencyCode: string;
 }

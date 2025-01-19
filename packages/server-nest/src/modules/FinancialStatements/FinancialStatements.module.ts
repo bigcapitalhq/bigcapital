@@ -3,6 +3,10 @@ import { PurchasesByItemsModule } from './modules/PurchasesByItems/PurchasesByIt
 import { CustomerBalanceSummaryModule } from './modules/CustomerBalanceSummary/CustomerBalanceSummary.module';
 import { SalesByItemsModule } from './modules/SalesByItems/SalesByItems.module';
 import { GeneralLedgerModule } from './modules/GeneralLedger/GeneralLedger.module';
+import { TransactionsByCustomerModule } from './modules/TransactionsByCustomer/TransactionsByCustomer.module';
+import { TrialBalanceSheetModule } from './modules/TrialBalanceSheet/TrialBalanceSheet.module';
+import { TransactionsByReferenceModule } from './modules/TransactionsByReference/TransactionByReference.module';
+import { TransactionsByVendorModule } from './modules/TransactionsByVendor/TransactionsByVendor.module';
 // 
 @Module({
   providers: [],
@@ -10,7 +14,14 @@ import { GeneralLedgerModule } from './modules/GeneralLedger/GeneralLedger.modul
     PurchasesByItemsModule,
     CustomerBalanceSummaryModule,
     SalesByItemsModule,
-    GeneralLedgerModule
+    GeneralLedgerModule,
+    TrialBalanceSheetModule,
+    TransactionsByCustomerModule,
+    TransactionsByVendorModule,
+    // TransactionsByReferenceModule,
+    // TransactionsByVendorModule,
+    // TransactionsByContactModule,
   ],
 })
 export class FinancialStatementsModule {}
+

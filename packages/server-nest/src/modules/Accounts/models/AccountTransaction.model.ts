@@ -1,5 +1,6 @@
 import { Model, raw } from 'objection';
-import moment, { unitOfTime } from 'moment';
+import * as moment from 'moment';
+import { unitOfTime } from 'moment';
 import { isEmpty, castArray } from 'lodash';
 import { BaseModel } from '@/models/Model';
 import { Account } from './Account.model';
@@ -10,6 +11,7 @@ export class AccountTransaction extends BaseModel {
   public readonly referenceId: number;
   public readonly accountId: number;
   public readonly contactId: number;
+  public readonly contactType: string;
   public readonly credit: number;
   public readonly debit: number;
   public readonly exchangeRate: number;

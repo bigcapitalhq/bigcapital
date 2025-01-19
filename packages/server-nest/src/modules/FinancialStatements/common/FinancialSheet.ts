@@ -141,7 +141,7 @@ export class FinancialSheet {
    * @param {string} format
    * @returns
    */
-  protected getDateMeta(date: Date, format = 'YYYY-MM-DD') {
+  protected getDateMeta(date: moment.MomentInput, format = 'YYYY-MM-DD') {
     return {
       formattedDate: moment(date).format(format),
       date: moment(date).toDate(),
