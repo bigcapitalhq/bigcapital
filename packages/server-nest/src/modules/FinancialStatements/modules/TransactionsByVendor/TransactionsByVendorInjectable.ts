@@ -30,6 +30,12 @@ export class TransactionsByVendorsInjectable {
   ): Promise<ITransactionsByVendorsStatement> {
     const filter = { ...getTransactionsByVendorDefaultQuery(), ...query };
 
+    // Set filter.
+    this.transactionsByVendorRepository.setFilter(filter);
+
+    // Initialize the repository.
+    await this.transactionsByVendorRepository.asyncInit();
+
     // Transactions by customers data mapper.
     const reportInstance = new TransactionsByVendor(
       this.transactionsByVendorRepository,

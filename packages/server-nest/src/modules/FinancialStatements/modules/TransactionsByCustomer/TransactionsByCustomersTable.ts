@@ -1,4 +1,5 @@
 import * as R from 'ramda';
+import { I18nService } from 'nestjs-i18n';
 import { ITransactionsByCustomersCustomer } from './TransactionsByCustomer.types';
 import { ITableRow, ITableColumn } from '../../types/Table.types';
 import { TransactionsByContactsTableRows } from '../TransactionsByContact/TransactionsByContactTableRows';
@@ -18,7 +19,10 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
    * Constructor method.
    * @param {ITransactionsByCustomersCustomer[]} customersTransactions - Customers transactions.
    */
-  constructor(customersTransactions: ITransactionsByCustomersCustomer[], i18n) {
+  constructor(
+    customersTransactions: ITransactionsByCustomersCustomer[],
+    i18n: I18nService,
+  ) {
     super();
     this.customersTransactions = customersTransactions;
     this.i18n = i18n;
@@ -29,7 +33,9 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
    * @param {ITransactionsByCustomersCustomer} customer -
    * @returns {ITableRow[]}
    */
-  private customerDetails = (customer: ITransactionsByCustomersCustomer) => {
+  private customerDetails = (
+    customer: ITransactionsByCustomersCustomer,
+  ): ITableRow => {
     const columns = [
       { key: 'customerName', accessor: 'customerName' },
       ...R.repeat({ key: 'empty', value: '' }, 5),
@@ -56,22 +62,22 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
 
   /**
    * Retrieve the table rows of the customer section.
-   * @param {ITransactionsByCustomersCustomer} customer
-   * @returns {ITableRow[]}
+   * @param {ITransactionsByCustomersCustomer} customer - Customer object.
+   * @returns {ITableRow[]} - Table rows.
    */
-  private customerRowsMapper = (customer: ITransactionsByCustomersCustomer) => {
+  private customerRowsMapper = (
+    customer: ITransactionsByCustomersCustomer,
+  ): ITableRow => {
     return R.pipe(this.customerDetails)(customer);
   };
 
   /**
    * Retrieve the table rows of transactions by customers report.
-   * @param {ITransactionsByCustomersCustomer[]} customers
-   * @returns {ITableRow[]}
+   * @param {ITransactionsByCustomersCustomer[]} customers - Customer objects.
+   * @returns {ITableRow[]} - Table rows.
    */
   public tableRows = (): ITableRow[] => {
-    return R.map(this.customerRowsMapper.bind(this))(
-      this.customersTransactions,
-    );
+    return R.map(this.customerRowsMapper)(this.customersTransactions);
   };
 
   /**

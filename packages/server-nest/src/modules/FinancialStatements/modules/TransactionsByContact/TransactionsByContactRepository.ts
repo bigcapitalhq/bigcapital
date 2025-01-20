@@ -14,14 +14,14 @@ export class TransactionsByContactRepository {
   public accountsGraph: any;
 
   /**
-   * Report data.
-   * @param {Ledger} ledger
-   */
-  public ledger: Ledger;
-
-  /**
    * Opening balance entries.
    * @param {ILedgerEntry[]} openingBalanceEntries
    */
   public openingBalanceEntries: ILedgerEntry[];
+
+  /**
+   * Ledger.
+   * @param {Ledger} ledger
+   */
+  public ledger: Ledger;
 }

@@ -9,7 +9,14 @@ export interface ITransactionsByReferenceAmount {
   currencyCode: string;
 }
 
+interface ITransactionsByReferenceDate {
+  formattedDate: string;
+  date: Date;
+}
+
 export interface ITransactionsByReferenceTransaction {
+  date: ITransactionsByReferenceDate;
+
   credit: ITransactionsByReferenceAmount;
   debit: ITransactionsByReferenceAmount;
 

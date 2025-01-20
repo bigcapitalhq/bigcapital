@@ -13,6 +13,7 @@ export type ITableRow = {
   cells: ITableCell[];
   rowTypes?: Array<any>;
   id?: string;
+  children?: ITableRow[];
 };
 
 export interface ITableColumn {

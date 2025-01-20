@@ -29,7 +29,7 @@ export class TransactionsByReference extends FinancialSheet {
     this.transactions = transactions;
     this.query = query;
     this.baseCurrency = baseCurrency;
-    this.numberFormat = this.query.numberFormat;
+    // this.numberFormat = this.query.numberFormat;
   }
 
   /**
@@ -46,7 +46,10 @@ export class TransactionsByReference extends FinancialSheet {
       credit: this.getAmountMeta(transaction.credit, { money: false }),
       debit: this.getAmountMeta(transaction.debit, { money: false }),
 
-      referenceTypeFormatted: transaction.referenceTypeFormatted,
+      // @ts-ignore
+      // referenceTypeFormatted: transaction.referenceTypeFormatted,
+      referenceTypeFormatted: '',
+
       referenceType: transaction.referenceType,
       referenceId: transaction.referenceId,
 

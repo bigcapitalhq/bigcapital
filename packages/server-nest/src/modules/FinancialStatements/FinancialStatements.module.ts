@@ -3,11 +3,15 @@ import { PurchasesByItemsModule } from './modules/PurchasesByItems/PurchasesByIt
 import { CustomerBalanceSummaryModule } from './modules/CustomerBalanceSummary/CustomerBalanceSummary.module';
 import { SalesByItemsModule } from './modules/SalesByItems/SalesByItems.module';
 import { GeneralLedgerModule } from './modules/GeneralLedger/GeneralLedger.module';
-import { TransactionsByCustomerModule } from './modules/TransactionsByCustomer/TransactionsByCustomer.module';
 import { TrialBalanceSheetModule } from './modules/TrialBalanceSheet/TrialBalanceSheet.module';
-import { TransactionsByReferenceModule } from './modules/TransactionsByReference/TransactionByReference.module';
 import { TransactionsByVendorModule } from './modules/TransactionsByVendor/TransactionsByVendor.module';
-// 
+import { TransactionsByCustomerModule } from './modules/TransactionsByCustomer/TransactionsByCustomer.module';
+import { TransactionsByReferenceModule } from './modules/TransactionsByReference/TransactionByReference.module';
+import { ARAgingSummaryModule } from './modules/ARAgingSummary/ARAgingSummary.module';
+import { APAgingSummaryModule } from './modules/APAgingSummary/APAgingSummary.module';
+import { InventoryItemDetailsModule } from './modules/InventoryItemDetails/InventoryItemDetails.module';
+import { InventoryValuationSheetModule } from './modules/InventoryValuationSheet/InventoryValuationSheet.module';
+
 @Module({
   providers: [],
   imports: [
@@ -16,12 +20,13 @@ import { TransactionsByVendorModule } from './modules/TransactionsByVendor/Trans
     SalesByItemsModule,
     GeneralLedgerModule,
     TrialBalanceSheetModule,
-    TransactionsByCustomerModule,
     TransactionsByVendorModule,
-    // TransactionsByReferenceModule,
-    // TransactionsByVendorModule,
-    // TransactionsByContactModule,
+    TransactionsByCustomerModule,
+    TransactionsByReferenceModule,
+    ARAgingSummaryModule,
+    APAgingSummaryModule,
+    InventoryItemDetailsModule,
+    InventoryValuationSheetModule,
   ],
 })
 export class FinancialStatementsModule {}
-

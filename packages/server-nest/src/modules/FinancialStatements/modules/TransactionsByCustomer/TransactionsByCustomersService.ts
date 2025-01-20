@@ -1,3 +1,6 @@
+import { I18nService } from 'nestjs-i18n';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
 import {
   ITransactionsByCustomersFilter,
   ITransactionsByCustomersStatement,
@@ -5,11 +8,8 @@ import {
 import { TransactionsByCustomersRepository } from './TransactionsByCustomersRepository';
 import { TransactionsByCustomersMeta } from './TransactionsByCustomersMeta';
 import { getTransactionsByCustomerDefaultQuery } from './utils';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TransactionsByCustomers } from './TransactionsByCustomers';
 import { events } from '@/common/events/events';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
-import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TransactionsByCustomersSheet {
@@ -17,7 +17,7 @@ export class TransactionsByCustomersSheet {
     private readonly transactionsByCustomersMeta: TransactionsByCustomersMeta,
     private readonly transactionsByCustomersRepository: TransactionsByCustomersRepository,
     private readonly eventPublisher: EventEmitter2,
-    private readonly tenancyContext: TenancyContext,
+    private readonly i18n: I18nService,
   ) {}
 
   /**
@@ -29,13 +29,12 @@ export class TransactionsByCustomersSheet {
   public async transactionsByCustomers(
     query: ITransactionsByCustomersFilter,
   ): Promise<ITransactionsByCustomersStatement> {
-    const tenantMetadata = await this.tenancyContext.getTenantMetadata();
-
     const filter = {
       ...getTransactionsByCustomerDefaultQuery(),
       ...query,
     };
-    await this.transactionsByCustomersRepository.asyncInit(filter);
+    this.transactionsByCustomersRepository.setFilter(filter);
+    await this.transactionsByCustomersRepository.asyncInit();
 
     // Transactions by customers data mapper.
     const reportInstance = new TransactionsByCustomers(
@@ -43,15 +42,12 @@ export class TransactionsByCustomersSheet {
       this.transactionsByCustomersRepository,
       this.i18n,
     );
-
     const meta = await this.transactionsByCustomersMeta.meta(filter);
 
     // Triggers `onCustomerTransactionsViewed` event.
     await this.eventPublisher.emitAsync(
       events.reports.onCustomerTransactionsViewed,
-      {
-        query,
-      },
+      { query },
     );
 
     return {

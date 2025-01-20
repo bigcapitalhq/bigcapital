@@ -46,11 +46,11 @@ export class TransactionsByVendor extends TransactionsByContact {
    * @param {number} openingBalance - Opening balance amount.
    * @returns {ITransactionsByVendorsTransaction[]}
    */
-  private vendorTransactions(
+  public vendorTransactions(
     vendorId: number,
     openingBalance: number,
   ): ITransactionsByVendorsTransaction[] {
-    const openingBalanceLedger = this.repository.journal
+    const openingBalanceLedger = this.repository.ledger
       .whereContactId(vendorId)
       .whereFromDate(this.filter.fromDate)
       .whereToDate(this.filter.toDate);
@@ -68,7 +68,7 @@ export class TransactionsByVendor extends TransactionsByContact {
    * @param {IVendor} vendor
    * @returns {ITransactionsByVendorsVendor}
    */
-  private vendorMapper(
+  public vendorMapper(
     vendor: ModelObject<Vendor>,
   ): ITransactionsByVendorsVendor {
     const openingBalance = this.getContactOpeningBalance(vendor.id);
@@ -93,7 +93,7 @@ export class TransactionsByVendor extends TransactionsByContact {
    * @param {number} openingBalance
    * @returns
    */
-  private getVendorClosingBalance(
+  public getVendorClosingBalance(
     vendorTransactions: ITransactionsByVendorsTransaction[],
     openingBalance: number,
   ) {
@@ -108,7 +108,7 @@ export class TransactionsByVendor extends TransactionsByContact {
    * Detarmines whether the vendors post filter is active.
    * @returns {boolean}
    */
-  private isVendorsPostFilter = (): boolean => {
+  public isVendorsPostFilter = (): boolean => {
     return isEmpty(this.filter.vendorsIds);
   };
 
@@ -117,7 +117,7 @@ export class TransactionsByVendor extends TransactionsByContact {
    * @param {IVendor[]} vendors
    * @returns {ITransactionsByVendorsVendor[]}
    */
-  private vendorsMapper(
+  public vendorsMapper(
     vendors: ModelObject<Vendor>[],
   ): ITransactionsByVendorsVendor[] {
     return R.compose(

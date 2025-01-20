@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import {
   ITransactionsByVendorTable,
   ITransactionsByVendorsFilter,
@@ -7,7 +8,6 @@ import { TransactionsByVendorExportInjectable } from './TransactionsByVendorExpo
 import { TransactionsByVendorTableInjectable } from './TransactionsByVendorTableInjectable';
 import { TransactionsByVendorsInjectable } from './TransactionsByVendorInjectable';
 import { TransactionsByVendorsPdf } from './TransactionsByVendorPdf';
-import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TransactionsByVendorApplication {
@@ -55,7 +55,6 @@ export class TransactionsByVendorApplication {
 
   /**
    * Retrieves the transactions by vendor in XLSX format.
-   * @param {number} tenantId
    * @param {ITransactionsByVendorsFilter} query
    * @returns {Promise<Buffer>}
    */
@@ -67,7 +66,6 @@ export class TransactionsByVendorApplication {
 
   /**
    * Retrieves the transactions by vendor in PDF format.
-   * @param {number} tenantId
    * @param {ITransactionsByVendorsFilter} query
    * @returns {Promise<Buffer>}
    */

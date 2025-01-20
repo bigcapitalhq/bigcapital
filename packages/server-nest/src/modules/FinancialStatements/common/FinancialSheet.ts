@@ -1,8 +1,7 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import {
   IFormatNumberSettings,
   INumberFormatQuery,
-  
 } from '../types/Report.types';
 import { formatNumber } from '@/utils/format-number';
 import { IFinancialTableTotal } from '../types/Table.types';
@@ -41,7 +40,7 @@ export class FinancialSheet {
    */
   protected formatNumber(
     number,
-    overrideSettings: IFormatNumberSettings = {}
+    overrideSettings: IFormatNumberSettings = {},
   ): string {
     const settings = {
       ...this.transfromFormatQueryToSettings(),
@@ -57,7 +56,7 @@ export class FinancialSheet {
    */
   protected formatTotalNumber = (
     amount: number,
-    settings: IFormatNumberSettings = {}
+    settings: IFormatNumberSettings = {},
   ): string => {
     const { numberFormat } = this;
 
@@ -75,7 +74,7 @@ export class FinancialSheet {
    */
   protected formatPercentage = (
     amount: number,
-    overrideSettings: IFormatNumberSettings = {}
+    overrideSettings: IFormatNumberSettings = {},
   ): string => {
     const percentage = amount * 100;
     const settings = {
@@ -94,7 +93,7 @@ export class FinancialSheet {
    */
   protected formatTotalPercentage = (
     amount: number,
-    settings: IFormatNumberSettings = {}
+    settings: IFormatNumberSettings = {},
   ): string => {
     return this.formatPercentage(amount, {
       ...settings,
@@ -109,7 +108,7 @@ export class FinancialSheet {
    */
   protected getAmountMeta(
     amount: number,
-    overrideSettings?: IFormatNumberSettings
+    overrideSettings?: IFormatNumberSettings,
   ): IFinancialTableTotal {
     return {
       amount,
@@ -125,7 +124,7 @@ export class FinancialSheet {
    */
   protected getTotalAmountMeta(
     amount: number,
-    title?: string
+    title?: string,
   ): IFinancialTableTotal {
     return {
       ...(title ? { title } : {}),

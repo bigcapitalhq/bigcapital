@@ -11,9 +11,9 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 import { ITableColumn, ITableRow } from '../../types/Table.types';
 import { tableRowMapper } from '../../utils/Table.utils';
 
-export class SalesByItemsTable extends R.compose(
+export class SalesByItemsTable extends R.pipe(
   FinancialTable,
-  FinancialSheetStructure
+  FinancialSheetStructure,
 )(FinancialSheet) {
   private readonly data: ISalesByItemsSheetData;
 

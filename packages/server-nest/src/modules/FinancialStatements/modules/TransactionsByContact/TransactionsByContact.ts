@@ -33,7 +33,10 @@ export class TransactionsByContact extends FinancialSheet {
       accountName: account.name,
       currencyCode: this.baseCurrency,
       transactionNumber: entry.transactionNumber,
-      transactionType: this.i18n.t(entry.referenceTypeFormatted),
+
+      // @ts-ignore
+      // transactionType: this.i18n.t(entry.referenceTypeFormatted),
+      transactionType: '',
       date: entry.date,
       createdAt: entry.createdAt,
     };

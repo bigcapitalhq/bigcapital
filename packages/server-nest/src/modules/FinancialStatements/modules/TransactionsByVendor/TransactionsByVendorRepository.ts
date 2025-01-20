@@ -1,4 +1,5 @@
 import * as R from 'ramda';
+import * as moment from 'moment';
 import { isEmpty, map } from 'lodash';
 import { Inject, Injectable } from '@nestjs/common';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
@@ -12,6 +13,7 @@ import { AccountRepository } from '@/modules/Accounts/repositories/Account.repos
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { ModelObject } from 'objection';
 import { ITransactionsByVendorsFilter } from './TransactionsByVendor.types';
+import { DateInput } from '@/common/types/Date';
 
 @Injectable()
 export class TransactionsByVendorRepository extends TransactionsByContactRepository {
@@ -67,11 +69,17 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
   public reportEntries: ILedgerEntry[];
 
   /**
-   * Journal.
-   * @param {Ledger} journal
+   * Set filter.
+   * @param {ITransactionsByVendorsFilter} filter
    */
-  public journal: Ledger;
+  public setFilter(filter: ITransactionsByVendorsFilter) {
+    this.filter = filter;
+  }
 
+  /**
+   * Initialize the repository.
+   * @returns {Promise<void>}
+   */
   async asyncInit() {
     await this.initBaseCurrency();
     await this.initVendors();
@@ -114,7 +122,7 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
   }
 
   async initLedger() {
-    this.journal = new Ledger(this.reportEntries);
+    this.ledger = new Ledger(this.reportEntries);
   }
 
   /**
@@ -145,8 +153,8 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
    * @param {number[]} customersIds
    */
   public async getVendorsPeriodEntries(
-    fromDate: moment.MomentInput,
-    toDate: moment.MomentInput,
+    fromDate: DateInput,
+    toDate: DateInput,
   ): Promise<ILedgerEntry[]> {
     const transactions = await this.getVendorsPeriodTransactions(
       fromDate,
@@ -172,8 +180,8 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
    * @returns {Promise<ILedgerEntry[]>}
    */
   public async getReportEntries(
-    fromDate: moment.MomentInput,
-    toDate: moment.MomentInput,
+    fromDate: DateInput,
+    toDate: DateInput,
   ): Promise<ILedgerEntry[]> {
     const openingBalanceDate = moment(fromDate).subtract(1, 'days').toDate();
 
@@ -240,8 +248,8 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
    * @returns {Promise<AccountTransaction[]>}
    */
   public async getVendorsPeriodTransactions(
-    fromDate: moment.MomentInput,
-    toDate: moment.MomentInput,
+    fromDate: DateInput,
+    toDate: DateInput,
   ): Promise<AccountTransaction[]> {
     const receivableAccounts = await this.getPayableAccounts();
     const receivableAccountsIds = map(receivableAccounts, 'id');

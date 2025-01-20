@@ -1,3 +1,5 @@
+import { ModelObject } from 'objection';
+import * as moment from 'moment';
 import * as R from 'ramda';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
 import { Account } from '@/modules/Accounts/models/Account.model';
@@ -9,9 +11,9 @@ import { isEmpty, map } from 'lodash';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { ITransactionsByCustomersFilter } from './TransactionsByCustomer.types';
-import { ModelObject } from 'objection';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TransactionsByContactRepository } from '../TransactionsByContact/TransactionsByContactRepository';
+import { DateInput } from '@/common/types/Date';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class TransactionsByCustomersRepository extends TransactionsByContactRepository {
@@ -50,17 +52,22 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
 
   /**
    * Initialize the report data.
-   * @param {ITransactionsByCustomersFilter} filter
    */
-  public async asyncInit(filter: ITransactionsByCustomersFilter) {
-    this.filter = filter;
-
+  public async asyncInit() {
     await this.initAccountsGraph();
     await this.initCustomers();
     await this.initOpeningBalanceEntries();
     await this.initCustomersPeriodsEntries();
     await this.initLedger();
     await this.initBaseCurrency();
+  }
+
+  /**
+   * Set the filter.
+   * @param {ITransactionsByCustomersFilter} filter
+   */
+  public setFilter(filter: ITransactionsByCustomersFilter) {
+    this.filter = filter;
   }
 
   /**
@@ -119,6 +126,9 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
     this.ledger = new Ledger(journalTransactions);
   }
 
+  /**
+   * Initialize the base currency.
+   */
   async initBaseCurrency() {
     const tenantMetadata = await this.tenancyContext.getTenantMetadata();
     this.baseCurrency = tenantMetadata.baseCurrency;
@@ -140,6 +150,7 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
         openingDate,
         customersIds,
       );
+    // @ts-ignore
     return R.compose(
       R.map(R.assoc('date', openingDate)),
       R.map(R.assoc('accountNormal', 'debit')),
@@ -154,25 +165,29 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
    * @returns {Promise<ILedgerEntry[]>}
    */
   private async getCustomersPeriodsEntries(
-    fromDate: Date | string,
-    toDate: Date | string,
+    fromDate: DateInput,
+    toDate: DateInput,
   ): Promise<ILedgerEntry[]> {
     const transactions =
       await this.getCustomersPeriodTransactions(
         fromDate,
         toDate,
       );
-    return R.compose(
+
+    // @ts-ignore
+    return R.pipe(
       R.map(R.assoc('accountNormal', 'debit')),
       R.map((trans) => ({
         ...trans,
-        referenceTypeFormatted: trans.referenceTypeFormatted,
+        // @ts-ignore
+        referenceTypeFormatted: '',
+        // referenceTypeFormatted: trans.referenceTypeFormatted,
       })),
     )(transactions);
   }
 
   /**
-   * Retrieve the report customers.
+   * Retrieves the report customers.
    * @param {number[]} customersIds - Customers ids.
    * @returns {Promise<ICustomer[]>}
    */
@@ -187,7 +202,7 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
   }
 
   /**
-   * Retrieve the accounts receivable.
+   * Retrieves the accounts receivable.
    * @returns {Promise<IAccount[]>}
    */
   public async getReceivableAccounts(): Promise<Account[]> {
@@ -204,7 +219,7 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
    * @returns {Promise<IAccountTransaction[]>}
    */
   public async getCustomersOpeningBalanceTransactions(
-    openingDate: Date,
+    openingDate: DateInput,
     customersIds?: number[],
   ): Promise<AccountTransaction[]> {
     const receivableAccounts = await this.getReceivableAccounts();
@@ -222,14 +237,14 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
   }
 
   /**
-   * Retrieve the customers periods transactions.
-   * @param {Date} fromDate - From date.
-   * @param {Date} toDate - To date.
+   * Retrieves the customers periods transactions.
+   * @param {DateInput} fromDate - From date.
+   * @param {DateInput} toDate - To date.
    * @return {Promise<IAccountTransaction[]>}
    */
   public async getCustomersPeriodTransactions(
-    fromDate: Date,
-    toDate: Date,
+    fromDate: DateInput,
+    toDate: DateInput,
   ): Promise<AccountTransaction[]> {
     const receivableAccounts = await this.getReceivableAccounts();
     const receivableAccountsIds = map(receivableAccounts, 'id');

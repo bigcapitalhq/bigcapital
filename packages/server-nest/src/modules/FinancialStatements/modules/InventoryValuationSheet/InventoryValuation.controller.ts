@@ -1,0 +1,67 @@
+import { Response } from 'express';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
+import { InventoryValuationSheetApplication } from './InventoryValuationSheetApplication';
+import { IInventoryValuationReportQuery } from './InventoryValuationSheet.types';
+import { AcceptType } from '@/constants/accept-type';
+import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+
+@Controller('reports/inventory-valuation')
+@PublicRoute()
+@ApiTags('reports')
+export class InventoryValuationController {
+  constructor(
+    private readonly inventoryValuationApp: InventoryValuationSheetApplication,
+  ) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Retrieves the inventory valuation sheet' })
+  @ApiResponse({
+    status: 200,
+    description: 'The inventory valuation sheet',
+  })
+  public async getInventoryValuationSheet(
+    @Query() query: IInventoryValuationReportQuery,
+    @Res() res: Response,
+    @Headers('accept') acceptHeader: string,
+  ) {
+    // Retrieves the json table format.
+    if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+      const table = await this.inventoryValuationApp.table(query);
+
+      return res.status(200).send(table);
+      // Retrieves the csv format.
+    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+      const buffer = await this.inventoryValuationApp.csv(query);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+      res.setHeader('Content-Type', 'text/csv');
+
+      return res.send(buffer);
+      // Retrieves the xslx buffer format.
+    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+      const buffer = await this.inventoryValuationApp.xlsx(query);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+      return res.send(buffer);
+      // Retrieves the pdf format.
+    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+      const pdfContent = await this.inventoryValuationApp.pdf(query);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      return res.status(200).send(pdfContent);
+      // Retrieves the json format.
+    } else {
+      const sheet = await this.inventoryValuationApp.sheet(query);
+
+      return res.status(200).send(sheet);
+    }
+  }
+}
