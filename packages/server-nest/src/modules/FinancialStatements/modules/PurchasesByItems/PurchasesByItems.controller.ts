@@ -4,7 +4,12 @@ import { PurchasesByItemsApplication } from './PurchasesByItemsApplication';
 import { IPurchasesByItemsReportQuery } from './types/PurchasesByItems.types';
 import { AcceptType } from '@/constants/accept-type';
 import { PublicRoute } from '@/modules/Auth/Jwt.guard';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiResponseProperty,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('/reports/purchases-by-items')
 @PublicRoute()
@@ -16,6 +21,7 @@ export class PurchasesByItemReportController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'Purchases by items report' })
+  @ApiOperation({ summary: 'Get purchases by items report' })
   async purchasesByItems(
     @Query() filter: IPurchasesByItemsReportQuery,
     @Res() res: Response,

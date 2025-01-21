@@ -9,8 +9,12 @@ import {
 import { I18nService } from 'nestjs-i18n';
 import { IInventoryDetailsData } from './InventoryItemDetails.types';
 import { tableRowMapper } from '../../utils/Table.utils';
-import { ITableColumn, ITableRow } from '../../types/Table.types';
-import mapValuesDeep from 'deepdash/es/mapValuesDeep';
+import {
+  IColumnMapperMeta,
+  ITableColumn,
+  ITableRow,
+} from '../../types/Table.types';
+import { mapValuesDeep } from '@/utils/deepdash';
 
 enum IROW_TYPE {
   ITEM = 'ITEM',
@@ -53,7 +57,7 @@ export class InventoryItemDetailsTable {
    * @returns {ITableRow}
    */
   private itemTransactionNodeMapper = (
-    transaction: IInventoryDetailsItemTransaction
+    transaction: IInventoryDetailsItemTransaction,
   ) => {
     const columns = [
       { key: 'date', accessor: 'date.formattedDate' },
@@ -84,15 +88,15 @@ export class InventoryItemDetailsTable {
    * @returns {ITableRow}
    */
   private openingNodeMapper = (
-    transaction: IInventoryDetailsOpening
+    transaction: IInventoryDetailsOpening,
   ): ITableRow => {
-    const columns = [
+    const columns: Array<IColumnMapperMeta> = [
       { key: 'date', accessor: 'date.formattedDate' },
       { key: 'closing', value: this.i18n.t('Opening balance') },
-      { key: 'empty' },
+      { key: 'empty', value: '' },
       { key: 'quantity', accessor: 'quantity.formattedNumber' },
-      { key: 'empty' },
-      { key: 'empty' },
+      { key: 'empty', value: '' },
+      { key: 'empty', value: '' },
       { key: 'value', accessor: 'value.formattedNumber' },
     ];
     return tableRowMapper(transaction, columns, {
@@ -106,19 +110,18 @@ export class InventoryItemDetailsTable {
    * @returns {ITableRow}
    */
   private closingNodeMapper = (
-    transaction: IInventoryDetailsClosing
+    transaction: IInventoryDetailsClosing,
   ): ITableRow => {
-    const columns = [
+    const columns: Array<IColumnMapperMeta> = [
       { key: 'date', accessor: 'date.formattedDate' },
       { key: 'closing', value: this.i18n.t('Closing balance') },
-      { key: 'empty' },
+      { key: 'empty', value: '' },
       { key: 'quantity', accessor: 'quantity.formattedNumber' },
-      { key: 'empty' },
-      { key: 'empty' },
+      { key: 'empty', value: '' },
+      { key: 'empty', value: '' },
       { key: 'value', accessor: 'value.formattedNumber' },
       { key: 'profitMargin', accessor: 'profitMargin.formattedNumber' },
     ];
-
     return tableRowMapper(transaction, columns, {
       rowTypes: [IROW_TYPE.CLOSING_ENTRY],
     });
@@ -132,7 +135,7 @@ export class InventoryItemDetailsTable {
    */
   private isNodeTypeEquals = (
     type: string,
-    node: IInventoryDetailsNode
+    node: IInventoryDetailsNode,
   ): boolean => {
     return node.nodeType === type;
   };
@@ -143,20 +146,23 @@ export class InventoryItemDetailsTable {
    * @return {ITableRow}
    */
   private itemMapper = (node: IInventoryDetailsNode): ITableRow => {
+    // @ts-ignore
     return R.compose(
       R.when(
+        // @ts-ignore
         R.curry(this.isNodeTypeEquals)('OPENING_ENTRY'),
-        this.openingNodeMapper
+        this.openingNodeMapper,
       ),
       R.when(
+        // @ts-ignore
         R.curry(this.isNodeTypeEquals)('CLOSING_ENTRY'),
-        this.closingNodeMapper
+        this.closingNodeMapper,
       ),
       R.when(R.curry(this.isNodeTypeEquals)('item'), this.itemNodeMapper),
       R.when(
         R.curry(this.isNodeTypeEquals)('transaction'),
-        this.itemTransactionNodeMapper
-      )
+        this.itemTransactionNodeMapper,
+      ),
     )(node);
   };
 
@@ -166,6 +172,7 @@ export class InventoryItemDetailsTable {
    * @returns {ITableRow[]}
    */
   private itemsMapper = (items: IInventoryDetailsItem[]): ITableRow[] => {
+    // @ts-ignore
     return mapValuesDeep(items, this.itemMapper, MAP_CONFIG);
   };
 

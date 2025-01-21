@@ -8,7 +8,7 @@ import { TransactionsByVendorModule } from './modules/TransactionsByVendor/Trans
 import { TransactionsByCustomerModule } from './modules/TransactionsByCustomer/TransactionsByCustomer.module';
 import { TransactionsByReferenceModule } from './modules/TransactionsByReference/TransactionByReference.module';
 import { ARAgingSummaryModule } from './modules/ARAgingSummary/ARAgingSummary.module';
-import { APAgingSummaryModule } from './modules/APAgingSummary/APAgingSummary.module';
+// import { APAgingSummaryModule } from './modules/APAgingSummary/APAgingSummary.module';
 import { InventoryItemDetailsModule } from './modules/InventoryItemDetails/InventoryItemDetails.module';
 import { InventoryValuationSheetModule } from './modules/InventoryValuationSheet/InventoryValuationSheet.module';
 
@@ -24,7 +24,7 @@ import { InventoryValuationSheetModule } from './modules/InventoryValuationSheet
     TransactionsByCustomerModule,
     TransactionsByReferenceModule,
     ARAgingSummaryModule,
-    APAgingSummaryModule,
+    // APAgingSummaryModule,
     InventoryItemDetailsModule,
     InventoryValuationSheetModule,
   ],

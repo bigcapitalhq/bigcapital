@@ -41,6 +41,7 @@ export interface IInventoryDetailsOpening {
 export interface IInventoryDetailsClosing
   extends Omit<IInventoryDetailsOpening, 'nodeType'> {
   nodeType: 'CLOSING_ENTRY';
+  profitMargin: IInventoryDetailsNumber;
 }
 
 export interface IInventoryDetailsItem {

@@ -3,7 +3,7 @@ import { ICustomerBalanceSummaryQuery } from './CustomerBalanceSummary.types';
 import { CustomerBalanceSummaryApplication } from './CustomerBalanceSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/customer-balance-summary')
 @ApiTags('reports')
@@ -14,6 +14,7 @@ export class CustomerBalanceSummaryController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'Customer balance summary report' })
+  @ApiOperation({ summary: 'Get customer balance summary report' })
   async customerBalanceSummary(
     @Query() filter: ICustomerBalanceSummaryQuery,
     @Res() res: Response,

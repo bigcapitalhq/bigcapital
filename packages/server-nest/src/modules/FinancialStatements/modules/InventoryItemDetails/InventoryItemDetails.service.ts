@@ -29,6 +29,11 @@ export class InventoryDetailsService {
       ...getInventoryItemDetailsDefaultQuery(),
       ...query,
     };
+
+    // Initialize the inventory item details repository.
+    this.inventoryItemDetailsRepository.setFilter(filter);
+    await this.inventoryItemDetailsRepository.asyncInit();
+
     // Inventory details report mapper.
     const inventoryDetailsInstance = new InventoryDetails(
       filter,

@@ -1,9 +1,17 @@
-import { Body, Controller, Get, Headers, Query, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { ISalesByItemsReportQuery } from './SalesByItems.types';
 import { AcceptType } from '@/constants/accept-type';
 import { SalesByItemsApplication } from './SalesByItemsApplication';
 import { Response } from 'express';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/sales-by-items')
 @ApiTags('reports')
@@ -12,6 +20,7 @@ export class SalesByItemsController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'Sales by items report' })
+  @ApiOperation({ summary: 'Get sales by items report' })
   public async salesByitems(
     @Query() filter: ISalesByItemsReportQuery,
     @Res() res: Response,

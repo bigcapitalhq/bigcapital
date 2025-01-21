@@ -3,10 +3,11 @@ import { ITransactionsByVendorsFilter } from './TransactionsByVendor.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { TransactionsByVendorApplication } from './TransactionsByVendorApplication';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PublicRoute } from '@/modules/Auth/Jwt.guard';
 
 @Controller('/reports/transactions-by-vendors')
+@ApiTags('reports')
 @PublicRoute()
 export class TransactionsByVendorController {
   constructor(

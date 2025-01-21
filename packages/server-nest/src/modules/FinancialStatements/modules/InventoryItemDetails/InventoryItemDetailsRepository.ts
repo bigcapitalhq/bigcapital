@@ -31,12 +31,15 @@ export class InventoryItemDetailsRepository {
    * @param {ModelObject<InventoryTransaction>[]} openingBalanceTransactions - The opening balance transactions.
    */
   openingBalanceTransactions: ModelObject<InventoryTransaction>[];
-  
+
   /**
    * The opening balance transactions by item id.
    * @param {Map<number, ModelObject<InventoryTransaction>>} openingBalanceTransactionsByItemId - The opening balance transactions by item id.
    */
-  openingBalanceTransactionsByItemId: Map<number, ModelObject<InventoryTransaction>>;
+  openingBalanceTransactionsByItemId: Map<
+    number,
+    ModelObject<InventoryTransaction>
+  >;
 
   /**
    * The inventory transactions.
@@ -46,9 +49,12 @@ export class InventoryItemDetailsRepository {
 
   /**
    * The inventory transactions by item id.
-   * @param {Map<number, ModelObject<InventoryTransaction>>} inventoryTransactionsByItemId - The inventory transactions by item id.
+   * @param {Map<string, ModelObject<InventoryTransaction>>} inventoryTransactionsByItemId - The inventory transactions by item id.
    */
-  inventoryTransactionsByItemId: Map<number, ModelObject<InventoryTransaction>[]>;
+  inventoryTransactionsByItemId: Map<
+    string,
+    ModelObject<InventoryTransaction>[]
+  >;
 
   /**
    * The filter.
@@ -100,7 +106,7 @@ export class InventoryItemDetailsRepository {
     this.openingBalanceTransactions = openingBalanceTransactions;
     this.openingBalanceTransactionsByItemId = transformToMapKeyValue(
       openingBalanceTransactions,
-      'itemId'
+      'itemId',
     );
   }
 
@@ -115,7 +121,7 @@ export class InventoryItemDetailsRepository {
     this.inventoryTransactions = inventoryTransactions;
     this.inventoryTransactionsByItemId = transformToMapBy(
       inventoryTransactions,
-      'itemId'
+      'itemId',
     );
   }
 

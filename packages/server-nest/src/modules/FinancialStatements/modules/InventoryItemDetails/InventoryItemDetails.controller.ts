@@ -1,15 +1,21 @@
-import { Controller, Headers, Query, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { InventoryItemDetailsApplication } from './InventoryItemDetailsApplication';
 import { IInventoryDetailsQuery } from './InventoryItemDetails.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
+import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('reports/inventory-item-details')
+@PublicRoute()
+@ApiTags('reports')
 export class InventoryItemDetailsController {
   constructor(
     private readonly inventoryItemDetailsApp: InventoryItemDetailsApplication,
   ) {}
 
+  @Get('/')
+  @ApiOperation({ summary: 'Get inventory item details' })
   async inventoryItemDetails(
     @Query() query: IInventoryDetailsQuery,
     @Res() res: Response,

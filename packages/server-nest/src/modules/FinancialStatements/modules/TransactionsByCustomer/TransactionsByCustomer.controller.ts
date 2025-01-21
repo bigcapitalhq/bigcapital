@@ -1,5 +1,5 @@
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ITransactionsByCustomersFilter } from './TransactionsByCustomer.types';
 import { TransactionsByCustomerApplication } from './TransactionsByCustomersApplication';
 import { AcceptType } from '@/constants/accept-type';
@@ -7,6 +7,7 @@ import { Response } from 'express';
 import { PublicRoute } from '@/modules/Auth/Jwt.guard';
 
 @Controller('/reports/transactions-by-customers')
+@ApiTags('reports')
 @PublicRoute()
 export class TransactionsByCustomerController {
   constructor(

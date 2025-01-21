@@ -29,7 +29,6 @@ export class InventoryDetails extends FinancialSheet {
   readonly repository: InventoryItemDetailsRepository;
   readonly query: IInventoryDetailsQuery;
   readonly numberFormat: INumberFormatQuery;
-  readonly items: ModelObject<Item>[];
   readonly i18n: I18nService;
 
   /**
@@ -112,9 +111,9 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IInventoryDetailsItemTransaction[]} transactions
    * @returns {IInventoryDetailsItemTransaction[]}
    */
-  public mapAccumTransactionsRunningQuantity(
+  public mapAccumTransactionsRunningQuantity = (
     transactions: IInventoryDetailsItemTransaction[],
-  ): IInventoryDetailsItemTransaction[] {
+  ): IInventoryDetailsItemTransaction[] => {
     const initial = this.getNumberMeta(0);
 
     const mapAccumAppender = (a, b) => {
@@ -125,20 +124,21 @@ export class InventoryDetails extends FinancialSheet {
       return [accum, accum];
     };
     return R.mapAccum(
+      // @ts-ignore
       mapAccumAppender,
       { runningQuantity: initial },
       transactions,
     )[1];
-  }
+  };
 
   /**
    * Accumulate and mapping running valuation on transactions.
    * @param {IInventoryDetailsItemTransaction[]} transactions
    * @returns {IInventoryDetailsItemTransaction}
    */
-  public mapAccumTransactionsRunningValuation(
+  public mapAccumTransactionsRunningValuation = (
     transactions: IInventoryDetailsItemTransaction[],
-  ): IInventoryDetailsItemTransaction[] {
+  ): IInventoryDetailsItemTransaction[] => {
     const initial = this.getNumberMeta(0);
 
     const mapAccumAppender = (a, b) => {
@@ -150,11 +150,12 @@ export class InventoryDetails extends FinancialSheet {
       return [accum, accum];
     };
     return R.mapAccum(
+      // @ts-ignore
       mapAccumAppender,
       { runningValuation: initial },
       transactions,
     )[1];
-  }
+  };
 
   /**
    * Retrieve the inventory transaction total.
@@ -170,15 +171,13 @@ export class InventoryDetails extends FinancialSheet {
   };
 
   /**
-   * Mappes the item transaction to inventory item transaction node.
-   * @param {IItem} item
-   * @param {IInvetoryTransaction} transaction
+   * Maps the item transaction to inventory item transaction node.
+   * @param {IInvetoryTransaction} transaction - The inventory transaction.
    * @returns {IInventoryDetailsItemTransaction}
    */
-  public itemTransactionMapper(
-    item: ModelObject<Item>,
+  public itemTransactionMapper = (
     transaction: ModelObject<InventoryTransaction>,
-  ): IInventoryDetailsItemTransaction {
+  ): IInventoryDetailsItemTransaction => {
     const total = this.getTransactionTotal(transaction);
     const amountMovement = this.adjustAmountMovement(transaction.direction);
 
@@ -217,7 +216,7 @@ export class InventoryDetails extends FinancialSheet {
       runningQuantity: this.getNumberMeta(0),
       runningValuation: this.getNumberMeta(0),
     };
-  }
+  };
 
   /**
    * Retrieve the inventory transcations by item id.
@@ -228,7 +227,7 @@ export class InventoryDetails extends FinancialSheet {
     itemId: number,
   ): ModelObject<InventoryTransaction>[] {
     return defaultTo(
-      this.repository.inventoryTransactionsByItemId.get(itemId),
+      this.repository.inventoryTransactionsByItemId.get(itemId.toString()),
       [],
     );
   }
@@ -240,13 +239,13 @@ export class InventoryDetails extends FinancialSheet {
    */
   public getItemTransactions(
     item: ModelObject<Item>,
-  ): ModelObject<InventoryTransaction>[] {
+  ): IInventoryDetailsItemTransaction[] {
     const transactions = this.getInventoryTransactionsByItemId(item.id);
 
-    return R.compose(
-      this.mapAccumTransactionsRunningQuantity.bind(this),
-      this.mapAccumTransactionsRunningValuation.bind(this),
-      R.map(R.curry(this.itemTransactionMapper.bind(this))(item)),
+    return R.pipe(
+      R.map(this.itemTransactionMapper),
+      this.mapAccumTransactionsRunningValuation,
+      this.mapAccumTransactionsRunningQuantity,
     )(transactions);
   }
 
@@ -261,11 +260,11 @@ export class InventoryDetails extends FinancialSheet {
    */
   public itemTransactionsMapper(
     item: ModelObject<Item>,
-  ): (
+  ): Array<
     | IInventoryDetailsItemTransaction
     | IInventoryDetailsOpening
     | IInventoryDetailsClosing
-  )[] {
+  > {
     const transactions = this.getItemTransactions(item);
     const openingValuation = this.getItemOpeingValuation(item);
     const closingValuation = this.getItemClosingValuation(
@@ -280,7 +279,11 @@ export class InventoryDetails extends FinancialSheet {
       R.concat(transactions),
       R.when(R.always(isItemHasOpeningBalance), R.prepend(openingValuation)),
       R.when(R.always(hasTransactions), R.append(closingValuation)),
-    )([]);
+    )([]) as Array<
+      | IInventoryDetailsItemTransaction
+      | IInventoryDetailsOpening
+      | IInventoryDetailsClosing
+    >;
   }
 
   /**
@@ -300,9 +303,8 @@ export class InventoryDetails extends FinancialSheet {
   public getItemOpeingValuation(
     item: ModelObject<Item>,
   ): IInventoryDetailsOpening {
-    const openingBalance = this.repository.openingBalanceTransactionsByItemId.get(
-      item.id,
-    );
+    const openingBalance =
+      this.repository.openingBalanceTransactionsByItemId.get(item.id);
     const quantity = defaultTo(get(openingBalance, 'quantity'), 0);
     const value = defaultTo(get(openingBalance, 'value'), 0);
 
@@ -321,9 +323,9 @@ export class InventoryDetails extends FinancialSheet {
    */
   public getItemClosingValuation(
     item: ModelObject<Item>,
-    transactions: ModelObject<InventoryTransaction>[],
+    transactions: IInventoryDetailsItemTransaction[],
     openingValuation: IInventoryDetailsOpening,
-  ): IInventoryDetailsOpening {
+  ): IInventoryDetailsClosing {
     const value = sumBy(transactions, 'valueMovement.number');
     const quantity = sumBy(transactions, 'quantityMovement.number');
     const profitMargin = sumBy(transactions, 'profitMargin.number');
@@ -374,7 +376,9 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {boolean}
    */
   public isItemNodeHasTransactions(item: IInventoryDetailsItem) {
-    return !!this.repository.inventoryTransactionsByItemId.get(item.id);
+    return !!this.repository.inventoryTransactionsByItemId.get(
+      item.id?.toString(),
+    );
   }
 
   /**
@@ -383,7 +387,9 @@ export class InventoryDetails extends FinancialSheet {
    * @return {boolean}
    */
   public isFilterNode(item: IInventoryDetailsItem): boolean {
+    // @ts-ignore
     return R.ifElse(
+      // @ts-ignore
       R.curry(this.isNodeTypeEquals)(INodeTypes.ITEM),
       this.isItemNodeHasTransactions.bind(this),
       R.always(true),
@@ -410,6 +416,7 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {IInventoryDetailsItem[]}
    */
   public itemsNodes(items: ModelObject<Item>[]): IInventoryDetailsItem[] {
+    // @ts-ignore
     return R.compose(
       this.filterItemsNodes.bind(this),
       R.map(this.itemsNodeMapper.bind(this)),
@@ -421,6 +428,6 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {IInventoryDetailsData}
    */
   public reportData(): IInventoryDetailsData {
-    return this.itemsNodes(this.items);
+    return this.itemsNodes(this.repository.items);
   }
 }

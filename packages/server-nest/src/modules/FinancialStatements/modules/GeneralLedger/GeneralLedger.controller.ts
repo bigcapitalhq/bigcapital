@@ -4,7 +4,7 @@ import { IGeneralLedgerSheetQuery } from './GeneralLedger.types';
 import { GeneralLedgerApplication } from './GeneralLedgerApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/general-ledger')
 @ApiTags('reports')
@@ -15,6 +15,7 @@ export class GeneralLedgerController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'General ledger report' })
+  @ApiOperation({ summary: 'Get general ledger report' })
   public async getGeneralLedger(
     @Query() query: IGeneralLedgerSheetQuery,
     @Res() res: Response,
