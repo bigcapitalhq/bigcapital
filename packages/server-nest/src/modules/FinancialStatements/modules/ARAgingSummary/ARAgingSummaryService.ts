@@ -5,11 +5,13 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IARAgingSummaryQuery } from './ARAgingSummary.types';
 import { events } from '@/common/events/events';
+import { ARAgingSummaryRepository } from './ARAgingSummaryRepository';
 
 @Injectable()
 export class ARAgingSummaryService {
   constructor(
     private readonly ARAgingSummaryMeta: ARAgingSummaryMeta,
+    private readonly ARAgingSummaryRepository: ARAgingSummaryRepository,
     private readonly eventPublisher: EventEmitter2,
   ) {}
 
@@ -22,13 +24,14 @@ export class ARAgingSummaryService {
       ...getARAgingSummaryDefaultQuery(),
       ...query,
     };
+    // Load the A/R aging summary repository.
+    this.ARAgingSummaryRepository.setFilter(filter);
+    await this.ARAgingSummaryRepository.load();
+
     // AR aging summary report instance.
     const ARAgingSummaryReport = new ARAgingSummarySheet(
       filter,
-      customers,
-      overdueSaleInvoices,
-      currentInvoices,
-      tenant.metadata.baseCurrency,
+      this.ARAgingSummaryRepository,
     );
     // AR aging summary report data and columns.
     const data = ARAgingSummaryReport.reportData();
@@ -40,9 +43,7 @@ export class ARAgingSummaryService {
     // Triggers `onReceivableAgingViewed` event.
     await this.eventPublisher.emitAsync(
       events.reports.onReceivableAgingViewed,
-      {
-        query,
-      },
+      { query },
     );
 
     return {

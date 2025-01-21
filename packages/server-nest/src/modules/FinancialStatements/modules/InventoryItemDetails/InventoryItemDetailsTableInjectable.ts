@@ -1,11 +1,11 @@
-import { InventoryDetailsTable } from './InventoryItemDetailsTable';
+import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import {
   IInventoryDetailsQuery,
   IInvetoryItemDetailsTable,
 } from './InventoryItemDetails.types';
-import { InventoryDetailsService } from './InventoryItemDetailsService';
-import { Injectable } from '@nestjs/common';
-import { I18nService } from 'nestjs-i18n';
+import { InventoryDetailsService } from './InventoryItemDetails.service';
+import { InventoryItemDetailsTable } from './InventoryItemDetailsTable';
 
 @Injectable()
 export class InventoryDetailsTableInjectable {
@@ -24,7 +24,8 @@ export class InventoryDetailsTableInjectable {
   ): Promise<IInvetoryItemDetailsTable> {
     const inventoryDetails =
       await this.inventoryDetails.inventoryDetails(query);
-    const table = new InventoryDetailsTable(inventoryDetails, this.i18n);
+
+    const table = new InventoryItemDetailsTable(inventoryDetails.data, this.i18n);
 
     return {
       table: {

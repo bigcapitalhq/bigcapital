@@ -1,6 +1,7 @@
 import * as R from 'ramda';
+import * as moment from 'moment';
 import { defaultTo, sumBy, get } from 'lodash';
-import moment from 'moment';
+import { I18nService } from 'nestjs-i18n';
 import {
   IInventoryDetailsQuery,
   IInventoryDetailsNumber,
@@ -11,56 +12,42 @@ import {
   IInventoryDetailsOpening,
   IInventoryDetailsItemTransaction,
 } from './InventoryItemDetails.types';
-import FinancialSheet from '../FinancialSheet';
-import { transformToMapBy, transformToMapKeyValue } from 'utils';
-import { filterDeep } from 'utils/deepdash';
-
-const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
-
-enum INodeTypes {
-  ITEM = 'item',
-  TRANSACTION = 'transaction',
-  OPENING_ENTRY = 'OPENING_ENTRY',
-  CLOSING_ENTRY = 'CLOSING_ENTRY',
-}
+import { ModelObject } from 'objection';
+import { Item } from '@/modules/Items/models/Item';
+import {
+  IFormatNumberSettings,
+  INumberFormatQuery,
+} from '../../types/Report.types';
+import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
+import { InventoryItemDetailsRepository } from './InventoryItemDetailsRepository';
+import { TInventoryTransactionDirection } from '@/modules/InventoryCost/types/InventoryCost.types';
+import { FinancialSheet } from '../../common/FinancialSheet';
+import { filterDeep } from '@/utils/deepdash';
+import { INodeTypes, MAP_CONFIG } from './constant';
 
 export class InventoryDetails extends FinancialSheet {
-  readonly inventoryTransactionsByItemId: Map<number, IInventoryTransaction[]>;
-  readonly openingBalanceTransactions: Map<number, IInventoryTransaction>;
+  readonly repository: InventoryItemDetailsRepository;
   readonly query: IInventoryDetailsQuery;
   readonly numberFormat: INumberFormatQuery;
-  readonly baseCurrency: string;
-  readonly items: IItem[];
+  readonly items: ModelObject<Item>[];
+  readonly i18n: I18nService;
 
   /**
    * Constructor method.
-   * @param {IItem[]} items - Items.
-   * @param {IInventoryTransaction[]} inventoryTransactions - Inventory transactions.
-   * @param {IInventoryDetailsQuery} query - Report query.
-   * @param {string} baseCurrency - The base currency.
+   * @param {InventoryItemDetailsRepository} repository - The repository.
+   * @param {I18nService} i18n - The i18n service.
    */
   constructor(
-    items: IItem[],
-    openingBalanceTransactions: IInventoryTransaction[],
-    inventoryTransactions: IInventoryTransaction[],
-    query: IInventoryDetailsQuery,
-    baseCurrency: string,
-    i18n: any
+    filter: IInventoryDetailsQuery,
+    repository: InventoryItemDetailsRepository,
+    i18n: I18nService,
   ) {
     super();
 
-    this.inventoryTransactionsByItemId = transformToMapBy(
-      inventoryTransactions,
-      'itemId'
-    );
-    this.openingBalanceTransactions = transformToMapKeyValue(
-      openingBalanceTransactions,
-      'itemId'
-    );
-    this.query = query;
+    this.repository = repository;
+
+    this.query = filter;
     this.numberFormat = this.query.numberFormat;
-    this.items = items;
-    this.baseCurrency = baseCurrency;
     this.i18n = i18n;
   }
 
@@ -69,9 +56,9 @@ export class InventoryDetails extends FinancialSheet {
    * @param {number} number
    * @returns
    */
-  private getNumberMeta(
+  public getNumberMeta(
     number: number,
-    settings?: IFormatNumberSettings
+    settings?: IFormatNumberSettings,
   ): IInventoryDetailsNumber {
     return {
       formattedNumber: this.formatNumber(number, {
@@ -89,9 +76,9 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IFormatNumberSettings} settings -
    * @retrun {IInventoryDetailsNumber}
    */
-  private getTotalNumberMeta(
+  public getTotalNumberMeta(
     number: number,
-    settings?: IFormatNumberSettings
+    settings?: IFormatNumberSettings,
   ): IInventoryDetailsNumber {
     return this.getNumberMeta(number, { excerptZero: false, ...settings });
   }
@@ -101,7 +88,7 @@ export class InventoryDetails extends FinancialSheet {
    * @param {Date|string} date
    * @returns {IInventoryDetailsDate}
    */
-  private getDateMeta(date: Date | string): IInventoryDetailsDate {
+  public getDateMeta(date: Date | string): IInventoryDetailsDate {
     return {
       formattedDate: moment(date).format('YYYY-MM-DD'),
       date: moment(date).toDate(),
@@ -110,14 +97,14 @@ export class InventoryDetails extends FinancialSheet {
 
   /**
    * Adjusts the movement amount.
-   * @param {number} amount
-   * @param {TInventoryTransactionDirection} direction
+   * @param {number} amount - The amount.
+   * @param {TInventoryTransactionDirection} direction - The transaction direction.
    * @returns {number}
    */
-  private adjustAmountMovement = R.curry(
+  public adjustAmountMovement = R.curry(
     (direction: TInventoryTransactionDirection, amount: number): number => {
       return direction === 'OUT' ? amount * -1 : amount;
-    }
+    },
   );
 
   /**
@@ -125,8 +112,8 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IInventoryDetailsItemTransaction[]} transactions
    * @returns {IInventoryDetailsItemTransaction[]}
    */
-  private mapAccumTransactionsRunningQuantity(
-    transactions: IInventoryDetailsItemTransaction[]
+  public mapAccumTransactionsRunningQuantity(
+    transactions: IInventoryDetailsItemTransaction[],
   ): IInventoryDetailsItemTransaction[] {
     const initial = this.getNumberMeta(0);
 
@@ -140,7 +127,7 @@ export class InventoryDetails extends FinancialSheet {
     return R.mapAccum(
       mapAccumAppender,
       { runningQuantity: initial },
-      transactions
+      transactions,
     )[1];
   }
 
@@ -149,8 +136,8 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IInventoryDetailsItemTransaction[]} transactions
    * @returns {IInventoryDetailsItemTransaction}
    */
-  private mapAccumTransactionsRunningValuation(
-    transactions: IInventoryDetailsItemTransaction[]
+  public mapAccumTransactionsRunningValuation(
+    transactions: IInventoryDetailsItemTransaction[],
   ): IInventoryDetailsItemTransaction[] {
     const initial = this.getNumberMeta(0);
 
@@ -165,16 +152,18 @@ export class InventoryDetails extends FinancialSheet {
     return R.mapAccum(
       mapAccumAppender,
       { runningValuation: initial },
-      transactions
+      transactions,
     )[1];
   }
 
   /**
    * Retrieve the inventory transaction total.
-   * @param {IInventoryTransaction} transaction
+   * @param {ModelObject<InventoryTransaction>} transaction
    * @returns {number}
    */
-  private getTransactionTotal = (transaction: IInventoryTransaction) => {
+  public getTransactionTotal = (
+    transaction: ModelObject<InventoryTransaction>,
+  ) => {
     return transaction.quantity
       ? transaction.quantity * transaction.rate
       : transaction.rate;
@@ -186,9 +175,9 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IInvetoryTransaction} transaction
    * @returns {IInventoryDetailsItemTransaction}
    */
-  private itemTransactionMapper(
-    item: IItem,
-    transaction: IInventoryTransaction
+  public itemTransactionMapper(
+    item: ModelObject<Item>,
+    transaction: ModelObject<InventoryTransaction>,
   ): IInventoryDetailsItemTransaction {
     const total = this.getTransactionTotal(transaction);
     const amountMovement = this.adjustAmountMovement(transaction.direction);
@@ -209,7 +198,7 @@ export class InventoryDetails extends FinancialSheet {
     return {
       nodeType: INodeTypes.TRANSACTION,
       date: this.getDateMeta(transaction.date),
-      transactionType: this.i18n.__(transaction.transcationTypeFormatted),
+      transactionType: this.i18n.t(transaction.transcationTypeFormatted),
       transactionNumber: transaction?.meta?.transactionNumber,
       direction: transaction.direction,
 
@@ -232,13 +221,16 @@ export class InventoryDetails extends FinancialSheet {
 
   /**
    * Retrieve the inventory transcations by item id.
-   * @param {number} itemId
-   * @returns {IInventoryTransaction[]}
+   * @param {number} itemId - The item id.
+   * @returns {ModelObject<InventoryTransaction>[]}
    */
-  private getInventoryTransactionsByItemId(
-    itemId: number
-  ): IInventoryTransaction[] {
-    return defaultTo(this.inventoryTransactionsByItemId.get(itemId + ''), []);
+  public getInventoryTransactionsByItemId(
+    itemId: number,
+  ): ModelObject<InventoryTransaction>[] {
+    return defaultTo(
+      this.repository.inventoryTransactionsByItemId.get(itemId),
+      [],
+    );
   }
 
   /**
@@ -246,13 +238,15 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IItem} item
    * @returns {IInventoryDetailsItemTransaction[]}
    */
-  private getItemTransactions(item: IItem): IInventoryDetailsItemTransaction[] {
+  public getItemTransactions(
+    item: ModelObject<Item>,
+  ): ModelObject<InventoryTransaction>[] {
     const transactions = this.getInventoryTransactionsByItemId(item.id);
 
     return R.compose(
       this.mapAccumTransactionsRunningQuantity.bind(this),
       this.mapAccumTransactionsRunningValuation.bind(this),
-      R.map(R.curry(this.itemTransactionMapper.bind(this))(item))
+      R.map(R.curry(this.itemTransactionMapper.bind(this))(item)),
     )(transactions);
   }
 
@@ -265,8 +259,8 @@ export class InventoryDetails extends FinancialSheet {
    *  | IInventoryDetailsClosing
    *  )[]}
    */
-  private itemTransactionsMapper(
-    item: IItem
+  public itemTransactionsMapper(
+    item: ModelObject<Item>,
   ): (
     | IInventoryDetailsItemTransaction
     | IInventoryDetailsOpening
@@ -277,7 +271,7 @@ export class InventoryDetails extends FinancialSheet {
     const closingValuation = this.getItemClosingValuation(
       item,
       transactions,
-      openingValuation
+      openingValuation,
     );
     const hasTransactions = transactions.length > 0;
     const isItemHasOpeningBalance = this.isItemHasOpeningBalance(item.id);
@@ -285,7 +279,7 @@ export class InventoryDetails extends FinancialSheet {
     return R.pipe(
       R.concat(transactions),
       R.when(R.always(isItemHasOpeningBalance), R.prepend(openingValuation)),
-      R.when(R.always(hasTransactions), R.append(closingValuation))
+      R.when(R.always(hasTransactions), R.append(closingValuation)),
     )([]);
   }
 
@@ -294,8 +288,8 @@ export class InventoryDetails extends FinancialSheet {
    * @param {number} itemId - Item id.
    * @return {boolean}
    */
-  private isItemHasOpeningBalance(itemId: number): boolean {
-    return !!this.openingBalanceTransactions.get(itemId);
+  public isItemHasOpeningBalance(itemId: number): boolean {
+    return !!this.repository.openingBalanceTransactionsByItemId.get(itemId);
   }
 
   /**
@@ -303,8 +297,12 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IItem} item -
    * @returns {IInventoryDetailsOpening}
    */
-  private getItemOpeingValuation(item: IItem): IInventoryDetailsOpening {
-    const openingBalance = this.openingBalanceTransactions.get(item.id);
+  public getItemOpeingValuation(
+    item: ModelObject<Item>,
+  ): IInventoryDetailsOpening {
+    const openingBalance = this.repository.openingBalanceTransactionsByItemId.get(
+      item.id,
+    );
     const quantity = defaultTo(get(openingBalance, 'quantity'), 0);
     const value = defaultTo(get(openingBalance, 'value'), 0);
 
@@ -321,10 +319,10 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IItem} item -
    * @returns {IInventoryDetailsOpening}
    */
-  private getItemClosingValuation(
-    item: IItem,
-    transactions: IInventoryDetailsItemTransaction[],
-    openingValuation: IInventoryDetailsOpening
+  public getItemClosingValuation(
+    item: ModelObject<Item>,
+    transactions: ModelObject<InventoryTransaction>[],
+    openingValuation: IInventoryDetailsOpening,
   ): IInventoryDetailsOpening {
     const value = sumBy(transactions, 'valueMovement.number');
     const quantity = sumBy(transactions, 'quantityMovement.number');
@@ -347,7 +345,7 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IItem} item
    * @returns {IInventoryDetailsItem}
    */
-  private itemsNodeMapper(item: IItem): IInventoryDetailsItem {
+  public itemsNodeMapper(item: ModelObject<Item>): IInventoryDetailsItem {
     return {
       id: item.id,
       name: item.name,
@@ -363,9 +361,9 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IItem} node
    * @returns {boolean}
    */
-  private isNodeTypeEquals(
+  public isNodeTypeEquals(
     nodeType: string,
-    node: IInventoryDetailsItem
+    node: IInventoryDetailsItem,
   ): boolean {
     return nodeType === node.nodeType;
   }
@@ -375,8 +373,8 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IInventoryDetailsItem} item
    * @returns {boolean}
    */
-  private isItemNodeHasTransactions(item: IInventoryDetailsItem) {
-    return !!this.inventoryTransactionsByItemId.get(item.id);
+  public isItemNodeHasTransactions(item: IInventoryDetailsItem) {
+    return !!this.repository.inventoryTransactionsByItemId.get(item.id);
   }
 
   /**
@@ -384,11 +382,11 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IInventoryDetailsItem} item
    * @return {boolean}
    */
-  private isFilterNode(item: IInventoryDetailsItem): boolean {
+  public isFilterNode(item: IInventoryDetailsItem): boolean {
     return R.ifElse(
       R.curry(this.isNodeTypeEquals)(INodeTypes.ITEM),
       this.isItemNodeHasTransactions.bind(this),
-      R.always(true)
+      R.always(true),
     )(item);
   }
 
@@ -397,24 +395,24 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IInventoryDetailsItem[]} items -
    * @returns {IInventoryDetailsItem[]}
    */
-  private filterItemsNodes(items: IInventoryDetailsItem[]) {
+  public filterItemsNodes(items: IInventoryDetailsItem[]) {
     const filtered = filterDeep(
       items,
       this.isFilterNode.bind(this),
-      MAP_CONFIG
+      MAP_CONFIG,
     );
     return defaultTo(filtered, []);
   }
 
   /**
    * Retrieve the items nodes of the report.
-   * @param {IItem} items
+   * @param {ModelObject<Item>[]} items
    * @returns {IInventoryDetailsItem[]}
    */
-  private itemsNodes(items: IItem[]): IInventoryDetailsItem[] {
+  public itemsNodes(items: ModelObject<Item>[]): IInventoryDetailsItem[] {
     return R.compose(
       this.filterItemsNodes.bind(this),
-      R.map(this.itemsNodeMapper.bind(this))
+      R.map(this.itemsNodeMapper.bind(this)),
     )(items);
   }
 

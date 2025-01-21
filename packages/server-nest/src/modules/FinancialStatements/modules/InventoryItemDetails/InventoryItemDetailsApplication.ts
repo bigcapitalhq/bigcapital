@@ -1,10 +1,10 @@
 import {
   IInventoryDetailsQuery,
   IInvetoryItemDetailsTable,
-} from '@/interfaces';
+} from './InventoryItemDetails.types';
 import { InventoryItemDetailsExportInjectable } from './InventoryItemDetailsExportInjectable';
 import { InventoryDetailsTableInjectable } from './InventoryItemDetailsTableInjectable';
-import { InventoryDetailsService } from './InventoryItemDetailsService';
+import { InventoryDetailsService } from './InventoryItemDetails.service';
 import { InventoryDetailsTablePdf } from './InventoryItemDetailsTablePdf';
 import { Injectable } from '@nestjs/common';
 

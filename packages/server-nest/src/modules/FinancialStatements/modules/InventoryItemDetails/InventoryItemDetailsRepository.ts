@@ -4,19 +4,129 @@ import moment from 'moment';
 import { IInventoryDetailsQuery } from './InventoryItemDetails.types';
 import { Item } from '@/modules/Items/models/Item';
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
-import { Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { transformToMapKeyValue } from '@/utils/transform-to-map-key-value';
+import { transformToMapBy } from '@/utils/transform-to-map-by';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class InventoryItemDetailsRepository {
+  @Inject(Item.name)
+  readonly itemModel: typeof Item;
+
+  @Inject(InventoryTransaction.name)
+  readonly inventoryTransactionModel: typeof InventoryTransaction;
+
+  @Inject(TenancyContext)
+  readonly tenancyContext: TenancyContext;
+
   /**
-   * Constructor method.
-   * @param {typeof Item} itemModel - Item model.
-   * @param {typeof InventoryTransaction} inventoryTransactionModel - Inventory transaction model.
+   * The items.
+   * @param {ModelObject<Item>[]} items - The items.
    */
-  constructor(
-    private readonly itemModel: typeof Item,
-    private readonly inventoryTransactionModel: typeof InventoryTransaction,
-  ) {}
+  items: ModelObject<Item>[];
+
+  /**
+   * The opening balance transactions.
+   * @param {ModelObject<InventoryTransaction>[]} openingBalanceTransactions - The opening balance transactions.
+   */
+  openingBalanceTransactions: ModelObject<InventoryTransaction>[];
+  
+  /**
+   * The opening balance transactions by item id.
+   * @param {Map<number, ModelObject<InventoryTransaction>>} openingBalanceTransactionsByItemId - The opening balance transactions by item id.
+   */
+  openingBalanceTransactionsByItemId: Map<number, ModelObject<InventoryTransaction>>;
+
+  /**
+   * The inventory transactions.
+   * @param {ModelObject<InventoryTransaction>[]} inventoryTransactions - The inventory transactions.
+   */
+  inventoryTransactions: ModelObject<InventoryTransaction>[];
+
+  /**
+   * The inventory transactions by item id.
+   * @param {Map<number, ModelObject<InventoryTransaction>>} inventoryTransactionsByItemId - The inventory transactions by item id.
+   */
+  inventoryTransactionsByItemId: Map<number, ModelObject<InventoryTransaction>[]>;
+
+  /**
+   * The filter.
+   * @param {IInventoryDetailsQuery} filter - The filter.
+   */
+  filter: IInventoryDetailsQuery;
+
+  /**
+   * The base currency.
+   * @param {string} baseCurrency - The base currency.
+   */
+  baseCurrency: string;
+
+  /**
+   * Set the filter.
+   * @param {IInventoryDetailsQuery} filter - The filter.
+   */
+  setFilter(filter: IInventoryDetailsQuery) {
+    this.filter = filter;
+  }
+
+  /**
+   * Initialize the repository.
+   */
+  async asyncInit() {
+    await this.initItems();
+    await this.initOpeningBalanceTransactions();
+    await this.initInventoryTransactions();
+    await this.initBaseCurrency();
+  }
+
+  /**
+   * Initialize the items.
+   */
+  async initItems() {
+    // Retrieves the items.
+    const items = await this.getInventoryItems(this.filter.itemsIds);
+    this.items = items;
+  }
+
+  /**
+   * Initialize the opening balance transactions.
+   */
+  async initOpeningBalanceTransactions() {
+    // Retrieves the opening balance transactions.
+    const openingBalanceTransactions = await this.getOpeningBalanceTransactions(
+      this.filter,
+    );
+    this.openingBalanceTransactions = openingBalanceTransactions;
+    this.openingBalanceTransactionsByItemId = transformToMapKeyValue(
+      openingBalanceTransactions,
+      'itemId'
+    );
+  }
+
+  /**
+   * Initialize the inventory transactions.
+   */
+  async initInventoryTransactions() {
+    // Retrieves the inventory transactions.
+    const inventoryTransactions = await this.getItemInventoryTransactions(
+      this.filter,
+    );
+    this.inventoryTransactions = inventoryTransactions;
+    this.inventoryTransactionsByItemId = transformToMapBy(
+      inventoryTransactions,
+      'itemId'
+    );
+  }
+
+  /**
+   * Initialize the base currency.
+   */
+  async initBaseCurrency() {
+    const tenantMetadata = await this.tenancyContext.getTenantMetadata();
+
+    this.baseCurrency = tenantMetadata.baseCurrency;
+  }
 
   /**
    * Retrieve inventory items.
@@ -39,7 +149,7 @@ export class InventoryItemDetailsRepository {
    * @param {IInventoryDetailsQuery}
    * @return {Promise<ModelObject<InventoryTransaction>>}
    */
-  public async openingBalanceTransactions(
+  public async getOpeningBalanceTransactions(
     filter: IInventoryDetailsQuery,
   ): Promise<ModelObject<InventoryTransaction>[]> {
     const openingBalanceDate = moment(filter.fromDate)
@@ -95,7 +205,7 @@ export class InventoryItemDetailsRepository {
    * @param {IInventoryDetailsQuery}
    * @return {Promise<IInventoryTransaction>}
    */
-  public async itemInventoryTransactions(
+  public async getItemInventoryTransactions(
     filter: IInventoryDetailsQuery,
   ): Promise<ModelObject<InventoryTransaction>[]> {
     const inventoryTransactions = this.inventoryTransactionModel

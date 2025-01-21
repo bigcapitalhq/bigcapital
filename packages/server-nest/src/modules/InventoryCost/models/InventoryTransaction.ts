@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
 import { TInventoryTransactionDirection } from '../types/InventoryCost.types';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { InventoryTransactionMeta } from './InventoryTransactionMeta';
 
 export class InventoryTransaction extends TenantBaseModel {
   date: Date | string;
@@ -20,6 +21,8 @@ export class InventoryTransaction extends TenantBaseModel {
   updatedAt?: Date;
 
   warehouseId?: number;
+
+  meta?: InventoryTransactionMeta;
 
   /**
    * Table name

@@ -9,19 +9,15 @@ import { InventoryValuationMetaInjectable } from './InventoryValuationSheetMeta'
 import { getInventoryValuationDefaultQuery } from './_constants';
 import { InventoryCostLotTracker } from '@/modules/InventoryCost/models/InventoryCostLotTracker';
 import { Item } from '@/modules/Items/models/Item';
+import { InventoryValuationSheetRepository } from './InventoryValuationSheetRepository';
+import { InventoryValuationSheet } from './InventoryValuationSheet';
 
 @Injectable()
 export class InventoryValuationSheetService {
   constructor(
-    private readonly inventoryService: InventoryService,
     private readonly inventoryValuationMeta: InventoryValuationMetaInjectable,
     private readonly eventPublisher: EventEmitter2,
-
-    @Inject(Item.name)
-    private readonly itemModel: typeof Item,
-
-    @Inject(InventoryCostLotTracker.name)
-    private readonly inventoryCostLotTracker: typeof InventoryCostLotTracker,
+    private readonly inventoryValuationSheetRepository: InventoryValuationSheetRepository,
   ) {}
 
   /**
@@ -35,12 +31,12 @@ export class InventoryValuationSheetService {
       ...getInventoryValuationDefaultQuery(),
       ...query,
     };
+    this.inventoryValuationSheetRepository.setFilter(filter);
+    await this.inventoryValuationSheetRepository.asyncInit();
+
     const inventoryValuationInstance = new InventoryValuationSheet(
       filter,
-      inventoryItems,
-      INTransactions,
-      OUTTransactions,
-      tenant.metadata.baseCurrency,
+      this.inventoryValuationSheetRepository,
     );
     // Retrieve the inventory valuation report data.
     const inventoryValuationData = inventoryValuationInstance.reportData();
@@ -51,9 +47,7 @@ export class InventoryValuationSheetService {
     // Triggers `onInventoryValuationViewed` event.
     await this.eventPublisher.emitAsync(
       events.reports.onInventoryValuationViewed,
-      {
-        query,
-      },
+      { query },
     );
 
     return {

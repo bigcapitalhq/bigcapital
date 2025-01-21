@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { Dictionary, groupBy, isEmpty, sum } from 'lodash';
+import { isEmpty, sum } from 'lodash';
 import { IAgingPeriod } from '../AgingSummary/AgingSummary.types';
 import {
   IARAgingSummaryQuery,
@@ -12,17 +12,12 @@ import { AgingSummaryReport } from '../AgingSummary/AgingSummary';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { ModelObject } from 'objection';
 import { Customer } from '@/modules/Customers/models/Customer';
-import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
+import { ARAgingSummaryRepository } from './ARAgingSummaryRepository';
 
 export class ARAgingSummarySheet extends AgingSummaryReport {
-  readonly tenantId: number;
   readonly query: IARAgingSummaryQuery;
-  readonly contacts: ModelObject<Customer>[];
   readonly agingPeriods: IAgingPeriod[];
-  readonly baseCurrency: string;
-
-  readonly overdueInvoicesByContactId: Dictionary<ModelObject<SaleInvoice>[]>;
-  readonly currentInvoicesByContactId: Dictionary<ModelObject<SaleInvoice>[]>;
+  readonly repository: ARAgingSummaryRepository;
 
   /**
    * Constructor method.
@@ -32,29 +27,15 @@ export class ARAgingSummarySheet extends AgingSummaryReport {
    * @param {IJournalPoster} journal
    */
   constructor(
-    tenantId: number,
     query: IARAgingSummaryQuery,
-    customers: ModelObject<Customer>[],
-    overdueSaleInvoices: ModelObject<SaleInvoice>[],
-    currentSaleInvoices: ModelObject<SaleInvoice>[],
-    baseCurrency: string,
+    repository: ARAgingSummaryRepository,
   ) {
     super();
 
-    this.tenantId = tenantId;
-    this.contacts = customers;
     this.query = query;
-    this.baseCurrency = baseCurrency;
+    this.repository = repository;
     this.numberFormat = this.query.numberFormat;
 
-    this.overdueInvoicesByContactId = groupBy(
-      overdueSaleInvoices,
-      'customerId',
-    );
-    this.currentInvoicesByContactId = groupBy(
-      currentSaleInvoices,
-      'customerId',
-    );
     // Initializes the aging periods.
     this.agingPeriods = this.agingRangePeriods(
       this.query.asDate,
@@ -179,7 +160,9 @@ export class ARAgingSummarySheet extends AgingSummaryReport {
    * @return {IARAgingSummaryData}
    */
   public reportData = (): IARAgingSummaryData => {
-    const customersAgingPeriods = this.customersWalker(this.contacts);
+    const customersAgingPeriods = this.customersWalker(
+      this.repository.customers,
+    );
     const customersTotal = this.getCustomersTotal(customersAgingPeriods);
 
     return {

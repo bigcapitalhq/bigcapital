@@ -2,6 +2,10 @@ import { BaseModel } from '@/models/Model';
 import { Model, raw } from 'objection';
 
 export class InventoryTransactionMeta extends BaseModel {
+  transactionNumber!: string;
+  description!: string;
+  inventoryTransactionId!: number;
+
   /**
    * Table name
    */

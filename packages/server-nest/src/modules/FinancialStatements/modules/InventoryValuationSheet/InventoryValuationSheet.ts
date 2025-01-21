@@ -1,3 +1,4 @@
+import { ModelObject } from 'objection';
 import { sumBy, get, isEmpty } from 'lodash';
 import * as R from 'ramda';
 import {
@@ -6,41 +7,29 @@ import {
   IInventoryValuationStatement,
   IInventoryValuationTotal,
 } from './InventoryValuationSheet.types';
-import { ModelObject } from 'objection';
 import { Item } from '@/modules/Items/models/Item';
 import { InventoryCostLotTracker } from '@/modules/InventoryCost/models/InventoryCostLotTracker';
 import { FinancialSheet } from '../../common/FinancialSheet';
-import { transformToMap } from '@/utils/transform-to-key';
+import { InventoryValuationSheetRepository } from './InventoryValuationSheetRepository';
+import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 
 export class InventoryValuationSheet extends FinancialSheet {
   readonly query: IInventoryValuationReportQuery;
-  readonly items: ModelObject<Item>[];
-  readonly INInventoryCostLots: Map<number, InventoryCostLotTracker>;
-  readonly OUTInventoryCostLots: Map<number, InventoryCostLotTracker>;
-  readonly baseCurrency: string;
+  readonly repository: InventoryValuationSheetRepository;
 
   /**
    * Constructor method.
-   * @param {IInventoryValuationReportQuery} query
-   * @param {ModelObject<Item>[]} items
-   * @param {Map<number, InventoryCostLotTracker[]>} INInventoryCostLots
-   * @param {Map<number, InventoryCostLotTracker[]>} OUTInventoryCostLots
-   * @param {string} baseCurrency
+   * @param {IInventoryValuationReportQuery} query - Inventory valuation query.
+   * @param {InventoryValuationSheetRepository} repository - Inventory valuation sheet repository.
    */
   constructor(
     query: IInventoryValuationReportQuery,
-    items: ModelObject<Item>[],
-    INInventoryCostLots: Map<number, InventoryCostLotTracker[]>,
-    OUTInventoryCostLots: Map<number, InventoryCostLotTracker[]>,
-    baseCurrency: string,
+    repository: InventoryValuationSheetRepository,
   ) {
     super();
 
     this.query = query;
-    this.items = items;
-    this.INInventoryCostLots = transformToMap(INInventoryCostLots, 'itemId');
-    this.OUTInventoryCostLots = transformToMap(OUTInventoryCostLots, 'itemId');
-    this.baseCurrency = baseCurrency;
+    this.repository = repository;
     this.numberFormat = this.query.numberFormat;
   }
 
@@ -70,7 +59,7 @@ export class InventoryValuationSheet extends FinancialSheet {
     cost: number;
     quantity: number;
   } {
-    return this.getItemTransaction(this.INInventoryCostLots, itemId);
+    return this.getItemTransaction(this.repository.INInventoryCostLots, itemId);
   }
 
   /**
@@ -81,7 +70,7 @@ export class InventoryValuationSheet extends FinancialSheet {
     cost: number;
     quantity: number;
   } {
-    return this.getItemTransaction(this.OUTInventoryCostLots, itemId);
+    return this.getItemTransaction(this.repository.OUTInventoryCostLots, itemId);
   }
 
   /**
@@ -148,10 +137,13 @@ export class InventoryValuationSheet extends FinancialSheet {
   private filterNoneTransactions = (
     valuationItem: IInventoryValuationItem,
   ): boolean => {
-    const transactionIN = this.INInventoryCostLots.get(valuationItem.id);
-    const transactionOUT = this.OUTInventoryCostLots.get(valuationItem.id);
-
-    return transactionOUT || transactionIN;
+    const transactionIN = this.repository.INInventoryCostLots.get(
+      valuationItem.id,
+    );
+    const transactionOUT = this.repository.OUTInventoryCostLots.get(
+      valuationItem.id,
+    );
+    return !isEmpty(transactionOUT) || !isEmpty(transactionIN);
   };
 
   /**
@@ -200,8 +192,8 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @param {IItem[]} items
    * @returns {IInventoryValuationItem[]}
    */
-  private itemsMapper = (items: IItem[]): IInventoryValuationItem[] => {
-    return this.items.map(this.itemMapper.bind(this));
+  private itemsMapper = (items: ModelObject<Item>[]): IInventoryValuationItem[] => {
+    return this.repository.inventoryItems.map(this.itemMapper.bind(this));
   };
 
   /**
@@ -230,7 +222,7 @@ export class InventoryValuationSheet extends FinancialSheet {
     return R.compose(
       R.when(this.isItemsPostFilter, this.itemsFilter),
       this.itemsMapper,
-    )(this.items);
+    )(this.repository.inventoryItems);
   }
 
   /**

@@ -1,5 +1,5 @@
 import { Controller, Headers, Query, Res } from '@nestjs/common';
-import { InventortyDetailsApplication } from './InventoryItemDetailsApplication';
+import { InventoryItemDetailsApplication } from './InventoryItemDetailsApplication';
 import { IInventoryDetailsQuery } from './InventoryItemDetails.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
@@ -7,7 +7,7 @@ import { Response } from 'express';
 @Controller('reports/inventory-item-details')
 export class InventoryItemDetailsController {
   constructor(
-    private readonly inventoryItemDetailsApp: InventortyDetailsApplication,
+    private readonly inventoryItemDetailsApp: InventoryItemDetailsApplication,
   ) {}
 
   async inventoryItemDetails(

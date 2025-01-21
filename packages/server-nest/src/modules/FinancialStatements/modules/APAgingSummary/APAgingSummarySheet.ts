@@ -1,4 +1,4 @@
-import { groupBy, sum, isEmpty } from 'lodash';
+import { sum, isEmpty } from 'lodash';
 import * as R from 'ramda';
 import {
   IAPAgingSummaryQuery,
@@ -10,20 +10,13 @@ import {
 import { AgingSummaryReport } from '../AgingSummary/AgingSummary';
 import { IAgingPeriod } from '../AgingSummary/AgingSummary.types';
 import { ModelObject } from 'objection';
-import { Bill } from '@/modules/Bills/models/Bill';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
+import { APAgingSummaryRepository } from './APAgingSummaryRepository';
 
 export class APAgingSummarySheet extends AgingSummaryReport {
-  readonly tenantId: number;
+  readonly repository: APAgingSummaryRepository;
   readonly query: IAPAgingSummaryQuery;
-  readonly contacts: ModelObject<Vendor>[];
-  readonly unpaidBills: ModelObject<Bill>[];
-  readonly baseCurrency: string;
-
-  readonly overdueInvoicesByContactId: Record<number, Array<ModelObject<Bill>>>;
-  readonly currentInvoicesByContactId: Record<number, Array<ModelObject<Bill>>>;
-
   readonly agingPeriods: IAgingPeriod[];
 
   /**
@@ -34,23 +27,14 @@ export class APAgingSummarySheet extends AgingSummaryReport {
    * @param {string} baseCurrency - Base currency of the organization.
    */
   constructor(
-    tenantId: number,
     query: IAPAgingSummaryQuery,
-    vendors: ModelObject<Vendor>[],
-    overdueBills: ModelObject<Bill>[],
-    unpaidBills: ModelObject<Bill>[],
-    baseCurrency: string,
+    repository: APAgingSummaryRepository,
   ) {
     super();
 
-    this.tenantId = tenantId;
     this.query = query;
+    this.repository = repository;
     this.numberFormat = this.query.numberFormat;
-    this.contacts = vendors;
-    this.baseCurrency = baseCurrency;
-
-    this.overdueInvoicesByContactId = groupBy(overdueBills, 'vendorId');
-    this.currentInvoicesByContactId = groupBy(unpaidBills, 'vendorId');
 
     // Initializes the aging periods.
     this.agingPeriods = this.agingRangePeriods(
@@ -170,7 +154,7 @@ export class APAgingSummarySheet extends AgingSummaryReport {
    * @return {IAPAgingSummaryData}
    */
   public reportData = (): IAPAgingSummaryData => {
-    const vendorsAgingPeriods = this.vendorsSection(this.contacts);
+    const vendorsAgingPeriods = this.vendorsSection(this.repository.vendors);
     const vendorsTotal = this.getVendorsTotal(vendorsAgingPeriods);
 
     return {

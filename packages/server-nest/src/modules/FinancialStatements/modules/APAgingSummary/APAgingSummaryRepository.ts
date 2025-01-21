@@ -1,35 +1,138 @@
-
-
+import { isEmpty } from 'lodash';
+import { Bill } from '@/modules/Bills/models/Bill';
+import { Vendor } from '@/modules/Vendors/models/Vendor';
+import { IAPAgingSummaryQuery } from './APAgingSummary.types';
+import { Inject } from '@nestjs/common';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { groupBy } from 'ramda';
 
 export class APAgingSummaryRepository {
+  @Inject(Vendor.name)
+  private readonly vendorModel: typeof Vendor;
 
+  @Inject(Bill.name)
+  private readonly billModel: typeof Bill;
 
-  asyncInit() {
-    // Settings tenant service.
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+  @Inject(TenancyContext)
+  private readonly tenancyContext: TenancyContext;
 
+  /**
+   * Filter.
+   * @param {IAPAgingSummaryQuery} filter
+   */
+  filter: IAPAgingSummaryQuery;
+
+  /**
+   * Due bills.
+   * @param {Bill[]} dueBills
+   */
+  dueBills: Bill[];
+
+  /**
+   * Due bills by vendor id.
+   * @param {Record<string, Bill[]>} dueBillsByVendorId
+   */
+  dueBillsByVendorId: Record<number, Bill[]>;
+
+  /**
+   * Overdue bills.
+   * @param {Bill[]} overdueBills
+   */
+  overdueBills: Bill[];
+
+  /**
+   * Overdue bills by vendor id.
+   * @param {Record<string, Bill[]>} overdueBillsByVendorId
+   */
+  overdueBillsByVendorId: Record<number, Bill[]>;
+
+  /**
+   * Vendors.
+   * @param {Vendor[]} vendors
+   */
+  vendors: Vendor[];
+
+  /**
+   * Base currency.
+   * @param {string} baseCurrency
+   */
+  baseCurrency: string;
+
+  /**
+   * Set the filter.
+   * @param {IAPAgingSummaryQuery} filter
+   */
+  setFilter(filter: IAPAgingSummaryQuery) {
+    this.filter = filter;
+  }
+
+  /**
+   * Load the data.
+   */
+  async load() {
+    await this.asyncBaseCurrency();
+    await this.asyncVendors();
+    await this.asyncDueBills();
+    await this.asyncOverdueBills();
+  }
+
+  /**
+   * Retrieve the base currency.
+   * @returns {Promise<string>}
+   */
+  async asyncBaseCurrency() {
+    const metadata = await this.tenancyContext.getTenantMetadata();
+
+    this.baseCurrency = metadata.baseCurrency;
+  }
+
+  /**
+   * Retrieve all vendors from the storage.
+   */
+  async asyncVendors() {
     // Retrieve all vendors from the storage.
     const vendors =
-      filter.vendorsIds.length > 0
-        ? await vendorRepository.findWhereIn('id', filter.vendorsIds)
-        : await vendorRepository.all();
+      this.filter.vendorsIds.length > 0
+        ? await this.vendorModel.query().whereIn('id', this.filter.vendorsIds)
+        : await this.vendorModel.query();
 
-    // Common query.
+    this.vendors = vendors;
+  }
+
+  /**
+   * Retrieve all overdue bills from the storage.
+   */
+  async asyncOverdueBills() {
     const commonQuery = (query) => {
-      if (!isEmpty(filter.branchesIds)) {
-        query.modify('filterByBranches', filter.branchesIds);
+      if (!isEmpty(this.filter.branchesIds)) {
+        query.modify('filterByBranches', this.filter.branchesIds);
       }
     };
-    // Retrieve all overdue vendors bills.
-    const overdueBills = await Bill.query()
-      .modify('overdueBillsFromDate', filter.asDate)
+    const overdueBills = await this.billModel
+      .query()
+      .modify('overdueBillsFromDate', this.filter.asDate)
       .onBuild(commonQuery);
 
+    this.overdueBills = overdueBills;
+    this.overdueBillsByVendorId = groupBy(overdueBills, 'vendorId');
+  }
+
+  /**
+   * Retrieve all due bills from the storage.
+   */
+  async asyncDueBills() {
+    const commonQuery = (query) => {
+      if (!isEmpty(this.filter.branchesIds)) {
+        query.modify('filterByBranches', this.filter.branchesIds);
+      }
+    };
     // Retrieve all due vendors bills.
-    const dueBills = await Bill.query()
-      .modify('dueBillsFromDate', filter.asDate)
+    const dueBills = await this.billModel
+      .query()
+      .modify('dueBillsFromDate', this.filter.asDate)
       .onBuild(commonQuery);
+
+    this.dueBills = dueBills;
+    this.dueBillsByVendorId = groupBy(dueBills, 'vendorId');
   }
 }
