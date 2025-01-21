@@ -1,4 +1,5 @@
-import moment, { unitOfTime } from 'moment';
+import * as moment from 'moment';
+import { unitOfTime } from 'moment';
 
 export class SubscriptionPeriod {
   private start: Date;

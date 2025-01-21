@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { IDateRange, IFinancialDatePeriodsUnit } from '../types/Report.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from './FinancialSheet';

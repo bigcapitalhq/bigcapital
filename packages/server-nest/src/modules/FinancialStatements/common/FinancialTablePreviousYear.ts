@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { ITableColumn, ITableColumnAccessor } from '../types/Table.types';
 import { IDateRange } from '../types/Report.types';
 import { GConstructor } from '@/common/types/Constructor';

@@ -1,22 +1,21 @@
-import moment from 'moment';
-import { FinancialSheetMeta } from '../../common/FinancialSheetMeta';
-import { ISalesByItemsReportQuery, ISalesByItemsSheetMeta } from './SalesByItems.types';
+import * as moment from 'moment';
 import { Injectable } from '@nestjs/common';
-import { I18nService } from 'nestjs-i18n';
+import { FinancialSheetMeta } from '../../common/FinancialSheetMeta';
+import {
+  ISalesByItemsReportQuery,
+  ISalesByItemsSheetMeta,
+} from './SalesByItems.types';
 
 @Injectable()
 export class SalesByItemsMeta {
-  constructor(
-    private financialSheetMeta: FinancialSheetMeta,
-    private i18n: I18nService,
-  ) {}
+  constructor(private financialSheetMeta: FinancialSheetMeta) {}
 
   /**
    * Retrieve the sales by items meta.
    * @returns {IBalanceSheetMeta}
    */
   public async meta(
-    query: ISalesByItemsReportQuery
+    query: ISalesByItemsReportQuery,
   ): Promise<ISalesByItemsSheetMeta> {
     const commonMeta = await this.financialSheetMeta.meta();
     const formattedToDate = moment(query.toDate).format('YYYY/MM/DD');

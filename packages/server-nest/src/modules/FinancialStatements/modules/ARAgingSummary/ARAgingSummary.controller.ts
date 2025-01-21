@@ -1,10 +1,13 @@
 import { IARAgingSummaryQuery } from './ARAgingSummary.types';
-import { Get, Headers } from '@nestjs/common';
+import { Controller, Get, Headers } from '@nestjs/common';
 import { Query, Res } from '@nestjs/common';
 import { ARAgingSummaryApplication } from './ARAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
+import { PublicRoute } from '@/modules/Auth/Jwt.guard';
 
+@Controller('reports/receivable-aging-summary')
+@PublicRoute()
 export class ARAgingSummaryController {
   constructor(private readonly ARAgingSummaryApp: ARAgingSummaryApplication) {}
 

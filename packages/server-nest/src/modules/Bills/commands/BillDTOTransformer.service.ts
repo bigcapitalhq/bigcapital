@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as R from 'ramda';
 import * as composeAsync from 'async/compose';
 import { formatDateFields } from '@/utils/format-date-fields';

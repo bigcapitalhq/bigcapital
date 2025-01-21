@@ -1,10 +1,10 @@
+import { Inject } from '@nestjs/common';
 import { isEmpty, groupBy } from 'lodash';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { ModelObject } from 'objection';
 import { IARAgingSummaryQuery } from './ARAgingSummary.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
-import { Inject } from '@nestjs/common';
 
 export class ARAgingSummaryRepository {
   @Inject(TenancyContext)

@@ -1,7 +1,7 @@
+import * as moment from 'moment';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Knex } from 'knex';
-import moment from 'moment';
 import { SaleEstimate } from '../models/SaleEstimate';
 import { events } from '@/common/events/events';
 

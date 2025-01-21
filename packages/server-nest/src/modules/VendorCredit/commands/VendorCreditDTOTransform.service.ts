@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { omit } from 'lodash';
 import * as R from 'ramda';
 import { ERRORS } from '../constants';

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import bluebird from 'bluebird';
 import { deleteImportFile } from './_utils';
 import { Injectable } from '@nestjs/common';

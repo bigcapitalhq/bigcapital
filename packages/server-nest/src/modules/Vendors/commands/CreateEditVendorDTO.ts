@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { defaultTo, isEmpty } from 'lodash';
 import { Injectable } from '@nestjs/common';
 import { IVendorEditDTO, IVendorNewDTO } from '../types/Vendors.types';

@@ -1,6 +1,7 @@
 import { Model } from 'objection';
 import { castArray } from 'lodash';
-import moment, { unitOfTime } from 'moment';
+import * as moment from 'moment';
+import { unitOfTime } from 'moment';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { SaleReceipt } from '@/modules/SaleReceipts/models/SaleReceipt';
 import { Item } from '@/modules/Items/models/Item';

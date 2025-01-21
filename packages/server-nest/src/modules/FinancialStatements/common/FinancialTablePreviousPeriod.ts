@@ -1,7 +1,7 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { ITableColumn, ITableColumnAccessor } from '../types/Table.types';
 import { IDateRange } from '../types/Report.types';
-import { Constructor, GConstructor } from '@/common/types/Constructor';
+import { GConstructor } from '@/common/types/Constructor';
 import { I18nService } from 'nestjs-i18n';
 import { FinancialSheet } from './FinancialSheet';
 

@@ -1,4 +1,5 @@
-import moment, { MomentInput } from 'moment';
+import * as moment from 'moment';
+import { MomentInput } from 'moment';
 import { Injectable } from '@nestjs/common';
 import { TransactionsLockingGroup } from '../types/TransactionsLocking.types';
 import { TransactionsLockingRepository } from '../TransactionsLockingRepository';

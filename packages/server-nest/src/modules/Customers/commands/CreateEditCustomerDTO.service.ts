@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { defaultTo, omit, isEmpty } from 'lodash';
 import { Injectable } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';

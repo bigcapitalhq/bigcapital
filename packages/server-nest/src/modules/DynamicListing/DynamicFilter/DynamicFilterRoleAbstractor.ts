@@ -1,5 +1,5 @@
 // @ts-nocheck
-import moment from 'moment';
+import * as moment from 'moment';
 import * as R from 'ramda';
 import { IFilterRole, IDynamicFilter } from './DynamicFilter.types';
 import { Parser } from '@/libs/logic-evaluation/Parser';

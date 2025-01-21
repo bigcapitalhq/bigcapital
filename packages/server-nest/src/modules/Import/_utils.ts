@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as R from 'ramda';
 import { Knex } from 'knex';
 import fs from 'fs/promises';

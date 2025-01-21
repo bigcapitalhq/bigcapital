@@ -1,4 +1,4 @@
-
+import * as moment from 'moment';
 
 
 export const getARAgingSummaryDefaultQuery = () => { 

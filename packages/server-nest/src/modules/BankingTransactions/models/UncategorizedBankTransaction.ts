@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-import moment from 'moment';
+import * as moment from 'moment';
 import { Model } from 'objection';
 // import TenantModel from 'models/TenantModel';
 // import ModelSettings from './ModelSetting';

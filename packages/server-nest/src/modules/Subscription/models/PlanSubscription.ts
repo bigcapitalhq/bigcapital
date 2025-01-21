@@ -1,5 +1,5 @@
 import { Model, mixin } from 'objection';
-import moment from 'moment';
+import * as moment from 'moment';
 import { SubscriptionPeriod } from '../SubscriptionPeriod';
 import { SystemModel } from '@/modules/System/models/SystemModel';
 import { SubscriptionPaymentStatus } from '@/interfaces/SubscriptionPlan';

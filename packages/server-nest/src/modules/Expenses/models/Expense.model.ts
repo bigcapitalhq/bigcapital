@@ -1,5 +1,5 @@
 import { Model, raw } from 'objection';
-import moment from 'moment';
+import * as moment from 'moment';
 import { ExpenseCategory } from './ExpenseCategory.model';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';

@@ -7,9 +7,12 @@ import { AgingSummaryModule } from '../AgingSummary/AgingSummary.module';
 import { ARAgingSummaryRepository } from './ARAgingSummaryRepository';
 import { ARAgingSummaryApplication } from './ARAgingSummaryApplication';
 import { ARAgingSummaryController } from './ARAgingSummary.controller';
+import { ARAgingSummaryMeta } from './ARAgingSummaryMeta';
+import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Module({
-  imports: [AgingSummaryModule],
+  imports: [AgingSummaryModule, FinancialSheetCommonModule],
   controllers: [ARAgingSummaryController],
   providers: [
     ARAgingSummaryTableInjectable,
@@ -18,6 +21,8 @@ import { ARAgingSummaryController } from './ARAgingSummary.controller';
     ARAgingSummaryPdfInjectable,
     ARAgingSummaryRepository,
     ARAgingSummaryApplication,
+    ARAgingSummaryMeta,
+    TenancyContext,
   ],
 })
 export class ARAgingSummaryModule {}

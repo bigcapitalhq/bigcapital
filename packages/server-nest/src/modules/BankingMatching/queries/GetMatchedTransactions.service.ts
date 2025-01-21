@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import moment from 'moment';
+import * as moment from 'moment';
 import { first, sumBy } from 'lodash';
 import { PromisePool } from '@supercharge/promise-pool';
 import { Inject, Injectable } from '@nestjs/common';

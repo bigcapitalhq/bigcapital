@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import {
   ICustomerBalanceSummaryMeta,
   ICustomerBalanceSummaryQuery,

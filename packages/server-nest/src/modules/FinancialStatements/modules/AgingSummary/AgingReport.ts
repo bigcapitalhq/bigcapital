@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { IAgingPeriod } from './AgingSummary.types';
 import { FinancialSheet } from '../../common/FinancialSheet';
 
-export abstract class AgingReport extends FinancialSheet {
+export class AgingReport extends FinancialSheet {
   /**
    * Retrieve the aging periods range.
    * @param {string} asDay

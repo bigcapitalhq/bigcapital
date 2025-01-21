@@ -16,7 +16,7 @@ export class ARAgingSummaryApplication {
 
   /**
    * Retrieve the A/R aging summary sheet.
-   * @param {IAPAgingSummaryQuery} query
+   * @param {IARAgingSummaryQuery} query
    */
   public sheet(query: IARAgingSummaryQuery) {
     return this.ARAgingSummarySheet.ARAgingSummary(query);
@@ -24,7 +24,6 @@ export class ARAgingSummaryApplication {
 
   /**
    * Retrieve the A/R aging summary in table format.
-   * @param {number} tenantId
    * @param {IAPAgingSummaryQuery} query
    */
   public table(query: IARAgingSummaryQuery) {
@@ -33,7 +32,6 @@ export class ARAgingSummaryApplication {
 
   /**
    * Retrieve the A/R aging summary in XLSX format.
-   * @param {number} tenantId
    * @param {IAPAgingSummaryQuery} query
    */
   public xlsx(query: IARAgingSummaryQuery) {
@@ -42,7 +40,6 @@ export class ARAgingSummaryApplication {
 
   /**
    * Retrieve the A/R aging summary in CSV format.
-   * @param {number} tenantId
    * @param {IAPAgingSummaryQuery} query
    */
   public csv(query: IARAgingSummaryQuery) {

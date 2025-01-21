@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export enum ROW_TYPE {
   ITEM = 'ITEM',
   TOTAL = 'TOTAL',
