@@ -71,14 +71,7 @@ export class SaleInvoiceTransformer extends Transformer {
    * @returns {string}
    */
   protected dueAmountFormatted = (invoice): string => {
-    // const dueAmount = formatNumber(invoice.dueAmount, {
-    //   currencyCode: invoice.currencyCode,
-    // });
-    // console.log('dueAmountFormatted', invoice.dueAmount, dueAmount)
-    // console.log("OPTIONS", this.options)
-
     return formatNumber(invoice.dueAmount, {
-      // currencyCode: "USD",
       currencyCode: this.context.organization.baseCurrency,
       money: false, 
       symbol: this.options?.baseCurrencySymbol ?? ""

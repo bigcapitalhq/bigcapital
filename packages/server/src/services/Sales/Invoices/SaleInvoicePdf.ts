@@ -57,21 +57,16 @@ export class SaleInvoicePdf {
     tenantId: number,
     invoiceId: number
   ): Promise<[Buffer, string]> {
-    console.log('saleInvoicePdf', tenantId, invoiceId);
     const filename = await this.getInvoicePdfFilename(tenantId, invoiceId);
 
     const htmlContent = await this.saleInvoiceHtml(tenantId, invoiceId);
      
-    // const { Currency } = this.tenancy.models(tenantId);
-
     // Converts the given html content to pdf document.
     const buffer = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,
       htmlContent
     );
     const eventPayload = { tenantId, saleInvoiceId: invoiceId };
-      // .where('currencyCode', organization.metadata.currencyCode);
-    // console.log("currencies", foundCurrency)
 
     // Triggers the `onSaleInvoicePdfViewed` event.
     await this.eventPublisher.emitAsync(

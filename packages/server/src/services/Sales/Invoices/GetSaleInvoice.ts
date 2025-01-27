@@ -47,10 +47,6 @@ export class GetSaleInvoice {
     const organization = await Tenant.query()
       .findById(tenantId)
       .withGraphFetched('metadata')
-      .catch((err) => {
-        console.log('err', err);
-        throw err
-      })
     const foundCurrency = await Currency.query().findOne(
       'currency_code',
       organization.metadata.baseCurrency

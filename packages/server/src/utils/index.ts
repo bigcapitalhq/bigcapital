@@ -379,7 +379,6 @@ const mergeObjectsBykey = (object1, object2, key) => {
 
 function templateRender(filePath, options) {
   const basePath = path.join(global.__resources_dir, '/views');
-  // console.log("options", util.inspect(options, {showHidden: false, depth: null, colors: true}))
   
   const imageb64 = fs.readFileSync(path.join(__dirname, '../resources/images/koch-01.png'), 'base64')
   options.organization.metadata.imageSrc = `data:image/png;base64,${imageb64}`
