@@ -15,6 +15,7 @@ import {
   DefaultPdfTemplateItemName,
   DefaultPdfTemplateAddressBilledTo,
   DefaultPdfTemplateAddressBilledFrom,
+  DefaultPdfTemplateMetadata,
 } from './_constants';
 
 interface InvoiceLine {
@@ -65,6 +66,14 @@ export interface InvoicePaperTemplateProps extends PaperTemplateProps {
   companyAddress?: string;
 
   billedToLabel?: string;
+
+  // Metadata
+  customerMetadata?: {
+    taxNumber?: string;
+  };
+  companyMetadata?: {
+    taxNumber?: string;
+  };
 
   // Entries
   lineItemLabel?: string;
@@ -156,6 +165,10 @@ export function InvoicePaperTemplate({
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
 
   billedToLabel = 'Billed To',
+
+  // Metadata
+  customerMetadata = DefaultPdfTemplateMetadata,
+  companyMetadata = DefaultPdfTemplateMetadata,
 
   // Entries
   lineItemLabel = 'Item',
@@ -252,11 +265,17 @@ export function InvoicePaperTemplate({
         </Group>
 
         <PaperTemplate.AddressesGroup>
+          {/* {showCompanyAddress && (
+            <div>{companyMetadata.taxNumber}</div>
+          )} */}
           {showCompanyAddress && (
             <PaperTemplate.Address>
               <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
             </PaperTemplate.Address>
           )}
+          {/* {showCustomerAddress && (
+            <div>{customerMetadata.taxNumber}</div>
+          )} */}
           {showCustomerAddress && (
             <PaperTemplate.Address>
               <strong>{billedToLabel}</strong>

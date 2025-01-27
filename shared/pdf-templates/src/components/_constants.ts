@@ -23,3 +23,7 @@ United States, <br />
 +1 762-339-5634, <br />
 ahmed@bigcapital.app
 `;
+
+export const DefaultPdfTemplateMetadata = {
+  taxNumber: '123456789',
+}

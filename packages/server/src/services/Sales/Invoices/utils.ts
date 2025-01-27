@@ -52,5 +52,8 @@ export const transformInvoiceToPdfTemplate = (
     })),
     showLineDiscount: invoice.entries.some((entry) => entry.discountFormatted),
     customerAddress: contactAddressTextFormat(invoice.customer),
+
+    customerMetadata: invoice.customerMetadata,
+    companyMetadata: invoice.companyMetadata,
   };
 };

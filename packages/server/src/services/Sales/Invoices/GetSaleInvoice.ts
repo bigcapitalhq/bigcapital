@@ -6,6 +6,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { Tenant } from '@/system/models';
 
 @Service()
 export class GetSaleInvoice {
@@ -40,18 +41,20 @@ export class GetSaleInvoice {
       .withGraphFetched('customer')
       .withGraphFetched('branch')
       .withGraphFetched('taxes.taxRate')
+      .withGraphFetched('attachments')
+      .withGraphFetched('paymentMethods')
 
     const organization = await Tenant.query()
       .findById(tenantId)
-      .withGraphFetched('attachments')
       .withGraphFetched('metadata')
-      .withGraphFetched('paymentMethods');
+      .catch((err) => {
+        console.log('err', err);
+        throw err
+      })
     const foundCurrency = await Currency.query().findOne(
       'currency_code',
       organization.metadata.baseCurrency
     );
-
-    // console.log("foundCurrency", foundCurrency)
 
     // Validates the given sale invoice existance.
     this.validators.validateInvoiceExistance(saleInvoice);

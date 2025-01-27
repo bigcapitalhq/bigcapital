@@ -57,11 +57,10 @@ export class SaleInvoicePdf {
     tenantId: number,
     invoiceId: number
   ): Promise<[Buffer, string]> {
+    console.log('saleInvoicePdf', tenantId, invoiceId);
     const filename = await this.getInvoicePdfFilename(tenantId, invoiceId);
 
     const htmlContent = await this.saleInvoiceHtml(tenantId, invoiceId);
-      .findById(tenantId)
-      .withGraphFetched('metadata');
      
     // const { Currency } = this.tenancy.models(tenantId);
 

@@ -459,6 +459,10 @@ export default class SaleInvoicesController extends BaseController {
     const { id: saleInvoiceId } = req.params;
     const { tenantId, user } = req;
 
+    console.log('saleInvoiceId', saleInvoiceId);
+    console.log('tenantId', tenantId);
+    console.log('user', user);
+
     const accept = this.accepts(req);
 
     const acceptType = accept.types([

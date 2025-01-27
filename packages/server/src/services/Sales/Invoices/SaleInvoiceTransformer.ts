@@ -33,6 +33,8 @@ export class SaleInvoiceTransformer extends Transformer {
       'taxes',
       'entries',
       'attachments',
+      'customerMetadata',
+      'companyMetadata',
     ];
   };
 
@@ -275,4 +277,26 @@ export class SaleInvoiceTransformer extends Transformer {
   protected attachments = (invoice) => {
     return this.item(invoice.attachments, new AttachmentTransformer());
   };
+
+  /**
+   * Retrieves the customer metadata.
+   * @param {ISaleInvoice} invoice
+   * @returns
+   */
+  protected customerMetadata = (invoice) => {
+    return {
+      taxNumber: invoice.customer.taxNumber,
+    }
+  }
+
+  /**
+   * Retrieves the company metadata.
+   * @param {ISaleInvoice} invoice
+   * @returns
+   */
+  protected companyMetadata = (invoice) => {
+    return {
+      taxNumber: this.context.organization.taxNumber,
+    }
+  }
 }
