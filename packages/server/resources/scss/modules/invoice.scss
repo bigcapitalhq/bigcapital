@@ -11,9 +11,35 @@
     margin: 0 0 30px;
 
     .organization {
-      .title {
-        margin: 0 0 4px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+
+      .vertical-bar {
+        height: 50px;  /* Adjust to desired height */
+        width: 1px;    /* Adjust to desired width */
+        background-color: black;  /* Adjust to desired color */
+        // margin: 0 10px;  /* Space between the bar and items */
       }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+          margin: 0;
+        }
+        .email {
+          font-size: 10px;
+          margin: 0;
+        }
+        .tax-number {
+          font-size: 10px;
+          margin: 0;
+        }
+      }
+
+
       .invoiceNo {
         font-size: 12px;
       }
@@ -28,6 +54,8 @@
         font-size: 32px;
         line-height: 1;
       }
+
+
     }
   }
 
@@ -43,6 +71,19 @@
       margin-bottom: 10px;
       display: flex;
       flex-direction: row;
+
+      .display_name {
+        display: flex;
+        flex-direction: column;
+
+        .under {
+          font-size: 9px;
+        }
+
+        .value {
+          color: #000;
+        }
+      }
 
       .value {
         color: #000;
@@ -134,8 +175,15 @@
       tbody tr:first-child td {
         border-top: 0;
       }
+      tbody tr.tax td {
+        border-top: 3px solid #666;
+        // font-weight: bold;
+      }
+      tbody tr.total td {
+        font-weight: bold;
+      }
       tbody tr.payment-amount td:last-child {
-        color: red
+        color: #666
       }
       tbody tr.blanace-due td{
         border-top: 3px double #666;

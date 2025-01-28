@@ -73,6 +73,8 @@ export interface IContact extends IContactAddress {
 
   note: string;
   active: boolean;
+
+  taxNumber?: string
 }
 export interface IContactNewDTO {
   contactType?: string;
@@ -95,6 +97,8 @@ export interface IContactNewDTO {
 
   note?: string;
   active: boolean;
+
+  taxNumber?: string
 }
 export interface IContactEditDTO {
   contactType?: string;
@@ -112,6 +116,8 @@ export interface IContactEditDTO {
 
   note?: string;
   active: boolean;
+
+  taxNumber?: string
 }
 
 // Customer Interfaces.

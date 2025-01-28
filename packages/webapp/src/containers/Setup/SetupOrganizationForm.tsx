@@ -43,6 +43,15 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
         <FInputGroup name={'name'} fastField={true} />
       </FFormGroup>
 
+      {/* ---------- Organization Tax Number ----------  */}
+      <FFormGroup
+        name={'tax_number'}
+        label={<T id={'organization_tax_number'} />}
+        fastField={true}
+      >
+        <FInputGroup name={'tax_number'} fastField={true} />
+      </FFormGroup>
+
       {/* ---------- Location ---------- */}
       <FFormGroup
         name={'location'}

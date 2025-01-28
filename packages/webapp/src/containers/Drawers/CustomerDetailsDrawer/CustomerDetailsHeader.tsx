@@ -50,6 +50,12 @@ export default function CustomerDetailsHeader() {
           label={<T id={'customer.drawer.label.company_name'} />}
           children={defaultTo(customer?.company_name, '--')}
         />
+
+        <DetailItem
+          label={<T id={'customer.drawer.label.tax_number'} />}
+          children={defaultTo(customer?.tax_number, '--')}
+        />
+
         <DetailItem
           label={<T id={'customer.drawer.label.email'} />}
           children={defaultTo(customer?.email, '--')}

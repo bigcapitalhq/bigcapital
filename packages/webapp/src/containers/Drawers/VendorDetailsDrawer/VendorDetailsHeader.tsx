@@ -47,6 +47,10 @@ export default function VendorDetailsHeader() {
           children={defaultTo(vendor?.company_name, '--')}
         />
         <DetailItem
+          label={<T id={'vendor.drawer.label.tax_number'} />}
+          children={defaultTo(vendor?.tax_number, '--')}
+        />
+        <DetailItem
           label={intl.get('email')}
           children={defaultTo(vendor.email, '--')}
         />

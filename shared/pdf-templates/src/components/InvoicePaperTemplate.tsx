@@ -1,13 +1,13 @@
-import { isEmpty } from 'lodash';
+import { isEmpty } from "lodash";
 import {
   PaperTemplate,
   PaperTemplateProps,
   PaperTemplateTotalBorder,
-} from './PaperTemplate';
-import { Box } from '../lib/layout/Box';
-import { Text } from '../lib/text/Text';
-import { Stack } from '../lib/layout/Stack';
-import { Group } from '../lib/layout/Group';
+} from "./PaperTemplate";
+import { Box } from "../lib/layout/Box";
+import { Text } from "../lib/text/Text";
+import { Stack } from "../lib/layout/Stack";
+import { Group } from "../lib/layout/Group";
 import {
   DefaultPdfTemplateTerms,
   DefaultPdfTemplateItemDescription,
@@ -15,7 +15,8 @@ import {
   DefaultPdfTemplateItemName,
   DefaultPdfTemplateAddressBilledTo,
   DefaultPdfTemplateAddressBilledFrom,
-} from './_constants';
+  DefaultPdfTemplateMetadata,
+} from "./_constants";
 
 interface InvoiceLine {
   item?: string;
@@ -65,6 +66,14 @@ export interface InvoicePaperTemplateProps extends PaperTemplateProps {
   companyAddress?: string;
 
   billedToLabel?: string;
+
+  // Metadata
+  customerMetadata?: {
+    taxNumber?: string;
+  };
+  companyMetadata?: {
+    taxNumber?: string;
+  };
 
   // Entries
   lineItemLabel?: string;
@@ -128,24 +137,24 @@ export function InvoicePaperTemplate({
   secondaryColor,
 
   // # Company.
-  companyName = 'Bigcapital Technology, Inc.',
+  companyName = "Bigcapital Technology, Inc.",
 
   showCompanyLogo = true,
-  companyLogoUri = '',
+  companyLogoUri = "",
 
   // # Due date
-  dueDate = 'September 3, 2024',
-  dueDateLabel = 'Date due',
+  dueDate = "September 3, 2024",
+  dueDateLabel = "Date due",
   showDueDate = true,
 
   // # Issue date.
-  dateIssue = 'September 3, 2024',
-  dateIssueLabel = 'Date of issue',
+  dateIssue = "September 3, 2024",
+  dateIssueLabel = "Date of issue",
   showDateIssue = true,
 
   // Invoice #,
-  invoiceNumberLabel = 'Invoice number',
-  invoiceNumber = '346D3D40-0001',
+  invoiceNumberLabel = "Invoice number",
+  invoiceNumber = "346D3D40-0001",
   showInvoiceNumber = true,
 
   // Address
@@ -155,28 +164,32 @@ export function InvoicePaperTemplate({
   showCompanyAddress = true,
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
 
-  billedToLabel = 'Billed To',
+  billedToLabel = "Billed To",
+
+  // Metadata
+  customerMetadata = DefaultPdfTemplateMetadata,
+  companyMetadata = DefaultPdfTemplateMetadata,
 
   // Entries
-  lineItemLabel = 'Item',
-  lineQuantityLabel = 'Qty',
-  lineRateLabel = 'Rate',
-  lineTotalLabel = 'Total',
+  lineItemLabel = "Item",
+  lineQuantityLabel = "Qty",
+  lineRateLabel = "Rate",
+  lineTotalLabel = "Total",
 
-  totalLabel = 'Total',
-  subtotalLabel = 'Subtotal',
-  discountLabel = 'Discount',
-  adjustmentLabel = 'Adjustment',
-  paymentMadeLabel = 'Payment Made',
-  dueAmountLabel = 'Balance Due',
+  totalLabel = "Total",
+  subtotalLabel = "Subtotal",
+  discountLabel = "Discount",
+  adjustmentLabel = "Adjustment",
+  paymentMadeLabel = "Payment Made",
+  dueAmountLabel = "Balance Due",
 
   // # Line Discount
-  lineDiscountLabel = 'Discount',
+  lineDiscountLabel = "Discount",
   showLineDiscount = false,
 
   // Totals
   showTotal = true,
-  total = '$662.75',
+  total = "$662.75",
 
   showSubtotal = true,
   showDiscount = true,
@@ -185,14 +198,14 @@ export function InvoicePaperTemplate({
   showDueAmount = true,
   showAdjustment = true,
 
-  subtotal = '630.00',
-  discount = '0.00',
-  adjustment = '',
-  paymentMade = '100.00',
-  dueAmount = '$562.75',
+  subtotal = "630.00",
+  discount = "0.00",
+  adjustment = "",
+  paymentMade = "100.00",
+  dueAmount = "$562.75",
 
   // Footer paragraphs.
-  termsConditionsLabel = 'Terms & Conditions',
+  termsConditionsLabel = "Terms & Conditions",
   showTermsConditions = true,
   termsConditions = DefaultPdfTemplateTerms,
 
@@ -200,22 +213,40 @@ export function InvoicePaperTemplate({
     {
       item: DefaultPdfTemplateItemName,
       description: DefaultPdfTemplateItemDescription,
-      rate: '1',
-      quantity: '1000',
-      total: '$1000.00',
+      rate: "1",
+      quantity: "1000",
+      total: "$1000.00",
     },
   ],
   taxes = [
-    { label: 'Sample Tax1 (4.70%)', amount: '11.75' },
-    { label: 'Sample Tax2 (7.00%)', amount: '21.74' },
+    { label: "Sample Tax1 (4.70%)", amount: "11.75" },
+    { label: "Sample Tax2 (7.00%)", amount: "21.74" },
   ],
 
   // # Statement
-  statementLabel = 'Statement',
+  statementLabel = "Statement",
   showStatement = true,
   statement = DefaultPdfTemplateStatement,
   ...props
 }: InvoicePaperTemplateProps) {
+  
+  companyAddress = "<br />" + companyAddress;
+  const companyAddressParts = companyAddress.split("<br />");
+  companyAddressParts.splice(
+    2,
+    0,
+    `<strong>ABN: </strong>${companyMetadata.taxNumber}<br />`
+  );
+  companyAddress = companyAddressParts.join("<br />");
+
+  const customerAddressParts = customerAddress.split("<br />");
+  customerAddressParts.splice(
+    1,
+    0,
+    `<strong>ABN: </strong>${customerMetadata.taxNumber}<br />`
+  );
+  customerAddress = customerAddressParts.join("<br />");
+
   return (
     <PaperTemplate
       primaryColor={primaryColor}
@@ -225,7 +256,7 @@ export function InvoicePaperTemplate({
       <Stack spacing={24}>
         <Group align="start" spacing={10}>
           <Stack flex={1}>
-            <PaperTemplate.BigTitle title={'Invoice'} />
+            <PaperTemplate.BigTitle title={"Invoice"} />
 
             <PaperTemplate.TermsList>
               {showInvoiceNumber && (
@@ -273,26 +304,26 @@ export function InvoicePaperTemplate({
                 accessor: (data) => (
                   <Stack spacing={2}>
                     <Text>{data.item}</Text>
-                    <Text color={'#5f6b7c'} fontSize={12}>
+                    <Text color={"#5f6b7c"} fontSize={12}>
                       {data.description}
                     </Text>
                   </Stack>
                 ),
-                thStyle: { width: '60%' },
+                thStyle: { width: "60%" },
               },
               {
                 label: lineQuantityLabel,
-                accessor: 'quantity',
-                align: 'right',
+                accessor: "quantity",
+                align: "right",
               },
-              { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              { label: lineRateLabel, accessor: "rate", align: "right" },
               {
                 label: lineDiscountLabel,
-                accessor: 'discount',
-                align: 'right',
+                accessor: "discount",
+                align: "right",
                 visible: showLineDiscount,
               },
-              { label: lineTotalLabel, accessor: 'total', align: 'right' },
+              { label: lineTotalLabel, accessor: "total", align: "right" },
             ]}
             data={lines}
           />

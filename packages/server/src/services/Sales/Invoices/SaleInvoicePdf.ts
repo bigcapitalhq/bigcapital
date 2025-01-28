@@ -60,7 +60,7 @@ export class SaleInvoicePdf {
     const filename = await this.getInvoicePdfFilename(tenantId, invoiceId);
 
     const htmlContent = await this.saleInvoiceHtml(tenantId, invoiceId);
-
+     
     // Converts the given html content to pdf document.
     const buffer = await this.chromiumlyTenancy.convertHtmlContent(
       tenantId,

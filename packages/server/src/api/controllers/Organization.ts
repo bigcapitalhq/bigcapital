@@ -69,6 +69,7 @@ export default class OrganizationController extends BaseController {
       check('fiscal_year').exists().isIn(MONTHS),
       check('language').exists().isString().isIn(ACCEPTED_LOCALES),
       check('date_format').optional().isIn(DATE_FORMATS),
+      check('tax_number').optional({ nullable: true }).isString().trim().escape(),
     ];
   }
 

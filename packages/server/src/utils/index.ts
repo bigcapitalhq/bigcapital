@@ -8,6 +8,9 @@ import accounting from 'accounting';
 import pug from 'pug';
 import Currencies from 'js-money/lib/currency';
 import definedOptions from '@/data/options';
+import fs from 'fs'
+
+import util from 'util';
 
 export * from './table';
 
@@ -248,9 +251,9 @@ const convertEmptyStringToNull = (value) => {
 const getNegativeFormat = (formatName) => {
   switch (formatName) {
     case 'parentheses':
-      return '(%s%v)';
+      return '(%s %v)';
     case 'mines':
-      return '-%s%v';
+      return '- %s %v';
   }
 };
 
@@ -275,7 +278,7 @@ const formatNumber = (
 ) => {
   const formattedSymbol = getCurrencySign(currencyCode);
   const negForamt = getNegativeFormat(negativeFormat);
-  const format = '%s%v';
+  const format = '%s %v';
 
   let formattedBalance = parseFloat(balance);
 
@@ -376,6 +379,9 @@ const mergeObjectsBykey = (object1, object2, key) => {
 
 function templateRender(filePath, options) {
   const basePath = path.join(global.__resources_dir, '/views');
+  
+  const imageb64 = fs.readFileSync(path.join(__dirname, '../resources/images/koch-01.png'), 'base64')
+  options.organization.metadata.imageSrc = `data:image/png;base64,${imageb64}`
   return pug.renderFile(`${basePath}/${filePath}.pug`, options);
 }
 

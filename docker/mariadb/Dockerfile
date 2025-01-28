@@ -21,6 +21,7 @@ COPY ./docker-entrypoint.sh /docker-entrypoint-initdb.d/docker-initialize.sh
 # the mysql user inside the MySQL Docker container.
 RUN chown -R mysql:root /docker-entrypoint-initdb.d
 RUN chown -R mysql:root /scripts
+# RUN chown -R mysql:root /tmp
 
 CMD ["mysqld"]
 EXPOSE 3306
