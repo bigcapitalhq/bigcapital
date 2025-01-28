@@ -1,10 +1,10 @@
-import { isEmpty } from 'lodash';
+import { Inject } from '@nestjs/common';
+import { isEmpty, groupBy } from 'lodash';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
-import { IAPAgingSummaryQuery } from './APAgingSummary.types';
-import { Inject } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
-import { groupBy } from 'ramda';
+import { IAPAgingSummaryQuery } from './APAgingSummary.types';
+import { ModelObject } from 'objection';
 
 export class APAgingSummaryRepository {
   @Inject(Vendor.name)
@@ -32,19 +32,19 @@ export class APAgingSummaryRepository {
    * Due bills by vendor id.
    * @param {Record<string, Bill[]>} dueBillsByVendorId
    */
-  dueBillsByVendorId: Record<number, Bill[]>;
+  dueBillsByVendorId: Record<string, Bill[]>;
 
   /**
    * Overdue bills.
-   * @param {Bill[]} overdueBills
+   * @param {Bill[]} overdueBills - overdue bills.
    */
-  overdueBills: Bill[];
+  overdueBills: ModelObject<Bill>[];
 
   /**
    * Overdue bills by vendor id.
-   * @param {Record<string, Bill[]>} overdueBillsByVendorId
+   * @param {Record<string, Bill[]>} overdueBillsByVendorId - Overdue bills by vendor id.
    */
-  overdueBillsByVendorId: Record<number, Bill[]>;
+  overdueBillsByVendorId: ModelObject<Bill>[];
 
   /**
    * Vendors.

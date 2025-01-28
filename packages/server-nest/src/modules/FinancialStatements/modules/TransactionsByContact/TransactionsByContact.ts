@@ -13,7 +13,7 @@ import { TransactionsByContactRepository } from './TransactionsByContactReposito
 
 export class TransactionsByContact extends FinancialSheet {
   public readonly filter: ITransactionsByContactsFilter;
-  public readonly i18n: I18nService
+  public readonly i18n: I18nService;
   public readonly repository: TransactionsByContactRepository;
 
   /**
@@ -22,7 +22,7 @@ export class TransactionsByContact extends FinancialSheet {
    * @return {Omit<ITransactionsByContactsTransaction, 'runningBalance'>}
    */
   protected contactTransactionMapper(
-    entry: ILedgerEntry
+    entry: ILedgerEntry,
   ): Omit<ITransactionsByContactsTransaction, 'runningBalance'> {
     const account = this.repository.accountsGraph.getNodeData(entry.accountId);
     const currencyCode = this.baseCurrency;
@@ -37,6 +37,7 @@ export class TransactionsByContact extends FinancialSheet {
       // @ts-ignore
       // transactionType: this.i18n.t(entry.referenceTypeFormatted),
       transactionType: '',
+      // @ts-ignore
       date: entry.date,
       createdAt: entry.createdAt,
     };
@@ -51,7 +52,7 @@ export class TransactionsByContact extends FinancialSheet {
   protected contactTransactionRunningBalance(
     openingBalance: number,
     accountNormal: 'credit' | 'debit',
-    transactions: Omit<ITransactionsByContactsTransaction, 'runningBalance'>[]
+    transactions: Omit<ITransactionsByContactsTransaction, 'runningBalance'>[],
   ): any {
     let _openingBalance = openingBalance;
 
@@ -69,10 +70,10 @@ export class TransactionsByContact extends FinancialSheet {
 
         const runningBalance = this.getTotalAmountMeta(
           _openingBalance,
-          transaction.currencyCode
+          transaction.currencyCode,
         );
         return { ...transaction, runningBalance };
-      }
+      },
     );
   }
 
@@ -85,7 +86,7 @@ export class TransactionsByContact extends FinancialSheet {
   protected getContactClosingBalance(
     customerTransactions: ITransactionsByContactsTransaction[],
     contactNormal: 'credit' | 'debit',
-    openingBalance: number
+    openingBalance: number,
   ): number {
     const closingBalance = openingBalance;
 
@@ -124,7 +125,7 @@ export class TransactionsByContact extends FinancialSheet {
    */
   protected getContactAmount(
     amount: number,
-    currencyCode: string
+    currencyCode: string,
   ): ITransactionsByContactsAmount {
     return {
       amount,
@@ -153,7 +154,7 @@ export class TransactionsByContact extends FinancialSheet {
    * @returns {boolean}
    */
   private filterContactByNoneTransaction = (
-    transactionsByContact: ITransactionsByContactsContact
+    transactionsByContact: ITransactionsByContactsContact,
   ): boolean => {
     return transactionsByContact.transactions.length > 0;
   };
@@ -164,7 +165,7 @@ export class TransactionsByContact extends FinancialSheet {
    * @returns {boolean}
    */
   private filterContactNoneZero = (
-    transactionsByContact: ITransactionsByContactsContact
+    transactionsByContact: ITransactionsByContactsContact,
   ): boolean => {
     return transactionsByContact.closingBalance.amount !== 0;
   };
@@ -190,7 +191,7 @@ export class TransactionsByContact extends FinancialSheet {
    * @returns {ICustomerBalanceSummaryCustomer[]}
    */
   protected contactsFilter = (
-    nodes: ITransactionsByContactsContact[]
+    nodes: ITransactionsByContactsContact[],
   ): ITransactionsByContactsContact[] => {
     return nodes.filter(this.contactNodeFilter);
   };

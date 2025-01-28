@@ -5,7 +5,7 @@ export const transformLedgerEntryToTransaction = (
   entry: ILedgerEntry
 ): Partial<AccountTransaction> => {
   return {
-    date: entry.date,
+    date: moment(entry.date).toDate(),
 
     credit: entry.credit,
     debit: entry.debit,

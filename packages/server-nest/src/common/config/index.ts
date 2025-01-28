@@ -7,6 +7,7 @@ import lemonsqueezy from './lemonsqueezy';
 import s3 from './s3';
 import openExchange from './open-exchange';
 import posthog from './posthog';
+import stripePayment from './stripe-payment';
 
 export const config = [
   systemDatabase,
@@ -18,4 +19,5 @@ export const config = [
   s3,
   openExchange,
   posthog,
+  stripePayment,
 ];

@@ -8,9 +8,11 @@ import { TransactionsByVendorModule } from './modules/TransactionsByVendor/Trans
 import { TransactionsByCustomerModule } from './modules/TransactionsByCustomer/TransactionsByCustomer.module';
 import { TransactionsByReferenceModule } from './modules/TransactionsByReference/TransactionByReference.module';
 import { ARAgingSummaryModule } from './modules/ARAgingSummary/ARAgingSummary.module';
-// import { APAgingSummaryModule } from './modules/APAgingSummary/APAgingSummary.module';
+import { APAgingSummaryModule } from './modules/APAgingSummary/APAgingSummary.module';
 import { InventoryItemDetailsModule } from './modules/InventoryItemDetails/InventoryItemDetails.module';
 import { InventoryValuationSheetModule } from './modules/InventoryValuationSheet/InventoryValuationSheet.module';
+import { SalesTaxLiabilityModule } from './modules/SalesTaxLiabilitySummary/SalesTaxLiability.module';
+import { JournalSheetModule } from './modules/JournalSheet/JournalSheet.module';
 
 @Module({
   providers: [],
@@ -24,9 +26,11 @@ import { InventoryValuationSheetModule } from './modules/InventoryValuationSheet
     TransactionsByCustomerModule,
     TransactionsByReferenceModule,
     ARAgingSummaryModule,
-    // APAgingSummaryModule,
+    APAgingSummaryModule,
     InventoryItemDetailsModule,
     InventoryValuationSheetModule,
+    SalesTaxLiabilityModule,
+    JournalSheetModule,
   ],
 })
 export class FinancialStatementsModule {}

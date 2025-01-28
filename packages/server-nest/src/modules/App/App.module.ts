@@ -67,6 +67,7 @@ import { PostHogModule } from '../EventsTracker/postHog.module';
 import { EventTrackerModule } from '../EventsTracker/EventTracker.module';
 import { MailModule } from '../Mail/Mail.module';
 import { FinancialStatementsModule } from '../FinancialStatements/FinancialStatements.module';
+import { StripePaymentModule } from '../StripePayment/StripePayment.module';
 
 @Module({
   imports: [
@@ -158,6 +159,7 @@ import { FinancialStatementsModule } from '../FinancialStatements/FinancialState
     PostHogModule,
     EventTrackerModule,
     FinancialStatementsModule,
+    StripePaymentModule,
   ],
   controllers: [AppController],
   providers: [

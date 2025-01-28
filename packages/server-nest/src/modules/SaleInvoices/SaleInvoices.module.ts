@@ -59,7 +59,7 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
     MailModule,
     MailNotificationModule,
     InventoryCostModule,
-    DynamicListModule
+    DynamicListModule,
   ],
   controllers: [SaleInvoicesController],
   providers: [
@@ -94,7 +94,8 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
     SendSaleInvoiceMail,
     GetSaleInvoicesService,
     GetSaleInvoiceMailState,
-    SendSaleInvoiceMailCommon
+    SendSaleInvoiceMailCommon,
   ],
+  exports: [GetSaleInvoice],
 })
 export class SaleInvoicesModule {}

@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import * as moment from 'moment';
 
 export interface ILedger {
   entries: ILedgerEntry[];
@@ -41,7 +42,7 @@ export interface ILedgerEntry {
   accountId?: number;
   accountNormal: string;
   contactId?: number;
-  date: Date | string;
+  date: moment.MomentInput;
 
   transactionType: string;
   transactionSubType?: string;
