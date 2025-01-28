@@ -92,6 +92,8 @@ export class EditSaleInvoice {
       oldSaleInvoice,
       authorizedUser
     );
+
+    console.log('saleInvoiceObj', saleInvoiceObj);
     // Validate sale invoice number uniquiness.
     if (saleInvoiceObj.invoiceNo) {
       await this.validators.validateInvoiceNumberUnique(
@@ -102,9 +104,10 @@ export class EditSaleInvoice {
     }
     // Validate the invoice amount is not smaller than the invoice payment amount.
     this.validators.validateInvoiceAmountBiggerPaymentAmount(
-      saleInvoiceObj.balance,
+      saleInvoiceObj.amount,
       oldSaleInvoice.paymentAmount
     );
+
     // Edit sale invoice transaction in UOW envirment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleInvoiceEditing` event.
@@ -121,6 +124,7 @@ export class EditSaleInvoice {
           id: saleInvoiceId,
           ...saleInvoiceObj,
         });
+      
       // Edit event payload.
       const editEventPayload: ISaleInvoiceEditedPayload = {
         tenantId,
@@ -137,6 +141,7 @@ export class EditSaleInvoice {
         editEventPayload
       );
       return saleInvoice;
+    
     });
   }
 
