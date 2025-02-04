@@ -13,6 +13,8 @@ import { InventoryItemDetailsModule } from './modules/InventoryItemDetails/Inven
 import { InventoryValuationSheetModule } from './modules/InventoryValuationSheet/InventoryValuationSheet.module';
 import { SalesTaxLiabilityModule } from './modules/SalesTaxLiabilitySummary/SalesTaxLiability.module';
 import { JournalSheetModule } from './modules/JournalSheet/JournalSheet.module';
+import { ProfitLossSheetModule } from './modules/ProfitLossSheet/ProfitLossSheet.module';
+import { CashflowStatementModule } from './modules/CashFlowStatement/CashflowStatement.module';
 
 @Module({
   providers: [],
@@ -31,6 +33,8 @@ import { JournalSheetModule } from './modules/JournalSheet/JournalSheet.module';
     InventoryValuationSheetModule,
     SalesTaxLiabilityModule,
     JournalSheetModule,
+    ProfitLossSheetModule,
+    CashflowStatementModule,
   ],
 })
 export class FinancialStatementsModule {}

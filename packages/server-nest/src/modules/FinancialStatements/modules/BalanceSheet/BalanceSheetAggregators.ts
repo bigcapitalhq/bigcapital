@@ -27,8 +27,8 @@ export const BalanceSheetAggregators = <T extends GConstructor<FinancialSheet>>(
     BalanceSheetComparsionPreviousYear,
     BalanceSheetPercentage,
     BalanceSheetSchema,
-    BalanceSheetBase,
     FinancialSheetStructure,
+    BalanceSheetBase,
   )(Base) {
     /**
      * Balance sheet query.

@@ -11,7 +11,7 @@ export const BalanceSheetBase = <T extends GConstructor<FinancialSheet>>(
 ) =>
   class BalanceSheetBase extends Base {
     /**
-     * Detarmines the node type of the given schema node.
+     * Determines the node type of the given schema node.
      * @param {IBalanceSheetStructureSection} node -
      * @param {string} type -
      * @return {boolean}
@@ -21,9 +21,8 @@ export const BalanceSheetBase = <T extends GConstructor<FinancialSheet>>(
         return node.type === type;
       },
     );
-
     /**
-     * Detarmines the node type of the given schema node.
+     * Determines the node type of the given schema node.
      * @param {IBalanceSheetStructureSection} node -
      * @param {string} type -
      * @return {boolean}
@@ -33,9 +32,8 @@ export const BalanceSheetBase = <T extends GConstructor<FinancialSheet>>(
         return node.nodeType === type;
       },
     );
-
     /**
-     * Detarmines the given display columns by type.
+     * Determines the given display columns by type.
      * @param {string} displayColumnsBy
      * @returns {boolean}
      */

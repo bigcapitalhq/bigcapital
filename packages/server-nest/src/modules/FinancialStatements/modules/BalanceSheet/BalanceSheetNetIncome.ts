@@ -62,8 +62,8 @@ export const BalanceSheetNetIncome = <T extends GConstructor<FinancialSheet>>(
     };
 
     /**
-     * Mappes the aggregate schema node type.
-     * @param  {IBalanceSheetSchemaNetIncomeNode} node - Schema node.
+     * Maps the aggregate schema node type.
+     * @param {IBalanceSheetSchemaNetIncomeNode} node - Schema node.
      * @return {IBalanceSheetAggregateNode}
      */
     public schemaNetIncomeNodeMapper = (

@@ -8,7 +8,7 @@ export const FinancialHorizTotals = <T extends GConstructor<FinancialSheet>>(
 ) =>
   class FinancialHorizTotals extends Base {
     /**
-     *
+     * Associate percentage to the given node.
      */
     public assocNodePercentage = R.curry(
       (assocPath, parentTotal: number, node: any) => {
@@ -25,7 +25,7 @@ export const FinancialHorizTotals = <T extends GConstructor<FinancialSheet>>(
     );
 
     /**
-     *
+     * Associate horizontal percentage total to the given node.
      * @param {} parentNode -
      * @param {} horTotalNode -
      * @param {number} index -

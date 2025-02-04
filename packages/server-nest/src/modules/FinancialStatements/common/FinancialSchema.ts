@@ -4,9 +4,9 @@ import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from './FinancialSheet';
 
 export const FinancialSchema = <T extends GConstructor<FinancialSheet>>(
-  Base: T
+  Base: T,
 ) =>
-  class FinancialSchema extends R.compose(FinancialSheetStructure)(Base) {
+  class FinancialSchema extends FinancialSheetStructure(Base) {
     /**
      *
      * @returns

@@ -15,7 +15,7 @@ export class JournalSheetApplication {
   /**
    * Retrieves the journal sheet.
    * @param {IJournalReportQuery} query
-   * @returns {}
+   * @returns {Promise<IJournalSheet>}
    */
   public sheet(query: IJournalReportQuery) {
     return this.journalSheet.journalSheet(query);

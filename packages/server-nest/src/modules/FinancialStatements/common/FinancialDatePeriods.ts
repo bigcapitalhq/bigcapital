@@ -9,11 +9,12 @@ import { dateRangeFromToCollection } from '@/utils/date-range-collection';
 import { FinancialDateRanges } from './FinancialDateRanges';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from './FinancialSheet';
+import { IFinancialSheetTotalPeriod } from '../modules/BalanceSheet/BalanceSheet.types';
 
 export const FinancialDatePeriods = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.compose(FinancialDateRanges)(Base) {
+  class extends R.pipe(FinancialDateRanges)(Base) {
     /**
      * Retrieves the date ranges from the given from date to the given to date.
      * @param {Date} fromDate -

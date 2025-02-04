@@ -17,7 +17,7 @@ export class ExpenseGLEntriesService {
   /**
    * Retrieves the expense G/L of the given id.
    * @param {number} expenseId
-   * @param {Knex.Transaction} trx
+   * @param {Knex.Transaction} trx - Knex transaction.
    * @returns {Promise<ILedger>}
    */
   public getExpenseLedgerById = async (

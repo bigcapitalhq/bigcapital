@@ -7,17 +7,11 @@ import UnitOfWork from '../UnitOfWork';
 
 @Service()
 export class CreatePaymentReceiveStripePayment {
-  @Inject()
-  private getSaleInvoiceService: GetSaleInvoice;
-
-  @Inject()
-  private createPaymentReceivedService: CreatePaymentReceived;
-
-  @Inject()
-  private tenancy: HasTenancyService;
-
-  @Inject()
-  private uow: UnitOfWork;
+  constructor(
+    private readonly getSaleInvoiceService: GetSaleInvoice,
+    private readonly createPaymentReceivedService: CreatePaymentReceived,
+    private readonly uow: UnitOfWork
+  ) {}
 
   /**
    *

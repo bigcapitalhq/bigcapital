@@ -12,10 +12,8 @@ import {
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from './FinancialSheet';
 
-export const FinancialSheetStructure = <
-  T extends GConstructor<FinancialSheet>,
->(
-  Base: T
+export const FinancialSheetStructure = <T extends GConstructor<FinancialSheet>>(
+  Base: T,
 ) =>
   class FinancialSheetStructure extends Base {
     /**
@@ -30,7 +28,6 @@ export const FinancialSheetStructure = <
         pathFormat: 'array',
       });
     };
-
     /**
      *
      * @param nodes
@@ -43,18 +40,15 @@ export const FinancialSheetStructure = <
         pathFormat: 'array',
       });
     };
-
     public mapNodes = (nodes, callback) => {
       return mapValues(nodes, callback, {
         childrenPath: 'children',
         pathFormat: 'array',
       });
     };
-
     public filterNodesDeep2 = R.curry((predicate, nodes) => {
       return filterNodesDeep(predicate, nodes);
     });
-
     /**
      *
      * @param
@@ -65,14 +59,12 @@ export const FinancialSheetStructure = <
         pathFormat: 'array',
       });
     };
-
     public findNodeDeep = (nodes, callback) => {
       return findValueDeep(nodes, callback, {
         childrenPath: 'children',
         pathFormat: 'array',
       });
     };
-
     public mapAccNodesDeep = (nodes, callback) => {
       return reduceDeep(
         nodes,
@@ -80,7 +72,7 @@ export const FinancialSheetStructure = <
           set(
             acc,
             context.path,
-            callback(value, key, parentValue, acc, context)
+            callback(value, key, parentValue, acc, context),
           );
           return acc;
         },
@@ -88,10 +80,9 @@ export const FinancialSheetStructure = <
         {
           childrenPath: 'children',
           pathFormat: 'array',
-        }
+        },
       );
     };
-
     /**
      *
      */
@@ -101,11 +92,9 @@ export const FinancialSheetStructure = <
         pathFormat: 'array',
       });
     };
-
     public getTotalOfChildrenNodes = (node) => {
       return this.getTotalOfNodes(node.children);
     };
-
     public getTotalOfNodes = (nodes) => {
       return sumBy(nodes, 'total.amount');
     };

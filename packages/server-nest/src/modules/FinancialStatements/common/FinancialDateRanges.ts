@@ -2,6 +2,7 @@ import * as moment from 'moment';
 import { IDateRange, IFinancialDatePeriodsUnit } from '../types/Report.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from './FinancialSheet';
+import { DateInput } from '@/common/types/Date';
 
 export const FinancialDateRanges = <T extends GConstructor<FinancialSheet>>(
   Base: T,
@@ -15,7 +16,7 @@ export const FinancialDateRanges = <T extends GConstructor<FinancialSheet>>(
      * @returns {Date}
      */
     public getPreviousPeriodDate = (
-      date: Date,
+      date: DateInput,
       value: number = 1,
       unit: IFinancialDatePeriodsUnit = IFinancialDatePeriodsUnit.Day,
     ): Date => {
@@ -28,21 +29,21 @@ export const FinancialDateRanges = <T extends GConstructor<FinancialSheet>>(
      * @param {Date} toDate
      * @returns {number}
      */
-    public getPreviousPeriodDiff = (fromDate: Date, toDate: Date) => {
+    public getPreviousPeriodDiff = (fromDate: DateInput, toDate: DateInput) => {
       return moment(toDate).diff(fromDate, 'days') + 1;
     };
 
     /**
      * Retrieves the periods period dates.
-     * @param {Date} fromDate - From date.
-     * @param {Date} toDate - To date.
+     * @param {DateInput} fromDate - From date.
+     * @param {DateInput} toDate - To date.
      * @param {IFinancialDatePeriodsUnit} unit - Unit of time.
      * @param {number} amount - Amount of time.
      * @returns {IDateRange}
      */
     public getPreviousPeriodDateRange = (
-      fromDate: Date,
-      toDate: Date,
+      fromDate: DateInput,
+      toDate: DateInput,
       unit: IFinancialDatePeriodsUnit,
       amount: number = 1,
     ): IDateRange => {
@@ -54,11 +55,14 @@ export const FinancialDateRanges = <T extends GConstructor<FinancialSheet>>(
 
     /**
      * Retrieves the previous period (PP) date range of total column.
-     * @param   {Date} fromDate
-     * @param   {Date} toDate
+     * @param {DateInput} fromDate - From date.
+     * @param {DateInput} toDate - To date.
      * @returns {IDateRange}
      */
-    public getPPTotalDateRange = (fromDate: Date, toDate: Date): IDateRange => {
+    public getPPTotalDateRange = (
+      fromDate: DateInput,
+      toDate: DateInput,
+    ): IDateRange => {
       const unit = this.getPreviousPeriodDiff(fromDate, toDate);
 
       return this.getPreviousPeriodDateRange(
@@ -77,8 +81,8 @@ export const FinancialDateRanges = <T extends GConstructor<FinancialSheet>>(
      * @returns {IDateRange}
      */
     public getPPDatePeriodDateRange = (
-      fromDate: Date,
-      toDate: Date,
+      fromDate: DateInput,
+      toDate: DateInput,
       unit: IFinancialDatePeriodsUnit,
     ): IDateRange => {
       return this.getPreviousPeriodDateRange(fromDate, toDate, unit, 1);
@@ -89,22 +93,22 @@ export const FinancialDateRanges = <T extends GConstructor<FinancialSheet>>(
     // ------------------------
     /**
      * Retrieve the previous year of the given date.
-     * @params  {Date} date
+     * @param {DateInput} date
      * @returns {Date}
      */
-    getPreviousYearDate = (date: Date) => {
+    getPreviousYearDate = (date: DateInput) => {
       return moment(date).subtract(1, 'years').toDate();
     };
 
     /**
      * Retrieves previous year date range.
-     * @param   {Date} fromDate
-     * @param   {Date} toDate
+     * @param {DateInput} fromDate - From date.
+     * @param {DateInput} toDate - To date.
      * @returns {IDateRange}
      */
     public getPreviousYearDateRange = (
-      fromDate: Date,
-      toDate: Date,
+      fromDate: DateInput,
+      toDate: DateInput,
     ): IDateRange => {
       const PYFromDate = this.getPreviousYearDate(fromDate);
       const PYToDate = this.getPreviousYearDate(toDate);

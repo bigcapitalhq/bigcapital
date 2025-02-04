@@ -11,8 +11,9 @@
     "./src/modules/DynamicListing",
     "./src/modules/DynamicListing/**/*.ts",
     "./src/modules/FinancialStatements/**/*.ts",
-    // "./src/modules/FinancialStatements/modules/BalanceSheet/**.ts",
+   "./src/modules/StripePayment/**/*.ts", 
+    "./src/modules/FinancialStatements/modules/BalanceSheet/**.ts",
+    "./src/modules/FinancialStatements/modules/ProfitLossSheet/**.ts",
     "./src/modules/Views",
-    "./src/modules/Expenses/subscribers"
   ]
 }

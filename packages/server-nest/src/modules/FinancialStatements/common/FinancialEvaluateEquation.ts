@@ -10,7 +10,7 @@ export const FinancialEvaluateEquation = <
 >(
   Base: T
 ) =>
-  class FinancialEvaluateEquation extends R.compose(FinancialSheetStructure)(Base) {
+  class FinancialEvaluateEquation extends R.pipe(FinancialSheetStructure)(Base) {
     /**
      * Evauluate equaation string with the given scope table.
      * @param {string} equation -

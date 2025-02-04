@@ -1,5 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-import * as R from 'ramda';
 import {
   BALANCE_SHEET_SCHEMA_NODE_ID,
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
@@ -12,7 +11,7 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 export const BalanceSheetSchema = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialSchema)(Base) {
+  class extends FinancialSchema(Base) {
     /**
      * Retrieves the balance sheet schema.
      * @returns

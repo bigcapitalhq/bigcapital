@@ -1,33 +1,34 @@
+// @ts-nocheck
 import * as R from 'ramda';
-import { IDateRange } from '../../types/Report.types';
-import { ITableColumn } from '../../types/Table.types';
-import { FinancialTablePreviousYear } from '../../common/FinancialTablePreviousYear';
-import { FinancialDateRanges } from '../../common/FinancialDateRanges';
+import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { ITableColumn, ITableColumnAccessor } from '../../types/Table.types';
+import { IDateRange } from '../CashFlowStatement/Cashflow.types';
+import { FinancialTablePreviousYear } from '../../common/FinancialTablePreviousYear';
+import { FinancialDateRanges } from '../../common/FinancialDateRanges';
 
-export const BalanceSheetTablePreviousYear = <
+export const ProfitLossTablePreviousYear = <
   T extends GConstructor<FinancialSheet>,
 >(
   Base: T,
 ) =>
   class extends R.pipe(FinancialTablePreviousYear, FinancialDateRanges)(Base) {
-    // --------------------
+    query: ProfitLossSheetQuery;
+
+    // ------------------------------------
     // # Columns.
-    // --------------------
+    // ------------------------------------
     /**
      * Retrieves pervious year comparison columns.
      * @returns {ITableColumn[]}
      */
-    public getPreviousYearColumns = (
+    protected getPreviousYearColumns = (
       dateRange?: IDateRange,
     ): ITableColumn[] => {
       return R.pipe(
         // Previous year columns.
-        R.when(
-          this.query.isPreviousYearActive,
-          R.append(this.getPreviousYearTotalColumn(dateRange)),
-        ),
+        R.append(this.getPreviousYearTotalColumn(dateRange)),
         R.when(
           this.query.isPreviousYearChangeActive,
           R.append(this.getPreviousYearChangeColumn()),
@@ -40,11 +41,13 @@ export const BalanceSheetTablePreviousYear = <
     };
 
     /**
-     *
+     * Compose the previous year for date periods columns.
      * @param {IDateRange} dateRange
-     * @returns
+     * @returns {ITableColumn[]}
      */
-    public getPreviousYearHorizontalColumns = (dateRange: IDateRange) => {
+    private previousYearDatePeriodColumnCompose = (
+      dateRange: IDateRange,
+    ): ITableColumn[] => {
       const PYDateRange = this.getPreviousYearDateRange(
         dateRange.fromDate,
         dateRange.toDate,
@@ -52,20 +55,28 @@ export const BalanceSheetTablePreviousYear = <
       return this.getPreviousYearColumns(PYDateRange);
     };
 
-    // --------------------
-    // # Accessors.
-    // --------------------
     /**
-     * Retrieves previous year columns accessors.
+     * Retrieves previous year date periods columns.
+     * @param {IDateRange} dateRange
      * @returns {ITableColumn[]}
      */
-    public previousYearColumnAccessor = (): ITableColumn[] => {
+    protected getPreviousYearDatePeriodColumnPlugin = (
+      dateRange: IDateRange,
+    ): ITableColumn[] => {
+      return this.previousYearDatePeriodColumnCompose(dateRange);
+    };
+
+    // ---------------------------------------------------
+    // # Accessors.
+    // ---------------------------------------------------
+    /**
+     * Retrieves previous year columns accessors.
+     * @returns {ITableColumnAccessor[]}
+     */
+    protected previousYearColumnAccessor = (): ITableColumnAccessor[] => {
       return R.pipe(
         // Previous year columns.
-        R.when(
-          this.query.isPreviousYearActive,
-          R.append(this.getPreviousYearTotalAccessor()),
-        ),
+        R.append(this.getPreviousYearTotalAccessor()),
         R.when(
           this.query.isPreviousYearChangeActive,
           R.append(this.getPreviousYearChangeAccessor()),
@@ -79,18 +90,15 @@ export const BalanceSheetTablePreviousYear = <
 
     /**
      * Previous year period column accessor.
-     * @param   {number} index
+     * @param {number} index
      * @returns {ITableColumn[]}
      */
-    public previousYearHorizontalColumnAccessors = (
+    protected previousYearHorizontalColumnAccessors = (
       index: number,
-    ): ITableColumn[] => {
+    ): ITableColumnAccessor[] => {
       return R.pipe(
         // Previous year columns.
-        R.when(
-          this.query.isPreviousYearActive,
-          R.append(this.getPreviousYearTotalHorizAccessor(index)),
-        ),
+        R.append(this.getPreviousYearTotalHorizAccessor(index)),
         R.when(
           this.query.isPreviousYearChangeActive,
           R.append(this.getPreviousYearChangeHorizAccessor(index)),
