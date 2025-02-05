@@ -1,12 +1,14 @@
+import { Response } from 'express';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { ICustomerBalanceSummaryQuery } from './CustomerBalanceSummary.types';
 import { CustomerBalanceSummaryApplication } from './CustomerBalanceSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
-import { Response } from 'express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PublicRoute } from '@/modules/Auth/Jwt.guard';
 
 @Controller('/reports/customer-balance-summary')
 @ApiTags('reports')
+@PublicRoute()
 export class CustomerBalanceSummaryController {
   constructor(
     private readonly customerBalanceSummaryApp: CustomerBalanceSummaryApplication,

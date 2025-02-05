@@ -3,12 +3,18 @@ import { IJournalReportQuery } from './JournalSheet.types';
 import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';
 import { JournalSheetApplication } from './JournalSheetApplication';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PublicRoute } from '@/modules/Auth/Jwt.guard';
 
 @Controller('/reports/journal')
+@ApiTags('reports')
+@PublicRoute()
 export class JournalSheetController {
   constructor(private readonly journalSheetApp: JournalSheetApplication) {}
 
   @Get('/')
+  @ApiResponse({ status: 200, description: 'Journal report' })
+  @ApiOperation({ summary: 'Journal report' })
   async journalSheet(
     @Query() query: IJournalReportQuery,
     @Res() res: Response,

@@ -4,8 +4,10 @@ import { IProfitLossSheetQuery } from './ProfitLossSheet.types';
 import { ProfitLossSheetApplication } from './ProfitLossSheetApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/profit-loss-sheet')
+@ApiTags('reports')
 @PublicRoute()
 export class ProfitLossSheetController {
   constructor(
@@ -19,6 +21,8 @@ export class ProfitLossSheetController {
    * @param {string} acceptHeader
    */
   @Get('/')
+  @ApiResponse({ status: 200, description: 'Profit & loss statement' })
+  @ApiOperation({ summary: 'Get profit/loss statement report' })
   async profitLossSheet(
     @Query() query: IProfitLossSheetQuery,
     @Res() res: Response,

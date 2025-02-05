@@ -61,9 +61,9 @@ export class VendorBalanceSummaryRepository {
    * Initialize the vendor balance summary repository.
    */
   async asyncInit() {
-    this.initVendors();
-    this.initVendorsEntries();
-    this.initLedger();
+    await this.initVendors();
+    await this.initVendorsEntries();
+    await this.initLedger();
   }
 
   /**
@@ -156,6 +156,6 @@ export class VendorBalanceSummaryRepository {
     const transactions = await this.getVendorsTransactions(date);
     const commonProps = { accountNormal: 'credit' };
 
-    return R.map(R.merge(commonProps))(transactions);
+    return R.map(R.mergeRight(commonProps))(transactions) as ILedgerEntry[];
   }
 }

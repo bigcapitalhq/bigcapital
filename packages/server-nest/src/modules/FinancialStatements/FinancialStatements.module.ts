@@ -15,12 +15,14 @@ import { SalesTaxLiabilityModule } from './modules/SalesTaxLiabilitySummary/Sale
 import { JournalSheetModule } from './modules/JournalSheet/JournalSheet.module';
 import { ProfitLossSheetModule } from './modules/ProfitLossSheet/ProfitLossSheet.module';
 import { CashflowStatementModule } from './modules/CashFlowStatement/CashflowStatement.module';
+import { VendorBalanceSummaryModule } from './modules/VendorBalanceSummary/VendorBalanceSummary.module';
 
 @Module({
   providers: [],
   imports: [
     PurchasesByItemsModule,
     CustomerBalanceSummaryModule,
+    VendorBalanceSummaryModule,
     SalesByItemsModule,
     GeneralLedgerModule,
     TrialBalanceSheetModule,

@@ -36,7 +36,7 @@ export class CustomerBalanceSummaryService {
     const commonProps = { accountNormal: 'debit', date: asDate };
 
     // @ts-ignore
-    return R.map(R.merge(commonProps))(transactions);
+    return R.map(R.mergeRight(commonProps))(transactions);
   }
 
   /**

@@ -100,7 +100,7 @@ export class VendorBalanceSummaryTable {
         R.always(this.query.percentageColumn),
         R.concat(this.getPercentageColumnsAccessor())
       )
-    )([]);
+    )([]) as IColumnMapperMeta[];
   };
 
   /**
@@ -142,13 +142,13 @@ export class VendorBalanceSummaryTable {
     ];
     return R.compose(
       R.when(
-        R.always(this.query.percentageColumn),
+        () => this.query.percentageColumn,
         R.append({
           key: 'percentage_of_column',
           label: this.i18n.t('contact_summary_balance.percentage_column'),
         })
       ),
-      R.concat(columns)
-    )([]);
+      R.concat(columns),
+    )([]) as ITableColumn[];
   };
 }

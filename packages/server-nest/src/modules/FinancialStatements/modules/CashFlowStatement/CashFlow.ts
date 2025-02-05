@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { defaultTo, map, set, sumBy, isEmpty, mapValues, get } from 'lodash';
+import { defaultTo, set, sumBy, isEmpty, mapValues, get } from 'lodash';
 import * as mathjs from 'mathjs';
 import * as moment from 'moment';
 import { I18nService } from 'nestjs-i18n';

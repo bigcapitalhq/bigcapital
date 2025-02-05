@@ -10,27 +10,33 @@ import { ContactBalanceSummaryReport } from '../ContactBalanceSummary/ContactBal
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { INumberFormatQuery } from '../../types/Report.types';
 import { VendorBalanceSummaryRepository } from './VendorBalanceSummaryRepository';
+import { Ledger } from '@/modules/Ledger/Ledger';
 
 export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
   readonly filter: IVendorBalanceSummaryQuery;
   readonly numberFormat: INumberFormatQuery;
-  readonly repo: VendorBalanceSummaryRepository;
+  readonly repository: VendorBalanceSummaryRepository;
+  readonly ledger: Ledger;
+  readonly baseCurrency: string;
 
   /**
    * Constructor method.
-   * @param {IJournalPoster} receivableLedger
-   * @param {IVendor[]} vendors
-   * @param {IVendorBalanceSummaryQuery} filter
-   * @param {string} baseCurrency
+   * @param {VendorBalanceSummaryRepository} repository - 
+   * @param {IVendorBalanceSummaryQuery} filter - 
    */
   constructor(
-    repo: VendorBalanceSummaryRepository,
+    repository: VendorBalanceSummaryRepository,
     filter: IVendorBalanceSummaryQuery,
   ) {
     super();
+    
+    this.repository = repository;
+    this.ledger = this.repository.ledger;
+    this.baseCurrency = this.repository.baseCurrency;
 
     this.filter = filter;
     this.numberFormat = this.filter.numberFormat;
+
   }
 
   /**
@@ -41,7 +47,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
   private vendorMapper = (
     vendor: ModelObject<Vendor>,
   ): IVendorBalanceSummaryVendor => {
-    const closingBalance = this.repo.ledger
+    const closingBalance = this.repository.ledger
       .whereContactId(vendor.id)
       .getClosingBalance();
 
@@ -86,7 +92,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
         this.contactCamparsionPercentageOfColumn,
       ),
       this.vendorsMapper,
-    )(vendors);
+    )(vendors) as IVendorBalanceSummaryVendor[];
   }
 
   /**
@@ -94,7 +100,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @returns {IVendorBalanceSummaryData}
    */
   public reportData(): IVendorBalanceSummaryData {
-    const vendors = this.getVendorsSection(this.repo.vendors);
+    const vendors = this.getVendorsSection(this.repository.vendors);
     const total = this.getContactsTotalSection(vendors);
 
     return { vendors, total };

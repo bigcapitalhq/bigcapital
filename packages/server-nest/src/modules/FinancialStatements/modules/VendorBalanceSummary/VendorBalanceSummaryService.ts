@@ -29,7 +29,7 @@ export class VendorBalanceSummaryService {
     const filter = { ...getVendorBalanceSummaryDefaultQuery(), ...query };
 
     this.vendorBalanceSummaryRepository.setFilter(filter);
-    this.vendorBalanceSummaryRepository.asyncInit();
+    await this.vendorBalanceSummaryRepository.asyncInit();
 
     // Report instance.
     const reportInstance = new VendorBalanceSummaryReport(

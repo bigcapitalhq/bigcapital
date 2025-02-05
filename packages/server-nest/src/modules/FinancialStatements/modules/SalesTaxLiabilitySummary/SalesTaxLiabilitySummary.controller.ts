@@ -4,8 +4,10 @@ import { AcceptType } from '@/constants/accept-type';
 import { SalesTaxLiabilitySummaryApplication } from './SalesTaxLiabilitySummaryApplication';
 import { Response } from 'express';
 import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/sales-tax-liability-summary')
+@ApiTags('reports')
 @PublicRoute()
 export class SalesTaxLiabilitySummaryController {
   constructor(
@@ -13,6 +15,11 @@ export class SalesTaxLiabilitySummaryController {
   ) {}
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Sales tax liability summary report',
+  })
+  @ApiOperation({ summary: 'Get sales tax liability summary report' })
   public async getSalesTaxLiabilitySummary(
     @Query() query: SalesTaxLiabilitySummaryQuery,
     @Res() res: Response,
