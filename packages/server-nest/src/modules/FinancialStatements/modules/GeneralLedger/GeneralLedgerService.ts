@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import { I18nService } from 'nestjs-i18n';
 import { GeneralLedgerMeta } from './GeneralLedgerMeta';
 import { GeneralLedgerRepository } from './GeneralLedgerRepository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -10,8 +10,6 @@ import {
   IGeneralLedgerMeta,
   IGeneralLedgerSheetQuery,
 } from './GeneralLedger.types';
-import { I18nService } from 'nestjs-i18n';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class GeneralLedgerService {
@@ -52,8 +50,7 @@ export class GeneralLedgerService {
     const meta = await this.generalLedgerMeta.meta(filter);
 
     // Triggers `onGeneralLedgerViewed` event.
-    await this.eventEmitter.emitAsync(events.reports.onGeneralLedgerViewed, {
-    });
+    await this.eventEmitter.emitAsync(events.reports.onGeneralLedgerViewed, {});
 
     return {
       data: reportData,

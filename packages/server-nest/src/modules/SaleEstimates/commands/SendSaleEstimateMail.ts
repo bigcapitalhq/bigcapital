@@ -1,3 +1,5 @@
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bull';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ContactMailNotification } from '@/modules/MailNotification/ContactMailNotification';
@@ -14,6 +16,8 @@ import { mergeAndValidateMailOptions } from '@/modules/MailNotification/utils';
 import {
   ISaleEstimateMailPresendEvent,
   SaleEstimateMailOptionsDTO,
+  SendSaleEstimateMailJob,
+  SendSaleEstimateMailQueue,
 } from '../types/SaleEstimates.types';
 import { SaleEstimateMailOptions } from '../types/SaleEstimates.types';
 import { Mail } from '@/modules/Mail/Mail';
@@ -38,6 +42,8 @@ export class SendSaleEstimateMail {
 
     @Inject(SaleEstimate.name)
     private readonly saleEstimateModel: typeof SaleEstimate,
+    @InjectQueue(SendSaleEstimateMailQueue)
+    private readonly sendEstimateMailQueue: Queue,
   ) {}
 
   /**
@@ -54,7 +60,7 @@ export class SendSaleEstimateMail {
       saleEstimateId,
       messageOptions,
     };
-    // await this.agenda.now('sale-estimate-mail-send', payload);
+    await this.sendEstimateMailQueue.add(SendSaleEstimateMailJob, payload);
 
     // Triggers `onSaleEstimatePreMailSend` event.
     await this.eventPublisher.emitAsync(events.saleEstimate.onPreMailSend, {

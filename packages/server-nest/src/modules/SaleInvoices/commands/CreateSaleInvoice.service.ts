@@ -115,19 +115,16 @@ export class CreateSaleInvoice {
 
   /**
    * Transformes create DTO to model.
-   * @param {number} tenantId -
    * @param {ICustomer} customer -
    * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO -
    */
   private transformCreateDTOToModel = async (
     customer: Customer,
     saleInvoiceDTO: ISaleInvoiceCreateDTO,
-    // authorizedUser: SystemUser,
   ) => {
     return this.transformerDTO.transformDTOToModel(
       customer,
       saleInvoiceDTO,
-      // authorizedUser,
     );
   };
 }

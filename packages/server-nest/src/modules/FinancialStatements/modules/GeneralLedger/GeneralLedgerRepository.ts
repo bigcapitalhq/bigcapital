@@ -1,21 +1,19 @@
 import * as moment from 'moment';
 import * as R from 'ramda';
-import {
-  IGeneralLedgerSheetQuery,
-
-} from './GeneralLedger.types';
+import { IGeneralLedgerSheetQuery } from './GeneralLedger.types';
 import { flatten, isEmpty, uniq } from 'lodash';
 import { ModelObject } from 'objection';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { Contact } from '@/modules/Contacts/models/Contact';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { transformToMap } from '@/utils/transform-to-key';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { TenantModel } from '@/modules/System/models/TenantModel';
 
+@Injectable({ scope: Scope.TRANSIENT })
 export class GeneralLedgerRepository {
   public filter: IGeneralLedgerSheetQuery;
   public accounts: Account[];
@@ -41,6 +39,12 @@ export class GeneralLedgerRepository {
 
   @Inject(AccountRepository)
   private readonly accountRepository: AccountRepository;
+
+  @Inject(AccountTransaction.name)
+  private readonly accountTransactionModel: typeof AccountTransaction;
+
+  @Inject(Contact.name)
+  private readonly contactModel: typeof Contact;
 
   @Inject(TenancyContext)
   private readonly tenancyContext: TenancyContext;
@@ -79,24 +83,21 @@ export class GeneralLedgerRepository {
    */
   public async initAccounts() {
     // @ts-ignore
-    this.accounts = await this.accountRepository
-      .all()
-      .orderBy('name', 'ASC');
+    this.accounts = await this.accountRepository.all().orderBy('name', 'ASC');
   }
 
   /**
    * Initialize the accounts graph.
    */
   public async initAccountsGraph() {
-    this.accountsGraph =
-      await this.repositories.accountRepository.getDependencyGraph();
+    this.accountsGraph = await this.accountRepository.getDependencyGraph();
   }
 
   /**
    * Initialize the contacts.
    */
   public async initContacts() {
-    this.contacts = await this.repositories.contactRepository.all();
+    this.contacts = await this.contactModel.query();
     this.contactsById = transformToMap(this.contacts, 'id');
   }
 
@@ -104,17 +105,23 @@ export class GeneralLedgerRepository {
    * Initialize the G/L transactions from/to the given date.
    */
   public async initTransactions() {
-    this.transactions = await this.repositories.transactionsRepository
-      .journal({
-        fromDate: this.filter.fromDate,
-        toDate: this.filter.toDate,
-        branchesIds: this.filter.branchesIds,
-      })
-      .orderBy('date', 'ASC')
+    this.transactions = await this.accountTransactionModel
+      .query()
       .onBuild((query) => {
+        query.modify(
+          'filterDateRange',
+          this.filter.fromDate,
+          this.filter.toDate,
+        );
+        if (!isEmpty(this.filter.branchesIds)) {
+          query.modify('filterByBranches', this.filter.branchesIds);
+        }
+        query.orderBy('date', 'ASC');
+
         if (this.filter.accountsIds?.length > 0) {
           query.whereIn('accountId', this.accountNodesIncludeTransactions);
         }
+        query.withGraphFetched('account');
       });
     // Transform array transactions to journal collection.
     this.transactionsLedger = Ledger.fromTransactions(this.transactions);
@@ -124,17 +131,23 @@ export class GeneralLedgerRepository {
    * Initialize the G/L accounts opening balance.
    */
   public async initAccountsOpeningBalance() {
-    // Retreive opening balance credit/debit sumation.
-    this.openingBalanceTransactions =
-      await this.repositories.transactionsRepository.journal({
-        toDate: moment(this.filter.fromDate).subtract(1, 'day'),
-        sumationCreditDebit: true,
-        branchesIds: this.filter.branchesIds,
-      });
+    // Retrieves opening balance credit/debit sumation.
+    this.openingBalanceTransactions = await this.accountTransactionModel
+      .query()
+      .onBuild((query) => {
+        const toDate = moment(this.filter.fromDate).subtract(1, 'day');
 
+        query.modify('sumationCreditDebit');
+        query.modify('filterDateRange', null, toDate);
+
+        if (!isEmpty(this.filter.branchesIds)) {
+          query.modify('filterByBranches', this.filter.branchesIds);
+        }
+        query.withGraphFetched('account');
+      });
     // Accounts opening transactions.
     this.openingBalanceTransactionsLedger = Ledger.fromTransactions(
-      this.openingBalanceTransactions
+      this.openingBalanceTransactions,
     );
   }
 
@@ -149,7 +162,7 @@ export class GeneralLedgerRepository {
     const childrenNodeIds = this.filter.accountsIds?.map(
       (accountId: number) => {
         return this.accountsGraph.dependenciesOf(accountId);
-      }
+      },
     );
     const nodeIds = R.concat(this.filter.accountsIds, childrenNodeIds);
 
@@ -175,7 +188,7 @@ export class GeneralLedgerRepository {
     this.accountNodeInclude = R.compose(
       R.uniq,
       R.flatten,
-      R.concat(this.filter.accountsIds)
+      R.concat(this.filter.accountsIds),
     )(nodeIds);
   }
 }

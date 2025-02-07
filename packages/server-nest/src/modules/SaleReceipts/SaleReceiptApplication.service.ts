@@ -13,6 +13,7 @@ import {
   ISaleReceiptState,
   ISalesReceiptsFilter,
   SaleReceiptMailOpts,
+  SaleReceiptMailOptsDTO,
 } from './types/SaleReceipts.types';
 import { GetSaleReceiptsService } from './queries/GetSaleReceipts.service';
 import { SaleReceipt } from './models/SaleReceipt';
@@ -29,7 +30,6 @@ export class SaleReceiptApplication {
     private getSaleReceiptsService: GetSaleReceiptsService,
     private closeSaleReceiptService: CloseSaleReceipt,
     private getSaleReceiptPdfService: SaleReceiptsPdfService,
-    // private saleReceiptNotifyBySmsService: SaleReceiptNotifyBySms,
     private getSaleReceiptStateService: GetSaleReceiptState,
     private saleReceiptNotifyByMailService: SaleReceiptMailNotification,
   ) {}
@@ -147,16 +147,15 @@ export class SaleReceiptApplication {
    * @param {SaleReceiptMailOptsDTO} messageOpts
    * @returns {Promise<void>}
    */
-  // public sendSaleReceiptMail(
-  //   saleReceiptId: number,
-  //   messageOpts: SaleReceiptMailOptsDTO,
-  // ): Promise<void> {
-  //   return this.saleReceiptNotifyByMailService.triggerMail(
-  //     tenantId,
-  //     saleReceiptId,
-  //     messageOpts,
-  //   );
-  // }
+  public sendSaleReceiptMail(
+    saleReceiptId: number,
+    messageOpts: SaleReceiptMailOptsDTO,
+  ): Promise<void> {
+    return this.saleReceiptNotifyByMailService.triggerMail(
+      saleReceiptId,
+      messageOpts,
+    );
+  }
 
   /**
    * Retrieves the default mail options of the given sale receipt.

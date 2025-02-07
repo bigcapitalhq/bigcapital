@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
 import { SaleReceiptApplication } from './SaleReceiptApplication.service';
 import { CreateSaleReceipt } from './commands/CreateSaleReceipt.service';
 import { EditSaleReceipt } from './commands/EditSaleReceipt.service';
@@ -30,8 +31,10 @@ import { SaleReceiptMailNotification } from './commands/SaleReceiptMailNotificat
 import { SaleReceiptInventoryTransactions } from './inventory/SaleReceiptInventoryTransactions';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
-import { MailModule } from '../Mail/Mail.module';
 import { MailNotificationModule } from '../MailNotification/MailNotification.module';
+import { SendSaleReceiptMailProcess } from './processes/SendSaleReceiptMail.process';
+import { MailModule } from '../Mail/Mail.module';
+import { SendSaleReceiptMailQueue } from './constants';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -48,7 +51,8 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
     InventoryCostModule,
     DynamicListModule,
     MailModule,
-    MailNotificationModule
+    MailNotificationModule,
+    BullModule.registerQueue({ name: SendSaleReceiptMailQueue }),
   ],
   providers: [
     TenancyContext,
@@ -70,6 +74,7 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
     SaleReceiptMailNotification,
     SaleReceiptInventoryTransactions,
     SaleReceiptInventoryTransactionsSubscriber,
+    SendSaleReceiptMailProcess,
   ],
 })
 export class SaleReceiptsModule {}

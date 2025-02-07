@@ -1,6 +1,10 @@
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bullmq';
 import {
   DEFAULT_RECEIPT_MAIL_CONTENT,
   DEFAULT_RECEIPT_MAIL_SUBJECT,
+  SendSaleReceiptMailJob,
+  SendSaleReceiptMailQueue,
 } from '../constants';
 import { mergeAndValidateMailOptions } from '@/modules/MailNotification/utils';
 import { transformReceiptToMailDataArgs } from '../utils';
@@ -36,14 +40,16 @@ export class SaleReceiptMailNotification {
     private readonly mailTransporter: MailTransporter,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: typeof SaleReceipt
+    private readonly saleReceiptModel: typeof SaleReceipt,
+
+    @InjectQueue(SendSaleReceiptMailQueue)
+    private readonly sendSaleReceiptMailProcess: Queue,
   ) {}
 
   /**
    * Sends the receipt mail of the given sale receipt.
-   * @param {number} tenantId
-   * @param {number} saleReceiptId
-   * @param {SaleReceiptMailOptsDTO} messageDTO
+   * @param {number} saleReceiptId - Sale receipt id.
+   * @param {SaleReceiptMailOptsDTO} messageDTO - Message DTOs.
    */
   public async triggerMail(
     saleReceiptId: number,
@@ -53,7 +59,7 @@ export class SaleReceiptMailNotification {
       saleReceiptId,
       messageOpts: messageOptions,
     };
-    // await this.agenda.now('sale-receipt-mail-send', payload);
+    this.sendSaleReceiptMailProcess.add(SendSaleReceiptMailJob, { ...payload });
 
     // Triggers the event `onSaleReceiptPreMailSend`.
     await this.eventEmitter.emitAsync(events.saleReceipt.onPreMailSend, {
@@ -70,7 +76,8 @@ export class SaleReceiptMailNotification {
   public async getMailOptions(
     saleReceiptId: number,
   ): Promise<SaleReceiptMailOpts> {
-    const saleReceipt = await this.saleReceiptModel.query()
+    const saleReceipt = await this.saleReceiptModel
+      .query()
       .findById(saleReceiptId)
       .throwIfNotFound();
 

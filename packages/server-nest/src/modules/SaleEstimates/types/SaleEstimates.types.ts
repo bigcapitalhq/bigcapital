@@ -8,6 +8,9 @@ import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/Dynam
 import { CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
 import { CommonMailOptions } from '@/modules/MailNotification/MailNotification.types';
 
+export const SendSaleEstimateMailQueue = 'SendSaleEstimateMailProcessor';
+export const SendSaleEstimateMailJob = 'SendSaleEstimateMailProcess';
+
 export interface ISaleEstimateDTO {
   customerId: number;
   exchangeRate?: number;
@@ -121,4 +124,9 @@ export interface ISaleEstimateMailPresendEvent {
 
 export interface ISaleEstimateState {
   defaultTemplateId: number;
+}
+
+export interface ISendSaleEstimateMailProcessData {
+  saleEstimateId: number;
+  messageOptions: SaleEstimateMailOptionsDTO;
 }

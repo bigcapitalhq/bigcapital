@@ -322,3 +322,9 @@ export interface InvoicePdfTemplateAttributes {
 export interface ISaleInvocieState {
   defaultTemplateId: number;
 }
+
+
+export interface SaleInvoiceSendMailData {
+  saleInvoiceId: number;
+  messageOptions: SendInvoiceMailDTO;
+}

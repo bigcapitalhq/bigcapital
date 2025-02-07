@@ -12,7 +12,6 @@ import { ValidateDeleteBankAccountTransactions } from './commands/ValidateDelete
 import { BankTransactionGLEntriesService } from './commands/BankTransactionGLEntries';
 import { BankingTransactionsApplication } from './BankingTransactionsApplication.service';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
-import { LedgerModule } from '../Ledger/Ledger.module';
 import { DeleteCashflowTransaction } from './commands/DeleteCashflowTransaction.service';
 import { CreateBankTransactionService } from './commands/CreateBankTransaction.service';
 import { GetBankTransactionService } from './queries/GetBankTransaction.service';
@@ -24,6 +23,7 @@ import { BankingTransactionsController } from './BankingTransactions.controller'
 import { GetBankAccountsService } from './queries/GetBankAccounts.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { BankAccount } from './models/BankAccount';
+import { LedgerModule } from '../Ledger/Ledger.module';
 
 const models = [
   RegisterTenancyModel(UncategorizedBankTransaction),

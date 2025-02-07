@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
@@ -33,7 +34,7 @@ import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.
 import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
 import { SaleEstimatePdfTemplate } from '../SaleInvoices/queries/SaleEstimatePdfTemplate.service';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
-// import { SaleEstimateNotifyBySms } from './commands/SaleEstimateSmsNotify';
+import { SendSaleEstimateMailQueue } from './types/SaleEstimates.types';
 
 @Module({
   imports: [
@@ -43,7 +44,8 @@ import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
     MailModule,
     ChromiumlyTenancyModule,
     TemplateInjectableModule,
-    PdfTemplatesModule
+    PdfTemplatesModule,
+    BullModule.registerQueue({ name: SendSaleEstimateMailQueue }),
   ],
   controllers: [SaleEstimatesController],
   providers: [
@@ -73,7 +75,6 @@ import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
     SendSaleEstimateMail,
     GetSaleEstimatePdf,
     SaleEstimatePdfTemplate
-    // SaleEstimateNotifyBySms,
   ],
 })
 export class SaleEstimatesModule {}

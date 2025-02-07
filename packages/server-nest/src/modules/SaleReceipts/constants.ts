@@ -14,6 +14,9 @@ Amount  : <strong>{Receipt Amount}</strong></br />
 </p>
 `;
 
+export const SendSaleReceiptMailQueue = 'SendSaleReceiptMailQueue';
+export const SendSaleReceiptMailJob = 'SendSaleReceiptMailJob';
+
 export const ERRORS = {
   SALE_RECEIPT_NOT_FOUND: 'SALE_RECEIPT_NOT_FOUND',
   DEPOSIT_ACCOUNT_NOT_FOUND: 'DEPOSIT_ACCOUNT_NOT_FOUND',

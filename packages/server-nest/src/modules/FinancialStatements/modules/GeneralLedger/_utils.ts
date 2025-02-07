@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 /**
  * Calculate the running balance.
  * @param {number} amount - Transaction amount.

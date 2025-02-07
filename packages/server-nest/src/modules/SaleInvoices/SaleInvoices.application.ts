@@ -8,8 +8,6 @@ import { GetSaleInvoicesPayable } from './queries/GetSaleInvoicesPayable.service
 import { WriteoffSaleInvoice } from './commands/WriteoffSaleInvoice.service';
 import { SaleInvoicePdf } from './queries/SaleInvoicePdf.service';
 import { GetInvoicePaymentsService } from './queries/GetInvoicePayments.service';
-// import { SaleInvoiceNotifyBySms } from './SaleInvoiceNotifyBySms';
-// import { SendInvoiceMailReminder } from './commands/SendSaleInvoiceMailReminder';
 import { GetSaleInvoiceState } from './queries/GetSaleInvoiceState.service';
 import { GetSaleInvoiceMailState } from './queries/GetSaleInvoiceMailState.service';
 import {
@@ -39,7 +37,6 @@ export class SaleInvoiceApplication {
     private getSaleInvoiceStateService: GetSaleInvoiceState,
     private sendSaleInvoiceMailService: SendSaleInvoiceMail,
     private getSaleInvoiceMailStateService: GetSaleInvoiceMailState,
-    // private invoiceSms: SaleInvoiceNotifyBySms,
   ) {}
 
   /**
@@ -192,56 +189,8 @@ export class SaleInvoiceApplication {
   }
 
   /**
-   *
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
-   * @param {InvoiceNotificationType} invoiceNotificationType
-   */
-  // public notifySaleInvoiceBySms = async (
-  //   tenantId: number,
-  //   saleInvoiceId: number,
-  //   invoiceNotificationType: InvoiceNotificationType,
-  // ) => {
-  //   return this.invoiceSms.notifyBySms(
-  //     tenantId,
-  //     saleInvoiceId,
-  //     invoiceNotificationType,
-  //   );
-  // };
-
-  /**
-   * Retrieves the SMS details of the given invoice.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} saleInvoiceId - Sale invoice id.
-   */
-  // public getSaleInvoiceSmsDetails = async (
-  //   tenantId: number,
-  //   saleInvoiceId: number,
-  //   invoiceSmsDetailsDTO: ISaleInvoiceSmsDetailsDTO,
-  // ): Promise<ISaleInvoiceSmsDetails> => {
-  //   return this.invoiceSms.smsDetails(
-  //     tenantId,
-  //     saleInvoiceId,
-  //     invoiceSmsDetailsDTO,
-  //   );
-  // };
-
-  /**
-   * Retrieves the metadata of invoice mail reminder.
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
-   * @returns {}
-   */
-  // public getSaleInvoiceMailReminder(tenantId: number, saleInvoiceId: number) {
-  //   return this.sendInvoiceReminderService.getMailOption(
-  //     tenantId,
-  //     saleInvoiceId,
-  //   );
-  // }
-
-  /**
    * Retrieves the default mail options of the given sale invoice.
-   * @param {number} saleInvoiceid
+   * @param {number} saleInvoiceid - Sale invoice id.
    * @returns {Promise<SaleInvoiceMailState>}
    */
   public getSaleInvoiceMailState(

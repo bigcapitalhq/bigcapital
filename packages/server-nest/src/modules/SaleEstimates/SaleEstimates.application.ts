@@ -81,7 +81,7 @@ export class SaleEstimatesApplication {
 
   /**
    * Deliver the given sale estimate.
-   * @param {number} saleEstimateId
+   * @param {number} saleEstimateId - Sale estimate id.
    * @returns {Promise<void>}
    */
   public deliverSaleEstimate(saleEstimateId: number) {

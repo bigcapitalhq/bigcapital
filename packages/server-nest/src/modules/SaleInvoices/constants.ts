@@ -1,5 +1,8 @@
 // import config from '@/config';
 
+export const SendSaleInvoiceQueue = 'SendSaleInvoiceQueue';
+export const SendSaleInvoiceMailJob = 'SendSaleInvoiceMailJob';
+
 const BASE_URL = 'http://localhost:3000';
 
 export const DEFAULT_INVOICE_MAIL_SUBJECT =

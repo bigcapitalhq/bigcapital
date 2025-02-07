@@ -44,6 +44,9 @@ import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { SendSaleInvoiceMailCommon } from './commands/SendInvoiceInvoiceMailCommon.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { MailNotificationModule } from '../MailNotification/MailNotification.module';
+import { SendSaleInvoiceMailProcessor } from './processors/SendSaleInvoiceMail.processor';
+import { BullModule } from '@nestjs/bull';
+import { SendSaleInvoiceQueue } from './constants';
 
 @Module({
   imports: [
@@ -60,6 +63,7 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
     MailNotificationModule,
     InventoryCostModule,
     DynamicListModule,
+    BullModule.registerQueue({ name: SendSaleInvoiceQueue }),
   ],
   controllers: [SaleInvoicesController],
   providers: [
@@ -95,6 +99,7 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
     GetSaleInvoicesService,
     GetSaleInvoiceMailState,
     SendSaleInvoiceMailCommon,
+    SendSaleInvoiceMailProcessor
   ],
   exports: [GetSaleInvoice],
 })

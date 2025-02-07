@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 import { SaleInvoicePdf } from '../queries/SaleInvoicePdf.service';
 import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { mergeAndValidateMailOptions } from '@/modules/MailNotification/utils';
-import { SaleInvoiceMailOptions, SendInvoiceMailDTO } from '../SaleInvoice.types';
+import {
+  SaleInvoiceMailOptions,
+  SendInvoiceMailDTO,
+} from '../SaleInvoice.types';
 import { ISaleInvoiceMailSend } from '../SaleInvoice.types';
 import { Mail } from '@/modules/Mail/Mail';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
+import { SendSaleInvoiceMailJob, SendSaleInvoiceQueue } from '../constants';
 
 @Injectable()
 export class SendSaleInvoiceMail {
@@ -22,13 +28,13 @@ export class SendSaleInvoiceMail {
     private readonly invoiceMail: SendSaleInvoiceMailCommon,
     private readonly eventEmitter: EventEmitter2,
     private readonly mailTransporter: MailTransporter,
+    @InjectQueue(SendSaleInvoiceQueue) private readonly sendInvoiceQueue: Queue,
   ) {}
 
   /**
    * Sends the invoice mail of the given sale invoice.
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
-   * @param {SendInvoiceMailDTO} messageDTO
+   * @param {number} saleInvoiceId - Sale invoice id.
+   * @param {SendInvoiceMailDTO} messageDTO - Message DTO.
    */
   public async triggerMail(
     saleInvoiceId: number,
@@ -38,8 +44,7 @@ export class SendSaleInvoiceMail {
       saleInvoiceId,
       messageOptions,
     };
-    // await this.agenda.now('sale-invoice-mail-send', payload);
-
+    await this.sendInvoiceQueue.add(SendSaleInvoiceMailJob, payload);
     // Triggers the event `onSaleInvoicePreMailSend`.
     await this.eventEmitter.emitAsync(events.saleInvoice.onPreMailSend, {
       saleInvoiceId,

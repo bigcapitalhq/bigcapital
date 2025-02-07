@@ -37,7 +37,7 @@ export class GeneralLedgerSheet extends R.compose(FinancialSheetStructure)(
   constructor(
     query: IGeneralLedgerSheetQuery,
     repository: GeneralLedgerRepository,
-    i18n,
+    i18n: I18nService,
   ) {
     super();
 
