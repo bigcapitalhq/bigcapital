@@ -5,21 +5,26 @@ import {
   ACCOUNT_TYPE,
 } from '@/constants/accounts';
 import { ServiceError } from './ServiceError';
-import { IItem, IItemDTO } from '@/interfaces/Item';
+import { IItemDTO } from '@/interfaces/Item';
 import { ERRORS } from './Items.constants';
 import { Item } from './models/Item';
 import { Account } from '../Accounts/models/Account.model';
+import { TaxRateModel } from '../TaxRates/models/TaxRate.model';
+import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
+import { ItemCategory } from '../ItemCategories/models/ItemCategory.model';
+import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
+import { InventoryAdjustment } from '../InventoryAdjutments/models/InventoryAdjustment';
 
 @Injectable()
 export class ItemsValidators {
   constructor(
     @Inject(Item.name) private itemModel: typeof Item,
     @Inject(Account.name) private accountModel: typeof Account,
-    @Inject(Item.name) private taxRateModel: typeof Item,
-    @Inject(Item.name) private itemEntryModel: typeof Item,
-    @Inject(Item.name) private itemCategoryModel: typeof Item,
-    @Inject(Item.name) private accountTransactionModel: typeof Item,
-    @Inject(Item.name) private inventoryAdjustmentEntryModel: typeof Item,
+    @Inject(TaxRateModel.name) private taxRateModel: typeof TaxRateModel,
+    @Inject(ItemEntry.name) private itemEntryModel: typeof ItemEntry,
+    @Inject(ItemCategory.name) private itemCategoryModel: typeof ItemCategory,
+    @Inject(AccountTransaction.name) private accountTransactionModel: typeof AccountTransaction,
+    @Inject(InventoryAdjustment.name) private inventoryAdjustmentEntryModel: typeof InventoryAdjustment,
   ) {}
 
   /**

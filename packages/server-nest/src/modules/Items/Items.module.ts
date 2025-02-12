@@ -15,9 +15,14 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { ItemsEntriesService } from './ItemsEntries.service';
 import { GetItemsService } from './GetItems.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdjustments.module';
 
 @Module({
-  imports: [TenancyDatabaseModule, DynamicListModule],
+  imports: [
+    TenancyDatabaseModule,
+    DynamicListModule,
+    InventoryAdjustmentsModule,
+  ],
   controllers: [ItemsController],
   providers: [
     ItemsValidators,
@@ -32,8 +37,8 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     ItemTransactionsService,
     TenancyContext,
     TransformerInjectable,
-    ItemsEntriesService
+    ItemsEntriesService,
   ],
-  exports: [ItemsEntriesService]
+  exports: [ItemsEntriesService],
 })
 export class ItemsModule {}
