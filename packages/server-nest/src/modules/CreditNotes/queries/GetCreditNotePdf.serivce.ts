@@ -9,6 +9,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
 import { CreditNotePdfTemplateAttributes } from '../types/CreditNotes.types';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetCreditNotePdf {
@@ -29,10 +30,12 @@ export class GetCreditNotePdf {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
 
     @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplateModel: typeof PdfTemplateModel,
+    private readonly pdfTemplateModel: TenantModelProxy<
+      typeof PdfTemplateModel
+    >,
   ) {}
 
   /**
@@ -69,7 +72,7 @@ export class GetCreditNotePdf {
    * @returns {Promise<string>}
    */
   public async getCreditNoteFilename(creditNoteId: number): Promise<string> {
-    const creditNote = await this.creditNoteModel
+    const creditNote = await this.creditNoteModel()
       .query()
       .findById(creditNoteId);
     return `Credit-${creditNote.creditNoteNumber}`;
@@ -90,7 +93,7 @@ export class GetCreditNotePdf {
     const templateId =
       creditNote.pdfTemplateId ??
       (
-        await this.pdfTemplateModel.query().findOne({
+        await this.pdfTemplateModel().query().findOne({
           resource: 'CreditNote',
           default: true,
         })

@@ -8,6 +8,7 @@ import {
 import { RefundCreditNote } from '../models/RefundCreditNote';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteRefundCreditNoteService {
@@ -21,7 +22,9 @@ export class DeleteRefundCreditNoteService {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(RefundCreditNote.name)
-    private readonly refundCreditNoteModel: typeof RefundCreditNote,
+    private readonly refundCreditNoteModel: TenantModelProxy<
+      typeof RefundCreditNote
+    >,
   ) {}
 
   /**
@@ -31,7 +34,7 @@ export class DeleteRefundCreditNoteService {
    */
   public deleteCreditNoteRefund = async (refundCreditId: number) => {
     // Retrieve the old credit note or throw not found service error.
-    const oldRefundCredit = await this.refundCreditNoteModel
+    const oldRefundCredit = await this.refundCreditNoteModel()
       .query()
       .findById(refundCreditId)
       .throwIfNotFound();
@@ -56,7 +59,7 @@ export class DeleteRefundCreditNoteService {
         eventPayload,
       );
       // Deletes the refund credit note graph from the storage.
-      await this.refundCreditNoteModel
+      await this.refundCreditNoteModel()
         .query(trx)
         .findById(refundCreditId)
         .delete();

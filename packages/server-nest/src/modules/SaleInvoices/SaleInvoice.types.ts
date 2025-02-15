@@ -7,6 +7,7 @@ import {
   CommonMailOptions,
   CommonMailOptionsDTO,
 } from '../MailNotification/MailNotification.types';
+import { TenantJobPayload } from '@/interfaces/Tenant';
 // import SaleInvoice from './models/SaleInvoice';
 // import { SystemUser } from '../System/models/SystemUser';
 // import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
@@ -323,8 +324,12 @@ export interface ISaleInvocieState {
   defaultTemplateId: number;
 }
 
-
 export interface SaleInvoiceSendMailData {
   saleInvoiceId: number;
   messageOptions: SendInvoiceMailDTO;
+}
+
+export interface SendSaleInvoiceMailJobPayload extends TenantJobPayload {
+  messageOptions: any;
+  saleInvoiceId: number;
 }

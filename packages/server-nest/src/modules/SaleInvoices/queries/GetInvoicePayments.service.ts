@@ -2,6 +2,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { InvoicePaymentTransactionTransformer } from './InvoicePaymentTransaction.transformer';
 import { Inject, Injectable } from '@nestjs/common';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetInvoicePaymentsService {
@@ -9,7 +10,9 @@ export class GetInvoicePaymentsService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(PaymentReceivedEntry.name)
-    private readonly paymentReceivedEntryModel: typeof PaymentReceivedEntry,
+    private readonly paymentReceivedEntryModel: TenantModelProxy<
+      typeof PaymentReceivedEntry
+    >,
   ) {}
 
   /**
@@ -18,7 +21,7 @@ export class GetInvoicePaymentsService {
    * @param {number} invoiceId - Invoice id.
    */
   public getInvoicePayments = async (invoiceId: number) => {
-    const paymentsEntries = await this.paymentReceivedEntryModel
+    const paymentsEntries = await this.paymentReceivedEntryModel()
       .query()
       .where('invoiceId', invoiceId)
       .withGraphJoined('payment.depositAccount')

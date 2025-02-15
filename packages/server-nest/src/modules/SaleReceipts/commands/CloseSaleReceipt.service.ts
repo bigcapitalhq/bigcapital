@@ -10,6 +10,7 @@ import { SaleReceipt } from '../models/SaleReceipt';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CloseSaleReceipt {
@@ -17,7 +18,7 @@ export class CloseSaleReceipt {
    * @param {EventEmitter2} eventEmitter - Event emitter.
    * @param {UnitOfWork} uow - Unit of work.
    * @param {SaleReceiptValidators} validators - Sale receipt validators.
-   * @param {typeof SaleReceipt} saleReceiptModel - Sale receipt model.
+   * @param {TenantModelProxy<typeof SaleReceipt>} saleReceiptModel - Sale receipt model.
    */
   constructor(
     private readonly eventEmitter: EventEmitter2,
@@ -25,7 +26,7 @@ export class CloseSaleReceipt {
     private readonly validators: SaleReceiptValidators,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: typeof SaleReceipt,
+    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
   ) {}
 
   /**
@@ -35,7 +36,7 @@ export class CloseSaleReceipt {
    */
   public async closeSaleReceipt(saleReceiptId: number): Promise<void> {
     // Retrieve sale receipt or throw not found service error.
-    const oldSaleReceipt = await this.saleReceiptModel
+    const oldSaleReceipt = await this.saleReceiptModel()
       .query()
       .findById(saleReceiptId)
       .withGraphFetched('entries')
@@ -53,12 +54,12 @@ export class CloseSaleReceipt {
       } as ISaleReceiptEventClosingPayload);
 
       // Mark the sale receipt as closed on the storage.
-      const saleReceipt = await this.saleReceiptModel
+      const saleReceipt = await this.saleReceiptModel()
         .query(trx)
         .patchAndFetchById(saleReceiptId, {
           closedAt: moment().toMySqlDateTime(),
         });
-        
+
       // Triggers `onSaleReceiptClosed` event.
       await this.eventEmitter.emitAsync(events.saleReceipt.onClosed, {
         saleReceiptId,

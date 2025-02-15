@@ -3,6 +3,7 @@ import { castArray, first, uniq } from 'lodash';
 import { GetAutofillCategorizeTransctionTransformer } from './GetAutofillCategorizeTransactionTransformer';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetAutofillCategorizeTransactionService {
@@ -10,7 +11,9 @@ export class GetAutofillCategorizeTransactionService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -18,13 +21,14 @@ export class GetAutofillCategorizeTransactionService {
    * @param {Array<number> | number} uncategorizeTransactionsId - Uncategorized transactions ids.
    */
   public async getAutofillCategorizeTransaction(
-    uncategorizeTransactionsId: Array<number> | number
+    uncategorizeTransactionsId: Array<number> | number,
   ) {
     const uncategorizeTransactionsIds = uniq(
-      castArray(uncategorizeTransactionsId)
+      castArray(uncategorizeTransactionsId),
     );
     const uncategorizedTransactions =
-      await this.uncategorizedBankTransactionModel.query()
+      await this.uncategorizedBankTransactionModel()
+        .query()
         .whereIn('id', uncategorizeTransactionsIds)
         .withGraphFetched('recognizedTransaction.assignAccount')
         .withGraphFetched('recognizedTransaction.bankRule')
@@ -36,7 +40,7 @@ export class GetAutofillCategorizeTransactionService {
       {
         uncategorizedTransactions,
         firstUncategorizedTransaction: first(uncategorizedTransactions),
-      }
+      },
     );
   }
 }

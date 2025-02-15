@@ -3,11 +3,12 @@ import { ERRORS } from '../constants';
 import { Branch } from '../models/Branch.model';
 
 import { ServiceError } from '../../Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 @Injectable()
 export class BranchCommandValidator {
   constructor(
     @Inject(Branch.name)
-    private readonly branchModel: typeof Branch,
+    private readonly branchModel: TenantModelProxy<typeof Branch>,
   ) {}
 
   /**
@@ -15,7 +16,9 @@ export class BranchCommandValidator {
    * @param {number} branchId
    */
   public validateBranchNotOnlyWarehouse = async (branchId: number) => {
-    const warehouses = await this.branchModel.query().whereNot('id', branchId);
+    const warehouses = await this.branchModel()
+      .query()
+      .whereNot('id', branchId);
 
     if (warehouses.length === 0) {
       throw new ServiceError(ERRORS.COULD_NOT_DELETE_ONLY_BRANCH);
@@ -31,7 +34,7 @@ export class BranchCommandValidator {
     code: string,
     exceptBranchId?: number,
   ): Promise<void> => {
-    const branch = await this.branchModel
+    const branch = await this.branchModel()
       .query()
       .onBuild((query) => {
         query.select(['id']);

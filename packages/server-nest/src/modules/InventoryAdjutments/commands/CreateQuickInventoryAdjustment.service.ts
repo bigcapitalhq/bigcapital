@@ -19,18 +19,21 @@ import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ERRORS } from '../constants/InventoryAdjustments.constants';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateQuickInventoryAdjustmentService {
   constructor(
     @Inject(InventoryAdjustment.name)
-    private readonly inventoryAdjustmentModel: typeof InventoryAdjustment,
+    private readonly inventoryAdjustmentModel: TenantModelProxy<
+      typeof InventoryAdjustment
+    >,
 
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProxy<typeof Item>,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
     private readonly tenancyContext: TenancyContext,
     private readonly eventEmitter: EventEmitter2,
@@ -89,13 +92,13 @@ export class CreateQuickInventoryAdjustmentService {
     quickAdjustmentDTO: IQuickInventoryAdjustmentDTO,
   ): Promise<InventoryAdjustment> {
     // Retrieve the adjustment account or throw not found error.
-    const adjustmentAccount = await this.accountModel
+    const adjustmentAccount = await this.accountModel()
       .query()
       .findById(quickAdjustmentDTO.adjustmentAccountId)
       .throwIfNotFound();
 
     // Retrieve the item model or throw not found service error.
-    const item = await this.itemModel
+    const item = await this.itemModel()
       .query()
       .findById(quickAdjustmentDTO.itemId)
       .throwIfNotFound();
@@ -119,7 +122,7 @@ export class CreateQuickInventoryAdjustmentService {
         } as IInventoryAdjustmentCreatingPayload,
       );
       // Saves the inventory adjustment with associated entries to the storage.
-      const inventoryAdjustment = await this.inventoryAdjustmentModel
+      const inventoryAdjustment = await this.inventoryAdjustmentModel()
         .query(trx)
         .upsertGraphAndFetch({
           ...invAdjustmentObject,

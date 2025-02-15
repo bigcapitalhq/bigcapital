@@ -1,15 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ApplyVendorCreditSyncInvoicedService {
   /**
-   * @param {typeof VendorCredit} vendorCreditModel - The vendor credit model.
+   * @param {TenantModelProxy<typeof VendorCredit>} vendorCreditModel - The vendor credit model.
    */
   constructor(
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -21,9 +22,10 @@ export class ApplyVendorCreditSyncInvoicedService {
   public incrementVendorCreditInvoicedAmount = async (
     vendorCreditId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
-    await this.vendorCreditModel.query(trx)
+    await this.vendorCreditModel()
+      .query(trx)
       .findById(vendorCreditId)
       .increment('invoicedAmount', amount);
   };
@@ -37,9 +39,10 @@ export class ApplyVendorCreditSyncInvoicedService {
   public decrementVendorCreditInvoicedAmount = async (
     vendorCreditId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
-    await this.vendorCreditModel.query(trx)
+    await this.vendorCreditModel()
+      .query(trx)
       .findById(vendorCreditId)
       .decrement('invoicedAmount', amount);
   };

@@ -4,6 +4,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { StripePaymentService } from './StripePaymentService';
 import { events } from '@/common/events/events';
 import { PaymentIntegration } from './models/PaymentIntegration.model';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateStripeAccountService {
@@ -12,7 +13,9 @@ export class CreateStripeAccountService {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(PaymentIntegration.name)
-    private readonly paymentIntegrationModel: typeof PaymentIntegration,
+    private readonly paymentIntegrationModel: TenantModelProxy<
+      typeof PaymentIntegration
+    >,
   ) {}
 
   /**
@@ -31,7 +34,7 @@ export class CreateStripeAccountService {
       ...stripeAccountDTO,
     };
     // Stores the details of the Stripe account.
-    await this.paymentIntegrationModel.query().insert({
+    await this.paymentIntegrationModel().query().insert({
       name: parsedStripeAccountDTO.name,
       accountId: stripeAccountId,
       active: false, // Active will turn true after onboarding.

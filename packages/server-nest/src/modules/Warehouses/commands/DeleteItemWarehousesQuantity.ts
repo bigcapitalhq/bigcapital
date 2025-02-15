@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { ItemWarehouseQuantity } from '../models/ItemWarehouseQuantity';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteItemWarehousesQuantity {
@@ -9,7 +10,9 @@ export class DeleteItemWarehousesQuantity {
    */
   constructor(
     @Inject(ItemWarehouseQuantity.name)
-    private readonly itemWarehouseQuantityModel: typeof ItemWarehouseQuantity,
+    private readonly itemWarehouseQuantityModel: TenantModelProxy<
+      typeof ItemWarehouseQuantity
+    >,
   ) {}
 
   /**
@@ -21,7 +24,7 @@ export class DeleteItemWarehousesQuantity {
     itemId: number,
     trx?: Knex.Transaction,
   ): Promise<void> => {
-    await this.itemWarehouseQuantityModel
+    await this.itemWarehouseQuantityModel()
       .query(trx)
       .where('itemId', itemId)
       .delete();

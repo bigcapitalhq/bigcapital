@@ -13,6 +13,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { RefundVendorCredit } from '../../VendorCreditsRefund/models/RefundVendorCredit';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteVendorCreditService {
@@ -29,16 +30,20 @@ export class DeleteVendorCreditService {
     private uow: UnitOfWork,
 
     @Inject(ItemEntry.name)
-    private itemEntryModel: typeof ItemEntry,
+    private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
 
     @Inject(VendorCredit.name)
-    private vendorCreditModel: typeof VendorCredit,
+    private vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
 
     @Inject(RefundVendorCredit.name)
-    private refundVendorCreditModel: typeof RefundVendorCredit,
+    private refundVendorCreditModel: TenantModelProxy<
+      typeof RefundVendorCredit
+    >,
 
     @Inject(VendorCreditAppliedBill.name)
-    private vendorCreditAppliedBillModel: typeof VendorCreditAppliedBill,
+    private vendorCreditAppliedBillModel: TenantModelProxy<
+      typeof VendorCreditAppliedBill
+    >,
   ) {}
 
   /**
@@ -50,7 +55,7 @@ export class DeleteVendorCreditService {
     trx?: Knex.Transaction,
   ) => {
     // Retrieve the old vendor credit.
-    const oldVendorCredit = await this.vendorCreditModel
+    const oldVendorCredit = await this.vendorCreditModel()
       .query()
       .findById(vendorCreditId)
       .throwIfNotFound();
@@ -70,14 +75,17 @@ export class DeleteVendorCreditService {
       } as IVendorCreditDeletingPayload);
 
       // Deletes the associated credit note entries.
-      await this.itemEntryModel
+      await this.itemEntryModel()
         .query(trx)
         .where('reference_id', vendorCreditId)
         .where('reference_type', 'VendorCredit')
         .delete();
 
       // Deletes the credit note transaction.
-      await this.vendorCreditModel.query(trx).findById(vendorCreditId).delete();
+      await this.vendorCreditModel()
+        .query(trx)
+        .findById(vendorCreditId)
+        .delete();
 
       // Triggers `onVendorCreditDeleted` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onDeleted, {
@@ -95,7 +103,7 @@ export class DeleteVendorCreditService {
   private validateVendorCreditHasNoRefundTransactions = async (
     vendorCreditId: number,
   ): Promise<void> => {
-    const refundCredits = await this.refundVendorCreditModel
+    const refundCredits = await this.refundVendorCreditModel()
       .query()
       .where('vendorCreditId', vendorCreditId);
     if (refundCredits.length > 0) {
@@ -110,7 +118,7 @@ export class DeleteVendorCreditService {
   private validateVendorCreditHasNoApplyBillsTransactions = async (
     vendorCreditId: number,
   ): Promise<void> => {
-    const appliedTransactions = await this.vendorCreditAppliedBillModel
+    const appliedTransactions = await this.vendorCreditAppliedBillModel()
       .query()
       .where('vendorCreditId', vendorCreditId);
     if (appliedTransactions.length > 0) {

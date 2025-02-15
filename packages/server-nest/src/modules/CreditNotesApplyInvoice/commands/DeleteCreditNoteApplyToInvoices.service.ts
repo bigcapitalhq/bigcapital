@@ -8,6 +8,7 @@ import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { CreditNote } from '../../CreditNotes/models/CreditNote';
 import { ERRORS } from '../../CreditNotes/constants';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export default class DeleteCreditNoteApplyToInvoices {
@@ -20,10 +21,14 @@ export default class DeleteCreditNoteApplyToInvoices {
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
-    private readonly creditNoteAppliedInvoiceModel: typeof CreditNoteAppliedInvoice,
+
+    @Inject(CreditNoteAppliedInvoice.name)
+    private readonly creditNoteAppliedInvoiceModel: TenantModelProxy<
+      typeof CreditNoteAppliedInvoice
+    >,
 
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
   ) {}
 
   /**
@@ -34,15 +39,16 @@ export default class DeleteCreditNoteApplyToInvoices {
   public deleteApplyCreditNoteToInvoices = async (
     applyCreditToInvoicesId: number,
   ): Promise<void> => {
-    const creditNoteAppliedToInvoice = await this.creditNoteAppliedInvoiceModel
-      .query()
-      .findById(applyCreditToInvoicesId);
+    const creditNoteAppliedToInvoice =
+      await this.creditNoteAppliedInvoiceModel()
+        .query()
+        .findById(applyCreditToInvoicesId);
 
     if (!creditNoteAppliedToInvoice) {
       throw new ServiceError(ERRORS.CREDIT_NOTE_APPLY_TO_INVOICES_NOT_FOUND);
     }
     // Retrieve the credit note or throw not found service error.
-    const creditNote = await this.creditNoteModel
+    const creditNote = await this.creditNoteModel()
       .query()
       .findById(creditNoteAppliedToInvoice.creditNoteId)
       .throwIfNotFound();
@@ -50,7 +56,7 @@ export default class DeleteCreditNoteApplyToInvoices {
     // Creates credit note apply to invoice transaction.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Delete credit note applied to invoices.
-      await this.creditNoteAppliedInvoiceModel
+      await this.creditNoteAppliedInvoiceModel()
         .query(trx)
         .findById(applyCreditToInvoicesId)
         .delete();

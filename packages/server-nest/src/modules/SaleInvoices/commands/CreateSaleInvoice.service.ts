@@ -15,6 +15,7 @@ import { SaleInvoice } from '../models/SaleInvoice';
 import { SaleEstimate } from '@/modules/SaleEstimates/models/SaleEstimate';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateSaleInvoice {
@@ -27,13 +28,13 @@ export class CreateSaleInvoice {
     private readonly uow: UnitOfWork,
 
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
 
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
 
     @Inject(Customer.name)
-    private readonly customerModel: typeof Customer,
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -50,14 +51,14 @@ export class CreateSaleInvoice {
     trx?: Knex.Transaction,
   ): Promise<SaleInvoice> => {
     // Validate customer existance.
-    const customer = await this.customerModel
+    const customer = await this.customerModel()
       .query()
       .findById(saleInvoiceDTO.customerId)
       .throwIfNotFound();
 
     // Validate the from estimate id exists on the storage.
     if (saleInvoiceDTO.fromEstimateId) {
-      const fromEstimate = await this.saleEstimateModel
+      const fromEstimate = await this.saleEstimateModel()
         .query()
         .findById(saleInvoiceDTO.fromEstimateId)
         .throwIfNotFound();
@@ -94,7 +95,7 @@ export class CreateSaleInvoice {
       } as ISaleInvoiceCreatingPaylaod);
 
       // Create sale invoice graph to the storage.
-      const saleInvoice = await this.saleInvoiceModel
+      const saleInvoice = await this.saleInvoiceModel()
         .query(trx)
         .upsertGraph(saleInvoiceObj);
 
@@ -122,9 +123,6 @@ export class CreateSaleInvoice {
     customer: Customer,
     saleInvoiceDTO: ISaleInvoiceCreateDTO,
   ) => {
-    return this.transformerDTO.transformDTOToModel(
-      customer,
-      saleInvoiceDTO,
-    );
+    return this.transformerDTO.transformDTOToModel(customer, saleInvoiceDTO);
   };
 }

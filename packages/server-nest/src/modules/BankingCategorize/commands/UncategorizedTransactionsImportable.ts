@@ -8,6 +8,7 @@ import { ImportableContext } from '../../Import/interfaces';
 import { BankTransactionsSampleData } from '../../BankingTransactions/constants';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { CreateUncategorizedTransactionDTO } from '../types/BankingCategorize.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class UncategorizedTransactionsImportable extends Importable {
@@ -15,14 +16,14 @@ export class UncategorizedTransactionsImportable extends Importable {
     private readonly createUncategorizedTransaction: CreateUncategorizedTransactionService,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {
     super();
   }
 
   /**
    * Passing the sheet DTO to create uncategorized transaction.
-   * @param {CreateUncategorizedTransactionDTO,} createDTO 
+   * @param {CreateUncategorizedTransactionDTO,} createDTO
    * @param {Knex.Transaction} trx
    */
   public async importable(
@@ -77,7 +78,7 @@ export class UncategorizedTransactionsImportable extends Importable {
    */
   public async validateParams(params: Record<string, any>): Promise<void> {
     if (params.accountId) {
-      await this.accountModel
+      await this.accountModel()
         .query()
         .findById(params.accountId)
         .throwIfNotFound({});

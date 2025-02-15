@@ -2,11 +2,14 @@ import { Knex } from 'knex';
 import { Inject } from '@nestjs/common';
 import { omit } from 'lodash';
 import { InventoryCostLotTracker } from './models/InventoryCostLotTracker';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 export class InventoryCostMethod {
   constructor(
     @Inject(InventoryCostLotTracker.name)
-    private readonly inventoryCostLotTracker: typeof InventoryCostLotTracker,
+    private readonly inventoryCostLotTracker: TenantModelProxy<
+      typeof InventoryCostLotTracker
+    >,
   ) {}
 
   /**
@@ -23,16 +26,18 @@ export class InventoryCostMethod {
 
     costLotsTransactions.forEach((transaction: any) => {
       if (transaction.lotTransId && transaction.decrement) {
-        const decrementOper = this.inventoryCostLotTracker
+        const decrementOper = this.inventoryCostLotTracker()
           .query(trx)
           .where('id', transaction.lotTransId)
           .decrement('remaining', transaction.decrement);
 
         opers.push(decrementOper);
       } else if (!transaction.lotTransId) {
-        const operation = this.inventoryCostLotTracker.query(trx).insert({
-          ...omit(transaction, ['decrement', 'invTransId', 'lotTransId']),
-        });
+        const operation = this.inventoryCostLotTracker()
+          .query(trx)
+          .insert({
+            ...omit(transaction, ['decrement', 'invTransId', 'lotTransId']),
+          });
         opers.push(operation);
       }
     });

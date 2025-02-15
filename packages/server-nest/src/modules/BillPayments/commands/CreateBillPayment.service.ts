@@ -13,6 +13,7 @@ import { events } from '@/common/events/events';
 import { TenancyContext } from '../../Tenancy/TenancyContext.service';
 import { BillPayment } from '../models/BillPayment';
 import { Vendor } from '../../Vendors/models/Vendor';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateBillPaymentService {
@@ -22,8 +23,8 @@ export class CreateBillPaymentService {
    * @param {BillPaymentValidators} validators - Bill payment validators service.
    * @param {CommandBillPaymentDTOTransformer} commandTransformerDTO - Command bill payment DTO transformer service.
    * @param {TenancyContext} tenancyContext - Tenancy context service.
-   * @param {typeof Vendor} vendorModel - Vendor model.
-   * @param {typeof BillPayment} billPaymentModel - Bill payment model.
+   * @param {TenantModelProxy<typeof Vendor>} vendorModel - Vendor model.
+   * @param {TenantModelProxy<typeof BillPayment>} billPaymentModel - Bill payment model.
    */
   constructor(
     private uow: UnitOfWork,
@@ -33,10 +34,10 @@ export class CreateBillPaymentService {
     private tenancyContext: TenancyContext,
 
     @Inject(Vendor.name)
-    private readonly vendorModel: typeof Vendor,
+    private readonly vendorModel: TenantModelProxy<typeof Vendor>,
 
     @Inject(BillPayment.name)
-    private readonly billPaymentModel: typeof BillPayment,
+    private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
   ) {}
 
   /**
@@ -61,7 +62,7 @@ export class CreateBillPaymentService {
     const tenantMeta = await this.tenancyContext.getTenant(true);
 
     // Retrieves the payment vendor or throw not found error.
-    const vendor = await this.vendorModel
+    const vendor = await this.vendorModel()
       .query()
       .findById(billPaymentDTO.vendorId)
       .throwIfNotFound();
@@ -102,7 +103,7 @@ export class CreateBillPaymentService {
       } as IBillPaymentCreatingPayload);
 
       // Writes the bill payment graph to the storage.
-      const billPayment = await this.billPaymentModel
+      const billPayment = await this.billPaymentModel()
         .query(trx)
         .insertGraphAndFetch({
           ...billPaymentObj,

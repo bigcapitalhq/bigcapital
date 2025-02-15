@@ -8,6 +8,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class OpenBillService {
@@ -17,7 +18,7 @@ export class OpenBillService {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(Bill.name)
-    private readonly billModel: typeof Bill,
+    private readonly billModel: TenantModelProxy<typeof Bill>,
   ) {}
 
   /**
@@ -27,7 +28,7 @@ export class OpenBillService {
    */
   public async openBill(billId: number): Promise<void> {
     // Retrieve the given bill or throw not found error.
-    const oldBill = await this.billModel
+    const oldBill = await this.billModel()
       .query()
       .findById(billId)
       .withGraphFetched('entries');
@@ -47,7 +48,7 @@ export class OpenBillService {
       } as IBillOpeningPayload);
 
       // Save the bill opened at on the storage.
-      const bill = await this.billModel
+      const bill = await this.billModel()
         .query(trx)
         .patchAndFetchById(billId, {
           openedAt: moment().toMySqlDateTime(),

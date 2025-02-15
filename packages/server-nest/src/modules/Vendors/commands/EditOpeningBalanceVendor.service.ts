@@ -9,6 +9,7 @@ import {
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Vendor } from '../models/Vendor';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditOpeningBalanceVendorService {
@@ -22,7 +23,7 @@ export class EditOpeningBalanceVendorService {
     private readonly uow: UnitOfWork,
 
     @Inject(Vendor.name)
-    private readonly vendorModel: typeof Vendor,
+    private readonly vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -36,7 +37,7 @@ export class EditOpeningBalanceVendorService {
     openingBalanceEditDTO: IVendorOpeningBalanceEditDTO,
   ) {
     // Retrieves the old vendor or throw not found error.
-    const oldVendor = await this.vendorModel
+    const oldVendor = await this.vendorModel()
       .query()
       .findById(vendorId)
       .throwIfNotFound();
@@ -54,7 +55,7 @@ export class EditOpeningBalanceVendorService {
       );
 
       // Mutates the vendor on the storage.
-      const vendor = await this.vendorModel
+      const vendor = await this.vendorModel()
         .query()
         .patchAndFetchById(vendorId, {
           ...openingBalanceEditDTO,

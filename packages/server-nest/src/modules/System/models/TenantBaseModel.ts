@@ -13,3 +13,5 @@ const ExtendedItem = R.pipe(
 )(BaseModel);
 
 export class TenantBaseModel extends ExtendedItem {}
+
+export type TenantModelProxy<T> = () => T;

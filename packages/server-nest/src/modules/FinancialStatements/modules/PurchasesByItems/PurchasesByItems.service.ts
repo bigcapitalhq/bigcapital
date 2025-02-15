@@ -11,6 +11,7 @@ import { Item } from '@/modules/Items/models/Item';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { events } from '@/common/events/events';
 import { getPurchasesByItemsDefaultQuery } from './utils';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PurchasesByItemsService {
@@ -27,10 +28,12 @@ export class PurchasesByItemsService {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(InventoryTransaction.name)
-    private readonly inventoryTransactionModel: typeof InventoryTransaction,
+    private readonly inventoryTransactionModel: TenantModelProxy<
+      typeof InventoryTransaction
+    >,
 
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -46,17 +49,19 @@ export class PurchasesByItemsService {
       ...getPurchasesByItemsDefaultQuery(),
       ...query,
     };
-    const inventoryItems = await this.itemModel.query().onBuild((q) => {
-      q.where('type', 'inventory');
+    const inventoryItems = await this.itemModel()
+      .query()
+      .onBuild((q) => {
+        q.where('type', 'inventory');
 
-      if (filter.itemsIds.length > 0) {
-        q.whereIn('id', filter.itemsIds);
-      }
-    });
+        if (filter.itemsIds.length > 0) {
+          q.whereIn('id', filter.itemsIds);
+        }
+      });
     const inventoryItemsIds = inventoryItems.map((item) => item.id);
 
     // Calculates the total inventory total quantity and rate `IN` transactions.
-    const inventoryTransactions = await this.inventoryTransactionModel
+    const inventoryTransactions = await this.inventoryTransactionModel()
       .query()
       .onBuild((builder: any) => {
         builder.modify('itemsTotals');

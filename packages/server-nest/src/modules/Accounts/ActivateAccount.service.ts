@@ -6,16 +6,17 @@ import { AccountRepository } from './repositories/Account.repository';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class ActivateAccount {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
+    private readonly accountRepository: AccountRepository,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
-    private readonly accountRepository: AccountRepository,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -25,7 +26,7 @@ export class ActivateAccount {
    */
   public activateAccount = async (accountId: number, activate?: boolean) => {
     // Retrieve the given account or throw not found error.
-    const oldAccount = await this.accountModel
+    const oldAccount = await this.accountModel()
       .query()
       .findById(accountId)
       .throwIfNotFound();

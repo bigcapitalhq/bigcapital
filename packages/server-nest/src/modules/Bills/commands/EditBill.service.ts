@@ -14,6 +14,7 @@ import { events } from '@/common/events/events';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Knex } from 'knex';
 import { TransactionLandedCostEntriesService } from '@/modules/BillLandedCosts/TransactionLandedCostEntries.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditBillService {
@@ -25,8 +26,8 @@ export class EditBillService {
     private transactionLandedCostEntries: TransactionLandedCostEntriesService,
     private transformerDTO: BillDTOTransformer,
 
-    @Inject(Bill.name) private billModel: typeof Bill,
-    @Inject(Vendor.name) private contactModel: typeof Vendor,
+    @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
+    @Inject(Vendor.name) private contactModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -45,12 +46,9 @@ export class EditBillService {
    * @param {IBillEditDTO} billDTO - The given new bill details.
    * @return {Promise<IBill>}
    */
-  public async editBill(
-    billId: number,
-    billDTO: IBillEditDTO,
-  ): Promise<Bill> {
+  public async editBill(billId: number, billDTO: IBillEditDTO): Promise<Bill> {
     // Retrieve the given bill or throw not found error.
-    const oldBill = await this.billModel
+    const oldBill = await this.billModel()
       .query()
       .findById(billId)
       .withGraphFetched('entries');
@@ -59,7 +57,7 @@ export class EditBillService {
     this.validators.validateBillExistance(oldBill);
 
     // Retrieve vendor details or throw not found service error.
-    const vendor = await this.contactModel
+    const vendor = await this.contactModel()
       .query()
       .findById(billDTO.vendorId)
       .modify('vendor')
@@ -69,44 +67,42 @@ export class EditBillService {
     if (billDTO.billNumber) {
       await this.validators.validateBillNumberExists(
         billDTO.billNumber,
-        billId
+        billId,
       );
     }
     // Validate the entries ids existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
       billId,
       'Bill',
-      billDTO.entries
+      billDTO.entries,
     );
     // Validate the items ids existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      billDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(billDTO.entries);
     // Accept the purchasable items only.
     await this.itemsEntriesService.validateNonPurchasableEntriesItems(
-      billDTO.entries
+      billDTO.entries,
     );
-    
+
     // Transforms the bill DTO to model object.
     const billObj = await this.transformerDTO.billDTOToModel(
       billDTO,
       vendor,
-      oldBill
+      oldBill,
     );
     // Validate bill total amount should be bigger than paid amount.
     this.validators.validateBillAmountBiggerPaidAmount(
       billObj.amount,
-      oldBill.paymentAmount
+      oldBill.paymentAmount,
     );
     // Validate landed cost entries that have allocated cost could not be deleted.
     await this.transactionLandedCostEntries.validateLandedCostEntriesNotDeleted(
       oldBill.entries,
-      billObj.entries
+      billObj.entries,
     );
     // Validate new landed cost entries should be bigger than new entries.
     await this.transactionLandedCostEntries.validateLocatedCostEntriesSmallerThanNewEntries(
       oldBill.entries,
-      billObj.entries  
+      billObj.entries,
     );
     // Edits bill transactions and associated transactions under UOW envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
@@ -118,10 +114,12 @@ export class EditBillService {
       } as IBillEditingPayload);
 
       // Update the bill transaction.
-      const bill = await this.billModel.query(trx).upsertGraphAndFetch({
-        id: billId,
-        ...billObj,
-      });
+      const bill = await this.billModel()
+        .query(trx)
+        .upsertGraphAndFetch({
+          id: billId,
+          ...billObj,
+        });
       // Triggers event `onBillEdited`.
       await this.eventPublisher.emitAsync(events.bill.onEdited, {
         oldBill,

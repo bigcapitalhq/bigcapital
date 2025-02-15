@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { SaleEstimate } from '../models/SaleEstimate';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class UnlinkConvertedSaleEstimate {
   constructor(
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
   ) {}
 
   /**
@@ -16,9 +17,10 @@ export class UnlinkConvertedSaleEstimate {
    */
   public async unlinkConvertedEstimateFromInvoice(
     invoiceId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
-    await this.saleEstimateModel.query(trx)
+    await this.saleEstimateModel()
+      .query(trx)
       .where({
         convertedToInvoiceId: invoiceId,
       })

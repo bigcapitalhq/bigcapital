@@ -7,15 +7,18 @@ import {
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DecrementUncategorizedTransactionOnExclude {
   constructor(
     @Inject(Account.name)
-    private readonly account: typeof Account,
+    private readonly account: TenantModelProxy<typeof Account>,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransaction: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransaction: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -27,11 +30,12 @@ export class DecrementUncategorizedTransactionOnExclude {
     uncategorizedTransactionId,
     trx,
   }: IBankTransactionExcludedEventPayload) {
-    const transaction = await this.uncategorizedBankTransaction.query(
-      trx
-    ).findById(uncategorizedTransactionId);
+    const transaction = await this.uncategorizedBankTransaction()
+      .query(trx)
+      .findById(uncategorizedTransactionId);
 
-    await this.account.query(trx)
+    await this.account()
+      .query(trx)
       .findById(transaction.accountId)
       .decrement('uncategorizedTransactions', 1);
   }
@@ -45,11 +49,12 @@ export class DecrementUncategorizedTransactionOnExclude {
     uncategorizedTransactionId,
     trx,
   }: IBankTransactionUnexcludedEventPayload) {
-    const transaction = await this.uncategorizedBankTransaction.query().findById(
-      uncategorizedTransactionId
-    );
+    const transaction = await this.uncategorizedBankTransaction()
+      .query()
+      .findById(uncategorizedTransactionId);
     //
-    await this.account.query(trx)
+    await this.account()
+      .query(trx)
       .findById(transaction.accountId)
       .increment('uncategorizedTransactions', 1);
   }

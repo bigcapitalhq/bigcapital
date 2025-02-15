@@ -10,6 +10,7 @@ import {
   IExpenseEventDeletePayload,
   IExpenseDeletingPayload,
 } from '../interfaces/Expenses.interface';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteExpense {
@@ -17,18 +18,19 @@ export class DeleteExpense {
    * @param {EventEmitter2} eventEmitter - Event emitter.
    * @param {UnitOfWork} uow - Unit of work.
    * @param {CommandExpenseValidator} validator - Command expense validator.
-   * @param {typeof Expense} expenseModel - Expense model.
-   * @param {typeof ExpenseCategory} expenseCategoryModel - Expense category model.
+   * @param {TenantModelProxy<typeof Expense>} expenseModel - Expense model.
+   * @param {TenantModelProxy<typeof ExpenseCategory>} expenseCategoryModel - Expense category model.
    */
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly validator: CommandExpenseValidator,
+
     @Inject(Expense.name)
-    private expenseModel: typeof Expense,
+    private expenseModel: TenantModelProxy<typeof Expense>,
 
     @Inject(ExpenseCategory.name)
-    private expenseCategoryModel: typeof ExpenseCategory,
+    private expenseCategoryModel: TenantModelProxy<typeof ExpenseCategory>,
   ) {}
 
   /**
@@ -39,7 +41,7 @@ export class DeleteExpense {
   public async deleteExpense(expenseId: number): Promise<void> {
     // Retrieves the expense transaction with associated entries or
     // throw not found error.
-    const oldExpense = await this.expenseModel
+    const oldExpense = await this.expenseModel()
       .query()
       .findById(expenseId)
       .withGraphFetched('categories')
@@ -58,13 +60,13 @@ export class DeleteExpense {
       } as IExpenseDeletingPayload);
 
       // Deletes expense associated entries.
-      await this.expenseCategoryModel
+      await this.expenseCategoryModel()
         .query(trx)
         .where('expenseId', expenseId)
         .delete();
 
       // Deletes expense transactions.
-      await this.expenseModel.query(trx).findById(expenseId).delete();
+      await this.expenseModel().query(trx).findById(expenseId).delete();
 
       // Triggers `onExpenseDeleted` event.
       await this.eventEmitter.emitAsync(events.expenses.onDeleted, {

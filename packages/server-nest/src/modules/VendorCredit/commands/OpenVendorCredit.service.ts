@@ -11,6 +11,7 @@ import { VendorCredit } from '../models/VendorCredit';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { Knex } from 'knex';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class OpenVendorCreditService {
@@ -23,7 +24,8 @@ export class OpenVendorCreditService {
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
 
-    @Inject(VendorCredit.name) private vendorCreditModel: typeof VendorCredit,
+    @Inject(VendorCredit.name)
+    private vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -36,7 +38,7 @@ export class OpenVendorCreditService {
     trx?: Knex.Transaction,
   ): Promise<VendorCredit> => {
     // Retrieve the vendor credit or throw not found service error.
-    const oldVendorCredit = await this.vendorCreditModel
+    const oldVendorCredit = await this.vendorCreditModel()
       .query()
       .findById(vendorCreditId)
       .throwIfNotFound();
@@ -64,7 +66,7 @@ export class OpenVendorCreditService {
         eventPayload as IVendorCreditOpeningPayload,
       );
       // Saves the vendor credit graph to the storage.
-      const vendorCredit = await this.vendorCreditModel
+      const vendorCredit = await this.vendorCreditModel()
         .query(trx)
         .findById(vendorCreditId)
         .updateAndFetchById(vendorCreditId, {

@@ -14,17 +14,34 @@ import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
 import { ItemCategory } from '../ItemCategories/models/ItemCategory.model';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
 import { InventoryAdjustment } from '../InventoryAdjutments/models/InventoryAdjustment';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class ItemsValidators {
   constructor(
-    @Inject(Item.name) private itemModel: typeof Item,
-    @Inject(Account.name) private accountModel: typeof Account,
-    @Inject(TaxRateModel.name) private taxRateModel: typeof TaxRateModel,
-    @Inject(ItemEntry.name) private itemEntryModel: typeof ItemEntry,
-    @Inject(ItemCategory.name) private itemCategoryModel: typeof ItemCategory,
-    @Inject(AccountTransaction.name) private accountTransactionModel: typeof AccountTransaction,
-    @Inject(InventoryAdjustment.name) private inventoryAdjustmentEntryModel: typeof InventoryAdjustment,
+    @Inject(Item.name) private itemModel: TenantModelProxy<typeof Item>,
+
+    @Inject(Account.name)
+    private accountModel: TenantModelProxy<typeof Account>,
+
+    @Inject(TaxRateModel.name)
+    private taxRateModel: TenantModelProxy<typeof TaxRateModel>,
+
+    @Inject(ItemEntry.name)
+    private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
+
+    @Inject(ItemCategory.name)
+    private itemCategoryModel: TenantModelProxy<typeof ItemCategory>,
+
+    @Inject(AccountTransaction.name)
+    private accountTransactionModel: TenantModelProxy<
+      typeof AccountTransaction
+    >,
+
+    @Inject(InventoryAdjustment.name)
+    private inventoryAdjustmentEntryModel: TenantModelProxy<
+      typeof InventoryAdjustment
+    >,
   ) {}
 
   /**
@@ -37,12 +54,14 @@ export class ItemsValidators {
     itemName: string,
     notItemId?: number,
   ): Promise<void> {
-    const foundItems = await this.itemModel.query().onBuild((builder: any) => {
-      builder.where('name', itemName);
-      if (notItemId) {
-        builder.whereNot('id', notItemId);
-      }
-    });
+    const foundItems = await this.itemModel()
+      .query()
+      .onBuild((builder: any) => {
+        builder.where('name', itemName);
+        if (notItemId) {
+          builder.whereNot('id', notItemId);
+        }
+      });
 
     if (foundItems.length > 0) {
       throw new ServiceError(
@@ -60,7 +79,7 @@ export class ItemsValidators {
   public async validateItemCostAccountExistance(
     costAccountId: number,
   ): Promise<void> {
-    const foundAccount = await this.accountModel
+    const foundAccount = await this.accountModel()
       .query()
       .findById(costAccountId);
 
@@ -78,7 +97,7 @@ export class ItemsValidators {
    * @param {number} sellAccountId - Sell account id.
    */
   public async validateItemSellAccountExistance(sellAccountId: number) {
-    const foundAccount = await this.accountModel
+    const foundAccount = await this.accountModel()
       .query()
       .findById(sellAccountId);
 
@@ -132,7 +151,7 @@ export class ItemsValidators {
   public async validateItemInventoryAccountExistance(
     inventoryAccountId: number,
   ) {
-    const foundAccount = await this.accountModel
+    const foundAccount = await this.accountModel()
       .query()
       .findById(inventoryAccountId);
 
@@ -148,7 +167,7 @@ export class ItemsValidators {
    * @param {number} itemCategoryId
    */
   public async validateItemCategoryExistance(itemCategoryId: number) {
-    const foundCategory = await this.itemCategoryModel
+    const foundCategory = await this.itemCategoryModel()
       .query()
       .findById(itemCategoryId);
 
@@ -164,7 +183,7 @@ export class ItemsValidators {
    */
   public async validateHasNoInvoicesOrBills(itemId: number[] | number) {
     const ids = Array.isArray(itemId) ? itemId : [itemId];
-    const foundItemEntries = await this.itemEntryModel
+    const foundItemEntries = await this.itemEntryModel()
       .query()
       .whereIn('item_id', ids);
 
@@ -185,7 +204,7 @@ export class ItemsValidators {
     itemId: number[] | number,
   ): Promise<void> {
     const itemsIds = Array.isArray(itemId) ? itemId : [itemId];
-    const inventoryAdjEntries = await this.inventoryAdjustmentEntryModel
+    const inventoryAdjEntries = await this.inventoryAdjustmentEntryModel()
       .query()
       .whereIn('item_id', itemsIds);
 
@@ -208,7 +227,7 @@ export class ItemsValidators {
       return;
     }
     // Retrieve all transactions that associated to the given item id.
-    const itemTransactionsCount = await this.accountTransactionModel
+    const itemTransactionsCount = await this.accountTransactionModel()
       .query()
       .where('item_id', oldItem.id)
       .count('item_id', { as: 'transactions' })
@@ -240,7 +259,7 @@ export class ItemsValidators {
       return;
     }
     // Inventory transactions associated to the given item id.
-    const transactions = await this.accountTransactionModel.query().where({
+    const transactions = await this.accountTransactionModel().query().where({
       itemId: oldItem.id,
     });
     // Throw the service error in case item has associated inventory transactions.
@@ -269,7 +288,7 @@ export class ItemsValidators {
    * @param {number} taxRateId -
    */
   public async validatePurchaseTaxRateExistance(taxRateId: number) {
-    const foundTaxRate = await this.taxRateModel.query().findById(taxRateId);
+    const foundTaxRate = await this.taxRateModel().query().findById(taxRateId);
 
     if (!foundTaxRate) {
       throw new ServiceError(ERRORS.PURCHASE_TAX_RATE_NOT_FOUND);
@@ -281,7 +300,7 @@ export class ItemsValidators {
    * @param {number} taxRateId
    */
   public async validateSellTaxRateExistance(taxRateId: number) {
-    const foundTaxRate = await this.taxRateModel.query().findById(taxRateId);
+    const foundTaxRate = await this.taxRateModel().query().findById(taxRateId);
 
     if (!foundTaxRate) {
       throw new ServiceError(ERRORS.SELL_TAX_RATE_NOT_FOUND);

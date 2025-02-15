@@ -3,9 +3,10 @@ import { VendorCreditToApplyBillTransformer } from './VendorCreditToApplyBillTra
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
-export class GetVendorCreditToApplyBills  {
+export class GetVendorCreditToApplyBills {
   /**
    * @param {TransformerService} transformerService - The transformer service.
    * @param {typeof Bill} billModel - The bill model.
@@ -13,10 +14,11 @@ export class GetVendorCreditToApplyBills  {
    */
   constructor(
     private readonly transformerService: TransformerInjectable,
-    @Inject(Bill.name) private readonly billModel: typeof Bill,
+    @Inject(Bill.name)
+    private readonly billModel: TenantModelProxy<typeof Bill>,
 
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -26,13 +28,13 @@ export class GetVendorCreditToApplyBills  {
    */
   public async getCreditToApplyBills(vendorCreditId: number) {
     // Retrieve vendor credit or throw not found service error.
-    const vendorCredit = await this.vendorCreditModel
+    const vendorCredit = await this.vendorCreditModel()
       .query()
       .findById(vendorCreditId)
       .throwIfNotFound();
 
     // Retrieve open bills associated to the given vendor.
-    const openBills = await this.billModel
+    const openBills = await this.billModel()
       .query()
       .where('vendor_id', vendorCredit.vendorId)
       .modify('dueBills')

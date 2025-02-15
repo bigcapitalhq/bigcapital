@@ -4,6 +4,7 @@ import { GetSaleInvoiceMailStateTransformer } from './GetSaleInvoiceMailState.tr
 import { SendSaleInvoiceMailCommon } from '../commands/SendInvoiceInvoiceMailCommon.service';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { SaleInvoiceMailState } from '../SaleInvoice.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetSaleInvoiceMailState {
@@ -12,7 +13,7 @@ export class GetSaleInvoiceMailState {
     private invoiceMail: SendSaleInvoiceMailCommon,
 
     @Inject(SaleInvoice.name)
-    private saleInvoiceModel: typeof SaleInvoice,
+    private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -24,7 +25,7 @@ export class GetSaleInvoiceMailState {
   public async getInvoiceMailState(
     saleInvoiceId: number,
   ): Promise<SaleInvoiceMailState> {
-    const saleInvoice = await this.saleInvoiceModel
+    const saleInvoice = await this.saleInvoiceModel()
       .query()
       .findById(saleInvoiceId)
       .withGraphFetched('customer')

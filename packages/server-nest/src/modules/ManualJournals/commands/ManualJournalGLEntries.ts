@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { ManualJournal } from '../models/ManualJournal';
 import { ManualJournalGL } from './ManualJournalGL';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ManualJournalGLEntries {
@@ -12,7 +13,7 @@ export class ManualJournalGLEntries {
    */
   constructor(
     @Inject(ManualJournal.name)
-    private readonly manualJournalModel: typeof ManualJournal,
+    private readonly manualJournalModel: TenantModelProxy<typeof ManualJournal>,
     private readonly ledgerStorage: LedgerStorageService,
   ) {}
 
@@ -26,7 +27,7 @@ export class ManualJournalGLEntries {
     trx?: Knex.Transaction,
   ) => {
     // Retrieves the given manual journal with associated entries.
-    const manualJournal = await this.manualJournalModel
+    const manualJournal = await this.manualJournalModel()
       .query(trx)
       .findById(manualJournalId)
       .withGraphFetched('entries.account');

@@ -38,6 +38,7 @@ const models = [
     LedgerModule,
     BranchesModule,
     DynamicListModule,
+    ...models,
   ],
   controllers: [BankingTransactionsController],
   providers: [
@@ -56,7 +57,6 @@ const models = [
     CommandBankTransactionValidator,
     BranchTransactionDTOTransformer,
     RemovePendingUncategorizedTransaction,
-    ...models,
   ],
   exports: [...models, RemovePendingUncategorizedTransaction],
 })

@@ -6,6 +6,7 @@ import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { ISalesReceiptsFilter } from '../types/SaleReceipts.types';
 import { SaleReceipt } from '../models/SaleReceipt';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 interface GetSaleReceiptsSettings {
   fetchEntriesGraph?: boolean;
@@ -17,7 +18,7 @@ export class GetSaleReceiptsService {
     private readonly dynamicListService: DynamicListService,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: typeof SaleReceipt,
+    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
   ) {}
 
   /**
@@ -37,7 +38,7 @@ export class GetSaleReceiptsService {
       SaleReceipt,
       filter,
     );
-    const { results, pagination } = await this.saleReceiptModel
+    const { results, pagination } = await this.saleReceiptModel()
       .query()
       .onBuild((builder) => {
         builder.withGraphFetched('depositAccount');

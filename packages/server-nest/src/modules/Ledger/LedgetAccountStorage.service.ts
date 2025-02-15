@@ -9,6 +9,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Account } from '../Accounts/models/Account.model';
 import { AccountRepository } from '../Accounts/repositories/Account.repository';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class LedegrAccountsStorage {
@@ -21,7 +22,7 @@ export class LedegrAccountsStorage {
     private accountRepository: AccountRepository,
 
     @Inject(Account.name)
-    private accountModel: typeof Account,
+    private accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -114,7 +115,7 @@ export class LedegrAccountsStorage {
     accountId: number,
     trx?: Knex.Transaction,
   ): Promise<void> => {
-    const account = await this.accountModel.query(trx).findById(accountId);
+    const account = await this.accountModel().query(trx).findById(accountId);
 
     // Filters the ledger entries by the current account.
     const accountLedger = ledger.whereAccountId(accountId);
@@ -139,10 +140,9 @@ export class LedegrAccountsStorage {
 
   /**
    * Saves the account balance.
-   * @param   {number} tenantId
-   * @param   {number} accountId
-   * @param   {number} change
-   * @param   {Knex.Transaction} trx -
+   * @param {number} accountId
+   * @param {number} change
+   * @param {Knex.Transaction} trx -
    * @returns {Promise<void>}
    */
   private saveAccountBalance = async (
@@ -151,7 +151,7 @@ export class LedegrAccountsStorage {
     trx?: Knex.Transaction,
   ) => {
     // Ensure the account has atleast zero in amount.
-    await this.accountModel
+    await this.accountModel()
       .query(trx)
       .findById(accountId)
       .whereNull('amount')

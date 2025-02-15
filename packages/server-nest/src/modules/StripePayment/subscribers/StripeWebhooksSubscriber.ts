@@ -9,6 +9,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { Inject, Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
 import { PaymentIntegration } from '../models/PaymentIntegration.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class StripeWebhooksSubscriber {
@@ -16,7 +17,9 @@ export class StripeWebhooksSubscriber {
     private readonly createPaymentReceiveStripePayment: CreatePaymentReceiveStripePayment,
 
     @Inject(PaymentIntegration.name)
-    private readonly paymentIntegrationModel: typeof PaymentIntegration,
+    private readonly paymentIntegrationModel: TenantModelProxy<
+      typeof PaymentIntegration
+    >,
   ) {}
 
   /**
@@ -65,7 +68,7 @@ export class StripeWebhooksSubscriber {
     // Check if the account capabilities are active
     if (account.capabilities.card_payments === 'active') {
       // Marks the payment method integration as active.
-      await this.paymentIntegrationModel
+      await this.paymentIntegrationModel()
         .query()
         .findById(metadata?.paymentIntegrationId)
         .patch({

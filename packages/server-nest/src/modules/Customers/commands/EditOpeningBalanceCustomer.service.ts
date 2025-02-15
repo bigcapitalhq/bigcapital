@@ -9,6 +9,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Customer } from '../models/Customer';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditOpeningBalanceCustomer {
@@ -20,7 +21,9 @@ export class EditOpeningBalanceCustomer {
   constructor(
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
-    @Inject(Customer.name) private customerModel: typeof Customer,
+
+    @Inject(Customer.name)
+    private customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -33,7 +36,7 @@ export class EditOpeningBalanceCustomer {
     openingBalanceEditDTO: ICustomerOpeningBalanceEditDTO,
   ): Promise<Customer> {
     // Retrieves the old customer or throw not found error.
-    const oldCustomer = await this.customerModel
+    const oldCustomer = await this.customerModel()
       .query()
       .findById(customerId)
       .throwIfNotFound();
@@ -50,7 +53,7 @@ export class EditOpeningBalanceCustomer {
         } as ICustomerOpeningBalanceEditingPayload,
       );
       // Mutates the customer on the storage.
-      const customer = await this.customerModel
+      const customer = await this.customerModel()
         .query()
         .patchAndFetchById(customerId, {
           ...openingBalanceEditDTO,

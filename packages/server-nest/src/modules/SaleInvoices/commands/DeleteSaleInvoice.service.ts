@@ -15,6 +15,7 @@ import { ERRORS } from '../constants';
 import { events } from '@/common/events/events';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
 import { CreditNoteAppliedInvoice } from '@/modules/CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteSaleInvoice {
@@ -24,13 +25,17 @@ export class DeleteSaleInvoice {
     private uow: UnitOfWork,
 
     @Inject(PaymentReceivedEntry.name)
-    private paymentReceivedEntryModel: typeof PaymentReceivedEntry,
+    private paymentReceivedEntryModel: TenantModelProxy<
+      typeof PaymentReceivedEntry
+    >,
 
     @Inject(CreditNoteAppliedInvoice.name)
-    private creditNoteAppliedInvoiceModel: typeof CreditNoteAppliedInvoice,
+    private creditNoteAppliedInvoiceModel: TenantModelProxy<
+      typeof CreditNoteAppliedInvoice
+    >,
 
     @Inject(SaleInvoice.name)
-    private saleInvoiceModel: typeof SaleInvoice,
+    private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -39,7 +44,7 @@ export class DeleteSaleInvoice {
    */
   private async validateInvoiceHasNoPaymentEntries(saleInvoiceId: number) {
     // Retrieve the sale invoice associated payment receive entries.
-    const entries = await this.paymentReceivedEntryModel
+    const entries = await this.paymentReceivedEntryModel()
       .query()
       .where('invoice_id', saleInvoiceId);
 
@@ -57,7 +62,7 @@ export class DeleteSaleInvoice {
   public validateInvoiceHasNoAppliedToCredit = async (
     invoiceId: number,
   ): Promise<void> => {
-    const appliedTransactions = await this.creditNoteAppliedInvoiceModel
+    const appliedTransactions = await this.creditNoteAppliedInvoiceModel()
       .query()
       .where('invoiceId', invoiceId);
 
@@ -75,7 +80,7 @@ export class DeleteSaleInvoice {
   public async deleteSaleInvoice(saleInvoiceId: number): Promise<void> {
     // Retrieve the given sale invoice with associated entries
     // or throw not found error.
-    const oldSaleInvoice = await this.saleInvoiceModel
+    const oldSaleInvoice = await this.saleInvoiceModel()
       .query()
       .findById(saleInvoiceId)
       .withGraphFetched('entries')

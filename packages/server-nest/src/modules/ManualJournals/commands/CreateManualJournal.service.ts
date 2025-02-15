@@ -17,6 +17,7 @@ import { ManualJournal } from '../models/ManualJournal';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ManualJournalBranchesDTOTransformer } from '@/modules/Branches/integrations/ManualJournals/ManualJournalDTOTransformer.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateManualJournalService {
@@ -29,7 +30,7 @@ export class CreateManualJournalService {
     private branchesDTOTransformer: ManualJournalBranchesDTOTransformer,
 
     @Inject(ManualJournal.name)
-    private manualJournalModel: typeof ManualJournal,
+    private manualJournalModel: TenantModelProxy<typeof ManualJournal>,
   ) {}
 
   /**
@@ -108,7 +109,7 @@ export class CreateManualJournalService {
     // Validate accounts with contact type from the given config.
     await this.validator.dynamicValidateAccountsWithContactType(
       manualJournalDTO.entries,
-    )
+    );
     // Validates the accounts currency with journal currency.
     await this.validator.validateJournalCurrencyWithAccountsCurrency(
       manualJournalDTO,
@@ -129,7 +130,8 @@ export class CreateManualJournalService {
     // Authorize manual journal creating.
     await this.authorize(manualJournalDTO);
     // Transformes the next DTO to model.
-    const manualJournalObj = await this.transformNewDTOToModel(manualJournalDTO);
+    const manualJournalObj =
+      await this.transformNewDTOToModel(manualJournalDTO);
 
     // Creates a manual journal transactions with associated transactions
     // under unit-of-work envirement.
@@ -141,7 +143,7 @@ export class CreateManualJournalService {
       } as IManualJournalCreatingPayload);
 
       // Upsert the manual journal object.
-      const manualJournal = await this.manualJournalModel
+      const manualJournal = await this.manualJournalModel()
         .query(trx)
         .upsertGraph({
           ...manualJournalObj,

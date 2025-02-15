@@ -99,7 +99,7 @@ import { SendSaleInvoiceQueue } from './constants';
     GetSaleInvoicesService,
     GetSaleInvoiceMailState,
     SendSaleInvoiceMailCommon,
-    SendSaleInvoiceMailProcessor
+    SendSaleInvoiceMailProcessor,
   ],
   exports: [GetSaleInvoice],
 })

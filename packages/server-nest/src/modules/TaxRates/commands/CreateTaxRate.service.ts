@@ -10,6 +10,7 @@ import { TaxRateModel } from '../models/TaxRate.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateTaxRate {
@@ -25,7 +26,7 @@ export class CreateTaxRate {
     private readonly validators: CommandTaxRatesValidators,
 
     @Inject(TaxRateModel.name)
-    private readonly taxRateModel: typeof TaxRateModel,
+    private readonly taxRateModel: TenantModelProxy<typeof TaxRateModel>,
   ) {}
 
   /**
@@ -34,36 +35,32 @@ export class CreateTaxRate {
    */
   public async createTaxRate(
     createTaxRateDTO: ICreateTaxRateDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
     // Validates the tax code uniquiness.
-    await this.validators.validateTaxCodeUnique(
-      createTaxRateDTO.code,
-      trx
-    );
+    await this.validators.validateTaxCodeUnique(createTaxRateDTO.code, trx);
 
-    return this.uow.withTransaction(
-      async (trx: Knex.Transaction) => {
-        // Triggers `onTaxRateCreating` event.
-        await this.eventEmitter.emitAsync(events.taxRates.onCreating, {
-          createTaxRateDTO,
-          trx,
-        } as ITaxRateCreatingPayload);
+    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Triggers `onTaxRateCreating` event.
+      await this.eventEmitter.emitAsync(events.taxRates.onCreating, {
+        createTaxRateDTO,
+        trx,
+      } as ITaxRateCreatingPayload);
 
-        const taxRate = await this.taxRateModel.query(trx).insertAndFetch({
+      const taxRate = await this.taxRateModel()
+        .query(trx)
+        .insertAndFetch({
           ...createTaxRateDTO,
         });
 
-        // Triggers `onTaxRateCreated` event.
-        await this.eventEmitter.emitAsync(events.taxRates.onCreated, {
-          createTaxRateDTO,
-          taxRate,
-          trx,
-        } as ITaxRateCreatedPayload);
+      // Triggers `onTaxRateCreated` event.
+      await this.eventEmitter.emitAsync(events.taxRates.onCreated, {
+        createTaxRateDTO,
+        taxRate,
+        trx,
+      } as ITaxRateCreatedPayload);
 
-        return taxRate;
-      },
-      trx
-    );
+      return taxRate;
+    }, trx);
   }
 }

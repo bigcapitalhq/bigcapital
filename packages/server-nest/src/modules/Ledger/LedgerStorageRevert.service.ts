@@ -4,18 +4,21 @@ import { Knex } from 'knex';
 import { Ledger } from './Ledger';
 import { LedgerStorageService } from './LedgerStorage.service';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class LedgerRevertService {
   /**
-   * @param ledgerStorage - Ledger storage service.
-   * @param accountTransactionModel - Account transaction model.
+   * @param {LedgerStorageService} ledgerStorage - Ledger storage service.
+   * @param {TenantModelProxy<typeof AccountTransaction>} accountTransactionModel - Account transaction model.
    */
   constructor(
     private readonly ledgerStorage: LedgerStorageService,
 
     @Inject(AccountTransaction.name)
-    private readonly accountTransactionModel: typeof AccountTransaction,
+    private readonly accountTransactionModel: TenantModelProxy<
+      typeof AccountTransaction
+    >,
   ) {}
 
   /**
@@ -27,7 +30,7 @@ export class LedgerRevertService {
     referenceId: number | number[],
     referenceType: string | string[],
   ) => {
-    const transactions = await this.accountTransactionModel
+    const transactions = await this.accountTransactionModel()
       .query()
       .whereIn('reference_type', castArray(referenceType))
       .whereIn('reference_id', castArray(referenceId))

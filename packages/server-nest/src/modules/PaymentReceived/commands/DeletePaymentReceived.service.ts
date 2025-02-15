@@ -9,6 +9,7 @@ import {
   IPaymentReceivedDeletingPayload,
   IPaymentReceivedDeletedPayload,
 } from '../types/PaymentReceived.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeletePaymentReceivedService {
@@ -23,10 +24,12 @@ export class DeletePaymentReceivedService {
     private uow: UnitOfWork,
 
     @Inject(PaymentReceived.name)
-    private paymentReceiveModel: typeof PaymentReceived,
+    private paymentReceiveModel: TenantModelProxy<typeof PaymentReceived>,
 
     @Inject(PaymentReceivedEntry.name)
-    private paymentReceiveEntryModel: typeof PaymentReceivedEntry,
+    private paymentReceiveEntryModel: TenantModelProxy<
+      typeof PaymentReceivedEntry
+    >,
   ) {}
 
   /**
@@ -44,7 +47,7 @@ export class DeletePaymentReceivedService {
    */
   public async deletePaymentReceive(paymentReceiveId: number) {
     // Retreive payment receive or throw not found service error.
-    const oldPaymentReceive = await this.paymentReceiveModel
+    const oldPaymentReceive = await this.paymentReceiveModel()
       .query()
       .withGraphFetched('entries')
       .findById(paymentReceiveId)
@@ -59,13 +62,13 @@ export class DeletePaymentReceivedService {
       } as IPaymentReceivedDeletingPayload);
 
       // Deletes the payment receive associated entries.
-      await this.paymentReceiveEntryModel
+      await this.paymentReceiveEntryModel()
         .query(trx)
         .where('payment_receive_id', paymentReceiveId)
         .delete();
 
       // Deletes the payment receive transaction.
-      await this.paymentReceiveModel
+      await this.paymentReceiveModel()
         .query(trx)
         .findById(paymentReceiveId)
         .delete();

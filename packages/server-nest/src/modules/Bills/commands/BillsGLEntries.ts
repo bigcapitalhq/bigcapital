@@ -4,6 +4,7 @@ import { AccountRepository } from '@/modules/Accounts/repositories/Account.repos
 import { Bill } from '../models/Bill';
 import { Inject, Injectable } from '@nestjs/common';
 import { BillGL } from './BillsGL';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class BillGLEntries {
@@ -17,7 +18,7 @@ export class BillGLEntries {
     private readonly accountRepository: AccountRepository,
 
     @Inject(Bill.name)
-    private readonly billModel: typeof Bill,
+    private readonly billModel: TenantModelProxy<typeof Bill>,
   ) {}
 
   /**
@@ -30,7 +31,7 @@ export class BillGLEntries {
     trx?: Knex.Transaction,
   ) => {
     // Retrieves bill with associated entries and landed costs.
-    const bill = await this.billModel
+    const bill = await this.billModel()
       .query(trx)
       .findById(billId)
       .withGraphFetched('entries.item')

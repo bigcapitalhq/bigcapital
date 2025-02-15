@@ -9,6 +9,7 @@ import { Expense } from '../models/Expense.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PublishExpense {
@@ -24,7 +25,7 @@ export class PublishExpense {
     private readonly validator: CommandExpenseValidator,
 
     @Inject(Expense.name)
-    private readonly expenseModel: typeof Expense,
+    private readonly expenseModel: TenantModelProxy<typeof Expense>,
   ) {}
 
   /**
@@ -35,7 +36,7 @@ export class PublishExpense {
    */
   public async publishExpense(expenseId: number) {
     // Retrieves the old expense or throw not found error.
-    const oldExpense = await this.expenseModel
+    const oldExpense = await this.expenseModel()
       .query()
       .findById(expenseId)
       .throwIfNotFound();
@@ -53,10 +54,10 @@ export class PublishExpense {
       } as IExpensePublishingPayload);
 
       // Publish the given expense on the storage.
-      await this.expenseModel.query().findById(expenseId).modify('publish');
+      await this.expenseModel().query().findById(expenseId).modify('publish');
 
       // Retrieve the new expense after modification.
-      const expense = await this.expenseModel
+      const expense = await this.expenseModel()
         .query()
         .findById(expenseId)
         .withGraphFetched('categories');

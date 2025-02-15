@@ -1,14 +1,15 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { GetSaleEstimate } from './GetSaleEstimate.service';
 import { transformEstimateToPdfTemplate } from '../utils';
 import { EstimatePdfBrandingAttributes } from '../constants';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SaleEstimatePdfTemplate } from '@/modules/SaleInvoices/queries/SaleEstimatePdfTemplate.service';
 import { TemplateInjectable } from '@/modules/TemplateInjectable/TemplateInjectable.service';
 import { ChromiumlyTenancy } from '@/modules/ChromiumlyTenancy/ChromiumlyTenancy.service';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
-import { Inject, Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
 import { SaleEstimate } from '../models/SaleEstimate';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetSaleEstimatePdf {
@@ -20,10 +21,12 @@ export class GetSaleEstimatePdf {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplateModel: typeof PdfTemplateModel,
+    private readonly pdfTemplateModel: TenantModelProxy<
+      typeof PdfTemplateModel
+    >,
 
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
   ) {}
 
   /**
@@ -37,6 +40,7 @@ export class GetSaleEstimatePdf {
     const filename = await this.getSaleEstimateFilename(saleEstimateId);
     const brandingAttributes =
       await this.getEstimateBrandingAttributes(saleEstimateId);
+
     const htmlContent = await this.templateInjectable.render(
       'modules/estimate-regular',
       brandingAttributes,
@@ -59,7 +63,9 @@ export class GetSaleEstimatePdf {
    * @returns {Promise<string>}
    */
   private async getSaleEstimateFilename(estimateId: number) {
-    const estimate = await this.saleEstimateModel.query().findById(estimateId);
+    const estimate = await this.saleEstimateModel()
+      .query()
+      .findById(estimateId);
 
     return `Estimate-${estimate.estimateNumber}`;
   }
@@ -78,7 +84,7 @@ export class GetSaleEstimatePdf {
     const templateId =
       saleEstimate.pdfTemplateId ??
       (
-        await this.pdfTemplateModel.query().findOne({
+        await this.pdfTemplateModel().query().findOne({
           resource: 'SaleEstimate',
           default: true,
         })

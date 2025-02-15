@@ -18,10 +18,12 @@ import {
   ISaleReceiptMailPresend,
   SaleReceiptMailOpts,
   SaleReceiptMailOptsDTO,
+  SaleReceiptSendMailPayload,
 } from '../types/SaleReceipts.types';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
 import { Mail } from '@/modules/Mail/Mail';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class SaleReceiptMailNotification {
@@ -38,6 +40,7 @@ export class SaleReceiptMailNotification {
     private readonly contactMailNotification: ContactMailNotification,
     private readonly eventEmitter: EventEmitter2,
     private readonly mailTransporter: MailTransporter,
+    private readonly tenancyContext: TenancyContext,
 
     @Inject(SaleReceipt.name)
     private readonly saleReceiptModel: typeof SaleReceipt,
@@ -55,10 +58,19 @@ export class SaleReceiptMailNotification {
     saleReceiptId: number,
     messageOptions: SaleReceiptMailOptsDTO,
   ) {
+    const tenant = await this.tenancyContext.getTenant();
+    const user = await this.tenancyContext.getSystemUser();
+
+    const organizationId = tenant.organizationId;
+    const userId = user.id;
+
     const payload = {
       saleReceiptId,
       messageOpts: messageOptions,
-    };
+      userId,
+      organizationId,
+    } as SaleReceiptSendMailPayload;
+
     this.sendSaleReceiptMailProcess.add(SendSaleReceiptMailJob, { ...payload });
 
     // Triggers the event `onSaleReceiptPreMailSend`.
@@ -70,7 +82,7 @@ export class SaleReceiptMailNotification {
 
   /**
    * Retrieves the mail options of the given sale receipt.
-   * @param {number} saleReceiptId
+   * @param {number} saleReceiptId - Sale receipt id.
    * @returns {Promise<SaleReceiptMailOptsDTO>}
    */
   public async getMailOptions(
@@ -97,7 +109,6 @@ export class SaleReceiptMailNotification {
 
   /**
    * Retrieves the formatted text of the given sale receipt.
-   * @param {number} tenantId - Tenant id.
    * @param {number} receiptId - Sale receipt id.
    * @param {string} text - The given text.
    * @returns {Promise<string>}
@@ -112,7 +123,6 @@ export class SaleReceiptMailNotification {
 
   /**
    * Formats the mail options of the given sale receipt.
-   * @param {number} tenantId
    * @param {number} receiptId
    * @param {SaleReceiptMailOpts} mailOptions
    * @returns {Promise<SaleReceiptMailOpts>}
@@ -132,7 +142,6 @@ export class SaleReceiptMailNotification {
 
   /**
    * Retrieves the formatted mail options of the given sale receipt.
-   * @param {number} tenantId
    * @param {number} saleReceiptId
    * @param {SaleReceiptMailOptsDTO} messageOpts
    * @returns {Promise<SaleReceiptMailOpts>}

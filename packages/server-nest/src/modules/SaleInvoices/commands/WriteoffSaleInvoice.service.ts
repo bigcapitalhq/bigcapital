@@ -13,6 +13,7 @@ import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators.ser
 import { SaleInvoice } from '../models/SaleInvoice';
 import { events } from '@/common/events/events';
 import { ServiceError } from '../../Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class WriteoffSaleInvoice {
@@ -28,7 +29,7 @@ export class WriteoffSaleInvoice {
     private readonly validators: CommandSaleInvoiceValidators,
 
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -41,7 +42,7 @@ export class WriteoffSaleInvoice {
     saleInvoiceId: number,
     writeoffDTO: ISaleInvoiceWriteoffDTO,
   ): Promise<SaleInvoice> => {
-    const saleInvoice = await this.saleInvoiceModel
+    const saleInvoice = await this.saleInvoiceModel()
       .query()
       .findById(saleInvoiceId)
       .throwIfNotFound();
@@ -69,7 +70,7 @@ export class WriteoffSaleInvoice {
         eventPayload,
       );
       // Mark the sale invoice as written-off.
-      const newSaleInvoice = await this.saleInvoiceModel
+      const newSaleInvoice = await this.saleInvoiceModel()
         .query(trx)
         .patch({
           writtenoffExpenseAccountId: writeoffDTO.expenseAccountId,
@@ -99,7 +100,7 @@ export class WriteoffSaleInvoice {
     // Validate the sale invoice existance.
 
     // Retrieve the sale invoice or throw not found service error.
-    const saleInvoice = await this.saleInvoiceModel
+    const saleInvoice = await this.saleInvoiceModel()
       .query()
       .findById(saleInvoiceId);
 

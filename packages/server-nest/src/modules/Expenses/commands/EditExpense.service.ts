@@ -13,6 +13,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { Expense } from '../models/Expense.model';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditExpense {
@@ -31,9 +32,10 @@ export class EditExpense {
     private transformDTO: ExpenseDTOTransformer,
     // private entriesService: EntriesService,
     @Inject(Expense.name)
-    private expenseModel: typeof Expense,
+    private expenseModel: TenantModelProxy<typeof Expense>,
+
     @Inject(Account.name)
-    private accountModel: typeof Account,
+    private accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -45,7 +47,7 @@ export class EditExpense {
     expenseDTO: IExpenseEditDTO,
   ) => {
     // Validate payment account existance on the storage.
-    const paymentAccount = await this.accountModel
+    const paymentAccount = await this.accountModel()
       .query()
       .findById(expenseDTO.paymentAccountId)
       .throwIfNotFound();
@@ -55,7 +57,7 @@ export class EditExpense {
       (category) => category.expenseAccountId,
     );
     // Retrieves the expenses accounts.
-    const expenseAccounts = await this.accountModel
+    const expenseAccounts = await this.accountModel()
       .query()
       .whereIn('id', DTOExpenseAccountsIds);
     // Validate expense accounts exist on the storage.
@@ -103,7 +105,7 @@ export class EditExpense {
     expenseDTO: IExpenseEditDTO,
   ): Promise<Expense> {
     // Retrieves the expense model or throw not found error.
-    const oldExpense = await this.expenseModel
+    const oldExpense = await this.expenseModel()
       .query()
       .findById(expenseId)
       .withGraphFetched('categories')
@@ -125,7 +127,7 @@ export class EditExpense {
       } as IExpenseEventEditingPayload);
 
       // Upsert the expense object with expense entries.
-      const expense = await this.expenseModel
+      const expense = await this.expenseModel()
         .query(trx)
         .upsertGraphAndFetch({
           id: expenseId,

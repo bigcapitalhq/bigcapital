@@ -22,7 +22,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 const models = [RegisterTenancyModel(BankAccount)];
 
 @Module({
-  imports: [TenancyDatabaseModule, DynamicListModule],
+  imports: [TenancyDatabaseModule, DynamicListModule, ...models],
   controllers: [AccountsController],
   providers: [
     AccountsApplication,
@@ -38,7 +38,6 @@ const models = [RegisterTenancyModel(BankAccount)];
     GetAccountTypesService,
     GetAccountTransactionsService,
     GetAccountsService,
-    ...models,
   ],
   exports: [AccountRepository, CreateAccountService, ...models],
 })

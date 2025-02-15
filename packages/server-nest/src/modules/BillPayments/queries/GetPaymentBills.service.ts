@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { BillPayment } from '../models/BillPayment';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetPaymentBills {
@@ -10,10 +11,10 @@ export class GetPaymentBills {
    */
   constructor(
     @Inject(Bill.name)
-    private readonly billModel: typeof Bill,
+    private readonly billModel: TenantModelProxy<typeof Bill>,
 
     @Inject(BillPayment.name)
-    private readonly billPaymentModel: typeof BillPayment,
+    private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
   ) {}
 
   /**
@@ -21,14 +22,14 @@ export class GetPaymentBills {
    * @param {number} billPaymentId - Bill payment id.
    */
   public async getPaymentBills(billPaymentId: number) {
-    const billPayment = await this.billPaymentModel
+    const billPayment = await this.billPaymentModel()
       .query()
       .findById(billPaymentId)
       .throwIfNotFound();
 
     const paymentBillsIds = billPayment.entries.map((entry) => entry.id);
 
-    const bills = await this.billModel.query().whereIn('id', paymentBillsIds);
+    const bills = await this.billModel().query().whereIn('id', paymentBillsIds);
 
     return bills;
   }

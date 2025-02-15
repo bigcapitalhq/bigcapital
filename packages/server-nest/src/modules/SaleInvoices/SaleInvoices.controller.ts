@@ -20,7 +20,13 @@ import {
 } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
 import { PublicRoute } from '../Auth/Jwt.guard';
-import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiHeader,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('sale-invoices')
 @ApiTags('sale-invoices')

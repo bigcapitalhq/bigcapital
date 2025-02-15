@@ -13,6 +13,7 @@ import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { Bill } from '../models/Bill';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateBill {
@@ -24,10 +25,10 @@ export class CreateBill {
     private transformerDTO: BillDTOTransformer,
 
     @Inject(Bill.name)
-    private billModel: typeof Bill,
+    private billModel: TenantModelProxy<typeof Bill>,
 
     @Inject(Vendor.name)
-    private vendorModel: typeof Vendor,
+    private vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -49,7 +50,7 @@ export class CreateBill {
     trx?: Knex.Transaction,
   ): Promise<Bill> {
     // Retrieves the given bill vendor or throw not found error.
-    const vendor = await this.vendorModel
+    const vendor = await this.vendorModel()
       .query()
       .findById(billDTO.vendorId)
       .throwIfNotFound();
@@ -80,7 +81,9 @@ export class CreateBill {
       } as IBillCreatingPayload);
 
       // Inserts the bill graph object to the storage.
-      const bill = await this.billModel.query(trx).upsertGraphAndFetch(billObj);
+      const bill = await this.billModel()
+        .query(trx)
+        .upsertGraphAndFetch(billObj);
 
       // Triggers `onBillCreated` event.
       await this.eventPublisher.emitAsync(events.bill.onCreated, {

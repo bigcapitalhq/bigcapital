@@ -1,15 +1,16 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class RefundSyncCreditNoteBalanceService {
   /**
-   * @param {typeof CreditNote} creditNoteModel - The credit note model.
+   * @param {TenantModelProxy<typeof CreditNote>} creditNoteModel - The credit note model.
    */
   constructor(
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
   ) {}
 
   /**
@@ -21,9 +22,9 @@ export class RefundSyncCreditNoteBalanceService {
   public incrementCreditNoteRefundAmount = async (
     creditNoteId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    await this.creditNoteModel
+    await this.creditNoteModel()
       .query(trx)
       .findById(creditNoteId)
       .increment('refunded_amount', amount);
@@ -38,9 +39,9 @@ export class RefundSyncCreditNoteBalanceService {
   public decrementCreditNoteRefundAmount = async (
     creditNoteId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    await this.creditNoteModel
+    await this.creditNoteModel()
       .query(trx)
       .findById(creditNoteId)
       .decrement('refunded_amount', amount);

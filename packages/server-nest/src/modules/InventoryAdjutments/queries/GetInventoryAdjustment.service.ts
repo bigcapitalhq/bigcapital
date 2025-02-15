@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
 import { InventoryAdjustmentTransformer } from '../InventoryAdjustmentTransformer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetInventoryAdjustmentService {
@@ -9,7 +10,9 @@ export class GetInventoryAdjustmentService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(InventoryAdjustment.name)
-    private readonly inventoryAdjustmentModel: typeof InventoryAdjustment,
+    private readonly inventoryAdjustmentModel: TenantModelProxy<
+      typeof InventoryAdjustment
+    >,
   ) {}
 
   /**
@@ -18,7 +21,7 @@ export class GetInventoryAdjustmentService {
    */
   async getInventoryAdjustment(inventoryAdjustmentId: number) {
     // Retrieve inventory adjustment transation with associated models.
-    const inventoryAdjustment = await this.inventoryAdjustmentModel
+    const inventoryAdjustment = await this.inventoryAdjustmentModel()
       .query()
       .findById(inventoryAdjustmentId)
       .withGraphFetched('entries.item')

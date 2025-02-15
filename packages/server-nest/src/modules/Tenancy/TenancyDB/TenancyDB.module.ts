@@ -1,20 +1,17 @@
 import knex from 'knex';
-import { Global, Module, Scope } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import { Global, Module } from '@nestjs/common';
+import { knexSnakeCaseMappers } from 'objection';
+import { ClsModule, ClsService } from 'nestjs-cls';
 import { ConfigService } from '@nestjs/config';
 import { TENANCY_DB_CONNECTION } from './TenancyDB.constants';
 import { UnitOfWork } from './UnitOfWork.service';
-import { knexSnakeCaseMappers } from 'objection';
-import { ClsService } from 'nestjs-cls';
 
-const connectionFactory = {
+export const TenancyDatabaseProxyProvider = ClsModule.forFeatureAsync({
   provide: TENANCY_DB_CONNECTION,
-  scope: Scope.REQUEST,
-  useFactory: async (
-    request: Request,
-    configService: ConfigService,
-    cls: ClsService,
-  ) => {
+  global: true,
+  strict: true,
+  inject: [ConfigService, ClsService],
+  useFactory: async (configService: ConfigService, cls: ClsService) => () => {
     const organizationId = cls.get('organizationId');
 
     return knex({
@@ -36,12 +33,13 @@ const connectionFactory = {
       ...knexSnakeCaseMappers({ upperCase: true }),
     });
   },
-  inject: [REQUEST, ConfigService, ClsService],
-};
+  type: 'function',
+});
 
 @Global()
 @Module({
-  providers: [connectionFactory, UnitOfWork],
-  exports: [TENANCY_DB_CONNECTION, UnitOfWork],
+  imports: [TenancyDatabaseProxyProvider],
+  providers: [UnitOfWork],
+  exports: [UnitOfWork],
 })
 export class TenancyDatabaseModule {}

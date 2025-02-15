@@ -8,15 +8,18 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { Inject, Injectable } from '@nestjs/common';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DecrementUncategorizedTransactionOnMatchingSubscriber {
   constructor(
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -29,14 +32,14 @@ export class DecrementUncategorizedTransactionOnMatchingSubscriber {
     trx,
   }: IBankTransactionMatchedEventPayload) {
     const uncategorizedTransactions =
-      await this.uncategorizedBankTransactionModel.query().whereIn(
-        'id',
-        uncategorizedTransactionIds
-      );
+      await this.uncategorizedBankTransactionModel()
+        .query()
+        .whereIn('id', uncategorizedTransactionIds);
+
     await PromisePool.withConcurrency(1)
       .for(uncategorizedTransactions)
       .process(async (transaction) => {
-        await this.accountModel
+        await this.accountModel()
           .query(trx)
           .findById(transaction.accountId)
           .decrement('uncategorizedTransactions', 1);
@@ -52,11 +55,11 @@ export class DecrementUncategorizedTransactionOnMatchingSubscriber {
     uncategorizedTransactionId,
     trx,
   }: IBankTransactionUnmatchedEventPayload) {
-    const transaction =
-      await this.uncategorizedBankTransactionModel.query().findById(
-        uncategorizedTransactionId
-      );
-    await this.accountModel
+    const transaction = await this.uncategorizedBankTransactionModel()
+      .query()
+      .findById(uncategorizedTransactionId);
+
+    await this.accountModel()
       .query(trx)
       .findById(transaction.accountId)
       .increment('uncategorizedTransactions', 1);

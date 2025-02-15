@@ -9,13 +9,16 @@ import { BankRuleCondition } from '../models/BankRuleCondition';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteBankRuleService {
   constructor(
-    @Inject(BankRule.name) private bankRuleModel: typeof BankRule,
+    @Inject(BankRule.name)
+    private bankRuleModel: TenantModelProxy<typeof BankRule>,
+
     @Inject(BankRuleCondition.name)
-    private bankRuleConditionModel: typeof BankRuleCondition,
+    private bankRuleConditionModel: TenantModelProxy<typeof BankRuleCondition>,
 
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
@@ -30,7 +33,7 @@ export class DeleteBankRuleService {
     ruleId: number,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    const oldBankRule = await this.bankRuleModel
+    const oldBankRule = await this.bankRuleModel()
       .query()
       .findById(ruleId)
       .throwIfNotFound();
@@ -43,11 +46,12 @@ export class DeleteBankRuleService {
         trx,
       } as IBankRuleEventDeletingPayload);
 
-      await this.bankRuleConditionModel
+      await this.bankRuleConditionModel()
         .query(trx)
         .where('ruleId', ruleId)
         .delete();
-      await this.bankRuleModel.query(trx).findById(ruleId).delete();
+
+      await this.bankRuleModel().query(trx).findById(ruleId).delete();
 
       // Triggers `onBankRuleDeleted` event.
       await this.eventPublisher.emitAsync(events.bankRules.onDeleted, {

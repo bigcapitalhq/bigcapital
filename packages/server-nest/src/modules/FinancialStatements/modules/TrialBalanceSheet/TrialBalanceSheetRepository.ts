@@ -7,16 +7,17 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { ITrialBalanceSheetQuery } from './TrialBalanceSheet.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class TrialBalanceSheetRepository {
   private query: ITrialBalanceSheetQuery;
 
   @Inject(Account.name)
-  private accountModel: typeof Account;
+  private accountModel: TenantModelProxy<typeof Account>;
 
   @Inject(AccountTransaction.name)
-  private accountTransactionModel: typeof AccountTransaction;
+  private accountTransactionModel: TenantModelProxy<typeof AccountTransaction>;
 
   @Inject(AccountRepository)
   private accountRepository: AccountRepository;
@@ -77,7 +78,7 @@ export class TrialBalanceSheetRepository {
    * @return {Promise<IAccount[]>}
    */
   private getAccounts = () => {
-    return this.accountModel.query();
+    return this.accountModel().query();
   };
 
   /**
@@ -85,18 +86,20 @@ export class TrialBalanceSheetRepository {
    * @param {Date|string} openingDate -
    */
   public closingAccountsTotal = async (openingDate: Date | string) => {
-    return this.accountTransactionModel.query().onBuild((query) => {
-      query.sum('credit as credit');
-      query.sum('debit as debit');
-      query.groupBy('accountId');
-      query.select(['accountId']);
+    return this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.groupBy('accountId');
+        query.select(['accountId']);
 
-      query.modify('filterDateRange', null, openingDate);
-      query.withGraphFetched('account');
+        query.modify('filterDateRange', null, openingDate);
+        query.withGraphFetched('account');
 
-      // @ts-ignore
-      this.commonFilterBranchesQuery(query);
-    });
+        // @ts-ignore
+        this.commonFilterBranchesQuery(query);
+      });
   };
 
   /**

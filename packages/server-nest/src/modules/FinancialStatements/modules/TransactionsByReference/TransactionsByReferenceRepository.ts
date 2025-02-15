@@ -1,4 +1,5 @@
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Inject, Injectable } from '@nestjs/common';
 import { ModelObject } from 'objection';
 
@@ -6,12 +7,13 @@ import { ModelObject } from 'objection';
 export class TransactionsByReferenceRepository {
   constructor(
     @Inject(AccountTransaction.name)
-    private readonly accountTransactionModel: typeof AccountTransaction,
+    private readonly accountTransactionModel: TenantModelProxy<
+      typeof AccountTransaction
+    >,
   ) {}
 
   /**
    * Retrieve the accounts transactions of the givne reference id and type.
-   * @param {number} tenantId - 
    * @param {number} referenceId - Reference id.
    * @param {string} referenceType - Reference type.
    * @return {Promise<IAccountTransaction[]>}
@@ -20,7 +22,8 @@ export class TransactionsByReferenceRepository {
     referenceId: number,
     referenceType: string,
   ): Promise<Array<ModelObject<AccountTransaction>>> {
-    return this.accountTransactionModel.query()
+    return this.accountTransactionModel()
+      .query()
       .where('reference_id', referenceId)
       .where('reference_type', referenceType)
       .withGraphFetched('account');

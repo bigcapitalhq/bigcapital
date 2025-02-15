@@ -12,12 +12,15 @@ import {
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ExcludeBankTransactionService {
   constructor(
     @Inject(UncategorizedBankTransaction.name)
-    private uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
 
     private uow: UnitOfWork,
     private eventEmitter: EventEmitter2,
@@ -30,7 +33,7 @@ export class ExcludeBankTransactionService {
    */
   public async excludeBankTransaction(uncategorizedTransactionId: number) {
     const oldUncategorizedTransaction =
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query()
         .findById(uncategorizedTransactionId)
         .throwIfNotFound();
@@ -47,7 +50,7 @@ export class ExcludeBankTransactionService {
         trx,
       } as IBankTransactionUnexcludingEventPayload);
 
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query(trx)
         .findById(uncategorizedTransactionId)
         .patch({

@@ -9,12 +9,13 @@ import { AccountRepository } from './repositories/Account.repository';
 import { AccountTypesUtils } from './utils/AccountType.utils';
 import { CreateAccountDTO } from './CreateAccount.dto';
 import { EditAccountDTO } from './EditAccount.dto';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CommandAccountValidators {
   constructor(
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
     private readonly accountRepository: AccountRepository,
   ) {}
 
@@ -66,7 +67,7 @@ export class CommandAccountValidators {
     accountId: number,
     notAccountId?: number,
   ) {
-    const parentAccount = await this.accountModel
+    const parentAccount = await this.accountModel()
       .query()
       .findById(accountId)
       .onBuild((query) => {
@@ -89,7 +90,7 @@ export class CommandAccountValidators {
     accountCode: string,
     notAccountId?: number,
   ) {
-    const account = await this.accountModel
+    const account = await this.accountModel()
       .query()
       .where('code', accountCode)
       .onBuild((query) => {

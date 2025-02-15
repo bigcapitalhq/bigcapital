@@ -239,7 +239,7 @@ export class CashFlowTable {
   ): ICashFlowStatementSection => {
     const label = section.footerLabel
       ? section.footerLabel
-      : this.i18n.__('Total {{accountName}}', { accountName: section.label });
+      : this.i18n.t('Total {{accountName}}', { accountName: section.label });
 
     section.children.push({
       sectionType: ICashFlowStatementSectionType.TOTAL,
@@ -300,7 +300,7 @@ export class CashFlowTable {
    * @returns {ITableColumn}
    */
   private totalColumns = (): ITableColumn[] => {
-    return [{ key: 'total', label: this.i18n.__('Total') }];
+    return [{ key: 'total', label: this.i18n.t('Total') }];
   };
 
   /**

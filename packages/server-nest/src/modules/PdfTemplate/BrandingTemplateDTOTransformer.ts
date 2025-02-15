@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { isNil } from 'lodash';
 import { PdfTemplateModel } from './models/PdfTemplate';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class BrandingTemplateDTOTransformer {
@@ -9,13 +10,13 @@ export class BrandingTemplateDTOTransformer {
    */
   constructor(
     @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplate: typeof PdfTemplateModel,
+    private readonly pdfTemplate: TenantModelProxy<typeof PdfTemplateModel>,
   ) {}
 
   /**
    * Associates the default branding template id.
    * @param {string} resource - Resource name.
-   * @param {Record<string, any>} object - 
+   * @param {Record<string, any>} object -
    * @param {string} attributeName
    * @returns
    */
@@ -23,7 +24,7 @@ export class BrandingTemplateDTOTransformer {
     (resource: string) => async (object: Record<string, any>) => {
       const attributeName = 'pdfTemplateId';
 
-      const defaultTemplate = await this.pdfTemplate
+      const defaultTemplate = await this.pdfTemplate()
         .query()
         .modify('default')
         .findOne({ resource });

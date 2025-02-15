@@ -12,6 +12,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { CommandManualJournalValidators } from './CommandManualJournalValidators.service';
 import { events } from '@/common/events/events';
 import { ManualJournal } from '../models/ManualJournal';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditManualJournal {
@@ -21,7 +22,7 @@ export class EditManualJournal {
     private validator: CommandManualJournalValidators,
 
     @Inject(ManualJournal.name)
-    private manualJournalModel: typeof ManualJournal,
+    private manualJournalModel: TenantModelProxy<typeof ManualJournal>,
   ) {}
 
   /**
@@ -91,7 +92,7 @@ export class EditManualJournal {
     oldManualJournal: ManualJournal;
   }> {
     // Validates the manual journal existance on the storage.
-    const oldManualJournal = await this.manualJournalModel
+    const oldManualJournal = await this.manualJournalModel()
       .query()
       .findById(manualJournalId)
       .throwIfNotFound();
@@ -115,11 +116,13 @@ export class EditManualJournal {
       } as IManualJournalEditingPayload);
 
       // Upserts the manual journal graph to the storage.
-      await this.manualJournalModel.query(trx).upsertGraph({
-        ...manualJournalObj,
-      });
+      await this.manualJournalModel()
+        .query(trx)
+        .upsertGraph({
+          ...manualJournalObj,
+        });
       // Retrieve the given manual journal with associated entries after modifications.
-      const manualJournal = await this.manualJournalModel
+      const manualJournal = await this.manualJournalModel()
         .query(trx)
         .findById(manualJournalId)
         .withGraphFetched('entries');

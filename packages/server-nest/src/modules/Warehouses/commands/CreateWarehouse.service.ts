@@ -10,6 +10,7 @@ import { Warehouse } from '../models/Warehouse.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateWarehouse {
@@ -25,7 +26,7 @@ export class CreateWarehouse {
     private readonly validator: WarehouseValidator,
 
     @Inject(Warehouse.name)
-    private readonly warehouseModel: typeof Warehouse,
+    private readonly warehouseModel: TenantModelProxy<typeof Warehouse>,
   ) {}
 
   /**
@@ -43,7 +44,7 @@ export class CreateWarehouse {
    * @param {ICreateWarehouseDTO} warehouseDTO
    */
   public createWarehouse = async (
-    warehouseDTO: ICreateWarehouseDTO
+    warehouseDTO: ICreateWarehouseDTO,
   ): Promise<Warehouse> => {
     // Authorize warehouse before creating.
     await this.authorize(warehouseDTO);
@@ -56,9 +57,11 @@ export class CreateWarehouse {
       } as IWarehouseCreatePayload);
 
       // Creates a new warehouse on the storage.
-      const warehouse = await this.warehouseModel.query(trx).insertAndFetch({
-        ...warehouseDTO,
-      });
+      const warehouse = await this.warehouseModel()
+        .query(trx)
+        .insertAndFetch({
+          ...warehouseDTO,
+        });
 
       // Triggers `onWarehouseCreated` event.
       await this.eventEmitter.emitAsync(events.warehouse.onCreated, {

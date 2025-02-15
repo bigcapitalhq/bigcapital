@@ -8,16 +8,17 @@ import { Warehouse } from '../models/Warehouse.model';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class WarehouseMarkPrimary {
   constructor(
     @Inject(Warehouse.name)
-    private readonly warehouseModel: typeof Warehouse,
+    private readonly warehouseModel: TenantModelProxy<typeof Warehouse>,
+
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
-  ) {
-  }
+  ) {}
 
   /**
    * Marks the given warehouse as primary.
@@ -25,7 +26,7 @@ export class WarehouseMarkPrimary {
    * @returns {Promise<IWarehouse>}
    */
   public async markAsPrimary(warehouseId: number) {
-    const oldWarehouse = await this.warehouseModel
+    const oldWarehouse = await this.warehouseModel()
       .query()
       .findById(warehouseId)
       .throwIfNotFound();
@@ -36,9 +37,9 @@ export class WarehouseMarkPrimary {
         trx,
       } as IWarehouseMarkAsPrimaryPayload);
 
-      await this.warehouseModel.query(trx).update({ primary: false });
+      await this.warehouseModel().query(trx).update({ primary: false });
 
-      const markedWarehouse = await this.warehouseModel
+      const markedWarehouse = await this.warehouseModel()
         .query(trx)
         .patchAndFetchById(warehouseId, { primary: true });
 

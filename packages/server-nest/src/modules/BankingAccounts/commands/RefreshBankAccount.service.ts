@@ -4,12 +4,14 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { PLAID_CLIENT } from '@/modules/Plaid/Plaid.module';
 import { ERRORS } from '../types/BankAccounts.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class RefreshBankAccountService {
   constructor(
     @Inject(PLAID_CLIENT) private plaidClient: PlaidApi,
-    @Inject(Account.name) private readonly accountModel: typeof Account,
+    @Inject(Account.name)
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -18,7 +20,7 @@ export class RefreshBankAccountService {
    * @returns {Promise<void>}
    */
   public async refreshBankAccount(bankAccountId: number) {
-    const bankAccount = await this.accountModel
+    const bankAccount = await this.accountModel()
       .query()
       .findById(bankAccountId)
       .withGraphFetched('plaidItem')

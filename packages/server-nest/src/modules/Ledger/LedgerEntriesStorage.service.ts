@@ -8,6 +8,7 @@ import {
 } from './types/Ledger.types';
 import { ILedger } from './types/Ledger.types';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 // Filter the blank entries.
 const filterBlankEntry = (entry: ILedgerEntry) =>
@@ -16,11 +17,13 @@ const filterBlankEntry = (entry: ILedgerEntry) =>
 @Injectable()
 export class LedgerEntriesStorageService {
   /**
-   * @param {typeof AccountTransaction} accountTransactionModel - Account transaction model.
+   * @param {TenantModelProxy<typeof AccountTransaction>} accountTransactionModel - Account transaction model.
    */
   constructor(
     @Inject(AccountTransaction.name)
-    private readonly accountTransactionModel: typeof AccountTransaction,
+    private readonly accountTransactionModel: TenantModelProxy<
+      typeof AccountTransaction
+    >,
   ) {}
 
   /**
@@ -50,7 +53,10 @@ export class LedgerEntriesStorageService {
       .filter((e) => e.entryId)
       .map((e) => e.entryId);
 
-    await AccountTransaction.query(trx).whereIn('id', entriesIds).delete();
+    await this.accountTransactionModel()
+      .query(trx)
+      .whereIn('id', entriesIds)
+      .delete();
   };
 
   /**
@@ -65,7 +71,7 @@ export class LedgerEntriesStorageService {
   ): Promise<void> => {
     const transaction = transformLedgerEntryToTransaction(entry);
 
-    await this.accountTransactionModel.query(trx).insert(transaction);
+    await this.accountTransactionModel().query(trx).insert(transaction);
   };
 
   /**

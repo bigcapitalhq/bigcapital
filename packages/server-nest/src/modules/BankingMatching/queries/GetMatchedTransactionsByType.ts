@@ -8,10 +8,13 @@ import {
 import PromisePool from '@supercharge/promise-pool';
 import { MatchedBankTransaction } from '../models/MatchedBankTransaction';
 import { Inject } from '@nestjs/common';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 export abstract class GetMatchedTransactionsByType {
   @Inject(MatchedBankTransaction.name)
-  private readonly matchedBankTransactionModel: typeof MatchedBankTransaction;
+  private readonly matchedBankTransactionModel: TenantModelProxy<
+    typeof MatchedBankTransaction
+  >;
 
   /**
    * Retrieves the matched transactions.
@@ -20,10 +23,10 @@ export abstract class GetMatchedTransactionsByType {
    * @returns {Promise<MatchedTransactionsPOJO>}
    */
   public async getMatchedTransactions(
-    filter: GetMatchedTransactionsFilter
+    filter: GetMatchedTransactionsFilter,
   ): Promise<MatchedTransactionsPOJO> {
     throw new Error(
-      'The `getMatchedTransactions` method is not defined for the transaction type.'
+      'The `getMatchedTransactions` method is not defined for the transaction type.',
     );
   }
 
@@ -34,10 +37,10 @@ export abstract class GetMatchedTransactionsByType {
    * @returns {Promise<MatchedTransactionPOJO>}
    */
   public async getMatchedTransaction(
-    transactionId: number
+    transactionId: number,
   ): Promise<MatchedTransactionPOJO> {
     throw new Error(
-      'The `getMatchedTransaction` method is not defined for the transaction type.'
+      'The `getMatchedTransaction` method is not defined for the transaction type.',
     );
   }
 
@@ -51,12 +54,12 @@ export abstract class GetMatchedTransactionsByType {
   public async createMatchedTransaction(
     uncategorizedTransactionIds: Array<number>,
     matchTransactionDTO: IMatchTransactionDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
     await PromisePool.withConcurrency(2)
       .for(uncategorizedTransactionIds)
       .process(async (uncategorizedTransactionId) => {
-        await this.matchedBankTransactionModel.query(trx).insert({
+        await this.matchedBankTransactionModel().query(trx).insert({
           uncategorizedTransactionId,
           referenceType: matchTransactionDTO.referenceType,
           referenceId: matchTransactionDTO.referenceId,

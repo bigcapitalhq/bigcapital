@@ -24,6 +24,7 @@ import { IPlaidTransactionsSyncedEventPayload } from '../types/BankingPlaid.type
 import { UncategorizedBankTransaction } from '../../BankingTransactions/models/UncategorizedBankTransaction';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUncategorizedTransactionService } from '@/modules/BankingCategorize/commands/CreateUncategorizedTransaction.service';
+import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 
 const CONCURRENCY_ASYNC = 10;
 
@@ -36,13 +37,15 @@ export class PlaidSyncDb {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
     @Inject(PlaidItemModel.name)
-    private readonly plaidItemModel: typeof PlaidItemModel,
+    private readonly plaidItemModel: TenantModelProxy<typeof PlaidItemModel>,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -55,7 +58,7 @@ export class PlaidSyncDb {
     createBankAccountDTO: IAccountCreateDTO,
     trx?: Knex.Transaction,
   ) {
-    const plaidAccount = await this.accountModel
+    const plaidAccount = await this.accountModel()
       .query(trx)
       .findOne('plaidAccountId', createBankAccountDTO.plaidAccountId);
     // Can't continue if the Plaid account is already created.
@@ -102,7 +105,7 @@ export class PlaidSyncDb {
     trx?: Knex.Transaction,
   ): Promise<void> {
     const batch = uniqid();
-    const cashflowAccount = await this.accountModel
+    const cashflowAccount = await this.accountModel()
       .query(trx)
       .findOne({ plaidAccountId })
       .throwIfNotFound();
@@ -165,7 +168,7 @@ export class PlaidSyncDb {
     trx?: Knex.Transaction,
   ) {
     const uncategorizedTransactions =
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query(trx)
         .whereIn('plaidTransactionId', plaidTransactionsIds);
     const uncategorizedTransactionsIds = uncategorizedTransactions.map(
@@ -193,7 +196,7 @@ export class PlaidSyncDb {
     lastCursor: string,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    await this.plaidItemModel
+    await this.plaidItemModel()
       .query(trx)
       .findOne({ plaidItemId })
       .patch({ lastCursor });
@@ -208,7 +211,7 @@ export class PlaidSyncDb {
     plaidAccountIds: string[],
     trx?: Knex.Transaction,
   ): Promise<void> {
-    await this.accountModel
+    await this.accountModel()
       .query(trx)
       .whereIn('plaid_account_id', plaidAccountIds)
       .patch({
@@ -227,7 +230,7 @@ export class PlaidSyncDb {
     isFeedsActive: boolean = true,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    await this.accountModel
+    await this.accountModel()
       .query(trx)
       .whereIn('plaid_account_id', plaidAccountIds)
       .patch({

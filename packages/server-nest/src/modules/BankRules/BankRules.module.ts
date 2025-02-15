@@ -20,9 +20,8 @@ const models = [
 
 @Module({
   controllers: [BankRulesController],
-  imports: [forwardRef(() => BankingTransactionsRegonizeModule)],
+  imports: [forwardRef(() => BankingTransactionsRegonizeModule), ...models],
   providers: [
-    ...models,
     CreateBankRuleService,
     EditBankRuleService,
     DeleteBankRuleService,
@@ -30,7 +29,7 @@ const models = [
     GetBankRuleService,
     GetBankRulesService,
     BankRulesApplication,
-    UnlinkBankRuleOnDeleteBankRuleSubscriber
+    UnlinkBankRuleOnDeleteBankRuleSubscriber,
   ],
   exports: [...models, DeleteBankRuleService, DeleteBankRulesService],
 })

@@ -3,15 +3,18 @@ import { ERRORS } from '../../CreditNotes/constants';
 import { RefundCreditNote } from '../models/RefundCreditNote';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { Account } from '@/modules/Accounts/models/Account.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class RefundCreditNoteService {
   /**
-   * @param {typeof RefundCreditNote} refundCreditNoteModel - The refund credit note model.
+   * @param {TenantModelProxy<typeof RefundCreditNote>} refundCreditNoteModel - The refund credit note model.
    */
   constructor(
     @Inject(RefundCreditNote.name)
-    private readonly refundCreditNoteModel: typeof RefundCreditNote,
+    private readonly refundCreditNoteModel: TenantModelProxy<
+      typeof RefundCreditNote
+    >,
   ) {}
 
   /**
@@ -22,7 +25,7 @@ export class RefundCreditNoteService {
   public getCreditNoteRefundOrThrowError = async (
     refundCreditId: number,
   ): Promise<RefundCreditNote> => {
-    const refundCreditNote = await this.refundCreditNoteModel
+    const refundCreditNote = await this.refundCreditNoteModel()
       .query()
       .findById(refundCreditId);
     if (!refundCreditNote) {

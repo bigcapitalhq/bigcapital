@@ -5,6 +5,7 @@ import { AttachmentLinkDTO } from '../../Attachments/Attachments.types';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
 import { CommonMailOptions } from '@/modules/MailNotification/MailNotification.types';
+import { TenantJobPayload } from '@/interfaces/Tenant';
 
 export interface ISalesReceiptsFilter {
   filterQuery?: (query: any) => void;
@@ -33,7 +34,6 @@ export interface ISaleReceiptSmsDetails {
 }
 export interface ISaleReceiptCreatingPayload {
   saleReceiptDTO: ISaleReceiptDTO;
-  // tenantId: number;
   trx: Knex.Transaction;
 }
 
@@ -46,7 +46,6 @@ export interface ISaleReceiptCreatedPayload {
 }
 
 export interface ISaleReceiptEditedPayload {
-  // tenantId: number;
   oldSaleReceipt: SaleReceipt;
   saleReceipt: SaleReceipt;
   // saleReceiptId: number;
@@ -55,20 +54,17 @@ export interface ISaleReceiptEditedPayload {
 }
 
 export interface ISaleReceiptEditingPayload {
-  // tenantId: number;
   oldSaleReceipt: SaleReceipt;
   saleReceiptDTO: ISaleReceiptDTO;
   trx: Knex.Transaction;
 }
 export interface ISaleReceiptEventClosedPayload {
-  // tenantId: number;
   saleReceiptId: number;
   saleReceipt: SaleReceipt;
   trx: Knex.Transaction;
 }
 
 export interface ISaleReceiptEventClosingPayload {
-  // tenantId: number;
   oldSaleReceipt: SaleReceipt;
   trx: Knex.Transaction;
 }
@@ -166,4 +162,9 @@ export interface ISaleReceiptBrandingTemplateAttributes {
 
 export interface ISaleReceiptState {
   defaultTemplateId: number;
+}
+
+export interface SaleReceiptSendMailPayload extends TenantJobPayload {
+  messageOpts: SaleReceiptMailOptsDTO;
+  saleReceiptId: number;
 }

@@ -1,7 +1,6 @@
 import { Knex } from 'knex';
 import { Global, Module, Scope } from '@nestjs/common';
 import { TENANCY_DB_CONNECTION } from '../TenancyDB/TenancyDB.constants';
-
 import { Item } from '../../../modules/Items/models/Item';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
@@ -38,8 +37,8 @@ import { RefundCreditNote } from '@/modules/CreditNoteRefunds/models/RefundCredi
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { RefundVendorCredit } from '@/modules/VendorCreditsRefund/models/RefundVendorCredit';
 import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceived';
-import { BaseModel } from '@/models/Model';
 import { Model } from 'objection';
+import { ClsModule } from 'nestjs-cls';
 
 const models = [
   Item,
@@ -78,7 +77,7 @@ const models = [
   VendorCreditAppliedBill,
   RefundVendorCredit,
   PaymentReceived,
-  PaymentReceivedEntry
+  PaymentReceivedEntry,
 ];
 
 /**
@@ -86,14 +85,17 @@ const models = [
  * @param model The model class to register
  */
 export function RegisterTenancyModel(model: typeof Model) {
-  return {
+  console.log(model.name);
+
+  return ClsModule.forFeatureAsync({
     provide: model.name,
-    inject: [TENANCY_DB_CONNECTION], 
-    scope: Scope.REQUEST,
-    useFactory: async (tenantKnex: Knex) => {
-      return model.bindKnex(tenantKnex);
-    }
-  };
+    inject: [TENANCY_DB_CONNECTION],
+    global: true,
+    useFactory: async (tenantKnex: () => Knex) => () => {
+      return model.bindKnex(tenantKnex());
+    },
+    type: 'function',
+  });
 }
 
 // Register all models using the decorator
@@ -101,7 +103,7 @@ const modelProviders = models.map((model) => RegisterTenancyModel(model));
 
 @Global()
 @Module({
-  providers: [...modelProviders],
+  imports: [...modelProviders],
   exports: [...modelProviders],
 })
 export class TenancyModelsModule {}

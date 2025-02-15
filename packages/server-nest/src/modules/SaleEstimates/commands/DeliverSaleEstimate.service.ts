@@ -11,12 +11,14 @@ import { SaleEstimate } from '../models/SaleEstimate';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeliverSaleEstimateService {
   constructor(
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
+
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
   ) {}
@@ -27,7 +29,7 @@ export class DeliverSaleEstimateService {
    */
   public async deliverSaleEstimate(saleEstimateId: number): Promise<void> {
     // Retrieve details of the given sale estimate id.
-    const oldSaleEstimate = await this.saleEstimateModel
+    const oldSaleEstimate = await this.saleEstimateModel()
       .query()
       .findById(saleEstimateId)
       .throwIfNotFound();
@@ -47,7 +49,7 @@ export class DeliverSaleEstimateService {
       } as ISaleEstimateEventDeliveringPayload);
 
       // Record the delivered at on the storage.
-      const saleEstimate = await this.saleEstimateModel
+      const saleEstimate = await this.saleEstimateModel()
         .query(trx)
         .patchAndFetchById(saleEstimateId, {
           deliveredAt: moment().toMySqlDateTime(),

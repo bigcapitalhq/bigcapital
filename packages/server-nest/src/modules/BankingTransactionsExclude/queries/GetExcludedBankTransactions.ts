@@ -3,14 +3,21 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { ExcludedBankTransactionsQuery } from '../types/BankTransactionsExclude.types';
 import { UncategorizedTransactionTransformer } from '@/modules/BankingCategorize/commands/UncategorizedTransaction.transformer';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetExcludedBankTransactionsService {
+  /**
+   * @param {TransformerInjectable} transformer
+   * @param {TenantModelProxy<typeof UncategorizedBankTransaction>} uncategorizedBankTransaction
+   */
   constructor(
     private readonly transformer: TransformerInjectable,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransaction: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransaction: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -27,7 +34,7 @@ export class GetExcludedBankTransactionsService {
       pageSize: 20,
       ...filter,
     };
-    const { results, pagination } = await this.uncategorizedBankTransaction
+    const { results, pagination } = await this.uncategorizedBankTransaction()
       .query()
       .onBuild((q) => {
         q.modify('excluded');

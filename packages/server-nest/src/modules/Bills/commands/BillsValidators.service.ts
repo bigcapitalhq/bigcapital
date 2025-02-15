@@ -8,22 +8,25 @@ import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { transformToMap } from '@/utils/transform-to-key';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class BillsValidators {
   constructor(
-    @Inject(Bill.name) private billModel: typeof Bill,
+    @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
 
     @Inject(BillPaymentEntry.name)
-    private billPaymentEntryModel: typeof BillPaymentEntry,
+    private billPaymentEntryModel: TenantModelProxy<typeof BillPaymentEntry>,
 
     @Inject(BillLandedCost.name)
-    private billLandedCostModel: typeof BillLandedCost,
+    private billLandedCostModel: TenantModelProxy<typeof BillLandedCost>,
 
     @Inject(VendorCreditAppliedBill.name)
-    private vendorCreditAppliedBillModel: typeof VendorCreditAppliedBill,
+    private vendorCreditAppliedBillModel: TenantModelProxy<
+      typeof VendorCreditAppliedBill
+    >,
 
-    @Inject(Item.name) private itemModel: typeof Item,
+    @Inject(Item.name) private itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -57,7 +60,7 @@ export class BillsValidators {
     billNumber: string,
     notBillId?: number,
   ) {
-    const foundBills = await this.billModel
+    const foundBills = await this.billModel()
       .query()
       .where('bill_number', billNumber)
       .onBuild((builder) => {
@@ -80,7 +83,7 @@ export class BillsValidators {
    */
   public async validateBillHasNoEntries(billId: number) {
     // Retrieve the bill associate payment made entries.
-    const entries = await this.billPaymentEntryModel
+    const entries = await this.billPaymentEntryModel()
       .query()
       .where('bill_id', billId);
 
@@ -105,7 +108,7 @@ export class BillsValidators {
    * @param {number} billId
    */
   public async validateBillHasNoLandedCost(billId: number) {
-    const billLandedCosts = await this.billLandedCostModel
+    const billLandedCosts = await this.billLandedCostModel()
       .query()
       .where('billId', billId);
 
@@ -123,7 +126,7 @@ export class BillsValidators {
     newEntriesDTO: IItemEntryDTO[],
   ) {
     const entriesItemsIds = newEntriesDTO.map((e) => e.itemId);
-    const entriesItems = await this.itemModel
+    const entriesItems = await this.itemModel()
       .query()
       .whereIn('id', entriesItemsIds);
 
@@ -147,9 +150,10 @@ export class BillsValidators {
    * @param {number} billId
    */
   public validateBillHasNoAppliedToCredit = async (billId: number) => {
-    const appliedTransactions = await this.vendorCreditAppliedBillModel
+    const appliedTransactions = await this.vendorCreditAppliedBillModel()
       .query()
       .where('billId', billId);
+
     if (appliedTransactions.length > 0) {
       throw new ServiceError(ERRORS.BILL_HAS_APPLIED_TO_VENDOR_CREDIT);
     }
@@ -160,7 +164,7 @@ export class BillsValidators {
    * @param {number} vendorId - Vendor id.
    */
   public async validateVendorHasNoBills(vendorId: number) {
-    const bills = await this.billModel.query().where('vendor_id', vendorId);
+    const bills = await this.billModel().query().where('vendor_id', vendorId);
 
     if (bills.length > 0) {
       throw new ServiceError(ERRORS.VENDOR_HAS_BILLS);

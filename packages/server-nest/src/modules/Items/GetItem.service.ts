@@ -4,12 +4,12 @@ import { Item } from './models/Item';
 import { events } from '@/common/events/events';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { ItemTransformer } from './Item.transformer';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class GetItemService {
   constructor(
-    @Inject(Item.name)
-    private itemModel: typeof Item,
+    @Inject(Item.name) private itemModel: TenantModelProxy<typeof Item>,
     private eventEmitter2: EventEmitter2,
     private transformerInjectable: TransformerInjectable,
   ) {}
@@ -20,7 +20,7 @@ export class GetItemService {
    * @param {number} itemId - The item id.
    */
   public async getItem(itemId: number): Promise<any> {
-    const item = await this.itemModel
+    const item = await this.itemModel()
       .query()
       .findById(itemId)
       .withGraphFetched('sellAccount')

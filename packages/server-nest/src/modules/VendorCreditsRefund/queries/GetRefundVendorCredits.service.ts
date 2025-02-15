@@ -3,18 +3,21 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { RefundVendorCreditTransformer } from '../commands/RefundVendorCreditTransformer';
 import { IRefundVendorCreditPOJO } from '../types/VendorCreditRefund.types';
 import { RefundVendorCredit } from '../models/RefundVendorCredit';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetRefundVendorCreditsService {
   /**
    * @param {TransformerInjectable} transformer - Transformer injectable service.
-   * @param {typeof RefundVendorCredit} refundVendorCreditModel - Refund vendor credit model.
+   * @param {TenantModelProxy<typeof RefundVendorCredit>} refundVendorCreditModel - Refund vendor credit model.
    */
   constructor(
     private readonly transformer: TransformerInjectable,
 
     @Inject(RefundVendorCredit.name)
-    private readonly refundVendorCreditModel: typeof RefundVendorCredit,
+    private readonly refundVendorCreditModel: TenantModelProxy<
+      typeof RefundVendorCredit
+    >,
   ) {}
 
   /**
@@ -26,13 +29,13 @@ export class GetRefundVendorCreditsService {
     vendorCreditId: number,
   ): Promise<IRefundVendorCreditPOJO[]> => {
     // Retrieve refund transactions associated to the given vendor credit.
-    const refundVendorTransactions = await this.refundVendorCreditModel
+    const refundVendorTransactions = await this.refundVendorCreditModel()
       .query()
       .where('vendorCreditId', vendorCreditId)
       .withGraphFetched('vendorCredit')
       .withGraphFetched('depositAccount');
 
-    // Transformes refund vendor credit models to POJO objects.
+    // Transforms refund vendor credit models to POJO objects.
     return this.transformer.transform(
       refundVendorTransactions,
       new RefundVendorCreditTransformer(),

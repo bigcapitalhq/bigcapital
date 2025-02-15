@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreditNote } from '../../CreditNotes/models/CreditNote';
 import { ERRORS } from '../../CreditNotes/constants';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteCustomerLinkedCreditNoteService {
@@ -10,7 +11,7 @@ export class DeleteCustomerLinkedCreditNoteService {
    */
   constructor(
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
   ) {}
 
   /**
@@ -18,7 +19,7 @@ export class DeleteCustomerLinkedCreditNoteService {
    * @param {number} customerId - The customer identifier.
    */
   public async validateCustomerHasNoCreditTransaction(customerId: number) {
-    const associatedCredits = await this.creditNoteModel
+    const associatedCredits = await this.creditNoteModel()
       .query()
       .where('customerId', customerId);
 

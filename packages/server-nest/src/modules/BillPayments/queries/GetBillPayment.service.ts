@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { BillPayment } from '../models/BillPayment';
 import { BillPaymentTransformer } from './BillPaymentTransformer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetBillPayment {
@@ -9,7 +10,7 @@ export class GetBillPayment {
     private readonly transformer: TransformerInjectable,
 
     @Inject(BillPayment.name)
-    private readonly billPaymentModel: typeof BillPayment,
+    private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
   ) {}
 
   /**
@@ -18,7 +19,7 @@ export class GetBillPayment {
    * @return {Promise<BillPayment>}
    */
   public async getBillPayment(billPyamentId: number): Promise<BillPayment> {
-    const billPayment = await this.billPaymentModel
+    const billPayment = await this.billPaymentModel()
       .query()
       .withGraphFetched('entries.bill')
       .withGraphFetched('vendor')

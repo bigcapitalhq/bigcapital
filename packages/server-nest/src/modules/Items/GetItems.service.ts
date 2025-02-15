@@ -5,15 +5,15 @@ import { DynamicListService } from '../DynamicListing/DynamicList.service';
 import { Item } from './models/Item';
 import { IItemsFilter } from './types/Items.types';
 import { ItemTransformer } from './Item.transformer';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class GetItemsService {
   constructor(
     private readonly dynamicListService: DynamicListService,
     private readonly transformer: TransformerInjectable,
-
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -39,7 +39,7 @@ export class GetItemsService {
       Item,
       filter,
     );
-    const { results: items, pagination } = await this.itemModel
+    const { results: items, pagination } = await this.itemModel()
       .query()
       .onBuild((builder) => {
         builder.modify('inactiveMode', filter.inactiveMode);

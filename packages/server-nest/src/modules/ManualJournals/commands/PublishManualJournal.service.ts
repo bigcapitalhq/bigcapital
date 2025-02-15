@@ -10,6 +10,7 @@ import { CommandManualJournalValidators } from './CommandManualJournalValidators
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ManualJournal } from '../models/ManualJournal';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PublishManualJournal {
@@ -19,7 +20,7 @@ export class PublishManualJournal {
     private validator: CommandManualJournalValidators,
 
     @Inject(ManualJournal.name)
-    private manualJournalModel: typeof ManualJournal,
+    private manualJournalModel: TenantModelProxy<typeof ManualJournal>,
   ) {}
 
   /**
@@ -37,7 +38,7 @@ export class PublishManualJournal {
    */
   public async publishManualJournal(manualJournalId: number): Promise<void> {
     // Find the old manual journal or throw not found error.
-    const oldManualJournal = await this.manualJournalModel
+    const oldManualJournal = await this.manualJournalModel()
       .query()
       .findById(manualJournalId)
       .throwIfNotFound();
@@ -54,11 +55,15 @@ export class PublishManualJournal {
       } as IManualJournalPublishingPayload);
 
       // Mark the given manual journal as published.
-      await this.manualJournalModel.query(trx).findById(manualJournalId).patch({
-        publishedAt: moment().toMySqlDateTime(),
-      });
+      await this.manualJournalModel()
+        .query(trx)
+        .findById(manualJournalId)
+        .patch({
+          publishedAt: moment().toMySqlDateTime(),
+        });
       // Retrieve the manual journal with enrties after modification.
-      const manualJournal = await this.manualJournalModel.query()
+      const manualJournal = await this.manualJournalModel()
+        .query()
         .findById(manualJournalId)
         .withGraphFetched('entries');
 

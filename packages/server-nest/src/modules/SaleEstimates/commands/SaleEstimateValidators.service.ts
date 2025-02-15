@@ -2,12 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ERRORS } from '../constants';
 import { SaleEstimate } from '../models/SaleEstimate';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleEstimateValidators {
   constructor(
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
   ) {}
 
   /**
@@ -29,7 +30,7 @@ export class SaleEstimateValidators {
     estimateNumber: string,
     notEstimateId?: number,
   ) {
-    const foundSaleEstimate = await this.saleEstimateModel
+    const foundSaleEstimate = await this.saleEstimateModel()
       .query()
       .findOne('estimate_number', estimateNumber)
       .onBuild((builder) => {
@@ -70,7 +71,7 @@ export class SaleEstimateValidators {
    * @param {number} customerId - The customer id.
    */
   public async validateCustomerHasNoEstimates(customerId: number) {
-    const estimates = await this.saleEstimateModel
+    const estimates = await this.saleEstimateModel()
       .query()
       .where('customer_id', customerId);
 

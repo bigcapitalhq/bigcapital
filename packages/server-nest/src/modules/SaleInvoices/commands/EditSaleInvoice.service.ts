@@ -13,6 +13,7 @@ import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { events } from '@/common/events/events';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditSaleInvoice {
@@ -24,9 +25,10 @@ export class EditSaleInvoice {
     private readonly uow: UnitOfWork,
 
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
-    
-    @Inject(Customer.name) private readonly customerModel: typeof Customer,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
+
+    @Inject(Customer.name)
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -41,7 +43,7 @@ export class EditSaleInvoice {
     saleInvoiceDTO: ISaleInvoiceEditDTO,
   ): Promise<SaleInvoice> {
     // Retrieve the sale invoice or throw not found service error.
-    const oldSaleInvoice = await this.saleInvoiceModel
+    const oldSaleInvoice = await this.saleInvoiceModel()
       .query()
       .findById(saleInvoiceId)
       .withGraphJoined('entries');
@@ -50,7 +52,7 @@ export class EditSaleInvoice {
     this.validators.validateInvoiceExistance(oldSaleInvoice);
 
     // Validate customer existance.
-    const customer = await this.customerModel
+    const customer = await this.customerModel()
       .query()
       .findById(saleInvoiceDTO.customerId)
       .throwIfNotFound();
@@ -97,7 +99,7 @@ export class EditSaleInvoice {
       } as ISaleInvoiceEditingPayload);
 
       // Upsert the the invoice graph to the storage.
-      const saleInvoice = await this.saleInvoiceModel
+      const saleInvoice = await this.saleInvoiceModel()
         .query()
         .upsertGraphAndFetch({
           id: saleInvoiceId,

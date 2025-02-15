@@ -7,6 +7,7 @@ import { AccountTransaction } from './models/AccountTransaction.model';
 import { Account } from './models/Account.model';
 import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class GetAccountTransactionsService {
@@ -14,10 +15,12 @@ export class GetAccountTransactionsService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(AccountTransaction.name)
-    private readonly accountTransaction: typeof AccountTransaction,
+    private readonly accountTransaction: TenantModelProxy<
+      typeof AccountTransaction
+    >,
 
     @Inject(Account.name)
-    private readonly account: typeof Account,
+    private readonly account: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -29,9 +32,9 @@ export class GetAccountTransactionsService {
   ): Promise<IGetAccountTransactionPOJO[]> => {
     // Retrieve the given account or throw not found error.
     if (filter.accountId) {
-      await this.account.query().findById(filter.accountId).throwIfNotFound();
+      await this.account().query().findById(filter.accountId).throwIfNotFound();
     }
-    const transactions = await this.accountTransaction
+    const transactions = await this.accountTransaction()
       .query()
       .onBuild((query) => {
         query.orderBy('date', 'DESC');

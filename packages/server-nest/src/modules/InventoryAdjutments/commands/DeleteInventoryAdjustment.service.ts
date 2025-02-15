@@ -9,6 +9,7 @@ import {
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { InventoryAdjustmentEntry } from '../models/InventoryAdjustmentEntry';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteInventoryAdjustmentService {
@@ -17,10 +18,14 @@ export class DeleteInventoryAdjustmentService {
     private readonly uow: UnitOfWork,
 
     @Inject(InventoryAdjustment.name)
-    private readonly inventoryAdjustmentModel: typeof InventoryAdjustment,
+    private readonly inventoryAdjustmentModel: TenantModelProxy<
+      typeof InventoryAdjustment
+    >,
 
     @Inject(InventoryAdjustmentEntry.name)
-    private readonly inventoryAdjustmentEntryModel: typeof InventoryAdjustmentEntry,
+    private readonly inventoryAdjustmentEntryModel: TenantModelProxy<
+      typeof InventoryAdjustmentEntry
+    >,
   ) {}
 
   /**
@@ -31,7 +36,7 @@ export class DeleteInventoryAdjustmentService {
     inventoryAdjustmentId: number,
   ): Promise<void> {
     // Retrieve the inventory adjustment or throw not found service error.
-    const oldInventoryAdjustment = await this.inventoryAdjustmentModel
+    const oldInventoryAdjustment = await this.inventoryAdjustmentModel()
       .query()
       .findById(inventoryAdjustmentId)
       .throwIfNotFound();
@@ -46,13 +51,13 @@ export class DeleteInventoryAdjustmentService {
       } as IInventoryAdjustmentDeletingPayload);
 
       // Deletes the inventory adjustment entries.
-      await this.inventoryAdjustmentEntryModel
+      await this.inventoryAdjustmentEntryModel()
         .query(trx)
         .where('adjustment_id', inventoryAdjustmentId)
         .delete();
 
       // Deletes the inventory adjustment transaction.
-      await this.inventoryAdjustmentModel
+      await this.inventoryAdjustmentModel()
         .query(trx)
         .findById(inventoryAdjustmentId)
         .delete();

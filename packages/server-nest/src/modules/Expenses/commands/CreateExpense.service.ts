@@ -12,6 +12,7 @@ import { Expense } from '@/modules/Expenses/models/Expense.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateExpense {
@@ -30,10 +31,10 @@ export class CreateExpense {
     private readonly transformDTO: ExpenseDTOTransformer,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
     @Inject(Expense.name)
-    private readonly expenseModel: typeof Expense,
+    private readonly expenseModel: TenantModelProxy<typeof Expense>,
   ) {}
 
   /**
@@ -42,7 +43,7 @@ export class CreateExpense {
    */
   private authorize = async (expenseDTO: IExpenseCreateDTO) => {
     // Validate payment account existance on the storage.
-    const paymentAccount = await this.accountModel
+    const paymentAccount = await this.accountModel()
       .query()
       .findById(expenseDTO.paymentAccountId)
       .throwIfNotFound();
@@ -52,7 +53,7 @@ export class CreateExpense {
       (category) => category.expenseAccountId,
     );
     // Retrieves the expenses accounts.
-    const expenseAccounts = await this.accountModel
+    const expenseAccounts = await this.accountModel()
       .query()
       .whereIn('id', DTOExpenseAccountsIds);
     // Validate expense accounts exist on the storage.
@@ -104,7 +105,7 @@ export class CreateExpense {
       } as IExpenseCreatingPayload);
 
       // Creates a new expense transaction graph.
-      const expense = await this.expenseModel
+      const expense = await this.expenseModel()
         .query(trx)
         .upsertGraph(expenseObj);
       // Triggers `onExpenseCreated` event.

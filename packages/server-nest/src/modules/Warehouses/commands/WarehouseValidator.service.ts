@@ -1,15 +1,15 @@
-
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { Inject } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { ERRORS } from '../contants';
 import { Warehouse } from '../models/Warehouse.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class WarehouseValidator {
   constructor(
     @Inject(Warehouse.name)
-    private readonly warehouseModel: typeof Warehouse,
+    private readonly warehouseModel: TenantModelProxy<typeof Warehouse>,
   ) {}
 
   /**
@@ -17,7 +17,9 @@ export class WarehouseValidator {
    * @param {number} warehouseId
    */
   public validateWarehouseNotOnlyWarehouse = async (warehouseId: number) => {
-    const warehouses = await this.warehouseModel.query().whereNot('id', warehouseId);
+    const warehouses = await this.warehouseModel()
+      .query()
+      .whereNot('id', warehouseId);
 
     if (warehouses.length === 0) {
       throw new ServiceError(ERRORS.COULD_NOT_DELETE_ONLY_WAERHOUSE);
@@ -33,7 +35,8 @@ export class WarehouseValidator {
     code: string,
     exceptWarehouseId?: number,
   ) => {
-    const warehouse = await this.warehouseModel.query()
+    const warehouse = await this.warehouseModel()
+      .query()
       .onBuild((query) => {
         query.select(['id']);
         query.where('code', code);

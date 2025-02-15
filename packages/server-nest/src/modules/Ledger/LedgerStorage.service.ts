@@ -6,6 +6,7 @@ import { LedegrAccountsStorage } from './LedgetAccountStorage.service';
 import { LedgerEntriesStorageService } from './LedgerEntriesStorage.service';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
 import { Ledger } from './Ledger';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class LedgerStorageService {
@@ -20,7 +21,9 @@ export class LedgerStorageService {
     private ledgerEntriesService: LedgerEntriesStorageService,
 
     @Inject(AccountTransaction.name)
-    private accountTransactionModel: typeof AccountTransaction,
+    private accountTransactionModel: TenantModelProxy<
+      typeof AccountTransaction
+    >,
   ) {}
 
   /**
@@ -78,7 +81,7 @@ export class LedgerStorageService {
     trx?: Knex.Transaction,
   ) => {
     // Retrieves the transactions of the given reference.
-    const transactions = await this.accountTransactionModel
+    const transactions = await this.accountTransactionModel()
       .query(trx)
       .modify('filterByReference', referenceId, referenceType)
       .withGraphFetched('account');

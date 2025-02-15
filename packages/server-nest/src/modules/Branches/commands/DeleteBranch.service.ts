@@ -7,12 +7,13 @@ import { Branch } from '../models/Branch.model';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteBranchService {
   constructor(
     @Inject(Branch.name)
-    private readonly branchModel: typeof Branch,
+    private readonly branchModel: TenantModelProxy<typeof Branch>,
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
     private readonly validator: BranchCommandValidator,
@@ -29,18 +30,18 @@ export class DeleteBranchService {
 
   /**
    * Deletes branch.
-   * @param   {number} branchId
+   * @param {number} branchId
    * @returns {Promise<void>}
    */
   public deleteBranch = async (branchId: number): Promise<void> => {
     // Retrieves the old branch or throw not found service error.
-    const oldBranch = await this.branchModel
+    const oldBranch = await this.branchModel()
       .query()
       .findById(branchId)
       .throwIfNotFound();
-      // .queryAndThrowIfHasRelations({
-      //   type: ERRORS.BRANCH_HAS_ASSOCIATED_TRANSACTIONS,
-      // });
+    // .queryAndThrowIfHasRelations({
+    //   type: ERRORS.BRANCH_HAS_ASSOCIATED_TRANSACTIONS,
+    // });
 
     // Authorize the branch before deleting.
     await this.authorize(branchId);
@@ -53,7 +54,7 @@ export class DeleteBranchService {
         trx,
       } as IBranchDeletePayload);
 
-      await this.branchModel.query().findById(branchId).delete();
+      await this.branchModel().query().findById(branchId).delete();
 
       // Triggers `onBranchCreate` event.
       await this.eventPublisher.emitAsync(events.warehouse.onEdited, {

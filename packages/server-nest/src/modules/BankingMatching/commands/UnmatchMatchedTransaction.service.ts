@@ -4,6 +4,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { MatchedBankTransaction } from '../models/MatchedBankTransaction';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class UnmatchMatchedBankTransaction {
@@ -12,7 +13,9 @@ export class UnmatchMatchedBankTransaction {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(MatchedBankTransaction.name)
-    private readonly matchedBankTransactionModel: typeof MatchedBankTransaction,
+    private readonly matchedBankTransactionModel: TenantModelProxy<
+      typeof MatchedBankTransaction
+    >,
   ) {}
 
   /**
@@ -29,7 +32,7 @@ export class UnmatchMatchedBankTransaction {
         trx,
       } as IBankTransactionUnmatchingEventPayload);
 
-      await this.matchedBankTransactionModel
+      await this.matchedBankTransactionModel()
         .query(trx)
         .where('uncategorizedTransactionId', uncategorizedTransactionId)
         .delete();

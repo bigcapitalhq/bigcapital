@@ -5,6 +5,7 @@ import { Item } from './models/Item';
 import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
 import { ServiceError } from './ServiceError';
 import { IItemEntryDTO } from '../TransactionItemEntry/ItemEntry.types';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -16,12 +17,15 @@ const ERRORS = {
 @Injectable()
 export class ItemsEntriesService {
   /**
-   * @param {typeof Item} itemModel - Item model.
-   * @param {typeof ItemEntry} itemEntryModel - Item entry model.
+   * @param {TenantModelProxy<typeof Item>} itemModel - Item model.
+   * @param {TenantModelProxy<typeof ItemEntry>} itemEntryModel - Item entry model.
    */
   constructor(
-    @Inject(Item.name) private readonly itemModel: typeof Item,
-    @Inject(ItemEntry.name) private readonly itemEntryModel: typeof ItemEntry,
+    @Inject(Item.name)
+    private readonly itemModel: TenantModelProxy<typeof Item>,
+
+    @Inject(ItemEntry.name)
+    private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
   ) {}
 
   /**
@@ -34,12 +38,12 @@ export class ItemsEntriesService {
     referenceType: string,
     referenceId: number,
   ): Promise<ItemEntry[]> {
-    const itemsEntries = await this.itemEntryModel
+    const itemsEntries = await this.itemEntryModel()
       .query()
       .where('reference_type', referenceType)
       .where('reference_id', referenceId);
 
-    const inventoryItems = await this.itemModel
+    const inventoryItems = await this.itemModel()
       .query()
       .whereIn('id', map(itemsEntries, 'itemId'))
       .where('type', 'inventory');
@@ -63,7 +67,7 @@ export class ItemsEntriesService {
   ): Promise<ItemEntry[]> {
     const entriesItemsIds = entries.map((e) => e.itemId);
 
-    const inventoryItems = await this.itemModel
+    const inventoryItems = await this.itemModel()
       .query(trx)
       .whereIn('id', entriesItemsIds)
       .where('type', 'inventory');
@@ -81,7 +85,7 @@ export class ItemsEntriesService {
   public async validateItemsIdsExistance(itemEntries: IItemEntryDTO[]) {
     const itemsIds = itemEntries.map((e) => e.itemId);
 
-    const foundItems = await this.itemModel.query().whereIn('id', itemsIds);
+    const foundItems = await this.itemModel().query().whereIn('id', itemsIds);
 
     const foundItemsIds = foundItems.map((item: Item) => item.id);
     const notFoundItemsIds = difference(itemsIds, foundItemsIds);
@@ -107,7 +111,7 @@ export class ItemsEntriesService {
       .filter((e: ItemEntry) => e.id)
       .map((e: ItemEntry) => e.id);
 
-    const storedEntries = await this.itemEntryModel
+    const storedEntries = await this.itemEntryModel()
       .query()
       .whereIn('reference_id', [referenceId])
       .whereIn('reference_type', [referenceType]);
@@ -128,7 +132,7 @@ export class ItemsEntriesService {
     itemEntries: IItemEntryDTO[],
   ) {
     const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
-    const purchasbleItems = await this.itemModel
+    const purchasbleItems = await this.itemModel()
       .query()
       .where('purchasable', true)
       .whereIn('id', itemsIds);
@@ -148,7 +152,7 @@ export class ItemsEntriesService {
   public async validateNonSellableEntriesItems(itemEntries: IItemEntryDTO[]) {
     const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
 
-    const sellableItems = await this.itemModel
+    const sellableItems = await this.itemModel()
       .query()
       .where('sellable', true)
       .whereIn('id', itemsIds);
@@ -215,7 +219,7 @@ export class ItemsEntriesService {
    */
   public setItemsEntriesDefaultAccounts = async (entries: IItemEntryDTO[]) => {
     const entriesItemsIds = entries.map((e) => e.itemId);
-    const items = await this.itemModel.query().whereIn('id', entriesItemsIds);
+    const items = await this.itemModel().query().whereIn('id', entriesItemsIds);
 
     return entries.map((entry) => {
       const item = items.find((i) => i.id === entry.itemId);
@@ -228,7 +232,7 @@ export class ItemsEntriesService {
         }),
       };
     });
-  }
+  };
 
   /**
    * Retrieve the total items entries.

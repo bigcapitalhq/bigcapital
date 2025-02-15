@@ -7,11 +7,14 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { IAccountEventDeletedPayload } from './Accounts.types';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteAccount {
   constructor(
-    @Inject(Account.name) private accountModel: typeof Account,
+    @Inject(Account.name)
+    private accountModel: TenantModelProxy<typeof Account>,
+
     private eventEmitter: EventEmitter2,
     private uow: UnitOfWork,
     private validator: CommandAccountValidators,
@@ -38,7 +41,7 @@ export class DeleteAccount {
       ? parentAccountId
       : [parentAccountId];
 
-    await this.accountModel
+    await this.accountModel()
       .query(trx)
       .whereIn('parent_account_id', accountsIds)
       .patch({ parentAccountId: null });
@@ -50,7 +53,7 @@ export class DeleteAccount {
    */
   public deleteAccount = async (accountId: number): Promise<void> => {
     // Retrieve account or not found service error.
-    const oldAccount = await this.accountModel.query().findById(accountId);
+    const oldAccount = await this.accountModel().query().findById(accountId);
 
     // Authorize before delete account.
     await this.authorize(accountId, oldAccount);
@@ -67,7 +70,7 @@ export class DeleteAccount {
       await this.unassociateChildrenAccountsFromParent(accountId, trx);
 
       // Deletes account by the given id.
-      await this.accountModel.query(trx).deleteById(accountId);
+      await this.accountModel().query(trx).deleteById(accountId);
 
       // Triggers `onAccountDeleted` event.
       await this.eventEmitter.emitAsync(events.accounts.onDeleted, {

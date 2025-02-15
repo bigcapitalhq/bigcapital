@@ -14,7 +14,7 @@ export class CreateEditCustomerDTO {
 
   /**
    * Transformes the create/edit DTO.
-   * @param   {ICustomerNewDTO | ICustomerEditDTO} customerDTO
+   * @param {ICustomerNewDTO | ICustomerEditDTO} customerDTO
    * @returns
    */
   private transformCommonDTO = (

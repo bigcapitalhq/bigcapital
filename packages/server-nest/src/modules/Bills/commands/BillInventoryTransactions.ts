@@ -4,6 +4,8 @@ import { Bill } from '../models/Bill';
 import { Inject, Injectable } from '@nestjs/common';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { InventoryTransactionsService } from '@/modules/InventoryCost/InventoryTransactions.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+
 @Injectable()
 export class BillInventoryTransactions {
   constructor(
@@ -11,7 +13,7 @@ export class BillInventoryTransactions {
     private readonly inventoryTransactionsService: InventoryTransactionsService,
 
     @Inject(Bill.name)
-    private readonly bill: typeof Bill,
+    private readonly bill: TenantModelProxy<typeof Bill>,
   ) {}
 
   /**
@@ -26,7 +28,7 @@ export class BillInventoryTransactions {
   ): Promise<void> {
     // Retireve bill with assocaited entries and allocated cost entries.
 
-    const bill = await this.bill
+    const bill = await this.bill()
       .query(trx)
       .findById(billId)
       .withGraphFetched('entries.allocatedCostEntries');

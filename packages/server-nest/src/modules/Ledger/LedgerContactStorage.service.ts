@@ -10,6 +10,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Contact } from '../Contacts/models/Contact';
 import { Account } from '../Accounts/models/Account.model';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class LedgerContactsBalanceStorage {
@@ -17,10 +18,10 @@ export class LedgerContactsBalanceStorage {
     private tenancyContext: TenancyContext,
 
     @Inject(Contact.name)
-    private contactModel: typeof Contact,
+    private contactModel: TenantModelProxy<typeof Contact>,
 
     @Inject(Account.name)
-    private accountModel: typeof Account,
+    private accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -69,7 +70,7 @@ export class LedgerContactsBalanceStorage {
   private filterARAPLedgerEntris = async (
     trx?: Knex.Transaction,
   ): Promise<(entry: ILedgerEntry) => boolean> => {
-    const ARAPAccounts = await this.accountModel
+    const ARAPAccounts = await this.accountModel()
       .query(trx)
       .whereIn('accountType', [
         ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE,
@@ -94,7 +95,7 @@ export class LedgerContactsBalanceStorage {
     contactId: number,
     trx?: Knex.Transaction,
   ): Promise<void> => {
-    const contact = await this.contactModel.query(trx).findById(contactId);
+    const contact = await this.contactModel().query(trx).findById(contactId);
     const tenant = await this.tenancyContext.getTenant(true);
 
     // Detarmines whether the contact has foreign currency.

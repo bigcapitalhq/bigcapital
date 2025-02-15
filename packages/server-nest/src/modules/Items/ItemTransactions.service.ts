@@ -5,6 +5,7 @@ import { ItemBillTransactionTransformer } from './ItemBillsTransactions.transfor
 import { ItemReceiptTransactionTransformer } from './ItemReceiptsTransactions.transformer';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class ItemTransactionsService {
@@ -12,7 +13,7 @@ export class ItemTransactionsService {
     private transformer: TransformerInjectable,
 
     @Inject(ItemEntry.name)
-    private readonly itemEntry: typeof ItemEntry,
+    private readonly itemEntry: TenantModelProxy<typeof ItemEntry>,
   ) {}
 
   /**
@@ -20,7 +21,8 @@ export class ItemTransactionsService {
    * @param {number} itemId -
    */
   public async getItemInvoicesTransactions(itemId: number) {
-    const invoiceEntries = await this.itemEntry.query()
+    const invoiceEntries = await this.itemEntry()
+      .query()
       .where('itemId', itemId)
       .where('referenceType', 'SaleInvoice')
       .withGraphJoined('invoice.customer(selectCustomerColumns)')
@@ -43,7 +45,8 @@ export class ItemTransactionsService {
    * @returns
    */
   public async getItemBillTransactions(itemId: number) {
-    const billEntries = await this.itemEntry.query()
+    const billEntries = await this.itemEntry()
+      .query()
       .where('itemId', itemId)
       .where('referenceType', 'Bill')
       .withGraphJoined('bill.vendor(selectVendorColumns)')
@@ -66,7 +69,8 @@ export class ItemTransactionsService {
    * @returns
    */
   public async getItemEstimateTransactions(itemId: number) {
-    const estimatesEntries = await this.itemEntry.query()
+    const estimatesEntries = await this.itemEntry()
+      .query()
       .where('itemId', itemId)
       .where('referenceType', 'SaleEstimate')
       .withGraphJoined('estimate.customer(selectCustomerColumns)')
@@ -89,7 +93,8 @@ export class ItemTransactionsService {
    * @returns
    */
   public async getItemReceiptTransactions(itemId: number) {
-    const receiptsEntries = await this.itemEntry.query()
+    const receiptsEntries = await this.itemEntry()
+      .query()
       .where('itemId', itemId)
       .where('referenceType', 'SaleReceipt')
       .withGraphJoined('receipt.customer(selectCustomerColumns)')

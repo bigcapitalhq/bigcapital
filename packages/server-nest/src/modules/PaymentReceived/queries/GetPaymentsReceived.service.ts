@@ -6,6 +6,7 @@ import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service
 import { PaymentReceived } from '../models/PaymentReceived';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { IPaymentsReceivedFilter } from '../types/PaymentReceived.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetPaymentsReceivedService {
@@ -14,7 +15,9 @@ export class GetPaymentsReceivedService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(PaymentReceived.name)
-    private readonly paymentReceivedModel: typeof PaymentReceived,
+    private readonly paymentReceivedModel: TenantModelProxy<
+      typeof PaymentReceived
+    >,
   ) {}
 
   /**
@@ -34,7 +37,7 @@ export class GetPaymentsReceivedService {
       PaymentReceived,
       filter,
     );
-    const { results, pagination } = await this.paymentReceivedModel
+    const { results, pagination } = await this.paymentReceivedModel()
       .query()
       .onBuild((builder) => {
         builder.withGraphFetched('customer');

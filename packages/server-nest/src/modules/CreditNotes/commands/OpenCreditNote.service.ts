@@ -10,6 +10,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { CreditNote } from '../models/CreditNote';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class OpenCreditNoteService {
@@ -23,7 +24,7 @@ export class OpenCreditNoteService {
     private readonly uow: UnitOfWork,
 
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
   ) {}
 
   /**
@@ -33,7 +34,7 @@ export class OpenCreditNoteService {
    */
   public openCreditNote = async (creditNoteId: number): Promise<CreditNote> => {
     // Retrieve the sale invoice or throw not found service error.
-    const oldCreditNote = await this.creditNoteModel
+    const oldCreditNote = await this.creditNoteModel()
       .query()
       .findById(creditNoteId)
       .throwIfNotFound();
@@ -59,7 +60,7 @@ export class OpenCreditNoteService {
         eventPayload,
       );
       // Saves the credit note graph to the storage.
-      const creditNote = await this.creditNoteModel
+      const creditNote = await this.creditNoteModel()
         .query(trx)
         .updateAndFetchById(creditNoteId, {
           openedAt: new Date(),

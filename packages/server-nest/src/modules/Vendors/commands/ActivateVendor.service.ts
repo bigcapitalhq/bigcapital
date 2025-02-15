@@ -6,6 +6,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Vendor } from '../models/Vendor';
 import { events } from '@/common/events/events';
 import { IVendorActivatedPayload } from '../types/Vendors.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ActivateVendorService {
@@ -15,7 +16,7 @@ export class ActivateVendorService {
     private readonly validators: VendorValidators,
 
     @Inject(Vendor.name)
-    private readonly vendorModel: typeof Vendor,
+    private readonly vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -25,7 +26,7 @@ export class ActivateVendorService {
    */
   public async activateVendor(vendorId: number): Promise<void> {
     // Retrieves the old vendor or throw not found error.
-    const oldVendor = await this.vendorModel
+    const oldVendor = await this.vendorModel()
       .query()
       .findById(vendorId)
       .throwIfNotFound();
@@ -42,7 +43,7 @@ export class ActivateVendorService {
       } as IVendorActivatedPayload);
 
       // Updates the vendor on the storage.
-      const vendor = await this.vendorModel
+      const vendor = await this.vendorModel()
         .query(trx)
         .updateAndFetchById(vendorId, {
           active: true,

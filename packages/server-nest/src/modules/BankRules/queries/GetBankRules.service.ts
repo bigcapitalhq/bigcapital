@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GetBankRulesTransformer } from './GetBankRulesTransformer';
 import { BankRule } from '../models/BankRule';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetBankRulesService {
@@ -9,7 +10,7 @@ export class GetBankRulesService {
     private transformer: TransformerInjectable,
 
     @Inject(BankRule.name)
-    private bankRuleModel: typeof BankRule,
+    private bankRuleModel: TenantModelProxy<typeof BankRule>,
   ) {}
 
   /**
@@ -17,14 +18,11 @@ export class GetBankRulesService {
    * @returns {Promise<any>}
    */
   public async getBankRules(): Promise<any> {
-    const bankRule = await this.bankRuleModel
+    const bankRule = await this.bankRuleModel()
       .query()
       .withGraphFetched('conditions')
       .withGraphFetched('assignAccount');
 
-    return this.transformer.transform(
-      bankRule,
-      new GetBankRulesTransformer()
-    );
+    return this.transformer.transform(bankRule, new GetBankRulesTransformer());
   }
 }

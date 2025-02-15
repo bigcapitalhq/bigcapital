@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ExpenseTransfromer } from './Expense.transformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Expense } from '../models/Expense.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetExpenseService {
@@ -9,7 +10,7 @@ export class GetExpenseService {
     private readonly transformerService: TransformerInjectable,
 
     @Inject(Expense.name)
-    private readonly expenseModel: typeof Expense,
+    private readonly expenseModel: TenantModelProxy<typeof Expense>,
   ) {}
 
   /**
@@ -18,7 +19,7 @@ export class GetExpenseService {
    * @return {Promise<IExpense>}
    */
   public async getExpense(expenseId: number): Promise<Expense> {
-    const expense = await this.expenseModel
+    const expense = await this.expenseModel()
       .query()
       .findById(expenseId)
       .withGraphFetched('categories.expenseAccount')

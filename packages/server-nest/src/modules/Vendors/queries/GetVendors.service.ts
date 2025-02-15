@@ -5,6 +5,7 @@ import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { VendorTransfromer } from './VendorTransformer';
 import { GetVendorsResponse, IVendorsFilter } from '../types/Vendors.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetVendorsService {
@@ -18,7 +19,7 @@ export class GetVendorsService {
     private dynamicListService: DynamicListService,
     private transformer: TransformerInjectable,
 
-    @Inject(Vendor.name) private vendorModel: typeof Vendor,
+    @Inject(Vendor.name) private vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -34,11 +35,11 @@ export class GetVendorsService {
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
-      this.vendorModel,
+      this.vendorModel(),
       filter,
     );
     // Vendors list.
-    const { results, pagination } = await this.vendorModel
+    const { results, pagination } = await this.vendorModel()
       .query()
       .onBuild((builder) => {
         dynamicList.buildQuery()(builder);

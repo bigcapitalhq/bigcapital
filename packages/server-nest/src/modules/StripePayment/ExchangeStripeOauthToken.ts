@@ -6,6 +6,7 @@ import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PaymentIntegration } from './models/PaymentIntegration.model';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class ExchangeStripeOAuthTokenService {
@@ -15,7 +16,9 @@ export class ExchangeStripeOAuthTokenService {
     private readonly uow: UnitOfWork,
 
     @Inject(PaymentIntegration.name)
-    private readonly paymentIntegrationModel: typeof PaymentIntegration,
+    private readonly paymentIntegrationModel: TenantModelProxy<
+      typeof PaymentIntegration
+    >,
   ) {}
 
   /**
@@ -43,7 +46,7 @@ export class ExchangeStripeOAuthTokenService {
 
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Stores the details of the Stripe account.
-      const paymentIntegration = await this.paymentIntegrationModel
+      const paymentIntegration = await this.paymentIntegrationModel()
         .query(trx)
         .insert({
           name: companyName,

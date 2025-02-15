@@ -9,6 +9,7 @@ import { events } from '@/common/events/events';
 import { Item } from './models/Item';
 import { ERRORS } from './Items.constants';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteItemService {
@@ -23,7 +24,7 @@ export class DeleteItemService {
     private readonly uow: UnitOfWork,
 
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -36,13 +37,13 @@ export class DeleteItemService {
     trx?: Knex.Transaction,
   ): Promise<void> {
     // Retrieve the given item or throw not found service error.
-    const oldItem = await this.itemModel
+    const oldItem = await this.itemModel()
       .query()
       .findById(itemId)
       .throwIfNotFound();
-      // .queryAndThrowIfHasRelations({
-      //   type: ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTIONS,
-      // });
+    // .queryAndThrowIfHasRelations({
+    //   type: ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTIONS,
+    // });
 
     // Delete item in unit of work.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
@@ -53,7 +54,7 @@ export class DeleteItemService {
       } as IItemEventDeletingPayload);
 
       // Deletes the item.
-      await this.itemModel.query(trx).findById(itemId).delete();
+      await this.itemModel().query(trx).findById(itemId).delete();
 
       // Triggers `onItemDeleted` event.
       await this.eventEmitter.emitAsync(events.item.onDeleted, {

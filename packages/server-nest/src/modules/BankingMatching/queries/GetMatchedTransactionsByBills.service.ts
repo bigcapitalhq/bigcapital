@@ -13,6 +13,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { IBillPaymentDTO } from '@/modules/BillPayments/types/BillPayments.types';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType {
@@ -21,10 +22,12 @@ export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType 
     private readonly transformer: TransformerInjectable,
 
     @Inject(Bill.name)
-    private readonly billModel: typeof Bill,
+    private readonly billModel: TenantModelProxy<typeof Bill>,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {
     super();
   }
@@ -34,23 +37,23 @@ export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType 
    * @param {number} tenantId -
    * @param {GetMatchedTransactionsFilter} filter -
    */
-  public async getMatchedTransactions(
-    filter: GetMatchedTransactionsFilter,
-  ) {
+  public async getMatchedTransactions(filter: GetMatchedTransactionsFilter) {
     // Retrieves the bill matches.
-    const bills = await Bill.query().onBuild((q) => {
-      q.withGraphJoined('matchedBankTransaction');
-      q.whereNull('matchedBankTransaction.id');
-      q.modify('published');
+    const bills = await this.billModel()
+      .query()
+      .onBuild((q) => {
+        q.withGraphJoined('matchedBankTransaction');
+        q.whereNull('matchedBankTransaction.id');
+        q.modify('published');
 
-      if (filter.fromDate) {
-        q.where('billDate', '>=', filter.fromDate);
-      }
-      if (filter.toDate) {
-        q.where('billDate', '<=', filter.toDate);
-      }
-      q.orderBy('billDate', 'DESC');
-    });
+        if (filter.fromDate) {
+          q.where('billDate', '>=', filter.fromDate);
+        }
+        if (filter.toDate) {
+          q.where('billDate', '<=', filter.toDate);
+        }
+        q.orderBy('billDate', 'DESC');
+      });
 
     return this.transformer.transform(
       bills,
@@ -67,7 +70,7 @@ export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType 
   public async getMatchedTransaction(
     transactionId: number,
   ): Promise<MatchedTransactionPOJO> {
-    const bill = await this.billModel
+    const bill = await this.billModel()
       .query()
       .findById(transactionId)
       .throwIfNotFound();
@@ -97,12 +100,12 @@ export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType 
     );
     const uncategorizedTransactionId = first(uncategorizedTransactionIds);
     const uncategorizedTransaction =
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query(trx)
         .findById(uncategorizedTransactionId)
         .throwIfNotFound();
 
-    const bill = await this.billModel
+    const bill = await this.billModel()
       .query(trx)
       .findById(matchTransactionDTO.referenceId)
       .throwIfNotFound();

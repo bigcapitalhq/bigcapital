@@ -10,6 +10,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Bill } from '../models/Bill';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteBill {
@@ -17,8 +18,12 @@ export class DeleteBill {
     private readonly validators: BillsValidators,
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
-    @Inject(Bill.name) private readonly billModel: typeof Bill,
-    @Inject(ItemEntry.name) private readonly itemEntryModel: typeof ItemEntry,
+
+    @Inject(Bill.name)
+    private readonly billModel: TenantModelProxy<typeof Bill>,
+
+    @Inject(ItemEntry.name)
+    private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
   ) {}
 
   /**
@@ -28,7 +33,7 @@ export class DeleteBill {
    */
   public async deleteBill(billId: number) {
     // Retrieve the given bill or throw not found error.
-    const oldBill = await this.billModel
+    const oldBill = await this.billModel()
       .query()
       .findById(billId)
       .withGraphFetched('entries');
@@ -55,7 +60,8 @@ export class DeleteBill {
       } as IBillEventDeletingPayload);
 
       // Delete all associated bill entries.
-      await this.itemEntryModel.query(trx)
+      await this.itemEntryModel()
+        .query(trx)
         .where('reference_type', 'Bill')
         .where('reference_id', billId)
         .delete();

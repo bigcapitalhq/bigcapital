@@ -9,6 +9,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
 import { ISaleReceiptBrandingTemplateAttributes } from '../types/SaleReceipts.types';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleReceiptsPdfService {
@@ -29,10 +30,12 @@ export class SaleReceiptsPdfService {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: typeof SaleReceipt,
+    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
 
     @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplateModel: typeof PdfTemplateModel,
+    private readonly pdfTemplateModel: TenantModelProxy<
+      typeof PdfTemplateModel
+    >,
   ) {}
 
   /**
@@ -71,7 +74,7 @@ export class SaleReceiptsPdfService {
    * @returns {Promise<string>}
    */
   public async getSaleReceiptFilename(receiptId: number): Promise<string> {
-    const receipt = await this.saleReceiptModel.query().findById(receiptId);
+    const receipt = await this.saleReceiptModel().query().findById(receiptId);
 
     return `Receipt-${receipt.receiptNumber}`;
   }
@@ -91,7 +94,7 @@ export class SaleReceiptsPdfService {
     const templateId =
       saleReceipt.pdfTemplateId ??
       (
-        await this.pdfTemplateModel.query().findOne({
+        await this.pdfTemplateModel().query().findOne({
           resource: 'SaleReceipt',
           default: true,
         })

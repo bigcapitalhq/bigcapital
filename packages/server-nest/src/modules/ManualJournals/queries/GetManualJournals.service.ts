@@ -6,6 +6,7 @@ import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service
 import { ManualJournal } from '../models/ManualJournal';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { IManualJournalsFilter } from '../types/ManualJournals.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetManualJournals {
@@ -14,7 +15,7 @@ export class GetManualJournals {
     private readonly transformer: TransformerInjectable,
 
     @Inject(ManualJournal.name)
-    private readonly manualJournalModel: typeof ManualJournal,
+    private readonly manualJournalModel: TenantModelProxy<typeof ManualJournal>,
   ) {}
 
   /**
@@ -41,10 +42,10 @@ export class GetManualJournals {
 
     // Dynamic service.
     const dynamicService = await this.dynamicListService.dynamicList(
-      this.manualJournalModel,
+      this.manualJournalModel(),
       filter,
     );
-    const { results, pagination } = await this.manualJournalModel
+    const { results, pagination } = await this.manualJournalModel()
       .query()
       .onBuild((builder) => {
         dynamicService.buildQuery()(builder);

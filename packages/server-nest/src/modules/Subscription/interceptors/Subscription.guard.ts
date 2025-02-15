@@ -7,12 +7,15 @@ import {
 } from '@nestjs/common';
 import { PlanSubscription } from '../models/PlanSubscription';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SubscriptionGuard implements CanActivate {
   constructor(
     @Inject(PlanSubscription.name)
-    private readonly planSubscriptionModel: typeof PlanSubscription,
+    private readonly planSubscriptionModel: TenantModelProxy<
+      typeof PlanSubscription
+    >,
     private readonly tenancyContext: TenancyContext,
   ) {}
 
@@ -27,7 +30,7 @@ export class SubscriptionGuard implements CanActivate {
     subscriptionSlug: string = 'main', // Default value
   ): Promise<boolean> {
     const tenant = await this.tenancyContext.getTenant();
-    const subscription = await this.planSubscriptionModel
+    const subscription = await this.planSubscriptionModel()
       .query()
       .findOne('slug', subscriptionSlug)
       .where('tenant_id', tenant.id);

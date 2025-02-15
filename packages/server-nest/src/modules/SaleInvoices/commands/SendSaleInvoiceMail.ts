@@ -9,11 +9,13 @@ import { mergeAndValidateMailOptions } from '@/modules/MailNotification/utils';
 import {
   SaleInvoiceMailOptions,
   SendInvoiceMailDTO,
+  SendSaleInvoiceMailJobPayload,
 } from '../SaleInvoice.types';
 import { ISaleInvoiceMailSend } from '../SaleInvoice.types';
 import { Mail } from '@/modules/Mail/Mail';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
 import { SendSaleInvoiceMailJob, SendSaleInvoiceQueue } from '../constants';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class SendSaleInvoiceMail {
@@ -28,6 +30,8 @@ export class SendSaleInvoiceMail {
     private readonly invoiceMail: SendSaleInvoiceMailCommon,
     private readonly eventEmitter: EventEmitter2,
     private readonly mailTransporter: MailTransporter,
+    private readonly tenancyContect: TenancyContext,
+
     @InjectQueue(SendSaleInvoiceQueue) private readonly sendInvoiceQueue: Queue,
   ) {}
 
@@ -40,11 +44,21 @@ export class SendSaleInvoiceMail {
     saleInvoiceId: number,
     messageOptions: SendInvoiceMailDTO,
   ) {
+    const tenant = await this.tenancyContect.getTenant();
+    const user = await this.tenancyContect.getSystemUser();
+
+    const organizationId = tenant.organizationId;
+    const userId = user.id;
+
     const payload = {
       saleInvoiceId,
       messageOptions,
-    };
+      userId,
+      organizationId,
+    } as SendSaleInvoiceMailJobPayload;
+
     await this.sendInvoiceQueue.add(SendSaleInvoiceMailJob, payload);
+
     // Triggers the event `onSaleInvoicePreMailSend`.
     await this.eventEmitter.emitAsync(events.saleInvoice.onPreMailSend, {
       saleInvoiceId,

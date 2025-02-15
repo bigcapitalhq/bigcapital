@@ -5,12 +5,15 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { ServiceError } from '../../Items/ServiceError';
 import { PdfTemplateModel } from '../models/PdfTemplate';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeletePdfTemplateService {
   constructor(
     @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplateModel: typeof PdfTemplateModel,
+    private readonly pdfTemplateModel: TenantModelProxy<
+      typeof PdfTemplateModel
+    >,
     private readonly uow: UnitOfWork,
     private readonly eventEmitter: EventEmitter2,
   ) {}
@@ -20,7 +23,8 @@ export class DeletePdfTemplateService {
    * @param {number} templateId - Pdf template id.
    */
   public async deletePdfTemplate(templateId: number) {
-    const oldPdfTemplate = await this.pdfTemplateModel.query()
+    const oldPdfTemplate = await this.pdfTemplateModel()
+      .query()
       .findById(templateId)
       .throwIfNotFound();
 
@@ -36,7 +40,7 @@ export class DeletePdfTemplateService {
         oldPdfTemplate,
         trx,
       });
-      await this.pdfTemplateModel.query(trx).deleteById(templateId);
+      await this.pdfTemplateModel().query(trx).deleteById(templateId);
 
       // Triggers `onPdfTemplateDeleted` event.
       await this.eventEmitter.emitAsync(events.pdfTemplate.onDeleted, {

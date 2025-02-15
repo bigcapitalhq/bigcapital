@@ -8,7 +8,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { events } from '@/common/events/events';
 import { PaymentLink } from '@/modules/PaymentLinks/models/PaymentLink';
 import { SaleInvoice } from '../models/SaleInvoice';
-
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GenerateShareLink {
@@ -16,8 +16,12 @@ export class GenerateShareLink {
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
     private transformer: TransformerInjectable,
-    @Inject(SaleInvoice.name) private saleInvoiceModel: typeof SaleInvoice,
-    @Inject(PaymentLink.name) private paymentLinkModel: typeof PaymentLink,
+
+    @Inject(SaleInvoice.name)
+    private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
+
+    @Inject(PaymentLink.name)
+    private paymentLinkModel: TenantModelProxy<typeof PaymentLink>,
   ) {}
 
   /**
@@ -29,9 +33,10 @@ export class GenerateShareLink {
   async generatePaymentLink(
     saleInvoiceId: number,
     publicity: string = 'private',
-    expiryTime: string = ''
+    expiryTime: string = '',
   ) {
-    const foundInvoice = await this.saleInvoiceModel.query()
+    const foundInvoice = await this.saleInvoiceModel()
+      .query()
       .findById(saleInvoiceId)
       .throwIfNotFound();
 
@@ -47,9 +52,9 @@ export class GenerateShareLink {
       // Triggers `onPublicSharableLinkGenerating` event.
       await this.eventPublisher.emitAsync(
         events.saleInvoice.onPublicLinkGenerating,
-        { ...commonEventPayload, trx }
+        { ...commonEventPayload, trx },
       );
-      const paymentLink = await this.paymentLinkModel.query().insert({
+      const paymentLink = await this.paymentLinkModel().query().insert({
         linkId,
         publicity,
         resourceId: foundInvoice.id,
@@ -62,11 +67,11 @@ export class GenerateShareLink {
           ...commonEventPayload,
           paymentLink,
           trx,
-        }
+        },
       );
       return this.transformer.transform(
         paymentLink,
-        new GeneratePaymentLinkTransformer()
+        new GeneratePaymentLinkTransformer(),
       );
     });
   }

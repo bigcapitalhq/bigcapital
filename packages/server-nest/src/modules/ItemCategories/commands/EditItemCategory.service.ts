@@ -11,6 +11,7 @@ import { Knex } from 'knex';
 import { ItemCategory } from '../models/ItemCategory.model';
 import { Inject } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 export class EditItemCategoryService {
   /**
@@ -25,8 +26,9 @@ export class EditItemCategoryService {
     private readonly validator: CommandItemCategoryValidatorService,
     private readonly eventEmitter: EventEmitter2,
     private readonly tenancyContext: TenancyContext,
+
     @Inject(ItemCategory.name)
-    private readonly itemCategoryModel: typeof ItemCategory,
+    private readonly itemCategoryModel: TenantModelProxy<typeof ItemCategory>,
   ) {}
 
   /**
@@ -41,7 +43,7 @@ export class EditItemCategoryService {
     itemCategoryOTD: IItemCategoryOTD,
   ): Promise<ItemCategory> {
     // Retrieve the item category from the storage.
-    const oldItemCategory = await this.itemCategoryModel
+    const oldItemCategory = await this.itemCategoryModel()
       .query()
       .findById(itemCategoryId)
       .throwIfNotFound();

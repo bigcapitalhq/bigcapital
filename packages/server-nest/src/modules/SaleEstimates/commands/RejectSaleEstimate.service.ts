@@ -7,13 +7,13 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
 import { events } from '@/common/events/events';
-
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class RejectSaleEstimateService {
   constructor(
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
   ) {}
@@ -24,7 +24,8 @@ export class RejectSaleEstimateService {
    */
   public async rejectSaleEstimate(saleEstimateId: number): Promise<void> {
     // Retrieve details of the given sale estimate id.
-    const saleEstimate = await this.saleEstimateModel.query()
+    const saleEstimate = await this.saleEstimateModel()
+      .query()
       .findById(saleEstimateId)
       .throwIfNotFound();
 
@@ -39,10 +40,13 @@ export class RejectSaleEstimateService {
 
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Mark the sale estimate as reject on the storage.
-      await this.saleEstimateModel.query(trx).where('id', saleEstimateId).patch({
-        rejectedAt: moment().toMySqlDateTime(),
-        approvedAt: null,
-      });
+      await this.saleEstimateModel()
+        .query(trx)
+        .where('id', saleEstimateId)
+        .patch({
+          rejectedAt: moment().toMySqlDateTime(),
+          approvedAt: null,
+        });
       // Triggers `onSaleEstimateRejected` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onRejected, {});
     });

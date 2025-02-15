@@ -8,6 +8,7 @@ import {
   GetCustomersResponse,
   ICustomersFilter,
 } from '../types/Customers.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetCustomers {
@@ -15,7 +16,8 @@ export class GetCustomers {
     private dynamicListService: DynamicListService,
     private transformer: TransformerInjectable,
 
-    @Inject(Customer.name) private customerModel: typeof Customer,
+    @Inject(Customer.name)
+    private customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -38,10 +40,10 @@ export class GetCustomers {
     const filter = this.parseCustomersListFilterDTO(filterDTO);
 
     const dynamicList = await this.dynamicListService.dynamicList(
-      this.customerModel,
+      this.customerModel(),
       filter,
     );
-    const { results, pagination } = await this.customerModel
+    const { results, pagination } = await this.customerModel()
       .query()
       .onBuild((builder) => {
         dynamicList.buildQuery()(builder);

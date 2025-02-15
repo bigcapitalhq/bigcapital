@@ -20,7 +20,7 @@ export class SendSaleInvoiceMailCommon {
     private generatePaymentLinkService: GenerateShareLink,
 
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: () => typeof SaleInvoice,
   ) {}
 
   /**
@@ -35,7 +35,7 @@ export class SendSaleInvoiceMailCommon {
     defaultSubject: string = DEFAULT_INVOICE_MAIL_SUBJECT,
     defaultMessage: string = DEFAULT_INVOICE_MAIL_CONTENT,
   ): Promise<SaleInvoiceMailOptions> {
-    const saleInvoice = await this.saleInvoiceModel
+    const saleInvoice = await this.saleInvoiceModel()
       .query()
       .findById(invoiceId)
       .throwIfNotFound();
@@ -97,7 +97,7 @@ export class SendSaleInvoiceMailCommon {
    * @param {string} text - The given text.
    * @returns {Promise<string>}
    */
-  // @ts-nocheck 
+  // @ts-nocheck
   public getInvoiceFormatterArgs = async (
     invoiceId: number,
   ): Promise<Record<string, string | number>> => {

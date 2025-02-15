@@ -12,6 +12,7 @@ import { Contact } from '@/modules/Contacts/models/Contact';
 import { events } from '@/common/events/events';
 import { Knex } from 'knex';
 import { VendorCreditDTOTransformService } from './VendorCreditDTOTransform.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditVendorCreditService {
@@ -29,10 +30,10 @@ export class EditVendorCreditService {
     private readonly vendorCreditDTOTransform: VendorCreditDTOTransformService,
 
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
 
     @Inject(Contact.name)
-    private readonly contactModel: typeof Contact,
+    private readonly contactModel: TenantModelProxy<typeof Contact>,
   ) {}
 
   /**
@@ -45,13 +46,13 @@ export class EditVendorCreditService {
     trx?: Knex.Transaction,
   ) => {
     // Retrieve the vendor credit or throw not found service error.
-    const oldVendorCredit = await this.vendorCreditModel
+    const oldVendorCredit = await this.vendorCreditModel()
       .query()
       .findById(vendorCreditId)
       .throwIfNotFound();
 
     // Validate customer existance.
-    const vendor = await this.contactModel
+    const vendor = await this.contactModel()
       .query()
       .modify('vendor')
       .findById(vendorCreditDTO.vendorId)
@@ -88,7 +89,7 @@ export class EditVendorCreditService {
       } as IVendorCreditEditingPayload);
 
       // Saves the vendor credit graph to the storage.
-      const vendorCredit = await this.vendorCreditModel
+      const vendorCredit = await this.vendorCreditModel()
         .query(trx)
         .upsertGraphAndFetch({
           id: vendorCreditId,

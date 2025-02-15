@@ -14,6 +14,7 @@ import { PaymentReceived } from '../models/PaymentReceived';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { formatDateFields } from '@/utils/format-date-fields';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PaymentReceiveDTOTransformer {
@@ -24,7 +25,9 @@ export class PaymentReceiveDTOTransformer {
     private readonly brandingTemplatesTransformer: BrandingTemplateDTOTransformer,
 
     @Inject(PaymentReceived.name)
-    private readonly paymentReceivedModel: typeof PaymentReceived,
+    private readonly paymentReceivedModel: TenantModelProxy<
+      typeof PaymentReceived
+    >,
   ) {}
 
   /**
@@ -36,15 +39,14 @@ export class PaymentReceiveDTOTransformer {
   public async transformPaymentReceiveDTOToModel(
     customer: Customer,
     paymentReceiveDTO: IPaymentReceivedCreateDTO | IPaymentReceivedEditDTO,
-    oldPaymentReceive?: PaymentReceived
+    oldPaymentReceive?: PaymentReceived,
   ): Promise<PaymentReceived> {
     const amount =
       paymentReceiveDTO.amount ??
       sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
     // Retreive the next invoice number.
-    const autoNextNumber =
-      this.increments.getNextPaymentReceiveNumber();
+    const autoNextNumber = this.increments.getNextPaymentReceiveNumber();
 
     // Retrieve the next payment receive number.
     const paymentReceiveNo =
@@ -56,7 +58,7 @@ export class PaymentReceiveDTOTransformer {
 
     const entries = R.compose(
       // Associate the default index to each item entry line.
-      assocItemEntriesDefaultIndex
+      assocItemEntriesDefaultIndex,
     )(paymentReceiveDTO.entries);
 
     const initialDTO = {
@@ -72,12 +74,12 @@ export class PaymentReceiveDTOTransformer {
     const initialAsyncDTO = await composeAsync(
       // Assigns the default branding template id to the invoice DTO.
       this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
-        'SaleInvoice'
-      )  
+        'SaleInvoice',
+      ),
     )(initialDTO);
 
-    return R.compose(
-      this.branchDTOTransform.transformDTO<PaymentReceived>
-    )(initialAsyncDTO) as PaymentReceived;
+    return R.compose(this.branchDTOTransform.transformDTO<PaymentReceived>)(
+      initialAsyncDTO,
+    ) as PaymentReceived;
   }
 }

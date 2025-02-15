@@ -5,6 +5,7 @@ import { SaleInvoice } from '../models/SaleInvoice';
 import { SaleInvoiceTransformer } from './SaleInvoice.transformer';
 import { CommandSaleInvoiceValidators } from '../commands/CommandSaleInvoiceValidators.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetSaleInvoice {
@@ -14,7 +15,7 @@ export class GetSaleInvoice {
     private eventPublisher: EventEmitter2,
 
     @Inject(SaleInvoice.name)
-    private saleInvoiceModel: typeof SaleInvoice,
+    private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -24,7 +25,7 @@ export class GetSaleInvoice {
    * @return {Promise<ISaleInvoice>}
    */
   public async getSaleInvoice(saleInvoiceId: number): Promise<SaleInvoice> {
-    const saleInvoice = await this.saleInvoiceModel
+    const saleInvoice = await this.saleInvoiceModel()
       .query()
       .findById(saleInvoiceId)
       .withGraphFetched('entries.item')

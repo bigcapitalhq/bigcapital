@@ -21,9 +21,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 @Module({
   imports: [LedgerModule, BranchesModule, DynamicListModule],
   controllers: [ExpensesController],
-  exports: [
-    CreateExpense,
-  ],
+  exports: [CreateExpense],
   providers: [
     CreateExpense,
     ExpenseDTOTransformer,
@@ -42,4 +40,3 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
   ],
 })
 export class ExpensesModule {}
-

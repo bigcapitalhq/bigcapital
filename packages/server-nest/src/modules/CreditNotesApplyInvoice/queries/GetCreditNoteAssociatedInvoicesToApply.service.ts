@@ -3,6 +3,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { GetCreditNote } from '../../CreditNotes/queries/GetCreditNote.service';
 import { CreditNoteWithInvoicesToApplyTransformer } from './CreditNoteWithInvoicesToApplyTransformer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetCreditNoteAssociatedInvoicesToApply {
@@ -16,7 +17,7 @@ export class GetCreditNoteAssociatedInvoicesToApply {
     private getCreditNote: GetCreditNote,
 
     @Inject(SaleInvoice.name)
-    private saleInvoiceModel: typeof SaleInvoice,
+    private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -31,7 +32,7 @@ export class GetCreditNoteAssociatedInvoicesToApply {
     const creditNote = await this.getCreditNote.getCreditNote(creditNoteId);
 
     // Retrieves the published due invoices that associated to the given customer.
-    const saleInvoices = await this.saleInvoiceModel
+    const saleInvoices = await this.saleInvoiceModel()
       .query()
       .where('customerId', creditNote.customerId)
       .modify('dueInvoices')

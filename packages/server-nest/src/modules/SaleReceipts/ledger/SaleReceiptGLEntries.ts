@@ -4,6 +4,7 @@ import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { SaleReceiptGL } from './SaleReceiptGL';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleReceiptGLEntries {
@@ -12,7 +13,7 @@ export class SaleReceiptGLEntries {
     private readonly accountRepository: AccountRepository,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: typeof SaleReceipt,
+    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
   ) {}
 
   /**
@@ -22,17 +23,16 @@ export class SaleReceiptGLEntries {
    */
   public writeIncomeGLEntries = async (
     saleReceiptId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    const saleReceipt = await this.saleReceiptModel.query(trx)
+    const saleReceipt = await this.saleReceiptModel()
+      .query(trx)
       .findById(saleReceiptId)
       .withGraphFetched('entries.item');
 
     // Find or create the discount expense account.
-    const discountAccount = await this.accountRepository.findOrCreateDiscountAccount(
-      {},
-      trx
-    );
+    const discountAccount =
+      await this.accountRepository.findOrCreateDiscountAccount({}, trx);
     // Find or create the other charges account.
     const otherChargesAccount =
       await this.accountRepository.findOrCreateOtherChargesAccount({}, trx);
@@ -55,12 +55,12 @@ export class SaleReceiptGLEntries {
    */
   public revertReceiptGLEntries = async (
     saleReceiptId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     await this.ledgerStorage.deleteByReference(
       saleReceiptId,
       'SaleReceipt',
-      trx
+      trx,
     );
   };
 
@@ -72,7 +72,7 @@ export class SaleReceiptGLEntries {
    */
   public rewriteReceiptGLEntries = async (
     saleReceiptId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     // Reverts the receipt GL entries.
     await this.revertReceiptGLEntries(saleReceiptId, trx);

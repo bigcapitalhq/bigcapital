@@ -11,6 +11,7 @@ import {
   RemovedTransaction,
 } from 'plaid';
 import { PLAID_CLIENT } from '@/modules/Plaid/Plaid.module';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PlaidUpdateTransactions {
@@ -19,7 +20,7 @@ export class PlaidUpdateTransactions {
     private readonly uow: UnitOfWork,
 
     @Inject(PlaidItem.name)
-    private readonly plaidItemModel: typeof PlaidItem,
+    private readonly plaidItemModel: TenantModelProxy<typeof PlaidItem>,
 
     @Inject(PLAID_CLIENT)
     private readonly plaidClient: PlaidApi,
@@ -105,9 +106,10 @@ export class PlaidUpdateTransactions {
   ): Promise<PlaidFetchedTransactionsUpdates> {
     // the transactions endpoint is paginated, so we may need to hit it multiple times to
     // retrieve all available transactions.
-    const plaidItem = await this.plaidItemModel
+    const plaidItem = await this.plaidItemModel()
       .query()
       .findOne('plaidItemId', plaidItemId);
+
     if (!plaidItem) {
       throw new Error('The given Plaid item id is not found.');
     }

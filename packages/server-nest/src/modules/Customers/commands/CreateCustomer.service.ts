@@ -10,6 +10,7 @@ import {
   ICustomerEventCreatingPayload,
   ICustomerNewDTO,
 } from '../types/Customers.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateCustomer {
@@ -25,7 +26,7 @@ export class CreateCustomer {
     private readonly customerDTO: CreateEditCustomerDTO,
 
     @Inject(Customer.name)
-    private readonly customerModel: typeof Customer,
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -49,9 +50,11 @@ export class CreateCustomer {
       } as ICustomerEventCreatingPayload);
 
       // Creates a new contact as customer.
-      const customer = await this.customerModel.query(trx).insertAndFetch({
-        ...customerObj,
-      });
+      const customer = await this.customerModel()
+        .query(trx)
+        .insertAndFetch({
+          ...customerObj,
+        });
       // Triggers `onCustomerCreated` event.
       await this.eventPublisher.emitAsync(events.customers.onCreated, {
         customer,

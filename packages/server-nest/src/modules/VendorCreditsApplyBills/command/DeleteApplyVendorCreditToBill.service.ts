@@ -7,6 +7,7 @@ import { IVendorCreditApplyToBillDeletedPayload } from '../types/VendorCreditApp
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { ERRORS } from '../VendorCreditsApplyBills.constants';
 import { VendorCreditAppliedBill } from '../models/VendorCreditAppliedBill';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteApplyVendorCreditToBillService {
@@ -19,12 +20,14 @@ export class DeleteApplyVendorCreditToBillService {
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
-    
+
     @Inject(VendorCreditAppliedBill.name)
-    private readonly vendorCreditAppliedBillModel: typeof VendorCreditAppliedBill,
+    private readonly vendorCreditAppliedBillModel: TenantModelProxy<
+      typeof VendorCreditAppliedBill
+    >,
 
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -33,7 +36,7 @@ export class DeleteApplyVendorCreditToBillService {
    * @returns {Promise<void>}
    */
   public async deleteApplyVendorCreditToBills(appliedCreditToBillId: number) {
-    const oldCreditAppliedToBill = await this.vendorCreditAppliedBillModel
+    const oldCreditAppliedToBill = await this.vendorCreditAppliedBillModel()
       .query()
       .findById(appliedCreditToBillId);
 
@@ -41,7 +44,7 @@ export class DeleteApplyVendorCreditToBillService {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_APPLY_TO_BILLS_NOT_FOUND);
     }
     // Retrieve the vendor credit or throw not found service error.
-    const vendorCredit = await this.vendorCreditModel
+    const vendorCredit = await this.vendorCreditModel()
       .query()
       .findById(oldCreditAppliedToBill.vendorCreditId)
       .throwIfNotFound();
@@ -49,7 +52,7 @@ export class DeleteApplyVendorCreditToBillService {
     // Deletes vendor credit apply under unit-of-work environment.
     return this.uow.withTransaction(async (trx) => {
       // Delete vendor credit applied to bill transaction.
-      await this.vendorCreditAppliedBillModel
+      await this.vendorCreditAppliedBillModel()
         .query(trx)
         .findById(appliedCreditToBillId)
         .delete();

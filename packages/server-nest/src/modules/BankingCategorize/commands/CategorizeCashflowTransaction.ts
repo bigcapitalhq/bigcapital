@@ -16,6 +16,7 @@ import { CreateBankTransactionService } from '../../BankingTransactions/commands
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CategorizeCashflowTransaction {
@@ -26,7 +27,9 @@ export class CategorizeCashflowTransaction {
     private readonly createBankTransaction: CreateBankTransactionService,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -41,7 +44,8 @@ export class CategorizeCashflowTransaction {
 
     // Retrieves the uncategorized transaction or throw an error.
     const oldUncategorizedTransactions =
-      await this.uncategorizedBankTransactionModel.query()
+      await this.uncategorizedBankTransactionModel()
+        .query()
         .whereIn('id', uncategorizedTransactionIds)
         .throwIfNotFound();
 
@@ -81,7 +85,8 @@ export class CategorizeCashflowTransaction {
         );
 
       // Updates the uncategorized transaction as categorized.
-      await this.uncategorizedBankTransactionModel.query(trx)
+      await this.uncategorizedBankTransactionModel()
+        .query(trx)
         .whereIn('id', uncategorizedTransactionIds)
         .patch({
           categorized: true,
@@ -90,10 +95,9 @@ export class CategorizeCashflowTransaction {
         });
       // Fetch the new updated uncategorized transactions.
       const uncategorizedTransactions =
-        await this.uncategorizedBankTransactionModel.query(trx).whereIn(
-          'id',
-          uncategorizedTransactionIds,
-        );
+        await this.uncategorizedBankTransactionModel()
+          .query(trx)
+          .whereIn('id', uncategorizedTransactionIds);
       // Triggers `onCashflowTransactionCategorized` event.
       await this.eventPublisher.emitAsync(
         events.cashflow.onTransactionCategorized,

@@ -5,12 +5,16 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ResumeBankAccountFeedsService {
   constructor(
-    @Inject(Account.name) private accountModel: typeof Account,
-    @Inject(PlaidItem.name) private plaidItemModel: typeof PlaidItem,
+    @Inject(Account.name)
+    private accountModel: TenantModelProxy<typeof Account>,
+
+    @Inject(PlaidItem.name)
+    private plaidItemModel: TenantModelProxy<typeof PlaidItem>,
 
     private uow: UnitOfWork,
   ) {}
@@ -21,7 +25,7 @@ export class ResumeBankAccountFeedsService {
    * @returns {Promise<void>}
    */
   public async resumeBankAccountFeeds(bankAccountId: number) {
-    const oldAccount = await this.accountModel
+    const oldAccount = await this.accountModel()
       .query()
       .findById(bankAccountId)
       .withGraphFetched('plaidItem');
@@ -35,7 +39,7 @@ export class ResumeBankAccountFeedsService {
       throw new ServiceError(ERRORS.BANK_ACCOUNT_FEEDS_ALREADY_RESUMED);
     }
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
-      await this.plaidItemModel
+      await this.plaidItemModel()
         .query(trx)
         .findById(oldAccount.plaidItem.id)
         .patch({

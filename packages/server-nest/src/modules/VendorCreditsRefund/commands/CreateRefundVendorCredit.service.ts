@@ -16,6 +16,7 @@ import { IVendorCreditCreatePayload } from '@/modules/VendorCredit/types/VendorC
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateRefundVendorCredit {
@@ -25,13 +26,15 @@ export class CreateRefundVendorCredit {
     private readonly branchDTOTransform: BranchTransactionDTOTransformer,
 
     @Inject(RefundVendorCredit.name)
-    private readonly refundVendorCreditModel: typeof RefundVendorCredit,
+    private readonly refundVendorCreditModel: TenantModelProxy<
+      typeof RefundVendorCredit
+    >,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -45,13 +48,13 @@ export class CreateRefundVendorCredit {
     refundVendorCreditDTO: IRefundVendorCreditDTO,
   ): Promise<RefundVendorCredit> => {
     // Retrieve the vendor credit or throw not found service error.
-    const vendorCredit = await this.vendorCreditModel
+    const vendorCredit = await this.vendorCreditModel()
       .query()
       .findById(vendorCreditId)
       .throwIfNotFound();
 
     // Retrieve the deposit account or throw not found service error.
-    const depositAccount = await this.accountModel
+    const depositAccount = await this.accountModel()
       .query()
       .findById(refundVendorCreditDTO.depositAccountId)
       .throwIfNotFound();
@@ -88,7 +91,7 @@ export class CreateRefundVendorCredit {
         eventPayload as IRefundVendorCreditCreatingPayload,
       );
       // Inserts refund vendor credit to the storage layer.
-      const refundVendorCredit = await this.refundVendorCreditModel
+      const refundVendorCredit = await this.refundVendorCreditModel()
         .query()
         .insertAndFetch(refundCreditObj);
 

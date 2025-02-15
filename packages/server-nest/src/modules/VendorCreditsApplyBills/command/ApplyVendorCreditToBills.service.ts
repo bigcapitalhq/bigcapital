@@ -16,6 +16,7 @@ import { Bill } from '@/modules/Bills/models/Bill';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { events } from '@/common/events/events';
 import { VendorCreditDTOTransformService } from '@/modules/VendorCredit/commands/VendorCreditDTOTransform.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ApplyVendorCreditToBillsService {
@@ -23,8 +24,8 @@ export class ApplyVendorCreditToBillsService {
    * @param {UnitOfWork} uow - The unit of work service.
    * @param {EventEmitter2} eventPublisher - The event emitter service.
    * @param {BillPaymentValidators} billPaymentValidators - The bill payment validators service.
-   * @param {typeof VendorCreditAppliedBill} vendorCreditAppliedBillModel - The vendor credit applied bill model.
-   * @param {typeof VendorCredit} vendorCreditModel - The vendor credit model.
+   * @param {TenantModelProxy<typeof VendorCreditAppliedBill>} vendorCreditAppliedBillModel - The vendor credit applied bill model.
+   * @param {TenantModelProxy<typeof VendorCredit>} vendorCreditModel - The vendor credit model.
    */
   constructor(
     private readonly uow: UnitOfWork,
@@ -33,10 +34,12 @@ export class ApplyVendorCreditToBillsService {
     private readonly vendorCreditDTOTransform: VendorCreditDTOTransformService,
 
     @Inject(VendorCreditAppliedBill.name)
-    private readonly vendorCreditAppliedBillModel: typeof VendorCreditAppliedBill,
+    private readonly vendorCreditAppliedBillModel: TenantModelProxy<
+      typeof VendorCreditAppliedBill
+    >,
 
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -49,7 +52,7 @@ export class ApplyVendorCreditToBillsService {
     applyCreditToBillsDTO: IVendorCreditApplyToInvoicesDTO,
   ): Promise<void> => {
     // Retrieves the vendor credit or throw not found service error.
-    const vendorCredit = await this.vendorCreditModel
+    const vendorCredit = await this.vendorCreditModel()
       .query()
       .findById(vendorCreditId)
       .throwIfNotFound();
@@ -80,7 +83,7 @@ export class ApplyVendorCreditToBillsService {
     // Saves vendor credit applied to bills under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Inserts vendor credit applied to bills graph to the storage layer.
-      const vendorCreditAppliedBills = await this.vendorCreditAppliedBillModel
+      const vendorCreditAppliedBills = await this.vendorCreditAppliedBillModel()
         .query(trx)
         .insertGraph(vendorCreditAppliedModel.entries);
 

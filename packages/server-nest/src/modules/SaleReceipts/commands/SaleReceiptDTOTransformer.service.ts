@@ -15,6 +15,7 @@ import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-ind
 import { SaleReceipt } from '../models/SaleReceipt';
 import { ISaleReceiptDTO } from '../types/SaleReceipts.types';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleReceiptDTOTransformer {
@@ -36,7 +37,7 @@ export class SaleReceiptDTOTransformer {
     private readonly brandingTemplatesTransformer: BrandingTemplateDTOTransformer,
 
     @Inject(ItemEntry.name)
-    private readonly itemEntryModel: typeof ItemEntry,
+    private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
   ) {}
 
   /**
@@ -51,7 +52,7 @@ export class SaleReceiptDTOTransformer {
     oldSaleReceipt?: SaleReceipt,
   ): Promise<SaleReceipt> {
     const amount = sumBy(saleReceiptDTO.entries, (e) =>
-      this.itemEntryModel.calcAmount(e),
+      this.itemEntryModel().calcAmount(e),
     );
     // Retrieve the next invoice number.
     const autoNextNumber = await this.receiptIncrement.getNextReceiptNumber();

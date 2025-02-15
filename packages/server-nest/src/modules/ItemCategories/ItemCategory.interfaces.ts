@@ -44,5 +44,5 @@ export interface IItemCategoriesFilter extends IDynamicListFilter {
 
 export interface GetItemCategoriesResponse {
   itemCategories: ItemCategory[];
-  filterMeta: IFilterMeta;
+  // filterMeta: IFilterMeta;
 }

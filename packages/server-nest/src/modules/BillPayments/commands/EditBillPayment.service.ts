@@ -12,6 +12,7 @@ import { CommandBillPaymentDTOTransformer } from './CommandBillPaymentDTOTransfo
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { events } from '@/common/events/events';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditBillPayment {
@@ -23,10 +24,10 @@ export class EditBillPayment {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(BillPayment.name)
-    private readonly billPaymentModel: typeof BillPayment,
+    private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
 
     @Inject(Vendor.name)
-    private readonly vendorModel: typeof Vendor,
+    private readonly vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -53,13 +54,13 @@ export class EditBillPayment {
   ): Promise<BillPayment> {
     const tenantMeta = await this.tenancyContext.getTenant(true);
 
-    const oldBillPayment = await this.billPaymentModel
+    const oldBillPayment = await this.billPaymentModel()
       .query()
       .findById(billPaymentId)
       .withGraphFetched('entries')
       .throwIfNotFound();
 
-    const vendor = await this.vendorModel
+    const vendor = await this.vendorModel()
       .query()
       .findById(billPaymentDTO.vendorId)
       .throwIfNotFound();
@@ -115,7 +116,7 @@ export class EditBillPayment {
       } as IBillPaymentEditingPayload);
 
       // Edits the bill payment transaction graph on the storage.
-      const billPayment = await this.billPaymentModel
+      const billPayment = await this.billPaymentModel()
         .query(trx)
         .upsertGraphAndFetch({
           id: billPaymentId,

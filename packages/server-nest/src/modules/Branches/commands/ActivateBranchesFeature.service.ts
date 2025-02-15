@@ -13,6 +13,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Branch } from '../models/Branch.model';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ActivateBranches {
@@ -24,7 +25,7 @@ export class ActivateBranches {
     private readonly i18n: I18nService,
 
     @Inject(Branch.name)
-    private readonly branchModel: typeof Branch,
+    private readonly branchModel: TenantModelProxy<typeof Branch>,
   ) {}
 
   /**

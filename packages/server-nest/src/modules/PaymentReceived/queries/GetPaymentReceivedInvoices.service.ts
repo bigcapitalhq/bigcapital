@@ -2,15 +2,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PaymentReceivedValidators } from '../commands/PaymentReceivedValidators.service';
 import { SaleInvoice } from '../../SaleInvoices/models/SaleInvoice';
 import { PaymentReceived } from '../models/PaymentReceived';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetPaymentReceivedInvoices {
   constructor(
     @Inject(PaymentReceived.name)
-    private paymentReceiveModel: typeof PaymentReceived,
+    private paymentReceiveModel: TenantModelProxy<typeof PaymentReceived>,
 
     @Inject(SaleInvoice.name)
-    private saleInvoiceModel: typeof SaleInvoice,
+    private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
 
     private validators: PaymentReceivedValidators,
   ) {}
@@ -21,7 +22,7 @@ export class GetPaymentReceivedInvoices {
    * @return {Promise<ISaleInvoice>}
    */
   public async getPaymentReceiveInvoices(paymentReceiveId: number) {
-    const paymentReceive = await this.paymentReceiveModel
+    const paymentReceive = await this.paymentReceiveModel()
       .query()
       .findById(paymentReceiveId)
       .withGraphFetched('entries');
@@ -32,7 +33,7 @@ export class GetPaymentReceivedInvoices {
     const paymentReceiveInvoicesIds = paymentReceive.entries.map(
       (entry) => entry.invoiceId,
     );
-    const saleInvoices = await this.saleInvoiceModel
+    const saleInvoices = await this.saleInvoiceModel()
       .query()
       .whereIn('id', paymentReceiveInvoicesIds);
 

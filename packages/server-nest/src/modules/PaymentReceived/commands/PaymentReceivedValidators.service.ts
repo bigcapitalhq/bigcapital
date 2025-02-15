@@ -11,21 +11,26 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PaymentReceivedValidators {
   constructor(
     @Inject(PaymentReceived.name)
-    private readonly paymentReceiveModel: typeof PaymentReceived,
+    private readonly paymentReceiveModel: TenantModelProxy<
+      typeof PaymentReceived
+    >,
 
     @Inject(PaymentReceivedEntry.name)
-    private readonly paymentReceiveEntryModel: typeof PaymentReceivedEntry,
+    private readonly paymentReceiveEntryModel: TenantModelProxy<
+      typeof PaymentReceivedEntry
+    >,
 
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -45,9 +50,10 @@ export class PaymentReceivedValidators {
    */
   public async validatePaymentReceiveNoExistance(
     paymentReceiveNo: string,
-    notPaymentReceiveId?: number
+    notPaymentReceiveId?: number,
   ): Promise<void> {
-    const paymentReceive = await this.paymentReceiveModel.query()
+    const paymentReceive = await this.paymentReceiveModel()
+      .query()
       .findOne('payment_receive_no', paymentReceiveNo)
       .onBuild((builder) => {
         if (notPaymentReceiveId) {
@@ -67,12 +73,13 @@ export class PaymentReceivedValidators {
    */
   public async validateInvoicesIDsExistance(
     customerId: number,
-    paymentReceiveEntries: { invoiceId: number }[]
+    paymentReceiveEntries: { invoiceId: number }[],
   ): Promise<SaleInvoice[]> {
     const invoicesIds = paymentReceiveEntries.map(
-      (e: { invoiceId: number }) => e.invoiceId
+      (e: { invoiceId: number }) => e.invoiceId,
     );
-    const storedInvoices = await this.saleInvoiceModel.query()
+    const storedInvoices = await this.saleInvoiceModel()
+      .query()
       .whereIn('id', invoicesIds)
       .where('customer_id', customerId);
 
@@ -84,7 +91,7 @@ export class PaymentReceivedValidators {
     }
     // Filters the not delivered invoices.
     const notDeliveredInvoices = storedInvoices.filter(
-      (invoice) => !invoice.isDelivered
+      (invoice) => !invoice.isDelivered,
     );
     if (notDeliveredInvoices.length > 0) {
       throw new ServiceError(ERRORS.INVOICES_NOT_DELIVERED_YET, null, {
@@ -101,13 +108,14 @@ export class PaymentReceivedValidators {
    */
   public async validateInvoicesPaymentsAmount(
     paymentReceiveEntries: IPaymentReceivedEntryDTO[],
-    oldPaymentEntries: PaymentReceivedEntry[] = []
+    oldPaymentEntries: PaymentReceivedEntry[] = [],
   ) {
     const invoicesIds = paymentReceiveEntries.map(
-      (e: IPaymentReceivedEntryDTO) => e.invoiceId
+      (e: IPaymentReceivedEntryDTO) => e.invoiceId,
     );
-
-    const storedInvoices = await this.saleInvoiceModel.query().whereIn('id', invoicesIds);
+    const storedInvoices = await this.saleInvoiceModel()
+      .query()
+      .whereIn('id', invoicesIds);
 
     const storedInvoicesMap = new Map(
       storedInvoices.map((invoice: SaleInvoice) => {
@@ -118,7 +126,7 @@ export class PaymentReceivedValidators {
           invoice.id,
           { ...invoice, dueAmount: invoice.dueAmount + oldPaymentAmount },
         ];
-      })
+      }),
     );
     const hasWrongPaymentAmount: any[] = [];
 
@@ -130,7 +138,7 @@ export class PaymentReceivedValidators {
         if (dueAmount < entry.paymentAmount) {
           hasWrongPaymentAmount.push({ index, due_amount: dueAmount });
         }
-      }
+      },
     );
     if (hasWrongPaymentAmount.length > 0) {
       throw new ServiceError(ERRORS.INVALID_PAYMENT_AMOUNT);
@@ -154,16 +162,15 @@ export class PaymentReceivedValidators {
    */
   public async validateEntriesIdsExistance(
     paymentReceiveId: number,
-    paymentReceiveEntries: IPaymentReceivedEntryDTO[]
+    paymentReceiveEntries: IPaymentReceivedEntryDTO[],
   ) {
     const entriesIds = paymentReceiveEntries
       .filter((entry) => entry.id)
       .map((entry) => entry.id);
 
-    const storedEntries = await this.paymentReceiveEntryModel.query().where(
-      'payment_receive_id',
-      paymentReceiveId
-    );
+    const storedEntries = await this.paymentReceiveEntryModel()
+      .query()
+      .where('payment_receive_id', paymentReceiveId);
     const storedEntriesIds = storedEntries.map((entry: any) => entry.id);
     const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
 
@@ -189,7 +196,7 @@ export class PaymentReceivedValidators {
    */
   public validateCustomerNotModified(
     paymentReceiveDTO: IPaymentReceivedEditDTO,
-    oldPaymentReceive: PaymentReceived
+    oldPaymentReceive: PaymentReceived,
   ) {
     if (paymentReceiveDTO.customerId !== oldPaymentReceive.customerId) {
       throw new ServiceError(ERRORS.PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE);
@@ -199,15 +206,15 @@ export class PaymentReceivedValidators {
   /**
    * Validates the payment account currency code. The deposit account curreny
    * should be equals the customer currency code or the base currency.
-   * @param  {string} paymentAccountCurrency
-   * @param  {string} customerCurrency
-   * @param  {string} baseCurrency
+   * @param {string} paymentAccountCurrency
+   * @param {string} customerCurrency
+   * @param {string} baseCurrency
    * @throws {ServiceError(ERRORS.PAYMENT_ACCOUNT_CURRENCY_INVALID)}
    */
   public validatePaymentAccountCurrency = (
     paymentAccountCurrency: string,
     customerCurrency: string,
-    baseCurrency: string
+    baseCurrency: string,
   ) => {
     if (
       paymentAccountCurrency !== customerCurrency &&
@@ -222,9 +229,10 @@ export class PaymentReceivedValidators {
    * @param {number} paymentReceiveId - Payment receive id.
    */
   async getPaymentReceiveOrThrowError(
-    paymentReceiveId: number
+    paymentReceiveId: number,
   ): Promise<PaymentReceived> {
-    const paymentReceive = await this.paymentReceiveModel.query()
+    const paymentReceive = await this.paymentReceiveModel()
+      .query()
       .withGraphFetched('entries')
       .findById(paymentReceiveId);
 
@@ -240,9 +248,11 @@ export class PaymentReceivedValidators {
    * @return {Promise<IAccount>}
    */
   async getDepositAccountOrThrowError(
-    depositAccountId: number
+    depositAccountId: number,
   ): Promise<Account> {
-    const depositAccount = await this.accountModel.query().findById(depositAccountId);
+    const depositAccount = await this.accountModel()
+      .query()
+      .findById(depositAccountId);
 
     if (!depositAccount) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
@@ -264,13 +274,10 @@ export class PaymentReceivedValidators {
    * Validate the given customer has no payments receives.
    * @param {number} customerId - Customer id.
    */
-  public async validateCustomerHasNoPayments(
-    customerId: number
-  ) {
-    const paymentReceives = await this.paymentReceiveModel.query().where(
-      'customer_id',
-      customerId
-    );
+  public async validateCustomerHasNoPayments(customerId: number) {
+    const paymentReceives = await this.paymentReceiveModel()
+      .query()
+      .where('customer_id', customerId);
     if (paymentReceives.length > 0) {
       throw new ServiceError(ERRORS.CUSTOMER_HAS_PAYMENT_RECEIVES);
     }

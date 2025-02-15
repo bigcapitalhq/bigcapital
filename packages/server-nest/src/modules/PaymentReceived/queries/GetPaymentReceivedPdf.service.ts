@@ -10,6 +10,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TemplateInjectable } from '@/modules/TemplateInjectable/TemplateInjectable.service';
 import { PaymentReceivedPdfTemplateAttributes } from '../types/PaymentReceived.types';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetPaymentReceivedPdfService {
@@ -21,10 +22,10 @@ export class GetPaymentReceivedPdfService {
     private eventPublisher: EventEmitter2,
 
     @Inject(PaymentReceived.name)
-    private paymentReceiveModel: typeof PaymentReceived,
+    private paymentReceiveModel: TenantModelProxy<typeof PaymentReceived>,
 
     @Inject(PdfTemplateModel.name)
-    private pdfTemplateModel: typeof PdfTemplateModel,
+    private pdfTemplateModel: TenantModelProxy<typeof PdfTemplateModel>,
   ) {}
 
   /**
@@ -66,7 +67,7 @@ export class GetPaymentReceivedPdfService {
   private async getPaymentReceivedFilename(
     paymentReceivedId: number,
   ): Promise<string> {
-    const payment = await this.paymentReceiveModel
+    const payment = await this.paymentReceiveModel()
       .query()
       .findById(paymentReceivedId);
 
@@ -87,7 +88,7 @@ export class GetPaymentReceivedPdfService {
     const templateId =
       paymentReceived?.pdfTemplateId ??
       (
-        await this.pdfTemplateModel.query().findOne({
+        await this.pdfTemplateModel().query().findOne({
           resource: 'PaymentReceive',
           default: true,
         })

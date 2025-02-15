@@ -11,6 +11,7 @@ import {
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants/InventoryAdjustments.constants';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PublishInventoryAdjustmentService {
@@ -19,7 +20,9 @@ export class PublishInventoryAdjustmentService {
     private readonly uow: UnitOfWork,
 
     @Inject(InventoryAdjustment.name)
-    private readonly inventoryAdjustmentModel: typeof InventoryAdjustment,
+    private readonly inventoryAdjustmentModel: TenantModelProxy<
+      typeof InventoryAdjustment
+    >,
   ) {}
 
   /**
@@ -30,7 +33,7 @@ export class PublishInventoryAdjustmentService {
     inventoryAdjustmentId: number,
   ): Promise<void> {
     // Retrieve the inventory adjustment or throw not found service error.
-    const oldInventoryAdjustment = await this.inventoryAdjustmentModel
+    const oldInventoryAdjustment = await this.inventoryAdjustmentModel()
       .query()
       .findById(inventoryAdjustmentId)
       .throwIfNotFound();
@@ -50,14 +53,14 @@ export class PublishInventoryAdjustmentService {
       );
 
       // Publish the inventory adjustment transaction.
-      await this.inventoryAdjustmentModel
+      await this.inventoryAdjustmentModel()
         .query()
         .findById(inventoryAdjustmentId)
         .patch({
           publishedAt: moment().toMySqlDateTime(),
         });
       // Retrieve the inventory adjustment after the modification.
-      const inventoryAdjustment = await this.inventoryAdjustmentModel
+      const inventoryAdjustment = await this.inventoryAdjustmentModel()
         .query()
         .findById(inventoryAdjustmentId)
         .withGraphFetched('entries');

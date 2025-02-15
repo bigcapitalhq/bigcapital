@@ -62,7 +62,7 @@
     "moment": "^2.30.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.3",
-    "nestjs-cls": "^4.4.1",
+    "nestjs-cls": "^5.2.0",
     "nestjs-i18n": "^10.4.9",
     "nodemailer": "^6.3.0",
     "object-hash": "^2.0.3",

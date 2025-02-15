@@ -6,6 +6,7 @@ import { events } from '@/common/events/events';
 import { ItemsValidators } from './ItemValidator.service';
 import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class EditItemService {
@@ -22,7 +23,7 @@ export class EditItemService {
     private readonly validators: ItemsValidators,
 
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -110,7 +111,7 @@ export class EditItemService {
     trx?: Knex.Transaction,
   ): Promise<number> {
     // Validates the given item existance on the storage.
-    const oldItem = await this.itemModel
+    const oldItem = await this.itemModel()
       .query()
       .findById(itemId)
       .throwIfNotFound();
@@ -124,7 +125,7 @@ export class EditItemService {
     // Edits the item with associated transactions under unit-of-work environment.
     return this.uow.withTransaction<number>(async (trx: Knex.Transaction) => {
       // Updates the item on the storage and fetches the updated one.
-      const newItem = await this.itemModel
+      const newItem = await this.itemModel()
         .query(trx)
         .patchAndFetchById(itemId, itemModel);
 

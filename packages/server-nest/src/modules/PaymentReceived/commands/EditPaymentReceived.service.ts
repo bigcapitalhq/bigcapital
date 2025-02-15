@@ -13,6 +13,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditPaymentReceivedService {
@@ -24,10 +25,12 @@ export class EditPaymentReceivedService {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(PaymentReceived.name)
-    private readonly paymentReceiveModel: typeof PaymentReceived,
+    private readonly paymentReceiveModel: TenantModelProxy<
+      typeof PaymentReceived
+    >,
 
     @Inject(Customer.name)
-    private readonly customerModel: typeof Customer,
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -51,7 +54,7 @@ export class EditPaymentReceivedService {
     const tenant = await this.tenancyContext.getTenant(true);
 
     // Validate the payment receive existance.
-    const oldPaymentReceive = await this.paymentReceiveModel
+    const oldPaymentReceive = await this.paymentReceiveModel()
       .query()
       .withGraphFetched('entries')
       .findById(paymentReceiveId)
@@ -61,7 +64,7 @@ export class EditPaymentReceivedService {
     this.validators.validatePaymentExistance(oldPaymentReceive);
 
     // Validate customer existance.
-    const customer = await this.customerModel
+    const customer = await this.customerModel()
       .query()
       .findById(paymentReceiveDTO.customerId)
       .throwIfNotFound();
@@ -120,7 +123,7 @@ export class EditPaymentReceivedService {
       } as IPaymentReceivedEditingPayload);
 
       // Update the payment receive transaction.
-      const paymentReceive = await this.paymentReceiveModel
+      const paymentReceive = await this.paymentReceiveModel()
         .query(trx)
         .upsertGraphAndFetch({
           id: paymentReceiveId,

@@ -22,6 +22,7 @@ import {
 import { SaleEstimateMailOptions } from '../types/SaleEstimates.types';
 import { Mail } from '@/modules/Mail/Mail';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SendSaleEstimateMail {
@@ -41,7 +42,8 @@ export class SendSaleEstimateMail {
     private readonly mailTransporter: MailTransporter,
 
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
+
     @InjectQueue(SendSaleEstimateMailQueue)
     private readonly sendEstimateMailQueue: Queue,
   ) {}
@@ -91,7 +93,7 @@ export class SendSaleEstimateMail {
     defaultSubject: string = DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT,
     defaultMessage: string = DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT,
   ): Promise<SaleEstimateMailOptions> => {
-    const saleEstimate = await this.saleEstimateModel
+    const saleEstimate = await this.saleEstimateModel()
       .query()
       .findById(saleEstimateId)
       .throwIfNotFound();

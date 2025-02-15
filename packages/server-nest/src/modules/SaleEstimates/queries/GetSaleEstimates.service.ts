@@ -6,6 +6,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { ISalesEstimatesFilter } from '../types/SaleEstimates.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetSaleEstimatesService {
@@ -14,16 +15,14 @@ export class GetSaleEstimatesService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
   ) {}
 
   /**
    * Retrieves estimates filterable and paginated list.
    * @param {IEstimatesFilter} estimatesFilter -
    */
-  public async getEstimates(
-    filterDTO: ISalesEstimatesFilter
-  ): Promise<{
+  public async getEstimates(filterDTO: ISalesEstimatesFilter): Promise<{
     salesEstimates: SaleEstimate[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
@@ -34,13 +33,14 @@ export class GetSaleEstimatesService {
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       SaleEstimate,
-      filter
+      filter,
     );
-    const { results, pagination } = await this.saleEstimateModel.query()
+    const { results, pagination } = await this.saleEstimateModel()
+      .query()
       .onBuild((builder) => {
         builder.withGraphFetched('customer');
         builder.withGraphFetched('entries');
-        builder.withGraphFetched('entries.item'); 
+        builder.withGraphFetched('entries.item');
 
         dynamicFilter.buildQuery()(builder);
         filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
@@ -49,7 +49,7 @@ export class GetSaleEstimatesService {
 
     const transformedEstimates = await this.transformer.transform(
       results,
-      new SaleEstimateTransfromer()
+      new SaleEstimateTransfromer(),
     );
     return {
       salesEstimates: transformedEstimates,

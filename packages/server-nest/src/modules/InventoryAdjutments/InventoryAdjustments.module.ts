@@ -31,10 +31,10 @@ const models = [
     LedgerModule,
     DynamicListModule,
     InventoryCostModule,
+    ...models,
   ],
   controllers: [InventoryAdjustmentsController],
   providers: [
-    ...models,
     CreateQuickInventoryAdjustmentService,
     PublishInventoryAdjustmentService,
     GetInventoryAdjustmentsService,

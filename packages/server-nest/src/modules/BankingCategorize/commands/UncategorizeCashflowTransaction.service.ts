@@ -9,6 +9,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { UncategorizedBankTransaction } from '../../BankingTransactions/models/UncategorizedBankTransaction';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class UncategorizeCashflowTransactionService {
@@ -17,7 +18,9 @@ export class UncategorizeCashflowTransactionService {
     private readonly uow: UnitOfWork,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -29,7 +32,7 @@ export class UncategorizeCashflowTransactionService {
     uncategorizedTransactionId: number,
   ): Promise<Array<number>> {
     const oldMainUncategorizedTransaction =
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query()
         .findById(uncategorizedTransactionId)
         .throwIfNotFound();
@@ -37,7 +40,7 @@ export class UncategorizeCashflowTransactionService {
     validateTransactionShouldBeCategorized(oldMainUncategorizedTransaction);
 
     const associatedUncategorizedTransactions =
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query()
         .where(
           'categorizeRefId',
@@ -69,7 +72,7 @@ export class UncategorizeCashflowTransactionService {
         } as ICashflowTransactionUncategorizingPayload,
       );
       // Removes the ref relation with the related transaction.
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query(trx)
         .whereIn('id', oldUncategoirzedTransactionsIds)
         .patch({
@@ -78,7 +81,7 @@ export class UncategorizeCashflowTransactionService {
           categorizeRefType: null,
         });
       const uncategorizedTransactions =
-        await this.uncategorizedBankTransactionModel
+        await this.uncategorizedBankTransactionModel()
           .query(trx)
           .whereIn('id', oldUncategoirzedTransactionsIds);
       // Triggers `onTransactionUncategorized` event.

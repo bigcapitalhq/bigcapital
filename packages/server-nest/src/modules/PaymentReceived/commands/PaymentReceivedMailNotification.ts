@@ -16,6 +16,7 @@ import { PaymentReceiveMailPresendEvent } from '../types/PaymentReceived.types';
 import { SendInvoiceMailDTO } from '@/modules/SaleInvoices/SaleInvoice.types';
 import { Mail } from '@/modules/Mail/Mail';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SendPaymentReceiveMailNotification {
@@ -26,7 +27,9 @@ export class SendPaymentReceiveMailNotification {
     private readonly mailTransport: MailTransporter,
 
     @Inject(PaymentReceived.name)
-    private readonly paymentReceiveModel: typeof PaymentReceived,
+    private readonly paymentReceiveModel: TenantModelProxy<
+      typeof PaymentReceived
+    >,
   ) {}
 
   /**
@@ -61,7 +64,7 @@ export class SendPaymentReceiveMailNotification {
   public getMailOptions = async (
     paymentId: number,
   ): Promise<PaymentReceiveMailOpts> => {
-    const paymentReceive = await this.paymentReceiveModel
+    const paymentReceive = await this.paymentReceiveModel()
       .query()
       .findById(paymentId)
       .throwIfNotFound();

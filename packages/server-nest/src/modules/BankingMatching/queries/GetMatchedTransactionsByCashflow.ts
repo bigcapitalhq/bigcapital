@@ -4,6 +4,7 @@ import { GetMatchedTransactionsFilter } from '../types';
 import { BankTransaction } from '@/modules/BankingTransactions/models/BankTransaction';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Inject, Injectable } from '@nestjs/common';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByType {
@@ -11,7 +12,9 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
     private readonly transformer: TransformerInjectable,
 
     @Inject(BankTransaction.name)
-    private readonly bankTransactionModel: typeof BankTransaction,
+    private readonly bankTransactionModel: TenantModelProxy<
+      typeof BankTransaction
+    >,
   ) {
     super();
   }
@@ -25,7 +28,7 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
   async getMatchedTransactions(
     filter: Omit<GetMatchedTransactionsFilter, 'transactionType'>,
   ) {
-    const transactions = await this.bankTransactionModel
+    const transactions = await this.bankTransactionModel()
       .query()
       .onBuild((q) => {
         // Not matched to bank transaction.
@@ -60,7 +63,7 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
    * @returns
    */
   async getMatchedTransaction(transactionId: number) {
-    const transactions = await this.bankTransactionModel
+    const transactions = await this.bankTransactionModel()
       .query()
       .findById(transactionId)
       .withGraphJoined('matchedBankTransaction')

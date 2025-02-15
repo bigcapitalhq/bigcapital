@@ -117,26 +117,22 @@ export interface IAccountsTypesService {
 }
 
 export interface IAccountEventCreatingPayload {
-  tenantId: number;
   accountDTO: any;
   trx: Knex.Transaction;
 }
 export interface IAccountEventCreatedPayload {
-  tenantId: number;
   account: IAccount;
   accountId: number;
   trx: Knex.Transaction;
 }
 
 export interface IAccountEventEditedPayload {
-  tenantId: number;
   account: IAccount;
   oldAccount: IAccount;
   trx: Knex.Transaction;
 }
 
 export interface IAccountEventDeletedPayload {
-  tenantId: number;
   accountId: number;
   oldAccount: IAccount;
   trx: Knex.Transaction;

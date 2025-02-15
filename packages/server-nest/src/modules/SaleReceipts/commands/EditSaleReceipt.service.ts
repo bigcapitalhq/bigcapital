@@ -13,6 +13,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Contact } from '@/modules/Contacts/models/Contact';
 import { events } from '@/common/events/events';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditSaleReceipt {
@@ -24,10 +25,10 @@ export class EditSaleReceipt {
     private readonly dtoTransformer: SaleReceiptDTOTransformer,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: typeof SaleReceipt,
+    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
 
     @Inject(Customer.name)
-    private readonly customerModel: typeof Customer,
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -38,14 +39,14 @@ export class EditSaleReceipt {
    */
   public async editSaleReceipt(saleReceiptId: number, saleReceiptDTO: any) {
     // Retrieve sale receipt or throw not found service error.
-    const oldSaleReceipt = await this.saleReceiptModel
+    const oldSaleReceipt = await this.saleReceiptModel()
       .query()
       .findById(saleReceiptId)
       .withGraphFetched('entries')
       .throwIfNotFound();
 
     // Retrieves the payment customer model.
-    const paymentCustomer = await this.customerModel
+    const paymentCustomer = await this.customerModel()
       .query()
       .findById(saleReceiptDTO.customerId)
       .throwIfNotFound();
@@ -85,7 +86,7 @@ export class EditSaleReceipt {
       } as ISaleReceiptEditingPayload);
 
       // Upsert the receipt graph to the storage.
-      const saleReceipt = await this.saleReceiptModel
+      const saleReceipt = await this.saleReceiptModel()
         .query(trx)
         .upsertGraphAndFetch({
           id: saleReceiptId,

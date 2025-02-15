@@ -5,12 +5,15 @@ import { PdfTemplateModel } from '../models/PdfTemplate';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditPdfTemplateService {
   constructor(
     @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplateModel: typeof PdfTemplateModel,
+    private readonly pdfTemplateModel: TenantModelProxy<
+      typeof PdfTemplateModel
+    >,
     private readonly uow: UnitOfWork,
     private readonly eventEmitter: EventEmitter2,
   ) {}
@@ -22,9 +25,10 @@ export class EditPdfTemplateService {
    */
   public async editPdfTemplate(
     templateId: number,
-    editTemplateDTO: IEditPdfTemplateDTO
+    editTemplateDTO: IEditPdfTemplateDTO,
   ) {
-    const oldPdfTemplate = await this.pdfTemplateModel.query()
+    const oldPdfTemplate = await this.pdfTemplateModel()
+      .query()
       .findById(templateId)
       .throwIfNotFound();
 
@@ -34,7 +38,8 @@ export class EditPdfTemplateService {
         templateId,
       });
 
-      const pdfTemplate = await this.pdfTemplateModel.query(trx)
+      const pdfTemplate = await this.pdfTemplateModel()
+        .query(trx)
         .where('id', templateId)
         .update({
           templateName: editTemplateDTO.templateName,

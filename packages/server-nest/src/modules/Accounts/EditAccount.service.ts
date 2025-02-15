@@ -6,6 +6,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { EditAccountDTO } from './EditAccount.dto';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class EditAccount {
@@ -15,7 +16,7 @@ export class EditAccount {
     private readonly validator: CommandAccountValidators,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -66,7 +67,7 @@ export class EditAccount {
     accountDTO: EditAccountDTO,
   ): Promise<Account> {
     // Retrieve the old account or throw not found service error.
-    const oldAccount = await this.accountModel
+    const oldAccount = await this.accountModel()
       .query()
       .findById(accountId)
       .throwIfNotFound();
@@ -82,7 +83,7 @@ export class EditAccount {
         accountDTO,
       });
       // Update the account on the storage.
-      const account = await this.accountModel
+      const account = await this.accountModel()
         .query(trx)
         .findById(accountId)
         .updateAndFetch({ ...accountDTO });

@@ -16,10 +16,7 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { SystemPlaidItem } from './models/SystemPlaidItem';
 
-const models = [
-  RegisterTenancyModel(PlaidItem),
-  InjectSystemModel(SystemPlaidItem),
-];
+const models = [RegisterTenancyModel(PlaidItem)];
 
 @Module({
   imports: [
@@ -27,9 +24,10 @@ const models = [
     AccountsModule,
     BankingCategorizeModule,
     BankingTransactionsModule,
+    ...models,
   ],
   providers: [
-    ...models,
+    InjectSystemModel(SystemPlaidItem),
     PlaidItemService,
     PlaidUpdateTransactions,
     PlaidSyncDb,

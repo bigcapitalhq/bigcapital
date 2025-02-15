@@ -4,16 +4,20 @@ import { SaleReceipt } from '../models/SaleReceipt';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ACCOUNT_PARENT_TYPE } from '@/constants/accounts';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleReceiptValidators {
   /**
-   * @param {typeof SaleReceipt} saleReceiptModel - Sale receipt model.
-   * @param {typeof Account} accountModel - Account model.
+   * @param {TenantModelProxy<typeof SaleReceipt>} saleReceiptModel - Sale receipt model.
+   * @param {TenantModelProxy<typeof Account>} accountModel - Account model.
    */
   constructor(
-    @Inject(SaleReceipt.name) private saleReceiptModel: typeof SaleReceipt,
-    @Inject(Account.name) private accountModel: typeof Account,
+    @Inject(SaleReceipt.name)
+    private saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
+
+    @Inject(Account.name)
+    private accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -41,7 +45,9 @@ export class SaleReceiptValidators {
    * @param {number} accountId - Account id.
    */
   public async validateReceiptDepositAccountExistence(accountId: number) {
-    const depositAccount = await this.accountModel.query().findById(accountId);
+    const depositAccount = await this.accountModel()
+      .query()
+      .findById(accountId);
 
     if (!depositAccount) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
@@ -60,7 +66,7 @@ export class SaleReceiptValidators {
     receiptNumber: string,
     notReceiptId?: number,
   ) {
-    const saleReceipt = await this.saleReceiptModel
+    const saleReceipt = await this.saleReceiptModel()
       .query()
       .findOne('receipt_number', receiptNumber)
       .onBuild((builder) => {
@@ -89,7 +95,7 @@ export class SaleReceiptValidators {
    * @param {number} customerId - Customer id.
    */
   public async validateCustomerHasNoReceipts(customerId: number) {
-    const receipts = await this.saleReceiptModel
+    const receipts = await this.saleReceiptModel()
       .query()
       .where('customer_id', customerId);
 

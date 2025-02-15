@@ -9,6 +9,7 @@ import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Branch } from '../models/Branch.model';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateBranchService {
@@ -22,7 +23,7 @@ export class CreateBranchService {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(Branch.name)
-    private readonly branchModel: typeof Branch,
+    private readonly branchModel: TenantModelProxy<typeof Branch>,
   ) {}
 
   /**
@@ -41,10 +42,11 @@ export class CreateBranchService {
         trx,
       } as IBranchCreatePayload);
 
-      const branch = await this.branchModel.query().insertAndFetch({
-        ...createBranchDTO,
-      });
-
+      const branch = await this.branchModel()
+        .query()
+        .insertAndFetch({
+          ...createBranchDTO,
+        });
       // Triggers `onBranchCreated` event.
       await this.eventPublisher.emitAsync(events.warehouse.onEdited, {
         createBranchDTO,

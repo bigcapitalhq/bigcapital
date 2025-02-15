@@ -13,12 +13,17 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateSaleEstimate {
   constructor(
-    @Inject(SaleEstimate.name) private saleEstimateModel: typeof SaleEstimate,
-    @Inject(Customer.name) private customerModel: typeof Customer,
+    @Inject(SaleEstimate.name)
+    private saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
+
+    @Inject(Customer.name)
+    private customerModel: TenantModelProxy<typeof Customer>,
+
     private itemsEntriesService: ItemsEntriesService,
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
@@ -36,7 +41,7 @@ export class CreateSaleEstimate {
     trx?: Knex.Transaction,
   ): Promise<SaleEstimate> {
     // Retrieve the given customer or throw not found service error.
-    const customer = await this.customerModel
+    const customer = await this.customerModel()
       .query()
       .findById(estimateDTO.customerId)
       .throwIfNotFound();
@@ -67,7 +72,7 @@ export class CreateSaleEstimate {
       } as ISaleEstimateCreatingPayload);
 
       // Upsert the sale estimate graph to the storage.
-      const saleEstimate = await this.saleEstimateModel
+      const saleEstimate = await this.saleEstimateModel()
         .query(trx)
         .upsertGraphAndFetch({
           ...estimateObj,

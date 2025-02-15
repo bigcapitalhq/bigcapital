@@ -12,6 +12,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class UnexcludeBankTransactionService {
@@ -20,7 +21,9 @@ export class UnexcludeBankTransactionService {
     private readonly uow: UnitOfWork,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -33,7 +36,7 @@ export class UnexcludeBankTransactionService {
     uncategorizedTransactionId: number,
   ): Promise<void> {
     const oldUncategorizedTransaction =
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query()
         .findById(uncategorizedTransactionId)
         .throwIfNotFound();
@@ -49,7 +52,7 @@ export class UnexcludeBankTransactionService {
         uncategorizedTransactionId,
       } as IBankTransactionExcludingEventPayload);
 
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query(trx)
         .findById(uncategorizedTransactionId)
         .patch({

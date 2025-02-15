@@ -17,10 +17,11 @@ const ERRORS = {
 export default class ItemsEntriesService {
   constructor(
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProx<typeof Item>,
+
     @Inject(ItemEntry.name)
-    private readonly itemEntryModel: typeof ItemEntry,
-    private readonly itemRepository: any, // Replace 'any' with proper repository type
+    private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
+    private readonly itemRepository: any // Replace 'any' with proper repository type
   ) {}
 
   /**
@@ -33,11 +34,13 @@ export default class ItemsEntriesService {
     referenceType: string,
     referenceId: number
   ): Promise<IItemEntry[]> {
-    const itemsEntries = await this.itemEntryModel.query()
+    const itemsEntries = await this.itemEntryModel
+      .query()
       .where('reference_type', referenceType)
       .where('reference_id', referenceId);
 
-    const inventoryItems = await this.itemModel.query()
+    const inventoryItems = await this.itemModel
+      .query()
       .whereIn('id', map(itemsEntries, 'itemId'))
       .where('type', 'inventory');
 
@@ -60,7 +63,8 @@ export default class ItemsEntriesService {
   ): Promise<IItemEntry[]> {
     const entriesItemsIds = entries.map((e) => e.itemId);
 
-    const inventoryItems = await this.itemModel.query(trx)
+    const inventoryItems = await this.itemModel
+      .query(trx)
       .whereIn('id', entriesItemsIds)
       .where('type', 'inventory');
 
@@ -75,9 +79,7 @@ export default class ItemsEntriesService {
    * @async
    * @param {IItemEntryDTO[]} itemEntries -
    */
-  public async validateItemsIdsExistance(
-    itemEntries: IItemEntryDTO[]
-  ) {
+  public async validateItemsIdsExistance(itemEntries: IItemEntryDTO[]) {
     const itemsIds = itemEntries.map((e) => e.itemId);
 
     const foundItems = await this.itemModel.query().whereIn('id', itemsIds);
@@ -105,7 +107,8 @@ export default class ItemsEntriesService {
       .filter((e: IItemEntry) => e.id)
       .map((e: IItemEntry) => e.id);
 
-    const storedEntries = await this.itemEntryModel.query()
+    const storedEntries = await this.itemEntryModel
+      .query()
       .whereIn('reference_id', [referenceId])
       .whereIn('reference_type', [referenceType]);
 
@@ -125,7 +128,8 @@ export default class ItemsEntriesService {
   ) {
     const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
 
-    const purchasbleItems = await this.itemModel.query()
+    const purchasbleItems = await this.itemModel
+      .query()
       .where('purchasable', true)
       .whereIn('id', itemsIds);
 
@@ -140,12 +144,11 @@ export default class ItemsEntriesService {
   /**
    * Validate the entries items that not sell-able.
    */
-  public async validateNonSellableEntriesItems(
-    itemEntries: IItemEntryDTO[]
-  ) {
+  public async validateNonSellableEntriesItems(itemEntries: IItemEntryDTO[]) {
     const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
 
-    const sellableItems = await this.itemModel.query()
+    const sellableItems = await this.itemModel
+      .query()
       .where('sellable', true)
       .whereIn('id', itemsIds);
 
@@ -189,9 +192,7 @@ export default class ItemsEntriesService {
    * Increment items quantity from the given items entries.
    * @param {IItemEntry[]} entries - Items entries.
    */
-  public async incrementItemsEntries(
-    entries: IItemEntry[]
-  ): Promise<void> {
+  public async incrementItemsEntries(entries: IItemEntry[]): Promise<void> {
     return this.changeItemsQuantity(entries);
   }
 
@@ -199,9 +200,7 @@ export default class ItemsEntriesService {
    * Decrement items quantity from the given items entries.
    * @param {IItemEntry[]} entries - Items entries.
    */
-  public async decrementItemsQuantity(
-    entries: IItemEntry[]
-  ): Promise<void> {
+  public async decrementItemsQuantity(entries: IItemEntry[]): Promise<void> {
     return this.changeItemsQuantity(
       entries.map((entry) => ({
         ...entry,

@@ -17,6 +17,7 @@ import {
   ICommandCashflowCreatedPayload,
   ICommandCashflowCreatingPayload,
 } from '../types/BankingTransactions.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateBankTransactionService {
@@ -28,10 +29,10 @@ export class CreateBankTransactionService {
     private branchDTOTransform: BranchTransactionDTOTransformer,
 
     @Inject(BankTransaction.name)
-    private bankTransactionModel: typeof BankTransaction,
+    private bankTransactionModel: TenantModelProxy<typeof BankTransaction>,
 
     @Inject(Account.name)
-    private accountModel: typeof Account,
+    private accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -118,13 +119,13 @@ export class CreateBankTransactionService {
     userId?: number,
   ): Promise<BankTransaction> => {
     // Retrieves the cashflow account or throw not found error.
-    const cashflowAccount = await this.accountModel
+    const cashflowAccount = await this.accountModel()
       .query()
       .findById(newTransactionDTO.cashflowAccountId)
       .throwIfNotFound();
 
     // Retrieves the credit account or throw not found error.
-    const creditAccount = await this.accountModel
+    const creditAccount = await this.accountModel()
       .query()
       .findById(newTransactionDTO.creditAccountId)
       .throwIfNotFound();
@@ -149,7 +150,7 @@ export class CreateBankTransactionService {
         } as ICommandCashflowCreatingPayload,
       );
       // Inserts cashflow owner contribution transaction.
-      const cashflowTransaction = await this.bankTransactionModel
+      const cashflowTransaction = await this.bankTransactionModel()
         .query(trx)
         .upsertGraph(cashflowTransactionObj);
 

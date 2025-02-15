@@ -10,6 +10,7 @@ import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransac
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class RemovePendingUncategorizedTransaction {
@@ -18,7 +19,9 @@ export class RemovePendingUncategorizedTransaction {
     private readonly uow: UnitOfWork,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransaction: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransaction: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -31,7 +34,7 @@ export class RemovePendingUncategorizedTransaction {
     uncategorizedTransactionId: number,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    const pendingTransaction = await this.uncategorizedBankTransaction
+    const pendingTransaction = await this.uncategorizedBankTransaction()
       .query(trx)
       .findById(uncategorizedTransactionId)
       .throwIfNotFound();
@@ -49,7 +52,7 @@ export class RemovePendingUncategorizedTransaction {
         } as IPendingTransactionRemovingEventPayload,
       );
       // Removes the pending uncategorized transaction.
-      await this.uncategorizedBankTransaction
+      await this.uncategorizedBankTransaction()
         .query(trx)
         .findById(uncategorizedTransactionId)
         .delete();

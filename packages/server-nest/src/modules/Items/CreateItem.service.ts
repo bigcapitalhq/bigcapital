@@ -7,6 +7,7 @@ import { events } from '@/common/events/events';
 import { ItemsValidators } from './ItemValidator.service';
 import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CreateItemService {
@@ -23,7 +24,7 @@ export class CreateItemService {
     private readonly validators: ItemsValidators,
 
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -103,9 +104,11 @@ export class CreateItemService {
       const itemInsert = this.transformNewItemDTOToModel(itemDTO);
 
       // Inserts a new item and fetch the created item.
-      const item = await this.itemModel.query(trx).insertAndFetch({
-        ...itemInsert,
-      });
+      const item = await this.itemModel()
+        .query(trx)
+        .insertAndFetch({
+          ...itemInsert,
+        });
       // Triggers `onItemCreated` event.
       await this.eventEmitter.emitAsync(events.item.onCreated, {
         item,

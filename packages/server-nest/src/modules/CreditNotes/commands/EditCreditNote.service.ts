@@ -12,6 +12,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { CommandCreditNoteDTOTransform } from './CommandCreditNoteDTOTransform.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditCreditNoteService {
@@ -24,8 +25,11 @@ export class EditCreditNoteService {
    * @param {UnitOfWork} uow - The unit of work.
    */
   constructor(
-    @Inject(CreditNote.name) private creditNoteModel: typeof CreditNote,
-    @Inject(Contact.name) private contactModel: typeof Contact,
+    @Inject(CreditNote.name)
+    private creditNoteModel: TenantModelProxy<typeof CreditNote>,
+    @Inject(Contact.name)
+    private contactModel: TenantModelProxy<typeof Contact>,
+
     private commandCreditNoteDTOTransform: CommandCreditNoteDTOTransform,
     private itemsEntriesService: ItemsEntriesService,
     private eventPublisher: EventEmitter2,
@@ -41,13 +45,13 @@ export class EditCreditNoteService {
     creditNoteEditDTO: ICreditNoteEditDTO,
   ) {
     // Retrieve the sale invoice or throw not found service error.
-    const oldCreditNote = await this.creditNoteModel
+    const oldCreditNote = await this.creditNoteModel()
       .query()
       .findById(creditNoteId)
       .throwIfNotFound();
 
     // Validate customer existance.
-    const customer = await this.contactModel
+    const customer = await this.contactModel()
       .query()
       .findById(creditNoteEditDTO.customerId);
 
@@ -82,10 +86,12 @@ export class EditCreditNoteService {
       } as ICreditNoteEditingPayload);
 
       // Saves the credit note graph to the storage.
-      const creditNote = await this.creditNoteModel.query(trx).upsertGraph({
-        id: creditNoteId,
-        ...creditNoteModel,
-      });
+      const creditNote = await this.creditNoteModel()
+        .query(trx)
+        .upsertGraph({
+          id: creditNoteId,
+          ...creditNoteModel,
+        });
       // Triggers `onCreditNoteEdited` event.
       await this.eventPublisher.emitAsync(events.creditNote.onEdited, {
         trx,

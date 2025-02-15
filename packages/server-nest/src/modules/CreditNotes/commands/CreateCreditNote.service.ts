@@ -12,6 +12,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateCreditNoteService {
@@ -30,10 +31,10 @@ export class CreateCreditNoteService {
     private readonly commandCreditNoteDTOTransform: CommandCreditNoteDTOTransform,
 
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
 
     @Inject(Contact.name)
-    private readonly contactModel: typeof Contact,
+    private readonly contactModel: TenantModelProxy<typeof Contact>,
   ) {}
 
   /**
@@ -49,7 +50,7 @@ export class CreateCreditNoteService {
       creditNoteDTO,
     });
     // Validate customer existance.
-    const customer = await this.contactModel
+    const customer = await this.contactModel()
       .query()
       .modify('customer')
       .findById(creditNoteDTO.customerId)
@@ -78,9 +79,11 @@ export class CreateCreditNoteService {
       } as ICreditNoteCreatingPayload);
 
       // Upsert the credit note graph.
-      const creditNote = await this.creditNoteModel.query(trx).upsertGraph({
-        ...creditNoteModel,
-      });
+      const creditNote = await this.creditNoteModel()
+        .query(trx)
+        .upsertGraph({
+          ...creditNoteModel,
+        });
       // Triggers `onCreditNoteCreated` event.
       await this.eventPublisher.emitAsync(events.creditNote.onCreated, {
         creditNoteDTO,

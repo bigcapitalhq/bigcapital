@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GetRecognizedTransactionTransformer } from './GetRecognizedTransactionTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetRecognizedTransactionService {
@@ -9,7 +10,9 @@ export class GetRecognizedTransactionService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -17,11 +20,10 @@ export class GetRecognizedTransactionService {
    * @param {number} tenantId
    * @param {number} uncategorizedTransactionId
    */
-  public async getRecognizedTransaction(
-    uncategorizedTransactionId: number
-  ) {
+  public async getRecognizedTransaction(uncategorizedTransactionId: number) {
     const uncategorizedTransaction =
-      await this.uncategorizedBankTransactionModel.query()
+      await this.uncategorizedBankTransactionModel()
+        .query()
         .findById(uncategorizedTransactionId)
         .withGraphFetched('matchedBankTransactions')
         .withGraphFetched('recognizedTransaction.assignAccount')
@@ -31,7 +33,7 @@ export class GetRecognizedTransactionService {
 
     return this.transformer.transform(
       uncategorizedTransaction,
-      new GetRecognizedTransactionTransformer()
+      new GetRecognizedTransactionTransformer(),
     );
   }
 }

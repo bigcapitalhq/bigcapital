@@ -9,6 +9,7 @@ import { BillPaymentEntry } from '../models/BillPaymentEntry';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteBillPayment {
@@ -23,10 +24,12 @@ export class DeleteBillPayment {
     private readonly uow: UnitOfWork,
 
     @Inject(BillPayment.name)
-    private readonly billPaymentModel: typeof BillPayment,
+    private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
 
     @Inject(BillPaymentEntry.name)
-    private readonly billPaymentEntryModel: typeof BillPaymentEntry,
+    private readonly billPaymentEntryModel: TenantModelProxy<
+      typeof BillPaymentEntry
+    >,
   ) {}
 
   /**
@@ -36,7 +39,7 @@ export class DeleteBillPayment {
    */
   public async deleteBillPayment(billPaymentId: number) {
     // Retrieve the bill payment or throw not found service error.
-    const oldBillPayment = await this.billPaymentModel
+    const oldBillPayment = await this.billPaymentModel()
       .query()
       .withGraphFetched('entries')
       .findById(billPaymentId)
@@ -52,13 +55,13 @@ export class DeleteBillPayment {
       } as IBillPaymentDeletingPayload);
 
       // Deletes the bill payment associated entries.
-      await this.billPaymentEntryModel
+      await this.billPaymentEntryModel()
         .query(trx)
         .where('bill_payment_id', billPaymentId)
         .delete();
 
       // Deletes the bill payment transaction.
-      await this.billPaymentModel
+      await this.billPaymentModel()
         .query(trx)
         .where('id', billPaymentId)
         .delete();

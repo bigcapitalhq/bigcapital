@@ -1,11 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { SaleInvoice } from '../models/SaleInvoice';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetSaleInvoicesPayable {
   constructor(
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -15,7 +16,7 @@ export class GetSaleInvoicesPayable {
   public async getPayableInvoices(
     customerId?: number,
   ): Promise<Array<SaleInvoice>> {
-    const salesInvoices = await this.saleInvoiceModel
+    const salesInvoices = await this.saleInvoiceModel()
       .query()
       .onBuild((query) => {
         query.modify('dueInvoices');

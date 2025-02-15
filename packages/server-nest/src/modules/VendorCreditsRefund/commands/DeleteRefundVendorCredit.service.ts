@@ -10,6 +10,7 @@ import { RefundVendorCredit } from '../models/RefundVendorCredit';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteRefundVendorCreditService {
@@ -23,7 +24,9 @@ export class DeleteRefundVendorCreditService {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(RefundVendorCredit.name)
-    private readonly refundVendorCreditModel: typeof RefundVendorCredit,
+    private readonly refundVendorCreditModel: TenantModelProxy<
+      typeof RefundVendorCredit
+    >,
   ) {}
 
   /**
@@ -35,7 +38,7 @@ export class DeleteRefundVendorCreditService {
     refundCreditId: number,
   ): Promise<void> {
     // Retrieve the old credit note or throw not found service error.
-    const oldRefundCredit = await this.refundVendorCreditModel
+    const oldRefundCredit = await this.refundVendorCreditModel()
       .query()
       .findById(refundCreditId)
       .throwIfNotFound();
@@ -60,7 +63,7 @@ export class DeleteRefundVendorCreditService {
         eventPayload,
       );
       // Deletes the refund vendor credit graph from the storage.
-      await this.refundVendorCreditModel
+      await this.refundVendorCreditModel()
         .query(trx)
         .findById(refundCreditId)
         .delete();

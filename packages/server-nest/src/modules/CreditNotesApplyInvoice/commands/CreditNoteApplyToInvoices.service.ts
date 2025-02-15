@@ -16,6 +16,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
 import { CommandCreditNoteDTOTransform } from '@/modules/CreditNotes/commands/CommandCreditNoteDTOTransform.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreditNoteApplyToInvoices {
@@ -32,10 +33,12 @@ export class CreditNoteApplyToInvoices {
     private readonly creditNoteDTOTransform: CommandCreditNoteDTOTransform,
 
     @Inject(CreditNoteAppliedInvoice.name)
-    private readonly creditNoteAppliedInvoiceModel: typeof CreditNoteAppliedInvoice,
+    private readonly creditNoteAppliedInvoiceModel: TenantModelProxy<
+      typeof CreditNoteAppliedInvoice
+    >,
 
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
   ) {}
 
   /**
@@ -48,7 +51,7 @@ export class CreditNoteApplyToInvoices {
     applyCreditToInvoicesDTO: IApplyCreditToInvoicesDTO,
   ): Promise<CreditNoteAppliedInvoice[]> {
     // Saves the credit note or throw not found service error.
-    const creditNote = await this.creditNoteModel
+    const creditNote = await this.creditNoteModel()
       .query()
       .findById(creditNoteId)
       .throwIfNotFound();
@@ -78,9 +81,10 @@ export class CreditNoteApplyToInvoices {
     // Creates credit note apply to invoice transaction.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Saves the credit note apply to invoice graph to the storage layer.
-      const creditNoteAppliedInvoices = await this.creditNoteAppliedInvoiceModel
-        .query()
-        .insertGraph(creditNoteAppliedModel.entries);
+      const creditNoteAppliedInvoices =
+        await this.creditNoteAppliedInvoiceModel()
+          .query()
+          .insertGraph(creditNoteAppliedModel.entries);
 
       // Triggers `onCreditNoteApplyToInvoiceCreated` event.
       await this.eventPublisher.emitAsync(

@@ -6,6 +6,7 @@ import { InventoryAdjustment } from '../models/InventoryAdjustment';
 import { IInventoryAdjustmentsFilter } from '../types/InventoryAdjustments.types';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetInventoryAdjustmentsService {
@@ -14,7 +15,9 @@ export class GetInventoryAdjustmentsService {
     private readonly dynamicListService: DynamicListService,
 
     @Inject(InventoryAdjustment.name)
-    private readonly inventoryAdjustmentModel: typeof InventoryAdjustment,
+    private readonly inventoryAdjustmentModel: TenantModelProxy<
+      typeof InventoryAdjustment
+    >,
   ) {}
   /**
    * Retrieve the inventory adjustments paginated list.
@@ -32,10 +35,10 @@ export class GetInventoryAdjustmentsService {
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
-      this.inventoryAdjustmentModel,
+      this.inventoryAdjustmentModel(),
       filter,
     );
-    const { results, pagination } = await this.inventoryAdjustmentModel
+    const { results, pagination } = await this.inventoryAdjustmentModel()
       .query()
       .onBuild((query) => {
         query.withGraphFetched('entries.item');

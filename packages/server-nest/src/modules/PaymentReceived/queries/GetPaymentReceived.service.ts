@@ -4,6 +4,7 @@ import { PaymentReceiveTransfromer } from './PaymentReceivedTransformer';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { ServiceError } from '../../Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetPaymentReceivedService {
@@ -11,7 +12,9 @@ export class GetPaymentReceivedService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(PaymentReceived.name)
-    private readonly paymentReceiveModel: typeof PaymentReceived,
+    private readonly paymentReceiveModel: TenantModelProxy<
+      typeof PaymentReceived
+    >,
   ) {}
 
   /**
@@ -20,9 +23,10 @@ export class GetPaymentReceivedService {
    * @return {Promise<IPaymentReceived>}
    */
   public async getPaymentReceive(
-    paymentReceiveId: number
+    paymentReceiveId: number,
   ): Promise<PaymentReceived> {
-    const paymentReceive = await this.paymentReceiveModel.query()
+    const paymentReceive = await this.paymentReceiveModel()
+      .query()
       .withGraphFetched('customer')
       .withGraphFetched('depositAccount')
       .withGraphFetched('entries.invoice')
@@ -35,7 +39,7 @@ export class GetPaymentReceivedService {
     }
     return this.transformer.transform(
       paymentReceive,
-      new PaymentReceiveTransfromer()
+      new PaymentReceiveTransfromer(),
     );
   }
 }

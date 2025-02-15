@@ -1,12 +1,13 @@
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
 import { Inject, Injectable } from '@nestjs/common';
 import { IPaymentReceivedState } from '../types/PaymentReceived.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetPaymentReceivedStateService {
   constructor(
     @Inject(PdfTemplateModel.name)
-    private pdfTemplateModel: typeof PdfTemplateModel,
+    private pdfTemplateModel: TenantModelProxy<typeof PdfTemplateModel>,
   ) {}
 
   /**
@@ -14,7 +15,7 @@ export class GetPaymentReceivedStateService {
    * @returns {Promise<IPaymentReceivedState>} - A promise resolving to the payment received state.
    */
   public async getPaymentReceivedState(): Promise<IPaymentReceivedState> {
-    const defaultPdfTemplate = await this.pdfTemplateModel
+    const defaultPdfTemplate = await this.pdfTemplateModel()
       .query()
       .findOne({ resource: 'PaymentReceive' })
       .modify('default');

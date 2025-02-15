@@ -9,6 +9,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ManualJournal } from '../models/ManualJournal';
 import { ManualJournalEntry } from '../models/ManualJournalEntry';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteManualJournalService {
@@ -17,10 +18,12 @@ export class DeleteManualJournalService {
     private readonly uow: UnitOfWork,
 
     @Inject(ManualJournal.name)
-    private readonly manualJournalModel: typeof ManualJournal,
+    private readonly manualJournalModel: TenantModelProxy<typeof ManualJournal>,
 
     @Inject(ManualJournalEntry.name)
-    private readonly manualJournalEntryModel: typeof ManualJournalEntry,
+    private readonly manualJournalEntryModel: TenantModelProxy<
+      typeof ManualJournalEntry
+    >,
   ) {}
 
   /**
@@ -34,7 +37,8 @@ export class DeleteManualJournalService {
     oldManualJournal: ManualJournal;
   }> => {
     // Validate the manual journal exists on the storage.
-    const oldManualJournal = await this.manualJournalModel.query()
+    const oldManualJournal = await this.manualJournalModel()
+      .query()
       .findById(manualJournalId)
       .throwIfNotFound();
 
@@ -47,13 +51,13 @@ export class DeleteManualJournalService {
       } as IManualJournalDeletingPayload);
 
       // Deletes the manual journal entries.
-      await this.manualJournalEntryModel
+      await this.manualJournalEntryModel()
         .query(trx)
         .where('manualJournalId', manualJournalId)
         .delete();
 
       // Deletes the manual journal transaction.
-      await this.manualJournalModel
+      await this.manualJournalModel()
         .query(trx)
         .findById(manualJournalId)
         .delete();

@@ -11,21 +11,24 @@ import { BillPaymentEntry } from '../models/BillPaymentEntry';
 import { ServiceError } from '../../Items/ServiceError';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
 import { Account } from '../../Accounts/models/Account.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class BillPaymentValidators {
   constructor(
     @Inject(Bill.name)
-    private readonly billModel: typeof Bill,
+    private readonly billModel: TenantModelProxy<typeof Bill>,
 
     @Inject(BillPayment.name)
-    private readonly billPaymentModel: typeof BillPayment,
+    private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
 
     @Inject(BillPaymentEntry.name)
-    private readonly billPaymentEntryModel: typeof BillPaymentEntry,
+    private readonly billPaymentEntryModel: TenantModelProxy<
+      typeof BillPaymentEntry
+    >,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -35,7 +38,7 @@ export class BillPaymentValidators {
    * @param {Function} next
    */
   public async getPaymentMadeOrThrowError(paymentMadeId: number) {
-    const billPayment = await this.billPaymentModel
+    const billPayment = await this.billPaymentModel()
       .query()
       .withGraphFetched('entries')
       .findById(paymentMadeId);
@@ -53,9 +56,10 @@ export class BillPaymentValidators {
    * @return {Promise<IAccountType>}
    */
   public async getPaymentAccountOrThrowError(paymentAccountId: number) {
-    const paymentAccount = await this.accountModel
+    const paymentAccount = await this.accountModel()
       .query()
       .findById(paymentAccountId);
+
     if (!paymentAccount) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_FOUND);
     }
@@ -82,7 +86,7 @@ export class BillPaymentValidators {
     paymentMadeNumber: string,
     notPaymentMadeId?: number,
   ) {
-    const foundBillPayment = await this.billPaymentModel
+    const foundBillPayment = await this.billPaymentModel()
       .query()
       .onBuild((builder: any) => {
         builder.findOne('payment_number', paymentMadeNumber);
@@ -107,7 +111,7 @@ export class BillPaymentValidators {
   ) {
     const entriesBillsIds = billPaymentEntries.map((e: any) => e.billId);
 
-    const storedBills = await this.billModel
+    const storedBills = await this.billModel()
       .query()
       .whereIn('id', entriesBillsIds)
       .where('vendor_id', vendorId);
@@ -144,7 +148,7 @@ export class BillPaymentValidators {
       (entry: IBillPaymentEntryDTO) => entry.billId,
     );
 
-    const storedBills = await this.billModel.query().whereIn('id', billsIds);
+    const storedBills = await this.billModel().query().whereIn('id', billsIds);
     const storedBillsMap = new Map(
       storedBills.map((bill) => {
         const oldEntries = oldPaymentEntries.filter(
@@ -191,7 +195,7 @@ export class BillPaymentValidators {
       .filter((entry: any) => entry.id)
       .map((entry: any) => entry.id);
 
-    const storedEntries = await this.billPaymentEntryModel
+    const storedEntries = await this.billPaymentEntryModel()
       .query()
       .where('bill_payment_id', billPaymentId);
 
@@ -243,7 +247,7 @@ export class BillPaymentValidators {
    * @param {number} vendorId
    */
   public async validateVendorHasNoPayments(vendorId: number) {
-    const payments = await this.billPaymentModel
+    const payments = await this.billPaymentModel()
       .query()
       .where('vendor_id', vendorId);
 

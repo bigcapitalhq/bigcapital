@@ -11,6 +11,7 @@ import {
   ICommandCashflowDeletedPayload,
   ICommandCashflowDeletingPayload,
 } from '../types/BankingTransactions.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteCashflowTransaction {
@@ -19,10 +20,12 @@ export class DeleteCashflowTransaction {
     private readonly eventEmitter: EventEmitter2,
 
     @Inject(BankTransaction.name)
-    private readonly bankTransaction: typeof BankTransaction,
+    private readonly bankTransaction: TenantModelProxy<typeof BankTransaction>,
 
     @Inject(BankTransactionLine.name)
-    private readonly bankTransactionLine: typeof BankTransactionLine,
+    private readonly bankTransactionLine: TenantModelProxy<
+      typeof BankTransactionLine
+    >,
   ) {}
 
   /**
@@ -35,7 +38,7 @@ export class DeleteCashflowTransaction {
     trx?: Knex.Transaction,
   ): Promise<BankTransaction> => {
     // Retrieve the cashflow transaction.
-    const oldCashflowTransaction = await this.bankTransaction
+    const oldCashflowTransaction = await this.bankTransaction()
       .query()
       .findById(cashflowTransactionId);
     // Throw not found error if the given transaction id not found.
@@ -50,13 +53,13 @@ export class DeleteCashflowTransaction {
       } as ICommandCashflowDeletingPayload);
 
       // Delete cashflow transaction associated lines first.
-      await this.bankTransactionLine
+      await this.bankTransactionLine()
         .query(trx)
         .where('cashflow_transaction_id', cashflowTransactionId)
         .delete();
 
       // Delete cashflow transaction.
-      await this.bankTransaction
+      await this.bankTransaction()
         .query(trx)
         .findById(cashflowTransactionId)
         .delete();

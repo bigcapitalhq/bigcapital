@@ -6,6 +6,7 @@ import { RevertRecognizedTransactionsService } from '@/modules/BankingTranasctio
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { DeleteBankRulesService } from '@/modules/BankRules/commands/DeleteBankRules.service';
 import { BankRule } from '@/modules/BankRules/models/BankRule';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteUncategorizedTransactionsOnAccountDeleting {
@@ -13,9 +14,13 @@ export class DeleteUncategorizedTransactionsOnAccountDeleting {
     private readonly deleteBankRules: DeleteBankRulesService,
     private readonly revertRecognizedTransactins: RevertRecognizedTransactionsService,
 
-    @Inject(BankRule.name) private bankRuleModel: typeof BankRule,
+    @Inject(BankRule.name)
+    private bankRuleModel: TenantModelProxy<typeof BankRule>,
+
     @Inject(UncategorizedBankTransaction.name)
-    private uncategorizedCashflowTransactionModel: typeof UncategorizedBankTransaction,
+    private uncategorizedCashflowTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -28,10 +33,9 @@ export class DeleteUncategorizedTransactionsOnAccountDeleting {
     oldAccount,
     trx,
   }: IAccountEventDeletePayload) {
-    const foundAssociatedRules = await this.bankRuleModel.query(trx).where(
-      'applyIfAccountId',
-      oldAccount.id,
-    );
+    const foundAssociatedRules = await this.bankRuleModel()
+      .query(trx)
+      .where('applyIfAccountId', oldAccount.id);
     const foundAssociatedRulesIds = foundAssociatedRules.map((rule) => rule.id);
 
     // Revert the recognized transactions of the given bank rules.
@@ -41,15 +45,12 @@ export class DeleteUncategorizedTransactionsOnAccountDeleting {
       trx,
     );
     // Delete the associated uncategorized transactions.
-    await this.uncategorizedCashflowTransactionModel
+    await this.uncategorizedCashflowTransactionModel()
       .query(trx)
       .where('accountId', oldAccount.id)
       .delete();
 
     // Delete the given bank rules.
-    await this.deleteBankRules.deleteBankRules(
-      foundAssociatedRulesIds,
-      trx,
-    );
+    await this.deleteBankRules.deleteBankRules(foundAssociatedRulesIds, trx);
   }
 }

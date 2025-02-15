@@ -4,14 +4,21 @@ import { events } from '@/common/events/events';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { PaymentIntegration } from '../models/PaymentIntegration.model';
 import { StripeOAuthCodeGrantedEventPayload } from '../types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SeedStripeAccountsOnOAuthGrantedSubscriber {
+  /**
+   * @param {AccountRepository} accountRepository
+   * @param {TenantModelProxy<typeof PaymentIntegration>} paymentIntegrationModel
+   */
   constructor(
     private readonly accountRepository: AccountRepository,
 
     @Inject(PaymentIntegration.name)
-    private readonly paymentIntegrationModel: typeof PaymentIntegration,
+    private readonly paymentIntegrationModel: TenantModelProxy<
+      typeof PaymentIntegration
+    >,
   ) {}
 
   /**
@@ -29,7 +36,7 @@ export class SeedStripeAccountsOnOAuthGrantedSubscriber {
     const bankAccount = await this.accountRepository.findBySlug('bank-account');
 
     // Patch the Stripe integration default settings.
-    await this.paymentIntegrationModel
+    await this.paymentIntegrationModel()
       .query(trx)
       .findById(paymentIntegrationId)
       .patch({

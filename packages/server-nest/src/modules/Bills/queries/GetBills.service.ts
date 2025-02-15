@@ -6,6 +6,7 @@ import { Bill } from '../models/Bill';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { BillTransformer } from './Bill.transformer';
 import { IBillsFilter } from '../Bills.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetBillsService {
@@ -13,7 +14,7 @@ export class GetBillsService {
     private transformer: TransformerInjectable,
     private dynamicListService: DynamicListService,
 
-    @Inject(Bill.name) private billModel: typeof Bill,
+    @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
   ) {}
 
   /**
@@ -30,10 +31,10 @@ export class GetBillsService {
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
-      this.billModel,
+      this.billModel(),
       filter,
     );
-    const { results, pagination } = await this.billModel
+    const { results, pagination } = await this.billModel()
       .query()
       .onBuild((builder) => {
         builder.withGraphFetched('vendor');

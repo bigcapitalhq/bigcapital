@@ -11,15 +11,16 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteSaleEstimate {
   constructor(
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
 
     @Inject(ItemEntry.name)
-    private readonly itemEntryModel: typeof ItemEntry,
+    private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
 
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
@@ -33,7 +34,7 @@ export class DeleteSaleEstimate {
    */
   public async deleteEstimate(estimateId: number): Promise<void> {
     // Retrieve sale estimate or throw not found service error.
-    const oldSaleEstimate = await this.saleEstimateModel
+    const oldSaleEstimate = await this.saleEstimateModel()
       .query()
       .findById(estimateId)
       .throwIfNotFound();
@@ -51,14 +52,17 @@ export class DeleteSaleEstimate {
       } as ISaleEstimateDeletingPayload);
 
       // Delete sale estimate entries.
-      await this.itemEntryModel
+      await this.itemEntryModel()
         .query(trx)
         .where('reference_id', estimateId)
         .where('reference_type', 'SaleEstimate')
         .delete();
 
       // Delete sale estimate transaction.
-      await this.saleEstimateModel.query(trx).where('id', estimateId).delete();
+      await this.saleEstimateModel()
+        .query(trx)
+        .where('id', estimateId)
+        .delete();
 
       // Triggers `onSaleEstimatedDeleted` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onDeleted, {

@@ -14,12 +14,13 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { events } from '@/common/events/events';
 import { CreateAccountDTO } from './CreateAccount.dto';
 import { PartialModelObject } from 'objection';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateAccountService {
   constructor(
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly validator: CommandAccountValidators,
@@ -121,9 +122,11 @@ export class CreateAccountService {
       } as IAccountEventCreatingPayload);
 
       // Inserts account to the storage.
-      const account = await this.accountModel.query().insert({
-        ...accountInputModel,
-      });
+      const account = await this.accountModel()
+        .query()
+        .insert({
+          ...accountInputModel,
+        });
       // Triggers `onAccountCreated` event.
       await this.eventEmitter.emitAsync(events.accounts.onCreated, {
         account,

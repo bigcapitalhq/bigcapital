@@ -10,17 +10,20 @@ import {
   getPdfFilesStorageDir,
 } from './utils';
 import { Document } from './models/Document';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class ChromiumlyHtmlConvert {
   /**
-   * @param {typeof Document} documentModel - Document model.
+   * @param {TenantModelProxy<typeof Document>} documentModel - Document model.
    */
-  constructor(@Inject(Document.name) private documentModel: typeof Document) {}
+  constructor(
+    @Inject(Document.name)
+    private documentModel: TenantModelProxy<typeof Document>,
+  ) {}
 
   /**
    * Write HTML content to temporary file.
-   * @param {number} tenantId - Tenant id.
    * @param {string} content - HTML content.
    * @returns {Promise<[string, () => Promise<void>]>}
    */
@@ -31,7 +34,7 @@ export class ChromiumlyHtmlConvert {
     const filePath = getPdfFilePath(filename);
 
     await fs.writeFile(filePath, content);
-    await this.documentModel
+    await this.documentModel()
       .query()
       .insert({ key: filename, mimeType: 'text/html' });
 

@@ -12,6 +12,7 @@ import { events } from '@/common/events/events';
 import { ERRORS } from '../constants';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeliverSaleInvoice {
@@ -20,7 +21,8 @@ export class DeliverSaleInvoice {
     private uow: UnitOfWork,
     private validators: CommandSaleInvoiceValidators,
 
-    @Inject(SaleInvoice.name) private saleInvoiceModel: typeof SaleInvoice,
+    @Inject(SaleInvoice.name)
+    private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -30,7 +32,7 @@ export class DeliverSaleInvoice {
    */
   public async deliverSaleInvoice(saleInvoiceId: number): Promise<void> {
     // Retrieve details of the given sale invoice id.
-    const oldSaleInvoice = await this.saleInvoiceModel
+    const oldSaleInvoice = await this.saleInvoiceModel()
       .query()
       .findById(saleInvoiceId);
 
@@ -51,7 +53,7 @@ export class DeliverSaleInvoice {
       } as ISaleInvoiceDeliveringPayload);
 
       // Record the delivered at on the storage.
-      const saleInvoice = await this.saleInvoiceModel
+      const saleInvoice = await this.saleInvoiceModel()
         .query(trx)
         .patchAndFetchById(saleInvoiceId, {
           deliveredAt: moment().toMySqlDateTime(),

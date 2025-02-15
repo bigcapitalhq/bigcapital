@@ -12,6 +12,7 @@ import { RefundCreditNote } from '@/modules/CreditNoteRefunds/models/RefundCredi
 import { CommandCreditNoteDTOTransform } from '@/modules/CreditNotes/commands/CommandCreditNoteDTOTransform.service';
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateRefundCreditNoteService {
@@ -19,9 +20,9 @@ export class CreateRefundCreditNoteService {
    * @param {UnitOfWork} uow - The unit of work service.
    * @param {EventEmitter2} eventPublisher - The event emitter service.
    * @param {CommandCreditNoteDTOTransform} commandCreditNoteDTOTransform - The command credit note DTO transform service.
-   * @param {typeof RefundCreditNote} refundCreditNoteModel - The refund credit note model.
-   * @param {typeof Account} accountModel - The account model.
-   * @param {typeof CreditNote} creditNoteModel - The credit note model.
+   * @param {TenantModelProxy<typeof RefundCreditNote>} refundCreditNoteModel - The refund credit note model.
+   * @param {TenantModelProxy<typeof Account>} accountModel - The account model.
+   * @param {TenantModelProxy<typeof CreditNote>} creditNoteModel - The credit note model.
    */
   constructor(
     private uow: UnitOfWork,
@@ -29,10 +30,13 @@ export class CreateRefundCreditNoteService {
     private commandCreditNoteDTOTransform: CommandCreditNoteDTOTransform,
 
     @Inject(RefundCreditNote.name)
-    private refundCreditNoteModel: typeof RefundCreditNote,
+    private refundCreditNoteModel: TenantModelProxy<typeof RefundCreditNote>,
 
-    @Inject(Account.name) private accountModel: typeof Account,
-    @Inject(CreditNote.name) private creditNoteModel: typeof CreditNote,
+    @Inject(Account.name)
+    private accountModel: TenantModelProxy<typeof Account>,
+
+    @Inject(CreditNote.name)
+    private creditNoteModel: TenantModelProxy<typeof CreditNote>,
   ) {}
 
   /**
@@ -46,13 +50,13 @@ export class CreateRefundCreditNoteService {
     newCreditNoteDTO: ICreditNoteRefundDTO,
   ): Promise<RefundCreditNote> {
     // Retrieve the credit note or throw not found service error.
-    const creditNote = await this.creditNoteModel
+    const creditNote = await this.creditNoteModel()
       .query()
       .findById(creditNoteId)
       .throwIfNotFound();
 
     // Retrieve the withdrawal account or throw not found service error.
-    const fromAccount = await this.accountModel
+    const fromAccount = await this.accountModel()
       .query()
       .findById(newCreditNoteDTO.fromAccountId)
       .throwIfNotFound();
@@ -76,7 +80,7 @@ export class CreateRefundCreditNoteService {
       } as IRefundCreditNoteCreatingPayload);
 
       // Stores the refund credit note graph to the storage layer.
-      const refundCreditNote = await this.refundCreditNoteModel
+      const refundCreditNote = await this.refundCreditNoteModel()
         .query(trx)
         .insertAndFetch({
           ...this.transformDTOToModel(creditNote, newCreditNoteDTO),

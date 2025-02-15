@@ -6,6 +6,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IExpensesFilter, IPaginationMeta } from '../Expenses.types';
 import { Expense } from '../models/Expense.model';
 import { IFilterMeta } from '@/interfaces/Model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetExpensesService {
@@ -14,7 +15,7 @@ export class GetExpensesService {
     private readonly dynamicListService: DynamicListService,
 
     @Inject(Expense.name)
-    private readonly expense: typeof Expense,
+    private readonly expense: TenantModelProxy<typeof Expense>,
   ) {}
 
   /**
@@ -22,9 +23,7 @@ export class GetExpensesService {
    * @param  {IExpensesFilter} expensesFilter
    * @return {IExpense[]}
    */
-  public async getExpensesList(
-    filterDTO: IExpensesFilter
-  ): Promise<{
+  public async getExpensesList(filterDTO: IExpensesFilter): Promise<{
     expenses: Expense[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
@@ -34,11 +33,12 @@ export class GetExpensesService {
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
-      this.expense,
-      filter
+      this.expense(),
+      filter,
     );
     // Retrieves the paginated results.
-    const { results, pagination } = await this.expense.query()
+    const { results, pagination } = await this.expense()
+      .query()
       .onBuild((builder) => {
         builder.withGraphFetched('paymentAccount');
         builder.withGraphFetched('categories.expenseAccount');
@@ -51,14 +51,14 @@ export class GetExpensesService {
     // Transformes the expenses models to POJO.
     const expenses = await this.transformer.transform(
       results,
-      new ExpenseTransfromer()
+      new ExpenseTransfromer(),
     );
     return {
       expenses,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };
-  };
+  }
 
   /**
    * Parses filter DTO of expenses list.

@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { CreditNote } from '../models/CreditNote';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreditNoteGLEntries {
@@ -12,7 +13,7 @@ export class CreditNoteGLEntries {
     private readonly accountRepository: AccountRepository,
 
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
   ) {}
 
   /**

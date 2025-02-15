@@ -13,6 +13,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateSaleReceipt {
@@ -33,10 +34,10 @@ export class CreateSaleReceipt {
     private readonly validators: SaleReceiptValidators,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: typeof SaleReceipt,
+    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
 
     @Inject(Customer.name)
-    private readonly customerModel: typeof Customer,
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -50,7 +51,7 @@ export class CreateSaleReceipt {
     trx?: Knex.Transaction,
   ): Promise<SaleReceipt> {
     // Retrieves the payment customer model.
-    const paymentCustomer = await this.customerModel
+    const paymentCustomer = await this.customerModel()
       .query()
       .findById(saleReceiptDTO.customerId)
       .throwIfNotFound();
@@ -87,9 +88,11 @@ export class CreateSaleReceipt {
       } as ISaleReceiptCreatingPayload);
 
       // Inserts the sale receipt graph to the storage.
-      const saleReceipt = await this.saleReceiptModel.query().upsertGraph({
-        ...saleReceiptObj,
-      });
+      const saleReceipt = await this.saleReceiptModel()
+        .query()
+        .upsertGraph({
+          ...saleReceiptObj,
+        });
 
       // Triggers `onSaleReceiptCreated` event.
       await this.eventEmitter.emitAsync(events.saleReceipt.onCreated, {

@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ICreditNoteState } from '../types/CreditNotes.types';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetCreditNoteState {
   constructor(
     @Inject(PdfTemplateModel.name)
-    private pdfTemplateModel: typeof PdfTemplateModel,
+    private pdfTemplateModel: TenantModelProxy<typeof PdfTemplateModel>,
   ) {}
 
   /**
@@ -14,7 +15,8 @@ export class GetCreditNoteState {
    * @return {Promise<ICreditNoteState>}
    */
   public async getCreditNoteState(): Promise<ICreditNoteState> {
-    const defaultPdfTemplate = await this.pdfTemplateModel.query()
+    const defaultPdfTemplate = await this.pdfTemplateModel()
+      .query()
       .findOne({ resource: 'CreditNote' })
       .modify('default');
 

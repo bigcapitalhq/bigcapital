@@ -11,12 +11,14 @@ import { SaleEstimate } from '../models/SaleEstimate';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ApproveSaleEstimateService {
   constructor(
     @Inject(SaleEstimate.name)
-    private saleEstimateModel: typeof SaleEstimate,
+    private saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
+
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
   ) {}
@@ -28,7 +30,7 @@ export class ApproveSaleEstimateService {
    */
   public async approveSaleEstimate(saleEstimateId: number): Promise<void> {
     // Retrieve details of the given sale estimate id.
-    const oldSaleEstimate = await this.saleEstimateModel
+    const oldSaleEstimate = await this.saleEstimateModel()
       .query()
       .findById(saleEstimateId)
       .throwIfNotFound();
@@ -50,7 +52,7 @@ export class ApproveSaleEstimateService {
       } as ISaleEstimateApprovingEvent);
 
       // Update estimate as approved.
-      const saleEstimate = await this.saleEstimateModel
+      const saleEstimate = await this.saleEstimateModel()
         .query(trx)
         .patchAndFetchById(saleEstimateId, {
           approvedAt: moment().toMySqlDateTime(),

@@ -4,12 +4,13 @@ import { Bill } from '../../Bills/models/Bill';
 import { IBillPaymentEntryDTO } from '../types/BillPayments.types';
 import { entriesAmountDiff } from '@/utils/entries-amount-diff';
 import Objection from 'objection';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class BillPaymentBillSync {
   constructor(
     @Inject(Bill.name)
-    private readonly bill: typeof Bill
+    private readonly bill: TenantModelProxy<typeof Bill>,
   ) {}
 
   /**
@@ -36,7 +37,7 @@ export class BillPaymentBillSync {
         if (diffEntry.paymentAmount === 0) {
           return;
         }
-        const oper = this.bill.changePaymentAmount(
+        const oper = this.bill().changePaymentAmount(
           diffEntry.billId,
           diffEntry.paymentAmount,
           trx,

@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { Inject, Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
-import * as  composeAsync from 'async/compose';
+import * as composeAsync from 'async/compose';
 // import { ICustomer, ISaleEstimate, ISaleEstimateDTO } from '../types/SaleEstimates.types';
 import { SaleEstimateValidators } from './SaleEstimateValidators.service';
 // import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
@@ -17,6 +17,7 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { SaleEstimate } from '../models/SaleEstimate';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { ISaleEstimateDTO } from '../types/SaleEstimates.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 // import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
 // import { BrandingTemplateDTOTransformer } from '@/services/PdfTemplate/BrandingTemplateDTOTransformer';
 
@@ -24,7 +25,8 @@ import { ISaleEstimateDTO } from '../types/SaleEstimates.types';
 export class SaleEstimateDTOTransformer {
   constructor(
     @Inject(ItemEntry.name)
-    private itemEntryModel: typeof ItemEntry,
+    private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
+
     private readonly validators: SaleEstimateValidators,
     private readonly branchDTOTransform: BranchTransactionDTOTransformer,
     private readonly warehouseDTOTransform: WarehouseTransactionDTOTransform,
@@ -42,10 +44,10 @@ export class SaleEstimateDTOTransformer {
   async transformDTOToModel(
     estimateDTO: ISaleEstimateDTO,
     paymentCustomer: Customer,
-    oldSaleEstimate?: SaleEstimate
+    oldSaleEstimate?: SaleEstimate,
   ): Promise<SaleEstimate> {
-    const amount = sumBy(estimateDTO.entries, (e) => 
-      this.itemEntryModel.calcAmount(e)
+    const amount = sumBy(estimateDTO.entries, (e) =>
+      this.itemEntryModel().calcAmount(e),
     );
     // Retrieve the next invoice number.
     const autoNextNumber = this.estimateIncrement.getNextEstimateNumber();
@@ -64,14 +66,14 @@ export class SaleEstimateDTOTransformer {
       R.map((entry) => R.assoc('reference_type', 'SaleEstimate', entry)),
 
       // Associate default index to item entries.
-      assocItemEntriesDefaultIndex
+      assocItemEntriesDefaultIndex,
     )(estimateDTO.entries);
 
     const initialDTO = {
       amount,
       ...formatDateFields(
         omit(estimateDTO, ['delivered', 'entries', 'attachments']),
-        ['estimateDate', 'expirationDate']
+        ['estimateDate', 'expirationDate'],
       ),
       currencyCode: paymentCustomer.currencyCode,
       exchangeRate: estimateDTO.exchangeRate || 1,
@@ -86,8 +88,8 @@ export class SaleEstimateDTOTransformer {
     const initialAsyncDTO = await composeAsync(
       // Assigns the default branding template id to the invoice DTO.
       this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
-        'SaleEstimate'
-      )
+        'SaleEstimate',
+      ),
     )(initialDTO);
 
     return R.compose(
@@ -103,7 +105,7 @@ export class SaleEstimateDTOTransformer {
    */
   public transformEstimateNumberToModel(
     saleEstimateDTO: ISaleEstimateDTO,
-    oldSaleEstimate?: SaleEstimate
+    oldSaleEstimate?: SaleEstimate,
   ): string {
     const autoNextNumber = this.estimateIncrement.getNextEstimateNumber();
 

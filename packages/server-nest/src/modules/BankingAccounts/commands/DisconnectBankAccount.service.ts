@@ -14,6 +14,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PLAID_CLIENT } from '@/modules/Plaid/Plaid.module';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DisconnectBankAccountService {
@@ -21,9 +22,12 @@ export class DisconnectBankAccountService {
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
 
-    @Inject(Account.name) private accountModel: typeof Account,
-    @Inject(PlaidItem.name) private plaidItemModel: typeof PlaidItem,
     @Inject(PLAID_CLIENT) private plaidClient: PlaidApi,
+    @Inject(Account.name)
+    private accountModel: TenantModelProxy<typeof Account>,
+
+    @Inject(PlaidItem.name)
+    private plaidItemModel: TenantModelProxy<typeof PlaidItem>,
   ) {}
 
   /**
@@ -33,7 +37,7 @@ export class DisconnectBankAccountService {
    */
   public async disconnectBankAccount(bankAccountId: number) {
     // Retrieve the bank account or throw not found error.
-    const account = await this.accountModel
+    const account = await this.accountModel()
       .query()
       .findById(bankAccountId)
       .whereIn('account_type', [ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK])
@@ -52,10 +56,13 @@ export class DisconnectBankAccountService {
       } as IBankAccountDisconnectingEventPayload);
 
       // Remove the Plaid item from the system.
-      await this.plaidItemModel.query(trx).findById(account.plaidItemId).delete();
+      await this.plaidItemModel()
+        .query(trx)
+        .findById(account.plaidItemId)
+        .delete();
 
       // Remove the plaid item association to the bank account.
-      await this.accountModel.query(trx).findById(bankAccountId).patch({
+      await this.accountModel().query(trx).findById(bankAccountId).patch({
         plaidAccountId: null,
         plaidItemId: null,
         isFeedsActive: false,

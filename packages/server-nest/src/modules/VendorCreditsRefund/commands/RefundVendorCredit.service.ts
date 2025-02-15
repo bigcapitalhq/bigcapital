@@ -4,18 +4,21 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { RefundVendorCredit } from '../models/RefundVendorCredit';
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class RefundVendorCreditService {
   constructor(
     @Inject(RefundVendorCredit.name)
-    private refundVendorCreditModel: typeof RefundVendorCredit,
+    private refundVendorCreditModel: TenantModelProxy<
+      typeof RefundVendorCredit
+    >,
 
     @Inject(Account.name)
-    private accountModel: typeof Account,
+    private accountModel: TenantModelProxy<typeof Account>,
 
     @Inject(VendorCredit.name)
-    private vendorCreditModel: typeof VendorCredit,
+    private vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -26,7 +29,7 @@ export class RefundVendorCreditService {
   public getRefundVendorCreditOrThrowError = async (
     refundVendorCreditId: number,
   ) => {
-    const refundCredit = await this.refundVendorCreditModel
+    const refundCredit = await this.refundVendorCreditModel()
       .query()
       .findById(refundVendorCreditId);
     if (!refundCredit) {

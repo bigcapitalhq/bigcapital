@@ -3,6 +3,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { RefundCreditNote } from '../models/RefundCreditNote';
 import { RefundCreditNoteTransformer } from '@/modules/CreditNotes/queries/RefundCreditNoteTransformer';
 import { IRefundCreditNotePOJO } from '../types/CreditNoteRefunds.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ListCreditNoteRefunds {
@@ -10,7 +11,9 @@ export class ListCreditNoteRefunds {
     private readonly transformer: TransformerInjectable,
 
     @Inject(RefundCreditNote.name)
-    private readonly refundCreditNoteModel: typeof RefundCreditNote,
+    private readonly refundCreditNoteModel: TenantModelProxy<
+      typeof RefundCreditNote
+    >,
   ) {}
 
   /**
@@ -22,7 +25,7 @@ export class ListCreditNoteRefunds {
     creditNoteId: number,
   ): Promise<IRefundCreditNotePOJO[]> {
     // Retrieve refund credit notes associated to the given credit note.
-    const refundCreditTransactions = await this.refundCreditNoteModel
+    const refundCreditTransactions = await this.refundCreditNoteModel()
       .query()
       .where('creditNoteId', creditNoteId)
       .withGraphFetched('creditNote')

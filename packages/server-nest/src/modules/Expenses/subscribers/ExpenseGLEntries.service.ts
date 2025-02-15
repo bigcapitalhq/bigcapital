@@ -3,15 +3,16 @@ import { ExpenseGL } from './ExpenseGL';
 import { Inject, Injectable } from '@nestjs/common';
 import { Expense } from '../models/Expense.model';
 import { ILedger } from '@/modules/Ledger/types/Ledger.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ExpenseGLEntriesService {
   /**
-   * @param {typeof Expense} expense - Expense model.
+   * @param {TenantModelProxy<typeof Expense>} expense - Expense model.
    */
   constructor(
     @Inject(Expense.name)
-    private readonly expense: typeof Expense,
+    private readonly expense: TenantModelProxy<typeof Expense>,
   ) {}
 
   /**
@@ -24,7 +25,7 @@ export class ExpenseGLEntriesService {
     expenseId: number,
     trx?: Knex.Transaction,
   ): Promise<ILedger> => {
-    const expense = await this.expense
+    const expense = await this.expense()
       .query(trx)
       .findById(expenseId)
       .withGraphFetched('categories')

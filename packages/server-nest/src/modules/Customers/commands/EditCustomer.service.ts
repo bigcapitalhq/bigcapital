@@ -10,6 +10,7 @@ import { Customer } from '../models/Customer';
 import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditCustomer {
@@ -17,13 +18,15 @@ export class EditCustomer {
    * @param {UnitOfWork} uow - Unit of work service.
    * @param {EventEmitter2} eventPublisher - Event emitter service.
    * @param {CreateEditCustomerDTO} customerDTO - Customer DTO.
-   * @param {typeof Customer} contactModel - Customer model.
+   * @param {TenantModelProxy<typeof Customer>} contactModel - Customer model.
    */
   constructor(
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
     private customerDTO: CreateEditCustomerDTO,
-    @Inject(Customer.name) private customerModel: typeof Customer,
+
+    @Inject(Customer.name)
+    private customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -37,7 +40,7 @@ export class EditCustomer {
     customerDTO: ICustomerEditDTO,
   ): Promise<Customer> {
     // Retrieve the customer or throw not found error.
-    const oldCustomer = await this.customerModel
+    const oldCustomer = await this.customerModel()
       .query()
       .findById(customerId)
       .throwIfNotFound();
@@ -55,7 +58,7 @@ export class EditCustomer {
       } as ICustomerEventEditingPayload);
 
       // Edits the customer details on the storage.
-      const customer = await this.customerModel
+      const customer = await this.customerModel()
         .query()
         .updateAndFetchById(customerId, {
           ...customerObj,

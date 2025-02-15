@@ -10,6 +10,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Vendor } from '../models/Vendor';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditVendorService {
@@ -18,7 +19,8 @@ export class EditVendorService {
     private readonly uow: UnitOfWork,
     private readonly transformDTO: CreateEditVendorDTOService,
 
-    @Inject(Vendor.name) private readonly vendorModel: typeof Vendor,
+    @Inject(Vendor.name)
+    private readonly vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -29,7 +31,7 @@ export class EditVendorService {
    */
   public async editVendor(vendorId: number, vendorDTO: IVendorEditDTO) {
     // Retrieve the vendor or throw not found error.
-    const oldVendor = await this.vendorModel
+    const oldVendor = await this.vendorModel()
       .query()
       .findById(vendorId)
       .throwIfNotFound();
@@ -46,7 +48,7 @@ export class EditVendorService {
       } as IVendorEventEditingPayload);
 
       // Edits the vendor contact.
-      const vendor = await this.vendorModel
+      const vendor = await this.vendorModel()
         .query()
         .updateAndFetchById(vendorId, {
           ...vendorObj,

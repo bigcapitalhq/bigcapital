@@ -8,6 +8,7 @@ import { BankRule } from '../models/BankRule';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditBankRuleService {
@@ -15,7 +16,8 @@ export class EditBankRuleService {
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
 
-    @Inject(BankRule.name) private bankRuleModel: typeof BankRule,
+    @Inject(BankRule.name)
+    private bankRuleModel: TenantModelProxy<typeof BankRule>,
   ) {}
 
   /**
@@ -34,11 +36,9 @@ export class EditBankRuleService {
    * @param {number} ruleId -
    * @param {IEditBankRuleDTO} editBankDTO
    */
-  public async editBankRule(
-    ruleId: number,
-    editRuleDTO: IEditBankRuleDTO
-  ) {
-    const oldBankRule = await this.bankRuleModel.query()
+  public async editBankRule(ruleId: number, editRuleDTO: IEditBankRuleDTO) {
+    const oldBankRule = await this.bankRuleModel()
+      .query()
       .findById(ruleId)
       .withGraphFetched('conditions')
       .throwIfNotFound();
@@ -55,10 +55,12 @@ export class EditBankRuleService {
       } as IBankRuleEventEditingPayload);
 
       // Updates the given bank rule.
-      const bankRule = await this.bankRuleModel.query(trx).upsertGraphAndFetch({
-        ...tranformDTO,
-        id: ruleId,
-      });
+      const bankRule = await this.bankRuleModel()
+        .query(trx)
+        .upsertGraphAndFetch({
+          ...tranformDTO,
+          id: ruleId,
+        });
       // Triggers `onBankRuleEdited` event.
       await this.eventPublisher.emitAsync(events.bankRules.onEdited, {
         oldBankRule,

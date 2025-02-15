@@ -3,6 +3,7 @@ import { VendorCreditAppliedBillTransformer } from './VendorCreditAppliedBillTra
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetAppliedBillsToVendorCreditService {
@@ -10,10 +11,12 @@ export class GetAppliedBillsToVendorCreditService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(VendorCreditAppliedBill.name)
-    private readonly vendorCreditAppliedBillModel: typeof VendorCreditAppliedBill,
+    private readonly vendorCreditAppliedBillModel: TenantModelProxy<
+      typeof VendorCreditAppliedBill
+    >,
 
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -22,12 +25,12 @@ export class GetAppliedBillsToVendorCreditService {
    * @returns
    */
   public getAppliedBills = async (vendorCreditId: number) => {
-    const vendorCredit = await this.vendorCreditModel
+    const vendorCredit = await this.vendorCreditModel()
       .query()
       .findById(vendorCreditId)
       .throwIfNotFound();
 
-    const appliedToBills = await this.vendorCreditAppliedBillModel
+    const appliedToBills = await this.vendorCreditAppliedBillModel()
       .query()
       .where('vendorCreditId', vendorCreditId)
       .withGraphFetched('bill')

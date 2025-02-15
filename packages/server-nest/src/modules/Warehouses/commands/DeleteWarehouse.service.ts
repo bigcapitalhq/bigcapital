@@ -10,6 +10,7 @@ import { ERRORS } from '../contants';
 import { Warehouse } from '../models/Warehouse.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteWarehouseService {
@@ -25,7 +26,7 @@ export class DeleteWarehouseService {
     private readonly validator: WarehouseValidator,
 
     @Inject(Warehouse.name)
-    private readonly warehouseModel: typeof Warehouse,
+    private readonly warehouseModel: TenantModelProxy<typeof Warehouse>,
   ) {}
 
   /**
@@ -44,7 +45,7 @@ export class DeleteWarehouseService {
    */
   public deleteWarehouse = async (warehouseId: number): Promise<void> => {
     // Retrieves the old warehouse or throw not found service error.
-    const oldWarehouse = await this.warehouseModel
+    const oldWarehouse = await this.warehouseModel()
       .query()
       .findById(warehouseId)
       .throwIfNotFound();
@@ -69,7 +70,7 @@ export class DeleteWarehouseService {
         eventPayload,
       );
       // Deletes the given warehouse from the storage.
-      await this.warehouseModel.query().findById(warehouseId).delete();
+      await this.warehouseModel().query().findById(warehouseId).delete();
 
       // Triggers `onWarehouseCreated`.
       await this.eventPublisher.emitAsync(

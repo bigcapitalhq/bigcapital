@@ -9,6 +9,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { TaxRateModel } from '../models/TaxRate.model';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ActivateTaxRateService {
@@ -24,7 +25,7 @@ export class ActivateTaxRateService {
     private readonly validators: CommandTaxRatesValidators,
 
     @Inject(TaxRateModel.name)
-    private readonly taxRateModel: typeof TaxRateModel,
+    private readonly taxRateModel: TenantModelProxy<typeof TaxRateModel>,
   ) {}
 
   /**
@@ -33,7 +34,7 @@ export class ActivateTaxRateService {
    * @returns {Promise<ITaxRate>}
    */
   public async activateTaxRate(taxRateId: number) {
-    const oldTaxRate = await this.taxRateModel.query().findById(taxRateId);
+    const oldTaxRate = await this.taxRateModel().query().findById(taxRateId);
 
     // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(oldTaxRate);
@@ -48,7 +49,7 @@ export class ActivateTaxRateService {
         trx,
       } as ITaxRateActivatingPayload);
 
-      const taxRate = await this.taxRateModel
+      const taxRate = await this.taxRateModel()
         .query(trx)
         .findById(taxRateId)
         .patch({ active: true });

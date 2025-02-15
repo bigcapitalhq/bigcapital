@@ -3,12 +3,15 @@ import { ERRORS } from '../types';
 import { Inject, Injectable } from '@nestjs/common';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { MatchedBankTransaction } from '../models/MatchedBankTransaction';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ValidateTransactionMatched {
   constructor(
     @Inject(MatchedBankTransaction.name)
-    private readonly matchedBankTransactionModel: typeof MatchedBankTransaction,
+    private readonly matchedBankTransactionModel: TenantModelProxy<
+      typeof MatchedBankTransaction
+    >,
   ) {}
 
   /**
@@ -20,13 +23,15 @@ export class ValidateTransactionMatched {
   public async validateTransactionNoMatchLinking(
     referenceType: string,
     referenceId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
-    const foundMatchedTransaction =
-      await this.matchedBankTransactionModel.query(trx).findOne({
+    const foundMatchedTransaction = await this.matchedBankTransactionModel()
+      .query(trx)
+      .findOne({
         referenceType,
         referenceId,
       });
+
     if (foundMatchedTransaction) {
       throw new ServiceError(ERRORS.CANNOT_DELETE_TRANSACTION_MATCHED);
     }

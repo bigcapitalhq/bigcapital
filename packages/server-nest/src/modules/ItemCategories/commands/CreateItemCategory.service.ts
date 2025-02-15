@@ -10,6 +10,7 @@ import { CommandItemCategoryValidatorService } from './CommandItemCategoryValida
 import { ItemCategory } from '../models/ItemCategory.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { SystemUser } from '@/modules/System/models/SystemUser';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateItemCategoryService {
@@ -25,7 +26,7 @@ export class CreateItemCategoryService {
     private readonly eventEmitter: EventEmitter2,
 
     @Inject(ItemCategory.name)
-    private readonly itemCategoryModel: typeof ItemCategory,
+    private readonly itemCategoryModel: () => typeof ItemCategory,
   ) {}
 
   /**
@@ -72,9 +73,11 @@ export class CreateItemCategoryService {
     // Creates item category under unit-of-work evnirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Inserts the item category.
-      const itemCategory = await this.itemCategoryModel.query(trx).insert({
-        ...itemCategoryObj,
-      });
+      const itemCategory = await this.itemCategoryModel()
+        .query(trx)
+        .insert({
+          ...itemCategoryObj,
+        });
       // Triggers `onItemCategoryCreated` event.
       await this.eventEmitter.emitAsync(events.itemCategory.onCreated, {
         itemCategory,

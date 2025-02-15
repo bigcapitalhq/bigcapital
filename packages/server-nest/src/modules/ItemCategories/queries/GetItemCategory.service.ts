@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ItemCategory } from '../models/ItemCategory.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetItemCategoryService {
@@ -8,7 +9,7 @@ export class GetItemCategoryService {
    */
   constructor(
     @Inject(ItemCategory.name)
-    private readonly itemCategoryModel: typeof ItemCategory,
+    private readonly itemCategoryModel: TenantModelProxy<typeof ItemCategory>,
   ) {}
 
   /**
@@ -17,7 +18,7 @@ export class GetItemCategoryService {
    * @returns {Promise<IItemCategory>}
    */
   public async getItemCategory(itemCategoryId: number) {
-    const itemCategory = await this.itemCategoryModel
+    const itemCategory = await this.itemCategoryModel()
       .query()
       .findById(itemCategoryId)
       .throwIfNotFound();

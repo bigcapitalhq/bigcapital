@@ -4,6 +4,7 @@ import { LedgerStorageService } from '../../../Ledger/LedgerStorage.service';
 import { InventoryAdjustment } from '../../models/InventoryAdjustment';
 import { TenancyContext } from '../../../Tenancy/TenancyContext.service';
 import { InventoryAdjustmentsGL } from './InventoryAdjustmentGL';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class InventoryAdjustmentsGLEntries {
@@ -12,7 +13,9 @@ export class InventoryAdjustmentsGLEntries {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(InventoryAdjustment.name)
-    private readonly inventoryAdjustment: typeof InventoryAdjustment,
+    private readonly inventoryAdjustment: TenantModelProxy<
+      typeof InventoryAdjustment
+    >,
   ) {}
 
   /**
@@ -25,7 +28,8 @@ export class InventoryAdjustmentsGLEntries {
     trx?: Knex.Transaction,
   ): Promise<void> => {
     // Retrieves the inventory adjustment with associated entries.
-    const adjustment = await this.inventoryAdjustment.query(trx)
+    const adjustment = await this.inventoryAdjustment()
+      .query(trx)
       .findById(inventoryAdjustmentId)
       .withGraphFetched('entries.item');
 

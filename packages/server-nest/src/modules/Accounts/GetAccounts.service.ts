@@ -7,6 +7,7 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { Account } from './models/Account.model';
 import { AccountRepository } from './repositories/Account.repository';
 import { IFilterMeta } from '@/interfaces/Model';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class GetAccountsService {
@@ -16,7 +17,7 @@ export class GetAccountsService {
     private readonly accountRepository: AccountRepository,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -32,14 +33,16 @@ export class GetAccountsService {
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
-      this.accountModel,
+      this.accountModel(),
       filter,
     );
     // Retrieve accounts model based on the given query.
-    const accounts = await this.accountModel.query().onBuild((builder) => {
-      dynamicList.buildQuery()(builder);
-      builder.modify('inactiveMode', filter.inactiveMode);
-    });
+    const accounts = await this.accountModel()
+      .query()
+      .onBuild((builder) => {
+        dynamicList.buildQuery()(builder);
+        builder.modify('inactiveMode', filter.inactiveMode);
+      });
     const accountsGraph = await this.accountRepository.getDependencyGraph();
 
     // Retrieves the transformed accounts collection.

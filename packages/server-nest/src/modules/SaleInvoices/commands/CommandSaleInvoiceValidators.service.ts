@@ -2,12 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CommandSaleInvoiceValidators {
   constructor(
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -29,7 +30,7 @@ export class CommandSaleInvoiceValidators {
     invoiceNumber: string,
     notInvoiceId?: number,
   ) {
-    const saleInvoice = await this.saleInvoiceModel
+    const saleInvoice = await this.saleInvoiceModel()
       .query()
       .findOne('invoice_no', invoiceNumber)
       .onBuild((builder) => {
@@ -71,7 +72,7 @@ export class CommandSaleInvoiceValidators {
    * @param {number} customerId - Customer id.
    */
   public async validateCustomerHasNoInvoices(customerId: number) {
-    const invoices = await this.saleInvoiceModel
+    const invoices = await this.saleInvoiceModel()
       .query()
       .where('customer_id', customerId);
 

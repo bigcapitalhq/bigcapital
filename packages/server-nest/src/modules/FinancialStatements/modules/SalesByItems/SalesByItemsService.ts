@@ -11,6 +11,7 @@ import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTr
 import { events } from '@/common/events/events';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { SalesByItemsReport } from './SalesByItems';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SalesByItemsReportService {
@@ -20,10 +21,12 @@ export class SalesByItemsReportService {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProxy<typeof Item>,
 
     @Inject(InventoryTransaction.name)
-    private readonly inventoryTransactionModel: typeof InventoryTransaction,
+    private readonly inventoryTransactionModel: TenantModelProxy<
+      typeof InventoryTransaction
+    >,
   ) {}
 
   /**
@@ -41,18 +44,21 @@ export class SalesByItemsReportService {
     const tenantMetadata = await this.tenancyContext.getTenantMetadata();
 
     // Inventory items for sales report.
-    const inventoryItems = await this.itemModel.query().onBuild((q) => {
-      q.where('type', 'inventory');
+    const inventoryItems = await this.itemModel()
+      .query()
+      .onBuild((q) => {
+        q.where('type', 'inventory');
 
-      if (filter.itemsIds.length > 0) {
-        q.whereIn('id', filter.itemsIds);
-      }
-    });
+        if (filter.itemsIds.length > 0) {
+          q.whereIn('id', filter.itemsIds);
+        }
+      });
     const inventoryItemsIds = inventoryItems.map((item) => item.id);
 
     // Calculates the total inventory total quantity and rate `IN` transactions.
-    const inventoryTransactions = await this.inventoryTransactionModel.query().onBuild(
-      (builder: any) => {
+    const inventoryTransactions = await this.inventoryTransactionModel()
+      .query()
+      .onBuild((builder: any) => {
         builder.modify('itemsTotals');
         builder.modify('OUTDirection');
 
@@ -61,8 +67,7 @@ export class SalesByItemsReportService {
 
         // Filter the date range of the sheet.
         builder.modify('filterDateRange', filter.fromDate, filter.toDate);
-      },
-    );
+      });
     const sheet = new SalesByItemsReport(
       filter,
       inventoryItems,

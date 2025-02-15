@@ -10,6 +10,7 @@ import {
   ICashflowTransactionCategorizedPayload,
   ICategorizeCashflowTransactioDTO,
 } from '../types/BankingCategorize.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CategorizeTransactionAsExpense {
@@ -19,7 +20,9 @@ export class CategorizeTransactionAsExpense {
     private readonly createExpenseService: CreateExpense,
 
     @Inject(BankTransaction.name)
-    private readonly bankTransactionModel: typeof BankTransaction,
+    private readonly bankTransactionModel: TenantModelProxy<
+      typeof BankTransaction
+    >,
   ) {}
 
   /**
@@ -31,7 +34,7 @@ export class CategorizeTransactionAsExpense {
     cashflowTransactionId: number,
     transactionDTO: ICategorizeCashflowTransactioDTO,
   ) {
-    const transaction = await this.bankTransactionModel
+    const transaction = await this.bankTransactionModel()
       .query()
       .findById(cashflowTransactionId)
       .throwIfNotFound();
@@ -53,7 +56,7 @@ export class CategorizeTransactionAsExpense {
       });
 
       // Updates the item on the storage and fetches the updated once.
-      const cashflowTransaction = await this.bankTransactionModel
+      const cashflowTransaction = await this.bankTransactionModel()
         .query(trx)
         .patchAndFetchById(cashflowTransactionId, {
           categorizeRefType: 'Expense',

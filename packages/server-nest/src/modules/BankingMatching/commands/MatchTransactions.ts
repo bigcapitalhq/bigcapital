@@ -20,6 +20,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class MatchBankTransactions {
@@ -29,7 +30,9 @@ export class MatchBankTransactions {
     private readonly matchedBankTransactions: MatchTransactionsTypes,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -46,7 +49,7 @@ export class MatchBankTransactions {
 
     // Validates the uncategorized transaction existance.
     const uncategorizedTransactions =
-      await this.uncategorizedBankTransactionModel
+      await this.uncategorizedBankTransactionModel()
         .query()
         .whereIn('id', uncategorizedTransactionIds)
         .withGraphFetched('matchedBankTransactions')

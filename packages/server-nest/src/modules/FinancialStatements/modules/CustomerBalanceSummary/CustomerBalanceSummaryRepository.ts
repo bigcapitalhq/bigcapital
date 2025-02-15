@@ -5,18 +5,21 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { Customer } from '@/modules/Customers/models/Customer';
 import { ModelObject } from 'objection';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CustomerBalanceSummaryRepository {
   constructor(
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
     @Inject(AccountTransaction.name)
-    private readonly accountTransactionModel: typeof AccountTransaction,
+    private readonly accountTransactionModel: TenantModelProxy<
+      typeof AccountTransaction
+    >,
 
     @Inject(Customer.name)
-    private readonly customerModel: typeof Customer,
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -27,7 +30,7 @@ export class CustomerBalanceSummaryRepository {
   public async getCustomers(
     customersIds: number[],
   ): Promise<ModelObject<Customer>[]> {
-    return await this.customerModel
+    return await this.customerModel()
       .query()
       .orderBy('displayName')
       .onBuild((query) => {
@@ -42,7 +45,7 @@ export class CustomerBalanceSummaryRepository {
    * @returns {Promise<IAccount[]>}
    */
   public async getReceivableAccounts(): Promise<ModelObject<Account>[]> {
-    return await this.accountModel
+    return await this.accountModel()
       .query()
       .where('accountType', ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE);
   }
@@ -59,7 +62,7 @@ export class CustomerBalanceSummaryRepository {
     const receivableAccountsIds = map(receivableAccounts, 'id');
 
     // Retrieve the customers transactions of A/R accounts.
-    const customersTranasctions = await this.accountTransactionModel
+    const customersTranasctions = await this.accountTransactionModel()
       .query()
       .onBuild((query) => {
         query.whereIn('accountId', receivableAccountsIds);

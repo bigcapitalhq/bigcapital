@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { RefundCreditNote } from '../models/RefundCreditNote';
 import { RefundCreditNoteTransformer } from '../../CreditNotes/queries/RefundCreditNoteTransformer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetRefundCreditNoteTransaction {
@@ -12,9 +13,10 @@ export class GetRefundCreditNoteTransaction {
     private readonly transformer: RefundCreditNoteTransformer,
 
     @Inject(RefundCreditNote.name)
-    private readonly refundCreditNoteModel: typeof RefundCreditNote,
-  ) {
-  }
+    private readonly refundCreditNoteModel: TenantModelProxy<
+      typeof RefundCreditNote
+    >,
+  ) {}
 
   /**
    * Retrieve credit note associated invoices to apply.
@@ -22,9 +24,9 @@ export class GetRefundCreditNoteTransaction {
    * @returns {Promise<IRefundCreditNote>}
    */
   public async getRefundCreditTransaction(
-    refundCreditId: number
+    refundCreditId: number,
   ): Promise<RefundCreditNote> {
-    const refundCreditNote = await this.refundCreditNoteModel
+    const refundCreditNote = await this.refundCreditNoteModel()
       .query()
       .findById(refundCreditId)
       .withGraphFetched('fromAccount')

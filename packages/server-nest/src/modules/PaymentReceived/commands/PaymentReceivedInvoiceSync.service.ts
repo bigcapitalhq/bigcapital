@@ -3,12 +3,13 @@ import { Knex } from 'knex';
 import { SaleInvoice } from '../../SaleInvoices/models/SaleInvoice';
 import { IPaymentReceivedEntryDTO } from '../types/PaymentReceived.types';
 import { entriesAmountDiff } from '@/utils/entries-amount-diff';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PaymentReceivedInvoiceSync {
   constructor(
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -20,7 +21,7 @@ export class PaymentReceivedInvoiceSync {
   public async saveChangeInvoicePaymentAmount(
     newPaymentReceiveEntries: IPaymentReceivedEntryDTO[],
     oldPaymentReceiveEntries?: IPaymentReceivedEntryDTO[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const opers: Promise<void>[] = [];
 
@@ -28,16 +29,16 @@ export class PaymentReceivedInvoiceSync {
       newPaymentReceiveEntries,
       oldPaymentReceiveEntries,
       'paymentAmount',
-      'invoiceId'
+      'invoiceId',
     );
     diffEntries.forEach((diffEntry: any) => {
       if (diffEntry.paymentAmount === 0) {
         return;
       }
-      const oper = this.saleInvoiceModel.changePaymentAmount(
+      const oper = this.saleInvoiceModel().changePaymentAmount(
         diffEntry.invoiceId,
         diffEntry.paymentAmount,
-        trx
+        trx,
       );
       opers.push(oper);
     });

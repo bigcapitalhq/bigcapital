@@ -5,6 +5,7 @@ import { AccountRepository } from '@/modules/Accounts/repositories/Account.repos
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { SaleInvoice } from '../../models/SaleInvoice';
 import { SaleInvoiceWriteoffGL } from './SaleInvoiceWriteoffGL';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleInvoiceWriteoffGLStorage {
@@ -18,9 +19,10 @@ export class SaleInvoiceWriteoffGLStorage {
     private readonly ledgerStorage: LedgerStorageService,
     private readonly accountRepository: AccountRepository,
 
-    @Inject(Account.name) private readonly accountModel: typeof Account,
+    @Inject(Account.name)
+    private readonly accountModel: TenantModelProxy<typeof Account>,
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -34,7 +36,7 @@ export class SaleInvoiceWriteoffGLStorage {
     trx?: Knex.Transaction,
   ) {
     // Retrieves the sale invoice.
-    const saleInvoice = await this.saleInvoiceModel
+    const saleInvoice = await this.saleInvoiceModel()
       .query(trx)
       .findById(saleInvoiceId)
       .withGraphFetched('writtenoffExpenseAccount');
@@ -64,7 +66,6 @@ export class SaleInvoiceWriteoffGLStorage {
     trx?: Knex.Transaction,
   ) {
     await this.revertInvoiceWriteoffEntries(saleInvoiceId, trx);
-
     await this.writeInvoiceWriteoffEntries(saleInvoiceId, trx);
   }
 

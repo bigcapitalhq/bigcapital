@@ -5,12 +5,14 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { SaleEstimate } from '../models/SaleEstimate';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetSaleEstimate {
   constructor(
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
+
     private readonly transformer: TransformerInjectable,
     private readonly validators: SaleEstimateValidators,
     private readonly eventPublisher: EventEmitter2,
@@ -22,7 +24,8 @@ export class GetSaleEstimate {
    * @param {Integer} estimateId
    */
   public async getEstimate(estimateId: number) {
-    const estimate = await this.saleEstimateModel.query()
+    const estimate = await this.saleEstimateModel()
+      .query()
       .findById(estimateId)
       .withGraphFetched('entries.item')
       .withGraphFetched('customer')
@@ -35,14 +38,14 @@ export class GetSaleEstimate {
     // Transformes sale estimate model to POJO.
     const transformed = await this.transformer.transform(
       estimate,
-      new SaleEstimateTransfromer()
+      new SaleEstimateTransfromer(),
     );
     const eventPayload = { saleEstimateId: estimateId };
 
     // Triggers `onSaleEstimateViewed` event.
     await this.eventPublisher.emitAsync(
       events.saleEstimate.onViewed,
-      eventPayload
+      eventPayload,
     );
     return transformed;
   }

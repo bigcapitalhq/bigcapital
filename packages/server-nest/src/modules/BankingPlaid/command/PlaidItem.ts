@@ -6,7 +6,11 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { SystemPlaidItem } from '../models/SystemPlaidItem';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
-import { IPlaidItemCreatedEventPayload, PlaidItemDTO } from '../types/BankingPlaid.types';
+import {
+  IPlaidItemCreatedEventPayload,
+  PlaidItemDTO,
+} from '../types/BankingPlaid.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PlaidItemService {
@@ -15,10 +19,12 @@ export class PlaidItemService {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(SystemPlaidItem.name)
-    private readonly systemPlaidItemModel: typeof SystemPlaidItem,
+    private readonly systemPlaidItemModel: TenantModelProxy<
+      typeof SystemPlaidItem
+    >,
 
     @Inject(PlaidItem.name)
-    private readonly plaidItemModel: typeof PlaidItem,
+    private readonly plaidItemModel: TenantModelProxy<typeof PlaidItem>,
 
     @Inject(PLAID_CLIENT)
     private readonly plaidClient: PlaidApi,
@@ -44,14 +50,14 @@ export class PlaidItemService {
     const plaidItemId = response.data.item_id;
 
     // Store the Plaid item metadata on tenant scope.
-    const plaidItem = await this.plaidItemModel.query().insertAndFetch({
+    const plaidItem = await this.plaidItemModel().query().insertAndFetch({
       tenantId,
       plaidAccessToken,
       plaidItemId,
       plaidInstitutionId: institutionId,
     });
     // Stores the Plaid item id on system scope.
-    await this.systemPlaidItemModel.query().insert({ tenantId, plaidItemId });
+    await this.systemPlaidItemModel().query().insert({ tenantId, plaidItemId });
 
     // Triggers `onPlaidItemCreated` event.
     await this.eventEmitter.emitAsync(events.plaid.onItemCreated, {

@@ -4,6 +4,7 @@ import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { VendorCredit } from '../models/VendorCredit';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class VendorCreditGLEntries {
@@ -12,7 +13,7 @@ export class VendorCreditGLEntries {
     private readonly accountRepository: AccountRepository,
 
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -25,7 +26,7 @@ export class VendorCreditGLEntries {
     trx?: Knex.Transaction,
   ) => {
     // Vendor credit with entries items.
-    const vendorCredit = await this.vendorCreditModel
+    const vendorCredit = await this.vendorCreditModel()
       .query(trx)
       .findById(vendorCreditId)
       .withGraphFetched('entries.item');
@@ -84,5 +85,5 @@ export class VendorCreditGLEntries {
       'VendorCredit',
       trx,
     );
-  };
+  }
 }

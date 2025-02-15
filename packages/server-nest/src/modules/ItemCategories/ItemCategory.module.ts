@@ -24,7 +24,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     ItemCategoryApplication,
     CommandItemCategoryValidatorService,
     TransformerInjectable,
-    TenancyContext
+    TenancyContext,
   ],
 })
 export class ItemCategoryModule {}

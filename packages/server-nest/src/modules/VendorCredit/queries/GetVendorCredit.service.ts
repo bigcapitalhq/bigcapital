@@ -5,6 +5,7 @@ import { ERRORS } from '../constants';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { VendorCredit } from '../models/VendorCredit';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetVendorCreditService {
@@ -14,7 +15,7 @@ export class GetVendorCreditService {
    */
   constructor(
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
     private readonly transformer: TransformerInjectable,
   ) {}
 
@@ -25,7 +26,7 @@ export class GetVendorCreditService {
    */
   public async getVendorCredit(vendorCreditId: number, trx?: Knex.Transaction) {
     // Retrieve the vendor credit model graph.
-    const vendorCredit = await this.vendorCreditModel
+    const vendorCredit = await this.vendorCreditModel()
       .query(trx)
       .findById(vendorCreditId)
       .withGraphFetched('entries.item')

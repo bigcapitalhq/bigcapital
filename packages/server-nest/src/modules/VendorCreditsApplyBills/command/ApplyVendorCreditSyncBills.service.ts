@@ -3,12 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { IVendorCreditAppliedBill } from '../types/VendorCreditApplyBills.types';
 import { Bill } from '@/modules/Bills/models/Bill';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ApplyVendorCreditSyncBillsService {
   constructor(
     @Inject(Bill.name)
-    private readonly billModel: typeof Bill,
+    private readonly billModel: TenantModelProxy<typeof Bill>,
   ) {}
 
   /**
@@ -23,7 +24,7 @@ export class ApplyVendorCreditSyncBillsService {
     await Bluebird.each(
       vendorCreditAppliedBills,
       (vendorCreditAppliedBill: IVendorCreditAppliedBill) => {
-        return this.billModel
+        return this.billModel()
           .query(trx)
           .where('id', vendorCreditAppliedBill.billId)
           .increment('creditedAmount', vendorCreditAppliedBill.amount);
@@ -40,7 +41,7 @@ export class ApplyVendorCreditSyncBillsService {
     vendorCreditAppliedBill: IVendorCreditAppliedBill,
     trx?: Knex.Transaction,
   ) => {
-    await this.billModel
+    await this.billModel()
       .query(trx)
       .findById(vendorCreditAppliedBill.billId)
       .decrement('creditedAmount', vendorCreditAppliedBill.amount);

@@ -7,14 +7,13 @@ import {
 import { ERRORS } from '../constants';
 import { CreditNote } from '../models/CreditNote';
 import { CreditNoteAppliedInvoice } from '../../CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
-import {
-  RefundCreditNote as RefundCreditNoteModel,
-} from '../../CreditNoteRefunds/models/RefundCreditNote';
+import { RefundCreditNote as RefundCreditNoteModel } from '../../CreditNoteRefunds/models/RefundCreditNote';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteCreditNoteService {
@@ -31,16 +30,20 @@ export class DeleteCreditNoteService {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
 
     @Inject(ItemEntry.name)
-    private readonly itemEntryModel: typeof ItemEntry,
+    private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
 
     @Inject(CreditNoteAppliedInvoice.name)
-    private readonly creditNoteAppliedInvoiceModel: typeof CreditNoteAppliedInvoice,
+    private readonly creditNoteAppliedInvoiceModel: TenantModelProxy<
+      typeof CreditNoteAppliedInvoice
+    >,
 
     @Inject(RefundCreditNoteModel.name)
-    private readonly refundCreditNoteModel: typeof RefundCreditNoteModel,
+    private readonly refundCreditNoteModel: TenantModelProxy<
+      typeof RefundCreditNoteModel
+    >,
   ) {}
 
   /**
@@ -50,7 +53,7 @@ export class DeleteCreditNoteService {
    */
   public async deleteCreditNote(creditNoteId: number): Promise<void> {
     // Retrieve the credit note or throw not found service error.
-    const oldCreditNote = await this.creditNoteModel
+    const oldCreditNote = await this.creditNoteModel()
       .query()
       .findById(creditNoteId)
       .throwIfNotFound();
@@ -70,14 +73,14 @@ export class DeleteCreditNoteService {
       } as ICreditNoteDeletingPayload);
 
       // Deletes the associated credit note entries.
-      await this.itemEntryModel
+      await this.itemEntryModel()
         .query(trx)
         .where('reference_id', creditNoteId)
         .where('reference_type', 'CreditNote')
         .delete();
 
       // Deletes the credit note transaction.
-      await this.creditNoteModel.query(trx).findById(creditNoteId).delete();
+      await this.creditNoteModel().query(trx).findById(creditNoteId).delete();
 
       // Triggers `onCreditNoteDeleted` event.
       await this.eventPublisher.emitAsync(events.creditNote.onDeleted, {
@@ -96,7 +99,7 @@ export class DeleteCreditNoteService {
   private async validateCreditNoteHasNoRefundTransactions(
     creditNoteId: number,
   ): Promise<void> {
-    const refundTransactions = await this.refundCreditNoteModel
+    const refundTransactions = await this.refundCreditNoteModel()
       .query()
       .where('creditNoteId', creditNoteId);
 
@@ -113,7 +116,7 @@ export class DeleteCreditNoteService {
   private async validateCreditNoteHasNoApplyInvoiceTransactions(
     creditNoteId: number,
   ): Promise<void> {
-    const appliedTransactions = await this.creditNoteAppliedInvoiceModel
+    const appliedTransactions = await this.creditNoteAppliedInvoiceModel()
       .query()
       .where('creditNoteId', creditNoteId);
 

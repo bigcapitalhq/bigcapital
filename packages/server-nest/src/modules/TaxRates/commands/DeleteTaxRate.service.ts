@@ -9,6 +9,7 @@ import { TaxRateModel } from '../models/TaxRate.model';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteTaxRateService {
@@ -24,7 +25,7 @@ export class DeleteTaxRateService {
     private readonly validators: CommandTaxRatesValidators,
 
     @Inject(TaxRateModel.name)
-    private readonly taxRateModel: typeof TaxRateModel,
+    private readonly taxRateModel: TenantModelProxy<typeof TaxRateModel>,
   ) {}
 
   /**
@@ -33,7 +34,7 @@ export class DeleteTaxRateService {
    * @returns {Promise<void>}
    */
   public async deleteTaxRate(taxRateId: number): Promise<void> {
-    const oldTaxRate = await this.taxRateModel.query().findById(taxRateId);
+    const oldTaxRate = await this.taxRateModel().query().findById(taxRateId);
 
     // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(oldTaxRate);
@@ -45,7 +46,7 @@ export class DeleteTaxRateService {
         trx,
       } as ITaxRateDeletingPayload);
 
-      await this.taxRateModel.query(trx).findById(taxRateId).delete();
+      await this.taxRateModel().query(trx).findById(taxRateId).delete();
 
       // Triggers `onTaxRateDeleted` event.
       await this.eventEmitter.emitAsync(events.taxRates.onDeleted, {

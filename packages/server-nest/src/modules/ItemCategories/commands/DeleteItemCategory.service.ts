@@ -7,6 +7,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { IItemCategoryDeletedPayload } from '../ItemCategory.interfaces';
 import { Item } from '@/modules/Items/models/Item';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteItemCategoryService {
@@ -20,11 +21,12 @@ export class DeleteItemCategoryService {
     private readonly uow: UnitOfWork,
     private readonly validator: CommandItemCategoryValidatorService,
     private readonly eventEmitter: EventEmitter2,
+
     @Inject(ItemCategory.name)
-    private readonly itemCategoryModel: typeof ItemCategory,
+    private readonly itemCategoryModel: TenantModelProxy<typeof ItemCategory>,
 
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -35,7 +37,7 @@ export class DeleteItemCategoryService {
    */
   public async deleteItemCategory(itemCategoryId: number) {
     // Retrieve item category or throw not found error.
-    const oldItemCategory = await this.itemCategoryModel
+    const oldItemCategory = await this.itemCategoryModel()
       .query()
       .findById(itemCategoryId)
       .throwIfNotFound();
@@ -68,7 +70,8 @@ export class DeleteItemCategoryService {
       ? itemCategoryId
       : [itemCategoryId];
 
-    await this.itemModel.query(trx)
+    await this.itemModel()
+      .query(trx)
       .whereIn('category_id', ids)
       .patch({ categoryId: null });
   }

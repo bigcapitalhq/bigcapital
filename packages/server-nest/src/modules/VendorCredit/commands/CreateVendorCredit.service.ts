@@ -12,6 +12,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { VendorCreditDTOTransformService } from './VendorCreditDTOTransform.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateVendorCreditService {
@@ -29,9 +30,10 @@ export class CreateVendorCreditService {
     private readonly vendorCreditDTOTransformService: VendorCreditDTOTransformService,
 
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
 
-    @Inject(Vendor.name) private readonly vendorModel: typeof Vendor,
+    @Inject(Vendor.name)
+    private readonly vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -48,7 +50,7 @@ export class CreateVendorCreditService {
       vendorCreditCreateDTO,
     });
     // Retrieve the given vendor or throw not found service error.
-    const vendor = await this.vendorModel
+    const vendor = await this.vendorModel()
       .query()
       .findById(vendorCreditCreateDTO.vendorId)
       .throwIfNotFound();
@@ -72,7 +74,7 @@ export class CreateVendorCreditService {
       } as IVendorCreditCreatingPayload);
 
       // Saves the vendor credit graph.
-      const vendorCredit = await this.vendorCreditModel
+      const vendorCredit = await this.vendorCreditModel()
         .query(trx)
         .upsertGraphAndFetch({
           ...vendorCreditModel,

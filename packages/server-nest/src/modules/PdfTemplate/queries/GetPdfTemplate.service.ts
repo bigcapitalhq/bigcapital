@@ -3,12 +3,15 @@ import { Knex } from 'knex';
 import { GetPdfTemplateTransformer } from './GetPdfTemplate.transformer';
 import { PdfTemplateModel } from '../models/PdfTemplate';
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetPdfTemplateService {
   constructor(
     @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplateModel: typeof PdfTemplateModel,
+    private readonly pdfTemplateModel: TenantModelProxy<
+      typeof PdfTemplateModel
+    >,
     private readonly transformer: TransformerInjectable,
   ) {}
 
@@ -19,15 +22,16 @@ export class GetPdfTemplateService {
    */
   async getPdfTemplate(
     templateId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<any> {
-    const template = await this.pdfTemplateModel.query(trx)
+    const template = await this.pdfTemplateModel()
+      .query(trx)
       .findById(templateId)
       .throwIfNotFound();
 
     return this.transformer.transform(
       template,
-      new GetPdfTemplateTransformer()
+      new GetPdfTemplateTransformer(),
     );
   }
 }

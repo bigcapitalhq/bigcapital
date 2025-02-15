@@ -3,6 +3,7 @@ import { CreditNoteAppliedInvoiceTransformer } from './CreditNoteAppliedInvoiceT
 import { CreditNote } from '../../CreditNotes/models/CreditNote';
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetCreditNoteAssociatedAppliedInvoices {
@@ -11,9 +12,8 @@ export class GetCreditNoteAssociatedAppliedInvoices {
     private readonly creditNoteAppliedInvoiceModel: typeof CreditNoteAppliedInvoice,
 
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote
-  ) {
-  }
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
+  ) {}
 
   /**
    * Retrieve credit note associated invoices to apply.
@@ -21,14 +21,16 @@ export class GetCreditNoteAssociatedAppliedInvoices {
    * @returns {Promise<CreditNoteAppliedInvoice[]>}
    */
   public async getCreditAssociatedAppliedInvoices(
-    creditNoteId: number
+    creditNoteId: number,
   ): Promise<CreditNoteAppliedInvoice[]> {
     // Retrieve credit note or throw not found service error.
-    const creditNote = await this.creditNoteModel.query()
+    const creditNote = await this.creditNoteModel()
+      .query()
       .findById(creditNoteId)
       .throwIfNotFound();
 
-    const appliedToInvoices = await this.creditNoteAppliedInvoiceModel.query()
+    const appliedToInvoices = await this.creditNoteAppliedInvoiceModel
+      .query()
       .where('credit_note_id', creditNoteId)
       .withGraphFetched('saleInvoice')
       .withGraphFetched('creditNote');
@@ -36,7 +38,7 @@ export class GetCreditNoteAssociatedAppliedInvoices {
     // Transforms credit note applied to invoices.
     return this.transformer.transform(
       appliedToInvoices,
-      new CreditNoteAppliedInvoiceTransformer()
+      new CreditNoteAppliedInvoiceTransformer(),
     );
   }
 }

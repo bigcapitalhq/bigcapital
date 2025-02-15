@@ -14,17 +14,20 @@ import { ITransactionsByCustomersFilter } from './TransactionsByCustomer.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TransactionsByContactRepository } from '../TransactionsByContact/TransactionsByContactRepository';
 import { DateInput } from '@/common/types/Date';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class TransactionsByCustomersRepository extends TransactionsByContactRepository {
   @Inject(Customer.name)
-  private readonly customerModel: typeof Customer;
+  private readonly customerModel: TenantModelProxy<typeof Customer>;
 
   @Inject(Account.name)
-  private readonly accountModel: typeof Account;
+  private readonly accountModel: TenantModelProxy<typeof Account>;
 
   @Inject(AccountTransaction.name)
-  private readonly accountTransactionModel: typeof AccountTransaction;
+  private readonly accountTransactionModel: TenantModelProxy<
+    typeof AccountTransaction
+  >;
 
   @Inject(AccountRepository)
   private readonly accountRepository: AccountRepository;
@@ -168,11 +171,10 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
     fromDate: DateInput,
     toDate: DateInput,
   ): Promise<ILedgerEntry[]> {
-    const transactions =
-      await this.getCustomersPeriodTransactions(
-        fromDate,
-        toDate,
-      );
+    const transactions = await this.getCustomersPeriodTransactions(
+      fromDate,
+      toDate,
+    );
 
     // @ts-ignore
     return R.pipe(
@@ -192,13 +194,15 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
    * @returns {Promise<ICustomer[]>}
    */
   public async getCustomers(customersIds?: number[]) {
-    return this.customerModel.query().onBuild((q) => {
-      q.orderBy('displayName');
+    return this.customerModel()
+      .query()
+      .onBuild((q) => {
+        q.orderBy('displayName');
 
-      if (!isEmpty(customersIds)) {
-        q.whereIn('id', customersIds);
-      }
-    });
+        if (!isEmpty(customersIds)) {
+          q.whereIn('id', customersIds);
+        }
+      });
   }
 
   /**
@@ -206,7 +210,7 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
    * @returns {Promise<IAccount[]>}
    */
   public async getReceivableAccounts(): Promise<Account[]> {
-    const accounts = await this.accountModel
+    const accounts = await this.accountModel()
       .query()
       .where('accountType', ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE);
     return accounts;
@@ -225,7 +229,7 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
     const receivableAccounts = await this.getReceivableAccounts();
     const receivableAccountsIds = map(receivableAccounts, 'id');
 
-    const openingTransactions = await this.accountTransactionModel
+    const openingTransactions = await this.accountTransactionModel()
       .query()
       .modify(
         'contactsOpeningBalance',
@@ -249,7 +253,7 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
     const receivableAccounts = await this.getReceivableAccounts();
     const receivableAccountsIds = map(receivableAccounts, 'id');
 
-    const transactions = await this.accountTransactionModel
+    const transactions = await this.accountTransactionModel()
       .query()
       .onBuild((query) => {
         // Filter by date.

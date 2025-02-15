@@ -6,6 +6,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Warehouse } from '../models/Warehouse.model';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditWarehouse {
@@ -21,7 +22,7 @@ export class EditWarehouse {
     private readonly validator: WarehouseValidator,
 
     @Inject(Warehouse.name)
-    private readonly warehouseModel: typeof Warehouse,
+    private readonly warehouseModel: TenantModelProxy<typeof Warehouse>,
   ) {}
 
   /**
@@ -60,7 +61,7 @@ export class EditWarehouse {
         trx,
       });
       // Updates the given branch on the storage.
-      const warehouse = await this.warehouseModel
+      const warehouse = await this.warehouseModel()
         .query()
         .patchAndFetchById(warehouseId, {
           ...warehouseDTO,

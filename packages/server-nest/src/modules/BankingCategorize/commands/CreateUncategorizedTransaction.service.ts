@@ -9,6 +9,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UncategorizedBankTransaction } from '../../BankingTransactions/models/UncategorizedBankTransaction';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateUncategorizedTransactionService {
@@ -17,7 +18,9 @@ export class CreateUncategorizedTransactionService {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransaction: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransaction: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -28,34 +31,32 @@ export class CreateUncategorizedTransactionService {
    */
   public create(
     createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
-    return this.uow.withTransaction(
-      async (trx: Knex.Transaction) => {
-        await this.eventPublisher.emitAsync(
-          events.cashflow.onTransactionUncategorizedCreating,
-          {
-            createUncategorizedTransactionDTO,
-            trx,
-          } as IUncategorizedTransactionCreatingEventPayload
-        );
+    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      await this.eventPublisher.emitAsync(
+        events.cashflow.onTransactionUncategorizedCreating,
+        {
+          createUncategorizedTransactionDTO,
+          trx,
+        } as IUncategorizedTransactionCreatingEventPayload,
+      );
 
-        const uncategorizedTransaction =
-          await this.uncategorizedBankTransaction.query(trx).insertAndFetch({
-            ...createUncategorizedTransactionDTO,
-          });
+      const uncategorizedTransaction = await this.uncategorizedBankTransaction
+        .query(trx)
+        .insertAndFetch({
+          ...createUncategorizedTransactionDTO,
+        });
 
-        await this.eventPublisher.emitAsync(
-          events.cashflow.onTransactionUncategorizedCreated,
-          {
-            uncategorizedTransaction,
-            createUncategorizedTransactionDTO,
-            trx,
-          } as IUncategorizedTransactionCreatedEventPayload
-        );
-        return uncategorizedTransaction;
-      },
-      trx
-    );
+      await this.eventPublisher.emitAsync(
+        events.cashflow.onTransactionUncategorizedCreated,
+        {
+          uncategorizedTransaction,
+          createUncategorizedTransactionDTO,
+          trx,
+        } as IUncategorizedTransactionCreatedEventPayload,
+      );
+      return uncategorizedTransaction;
+    }, trx);
   }
 }

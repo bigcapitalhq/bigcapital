@@ -10,6 +10,7 @@ import {
   IVendorNewDTO,
 } from '../types/Vendors.types';
 import { CreateEditVendorDTOService } from './CreateEditVendorDTO';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateVendorService {
@@ -25,7 +26,7 @@ export class CreateVendorService {
     private readonly transformDTO: CreateEditVendorDTOService,
 
     @Inject(Vendor.name)
-    private readonly vendorModel: typeof Vendor,
+    private readonly vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -46,9 +47,11 @@ export class CreateVendorService {
       } as IVendorEventCreatingPayload);
 
       // Creates a new contact as vendor.
-      const vendor = await this.vendorModel.query(trx).insertAndFetch({
-        ...vendorObject,
-      });
+      const vendor = await this.vendorModel()
+        .query(trx)
+        .insertAndFetch({
+          ...vendorObject,
+        });
       // Triggers `onVendorCreated` event.
       await this.eventPublisher.emitAsync(events.vendors.onCreated, {
         vendorId: vendor.id,

@@ -6,6 +6,7 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { BillPayment } from '../models/BillPayment';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class BillPaymentGLEntries {
@@ -15,24 +16,23 @@ export class BillPaymentGLEntries {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(BillPayment.name)
-    private readonly billPaymentModel: typeof BillPayment,
+    private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
    * Creates a bill payment GL entries.
-   * @param {number} tenantId
-   * @param {number} billPaymentId
-   * @param {Knex.Transaction} trx
+   * @param {number} billPaymentId - Bill payment id.
+   * @param {Knex.Transaction} trx - Knex transaction.
    */
   public writePaymentGLEntries = async (
     billPaymentId: number,
     trx?: Knex.Transaction,
   ): Promise<void> => {
     // Retrieves the bill payment details with associated entries.
-    const payment = await this.billPaymentModel
+    const payment = await this.billPaymentModel()
       .query(trx)
       .findById(billPaymentId)
       .withGraphFetched('entries.bill');
@@ -47,7 +47,7 @@ export class BillPaymentGLEntries {
       trx,
     );
     // Exchange gain or loss account.
-    const EXGainLossAccount = await this.accountModel
+    const EXGainLossAccount = await this.accountModel()
       .query(trx)
       .modify('findBySlug', 'exchange-grain-loss')
       .first();

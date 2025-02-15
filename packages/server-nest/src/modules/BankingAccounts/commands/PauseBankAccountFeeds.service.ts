@@ -5,23 +5,26 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PauseBankAccountFeeds {
   constructor(
-    @Inject(Account.name) private accountModel: typeof Account,
-    @Inject(PlaidItem.name) private plaidItemModel: typeof PlaidItem,
+    @Inject(Account.name)
+    private accountModel: TenantModelProxy<typeof Account>,
+    @Inject(PlaidItem.name)
+    private plaidItemModel: TenantModelProxy<typeof PlaidItem>,
 
     private uow: UnitOfWork,
   ) {}
 
   /**
-   * Pauses the bankfeed syncing of the given bank account.
+   * Pauses the bank feed syncing of the given bank account.
    * @param {number} bankAccountId
    * @returns {Promise<void>}
    */
   public async pauseBankAccountFeeds(bankAccountId: number) {
-    const oldAccount = await this.accountModel
+    const oldAccount = await this.accountModel()
       .query()
       .findById(bankAccountId)
       .withGraphFetched('plaidItem')
@@ -36,7 +39,7 @@ export class PauseBankAccountFeeds {
       throw new ServiceError(ERRORS.BANK_ACCOUNT_FEEDS_ALREADY_PAUSED);
     }
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
-      await this.plaidItemModel
+      await this.plaidItemModel()
         .query(trx)
         .findById(oldAccount.plaidItem.id)
         .patch({

@@ -1,11 +1,15 @@
 import * as R from 'ramda';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
-import { GetCreditNotesResponse, ICreditNotesQueryDTO } from '../types/CreditNotes.types';
+import {
+  GetCreditNotesResponse,
+  ICreditNotesQueryDTO,
+} from '../types/CreditNotes.types';
 import { CreditNote } from '../models/CreditNote';
 import { CreditNoteTransformer } from './CreditNoteTransformer';
 import { Inject } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetCreditNotesService {
@@ -14,7 +18,7 @@ export class GetCreditNotesService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(CreditNote.name)
-    private readonly creditNoteModel: typeof CreditNote,
+    private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
   ) {}
 
   /**
@@ -39,10 +43,10 @@ export class GetCreditNotesService {
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
-      this.creditNoteModel,
+      this.creditNoteModel(),
       filter,
     );
-    const { results, pagination } = await this.creditNoteModel
+    const { results, pagination } = await this.creditNoteModel()
       .query()
       .onBuild((builder) => {
         builder.withGraphFetched('entries.item');

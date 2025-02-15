@@ -5,18 +5,21 @@ import {
   RefundVendorCredit as RefundVendorCreditModel,
 } from '../models/RefundVendorCredit';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetRefundVendorCreditService {
   /**
    * @param {TransformerInjectable} transformer - Transformer injectable service.
-   * @param {typeof RefundVendorCreditModel} refundVendorCreditModel - Refund vendor credit model.
+   * @param {TenantModelProxy<typeof RefundVendorCreditModel>} refundVendorCreditModel - Refund vendor credit model.
    */
   constructor(
     private readonly transformer: TransformerInjectable,
 
     @Inject(RefundVendorCredit.name)
-    private readonly refundVendorCreditModel: typeof RefundVendorCreditModel,
+    private readonly refundVendorCreditModel: TenantModelProxy<
+      typeof RefundVendorCreditModel
+    >,
   ) {}
 
   /**
@@ -27,13 +30,13 @@ export class GetRefundVendorCreditService {
   public getRefundCreditTransaction = async (
     refundId: number,
   ): Promise<RefundVendorCredit> => {
-    await this.refundVendorCreditModel
+    await this.refundVendorCreditModel()
       .query()
       .findById(refundId)
       .throwIfNotFound();
 
     // Retrieve refund transactions associated to the given vendor credit.
-    const refundVendorTransactions = await this.refundVendorCreditModel
+    const refundVendorTransactions = await this.refundVendorCreditModel()
       .query()
       .findById(refundId)
       .withGraphFetched('vendorCredit')

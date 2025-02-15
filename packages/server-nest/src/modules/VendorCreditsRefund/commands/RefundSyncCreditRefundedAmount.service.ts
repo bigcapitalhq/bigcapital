@@ -1,6 +1,7 @@
 import { Transaction } from 'objection';
 import { Inject, Injectable } from '@nestjs/common';
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class RefundSyncCreditRefundedAmount {
@@ -9,7 +10,7 @@ export class RefundSyncCreditRefundedAmount {
    */
   constructor(
     @Inject(VendorCredit.name)
-    private vendorCreditModel: typeof VendorCredit,
+    private vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -23,7 +24,7 @@ export class RefundSyncCreditRefundedAmount {
     amount: number,
     trx?: Transaction,
   ): Promise<void> => {
-    await this.vendorCreditModel
+    await this.vendorCreditModel()
       .query(trx)
       .findById(vendorCreditId)
       .increment('refundedAmount', amount);
@@ -40,7 +41,7 @@ export class RefundSyncCreditRefundedAmount {
     amount: number,
     trx?: Transaction,
   ): Promise<void> => {
-    await this.vendorCreditModel
+    await this.vendorCreditModel()
       .query(trx)
       .findById(vendorCreditId)
       .decrement('refundedAmount', amount);

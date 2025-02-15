@@ -5,12 +5,13 @@ import { AccountRepository } from './repositories/Account.repository';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class GetAccount {
   constructor(
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
     private readonly accountRepository: AccountRepository,
     private readonly transformer: TransformerInjectable,
     private readonly eventEmitter: EventEmitter2,
@@ -22,7 +23,7 @@ export class GetAccount {
    */
   public getAccount = async (accountId: number) => {
     // Find the given account or throw not found error.
-    const account = await this.accountModel
+    const account = await this.accountModel()
       .query()
       .findById(accountId)
       .withGraphFetched('plaidItem')

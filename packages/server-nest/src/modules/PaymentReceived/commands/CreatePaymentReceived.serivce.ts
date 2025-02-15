@@ -13,6 +13,7 @@ import { events } from '@/common/events/events';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { Inject, Injectable } from '@nestjs/common';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreatePaymentReceivedService {
@@ -24,10 +25,10 @@ export class CreatePaymentReceivedService {
     private tenancyContext: TenancyContext,
 
     @Inject(PaymentReceived.name)
-    private paymentReceived: typeof PaymentReceived,
+    private paymentReceived: TenantModelProxy<typeof PaymentReceived>,
 
     @Inject(Customer.name)
-    private customer: typeof Customer,
+    private customer: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -43,7 +44,7 @@ export class CreatePaymentReceivedService {
     const tenant = await this.tenancyContext.getTenant(true);
 
     // Validate customer existance.
-    const paymentCustomer = await this.customer
+    const paymentCustomer = await this.customer()
       .query()
       .findById(paymentReceiveDTO.customerId)
       .throwIfNotFound();
@@ -85,7 +86,7 @@ export class CreatePaymentReceivedService {
       } as IPaymentReceivedCreatingPayload);
 
       // Inserts the payment receive transaction.
-      const paymentReceive = await this.paymentReceived
+      const paymentReceive = await this.paymentReceived()
         .query(trx)
         .insertGraphAndFetch({
           ...paymentReceiveObj,

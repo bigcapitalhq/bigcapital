@@ -5,6 +5,7 @@ import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { VendorCredit } from '../models/VendorCredit';
 import { IVendorCreditsQueryDTO } from '../types/VendorCredit.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetVendorCreditsService {
@@ -13,7 +14,7 @@ export class GetVendorCreditsService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(VendorCredit.name)
-    private readonly vendorCreditModel: typeof VendorCredit,
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 
   /**
@@ -40,7 +41,7 @@ export class GetVendorCreditsService {
       VendorCredit,
       filter,
     );
-    const { results, pagination } = await this.vendorCreditModel
+    const { results, pagination } = await this.vendorCreditModel()
       .query()
       .onBuild((builder) => {
         builder.withGraphFetched('entries');

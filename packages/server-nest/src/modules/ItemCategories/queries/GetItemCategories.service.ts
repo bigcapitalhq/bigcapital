@@ -6,13 +6,14 @@ import {
   GetItemCategoriesResponse,
   IItemCategoriesFilter,
 } from '../ItemCategory.interfaces';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 export class GetItemCategoriesService {
   constructor(
     private readonly dynamicListService: DynamicListService,
 
     @Inject(ItemCategory.name)
-    private readonly itemCategoryModel: typeof ItemCategory,
+    private readonly itemCategoryModel: TenantModelProxy<typeof ItemCategory>,
   ) {}
 
   /**
@@ -39,22 +40,23 @@ export class GetItemCategoriesService {
     const filter = this.parsesListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      this.itemCategoryModel,
-      filter,
-    );
+    // const dynamicList = await this.dynamicListService.dynamicList(
+    //   this.itemCategoryModel(),
+    //   filter,
+    // );
     // Items categories.
-    const itemCategories = await this.itemCategoryModel
+    const itemCategories = await this.itemCategoryModel()
       .query()
       .onBuild((query) => {
         // Subquery to calculate sumation of associated items to the item category.
         query.select(
           '*',
-          this.itemCategoryModel.relatedQuery('items').count().as('count'),
+          this.itemCategoryModel().relatedQuery('items').count().as('count'),
         );
 
-        dynamicList.buildQuery()(query);
+        // dynamicList.buildQuery()(query);
       });
-    return { itemCategories, filterMeta: dynamicList.getResponseMeta() };
+
+    return { itemCategories };
   }
 }

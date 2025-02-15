@@ -13,6 +13,7 @@ import { events } from '@/common/events/events';
 import { SaleEstimate } from '../models/SaleEstimate';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditSaleEstimate {
@@ -24,10 +25,10 @@ export class EditSaleEstimate {
     private readonly transformerDTO: SaleEstimateDTOTransformer,
 
     @Inject(SaleEstimate.name)
-    private readonly saleEstimateModel: typeof SaleEstimate,
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
 
     @Inject(Customer.name)
-    private readonly customerModel: typeof Customer,
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -42,7 +43,7 @@ export class EditSaleEstimate {
     estimateDTO: ISaleEstimateDTO,
   ): Promise<SaleEstimate> {
     // Retrieve details of the given sale estimate id.
-    const oldSaleEstimate = await this.saleEstimateModel
+    const oldSaleEstimate = await this.saleEstimateModel()
       .query()
       .findById(estimateId);
 
@@ -50,7 +51,7 @@ export class EditSaleEstimate {
     this.validators.validateEstimateExistance(oldSaleEstimate);
 
     // Retrieve the given customer or throw not found service error.
-    const customer = await this.customerModel
+    const customer = await this.customerModel()
       .query()
       .findById(estimateDTO.customerId)
       .throwIfNotFound();
@@ -93,7 +94,7 @@ export class EditSaleEstimate {
       } as ISaleEstimateEditingPayload);
 
       // Upsert the estimate graph to the storage.
-      const saleEstimate = await this.saleEstimateModel
+      const saleEstimate = await this.saleEstimateModel()
         .query(trx)
         .upsertGraphAndFetch({
           id: estimateId,

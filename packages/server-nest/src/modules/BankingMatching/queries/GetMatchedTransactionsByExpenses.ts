@@ -4,6 +4,7 @@ import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { GetMatchedTransactionExpensesTransformer } from './GetMatchedTransactionExpensesTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Expense } from '@/modules/Expenses/models/Expense.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByType {
@@ -11,7 +12,7 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
     protected readonly transformer: TransformerInjectable,
 
     @Inject(Expense.name)
-    protected readonly expenseModel: typeof Expense,
+    protected readonly expenseModel: TenantModelProxy<typeof Expense>,
   ) {
     super();
   }
@@ -24,28 +25,30 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
    */
   async getMatchedTransactions(filter: GetMatchedTransactionsFilter) {
     // Retrieve the expense matches.
-    const expenses = await this.expenseModel.query().onBuild((query) => {
-      // Filter out the not matched to bank transactions.
-      query.withGraphJoined('matchedBankTransaction');
-      query.whereNull('matchedBankTransaction.id');
+    const expenses = await this.expenseModel()
+      .query()
+      .onBuild((query) => {
+        // Filter out the not matched to bank transactions.
+        query.withGraphJoined('matchedBankTransaction');
+        query.whereNull('matchedBankTransaction.id');
 
-      // Filter the published onyl
-      query.modify('filterByPublished');
+        // Filter the published onyl
+        query.modify('filterByPublished');
 
-      if (filter.fromDate) {
-        query.where('paymentDate', '>=', filter.fromDate);
-      }
-      if (filter.toDate) {
-        query.where('paymentDate', '<=', filter.toDate);
-      }
-      if (filter.minAmount) {
-        query.where('totalAmount', '>=', filter.minAmount);
-      }
-      if (filter.maxAmount) {
-        query.where('totalAmount', '<=', filter.maxAmount);
-      }
-      query.orderBy('paymentDate', 'DESC');
-    });
+        if (filter.fromDate) {
+          query.where('paymentDate', '>=', filter.fromDate);
+        }
+        if (filter.toDate) {
+          query.where('paymentDate', '<=', filter.toDate);
+        }
+        if (filter.minAmount) {
+          query.where('totalAmount', '>=', filter.minAmount);
+        }
+        if (filter.maxAmount) {
+          query.where('totalAmount', '<=', filter.maxAmount);
+        }
+        query.orderBy('paymentDate', 'DESC');
+      });
     return this.transformer.transform(
       expenses,
       new GetMatchedTransactionExpensesTransformer(),
@@ -61,7 +64,7 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
   public async getMatchedTransaction(
     transactionId: number,
   ): Promise<MatchedTransactionPOJO> {
-    const expense = await this.expenseModel
+    const expense = await this.expenseModel()
       .query()
       .findById(transactionId)
       .throwIfNotFound();

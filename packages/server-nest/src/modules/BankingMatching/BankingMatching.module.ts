@@ -28,12 +28,12 @@ const models = [RegisterTenancyModel(MatchedBankTransaction)];
 @Module({
   controllers: [BankingMatchingController],
   imports: [
+    ...models,
     BillPaymentsModule,
     BankingTransactionsModule,
     PaymentsReceivedModule,
   ],
   providers: [
-    ...models,
     ValidateTransactionMatched,
     MatchBankTransactions,
     MatchTransactionsTypes,

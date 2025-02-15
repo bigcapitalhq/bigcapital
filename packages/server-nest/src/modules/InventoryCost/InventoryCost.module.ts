@@ -15,9 +15,8 @@ const models = [
 ];
 
 @Module({
-  imports: [LedgerModule],
+  imports: [LedgerModule, ...models],
   providers: [
-    ...models,
     InventoryCostGLBeforeWriteSubscriber,
     InventoryCostGLStorage,
     InventoryItemsQuantitySyncService,

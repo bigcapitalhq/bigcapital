@@ -14,6 +14,7 @@ import { IBillDTO } from '../Bills.types';
 import { Bill } from '../models/Bill';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class BillDTOTransformer {
@@ -23,8 +24,9 @@ export class BillDTOTransformer {
     private taxDTOTransformer: ItemEntriesTaxTransactions,
     private tenancyContext: TenancyContext,
 
-    @Inject(ItemEntry.name) private itemEntryModel: typeof ItemEntry,
-    @Inject(Item.name) private itemModel: typeof Item,
+    @Inject(ItemEntry.name)
+    private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
+    @Inject(Item.name) private itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -33,7 +35,7 @@ export class BillDTOTransformer {
    * @returns {number}
    */
   private getBillEntriesTotal(entries: ItemEntry[]): number {
-    return sumBy(entries, (e) => this.itemEntryModel.calcAmount(e));
+    return sumBy(entries, (e) => this.itemEntryModel().calcAmount(e));
   }
 
   /**
@@ -61,7 +63,7 @@ export class BillDTOTransformer {
     oldBill?: Bill,
   ): Promise<Bill> {
     const amount = sumBy(billDTO.entries, (e) =>
-      this.itemEntryModel.calcAmount(e),
+      this.itemEntryModel().calcAmount(e),
     );
     // Retrieve the landed cost amount from landed cost entries.
     const landedCostAmount = this.getBillLandedCostAmount(billDTO);
@@ -125,7 +127,9 @@ export class BillDTOTransformer {
   private setBillEntriesDefaultAccounts() {
     return async (entries: ItemEntry[]) => {
       const entriesItemsIds = entries.map((e) => e.itemId);
-      const items = await this.itemModel.query().whereIn('id', entriesItemsIds);
+      const items = await this.itemModel()
+        .query()
+        .whereIn('id', entriesItemsIds);
 
       return entries.map((entry) => {
         const item = items.find((i) => i.id === entry.itemId);

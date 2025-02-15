@@ -14,6 +14,7 @@ import { Ledger } from '@/modules/Ledger/Ledger';
 import { ModelObject } from 'objection';
 import { ITransactionsByVendorsFilter } from './TransactionsByVendor.types';
 import { DateInput } from '@/common/types/Date';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class TransactionsByVendorRepository extends TransactionsByContactRepository {
@@ -24,13 +25,15 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
   public readonly accountRepository: AccountRepository;
 
   @Inject(Vendor.name)
-  public readonly vendorModel: typeof Vendor;
+  public readonly vendorModel: TenantModelProxy<typeof Vendor>;
 
   @Inject(Account.name)
-  public readonly accountModel: typeof Account;
+  public readonly accountModel: TenantModelProxy<typeof Account>;
 
   @Inject(AccountTransaction.name)
-  public readonly accountTransactionModel: typeof AccountTransaction;
+  public readonly accountTransactionModel: TenantModelProxy<
+    typeof AccountTransaction
+  >;
 
   /**
    * Ledger.
@@ -197,13 +200,15 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
    * @returns {Promise<IVendor[]>}
    */
   public async getVendors(vendorsIds?: number[]): Promise<Vendor[]> {
-    return await this.vendorModel.query().onBuild((q) => {
-      q.orderBy('displayName');
+    return await this.vendorModel()
+      .query()
+      .onBuild((q) => {
+        q.orderBy('displayName');
 
-      if (!isEmpty(vendorsIds)) {
-        q.whereIn('id', vendorsIds);
-      }
-    });
+        if (!isEmpty(vendorsIds)) {
+          q.whereIn('id', vendorsIds);
+        }
+      });
   }
 
   /**
@@ -211,7 +216,7 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
    * @returns {Promise<IAccount[]>}
    */
   public async getPayableAccounts(): Promise<Account[]> {
-    const accounts = await this.accountModel
+    const accounts = await this.accountModel()
       .query()
       .where('accountType', ACCOUNT_TYPE.ACCOUNTS_PAYABLE);
     return accounts;
@@ -230,7 +235,7 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
     const payableAccounts = await this.getPayableAccounts();
     const payableAccountsIds = map(payableAccounts, 'id');
 
-    const openingTransactions = await this.accountTransactionModel
+    const openingTransactions = await this.accountTransactionModel()
       .query()
       .modify(
         'contactsOpeningBalance',
@@ -254,7 +259,7 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
     const receivableAccounts = await this.getPayableAccounts();
     const receivableAccountsIds = map(receivableAccounts, 'id');
 
-    const transactions = await this.accountTransactionModel
+    const transactions = await this.accountTransactionModel()
       .query()
       .onBuild((query) => {
         // Filter by date.

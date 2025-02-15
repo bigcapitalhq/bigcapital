@@ -4,6 +4,7 @@ import { LedgerStorageService } from '../../Ledger/LedgerStorage.service';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { AccountRepository } from '../../Accounts/repositories/Account.repository';
 import { InvoiceGL } from './InvoiceGL';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleInvoiceGLEntries {
@@ -12,7 +13,7 @@ export class SaleInvoiceGLEntries {
     private readonly accountRepository: AccountRepository,
 
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -24,7 +25,7 @@ export class SaleInvoiceGLEntries {
     saleInvoiceId: number,
     trx?: Knex.Transaction,
   ) => {
-    const saleInvoice = await this.saleInvoiceModel
+    const saleInvoice = await this.saleInvoiceModel()
       .query(trx)
       .findById(saleInvoiceId)
       .withGraphFetched('entries.item');

@@ -9,6 +9,7 @@ import { SaleInvoice } from '../models/SaleInvoice';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
 import { events } from '@/common/events/events';
 import { InvoicePdfTemplateAttributes } from '../SaleInvoice.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleInvoicePdf {
@@ -19,10 +20,10 @@ export class SaleInvoicePdf {
     private eventPublisher: EventEmitter2,
 
     @Inject(SaleInvoice.name)
-    private saleInvoiceModel: typeof SaleInvoice,
+    private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
 
     @Inject(PdfTemplateModel.name)
-    private pdfTemplateModel: typeof PdfTemplateModel,
+    private pdfTemplateModel: TenantModelProxy<typeof PdfTemplateModel>,
   ) {}
 
   /**
@@ -67,7 +68,7 @@ export class SaleInvoicePdf {
    * @returns {Promise<string>}
    */
   private async getInvoicePdfFilename(invoiceId: number): Promise<string> {
-    const invoice = await this.saleInvoiceModel.query().findById(invoiceId);
+    const invoice = await this.saleInvoiceModel().query().findById(invoiceId);
     return `Invoice-${invoice.invoiceNo}`;
   }
 
@@ -85,7 +86,7 @@ export class SaleInvoicePdf {
     const templateId =
       invoice.pdfTemplateId ??
       (
-        await this.pdfTemplateModel.query().findOne({
+        await this.pdfTemplateModel().query().findOne({
           resource: 'SaleInvoice',
           default: true,
         })

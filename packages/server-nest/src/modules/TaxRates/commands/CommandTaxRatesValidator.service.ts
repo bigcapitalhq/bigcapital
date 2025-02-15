@@ -6,15 +6,16 @@ import { TaxRateModel } from '../models/TaxRate.model';
 import { Inject } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CommandTaxRatesValidators {
   /**
-   * @param {typeof TaxRateModel} taxRateModel - The tax rate model.
+   * @param {TenantModelProxy<typeof TaxRateModel>} taxRateModel - The tax rate model.
    */
   constructor(
     @Inject(TaxRateModel.name)
-    private readonly taxRateModel: typeof TaxRateModel,
+    private readonly taxRateModel: TenantModelProxy<typeof TaxRateModel>,
   ) {}
 
   /**
@@ -54,7 +55,7 @@ export class CommandTaxRatesValidators {
    * @param {Knex.Transaction} trx -
    */
   public async validateTaxCodeUnique(taxCode: string, trx?: Knex.Transaction) {
-    const foundTaxCode = await this.taxRateModel
+    const foundTaxCode = await this.taxRateModel()
       .query(trx)
       .findOne({ code: taxCode });
 

@@ -4,6 +4,7 @@ import { events } from '@/common/events/events';
 import { ICreateInvoicePdfTemplateDTO } from '../types';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { PdfTemplateModel } from '../models/PdfTemplate';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreatePdfTemplateService {
@@ -12,7 +13,9 @@ export class CreatePdfTemplateService {
     private readonly eventEmitter: EventEmitter2,
 
     @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplateModel: typeof PdfTemplateModel,
+    private readonly pdfTemplateModel: TenantModelProxy<
+      typeof PdfTemplateModel
+    >,
   ) {}
 
   /**
@@ -32,7 +35,7 @@ export class CreatePdfTemplateService {
       // Triggers `onPdfTemplateCreating` event.
       await this.eventEmitter.emitAsync(events.pdfTemplate.onCreating, {});
 
-      const pdfTemplate = await this.pdfTemplateModel.query(trx).insert({
+      const pdfTemplate = await this.pdfTemplateModel().query(trx).insert({
         templateName,
         resource,
         attributes,

@@ -10,6 +10,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteSaleReceipt {
@@ -19,10 +20,10 @@ export class DeleteSaleReceipt {
     private readonly validators: SaleReceiptValidators,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: typeof SaleReceipt,
+    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
 
     @Inject(ItemEntry.name)
-    private readonly itemEntryModel: typeof ItemEntry,
+    private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
   ) {}
 
   /**
@@ -31,7 +32,7 @@ export class DeleteSaleReceipt {
    * @return {void}
    */
   public async deleteSaleReceipt(saleReceiptId: number) {
-    const oldSaleReceipt = await this.saleReceiptModel
+    const oldSaleReceipt = await this.saleReceiptModel()
       .query()
       .findById(saleReceiptId)
       .withGraphFetched('entries');
@@ -46,14 +47,14 @@ export class DeleteSaleReceipt {
         oldSaleReceipt,
       } as ISaleReceiptDeletingPayload);
 
-      await this.itemEntryModel
+      await this.itemEntryModel()
         .query(trx)
         .where('reference_id', saleReceiptId)
         .where('reference_type', 'SaleReceipt')
         .delete();
 
       // Delete the sale receipt transaction.
-      await this.saleReceiptModel
+      await this.saleReceiptModel()
         .query(trx)
         .where('id', saleReceiptId)
         .delete();

@@ -8,6 +8,7 @@ import {
   IVendorEventDeletedPayload,
   IVendorEventDeletingPayload,
 } from '../types/Vendors.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteVendorService {
@@ -19,7 +20,7 @@ export class DeleteVendorService {
   constructor(
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
-    @Inject(Vendor.name) private vendorModel: typeof Vendor,
+    @Inject(Vendor.name) private vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
   /**
@@ -29,7 +30,7 @@ export class DeleteVendorService {
    */
   public async deleteVendor(vendorId: number) {
     // Retrieves the old vendor or throw not found service error.
-    const oldVendor = await this.vendorModel
+    const oldVendor = await this.vendorModel()
       .query()
       .findById(vendorId)
       .throwIfNotFound();
@@ -46,7 +47,7 @@ export class DeleteVendorService {
     // Deletes vendor contact under unit-of-work.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Deletes the vendor contact from the storage.
-      await this.vendorModel.query(trx).findById(vendorId).delete();
+      await this.vendorModel().query(trx).findById(vendorId).delete();
 
       // Triggers `onVendorDeleted` event.
       await this.eventPublisher.emitAsync(events.vendors.onDeleted, {

@@ -5,19 +5,20 @@ import { Bill } from '../../Bills/models/Bill';
 import { BillPayment } from '../models/BillPayment';
 import { IBillReceivePageEntry } from '../types/BillPayments.types';
 import { ServiceError } from '../../Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export default class BillPaymentsPages {
   /**
-   * @param {typeof Bill} billModel - Bill model.
-   * @param {typeof BillPayment} billPaymentModel - Bill payment model.
+   * @param {TenantModelProxy<typeof Bill>} billModel - Bill model.
+   * @param {TenantModelProxy<typeof BillPayment>} billPaymentModel - Bill payment model.
    */
   constructor(
     @Inject(Bill.name)
-    private readonly billModel: typeof Bill,
+    private readonly billModel: TenantModelProxy<typeof Bill>,
 
     @Inject(BillPayment.name)
-    private readonly billPaymentModel: typeof BillPayment,
+    private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
   ) {}
 
   /**
@@ -29,7 +30,7 @@ export default class BillPaymentsPages {
     billPayment: Omit<BillPayment, 'entries'>;
     entries: IBillReceivePageEntry[];
   }> {
-    const billPayment = await this.billPaymentModel
+    const billPayment = await this.billPaymentModel()
       .query()
       .findById(billPaymentId)
       .withGraphFetched('entries.bill')
@@ -74,7 +75,7 @@ export default class BillPaymentsPages {
     vendorId: number,
   ): Promise<IBillReceivePageEntry[]> {
     // Retrieve all payable bills that associated to the payment made transaction.
-    const payableBills = await this.billModel
+    const payableBills = await this.billModel()
       .query()
       .modify('opened')
       .modify('dueBills')

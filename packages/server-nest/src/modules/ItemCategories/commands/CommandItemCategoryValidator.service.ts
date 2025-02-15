@@ -4,19 +4,20 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
 import { ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from '@/constants/accounts';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CommandItemCategoryValidatorService {
   /**
-   * @param {typeof ItemCategory} itemCategoryModel - Item category model.
-   * @param {typeof Account} accountModel - Account model.
+   * @param {TenantModelProxy<typeof ItemCategory>} itemCategoryModel - Item category model.
+   * @param {TenantModelProxy<typeof Account>} accountModel - Account model.
    */
   constructor(
     @Inject(ItemCategory.name)
-    private readonly itemCategoryModel: typeof ItemCategory,
+    private readonly itemCategoryModel: TenantModelProxy<typeof ItemCategory>,
 
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -28,7 +29,7 @@ export class CommandItemCategoryValidatorService {
     categoryName: string,
     notCategoryId?: number,
   ) {
-    const foundItemCategory = await this.itemCategoryModel
+    const foundItemCategory = await this.itemCategoryModel()
       .query()
       .findOne('name', categoryName)
       .onBuild((query) => {
@@ -51,7 +52,7 @@ export class CommandItemCategoryValidatorService {
    * @return {Promise<void>}
    */
   public async validateSellAccount(sellAccountId: number) {
-    const foundAccount = await this.accountModel
+    const foundAccount = await this.accountModel()
       .query()
       .findById(sellAccountId);
 
@@ -68,7 +69,7 @@ export class CommandItemCategoryValidatorService {
    * @return {Promise<void>}
    */
   public async validateCostAccount(costAccountId: number) {
-    const foundAccount = await this.accountModel
+    const foundAccount = await this.accountModel()
       .query()
       .findById(costAccountId);
 
@@ -85,7 +86,7 @@ export class CommandItemCategoryValidatorService {
    * @return {Promise<void>}
    */
   public async validateInventoryAccount(inventoryAccountId: number) {
-    const foundAccount = await this.accountModel
+    const foundAccount = await this.accountModel()
       .query()
       .findById(inventoryAccountId);
 

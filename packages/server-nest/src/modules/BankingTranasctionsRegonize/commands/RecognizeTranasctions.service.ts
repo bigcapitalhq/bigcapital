@@ -8,18 +8,23 @@ import { BankRule } from '@/modules/BankRules/models/BankRule';
 import { RecognizedBankTransaction } from '../models/RecognizedBankTransaction';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { transformToMapBy } from '@/utils/transform-to-map-by';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class RecognizeTranasctionsService {
   constructor(
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedCashflowTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedCashflowTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
 
     @Inject(RecognizedBankTransaction.name)
-    private readonly recognizedBankTransactionModel: typeof RecognizedBankTransaction,
+    private readonly recognizedBankTransactionModel: TenantModelProxy<
+      typeof RecognizedBankTransaction
+    >,
 
     @Inject(BankRule.name)
-    private readonly bankRuleModel: typeof BankRule,
+    private readonly bankRuleModel: TenantModelProxy<typeof BankRule>,
   ) {}
 
   /**
@@ -33,7 +38,7 @@ export class RecognizeTranasctionsService {
     transaction: UncategorizedBankTransaction,
     trx?: Knex.Transaction,
   ) {
-    const recognizedTransaction = await this.recognizedBankTransactionModel
+    const recognizedTransaction = await this.recognizedBankTransactionModel()
       .query(trx)
       .insert({
         bankRuleId: bankRule.id,
@@ -43,7 +48,8 @@ export class RecognizeTranasctionsService {
         assignedPayee: bankRule.assignPayee,
         assignedMemo: bankRule.assignMemo,
       });
-    await this.uncategorizedCashflowTransactionModel
+
+    await this.uncategorizedCashflowTransactionModel()
       .query(trx)
       .findById(transaction.id)
       .patch({
@@ -52,7 +58,7 @@ export class RecognizeTranasctionsService {
   }
 
   /**
-   * Regonized the uncategorized transactions.
+   * Recognized the uncategorized transactions.
    * @param {number|Array<number>} ruleId - The target rule id/ids.
    * @param {RecognizeTransactionsCriteria}
    * @param {Knex.Transaction} trx -
@@ -63,7 +69,7 @@ export class RecognizeTranasctionsService {
     trx?: Knex.Transaction,
   ) {
     const uncategorizedTranasctions =
-      await this.uncategorizedCashflowTransactionModel
+      await this.uncategorizedCashflowTransactionModel()
         .query(trx)
         .onBuild((query) => {
           query.modify('notRecognized');
@@ -78,14 +84,17 @@ export class RecognizeTranasctionsService {
           }
         });
 
-    const bankRules = await this.bankRuleModel.query(trx).onBuild((q) => {
-      const rulesIds = !isEmpty(ruleId) ? castArray(ruleId) : [];
+    const bankRules = await this.bankRuleModel()
+      .query(trx)
+      .onBuild((q) => {
+        const rulesIds = !isEmpty(ruleId) ? castArray(ruleId) : [];
 
-      if (rulesIds?.length > 0) {
-        q.whereIn('id', rulesIds);
-      }
-      q.withGraphFetched('conditions');
-    });
+        if (rulesIds?.length > 0) {
+          q.whereIn('id', rulesIds);
+        }
+        q.withGraphFetched('conditions');
+      });
+
     const bankRulesByAccountId = transformToMapBy(
       bankRules,
       'applyIfAccountId',

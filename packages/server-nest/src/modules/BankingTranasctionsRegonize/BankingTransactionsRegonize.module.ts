@@ -11,9 +11,12 @@ import { BankRulesModule } from '../BankRules/BankRules.module';
 const models = [RegisterTenancyModel(RecognizedBankTransaction)];
 
 @Module({
-  imports: [BankingTransactionsModule, forwardRef(() => BankRulesModule)],
-  providers: [
+  imports: [
+    BankingTransactionsModule,
+    forwardRef(() => BankRulesModule),
     ...models,
+  ],
+  providers: [
     GetAutofillCategorizeTransactionService,
     RevertRecognizedTransactionsService,
     RecognizeTranasctionsService,

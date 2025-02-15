@@ -8,6 +8,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { Branch } from '../models/Branch.model';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class MarkBranchAsPrimaryService {
@@ -16,7 +17,7 @@ export class MarkBranchAsPrimaryService {
     private readonly eventPublisher: EventEmitter2,
 
     @Inject(Branch.name)
-    private readonly branchModel: typeof Branch,
+    private readonly branchModel: TenantModelProxy<typeof Branch>,
   ) {}
 
   /**
@@ -26,7 +27,7 @@ export class MarkBranchAsPrimaryService {
    */
   public async markAsPrimary(branchId: number): Promise<Branch> {
     // Retrieves the old branch or throw not found service error.
-    const oldBranch = await this.branchModel
+    const oldBranch = await this.branchModel()
       .query()
       .findById(branchId)
       .throwIfNotFound();
@@ -40,10 +41,10 @@ export class MarkBranchAsPrimaryService {
       } as IBranchMarkAsPrimaryPayload);
 
       // Updates all branches as not primary.
-      await this.branchModel.query(trx).update({ primary: false });
+      await this.branchModel().query(trx).update({ primary: false });
 
       // Updates the given branch as primary.
-      const markedBranch = await this.branchModel
+      const markedBranch = await this.branchModel()
         .query(trx)
         .patchAndFetchById(branchId, {
           primary: true,

@@ -6,6 +6,7 @@ import { ModelObject } from 'objection';
 import { ICashFlowStatementQuery } from './Cashflow.types';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CashFlowRepository {
@@ -15,10 +16,12 @@ export class CashFlowRepository {
    */
   constructor(
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
     @Inject(AccountTransaction.name)
-    private readonly accountTransactionModel: typeof AccountTransaction,
+    private readonly accountTransactionModel: TenantModelProxy<
+      typeof AccountTransaction
+    >,
   ) {}
 
   /**
@@ -42,7 +45,7 @@ export class CashFlowRepository {
    * @returns {Promise<IAccount[]>}
    */
   public async cashFlowAccounts(): Promise<Account[]> {
-    const accounts = await this.accountModel.query();
+    const accounts = await this.accountModel().query();
     return accounts;
   }
 
@@ -58,7 +61,7 @@ export class CashFlowRepository {
       .subtract(1, 'day')
       .toDate();
 
-    const transactions = await this.accountTransactionModel
+    const transactions = await this.accountTransactionModel()
       .query()
       .onBuild((query) => {
         query.modify('creditDebitSummation');
@@ -85,19 +88,21 @@ export class CashFlowRepository {
     const groupByDateType = this.getGroupTypeFromPeriodsType(
       filter.displayColumnsBy,
     );
-    return await this.accountTransactionModel.query().onBuild((query) => {
-      query.modify('creditDebitSummation');
-      query.modify('groupByDateFormat', groupByDateType);
+    return await this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.modify('creditDebitSummation');
+        query.modify('groupByDateFormat', groupByDateType);
 
-      query.select('accountId');
+        query.select('accountId');
 
-      query.groupBy('accountId');
-      query.withGraphFetched('account');
+        query.groupBy('accountId');
+        query.withGraphFetched('account');
 
-      query.modify('filterDateRange', filter.fromDate, filter.toDate);
+        query.modify('filterDateRange', filter.fromDate, filter.toDate);
 
-      this.commonFilterBranchesQuery(filter, query);
-    });
+        this.commonFilterBranchesQuery(filter, query);
+      });
   }
 
   /**
@@ -112,18 +117,20 @@ export class CashFlowRepository {
     const groupByDateType = this.getGroupTypeFromPeriodsType(
       filter.displayColumnsBy,
     );
-    return await this.accountTransactionModel.query().onBuild((query) => {
-      query.modify('creditDebitSummation');
-      query.modify('groupByDateFormat', groupByDateType);
+    return await this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.modify('creditDebitSummation');
+        query.modify('groupByDateFormat', groupByDateType);
 
-      query.select('accountId');
-      query.groupBy('accountId');
+        query.select('accountId');
+        query.groupBy('accountId');
 
-      query.withGraphFetched('account');
-      query.modify('filterDateRange', filter.fromDate, filter.toDate);
+        query.withGraphFetched('account');
+        query.modify('filterDateRange', filter.fromDate, filter.toDate);
 
-      this.commonFilterBranchesQuery(filter, query);
-    });
+        this.commonFilterBranchesQuery(filter, query);
+      });
   }
 
   /**
@@ -138,18 +145,20 @@ export class CashFlowRepository {
       filter.displayColumnsBy,
     );
 
-    return await this.accountTransactionModel.query().onBuild((query) => {
-      query.modify('creditDebitSummation');
-      query.modify('groupByDateFormat', groupByDateType);
+    return await this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.modify('creditDebitSummation');
+        query.modify('groupByDateFormat', groupByDateType);
 
-      query.select('accountId');
-      query.groupBy('accountId');
+        query.select('accountId');
+        query.groupBy('accountId');
 
-      query.withGraphFetched('account');
-      query.modify('filterDateRange', filter.fromDate, filter.toDate);
+        query.withGraphFetched('account');
+        query.modify('filterDateRange', filter.fromDate, filter.toDate);
 
-      this.commonFilterBranchesQuery(filter, query);
-    });
+        this.commonFilterBranchesQuery(filter, query);
+      });
   }
 
   /**

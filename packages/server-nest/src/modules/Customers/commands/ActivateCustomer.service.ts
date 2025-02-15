@@ -9,6 +9,7 @@ import {
 import { Customer } from '@/modules/Customers/models/Customer';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class ActivateCustomer {
@@ -24,7 +25,7 @@ export class ActivateCustomer {
     private validators: CustomerValidators,
 
     @Inject(Customer.name)
-    private customerModel: typeof Customer,
+    private customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -34,7 +35,7 @@ export class ActivateCustomer {
    */
   public async activateCustomer(customerId: number): Promise<void> {
     // Retrieves the customer or throw not found error.
-    const oldCustomer = await this.customerModel
+    const oldCustomer = await this.customerModel()
       .query()
       .findById(customerId)
       .throwIfNotFound();
@@ -50,7 +51,7 @@ export class ActivateCustomer {
       } as ICustomerActivatingPayload);
 
       // Update the given customer details.
-      const customer = await this.customerModel
+      const customer = await this.customerModel()
         .query(trx)
         .findById(customerId)
         .updateAndFetchById(customerId, { active: true });

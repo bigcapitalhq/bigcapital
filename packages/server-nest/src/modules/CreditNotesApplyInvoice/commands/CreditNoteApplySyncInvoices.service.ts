@@ -4,6 +4,7 @@ import Bluebird from 'bluebird';
 import { ICreditNoteAppliedToInvoice } from '../types/CreditNoteApplyInvoice.types';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreditNoteApplySyncInvoicesCreditedAmount {
@@ -12,7 +13,7 @@ export class CreditNoteApplySyncInvoicesCreditedAmount {
    */
   constructor(
     @Inject(SaleInvoice.name)
-    private readonly saleInvoiceModel: typeof SaleInvoice,
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -22,30 +23,32 @@ export class CreditNoteApplySyncInvoicesCreditedAmount {
    */
   public incrementInvoicesCreditedAmount = async (
     creditNoteAppliedInvoices: ICreditNoteAppliedToInvoice[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     await Bluebird.each(
       creditNoteAppliedInvoices,
       (creditNoteAppliedInvoice: CreditNoteAppliedInvoice) => {
-        return this.saleInvoiceModel.query(trx)
+        return this.saleInvoiceModel()
+          .query(trx)
           .where('id', creditNoteAppliedInvoice.invoiceId)
           .increment('creditedAmount', creditNoteAppliedInvoice.amount);
-      }
+      },
     );
   };
 
   /**
    *
    * @param {number} invoicesIds
-   * @param {number} amount - 
-   * @param {Knex.Transaction} knex - 
+   * @param {number} amount -
+   * @param {Knex.Transaction} knex -
    */
   public decrementInvoiceCreditedAmount = async (
     invoiceId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
-    await this.saleInvoiceModel.query(trx)
+    await this.saleInvoiceModel()
+      .query(trx)
       .findById(invoiceId)
       .decrement('creditedAmount', amount);
   };

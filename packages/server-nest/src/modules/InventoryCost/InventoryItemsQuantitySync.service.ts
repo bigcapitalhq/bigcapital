@@ -5,6 +5,7 @@ import { Inject } from '@nestjs/common';
 import { Item } from '../Items/models/Item';
 import { Injectable } from '@nestjs/common';
 import { InventoryTransaction } from './models/InventoryTransaction';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 /**
  * Syncs the inventory transactions with inventory items quantity.
@@ -12,7 +13,8 @@ import { InventoryTransaction } from './models/InventoryTransaction';
 @Injectable()
 export class InventoryItemsQuantitySyncService {
   constructor(
-    @Inject(Item.name) private readonly itemModel: typeof Item,
+    @Inject(Item.name)
+    private readonly itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -84,7 +86,7 @@ export class InventoryItemsQuantitySyncService {
     const opers = [];
 
     itemsQuantity.forEach((itemQuantity: IItemsQuantityChanges) => {
-      const changeQuantityOper = this.itemModel
+      const changeQuantityOper = this.itemModel()
         .query(trx)
         .where({ id: itemQuantity.itemId, type: 'inventory' })
         .modify('quantityOnHand', itemQuantity.balanceChange);

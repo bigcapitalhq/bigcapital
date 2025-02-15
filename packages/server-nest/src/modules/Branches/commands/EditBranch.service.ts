@@ -9,12 +9,13 @@ import { Branch } from '../models/Branch.model';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class EditBranchService {
   constructor(
     @Inject(Branch.name)
-    private readonly branchModel: typeof Branch,
+    private readonly branchModel: TenantModelProxy<typeof Branch>,
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
   ) {}
@@ -29,7 +30,7 @@ export class EditBranchService {
     editBranchDTO: IEditBranchDTO,
   ) => {
     // Retrieves the old branch or throw not found service error.
-    const oldBranch = await this.branchModel
+    const oldBranch = await this.branchModel()
       .query()
       .findById(branchId)
       .throwIfNotFound();
@@ -43,7 +44,7 @@ export class EditBranchService {
       } as IBranchEditPayload);
 
       // Edits the branch on the storage.
-      const branch = await this.branchModel
+      const branch = await this.branchModel()
         .query()
         .patchAndFetchById(branchId, {
           ...editBranchDTO,

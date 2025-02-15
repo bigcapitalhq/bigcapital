@@ -43,9 +43,7 @@ export class CommandSaleInvoiceDTOTransformer {
     private invoiceIncrement: SaleInvoiceIncrement,
     private taxDTOTransformer: ItemEntriesTaxTransactions,
     private brandingTemplatesTransformer: BrandingTemplateDTOTransformer,
-    private tenancyContext: TenancyContext,
-
-    @Inject(SaleInvoice.name) private saleInvoiceModel: typeof SaleInvoice,
+    private tenancyContext: TenancyContext
   ) {}
 
   /**

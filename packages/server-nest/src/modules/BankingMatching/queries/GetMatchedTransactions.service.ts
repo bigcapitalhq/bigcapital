@@ -3,7 +3,10 @@ import * as moment from 'moment';
 import { first, sumBy } from 'lodash';
 import { PromisePool } from '@supercharge/promise-pool';
 import { Inject, Injectable } from '@nestjs/common';
-import { GetMatchedTransactionsFilter, MatchedTransactionsPOJO } from '../types';
+import {
+  GetMatchedTransactionsFilter,
+  MatchedTransactionsPOJO,
+} from '../types';
 import { GetMatchedTransactionsByExpenses } from './GetMatchedTransactionsByExpenses';
 import { GetMatchedTransactionsByBills } from './GetMatchedTransactionsByBills.service';
 import { GetMatchedTransactionsByManualJournals } from './GetMatchedTransactionsByManualJournals.service';
@@ -11,6 +14,7 @@ import { GetMatchedTransactionsByCashflow } from './GetMatchedTransactionsByCash
 import { GetMatchedTransactionsByInvoices } from './GetMatchedTransactionsByInvoices.service';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { sortClosestMatchTransactions } from '../_utils';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetMatchedTransactions {
@@ -22,7 +26,9 @@ export class GetMatchedTransactions {
     private readonly getMatchedCashflowService: GetMatchedTransactionsByCashflow,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -46,10 +52,11 @@ export class GetMatchedTransactions {
    */
   public async getMatchedTransactions(
     uncategorizedTransactionIds: Array<number>,
-    filter: GetMatchedTransactionsFilter
+    filter: GetMatchedTransactionsFilter,
   ): Promise<MatchedTransactionsPOJO> {
     const uncategorizedTransactions =
-      await this.uncategorizedBankTransactionModel.query()
+      await this.uncategorizedBankTransactionModel()
+        .query()
         .whereIn('id', uncategorizedTransactionIds)
         .throwIfNotFound();
 
@@ -66,7 +73,7 @@ export class GetMatchedTransactions {
       });
     const { perfectMatches, possibleMatches } = this.groupMatchedResults(
       uncategorizedTransactions,
-      matchedTransactions
+      matchedTransactions,
     );
     return {
       perfectMatches,
@@ -84,7 +91,7 @@ export class GetMatchedTransactions {
    */
   private groupMatchedResults(
     uncategorizedTransactions: Array<any>,
-    matchedTransactions
+    matchedTransactions,
   ): MatchedTransactionsPOJO {
     const results = R.compose(R.flatten)(matchedTransactions?.results);
 
@@ -97,7 +104,7 @@ export class GetMatchedTransactions {
     const perfectMatches = R.filter(
       (match) =>
         match.amount === amount && moment(match.date).isSame(date, 'day'),
-      closestResullts
+      closestResullts,
     );
     const possibleMatches = R.difference(closestResullts, perfectMatches);
     const totalPending = sumBy(uncategorizedTransactions, 'amount');

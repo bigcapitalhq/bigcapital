@@ -9,18 +9,19 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ManualJournal } from '../models/ManualJournal';
 import { Contact } from '@/modules/Contacts/models/Contact';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CommandManualJournalValidators {
   constructor(
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
     @Inject(ManualJournal.name)
-    private readonly manualJournalModel: typeof ManualJournal,
+    private readonly manualJournalModel: TenantModelProxy<typeof ManualJournal>,
 
     @Inject(Contact.name)
-    private readonly contactModel: typeof Contact,
+    private readonly contactModel: TenantModelProxy<typeof Contact>,
   ) {}
 
   /**
@@ -51,7 +52,7 @@ export class CommandManualJournalValidators {
    */
   public async validateAccountsExistance(manualJournalDTO: IManualJournalDTO) {
     const manualAccountsIds = manualJournalDTO.entries.map((e) => e.accountId);
-    const accounts = await this.accountModel
+    const accounts = await this.accountModel()
       .query()
       .whereIn('id', manualAccountsIds);
 
@@ -71,7 +72,7 @@ export class CommandManualJournalValidators {
     journalNumber: string,
     notId?: number,
   ) {
-    const journals = await this.manualJournalModel
+    const journals = await this.manualJournalModel()
       .query()
       .where('journal_number', journalNumber)
       .onBuild((builder) => {
@@ -100,17 +101,19 @@ export class CommandManualJournalValidators {
     contactType: string,
   ): Promise<void | ServiceError> {
     // Retrieve account meta by the given account slug.
-    const account = await this.accountModel
+    const account = await this.accountModel()
       .query()
       .findOne('slug', accountBySlug);
 
     // Retrieve all stored contacts on the storage from contacts entries.
-    const storedContacts = await this.contactModel.query().whereIn(
-      'id',
-      entriesDTO
-        .filter((entry) => entry.contactId)
-        .map((entry) => entry.contactId),
-    );
+    const storedContacts = await this.contactModel()
+      .query()
+      .whereIn(
+        'id',
+        entriesDTO
+          .filter((entry) => entry.contactId)
+          .map((entry) => entry.contactId),
+      );
     // Converts the stored contacts to map with id as key and entry as value.
     const storedContactsMap = new Map(
       storedContacts.map((contact) => [contact.id, contact]),
@@ -179,7 +182,6 @@ export class CommandManualJournalValidators {
 
   /**
    * Validate entries contacts existance.
-   * @param {number} tenantId -
    * @param {IManualJournalDTO} manualJournalDTO
    */
   public async validateContactsExistance(manualJournalDTO: IManualJournalDTO) {
@@ -193,7 +195,7 @@ export class CommandManualJournalValidators {
         (entry) => entry.contactId,
       );
       // Retrieve all stored contacts on the storage from contacts entries.
-      const storedContacts = await this.contactModel
+      const storedContacts = await this.contactModel()
         .query()
         .whereIn('id', entriesContactsIds);
 
@@ -266,7 +268,6 @@ export class CommandManualJournalValidators {
 
   /**
    *
-   * @param {number} tenantId
    * @param {IManualJournalDTO} manualJournalDTO
    */
   public validateJournalCurrencyWithAccountsCurrency = async (
@@ -274,7 +275,9 @@ export class CommandManualJournalValidators {
     baseCurrency: string,
   ) => {
     const accountsIds = manualJournalDTO.entries.map((e) => e.accountId);
-    const accounts = await this.accountModel.query().whereIn('id', accountsIds);
+    const accounts = await this.accountModel()
+      .query()
+      .whereIn('id', accountsIds);
 
     // Filters the accounts that has no base currency or DTO currency.
     const notSupportedCurrency = accounts.filter((account) => {

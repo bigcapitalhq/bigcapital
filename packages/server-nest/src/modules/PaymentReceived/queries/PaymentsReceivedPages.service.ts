@@ -5,6 +5,7 @@ import { ERRORS } from '../constants';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 /**
  * Payment receives edit/new pages service.
@@ -13,10 +14,10 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 export class PaymentsReceivedPagesService {
   constructor(
     @Inject(SaleInvoice.name)
-    private readonly saleInvoice: typeof SaleInvoice,
+    private readonly saleInvoice: TenantModelProxy<typeof SaleInvoice>,
 
     @Inject(PaymentReceived.name)
-    private readonly paymentReceived: typeof PaymentReceived,
+    private readonly paymentReceived: TenantModelProxy<typeof PaymentReceived>,
   ) {}
 
   /**
@@ -46,7 +47,7 @@ export class PaymentsReceivedPagesService {
    */
   public async getNewPageEntries(tenantId: number, customerId: number) {
     // Retrieve due invoices.
-    const entries = await this.saleInvoice
+    const entries = await this.saleInvoice()
       .query()
       .modify('delivered')
       .modify('dueInvoices')
@@ -69,7 +70,7 @@ export class PaymentsReceivedPagesService {
     entries: IPaymentReceivePageEntry[];
   }> {
     // Retrieve payment receive.
-    const paymentReceive = await this.paymentReceived
+    const paymentReceive = await this.paymentReceived()
       .query()
       .findById(paymentReceiveId)
       .withGraphFetched('entries.invoice')
@@ -86,7 +87,7 @@ export class PaymentsReceivedPagesService {
       index: entry.index,
     }));
     // Retrieves all receivable bills that associated to the payment receive transaction.
-    const restReceivableInvoices = await this.saleInvoice
+    const restReceivableInvoices = await this.saleInvoice()
       .query()
       .modify('delivered')
       .modify('dueInvoices')

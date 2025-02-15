@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ManualJournal } from '../models/ManualJournal';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { ManualJournalTransfromer } from './ManualJournalTransformer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetManualJournal {
@@ -9,7 +10,7 @@ export class GetManualJournal {
     private readonly transformer: TransformerInjectable,
 
     @Inject(ManualJournal.name)
-    private readonly manualJournalModel: typeof ManualJournal,
+    private readonly manualJournalModel: TenantModelProxy<typeof ManualJournal>,
   ) {}
 
   /**
@@ -18,7 +19,7 @@ export class GetManualJournal {
    * @param {number} manualJournalId
    */
   public getManualJournal = async (manualJournalId: number) => {
-    const manualJournal = await this.manualJournalModel
+    const manualJournal = await this.manualJournalModel()
       .query()
       .findById(manualJournalId)
       .withGraphFetched('entries.account')
