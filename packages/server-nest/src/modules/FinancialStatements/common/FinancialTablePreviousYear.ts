@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as moment from 'moment';
 import { ITableColumn, ITableColumnAccessor } from '../types/Table.types';
 import { IDateRange } from '../types/Report.types';

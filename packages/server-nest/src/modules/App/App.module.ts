@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { join } from 'path';
 import {
   AcceptLanguageResolver,
@@ -25,7 +26,6 @@ import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { TenancyModelsModule } from '../Tenancy/TenancyModels/Tenancy.module';
 import { LoggerMiddleware } from '@/middleware/logger.middleware';
 import { ExcludeNullInterceptor } from '@/interceptors/ExcludeNull.interceptor';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from '../Auth/Jwt.guard';
 import { UserIpInterceptor } from '@/interceptors/user-ip.interceptor';
 import { TenancyGlobalMiddleware } from '../Tenancy/TenancyGlobal.middleware';
@@ -154,13 +154,13 @@ import { StripePaymentModule } from '../StripePayment/StripePayment.module';
     BankingTransactionsModule,
     BankingTransactionsExcludeModule,
     BankingTransactionsRegonizeModule,
-    // BankingMatchingModule,
+    BankingMatchingModule,
     // TransactionsLockingModule,
     // SettingsModule,
     InventoryAdjustmentsModule,
     PostHogModule,
     EventTrackerModule,
-    // FinancialStatementsModule,
+    FinancialStatementsModule,
     StripePaymentModule,
   ],
   controllers: [AppController],

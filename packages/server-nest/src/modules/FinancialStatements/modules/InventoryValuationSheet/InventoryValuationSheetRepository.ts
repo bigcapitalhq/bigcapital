@@ -6,6 +6,7 @@ import { ModelObject } from 'objection';
 import { Item } from '@/modules/Items/models/Item';
 import { transformToMap } from '@/utils/transform-to-key';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class InventoryValuationSheetRepository {
@@ -13,10 +14,12 @@ export class InventoryValuationSheetRepository {
   private readonly tenancyContext: TenancyContext;
 
   @Inject(InventoryCostLotTracker.name)
-  private readonly inventoryCostLotTracker: typeof InventoryCostLotTracker;
+  private readonly inventoryCostLotTracker: TenantModelProxy<
+    typeof InventoryCostLotTracker
+  >;
 
   @Inject(Item.name)
-  private readonly itemModel: typeof Item;
+  private readonly itemModel: TenantModelProxy<typeof Item>;
 
   /**
    * The filter.
@@ -89,8 +92,10 @@ export class InventoryValuationSheetRepository {
    * Retrieve the inventory items.
    */
   async asyncItems() {
-    const inventoryItems = await this.itemModel.query().onBuild((q) => {
-      q.where('type', 'inventory');
+    const inventoryItems = await this.itemModel()
+      .query()
+      .onBuild((q) => {
+        q.where('type', 'inventory');
 
       if (this.filter.itemsIds.length > 0) {
         q.whereIn('id', this.filter.itemsIds);
@@ -121,13 +126,13 @@ export class InventoryValuationSheetRepository {
       }
     };
     // Retrieve the inventory cost `IN` transactions.
-    const INTransactions = await this.inventoryCostLotTracker
+    const INTransactions = await this.inventoryCostLotTracker()
       .query()
       .onBuild(commonQuery)
       .where('direction', 'IN');
 
     // Retrieve the inventory cost `OUT` transactions.
-    const OUTTransactions = await this.inventoryCostLotTracker
+    const OUTTransactions = await this.inventoryCostLotTracker()
       .query()
       .onBuild(commonQuery)
       .where('direction', 'OUT');

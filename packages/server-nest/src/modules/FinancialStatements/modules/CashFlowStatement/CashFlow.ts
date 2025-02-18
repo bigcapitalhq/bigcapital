@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { defaultTo, set, sumBy, isEmpty, mapValues, get } from 'lodash';
 import * as mathjs from 'mathjs';

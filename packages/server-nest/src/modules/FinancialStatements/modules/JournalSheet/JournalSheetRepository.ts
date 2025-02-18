@@ -2,6 +2,7 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { Contact } from '@/modules/Contacts/models/Contact';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { transformToMap } from '@/utils/transform-to-key';
 import { Inject } from '@nestjs/common';
@@ -15,10 +16,10 @@ export class JournalSheetRepository {
   private accountRepository: AccountRepository;
 
   @Inject(Contact.name)
-  private contactModel: typeof Contact;
+  private contactModel: TenantModelProxy<typeof Contact>;
 
   @Inject(AccountTransaction.name)
-  private accountTransaction: typeof AccountTransaction;
+  private accountTransaction: TenantModelProxy<typeof AccountTransaction>;
 
   @Inject(AccountTransaction.name)
   private accountTransactions: Array<ModelObject<AccountTransaction>>;
@@ -88,7 +89,7 @@ export class JournalSheetRepository {
    */
   async initAccountTransactions() {
     // Retrieve all journal transactions based on the given query.
-    const transactions = await this.accountTransaction
+    const transactions = await this.accountTransaction()
       .query()
       .onBuild((query) => {
         if (this.filter.fromRange || this.filter.toRange) {
@@ -119,7 +120,7 @@ export class JournalSheetRepository {
    * Initialize contacts.
    */
   async initContacts() {
-    const contacts = await this.contactModel.query();
+    const contacts = await this.contactModel().query();
 
     this.contacts = contacts;
     this.contactsById = transformToMap(contacts, 'id');

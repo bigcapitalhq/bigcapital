@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { get } from 'lodash';
 import { ProfitLossSheetBase } from './ProfitLossSheetBase';

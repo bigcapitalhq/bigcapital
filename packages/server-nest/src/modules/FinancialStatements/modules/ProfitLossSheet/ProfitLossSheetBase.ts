@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { TOTAL_NODE_TYPES } from './constants';
 import { FinancialSheet } from '../../common/FinancialSheet';

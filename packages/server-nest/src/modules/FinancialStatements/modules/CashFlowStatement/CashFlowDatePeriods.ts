@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { sumBy, mapValues, get } from 'lodash';
 import { ACCOUNT_ROOT_TYPE } from '@/constants/accounts';

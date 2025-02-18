@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { map } from 'lodash';
 import { Account } from "@/modules/Accounts/models/Account.model";

@@ -8,14 +8,17 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { transformToMapKeyValue } from '@/utils/transform-to-map-key-value';
 import { transformToMapBy } from '@/utils/transform-to-map-by';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class InventoryItemDetailsRepository {
   @Inject(Item.name)
-  readonly itemModel: typeof Item;
+  readonly itemModel: TenantModelProxy<typeof Item>;
 
   @Inject(InventoryTransaction.name)
-  readonly inventoryTransactionModel: typeof InventoryTransaction;
+  readonly inventoryTransactionModel: TenantModelProxy<
+    typeof InventoryTransaction
+  >;
 
   @Inject(TenancyContext)
   readonly tenancyContext: TenancyContext;
@@ -141,7 +144,7 @@ export class InventoryItemDetailsRepository {
   public async getInventoryItems(
     itemsIds?: number[],
   ): Promise<ModelObject<Item>[]> {
-    return this.itemModel.query().onBuild((q) => {
+    return this.itemModel().query().onBuild((q) => {
       q.where('type', 'inventory');
 
       if (!isEmpty(itemsIds)) {
@@ -163,7 +166,7 @@ export class InventoryItemDetailsRepository {
       .toDate();
 
     // Opening inventory transactions.
-    const openingTransactions = this.inventoryTransactionModel
+    const openingTransactions = this.inventoryTransactionModel()
       .query()
       .select('*')
       .select(raw("IF(`DIRECTION` = 'IN', `QUANTITY`, 0) as 'QUANTITY_IN'"))
@@ -188,8 +191,7 @@ export class InventoryItemDetailsRepository {
     if (!isEmpty(filter.branchesIds)) {
       openingTransactions.modify('filterByBranches', filter.branchesIds);
     }
-
-    const openingBalanceTransactions = await this.inventoryTransactionModel
+    const openingBalanceTransactions = await this.inventoryTransactionModel()
       .query()
       .from(openingTransactions)
       .select('itemId')
@@ -214,7 +216,7 @@ export class InventoryItemDetailsRepository {
   public async getItemInventoryTransactions(
     filter: IInventoryDetailsQuery,
   ): Promise<ModelObject<InventoryTransaction>[]> {
-    const inventoryTransactions = this.inventoryTransactionModel
+    const inventoryTransactions = this.inventoryTransactionModel()
       .query()
       .modify('filterDateRange', filter.fromDate, filter.toDate)
       .orderBy('date', 'ASC')

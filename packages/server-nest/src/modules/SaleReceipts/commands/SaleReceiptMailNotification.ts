@@ -71,7 +71,9 @@ export class SaleReceiptMailNotification {
       organizationId,
     } as SaleReceiptSendMailPayload;
 
-    this.sendSaleReceiptMailProcess.add(SendSaleReceiptMailJob, { ...payload });
+    await this.sendSaleReceiptMailProcess.add(SendSaleReceiptMailJob, {
+      ...payload,
+    });
 
     // Triggers the event `onSaleReceiptPreMailSend`.
     await this.eventEmitter.emitAsync(events.saleReceipt.onPreMailSend, {

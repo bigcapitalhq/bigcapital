@@ -14,6 +14,7 @@ import { Ledger } from '@/modules/Ledger/Ledger';
 import { transformToMapBy } from '@/utils/transform-to-map-by';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class BalanceSheetRepository extends R.compose(
@@ -24,13 +25,15 @@ export class BalanceSheetRepository extends R.compose(
    * Account model.
    */
   @Inject(Account.name)
-  public readonly accountModel: typeof Account;
+  public readonly accountModel: TenantModelProxy<typeof Account>;
 
   /**
    * Account transaction model.
    */
   @Inject(AccountTransaction.name)
-  public readonly accountTransactionModel: typeof AccountTransaction;
+  public readonly accountTransactionModel: TenantModelProxy<
+    typeof AccountTransaction
+  >;
 
   /**
    * @description Balance sheet query.
@@ -216,7 +219,7 @@ export class BalanceSheetRepository extends R.compose(
    * Initialize accounts graph.
    */
   public initAccountsGraph = async () => {
-    this.accountsGraph = this.accountModel.toDependencyGraph(this.accounts);
+    this.accountsGraph = this.accountModel().toDependencyGraph(this.accounts);
   };
 
   // ----------------------------
@@ -338,7 +341,7 @@ export class BalanceSheetRepository extends R.compose(
    * @return {Promise<IAccount[]>}
    */
   public getAccounts = () => {
-    return this.accountModel.query();
+    return this.accountModel().query();
   };
 
   /**
@@ -353,18 +356,20 @@ export class BalanceSheetRepository extends R.compose(
     toDate: Date,
     datePeriodsType: string,
   ) => {
-    return this.accountTransactionModel.query().onBuild((query) => {
-      query.sum('credit as credit');
-      query.sum('debit as debit');
-      query.groupBy('accountId');
-      query.select(['accountId']);
+    return this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.groupBy('accountId');
+        query.select(['accountId']);
 
-      query.modify('groupByDateFormat', datePeriodsType);
-      query.modify('filterDateRange', fromDate, toDate);
-      query.withGraphFetched('account');
+        query.modify('groupByDateFormat', datePeriodsType);
+        query.modify('filterDateRange', fromDate, toDate);
+        query.withGraphFetched('account');
 
-      this.commonFilterBranchesQuery(query);
-    });
+        this.commonFilterBranchesQuery(query);
+      });
   };
 
   /**
@@ -372,17 +377,19 @@ export class BalanceSheetRepository extends R.compose(
    * @param {Date|string} openingDate -
    */
   public closingAccountsTotal = async (openingDate: Date | string) => {
-    return this.accountTransactionModel.query().onBuild((query) => {
-      query.sum('credit as credit');
-      query.sum('debit as debit');
-      query.groupBy('accountId');
-      query.select(['accountId']);
+    return this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.groupBy('accountId');
+        query.select(['accountId']);
 
-      query.modify('filterDateRange', null, openingDate);
-      query.withGraphFetched('account');
+        query.modify('filterDateRange', null, openingDate);
+        query.withGraphFetched('account');
 
-      this.commonFilterBranchesQuery(query);
-    });
+        this.commonFilterBranchesQuery(query);
+      });
   };
 
   /**

@@ -31,7 +31,6 @@ export class DeleteItemCategoryService {
 
   /**
    * Deletes the given item category.
-   * @param {number} tenantId - Tenant id.
    * @param {number} itemCategoryId - Item category id.
    * @return {Promise<void>}
    */

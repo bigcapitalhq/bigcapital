@@ -2,7 +2,11 @@ import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 import { Knex } from 'knex';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
-import { CommonMailOptions, CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
+import {
+  CommonMailOptions,
+  CommonMailOptionsDTO,
+} from '@/modules/MailNotification/MailNotification.types';
+import { TenantJobPayload } from '@/interfaces/Tenant';
 
 export interface IPaymentReceivedCreateDTO {
   customerId: number;
@@ -148,7 +152,7 @@ export enum PaymentReceiveAction {
 export interface PaymentReceiveMailOpts extends CommonMailOptions {}
 export interface PaymentReceiveMailOptsDTO extends CommonMailOptionsDTO {}
 export interface PaymentReceiveMailPresendEvent {
-  paymentReceiveId: number;
+  paymentReceivedId: number;
   messageOptions: PaymentReceiveMailOptsDTO;
 }
 
@@ -206,4 +210,9 @@ export interface PaymentReceivedPdfTemplateAttributes {
 
 export interface IPaymentReceivedState {
   defaultTemplateId: number;
+}
+
+export interface SendPaymentReceivedMailPayload extends TenantJobPayload {
+  paymentReceivedId: number;
+  messageOptions: PaymentReceiveMailOptsDTO;
 }

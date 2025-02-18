@@ -12,6 +12,7 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { transformToMap } from '@/utils/transform-to-key';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { TenantModel } from '@/modules/System/models/TenantModel';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class GeneralLedgerRepository {
@@ -41,10 +42,12 @@ export class GeneralLedgerRepository {
   private readonly accountRepository: AccountRepository;
 
   @Inject(AccountTransaction.name)
-  private readonly accountTransactionModel: typeof AccountTransaction;
+  private readonly accountTransactionModel: TenantModelProxy<
+    typeof AccountTransaction
+  >;
 
   @Inject(Contact.name)
-  private readonly contactModel: typeof Contact;
+  private readonly contactModel: TenantModelProxy<typeof Contact>;
 
   @Inject(TenancyContext)
   private readonly tenancyContext: TenancyContext;
@@ -97,7 +100,7 @@ export class GeneralLedgerRepository {
    * Initialize the contacts.
    */
   public async initContacts() {
-    this.contacts = await this.contactModel.query();
+    this.contacts = await this.contactModel().query();
     this.contactsById = transformToMap(this.contacts, 'id');
   }
 
@@ -105,7 +108,7 @@ export class GeneralLedgerRepository {
    * Initialize the G/L transactions from/to the given date.
    */
   public async initTransactions() {
-    this.transactions = await this.accountTransactionModel
+    this.transactions = await this.accountTransactionModel()
       .query()
       .onBuild((query) => {
         query.modify(
@@ -132,7 +135,7 @@ export class GeneralLedgerRepository {
    */
   public async initAccountsOpeningBalance() {
     // Retrieves opening balance credit/debit sumation.
-    this.openingBalanceTransactions = await this.accountTransactionModel
+    this.openingBalanceTransactions = await this.accountTransactionModel()
       .query()
       .onBuild((query) => {
         const toDate = moment(this.filter.fromDate).subtract(1, 'day');

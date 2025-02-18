@@ -9,17 +9,20 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { ModelObject } from 'objection';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class VendorBalanceSummaryRepository {
   @Inject(AccountTransaction.name)
-  private readonly accountTransactionModel: typeof AccountTransaction;
+  private readonly accountTransactionModel: TenantModelProxy<
+    typeof AccountTransaction
+  >;
 
   @Inject(Vendor.name)
-  private readonly vendorModel: typeof Vendor;
+  private readonly vendorModel: TenantModelProxy<typeof Vendor>;
 
   @Inject(Account.name)
-  private readonly accountModel: typeof Account;
+  private readonly accountModel: TenantModelProxy<typeof Account>;
 
   /**
    * Filter.
@@ -99,7 +102,7 @@ export class VendorBalanceSummaryRepository {
   public async getVendors(
     vendorsIds?: number[],
   ): Promise<ModelObject<Vendor>[]> {
-    const vendorQuery = this.vendorModel.query().orderBy('displayName');
+    const vendorQuery = this.vendorModel().query().orderBy('displayName');
 
     if (!isEmpty(vendorsIds)) {
       vendorQuery.whereIn('id', vendorsIds);
@@ -113,7 +116,7 @@ export class VendorBalanceSummaryRepository {
    * @returns {Promise<IAccount[]>}
    */
   public async getPayableAccounts(): Promise<ModelObject<Account>[]> {
-    return this.accountModel
+    return this.accountModel()
       .query()
       .where('accountType', ACCOUNT_TYPE.ACCOUNTS_PAYABLE);
   }
@@ -130,7 +133,7 @@ export class VendorBalanceSummaryRepository {
     const payableAccountsIds = map(payableAccounts, 'id');
 
     // Retrieve the customers transactions of A/R accounts.
-    const customersTranasctions = await this.accountTransactionModel
+    const customersTranasctions = await this.accountTransactionModel()
       .query()
       .onBuild((query) => {
         query.whereIn('accountId', payableAccountsIds);

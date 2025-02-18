@@ -5,16 +5,17 @@ import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { ModelObject } from 'objection';
 import { IARAgingSummaryQuery } from './ARAgingSummary.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 export class ARAgingSummaryRepository {
   @Inject(TenancyContext)
   private tenancyContext: TenancyContext;
 
   @Inject(Customer.name)
-  private customerModel: typeof Customer;
+  private customerModel: TenantModelProxy<typeof Customer>;
 
   @Inject(SaleInvoice.name)
-  private saleInvoiceModel: typeof SaleInvoice;
+  private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>;
 
   /**
    * Filter.
@@ -92,10 +93,10 @@ export class ARAgingSummaryRepository {
     // Retrieve all customers from the storage.
     const customers =
       this.filter.customersIds.length > 0
-        ? await this.customerModel
+        ? await this.customerModel()
             .query()
             .whereIn('id', this.filter.customersIds)
-        : await this.customerModel.query();
+        : await this.customerModel().query();
 
     this.customers = customers;
   }
@@ -110,7 +111,7 @@ export class ARAgingSummaryRepository {
       }
     };
     // Retrieve all overdue sale invoices.
-    const overdueSaleInvoices = await this.saleInvoiceModel
+    const overdueSaleInvoices = await this.saleInvoiceModel()
       .query()
       .modify('overdueInvoicesFromDate', this.filter.asDate)
       .onBuild(commonQuery);
@@ -132,7 +133,7 @@ export class ARAgingSummaryRepository {
       }
     };
     // Retrieve all due sale invoices.
-    const currentInvoices = await this.saleInvoiceModel
+    const currentInvoices = await this.saleInvoiceModel()
       .query()
       .modify('dueInvoicesFromDate', this.filter.asDate)
       .onBuild(commonQuery);

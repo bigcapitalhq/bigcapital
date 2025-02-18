@@ -1,3 +1,7 @@
+export const SEND_PAYMENT_RECEIVED_MAIL_QUEUE =
+  'SEND_PAYMENT_RECEIVED_MAIL_QUEUE';
+export const SEND_PAYMENT_RECEIVED_MAIL_JOB = 'SEND_PAYMENT_RECEIVED_MAIL_JOB';
+
 export const DEFAULT_PAYMENT_MAIL_SUBJECT =
   'Payment Received for {Customer Name} from {Company Name}';
 export const DEFAULT_PAYMENT_MAIL_CONTENT = `

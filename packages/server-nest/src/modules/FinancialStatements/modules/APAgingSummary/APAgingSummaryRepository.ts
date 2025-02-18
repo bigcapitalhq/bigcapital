@@ -5,13 +5,14 @@ import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { IAPAgingSummaryQuery } from './APAgingSummary.types';
 import { ModelObject } from 'objection';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 export class APAgingSummaryRepository {
   @Inject(Vendor.name)
-  private readonly vendorModel: typeof Vendor;
+  private readonly vendorModel: TenantModelProxy<typeof Vendor>;
 
   @Inject(Bill.name)
-  private readonly billModel: typeof Bill;
+  private readonly billModel: TenantModelProxy<typeof Bill>;
 
   @Inject(TenancyContext)
   private readonly tenancyContext: TenancyContext;
@@ -93,8 +94,8 @@ export class APAgingSummaryRepository {
     // Retrieve all vendors from the storage.
     const vendors =
       this.filter.vendorsIds.length > 0
-        ? await this.vendorModel.query().whereIn('id', this.filter.vendorsIds)
-        : await this.vendorModel.query();
+        ? await this.vendorModel().query().whereIn('id', this.filter.vendorsIds)
+        : await this.vendorModel().query();
 
     this.vendors = vendors;
   }
@@ -108,7 +109,7 @@ export class APAgingSummaryRepository {
         query.modify('filterByBranches', this.filter.branchesIds);
       }
     };
-    const overdueBills = await this.billModel
+    const overdueBills = await this.billModel()
       .query()
       .modify('overdueBillsFromDate', this.filter.asDate)
       .onBuild(commonQuery);
@@ -127,7 +128,7 @@ export class APAgingSummaryRepository {
       }
     };
     // Retrieve all due vendors bills.
-    const dueBills = await this.billModel
+    const dueBills = await this.billModel()
       .query()
       .modify('dueBillsFromDate', this.filter.asDate)
       .onBuild(commonQuery);

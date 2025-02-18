@@ -42,7 +42,7 @@ export class CreateUncategorizedTransactionService {
         } as IUncategorizedTransactionCreatingEventPayload,
       );
 
-      const uncategorizedTransaction = await this.uncategorizedBankTransaction
+      const uncategorizedTransaction = await this.uncategorizedBankTransaction()
         .query(trx)
         .insertAndFetch({
           ...createUncategorizedTransactionDTO,

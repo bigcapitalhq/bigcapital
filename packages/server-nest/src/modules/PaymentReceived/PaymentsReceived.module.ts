@@ -31,9 +31,12 @@ import { GetPaymentsReceivedService } from './queries/GetPaymentsReceived.servic
 import { MailNotificationModule } from '../MailNotification/MailNotification.module';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { MailModule } from '../Mail/Mail.module';
+import { SendPaymentReceivedMailProcessor } from './processors/PaymentReceivedMailNotification.processor';
+import { BullModule } from '@nestjs/bull';
+import { SEND_PAYMENT_RECEIVED_MAIL_QUEUE } from './constants';
 
 @Module({
-  controllers: [PaymentReceivesController,],
+  controllers: [PaymentReceivesController],
   providers: [
     PaymentReceivesApplication,
     CreatePaymentReceivedService,
@@ -53,8 +56,9 @@ import { MailModule } from '../Mail/Mail.module';
     PaymentReceivedAutoIncrementSubscriber,
     PaymentReceivedGLEntriesSubscriber,
     PaymentReceivedSyncInvoicesSubscriber,
+    GetPaymentsReceivedService,
     SendPaymentReceiveMailNotification,
-    GetPaymentsReceivedService
+    SendPaymentReceivedMailProcessor,
   ],
   exports: [PaymentReceivesApplication, CreatePaymentReceivedService],
   imports: [
@@ -68,7 +72,8 @@ import { MailModule } from '../Mail/Mail.module';
     AccountsModule,
     MailNotificationModule,
     DynamicListModule,
-    MailModule
+    MailModule,
+    BullModule.registerQueue({ name: SEND_PAYMENT_RECEIVED_MAIL_QUEUE }),
   ],
 })
 export class PaymentsReceivedModule {}

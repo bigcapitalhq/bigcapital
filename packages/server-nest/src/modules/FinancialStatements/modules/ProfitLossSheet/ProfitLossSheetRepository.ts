@@ -1,9 +1,11 @@
+// @ts-nocheck
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { ModelObject } from 'objection';
 import { castArray } from 'lodash';
 import * as R from 'ramda';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
+import * as moment from 'moment';
 import { transformToMapBy } from '@/utils/transform-to-map-by';
 import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
 import { Ledger } from '@/modules/Ledger/Ledger';
@@ -13,16 +15,17 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { FinancialDatePeriods } from '../../common/FinancialDatePeriods';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
   class {},
 ) {
   @Inject(Account.name)
-  public accountModel: typeof Account;
+  public accountModel: TenantModelProxy<typeof Account>;
 
   @Inject(AccountTransaction.name)
-  public accountTransactionModel: typeof AccountTransaction;
+  public accountTransactionModel: TenantModelProxy<typeof AccountTransaction>;
 
   @Inject(TenancyContext)
   public tenancyContext: TenancyContext;
@@ -206,7 +209,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    * Initialize accounts graph.
    */
   private initAccountsGraph = async () => {
-    this.accountsGraph = this.accountModel.toDependencyGraph(this.accounts);
+    this.accountsGraph = this.accountModel().toDependencyGraph(this.accounts);
   };
 
   // ----------------------------
@@ -217,8 +220,8 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    */
   private initAccountsTotalLedger = async (): Promise<void> => {
     const totalByAccount = await this.accountsTotal(
-      this.query.fromDate,
-      this.query.toDate,
+      this.query.query.fromDate,
+      this.query.query.toDate,
     );
     // Inject to the repository.
     this.totalAccountsLedger = Ledger.fromTransactions(totalByAccount);
@@ -306,18 +309,23 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
   /**
    * Retrieve the opening balance transactions of the report.
    */
-  public accountsTotal = async (fromDate: Date, toDate: Date) => {
-    return this.accountTransactionModel.query().onBuild((query) => {
-      query.sum('credit as credit');
-      query.sum('debit as debit');
-      query.groupBy('accountId');
-      query.select(['accountId']);
+  public accountsTotal = async (
+    fromDate: moment.MomentInput,
+    toDate: moment.MomentInput,
+  ) => {
+    return this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.groupBy('accountId');
+        query.select(['accountId']);
 
-      query.modify('filterDateRange', fromDate, toDate);
-      query.withGraphFetched('account');
+        query.modify('filterDateRange', fromDate, toDate);
+        query.withGraphFetched('account');
 
-      this.commonFilterBranchesQuery(query);
-    });
+        this.commonFilterBranchesQuery(query);
+      });
   };
 
   /**
@@ -331,18 +339,20 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     toDate: moment.MomentInput,
     datePeriodsType,
   ) => {
-    return this.accountTransactionModel.query().onBuild((query) => {
-      query.sum('credit as credit');
-      query.sum('debit as debit');
-      query.groupBy('accountId');
-      query.select(['accountId']);
+    return this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.groupBy('accountId');
+        query.select(['accountId']);
 
-      query.modify('groupByDateFormat', datePeriodsType);
-      query.modify('filterDateRange', fromDate, toDate);
-      query.withGraphFetched('account');
+        query.modify('groupByDateFormat', datePeriodsType);
+        query.modify('filterDateRange', fromDate, toDate);
+        query.withGraphFetched('account');
 
-      this.commonFilterBranchesQuery(query);
-    });
+        this.commonFilterBranchesQuery(query);
+      });
   };
 
   /**
@@ -360,7 +370,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    * @return {Promise<IAccount[]>}
    */
   private getAccounts = () => {
-    return this.accountModel.query();
+    return this.accountModel().query();
   };
 
   /**

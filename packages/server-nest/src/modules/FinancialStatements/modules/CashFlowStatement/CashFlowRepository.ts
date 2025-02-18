@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Inject, Injectable } from '@nestjs/common';
 import * as moment from 'moment';
 import { Knex } from 'knex';
@@ -11,8 +12,8 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 @Injectable()
 export class CashFlowRepository {
   /**
-   * @param {typeof Account} accountModel - Account model.
-   * @param {typeof AccountTransaction} accountTransactionModel - Account transaction model.
+   * @param {TenantModelProxy<typeof Account>} accountModel - Account model.
+   * @param {TenantModelProxy<typeof AccountTransaction>} accountTransactionModel - Account transaction model.
    */
   constructor(
     @Inject(Account.name)

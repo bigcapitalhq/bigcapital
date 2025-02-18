@@ -1,7 +1,11 @@
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   DEFAULT_PAYMENT_MAIL_CONTENT,
   DEFAULT_PAYMENT_MAIL_SUBJECT,
+  SEND_PAYMENT_RECEIVED_MAIL_JOB,
+  SEND_PAYMENT_RECEIVED_MAIL_QUEUE,
 } from '../constants';
 import { transformPaymentReceivedToMailDataArgs } from '../utils';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -10,13 +14,17 @@ import { ContactMailNotification } from '@/modules/MailNotification/ContactMailN
 import { PaymentReceived } from '../models/PaymentReceived';
 import { GetPaymentReceivedService } from '../queries/GetPaymentReceived.service';
 import { mergeAndValidateMailOptions } from '@/modules/MailNotification/utils';
-import { PaymentReceiveMailOptsDTO } from '../types/PaymentReceived.types';
+import {
+  PaymentReceiveMailOptsDTO,
+  SendPaymentReceivedMailPayload,
+} from '../types/PaymentReceived.types';
 import { PaymentReceiveMailOpts } from '../types/PaymentReceived.types';
 import { PaymentReceiveMailPresendEvent } from '../types/PaymentReceived.types';
 import { SendInvoiceMailDTO } from '@/modules/SaleInvoices/SaleInvoice.types';
 import { Mail } from '@/modules/Mail/Mail';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class SendPaymentReceiveMailNotification {
@@ -25,6 +33,10 @@ export class SendPaymentReceiveMailNotification {
     private readonly contactMailNotification: ContactMailNotification,
     private readonly eventEmitter: EventEmitter2,
     private readonly mailTransport: MailTransporter,
+    private readonly tenancyContext: TenancyContext,
+
+    @InjectQueue(SEND_PAYMENT_RECEIVED_MAIL_QUEUE)
+    private readonly sendPaymentMailQueue: Queue,
 
     @Inject(PaymentReceived.name)
     private readonly paymentReceiveModel: TenantModelProxy<
@@ -40,19 +52,30 @@ export class SendPaymentReceiveMailNotification {
    * @returns {Promise<void>}
    */
   public async triggerMail(
-    paymentReceiveId: number,
-    messageDTO: PaymentReceiveMailOptsDTO,
+    paymentReceivedId: number,
+    messageOptions: PaymentReceiveMailOptsDTO,
   ): Promise<void> {
-    const payload = {
-      paymentReceiveId,
-      messageDTO,
-    };
-    // await this.agenda.now('payment-receive-mail-send', payload);
+    const tenant = await this.tenancyContext.getTenant();
+    const user = await this.tenancyContext.getSystemUser();
 
+    const organizationId = tenant.organizationId;
+    const userId = user.id;
+
+    const payload = {
+      paymentReceivedId,
+      messageOptions,
+      userId,
+      organizationId,
+    } as SendPaymentReceivedMailPayload;
+
+    await this.sendPaymentMailQueue.add(
+      SEND_PAYMENT_RECEIVED_MAIL_JOB,
+      payload,
+    );
     // Triggers `onPaymentReceivePreMailSend` event.
     await this.eventEmitter.emitAsync(events.paymentReceive.onPreMailSend, {
-      paymentReceiveId,
-      messageOptions: messageDTO,
+      paymentReceivedId,
+      messageOptions,
     } as PaymentReceiveMailPresendEvent);
   }
 
