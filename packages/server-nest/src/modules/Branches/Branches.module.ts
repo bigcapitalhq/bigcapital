@@ -15,7 +15,18 @@ import { BranchesSettingsService } from './BranchesSettings';
 import { BranchCommandValidator } from './commands/BranchCommandValidator.service';
 import { BranchTransactionDTOTransformer } from './integrations/BranchTransactionDTOTransform';
 import { ManualJournalBranchesDTOTransformer } from './integrations/ManualJournals/ManualJournalDTOTransformer.service';
-
+import { BillBranchValidateSubscriber } from './subscribers/Validators/BillBranchSubscriber';
+import { InventoryAdjustmentBranchValidateSubscriber } from './subscribers/Validators/InventoryAdjustmentBranchValidatorSubscriber';
+import { ExpenseBranchValidateSubscriber } from './subscribers/Validators/ExpenseBranchSubscriber';
+import { CreditNoteBranchValidateSubscriber } from './subscribers/Validators/CreditNoteBranchesSubscriber';
+import { CreditNoteRefundBranchValidateSubscriber } from './subscribers/Validators/CreditNoteRefundBranchSubscriber';
+import { ContactBranchValidateSubscriber } from './subscribers/Validators/ContactOpeningBalanceBranchSubscriber';
+import { ManualJournalBranchValidateSubscriber } from './subscribers/Validators/ManualJournalBranchSubscriber';
+import { SaleEstimateBranchValidateSubscriber } from './subscribers/Validators/SaleEstimateMultiBranchesSubscriber';
+import { PaymentMadeBranchValidateSubscriber } from './subscribers/Validators/PaymentMadeBranchSubscriber';
+import { PaymentReceiveBranchValidateSubscriber } from './subscribers/Validators/PaymentReceiveBranchSubscriber';
+import { SaleReceiptBranchValidateSubscriber } from './subscribers/Validators/SaleReceiptBranchesSubscriber';
+import { VendorCreditBranchValidateSubscriber } from './subscribers/Validators/VendorCreditBranchSubscriber';
 @Module({
   imports: [TenancyDatabaseModule],
   controllers: [BranchesController],
@@ -34,6 +45,18 @@ import { ManualJournalBranchesDTOTransformer } from './integrations/ManualJourna
     BranchCommandValidator,
     BranchTransactionDTOTransformer,
     ManualJournalBranchesDTOTransformer,
+    BillBranchValidateSubscriber,
+    CreditNoteBranchValidateSubscriber,
+    CreditNoteRefundBranchValidateSubscriber,
+    ContactBranchValidateSubscriber,
+    ExpenseBranchValidateSubscriber,
+    InventoryAdjustmentBranchValidateSubscriber,
+    ManualJournalBranchValidateSubscriber,
+    PaymentMadeBranchValidateSubscriber,
+    PaymentReceiveBranchValidateSubscriber,
+    SaleEstimateBranchValidateSubscriber,
+    SaleReceiptBranchValidateSubscriber,
+    VendorCreditBranchValidateSubscriber,
   ],
   exports: [
     BranchesSettingsService,

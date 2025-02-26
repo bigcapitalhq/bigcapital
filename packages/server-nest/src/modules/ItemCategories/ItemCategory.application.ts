@@ -32,13 +32,9 @@ export class ItemCategoryApplication {
    * @returns {Promise<ItemCategory>} The created item category.
    */
   public createItemCategory(
-    tenantId: number,
     itemCategoryDTO: IItemCategoryOTD,
   ) {
-    return this.createItemCategoryService.newItemCategory(
-      tenantId,
-      itemCategoryDTO,
-    );
+    return this.createItemCategoryService.newItemCategory(itemCategoryDTO);
   }
 
   /**

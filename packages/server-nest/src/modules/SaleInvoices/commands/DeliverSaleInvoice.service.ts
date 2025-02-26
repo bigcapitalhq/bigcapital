@@ -16,6 +16,12 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeliverSaleInvoice {
+  /**
+   * @param {EventEmitter2} eventEmitter - Event emitter.
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {CommandSaleInvoiceValidators} validators - Command sale invoice validators.
+   * @param {TenantModelProxy<typeof SaleInvoice>} saleInvoiceModel - Sale invoice model.
+   */
   constructor(
     private eventEmitter: EventEmitter2,
     private uow: UnitOfWork,

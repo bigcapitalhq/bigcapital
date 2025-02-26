@@ -68,6 +68,7 @@ import { EventTrackerModule } from '../EventsTracker/EventTracker.module';
 import { MailModule } from '../Mail/Mail.module';
 import { FinancialStatementsModule } from '../FinancialStatements/FinancialStatements.module';
 import { StripePaymentModule } from '../StripePayment/StripePayment.module';
+import { FeaturesModule } from '../Features/Features.module';
 
 @Module({
   imports: [
@@ -155,8 +156,9 @@ import { StripePaymentModule } from '../StripePayment/StripePayment.module';
     BankingTransactionsExcludeModule,
     BankingTransactionsRegonizeModule,
     BankingMatchingModule,
-    // TransactionsLockingModule,
-    // SettingsModule,
+    TransactionsLockingModule,
+    SettingsModule,
+    FeaturesModule,
     InventoryAdjustmentsModule,
     PostHogModule,
     EventTrackerModule,

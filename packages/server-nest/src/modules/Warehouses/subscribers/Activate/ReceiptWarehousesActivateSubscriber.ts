@@ -1,36 +1,27 @@
-// import { Service, Inject } from 'typedi';
-// import { IWarehousesActivatedPayload } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { ReceiptActivateWarehouses } from '../../Activate/ReceiptWarehousesActivate';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { ReceiptActivateWarehouses } from '../../Activate/ReceiptWarehousesActivate';
+import { events } from '@/common/events/events';
+import { IWarehousesActivatedPayload } from '../../Warehouse.types';
 
-// @Service()
-// export class ReceiptsActivateWarehousesSubscriber {
-//   @Inject()
-//   private receiptsActivateWarehouses: ReceiptActivateWarehouses;
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.warehouse.onActivated,
-//       this.updateInventoryTransactionsWithWarehouseOnActivated
-//     );
-//     return bus;
-//   }
+@Injectable()
+export class ReceiptsActivateWarehousesSubscriber {
+  constructor(
+    private readonly receiptsActivateWarehouses: ReceiptActivateWarehouses, 
+  ) {}
 
-//   /**
-//    * Updates all receipts transactions with the primary warehouse once
-//    * multi-warehouses feature is activated.
-//    * @param {IWarehousesActivatedPayload}
-//    */
-//   private updateInventoryTransactionsWithWarehouseOnActivated = async ({
-//     tenantId,
-//     primaryWarehouse,
-//   }: IWarehousesActivatedPayload) => {
-//     await this.receiptsActivateWarehouses.updateReceiptsWithWarehouse(
-//       tenantId,
-//       primaryWarehouse
-//     );
-//   };
-// }
+  /**
+   * Updates all receipts transactions with the primary warehouse once
+   * multi-warehouses feature is activated.
+   * @param {IWarehousesActivatedPayload}
+   */
+  @OnEvent(events.warehouse.onActivated)
+  async updateInventoryTransactionsWithWarehouseOnActivated({
+    primaryWarehouse,
+  }: IWarehousesActivatedPayload) {
+    await this.receiptsActivateWarehouses.updateReceiptsWithWarehouse(
+      primaryWarehouse
+    );
+  };
+}

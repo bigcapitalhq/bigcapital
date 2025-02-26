@@ -1,26 +1,27 @@
-// import { Service, Inject } from 'typedi';
-// import { Knex } from 'knex';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Injectable } from '@nestjs/common';
+import { BankTransaction } from '@/modules/BankingTransactions/models/BankTransaction';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
-// @Service()
-// export class CashflowTransactionsActivateBranches {
-//   @Inject()
-//   private tenancy: HasTenancyService;
+@Injectable()
+export class CashflowTransactionsActivateBranches {
+  constructor(
+    private readonly bankTransaction: TenantModelProxy<typeof BankTransaction>,
+  ) {}
 
-//   /**
-//    * Updates all cashflow transactions with the primary branch.
-//    * @param   {number} tenantId
-//    * @param   {number} primaryBranchId
-//    * @returns {Promise<void>}
-//    */
-//   public updateCashflowTransactionsWithBranch = async (
-//     tenantId: number,
-//     primaryBranchId: number,
-//     trx?: Knex.Transaction
-//   ) => {
-//     const { CashflowTransaction } = this.tenancy.models(tenantId);
-
-//     // Updates the cashflow transactions with primary branch.
-//     await CashflowTransaction.query(trx).update({ branchId: primaryBranchId });
-//   };
-// }
+  /**
+   * Updates all cashflow transactions with the primary branch.
+   * @param {number} primaryBranchId - The primary branch id.
+   * @param {Knex.Transaction} trx - The database transaction.
+   * @returns {Promise<void>}
+   */
+  public updateCashflowTransactionsWithBranch = async (
+    primaryBranchId: number,
+    trx?: Knex.Transaction,
+  ) => {
+    // Updates the cashflow transactions with primary branch.
+    await this.bankTransaction()
+      .query(trx)
+      .update({ branchId: primaryBranchId });
+  };
+}

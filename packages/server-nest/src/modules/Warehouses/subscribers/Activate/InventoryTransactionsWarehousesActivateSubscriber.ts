@@ -1,36 +1,26 @@
-// import { Service, Inject } from 'typedi';
-// import { IWarehousesActivatedPayload } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { InventoryActivateWarehouses } from '../../Activate/InventoryTransactionsWarehousesActivate';
+import { InventoryActivateWarehouses } from '../../Activate/InventoryTransactionsWarehousesActivate';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
+import { IWarehousesActivatedPayload } from '../../Warehouse.types';
 
-// @Service()
-// export class InventoryActivateWarehousesSubscriber {
-//   @Inject()
-//   private inventoryActivateWarehouses: InventoryActivateWarehouses;
+@Injectable()
+export class InventoryActivateWarehousesSubscriber {
+  constructor(
+    private readonly inventoryActivateWarehouses: InventoryActivateWarehouses,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.warehouse.onActivated,
-//       this.updateInventoryTransactionsWithWarehouseOnActivated
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Updates all inventory transactions with the primary warehouse once
-//    * multi-warehouses feature is activated.
-//    * @param {IWarehousesActivatedPayload}
-//    */
-//   private updateInventoryTransactionsWithWarehouseOnActivated = async ({
-//     tenantId,
-//     primaryWarehouse,
-//   }: IWarehousesActivatedPayload) => {
-//     await this.inventoryActivateWarehouses.updateInventoryTransactionsWithWarehouse(
-//       tenantId,
-//       primaryWarehouse
-//     );
-//   };
-// }
+  /**
+   * Updates all inventory transactions with the primary warehouse once
+   * multi-warehouses feature is activated.
+   * @param {IWarehousesActivatedPayload}
+   */
+  @OnEvent(events.warehouse.onActivated)
+  async updateInventoryTransactionsWithWarehouseOnActivated({
+    primaryWarehouse,
+  }: IWarehousesActivatedPayload) {
+    await this.inventoryActivateWarehouses.updateInventoryTransactionsWithWarehouse(
+      primaryWarehouse,
+    );
+  }
+}

@@ -1,56 +1,41 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import {
-//   IPaymentReceivedCreatingPayload,
-//   IPaymentReceivedEditingPayload,
-// } from '@/interfaces';
-// import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import {
+  IPaymentReceivedCreatingPayload,
+  IPaymentReceivedEditingPayload,
+} from '@/modules/PaymentReceived/types/PaymentReceived.types';
+import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export class PaymentReceiveBranchValidateSubscriber {
-//   @Inject()
-//   private validateBranchExistance: ValidateBranchExistance;
+@Injectable()
+export class PaymentReceiveBranchValidateSubscriber {
+  constructor(
+    private readonly validateBranchExistance: ValidateBranchExistance,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.paymentReceive.onCreating,
-//       this.validateBranchExistanceOnPaymentCreating
-//     );
-//     bus.subscribe(
-//       events.paymentReceive.onEditing,
-//       this.validateBranchExistanceOnPaymentEditing
-//     );
-//     return bus;
-//   };
+  /**
+   * Validate branch existance on estimate creating.
+   * @param {IPaymentReceivedCreatingPayload} payload
+   */
+  @OnEvent(events.paymentReceive.onCreating)
+  async validateBranchExistanceOnPaymentCreating({
+    paymentReceiveDTO,
+  }: IPaymentReceivedCreatingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      paymentReceiveDTO.branchId,
+    );
+  }
 
-//   /**
-//    * Validate branch existance on estimate creating.
-//    * @param {IPaymentReceivedCreatingPayload} payload
-//    */
-//   private validateBranchExistanceOnPaymentCreating = async ({
-//     tenantId,
-//     paymentReceiveDTO,
-//   }: IPaymentReceivedCreatingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       paymentReceiveDTO.branchId
-//     );
-//   };
-
-//   /**
-//    * Validate branch existance once estimate editing.
-//    * @param {IPaymentReceivedEditingPayload} payload
-//    */
-//   private validateBranchExistanceOnPaymentEditing = async ({
-//     paymentReceiveDTO,
-//     tenantId,
-//   }: IPaymentReceivedEditingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       paymentReceiveDTO.branchId
-//     );
-//   };
-// }
+  /**
+   * Validate branch existance once estimate editing.
+   * @param {IPaymentReceivedEditingPayload} payload
+   */
+  @OnEvent(events.paymentReceive.onEditing)
+  async validateBranchExistanceOnPaymentEditing({
+    paymentReceiveDTO,
+  }: IPaymentReceivedEditingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      paymentReceiveDTO.branchId,
+    );
+  }
+}

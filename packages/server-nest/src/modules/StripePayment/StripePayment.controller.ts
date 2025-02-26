@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Injectable, Post } from '@nestjs/common';
 import { StripePaymentApplication } from './StripePaymentApplication';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('/stripe')
+@ApiTags('stripe')
 export class StripeIntegrationController {
   constructor(private readonly stripePaymentApp: StripePaymentApplication) {}
 

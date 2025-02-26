@@ -1,36 +1,26 @@
-// import { Service, Inject } from 'typedi';
-// import { IWarehousesActivatedPayload } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { EstimatesActivateWarehouses } from '../../Activate/EstimateWarehousesActivate';
+import { EstimatesActivateWarehouses } from '../../Activate/EstimateWarehousesActivate';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { IWarehousesActivatedPayload } from '../../Warehouse.types';
+import { Injectable } from '@nestjs/common';
 
-// @Service()
-// export class EstimatesActivateWarehousesSubscriber {
-//   @Inject()
-//   private estimatesActivateWarehouses: EstimatesActivateWarehouses;
+@Injectable()
+export class EstimatesActivateWarehousesSubscriber {
+  constructor(
+    private readonly estimatesActivateWarehouses: EstimatesActivateWarehouses,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.warehouse.onActivated,
-//       this.updateEstimatessWithWarehouseOnActivated
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Updates all inventory transactions with the primary warehouse once
-//    * multi-warehouses feature is activated.
-//    * @param {IWarehousesActivatedPayload}
-//    */
-//   private updateEstimatessWithWarehouseOnActivated = async ({
-//     tenantId,
-//     primaryWarehouse,
-//   }: IWarehousesActivatedPayload) => {
-//     await this.estimatesActivateWarehouses.updateEstimatesWithWarehouse(
-//       tenantId,
-//       primaryWarehouse
-//     );
-//   };
-// }
+  /**
+   * Updates all inventory transactions with the primary warehouse once
+   * multi-warehouses feature is activated.
+   * @param {IWarehousesActivatedPayload}
+   */
+  @OnEvent(events.warehouse.onActivated)
+  async updateEstimatessWithWarehouseOnActivated({
+    primaryWarehouse,
+  }: IWarehousesActivatedPayload) {
+    await this.estimatesActivateWarehouses.updateEstimatesWithWarehouse(
+      primaryWarehouse,
+    );
+  }
+}

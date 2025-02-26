@@ -1,56 +1,41 @@
-// import { Inject, Service } from 'typedi';
-// import {
-//   ICreditNoteCreatingPayload,
-//   ICreditNoteEditingPayload,
-// } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
+import {
+  ICreditNoteEditingPayload,
+  ICreditNoteCreatingPayload,
+} from '@/modules/CreditNotes/types/CreditNotes.types';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export class CreditNoteWarehousesValidateSubscriber {
-//   @Inject()
-//   warehouseDTOValidator: WarehousesDTOValidators;
+@Injectable()
+export class CreditNoteWarehousesValidateSubscriber {
+  constructor(
+    private readonly warehouseDTOValidator: WarehousesDTOValidators,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.creditNote.onCreating,
-//       this.validateCreditNoteWarehouseExistanceOnCreating
-//     );
-//     bus.subscribe(
-//       events.creditNote.onEditing,
-//       this.validateCreditNoteWarehouseExistanceOnEditing
-//     );
-//     return bus;
-//   }
+  /**
+   * Validate warehouse existance of sale invoice once creating.
+   * @param {ICreditNoteCreatingPayload}
+   */
+  @OnEvent(events.creditNote.onCreating)
+  async validateCreditNoteWarehouseExistanceOnCreating({
+    creditNoteDTO,
+  }: ICreditNoteCreatingPayload) {
+    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
+      creditNoteDTO,
+    );
+  }
 
-//   /**
-//    * Validate warehouse existance of sale invoice once creating.
-//    * @param {ICreditNoteCreatingPayload}
-//    */
-//   private validateCreditNoteWarehouseExistanceOnCreating = async ({
-//     creditNoteDTO,
-//     tenantId,
-//   }: ICreditNoteCreatingPayload) => {
-//     await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
-//       tenantId,
-//       creditNoteDTO
-//     );
-//   };
-
-//   /**
-//    * Validate warehouse existance of sale invoice once editing.
-//    * @param {ICreditNoteEditingPayload}
-//    */
-//   private validateCreditNoteWarehouseExistanceOnEditing = async ({
-//     tenantId,
-//     creditNoteEditDTO,
-//   }: ICreditNoteEditingPayload) => {
-//     await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
-//       tenantId,
-//       creditNoteEditDTO
-//     );
-//   };
-// }
+  /**
+   * Validate warehouse existance of sale invoice once editing.
+   * @param {ICreditNoteEditingPayload}
+   */
+  @OnEvent(events.creditNote.onEditing)
+  async validateCreditNoteWarehouseExistanceOnEditing({
+    creditNoteEditDTO,
+  }: ICreditNoteEditingPayload) {
+    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
+      creditNoteEditDTO,
+    );
+  }
+}

@@ -1,49 +1,36 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import { ISaleInvoiceMailSent } from '@/interfaces';
-// import { DeliverSaleInvoice } from '../commands/DeliverSaleInvoice.service';
-// import { ServiceError } from '@/exceptions';
-// import { ERRORS } from '../constants';
+import { Injectable } from '@nestjs/common';
+import { DeliverSaleInvoice } from '../commands/DeliverSaleInvoice.service';
+import { ERRORS } from '../constants';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { ServiceError } from '@/modules/Items/ServiceError';
+import { ISaleInvoiceMailSent } from '../SaleInvoice.types';
 
-// @Service()
-// export class InvoiceChangeStatusOnMailSentSubscriber {
-//   @Inject()
-//   private markInvoiceDelivedService: DeliverSaleInvoice;
+@Injectable()
+export class InvoiceChangeStatusOnMailSentSubscriber {
+  constructor(private readonly markInvoiceDelivedService: DeliverSaleInvoice) {}
 
-//   /**
-//    * Attaches events.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(events.saleInvoice.onPreMailSend, this.markInvoiceDelivered);
-//     bus.subscribe(
-//       events.saleInvoice.onMailReminderSent,
-//       this.markInvoiceDelivered
-//     );
-//   }
-
-//   /**
-//    * Marks the invoice delivered once the invoice mail sent.
-//    * @param {ISaleInvoiceMailSent}
-//    * @returns {Promise<void>}
-//    */
-//   private markInvoiceDelivered = async ({
-//     tenantId,
-//     saleInvoiceId,
-//     messageOptions,
-//   }: ISaleInvoiceMailSent) => {
-//     try {
-//       await this.markInvoiceDelivedService.deliverSaleInvoice(
-//         tenantId,
-//         saleInvoiceId
-//       );
-//     } catch (error) {
-//       if (
-//         error instanceof ServiceError &&
-//         error.errorType === ERRORS.SALE_INVOICE_ALREADY_DELIVERED
-//       ) {
-//       } else {
-//         throw error;
-//       }
-//     }
-//   };
-// }
+  /**
+   * Marks the invoice delivered once the invoice mail sent.
+   * @param {ISaleInvoiceMailSent}
+   * @returns {Promise<void>}
+   */
+  @OnEvent(events.saleInvoice.onMailReminderSent)
+  @OnEvent(events.saleInvoice.onMailSent)
+  async markInvoiceDelivered({
+    saleInvoiceId,
+    messageOptions,
+  }: ISaleInvoiceMailSent) {
+    try {
+      await this.markInvoiceDelivedService.deliverSaleInvoice(saleInvoiceId);
+    } catch (error) {
+      if (
+        error instanceof ServiceError &&
+        error.errorType === ERRORS.SALE_INVOICE_ALREADY_DELIVERED
+      ) {
+      } else {
+        throw error;
+      }
+    }
+  }
+}

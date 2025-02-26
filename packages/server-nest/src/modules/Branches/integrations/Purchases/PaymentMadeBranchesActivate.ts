@@ -1,26 +1,24 @@
-// import { Service, Inject } from 'typedi';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
-// import { Knex } from 'knex';
+import { Knex } from 'knex';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { BillPayment } from '@/modules/BillPayments/models/BillPayment';
+import { Injectable } from '@nestjs/common';
 
-// @Service()
-// export class BillPaymentsActivateBranches {
-//   @Inject()
-//   tenancy: HasTenancyService;
+@Injectable()
+export class BillPaymentsActivateBranches {
+  constructor(
+    private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
+  ) {}
 
-//   /**
-//    * Updates all bills payments transcations with the primary branch.
-//    * @param   {number} tenantId
-//    * @param   {number} primaryBranchId
-//    * @returns {Promise<void>}
-//    */
-//   public updateBillPaymentsWithBranch = async (
-//     tenantId: number,
-//     primaryBranchId: number,
-//     trx?: Knex.Transaction
-//   ) => {
-//     const { BillPayment } = this.tenancy.models(tenantId);
-
-//     // Updates the bill payments with primary branch.
-//     await BillPayment.query(trx).update({ branchId: primaryBranchId });
-//   };
-// }
+  /**
+   * Updates all bills payments transcations with the primary branch.
+   * @param   {number} primaryBranchId
+   * @returns {Promise<void>}
+   */
+  public updateBillPaymentsWithBranch = async (
+    primaryBranchId: number,
+    trx?: Knex.Transaction
+  ) => {
+    // Updates the bill payments with primary branch.
+    await this.billPaymentModel().query(trx).update({ branchId: primaryBranchId });
+  };
+}

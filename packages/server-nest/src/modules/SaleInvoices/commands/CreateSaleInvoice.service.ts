@@ -116,7 +116,7 @@ export class CreateSaleInvoice {
 
   /**
    * Transformes create DTO to model.
-   * @param {ICustomer} customer -
+   * @param {Customer} customer -
    * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO -
    */
   private transformCreateDTOToModel = async (

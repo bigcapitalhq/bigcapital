@@ -1,36 +1,27 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import { DeleteItemWarehousesQuantity } from '../commands/DeleteItemWarehousesQuantity';
-// import { IItemEventDeletingPayload } from '@/interfaces';
+import { Injectable } from '@nestjs/common';
+import { DeleteItemWarehousesQuantity } from '../commands/DeleteItemWarehousesQuantity';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { IItemEventDeletingPayload } from '@/interfaces/Item';
 
-// @Service()
-// export class DeleteItemWarehousesQuantitySubscriber {
-//   @Inject()
-//   private deleteItemWarehousesQuantity: DeleteItemWarehousesQuantity;
+@Injectable()
+export class DeleteItemWarehousesQuantitySubscriber {
+  constructor(
+    private readonly deleteItemWarehousesQuantity: DeleteItemWarehousesQuantity,
+  ) {}
 
-//   /**
-//    * Attaches events.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.item.onDeleting,
-//       this.deleteItemWarehouseQuantitiesOnItemDelete
-//     );
-//   }
-
-//   /**
-//    * Deletes the given item warehouses quantities once the item deleting.
-//    * @param {IItemEventDeletingPayload} payload -
-//    */
-//   private deleteItemWarehouseQuantitiesOnItemDelete = async ({
-//     tenantId,
-//     oldItem,
-//     trx,
-//   }: IItemEventDeletingPayload) => {
-//     await this.deleteItemWarehousesQuantity.deleteItemWarehousesQuantity(
-//       tenantId,
-//       oldItem.id,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Deletes the given item warehouses quantities once the item deleting.
+   * @param {IItemEventDeletingPayload} payload -
+   */
+  @OnEvent(events.item.onDeleting)
+  async deleteItemWarehouseQuantitiesOnItemDelete({
+    oldItem,
+    trx,
+  }: IItemEventDeletingPayload) {
+    await this.deleteItemWarehousesQuantity.deleteItemWarehousesQuantity(
+      oldItem.id,
+      trx,
+    );
+  }
+}

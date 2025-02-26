@@ -27,14 +27,8 @@ export class ItemCategoryController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new item category.' })
-  async createItemCategory(
-    @Body('tenantId') tenantId: number,
-    @Body() itemCategoryDTO: IItemCategoryOTD,
-  ) {
-    return this.itemCategoryApplication.createItemCategory(
-      tenantId,
-      itemCategoryDTO,
-    );
+  async createItemCategory(@Body() itemCategoryDTO: IItemCategoryOTD) {
+    return this.itemCategoryApplication.createItemCategory(itemCategoryDTO);
   }
 
   @Get()

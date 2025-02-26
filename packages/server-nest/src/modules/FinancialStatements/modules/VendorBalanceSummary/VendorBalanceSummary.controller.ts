@@ -3,10 +3,11 @@ import { IVendorBalanceSummaryQuery } from './VendorBalanceSummary.types';
 import { VendorBalanceSummaryApplication } from './VendorBalanceSummaryApplication';
 import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PublicRoute } from '@/modules/Auth/Jwt.guard';
 
 @Controller('/reports/vendor-balance-summary')
+@ApiTags('reports')
 @PublicRoute()
 export class VendorBalanceSummaryController {
   constructor(

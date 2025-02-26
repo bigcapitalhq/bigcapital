@@ -1,35 +1,25 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import { IRefundVendorCreditCreatingPayload } from '@/interfaces';
-// import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
+import { IRefundVendorCreditCreatingPayload } from '@/modules/VendorCreditsRefund/types/VendorCreditRefund.types';
 
-// @Service()
-// export class VendorCreditRefundBranchValidateSubscriber {
-//   @Inject()
-//   private validateBranchExistance: ValidateBranchExistance;
+@Injectable()
+export class VendorCreditRefundBranchValidateSubscriber {
+  constructor(
+    private readonly validateBranchExistance: ValidateBranchExistance,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.vendorCredit.onRefundCreating,
-//       this.validateBranchExistanceOnCreditRefundCreating
-//     );
-//     return bus;
-//   };
-
-//   /**
-//    * Validate branch existance on refund credit note creating.
-//    * @param {IRefundVendorCreditCreatingPayload} payload
-//    */
-//   private validateBranchExistanceOnCreditRefundCreating = async ({
-//     tenantId,
-//     refundVendorCreditDTO,
-//   }: IRefundVendorCreditCreatingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       refundVendorCreditDTO.branchId
-//     );
-//   };
-// }
+  /**
+   * Validate branch existance on refund credit note creating.
+   * @param {IRefundVendorCreditCreatingPayload} payload
+   */
+  @OnEvent(events.vendorCredit.onRefundCreating)
+  async validateBranchExistanceOnCreditRefundCreating({
+    refundVendorCreditDTO,
+  }: IRefundVendorCreditCreatingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      refundVendorCreditDTO.branchId,
+    );
+  }
+}

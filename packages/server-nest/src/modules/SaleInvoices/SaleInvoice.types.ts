@@ -88,11 +88,9 @@ export interface ISaleInvoiceWriteoffDTO {
 export type InvoiceNotificationType = 'details' | 'reminder';
 
 export interface ISaleInvoiceCreatedPayload {
-  // tenantId: number;
   saleInvoice: SaleInvoice;
   saleInvoiceDTO: ISaleInvoiceCreateDTO;
   saleInvoiceId: number;
-  // authorizedUser: SystemUser;
   trx: Knex.Transaction;
 }
 
@@ -103,17 +101,14 @@ export interface ISaleInvoiceCreatingPaylaod {
 }
 
 export interface ISaleInvoiceEditedPayload {
-  // tenantId: number;
   saleInvoice: SaleInvoice;
   oldSaleInvoice: SaleInvoice;
   saleInvoiceDTO: ISaleInvoiceEditDTO;
   saleInvoiceId: number;
-  // authorizedUser: SystemUser;
   trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceEditingPayload {
-  // tenantId: number;
   saleInvoiceDTO: ISaleInvoiceEditDTO;
   oldSaleInvoice: SaleInvoice;
   trx: Knex.Transaction;
@@ -127,21 +122,18 @@ export interface ISaleInvoiceDeletePayload {
 }
 
 export interface ISaleInvoiceDeletingPayload {
-  // tenantId: number;
   oldSaleInvoice: SaleInvoice;
   saleInvoiceId: number;
   trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceDeletedPayload {
-  // tenantId: number;
   oldSaleInvoice: SaleInvoice;
   saleInvoiceId: number;
   trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceWriteoffCreatePayload {
-  // tenantId: number;
   saleInvoiceId: number;
   saleInvoice: SaleInvoice;
   writeoffDTO: ISaleInvoiceWriteoffDTO;
@@ -149,33 +141,28 @@ export interface ISaleInvoiceWriteoffCreatePayload {
 }
 
 export interface ISaleInvoiceWriteoffCreatedPayload {
-  // tenantId: number;
   saleInvoiceId: number;
   saleInvoice: SaleInvoice;
   writeoffDTO: ISaleInvoiceCreatedPayload;
 }
 
 export interface ISaleInvoiceWrittenOffCancelPayload {
-  // tenantId: number;
   saleInvoice: SaleInvoice;
   trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceWrittenOffCanceledPayload {
-  // tenantId: number;
   saleInvoice: SaleInvoice;
   trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceEventDeliveredPayload {
-  // tenantId: number;
   saleInvoiceId: number;
   saleInvoice: SaleInvoice;
   trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceDeliveringPayload {
-  // tenantId: number;
   oldSaleInvoice: SaleInvoice;
   trx: Knex.Transaction;
 }

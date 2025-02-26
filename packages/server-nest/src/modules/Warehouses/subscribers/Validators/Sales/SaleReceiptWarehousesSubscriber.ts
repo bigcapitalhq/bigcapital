@@ -1,56 +1,41 @@
-// import { Inject, Service } from 'typedi';
-// import {
-//   ISaleReceiptCreatingPayload,
-//   ISaleReceiptEditingPayload,
-// } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
+import {
+  ISaleReceiptCreatingPayload,
+  ISaleReceiptEditingPayload,
+} from '@/modules/SaleReceipts/types/SaleReceipts.types';
+import { events } from '@/common/events/events';
+import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
 
-// @Service()
-// export class SaleReceiptWarehousesValidateSubscriber {
-//   @Inject()
-//   private warehousesDTOValidator: WarehousesDTOValidators;
+@Injectable()
+export class SaleReceiptWarehousesValidateSubscriber {
+  constructor(
+    private readonly warehousesDTOValidator: WarehousesDTOValidators,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.saleReceipt.onCreating,
-//       this.validateSaleReceiptWarehouseExistanceOnCreating
-//     );
-//     bus.subscribe(
-//       events.saleReceipt.onEditing,
-//       this.validateSaleReceiptWarehouseExistanceOnEditing
-//     );
-//     return bus;
-//   }
+  /**
+   * Validate warehouse existance of sale invoice once creating.
+   * @param {ISaleReceiptCreatingPayload}
+   */
+  @OnEvent(events.saleReceipt.onCreating)
+  async validateSaleReceiptWarehouseExistanceOnCreating({
+    saleReceiptDTO,
+  }: ISaleReceiptCreatingPayload) {
+    await this.warehousesDTOValidator.validateDTOWarehouseWhenActive(
+      saleReceiptDTO,
+    );
+  }
 
-//   /**
-//    * Validate warehouse existance of sale invoice once creating.
-//    * @param {ISaleReceiptCreatingPayload}
-//    */
-//   private validateSaleReceiptWarehouseExistanceOnCreating = async ({
-//     saleReceiptDTO,
-//     tenantId,
-//   }: ISaleReceiptCreatingPayload) => {
-//     await this.warehousesDTOValidator.validateDTOWarehouseWhenActive(
-//       tenantId,
-//       saleReceiptDTO
-//     );
-//   };
-
-//   /**
-//    * Validate warehouse existance of sale invoice once editing.
-//    * @param {ISaleReceiptEditingPayload}
-//    */
-//   private validateSaleReceiptWarehouseExistanceOnEditing = async ({
-//     tenantId,
-//     saleReceiptDTO,
-//   }: ISaleReceiptEditingPayload) => {
-//     await this.warehousesDTOValidator.validateDTOWarehouseWhenActive(
-//       tenantId,
-//       saleReceiptDTO
-//     );
-//   };
-// }
+  /**
+   * Validate warehouse existance of sale invoice once editing.
+   * @param {ISaleReceiptEditingPayload}
+   */
+  @OnEvent(events.saleReceipt.onEditing)
+  async validateSaleReceiptWarehouseExistanceOnEditing({
+    saleReceiptDTO,
+  }: ISaleReceiptEditingPayload) {
+    await this.warehousesDTOValidator.validateDTOWarehouseWhenActive(
+      saleReceiptDTO,
+    );
+  }
+}

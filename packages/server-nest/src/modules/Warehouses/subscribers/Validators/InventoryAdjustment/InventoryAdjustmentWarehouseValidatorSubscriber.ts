@@ -1,35 +1,25 @@
-// import { Inject, Service } from 'typedi';
-// import { IInventoryAdjustmentCreatingPayload } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
+import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { IInventoryAdjustmentCreatingPayload } from '@/modules/InventoryAdjutments/types/InventoryAdjustments.types';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export class InventoryAdjustmentWarehouseValidatorSubscriber {
-//   @Inject()
-//   private warehouseDTOValidator: WarehousesDTOValidators;
+@Injectable()
+export class InventoryAdjustmentWarehouseValidatorSubscriber {
+  constructor(
+    private readonly warehouseDTOValidator: WarehousesDTOValidators,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.inventoryAdjustment.onQuickCreating,
-//       this.validateAdjustmentWarehouseExistanceOnCreating
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Validate warehouse existance of sale invoice once creating.
-//    * @param {IBillCreatingPayload}
-//    */
-//   private validateAdjustmentWarehouseExistanceOnCreating = async ({
-//     quickAdjustmentDTO,
-//     tenantId,
-//   }: IInventoryAdjustmentCreatingPayload) => {
-//     await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
-//       tenantId,
-//       quickAdjustmentDTO
-//     );
-//   };
-// }
+  /**
+   * Validate warehouse existance of sale invoice once creating.
+   * @param {IBillCreatingPayload}
+   */
+  @OnEvent(events.inventoryAdjustment.onQuickCreating)
+  async validateAdjustmentWarehouseExistanceOnCreating({
+    quickAdjustmentDTO,
+  }: IInventoryAdjustmentCreatingPayload) {
+    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
+      quickAdjustmentDTO,
+    );
+  }
+}

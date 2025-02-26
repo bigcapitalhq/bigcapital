@@ -1,30 +1,36 @@
-// import { Service, Inject } from 'typedi';
-// import { IWarehouse } from '@/interfaces';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Injectable } from "@nestjs/common";
+import { Warehouse } from "../models/Warehouse.model";
+import { SaleInvoice } from "@/modules/SaleInvoices/models/SaleInvoice";
+import { ItemEntry } from "@/modules/TransactionItemEntry/models/ItemEntry";
+import { TenantModelProxy } from "@/modules/System/models/TenantBaseModel";
 
-// @Service()
-// export class InvoicesActivateWarehouses {
-//   @Inject()
-//   tenancy: HasTenancyService;
+@Injectable()
+export class InvoicesActivateWarehouses {
+  constructor(
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
+    private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
+  ) {}
+ 
 
-//   /**
-//    * Updates all inventory transactions with the primary warehouse.
-//    * @param   {number} tenantId
-//    * @param   {number} primaryWarehouse
-//    * @returns {Promise<void>}
-//    */
-//   public updateInvoicesWithWarehouse = async (
-//     tenantId: number,
-//     primaryWarehouse: IWarehouse
-//   ): Promise<void> => {
-//     const { SaleInvoice, ItemEntry } = this.tenancy.models(tenantId);
+  /**
+   * Updates all inventory transactions with the primary warehouse.
+   * @param   {Warehouse} primaryWarehouse
+   * @returns {Promise<void>}
+   */
+  updateInvoicesWithWarehouse = async (
+    primaryWarehouse: Warehouse
+  ): Promise<void> => {
+    // Updates the sale invoices with primary warehouse.
+    await this.saleInvoiceModel().query().update({
+      warehouseId: primaryWarehouse.id,
+    });
 
-//     // Updates the sale invoices with primary warehouse.
-//     await SaleInvoice.query().update({ warehouseId: primaryWarehouse.id });
-
-//     // Update the sale invoices entries with primary warehouse.
-//     await ItemEntry.query().where('referenceType', 'SaleInvoice').update({
-//       warehouseId: primaryWarehouse.id,
-//     });
-//   };
-// }
+    // Update the sale invoices entries with primary warehouse.
+    await this.itemEntryModel()
+      .query()
+      .where('referenceType', 'SaleInvoice')
+      .update({
+        warehouseId: primaryWarehouse.id,
+      });
+  };
+}

@@ -35,6 +35,8 @@ export class ItemEntry extends BaseModel {
 
   public taxRateId: number;
 
+  public warehouseId: number;
+
   item: Item;
   allocatedCostEntries: BillLandedCostEntry[];
 

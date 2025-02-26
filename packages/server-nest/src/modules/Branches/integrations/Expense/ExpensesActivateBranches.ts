@@ -1,26 +1,24 @@
-// import { Service, Inject } from 'typedi';
-// import { Knex } from 'knex';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Injectable } from '@nestjs/common';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { Expense } from '@/modules/Expenses/models/Expense.model';
 
-// @Service()
-// export class ExpensesActivateBranches {
-//   @Inject()
-//   private tenancy: HasTenancyService;
+@Injectable()
+export class ExpensesActivateBranches {
+  constructor(
+    private readonly expenseModel: TenantModelProxy<typeof Expense>,
+  ) {}
 
-//   /**
-//    * Updates all expenses transactions with the primary branch.
-//    * @param   {number} tenantId
-//    * @param   {number} primaryBranchId
-//    * @returns {Promise<void>}
-//    */
-//   public updateExpensesWithBranch = async (
-//     tenantId: number,
-//     primaryBranchId: number,
-//     trx?: Knex.Transaction
-//   ) => {
-//     const { Expense } = this.tenancy.models(tenantId);
-
-//     // Updates the expenses with primary branch.
-//     await Expense.query(trx).update({ branchId: primaryBranchId });
-//   };
-// }
+  /**
+   * Updates all expenses transactions with the primary branch.
+   * @param   {number} primaryBranchId
+   * @returns {Promise<void>}
+   */
+  public updateExpensesWithBranch = async (
+    primaryBranchId: number,
+    trx?: Knex.Transaction,
+  ) => {
+    // Updates the expenses with primary branch.
+    await this.expenseModel().query(trx).update({ branchId: primaryBranchId });
+  };
+}

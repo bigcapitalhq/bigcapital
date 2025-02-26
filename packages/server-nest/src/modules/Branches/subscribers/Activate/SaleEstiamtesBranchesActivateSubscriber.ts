@@ -1,38 +1,28 @@
-// import { IBranchesActivatedPayload } from '@/interfaces';
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import { SaleEstimateActivateBranches } from '../../Integrations/Sales/SaleEstimatesBranchesActivate';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { IBranchesActivatedPayload } from '../../Branches.types';
+import { events } from '@/common/events/events';
+import { SaleEstimateActivateBranches } from '../../integrations/Sales/SaleEstimatesBranchesActivate';
 
-// @Service()
-// export class SaleEstimatesActivateBranchesSubscriber {
-//   @Inject()
-//   private estimatesActivateBranches: SaleEstimateActivateBranches;
+@Injectable()
+export class SaleEstimatesActivateBranchesSubscriber {
+  constructor(
+      private readonly estimatesActivateBranches: SaleEstimateActivateBranches,
+    ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.branch.onActivated,
-//       this.updateEstimatesWithBranchOnActivated
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Updates accounts transactions with the primary branch once
-//    * the multi-branches is activated.
-//    * @param {IBranchesActivatedPayload}
-//    */
-//   private updateEstimatesWithBranchOnActivated = async ({
-//     tenantId,
-//     primaryBranch,
-//     trx,
-//   }: IBranchesActivatedPayload) => {
-//     await this.estimatesActivateBranches.updateEstimatesWithBranch(
-//       tenantId,
-//       primaryBranch.id,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Updates accounts transactions with the primary branch once
+   * the multi-branches is activated.
+   * @param {IBranchesActivatedPayload}
+   */
+  @OnEvent(events.branch.onActivated)
+  async updateEstimatesWithBranchOnActivated({
+    primaryBranch,
+    trx,
+  }: IBranchesActivatedPayload) {
+    await this.estimatesActivateBranches.updateEstimatesWithBranch(
+      primaryBranch.id,
+      trx
+    );
+  };
+}

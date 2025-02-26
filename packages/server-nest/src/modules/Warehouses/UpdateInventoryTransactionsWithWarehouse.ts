@@ -1,21 +1,23 @@
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
-// import { Service, Inject } from 'typedi';
+import { Inject, Injectable } from '@nestjs/common';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { InventoryTransaction } from '../InventoryCost/models/InventoryTransaction';
 
-// @Service()
-// export class UpdateInventoryTransactionsWithWarehouse {
-//   @Inject()
-//   tenancy: HasTenancyService;
+@Injectable()
+export class UpdateInventoryTransactionsWithWarehouse {
+  constructor(
+    @Inject(InventoryTransaction.name)
+    private readonly inventoryTransactionModel: TenantModelProxy<
+      typeof InventoryTransaction
+    >,
+  ) {}
 
-//   /**
-//    * Updates all inventory transactions with primary warehouse.
-//    * @param {number} tenantId -
-//    * @param {number} warehouseId -
-//    */
-//   public run = async (tenantId: number, primaryWarehouseId: number) => {
-//     const { InventoryTransaction } = this.tenancy.models(tenantId);
-
-//     await InventoryTransaction.query().update({
-//       warehouseId: primaryWarehouseId,
-//     });
-//   };
-// }
+  /**
+   * Updates all inventory transactions with primary warehouse.
+   * @param {number} warehouseId - Warehouse ID.
+   */
+  public run = async (primaryWarehouseId: number) => {
+    await this.inventoryTransactionModel().query().update({
+      warehouseId: primaryWarehouseId,
+    });
+  };
+}

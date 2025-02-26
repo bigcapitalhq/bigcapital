@@ -1,76 +1,60 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import {
-//   Features,
-//   IManualJournalCreatingPayload,
-//   IManualJournalEditingPayload,
-// } from '@/interfaces';
-// import { ManualJournalBranchesValidator } from '../../Integrations/ManualJournals/ManualJournalsBranchesValidator';
-// import { FeaturesManager } from '@/services/Features/FeaturesManager';
 
-// @Service()
-// export class ManualJournalBranchValidateSubscriber {
-//   @Inject()
-//   private validateManualJournalBranch: ManualJournalBranchesValidator;
+import {
+  IManualJournalCreatingPayload,
+  IManualJournalEditingPayload,
+} from '@/modules/ManualJournals/types/ManualJournals.types';
+import { ManualJournalBranchesValidator } from '../../Integrations/ManualJournals/ManualJournalsBranchesValidator';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
+import { Features } from '@/common/types/Features';
+import { FeaturesManager } from '../../../Features/FeaturesManager';
 
-//   @Inject()
-//   private featuresManager: FeaturesManager;
+@Injectable()
+export class ManualJournalBranchValidateSubscriber {
+  constructor(
+    private readonly validateManualJournalBranch: ManualJournalBranchesValidator,
+    private readonly featuresManager: FeaturesManager,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.manualJournals.onCreating,
-//       this.validateBranchExistanceOnBillCreating
-//     );
-//     bus.subscribe(
-//       events.manualJournals.onEditing,
-//       this.validateBranchExistanceOnBillEditing
-//     );
-//     return bus;
-//   };
+  /**
+   * Validate branch existance on estimate creating.
+   * @param {IManualJournalCreatingPayload} payload
+   */
+  @OnEvent(events.manualJournals.onCreating)
+  async validateBranchExistanceOnBillCreating({
+    manualJournalDTO,
+  }: IManualJournalCreatingPayload) {
+    // Detarmines whether the multi-branches is accessible by tenant.
+    const isAccessible = await this.featuresManager.accessible(
+      Features.BRANCHES
+    );
+    // Can't continue if the multi-branches feature is inactive.
+    if (!isAccessible) return;
 
-//   /**
-//    * Validate branch existance on estimate creating.
-//    * @param {IManualJournalCreatingPayload} payload
-//    */
-//   private validateBranchExistanceOnBillCreating = async ({
-//     manualJournalDTO,
-//     tenantId,
-//   }: IManualJournalCreatingPayload) => {
-//     // Detarmines whether the multi-branches is accessible by tenant.
-//     const isAccessible = await this.featuresManager.accessible(
-//       tenantId,
-//       Features.BRANCHES
-//     );
-//     // Can't continue if the multi-branches feature is inactive.
-//     if (!isAccessible) return;
+    // Validates the entries whether have branch id.
+    await this.validateManualJournalBranch.validateEntriesHasBranchId(
+      manualJournalDTO
+    );
+  };
 
-//     // Validates the entries whether have branch id.
-//     await this.validateManualJournalBranch.validateEntriesHasBranchId(
-//       manualJournalDTO
-//     );
-//   };
+  /**
+   * Validate branch existance once estimate editing.
+   * @param {ISaleEstimateEditingPayload} payload
+   */
+  @OnEvent(events.manualJournals.onEditing)
+  async validateBranchExistanceOnBillEditing({
+    manualJournalDTO,
+  }: IManualJournalEditingPayload) {
+    // Detarmines whether the multi-branches is accessible by tenant.
+    const isAccessible = await this.featuresManager.accessible(
+      Features.BRANCHES
+    );
+    // Can't continue if the multi-branches feature is inactive.
+    if (!isAccessible) return;
 
-//   /**
-//    * Validate branch existance once estimate editing.
-//    * @param {ISaleEstimateEditingPayload} payload
-//    */
-//   private validateBranchExistanceOnBillEditing = async ({
-//     tenantId,
-//     manualJournalDTO,
-//   }: IManualJournalEditingPayload) => {
-//     // Detarmines whether the multi-branches is accessible by tenant.
-//     const isAccessible = await this.featuresManager.accessible(
-//       tenantId,
-//       Features.BRANCHES
-//     );
-//     // Can't continue if the multi-branches feature is inactive.
-//     if (!isAccessible) return;
-
-//     await this.validateManualJournalBranch.validateEntriesHasBranchId(
-//       manualJournalDTO
-//     );
-//   };
-// }
+    await this.validateManualJournalBranch.validateEntriesHasBranchId(
+      manualJournalDTO
+    );
+  };
+}

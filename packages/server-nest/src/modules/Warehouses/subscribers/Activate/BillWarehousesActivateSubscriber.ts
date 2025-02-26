@@ -1,36 +1,26 @@
-// import { Service, Inject } from 'typedi';
-// import { IWarehousesActivatedPayload } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { BillActivateWarehouses } from '../../Activate/BillWarehousesActivate';
+import { BillActivateWarehouses } from '../../Activate/BillWarehousesActivate';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
+import { IWarehousesActivatedPayload } from '../../Warehouse.types';
 
-// @Service()
-// export class BillsActivateWarehousesSubscriber {
-//   @Inject()
-//   private billsActivateWarehouses: BillActivateWarehouses;
+@Injectable()
+export class BillsActivateWarehousesSubscriber {
+  constructor(
+    private readonly billsActivateWarehouses: BillActivateWarehouses,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.warehouse.onActivated,
-//       this.updateBillsWithWarehouseOnActivated
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Updates all inventory transactions with the primary warehouse once
-//    * multi-warehouses feature is activated.
-//    * @param {IWarehousesActivatedPayload}
-//    */
-//   private updateBillsWithWarehouseOnActivated = async ({
-//     tenantId,
-//     primaryWarehouse,
-//   }: IWarehousesActivatedPayload) => {
-//     await this.billsActivateWarehouses.updateBillsWithWarehouse(
-//       tenantId,
-//       primaryWarehouse
-//     );
-//   };
-// }
+  /**
+   * Updates all inventory transactions with the primary warehouse once
+   * multi-warehouses feature is activated.
+   * @param {IWarehousesActivatedPayload}
+   */
+  @OnEvent(events.warehouse.onActivated)
+  async  updateBillsWithWarehouseOnActivated ({
+    primaryWarehouse,
+  }: IWarehousesActivatedPayload) {
+    await this.billsActivateWarehouses.updateBillsWithWarehouse(
+      primaryWarehouse
+    );
+  };
+}

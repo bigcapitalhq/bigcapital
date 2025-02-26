@@ -24,6 +24,8 @@ export class InventoryCostLotTracker extends BaseModel {
   exchangeRate: number;
   currencyCode: string;
 
+  warehouseId: number;
+
   item?: Item;
   invoice?: SaleInvoice;
   receipt?: SaleReceipt;

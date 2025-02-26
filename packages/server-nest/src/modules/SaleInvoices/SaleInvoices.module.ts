@@ -47,6 +47,14 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
 import { SendSaleInvoiceMailProcessor } from './processors/SendSaleInvoiceMail.processor';
 import { BullModule } from '@nestjs/bull';
 import { SendSaleInvoiceQueue } from './constants';
+import { InvoicePaymentIntegrationSubscriber } from './subscribers/InvoicePaymentIntegrationSubscriber';
+import { InvoiceChangeStatusOnMailSentSubscriber } from './subscribers/InvoiceChangeStatusOnMailSentSubscriber';
+import { InvoiceCostGLEntriesSubscriber } from './subscribers/InvoiceCostGLEntriesSubscriber';
+import { InvoicePaymentGLRewriteSubscriber } from './subscribers/InvoicePaymentGLRewriteSubscriber';
+import { SaleInvoiceWriteInventoryTransactionsSubscriber } from './subscribers/InvoiceWriteInventoryTransactions';
+import { SaleInvoiceCostGLEntries } from './SaleInvoiceCostGLEntries';
+import { InvoicePaymentsGLEntriesRewrite } from './InvoicePaymentsGLRewrite';
+import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.module';
 
 @Module({
   imports: [
@@ -57,6 +65,7 @@ import { SendSaleInvoiceQueue } from './constants';
     BranchesModule,
     WarehousesModule,
     TaxRatesModule,
+    PaymentsReceivedModule,
     LedgerModule,
     AccountsModule,
     MailModule,
@@ -100,6 +109,13 @@ import { SendSaleInvoiceQueue } from './constants';
     GetSaleInvoiceMailState,
     SendSaleInvoiceMailCommon,
     SendSaleInvoiceMailProcessor,
+    SaleInvoiceCostGLEntries,
+    InvoicePaymentIntegrationSubscriber,
+    InvoiceChangeStatusOnMailSentSubscriber,
+    InvoiceCostGLEntriesSubscriber,
+    InvoicePaymentGLRewriteSubscriber,
+    SaleInvoiceWriteInventoryTransactionsSubscriber,
+    InvoicePaymentsGLEntriesRewrite
   ],
   exports: [GetSaleInvoice],
 })

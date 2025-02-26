@@ -1,38 +1,28 @@
-// import { IBranchesActivatedPayload } from '@/interfaces';
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import { SaleReceiptActivateBranches } from '../../Integrations/Sales/SaleReceiptBranchesActivate';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
+import { IBranchesActivatedPayload } from '../../Branches.types';
+import { SaleReceiptActivateBranches } from '../../integrations/Sales/SaleReceiptBranchesActivate';
 
-// @Service()
-// export class SaleReceiptsActivateBranchesSubscriber {
-//   @Inject()
-//   private receiptsActivateBranches: SaleReceiptActivateBranches;
+@Injectable()
+export class SaleReceiptsActivateBranchesSubscriber {
+  constructor(
+    private readonly receiptsActivateBranches: SaleReceiptActivateBranches,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.branch.onActivated,
-//       this.updateReceiptsWithBranchOnActivated
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Updates accounts transactions with the primary branch once
-//    * the multi-branches is activated.
-//    * @param {IBranchesActivatedPayload}
-//    */
-//   private updateReceiptsWithBranchOnActivated = async ({
-//     tenantId,
-//     primaryBranch,
-//     trx,
-//   }: IBranchesActivatedPayload) => {
-//     await this.receiptsActivateBranches.updateReceiptsWithBranch(
-//       tenantId,
-//       primaryBranch.id,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Updates accounts transactions with the primary branch once
+   * the multi-branches is activated.
+   * @param {IBranchesActivatedPayload}
+   */
+  @OnEvent(events.branch.onActivated)
+  async updateReceiptsWithBranchOnActivated({
+    primaryBranch,
+    trx,
+  }: IBranchesActivatedPayload) {
+    await this.receiptsActivateBranches.updateReceiptsWithBranch(
+      primaryBranch.id,
+      trx,
+    );
+  }
+}

@@ -1,56 +1,41 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import {
-//   ISaleReceiptCreatingPayload,
-//   ISaleReceiptEditingPayload,
-// } from '@/interfaces';
-// import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import {
+  ISaleReceiptCreatingPayload,
+  ISaleReceiptEditingPayload,
+} from '@/modules/SaleReceipts/types/SaleReceipts.types';
+import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export class SaleReceiptBranchValidateSubscriber {
-//   @Inject()
-//   private validateBranchExistance: ValidateBranchExistance;
+@Injectable()
+export class SaleReceiptBranchValidateSubscriber {
+  constructor(
+    private readonly validateBranchExistance: ValidateBranchExistance,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.saleReceipt.onCreating,
-//       this.validateBranchExistanceOnInvoiceCreating
-//     );
-//     bus.subscribe(
-//       events.saleReceipt.onEditing,
-//       this.validateBranchExistanceOnInvoiceEditing
-//     );
-//     return bus;
-//   };
+  /**
+   * Validate branch existance on estimate creating.
+   * @param {ISaleReceiptCreatingPayload} payload
+   */
+  @OnEvent(events.saleReceipt.onCreating)
+  async validateBranchExistanceOnInvoiceCreating({
+    saleReceiptDTO,
+  }: ISaleReceiptCreatingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      saleReceiptDTO.branchId,
+    );
+  }
 
-//   /**
-//    * Validate branch existance on estimate creating.
-//    * @param {ISaleReceiptCreatingPayload} payload
-//    */
-//   private validateBranchExistanceOnInvoiceCreating = async ({
-//     tenantId,
-//     saleReceiptDTO,
-//   }: ISaleReceiptCreatingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       saleReceiptDTO.branchId
-//     );
-//   };
-
-//   /**
-//    * Validate branch existance once estimate editing.
-//    * @param {ISaleReceiptEditingPayload} payload
-//    */
-//   private validateBranchExistanceOnInvoiceEditing = async ({
-//     saleReceiptDTO,
-//     tenantId,
-//   }: ISaleReceiptEditingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       saleReceiptDTO.branchId
-//     );
-//   };
-// }
+  /**
+   * Validate branch existance once estimate editing.
+   * @param {ISaleReceiptEditingPayload} payload
+   */
+  @OnEvent(events.saleReceipt.onEditing)
+  async validateBranchExistanceOnInvoiceEditing({
+    saleReceiptDTO,
+  }: ISaleReceiptEditingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      saleReceiptDTO.branchId,
+    );
+  }
+}

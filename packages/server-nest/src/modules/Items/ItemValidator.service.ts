@@ -18,6 +18,15 @@ import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class ItemsValidators {
+  /**
+   * @param {typeof Item} itemModel - The Item model.
+   * @param {typeof Account} accountModel - The Account model.
+   * @param {typeof TaxRateModel} taxRateModel - The TaxRateModel model.
+   * @param {typeof ItemEntry} itemEntryModel - The ItemEntry model.
+   * @param {typeof ItemCategory} itemCategoryModel - The ItemCategory model.
+   * @param {typeof AccountTransaction} accountTransactionModel - The AccountTransaction model.
+   * @param {typeof InventoryAdjustment} inventoryAdjustmentEntryModel - The InventoryAdjustment model.
+   */
   constructor(
     @Inject(Item.name) private itemModel: TenantModelProxy<typeof Item>,
 
@@ -244,9 +253,9 @@ export class ItemsValidators {
   /**
    * Validate the item inventory account whether modified and item
    * has associated inventory transactions.
-   * @param {Item} oldItem
-   * @param {IItemDTO} newItemDTO
-   * @returns
+   * @param {Item} oldItem - Old item.
+   * @param {IItemDTO} newItemDTO - New item DTO.
+   * @returns {Promise<void>}
    */
   async validateItemInvnetoryAccountModified(
     oldItem: Item,
@@ -285,7 +294,7 @@ export class ItemsValidators {
 
   /**
    * Validate the purchase tax rate id existance.
-   * @param {number} taxRateId -
+   * @param {number} taxRateId - Tax rate id.
    */
   public async validatePurchaseTaxRateExistance(taxRateId: number) {
     const foundTaxRate = await this.taxRateModel().query().findById(taxRateId);
@@ -297,7 +306,7 @@ export class ItemsValidators {
 
   /**
    * Validate the sell tax rate id existance.
-   * @param {number} taxRateId
+   * @param {number} taxRateId - Tax rate id.
    */
   public async validateSellTaxRateExistance(taxRateId: number) {
     const foundTaxRate = await this.taxRateModel().query().findById(taxRateId);

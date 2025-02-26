@@ -1,26 +1,25 @@
-// import { Service, Inject } from 'typedi';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
-// import { Knex } from 'knex';
+import { Knex } from 'knex';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceived';
+import { Inject, Injectable } from '@nestjs/common';
 
-// @Service()
-// export class SaleEstimateActivateBranches {
-//   @Inject()
-//   tenancy: HasTenancyService;
+@Injectable()
+export class SaleEstimateActivateBranches {
+  constructor(
+    @Inject(PaymentReceived.name)
+    private readonly paymentReceivedModel: TenantModelProxy<typeof PaymentReceived>,
+  ) {}
 
-//   /**
-//    * Updates all sale estimates transactions with the primary branch.
-//    * @param   {number} tenantId
-//    * @param   {number} primaryBranchId
-//    * @returns {Promise<void>}
-//    */
-//   public updateEstimatesWithBranch = async (
-//     tenantId: number,
-//     primaryBranchId: number,
-//     trx?: Knex.Transaction
-//   ) => {
-//     const { PaymentReceive } = this.tenancy.models(tenantId);
-
-//     // Updates the sale invoice with primary branch.
-//     await PaymentReceive.query(trx).update({ branchId: primaryBranchId });
-//   };
-// }
+  /**
+   * Updates all sale estimates transactions with the primary branch.
+   * @param {number} primaryBranchId
+   * @returns {Promise<void>}
+   */
+  public updateEstimatesWithBranch = async (
+    primaryBranchId: number,
+    trx?: Knex.Transaction
+  ) => {
+    // Updates the sale invoice with primary branch.
+    await this.paymentReceivedModel().query(trx).update({ branchId: primaryBranchId });
+  };
+}

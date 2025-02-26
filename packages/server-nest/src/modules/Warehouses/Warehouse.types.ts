@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { Warehouse } from './models/Warehouse.model';
 
 export interface IWarehouse {
   id?: number;
@@ -168,18 +169,18 @@ export interface IWarehousesActivatePayload {
 }
 export interface IWarehousesActivatedPayload {
   // tenantId: number;
-  primaryWarehouse: IWarehouse;
+  primaryWarehouse: Warehouse;
 }
 
 export interface IWarehouseMarkAsPrimaryPayload {
   // tenantId: number;
-  oldWarehouse: IWarehouse;
+  oldWarehouse: Warehouse;
   trx: Knex.Transaction;
 }
 export interface IWarehouseMarkedAsPrimaryPayload {
   // tenantId: number;
-  oldWarehouse: IWarehouse;
-  markedWarehouse: IWarehouse;
+  oldWarehouse: Warehouse;
+  markedWarehouse: Warehouse;
   trx: Knex.Transaction;
 }
 

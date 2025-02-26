@@ -1,36 +1,26 @@
-// import { Service, Inject } from 'typedi';
-// import { IWarehousesActivatedPayload } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { VendorCreditActivateWarehouses } from '../../Activate/VendorCreditWarehousesActivate';
+import { VendorCreditActivateWarehouses } from '../../Activate/VendorCreditWarehousesActivate';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { IWarehousesActivatedPayload } from '../../Warehouse.types';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export class VendorCreditsActivateWarehousesSubscriber {
-//   @Inject()
-//   private creditsActivateWarehouses: VendorCreditActivateWarehouses;
+@Injectable()
+export class VendorCreditsActivateWarehousesSubscriber {
+  constructor(
+    private readonly creditsActivateWarehouses: VendorCreditActivateWarehouses,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.warehouse.onActivated,
-//       this.updateCreditsWithWarehouseOnActivated
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Updates all inventory transactions with the primary warehouse once
-//    * multi-warehouses feature is activated.
-//    * @param {IWarehousesActivatedPayload}
-//    */
-//   private updateCreditsWithWarehouseOnActivated = async ({
-//     tenantId,
-//     primaryWarehouse,
-//   }: IWarehousesActivatedPayload) => {
-//     await this.creditsActivateWarehouses.updateCreditsWithWarehouse(
-//       tenantId,
-//       primaryWarehouse
-//     );
-//   };
-// }
+  /**
+   * Updates all inventory transactions with the primary warehouse once
+   * multi-warehouses feature is activated.
+   * @param {IWarehousesActivatedPayload}
+   */
+  @OnEvent(events.warehouse.onActivated)
+  async updateCreditsWithWarehouseOnActivated({
+    primaryWarehouse,
+  }: IWarehousesActivatedPayload) {
+    await this.creditsActivateWarehouses.updateCreditsWithWarehouse(
+      primaryWarehouse,
+    );
+  }
+}

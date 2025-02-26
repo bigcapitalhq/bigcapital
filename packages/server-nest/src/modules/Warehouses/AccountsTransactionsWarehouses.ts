@@ -1,26 +1,24 @@
-// import { Service, Inject } from 'typedi';
-// import { Knex } from 'knex';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Injectable } from '@nestjs/common';
+import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
-// @Service()
-// export class InventoryTransactionsWarehouses {
-//   @Inject()
-//   tenancy: HasTenancyService;
-
-//   /**
-//    * Updates all accounts transctions with the priamry branch.
-//    * @param tenantId
-//    * @param primaryBranchId
-//    */
-//   public updateTransactionsWithWarehouse = async (
-//     tenantId: number,
-//     primaryBranchId: number,
-//     trx?: Knex.Transaction
-//   ) => {
-//     const { AccountTransaction } = await this.tenancy.models(tenantId);
-
-//     await AccountTransaction.query(trx).update({
-//       branchId: primaryBranchId,
-//     });
-//   };
-// }
+@Injectable()
+export class InventoryTransactionsWarehouses {
+  constructor(
+    private readonly accountTransactionModel: TenantModelProxy<typeof AccountTransaction>,
+  ) {}
+ 
+  /**
+   * Updates all accounts transctions with the priamry branch.
+   * @param {number} primaryBranchId - The primary branch id.
+   */
+  public updateTransactionsWithWarehouse = async (
+    primaryBranchId: number,
+    trx?: Knex.Transaction
+  ) => {
+    await this.accountTransactionModel().query(trx).update({
+      branchId: primaryBranchId,
+    });
+  };
+}

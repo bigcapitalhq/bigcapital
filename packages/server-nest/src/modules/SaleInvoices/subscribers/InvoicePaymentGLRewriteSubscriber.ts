@@ -1,37 +1,27 @@
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import { ISaleInvoiceEditingPayload } from '@/interfaces';
-// import { InvoicePaymentsGLEntriesRewrite } from '../InvoicePaymentsGLRewrite';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { ISaleInvoiceEditingPayload } from '../SaleInvoice.types';
+import { InvoicePaymentsGLEntriesRewrite } from '../InvoicePaymentsGLRewrite';
 
-// @Service()
-// export class InvoicePaymentGLRewriteSubscriber {
-//   @Inject()
-//   private invoicePaymentsRewriteGLEntries: InvoicePaymentsGLEntriesRewrite;
+@Injectable()
+export class InvoicePaymentGLRewriteSubscriber {
+  constructor(
+    private readonly invoicePaymentsRewriteGLEntries: InvoicePaymentsGLEntriesRewrite,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.saleInvoice.onEdited,
-//       this.paymentGLEntriesRewriteOnPaymentEdit
-//     );
-//     return bus;
-//   };
-
-//   /**
-//    * Writes associated invoiceso of payment receive once edit.
-//    * @param {ISaleInvoiceEditingPayload} -
-//    */
-//   private paymentGLEntriesRewriteOnPaymentEdit = async ({
-//     tenantId,
-//     oldSaleInvoice,
-//     trx,
-//   }: ISaleInvoiceEditingPayload) => {
-//     await this.invoicePaymentsRewriteGLEntries.invoicePaymentsGLEntriesRewrite(
-//       tenantId,
-//       oldSaleInvoice.id,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Writes associated invoiceso of payment receive once edit.
+   * @param {ISaleInvoiceEditingPayload} -
+   */
+  @OnEvent(events.saleInvoice.onEdited)
+  async paymentGLEntriesRewriteOnPaymentEdit({
+    oldSaleInvoice,
+    trx,
+  }: ISaleInvoiceEditingPayload) {
+    await this.invoicePaymentsRewriteGLEntries.invoicePaymentsGLEntriesRewrite(
+      oldSaleInvoice.id,
+      trx,
+    );
+  }
+}

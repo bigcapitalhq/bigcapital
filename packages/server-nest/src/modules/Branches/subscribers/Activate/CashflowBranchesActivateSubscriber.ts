@@ -1,38 +1,29 @@
-// import { IBranchesActivatedPayload } from '@/interfaces';
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import { CashflowTransactionsActivateBranches } from '../../Integrations/Cashflow/CashflowActivateBranches';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { CashflowTransactionsActivateBranches } from '../../Integrations/Cashflow/CashflowActivateBranches';
+import { IBranchesActivatedPayload } from '../../Branches.types';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export class CreditNoteActivateBranchesSubscriber {
-//   @Inject()
-//   private cashflowActivateBranches: CashflowTransactionsActivateBranches;
-
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.branch.onActivated,
-//       this.updateCashflowWithBranchOnActivated
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Updates accounts transactions with the primary branch once
-//    * the multi-branches is activated.
-//    * @param {IBranchesActivatedPayload}
-//    */
-//   private updateCashflowWithBranchOnActivated = async ({
-//     tenantId,
-//     primaryBranch,
-//     trx,
-//   }: IBranchesActivatedPayload) => {
-//     await this.cashflowActivateBranches.updateCashflowTransactionsWithBranch(
-//       tenantId,
-//       primaryBranch.id,
-//       trx
-//     );
-//   };
-// }
+@Injectable()
+export class CreditNoteActivateBranchesSubscriber {
+  constructor(
+    private readonly cashflowActivateBranches: CashflowTransactionsActivateBranches,
+  ) {}
+  
+  /**
+   * Updates accounts transactions with the primary branch once
+   * the multi-branches is activated.
+   * @param {IBranchesActivatedPayload}
+   */
+  @OnEvent(events.branch.onActivated)
+  async updateCashflowWithBranchOnActivated({
+    
+    primaryBranch,
+    trx,
+  }: IBranchesActivatedPayload) {
+    await this.cashflowActivateBranches.updateCashflowTransactionsWithBranch(
+      primaryBranch.id,
+      trx
+    );
+  };
+}

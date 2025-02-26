@@ -1,30 +1,35 @@
-// import { Service, Inject } from 'typedi';
-// import { IWarehouse } from '@/interfaces';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
+import { Warehouse } from '../models/Warehouse.model';
+import { Injectable } from '@nestjs/common';
 
-// @Service()
-// export class VendorCreditActivateWarehouses {
-//   @Inject()
-//   tenancy: HasTenancyService;
+@Injectable()
+export class VendorCreditActivateWarehouses {
+  constructor(
+    private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
+    private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
+  ) {}
 
-//   /**
-//    * Updates all vendor credits transactions with the primary warehouse.
-//    * @param   {number} tenantId
-//    * @param   {number} primaryWarehouse
-//    * @returns {Promise<void>}
-//    */
-//   public updateCreditsWithWarehouse = async (
-//     tenantId: number,
-//     primaryWarehouse: IWarehouse
-//   ): Promise<void> => {
-//     const { VendorCredit, ItemEntry } = this.tenancy.models(tenantId);
+  /**
+   * Updates all vendor credits transactions with the primary warehouse.
+   * @param   {Warehouse} primaryWarehouse
+   * @returns {Promise<void>}
+   */
+  public updateCreditsWithWarehouse = async (
+    primaryWarehouse: Warehouse,
+  ): Promise<void> => {
+    // Updates the vendor credits transactions with primary warehouse.
+    await this.vendorCreditModel().query().update({
+      warehouseId: primaryWarehouse.id,
+    });
 
-//     // Updates the vendor credits transactions with primary warehouse.
-//     await VendorCredit.query().update({ warehouseId: primaryWarehouse.id });
-
-//     // Update the sale invoices entries with primary warehouse.
-//     await ItemEntry.query().where('referenceType', 'VendorCredit').update({
-//       warehouseId: primaryWarehouse.id,
-//     });
-//   };
-// }
+    // Update the sale invoices entries with primary warehouse.
+    await this.itemEntryModel()
+      .query()
+      .where('referenceType', 'VendorCredit')
+      .update({
+        warehouseId: primaryWarehouse.id,
+      });
+  };
+}

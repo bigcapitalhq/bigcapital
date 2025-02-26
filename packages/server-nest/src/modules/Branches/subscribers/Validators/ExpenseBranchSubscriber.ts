@@ -1,56 +1,40 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import {
-//   IExpenseCreatingPayload,
-//   IExpenseEventEditingPayload,
-// } from '@/interfaces';
-// import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import {
+  IExpenseCreatingPayload,
+  IExpenseEventEditingPayload,
+} from '@/modules/Expenses/Expenses.types';
+@Injectable()
+export class ExpenseBranchValidateSubscriber {
+  constructor(
+    private readonly validateBranchExistance: ValidateBranchExistance,
+  ) {}
 
-// @Service()
-// export class ExpenseBranchValidateSubscriber {
-//   @Inject()
-//   private validateBranchExistance: ValidateBranchExistance;
+  /**
+   * Validate branch existance once expense transaction creating.
+   * @param {IExpenseCreatingPayload} payload
+   */
+  @OnEvent(events.expenses.onCreating)
+  async validateBranchExistanceOnExpenseCreating({
+    expenseDTO,
+  }: IExpenseCreatingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      expenseDTO.branchId,
+    );
+  }
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.expenses.onCreating,
-//       this.validateBranchExistanceOnExpenseCreating
-//     );
-//     bus.subscribe(
-//       events.expenses.onEditing,
-//       this.validateBranchExistanceOnExpenseEditing
-//     );
-//     return bus;
-//   };
-
-//   /**
-//    * Validate branch existance once expense transaction creating.
-//    * @param {ISaleEstimateCreatedPayload} payload
-//    */
-//   private validateBranchExistanceOnExpenseCreating = async ({
-//     tenantId,
-//     expenseDTO,
-//   }: IExpenseCreatingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       expenseDTO.branchId
-//     );
-//   };
-
-//   /**
-//    * Validate branch existance once expense transaction editing.
-//    * @param {ISaleEstimateEditingPayload} payload
-//    */
-//   private validateBranchExistanceOnExpenseEditing = async ({
-//     expenseDTO,
-//     tenantId,
-//   }: IExpenseEventEditingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       expenseDTO.branchId
-//     );
-//   };
-// }
+  /**
+   * Validate branch existance once expense transaction editing.
+   * @param {IExpenseEventEditingPayload} payload
+   */
+  @OnEvent(events.expenses.onEditing)
+  async validateBranchExistanceOnExpenseEditing({
+    expenseDTO,
+  }: IExpenseEventEditingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      expenseDTO.branchId,
+    );
+  }
+}

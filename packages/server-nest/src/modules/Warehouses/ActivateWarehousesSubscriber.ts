@@ -1,58 +1,39 @@
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import { IWarehousesActivatedPayload } from '@/interfaces';
-// import { UpdateInventoryTransactionsWithWarehouse } from './UpdateInventoryTransactionsWithWarehouse';
-// import { CreateInitialWarehousesItemsQuantity } from './CreateInitialWarehousesitemsQuantity';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { UpdateInventoryTransactionsWithWarehouse } from './UpdateInventoryTransactionsWithWarehouse';
+import { CreateInitialWarehousesItemsQuantity } from './CreateInitialWarehousesitemsQuantity';
+import { IWarehousesActivatedPayload } from './Warehouse.types';
 
-// @Service()
-// export class ActivateWarehousesSubscriber {
-//   @Inject()
-//   private updateInventoryTransactionsWithWarehouse: UpdateInventoryTransactionsWithWarehouse;
+@Injectable()
+export class ActivateWarehousesSubscriber {
+  constructor(
+    private readonly updateInventoryTransactionsWithWarehouse: UpdateInventoryTransactionsWithWarehouse,
+    private readonly createInitialWarehousesItemsQuantity: CreateInitialWarehousesItemsQuantity,
+  ) {}
 
-//   @Inject()
-//   private createInitialWarehousesItemsQuantity: CreateInitialWarehousesItemsQuantity;
+  /**
+   * Updates inventory transactiont to primary warehouse once
+   * multi-warehouses activated.
+   * @param {IWarehousesActivatedPayload}
+   */
+  @OnEvent(events.warehouse.onActivated)
+  async updateInventoryTransactionsWithWarehouseOnActivating({
+    primaryWarehouse,
+  }: IWarehousesActivatedPayload) {
+    await this.updateInventoryTransactionsWithWarehouse.run(
+      primaryWarehouse.id,
+    );
+  }
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   attach(bus) {
-//     bus.subscribe(
-//       events.warehouse.onActivated,
-//       this.updateInventoryTransactionsWithWarehouseOnActivating
-//     );
-//     bus.subscribe(
-//       events.warehouse.onActivated,
-//       this.createInitialWarehousesItemsQuantityOnActivating
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Updates inventory transactiont to primary warehouse once
-//    * multi-warehouses activated.
-//    * @param {IWarehousesActivatedPayload}
-//    */
-//   private updateInventoryTransactionsWithWarehouseOnActivating = async ({
-//     tenantId,
-//     primaryWarehouse,
-//   }: IWarehousesActivatedPayload) => {
-//     await this.updateInventoryTransactionsWithWarehouse.run(
-//       tenantId,
-//       primaryWarehouse.id
-//     );
-//   };
-
-//   /**
-//    * Creates initial warehouses items quantity once the multi-warehouses activated.
-//    * @param {IWarehousesActivatedPayload}
-//    */
-//   private createInitialWarehousesItemsQuantityOnActivating = async ({
-//     tenantId,
-//     primaryWarehouse,
-//   }: IWarehousesActivatedPayload) => {
-//     await this.createInitialWarehousesItemsQuantity.run(
-//       tenantId,
-//       primaryWarehouse.id
-//     );
-//   };
-// }
+  /**
+   * Creates initial warehouses items quantity once the multi-warehouses activated.
+   * @param {IWarehousesActivatedPayload}
+   */
+  @OnEvent(events.warehouse.onActivated)
+  async createInitialWarehousesItemsQuantityOnActivating({
+    primaryWarehouse,
+  }: IWarehousesActivatedPayload) {
+    await this.createInitialWarehousesItemsQuantity.run(primaryWarehouse.id);
+  }
+}

@@ -1,38 +1,28 @@
-// import { IBranchesActivatedPayload } from '@/interfaces';
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import { ExpensesActivateBranches } from '../../Integrations/Expense/ExpensesActivateBranches';
+import { IBranchesActivatedPayload } from '../../Branches.types';
+import { events } from '@/common/events/events';
+import { Injectable } from '@nestjs/common';
+import { ExpensesActivateBranches } from '../../Integrations/Expense/ExpensesActivateBranches';
+import { OnEvent } from '@nestjs/event-emitter';
 
-// @Service()
-// export class ExpenseActivateBranchesSubscriber {
-//   @Inject()
-//   private expensesActivateBranches: ExpensesActivateBranches;
+@Injectable()
+export class ExpenseActivateBranchesSubscriber {
+  constructor(
+    private readonly expensesActivateBranches: ExpensesActivateBranches,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.branch.onActivated,
-//       this.updateExpensesWithBranchOnActivated
-//     );
-//     return bus;
-//   }
-
-//   /**
-//    * Updates accounts transactions with the primary branch once
-//    * the multi-branches is activated.
-//    * @param {IBranchesActivatedPayload}
-//    */
-//   private updateExpensesWithBranchOnActivated = async ({
-//     tenantId,
-//     primaryBranch,
-//     trx,
-//   }: IBranchesActivatedPayload) => {
-//     await this.expensesActivateBranches.updateExpensesWithBranch(
-//       tenantId,
-//       primaryBranch.id,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Updates accounts transactions with the primary branch once
+   * the multi-branches is activated.
+   * @param {IBranchesActivatedPayload}
+   */
+  @OnEvent(events.branch.onActivated)
+  async updateExpensesWithBranchOnActivated({
+    primaryBranch,
+    trx,
+  }: IBranchesActivatedPayload) {
+    await this.expensesActivateBranches.updateExpensesWithBranch(
+      primaryBranch.id,
+      trx,
+    );
+  }
+}

@@ -60,7 +60,11 @@ import { SEND_PAYMENT_RECEIVED_MAIL_QUEUE } from './constants';
     SendPaymentReceiveMailNotification,
     SendPaymentReceivedMailProcessor,
   ],
-  exports: [PaymentReceivesApplication, CreatePaymentReceivedService],
+  exports: [
+    PaymentReceivesApplication,
+    CreatePaymentReceivedService,
+    PaymentReceivedGLEntries,
+  ],
   imports: [
     ChromiumlyTenancyModule,
     TemplateInjectableModule,

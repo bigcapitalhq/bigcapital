@@ -1,74 +1,57 @@
-// import events from '@/subscribers/events';
-// import { Service, Inject } from 'typedi';
-// import { WarehousesItemsQuantitySync } from './WarehousesItemsQuantitySync';
-// import {
-//   IInventoryTransactionsCreatedPayload,
-//   IInventoryTransactionsDeletedPayload,
-// } from '@/interfaces';
-// import { WarehousesSettings } from '../WarehousesSettings';
+import { WarehousesItemsQuantitySync } from './WarehousesItemsQuantitySync';
+import { WarehousesSettings } from '../WarehousesSettings';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
+import {
+  IInventoryTransactionsCreatedPayload,
+  IInventoryTransactionsDeletedPayload,
+} from '@/modules/InventoryCost/types/InventoryCost.types';
 
-// @Service()
-// export class WarehousesItemsQuantitySyncSubscriber {
-//   @Inject()
-//   private warehousesItemsQuantitySync: WarehousesItemsQuantitySync;
+@Injectable()
+export class WarehousesItemsQuantitySyncSubscriber {
+  constructor(
+    private readonly warehousesItemsQuantitySync: WarehousesItemsQuantitySync,
+    private readonly warehousesSettings: WarehousesSettings,
+  ) {}
 
-//   @Inject()
-//   private warehousesSettings: WarehousesSettings;
+  /**
+   * Syncs warehouses items quantity once inventory transactions created.
+   * @param {IInventoryTransactionsCreatedPayload}
+   */
+  @OnEvent(events.inventory.onInventoryTransactionsCreated)
+  async syncWarehousesItemsQuantityOnInventoryTransCreated({
+    inventoryTransactions,
+    trx,
+  }: IInventoryTransactionsCreatedPayload) {
+    const isActive = this.warehousesSettings.isMultiWarehousesActive();
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.inventory.onInventoryTransactionsCreated,
-//       this.syncWarehousesItemsQuantityOnInventoryTransCreated
-//     );
-//     bus.subscribe(
-//       events.inventory.onInventoryTransactionsDeleted,
-//       this.syncWarehousesItemsQuantityOnInventoryTransDeleted
-//     );
-//     return bus;
-//   }
+    // Can't continue if the warehouses features is not active.
+    if (!isActive) return;
 
-//   /**
-//    * Syncs warehouses items quantity once inventory transactions created.
-//    * @param {IInventoryTransactionsCreatedPayload}
-//    */
-//   private syncWarehousesItemsQuantityOnInventoryTransCreated = async ({
-//     tenantId,
-//     inventoryTransactions,
-//     trx,
-//   }: IInventoryTransactionsCreatedPayload) => {
-//     const isActive = this.warehousesSettings.isMultiWarehousesActive(tenantId);
+    await this.warehousesItemsQuantitySync.mutateWarehousesItemsQuantityFromTransactions(
+      inventoryTransactions,
+      trx,
+    );
+  }
 
-//     // Can't continue if the warehouses features is not active.
-//     if (!isActive) return;
+  /**
+   * Syncs warehouses items quantity once inventory transactions deleted.
+   * @param {IInventoryTransactionsDeletedPayload}
+   */
+  @OnEvent(events.inventory.onInventoryTransactionsDeleted)
+  async syncWarehousesItemsQuantityOnInventoryTransDeleted({
+    oldInventoryTransactions,
+    trx,
+  }: IInventoryTransactionsDeletedPayload) {
+    const isActive = this.warehousesSettings.isMultiWarehousesActive();
 
-//     await this.warehousesItemsQuantitySync.mutateWarehousesItemsQuantityFromTransactions(
-//       tenantId,
-//       inventoryTransactions,
-//       trx
-//     );
-//   };
+    // Can't continue if the warehouses feature is not active yet.
+    if (!isActive) return;
 
-//   /**
-//    * Syncs warehouses items quantity once inventory transactions deleted.
-//    * @param {IInventoryTransactionsDeletedPayload}
-//    */
-//   private syncWarehousesItemsQuantityOnInventoryTransDeleted = async ({
-//     tenantId,
-//     oldInventoryTransactions,
-//     trx,
-//   }: IInventoryTransactionsDeletedPayload) => {
-//     const isActive = this.warehousesSettings.isMultiWarehousesActive(tenantId);
-
-//     // Can't continue if the warehouses feature is not active yet.
-//     if (!isActive) return;
-
-//     await this.warehousesItemsQuantitySync.reverseWarehousesItemsQuantityFromTransactions(
-//       tenantId,
-//       oldInventoryTransactions,
-//       trx
-//     );
-//   };
-// }
+    await this.warehousesItemsQuantitySync.reverseWarehousesItemsQuantityFromTransactions(
+      oldInventoryTransactions,
+      trx,
+    );
+  }
+}

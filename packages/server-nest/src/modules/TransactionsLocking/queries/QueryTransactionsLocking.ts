@@ -44,8 +44,7 @@ export class QueryTransactionsLocking {
 
   /**
    * Retrieve the transactions locking module meta.
-   * @param   {number} tenantId -
-   * @param   {TransactionsLockingGroup} module -
+   * @param {TransactionsLockingGroup} module -
    * @returns {ITransactionLockingMetaPOJO}
    */
   public getTransactionsLockingModuleMeta = (

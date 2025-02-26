@@ -50,7 +50,6 @@ export class CreateItemCategoryService {
    * @return {Promise<void>}
    */
   public async newItemCategory(
-    tenantId: number,
     itemCategoryOTD: IItemCategoryOTD,
     trx?: Knex.Transaction,
   ): Promise<ItemCategory> {
@@ -81,7 +80,6 @@ export class CreateItemCategoryService {
       // Triggers `onItemCategoryCreated` event.
       await this.eventEmitter.emitAsync(events.itemCategory.onCreated, {
         itemCategory,
-        tenantId,
         trx,
       } as IItemCategoryCreatedPayload);
 

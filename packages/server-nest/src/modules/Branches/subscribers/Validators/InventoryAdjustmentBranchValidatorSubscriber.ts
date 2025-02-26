@@ -1,35 +1,25 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import { IInventoryAdjustmentCreatingPayload } from '@/interfaces';
-// import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { IInventoryAdjustmentCreatingPayload } from '@/modules/InventoryAdjutments/types/InventoryAdjustments.types';
 
-// @Service()
-// export class InventoryAdjustmentBranchValidateSubscriber {
-//   @Inject()
-//   private validateBranchExistance: ValidateBranchExistance;
+@Injectable()
+export class InventoryAdjustmentBranchValidateSubscriber {
+  constructor(
+    private readonly validateBranchExistance: ValidateBranchExistance,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.inventoryAdjustment.onQuickCreating,
-//       this.validateBranchExistanceOnInventoryCreating
-//     );
-//     return bus;
-//   };
-
-//   /**
-//    * Validate branch existance on invoice creating.
-//    * @param {ISaleInvoiceCreatingPaylaod} payload
-//    */
-//   private validateBranchExistanceOnInventoryCreating = async ({
-//     tenantId,
-//     quickAdjustmentDTO,
-//   }: IInventoryAdjustmentCreatingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       quickAdjustmentDTO.branchId
-//     );
-//   };
-// }
+  /**
+   * Validate branch existance on inventory adjustment creating.
+   * @param {IInventoryAdjustmentCreatingPayload} payload
+   */
+  @OnEvent(events.inventoryAdjustment.onQuickCreating)
+  async validateBranchExistanceOnInventoryCreating({
+    quickAdjustmentDTO,
+  }: IInventoryAdjustmentCreatingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      quickAdjustmentDTO.branchId,
+    );
+  }
+}

@@ -28,6 +28,8 @@ export class ManualJournal extends TenantBaseModel {
   entries!: ManualJournalEntry[];
   attachments!: Document[];
 
+  branchId?: number;
+
   /**
    * Table name.
    */

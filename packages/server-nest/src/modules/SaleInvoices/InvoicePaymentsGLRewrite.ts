@@ -1,76 +1,70 @@
-// import { Knex } from 'knex';
-// import async from 'async';
-// import { Inject, Service } from 'typedi';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
-// import { PaymentReceivedGLEntries } from '../PaymentReceived/PaymentReceivedGLEntries';
+import { Knex } from 'knex';
+import async from 'async';
+import { Inject, Injectable } from '@nestjs/common';
+import { PaymentReceivedGLEntries } from '../PaymentReceived/commands/PaymentReceivedGLEntries';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { PaymentReceivedEntry } from '../PaymentReceived/models/PaymentReceivedEntry';
 
-// @Service()
-// export class InvoicePaymentsGLEntriesRewrite {
-//   @Inject()
-//   public tenancy: HasTenancyService;
+@Injectable()
+export class InvoicePaymentsGLEntriesRewrite {
+  constructor(
+    private readonly paymentGLEntries: PaymentReceivedGLEntries,
 
-//   @Inject()
-//   public paymentGLEntries: PaymentReceivedGLEntries;
+    @Inject(PaymentReceivedEntry.name)
+    private readonly paymentReceivedEntryModel: TenantModelProxy<typeof PaymentReceivedEntry>
+  ) {}
 
-//   /**
-//    * Rewrites the payment GL entries task.
-//    * @param   {{ tenantId: number, paymentId: number, trx: Knex?.Transaction }}
-//    * @returns {Promise<void>}
-//    */
-//   public rewritePaymentsGLEntriesTask = async ({
-//     tenantId,
-//     paymentId,
-//     trx,
-//   }) => {
-//     await this.paymentGLEntries.rewritePaymentGLEntries(
-//       tenantId,
-//       paymentId,
-//       trx
-//     );
-//   };
+  /**
+   * Rewrites the payment GL entries task.
+   * @param   {{ tenantId: number, paymentId: number, trx: Knex?.Transaction }}
+   * @returns {Promise<void>}
+   */
+  public rewritePaymentsGLEntriesTask = async ({
+    paymentId,
+    trx,
+  }) => {
+    await this.paymentGLEntries.rewritePaymentGLEntries(
+      paymentId,
+      trx
+    );
+  };
 
-//   /**
-//    * Rewrites the payment GL entries of the given payments ids.
-//    * @param {number} tenantId
-//    * @param {number[]} paymentsIds
-//    * @param {Knex.Transaction} trx
-//    */
-//   public rewritePaymentsGLEntriesQueue = async (
-//     tenantId: number,
-//     paymentsIds: number[],
-//     trx?: Knex.Transaction
-//   ) => {
-//     // Initiate a new queue for accounts balance mutation.
-//     const rewritePaymentGL = async.queue(this.rewritePaymentsGLEntriesTask, 10);
+  /**
+   * Rewrites the payment GL entries of the given payments ids.
+   * @param {number[]} paymentsIds
+   * @param {Knex.Transaction} trx
+   */
+  public rewritePaymentsGLEntriesQueue = async (
+    paymentsIds: number[],
+    trx?: Knex.Transaction
+  ) => {
+    // Initiate a new queue for accounts balance mutation.
+    const rewritePaymentGL = async.queue(this.rewritePaymentsGLEntriesTask, 10);
 
-//     paymentsIds.forEach((paymentId: number) => {
-//       rewritePaymentGL.push({ paymentId, trx, tenantId });
-//     });
-//     if (paymentsIds.length > 0) {
-//       await rewritePaymentGL.drain();
-//     }
-//   };
+    paymentsIds.forEach((paymentId: number) => {
+      rewritePaymentGL.push({ paymentId, trx });
+    });
+    if (paymentsIds.length > 0) {
+      await rewritePaymentGL.drain();
+    }
+  };
 
-//   /**
-//    * Rewrites the payments GL entries that associated to the given invoice.
-//    * @param   {number} tenantId
-//    * @param   {number} invoiceId
-//    * @param   {Knex.Transaction} trx
-//    * @returns {Promise<void>}
-//    */
-//   public invoicePaymentsGLEntriesRewrite = async (
-//     tenantId: number,
-//     invoiceId: number,
-//     trx?: Knex.Transaction
-//   ) => {
-//     const { PaymentReceiveEntry } = this.tenancy.models(tenantId);
+  /**
+   * Rewrites the payments GL entries that associated to the given invoice.
+   * @param {number} invoiceId
+   * @param {Knex.Transaction} trx
+   * @ {Promise<void>}
+   */
+  public invoicePaymentsGLEntriesRewrite = async (
+    invoiceId: number,
+    trx?: Knex.Transaction
+  ) => {
+    const invoicePaymentEntries = await this.paymentReceivedEntryModel()
+      .query()
+      .where('invoiceId', invoiceId);
 
-//     const invoicePaymentEntries = await PaymentReceiveEntry.query().where(
-//       'invoiceId',
-//       invoiceId
-//     );
-//     const paymentsIds = invoicePaymentEntries.map((e) => e.paymentReceiveId);
+    const paymentsIds = invoicePaymentEntries.map((e) => e.paymentReceiveId);
 
-//     await this.rewritePaymentsGLEntriesQueue(tenantId, paymentsIds, trx);
-//   };
-// }
+    await this.rewritePaymentsGLEntriesQueue(paymentsIds, trx);
+  };
+}

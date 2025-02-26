@@ -1,35 +1,25 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import { ICommandCashflowCreatingPayload } from '@/interfaces';
-// import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ICommandCashflowCreatingPayload } from '@/modules/BankingTransactions/types/BankingTransactions.types';
 
-// @Service()
-// export class CashflowBranchDTOValidatorSubscriber {
-//   @Inject()
-//   private validateBranchExistance: ValidateBranchExistance;
+@Injectable()
+export class CashflowBranchDTOValidatorSubscriber {
+  constructor(
+    private readonly validateBranchExistance: ValidateBranchExistance,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.cashflow.onTransactionCreating,
-//       this.validateBranchExistanceOnCashflowTransactionCreating
-//     );
-//     return bus;
-//   };
-
-//   /**
-//    * Validate branch existance once cashflow transaction creating.
-//    * @param {ICommandCashflowCreatingPayload} payload
-//    */
-//   private validateBranchExistanceOnCashflowTransactionCreating = async ({
-//     tenantId,
-//     newTransactionDTO,
-//   }: ICommandCashflowCreatingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       newTransactionDTO.branchId
-//     );
-//   };
-// }
+  /**
+   * Validate branch existance once cashflow transaction creating.
+   * @param {ICommandCashflowCreatingPayload} payload
+   */
+  @OnEvent(events.cashflow.onTransactionCreating)
+  async validateBranchExistanceOnCashflowTransactionCreating({
+    newTransactionDTO,
+  }: ICommandCashflowCreatingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      newTransactionDTO.branchId,
+    );
+  }
+}

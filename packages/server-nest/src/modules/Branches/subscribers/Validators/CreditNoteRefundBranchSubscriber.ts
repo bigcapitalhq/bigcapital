@@ -1,35 +1,25 @@
-// import { Inject, Service } from 'typedi';
-// import events from '@/subscribers/events';
-// import { IRefundCreditNoteCreatingPayload } from '@/interfaces';
-// import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { events } from '@/common/events/events';
+import { IRefundCreditNoteCreatingPayload } from '@/modules/CreditNoteRefunds/types/CreditNoteRefunds.types';
 
-// @Service()
-// export class CreditNoteRefundBranchValidateSubscriber {
-//   @Inject()
-//   private validateBranchExistance: ValidateBranchExistance;
+@Injectable()
+export class CreditNoteRefundBranchValidateSubscriber {
+  constructor(
+    private readonly validateBranchExistance: ValidateBranchExistance
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.creditNote.onRefundCreating,
-//       this.validateBranchExistanceOnCreditRefundCreating
-//     );
-//     return bus;
-//   };
-
-//   /**
-//    * Validate branch existance on refund credit note creating.
-//    * @param {ICreditNoteCreatingPayload} payload
-//    */
-//   private validateBranchExistanceOnCreditRefundCreating = async ({
-//     tenantId,
-//     newCreditNoteDTO,
-//   }: IRefundCreditNoteCreatingPayload) => {
-//     await this.validateBranchExistance.validateTransactionBranchWhenActive(
-//       tenantId,
-//       newCreditNoteDTO.branchId
-//     );
-//   };
-// }
+  /**
+   * Validate branch existance on refund credit note creating.
+   * @param {IRefundCreditNoteCreatingPayload} payload
+   */
+  @OnEvent(events.creditNote.onRefundCreating)
+  async validateBranchExistanceOnCreditRefundCreating({
+    newCreditNoteDTO,
+  }: IRefundCreditNoteCreatingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      newCreditNoteDTO.branchId
+    );
+  }
+}

@@ -1,75 +1,65 @@
-// import { ServiceError } from '@/exceptions';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
-// import { Service, Inject } from 'typedi';
-// import { BranchesSettings } from '../BranchesSettings';
-// import { ERRORS } from './constants';
+import { ServiceError } from '@/modules/Items/ServiceError';
+import { BranchesSettingsService } from '../BranchesSettings';
+import { ERRORS } from './constants';
+import { Inject, Injectable } from '@nestjs/common';
+import { Branch } from '../models/Branch.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
-// @Service()
-// export class ValidateBranchExistance {
-//   @Inject()
-//   tenancy: HasTenancyService;
+@Injectable()
+export class ValidateBranchExistance {
+  constructor(
+    private readonly branchesSettings: BranchesSettingsService,
 
-//   @Inject()
-//   branchesSettings: BranchesSettings;
+    @Inject(Branch.name)
+    private readonly branchModel: TenantModelProxy<typeof Branch>,
+  ) {}
 
-//   /**
-//    * Validate transaction branch id when the feature is active.
-//    * @param   {number} tenantId
-//    * @param   {number} branchId
-//    * @returns {Promise<void>}
-//    */
-//   public validateTransactionBranchWhenActive = async (
-//     tenantId: number,
-//     branchId: number | null
-//   ) => {
-//     const isActive = this.branchesSettings.isMultiBranchesActive(tenantId);
+  /**
+   * Validate transaction branch id when the feature is active.
+   * @param {number} branchId
+   * @returns {Promise<void>}
+   */
+  public validateTransactionBranchWhenActive = async (
+    branchId: number | null,
+  ) => {
+    const isActive = this.branchesSettings.isMultiBranchesActive();
 
-//     // Can't continue if the multi-warehouses feature is inactive.
-//     if (!isActive) return;
+    // Can't continue if the multi-warehouses feature is inactive.
+    if (!isActive) return;
 
-//     return this.validateTransactionBranch(tenantId, branchId);
-//   };
+    return this.validateTransactionBranch(branchId);
+  };
 
-//   /**
-//    * Validate transaction branch id existance.
-//    * @param  {number} tenantId
-//    * @param  {number} branchId
-//    * @return {Promise<void>}
-//    */
-//   public validateTransactionBranch = async (
-//     tenantId: number,
-//     branchId: number | null
-//   ) => {
-//     this.validateBranchIdExistance(branchId);
+  /**
+   * Validate transaction branch id existance.
+   * @param {number} branchId
+   * @return {Promise<void>}
+   */
+  public validateTransactionBranch = async (branchId: number | null) => {
+    this.validateBranchIdExistance(branchId);
 
-//     await this.validateBranchExistance(tenantId, branchId);
-//   };
+    await this.validateBranchExistance(branchId);
+  };
 
-//   /**
-//    *
-//    * @param branchId
-//    */
-//   public validateBranchIdExistance = (branchId: number | null) => {
-//     if (!branchId) {
-//       throw new ServiceError(ERRORS.BRANCH_ID_REQUIRED);
-//     }
-//   };
+  /**
+   * Validates the branch id existance.
+   * @param {number} branchId
+   */
+  public validateBranchIdExistance = (branchId: number | null) => {
+    if (!branchId) {
+      throw new ServiceError(ERRORS.BRANCH_ID_REQUIRED);
+    }
+  };
 
-//   /**
-//    *
-//    * @param tenantId
-//    * @param branchId
-//    */
-//   public validateBranchExistance = async (
-//     tenantId: number,
-//     branchId: number
-//   ) => {
-//     const { Branch } = this.tenancy.models(tenantId);
+  /**
+   * Validates the branch id existance.
+   * @param {number} branchId
+   */
+  public validateBranchExistance = async (branchId: number) => {
+    const branch = await this.branchModel().query().findById(branchId);
 
-//     const branch = await Branch.query().findById(branchId);
-
-//     if (!branch) {
-//       throw new ServiceError(ERRORS.BRANCH_ID_NOT_FOUND);
-//     }
-//   };
-// }
+    if (!branch) {
+      throw new ServiceError(ERRORS.BRANCH_ID_NOT_FOUND);
+    }
+  };
+}

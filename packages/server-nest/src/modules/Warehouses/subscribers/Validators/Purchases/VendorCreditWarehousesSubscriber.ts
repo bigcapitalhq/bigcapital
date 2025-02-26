@@ -1,56 +1,39 @@
-// import { Inject, Service } from 'typedi';
-// import {
-//   IVendorCreditCreatingPayload,
-//   IVendorCreditEditingPayload,
-// } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
+import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { IVendorCreditEditingPayload } from '@/modules/VendorCredit/types/VendorCredit.types';
+import { events } from '@/common/events/events';
+import { IVendorCreditCreatingPayload } from '@/modules/VendorCredit/types/VendorCredit.types';
 
-// @Service()
-// export class VendorCreditWarehousesValidateSubscriber {
-//   @Inject()
-//   warehouseDTOValidator: WarehousesDTOValidators;
+@Injectable()
+export class VendorCreditWarehousesValidateSubscriber {
+  constructor(
+    private readonly warehouseDTOValidator: WarehousesDTOValidators,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.vendorCredit.onCreating,
-//       this.validateVendorCreditWarehouseExistanceOnCreating
-//     );
-//     bus.subscribe(
-//       events.vendorCredit.onEditing,
-//       this.validateSaleEstimateWarehouseExistanceOnEditing
-//     );
-//     return bus;
-//   }
+  /**
+   * Validate warehouse existance of sale invoice once creating.
+   * @param {IVendorCreditCreatingPayload}
+   */
+  @OnEvent(events.vendorCredit.onCreating)
+  async validateVendorCreditWarehouseExistanceOnCreating({
+    vendorCreditCreateDTO,
+  }: IVendorCreditCreatingPayload) {
+    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
+      vendorCreditCreateDTO,
+    );
+  }
 
-//   /**
-//    * Validate warehouse existance of sale invoice once creating.
-//    * @param {IVendorCreditCreatingPayload}
-//    */
-//   private validateVendorCreditWarehouseExistanceOnCreating = async ({
-//     vendorCreditCreateDTO,
-//     tenantId,
-//   }: IVendorCreditCreatingPayload) => {
-//     await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
-//       tenantId,
-//       vendorCreditCreateDTO
-//     );
-//   };
-
-//   /**
-//    * Validate warehouse existance of sale invoice once editing.
-//    * @param {IVendorCreditEditingPayload}
-//    */
-//   private validateSaleEstimateWarehouseExistanceOnEditing = async ({
-//     tenantId,
-//     vendorCreditDTO,
-//   }: IVendorCreditEditingPayload) => {
-//     await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
-//       tenantId,
-//       vendorCreditDTO
-//     );
-//   };
-// }
+  /**
+   * Validate warehouse existance of sale invoice once editing.
+   * @param {IVendorCreditEditingPayload}
+   */
+  @OnEvent(events.vendorCredit.onEditing)
+  async validateSaleEstimateWarehouseExistanceOnEditing({
+    vendorCreditDTO,
+  }: IVendorCreditEditingPayload) {
+    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
+      vendorCreditDTO,
+    );
+  }
+}
