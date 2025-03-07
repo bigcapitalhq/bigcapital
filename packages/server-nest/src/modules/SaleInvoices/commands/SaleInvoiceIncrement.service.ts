@@ -10,9 +10,9 @@ export class SaleInvoiceIncrement {
   /**
    * Retrieves the next unique invoice number.
    * @param {number} tenantId - Tenant id.
-   * @return {string}
+   * @return {Promise<string>}
    */
-  public getNextInvoiceNumber(): string {
+  public getNextInvoiceNumber(): Promise<string> {
     return this.autoIncrementOrdersService.getNextTransactionNumber(
       'sales_invoices',
     );

@@ -9,10 +9,10 @@ import { FeaturesConfigure } from './FeaturesConfigure';
 export class FeaturesSettingsDriver {
   constructor(
     private readonly configure: FeaturesConfigureManager,
-    private readonly featuresConfigure: FeaturesConfigure
+    private readonly featuresConfigure: FeaturesConfigure,
 
     @Inject(SETTINGS_PROVIDER)
-    private readonly settings: SettingsStore,
+    private readonly settings: () => SettingsStore,
   ) {}
 
   /**
@@ -21,7 +21,7 @@ export class FeaturesSettingsDriver {
    * @returns {Promise<void>}
    */
   async turnOn(feature: string) {
-    this.settings.set({ group: 'features', key: feature, value: true });
+    this.settings().set({ group: 'features', key: feature, value: true });
   }
 
   /**
@@ -30,7 +30,7 @@ export class FeaturesSettingsDriver {
    * @returns {Promise<void>}
    */
   async turnOff(feature: string) {
-    this.settings.set({ group: 'features', key: feature, value: false });
+    this.settings().set({ group: 'features', key: feature, value: false });
   }
 
   /**
@@ -43,7 +43,7 @@ export class FeaturesSettingsDriver {
       feature,
       'defaultValue',
     );
-    const settingValue = this.settings.get(
+    const settingValue = this.settings().get(
       { group: 'features', key: feature },
       defaultValue,
     );

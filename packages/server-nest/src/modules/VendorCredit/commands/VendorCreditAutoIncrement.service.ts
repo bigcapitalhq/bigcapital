@@ -14,7 +14,7 @@ export class VendorCreditAutoIncrementService {
    * @param  {number} tenantId - Tenant id.
    * @return {string}
    */
-  public getNextCreditNumber = (): string => {
+  public getNextCreditNumber = (): Promise<string> => {
     return this.autoIncrementOrdersService.getNextTransactionNumber(
       'vendor_credit',
     );
@@ -22,7 +22,6 @@ export class VendorCreditAutoIncrementService {
 
   /**
    * Increment the vendor credit serial next number.
-   * @param {number} tenantId -
    */
   public incrementSerialNumber = () => {
     return this.autoIncrementOrdersService.incrementSettingsNextNumber(

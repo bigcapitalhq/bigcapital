@@ -8,11 +8,13 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { SettingsStore } from '../Settings/SettingsStore';
 import { SETTINGS_PROVIDER } from '../Settings/Settings.types';
+import { SettingsApplicationService } from '../Settings/SettingsApplication.service';
 
 @Injectable()
 export class TransactionsLockingRepository {
   constructor(
-    @Inject(SETTINGS_PROVIDER) private readonly settingsStore: SettingsStore,
+    @Inject(SETTINGS_PROVIDER)
+    private readonly settingsStore: () => SettingsStore,
   ) {}
 
   /**
@@ -25,57 +27,58 @@ export class TransactionsLockingRepository {
     transactionlocking,
   ) {
     const group = `transactions-locking`;
+    const settingsStore = await this.settingsStore();
 
     if (!isUndefined(transactionlocking.active)) {
-      this.settingsStore.set({
+      settingsStore.set({
         group,
         key: `${lockingGroup}.active`,
         value: transactionlocking.active,
       });
     }
     if (!isUndefined(transactionlocking.lockToDate)) {
-      this.settingsStore.set({
+      settingsStore.set({
         group,
         key: `${lockingGroup}.lock_to_date`,
         value: parseDate(transactionlocking.lockToDate),
       });
     }
     if (!isUndefined(transactionlocking.unlockFromDate)) {
-      this.settingsStore.set({
+      settingsStore.set({
         group,
         key: `${lockingGroup}.unlock_from_date`,
         value: parseDate(transactionlocking.unlockFromDate),
       });
     }
     if (!isUndefined(transactionlocking.unlockToDate)) {
-      this.settingsStore.set({
+      settingsStore.set({
         group,
         key: `${lockingGroup}.unlock_to_date`,
         value: parseDate(transactionlocking.unlockToDate),
       });
     }
     if (!isUndefined(transactionlocking.lockReason)) {
-      this.settingsStore.set({
+      settingsStore.set({
         group,
         key: `${lockingGroup}.lock_reason`,
         value: transactionlocking.lockReason,
       });
     }
     if (!isUndefined(transactionlocking.unlockReason)) {
-      this.settingsStore.set({
+      settingsStore.set({
         group,
         key: `${lockingGroup}.unlock_reason`,
         value: transactionlocking.unlockReason,
       });
     }
     if (!isUndefined(transactionlocking.partialUnlockReason)) {
-      this.settingsStore.set({
+      settingsStore.set({
         group,
         key: `${lockingGroup}.partial_unlock_reason`,
         value: transactionlocking.partialUnlockReason,
       });
     }
-    await this.settingsStore.save();
+    await settingsStore.save();
   }
 
   /**
@@ -83,40 +86,41 @@ export class TransactionsLockingRepository {
    * @param {string} lockingGroup - The group of the transactions locking
    * @returns {ITransactionMeta} - The transactions locking settings
    */
-  public getTransactionsLocking(
+  public async getTransactionsLocking(
     lockingGroup: string = TransactionsLockingGroup.All,
-  ): ITransactionMeta {
+  ): Promise<ITransactionMeta> {
     const group = `transactions-locking`;
+    const settingsStore = await this.settingsStore();
 
-    const isEnabled = this.settingsStore.get({
+    const isEnabled = settingsStore.get({
       group,
       key: `${lockingGroup}.active`,
     });
-    const lockFromDate = this.settingsStore.get({
+    const lockFromDate = settingsStore.get({
       group,
       key: `${lockingGroup}.lock_from_date`,
     });
-    const lockToDate = this.settingsStore.get({
+    const lockToDate = settingsStore.get({
       group,
       key: `${lockingGroup}.lock_to_date`,
     });
-    const unlockFromDate = this.settingsStore.get({
+    const unlockFromDate = settingsStore.get({
       group,
       key: `${lockingGroup}.unlock_from_date`,
     });
-    const unlockToDate = this.settingsStore.get({
+    const unlockToDate = settingsStore.get({
       group,
       key: `${lockingGroup}.unlock_to_date`,
     });
-    const lockReason = this.settingsStore.get({
+    const lockReason = settingsStore.get({
       group,
       key: `${lockingGroup}.lock_reason`,
     });
-    const unlockReason = this.settingsStore.get({
+    const unlockReason = settingsStore.get({
       group,
       key: `${lockingGroup}.unlock_reason`,
     });
-    const partialUnlockReason = this.settingsStore.get({
+    const partialUnlockReason = settingsStore.get({
       group,
       key: `${lockingGroup}.partial_unlock_reason`,
     });
@@ -137,8 +141,10 @@ export class TransactionsLockingRepository {
    * Get transactions locking type
    * @returns {string} - The transactions locking type
    */
-  public getTransactionsLockingType() {
-    const lockingType = this.settingsStore.get({
+  public async getTransactionsLockingType() {
+    const settingsStore = await this.settingsStore();
+
+    const lockingType = settingsStore.get({
       group: 'transactions-locking',
       key: 'locking-type',
     });
@@ -149,14 +155,17 @@ export class TransactionsLockingRepository {
    * Flag transactions locking type
    * @param {TransactionsLockingType} transactionsType - The transactions locking type
    */
-  public flagTransactionsLockingType(
+  public async flagTransactionsLockingType(
     transactionsType: TransactionsLockingType,
   ) {
-    this.settingsStore.set({
+    const settingsStore = await this.settingsStore();
+
+    settingsStore.set({
       group: 'transactions-locking',
       key: 'locking-type',
       value: transactionsType,
     });
+    await settingsStore.save();
   }
 }
 

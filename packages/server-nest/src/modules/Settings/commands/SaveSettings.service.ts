@@ -7,7 +7,7 @@ import { IOptionDTO, ISettingsDTO, SETTINGS_PROVIDER } from '../Settings.types';
 export class SaveSettingsService {
   constructor(
     @Inject(SETTINGS_PROVIDER)
-    private readonly settingsStore: SettingsStore,
+    private readonly settingsStore: () => SettingsStore,
   ) {}
 
   /**
@@ -15,6 +15,7 @@ export class SaveSettingsService {
    * @param {ISettingsDTO} settingsDTO
    */
   public async saveSettings(settingsDTO: ISettingsDTO) {
+    const settingsStore = await this.settingsStore();
     const notDefinedOptions = this.validateNotDefinedSettings(
       settingsDTO.options,
     );
@@ -30,9 +31,9 @@ export class SaveSettingsService {
       throw new Error(JSON.stringify(errorReasons));
     }
     settingsDTO.options.forEach((option: IOptionDTO) => {
-      this.settingsStore.set({ ...option });
+      settingsStore.set({ ...option });
     });
-    await this.settingsStore.save();
+    await settingsStore.save();
   }
 
   /**
@@ -44,7 +45,7 @@ export class SaveSettingsService {
     const notDefined = [];
 
     options.forEach((option) => {
-      const setting = this.settingsStore.config.getMetaConfig(
+      const setting = this.settingsStore().config.getMetaConfig(
         option.key,
         option.group,
       );

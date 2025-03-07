@@ -13,8 +13,8 @@ export class FinancialTransactionLocking {
    * @param {Date} transactionDate - The transaction date.
    * @throws {ServiceError(TRANSACTIONS_DATE_LOCKED)}
    */
-  public transactionLockingGuard = (transactionDate: Date) => {
-    this.transactionLockingGuardService.transactionsLockingGuard(
+  public transactionLockingGuard = async (transactionDate: Date) => {
+    await this.transactionLockingGuardService.transactionsLockingGuard(
       transactionDate,
       TransactionsLockingGroup.Financial,
     );

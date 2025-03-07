@@ -31,9 +31,22 @@ import { SaleReceiptWarehousesValidateSubscriber } from './subscribers/Validator
 import { CreditNoteWarehousesValidateSubscriber } from './subscribers/Validators/Sales/CreditNoteWarehousesSubscriber';
 import { BillWarehousesValidateSubscriber } from './subscribers/Validators/Purchases/BillWarehousesSubscriber';
 import { AccountsTransactionsWarehousesSubscribe } from './AccountsTransactionsWarehousesSubscribe';
+import { BillActivateWarehouses } from './Activate/BillWarehousesActivate';
+import { CreditNotesActivateWarehouses } from './Activate/CreditNoteWarehousesActivate';
+import { VendorCreditActivateWarehouses } from './Activate/VendorCreditWarehousesActivate';
+import { InvoicesActivateWarehouses } from './Activate/InvoiceWarehousesActivate';
+import { ReceiptActivateWarehouses } from './Activate/ReceiptWarehousesActivate';
+import { WarehousesDTOValidators } from './Integrations/WarehousesDTOValidators';
+import { DeleteItemWarehousesQuantity } from './commands/DeleteItemWarehousesQuantity';
+import { InventoryTransactionsWarehouses } from './AccountsTransactionsWarehouses';
+import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { Warehouse } from './models/Warehouse.model';
+import { ValidateWarehouseExistance } from './Integrations/ValidateWarehouseExistance';
+
+const models = [RegisterTenancyModel(Warehouse)];
 
 @Module({
-  imports: [TenancyDatabaseModule],
+  imports: [TenancyDatabaseModule, ...models],
   controllers: [WarehousesController],
   providers: [
     CreateWarehouse,
@@ -66,7 +79,17 @@ import { AccountsTransactionsWarehousesSubscribe } from './AccountsTransactionsW
     SaleInvoicesWarehousesValidateSubscriber,
     VendorCreditWarehousesValidateSubscriber,
     AccountsTransactionsWarehousesSubscribe,
+    BillActivateWarehouses,
+    CreditNotesActivateWarehouses,
+    VendorCreditActivateWarehouses,
+    CreditNotesActivateWarehouses,
+    InvoicesActivateWarehouses,
+    ReceiptActivateWarehouses,
+    WarehousesDTOValidators,
+    DeleteItemWarehousesQuantity,
+    InventoryTransactionsWarehouses,
+    ValidateWarehouseExistance
   ],
-  exports: [WarehouseTransactionDTOTransform],
+  exports: [WarehouseTransactionDTOTransform, ...models],
 })
 export class WarehousesModule {}

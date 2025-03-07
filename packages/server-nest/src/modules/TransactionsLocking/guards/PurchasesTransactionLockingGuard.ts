@@ -16,7 +16,7 @@ export class PurchasesTransactionLockingGuard {
   public transactionLockingGuard = async (
     transactionDate: MomentInput
   ) => {
-    this.transactionLockingGuardService.transactionsLockingGuard(
+    await this.transactionLockingGuardService.transactionsLockingGuard(
       transactionDate,
       TransactionsLockingGroup.Purchases
     );

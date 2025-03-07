@@ -74,7 +74,7 @@ export class EditVendorCreditService {
     );
     // Transformes edit DTO to model storage layer.
     const vendorCreditModel =
-      this.vendorCreditDTOTransform.transformCreateEditDTOToModel(
+      await this.vendorCreditDTOTransform.transformCreateEditDTOToModel(
         vendorCreditDTO,
         vendor.currencyCode,
         oldVendorCredit,

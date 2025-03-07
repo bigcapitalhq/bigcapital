@@ -1,23 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { SettingsStore } from '../Settings/SettingsStore';
+import { SETTINGS_PROVIDER } from '../Settings/Settings.types';
+import { transactionIncrement } from '@/utils/transaction-increment';
 
 /**
  * Auto increment orders service.
  */
 @Injectable()
 export class AutoIncrementOrdersService {
+  constructor(
+    @Inject(SETTINGS_PROVIDER)
+    private readonly settingsStore: () => SettingsStore,
+  ) {}
+
   /**
    * Check if the auto increment is enabled for the given settings group.
    * @param {string} settingsGroup - Settings group.
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
-  public autoIncrementEnabled = (settingsGroup: string): boolean => {
-    // const settings = this.tenancy.settings(tenantId);
-    // const group = settingsGroup;
+  public autoIncrementEnabled = async (
+    settingsGroup: string,
+  ): Promise<boolean> => {
+    const settingsStore = await this.settingsStore();
+    const group = settingsGroup;
 
-    // // Settings service transaction number and prefix.
-    // return settings.get({ group, key: 'auto_increment' }, false);
-
-    return true;
+    // Settings service transaction number and prefix.
+    return settingsStore.get({ group, key: 'auto_increment' }, false);
   };
 
   /**
@@ -26,18 +34,18 @@ export class AutoIncrementOrdersService {
    * @param {Function} getMaxTransactionNo
    * @return {Promise<string>}
    */
-  getNextTransactionNumber(group: string): string {
-    // const settings = this.tenancy.settings(tenantId);
+  async getNextTransactionNumber(group: string): Promise<string> {
+    const settingsStore = await this.settingsStore();
 
-    // // Settings service transaction number and prefix.
-    // const autoIncrement = this.autoIncrementEnabled(tenantId, group);
+    // Settings service transaction number and prefix.
+    const autoIncrement = await this.autoIncrementEnabled(group);
 
-    // const settingNo = settings.get({ group, key: 'next_number' }, '');
-    // const settingPrefix = settings.get({ group, key: 'number_prefix' }, '');
-
-    // return autoIncrement ? `${settingPrefix}${settingNo}` : '';
-
-    return '1';
+    const settingNo = settingsStore.get({ group, key: 'next_number' }, '');
+    const settingPrefix = settingsStore.get(
+      { group, key: 'number_prefix' },
+      '',
+    );
+    return autoIncrement ? `${settingPrefix}${settingNo}` : '';
   }
 
   /**
@@ -46,17 +54,19 @@ export class AutoIncrementOrdersService {
    * @param {string} orderNumber -Order number.
    */
   async incrementSettingsNextNumber(group: string) {
-    // const settings = this.tenancy.settings(tenantId);
-    // const settingNo = settings.get({ group, key: 'next_number' });
-    // const autoIncrement = settings.get({ group, key: 'auto_increment' });
+    const settingsStore = await this.settingsStore();
+
+    const settingNo = settingsStore.get({ group, key: 'next_number' });
+    const autoIncrement = settingsStore.get({ group, key: 'auto_increment' });
+
     // // Can't continue if the auto-increment of the service was disabled.
-    // if (!autoIncrement) {
-    //   return;
-    // }
-    // settings.set(
-    //   { group, key: 'next_number' },
-    //   transactionIncrement(settingNo)
-    // );
-    // await settings.save();
+    if (!autoIncrement) {
+      return;
+    }
+    settingsStore.set(
+      { group, key: 'next_number' },
+      transactionIncrement(settingNo),
+    );
+    await settingsStore.save();
   }
 }

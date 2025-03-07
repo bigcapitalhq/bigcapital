@@ -27,7 +27,6 @@ export class ItemCategoryApplication {
 
   /**
    * Creates a new item category.
-   * @param {number} tenantId - The tenant id.
    * @param {IItemCategoryOTD} itemCategoryDTO - The item category data.
    * @returns {Promise<ItemCategory>} The created item category.
    */

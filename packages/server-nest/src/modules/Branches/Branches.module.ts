@@ -27,8 +27,14 @@ import { PaymentMadeBranchValidateSubscriber } from './subscribers/Validators/Pa
 import { PaymentReceiveBranchValidateSubscriber } from './subscribers/Validators/PaymentReceiveBranchSubscriber';
 import { SaleReceiptBranchValidateSubscriber } from './subscribers/Validators/SaleReceiptBranchesSubscriber';
 import { VendorCreditBranchValidateSubscriber } from './subscribers/Validators/VendorCreditBranchSubscriber';
+import { ValidateBranchExistance } from './Integrations/ValidateBranchExistance';
+import { ManualJournalBranchesValidator } from './Integrations/ManualJournals/ManualJournalsBranchesValidator';
+import { CashflowTransactionsActivateBranches } from './integrations/Cashflow/CashflowActivateBranches';
+import { ExpensesActivateBranches } from './integrations/Expense/ExpensesActivateBranches';
+import { FeaturesModule } from '../Features/Features.module';
+
 @Module({
-  imports: [TenancyDatabaseModule],
+  imports: [TenancyDatabaseModule, FeaturesModule],
   controllers: [BranchesController],
   providers: [
     CreateBranchService,
@@ -45,18 +51,22 @@ import { VendorCreditBranchValidateSubscriber } from './subscribers/Validators/V
     BranchCommandValidator,
     BranchTransactionDTOTransformer,
     ManualJournalBranchesDTOTransformer,
-    BillBranchValidateSubscriber,
-    CreditNoteBranchValidateSubscriber,
-    CreditNoteRefundBranchValidateSubscriber,
-    ContactBranchValidateSubscriber,
-    ExpenseBranchValidateSubscriber,
-    InventoryAdjustmentBranchValidateSubscriber,
-    ManualJournalBranchValidateSubscriber,
-    PaymentMadeBranchValidateSubscriber,
-    PaymentReceiveBranchValidateSubscriber,
-    SaleEstimateBranchValidateSubscriber,
-    SaleReceiptBranchValidateSubscriber,
-    VendorCreditBranchValidateSubscriber,
+    // BillBranchValidateSubscriber,
+    // CreditNoteBranchValidateSubscriber,
+    // CreditNoteRefundBranchValidateSubscriber,
+    // ContactBranchValidateSubscriber,
+    // ExpenseBranchValidateSubscriber,
+    // InventoryAdjustmentBranchValidateSubscriber,
+    // ManualJournalBranchValidateSubscriber,
+    // PaymentMadeBranchValidateSubscriber,
+    // PaymentReceiveBranchValidateSubscriber,
+    // SaleEstimateBranchValidateSubscriber,
+    // SaleReceiptBranchValidateSubscriber,
+    // VendorCreditBranchValidateSubscriber,
+    // ValidateBranchExistance,
+    // ManualJournalBranchesValidator,
+    // CashflowTransactionsActivateBranches,
+    // ExpensesActivateBranches
   ],
   exports: [
     BranchesSettingsService,

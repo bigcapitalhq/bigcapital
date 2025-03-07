@@ -23,9 +23,6 @@ export class ActivateBranches {
     private readonly createBranch: CreateBranchService,
     private readonly branchesSettings: BranchesSettingsService,
     private readonly i18n: I18nService,
-
-    @Inject(Branch.name)
-    private readonly branchModel: TenantModelProxy<typeof Branch>,
   ) {}
 
   /**

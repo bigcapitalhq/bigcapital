@@ -38,11 +38,11 @@ export class VendorCreditDTOTransformService {
    * @param {IVendorCredit} oldVendorCredit -
    * @returns {VendorCredit}
    */
-  public transformCreateEditDTOToModel = (
+  public transformCreateEditDTOToModel = async (
     vendorCreditDTO: IVendorCreditCreateDTO | IVendorCreditEditDTO,
     vendorCurrencyCode: string,
     oldVendorCredit?: VendorCredit,
-  ): VendorCredit => {
+  ): Promise<VendorCredit> => {
     // Calculates the total amount of items entries.
     const amount = this.itemsEntriesService.getTotalItemsEntries(
       vendorCreditDTO.entries,
@@ -59,7 +59,8 @@ export class VendorCreditDTOTransformService {
     )(vendorCreditDTO.entries);
 
     // Retreive the next vendor credit number.
-    const autoNextNumber = this.vendorCreditAutoIncrement.getNextCreditNumber();
+    const autoNextNumber =
+      await this.vendorCreditAutoIncrement.getNextCreditNumber();
 
     // Detarmines the credit note number.
     const vendorCreditNumber =

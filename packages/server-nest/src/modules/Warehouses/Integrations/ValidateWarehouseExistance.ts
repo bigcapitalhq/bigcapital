@@ -1,5 +1,5 @@
 import { chain, difference } from 'lodash';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ERRORS } from './constants';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -11,6 +11,7 @@ export class ValidateWarehouseExistance {
    * @param {TenantModelProxy<typeof Warehouse>} warehouseModel - Warehouse model.
    */
   constructor(
+    @Inject(Warehouse.name)
     private readonly warehouseModel: TenantModelProxy<typeof Warehouse>,
   ) {}
 

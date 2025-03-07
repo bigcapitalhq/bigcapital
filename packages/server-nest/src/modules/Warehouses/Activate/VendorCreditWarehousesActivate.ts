@@ -2,12 +2,15 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Warehouse } from '../models/Warehouse.model';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class VendorCreditActivateWarehouses {
   constructor(
+    @Inject(VendorCredit.name)
     private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
+
+    @Inject(ItemEntry.name)
     private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
   ) {}
 

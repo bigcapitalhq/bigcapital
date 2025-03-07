@@ -61,11 +61,11 @@ export class CreateBankTransactionService {
    * @param {ICashflowNewCommandDTO} newCashflowTransactionDTO - New transaction DTO.
    * @returns {ICashflowTransactionInput} - Cashflow transaction object.
    */
-  private transformCashflowTransactionDTO = (
+  private transformCashflowTransactionDTO = async (
     newCashflowTransactionDTO: ICashflowNewCommandDTO,
     cashflowAccount: Account,
     userId: number,
-  ): BankTransaction => {
+  ): Promise<BankTransaction> => {
     const amount = newCashflowTransactionDTO.amount;
 
     const fromDTO = pick(newCashflowTransactionDTO, [
@@ -81,7 +81,7 @@ export class CreateBankTransactionService {
       'uncategorizedTransactionId',
     ]);
     // Retreive the next invoice number.
-    const autoNextNumber = this.autoIncrement.getNextTransactionNumber();
+    const autoNextNumber = await this.autoIncrement.getNextTransactionNumber();
 
     // Retrieve the transaction number.
     const transactionNumber =
@@ -134,7 +134,7 @@ export class CreateBankTransactionService {
     await this.authorize(newTransactionDTO, creditAccount);
 
     // Transformes owner contribution DTO to cashflow transaction.
-    const cashflowTransactionObj = this.transformCashflowTransactionDTO(
+    const cashflowTransactionObj = await this.transformCashflowTransactionDTO(
       newTransactionDTO,
       cashflowAccount,
       userId,

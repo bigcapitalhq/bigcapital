@@ -43,7 +43,7 @@ export class CommandSaleInvoiceDTOTransformer {
     private invoiceIncrement: SaleInvoiceIncrement,
     private taxDTOTransformer: ItemEntriesTaxTransactions,
     private brandingTemplatesTransformer: BrandingTemplateDTOTransformer,
-    private tenancyContext: TenancyContext
+    private tenancyContext: TenancyContext,
   ) {}
 
   /**
@@ -61,7 +61,7 @@ export class CommandSaleInvoiceDTOTransformer {
     const amount = this.getDueBalanceItemEntries(entriesModels);
 
     // Retreive the next invoice number.
-    const autoNextNumber = this.invoiceIncrement.getNextInvoiceNumber();
+    const autoNextNumber = await this.invoiceIncrement.getNextInvoiceNumber();
 
     // Retrieve the authorized user.
     const authorizedUser = await this.tenancyContext.getSystemUser();

@@ -12,9 +12,9 @@ export class PaymentReceivedIncrement {
 
   /**
    * Retrieve the next unique payment receive number.
-   * @return {string}
+   * @return {Promise<string>}
    */
-  public getNextPaymentReceiveNumber(): string {
+  public getNextPaymentReceiveNumber(): Promise<string> {
     return this.autoIncrementOrdersService.getNextTransactionNumber(
       'payment_receives',
     );

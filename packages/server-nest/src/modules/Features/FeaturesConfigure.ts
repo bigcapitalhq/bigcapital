@@ -8,7 +8,8 @@ export class FeaturesConfigure {
   constructor(private readonly configService: ConfigService) {}
 
   /**
-   *
+   * Get the feature configure.
+   * @returns {IFeatureConfiugration[]}
    */
 
   getConfigure(): IFeatureConfiugration[] {

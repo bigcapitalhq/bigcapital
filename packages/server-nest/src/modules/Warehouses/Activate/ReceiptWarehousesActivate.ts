@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Warehouse } from '../models/Warehouse.model';
@@ -7,7 +7,10 @@ import { SaleReceipt } from '@/modules/SaleReceipts/models/SaleReceipt';
 @Injectable()
 export class ReceiptActivateWarehouses {
   constructor(
+    @Inject(SaleReceipt.name)
     private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
+
+    @Inject(ItemEntry.name)
     private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
   ) {}
 

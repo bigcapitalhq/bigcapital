@@ -21,7 +21,7 @@ export class QueryTransactionsLocking {
    * Retrieve transactions locking modules.
    * @returns {ITransactionLockingMetaPOJO[]}
    */
-  public getTransactionsLockingModules = (): Promise<
+  public getTransactionsLockingModules = async (): Promise<
     ITransactionLockingMetaPOJO[]
   > => {
     const modules = TRANSACTIONS_LOCKING_SCHEMA.map(
@@ -47,10 +47,12 @@ export class QueryTransactionsLocking {
    * @param {TransactionsLockingGroup} module -
    * @returns {ITransactionLockingMetaPOJO}
    */
-  public getTransactionsLockingModuleMeta = (
+  public getTransactionsLockingModuleMeta = async (
     module: TransactionsLockingGroup,
   ): Promise<ITransactionLockingMetaPOJO> => {
-    const meta = this.transactionsLockingRepo.getTransactionsLocking(module);
+    const meta =
+      await this.transactionsLockingRepo.getTransactionsLocking(module);
+
     return this.transformer.transform(
       meta,
       new TransactionsLockingMetaTransformer(),
@@ -66,7 +68,7 @@ export class QueryTransactionsLocking {
     async (): Promise<ITransactionsLockingListPOJO> => {
       // Retrieve the current transactions locking type.
       const lockingType =
-        this.transactionsLockingRepo.getTransactionsLockingType();
+        await this.transactionsLockingRepo.getTransactionsLockingType();
 
       const all = await this.getTransactionsLockingAll();
       const modules = await this.getTransactionsLockingModules();

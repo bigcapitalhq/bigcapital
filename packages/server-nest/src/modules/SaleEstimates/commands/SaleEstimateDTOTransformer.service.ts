@@ -50,7 +50,7 @@ export class SaleEstimateDTOTransformer {
       this.itemEntryModel().calcAmount(e),
     );
     // Retrieve the next invoice number.
-    const autoNextNumber = this.estimateIncrement.getNextEstimateNumber();
+    const autoNextNumber = await this.estimateIncrement.getNextEstimateNumber();
 
     // Retrieve the next estimate number.
     const estimateNumber =
@@ -103,11 +103,11 @@ export class SaleEstimateDTOTransformer {
    * @param {ISaleEstimateDTO} saleEstimateDTO
    * @param {ISaleEstimate} oldSaleEstimate
    */
-  public transformEstimateNumberToModel(
+  public async transformEstimateNumberToModel(
     saleEstimateDTO: ISaleEstimateDTO,
     oldSaleEstimate?: SaleEstimate,
-  ): string {
-    const autoNextNumber = this.estimateIncrement.getNextEstimateNumber();
+  ): Promise<string> {
+    const autoNextNumber = await this.estimateIncrement.getNextEstimateNumber();
 
     if (saleEstimateDTO.estimateNumber) {
       return saleEstimateDTO.estimateNumber;

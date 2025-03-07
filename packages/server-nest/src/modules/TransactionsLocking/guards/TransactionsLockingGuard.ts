@@ -18,14 +18,12 @@ export class TransactionsLockingGuard {
    * @param {TransactionsLockingGroup} lockingGroup - The transaction group.
    * @returns {boolean}
    */
-  public isTransactionsLocking = (
+  public isTransactionsLocking = async (
     transactionDate: MomentInput,
-    lockingGroup: string = TransactionsLockingGroup.All
-  ): boolean => {
+    lockingGroup: string = TransactionsLockingGroup.All,
+  ): Promise<boolean> => {
     const { isEnabled, unlockFromDate, unlockToDate, lockToDate } =
-      this.transactionsLockingRepo.getTransactionsLocking(
-        lockingGroup
-      );
+      await this.transactionsLockingRepo.getTransactionsLocking(lockingGroup);
     // Returns false anyway in case if the transaction locking is disabled.
     if (!isEnabled) return false;
 
@@ -49,14 +47,15 @@ export class TransactionsLockingGuard {
    *
    * @throws {ServiceError}
    */
-  public validateTransactionsLocking = (
+  public validateTransactionsLocking = async (
     transactionDate: MomentInput,
-    lockingGroup: TransactionsLockingGroup
+    lockingGroup: TransactionsLockingGroup,
   ) => {
-    const isLocked = this.isTransactionsLocking(
+    const isLocked = await this.isTransactionsLocking(
       transactionDate,
-      lockingGroup
+      lockingGroup,
     );
+
     if (isLocked) {
       this.throwTransactionsLockError(lockingGroup);
     }
@@ -66,12 +65,11 @@ export class TransactionsLockingGuard {
    * Throws transactions locking error.
    * @param {TransactionsLockingGroup} lockingGroup - The transaction group.
    */
-  public throwTransactionsLockError = (
-    lockingGroup: TransactionsLockingGroup
+  public throwTransactionsLockError = async (
+    lockingGroup: TransactionsLockingGroup,
   ) => {
-    const { lockToDate } = this.transactionsLockingRepo.getTransactionsLocking(
-      lockingGroup
-    );
+    const { lockToDate } =
+      await this.transactionsLockingRepo.getTransactionsLocking(lockingGroup);
     throw new ServiceError(ERRORS.TRANSACTIONS_DATE_LOCKED, null, {
       lockedToDate: lockToDate,
       formattedLockedToDate: moment(lockToDate).format('YYYY/MM/DD'),
@@ -83,24 +81,21 @@ export class TransactionsLockingGuard {
    * @param {TransactionsLockingGroup} lockingGroup - The transaction group.
    * @param {Date} transactionDate - The transaction date.
    */
-  public transactionsLockingGuard = (
+  public transactionsLockingGuard = async (
     transactionDate: MomentInput,
-    moduleType: TransactionsLockingGroup
+    moduleType: TransactionsLockingGroup,
   ) => {
     const lockingType =
-      this.transactionsLockingRepo.getTransactionsLockingType();
+      await this.transactionsLockingRepo.getTransactionsLockingType();
 
     //
     if (lockingType === TransactionsLockingGroup.All) {
       return this.validateTransactionsLocking(
         transactionDate,
-        TransactionsLockingGroup.All
+        TransactionsLockingGroup.All,
       );
     }
     //
-    return this.validateTransactionsLocking(
-      transactionDate,
-      moduleType
-    );
+    return this.validateTransactionsLocking(transactionDate, moduleType);
   };
 }

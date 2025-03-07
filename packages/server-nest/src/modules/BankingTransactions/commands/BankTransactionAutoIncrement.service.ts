@@ -11,7 +11,7 @@ export class BankTransactionAutoIncrement {
    * Retrieve the next unique invoice number.
    * @return {string}
    */
-  public getNextTransactionNumber = (): string => {
+  public getNextTransactionNumber = (): Promise<string> => {
     return this.autoIncrementOrdersService.getNextTransactionNumber('cashflow');
   };
 

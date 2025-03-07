@@ -85,8 +85,6 @@ const models = [
  * @param model The model class to register
  */
 export function RegisterTenancyModel(model: typeof Model) {
-  console.log(model.name);
-
   return ClsModule.forFeatureAsync({
     provide: model.name,
     inject: [TENANCY_DB_CONNECTION],

@@ -12,7 +12,7 @@ export class GetBranchesService {
   /**
    * Retrieves branches list.
    * @returns
-   */
+ */
   public getBranches = async () => {
     const branches = await this.branch().query().orderBy('name', 'DESC');
 

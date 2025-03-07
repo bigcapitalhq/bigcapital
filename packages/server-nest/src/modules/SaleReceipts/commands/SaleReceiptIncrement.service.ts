@@ -12,7 +12,7 @@ export class SaleReceiptIncrement {
    * @param  {number} tenantId - Tenant id.
    * @return {string}
    */
-  public getNextReceiptNumber(): string {
+  public getNextReceiptNumber(): Promise<string> {
     return this.autoIncrementOrdersService.getNextTransactionNumber(
       'sales_receipts',
     );

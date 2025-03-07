@@ -11,7 +11,7 @@ export class CreditNoteAutoIncrementService {
    * Retrieve the next unique credit number.
    * @return {string}
    */
-  public getNextCreditNumber(): string {
+  public getNextCreditNumber(): Promise<string> {
     return this.autoIncrementOrdersService.getNextTransactionNumber(
       'credit_note',
     );

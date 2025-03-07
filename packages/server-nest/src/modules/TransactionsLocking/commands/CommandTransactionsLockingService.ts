@@ -27,8 +27,8 @@ export class TransactionsLockingService {
 
   /**
    * Enable/disable all transacations locking.
-   * @param   {TransactionsLockingGroup} module - The transaction locking module.
-   * @param   {Partial<ITransactionsLockingAllDTO>} allLockingDTO
+   * @param {TransactionsLockingGroup} module - The transaction locking module.
+   * @param {Partial<ITransactionsLockingAllDTO>} allLockingDTO
    * @returns {Promise<ITransactionMeta>}
    */
   public commandTransactionsLocking = async (
@@ -64,8 +64,8 @@ export class TransactionsLockingService {
 
   /**
    * Cancels the full transactions locking.
-   * @param   {TransactionsLockingGroup} module - The transaction locking module.
-   * @param   {ICancelTransactionsLockingDTO} cancelLockingDTO
+   * @param {TransactionsLockingGroup} module - The transaction locking module.
+   * @param {ICancelTransactionsLockingDTO} cancelLockingDTO
    * @returns {Promise<ITransactionMeta>}
    */
   public cancelTransactionLocking = async (
@@ -112,7 +112,7 @@ export class TransactionsLockingService {
 
     // Retrieve the current transactions locking type.
     const lockingType =
-      this.transactionsLockingRepo.getTransactionsLockingType();
+      await this.transactionsLockingRepo.getTransactionsLockingType();
 
     if (moduleGroup !== TransactionsLockingGroup.All) {
       this.validateLockingTypeNotAll(lockingType);

@@ -9,9 +9,9 @@ export class SaleEstimateIncrement {
 
   /**
    * Retrieve the next unique estimate number.
-   * @return {string}
+   * @return {Promise<string>}
    */
-  public getNextEstimateNumber(): string {
+  public getNextEstimateNumber(): Promise<string> {
     return this.autoIncrementOrdersService.getNextTransactionNumber(
       'sales_estimates',
     );

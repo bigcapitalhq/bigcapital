@@ -46,7 +46,7 @@ export class PaymentReceiveDTOTransformer {
       sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
     // Retreive the next invoice number.
-    const autoNextNumber = this.increments.getNextPaymentReceiveNumber();
+    const autoNextNumber = await this.increments.getNextPaymentReceiveNumber();
 
     // Retrieve the next payment receive number.
     const paymentReceiveNo =

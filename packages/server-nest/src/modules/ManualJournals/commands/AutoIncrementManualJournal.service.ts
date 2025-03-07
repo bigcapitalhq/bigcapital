@@ -23,8 +23,9 @@ export class AutoIncrementManualJournal {
 
   /**
    * Retrieve the next journal number.
+   * @returns {Promise<string>}
    */
-  public getNextJournalNumber = (): string => {
+  public getNextJournalNumber = (): Promise<string> => {
     return this.autoIncrementOrdersService.getNextTransactionNumber(
       'manual_journals'
     );
