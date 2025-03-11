@@ -12,6 +12,11 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TaxRatesApplication } from './TaxRate.application';
 import { ItemEntriesTaxTransactions } from './ItemEntriesTaxTransactions.service';
 import { GetTaxRatesService } from './queries/GetTaxRates.service';
+import { WriteBillTaxTransactionsSubscriber } from './subscribers/WriteBillTaxTransactionsSubscriber';
+import { WriteInvoiceTaxTransactionsSubscriber } from './subscribers/WriteInvoiceTaxTransactionsSubscriber';
+import { BillTaxRateValidateSubscriber } from './subscribers/BillTaxRateValidateSubscriber';
+import { SaleInvoiceTaxRateValidateSubscriber } from './subscribers/SaleInvoiceTaxRateValidateSubscriber';
+import { SyncItemTaxRateOnEditTaxSubscriber } from './subscribers/SyncItemTaxRateOnEditTaxSubscriber';
 
 @Module({
   imports: [],
@@ -28,7 +33,12 @@ import { GetTaxRatesService } from './queries/GetTaxRates.service';
     TransformerInjectable,
     TenancyContext,
     TaxRatesApplication,
-    ItemEntriesTaxTransactions
+    ItemEntriesTaxTransactions,
+    WriteBillTaxTransactionsSubscriber,
+    WriteInvoiceTaxTransactionsSubscriber,
+    BillTaxRateValidateSubscriber,
+    SaleInvoiceTaxRateValidateSubscriber,
+    SyncItemTaxRateOnEditTaxSubscriber,
   ],
   exports: [ItemEntriesTaxTransactions],
 })

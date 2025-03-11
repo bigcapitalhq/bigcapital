@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Injectable } from '@nestjs/common';
-import { InventoryTransactionsService } from '@/modules/InventoryCost/InventoryTransactions.service';
+import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { CreditNote } from '../models/CreditNote';
 import { Knex } from 'knex';

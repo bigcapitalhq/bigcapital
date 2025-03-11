@@ -1,10 +1,11 @@
 import { Knex } from 'knex';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { omit } from 'lodash';
-import { InventoryCostLotTracker } from './models/InventoryCostLotTracker';
-import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
+import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 
-export class InventoryCostMethod {
+@Injectable()
+export class StoreInventoryLotsCostService {
   constructor(
     @Inject(InventoryCostLotTracker.name)
     private readonly inventoryCostLotTracker: TenantModelProxy<
@@ -20,7 +21,7 @@ export class InventoryCostMethod {
    */
   public storeInventoryLotsCost(
     costLotsTransactions: InventoryCostLotTracker[],
-    trx: Knex.Transaction,
+    trx?: Knex.Transaction,
   ): Promise<object> {
     const opers: any = [];
 
@@ -42,5 +43,25 @@ export class InventoryCostMethod {
       }
     });
     return Promise.all(opers);
+  }
+
+  /**
+   * Reverts the inventory lots `OUT` transactions.
+   * @param {Date} startingDate - Starting date.
+   * @param {number} itemId - Item id.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Promise<void>}
+   */
+  async revertInventoryCostLotTransactions(
+    startingDate: Date,
+    itemId: number,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
+    await this.inventoryCostLotTracker()
+      .query(trx)
+      .modify('filterDateRange', startingDate)
+      .orderBy('date', 'DESC')
+      .where('item_id', itemId)
+      .delete();
   }
 }

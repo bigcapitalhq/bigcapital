@@ -7,6 +7,7 @@ import { Inject } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 
 @Injectable()
 export class CommandTaxRatesValidators {
@@ -70,46 +71,46 @@ export class CommandTaxRatesValidators {
    * @param {IItemEntryDTO[]} itemEntriesDTO
    * @throws {ServiceError}
    */
-  // public async validateItemEntriesTaxCode(itemEntriesDTO: IItemEntryDTO[]) {
-  //   const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxCode);
-  //   const taxCodes = filteredTaxEntries.map((e) => e.taxCode);
+  public async validateItemEntriesTaxCode(itemEntriesDTO: IItemEntryDTO[]) {
+    const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxCode);
+    const taxCodes = filteredTaxEntries.map((e) => e.taxCode);
 
-  //   // Can't validate if there is no tax codes.
-  //   if (taxCodes.length === 0) return;
+    // Can't validate if there is no tax codes.
+    if (taxCodes.length === 0) return;
 
-  //   const foundTaxCodes = await this.taxRateModel
-  //     .query()
-  //     .whereIn('code', taxCodes);
-  //   const foundCodes = foundTaxCodes.map((tax) => tax.code);
+    const foundTaxCodes = await this.taxRateModel()
+      .query()
+      .whereIn('code', taxCodes);
+    const foundCodes = foundTaxCodes.map((tax) => tax.code);
 
-  //   const notFoundTaxCodes = difference(taxCodes, foundCodes);
+    const notFoundTaxCodes = difference(taxCodes, foundCodes);
 
-  //   if (notFoundTaxCodes.length > 0) {
-  //     throw new ServiceError(ERRORS.ITEM_ENTRY_TAX_RATE_CODE_NOT_FOUND);
-  //   }
-  // }
+    if (notFoundTaxCodes.length > 0) {
+      throw new ServiceError(ERRORS.ITEM_ENTRY_TAX_RATE_CODE_NOT_FOUND);
+    }
+  }
 
   /**
    * Validates the tax rate id of the given item entries DTO.
    * @param {IItemEntryDTO[]} itemEntriesDTO
    * @throws {ServiceError}
    */
-  // public async validateItemEntriesTaxCodeId(itemEntriesDTO: IItemEntryDTO[]) {
-  //   const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxRateId);
-  //   const taxRatesIds = filteredTaxEntries.map((e) => e.taxRateId);
+  public async validateItemEntriesTaxCodeId(itemEntriesDTO: IItemEntryDTO[]) {
+    const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxRateId);
+    const taxRatesIds = filteredTaxEntries.map((e) => e.taxRateId);
 
-  //   // Can't validate if there is no tax codes.
-  //   if (taxRatesIds.length === 0) return;
+    // Can't validate if there is no tax codes.
+    if (taxRatesIds.length === 0) return;
 
-  //   const foundTaxCodes = await this.taxRateModel
-  //     .query()
-  //     .whereIn('id', taxRatesIds);
-  //   const foundTaxRatesIds = foundTaxCodes.map((tax) => tax.id);
+    const foundTaxCodes = await this.taxRateModel()
+      .query()
+      .whereIn('id', taxRatesIds);
+    const foundTaxRatesIds = foundTaxCodes.map((tax) => tax.id);
 
-  //   const notFoundTaxCodes = difference(taxRatesIds, foundTaxRatesIds);
+    const notFoundTaxCodes = difference(taxRatesIds, foundTaxRatesIds);
 
-  //   if (notFoundTaxCodes.length > 0) {
-  //     throw new ServiceError(ERRORS.ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND);
-  //   }
-  // }
+    if (notFoundTaxCodes.length > 0) {
+      throw new ServiceError(ERRORS.ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND);
+    }
+  }
 }

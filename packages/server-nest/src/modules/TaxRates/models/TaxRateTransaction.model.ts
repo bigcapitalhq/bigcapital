@@ -4,6 +4,13 @@ import { mixin, Model, raw } from 'objection';
 import { BaseModel } from '@/models/Model';
 
 export class TaxRateTransaction extends BaseModel {
+  id: number;
+  taxRateId: number;
+  referenceType: string;
+  referenceId: number;
+  rate: number;
+  taxAccountId: number;
+  
   /**
    * Table name
    */

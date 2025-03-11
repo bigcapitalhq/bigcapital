@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
-// import { InventoryItemCostService } from './InventoryCosts.service';
-import { IInventoryItemCostMeta } from './types/InventoryCost.types';
+import { InventoryItemCostService } from './commands/InventoryCosts.service';
 
 @Injectable()
 export class InventoryCostApplication {
-  constructor(
-    // private readonly inventoryCost: InventoryItemCostService,
-  ) {}
+  constructor(private readonly inventoryCost: InventoryItemCostService) {}
+
+  /**
+   * Computes the item cost.
+   * @param {Date} fromDate - From date.
+   * @param {number} itemId - Item id.
+   * @returns {Promise<Map<number, IInventoryItemCostMeta>>}
+   */
+  computeItemCost(fromDate: Date, itemId: number) {
+    return this.inventoryCost.getItemsInventoryValuation([itemId], fromDate);
+  }
 
   /**
    * Retrieves the items inventory valuation list.
@@ -14,14 +21,14 @@ export class InventoryCostApplication {
    * @param {Date} date
    * @returns {Promise<IInventoryItemCostMeta[]>}
    */
-  public getItemsInventoryValuationList = async (
+  async getItemsInventoryValuation(
     itemsId: number[],
-    date: Date
-  ): Promise<any> => {
-    // const itemsMap = await this.inventoryCost.getItemsInventoryValuation(
-    //   itemsId,
-    //   date
-    // );
-    // return [...itemsMap.values()];
-  };
+    date: Date,
+  ): Promise<any> {
+    const itemsMap = await this.inventoryCost.getItemsInventoryValuation(
+      itemsId,
+      date,
+    );
+    return [...itemsMap.values()];
+  }
 }

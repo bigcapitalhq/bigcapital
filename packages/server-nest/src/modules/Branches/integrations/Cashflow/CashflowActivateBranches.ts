@@ -1,11 +1,12 @@
 import { Knex } from 'knex';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { BankTransaction } from '@/modules/BankingTransactions/models/BankTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CashflowTransactionsActivateBranches {
   constructor(
+    @Inject(BankTransaction.name)
     private readonly bankTransaction: TenantModelProxy<typeof BankTransaction>,
   ) {}
 

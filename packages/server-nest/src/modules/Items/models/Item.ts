@@ -22,6 +22,8 @@ export class Item extends TenantBaseModel{
   public readonly landedCost: boolean;
   public readonly note: string;
   public readonly userId: number;
+  public readonly sellTaxRateId: number;
+  public readonly purchaseTaxRateId: number;
 
   public readonly warehouse!: Warehouse;
 

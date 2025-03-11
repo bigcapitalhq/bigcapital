@@ -6,6 +6,7 @@ import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
 import { ServiceError } from './ServiceError';
 import { IItemEntryDTO } from '../TransactionItemEntry/ItemEntry.types';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { entriesAmountDiff } from '@/utils/entries-amount-diff';
 
 const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -176,21 +177,21 @@ export class ItemsEntriesService {
   ): Promise<void> {
     const opers = [];
 
-    // const diffEntries = entriesAmountDiff(
-    //   entries,
-    //   oldEntries,
-    //   'quantity',
-    //   'itemId',
-    // );
-    // diffEntries.forEach((entry: ItemEntry) => {
-    //   const changeQuantityOper = this.itemRepository.changeNumber(
-    //     { id: entry.itemId, type: 'inventory' },
-    //     'quantityOnHand',
-    //     entry.quantity,
-    //   );
-    //   opers.push(changeQuantityOper);
-    // });
-    // await Promise.all(opers);
+    const diffEntries = entriesAmountDiff(
+      entries,
+      oldEntries,
+      'quantity',
+      'itemId',
+    );
+    diffEntries.forEach((entry: ItemEntry) => {
+      const changeQuantityOper = this.itemModel()
+        .query()
+        .where({ id: entry.itemId, type: 'inventory' })
+        .modify('quantityOnHand', entry.quantity);
+
+      opers.push(changeQuantityOper);
+    });
+    await Promise.all(opers);
   }
 
   /**

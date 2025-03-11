@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { InventoryCostGLStorage } from './InventoryCostGLStorage.service';
+import { InventoryCostGLStorage } from './commands/InventoryCostGLStorage.service';
 import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { InventoryCostLotTracker } from './models/InventoryCostLotTracker';
 import { InventoryTransaction } from './models/InventoryTransaction';
 import { InventoryCostGLBeforeWriteSubscriber } from './subscribers/InventoryCostGLBeforeWriteSubscriber';
-import { InventoryItemsQuantitySyncService } from './InventoryItemsQuantitySync.service';
-import { InventoryCostMethod } from './InventoryCostMethod';
-import { InventoryTransactionsService } from './InventoryTransactions.service';
+import { InventoryItemsQuantitySyncService } from './commands/InventoryItemsQuantitySync.service';
+import { InventoryTransactionsService } from './commands/InventoryTransactions.service';
 import { LedgerModule } from '../Ledger/Ledger.module';
+import { InventoryComputeCostService } from './commands/InventoryComputeCost.service';
 
 const models = [
   RegisterTenancyModel(InventoryCostLotTracker),
@@ -20,8 +20,8 @@ const models = [
     InventoryCostGLBeforeWriteSubscriber,
     InventoryCostGLStorage,
     InventoryItemsQuantitySyncService,
-    InventoryCostMethod,
     InventoryTransactionsService,
+    InventoryComputeCostService,
   ],
   exports: [...models, InventoryTransactionsService],
 })

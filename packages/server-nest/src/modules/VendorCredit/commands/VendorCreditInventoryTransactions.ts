@@ -2,7 +2,7 @@
 import { Knex } from 'knex';
 import { Injectable } from '@nestjs/common';
 import { VendorCredit } from '../models/VendorCredit';
-import { InventoryTransactionsService } from '@/modules/InventoryCost/InventoryTransactions.service';
+import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 
 @Injectable()

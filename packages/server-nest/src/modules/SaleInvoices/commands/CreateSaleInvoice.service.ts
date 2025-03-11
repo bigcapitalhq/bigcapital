@@ -19,6 +19,17 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateSaleInvoice {
+  /**
+   * @param {ItemsEntriesService} itemsEntriesService - Items entries service.
+   * @param {CommandSaleInvoiceValidators} validators - Command sale invoice validators.
+   * @param {CommandSaleInvoiceDTOTransformer} transformerDTO - Command sale invoice DTO transformer.
+   * @param {EventEmitter2} eventPublisher - Event emitter.
+   * @param {SaleEstimateValidators} commandEstimateValidators - Command sale estimate validators.
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {TenantModelProxy<typeof SaleInvoice>} saleInvoiceModel - Sale invoice model.
+   * @param {TenantModelProxy<typeof SaleEstimate>} saleEstimateModel - Sale estimate model.
+   * @param {TenantModelProxy<typeof Customer>} customerModel - Customer model.
+   */
   constructor(
     private readonly itemsEntriesService: ItemsEntriesService,
     private readonly validators: CommandSaleInvoiceValidators,

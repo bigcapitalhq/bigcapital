@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { IInventoryCostLotsGLEntriesWriteEvent } from '../types/InventoryCost.types';
-import { InventoryCostGLStorage } from '../InventoryCostGLStorage.service';
+import { InventoryCostGLStorage } from '../commands/InventoryCostGLStorage.service';
 
 @Injectable()
 export class InventoryCostGLBeforeWriteSubscriber {
@@ -21,7 +21,7 @@ export class InventoryCostGLBeforeWriteSubscriber {
   }: IInventoryCostLotsGLEntriesWriteEvent) {
     await this.inventoryCostGLStorage.revertInventoryCostGLEntries(
       startingDate,
-      trx
+      trx,
     );
-  };
+  }
 }

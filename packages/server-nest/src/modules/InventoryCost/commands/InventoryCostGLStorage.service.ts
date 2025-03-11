@@ -1,8 +1,9 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
-import { LedgerStorageService } from '../Ledger/LedgerStorage.service';
-import { Ledger } from '../Ledger/Ledger';
-import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
+import { LedgerStorageService } from '../../Ledger/LedgerStorage.service';
+import { Ledger } from '../../Ledger/Ledger';
+import { AccountTransaction } from '../../Accounts/models/AccountTransaction.model';
+import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 
 @Injectable()
 export class InventoryCostGLStorage {
@@ -10,7 +11,9 @@ export class InventoryCostGLStorage {
     private readonly ledgerStorage: LedgerStorageService,
 
     @Inject(AccountTransaction.name)
-    private readonly accountTransactionModel: typeof AccountTransaction,
+    private readonly accountTransactionModel: TenantModelProxy<
+      typeof AccountTransaction
+    >,
   ) {}
 
   /**
@@ -23,7 +26,7 @@ export class InventoryCostGLStorage {
     trx?: Knex.Transaction,
   ): Promise<void> {
     // Retrieve transactions from specific date range and costable transactions only.
-    const transactions = await this.accountTransactionModel
+    const transactions = await this.accountTransactionModel()
       .query()
       .where('costable', true)
       .modify('filterDateRange', startingDate)

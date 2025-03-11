@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Knex } from "knex";
 import { InventoryAdjustment } from "../models/InventoryAdjustment";
 import { InventoryTransaction } from "@/modules/InventoryCost/models/InventoryTransaction";
-import { InventoryTransactionsService } from "@/modules/InventoryCost/InventoryTransactions.service";
+import { InventoryTransactionsService } from "@/modules/InventoryCost/commands/InventoryTransactions.service";
 
 @Injectable()
 export class InventoryAdjustmentInventoryTransactions {

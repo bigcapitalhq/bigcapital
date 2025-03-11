@@ -3,7 +3,7 @@ import { Knex } from 'knex';
 import { Bill } from '../models/Bill';
 import { Inject, Injectable } from '@nestjs/common';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
-import { InventoryTransactionsService } from '@/modules/InventoryCost/InventoryTransactions.service';
+import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()

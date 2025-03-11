@@ -5,14 +5,14 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   IInventoryTransactionsDeletedPayload,
   TInventoryTransactionDirection,
-} from './types/InventoryCost.types';
-import { InventoryCostLotTracker } from './models/InventoryCostLotTracker';
-import { InventoryTransaction } from './models/InventoryTransaction';
+} from '../types/InventoryCost.types';
+import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
+import { InventoryTransaction } from '../models/InventoryTransaction';
 import { events } from '@/common/events/events';
-import { IInventoryTransactionsCreatedPayload } from './types/InventoryCost.types';
-import { transformItemEntriesToInventory } from './utils';
-import { IItemEntryTransactionType } from '../TransactionItemEntry/ItemEntry.types';
-import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
+import { IInventoryTransactionsCreatedPayload } from '../types/InventoryCost.types';
+import { transformItemEntriesToInventory } from '../utils';
+import { IItemEntryTransactionType } from '../../TransactionItemEntry/ItemEntry.types';
+import { ItemEntry } from '../../TransactionItemEntry/models/ItemEntry';
 
 export class InventoryTransactionsService {
   constructor(
@@ -82,7 +82,6 @@ export class InventoryTransactionsService {
 
   /**
    * Records the inventory transactions from items entries that have (inventory) type.
-   *
    * @param {number} tenantId
    * @param {number} transactionId
    * @param {string} transactionType
