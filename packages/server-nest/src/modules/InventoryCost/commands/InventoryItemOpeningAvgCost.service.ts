@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
 
 @Injectable()
 export class InventoryItemOpeningAvgCostService {
   constructor(
+    @Inject(InventoryCostLotTracker.name)
     private readonly inventoryCostLotTrackerModel: TenantModelProxy<
       typeof InventoryCostLotTracker
     >,
@@ -31,6 +32,10 @@ export class InventoryItemOpeningAvgCostService {
       builder.sum('cost as cost');
       builder.first();
     };
+    interface QueryResult {
+      cost: number;
+      quantity: number;
+    }
     // Calculates the total inventory total quantity and rate `IN` transactions.
     const inInvSumationOper = this.inventoryCostLotTrackerModel()
       .query()
@@ -43,10 +48,11 @@ export class InventoryItemOpeningAvgCostService {
       .onBuild(commonBuilder)
       .where('direction', 'OUT');
 
-    const [inInvSumation, outInvSumation] = await Promise.all([
+    const [inInvSumation, outInvSumation] = (await Promise.all([
       inInvSumationOper,
       outInvSumationOper,
-    ]);
+    ])) as unknown as [QueryResult, QueryResult];
+
     return this.computeItemAverageCost(
       inInvSumation?.cost || 0,
       inInvSumation?.quantity || 0,

@@ -9,11 +9,12 @@ import { events } from '@/common/events/events';
 import { ModelObject } from 'objection';
 import { InventoryTransaction } from '../InventoryCost/models/InventoryTransaction';
 import { IInventoryCostLotsGLEntriesWriteEvent } from '../InventoryCost/types/InventoryCost.types';
+import { InventoryComputeCostService } from '../InventoryCost/commands/InventoryComputeCost.service';
 
 @Injectable()
 export class SaleInvoicesCost {
   constructor(
-    private readonly inventoryService: InventoryService,
+    private readonly inventoryService: InventoryComputeCostService,
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
   ) {}
@@ -112,12 +113,12 @@ export class SaleInvoicesCost {
    * @return {Promise<agenda>}
    */
   scheduleWriteJournalEntries(startingDate?: Date) {
-    const agenda = Container.get('agenda');
+    // const agenda = Container.get('agenda');
 
-    return agenda.schedule('in 3 seconds', 'rewrite-invoices-journal-entries', {
-      startingDate,
-      tenantId,
-    });
+    // return agenda.schedule('in 3 seconds', 'rewrite-invoices-journal-entries', {
+    //   startingDate,
+    //   tenantId,
+    // });
   }
 
   /**

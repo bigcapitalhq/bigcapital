@@ -15,7 +15,7 @@ export class ImportAls {
    * @returns The result of the callback function.
    */
   public run<T>(callback: () => T): T {
-    return this.als.run<T>(new Map(), callback);
+    return this.als.run<T, any>(new Map(), callback);
   }
 
   /**

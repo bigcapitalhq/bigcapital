@@ -7,21 +7,20 @@ import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { InventoryTransactionMeta } from './InventoryTransactionMeta';
 
 export class InventoryTransaction extends TenantBaseModel {
-  date: Date | string;
-  direction: TInventoryTransactionDirection;
-  itemId: number;
-  quantity: number | null;
-  rate: number;
-  transactionType: string;
-  transactionId: number;
+  date!: Date | string;
+  direction!: TInventoryTransactionDirection;
+  itemId!: number;
+  quantity!: number | null;
+  rate!: number;
+  transactionType!: string;
+  transactionId!: number;
   costAccountId?: number;
-  entryId: number;
+  entryId!: number;
 
   createdAt?: Date;
   updatedAt?: Date;
 
   warehouseId?: number;
-
   meta?: InventoryTransactionMeta;
 
   /**
@@ -34,7 +33,7 @@ export class InventoryTransaction extends TenantBaseModel {
   /**
    * Model timestamps.
    */
-  get timestamps() {
+  static get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 

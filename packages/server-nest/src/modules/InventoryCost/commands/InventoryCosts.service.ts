@@ -1,6 +1,4 @@
 import { keyBy, get } from 'lodash';
-import { Knex } from 'knex';
-import * as R from 'ramda';
 import { IInventoryItemCostMeta } from '../types/InventoryCost.types';
 import { Inject, Injectable } from '@nestjs/common';
 import { InventoryTransaction } from '../models/InventoryTransaction';
@@ -22,33 +20,30 @@ export class InventoryItemCostService {
 
   /**
    *
-   * @param {} INValuationMap -
-   * @param {} OUTValuationMap -
+   * @param {Map<number, IInventoryItemCostMeta>} INValuationMap -
+   * @param {Map<number, IInventoryItemCostMeta>} OUTValuationMap -
    * @param {number} itemId
    */
-  private getItemInventoryMeta = R.curry(
-    (
-      INValuationMap,
-      OUTValuationMap,
-      itemId: number,
-    ): IInventoryItemCostMeta => {
-      const INCost = get(INValuationMap, `[${itemId}].cost`, 0);
-      const INQuantity = get(INValuationMap, `[${itemId}].quantity`, 0);
+  private getItemInventoryMeta(
+    INValuationMap: Map<number, IInventoryItemCostMeta>,
+    OUTValuationMap: Map<number, IInventoryItemCostMeta>,
+    itemId: number,
+  ) {
+    const INCost = get(INValuationMap, `[${itemId}].cost`, 0);
+    const INQuantity = get(INValuationMap, `[${itemId}].quantity`, 0);
 
-      const OUTCost = get(OUTValuationMap, `[${itemId}].cost`, 0);
-      const OUTQuantity = get(OUTValuationMap, `[${itemId}].quantity`, 0);
+    const OUTCost = get(OUTValuationMap, `[${itemId}].cost`, 0);
+    const OUTQuantity = get(OUTValuationMap, `[${itemId}].quantity`, 0);
 
-      const valuation = INCost - OUTCost;
-      const quantity = INQuantity - OUTQuantity;
-      const average = quantity ? valuation / quantity : 0;
+    const valuation = INCost - OUTCost;
+    const quantity = INQuantity - OUTQuantity;
+    const average = quantity ? valuation / quantity : 0;
 
-      return { itemId, valuation, quantity, average };
-    },
-  );
+    return { itemId, valuation, quantity, average };
+  }
 
   /**
    *
-   * @param {number} tenantId
    * @param {number} itemsId
    * @param {Date} date
    * @returns
@@ -57,7 +52,7 @@ export class InventoryItemCostService {
     itemsId: number[],
     date: Date,
   ): Promise<any> => {
-    const commonBuilder = (builder: Knex.QueryBuilder) => {
+    const commonBuilder = (builder) => {
       if (date) {
         builder.where('date', '<', date);
       }
@@ -84,7 +79,6 @@ export class InventoryItemCostService {
 
   /**
    *
-   * @param {number} tenantId -
    * @param {number[]} itemsIds -
    * @param {Date} date -
    */
@@ -122,11 +116,10 @@ export class InventoryItemCostService {
     const [OUTValuationMap, INValuationMap] =
       await this.getItemsInventoryInOutMap(itemsId, date);
 
-    const getItemValuation = this.getItemInventoryMeta(
-      INValuationMap,
-      OUTValuationMap,
-    );
-    const itemsValuations = inventoryItemsIds.map(getItemValuation);
+    const getItemValuation = (itemId: number) =>
+      this.getItemInventoryMeta(INValuationMap, OUTValuationMap, itemId);
+
+    const itemsValuations = inventoryItemsIds.map((id) => getItemValuation(id));
     const itemsValuationsMap = new Map(
       itemsValuations.map((i) => [i.itemId, i]),
     );

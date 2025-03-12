@@ -17,6 +17,8 @@ import { WriteInvoiceTaxTransactionsSubscriber } from './subscribers/WriteInvoic
 import { BillTaxRateValidateSubscriber } from './subscribers/BillTaxRateValidateSubscriber';
 import { SaleInvoiceTaxRateValidateSubscriber } from './subscribers/SaleInvoiceTaxRateValidateSubscriber';
 import { SyncItemTaxRateOnEditTaxSubscriber } from './subscribers/SyncItemTaxRateOnEditTaxSubscriber';
+import { WriteTaxTransactionsItemEntries } from './WriteTaxTransactionsItemEntries';
+import { SyncItemTaxRateOnEditTaxRate } from './SyncItemTaxRateOnEditTaxRate';
 
 @Module({
   imports: [],
@@ -39,6 +41,8 @@ import { SyncItemTaxRateOnEditTaxSubscriber } from './subscribers/SyncItemTaxRat
     BillTaxRateValidateSubscriber,
     SaleInvoiceTaxRateValidateSubscriber,
     SyncItemTaxRateOnEditTaxSubscriber,
+    WriteTaxTransactionsItemEntries,
+    SyncItemTaxRateOnEditTaxRate
   ],
   exports: [ItemEntriesTaxTransactions],
 })

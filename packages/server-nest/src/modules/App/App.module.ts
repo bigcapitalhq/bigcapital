@@ -69,6 +69,8 @@ import { MailModule } from '../Mail/Mail.module';
 import { FinancialStatementsModule } from '../FinancialStatements/FinancialStatements.module';
 import { StripePaymentModule } from '../StripePayment/StripePayment.module';
 import { FeaturesModule } from '../Features/Features.module';
+import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
+import { WarehousesTransfersModule } from '../WarehousesTransfers/WarehouseTransfers.module';
 
 @Module({
   imports: [
@@ -135,6 +137,7 @@ import { FeaturesModule } from '../Features/Features.module';
     PdfTemplatesModule,
     BranchesModule,
     WarehousesModule,
+    WarehousesTransfersModule,
     CustomersModule,
     VendorsModule,
     SaleInvoicesModule,
@@ -160,6 +163,7 @@ import { FeaturesModule } from '../Features/Features.module';
     SettingsModule,
     FeaturesModule,
     InventoryAdjustmentsModule,
+    InventoryCostModule,
     PostHogModule,
     EventTrackerModule,
     FinancialStatementsModule,

@@ -230,6 +230,7 @@ export class Account extends TenantBaseModel {
           to: 'accounts_transactions.accountId',
         },
       },
+     
       /**
        * Account may has many items as cost account.
        */

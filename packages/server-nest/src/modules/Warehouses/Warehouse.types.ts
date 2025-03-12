@@ -1,23 +1,12 @@
 import { Knex } from 'knex';
 import { Warehouse } from './models/Warehouse.model';
+import { WarehouseTransfer } from '../WarehousesTransfers/models/WarehouseTransfer';
+import { ModelObject } from 'objection';
 
 export interface IWarehouse {
   id?: number;
 }
-export interface IWarehouseTransfer {
-  id?: number;
-  date: Date;
-  fromWarehouseId: number;
-  toWarehouseId: number;
-  reason?: string;
-  transactionNumber: string;
-  entries: IWarehouseTransferEntry[];
-  transferInitiatedAt?: Date;
-  transferDeliveredAt?: Date;
 
-  isInitiated?: boolean;
-  isTransferred?: boolean; 
-}
 export interface IWarehouseTransferEntry {
   id?: number;
   index?: number;
@@ -118,37 +107,31 @@ export interface IWarehouseTransferCreate {
 }
 
 export interface IWarehouseTransferCreated {
-  trx: Knex.Transaction;
-  warehouseTransfer: IWarehouseTransfer;
+  trx?: Knex.Transaction;
+  warehouseTransfer: ModelObject<WarehouseTransfer>;
   warehouseTransferDTO: ICreateWarehouseTransferDTO;
-  // tenantId: number;
 }
 
 export interface IWarehouseTransferEditPayload {
-  // tenantId: number;
   editWarehouseDTO: IEditWarehouseTransferDTO;
-  oldWarehouseTransfer: IWarehouseTransfer;
+  oldWarehouseTransfer: ModelObject<WarehouseTransfer>;
   trx: Knex.Transaction;
 }
 
 export interface IWarehouseTransferEditedPayload {
-  // tenantId: number;
   editWarehouseDTO: IEditWarehouseTransferDTO;
-  oldWarehouseTransfer: IWarehouseTransfer;
-  warehouseTransfer: IWarehouseTransfer;
+  oldWarehouseTransfer: ModelObject<WarehouseTransfer>;
+  warehouseTransfer: ModelObject<WarehouseTransfer>;
   trx: Knex.Transaction;
 }
 
 export interface IWarehouseTransferDeletePayload {
-  // tenantId: number;
-  oldWarehouseTransfer: IWarehouseTransfer;
+  oldWarehouseTransfer: ModelObject<WarehouseTransfer>;
   trx: Knex.Transaction;
 }
 
 export interface IWarehouseTransferDeletedPayload {
-  // tenantId: number;
-  warehouseTransfer: IWarehouseTransfer;
-  oldWarehouseTransfer: IWarehouseTransfer;
+  oldWarehouseTransfer: ModelObject<WarehouseTransfer>;
   trx: Knex.Transaction;
 }
 
@@ -173,40 +156,33 @@ export interface IWarehousesActivatedPayload {
 }
 
 export interface IWarehouseMarkAsPrimaryPayload {
-  // tenantId: number;
   oldWarehouse: Warehouse;
   trx: Knex.Transaction;
 }
 export interface IWarehouseMarkedAsPrimaryPayload {
-  // tenantId: number;
   oldWarehouse: Warehouse;
   markedWarehouse: Warehouse;
   trx: Knex.Transaction;
 }
 
 export interface IWarehouseTransferInitiatePayload {
-  // tenantId: number;
-  oldWarehouseTransfer: IWarehouseTransfer;
+  oldWarehouseTransfer: ModelObject<WarehouseTransfer>;
   trx: Knex.Transaction;
 }
 
-
 export interface IWarehouseTransferInitiatedPayload {
-  // tenantId: number;
-  warehouseTransfer: IWarehouseTransfer;
-  oldWarehouseTransfer: IWarehouseTransfer;
+  warehouseTransfer: ModelObject<WarehouseTransfer>;
+  oldWarehouseTransfer: ModelObject<WarehouseTransfer>;
   trx: Knex.Transaction;
 }
 
 export interface IWarehouseTransferTransferingPayload {
-  // tenantId: number;
-  oldWarehouseTransfer: IWarehouseTransfer;
+  oldWarehouseTransfer: ModelObject<WarehouseTransfer>;
   trx: Knex.Transaction;
 }
 
 export interface IWarehouseTransferTransferredPayload {
-  // tenantId: number;
-  warehouseTransfer: IWarehouseTransfer;
-  oldWarehouseTransfer: IWarehouseTransfer;
+  warehouseTransfer: ModelObject<WarehouseTransfer>;
+  oldWarehouseTransfer: ModelObject<WarehouseTransfer>;
   trx: Knex.Transaction;
 }

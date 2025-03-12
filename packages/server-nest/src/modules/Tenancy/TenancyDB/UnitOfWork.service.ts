@@ -8,7 +8,7 @@ import { TENANCY_DB_CONNECTION } from '@/modules/Tenancy/TenancyDB/TenancyDB.con
 export class UnitOfWork {
   constructor(
     @Inject(TENANCY_DB_CONNECTION)
-    private readonly tenantKex: Knex,
+    private readonly tenantKex: () => Knex,
   ) {}
 
   /**
@@ -23,7 +23,7 @@ export class UnitOfWork {
     trx?: Transaction,
     isolationLevel: IsolationLevel = IsolationLevel.READ_UNCOMMITTED,
   ): Promise<T> => {
-    const knex = this.tenantKex;
+    const knex = this.tenantKex();
     let _trx = trx;
 
     if (!_trx) {

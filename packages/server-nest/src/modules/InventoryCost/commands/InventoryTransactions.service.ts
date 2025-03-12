@@ -33,7 +33,7 @@ export class InventoryTransactionsService {
    * @return {Promise<void>}
    */
   async recordInventoryTransactions(
-    transactions: InventoryTransaction[],
+    transactions: ModelObject<InventoryTransaction>[],
     override: boolean = false,
     trx?: Knex.Transaction,
   ): Promise<void> {

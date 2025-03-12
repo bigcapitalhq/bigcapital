@@ -3,12 +3,6 @@ import { Knex } from 'knex';
 import { InventoryTransaction } from '../models/InventoryTransaction';
 
 export class InventoryAverageCostMethod {
-  /**
-   * Constructor method.
-   * @param {number} tenantId - The given tenant id.
-   * @param {Date} startingDate -
-   * @param {number} itemId - The given inventory item id.
-   */
   constructor() {}
 
   /**

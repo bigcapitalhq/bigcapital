@@ -5,6 +5,11 @@ import ModelSearchable from './ModelSearchable';
 export default class TaxRateTransaction extends mixin(TenantModel, [
   ModelSearchable,
 ]) {
+  public rate: number;
+  public referenceId: number;
+  public referenceType: string;
+  public taxRateId: number;
+
   /**
    * Table name
    */

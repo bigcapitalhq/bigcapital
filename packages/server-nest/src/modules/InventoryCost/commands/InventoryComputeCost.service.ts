@@ -72,7 +72,6 @@ export class InventoryComputeCostService {
    * @param {Date} startingDate
    */
   async scheduleComputeItemCost(
-    tenantId: number,
     itemId: number,
     startingDate: Date | string,
   ) {

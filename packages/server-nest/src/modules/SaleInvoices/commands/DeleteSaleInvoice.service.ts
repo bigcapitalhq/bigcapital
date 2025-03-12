@@ -19,6 +19,14 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DeleteSaleInvoice {
+  /**
+   * @param {UnlinkConvertedSaleEstimate} unlockEstimateFromInvoice - Unlink converted sale estimate service.
+   * @param {EventEmitter2} eventPublisher - Event emitter.
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {TenantModelProxy<typeof PaymentReceivedEntry>} paymentReceivedEntryModel - Payment received entry model.
+   * @param {TenantModelProxy<typeof CreditNoteAppliedInvoice>} creditNoteAppliedInvoiceModel - Credit note applied invoice model.
+   * @param {TenantModelProxy<typeof SaleInvoice>} saleInvoiceModel - Sale invoice model.
+   */
   constructor(
     private unlockEstimateFromInvoice: UnlinkConvertedSaleEstimate,
     private eventPublisher: EventEmitter2,
@@ -36,6 +44,9 @@ export class DeleteSaleInvoice {
 
     @Inject(SaleInvoice.name)
     private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
+
+    @Inject(ItemEntry.name)
+    private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
   ) {}
 
   /**
@@ -113,12 +124,13 @@ export class DeleteSaleInvoice {
         saleInvoiceId,
         trx,
       );
-      await ItemEntry.query(trx)
+      await this.itemEntryModel()
+        .query(trx)
         .where('reference_id', saleInvoiceId)
         .where('reference_type', 'SaleInvoice')
         .delete();
 
-      await SaleInvoice.query(trx).findById(saleInvoiceId).delete();
+      await this.saleInvoiceModel().query(trx).findById(saleInvoiceId).delete();
 
       // Triggers `onSaleInvoiceDeleted` event.
       await this.eventPublisher.emitAsync(events.saleInvoice.onDeleted, {

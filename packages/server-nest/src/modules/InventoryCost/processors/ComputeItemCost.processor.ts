@@ -1,40 +1,58 @@
-import { JOB_REF, Processor } from '@nestjs/bullmq';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { JOB_REF, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Inject, Scope } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { ClsService } from 'nestjs-cls';
 import { TenantJobPayload } from '@/interfaces/Tenant';
 import { InventoryComputeCostService } from '../commands/InventoryComputeCost.service';
+import { events } from '@/common/events/events';
+import { ComputeItemCostQueueJob } from '../types/InventoryCost.types';
 
 interface ComputeItemCostJobPayload extends TenantJobPayload {
   itemId: number;
   startingDate: Date;
 }
-
 @Processor({
-  name: 'compute-item-cost',
+  name: ComputeItemCostQueueJob,
   scope: Scope.REQUEST,
 })
-export class ComputeItemCostProcessor {
+export class ComputeItemCostProcessor extends WorkerHost {
+  /**
+   * @param {InventoryComputeCostService} inventoryComputeCostService -
+   * @param {ClsService} clsService -
+   * @param {EventEmitter2} eventEmitter -
+   */
   constructor(
     private readonly inventoryComputeCostService: InventoryComputeCostService,
     private readonly clsService: ClsService,
-
-    @Inject(JOB_REF)
-    private readonly jobRef: Job<ComputeItemCostJobPayload>,
-  ) {}
+    private readonly eventEmitter: EventEmitter2,
+  ) {
+    super();
+  }
 
   /**
-   * Handle compute item cost job.
+   * Process the compute item cost job.
+   * @param {Job<ComputeItemCostJobPayload>} job - The job to process
    */
-  async handleComputeItemCost() {
-    const { itemId, startingDate, organizationId, userId } = this.jobRef.data;
+  async process(job: Job<ComputeItemCostJobPayload>) {
+    const { itemId, startingDate, organizationId, userId } = job.data;
 
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);
 
-    await this.inventoryComputeCostService.computeItemCost(
-      startingDate,
-      itemId,
-    );
+    try {
+      await this.inventoryComputeCostService.computeItemCost(
+        startingDate,
+        itemId,
+      );
+      // Emit job completed event
+      await this.eventEmitter.emitAsync(
+        events.inventory.onComputeItemCostJobCompleted,
+        { startingDate, itemId, organizationId, userId },
+      );
+    } catch (error) {
+      console.error('Error computing item cost:', error);
+      throw error;
+    }
   }
 }

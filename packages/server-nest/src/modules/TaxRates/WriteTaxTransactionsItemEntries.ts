@@ -6,6 +6,7 @@ import { TaxRateModel } from './models/TaxRate.model';
 import { Inject, Injectable } from '@nestjs/common';
 import { ModelObject } from 'objection';
 import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
+import { TaxRateTransaction } from './models/TaxRateTransaction.model';
 
 @Injectable()
 export class WriteTaxTransactionsItemEntries {
@@ -40,11 +41,11 @@ export class WriteTaxTransactionsItemEntries {
       taxRateId: entry.taxRateId,
       referenceType: entry.referenceType,
       referenceId: entry.referenceId,
-      rate: entry.taxRate || taxRatesById[entry.taxRateId]?.rate,
+      rate: entry.taxRate || (taxRatesById[entry.taxRateId]?.rate as number),
     }));
     await this.taxRateTransactionModel()
       .query(trx)
-      .upsertGraph(taxTransactions);
+      .upsertGraph(taxTransactions as ModelObject<TaxRateTransaction>[]);
   }
 
   /**

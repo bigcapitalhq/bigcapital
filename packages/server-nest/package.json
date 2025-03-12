@@ -22,6 +22,7 @@
   "dependencies": {
     "@bigcapital/email-components": "*",
     "@bigcapital/pdf-templates": "*",
+    "@bigcapital/server": "*",
     "@bigcapital/utils": "*",
     "@nestjs/bull": "^10.2.1",
     "@nestjs/bullmq": "^10.2.2",

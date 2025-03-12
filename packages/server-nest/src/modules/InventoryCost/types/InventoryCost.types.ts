@@ -1,6 +1,13 @@
-import { Knex } from "knex";
-import { InventoryTransaction } from "../models/InventoryTransaction";
+import { Knex } from 'knex';
+import { InventoryTransaction } from '../models/InventoryTransaction';
 
+export const ComputeItemCostQueue = 'ComputeItemCostQueue';
+export const ComputeItemCostQueueJob = 'ComputeItemCostQueueJob';
+
+export const WriteInventoryTransactionsGLEntriesQueue =
+  'WriteInventoryTransactionsGLEntriesQueue';
+export const WriteInventoryTransactionsGLEntriesQueueJob =
+  'WriteInventoryTransactionsGLEntriesQueueJob';
 
 export interface IInventoryItemCostMeta {
   itemId: number;
@@ -10,8 +17,8 @@ export interface IInventoryItemCostMeta {
 }
 
 export interface IInventoryCostLotsGLEntriesWriteEvent {
-  startingDate: Date,
-  trx: Knex.Transaction
+  startingDate: Date;
+  trx: Knex.Transaction;
 }
 
 export type TInventoryTransactionDirection = 'IN' | 'OUT';
