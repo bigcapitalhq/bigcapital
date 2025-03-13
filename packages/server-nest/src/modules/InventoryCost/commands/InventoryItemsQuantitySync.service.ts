@@ -12,6 +12,9 @@ import { TenantModelProxy } from '../../System/models/TenantBaseModel';
  */
 @Injectable()
 export class InventoryItemsQuantitySyncService {
+  /**
+   * @param {TenantModelProxy<typeof Item>} itemModel - Item model.
+   */
   constructor(
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,

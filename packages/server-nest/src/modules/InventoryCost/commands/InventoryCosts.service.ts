@@ -4,18 +4,18 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InventoryTransaction } from '../models/InventoryTransaction';
 import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
 import { Item } from '../../Items/models/Item';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class InventoryItemCostService {
   constructor(
-    @Inject(InventoryTransaction.name)
-    private readonly inventoryTransactionModel: typeof InventoryTransaction,
-
     @Inject(InventoryCostLotTracker.name)
-    private readonly inventoryCostLotTrackerModel: typeof InventoryCostLotTracker,
+    private readonly inventoryCostLotTrackerModel: TenantModelProxy<
+      typeof InventoryCostLotTracker
+    >,
 
     @Inject(Item.name)
-    private readonly itemModel: typeof Item,
+    private readonly itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
   /**
@@ -64,12 +64,12 @@ export class InventoryItemCostService {
       builder.groupBy('item_id');
       builder.select(['item_id']);
     };
-    const INValuationOper = this.inventoryCostLotTrackerModel
+    const INValuationOper = this.inventoryCostLotTrackerModel()
       .query()
       .onBuild(commonBuilder)
       .where('direction', 'IN');
 
-    const OUTValuationOper = this.inventoryCostLotTrackerModel
+    const OUTValuationOper = this.inventoryCostLotTrackerModel()
       .query()
       .onBuild(commonBuilder)
       .where('direction', 'OUT');
@@ -104,7 +104,7 @@ export class InventoryItemCostService {
     date: Date,
   ): Promise<Map<number, IInventoryItemCostMeta>> => {
     // Retrieves the inventory items.
-    const items = await this.itemModel
+    const items = await this.itemModel()
       .query()
       .whereIn('id', itemsId)
       .where('type', 'inventory');

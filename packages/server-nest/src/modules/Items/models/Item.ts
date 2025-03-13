@@ -50,8 +50,8 @@ export class Item extends TenantBaseModel {
     // const WarehouseTransferEntry = require('../../Warehouses/');
     const {
       InventoryAdjustmentEntry,
-    } = require('../../InventoryAdjutments/models/InventoryAdjustment');
-    const { TaxRate } = require('../../TaxRates/models/TaxRate.model');
+    } = require('../../InventoryAdjutments/models/InventoryAdjustmentEntry');
+    const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
 
     return {
       /**
@@ -171,7 +171,7 @@ export class Item extends TenantBaseModel {
        */
       sellTaxRate: {
         relation: Model.BelongsToOneRelation,
-        modelClass: TaxRate,
+        modelClass: TaxRateModel,
         join: {
           from: 'items.sellTaxRateId',
           to: 'tax_rates.id',
@@ -183,7 +183,7 @@ export class Item extends TenantBaseModel {
        */
       purchaseTaxRate: {
         relation: Model.BelongsToOneRelation,
-        modelClass: TaxRate,
+        modelClass: TaxRateModel,
         join: {
           from: 'items.purchaseTaxRateId',
           to: 'tax_rates.id',

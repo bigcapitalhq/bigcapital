@@ -28,9 +28,8 @@ export class WarehouseTransferApplication {
 
   /**
    * Creates a warehouse transfer transaction.
-   * @param   {number} tenantId
-   * @param   {ICreateWarehouseTransferDTO} createWarehouseTransferDTO
-   * @returns {}
+   * @param {ICreateWarehouseTransferDTO} createWarehouseTransferDTO
+   * @returns {Promise<ModelObject<WarehouseTransfer>>}
    */
   public createWarehouseTransfer = (
     createWarehouseTransferDTO: ICreateWarehouseTransferDTO,
@@ -42,7 +41,6 @@ export class WarehouseTransferApplication {
 
   /**
    * Edits warehouse transfer transaction.
-   * @param {number} tenantId -
    * @param {number} warehouseTransferId - number
    * @param {IEditWarehouseTransferDTO} editWarehouseTransferDTO
    */
@@ -108,8 +106,8 @@ export class WarehouseTransferApplication {
 
   /**
    * Marks the warehouse transfer order as initiated.
-   * @param   {number} warehouseTransferId
-   * @returns {Promise<IWarehouseTransfer>}
+   * @param {number} warehouseTransferId
+   * @returns {Promise<ModelObject<WarehouseTransfer>>}
    */
   public initiateWarehouseTransfer = (
     warehouseTransferId: number,

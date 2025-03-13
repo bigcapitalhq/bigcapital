@@ -15,14 +15,23 @@ import { IItemEntryTransactionType } from '../../TransactionItemEntry/ItemEntry.
 import { ItemEntry } from '../../TransactionItemEntry/models/ItemEntry';
 
 export class InventoryTransactionsService {
+  /**
+   * @param {EventEmitter2} eventEmitter - Event emitter.
+   * @param {TenantModelProxy<typeof InventoryTransaction>} inventoryTransactionModel - Inventory transaction model.
+   * @param {TenantModelProxy<typeof InventoryCostLotTracker>} inventoryCostLotTracker - Inventory cost lot tracker model.
+   */
   constructor(
     private readonly eventEmitter: EventEmitter2,
 
     @Inject(InventoryTransaction.name)
-    private readonly inventoryTransactionModel: typeof InventoryTransaction,
+    private readonly inventoryTransactionModel: TenantModelProxy<
+      typeof InventoryTransaction
+    >,
 
     @Inject(InventoryCostLotTracker.name)
-    private readonly inventoryCostLotTracker: typeof InventoryCostLotTracker,
+    private readonly inventoryCostLotTracker: TenantModelProxy<
+      typeof InventoryCostLotTracker
+    >,
   ) {}
 
   /**
@@ -75,9 +84,11 @@ export class InventoryTransactionsService {
         trx,
       );
     }
-    return this.inventoryTransactionModel.query(trx).insertGraph({
-      ...inventoryEntry,
-    });
+    return this.inventoryTransactionModel()
+      .query(trx)
+      .insertGraph({
+        ...inventoryEntry,
+      });
   }
 
   /**
@@ -137,7 +148,7 @@ export class InventoryTransactionsService {
       .where({ transactionId, transactionType });
 
     // Deletes the inventory transactions by the given transaction type and id.
-    await this.inventoryTransactionModel
+    await this.inventoryTransactionModel()
       .query(trx)
       .where({ transactionType, transactionId })
       .delete();
