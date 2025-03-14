@@ -23,7 +23,7 @@ export class AccountRepository extends TenantRepository {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(TENANCY_DB_CONNECTION)
-    private readonly tenantDBKnex: Knex,
+    private readonly tenantDBKnex: () => Knex,
   ) {
     super();
   }
@@ -32,7 +32,7 @@ export class AccountRepository extends TenantRepository {
    * Gets the repository's model.
    */
   get model(): typeof Account {
-    return Account.bindKnex(this.tenantDBKnex);
+    return Account.bindKnex(this.tenantDBKnex());
   }
 
   /**

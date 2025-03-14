@@ -33,6 +33,25 @@ export class Item extends TenantBaseModel {
   }
 
   /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      updateQuantityOnHand(query, value: number) {
+        const q = query.where('type', 'inventory');
+
+        if (value > 0) {
+          q.increment('quantityOnHand', value);
+        }
+        if (value < 0) {
+          q.decrement('quantityOnHand', Math.abs(value));
+        }
+        return q;
+      },
+    };
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {

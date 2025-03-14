@@ -12,12 +12,9 @@ export class AppService {
   ) {}
 
   getHello(): string {
-    console.log(this.configService.get('DATABASE_PORT'));
     const payload = {};
 
     const accessToken = this.jwtService.sign(payload);
-
-    console.log(accessToken);
 
     return accessToken;
   }

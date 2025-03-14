@@ -14,7 +14,7 @@ import { Injectable } from '@nestjs/common';
 import { InventoryComputeCostService } from '../commands/InventoryComputeCost.service';
 
 @Injectable()
-export default class InventorySubscriber {
+export class InventoryCostSubscriber {
   constructor(
     private readonly saleInvoicesCost: SaleInvoicesCost,
     private readonly itemsQuantitySync: InventoryItemsQuantitySyncService,

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { InventoryCostGLStorage } from './commands/InventoryCostGLStorage.service';
 import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { InventoryCostLotTracker } from './models/InventoryCostLotTracker';
@@ -20,6 +20,9 @@ import { BullModule } from '@nestjs/bullmq';
 import { InventoryAverageCostMethodService } from './commands/InventoryAverageCostMethod.service';
 import { InventoryItemCostService } from './commands/InventoryCosts.service';
 import { InventoryItemOpeningAvgCostService } from './commands/InventoryItemOpeningAvgCost.service';
+import { InventoryCostSubscriber } from './subscribers/InventoryCost.subscriber';
+import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
+import { ImportModule } from '../Import/Import.module';
 
 const models = [
   RegisterTenancyModel(InventoryCostLotTracker),
@@ -34,6 +37,8 @@ const models = [
     BullModule.registerQueue({
       name: WriteInventoryTransactionsGLEntriesQueue,
     }),
+    forwardRef(() => SaleInvoicesModule),
+    ImportModule,
   ],
   providers: [
     InventoryCostGLBeforeWriteSubscriber,
@@ -48,7 +53,13 @@ const models = [
     InventoryAverageCostMethodService,
     InventoryItemCostService,
     InventoryItemOpeningAvgCostService,
+    InventoryCostSubscriber,
   ],
-  exports: [...models, InventoryTransactionsService, InventoryItemCostService],
+  exports: [
+    ...models,
+    InventoryTransactionsService,
+    InventoryItemCostService,
+    InventoryComputeCostService,
+  ],
 })
 export class InventoryCostModule {}

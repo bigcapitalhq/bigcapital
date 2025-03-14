@@ -1,30 +1,51 @@
-import { pick } from 'lodash';
+import { Queue } from 'bullmq';
+import { ClsService } from 'nestjs-cls';
+import Redis from 'ioredis';
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { Item } from '../../Items/models/Item';
 import { SETTINGS_PROVIDER } from '../../Settings/Settings.types';
 import { SettingsStore } from '../../Settings/SettingsStore';
-import { InventoryTransaction } from '../models/InventoryTransaction';
-import { IItemEntryTransactionType } from '../../TransactionItemEntry/ItemEntry.types';
-import { ModelObject } from 'objection';
-import { ItemEntry } from '../../TransactionItemEntry/models/ItemEntry';
-import { TInventoryTransactionDirection } from '../types/InventoryCost.types';
+import {
+  ComputeItemCostQueue,
+  ComputeItemCostQueueJob,
+} from '../types/InventoryCost.types';
 import { InventoryAverageCostMethodService } from './InventoryAverageCostMethod.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { InjectQueue } from '@nestjs/bullmq';
+import { RedisService } from '@liaoliaots/nestjs-redis';
 
 @Injectable()
 export class InventoryComputeCostService {
+  private readonly redisClient: Redis;
+
+  /**
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {InventoryAverageCostMethodService} inventoryAverageCostMethod - Inventory average cost method.
+   * @param {RedisService} redisService - Redis service.
+   * @param {ClsService} clsService - Cls service.
+   * @param {Queue} computeItemCostProcessor - Compute item cost processor.
+   * @param {TenantModelProxy<typeof Item>} itemModel - Item model.
+   * @param {() => SettingsStore} settingsStore - Settings store.
+   */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly inventoryAverageCostMethod: InventoryAverageCostMethodService,
+    private readonly clsService: ClsService,
+    private readonly redisService: RedisService,
+
+    @InjectQueue(ComputeItemCostQueue)
+    private readonly computeItemCostProcessor: Queue,
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
 
     @Inject(SETTINGS_PROVIDER)
     private readonly settingsStore: () => SettingsStore,
-  ) {}
+  ) {
+    this.redisClient = this.redisService.getOrThrow();
+  }
 
   /**
    * Compute item cost.
@@ -67,63 +88,45 @@ export class InventoryComputeCostService {
 
   /**
    * Schedule item cost compute job.
-   * @param {number} tenantId
    * @param {number} itemId
    * @param {Date} startingDate
    */
-  async scheduleComputeItemCost(
-    itemId: number,
-    startingDate: Date | string,
-  ) {
-    // const agenda = Container.get('agenda');
-    // const commonJobsQuery = {
-    //   name: 'compute-item-cost',
-    //   lastRunAt: { $exists: false },
-    //   'data.tenantId': tenantId,
-    //   'data.itemId': itemId,
-    // };
-    // // Cancel any `compute-item-cost` in the queue has upper starting date
-    // // with the same given item.
-    // await agenda.cancel({
-    //   ...commonJobsQuery,
-    //   'data.startingDate': { $lte: startingDate },
-    // });
-    // // Retrieve any `compute-item-cost` in the queue has lower starting date
-    // // with the same given item.
-    // const dependsJobs = await agenda.jobs({
-    //   ...commonJobsQuery,
-    //   'data.startingDate': { $gte: startingDate },
-    // });
-    // // If the depends jobs cleared.
-    // if (dependsJobs.length === 0) {
-    //   await agenda.schedule(
-    //     this.config.get('inventory.scheduleComputeItemCost'),
-    //     'compute-item-cost',
-    //     {
-    //       startingDate,
-    //       itemId,
-    //       tenantId,
-    //     },
-    //   );
-    //   // Triggers `onComputeItemCostJobScheduled` event.
-    //   await this.eventEmitter.emitAsync(
-    //     events.inventory.onComputeItemCostJobScheduled,
-    //     {
-    //       startingDate,
-    //       itemId,
-    //       tenantId,
-    //     } as IInventoryItemCostScheduledPayload,
-    //   );
-    // } else {
-    //   // Re-schedule the jobs that have higher date from current moment.
-    //   await Promise.all(
-    //     dependsJobs.map((job) =>
-    //       job
-    //         .schedule(this.config.get('inventory.scheduleComputeItemCost'))
-    //         .save(),
-    //     ),
-    //   );
-    // }
+  async scheduleComputeItemCost(itemId: number, startingDate: Date | string) {
+    const debounceKey = `inventory-cost-compute-debounce:${itemId}`;
+    const debounceTime = 1000 * 60; // 1 minute
+
+    // Generate a unique job ID or use a custom identifier
+    const jobId = `task-${Date.now()}-${Math.random().toString(36).substring(2)}`;
+
+    // Check if there's an existing debounced job
+    const existingJobId = await this.redisClient.get(debounceKey);
+
+    if (existingJobId) {
+      // Attempt to remove or mark the previous job as skippable
+      const existingJob =
+        await this.computeItemCostProcessor.getJob(existingJobId);
+      const state = await existingJob?.getState();
+
+      if (existingJob && ['waiting', 'delayed'].includes(state)) {
+        await existingJob.remove(); // Remove the previous job if it's still waiting
+      }
+    }
+    const organizationId = this.clsService.get('organizationId');
+    const userId = this.clsService.get('userId');
+
+    // Add the new job with a delay (debounce period)
+    const job = await this.computeItemCostProcessor.add(
+      ComputeItemCostQueueJob,
+      { itemId, startingDate, jobId, organizationId, userId },
+      {
+        jobId, // Custom job ID
+        delay: debounceTime, // Delay execution by 1 minute
+      },
+    );
+    // Store the latest job ID in Redis with an expiration
+    await this.redisClient.set(debounceKey, jobId, 'PX', debounceTime);
+
+    return { jobId, message: 'Task added with debounce' };
   }
 
   /**

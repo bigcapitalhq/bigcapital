@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
@@ -55,6 +55,7 @@ import { SaleInvoiceWriteInventoryTransactionsSubscriber } from './subscribers/I
 import { SaleInvoiceCostGLEntries } from './SaleInvoiceCostGLEntries';
 import { InvoicePaymentsGLEntriesRewrite } from './InvoicePaymentsGLRewrite';
 import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.module';
+import { SaleInvoicesCost } from './SalesInvoicesCost';
 
 @Module({
   imports: [
@@ -70,7 +71,7 @@ import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.modu
     AccountsModule,
     MailModule,
     MailNotificationModule,
-    InventoryCostModule,
+    forwardRef(() => InventoryCostModule),
     DynamicListModule,
     BullModule.registerQueue({ name: SendSaleInvoiceQueue }),
   ],
@@ -115,8 +116,9 @@ import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.modu
     InvoiceCostGLEntriesSubscriber,
     InvoicePaymentGLRewriteSubscriber,
     SaleInvoiceWriteInventoryTransactionsSubscriber,
-    InvoicePaymentsGLEntriesRewrite
+    InvoicePaymentsGLEntriesRewrite,
+    SaleInvoicesCost,
   ],
-  exports: [GetSaleInvoice],
+  exports: [GetSaleInvoice, SaleInvoicesCost],
 })
 export class SaleInvoicesModule {}

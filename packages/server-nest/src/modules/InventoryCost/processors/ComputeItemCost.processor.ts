@@ -6,14 +6,18 @@ import { ClsService } from 'nestjs-cls';
 import { TenantJobPayload } from '@/interfaces/Tenant';
 import { InventoryComputeCostService } from '../commands/InventoryComputeCost.service';
 import { events } from '@/common/events/events';
-import { ComputeItemCostQueueJob } from '../types/InventoryCost.types';
+import {
+  ComputeItemCostQueue,
+  ComputeItemCostQueueJob,
+} from '../types/InventoryCost.types';
+import { Process } from '@nestjs/bull';
 
 interface ComputeItemCostJobPayload extends TenantJobPayload {
   itemId: number;
   startingDate: Date;
 }
 @Processor({
-  name: ComputeItemCostQueueJob,
+  name: ComputeItemCostQueue,
   scope: Scope.REQUEST,
 })
 export class ComputeItemCostProcessor extends WorkerHost {
@@ -34,8 +38,11 @@ export class ComputeItemCostProcessor extends WorkerHost {
    * Process the compute item cost job.
    * @param {Job<ComputeItemCostJobPayload>} job - The job to process
    */
+  @Process(ComputeItemCostQueueJob)
   async process(job: Job<ComputeItemCostJobPayload>) {
     const { itemId, startingDate, organizationId, userId } = job.data;
+
+    console.log(`Compute item cost for item ${itemId} started`);
 
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);
@@ -50,6 +57,8 @@ export class ComputeItemCostProcessor extends WorkerHost {
         events.inventory.onComputeItemCostJobCompleted,
         { startingDate, itemId, organizationId, userId },
       );
+
+      console.log(`Compute item cost for item ${itemId} completed`);
     } catch (error) {
       console.error('Error computing item cost:', error);
       throw error;

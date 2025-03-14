@@ -92,7 +92,7 @@ export class InventoryItemsQuantitySyncService {
       const changeQuantityOper = this.itemModel()
         .query(trx)
         .where({ id: itemQuantity.itemId, type: 'inventory' })
-        .modify('quantityOnHand', itemQuantity.balanceChange);
+        .modify('updateQuantityOnHand', itemQuantity.balanceChange);
 
       opers.push(changeQuantityOper);
     });

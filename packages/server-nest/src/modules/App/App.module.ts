@@ -71,6 +71,7 @@ import { StripePaymentModule } from '../StripePayment/StripePayment.module';
 import { FeaturesModule } from '../Features/Features.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { WarehousesTransfersModule } from '../WarehousesTransfers/WarehouseTransfers.module';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 @Module({
   imports: [
@@ -123,6 +124,16 @@ import { WarehousesTransfersModule } from '../WarehousesTransfers/WarehouseTrans
         generateId: true,
         saveReq: true,
       },
+    }),
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        config: {
+          host: configService.get('redis.host') || 'localhost',
+          port: configService.get('redis.port') || 6379,
+        },
+      }),
+      inject: [ConfigService],
     }),
     TenancyDatabaseModule,
     TenancyModelsModule,
