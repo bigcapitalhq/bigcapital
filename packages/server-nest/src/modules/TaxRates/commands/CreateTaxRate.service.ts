@@ -11,6 +11,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateTaxRateDto } from '../dtos/TaxRate.dto';
 
 @Injectable()
 export class CreateTaxRate {
@@ -34,7 +35,7 @@ export class CreateTaxRate {
    * @param {ICreateTaxRateDTO} createTaxRateDTO
    */
   public async createTaxRate(
-    createTaxRateDTO: ICreateTaxRateDTO,
+    createTaxRateDTO: CreateTaxRateDto,
     trx?: Knex.Transaction,
   ) {
     // Validates the tax code uniquiness.

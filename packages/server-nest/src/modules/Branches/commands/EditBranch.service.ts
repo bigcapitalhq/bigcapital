@@ -1,15 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import {
-  IBranchEditedPayload,
-  IBranchEditPayload,
-  IEditBranchDTO,
-} from '../Branches.types';
+import { IBranchEditedPayload, IBranchEditPayload } from '../Branches.types';
 import { Branch } from '../models/Branch.model';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditBranchDto } from '../dtos/Branch.dto';
 
 @Injectable()
 export class EditBranchService {
@@ -27,7 +24,7 @@ export class EditBranchService {
    */
   public editBranch = async (
     branchId: number,
-    editBranchDTO: IEditBranchDTO,
+    editBranchDTO: EditBranchDto,
   ) => {
     // Retrieves the old branch or throw not found service error.
     const oldBranch = await this.branchModel()

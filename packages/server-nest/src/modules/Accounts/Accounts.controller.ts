@@ -14,8 +14,6 @@ import { EditAccountDTO } from './EditAccount.dto';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-// import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
-// import { ZodValidationPipe } from '@/common/pipes/ZodValidation.pipe';
 
 @Controller('accounts')
 @ApiTags('accounts')

@@ -12,6 +12,7 @@ import { GetBranchesService } from './queries/GetBranches.service';
 import { MarkBranchAsPrimaryService } from './commands/MarkBranchAsPrimary.service';
 import { Branch } from './models/Branch.model';
 import { Injectable } from '@nestjs/common';
+import { CreateBranchDto, EditBranchDto } from './dtos/Branch.dto';
 
 @Injectable()
 export class BranchesApplication {
@@ -27,8 +28,7 @@ export class BranchesApplication {
 
   /**
    * Retrieves branches list.
-   * @param   {number} tenantId
-   * @returns {IBranch}
+   * @returns {Branch[]}
    */
   public getBranches = (): Promise<Branch[]> => {
     return this.getBranchesService.getBranches();
@@ -50,7 +50,7 @@ export class BranchesApplication {
    * @returns {Promise<IBranch>}
    */
   public createBranch = (
-    createBranchDTO: ICreateBranchDTO,
+    createBranchDTO: CreateBranchDto,
   ): Promise<Branch> => {
     return this.createBranchService.createBranch(createBranchDTO);
   };
@@ -63,7 +63,7 @@ export class BranchesApplication {
    */
   public editBranch = (
     branchId: number,
-    editBranchDTO: IEditBranchDTO,
+    editBranchDTO: EditBranchDto,
   ): Promise<Branch> => {
     return this.editBranchService.editBranch(branchId, editBranchDTO);
   };

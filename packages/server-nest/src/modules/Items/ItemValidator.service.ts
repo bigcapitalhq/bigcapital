@@ -5,7 +5,6 @@ import {
   ACCOUNT_TYPE,
 } from '@/constants/accounts';
 import { ServiceError } from './ServiceError';
-import { IItemDTO } from '@/interfaces/Item';
 import { ERRORS } from './Items.constants';
 import { Item } from './models/Item';
 import { Account } from '../Accounts/models/Account.model';
@@ -15,6 +14,7 @@ import { ItemCategory } from '../ItemCategories/models/ItemCategory.model';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
 import { InventoryAdjustment } from '../InventoryAdjutments/models/InventoryAdjustment';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 
 @Injectable()
 export class ItemsValidators {
@@ -229,7 +229,7 @@ export class ItemsValidators {
    */
   public async validateEditItemTypeToInventory(
     oldItem: Item,
-    newItemDTO: IItemDTO,
+    newItemDTO: CreateItemDto | EditItemDto,
   ) {
     // We have no problem in case the item type not modified.
     if (newItemDTO.type === oldItem.type || oldItem.type === 'inventory') {
@@ -254,12 +254,12 @@ export class ItemsValidators {
    * Validate the item inventory account whether modified and item
    * has associated inventory transactions.
    * @param {Item} oldItem - Old item.
-   * @param {IItemDTO} newItemDTO - New item DTO.
+   * @param {CreateItemDto | EditItemDto} newItemDTO - New item DTO.
    * @returns {Promise<void>}
    */
   async validateItemInvnetoryAccountModified(
     oldItem: Item,
-    newItemDTO: IItemDTO,
+    newItemDTO: CreateItemDto | EditItemDto,
   ) {
     if (
       newItemDTO.type !== 'inventory' ||
@@ -279,10 +279,13 @@ export class ItemsValidators {
 
   /**
    * Validate edit item type from inventory to another type that not allowed.
-   * @param {IItemDTO} itemDTO - Item DTO.
+   * @param {CreateItemDto | EditItemDto} itemDTO - Item DTO.
    * @param {IItem} oldItem - Old item.
    */
-  public validateEditItemFromInventory(itemDTO: IItemDTO, oldItem: Item) {
+  public validateEditItemFromInventory(
+    itemDTO: CreateItemDto | EditItemDto,
+    oldItem: Item,
+  ) {
     if (
       itemDTO.type &&
       oldItem.type === 'inventory' &&

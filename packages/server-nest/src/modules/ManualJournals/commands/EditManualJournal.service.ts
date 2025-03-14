@@ -13,6 +13,7 @@ import { CommandManualJournalValidators } from './CommandManualJournalValidators
 import { events } from '@/common/events/events';
 import { ManualJournal } from '../models/ManualJournal';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditManualJournalDto } from '../dtos/ManualJournal.dto';
 
 @Injectable()
 export class EditManualJournal {
@@ -32,7 +33,7 @@ export class EditManualJournal {
    */
   private authorize = async (
     manualJournalId: number,
-    manualJournalDTO: IManualJournalDTO,
+    manualJournalDTO: EditManualJournalDto,
   ) => {
     // Validates the total credit and debit to be equals.
     this.validator.valdiateCreditDebitTotalEquals(manualJournalDTO);
@@ -62,7 +63,7 @@ export class EditManualJournal {
    * @param {IManualJournal} oldManualJournal
    */
   private transformEditDTOToModel = (
-    manualJournalDTO: IManualJournalDTO,
+    manualJournalDTO: EditManualJournalDto,
     oldManualJournal: ManualJournal,
   ) => {
     const amount = sumBy(manualJournalDTO.entries, 'credit') || 0;
@@ -86,7 +87,7 @@ export class EditManualJournal {
    */
   public async editJournalEntries(
     manualJournalId: number,
-    manualJournalDTO: IManualJournalDTO,
+    manualJournalDTO: EditManualJournalDto,
   ): Promise<{
     manualJournal: ManualJournal;
     oldManualJournal: ManualJournal;

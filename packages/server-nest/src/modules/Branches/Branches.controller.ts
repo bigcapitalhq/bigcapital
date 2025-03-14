@@ -8,7 +8,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { BranchesApplication } from './BranchesApplication.service';
-import { ICreateBranchDTO, IEditBranchDTO } from './Branches.types';
+import { CreateBranchDto, EditBranchDto } from './dtos/Branch.dto';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -46,7 +46,7 @@ export class BranchesController {
     description: 'The branch has been successfully created.',
   })
   @ApiResponse({ status: 404, description: 'The branch not found.' })
-  createBranch(@Body() createBranchDTO: ICreateBranchDTO) {
+  createBranch(@Body() createBranchDTO: CreateBranchDto) {
     return this.branchesApplication.createBranch(createBranchDTO);
   }
 
@@ -57,7 +57,7 @@ export class BranchesController {
     description: 'The branch has been successfully edited.',
   })
   @ApiResponse({ status: 404, description: 'The branch not found.' })
-  editBranch(@Param('id') id: string, @Body() editBranchDTO: IEditBranchDTO) {
+  editBranch(@Param('id') id: string, @Body() editBranchDTO: EditBranchDto) {
     return this.branchesApplication.editBranch(Number(id), editBranchDTO);
   }
 

@@ -2,12 +2,11 @@ import { CreateTaxRate } from './commands/CreateTaxRate.service';
 import { DeleteTaxRateService } from './commands/DeleteTaxRate.service';
 import { EditTaxRateService } from './commands/EditTaxRate.service';
 import { GetTaxRateService } from './queries/GetTaxRate.service';
-// import { GetTaxRatesService } from './queries/GetTaxRates';
 import { ActivateTaxRateService } from './commands/ActivateTaxRate.service';
 import { InactivateTaxRateService } from './commands/InactivateTaxRate';
 import { Injectable } from '@nestjs/common';
-import { ICreateTaxRateDTO, IEditTaxRateDTO } from './TaxRates.types';
 import { GetTaxRatesService } from './queries/GetTaxRates.service';
+import { CreateTaxRateDto, EditTaxRateDto } from './dtos/TaxRate.dto';
 
 @Injectable()
 export class TaxRatesApplication {
@@ -26,7 +25,7 @@ export class TaxRatesApplication {
    * @param {ICreateTaxRateDTO} createTaxRateDTO
    * @returns {Promise<ITaxRate>}
    */
-  public createTaxRate(createTaxRateDTO: ICreateTaxRateDTO) {
+  public createTaxRate(createTaxRateDTO: CreateTaxRateDto) {
     return this.createTaxRateService.createTaxRate(createTaxRateDTO);
   }
 
@@ -37,7 +36,7 @@ export class TaxRatesApplication {
    * @param {IEditTaxRateDTO} taxRateEditDTO
    * @returns {Promise<ITaxRate>}
    */
-  public editTaxRate(taxRateId: number, editTaxRateDTO: IEditTaxRateDTO) {
+  public editTaxRate(taxRateId: number, editTaxRateDTO: EditTaxRateDto) {
     return this.editTaxRateService.editTaxRate(taxRateId, editTaxRateDTO);
   }
 

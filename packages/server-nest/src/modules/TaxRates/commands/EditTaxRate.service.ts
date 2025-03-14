@@ -12,6 +12,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditTaxRateDto } from '../dtos/TaxRate.dto';
 
 @Injectable()
 export class EditTaxRateService {
@@ -38,7 +39,7 @@ export class EditTaxRateService {
    */
   private isTaxRateDTOChanged = (
     taxRate: TaxRateModel,
-    editTaxRateDTO: IEditTaxRateDTO,
+    editTaxRateDTO: EditTaxRateDto,
   ) => {
     return (
       taxRate.rate !== editTaxRateDTO.rate ||
@@ -57,7 +58,7 @@ export class EditTaxRateService {
    */
   private async editTaxRateOrCreate(
     oldTaxRate: TaxRateModel,
-    editTaxRateDTO: IEditTaxRateDTO,
+    editTaxRateDTO: EditTaxRateDto,
     trx?: Knex.Transaction,
   ) {
     const isTaxDTOChanged = this.isTaxRateDTOChanged(
@@ -90,7 +91,7 @@ export class EditTaxRateService {
    * @param {IEditTaxRateDTO} editTaxRateDTO - The tax rate data to edit.
    * @returns {Promise<ITaxRate>}
    */
-  public async editTaxRate(taxRateId: number, editTaxRateDTO: IEditTaxRateDTO) {
+  public async editTaxRate(taxRateId: number, editTaxRateDTO: EditTaxRateDto) {
     const oldTaxRate = await this.taxRateModel().query().findById(taxRateId);
 
     // Validates the tax rate existance.

@@ -8,9 +8,9 @@ import {
   Put,
 } from '@nestjs/common';
 import { TaxRatesApplication } from './TaxRate.application';
-import { ICreateTaxRateDTO, IEditTaxRateDTO } from './TaxRates.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateTaxRateDto, EditTaxRateDto } from './dtos/TaxRate.dto';
 
 @Controller('tax-rates')
 @ApiTags('tax-rates')
@@ -20,7 +20,7 @@ export class TaxRatesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new tax rate.' })
-  public createTaxRate(@Body() createTaxRateDTO: ICreateTaxRateDTO) {
+  public createTaxRate(@Body() createTaxRateDTO: CreateTaxRateDto) {
     return this.taxRatesApplication.createTaxRate(createTaxRateDTO);
   }
 
@@ -28,7 +28,7 @@ export class TaxRatesController {
   @ApiOperation({ summary: 'Edit the given tax rate.' })
   public editTaxRate(
     @Param('id') taxRateId: number,
-    @Body() editTaxRateDTO: IEditTaxRateDTO,
+    @Body() editTaxRateDTO: EditTaxRateDto,
   ) {
     return this.taxRatesApplication.editTaxRate(taxRateId, editTaxRateDTO);
   }

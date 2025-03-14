@@ -11,6 +11,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateWarehouseDto } from '../dtos/Warehouse.dto';
 
 @Injectable()
 export class CreateWarehouse {
@@ -33,7 +34,7 @@ export class CreateWarehouse {
    * Authorize the warehouse before creating.
    * @param {ICreateWarehouseDTO} warehouseDTO -
    */
-  public authorize = async (warehouseDTO: ICreateWarehouseDTO) => {
+  public authorize = async (warehouseDTO: CreateWarehouseDto) => {
     if (warehouseDTO.code) {
       await this.validator.validateWarehouseCodeUnique(warehouseDTO.code);
     }
@@ -44,7 +45,7 @@ export class CreateWarehouse {
    * @param {ICreateWarehouseDTO} warehouseDTO
    */
   public createWarehouse = async (
-    warehouseDTO: ICreateWarehouseDTO,
+    warehouseDTO: CreateWarehouseDto,
   ): Promise<Warehouse> => {
     // Authorize warehouse before creating.
     await this.authorize(warehouseDTO);

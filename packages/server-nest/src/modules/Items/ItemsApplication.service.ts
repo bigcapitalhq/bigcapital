@@ -11,6 +11,7 @@ import { ItemTransactionsService } from './ItemTransactions.service';
 import { Injectable } from '@nestjs/common';
 import { GetItemsService } from './GetItems.service';
 import { IItemsFilter } from './types/Items.types';
+import { EditItemDto, CreateItemDto } from './dtos/Item.dto';
 
 @Injectable()
 export class ItemsApplicationService {
@@ -32,7 +33,7 @@ export class ItemsApplicationService {
    * @return {Promise<number>} - The created item id.
    */
   async createItem(
-    createItemDto: IItemDTO,
+    createItemDto: CreateItemDto,
     trx?: Knex.Transaction,
   ): Promise<number> {
     return this.createItemService.createItem(createItemDto);
@@ -47,7 +48,7 @@ export class ItemsApplicationService {
    */
   async editItem(
     itemId: number,
-    editItemDto: IItemDTO,
+    editItemDto: EditItemDto,
     trx?: Knex.Transaction,
   ): Promise<number> {
     return this.editItemService.editItem(itemId, editItemDto, trx);

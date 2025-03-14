@@ -7,6 +7,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Warehouse } from '../models/Warehouse.model';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditWarehouseDto } from '../dtos/Warehouse.dto';
 
 @Injectable()
 export class EditWarehouse {
@@ -29,7 +30,7 @@ export class EditWarehouse {
    * Authorize the warehouse before deleting.
    */
   public authorize = async (
-    warehouseDTO: IEditWarehouseDTO,
+    warehouseDTO: EditWarehouseDto,
     warehouseId: number,
   ) => {
     if (warehouseDTO.code) {
@@ -47,7 +48,7 @@ export class EditWarehouse {
    */
   public editWarehouse = async (
     warehouseId: number,
-    warehouseDTO: IEditWarehouseDTO,
+    warehouseDTO: EditWarehouseDto,
   ): Promise<Warehouse> => {
     // Authorize the warehouse DTO before editing.
     await this.authorize(warehouseDTO, warehouseId);

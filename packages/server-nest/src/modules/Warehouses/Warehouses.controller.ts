@@ -11,6 +11,7 @@ import { WarehousesApplication } from './WarehousesApplication.service';
 import { ICreateWarehouseDTO, IEditWarehouseDTO } from './Warehouse.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateWarehouseDto, EditWarehouseDto } from './dtos/Warehouse.dto';
 
 @Controller('warehouses')
 @ApiTags('warehouses')
@@ -20,14 +21,14 @@ export class WarehousesController {
 
   @Post()
   @ApiOperation({ summary: 'Create a warehouse' })
-  createWarehouse(@Body() createWarehouseDTO: ICreateWarehouseDTO) {
+  createWarehouse(@Body() createWarehouseDTO: CreateWarehouseDto) {
     return this.warehousesApplication.createWarehouse(createWarehouseDTO);
   }
 
   @Put(':id')
   editWarehouse(
     @Param('id') warehouseId: string,
-    @Body() editWarehouseDTO: IEditWarehouseDTO,
+    @Body() editWarehouseDTO: EditWarehouseDto,
   ) {
     return this.warehousesApplication.editWarehouse(
       Number(warehouseId),

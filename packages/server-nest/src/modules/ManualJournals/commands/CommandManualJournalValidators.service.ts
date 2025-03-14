@@ -1,15 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { difference, isEmpty, round, sumBy } from 'lodash';
-import {
-  IManualJournalDTO,
-  IManualJournalEntryDTO,
-} from '../types/ManualJournals.types';
 import { ERRORS } from '../constants';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ManualJournal } from '../models/ManualJournal';
 import { Contact } from '@/modules/Contacts/models/Contact';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import {
+  CreateManualJournalDto,
+  EditManualJournalDto,
+  ManualJournalEntryDto,
+} from '../dtos/ManualJournal.dto';
 
 @Injectable()
 export class CommandManualJournalValidators {
@@ -26,9 +27,11 @@ export class CommandManualJournalValidators {
 
   /**
    * Validate manual journal credit and debit should be equal.
-   * @param {IManualJournalDTO} manualJournalDTO
+   * @param {CreateManualJournalDto | EditManualJournalDto} manualJournalDTO
    */
-  public valdiateCreditDebitTotalEquals(manualJournalDTO: IManualJournalDTO) {
+  public valdiateCreditDebitTotalEquals(
+    manualJournalDTO: CreateManualJournalDto | EditManualJournalDto,
+  ) {
     const totalCredit = round(
       sumBy(manualJournalDTO.entries, (entry) => entry.credit || 0),
       2,
@@ -48,9 +51,11 @@ export class CommandManualJournalValidators {
   /**
    * Validate manual entries accounts existance on the storage.
    * @param {number} tenantId -
-   * @param {IManualJournalDTO} manualJournalDTO -
+   * @param {CreateManualJournalDto | EditManualJournalDto} manualJournalDTO -
    */
-  public async validateAccountsExistance(manualJournalDTO: IManualJournalDTO) {
+  public async validateAccountsExistance(
+    manualJournalDTO: CreateManualJournalDto | EditManualJournalDto,
+  ) {
     const manualAccountsIds = manualJournalDTO.entries.map((e) => e.accountId);
     const accounts = await this.accountModel()
       .query()
@@ -66,7 +71,7 @@ export class CommandManualJournalValidators {
   /**
    * Validate manual journal number unique.
    * @param {number} tenantId
-   * @param {IManualJournalDTO} manualJournalDTO
+   * @param {CreateManualJournalDto | EditManualJournalDto} manualJournalDTO
    */
   public async validateManualJournalNoUnique(
     journalNumber: string,
@@ -91,12 +96,12 @@ export class CommandManualJournalValidators {
   /**
    * Validate accounts with contact type.
    * @param {number} tenantId
-   * @param {IManualJournalDTO} manualJournalDTO
+   * @param {CreateManualJournalDto | EditManualJournalDto} manualJournalDTO
    * @param {string} accountBySlug
    * @param {string} contactType
    */
   public async validateAccountWithContactType(
-    entriesDTO: IManualJournalEntryDTO[],
+    entriesDTO: ManualJournalEntryDto[],
     accountBySlug: string,
     contactType: string,
   ): Promise<void | ServiceError> {
@@ -147,10 +152,10 @@ export class CommandManualJournalValidators {
   /**
    * Dynamic validates accounts with contacts.
    * @param {number} tenantId
-   * @param {IManualJournalDTO} manualJournalDTO
+   * @param {CreateManualJournalDto | EditManualJournalDto} manualJournalDTO
    */
   public async dynamicValidateAccountsWithContactType(
-    entriesDTO: IManualJournalEntryDTO[],
+    entriesDTO: ManualJournalEntryDto[],
   ): Promise<any> {
     return Promise.all([
       this.validateAccountWithContactType(
@@ -182,9 +187,11 @@ export class CommandManualJournalValidators {
 
   /**
    * Validate entries contacts existance.
-   * @param {IManualJournalDTO} manualJournalDTO
+   * @param {CreateManualJournalDto | EditManualJournalDto} manualJournalDTO
    */
-  public async validateContactsExistance(manualJournalDTO: IManualJournalDTO) {
+  public async validateContactsExistance(
+    manualJournalDTO: CreateManualJournalDto | EditManualJournalDto,
+  ) {
     // Filters the entries that have contact only.
     const entriesContactPairs = manualJournalDTO.entries.filter(
       (entry) => entry.contactId,
@@ -268,10 +275,10 @@ export class CommandManualJournalValidators {
 
   /**
    *
-   * @param {IManualJournalDTO} manualJournalDTO
+   * @param {CreateManualJournalDto | EditManualJournalDto} manualJournalDTO
    */
   public validateJournalCurrencyWithAccountsCurrency = async (
-    manualJournalDTO: IManualJournalDTO,
+    manualJournalDTO: CreateManualJournalDto | EditManualJournalDto,
     baseCurrency: string,
   ) => {
     const accountsIds = manualJournalDTO.entries.map((e) => e.accountId);

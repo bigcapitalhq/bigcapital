@@ -7,6 +7,7 @@ import { ItemsValidators } from './ItemValidator.service';
 import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { EditItemDto } from './dtos/Item.dto';
 
 @Injectable()
 export class EditItemService {
@@ -31,7 +32,7 @@ export class EditItemService {
    * @param {IItemDTO} itemDTO
    * @param {Item} oldItem
    */
-  async authorize(itemDTO: IItemDTO, oldItem: Item) {
+  async authorize(itemDTO: EditItemDto, oldItem: Item) {
     // Validate edit item type from inventory type.
     this.validators.validateEditItemFromInventory(itemDTO, oldItem);
 
@@ -86,7 +87,7 @@ export class EditItemService {
    * @return {Partial<Item>}
    */
   private transformEditItemDTOToModel(
-    itemDTO: IItemDTO,
+    itemDTO: EditItemDto,
     oldItem: Item,
   ): Partial<Item> {
     return {
@@ -107,7 +108,7 @@ export class EditItemService {
    */
   public async editItem(
     itemId: number,
-    itemDTO: IItemDTO,
+    itemDTO: EditItemDto,
     trx?: Knex.Transaction,
   ): Promise<number> {
     // Validates the given item existance on the storage.

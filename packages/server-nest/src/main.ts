@@ -4,6 +4,7 @@ import { ClsMiddleware } from 'nestjs-cls';
 import './utils/moment-mysql';
 import { AppModule } from './modules/App/App.module';
 import { ServiceErrorFilter } from './common/filters/service-error.filter';
+import { ValidationPipe } from './common/pipes/ClassValidation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,9 @@ async function bootstrap() {
 
   // create and mount the middleware manually here
   app.use(new ClsMiddleware({}).use);
+
+  // use the validation pipe globally
+  app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
     .setTitle('Bigcapital')

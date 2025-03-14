@@ -18,6 +18,7 @@ import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-ind
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ManualJournalBranchesDTOTransformer } from '@/modules/Branches/integrations/ManualJournals/ManualJournalDTOTransformer.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateManualJournalDto } from '../dtos/ManualJournal.dto';
 
 @Injectable()
 export class CreateManualJournalService {
@@ -39,7 +40,7 @@ export class CreateManualJournalService {
    * @returns {Promise<ManualJournal>}
    */
   private async transformNewDTOToModel(
-    manualJournalDTO: IManualJournalDTO,
+    manualJournalDTO: CreateManualJournalDto,
   ): Promise<ManualJournal> {
     const amount = sumBy(manualJournalDTO.entries, 'credit') || 0;
     const date = moment(manualJournalDTO.date).format('YYYY-MM-DD');
@@ -84,7 +85,7 @@ export class CreateManualJournalService {
    * @param {IManualJournalDTO} manualJournalDTO
    * @param {ISystemUser} authorizedUser
    */
-  private authorize = async (manualJournalDTO: IManualJournalDTO) => {
+  private authorize = async (manualJournalDTO: CreateManualJournalDto) => {
     const tenant = await this.tenancyContext.getTenant(true);
 
     // Validate the total credit should equals debit.
@@ -124,7 +125,7 @@ export class CreateManualJournalService {
    * @param {ISystemUser} authorizedUser
    */
   public makeJournalEntries = async (
-    manualJournalDTO: IManualJournalDTO,
+    manualJournalDTO: CreateManualJournalDto,
     trx?: Knex.Transaction,
   ): Promise<ManualJournal> => {
     // Authorize manual journal creating.

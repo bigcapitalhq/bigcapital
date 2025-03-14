@@ -1,6 +1,4 @@
 import {
-  ICreateWarehouseDTO,
-  IEditWarehouseDTO,
   IWarehouse,
 } from './Warehouse.types';
 import { ActivateWarehousesService } from './commands/ActivateWarehouses.service';
@@ -12,6 +10,7 @@ import { GetWarehouses } from './queries/GetWarehouses';
 import { GetItemWarehouses } from './Items/GetItemWarehouses';
 import { WarehouseMarkPrimary } from './commands/WarehouseMarkPrimary.service';
 import { Injectable } from '@nestjs/common';
+import { CreateWarehouseDto, EditWarehouseDto } from './dtos/Warehouse.dto';
 
 @Injectable()
 export class WarehousesApplication {
@@ -31,20 +30,19 @@ export class WarehousesApplication {
    * @param {ICreateWarehouseDTO} createWarehouseDTO
    * @returns {Promise<IWarehouse>}
    */
-  public createWarehouse = (createWarehouseDTO: ICreateWarehouseDTO) => {
+  public createWarehouse = (createWarehouseDTO: CreateWarehouseDto) => {
     return this.createWarehouseService.createWarehouse(createWarehouseDTO);
   };
 
   /**
    * Edits the given warehouse.
-   * @param   {number} tenantId
-   * @param   {number} warehouseId
-   * @param   {IEditWarehouseDTO} editWarehouseDTO
+   * @param {number} warehouseId
+   * @param {EditWarehouseDto} editWarehouseDTO
    * @returns {Promise<void>}
    */
   public editWarehouse = (
     warehouseId: number,
-    editWarehouseDTO: IEditWarehouseDTO,
+    editWarehouseDTO: EditWarehouseDto,
   ) => {
     return this.editWarehouseService.editWarehouse(
       warehouseId,
@@ -54,7 +52,6 @@ export class WarehousesApplication {
 
   /**
    * Deletes the given warehouse.
-   * @param {number} tenantId
    * @param {number} warehouseId
    */
   public deleteWarehouse = (warehouseId: number) => {
@@ -63,7 +60,7 @@ export class WarehousesApplication {
 
   /**
    * Retrieves the specific warehouse.
-   * @param   {number} warehouseId
+   * @param {number} warehouseId
    * @returns
    */
   public getWarehouse = (warehouseId: number) => {
@@ -71,9 +68,8 @@ export class WarehousesApplication {
   };
 
   /**
-   *
-   * @param   {number} tenantId
-   * @returns
+   * Retrieves the warehouses list.
+   * @returns {Promise<IWarehouse[]>}
    */
   public getWarehouses = () => {
     return this.getWarehousesService.getWarehouses();

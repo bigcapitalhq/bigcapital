@@ -5,6 +5,7 @@ import { PublishManualJournal } from './commands/PublishManualJournal.service';
 import { GetManualJournal } from './queries/GetManualJournal.service';
 import { DeleteManualJournalService } from './commands/DeleteManualJournal.service';
 import { IManualJournalDTO,  } from './types/ManualJournals.types';
+import { CreateManualJournalDto, EditManualJournalDto } from './dtos/ManualJournal.dto';
 // import { GetManualJournals } from './queries/GetManualJournals';
 
 @Injectable()
@@ -24,7 +25,7 @@ export class ManualJournalsApplication {
    * @param {IManualJournalDTO} manualJournalDTO
    * @returns {Promise<IManualJournal>}
    */
-  public createManualJournal = (manualJournalDTO: IManualJournalDTO) => {
+  public createManualJournal = (manualJournalDTO: CreateManualJournalDto) => {
     return this.createManualJournalService.makeJournalEntries(manualJournalDTO);
   };
 
@@ -35,7 +36,7 @@ export class ManualJournalsApplication {
    */
   public editManualJournal = (
     manualJournalId: number,
-    manualJournalDTO: IManualJournalDTO,
+    manualJournalDTO: EditManualJournalDto,
   ) => {
     return this.editManualJournalService.editJournalEntries(
       manualJournalId,

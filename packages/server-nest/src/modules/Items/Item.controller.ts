@@ -23,6 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { IItemsFilter } from './types/Items.types';
 import { IItemDTO } from '@/interfaces/Item';
+import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 
 @Controller('/items')
 @UseGuards(SubscriptionGuard)
@@ -120,7 +121,7 @@ export class ItemsController extends TenantController {
   // @UsePipes(new ZodValidationPipe(createItemSchema))
   async editItem(
     @Param('id') id: string,
-    @Body() editItemDto: IItemDTO,
+    @Body() editItemDto: EditItemDto,
   ): Promise<number> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.editItem(itemId, editItemDto);
@@ -138,7 +139,7 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully created.',
   })
   // @UsePipes(new ZodValidationPipe(createItemSchema))
-  async createItem(@Body() createItemDto: IItemDTO): Promise<number> {
+  async createItem(@Body() createItemDto: CreateItemDto): Promise<number> {
     return this.itemsApplication.createItem(createItemDto);
   }
 
@@ -182,8 +183,6 @@ export class ItemsController extends TenantController {
     description: 'The item id',
   })
   async inactivateItem(@Param('id') id: string): Promise<void> {
-    console.log(id, 'XXXXXX');
-
     const itemId = parseInt(id, 10);
     return this.itemsApplication.inactivateItem(itemId);
   }
@@ -243,7 +242,8 @@ export class ItemsController extends TenantController {
   })
   @ApiResponse({
     status: 200,
-    description: 'The item associated invoices transactions have been successfully retrieved.',
+    description:
+      'The item associated invoices transactions have been successfully retrieved.',
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
   @ApiParam({

@@ -8,6 +8,7 @@ import { ItemsValidators } from './ItemValidator.service';
 import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { CreateItemDto } from './dtos/Item.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CreateItemService {
@@ -32,7 +33,7 @@ export class CreateItemService {
    * @param {number} tenantId
    * @param {IItemDTO} itemDTO
    */
-  async authorize(itemDTO: IItemDTO) {
+  async authorize(itemDTO: CreateItemDto) {
     // Validate whether the given item name already exists on the storage.
     await this.validators.validateItemNameUniquiness(itemDTO.name);
 
@@ -76,10 +77,10 @@ export class CreateItemService {
 
   /**
    * Transforms the item DTO to model.
-   * @param {IItemDTO} itemDTO - Item DTO.
+   * @param {CreateItemDto} itemDTO - Item DTO.
    * @return {IItem}
    */
-  private transformNewItemDTOToModel(itemDTO: IItemDTO) {
+  private transformNewItemDTOToModel(itemDTO: CreateItemDto) {
     return {
       ...itemDTO,
       active: defaultTo(itemDTO.active, 1),
@@ -93,7 +94,7 @@ export class CreateItemService {
    * @return {Promise<number>} - The created item id.
    */
   public async createItem(
-    itemDTO: IItemDTO,
+    itemDTO: CreateItemDto,
     trx?: Knex.Transaction,
   ): Promise<number> {
     // Authorize the item before creating.
