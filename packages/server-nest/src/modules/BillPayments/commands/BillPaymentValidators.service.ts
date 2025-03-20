@@ -1,9 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { sumBy, difference } from 'lodash';
-import {
-  IBillPaymentDTO,
-  IBillPaymentEntryDTO,
-} from '../types/BillPayments.types';
 import { ERRORS } from '../constants';
 import { Bill } from '../../Bills/models/Bill';
 import { BillPayment } from '../models/BillPayment';
@@ -12,6 +8,10 @@ import { ServiceError } from '../../Items/ServiceError';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
 import { Account } from '../../Accounts/models/Account.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import {
+  BillPaymentEntryDto,
+  EditBillPaymentDto,
+} from '../dtos/BillPayment.dto';
 
 @Injectable()
 export class BillPaymentValidators {
@@ -141,11 +141,11 @@ export class BillPaymentValidators {
    * @return {void}
    */
   public async validateBillsDueAmount(
-    billPaymentEntries: IBillPaymentEntryDTO[],
+    billPaymentEntries: BillPaymentEntryDto[],
     oldPaymentEntries: BillPaymentEntry[] = [],
   ) {
     const billsIds = billPaymentEntries.map(
-      (entry: IBillPaymentEntryDTO) => entry.billId,
+      (entry: BillPaymentEntryDto) => entry.billId,
     );
 
     const storedBills = await this.billModel().query().whereIn('id', billsIds);
@@ -168,7 +168,7 @@ export class BillPaymentValidators {
     }
     const hasWrongPaymentAmount: invalidPaymentAmountError[] = [];
 
-    billPaymentEntries.forEach((entry: IBillPaymentEntryDTO, index: number) => {
+    billPaymentEntries.forEach((entry: BillPaymentEntryDto, index: number) => {
       const entryBill = storedBillsMap.get(entry.billId);
       const { dueAmount } = entryBill;
 
@@ -212,7 +212,7 @@ export class BillPaymentValidators {
    * @param {string} billPaymentNo
    */
   public validateVendorNotModified(
-    billPaymentDTO: IBillPaymentDTO,
+    billPaymentDTO: EditBillPaymentDto,
     oldBillPayment: BillPayment,
   ) {
     if (billPaymentDTO.vendorId !== oldBillPayment.vendorId) {

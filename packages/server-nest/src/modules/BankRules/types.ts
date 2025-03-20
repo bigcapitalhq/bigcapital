@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 import { BankRule } from './models/BankRule';
+import { CreateBankRuleDto, EditBankRuleDto } from './dtos/BankRule.dto';
 
 export enum BankRuleConditionField {
   Amount = 'amount',
@@ -94,11 +95,11 @@ export interface ICreateBankRuleDTO extends IBankRuleCommonDTO {}
 export interface IEditBankRuleDTO extends IBankRuleCommonDTO {}
 
 export interface IBankRuleEventCreatingPayload {
-  createRuleDTO: ICreateBankRuleDTO;
+  createRuleDTO: CreateBankRuleDto;
   trx?: Knex.Transaction;
 }
 export interface IBankRuleEventCreatedPayload {
-  createRuleDTO: ICreateBankRuleDTO;
+  createRuleDTO: CreateBankRuleDto;
   bankRule: BankRule;
   trx?: Knex.Transaction;
 }
@@ -106,13 +107,13 @@ export interface IBankRuleEventCreatedPayload {
 export interface IBankRuleEventEditingPayload {
   ruleId: number;
   oldBankRule: any;
-  editRuleDTO: IEditBankRuleDTO;
+  editRuleDTO: EditBankRuleDto;
   trx?: Knex.Transaction;
 }
 export interface IBankRuleEventEditedPayload {
   oldBankRule: BankRule;
   bankRule: BankRule;
-  editRuleDTO: IEditBankRuleDTO;
+  editRuleDTO: EditBankRuleDto;
   trx?: Knex.Transaction;
 }
 

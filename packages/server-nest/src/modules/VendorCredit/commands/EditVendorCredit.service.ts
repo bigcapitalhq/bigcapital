@@ -13,6 +13,7 @@ import { events } from '@/common/events/events';
 import { Knex } from 'knex';
 import { VendorCreditDTOTransformService } from './VendorCreditDTOTransform.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditVendorCreditDto } from '../dtos/VendorCredit.dto';
 
 @Injectable()
 export class EditVendorCreditService {
@@ -39,10 +40,11 @@ export class EditVendorCreditService {
   /**
    * Deletes the given vendor credit.
    * @param {number} vendorCreditId - Vendor credit id.
+   * @param {EditVendorCreditDto} vendorCreditDto - 
    */
   public editVendorCredit = async (
     vendorCreditId: number,
-    vendorCreditDTO: IVendorCreditEditDTO,
+    vendorCreditDTO: EditVendorCreditDto,
     trx?: Knex.Transaction,
   ) => {
     // Retrieve the vendor credit or throw not found service error.

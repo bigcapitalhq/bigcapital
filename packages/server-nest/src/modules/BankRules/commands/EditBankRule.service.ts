@@ -9,6 +9,8 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditBankRuleDto } from '../dtos/BankRule.dto';
+import { ModelObject } from 'objection';
 
 @Injectable()
 export class EditBankRuleService {
@@ -25,10 +27,10 @@ export class EditBankRuleService {
    * @param createDTO
    * @returns
    */
-  private transformDTO(createDTO: IEditBankRuleDTO) {
+  private transformDTO(createDTO: EditBankRuleDto): ModelObject<BankRule> {
     return {
       ...createDTO,
-    };
+    } as ModelObject<BankRule>;
   }
 
   /**
@@ -36,7 +38,7 @@ export class EditBankRuleService {
    * @param {number} ruleId -
    * @param {IEditBankRuleDTO} editBankDTO
    */
-  public async editBankRule(ruleId: number, editRuleDTO: IEditBankRuleDTO) {
+  public async editBankRule(ruleId: number, editRuleDTO: EditBankRuleDto) {
     const oldBankRule = await this.bankRuleModel()
       .query()
       .findById(ruleId)

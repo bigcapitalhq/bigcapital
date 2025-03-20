@@ -41,8 +41,7 @@ export class WarehousesDTOValidators {
 
   /**
    * Validate the warehouse existance of
-   * @param   {number} tenantId
-   * @param   {IWarehouseTransactionDTO} saleInvoiceDTO
+   * @param {IWarehouseTransactionDTO} saleInvoiceDTO
    * @returns
    */
   public validateDTOWarehouseWhenActive = async (

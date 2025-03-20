@@ -1,3 +1,4 @@
+import { ModelObject } from 'objection';
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import {
@@ -9,6 +10,7 @@ import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { BankRule } from '../models/BankRule';
+import { CreateBankRuleDto } from '../dtos/BankRule.dto';
 
 @Injectable()
 export class CreateBankRuleService {
@@ -23,10 +25,10 @@ export class CreateBankRuleService {
    * Transforms the DTO to model.
    * @param {ICreateBankRuleDTO} createDTO
    */
-  private transformDTO(createDTO: ICreateBankRuleDTO) {
+  private transformDTO(createDTO: CreateBankRuleDto): ModelObject<BankRule> {
     return {
       ...createDTO,
-    };
+    } as ModelObject<BankRule>;
   }
 
   /**
@@ -35,7 +37,7 @@ export class CreateBankRuleService {
    * @returns {Promise<BankRule>}
    */
   public async createBankRule(
-    createRuleDTO: ICreateBankRuleDTO,
+    createRuleDTO: CreateBankRuleDto,
   ): Promise<BankRule> {
     const transformDTO = this.transformDTO(createRuleDTO);
 

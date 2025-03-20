@@ -14,6 +14,7 @@ import { Customer } from '@/modules/Customers/models/Customer';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreatePaymentReceivedDto } from '../dtos/PaymentReceived.dto';
 
 @Injectable()
 export class CreatePaymentReceivedService {
@@ -38,7 +39,7 @@ export class CreatePaymentReceivedService {
    * @param {Knex.Transaction} trx - Database transaction.
    */
   public async createPaymentReceived(
-    paymentReceiveDTO: IPaymentReceivedCreateDTO,
+    paymentReceiveDTO: CreatePaymentReceivedDto,
     trx?: Knex.Transaction,
   ) {
     const tenant = await this.tenancyContext.getTenant(true);

@@ -2,11 +2,7 @@ import * as moment from 'moment';
 import { omit } from 'lodash';
 import * as R from 'ramda';
 import { ERRORS } from '../constants';
-import {
-  IVendorCreditCreateDTO,
-  IVendorCreditEditDTO,
-  IVendorCreditEntryDTO,
-} from '../types/VendorCredit.types';
+import { IVendorCreditEntryDTO } from '../types/VendorCredit.types';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
@@ -15,6 +11,10 @@ import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-ind
 import { VendorCreditAutoIncrementService } from './VendorCreditAutoIncrement.service';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { Injectable } from '@nestjs/common';
+import {
+  CreateVendorCreditDto,
+  EditVendorCreditDto,
+} from '../dtos/VendorCredit.dto';
 
 @Injectable()
 export class VendorCreditDTOTransformService {
@@ -39,7 +39,7 @@ export class VendorCreditDTOTransformService {
    * @returns {VendorCredit}
    */
   public transformCreateEditDTOToModel = async (
-    vendorCreditDTO: IVendorCreditCreateDTO | IVendorCreditEditDTO,
+    vendorCreditDTO: CreateVendorCreditDto | EditVendorCreditDto,
     vendorCurrencyCode: string,
     oldVendorCredit?: VendorCredit,
   ): Promise<VendorCredit> => {

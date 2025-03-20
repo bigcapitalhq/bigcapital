@@ -21,6 +21,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { MatchBankTransactionDto } from '../dtos/MatchBankTransaction.dto';
 
 @Injectable()
 export class MatchBankTransactions {
@@ -112,9 +113,10 @@ export class MatchBankTransactions {
    */
   public async matchTransaction(
     uncategorizedTransactionId: number | Array<number>,
-    matchedTransactions: Array<IMatchTransactionDTO>,
+    matchedTransactionsDto: MatchBankTransactionDto,
   ): Promise<void> {
     const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
+    const matchedTransactions = matchedTransactionsDto.entries;
 
     // Validates the given matching transactions DTO.
     await this.validate(uncategorizedTransactionIds, matchedTransactions);

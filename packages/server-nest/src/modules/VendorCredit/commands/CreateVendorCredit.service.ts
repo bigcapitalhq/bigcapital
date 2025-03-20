@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import {
   IVendorCreditCreatedPayload,
-  IVendorCreditCreateDTO,
   IVendorCreditCreatingPayload,
 } from '@/modules/VendorCredit/types/VendorCredit.types';
 import { VendorCredit } from '../models/VendorCredit';
@@ -13,6 +12,7 @@ import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { VendorCreditDTOTransformService } from './VendorCreditDTOTransform.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateVendorCreditDto } from '../dtos/VendorCredit.dto';
 
 @Injectable()
 export class CreateVendorCreditService {
@@ -42,7 +42,7 @@ export class CreateVendorCreditService {
    * @param {Knex.Transaction} trx -
    */
   public newVendorCredit = async (
-    vendorCreditCreateDTO: IVendorCreditCreateDTO,
+    vendorCreditCreateDTO: CreateVendorCreditDto,
     trx?: Knex.Transaction,
   ) => {
     // Triggers `onVendorCreditCreate` event.

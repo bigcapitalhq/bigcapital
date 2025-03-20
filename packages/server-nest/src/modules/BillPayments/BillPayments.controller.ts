@@ -8,8 +8,11 @@ import {
   Put,
 } from '@nestjs/common';
 import { BillPaymentsApplication } from './BillPaymentsApplication.service';
-import { IBillPaymentDTO } from './types/BillPayments.types';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  CreateBillPaymentDto,
+  EditBillPaymentDto,
+} from './dtos/BillPayment.dto';
 
 @Controller('bill-payments')
 @ApiTags('bill-payments')
@@ -18,7 +21,7 @@ export class BillPaymentsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new bill payment.' })
-  public createBillPayment(@Body() billPaymentDTO: IBillPaymentDTO) {
+  public createBillPayment(@Body() billPaymentDTO: CreateBillPaymentDto) {
     return this.billPaymentsApplication.createBillPayment(billPaymentDTO);
   }
 
@@ -46,7 +49,7 @@ export class BillPaymentsController {
   })
   public editBillPayment(
     @Param('billPaymentId') billPaymentId: string,
-    @Body() billPaymentDTO: IBillPaymentDTO,
+    @Body() billPaymentDTO: EditBillPaymentDto,
   ) {
     return this.billPaymentsApplication.editBillPayment(
       Number(billPaymentId),

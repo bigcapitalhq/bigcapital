@@ -1,10 +1,12 @@
-import { Knex } from 'knex';
+import { Injectable } from '@nestjs/common';
 import { DeleteCashflowTransaction } from './commands/DeleteCashflowTransaction.service';
 import { CreateBankTransactionService } from './commands/CreateBankTransaction.service';
 import { GetBankTransactionService } from './queries/GetBankTransaction.service';
-import { IBankAccountsFilter, ICashflowNewCommandDTO } from './types/BankingTransactions.types';
-import { Injectable } from '@nestjs/common';
+import {
+  IBankAccountsFilter,
+} from './types/BankingTransactions.types';
 import { GetBankAccountsService } from './queries/GetBankAccounts.service';
+import { CreateBankTransactionDto } from './dtos/CreateBankTransaction.dto';
 
 @Injectable()
 export class BankingTransactionsApplication {
@@ -20,7 +22,7 @@ export class BankingTransactionsApplication {
    * @param {ICashflowNewCommandDTO} transactionDTO
    * @returns
    */
-  public createTransaction(transactionDTO: ICashflowNewCommandDTO) {
+  public createTransaction(transactionDTO: CreateBankTransactionDto) {
     return this.createTransactionService.newCashflowTransaction(transactionDTO);
   }
 

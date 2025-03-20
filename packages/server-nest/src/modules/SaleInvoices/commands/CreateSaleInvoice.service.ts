@@ -16,6 +16,7 @@ import { SaleEstimate } from '@/modules/SaleEstimates/models/SaleEstimate';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
 
 @Injectable()
 export class CreateSaleInvoice {
@@ -57,8 +58,7 @@ export class CreateSaleInvoice {
    * @return {Promise<ISaleInvoice>}
    */
   public createSaleInvoice = async (
-    saleInvoiceDTO: ISaleInvoiceCreateDTO,
-    // authorizedUser: ITenantUser,
+    saleInvoiceDTO: CreateSaleInvoiceDto,
     trx?: Knex.Transaction,
   ): Promise<SaleInvoice> => {
     // Validate customer existance.
@@ -132,7 +132,7 @@ export class CreateSaleInvoice {
    */
   private transformCreateDTOToModel = async (
     customer: Customer,
-    saleInvoiceDTO: ISaleInvoiceCreateDTO,
+    saleInvoiceDTO: CreateSaleInvoiceDto,
   ) => {
     return this.transformerDTO.transformDTOToModel(customer, saleInvoiceDTO);
   };

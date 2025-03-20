@@ -13,9 +13,9 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { formatDateFields } from '@/utils/format-date-fields';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { SaleReceipt } from '../models/SaleReceipt';
-import { ISaleReceiptDTO } from '../types/SaleReceipts.types';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateSaleReceiptDto, EditSaleReceiptDto } from '../dtos/SaleReceipt.dto';
 
 @Injectable()
 export class SaleReceiptDTOTransformer {
@@ -47,7 +47,7 @@ export class SaleReceiptDTOTransformer {
    * @returns {ISaleReceipt}
    */
   async transformDTOToModel(
-    saleReceiptDTO: ISaleReceiptDTO,
+    saleReceiptDTO: CreateSaleReceiptDto | EditSaleReceiptDto,
     paymentCustomer: Customer,
     oldSaleReceipt?: SaleReceipt,
   ): Promise<SaleReceipt> {

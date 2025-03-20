@@ -6,6 +6,7 @@ import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
+import { EditCreditNoteDto } from '../dtos/CreditNote.dto';
 
 export interface ICreditNoteEntryNewDTO extends IItemEntryDTO {}
 
@@ -60,17 +61,16 @@ export interface ICreditNoteDeletedPayload {
 }
 
 export interface ICreditNoteEditingPayload {
-  trx: Knex.Transaction;
   oldCreditNote: CreditNote;
-  creditNoteEditDTO: ICreditNoteEditDTO;
-  tenantId: number;
+  creditNoteEditDTO: EditCreditNoteDto;
+  trx?: Knex.Transaction;
 }
 
 export interface ICreditNoteEditedPayload {
-  trx: Knex.Transaction;
+  trx?: Knex.Transaction;
   oldCreditNote: CreditNote;
   creditNote: CreditNote;
-  creditNoteEditDTO: ICreditNoteEditDTO;
+  creditNoteEditDTO: EditCreditNoteDto;
 }
 
 export interface ICreditNoteCreatedPayload {

@@ -4,12 +4,9 @@ import { DeleteCreditNoteService } from './commands/DeleteCreditNote.service';
 import { EditCreditNoteService } from './commands/EditCreditNote.service';
 import { OpenCreditNoteService } from './commands/OpenCreditNote.service';
 import { GetCreditNotePdf } from './queries/GetCreditNotePdf.serivce';
-import {
-  ICreditNoteEditDTO,
-  ICreditNoteNewDTO,
-  ICreditNotesQueryDTO,
-} from './types/CreditNotes.types';
+import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
 import { GetCreditNotesService } from './queries/GetCreditNotes.service';
+import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 
 @Injectable()
 export class CreditNoteApplication {
@@ -24,20 +21,20 @@ export class CreditNoteApplication {
 
   /**
    * Creates a new credit note.
-   * @param {ICreditNoteNewDTO} creditNoteDTO
+   * @param {CreateCreditNoteDto} creditNoteDTO
    * @returns {Promise<CreditNote>}
    */
-  createCreditNote(creditNoteDTO: ICreditNoteNewDTO) {
+  createCreditNote(creditNoteDTO: CreateCreditNoteDto) {
     return this.createCreditNoteService.creditCreditNote(creditNoteDTO);
   }
 
   /**
    * Edits a credit note.
    * @param {number} creditNoteId
-   * @param {ICreditNoteEditDTO} creditNoteDTO
+   * @param {EditCreditNoteDto} creditNoteDTO
    * @returns {Promise<CreditNote>}
    */
-  editCreditNote(creditNoteId: number, creditNoteDTO: ICreditNoteEditDTO) {
+  editCreditNote(creditNoteId: number, creditNoteDTO: EditCreditNoteDto) {
     return this.editCreditNoteService.editCreditNote(
       creditNoteId,
       creditNoteDTO,

@@ -10,8 +10,9 @@ import {
   Query,
 } from '@nestjs/common';
 import { BillsApplication } from './Bills.application';
-import { IBillDTO, IBillEditDTO, IBillsFilter } from './Bills.types';
+import { IBillsFilter } from './Bills.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
 
 @Controller('bills')
 @ApiTags('bills')
@@ -21,7 +22,7 @@ export class BillsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new bill.' })
-  createBill(@Body() billDTO: IBillDTO) {
+  createBill(@Body() billDTO: CreateBillDto) {
     return this.billsApplication.createBill(billDTO);
   }
 
@@ -33,7 +34,7 @@ export class BillsController {
     type: Number,
     description: 'The bill id',
   })
-  editBill(@Param('id') billId: number, @Body() billDTO: IBillEditDTO) {
+  editBill(@Param('id') billId: number, @Body() billDTO: EditBillDto) {
     return this.billsApplication.editBill(billId, billDTO);
   }
 

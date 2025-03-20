@@ -6,6 +6,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TrialBalanceSheetApplication {
+  /**
+   * @param {TrialBalanceSheetService} sheetService - The trial balance sheet service.
+   * @param {TrialBalanceSheetTableInjectable} tablable - The trial balance sheet table injectable.
+   * @param {TrialBalanceExportInjectable} exportable - The trial balance export injectable.
+   */
   constructor(
     private readonly sheetService: TrialBalanceSheetService,
     private readonly tablable: TrialBalanceSheetTableInjectable,

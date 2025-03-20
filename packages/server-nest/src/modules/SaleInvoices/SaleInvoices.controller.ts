@@ -11,8 +11,6 @@ import {
   Query,
 } from '@nestjs/common';
 import {
-  ISaleInvoiceCreateDTO,
-  ISaleInvoiceEditDTO,
   ISaleInvoiceWriteoffDTO,
   ISalesInvoicesFilter,
   SaleInvoiceMailState,
@@ -27,6 +25,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import {
+  CreateSaleInvoiceDto,
+  EditSaleInvoiceDto,
+} from './dtos/SaleInvoice.dto';
 
 @Controller('sale-invoices')
 @ApiTags('sale-invoices')
@@ -50,7 +52,7 @@ export class SaleInvoicesController {
     status: 201,
     description: 'Sale invoice created successfully',
   })
-  createSaleInvoice(@Body() saleInvoiceDTO: ISaleInvoiceCreateDTO) {
+  createSaleInvoice(@Body() saleInvoiceDTO: CreateSaleInvoiceDto) {
     return this.saleInvoiceApplication.createSaleInvoice(saleInvoiceDTO);
   }
 
@@ -89,7 +91,7 @@ export class SaleInvoicesController {
   })
   editSaleInvoice(
     @Param('id', ParseIntPipe) id: number,
-    @Body() saleInvoiceDTO: ISaleInvoiceEditDTO,
+    @Body() saleInvoiceDTO: EditSaleInvoiceDto,
   ) {
     return this.saleInvoiceApplication.editSaleInvoice(id, saleInvoiceDTO);
   }

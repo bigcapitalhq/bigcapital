@@ -3,7 +3,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   ICreditNoteCreatedPayload,
   ICreditNoteCreatingPayload,
-  ICreditNoteNewDTO,
 } from '../types/CreditNotes.types';
 import { CreditNote } from '../models/CreditNote';
 import { Contact } from '../../Contacts/models/Contact';
@@ -13,6 +12,7 @@ import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateCreditNoteDto } from '../dtos/CreditNote.dto';
 
 @Injectable()
 export class CreateCreditNoteService {
@@ -42,7 +42,7 @@ export class CreateCreditNoteService {
    * @param creditNoteDTO
    */
   public creditCreditNote = async (
-    creditNoteDTO: ICreditNoteNewDTO,
+    creditNoteDTO: CreateCreditNoteDto,
     trx?: Knex.Transaction,
   ) => {
     // Triggers `onCreditNoteCreate` event.

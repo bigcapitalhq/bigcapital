@@ -12,6 +12,8 @@ import { BankRulesApplication } from './BankRulesApplication';
 import { ICreateBankRuleDTO, IEditBankRuleDTO } from './types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { BankRule } from './models/BankRule';
+import { CreateBankRuleDto } from './dtos/BankRule.dto';
+import { EditBankRuleDto } from './dtos/BankRule.dto';
 
 @Controller('banking/rules')
 @ApiTags('bank-rules')
@@ -22,7 +24,7 @@ export class BankRulesController {
   @Post()
   @ApiOperation({ summary: 'Create a new bank rule.' })
   async createBankRule(
-    @Body() createRuleDTO: ICreateBankRuleDTO,
+    @Body() createRuleDTO: CreateBankRuleDto,
   ): Promise<BankRule> {
     return this.bankRulesApplication.createBankRule(createRuleDTO);
   }
@@ -31,7 +33,7 @@ export class BankRulesController {
   @ApiOperation({ summary: 'Edit the given bank rule.' })
   async editBankRule(
     @Param('id') ruleId: number,
-    @Body() editRuleDTO: IEditBankRuleDTO,
+    @Body() editRuleDTO: EditBankRuleDto,
   ): Promise<void> {
     return this.bankRulesApplication.editBankRule(ruleId, editRuleDTO);
   }

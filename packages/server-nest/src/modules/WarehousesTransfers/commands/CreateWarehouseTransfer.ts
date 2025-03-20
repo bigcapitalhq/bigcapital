@@ -20,6 +20,10 @@ import { events } from '@/common/events/events';
 import { IInventoryItemCostMeta } from '@/modules/InventoryCost/types/InventoryCost.types';
 import { ModelObject } from 'objection';
 import { WarehouseTransferEntry } from '../models/WarehouseTransferEntry';
+import {
+  CreateWarehouseTransferDto,
+  WarehouseTransferEntryDto,
+} from '../dtos/WarehouseTransfer.dto';
 
 @Injectable()
 export class CreateWarehouseTransfer {
@@ -48,11 +52,11 @@ export class CreateWarehouseTransfer {
 
   /**
    * Transformes the givne new warehouse transfer DTO to model.
-   * @param   {ICreateWarehouseTransferDTO} warehouseTransferDTO
+   * @param {ICreateWarehouseTransferDTO} warehouseTransferDTO
    * @returns {IWarehouseTransfer}
    */
   private transformDTOToModel = async (
-    warehouseTransferDTO: ICreateWarehouseTransferDTO,
+    warehouseTransferDTO: CreateWarehouseTransferDto,
   ): Promise<ModelObject<WarehouseTransfer>> => {
     const entries = await this.transformEntries(
       warehouseTransferDTO,
@@ -91,8 +95,8 @@ export class CreateWarehouseTransfer {
   private transformEntryAssocAverageCost = R.curry(
     (
       inventoryItemsCostMap: Map<number, IInventoryItemCostMeta>,
-      entry: IWarehouseTransferEntryDTO,
-    ): IWarehouseTransferEntryDTO => {
+      entry: WarehouseTransferEntryDto,
+    ): WarehouseTransferEntryDto => {
       const itemValuation = inventoryItemsCostMap.get(entry.itemId);
       const itemCost = get(itemValuation, 'average', 0);
 
@@ -107,8 +111,8 @@ export class CreateWarehouseTransfer {
    * @returns {Promise<IWarehouseTransferEntryDTO[]>}
    */
   public transformEntries = async (
-    warehouseTransferDTO: ICreateWarehouseTransferDTO,
-    entries: IWarehouseTransferEntryDTO[],
+    warehouseTransferDTO: CreateWarehouseTransferDto,
+    entries: WarehouseTransferEntryDto[],
   ): Promise<ModelObject<WarehouseTransferEntry>[]> => {
     const inventoryItemsIds = warehouseTransferDTO.entries.map((e) => e.itemId);
 
@@ -127,17 +131,15 @@ export class CreateWarehouseTransfer {
 
   /**
    * Authorize warehouse transfer before creating.
-   * @param {number} tenantId
-   * @param {ICreateWarehouseTransferDTO} warehouseTransferDTO
+   * @param {CreateWarehouseTransferDto} warehouseTransferDTO - Warehouse transfer DTO.
    */
   public authorize = async (
-    warehouseTransferDTO: ICreateWarehouseTransferDTO,
+    warehouseTransferDTO: CreateWarehouseTransferDto,
   ) => {
     // Validate warehouse from and to should not be the same.
     this.commandWarehouseTransfer.validateWarehouseFromToNotSame(
       warehouseTransferDTO,
     );
-
     // Retrieves the from warehouse or throw not found service error.
     const fromWarehouse =
       await this.commandWarehouseTransfer.getFromWarehouseOrThrow(
@@ -162,7 +164,7 @@ export class CreateWarehouseTransfer {
    * @returns {Promise<ModelObject<WarehouseTransfer>>}
    */
   public createWarehouseTransfer = async (
-    warehouseTransferDTO: ICreateWarehouseTransferDTO,
+    warehouseTransferDTO: CreateWarehouseTransferDto,
   ): Promise<ModelObject<WarehouseTransfer>> => {
     // Authorize warehouse transfer before creating.
     await this.authorize(warehouseTransferDTO);

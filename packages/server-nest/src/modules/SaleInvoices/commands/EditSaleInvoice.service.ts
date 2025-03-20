@@ -14,6 +14,7 @@ import { events } from '@/common/events/events';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
 
 @Injectable()
 export class EditSaleInvoice {
@@ -49,7 +50,7 @@ export class EditSaleInvoice {
    */
   public async editSaleInvoice(
     saleInvoiceId: number,
-    saleInvoiceDTO: ISaleInvoiceEditDTO,
+    saleInvoiceDTO: EditSaleInvoiceDto,
   ): Promise<SaleInvoice> {
     // Retrieve the sale invoice or throw not found service error.
     const oldSaleInvoice = await this.saleInvoiceModel()
@@ -139,15 +140,13 @@ export class EditSaleInvoice {
    */
   private tranformEditDTOToModel = async (
     customer: Customer,
-    saleInvoiceDTO: ISaleInvoiceEditDTO,
+    saleInvoiceDTO: EditSaleInvoiceDto,
     oldSaleInvoice: SaleInvoice,
-    // authorizedUser: ITenantUser,
   ) => {
     return this.transformerDTO.transformDTOToModel(
       customer,
       saleInvoiceDTO,
       oldSaleInvoice,
-      // authorizedUser,
     );
   };
 }

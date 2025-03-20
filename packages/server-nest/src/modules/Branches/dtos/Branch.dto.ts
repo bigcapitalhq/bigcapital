@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -12,6 +13,11 @@ class CommandBranchDto {
   @IsNotEmpty()
   @IsString()
   name: string;
+
+  @ApiPropertyOptional({ description: 'Branch code' })
+  @IsOptional()
+  @IsBoolean()
+  primary?: boolean;
 
   @ApiPropertyOptional({ description: 'Branch code' })
   @IsOptional()

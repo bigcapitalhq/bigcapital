@@ -7,6 +7,7 @@ import { GetDueBills } from './queries/GetDueBills.service';
 import { OpenBillService } from './commands/OpenBill.service';
 import { Injectable } from '@nestjs/common';
 import { GetBillsService } from './queries/GetBills.service';
+import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
 // import { GetBillPayments } from './queries/GetBillPayments';
 // import { GetBills } from './queries/GetBills';
 
@@ -28,7 +29,7 @@ export class BillsApplication {
    * @param {IBillDTO} billDTO
    * @returns
    */
-  public createBill(billDTO: IBillDTO) {
+  public createBill(billDTO: CreateBillDto) {
     return this.createBillService.createBill(billDTO);
   }
 
@@ -38,7 +39,7 @@ export class BillsApplication {
    * @param {IBillEditDTO} billDTO
    * @returns
    */
-  public editBill(billId: number, billDTO: IBillEditDTO) {
+  public editBill(billId: number, billDTO: EditBillDto) {
     return this.editBillService.editBill(billId, billDTO);
   }
 

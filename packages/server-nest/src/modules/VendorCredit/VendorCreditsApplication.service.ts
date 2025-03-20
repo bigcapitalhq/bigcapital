@@ -8,6 +8,7 @@ import { IVendorCreditCreateDTO } from './types/VendorCredit.types';
 import { Injectable } from '@nestjs/common';
 import { OpenVendorCreditService } from './commands/OpenVendorCredit.service';
 import { GetVendorCreditsService } from './queries/GetVendorCredits.service';
+import { CreateVendorCreditDto, EditVendorCreditDto } from './dtos/VendorCredit.dto';
 
 @Injectable()
 export class VendorCreditsApplicationService {
@@ -28,11 +29,11 @@ export class VendorCreditsApplicationService {
 
   /**
    * Creates a new vendor credit.
-   * @param {IVendorCreditCreateDTO} dto - The vendor credit create DTO.
+   * @param {CreateVendorCreditDto} dto - The vendor credit create DTO.
    * @param {Knex.Transaction} trx - The transaction.
    * @returns {Promise<VendorCredit>} The created vendor credit.
    */
-  createVendorCredit(dto: IVendorCreditCreateDTO, trx?: Knex.Transaction) {
+  createVendorCredit(dto: CreateVendorCreditDto, trx?: Knex.Transaction) {
     return this.createVendorCreditService.newVendorCredit(dto, trx);
   }
 
@@ -48,13 +49,13 @@ export class VendorCreditsApplicationService {
   /**
    * Edits the given vendor credit.
    * @param {number} vendorCreditId - The vendor credit id.
-   * @param {IVendorCreditEditDTO} dto - The vendor credit edit DTO.
+   * @param {EditVendorCreditDto} dto - The vendor credit edit DTO.
    * @param {Knex.Transaction} trx - The transaction.
    * @returns {Promise<VendorCredit>} The edited vendor credit.
    */
   editVendorCredit(
     vendorCreditId: number,
-    dto: IVendorCreditEditDTO,
+    dto: EditVendorCreditDto,
     trx?: Knex.Transaction,
   ) {
     return this.editVendorCreditService.editVendorCredit(

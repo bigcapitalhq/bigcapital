@@ -4,10 +4,6 @@ import * as R from 'ramda';
 import * as moment from 'moment';
 import '../../../utils/moment-mysql';
 import * as composeAsync from 'async/compose';
-import {
-  ISaleInvoiceCreateDTO,
-  ISaleInvoiceEditDTO,
-} from '../SaleInvoice.types';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
@@ -21,6 +17,10 @@ import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-ind
 import { formatDateFields } from '@/utils/format-date-fields';
 import { ItemEntriesTaxTransactions } from '@/modules/TaxRates/ItemEntriesTaxTransactions.service';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import {
+  CreateSaleInvoiceDto,
+  EditSaleInvoiceDto,
+} from '../dtos/SaleInvoice.dto';
 
 @Injectable()
 export class CommandSaleInvoiceDTOTransformer {
@@ -54,7 +54,7 @@ export class CommandSaleInvoiceDTOTransformer {
    */
   public async transformDTOToModel(
     customer: Customer,
-    saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO,
+    saleInvoiceDTO: CreateSaleInvoiceDto | EditSaleInvoiceDto,
     oldSaleInvoice?: SaleInvoice,
   ): Promise<SaleInvoice> {
     const entriesModels = this.transformDTOEntriesToModels(saleInvoiceDTO);
@@ -140,7 +140,7 @@ export class CommandSaleInvoiceDTOTransformer {
    * @returns {IItemEntry[]}
    */
   private transformDTOEntriesToModels = (
-    saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO,
+    saleInvoiceDTO: CreateSaleInvoiceDto | EditSaleInvoiceDto,
   ): ItemEntry[] => {
     return saleInvoiceDTO.entries.map((entry) => {
       return ItemEntry.fromJson({

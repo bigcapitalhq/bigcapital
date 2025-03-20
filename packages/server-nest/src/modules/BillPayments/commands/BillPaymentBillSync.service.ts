@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { Bill } from '../../Bills/models/Bill';
-import { IBillPaymentEntryDTO } from '../types/BillPayments.types';
 import { entriesAmountDiff } from '@/utils/entries-amount-diff';
-import Objection from 'objection';
+import Objection, { ModelObject } from 'objection';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { BillPaymentEntryDto } from '../dtos/BillPayment.dto';
+import { BillPaymentEntry } from '../models/BillPaymentEntry';
 
 @Injectable()
 export class BillPaymentBillSync {
@@ -20,8 +21,8 @@ export class BillPaymentBillSync {
    * @param {IBillPaymentEntryDTO[]} oldPaymentMadeEntries -
    */
   public async saveChangeBillsPaymentAmount(
-    paymentMadeEntries: IBillPaymentEntryDTO[],
-    oldPaymentMadeEntries?: IBillPaymentEntryDTO[],
+    paymentMadeEntries: BillPaymentEntryDto[],
+    oldPaymentMadeEntries?: ModelObject<BillPaymentEntry>[],
     trx?: Knex.Transaction,
   ): Promise<void> {
     const opers: Objection.QueryBuilder<Bill, Bill[]>[] = [];

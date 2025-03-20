@@ -9,13 +9,13 @@ import {
   Query,
 } from '@nestjs/common';
 import { VendorCreditsApplicationService } from './VendorCreditsApplication.service';
-import {
-  IVendorCreditCreateDTO,
-  IVendorCreditEditDTO,
-  IVendorCreditsQueryDTO,
-} from './types/VendorCredit.types';
+import { IVendorCreditsQueryDTO } from './types/VendorCredit.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  CreateVendorCreditDto,
+  EditVendorCreditDto,
+} from './dtos/VendorCredit.dto';
 
 @Controller('vendor-credits')
 @ApiTags('vendor-credits')
@@ -27,7 +27,7 @@ export class VendorCreditsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new vendor credit.' })
-  async createVendorCredit(@Body() dto: IVendorCreditCreateDTO) {
+  async createVendorCredit(@Body() dto: CreateVendorCreditDto) {
     return this.vendorCreditsApplication.createVendorCredit(dto);
   }
 
@@ -47,7 +47,7 @@ export class VendorCreditsController {
   @ApiOperation({ summary: 'Edit the given vendor credit.' })
   async editVendorCredit(
     @Param('id') vendorCreditId: number,
-    @Body() dto: IVendorCreditEditDTO,
+    @Body() dto: EditVendorCreditDto,
   ) {
     return this.vendorCreditsApplication.editVendorCredit(vendorCreditId, dto);
   }

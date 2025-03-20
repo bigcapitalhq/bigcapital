@@ -14,6 +14,7 @@ import { events } from '@/common/events/events';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateSaleEstimateDto } from '../dtos/SaleEstimate.dto';
 
 @Injectable()
 export class CreateSaleEstimate {
@@ -37,7 +38,7 @@ export class CreateSaleEstimate {
    * @return {Promise<ISaleEstimate>}
    */
   public async createEstimate(
-    estimateDTO: ISaleEstimateDTO,
+    estimateDTO: CreateSaleEstimateDto,
     trx?: Knex.Transaction,
   ): Promise<SaleEstimate> {
     // Retrieve the given customer or throw not found service error.

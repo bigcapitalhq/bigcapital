@@ -1,25 +1,7 @@
 import { Knex } from 'knex';
 import { BillPayment } from '../models/BillPayment';
 import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
-
-export interface IBillPaymentEntryDTO {
-  billId: number;
-  paymentAmount: number;
-}
-
-export interface IBillPaymentDTO {
-  vendorId: number;
-  amount?: number;
-  paymentAccountId: number;
-  paymentNumber?: string;
-  paymentDate: Date | string;
-  exchangeRate?: number;
-  statement?: string;
-  reference?: string;
-  entries: IBillPaymentEntryDTO[];
-  branchId?: number;
-  attachments?: AttachmentLinkDTO[];
-}
+import { CreateBillPaymentDto, EditBillPaymentDto } from '../dtos/BillPayment.dto';
 
 export interface IBillReceivePageEntry {
   billId: number;
@@ -35,18 +17,18 @@ export interface IBillReceivePageEntry {
 
 export interface IBillPaymentEventCreatedPayload {
   billPayment: BillPayment;
-  billPaymentDTO: IBillPaymentDTO;
+  billPaymentDTO: CreateBillPaymentDto;
   billPaymentId: number;
   trx: Knex.Transaction;
 }
 
 export interface IBillPaymentCreatingPayload {
-  billPaymentDTO: IBillPaymentDTO;
+  billPaymentDTO: CreateBillPaymentDto;
   trx: Knex.Transaction;
 }
 
 export interface IBillPaymentEditingPayload {
-  billPaymentDTO: IBillPaymentDTO;
+  billPaymentDTO: EditBillPaymentDto;
   oldBillPayment: BillPayment;
   trx: Knex.Transaction;
 }
@@ -54,7 +36,7 @@ export interface IBillPaymentEventEditedPayload {
   billPaymentId: number;
   billPayment: BillPayment;
   oldBillPayment: BillPayment;
-  billPaymentDTO: IBillPaymentDTO;
+  billPaymentDTO: EditBillPaymentDto;
   trx: Knex.Transaction;
 }
 

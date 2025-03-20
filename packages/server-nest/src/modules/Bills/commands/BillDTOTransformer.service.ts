@@ -15,6 +15,7 @@ import { Bill } from '../models/Bill';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateBillDto } from '../dtos/Bill.dto';
 
 @Injectable()
 export class BillDTOTransformer {
@@ -40,10 +41,10 @@ export class BillDTOTransformer {
 
   /**
    * Retrieve the bill landed cost amount.
-   * @param {IBillDTO} billDTO
+   * @param {CreateBillDto} billDTO
    * @returns {number}
    */
-  private getBillLandedCostAmount(billDTO: IBillDTO): number {
+  private getBillLandedCostAmount(billDTO: CreateBillDto): number {
     const costEntries = billDTO.entries.filter((entry) => entry.landedCost);
 
     // return this.getBillEntriesTotal(costEntries);
@@ -58,7 +59,7 @@ export class BillDTOTransformer {
    * @returns {IBill}
    */
   public async billDTOToModel(
-    billDTO: IBillDTO,
+    billDTO: CreateBillDto,
     vendor: Vendor,
     oldBill?: Bill,
   ): Promise<Bill> {

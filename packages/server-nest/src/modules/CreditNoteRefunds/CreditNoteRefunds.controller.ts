@@ -3,6 +3,7 @@ import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { ICreditNoteRefundDTO } from '../CreditNotes/types/CreditNotes.types';
 import { CreditNotesRefundsApplication } from './CreditNotesRefundsApplication.service';
 import { RefundCreditNote } from './models/RefundCreditNote';
+import { CreditNoteRefundDto } from './dto/CreditNoteRefund.dto';
 
 @Controller('credit-notes')
 @ApiTags('credit-notes-refunds')
@@ -21,7 +22,7 @@ export class CreditNoteRefundsController {
   @ApiOperation({ summary: 'Create a refund for the given credit note.' })
   createRefundCreditNote(
     @Param('creditNoteId') creditNoteId: number,
-    @Body() creditNoteDTO: ICreditNoteRefundDTO,
+    @Body() creditNoteDTO: CreditNoteRefundDto,
   ): Promise<RefundCreditNote> {
     return this.creditNotesRefundsApplication.createRefundCreditNote(
       creditNoteId,

@@ -10,6 +10,7 @@ import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { GetInventoryAdjustmentService } from './queries/GetInventoryAdjustment.service';
 import { GetInventoryAdjustmentsService } from './queries/GetInventoryAdjustments.service';
 import { IPaginationMeta } from '@/interfaces/Model';
+import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAdjustment.dto';
 
 @Injectable()
 export class InventoryAdjustmentsApplicationService {
@@ -39,7 +40,7 @@ export class InventoryAdjustmentsApplicationService {
    * @param {IQuickInventoryAdjustmentDTO} quickAdjustmentDTO - Quick inventory adjustment DTO.
    */
   public async createQuickInventoryAdjustment(
-    quickAdjustmentDTO: IQuickInventoryAdjustmentDTO,
+    quickAdjustmentDTO: CreateQuickInventoryAdjustmentDto,
   ): Promise<InventoryAdjustment> {
     return this.createQuickInventoryAdjustmentService.createQuickAdjustment(
       quickAdjustmentDTO,

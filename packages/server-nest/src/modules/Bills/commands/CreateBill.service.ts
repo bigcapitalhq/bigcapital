@@ -14,6 +14,7 @@ import { Bill } from '../models/Bill';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateBillDto } from '../dtos/Bill.dto';
 
 @Injectable()
 export class CreateBill {
@@ -46,7 +47,7 @@ export class CreateBill {
    * @return {Promise<IBill>}
    */
   public async createBill(
-    billDTO: IBillDTO,
+    billDTO: CreateBillDto,
     trx?: Knex.Transaction,
   ): Promise<Bill> {
     // Retrieves the given bill vendor or throw not found error.

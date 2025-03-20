@@ -13,6 +13,7 @@ import { CommandCreditNoteDTOTransform } from '@/modules/CreditNotes/commands/Co
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreditNoteRefundDto } from '../dto/CreditNoteRefund.dto';
 
 @Injectable()
 export class CreateRefundCreditNoteService {
@@ -47,7 +48,7 @@ export class CreateRefundCreditNoteService {
    */
   public async createCreditNoteRefund(
     creditNoteId: number,
-    newCreditNoteDTO: ICreditNoteRefundDTO,
+    newCreditNoteDTO: CreditNoteRefundDto,
   ): Promise<RefundCreditNote> {
     // Retrieve the credit note or throw not found service error.
     const creditNote = await this.creditNoteModel()
@@ -85,7 +86,6 @@ export class CreateRefundCreditNoteService {
         .insertAndFetch({
           ...this.transformDTOToModel(creditNote, newCreditNoteDTO),
         });
-
       // Triggers `onCreditNoteRefundCreated` event.
       await this.eventPublisher.emitAsync(events.creditNote.onRefundCreated, {
         trx,
@@ -99,13 +99,13 @@ export class CreateRefundCreditNoteService {
 
   /**
    * Transformes the refund credit note DTO to model.
-   * @param {number} creditNoteId
-   * @param {ICreditNoteRefundDTO} creditNoteDTO
-   * @returns {ICreditNote}
+   * @param {CreditNote} creditNote - The credit note.
+   * @param {CreditNoteRefundDto} creditNoteDTO - The credit note refund DTO.
+   * @returns {Partial<RefundCreditNote>}
    */
   private transformDTOToModel = (
     creditNote: CreditNote,
-    creditNoteDTO: ICreditNoteRefundDTO,
+    creditNoteDTO: CreditNoteRefundDto,
   ): Partial<RefundCreditNote> => {
     return {
       creditNoteId: creditNote.id,

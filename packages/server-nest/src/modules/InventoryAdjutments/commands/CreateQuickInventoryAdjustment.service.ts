@@ -17,6 +17,7 @@ import { Item } from '@/modules/Items/models/Item';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
+import { CreateQuickInventoryAdjustmentDto } from '../dtos/CreateQuickInventoryAdjustment.dto';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ERRORS } from '../constants/InventoryAdjustments.constants';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -89,7 +90,7 @@ export class CreateQuickInventoryAdjustmentService {
    * @param {IQuickInventoryAdjustmentDTO} quickAdjustmentDTO - qucik adjustment DTO.
    */
   public async createQuickAdjustment(
-    quickAdjustmentDTO: IQuickInventoryAdjustmentDTO,
+    quickAdjustmentDTO: CreateQuickInventoryAdjustmentDto,
   ): Promise<InventoryAdjustment> {
     // Retrieve the adjustment account or throw not found error.
     const adjustmentAccount = await this.accountModel()

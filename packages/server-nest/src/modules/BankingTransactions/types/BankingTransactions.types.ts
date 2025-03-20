@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';
 import { BankTransaction } from '../models/BankTransaction';
+import { CreateBankTransactionDto } from '../dtos/CreateBankTransaction.dto';
 
 export interface IPendingTransactionRemovingEventPayload {
   uncategorizedTransactionId: number;
@@ -67,7 +68,7 @@ export interface ICommandCashflowCreatingPayload {
 }
 
 export interface ICommandCashflowCreatedPayload {
-  newTransactionDTO: ICashflowNewCommandDTO;
+  newTransactionDTO: CreateBankTransactionDto;
   cashflowTransaction: BankTransaction;
   trx: Knex.Transaction;
 }

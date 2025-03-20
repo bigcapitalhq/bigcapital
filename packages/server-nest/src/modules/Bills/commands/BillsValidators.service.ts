@@ -9,6 +9,8 @@ import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost'
 import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { transformToMap } from '@/utils/transform-to-key';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
+import { BillEntryDto } from '../dtos/Bill.dto';
 
 @Injectable()
 export class BillsValidators {
@@ -123,7 +125,7 @@ export class BillsValidators {
    * @param {IItemEntryDTO[]} newEntriesDTO -
    */
   public async validateCostEntriesShouldBeInventoryItems(
-    newEntriesDTO: IItemEntryDTO[],
+    newEntriesDTO: BillEntryDto[],
   ) {
     const entriesItemsIds = newEntriesDTO.map((e) => e.itemId);
     const entriesItems = await this.itemModel()

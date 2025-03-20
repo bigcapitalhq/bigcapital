@@ -4,18 +4,18 @@ import { BankRuleCondition } from './BankRuleCondition';
 import { BankRuleAssignCategory, BankRuleConditionType } from '../types';
 
 export class BankRule extends BaseModel {
-  public id!: number;
-  public name!: string;
-  public order!: number;
-  public applyIfAccountId!: number;
-  public applyIfTransactionType!: string;
-  public assignCategory!: BankRuleAssignCategory;
-  public assignAccountId!: number;
-  public assignPayee!: string;
-  public assignMemo!: string;
-  public conditionsType!: BankRuleConditionType;
+  public readonly id!: number;
+  public readonly name!: string;
+  public readonly order!: number;
+  public readonly applyIfAccountId!: number;
+  public readonly applyIfTransactionType!: string;
+  public readonly assignCategory!: BankRuleAssignCategory;
+  public readonly assignAccountId!: number;
+  public readonly assignPayee!: string;
+  public readonly assignMemo!: string;
+  public readonly conditionsType!: BankRuleConditionType;
 
-  conditions!: BankRuleCondition[];
+  public readonly conditions!: BankRuleCondition[];
 
   /**
    * Table name
@@ -27,7 +27,7 @@ export class BankRule extends BaseModel {
   /**
    * Timestamps columns.
    */
-  get timestamps() {
+  static get timestamps() {
     return ['created_at', 'updated_at'];
   }
 

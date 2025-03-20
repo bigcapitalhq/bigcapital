@@ -8,13 +8,7 @@ import {
   CommonMailOptionsDTO,
 } from '../MailNotification/MailNotification.types';
 import { TenantJobPayload } from '@/interfaces/Tenant';
-// import SaleInvoice from './models/SaleInvoice';
-// import { SystemUser } from '../System/models/SystemUser';
-// import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
-// import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
-// import { IDynamicListFilter } from '@/interfaces/DynamicFilter';
-// import { IItemEntry, IItemEntryDTO } from './ItemEntry';
-// import { AttachmentLinkDTO } from './Attachments';
+import { CreateSaleInvoiceDto, EditSaleInvoiceDto } from './dtos/SaleInvoice.dto';
 
 export interface PaymentIntegrationTransactionLink {
   id: number;
@@ -89,27 +83,27 @@ export type InvoiceNotificationType = 'details' | 'reminder';
 
 export interface ISaleInvoiceCreatedPayload {
   saleInvoice: SaleInvoice;
-  saleInvoiceDTO: ISaleInvoiceCreateDTO;
+  saleInvoiceDTO: CreateSaleInvoiceDto;
   saleInvoiceId: number;
   trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceCreatingPaylaod {
   tenantId: number;
-  saleInvoiceDTO: ISaleInvoiceCreateDTO;
+  saleInvoiceDTO: CreateSaleInvoiceDto;
   trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceEditedPayload {
   saleInvoice: SaleInvoice;
   oldSaleInvoice: SaleInvoice;
-  saleInvoiceDTO: ISaleInvoiceEditDTO;
+  saleInvoiceDTO: EditSaleInvoiceDto;
   saleInvoiceId: number;
   trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceEditingPayload {
-  saleInvoiceDTO: ISaleInvoiceEditDTO;
+  saleInvoiceDTO: EditSaleInvoiceDto;
   oldSaleInvoice: SaleInvoice;
   trx: Knex.Transaction;
 }

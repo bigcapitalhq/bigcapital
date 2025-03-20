@@ -14,6 +14,7 @@ import {
 } from './types/BankingTransactions.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateBankTransactionDto } from './dtos/CreateBankTransaction.dto';
 
 @Controller('banking/transactions')
 @ApiTags('banking-transactions')
@@ -29,7 +30,7 @@ export class BankingTransactionsController {
   }
 
   @Post()
-  async createTransaction(@Body() transactionDTO: ICashflowNewCommandDTO) {
+  async createTransaction(@Body() transactionDTO: CreateBankTransactionDto) {
     return this.bankingTransactionsApplication.createTransaction(
       transactionDTO,
     );

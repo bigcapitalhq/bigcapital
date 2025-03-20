@@ -14,6 +14,7 @@ import { events } from '@/common/events/events';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditPaymentReceivedDto } from '../dtos/PaymentReceived.dto';
 
 @Injectable()
 export class EditPaymentReceivedService {
@@ -49,7 +50,7 @@ export class EditPaymentReceivedService {
    */
   public async editPaymentReceive(
     paymentReceiveId: number,
-    paymentReceiveDTO: IPaymentReceivedEditDTO,
+    paymentReceiveDTO: EditPaymentReceivedDto,
   ) {
     const tenant = await this.tenancyContext.getTenant(true);
 
@@ -151,7 +152,7 @@ export class EditPaymentReceivedService {
    */
   private transformEditDTOToModel = async (
     customer: Customer,
-    paymentReceiveDTO: IPaymentReceivedEditDTO,
+    paymentReceiveDTO: EditPaymentReceivedDto,
     oldPaymentReceive: PaymentReceived,
   ) => {
     return this.transformer.transformPaymentReceiveDTOToModel(

@@ -1,6 +1,5 @@
 import { Knex } from 'knex';
 import {
-  IBillPaymentDTO,
   IBillPaymentEventCreatedPayload,
   IBillPaymentCreatingPayload,
 } from '../types/BillPayments.types';
@@ -14,6 +13,7 @@ import { TenancyContext } from '../../Tenancy/TenancyContext.service';
 import { BillPayment } from '../models/BillPayment';
 import { Vendor } from '../../Vendors/models/Vendor';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateBillPaymentDto } from '../dtos/BillPayment.dto';
 
 @Injectable()
 export class CreateBillPaymentService {
@@ -56,7 +56,7 @@ export class CreateBillPaymentService {
    * @param {BillPaymentDTO} billPayment - Bill payment object.
    */
   public async createBillPayment(
-    billPaymentDTO: IBillPaymentDTO,
+    billPaymentDTO: CreateBillPaymentDto,
     trx?: Knex.Transaction,
   ): Promise<BillPayment> {
     const tenantMeta = await this.tenancyContext.getTenant(true);

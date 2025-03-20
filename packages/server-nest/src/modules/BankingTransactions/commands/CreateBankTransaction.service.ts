@@ -18,6 +18,7 @@ import {
   ICommandCashflowCreatingPayload,
 } from '../types/BankingTransactions.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateBankTransactionDto } from '../dtos/CreateBankTransaction.dto';
 
 @Injectable()
 export class CreateBankTransactionService {
@@ -62,7 +63,7 @@ export class CreateBankTransactionService {
    * @returns {ICashflowTransactionInput} - Cashflow transaction object.
    */
   private transformCashflowTransactionDTO = async (
-    newCashflowTransactionDTO: ICashflowNewCommandDTO,
+    newCashflowTransactionDTO: CreateBankTransactionDto,
     cashflowAccount: Account,
     userId: number,
   ): Promise<BankTransaction> => {

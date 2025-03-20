@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  ICreditNoteEditDTO,
   ICreditNoteEditedPayload,
   ICreditNoteEditingPayload,
 } from '../types/CreditNotes.types';
@@ -13,6 +12,7 @@ import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { CommandCreditNoteDTOTransform } from './CommandCreditNoteDTOTransform.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditCreditNoteDto } from '../dtos/CreditNote.dto';
 
 @Injectable()
 export class EditCreditNoteService {
@@ -27,6 +27,7 @@ export class EditCreditNoteService {
   constructor(
     @Inject(CreditNote.name)
     private creditNoteModel: TenantModelProxy<typeof CreditNote>,
+
     @Inject(Contact.name)
     private contactModel: TenantModelProxy<typeof Contact>,
 
@@ -42,7 +43,7 @@ export class EditCreditNoteService {
    */
   public async editCreditNote(
     creditNoteId: number,
-    creditNoteEditDTO: ICreditNoteEditDTO,
+    creditNoteEditDTO: EditCreditNoteDto,
   ) {
     // Retrieve the sale invoice or throw not found service error.
     const oldCreditNote = await this.creditNoteModel()

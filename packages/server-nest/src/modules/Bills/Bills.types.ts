@@ -3,6 +3,7 @@ import { IItemEntryDTO } from '../TransactionItemEntry/ItemEntry.types';
 import { AttachmentLinkDTO } from '../Attachments/Attachments.types';
 import { Bill } from './models/Bill';
 import { IDynamicListFilter } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
+import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
 
 export interface IBillDTO {
   vendorId: number;
@@ -51,29 +52,25 @@ export interface IBillsFilter extends IDynamicListFilter {
 }
 
 export interface IBillCreatedPayload {
-  // tenantId: number;
   bill: Bill;
-  billDTO: IBillDTO;
-  // billId: number;
+  billDTO: CreateBillDto;
   trx?: Knex.Transaction;
 }
 
 export interface IBillCreatingPayload {
-  // tenantId: number;
-  billDTO: IBillDTO;
+  billDTO: CreateBillDto;
   trx: Knex.Transaction;
 }
 
 export interface IBillEditingPayload {
-  // tenantId: number;
   oldBill: Bill;
-  billDTO: IBillEditDTO;
+  billDTO: EditBillDto;
   trx: Knex.Transaction;
 }
 export interface IBillEditedPayload {
   oldBill: Bill;
   bill: Bill;
-  billDTO: IBillDTO;
+  billDTO: EditBillDto;
   trx?: Knex.Transaction;
 }
 

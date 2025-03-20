@@ -12,6 +12,7 @@ import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditPaymentReceivedDto } from '../dtos/PaymentReceived.dto';
 
 @Injectable()
 export class PaymentReceivedValidators {
@@ -191,11 +192,11 @@ export class PaymentReceivedValidators {
 
   /**
    * Validate the payment customer whether modified.
-   * @param {IPaymentReceivedEditDTO} paymentReceiveDTO
-   * @param {IPaymentReceived} oldPaymentReceive
+   * @param {EditPaymentReceivedDto} paymentReceiveDTO
+   * @param {PaymentReceived} oldPaymentReceive
    */
   public validateCustomerNotModified(
-    paymentReceiveDTO: IPaymentReceivedEditDTO,
+    paymentReceiveDTO: EditPaymentReceivedDto,
     oldPaymentReceive: PaymentReceived,
   ) {
     if (paymentReceiveDTO.customerId !== oldPaymentReceive.customerId) {

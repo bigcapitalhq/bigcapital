@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import * as R from 'ramda';
 import { omit, sumBy } from 'lodash';
 import { formatDateFields } from '@/utils/format-date-fields';
-import { IBillPaymentDTO } from '../types/BillPayments.types';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { BillPayment } from '../models/BillPayment';
+import {
+  CreateBillPaymentDto,
+  EditBillPaymentDto,
+} from '../dtos/BillPayment.dto';
 
 @Injectable()
 export class CommandBillPaymentDTOTransformer {
@@ -22,7 +25,7 @@ export class CommandBillPaymentDTOTransformer {
    * @return {Promise<IBillPayment>}
    */
   public async transformDTOToModel(
-    billPaymentDTO: IBillPaymentDTO,
+    billPaymentDTO: CreateBillPaymentDto | EditBillPaymentDto,
     vendor: Vendor,
     oldBillPayment?: BillPayment,
   ): Promise<BillPayment> {

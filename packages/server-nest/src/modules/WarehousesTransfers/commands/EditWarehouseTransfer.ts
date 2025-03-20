@@ -13,9 +13,17 @@ import { events } from '@/common/events/events';
 import { WarehouseTransfer } from '../models/WarehouseTransfer';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { ModelObject } from 'objection';
+import { EditWarehouseTransferDto } from '../dtos/WarehouseTransfer.dto';
 
 @Injectable()
 export class EditWarehouseTransfer {
+  /**
+   * @param {UnitOfWork} uow - Unit of work service.
+   * @param {EventEmitter2} eventPublisher - Event emitter service.
+   * @param {CommandWarehouseTransfer} commandWarehouseTransfer - Command warehouse transfer service.
+   * @param {ItemsEntriesService} itemsEntries - Items entries service.
+   * @param {TenantModelProxy<WarehouseTransfer>} warehouseTransferModel - Warehouse transfer model.
+   */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
@@ -36,7 +44,7 @@ export class EditWarehouseTransfer {
    */
   public editWarehouseTransfer = async (
     warehouseTransferId: number,
-    editWarehouseDTO: IEditWarehouseTransferDTO,
+    editWarehouseDTO: EditWarehouseTransferDto,
   ): Promise<ModelObject<WarehouseTransfer>> => {
     // Retrieves the old warehouse transfer transaction.
     const oldWarehouseTransfer = await this.warehouseTransferModel()

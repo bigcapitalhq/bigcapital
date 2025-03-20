@@ -118,7 +118,6 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
-  // @UsePipes(new ZodValidationPipe(createItemSchema))
   async editItem(
     @Param('id') id: string,
     @Body() editItemDto: EditItemDto,

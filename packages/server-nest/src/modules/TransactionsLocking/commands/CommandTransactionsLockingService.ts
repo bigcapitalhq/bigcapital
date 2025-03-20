@@ -15,6 +15,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { CancelTransactionsLockingDto, TransactionsLockingDto } from '../dtos/TransactionsLocking.dto';
 
 const Modules = ['all', 'sales', 'purchases', 'financial'];
 
@@ -33,7 +34,7 @@ export class TransactionsLockingService {
    */
   public commandTransactionsLocking = async (
     module: TransactionsLockingGroup = TransactionsLockingGroup.All,
-    transactionLockingDTO: Partial<ITransactionsLockingAllDTO>,
+    transactionLockingDTO: TransactionsLockingDto,
   ): Promise<ITransactionMeta> => {
     // Validate the transaction locking module.
     this.validateTransactionsLockingModule(module);
@@ -70,7 +71,7 @@ export class TransactionsLockingService {
    */
   public cancelTransactionLocking = async (
     module: TransactionsLockingGroup = TransactionsLockingGroup.All,
-    cancelLockingDTO: ICancelTransactionsLockingDTO,
+    cancelLockingDTO: CancelTransactionsLockingDto,
   ): Promise<ITransactionMeta> => {
     // Validate the transaction locking module.
     this.validateTransactionsLockingModule(module);
@@ -137,10 +138,11 @@ export class TransactionsLockingService {
     this.validateTransactionsLockingModule(module);
 
     // Saves transactions locking settings.
-    await this.transactionsLockingRepo.saveTransactionsLocking(
-      module,
-      { unlockFromDate: '', unlockToDate: '', partialUnlockReason: '' },
-    );
+    await this.transactionsLockingRepo.saveTransactionsLocking(module, {
+      unlockFromDate: '',
+      unlockToDate: '',
+      partialUnlockReason: '',
+    });
   };
 
   /**

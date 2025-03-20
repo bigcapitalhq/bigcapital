@@ -11,8 +11,6 @@ import { GetInvoicePaymentsService } from './queries/GetInvoicePayments.service'
 import { GetSaleInvoiceState } from './queries/GetSaleInvoiceState.service';
 import { GetSaleInvoiceMailState } from './queries/GetSaleInvoiceMailState.service';
 import {
-  ISaleInvoiceCreateDTO,
-  ISaleInvoiceEditDTO,
   ISaleInvoiceWriteoffDTO,
   ISalesInvoicesFilter,
   SaleInvoiceMailState,
@@ -20,6 +18,10 @@ import {
 } from './SaleInvoice.types';
 import { GetSaleInvoicesService } from './queries/GetSaleInvoices';
 import { SendSaleInvoiceMail } from './commands/SendSaleInvoiceMail';
+import {
+  CreateSaleInvoiceDto,
+  EditSaleInvoiceDto,
+} from './dtos/SaleInvoice.dto';
 
 @Injectable()
 export class SaleInvoiceApplication {
@@ -44,7 +46,7 @@ export class SaleInvoiceApplication {
    * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO
    * @returns {Promise<ISaleInvoice>}
    */
-  public createSaleInvoice(saleInvoiceDTO: ISaleInvoiceCreateDTO) {
+  public createSaleInvoice(saleInvoiceDTO: CreateSaleInvoiceDto) {
     return this.createSaleInvoiceService.createSaleInvoice(saleInvoiceDTO);
   }
 
@@ -55,7 +57,7 @@ export class SaleInvoiceApplication {
    */
   public editSaleInvoice(
     saleInvoiceId: number,
-    saleInvoiceDTO: ISaleInvoiceEditDTO,
+    saleInvoiceDTO: EditSaleInvoiceDto,
   ) {
     return this.editSaleInvoiceService.editSaleInvoice(
       saleInvoiceId,

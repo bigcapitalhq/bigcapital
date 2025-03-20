@@ -1,6 +1,6 @@
+import { Injectable } from '@nestjs/common';
 import { CreateSaleEstimate } from './commands/CreateSaleEstimate.service';
 import {
-  ISaleEstimateDTO,
   ISalesEstimatesFilter,
   SaleEstimateMailOptionsDTO,
 } from './types/SaleEstimates.types';
@@ -10,12 +10,14 @@ import { GetSaleEstimate } from './queries/GetSaleEstimate.service';
 import { DeliverSaleEstimateService } from './commands/DeliverSaleEstimate.service';
 import { ApproveSaleEstimateService } from './commands/ApproveSaleEstimate.service';
 import { RejectSaleEstimateService } from './commands/RejectSaleEstimate.service';
-// import { SaleEstimateNotifyBySms } from './commands/SaleEstimateSmsNotify';
 import { SendSaleEstimateMail } from './commands/SendSaleEstimateMail';
 import { GetSaleEstimateState } from './queries/GetSaleEstimateState.service';
 import { GetSaleEstimatesService } from './queries/GetSaleEstimates.service';
-import { Injectable } from '@nestjs/common';
 import { GetSaleEstimatePdf } from './queries/GetSaleEstimatePdf';
+import {
+  CreateSaleEstimateDto,
+  EditSaleEstimateDto,
+} from './dtos/SaleEstimate.dto';
 
 @Injectable()
 export class SaleEstimatesApplication {
@@ -31,25 +33,27 @@ export class SaleEstimatesApplication {
     private readonly sendEstimateMailService: SendSaleEstimateMail,
     private readonly getSaleEstimateStateService: GetSaleEstimateState,
     private readonly saleEstimatesPdfService: GetSaleEstimatePdf,
-    // private readonly saleEstimateNotifyBySmsService: SaleEstimateNotifyBySms,
   ) {}
 
   /**
    * Create a sale estimate.
-   * @param {EstimateDTO} estimate - Estimate DTO.
+   * @param {CreateSaleEstimateDto} estimate - Estimate DTO.
    * @return {Promise<ISaleEstimate>}
    */
-  public createSaleEstimate(estimateDTO: ISaleEstimateDTO) {
+  public createSaleEstimate(estimateDTO: CreateSaleEstimateDto) {
     return this.createSaleEstimateService.createEstimate(estimateDTO);
   }
 
   /**
    * Edit the given sale estimate.
    * @param {number} estimateId - Sale estimate ID.
-   * @param {EstimateDTO} estimate - Estimate DTO.
+   * @param {EditSaleEstimateDto} estimate - Estimate DTO.
    * @return {Promise<ISaleEstimate>}
    */
-  public editSaleEstimate(estimateId: number, estimateDTO: ISaleEstimateDTO) {
+  public editSaleEstimate(
+    estimateId: number,
+    estimateDTO: EditSaleEstimateDto,
+  ) {
     return this.editSaleEstimateService.editEstimate(estimateId, estimateDTO);
   }
 

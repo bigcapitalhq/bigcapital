@@ -17,6 +17,7 @@ import { BrandingTemplateDTOTransformer } from '../../PdfTemplate/BrandingTempla
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { CreditNoteAutoIncrementService } from './CreditNoteAutoIncrement.service';
 import { CreditNote } from '../models/CreditNote';
+import { CreateCreditNoteDto, EditCreditNoteDto } from '../dtos/CreditNote.dto';
 
 @Injectable()
 export class CommandCreditNoteDTOTransform {
@@ -41,7 +42,7 @@ export class CommandCreditNoteDTOTransform {
    * @param {string} customerCurrencyCode -
    */
   public transformCreateEditDTOToModel = async (
-    creditNoteDTO: ICreditNoteNewDTO | ICreditNoteEditDTO,
+    creditNoteDTO: CreateCreditNoteDto | EditCreditNoteDto,
     customerCurrencyCode: string,
     oldCreditNote?: CreditNote,
   ): Promise<CreditNote> => {

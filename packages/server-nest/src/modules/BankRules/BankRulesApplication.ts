@@ -4,8 +4,8 @@ import { DeleteBankRuleService } from './commands/DeleteBankRule.service';
 import { EditBankRuleService } from './commands/EditBankRule.service';
 import { GetBankRuleService } from './queries/GetBankRule.service';
 import { GetBankRulesService } from './queries/GetBankRules.service';
-import { ICreateBankRuleDTO, IEditBankRuleDTO } from './types';
 import { BankRule } from './models/BankRule';
+import { CreateBankRuleDto, EditBankRuleDto } from './dtos/BankRule.dto';
 
 @Injectable()
 export class BankRulesApplication {
@@ -23,7 +23,7 @@ export class BankRulesApplication {
    * @returns {Promise<void>}
    */
   public createBankRule(
-    createRuleDTO: ICreateBankRuleDTO,
+    createRuleDTO: CreateBankRuleDto,
   ): Promise<BankRule> {
     return this.createBankRuleService.createBankRule(createRuleDTO);
   }
@@ -31,12 +31,12 @@ export class BankRulesApplication {
   /**
    * Edits the given bank rule.
    * @param {number} ruleId - Bank rule identifier.
-   * @param {IEditBankRuleDTO} editRuleDTO - Bank rule data.
+   * @param {EditBankRuleDto} editRuleDTO - Bank rule data.
    * @returns {Promise<void>}
    */
   public editBankRule(
     ruleId: number,
-    editRuleDTO: IEditBankRuleDTO,
+    editRuleDTO: EditBankRuleDto,
   ): Promise<void> {
     return this.editBankRuleService.editBankRule(ruleId, editRuleDTO);
   }

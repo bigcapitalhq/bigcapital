@@ -9,13 +9,13 @@ import {
   Query,
   Inject,
 } from '@nestjs/common';
-import { WarehouseTransferApplication } from './WarehouseTransferApplication';
-import {
-  ICreateWarehouseTransferDTO,
-  IEditWarehouseTransferDTO,
-} from '@/modules/Warehouses/Warehouse.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { WarehouseTransferApplication } from './WarehouseTransferApplication';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import {
+  CreateWarehouseTransferDto,
+  EditWarehouseTransferDto,
+} from './dtos/WarehouseTransfer.dto';
 
 @Controller('warehouse-transfers')
 @ApiTags('warehouse-transfers')
@@ -40,7 +40,7 @@ export class WarehouseTransfersController {
       'The warehouse transfer transaction has been created successfully.',
   })
   async createWarehouseTransfer(
-    @Body() createWarehouseTransferDTO: ICreateWarehouseTransferDTO,
+    @Body() createWarehouseTransferDTO: CreateWarehouseTransferDto,
   ) {
     const warehouse =
       await this.warehouseTransferApplication.createWarehouseTransfer(
@@ -66,14 +66,13 @@ export class WarehouseTransfersController {
   })
   async editWarehouseTransfer(
     @Param('id') id: number,
-    @Body() editWarehouseTransferDTO: IEditWarehouseTransferDTO,
+    @Body() editWarehouseTransferDTO: EditWarehouseTransferDto,
   ) {
     const warehouseTransfer =
       await this.warehouseTransferApplication.editWarehouseTransfer(
         id,
         editWarehouseTransferDTO,
       );
-
     return {
       id: warehouseTransfer.id,
       message:

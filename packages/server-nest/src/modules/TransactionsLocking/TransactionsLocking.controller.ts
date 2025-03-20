@@ -8,6 +8,7 @@ import { QueryTransactionsLocking } from './queries/QueryTransactionsLocking';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation } from '@nestjs/swagger';
 import { ApiTags } from '@nestjs/swagger';
+import { CancelTransactionsLockingDto, TransactionsLockingDto, UnlockTransactionsLockingDto } from './dtos/TransactionsLocking.dto';
 
 @Controller('transactions-locking')
 @ApiTags('Transactions Locking')
@@ -22,7 +23,7 @@ export class TransactionsLockingController {
   @ApiOperation({ summary: 'Lock all transactions for a module or all modules' })
   async commandTransactionsLocking(
     @Body('module') module: TransactionsLockingGroup,
-    @Body() transactionLockingDTO: ITransactionsLockingAllDTO,
+    @Body() transactionLockingDTO: TransactionsLockingDto,
   ) {
     const transactionMeta =
       await this.transactionsLockingService.commandTransactionsLocking(
@@ -39,7 +40,7 @@ export class TransactionsLockingController {
   @ApiOperation({ summary: 'Cancel all transactions locking for a module or all modules' })
   async cancelTransactionLocking(
     @Body('module') module: TransactionsLockingGroup,
-    @Body() cancelLockingDTO: ICancelTransactionsLockingDTO,
+    @Body() cancelLockingDTO: CancelTransactionsLockingDto,
   ) {
     const data = await this.transactionsLockingService.cancelTransactionLocking(
       module,
@@ -55,7 +56,7 @@ export class TransactionsLockingController {
   @ApiOperation({ summary: 'Partial unlock all transactions locking for a module or all modules' })
   async unlockTransactionsLockingBetweenPeriod(
     @Body('module') module: TransactionsLockingGroup,
-    @Body() unlockDTO: ITransactionLockingPartiallyDTO,
+    @Body() unlockDTO: UnlockTransactionsLockingDto,
   ) {
     const transactionMeta =
       await this.transactionsLockingService.unlockTransactionsLockingPartially(

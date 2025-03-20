@@ -5,8 +5,8 @@ import { EditBillPayment } from './commands/EditBillPayment.service';
 // import { GetBillPayments } from './GetBillPayments';
 import { GetBillPayment } from './queries/GetBillPayment.service';
 import { GetPaymentBills } from './queries/GetPaymentBills.service';
-import { IBillPaymentDTO } from './types/BillPayments.types';
 import { GetBillPayments } from '../Bills/queries/GetBillPayments';
+import { CreateBillPaymentDto, EditBillPaymentDto } from './dtos/BillPayment.dto';
 
 /**
  * Bill payments application.
@@ -28,7 +28,7 @@ export class BillPaymentsApplication {
    * @param {IBillPaymentDTO} billPaymentDTO
    * @returns {Promise<IBillPayment>}
    */
-  public createBillPayment(billPaymentDTO: IBillPaymentDTO) {
+  public createBillPayment(billPaymentDTO: CreateBillPaymentDto) {
     return this.createBillPaymentService.createBillPayment(billPaymentDTO);
   }
 
@@ -48,7 +48,7 @@ export class BillPaymentsApplication {
    */
   public editBillPayment(
     billPaymentId: number,
-    billPaymentDTO: IBillPaymentDTO,
+    billPaymentDTO: EditBillPaymentDto,
   ) {
     return this.editBillPaymentService.editBillPayment(
       billPaymentId,

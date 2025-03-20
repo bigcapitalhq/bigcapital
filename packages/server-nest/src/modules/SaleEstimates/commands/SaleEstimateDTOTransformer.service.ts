@@ -2,10 +2,7 @@ import * as R from 'ramda';
 import { Inject, Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
 import * as composeAsync from 'async/compose';
-// import { ICustomer, ISaleEstimate, ISaleEstimateDTO } from '../types/SaleEstimates.types';
 import { SaleEstimateValidators } from './SaleEstimateValidators.service';
-// import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
-// import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { formatDateFields } from '@/utils/format-date-fields';
 import * as moment from 'moment';
 import { SaleEstimateIncrement } from './SaleEstimateIncrement.service';
@@ -18,8 +15,7 @@ import { SaleEstimate } from '../models/SaleEstimate';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { ISaleEstimateDTO } from '../types/SaleEstimates.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-// import { assocItemEntriesDefaultIndex } from '@/services/Items/utils';
-// import { BrandingTemplateDTOTransformer } from '@/services/PdfTemplate/BrandingTemplateDTOTransformer';
+import { CommandSaleEstimateDto } from '../dtos/SaleEstimate.dto';
 
 @Injectable()
 export class SaleEstimateDTOTransformer {
@@ -42,7 +38,7 @@ export class SaleEstimateDTOTransformer {
    * @return {ISaleEstimate}
    */
   async transformDTOToModel(
-    estimateDTO: ISaleEstimateDTO,
+    estimateDTO: CommandSaleEstimateDto,
     paymentCustomer: Customer,
     oldSaleEstimate?: SaleEstimate,
   ): Promise<SaleEstimate> {

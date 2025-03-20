@@ -4,6 +4,7 @@ import { CreateRefundCreditNoteService } from './commands/CreateRefundCreditNote
 import { DeleteRefundCreditNoteService } from './commands/DeleteRefundCreditNote.service';
 import { RefundCreditNoteService } from './commands/RefundCreditNote.service';
 import { RefundSyncCreditNoteBalanceService } from './commands/RefundSyncCreditNoteBalance';
+import { CreditNoteRefundDto } from './dto/CreditNoteRefund.dto';
 
 @Injectable()
 export class CreditNotesRefundsApplication {
@@ -17,12 +18,12 @@ export class CreditNotesRefundsApplication {
   /**
    * Create a refund credit note.
    * @param {number} creditNoteId - The credit note ID.
-   * @param {ICreditNoteRefundDTO} creditNoteDTO - The credit note DTO.
+   * @param {CreditNoteRefundDto} creditNoteDTO - The credit note DTO.
    * @returns {Promise<RefundCreditNote>}
    */
   public createRefundCreditNote(
     creditNoteId: number,
-    creditNoteDTO: ICreditNoteRefundDTO,
+    creditNoteDTO: CreditNoteRefundDto,
   ) {
     return this.createRefundCreditNoteService.createCreditNoteRefund(
       creditNoteId,

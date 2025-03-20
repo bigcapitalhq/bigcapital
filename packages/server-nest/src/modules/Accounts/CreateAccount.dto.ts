@@ -25,12 +25,12 @@ export class CreateAccountDTO {
 
   @IsString()
   @MinLength(3)
-  @MaxLength(255) // Assuming DATATYPES_LENGTH.STRING is 255
+  @MaxLength(255)
   accountType: string;
 
   @IsOptional()
   @IsString()
-  @MaxLength(65535) // Assuming DATATYPES_LENGTH.TEXT is 65535
+  @MaxLength(65535)
   description?: string;
 
   @IsOptional()

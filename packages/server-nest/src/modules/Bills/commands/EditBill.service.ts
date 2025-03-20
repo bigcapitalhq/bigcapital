@@ -15,6 +15,7 @@ import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Knex } from 'knex';
 import { TransactionLandedCostEntriesService } from '@/modules/BillLandedCosts/TransactionLandedCostEntries.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditBillDto } from '../dtos/Bill.dto';
 
 @Injectable()
 export class EditBillService {
@@ -46,7 +47,7 @@ export class EditBillService {
    * @param {IBillEditDTO} billDTO - The given new bill details.
    * @return {Promise<IBill>}
    */
-  public async editBill(billId: number, billDTO: IBillEditDTO): Promise<Bill> {
+  public async editBill(billId: number, billDTO: EditBillDto): Promise<Bill> {
     // Retrieve the given bill or throw not found error.
     const oldBill = await this.billModel()
       .query()

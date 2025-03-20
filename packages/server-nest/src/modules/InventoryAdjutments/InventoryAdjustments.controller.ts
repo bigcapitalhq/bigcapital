@@ -17,6 +17,7 @@ import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { IPaginationMeta } from '@/interfaces/Model';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAdjustment.dto';
 
 @Controller('inventory-adjustments')
 @ApiTags('inventory-adjustments')
@@ -33,7 +34,7 @@ export class InventoryAdjustmentsController {
     description: 'The inventory adjustment has been successfully created.',
   })
   public async createQuickInventoryAdjustment(
-    @Body() quickAdjustmentDTO: IQuickInventoryAdjustmentDTO,
+    @Body() quickAdjustmentDTO: CreateQuickInventoryAdjustmentDto,
   ): Promise<InventoryAdjustment> {
     return this.inventoryAdjustmentsApplicationService.createQuickInventoryAdjustment(
       quickAdjustmentDTO,

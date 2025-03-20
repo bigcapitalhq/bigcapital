@@ -10,10 +10,10 @@ import {
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { CreateBillPaymentService } from '@/modules/BillPayments/commands/CreateBillPayment.service';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
-import { IBillPaymentDTO } from '@/modules/BillPayments/types/BillPayments.types';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateBillPaymentDto } from '@/modules/BillPayments/dtos/BillPayment.dto';
 
 @Injectable()
 export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType {
@@ -110,7 +110,7 @@ export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType 
       .findById(matchTransactionDTO.referenceId)
       .throwIfNotFound();
 
-    const createPaymentMadeDTO: IBillPaymentDTO = {
+    const createPaymentMadeDTO: CreateBillPaymentDto = {
       vendorId: bill.vendorId,
       paymentAccountId: uncategorizedTransaction.accountId,
       paymentDate: uncategorizedTransaction.date,

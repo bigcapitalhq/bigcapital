@@ -14,6 +14,7 @@ import { SaleEstimate } from '../models/SaleEstimate';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditSaleEstimateDto } from '../dtos/SaleEstimate.dto';
 
 @Injectable()
 export class EditSaleEstimate {
@@ -40,7 +41,7 @@ export class EditSaleEstimate {
    */
   public async editEstimate(
     estimateId: number,
-    estimateDTO: ISaleEstimateDTO,
+    estimateDTO: EditSaleEstimateDto,
   ): Promise<SaleEstimate> {
     // Retrieve details of the given sale estimate id.
     const oldSaleEstimate = await this.saleEstimateModel()

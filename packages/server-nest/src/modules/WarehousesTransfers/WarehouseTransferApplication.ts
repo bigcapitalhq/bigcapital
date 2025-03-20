@@ -1,8 +1,6 @@
-import {
-  ICreateWarehouseTransferDTO,
-  IEditWarehouseTransferDTO,
-  IGetWarehousesTransfersFilterDTO,
-} from '@/modules/Warehouses/Warehouse.types';
+import { Injectable } from '@nestjs/common';
+import { ModelObject } from 'objection';
+import { IGetWarehousesTransfersFilterDTO } from '@/modules/Warehouses/Warehouse.types';
 import { CreateWarehouseTransfer } from './commands/CreateWarehouseTransfer';
 import { DeleteWarehouseTransfer } from './commands/DeleteWarehouseTransfer';
 import { EditWarehouseTransfer } from './commands/EditWarehouseTransfer';
@@ -10,9 +8,11 @@ import { GetWarehouseTransfer } from './queries/GetWarehouseTransfer';
 import { GetWarehouseTransfers } from './queries/GetWarehouseTransfers';
 import { InitiateWarehouseTransfer } from './commands/InitiateWarehouseTransfer';
 import { TransferredWarehouseTransfer } from './commands/TransferredWarehouseTransfer';
-import { Injectable } from '@nestjs/common';
 import { WarehouseTransfer } from './models/WarehouseTransfer';
-import { ModelObject } from 'objection';
+import {
+  CreateWarehouseTransferDto,
+  EditWarehouseTransferDto,
+} from './dtos/WarehouseTransfer.dto';
 
 @Injectable()
 export class WarehouseTransferApplication {
@@ -32,7 +32,7 @@ export class WarehouseTransferApplication {
    * @returns {Promise<ModelObject<WarehouseTransfer>>}
    */
   public createWarehouseTransfer = (
-    createWarehouseTransferDTO: ICreateWarehouseTransferDTO,
+    createWarehouseTransferDTO: CreateWarehouseTransferDto,
   ): Promise<ModelObject<WarehouseTransfer>> => {
     return this.createWarehouseTransferService.createWarehouseTransfer(
       createWarehouseTransferDTO,
@@ -46,7 +46,7 @@ export class WarehouseTransferApplication {
    */
   public editWarehouseTransfer = (
     warehouseTransferId: number,
-    editWarehouseTransferDTO: IEditWarehouseTransferDTO,
+    editWarehouseTransferDTO: EditWarehouseTransferDto,
   ): Promise<ModelObject<WarehouseTransfer>> => {
     return this.editWarehouseTransferService.editWarehouseTransfer(
       warehouseTransferId,
@@ -69,8 +69,8 @@ export class WarehouseTransferApplication {
 
   /**
    * Retrieves warehouse transfer transaction.
-   * @param {number} warehouseTransferId
-   * @returns {Promise<IWarehouseTransfer>}
+   * @param {number} warehouseTransferId - Warehouse transfer id.
+   * @returns {Promise<ModelObject<WarehouseTransfer>>}
    */
   public getWarehouseTransfer = (
     warehouseTransferId: number,

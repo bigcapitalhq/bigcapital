@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { join } from 'path';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 import {
   AcceptLanguageResolver,
   CookieResolver,
@@ -71,7 +72,7 @@ import { StripePaymentModule } from '../StripePayment/StripePayment.module';
 import { FeaturesModule } from '../Features/Features.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { WarehousesTransfersModule } from '../WarehousesTransfers/WarehouseTransfers.module';
-import { RedisModule } from '@liaoliaots/nestjs-redis';
+
 
 @Module({
   imports: [

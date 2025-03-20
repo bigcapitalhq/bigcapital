@@ -4,12 +4,10 @@ import { CreateSaleReceipt } from './commands/CreateSaleReceipt.service';
 import { GetSaleReceiptState } from './queries/GetSaleReceiptState.service';
 import { SaleReceiptsPdfService } from './queries/SaleReceiptsPdf.service';
 import { CloseSaleReceipt } from './commands/CloseSaleReceipt.service';
-// import { GetSaleReceipts } from './queries/GetSaleReceipts';
 import { DeleteSaleReceipt } from './commands/DeleteSaleReceipt.service';
 import { GetSaleReceipt } from './queries/GetSaleReceipt.service';
 import { EditSaleReceipt } from './commands/EditSaleReceipt.service';
 import {
-  ISaleReceiptDTO,
   ISaleReceiptState,
   ISalesReceiptsFilter,
   SaleReceiptMailOpts,
@@ -19,6 +17,7 @@ import { GetSaleReceiptsService } from './queries/GetSaleReceipts.service';
 import { SaleReceipt } from './models/SaleReceipt';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { SaleReceiptMailNotification } from './commands/SaleReceiptMailNotification';
+import { CreateSaleReceiptDto, EditSaleReceiptDto } from './dtos/SaleReceipt.dto';
 
 @Injectable()
 export class SaleReceiptApplication {
@@ -40,7 +39,7 @@ export class SaleReceiptApplication {
    * @returns {Promise<ISaleReceipt>}
    */
   public async createSaleReceipt(
-    saleReceiptDTO: ISaleReceiptDTO,
+    saleReceiptDTO: CreateSaleReceiptDto,
     trx?: Knex.Transaction,
   ) {
     return this.createSaleReceiptService.createSaleReceipt(saleReceiptDTO, trx);
@@ -55,7 +54,7 @@ export class SaleReceiptApplication {
    */
   public async editSaleReceipt(
     saleReceiptId: number,
-    saleReceiptDTO: ISaleReceiptDTO,
+    saleReceiptDTO: EditSaleReceiptDto,
   ) {
     return this.editSaleReceiptService.editSaleReceipt(
       saleReceiptId,

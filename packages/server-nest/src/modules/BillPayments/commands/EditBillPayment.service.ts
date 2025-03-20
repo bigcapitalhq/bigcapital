@@ -13,6 +13,7 @@ import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { events } from '@/common/events/events';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditBillPaymentDto } from '../dtos/BillPayment.dto';
 
 @Injectable()
 export class EditBillPayment {
@@ -43,14 +44,13 @@ export class EditBillPayment {
    * - Update the diff vendor balance.
    * - Update the diff bill payment amount.
    * ------
-   * @param {number} tenantId - Tenant id
    * @param {Integer} billPaymentId
-   * @param {BillPaymentDTO} billPayment
-   * @param {IBillPayment} oldBillPayment
+   * @param {EditBillPaymentDto} billPayment
+   * @param {BillPayment} oldBillPayment
    */
   public async editBillPayment(
     billPaymentId: number,
-    billPaymentDTO,
+    billPaymentDTO: EditBillPaymentDto,
   ): Promise<BillPayment> {
     const tenantMeta = await this.tenancyContext.getTenant(true);
 

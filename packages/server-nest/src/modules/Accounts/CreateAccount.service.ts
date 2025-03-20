@@ -18,6 +18,13 @@ import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateAccountService {
+  /**
+   * @param {TenantModelProxy<typeof Account>} accountModel - The account model proxy.
+   * @param {EventEmitter2} eventEmitter - The event emitter.
+   * @param {UnitOfWork} uow - The unit of work.
+   * @param {CommandAccountValidators} validator - The command account validators.
+   * @param {TenancyContext} tenancyContext - The tenancy context.
+   */
   constructor(
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,

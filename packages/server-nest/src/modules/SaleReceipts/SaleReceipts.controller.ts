@@ -9,10 +9,13 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ISaleReceiptDTO } from './types/SaleReceipts.types';
 import { SaleReceiptApplication } from './SaleReceiptApplication.service';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  CreateSaleReceiptDto,
+  EditSaleReceiptDto,
+} from './dtos/SaleReceipt.dto';
 
 @Controller('sale-receipts')
 @ApiTags('sale-receipts')
@@ -22,7 +25,7 @@ export class SaleReceiptsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new sale receipt.' })
-  createSaleReceipt(@Body() saleReceiptDTO: ISaleReceiptDTO) {
+  createSaleReceipt(@Body() saleReceiptDTO: CreateSaleReceiptDto) {
     return this.saleReceiptApplication.createSaleReceipt(saleReceiptDTO);
   }
 
@@ -62,7 +65,7 @@ export class SaleReceiptsController {
   })
   editSaleReceipt(
     @Param('id', ParseIntPipe) id: number,
-    @Body() saleReceiptDTO: ISaleReceiptDTO,
+    @Body() saleReceiptDTO: EditSaleReceiptDto,
   ) {
     return this.saleReceiptApplication.editSaleReceipt(id, saleReceiptDTO);
   }

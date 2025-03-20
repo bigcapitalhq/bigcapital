@@ -13,12 +13,15 @@ import {
 } from '@nestjs/common';
 import { SaleEstimatesApplication } from './SaleEstimates.application';
 import {
-  ISaleEstimateDTO,
   ISalesEstimatesFilter,
   SaleEstimateMailOptionsDTO,
 } from './types/SaleEstimates.types';
 import { SaleEstimate } from './models/SaleEstimate';
 import { PublicRoute } from '../Auth/Jwt.guard';
+import {
+  CreateSaleEstimateDto,
+  EditSaleEstimateDto,
+} from './dtos/SaleEstimate.dto';
 
 @Controller('sale-estimates')
 @ApiTags('sale-estimates')
@@ -38,7 +41,7 @@ export class SaleEstimatesController {
     description: 'Sale estimate created successfully',
   })
   public createSaleEstimate(
-    @Body() estimateDTO: ISaleEstimateDTO,
+    @Body() estimateDTO: CreateSaleEstimateDto,
   ): Promise<SaleEstimate> {
     return this.saleEstimatesApplication.createSaleEstimate(estimateDTO);
   }
@@ -61,7 +64,7 @@ export class SaleEstimatesController {
   })
   public editSaleEstimate(
     @Param('id', ParseIntPipe) estimateId: number,
-    @Body() estimateDTO: ISaleEstimateDTO,
+    @Body() estimateDTO: EditSaleEstimateDto,
   ): Promise<SaleEstimate> {
     return this.saleEstimatesApplication.editSaleEstimate(
       estimateId,

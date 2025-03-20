@@ -7,6 +7,7 @@ import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
 import { CommonMailOptions } from '@/modules/MailNotification/MailNotification.types';
+import { EditSaleEstimateDto } from '../dtos/SaleEstimate.dto';
 
 export const SendSaleEstimateMailQueue = 'SendSaleEstimateMailProcessor';
 export const SendSaleEstimateMailJob = 'SendSaleEstimateMailProcess';
@@ -34,7 +35,6 @@ export interface ISalesEstimatesFilter extends IDynamicListFilter {
 }
 
 export interface ISaleEstimateCreatedPayload {
-  // tenantId: number;
   saleEstimate: SaleEstimate;
   saleEstimateId: number;
   saleEstimateDTO: ISaleEstimateDTO;
@@ -43,12 +43,10 @@ export interface ISaleEstimateCreatedPayload {
 
 export interface ISaleEstimateCreatingPayload {
   estimateDTO: ISaleEstimateDTO;
-  tenantId: number;
   trx: Knex.Transaction;
 }
 
 export interface ISaleEstimateEditedPayload {
-  // tenantId: number;
   estimateId: number;
   saleEstimate: SaleEstimate;
   oldSaleEstimate: SaleEstimate;
@@ -57,33 +55,28 @@ export interface ISaleEstimateEditedPayload {
 }
 
 export interface ISaleEstimateEditingPayload {
-  // tenantId: number;
   oldSaleEstimate: SaleEstimate;
-  estimateDTO: ISaleEstimateDTO;
+  estimateDTO: EditSaleEstimateDto;
   trx: Knex.Transaction;
 }
 
 export interface ISaleEstimateDeletedPayload {
-  // tenantId: number;
   saleEstimateId: number;
   oldSaleEstimate: SaleEstimate;
   trx: Knex.Transaction;
 }
 
 export interface ISaleEstimateDeletingPayload {
-  // tenantId: number;
   oldSaleEstimate: SaleEstimate;
   trx: Knex.Transaction;
 }
 
 export interface ISaleEstimateEventDeliveredPayload {
-  // tenantId: number;
   saleEstimate: SaleEstimate;
   trx: Knex.Transaction;
 }
 
 export interface ISaleEstimateEventDeliveringPayload {
-  // tenantId: number;
   oldSaleEstimate: SaleEstimate;
   trx: Knex.Transaction;
 }
@@ -97,13 +90,11 @@ export enum SaleEstimateAction {
 }
 
 export interface ISaleEstimateApprovingEvent {
-  // tenantId: number;
   oldSaleEstimate: SaleEstimate;
   trx: Knex.Transaction;
 }
 
 export interface ISaleEstimateApprovedEvent {
-  // tenantId: number;
   oldSaleEstimate: SaleEstimate;
   saleEstimate: SaleEstimate;
   trx: Knex.Transaction;

@@ -7,6 +7,7 @@ import { ServiceError } from './ServiceError';
 import { IItemEntryDTO } from '../TransactionItemEntry/ItemEntry.types';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { entriesAmountDiff } from '@/utils/entries-amount-diff';
+import { ItemEntryDto } from '../TransactionItemEntry/dto/ItemEntry.dto';
 
 const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -83,7 +84,7 @@ export class ItemsEntriesService {
    * @param {IItemEntryDTO[]} itemEntries - Items entries.
    * @returns {Promise<Item[]>}
    */
-  public async validateItemsIdsExistance(itemEntries: IItemEntryDTO[]) {
+  public async validateItemsIdsExistance(itemEntries: Array<{ itemId: number }>) {
     const itemsIds = itemEntries.map((e) => e.itemId);
 
     const foundItems = await this.itemModel().query().whereIn('id', itemsIds);
@@ -106,7 +107,7 @@ export class ItemsEntriesService {
   public async validateEntriesIdsExistance(
     referenceId: number,
     referenceType: string,
-    billEntries: IItemEntryDTO[],
+    billEntries: ItemEntryDto[],
   ) {
     const entriesIds = billEntries
       .filter((e: ItemEntry) => e.id)
@@ -130,9 +131,9 @@ export class ItemsEntriesService {
    * @param {IItemEntryDTO[]} itemEntries -
    */
   public async validateNonPurchasableEntriesItems(
-    itemEntries: IItemEntryDTO[],
+    itemEntries: ItemEntryDto[],
   ) {
-    const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
+    const itemsIds = itemEntries.map((e: ItemEntryDto) => e.itemId);
     const purchasbleItems = await this.itemModel()
       .query()
       .where('purchasable', true)
@@ -150,8 +151,8 @@ export class ItemsEntriesService {
    * Validate the entries items that not sell-able.
    * @param {IItemEntryDTO[]} itemEntries -
    */
-  public async validateNonSellableEntriesItems(itemEntries: IItemEntryDTO[]) {
-    const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
+  public async validateNonSellableEntriesItems(itemEntries: ItemEntryDto[]) {
+    const itemsIds = itemEntries.map((e: ItemEntryDto) => e.itemId);
 
     const sellableItems = await this.itemModel()
       .query()
@@ -218,7 +219,7 @@ export class ItemsEntriesService {
   /**
    * Sets the cost/sell accounts to the invoice entries.
    */
-  public setItemsEntriesDefaultAccounts = async (entries: IItemEntryDTO[]) => {
+  public setItemsEntriesDefaultAccounts = async (entries: ItemEntryDto[]) => {
     const entriesItemsIds = entries.map((e) => e.itemId);
     const items = await this.itemModel().query().whereIn('id', entriesItemsIds);
 
@@ -240,7 +241,7 @@ export class ItemsEntriesService {
    * @param {ItemEntry[]} entries - Items entries.
    * @returns {number}
    */
-  public getTotalItemsEntries(entries: IItemEntryDTO[]): number {
+  public getTotalItemsEntries(entries: ItemEntryDto[]): number {
     return sumBy(entries, (e) => ItemEntry.calcAmount(e));
   }
 

@@ -14,6 +14,7 @@ import { Contact } from '@/modules/Contacts/models/Contact';
 import { events } from '@/common/events/events';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditSaleReceiptDto } from '../dtos/SaleReceipt.dto';
 
 @Injectable()
 export class EditSaleReceipt {
@@ -37,7 +38,10 @@ export class EditSaleReceipt {
    * @param {ISaleReceipt} saleReceipt
    * @return {void}
    */
-  public async editSaleReceipt(saleReceiptId: number, saleReceiptDTO: any) {
+  public async editSaleReceipt(
+    saleReceiptId: number,
+    saleReceiptDTO: EditSaleReceiptDto,
+  ) {
     // Retrieve sale receipt or throw not found service error.
     const oldSaleReceipt = await this.saleReceiptModel()
       .query()

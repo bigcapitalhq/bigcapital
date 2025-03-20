@@ -1,16 +1,15 @@
+import { ModelObject } from 'objection';
+import { Inject, Injectable } from '@nestjs/common';
 import { ERRORS } from '../constants';
 import { WarehouseTransfer } from '../models/WarehouseTransfer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
-import { Inject, Injectable } from '@nestjs/common';
 import { ServiceError } from '@/modules/Items/ServiceError';
-import { ModelObject } from 'objection';
 import { Item } from '@/modules/Items/models/Item';
-import {
-  ICreateWarehouseTransferDTO,
-  IEditWarehouseTransferDTO,
-} from '@/modules/Warehouses/Warehouse.types';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
+import {
+  CreateWarehouseTransferDto,
+  EditWarehouseTransferDto,
+} from '../dtos/WarehouseTransfer.dto';
 
 @Injectable()
 export class CommandWarehouseTransfer {
@@ -25,7 +24,7 @@ export class CommandWarehouseTransfer {
   ) {}
 
   /**
-   *
+   * Throws error if warehouse transfer not found.
    * @param {WarehouseTransfer} warehouseTransfer
    */
   throwIfTransferNotFound = (warehouseTransfer: WarehouseTransfer) => {
@@ -35,9 +34,9 @@ export class CommandWarehouseTransfer {
   };
 
   /**
-   *
+   * Retrieves the warehouse transfer or throw not found service error.
    * @param {number} branchId
-   * @returns
+   * @returns {Promise<WarehouseTransfer>}
    */
   async getWarehouseTransferOrThrowNotFound(branchId: number) {
     const foundTransfer = await this.warehouseTransferModel()
@@ -55,9 +54,7 @@ export class CommandWarehouseTransfer {
    * @param {ICreateWarehouseTransferDTO|IEditWarehouseTransferDTO} warehouseTransferDTO
    */
   validateWarehouseFromToNotSame(
-    warehouseTransferDTO:
-      | ICreateWarehouseTransferDTO
-      | IEditWarehouseTransferDTO,
+    warehouseTransferDTO: CreateWarehouseTransferDto | EditWarehouseTransferDto,
   ) {
     if (
       warehouseTransferDTO.fromWarehouseId ===
@@ -69,12 +66,10 @@ export class CommandWarehouseTransfer {
 
   /**
    * Validates entries items should be inventory.
-   * @param   {IItem[]} items
+   * @param {ModelObject<Item>[]} items - Items.
    * @returns {void}
    */
-  validateItemsShouldBeInventory = (
-    items: ModelObject<Item>[],
-  ): void => {
+  validateItemsShouldBeInventory = (items: ModelObject<Item>[]): void => {
     const nonInventoryItems = items.filter((item) => item.type !== 'inventory');
 
     if (nonInventoryItems.length > 0) {
@@ -85,9 +80,9 @@ export class CommandWarehouseTransfer {
   };
 
   /**
-   *
-   * @param {number} fromWarehouseId
-   * @returns
+   * Retrieves the to warehouse or throw not found service error.
+   * @param {number} fromWarehouseId - From warehouse id.
+   * @returns {Promise<Warehouse>}
    */
   getToWarehouseOrThrow = async (fromWarehouseId: number) => {
     const warehouse = await this.warehouseModel()

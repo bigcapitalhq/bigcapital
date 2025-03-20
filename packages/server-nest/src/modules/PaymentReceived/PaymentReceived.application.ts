@@ -14,6 +14,10 @@ import { GetPaymentReceivedPdfService } from './queries/GetPaymentReceivedPdf.se
 import { GetPaymentReceivedStateService } from './queries/GetPaymentReceivedState.service';
 import { GetPaymentsReceivedService } from './queries/GetPaymentsReceived.service';
 import { SendPaymentReceiveMailNotification } from './commands/PaymentReceivedMailNotification';
+import {
+  CreatePaymentReceivedDto,
+  EditPaymentReceivedDto,
+} from './dtos/PaymentReceived.dto';
 
 @Injectable()
 export class PaymentReceivesApplication {
@@ -31,10 +35,10 @@ export class PaymentReceivesApplication {
 
   /**
    * Creates a new payment receive.
-   * @param {IPaymentReceivedCreateDTO} paymentReceiveDTO
+   * @param {CreatePaymentReceivedDto} paymentReceiveDTO
    * @returns
    */
-  public createPaymentReceived(paymentReceiveDTO: IPaymentReceivedCreateDTO) {
+  public createPaymentReceived(paymentReceiveDTO: CreatePaymentReceivedDto) {
     return this.createPaymentReceivedService.createPaymentReceived(
       paymentReceiveDTO,
     );
@@ -43,12 +47,12 @@ export class PaymentReceivesApplication {
   /**
    * Edit details the given payment receive with associated entries.
    * @param {number} paymentReceiveId - Payment receive id.
-   * @param {IPaymentReceivedEditDTO} paymentReceiveDTO - Payment receive data.
+   * @param {EditPaymentReceivedDto} paymentReceiveDTO - Payment receive data.
    * @returns
    */
   public editPaymentReceive(
     paymentReceiveId: number,
-    paymentReceiveDTO: IPaymentReceivedEditDTO,
+    paymentReceiveDTO: EditPaymentReceivedDto,
   ) {
     return this.editPaymentReceivedService.editPaymentReceive(
       paymentReceiveId,
@@ -130,17 +134,17 @@ export class PaymentReceivesApplication {
    * @param {PaymentReceive} paymentReceive
    * @returns
    */
-  public getPaymentReceivePdf = (paymentReceiveId: number) => {
+  public getPaymentReceivePdf(paymentReceiveId: number) {
     return this.getPaymentReceivePdfService.getPaymentReceivePdf(
       paymentReceiveId,
     );
-  };
+  }
 
   /**
    * Retrieves the create/edit initial state of the payment received.
    * @returns {Promise<IPaymentReceivedState>}
    */
-  public getPaymentReceivedState = () => {
+  public getPaymentReceivedState() {
     return this.getPaymentReceivedStateService.getPaymentReceivedState();
-  };
+  }
 }

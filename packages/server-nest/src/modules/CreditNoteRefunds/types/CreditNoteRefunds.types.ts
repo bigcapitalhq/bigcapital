@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { RefundCreditNote } from '../models/RefundCreditNote';
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
+import { CreditNoteRefundDto } from '../dto/CreditNoteRefund.dto';
 
 export interface ICreditNoteRefundDTO {
   fromAccountId: number;
@@ -31,7 +32,7 @@ export interface IRefundCreditNoteDeletingPayload {
 export interface IRefundCreditNoteCreatingPayload {
   trx: Knex.Transaction;
   creditNote: CreditNote;
-  newCreditNoteDTO: ICreditNoteRefundDTO;
+  newCreditNoteDTO: CreditNoteRefundDto;
 }
 
 export interface IRefundCreditNoteCreatedPayload {

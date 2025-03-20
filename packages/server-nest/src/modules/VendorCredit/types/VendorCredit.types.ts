@@ -5,6 +5,10 @@ import { IRefundVendorCreditDTO } from '@/modules/VendorCreditsRefund/types/Vend
 import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 import { DiscountType } from '@/common/types/Discount';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import {
+  CreateVendorCreditDto,
+  EditVendorCreditDto,
+} from '../dtos/VendorCredit.dto';
 
 export enum VendorCreditAction {
   Create = 'Create',
@@ -39,7 +43,7 @@ export interface IVendorCreditDTO {
 
   discount?: number;
   discountType?: DiscountType;
-  
+
   adjustment?: number;
 }
 
@@ -54,14 +58,13 @@ export interface IVendorCreditCreatePayload {
 export interface IVendorCreditCreatingPayload {
   vendorCredit: VendorCredit;
   vendorCreditId: number;
-  vendorCreditCreateDTO: IVendorCreditCreateDTO;
+  vendorCreditCreateDTO: CreateVendorCreditDto;
   trx: Knex.Transaction;
 }
 
 export interface IVendorCreditCreatedPayload {
-  // tenantId: number;
   vendorCredit: VendorCredit;
-  vendorCreditCreateDTO: IVendorCreditCreateDTO;
+  vendorCreditCreateDTO: CreateVendorCreditDto;
   trx: Knex.Transaction;
 }
 
@@ -83,18 +86,15 @@ export interface IVendorCreditDeletingPayload {
 // Edit Vendor Credit Events
 // ------------------------
 export interface IVendorCreditEditingPayload {
-  // tenantId: number;
   oldVendorCredit: VendorCredit;
-  vendorCreditDTO: IVendorCreditEditDTO;
+  vendorCreditDTO: EditVendorCreditDto;
   trx: Knex.Transaction;
 }
 
 export interface IVendorCreditEditedPayload {
-  // tenantId: number;
   oldVendorCredit: VendorCredit;
   vendorCredit: VendorCredit;
-  // vendorCreditId: number;
-  vendorCreditDTO: IVendorCreditEditDTO;
+  vendorCreditDTO: EditVendorCreditDto;
   trx: Knex.Transaction;
 }
 

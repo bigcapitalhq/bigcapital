@@ -14,6 +14,7 @@ import { SaleReceipt } from '../models/SaleReceipt';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateSaleReceiptDto } from '../dtos/SaleReceipt.dto';
 
 @Injectable()
 export class CreateSaleReceipt {
@@ -47,7 +48,7 @@ export class CreateSaleReceipt {
    * @return {Promise<ISaleReceipt>}
    */
   public async createSaleReceipt(
-    saleReceiptDTO: ISaleReceiptDTO,
+    saleReceiptDTO: CreateSaleReceiptDto,
     trx?: Knex.Transaction,
   ): Promise<SaleReceipt> {
     // Retrieves the payment customer model.

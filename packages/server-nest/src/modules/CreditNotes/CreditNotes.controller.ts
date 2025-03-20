@@ -9,13 +9,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreditNoteApplication } from './CreditNoteApplication.service';
-import {
-  ICreditNoteEditDTO,
-  ICreditNoteNewDTO,
-  ICreditNotesQueryDTO,
-} from './types/CreditNotes.types';
+import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 
 @Controller('credit-notes')
 @ApiTags('credit-notes')
@@ -27,7 +24,7 @@ export class CreditNotesController {
   constructor(private creditNoteApplication: CreditNoteApplication) {}
 
   @Post()
-  createCreditNote(@Body() creditNoteDTO: ICreditNoteNewDTO) {
+  createCreditNote(@Body() creditNoteDTO: CreateCreditNoteDto) {
     return this.creditNoteApplication.createCreditNote(creditNoteDTO);
   }
 
@@ -39,7 +36,7 @@ export class CreditNotesController {
   @Put(':id')
   editCreditNote(
     @Param('id') creditNoteId: number,
-    @Body() creditNoteDTO: ICreditNoteEditDTO,
+    @Body() creditNoteDTO: EditCreditNoteDto,
   ) {
     return this.creditNoteApplication.editCreditNote(
       creditNoteId,

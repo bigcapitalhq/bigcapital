@@ -7,6 +7,17 @@ import {
   CommonMailOptionsDTO,
 } from '@/modules/MailNotification/MailNotification.types';
 import { TenantJobPayload } from '@/interfaces/Tenant';
+import { EditPaymentReceivedDto } from '../dtos/PaymentReceived.dto';
+
+
+export interface IPaymentReceivedEntryDTO {
+  id?: number;
+  index?: number;
+  paymentReceiveId?: number;
+  invoiceId: number;
+  paymentAmount: number;
+}
+
 
 export interface IPaymentReceivedCreateDTO {
   customerId: number;
@@ -35,14 +46,6 @@ export interface IPaymentReceivedEditDTO {
   entries: IPaymentReceivedEntryDTO[];
   branchId?: number;
   attachments?: AttachmentLinkDTO[];
-}
-
-export interface IPaymentReceivedEntryDTO {
-  id?: number;
-  index?: number;
-  paymentReceiveId?: number;
-  invoiceId: number;
-  paymentAmount: number;
 }
 
 export interface IPaymentsReceivedFilter extends IDynamicListFilter {
@@ -96,32 +99,26 @@ export interface IPaymentReceivedCreatedPayload {
 }
 
 export interface IPaymentReceivedEditedPayload {
-  // tenantId: number;
   paymentReceiveId: number;
   paymentReceive: PaymentReceived;
   oldPaymentReceive: PaymentReceived;
-  paymentReceiveDTO: IPaymentReceivedEditDTO;
-  // authorizedUser: ISystemUser;
+  paymentReceiveDTO: EditPaymentReceivedDto;
   trx: Knex.Transaction;
 }
 
 export interface IPaymentReceivedEditingPayload {
-  // tenantId: number;
   oldPaymentReceive: PaymentReceived;
   paymentReceiveDTO: IPaymentReceivedEditDTO;
   trx: Knex.Transaction;
 }
 
 export interface IPaymentReceivedDeletingPayload {
-  // tenantId: number;
   oldPaymentReceive: PaymentReceived;
   trx: Knex.Transaction;
 }
 export interface IPaymentReceivedDeletedPayload {
-  // tenantId: number;
   paymentReceiveId: number;
   oldPaymentReceive: PaymentReceived;
-  // authorizedUser: ISystemUser;
   trx: Knex.Transaction;
 }
 

@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
+import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 
 @Injectable()
 export class CommandTaxRatesValidators {
@@ -67,11 +68,10 @@ export class CommandTaxRatesValidators {
 
   /**
    * Validates the tax codes of the given item entries DTO.
-   * @param {number} tenantId
    * @param {IItemEntryDTO[]} itemEntriesDTO
    * @throws {ServiceError}
    */
-  public async validateItemEntriesTaxCode(itemEntriesDTO: IItemEntryDTO[]) {
+  public async validateItemEntriesTaxCode(itemEntriesDTO: ItemEntryDto[]) {
     const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxCode);
     const taxCodes = filteredTaxEntries.map((e) => e.taxCode);
 
@@ -92,10 +92,10 @@ export class CommandTaxRatesValidators {
 
   /**
    * Validates the tax rate id of the given item entries DTO.
-   * @param {IItemEntryDTO[]} itemEntriesDTO
+   * @param {ItemEntryDto[]} itemEntriesDTO
    * @throws {ServiceError}
    */
-  public async validateItemEntriesTaxCodeId(itemEntriesDTO: IItemEntryDTO[]) {
+  public async validateItemEntriesTaxCodeId(itemEntriesDTO: ItemEntryDto[]) {
     const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxRateId);
     const taxRatesIds = filteredTaxEntries.map((e) => e.taxRateId);
 
