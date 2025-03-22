@@ -3,6 +3,7 @@ import { DeleteRefundVendorCreditService } from './commands/DeleteRefundVendorCr
 import { RefundVendorCredit } from './models/RefundVendorCredit';
 import { CreateRefundVendorCredit } from './commands/CreateRefundVendorCredit.service';
 import { IRefundVendorCreditDTO } from './types/VendorCreditRefund.types';
+import { RefundVendorCreditDto } from './dtos/RefundVendorCredit.dto';
 
 @Injectable()
 export class VendorCreditsRefundApplication {
@@ -23,7 +24,7 @@ export class VendorCreditsRefundApplication {
    */
   public async createRefundVendorCredit(
     vendorCreditId: number,
-    refundVendorCreditDTO: IRefundVendorCreditDTO,
+    refundVendorCreditDTO: RefundVendorCreditDto,
   ): Promise<RefundVendorCredit> {
     return this.createRefundVendorCreditService.createRefund(
       vendorCreditId,

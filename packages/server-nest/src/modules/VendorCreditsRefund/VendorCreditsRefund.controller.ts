@@ -6,6 +6,7 @@ import { IRefundVendorCreditDTO } from './types/VendorCreditRefund.types';
 import { RefundVendorCredit } from './models/RefundVendorCredit';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { RefundVendorCreditDto } from './dtos/RefundVendorCredit.dto';
 
 @Controller('vendor-credits')
 @ApiTags('vendor-credits-refunds')
@@ -25,7 +26,7 @@ export class VendorCreditsRefundController {
   @ApiOperation({ summary: 'Create a refund for the given vendor credit.' })
   public async createRefundVendorCredit(
     @Param('vendorCreditId') vendorCreditId: string,
-    @Body() refundVendorCreditDTO: IRefundVendorCreditDTO,
+    @Body() refundVendorCreditDTO: RefundVendorCreditDto,
   ): Promise<RefundVendorCredit> {
     return this.vendorCreditsRefundApplication.createRefundVendorCredit(
       Number(vendorCreditId),

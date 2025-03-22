@@ -5,7 +5,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   IRefundVendorCreditCreatedPayload,
   IRefundVendorCreditCreatingPayload,
-  IRefundVendorCreditDTO,
 } from '../types/VendorCreditRefund.types';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
@@ -17,9 +16,18 @@ import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../constants';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { RefundVendorCreditDto } from '../dtos/RefundVendorCredit.dto';
 
 @Injectable()
 export class CreateRefundVendorCredit {
+  /**
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {EventEmitter2} eventPublisher - Event emitter.
+   * @param {BranchTransactionDTOTransformer} branchDTOTransform - Branch transaction DTO transformer.
+   * @param {TenantModelProxy<typeof RefundVendorCredit>} refundVendorCreditModel - Refund vendor credit model.
+   * @param {TenantModelProxy<typeof Account>} accountModel - Account model.
+   * @param {TenantModelProxy<typeof VendorCredit>} vendorCreditModel - Vendor credit model.
+   */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
@@ -40,12 +48,12 @@ export class CreateRefundVendorCredit {
   /**
    * Creates a refund vendor credit.
    * @param {number} vendorCreditId
-   * @param {IRefundVendorCreditDTO} refundVendorCreditDTO
+   * @param {RefundVendorCreditDto} refundVendorCreditDTO
    * @returns {Promise<IRefundVendorCredit>}
    */
   public createRefund = async (
     vendorCreditId: number,
-    refundVendorCreditDTO: IRefundVendorCreditDTO,
+    refundVendorCreditDTO: RefundVendorCreditDto,
   ): Promise<RefundVendorCredit> => {
     // Retrieve the vendor credit or throw not found service error.
     const vendorCredit = await this.vendorCreditModel()
@@ -107,13 +115,13 @@ export class CreateRefundVendorCredit {
 
   /**
    * Transformes the refund DTO to refund vendor credit model.
-   * @param {IVendorCredit} vendorCredit -
-   * @param {IRefundVendorCreditDTO} vendorCreditDTO
+   * @param {VendorCredit} vendorCredit -
+   * @param {RefundVendorCreditDto} vendorCreditDTO
    * @returns {IRefundVendorCredit}
    */
   public transformDTOToModel = (
     vendorCredit: VendorCredit,
-    vendorCreditDTO: IRefundVendorCreditDTO,
+    vendorCreditDTO: RefundVendorCreditDto,
   ) => {
     const initialDTO = {
       vendorCreditId: vendorCredit.id,
@@ -126,7 +134,7 @@ export class CreateRefundVendorCredit {
 
   /**
    * Validate the deposit refund account type.
-   * @param {IAccount} account
+   * @param {Account} account
    */
   public validateRefundDepositAccountType(account: Account) {
     const supportedTypes = ['bank', 'cash', 'fixed-asset'];
@@ -138,7 +146,7 @@ export class CreateRefundVendorCredit {
 
   /**
    * Validate vendor credit has remaining credits.
-   * @param {IVendorCredit} vendorCredit
+   * @param {VendorCredit} vendorCredit
    * @param {number} amount
    */
   public validateVendorCreditRemainingCredit(
