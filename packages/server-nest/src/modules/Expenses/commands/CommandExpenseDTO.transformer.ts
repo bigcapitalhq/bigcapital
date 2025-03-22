@@ -2,14 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
 import * as moment from 'moment';
 import * as R from 'ramda';
-import {
-  IExpenseCreateDTO,
-  IExpenseEditDTO,
-} from '../interfaces/Expenses.interface';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { Expense } from '../models/Expense.model';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { CreateExpenseDto, EditExpenseDto } from '../dtos/Expense.dto';
 
 @Injectable()
 export class ExpenseDTOTransformer {
@@ -28,7 +25,7 @@ export class ExpenseDTOTransformer {
    * @return {number}
    */
   private getExpenseLandedCostAmount = (
-    expenseDTO: IExpenseCreateDTO | IExpenseEditDTO,
+    expenseDTO: CreateExpenseDto | EditExpenseDto,
   ): number => {
     const landedCostEntries = expenseDTO.categories.filter((entry) => {
       return entry.landedCost === true;
@@ -52,7 +49,7 @@ export class ExpenseDTOTransformer {
    * @return {IExpense}
    */
   private expenseDTOToModel(
-    expenseDTO: IExpenseCreateDTO | IExpenseEditDTO,
+    expenseDTO: CreateExpenseDto | EditExpenseDto,
   ): Expense {
     const landedCostAmount = this.getExpenseLandedCostAmount(expenseDTO);
     const totalAmount = this.getExpenseCategoriesTotal(expenseDTO.categories);
@@ -85,7 +82,7 @@ export class ExpenseDTOTransformer {
    * @returns {Promise<Expense>}
    */
   public expenseCreateDTO = async (
-    expenseDTO: IExpenseCreateDTO,
+    expenseDTO: CreateExpenseDto | EditExpenseDto,
   ): Promise<Partial<Expense>> => {
     const initialDTO = this.expenseDTOToModel(expenseDTO);
     const tenant = await this.tenancyContext.getTenant(true);
@@ -104,13 +101,11 @@ export class ExpenseDTOTransformer {
 
   /**
    * Transformes the expense edit DTO.
-   * @param {number} tenantId
-   * @param {IExpenseEditDTO} expenseDTO
-   * @param {ISystemUser} user
-   * @returns {IExpense}
+   * @param {EditExpenseDto} expenseDTO
+   * @returns {Promise<Expense>}
    */
   public expenseEditDTO = async (
-    expenseDTO: IExpenseEditDTO,
+    expenseDTO: EditExpenseDto,
   ): Promise<Expense> => {
     return this.expenseDTOToModel(expenseDTO);
   };

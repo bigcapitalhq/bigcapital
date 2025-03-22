@@ -1,23 +1,5 @@
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
-// import TenantModel from 'models/TenantModel';
-// import PaginationQueryBuilder from './Pagination';
-// import ModelSetting from './ModelSetting';
-// import CustomerSettings from './Customer.Settings';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Contacts/Customers/constants';
-// import ModelSearchable from './ModelSearchable';
 
-// class CustomerQueryBuilder extends PaginationQueryBuilder {
-//   constructor(...args) {
-//     super(...args);
-
-//     this.onBuild((builder) => {
-//       if (builder.isFind() || builder.isDelete() || builder.isUpdate()) {
-//         builder.where('contact_service', 'customer');
-//       }
-//     });
-//   }
-// }
 
 export class Customer extends TenantBaseModel{
   contactService: string;

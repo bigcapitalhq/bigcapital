@@ -3,6 +3,8 @@ import { Customer } from '../models/Customer';
 import { IContactAddressDTO } from '@/modules/Contacts/types/Contacts.types';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
+import { CreateCustomerDto } from '../dtos/CreateCustomer.dto';
+import { EditCustomerDto } from '../dtos/EditCustomer.dto';
 
 // Customer Interfaces.
 // ----------------------------------
@@ -63,46 +65,38 @@ export interface GetCustomersResponse {
 // Customer Events.
 // ----------------------------------
 export interface ICustomerEventCreatedPayload {
-  // tenantId: number;
   customerId: number;
-  // authorizedUser: ISystemUser;
   customer: Customer;
   trx: Knex.Transaction;
 }
 export interface ICustomerEventCreatingPayload {
-  // tenantId: number;
-  customerDTO: ICustomerNewDTO;
+  customerDTO: CreateCustomerDto;
   trx: Knex.Transaction;
 }
 export interface ICustomerEventEditedPayload {
-  // tenantId: number
   customerId: number;
   customer: Customer;
   trx: Knex.Transaction;
 }
 
 export interface ICustomerEventEditingPayload {
-  // tenantId: number;
-  customerDTO: ICustomerEditDTO;
+  customerDTO: EditCustomerDto;
   customerId: number;
   trx: Knex.Transaction;
 }
 
 export interface ICustomerDeletingPayload {
-  // tenantId: number;
   customerId: number;
   oldCustomer: Customer;
 }
 
 export interface ICustomerEventDeletedPayload {
-  // tenantId: number;
   customerId: number;
   oldCustomer: Customer;
   trx: Knex.Transaction;
 }
 export interface ICustomerEventCreatingPayload {
-  // tenantId: number;
-  customerDTO: ICustomerNewDTO;
+  customerDTO: CreateCustomerDto;
   trx: Knex.Transaction;
 }
 export enum CustomerAction {
@@ -141,13 +135,11 @@ export interface ICustomerOpeningBalanceEditedPayload {
 
 
 export interface ICustomerActivatingPayload {
-  // tenantId: number;
   trx: Knex.Transaction,
   oldCustomer: Customer;
 }
 
 export interface ICustomerActivatedPayload {
-  // tenantId: number;
   trx?: Knex.Transaction;
   oldCustomer: Customer;
   customer: Customer;

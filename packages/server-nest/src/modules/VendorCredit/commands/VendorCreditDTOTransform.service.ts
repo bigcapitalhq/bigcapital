@@ -2,7 +2,6 @@ import * as moment from 'moment';
 import { omit } from 'lodash';
 import * as R from 'ramda';
 import { ERRORS } from '../constants';
-import { IVendorCreditEntryDTO } from '../types/VendorCredit.types';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
@@ -14,6 +13,7 @@ import { Injectable } from '@nestjs/common';
 import {
   CreateVendorCreditDto,
   EditVendorCreditDto,
+  VendorCreditEntryDto,
 } from '../dtos/VendorCredit.dto';
 
 @Injectable()
@@ -52,7 +52,7 @@ export class VendorCreditDTOTransformService {
       assocItemEntriesDefaultIndex,
 
       // Associate the reference type to item entries.
-      R.map((entry: IVendorCreditEntryDTO) => ({
+      R.map((entry: VendorCreditEntryDto) => ({
         referenceType: 'VendorCredit',
         ...entry,
       })),

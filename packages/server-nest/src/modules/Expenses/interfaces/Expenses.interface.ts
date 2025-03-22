@@ -1,6 +1,7 @@
 import { IFilterRole } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { Knex } from 'knex';
 import { Expense } from '../models/Expense.model';
+import { CreateExpenseDto, EditExpenseDto } from '../dtos/Expense.dto';
 
 // import { AttachmentLinkDTO } from '../Attachments/Attachments';
 
@@ -20,26 +21,6 @@ export interface IExpensesFilter {
   filterQuery?: (query: any) => void;
 }
 
-export interface IExpenseCommonDTO {
-  currencyCode: string;
-  exchangeRate?: number;
-  description?: string;
-  paymentAccountId: number;
-  peyeeId?: number;
-  referenceNo?: string;
-  publish: boolean;
-  userId: number;
-  paymentDate: Date;
-  payeeId: number;
-  categories: IExpenseCategoryDTO[];
-
-  branchId?: number;
-  // attachments?: AttachmentLinkDTO[];
-}
-
-export interface IExpenseCreateDTO extends IExpenseCommonDTO {}
-export interface IExpenseEditDTO extends IExpenseCommonDTO {}
-
 export interface IExpenseCategoryDTO {
   id?: number;
   expenseAccountId: number;
@@ -52,55 +33,44 @@ export interface IExpenseCategoryDTO {
 }
 
 export interface IExpenseCreatingPayload {
+  expenseDTO: CreateExpenseDto;
   trx: Knex.Transaction;
-  tenantId: number;
-  expenseDTO: IExpenseCreateDTO;
 }
 
 export interface IExpenseEventEditingPayload {
-  tenantId: number;
   oldExpense: Expense;
-  expenseDTO: IExpenseEditDTO;
+  expenseDTO: EditExpenseDto;
   trx: Knex.Transaction;
 }
 export interface IExpenseCreatedPayload {
-  tenantId: number;
   expenseId: number;
-  // authorizedUser: ISystemUser;
   expense: Expense;
-  expenseDTO: IExpenseCreateDTO;
+  expenseDTO: CreateExpenseDto;
   trx: Knex.Transaction;
 }
 
 export interface IExpenseEventEditPayload {
-  tenantId: number;
   expenseId: number;
   expense: Expense;
-  expenseDTO: IExpenseEditDTO;
-  // authorizedUser: ISystemUser;
+  expenseDTO: EditExpenseDto;
   oldExpense: Expense;
   trx: Knex.Transaction;
 }
 
 export interface IExpenseEventDeletePayload {
-  tenantId: number;
   expenseId: number;
-  // authorizedUser: ISystemUser;
   oldExpense: Expense;
   trx: Knex.Transaction;
 }
 
 export interface IExpenseDeletingPayload {
   trx: Knex.Transaction;
-  tenantId: number;
   oldExpense: Expense;
 }
 export interface IExpenseEventPublishedPayload {
-  tenantId: number;
   expenseId: number;
   oldExpense: Expense;
   expense: Expense;
-  // authorizedUser: ISystemUser;
   trx: Knex.Transaction;
 }
 

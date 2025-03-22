@@ -5,6 +5,7 @@ import { IVendorEditDTO, IVendorNewDTO } from '../types/Vendors.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ContactService } from '@/modules/Contacts/types/Contacts.types';
 import { Vendor } from '../models/Vendor';
+import { CreateVendorDto } from '../dtos/CreateVendor.dto';
 
 @Injectable()
 export class CreateEditVendorDTOService {
@@ -30,7 +31,7 @@ export class CreateEditVendorDTOService {
    * @returns {IVendorNewDTO}
    */
   public transformCreateDTO = async (
-    vendorDTO: IVendorNewDTO,
+    vendorDTO: CreateVendorDto,
   ): Promise<Partial<Vendor>> => {
     const commonDTO = this.transformCommonDTO(vendorDTO);
 

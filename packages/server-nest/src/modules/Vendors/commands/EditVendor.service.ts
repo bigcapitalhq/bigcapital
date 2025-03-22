@@ -1,5 +1,4 @@
 import {
-  IVendorEditDTO,
   IVendorEventEditedPayload,
   IVendorEventEditingPayload,
 } from '../types/Vendors.types';
@@ -11,6 +10,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Vendor } from '../models/Vendor';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditVendorDto } from '../dtos/EditVendor.dto';
 
 @Injectable()
 export class EditVendorService {
@@ -29,7 +29,7 @@ export class EditVendorService {
    * @param   {IVendorEditDTO} vendorDTO -
    * @returns {Promise<IVendor>}
    */
-  public async editVendor(vendorId: number, vendorDTO: IVendorEditDTO) {
+  public async editVendor(vendorId: number, vendorDTO: EditVendorDto) {
     // Retrieve the vendor or throw not found error.
     const oldVendor = await this.vendorModel()
       .query()

@@ -56,7 +56,7 @@ export class TransactionsLockingController {
   @ApiOperation({ summary: 'Partial unlock all transactions locking for a module or all modules' })
   async unlockTransactionsLockingBetweenPeriod(
     @Body('module') module: TransactionsLockingGroup,
-    @Body() unlockDTO: UnlockTransactionsLockingDto,
+    @Body() unlockDTO: ITransactionLockingPartiallyDTO,
   ) {
     const transactionMeta =
       await this.transactionsLockingService.unlockTransactionsLockingPartially(

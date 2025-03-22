@@ -1,6 +1,6 @@
+import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  IVendorCreditEditDTO,
   IVendorCreditEditedPayload,
   IVendorCreditEditingPayload,
 } from '../types/VendorCredit.types';
@@ -10,7 +10,6 @@ import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { VendorCredit } from '../models/VendorCredit';
 import { Contact } from '@/modules/Contacts/models/Contact';
 import { events } from '@/common/events/events';
-import { Knex } from 'knex';
 import { VendorCreditDTOTransformService } from './VendorCreditDTOTransform.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditVendorCreditDto } from '../dtos/VendorCredit.dto';
@@ -40,7 +39,7 @@ export class EditVendorCreditService {
   /**
    * Deletes the given vendor credit.
    * @param {number} vendorCreditId - Vendor credit id.
-   * @param {EditVendorCreditDto} vendorCreditDto - 
+   * @param {EditVendorCreditDto} vendorCreditDto -
    */
   public editVendorCredit = async (
     vendorCreditId: number,

@@ -20,6 +20,16 @@ import { IFilterMeta } from '@/interfaces/Model';
 
 @Injectable()
 export class AccountsApplication {
+  /**
+   * @param {CreateAccountService} createAccountService - The create account service.
+   * @param {EditAccount} editAccountService - The edit account service.
+   * @param {DeleteAccount} deleteAccountService - The delete account service.
+   * @param {ActivateAccount} activateAccountService - The activate account service.
+   * @param {GetAccountTypesService} getAccountTypesService - The get account types service.
+   * @param {GetAccount} getAccountService - The get account service.
+   * @param {GetAccountTransactionsService} getAccountTransactionsService - The get account transactions service.
+   * @param {GetAccountsService} getAccountsService - The get accounts service.
+   */
   constructor(
     private readonly createAccountService: CreateAccountService,
     private readonly editAccountService: EditAccount,

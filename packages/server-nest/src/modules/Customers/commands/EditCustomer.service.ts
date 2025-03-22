@@ -11,6 +11,7 @@ import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditCustomerDto } from '../dtos/EditCustomer.dto';
 
 @Injectable()
 export class EditCustomer {
@@ -37,7 +38,7 @@ export class EditCustomer {
    */
   public async editCustomer(
     customerId: number,
-    customerDTO: ICustomerEditDTO,
+    customerDTO: EditCustomerDto,
   ): Promise<Customer> {
     // Retrieve the customer or throw not found error.
     const oldCustomer = await this.customerModel()

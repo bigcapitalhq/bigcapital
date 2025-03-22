@@ -8,13 +8,11 @@ import {
   Put,
 } from '@nestjs/common';
 import { CustomersApplication } from './CustomersApplication.service';
-import {
-  ICustomerEditDTO,
-  ICustomerNewDTO,
-  ICustomerOpeningBalanceEditDTO,
-} from './types/Customers.types';
+import { ICustomerOpeningBalanceEditDTO } from './types/Customers.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
+import { EditCustomerDto } from './dtos/EditCustomer.dto';
 
 @Controller('customers')
 @ApiTags('customers')
@@ -30,7 +28,7 @@ export class CustomersController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new customer.' })
-  createCustomer(@Body() customerDTO: ICustomerNewDTO) {
+  createCustomer(@Body() customerDTO: CreateCustomerDto) {
     return this.customersApplication.createCustomer(customerDTO);
   }
 
@@ -38,7 +36,7 @@ export class CustomersController {
   @ApiOperation({ summary: 'Edit the given customer.' })
   editCustomer(
     @Param('id') customerId: number,
-    @Body() customerDTO: ICustomerEditDTO,
+    @Body() customerDTO: EditCustomerDto,
   ) {
     return this.customersApplication.editCustomer(customerId, customerDTO);
   }

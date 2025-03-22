@@ -16,6 +16,15 @@ import { CreateBranchDto, EditBranchDto } from './dtos/Branch.dto';
 
 @Injectable()
 export class BranchesApplication {
+  /**
+   * @param {CreateBranchService} createBranchService - Create branch service.
+   * @param {EditBranchService} editBranchService - Edit branch service.
+   * @param {DeleteBranchService} deleteBranchService - Delete branch service.
+   * @param {GetBranchService} getBranchService - Get branch service.
+   * @param {GetBranchesService} getBranchesService - Get branches service.
+   * @param {ActivateBranches} activateBranchesService - Activate branches service.
+   * @param {MarkBranchAsPrimaryService} markBranchAsPrimaryService - Mark branch as primary service.
+   */
   constructor(
     private readonly createBranchService: CreateBranchService,
     private readonly editBranchService: EditBranchService,

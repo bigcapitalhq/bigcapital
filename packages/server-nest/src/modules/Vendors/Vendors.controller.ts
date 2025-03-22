@@ -10,13 +10,13 @@ import {
 } from '@nestjs/common';
 import { VendorsApplication } from './VendorsApplication.service';
 import {
-  IVendorEditDTO,
-  IVendorNewDTO,
   IVendorOpeningBalanceEditDTO,
   IVendorsFilter,
 } from './types/Vendors.types';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateVendorDto } from './dtos/CreateVendor.dto';
+import { EditVendorDto } from './dtos/EditVendor.dto';
 
 @Controller('vendors')
 @ApiTags('vendors')
@@ -38,13 +38,13 @@ export class VendorsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new vendor.' })
-  createVendor(@Body() vendorDTO: IVendorNewDTO) {
+  createVendor(@Body() vendorDTO: CreateVendorDto) {
     return this.vendorsApplication.createVendor(vendorDTO);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Edit the given vendor.' })
-  editVendor(@Param('id') vendorId: number, @Body() vendorDTO: IVendorEditDTO) {
+  editVendor(@Param('id') vendorId: number, @Body() vendorDTO: EditVendorDto) {
     return this.vendorsApplication.editVendor(vendorId, vendorDTO);
   }
 

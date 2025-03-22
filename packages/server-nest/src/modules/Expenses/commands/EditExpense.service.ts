@@ -3,17 +3,16 @@ import { Knex } from 'knex';
 import {
   IExpenseEventEditPayload,
   IExpenseEventEditingPayload,
-  IExpenseEditDTO,
 } from '../interfaces/Expenses.interface';
 import { CommandExpenseValidator } from './CommandExpenseValidator.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ExpenseDTOTransformer } from './CommandExpenseDTO.transformer';
-// import { EntriesService } from '@/services/Entries';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { Expense } from '../models/Expense.model';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditExpenseDto } from '../dtos/Expense.dto';
 
 @Injectable()
 export class EditExpense {
@@ -30,7 +29,6 @@ export class EditExpense {
     private uow: UnitOfWork,
     private validator: CommandExpenseValidator,
     private transformDTO: ExpenseDTOTransformer,
-    // private entriesService: EntriesService,
     @Inject(Expense.name)
     private expenseModel: TenantModelProxy<typeof Expense>,
 
@@ -40,11 +38,11 @@ export class EditExpense {
 
   /**
    * Authorize the DTO before editing expense transaction.
-   * @param {IExpenseEditDTO} expenseDTO
+   * @param {EditExpenseDto} expenseDTO
    */
   public authorize = async (
     oldExpense: Expense,
-    expenseDTO: IExpenseEditDTO,
+    expenseDTO: EditExpenseDto,
   ) => {
     // Validate payment account existance on the storage.
     const paymentAccount = await this.accountModel()
@@ -102,7 +100,7 @@ export class EditExpense {
    */
   public async editExpense(
     expenseId: number,
-    expenseDTO: IExpenseEditDTO,
+    expenseDTO: EditExpenseDto,
   ): Promise<Expense> {
     // Retrieves the expense model or throw not found error.
     const oldExpense = await this.expenseModel()

@@ -4,12 +4,9 @@ import { CreateCustomer } from './commands/CreateCustomer.service';
 import { EditCustomer } from './commands/EditCustomer.service';
 import { DeleteCustomer } from './commands/DeleteCustomer.service';
 import { EditOpeningBalanceCustomer } from './commands/EditOpeningBalanceCustomer.service';
-import {
-  ICustomerEditDTO,
-  ICustomerNewDTO,
-  ICustomerOpeningBalanceEditDTO,
-  // ICustomersFilter,
-} from './types/Customers.types';
+import { ICustomerOpeningBalanceEditDTO } from './types/Customers.types';
+import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
+import { EditCustomerDto } from './dtos/EditCustomer.dto';
 
 @Injectable()
 export class CustomersApplication {
@@ -36,7 +33,7 @@ export class CustomersApplication {
    * @param {ICustomerNewDTO} customerDTO
    * @returns {Promise<ICustomer>}
    */
-  public createCustomer = (customerDTO: ICustomerNewDTO) => {
+  public createCustomer = (customerDTO: CreateCustomerDto) => {
     return this.createCustomerService.createCustomer(customerDTO);
   };
 
@@ -46,7 +43,7 @@ export class CustomersApplication {
    * @param {ICustomerEditDTO} customerDTO - Customer edit DTO.
    * @return {Promise<ICustomer>}
    */
-  public editCustomer = (customerId: number, customerDTO: ICustomerEditDTO) => {
+  public editCustomer = (customerId: number, customerDTO: EditCustomerDto) => {
     return this.editCustomerService.editCustomer(customerId, customerDTO);
   };
 

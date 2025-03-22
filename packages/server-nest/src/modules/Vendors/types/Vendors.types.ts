@@ -5,6 +5,8 @@ import { Vendor } from '../models/Vendor';
 import { IContactAddressDTO } from '@/modules/Contacts/types/Contacts.types';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
+import { CreateVendorDto } from '../dtos/CreateVendor.dto';
+import { EditVendorDto } from '../dtos/EditVendor.dto';
 
 // ----------------------------------
 export interface IVendorNewDTO extends IContactAddressDTO {
@@ -60,43 +62,33 @@ export interface GetVendorsResponse {
 // Vendor Events.
 // ----------------------------------
 export interface IVendorEventCreatingPayload {
-  // tenantId: number;
-  vendorDTO: IVendorNewDTO;
-  // authorizedUser: ISystemUser;
+  vendorDTO: CreateVendorDto;
   trx: Knex.Transaction;
 }
 
 export interface IVendorEventCreatedPayload {
-  // tenantId: number;
   vendorId: number;
   vendor: Vendor;
-  // authorizedUser: ISystemUser;
   trx: Knex.Transaction;
 }
 
 export interface IVendorEventDeletingPayload {
-  // tenantId: number;
   vendorId: number;
   oldVendor: Vendor;
 }
 
 export interface IVendorEventDeletedPayload {
-  // tenantId: number;
   vendorId: number;
-  // authorizedUser: ISystemUser;
   oldVendor: Vendor;
   trx?: Knex.Transaction;
 }
 export interface IVendorEventEditingPayload {
-  // tenantId: number;
-  vendorDTO: IVendorEditDTO;
+  vendorDTO: EditVendorDto;
   trx?: Knex.Transaction;
 }
 export interface IVendorEventEditedPayload {
-  // tenantId: number;
   vendorId: number;
   vendor: Vendor;
-  // authorizedUser: ISystemUser;
   trx?: Knex.Transaction;
 }
 
@@ -108,14 +100,12 @@ export interface IVendorOpeningBalanceEditDTO {
 }
 
 export interface IVendorOpeningBalanceEditingPayload {
-  // tenantId: number;
   oldVendor: Vendor;
   openingBalanceEditDTO: IVendorOpeningBalanceEditDTO;
   trx?: Knex.Transaction;
 }
 
 export interface IVendorOpeningBalanceEditedPayload {
-  // tenantId: number;
   vendor: Vendor;
   oldVendor: Vendor;
   openingBalanceEditDTO: IVendorOpeningBalanceEditDTO;
@@ -123,13 +113,11 @@ export interface IVendorOpeningBalanceEditedPayload {
 }
 
 export interface IVendorActivatingPayload {
-  // tenantId: number;
   oldVendor: Vendor;
   trx: Knex.Transaction;
 }
 
 export interface IVendorActivatedPayload {
-  // tenantId: number;
   vendor: Vendor;
   oldVendor: Vendor;
   trx?: Knex.Transaction;

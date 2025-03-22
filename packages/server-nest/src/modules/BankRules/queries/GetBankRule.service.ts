@@ -15,7 +15,7 @@ export class GetBankRuleService {
 
   /**
    * Retrieves the bank rule.
-   * @param {number} ruleId
+   * @param {number} ruleId - Rule id.
    * @returns {Promise<any>}
    */
   async getBankRule(ruleId: number): Promise<any> {

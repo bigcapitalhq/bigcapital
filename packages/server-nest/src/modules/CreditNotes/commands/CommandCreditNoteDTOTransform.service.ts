@@ -17,7 +17,7 @@ import { BrandingTemplateDTOTransformer } from '../../PdfTemplate/BrandingTempla
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { CreditNoteAutoIncrementService } from './CreditNoteAutoIncrement.service';
 import { CreditNote } from '../models/CreditNote';
-import { CreateCreditNoteDto, EditCreditNoteDto } from '../dtos/CreditNote.dto';
+import { CreateCreditNoteDto, CreditNoteEntryDto, EditCreditNoteDto } from '../dtos/CreditNote.dto';
 
 @Injectable()
 export class CommandCreditNoteDTOTransform {
@@ -55,7 +55,7 @@ export class CommandCreditNoteDTOTransform {
       assocItemEntriesDefaultIndex,
 
       // Associate the reference type to credit note entries.
-      R.map((entry: ICreditNoteEntryNewDTO) => ({
+      R.map((entry: CreditNoteEntryDto) => ({
         ...entry,
         referenceType: 'CreditNote',
       })),

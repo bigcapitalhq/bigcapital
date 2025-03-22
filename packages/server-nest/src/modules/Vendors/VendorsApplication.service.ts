@@ -6,12 +6,12 @@ import { DeleteVendorService } from './commands/DeleteVendor.service';
 import { EditOpeningBalanceVendorService } from './commands/EditOpeningBalanceVendor.service';
 import { GetVendorService } from './queries/GetVendor';
 import {
-  IVendorEditDTO,
-  IVendorNewDTO,
   IVendorOpeningBalanceEditDTO,
   IVendorsFilter,
 } from './types/Vendors.types';
 import { GetVendorsService } from './queries/GetVendors.service';
+import { CreateVendorDto } from './dtos/CreateVendor.dto';
+import { EditVendorDto } from './dtos/EditVendor.dto';
 
 @Injectable()
 export class VendorsApplication {
@@ -29,7 +29,7 @@ export class VendorsApplication {
    * @param  {IVendorNewDTO} vendorDTO
    * @return {Promise<void>}
    */
-  public createVendor(vendorDTO: IVendorNewDTO, trx?: Knex.Transaction) {
+  public createVendor(vendorDTO: CreateVendorDto, trx?: Knex.Transaction) {
     return this.createVendorService.createVendor(vendorDTO, trx);
   }
 
@@ -39,7 +39,7 @@ export class VendorsApplication {
    * @param {IVendorEditDTO} vendorDTO -
    * @returns {Promise<IVendor>}
    */
-  public editVendor(vendorId: number, vendorDTO: IVendorEditDTO) {
+  public editVendor(vendorId: number, vendorDTO: EditVendorDto) {
     return this.editVendorService.editVendor(vendorId, vendorDTO);
   }
 
@@ -84,5 +84,5 @@ export class VendorsApplication {
    */
   public getVendors(filterDTO: IVendorsFilter) {
     return this.getVendorsService.getVendorsList(filterDTO);
-  };
+  }
 }

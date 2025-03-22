@@ -1,14 +1,11 @@
 import { sumBy, difference } from 'lodash';
 import { ERRORS, SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from '../constants';
-import {
-  IExpenseCreateDTO,
-  IExpenseEditDTO,
-} from '../interfaces/Expenses.interface';
 import { ACCOUNT_ROOT_TYPE } from '@/constants/accounts';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { Injectable } from '@nestjs/common';
 import { Expense } from '../models/Expense.model';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { CreateExpenseDto, EditExpenseDto } from '../dtos/Expense.dto';
 
 @Injectable()
 export class CommandExpenseValidator {
@@ -18,7 +15,7 @@ export class CommandExpenseValidator {
    * @throws {ServiceError}
    */
   public validateCategoriesNotEqualZero = (
-    expenseDTO: IExpenseCreateDTO | IExpenseEditDTO,
+    expenseDTO: CreateExpenseDto | EditExpenseDto,
   ) => {
     const totalAmount = sumBy(expenseDTO.categories, 'amount') || 0;
 
@@ -30,7 +27,6 @@ export class CommandExpenseValidator {
   /**
    * Retrieve expense accounts or throw error in case one of the given accounts
    * not found not the storage.
-   * @param {Array<Account>} tenantId
    * @param {number} expenseAccountsIds
    * @throws {ServiceError}
    * @returns {Promise<IAccount[]>}
@@ -40,7 +36,6 @@ export class CommandExpenseValidator {
     DTOAccountsIds: number[],
   ) {
     const storedExpenseAccountsIds = expenseAccounts.map((a: Account) => a.id);
-
     const notStoredAccountsIds = difference(
       DTOAccountsIds,
       storedExpenseAccountsIds,
@@ -84,7 +79,6 @@ export class CommandExpenseValidator {
   /**
    * Validates the expense has not associated landed cost
    * references to the given expense.
-   * @param {number} tenantId
    * @param {number} expenseId
    */
   public async validateNoAssociatedLandedCost(expenseId: number) {

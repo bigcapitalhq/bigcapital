@@ -8,9 +8,9 @@ import { events } from '@/common/events/events';
 import {
   ICustomerEventCreatedPayload,
   ICustomerEventCreatingPayload,
-  ICustomerNewDTO,
 } from '../types/Customers.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateCustomerDto } from '../dtos/CreateCustomer.dto';
 
 @Injectable()
 export class CreateCustomer {
@@ -35,7 +35,7 @@ export class CreateCustomer {
    * @return {Promise<ICustomer>}
    */
   public async createCustomer(
-    customerDTO: ICustomerNewDTO,
+    customerDTO: CreateCustomerDto,
     trx?: Knex.Transaction,
   ): Promise<Customer> {
     // Transformes the customer DTO to customer object.

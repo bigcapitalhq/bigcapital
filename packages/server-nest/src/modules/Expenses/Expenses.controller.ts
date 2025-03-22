@@ -9,13 +9,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { ExpensesApplication } from './ExpensesApplication.service';
-import {
-  IExpenseCreateDTO,
-  IExpenseEditDTO,
-} from './interfaces/Expenses.interface';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { IExpensesFilter } from './Expenses.types';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
 
 @Controller('expenses')
 @ApiTags('expenses')
@@ -29,7 +26,7 @@ export class ExpensesController {
    */
   @Post()
   @ApiOperation({ summary: 'Create a new expense transaction.' })
-  public createExpense(@Body() expenseDTO: IExpenseCreateDTO) {
+  public createExpense(@Body() expenseDTO: CreateExpenseDto) {
     return this.expensesApplication.createExpense(expenseDTO);
   }
 
@@ -42,7 +39,7 @@ export class ExpensesController {
   @ApiOperation({ summary: 'Edit the given expense transaction.' })
   public editExpense(
     @Param('id') expenseId: number,
-    @Body() expenseDTO: IExpenseEditDTO,
+    @Body() expenseDTO: EditExpenseDto,
   ) {
     return this.expensesApplication.editExpense(expenseId, expenseDTO);
   }

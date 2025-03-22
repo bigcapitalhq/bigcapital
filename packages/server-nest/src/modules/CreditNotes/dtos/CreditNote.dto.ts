@@ -19,7 +19,7 @@ enum DiscountType {
   Amount = 'amount',
 }
 
-class CreditNoteEntryDto extends ItemEntryDto {}
+export class CreditNoteEntryDto extends ItemEntryDto {}
 
 class AttachmentDto {
   @IsString()

@@ -10,6 +10,12 @@ import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class ActivateAccount {
+  /**
+   * @param {EventEmitter2} eventEmitter - The event emitter.
+   * @param {UnitOfWork} uow - The unit of work.
+   * @param {AccountRepository} accountRepository - The account repository.
+   * @param {TenantModelProxy<typeof Account>} accountModel - The account model.
+   */
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
@@ -21,8 +27,8 @@ export class ActivateAccount {
 
   /**
    * Activates/Inactivates the given account.
-   * @param {number} accountId
-   * @param {boolean} activate
+   * @param {number} accountId - The account id.
+   * @param {boolean} activate - Activate or inactivate the account.
    */
   public activateAccount = async (accountId: number, activate?: boolean) => {
     // Retrieve the given account or throw not found error.

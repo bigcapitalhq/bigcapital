@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import {
-  IExpenseCreateDTO,
   IExpenseCreatedPayload,
   IExpenseCreatingPayload,
 } from '../interfaces/Expenses.interface';
@@ -13,6 +12,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CreateExpenseDto } from '../dtos/Expense.dto';
 
 @Injectable()
 export class CreateExpense {
@@ -41,7 +41,7 @@ export class CreateExpense {
    * Authorize before create a new expense transaction.
    * @param {IExpenseDTO} expenseDTO
    */
-  private authorize = async (expenseDTO: IExpenseCreateDTO) => {
+  private authorize = async (expenseDTO: CreateExpenseDto) => {
     // Validate payment account existance on the storage.
     const paymentAccount = await this.accountModel()
       .query()
@@ -86,7 +86,7 @@ export class CreateExpense {
    * @param {IExpenseDTO} expenseDTO
    */
   public newExpense = async (
-    expenseDTO: IExpenseCreateDTO,
+    expenseDTO: CreateExpenseDto,
     trx?: Knex.Transaction,
   ): Promise<Expense> => {
     // Authorize before create a new expense.
