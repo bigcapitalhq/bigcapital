@@ -1,7 +1,16 @@
 import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
+import { PaymentIntegration } from './PaymentIntegration.model';
 
 export class TransactionPaymentServiceEntry extends BaseModel {
+  readonly referenceId!: number;
+  readonly referenceType!: string;
+  readonly paymentIntegrationId!: number;
+  readonly enable!: boolean;
+  readonly options!: Record<string, any>;
+  
+  readonly paymentIntegration: PaymentIntegration;
+
   /**
    * Table name
    */

@@ -12,6 +12,7 @@ import { ItemCategory } from '../models/ItemCategory.model';
 import { Inject } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { EditItemCategoryDto } from '../dtos/ItemCategory.dto';
 
 export class EditItemCategoryService {
   /**
@@ -33,14 +34,13 @@ export class EditItemCategoryService {
 
   /**
    * Edits item category.
-   * @param {number} tenantId
-   * @param {number} itemCategoryId
-   * @param {IItemCategoryOTD} itemCategoryOTD
-   * @return {Promise<void>}
+   * @param {number} itemCategoryId - Item category id.
+   * @param {EditItemCategoryDto} itemCategoryOTD - Item category OTD.
+   * @return {Promise<ItemCategory>}
    */
   public async editItemCategory(
     itemCategoryId: number,
-    itemCategoryOTD: IItemCategoryOTD,
+    itemCategoryOTD: EditItemCategoryDto,
   ): Promise<ItemCategory> {
     // Retrieve the item category from the storage.
     const oldItemCategory = await this.itemCategoryModel()
@@ -90,11 +90,11 @@ export class EditItemCategoryService {
 
   /**
    * Transforms OTD to model object.
-   * @param {IItemCategoryOTD} itemCategoryOTD
-   * @param {ISystemUser} authorizedUser
+   * @param {EditItemCategoryDto} itemCategoryOTD
+   * @param {SystemUser} authorizedUser
    */
   private transformOTDToObject(
-    itemCategoryOTD: IItemCategoryOTD,
+    itemCategoryOTD: EditItemCategoryDto,
     authorizedUser: SystemUser,
   ) {
     return { ...itemCategoryOTD, userId: authorizedUser.id };

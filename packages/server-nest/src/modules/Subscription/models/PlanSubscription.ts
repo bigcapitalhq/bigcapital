@@ -11,6 +11,7 @@ export class PlanSubscription extends mixin(SystemModel) {
   public readonly canceledAt: Date;
   public readonly trialEndsAt: Date;
   public readonly paymentStatus: SubscriptionPaymentStatus;
+  public readonly planId: number;
 
   /**
    * Table name.

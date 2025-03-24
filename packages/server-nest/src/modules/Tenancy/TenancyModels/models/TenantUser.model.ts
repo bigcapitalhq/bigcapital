@@ -1,0 +1,68 @@
+import { Model } from 'objection';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { Role } from '../../../Roles/models/Role.model';
+
+export class TenantUser extends TenantBaseModel {
+  firstName!: string;
+  lastName!: string;
+  inviteAcceptedAt!: Date;
+  roleId!: number;
+
+  role!: Role;
+
+  /**
+   * Table name.
+   */
+  static get tableName() {
+    return 'users';
+  }
+
+  /**
+   * Timestamps columns.
+   */
+  get timestamps() {
+    return ['created_at', 'updated_at'];
+  }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['isInviteAccepted', 'fullName'];
+  }
+
+  /**
+   * Detarmines whether the user ivnite is accept.
+   */
+  get isInviteAccepted() {
+    return !!this.inviteAcceptedAt;
+  }
+
+  /**
+   * Full name attribute.
+   */
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`.trim();
+  }
+
+  /**
+   * Relationship mapping.
+   */
+  static get relationMappings() {
+    const Role = require('models/Role');
+
+    return {
+      /**
+       * User belongs to user.
+       */
+      role: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Role.default,
+        join: {
+          from: 'users.roleId',
+          to: 'roles.id',
+        },
+      },
+    };
+  }
+}

@@ -8,6 +8,7 @@ import { DeleteItemCategoryService } from './commands/DeleteItemCategory.service
 import { EditItemCategoryService } from './commands/EditItemCategory.service';
 import { GetItemCategoryService } from './queries/GetItemCategory.service';
 import { GetItemCategoriesService } from './queries/GetItemCategories.service';
+import { CreateItemCategoryDto, EditItemCategoryDto } from './dtos/ItemCategory.dto';
 
 @Injectable()
 export class ItemCategoryApplication {
@@ -31,7 +32,7 @@ export class ItemCategoryApplication {
    * @returns {Promise<ItemCategory>} The created item category.
    */
   public createItemCategory(
-    itemCategoryDTO: IItemCategoryOTD,
+    itemCategoryDTO: CreateItemCategoryDto,
   ) {
     return this.createItemCategoryService.newItemCategory(itemCategoryDTO);
   }
@@ -44,7 +45,7 @@ export class ItemCategoryApplication {
    */
   public editItemCategory(
     itemCategoryId: number,
-    itemCategoryDTO: IItemCategoryOTD,
+    itemCategoryDTO: EditItemCategoryDto,
   ) {
     return this.editItemCategoryService.editItemCategory(
       itemCategoryId,

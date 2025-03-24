@@ -23,29 +23,25 @@ export class ExportResourceService {
 
   /**
    *
-   * @param {number} tenantId
    * @param {string} resourceName
    * @param {ExportFormat} format
    * @returns
    */
   public async export(
-    tenantId: number,
     resourceName: string,
     format: ExportFormat = ExportFormat.Csv
   ) {
     return this.exportAls.run(() =>
-      this.exportAlsRun(tenantId, resourceName, format)
+      this.exportAlsRun(resourceName, format)
     );
   }
 
   /**
    * Exports the given resource data through csv, xlsx or pdf.
-   * @param {number} tenantId - Tenant id.
    * @param {string} resourceName - Resource name.
    * @param {ExportFormat} format - File format.
    */
   public async exportAlsRun(
-    tenantId: number,
     resourceName: string,
     format: ExportFormat = ExportFormat.Csv
   ) {
@@ -85,8 +81,8 @@ export class ExportResourceService {
    * @param {string} resource - The name of the resource.
    * @returns The metadata of the resource.
    */
-  private getResourceMeta(tenantId: number, resource: string) {
-    return this.resourceService.getResourceMeta(tenantId, resource);
+  private getResourceMeta(resource: string) {
+    return this.resourceService.getResourceMeta(resource);
   }
 
   /**
@@ -104,18 +100,15 @@ export class ExportResourceService {
    * Transforms the exported data based on the resource metadata.
    * If the resource metadata specifies a flattening attribute (`exportFlattenOn`),
    * the data will be flattened based on this attribute using the `flatDataCollections` utility function.
-   *
-   * @param {number} tenantId - The tenant identifier.
    * @param {string} resource - The name of the resource.
    * @param {Array<Record<string, any>>} data - The original data to be transformed.
    * @returns {Array<Record<string, any>>} - The transformed data.
    */
   private transformExportedData(
-    tenantId: number,
     resource: string,
     data: Array<Record<string, any>>
   ): Array<Record<string, any>> {
-    const resourceMeta = this.getResourceMeta(tenantId, resource);
+    const resourceMeta = this.getResourceMeta(resource);
 
     return R.when<Array<Record<string, any>>, Array<Record<string, any>>>(
       R.always(Boolean(resourceMeta.exportFlattenOn)),
@@ -129,11 +122,11 @@ export class ExportResourceService {
    * @param {string} resource - The name of the resource.
    * @returns A promise that resolves to the exportable data.
    */
-  private async getExportableData(tenantId: number, resource: string) {
+  private async getExportableData(resource: string) {
     const exportable =
       this.exportableResources.registry.getExportable(resource);
 
-    return exportable.exportable(tenantId, {});
+    return exportable.exportable({});
   }
 
   /**

@@ -72,7 +72,10 @@ import { StripePaymentModule } from '../StripePayment/StripePayment.module';
 import { FeaturesModule } from '../Features/Features.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { WarehousesTransfersModule } from '../WarehousesTransfers/WarehouseTransfers.module';
-
+import { DashboardModule } from '../Dashboard/Dashboard.module';
+import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
+import { RolesModule } from '../Roles/Roles.module';
+import { SubscriptionModule } from '../Subscription/Subscription.module';
 
 @Module({
   imports: [
@@ -180,6 +183,10 @@ import { WarehousesTransfersModule } from '../WarehousesTransfers/WarehouseTrans
     EventTrackerModule,
     FinancialStatementsModule,
     StripePaymentModule,
+    DashboardModule,
+    PaymentLinksModule,
+    RolesModule,
+    SubscriptionModule
   ],
   controllers: [AppController],
   providers: [

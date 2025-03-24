@@ -12,10 +12,13 @@ import { ItemCategoryApplication } from './ItemCategory.application';
 import {
   GetItemCategoriesResponse,
   IItemCategoriesFilter,
-  IItemCategoryOTD,
 } from './ItemCategory.interfaces';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  CreateItemCategoryDto,
+  EditItemCategoryDto,
+} from './dtos/ItemCategory.dto';
 
 @Controller('item-categories')
 @ApiTags('item-categories')
@@ -27,7 +30,7 @@ export class ItemCategoryController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new item category.' })
-  async createItemCategory(@Body() itemCategoryDTO: IItemCategoryOTD) {
+  async createItemCategory(@Body() itemCategoryDTO: CreateItemCategoryDto) {
     return this.itemCategoryApplication.createItemCategory(itemCategoryDTO);
   }
 
@@ -43,7 +46,7 @@ export class ItemCategoryController {
   @ApiOperation({ summary: 'Edit the given item category.' })
   async editItemCategory(
     @Param('id') id: number,
-    @Body() itemCategoryDTO: IItemCategoryOTD,
+    @Body() itemCategoryDTO: EditItemCategoryDto,
   ) {
     return this.itemCategoryApplication.editItemCategory(id, itemCategoryDTO);
   }

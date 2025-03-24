@@ -12,6 +12,7 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { ISearchRole } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { PaymentIntegrationTransactionLink } from '../SaleInvoice.types';
+import { TransactionPaymentServiceEntry } from '@/modules/PaymentServices/models/TransactionPaymentServiceEntry.model';
 
 export class SaleInvoice extends TenantBaseModel{
   public taxAmountWithheld: number;
@@ -52,8 +53,7 @@ export class SaleInvoice extends TenantBaseModel{
   public entries!: ItemEntry[];
   public attachments!: Document[];
   public writtenoffExpenseAccount!: Account;
-  public paymentMethods!: PaymentIntegrationTransactionLink[];
-  
+  public paymentMethods!: TransactionPaymentServiceEntry[];
   /**
    * Table name
    */

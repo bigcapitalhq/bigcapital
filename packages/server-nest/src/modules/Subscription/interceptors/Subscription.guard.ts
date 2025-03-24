@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { PlanSubscription } from '../models/PlanSubscription';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
-import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SubscriptionGuard implements CanActivate {

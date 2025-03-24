@@ -16,7 +16,7 @@ export class ExportApplication {
    * @param {string} reosurce
    * @param {ExportFormat} format
    */
-  public export(tenantId: number, resource: string, format: ExportFormat) {
-    return this.exportResource.export(tenantId, resource, format);
+  public export(resource: string, format: ExportFormat) {
+    return this.exportResource.export(resource, format);
   }
 }

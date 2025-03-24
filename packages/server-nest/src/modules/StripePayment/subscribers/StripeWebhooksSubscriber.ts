@@ -10,6 +10,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
 import { PaymentIntegration } from '../models/PaymentIntegration.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { TenantModel } from '@/modules/System/models/TenantModel';
 
 @Injectable()
 export class StripeWebhooksSubscriber {
@@ -20,6 +21,9 @@ export class StripeWebhooksSubscriber {
     private readonly paymentIntegrationModel: TenantModelProxy<
       typeof PaymentIntegration
     >,
+
+    @Inject(TenantModel.name)
+    private readonly tenantModel: typeof TenantModel
   ) {}
 
   /**
@@ -33,6 +37,8 @@ export class StripeWebhooksSubscriber {
     const { metadata } = event.data.object;
     const tenantId = parseInt(metadata.tenantId, 10);
     const saleInvoiceId = parseInt(metadata.saleInvoiceId, 10);
+
+
 
     // await initalizeTenantServices(tenantId);
     // await initializeTenantSettings(tenantId);
@@ -63,7 +69,7 @@ export class StripeWebhooksSubscriber {
     if (!metadata?.paymentIntegrationId || !metadata.tenantId) return;
 
     // Find the tenant or throw not found error.
-    // await Tenant.query().findById(tenantId).throwIfNotFound();
+    await this.tenantModel.query().findById(tenantId).throwIfNotFound();
 
     // Check if the account capabilities are active
     if (account.capabilities.card_payments === 'active') {

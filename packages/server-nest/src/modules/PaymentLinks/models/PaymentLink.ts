@@ -1,6 +1,8 @@
+import { SystemModel } from '@/modules/System/models/SystemModel';
 import { Model } from 'objection';
 
-export class PaymentLink extends Model {
+export class PaymentLink extends SystemModel {
+  public id!: number;
   public tenantId!: number;
   public resourceId!: number;
   public resourceType!: string;

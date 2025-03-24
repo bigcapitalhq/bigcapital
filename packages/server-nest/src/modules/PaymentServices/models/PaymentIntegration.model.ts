@@ -1,8 +1,10 @@
 import { BaseModel } from "@/models/Model";
 
 export class PaymentIntegration extends BaseModel {
-  paymentEnabled!: boolean;
-  payoutEnabled!: boolean;
+  readonly service!: string;
+  readonly paymentEnabled!: boolean;
+  readonly payoutEnabled!: boolean;
+  readonly accountId!: string;
 
   static get tableName() {
     return 'payment_integrations';
@@ -24,6 +26,9 @@ export class PaymentIntegration extends BaseModel {
     return this.paymentEnabled && this.payoutEnabled;
   }
 
+  /**
+   * 
+   */
   static get modifiers() {
     return {
       /**

@@ -41,6 +41,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/passport-local": "^1.0.38",
     "@types/ramda": "^0.30.2",
+    "@lemonsqueezy/lemonsqueezy.js": "^2.2.0",
     "accounting": "^0.4.1",
     "async": "^3.2.0",
     "async-mutex": "^0.5.0",

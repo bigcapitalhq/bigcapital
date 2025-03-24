@@ -1,16 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Knex } from 'knex';
-import {
-  IItemCategoryOTD,
-  IItemCategoryCreatedPayload,
-} from '../ItemCategory.interfaces';
+import { IItemCategoryCreatedPayload } from '../ItemCategory.interfaces';
 import { events } from '@/common/events/events';
 import { CommandItemCategoryValidatorService } from './CommandItemCategoryValidator.service';
 import { ItemCategory } from '../models/ItemCategory.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
-import { SystemUser } from '@/modules/System/models/SystemUser';
-import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { CreateItemCategoryDto } from '../dtos/ItemCategory.dto';
 
 @Injectable()
 export class CreateItemCategoryService {
@@ -31,12 +27,11 @@ export class CreateItemCategoryService {
 
   /**
    * Transforms OTD to model object.
-   * @param {IItemCategoryOTD} itemCategoryOTD
-   * @param {ISystemUser} authorizedUser
-   * @returns {ItemCategory}
+   * @param {CreateItemCategoryDto} itemCategoryOTD
+   * @returns {Partial<ItemCategory>}
    */
   private transformOTDToObject(
-    itemCategoryOTD: IItemCategoryOTD,
+    itemCategoryOTD: CreateItemCategoryDto,
   ): Partial<ItemCategory> {
     return {
       ...itemCategoryOTD,
@@ -47,10 +42,10 @@ export class CreateItemCategoryService {
    * Inserts a new item category.
    * @param {number} tenantId
    * @param {IItemCategoryOTD} itemCategoryOTD
-   * @return {Promise<void>}
+   * @return {Promise<ItemCategory>}
    */
   public async newItemCategory(
-    itemCategoryOTD: IItemCategoryOTD,
+    itemCategoryOTD: CreateItemCategoryDto,
     trx?: Knex.Transaction,
   ): Promise<ItemCategory> {
     // Validate the category name uniquiness.

@@ -39,7 +39,7 @@ export class GeneralLedgerApplication {
   /**
    * Retrieves the G/L sheet in xlsx format.
    * @param {IGeneralLedgerSheetQuery} query
-   * @returns {}
+   * @returns {Promise<Buffer>}
    */
   public xlsx(
     query: IGeneralLedgerSheetQuery,
@@ -50,6 +50,7 @@ export class GeneralLedgerApplication {
   /**
    * Retrieves the G/L sheet in csv format.
    * @param {IGeneralLedgerSheetQuery} query -
+   * @returns {Promise<string>}
    */
   public csv(
     query: IGeneralLedgerSheetQuery,

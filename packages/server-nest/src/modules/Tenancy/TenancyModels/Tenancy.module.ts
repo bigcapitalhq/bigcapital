@@ -39,6 +39,7 @@ import { RefundVendorCredit } from '@/modules/VendorCreditsRefund/models/RefundV
 import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceived';
 import { Model } from 'objection';
 import { ClsModule } from 'nestjs-cls';
+import { TenantUser } from './models/TenantUser.model';
 
 const models = [
   Item,
@@ -78,6 +79,7 @@ const models = [
   RefundVendorCredit,
   PaymentReceived,
   PaymentReceivedEntry,
+  TenantUser,
 ];
 
 /**

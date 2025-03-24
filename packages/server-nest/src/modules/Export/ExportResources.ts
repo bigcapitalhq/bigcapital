@@ -1,4 +1,3 @@
-// @ts-nocheck
 // import Container, { Service } from 'typedi';
 // import { AccountsExportable } from '../Accounts/AccountsExportable';
 // import { ExportableRegistry } from './ExportRegistery';
@@ -20,10 +19,10 @@
 
 import { Injectable } from "@nestjs/common";
 import { ExportableRegistry } from "./ExportRegistery";
+import { AccountsExportable } from "../Accounts/AccountsExportable.service";
 
 @Injectable()
 export class ExportableResources {
-  
   constructor(
     private readonly exportRegistry: ExportableRegistry,
   ) {
@@ -34,7 +33,7 @@ export class ExportableResources {
    * Importable instances.
    */
   private importables = [
-    // { resource: 'Account', exportable: AccountsExportable },
+    { resource: 'Account', exportable: AccountsExportable },
     // { resource: 'Item', exportable: ItemsExportable },
     // { resource: 'ItemCategory', exportable: ItemCategoriesExportable },
     // { resource: 'Customer', exportable: CustomersExportable },
