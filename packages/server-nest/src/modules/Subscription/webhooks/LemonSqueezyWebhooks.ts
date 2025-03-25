@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   compareSignatures,
   configureLemonSqueezy,
@@ -6,14 +7,17 @@ import {
   webhookHasData,
   webhookHasMeta,
 } from '../utils';
-import { Subscription } from '../Subscription';
-import { ConfigService } from '@nestjs/config';
+import { Plan } from '../models/Plan';
+import { SubscriptionApplication } from '../SubscriptionApplication';
 
 @Injectable()
 export class LemonSqueezyWebhooks {
   constructor(
-    private readonly subscriptionService: Subscription,
+    private readonly subscriptionApp: SubscriptionApplication,
     private readonly configService: ConfigService,
+
+    @Inject(Plan.name)
+    private readonly planModel: typeof Plan,
   ) {}
 
   /**
@@ -68,14 +72,12 @@ export class LemonSqueezyWebhooks {
       if (webhookEvent.startsWith('subscription_payment_')) {
         // Marks the main subscription payment as succeed.
         if (webhookEvent === 'subscription_payment_success') {
-          await this.subscriptionService.markSubscriptionPaymentSucceed(
-            tenantId,
+          await this.subscriptionApp.markSubscriptionPaymentSuccessed(
             subscriptionSlug,
           );
           // Marks the main subscription payment as failed.
         } else if (webhookEvent === 'subscription_payment_failed') {
-          await this.subscriptionService.markSubscriptionPaymentFailed(
-            tenantId,
+          await this.subscriptionApp.markSubscriptionPaymentFailed(
             subscriptionSlug,
           );
         }
@@ -87,7 +89,9 @@ export class LemonSqueezyWebhooks {
         const variantId = attributes.variant_id as string;
 
         // We assume that the Plan table is up to date.
-        const plan = await Plan.query().findOne('lemonVariantId', variantId);
+        const plan = await this.planModel
+          .query()
+          .findOne('lemonVariantId', variantId);
 
         // Update the subscription in the database.
         const priceId = attributes.first_subscription_item.price_id;
@@ -99,27 +103,23 @@ export class LemonSqueezyWebhooks {
         }
         // Create a new subscription of the tenant.
         if (webhookEvent === 'subscription_created') {
-          await this.subscriptionService.newSubscribtion(
-            tenantId,
+          await this.subscriptionApp.createNewSubscription(
             plan.slug,
             subscriptionSlug,
             { lemonSqueezyId: subscriptionId },
           );
           // Cancel the given subscription of the organization.
         } else if (webhookEvent === 'subscription_cancelled') {
-          await this.subscriptionService.cancelSubscription(
-            tenantId,
+          await this.subscriptionApp.cancelSubscription(
             subscriptionSlug,
           );
         } else if (webhookEvent === 'subscription_plan_changed') {
-          await this.subscriptionService.subscriptionPlanChanged(
-            tenantId,
+          await this.subscriptionApp.markSubscriptionPlanChanged(
             plan.slug,
             subscriptionSlug,
           );
         } else if (webhookEvent === 'subscription_resumed') {
-          await this.subscriptionService.resumeSubscription(
-            tenantId,
+          await this.subscriptionApp.resumeSubscription(
             subscriptionSlug,
           );
         }

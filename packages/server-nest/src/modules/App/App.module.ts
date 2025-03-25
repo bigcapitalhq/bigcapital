@@ -76,6 +76,8 @@ import { DashboardModule } from '../Dashboard/Dashboard.module';
 import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
 import { RolesModule } from '../Roles/Roles.module';
 import { SubscriptionModule } from '../Subscription/Subscription.module';
+import { OrganizationModule } from '../Organization/Organization.module';
+import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
 
 @Module({
   imports: [
@@ -186,7 +188,9 @@ import { SubscriptionModule } from '../Subscription/Subscription.module';
     DashboardModule,
     PaymentLinksModule,
     RolesModule,
-    SubscriptionModule
+    SubscriptionModule,
+    OrganizationModule,
+    TenantDBManagerModule
   ],
   controllers: [AppController],
   providers: [

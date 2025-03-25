@@ -13,7 +13,9 @@ import { SaleInvoiceAction } from "../SaleInvoices/SaleInvoice.types";
 import { CreditNoteAction } from "../CreditNotes/types/CreditNotes.types";
 import { SaleReceiptAction } from "../SaleReceipts/types/SaleReceipts.types";
 import { BillAction } from "../Bills/Bills.types";
-import { AbilitySubject, ISubjectAbilitiesSchema } from "./Roles.types";
+import { AbilitySubject, ISubjectAbilitiesSchema, ISubjectAbilitySchema } from "./Roles.types";
+import { PaymentReceiveAction } from "../PaymentReceived/types/PaymentReceived.types";
+import { PreferencesAction } from "../Settings/Settings.types";
 
 export const AbilitySchema: ISubjectAbilitiesSchema[] = [
   {

@@ -11,3 +11,7 @@ export interface ISettingsDTO {
 
 
 export const SETTINGS_PROVIDER = 'SETTINGS';
+
+export enum PreferencesAction {
+  Mutate = 'Mutate'
+}

@@ -6,52 +6,28 @@ import {
   Req,
   Res,
   Next,
-  UseGuards,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
+import { ApiOperation, ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { SubscriptionApplication } from './SubscriptionApplication';
-import {
-  ApiOperation,
-  ApiTags,
-  ApiResponse,
-  ApiBody,
-} from '@nestjs/swagger';
-import { Subscription } from './Subscription';
-import { LemonSqueezy } from './LemonSqueezy';
 
 @Controller('subscription')
 @ApiTags('subscriptions')
 export class SubscriptionsController {
-  constructor(
-    private readonly subscriptionService: Subscription,
-    private readonly lemonSqueezyService: LemonSqueezy,
-    private readonly subscriptionApp: SubscriptionApplication,
-  ) {}
+  constructor(private readonly subscriptionApp: SubscriptionApplication) {}
 
-  /**
-   * Retrieve all subscriptions of the authenticated user's tenant.
-   */
   @Get()
   @ApiOperation({ summary: 'Get all subscriptions for the current tenant' })
   @ApiResponse({
     status: 200,
     description: 'List of subscriptions retrieved successfully',
   })
-  async getSubscriptions(
-    @Req() req: Request,
-    @Res() res: Response,
-    @Next() next: NextFunction,
-  ) {
-    const tenantId = req.headers['organization-id'] as string;
-    const subscriptions =
-      await this.subscriptionService.getSubscriptions(tenantId);
+  async getSubscriptions(@Res() res: Response) {
+    const subscriptions = await this.subscriptionApp.getSubscriptions();
 
     return res.status(200).send({ subscriptions });
   }
 
-  /**
-   * Retrieves the LemonSqueezy checkout url.
-   */
   @Post('lemon/checkout_url')
   @ApiOperation({ summary: 'Get LemonSqueezy checkout URL' })
   @ApiBody({
@@ -71,22 +47,15 @@ export class SubscriptionsController {
     description: 'Checkout URL retrieved successfully',
   })
   async getCheckoutUrl(
-    @Body('variantId') variantId: string,
-    @Req() req: Request,
+    @Body('variantId') variantId: number,
     @Res() res: Response,
-    @Next() next: NextFunction,
   ) {
-    const user = req.user;
-    const checkout = await this.lemonSqueezyService.getCheckout(
-      variantId,
-      user,
-    );
+    const checkout =
+      await this.subscriptionApp.getLemonSqueezyCheckoutUri(variantId);
+
     return res.status(200).send(checkout);
   }
 
-  /**
-   * Cancels the subscription of the current organization.
-   */
   @Post('cancel')
   @ApiOperation({ summary: 'Cancel the current organization subscription' })
   @ApiResponse({
@@ -107,9 +76,6 @@ export class SubscriptionsController {
     });
   }
 
-  /**
-   * Resumes the subscription of the current organization.
-   */
   @Post('resume')
   @ApiOperation({ summary: 'Resume the current organization subscription' })
   @ApiResponse({
@@ -130,9 +96,6 @@ export class SubscriptionsController {
     });
   }
 
-  /**
-   * Changes the main subscription plan of the current organization.
-   */
   @Post('change')
   @ApiOperation({
     summary: 'Change the subscription plan of the current organization',
@@ -155,12 +118,9 @@ export class SubscriptionsController {
   })
   async changeSubscriptionPlan(
     @Body('variant_id') variantId: number,
-    @Req() req: Request,
     @Res() res: Response,
-    @Next() next: NextFunction,
   ) {
-    const tenantId = req.headers['organization-id'] as string;
-    await this.subscriptionApp.changeSubscriptionPlan(tenantId, variantId);
+    await this.subscriptionApp.changeSubscriptionPlan(variantId);
 
     return res.status(200).send({
       message: 'The subscription plan has been changed.',

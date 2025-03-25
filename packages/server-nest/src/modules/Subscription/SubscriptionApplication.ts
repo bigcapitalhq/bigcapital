@@ -41,7 +41,7 @@ export class SubscriptionApplication {
    * @param variantId
    * @returns
    */
-  getLemonSqueezyCheckaoutUri(variantId: number) {
+  getLemonSqueezyCheckoutUri(variantId: number) {
     return this.getLemonSqueezyCheckoutService.getCheckout(variantId);
   }
 

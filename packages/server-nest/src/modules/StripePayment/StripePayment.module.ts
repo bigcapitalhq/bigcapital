@@ -33,6 +33,7 @@ const models = [InjectSystemModel(PaymentIntegration)];
     StripeWebhooksSubscriber,
     TenancyContext,
   ],
+  exports: [StripePaymentService],
   controllers: [StripeIntegrationController],
 })
 export class StripePaymentModule {}

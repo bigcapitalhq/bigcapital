@@ -5,10 +5,12 @@ import { PaymentLinksApplication } from './PaymentLinksApplication';
 import { PaymentLinksController } from './PaymentLinks.controller';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { PaymentLink } from './models/PaymentLink';
+import { StripePaymentModule } from '../StripePayment/StripePayment.module';
 
 const models = [InjectSystemModel(PaymentLink)];
 
 @Module({
+  imports: [StripePaymentModule],
   providers: [
     ...models,
     CreateInvoiceCheckoutSession,

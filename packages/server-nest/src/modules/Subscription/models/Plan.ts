@@ -2,6 +2,7 @@ import { SystemModel } from '@/modules/System/models/SystemModel';
 import { Model, mixin } from 'objection';
 
 export class Plan extends mixin(SystemModel) {
+  public readonly slug: string;
   public readonly price: number;
   public readonly invoiceInternal: number;
   public readonly invoicePeriod: string;

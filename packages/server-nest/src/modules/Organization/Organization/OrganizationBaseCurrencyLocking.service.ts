@@ -1,18 +1,14 @@
+import { Injectable } from '@nestjs/common';
 import { isEmpty } from 'lodash';
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { TimeoutSettings } from 'puppeteer';
+
 
 interface MutateBaseCurrencyLockMeta {
   modelName: string;
   pluralName?: string;
 }
 
-@Service()
-export default class OrganizationBaseCurrencyLocking {
-  @Inject()
-  tenancy: HasTenancyService;
-
+@Injectable()
+export class OrganizationBaseCurrencyLocking {
   /**
    * Retrieves the tenant models that have prevented mutation base currency.
    */
