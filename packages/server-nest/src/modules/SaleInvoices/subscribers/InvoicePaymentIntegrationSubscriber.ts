@@ -9,6 +9,7 @@ import {
   ISaleInvoiceDeletingPayload,
 } from '../SaleInvoice.types';
 import { events } from '@/common/events/events';
+import { TransactionPaymentServiceEntry } from '@/modules/PaymentServices/models/TransactionPaymentServiceEntry.model';
 
 @Injectable()
 export class InvoicePaymentIntegrationSubscriber {
@@ -30,7 +31,7 @@ export class InvoicePaymentIntegrationSubscriber {
       saleInvoice.paymentMethods?.filter((method) => method.enable) || [];
 
     paymentMethods.map(
-      async (paymentMethod: PaymentIntegrationTransactionLink) => {
+      async (paymentMethod: TransactionPaymentServiceEntry) => {
         const payload = {
           ...omit(paymentMethod, ['id']),
           saleInvoiceId: saleInvoice.id,
@@ -57,7 +58,7 @@ export class InvoicePaymentIntegrationSubscriber {
       oldSaleInvoice.paymentMethods?.filter((method) => method.enable) || [];
 
     paymentMethods.map(
-      async (paymentMethod: PaymentIntegrationTransactionLink) => {
+      async (paymentMethod: TransactionPaymentServiceEntry) => {
         const payload = {
           ...omit(paymentMethod, ['id']),
           oldSaleInvoiceId: oldSaleInvoice.id,

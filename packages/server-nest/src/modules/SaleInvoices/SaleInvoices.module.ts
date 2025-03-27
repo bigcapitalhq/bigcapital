@@ -119,6 +119,6 @@ import { SaleInvoicesCost } from './SalesInvoicesCost';
     InvoicePaymentsGLEntriesRewrite,
     SaleInvoicesCost,
   ],
-  exports: [GetSaleInvoice, SaleInvoicesCost],
+  exports: [GetSaleInvoice, SaleInvoicesCost, SaleInvoicePdf],
 })
 export class SaleInvoicesModule {}

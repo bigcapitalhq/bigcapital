@@ -1,18 +1,17 @@
-import { SubscriptionPayload } from '@/interfaces/SubscriptionPlan';
 import { Inject, Injectable } from '@nestjs/common';
-import { PlanSubscription } from '../models/PlanSubscription';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { SubscriptionPayload } from '@/interfaces/SubscriptionPlan';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { Plan } from '../models/Plan';
+import { NotAllowedChangeSubscriptionPlan } from '../exceptions/NotAllowedChangeSubscriptionPlan';
+import { PlanSubscriptionRepository } from '../repositories/PlanSubscription.repository';
 
 @Injectable()
 export class NewSubscriptionService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly tenancyContext: TenancyContext,
-
-    @Inject(PlanSubscription.name)
-    private readonly planSubscriptionModel: typeof PlanSubscription,
+    private readonly subscriptionRepository: PlanSubscriptionRepository,
 
     @Inject(Plan.name)
     private readonly planModel: typeof Plan,
@@ -56,7 +55,8 @@ export class NewSubscriptionService {
 
       // No stored past tenant subscriptions create new one.
     } else {
-      await tenant.newSubscription(
+      await this.subscriptionRepository.newSubscription(
+        tenant.id,
         plan.id,
         invoiceInterval,
         invoicePeriod,

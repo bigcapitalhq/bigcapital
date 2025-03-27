@@ -3,13 +3,20 @@ import { RoleTransformer } from './RoleTransformer';
 import { Role } from '../models/Role.model';
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { ServiceError } from '../../Items/ServiceError';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandRolePermissionDto } from '../dtos/Role.dto';
 import { ERRORS } from '../constants';
+import { getInvalidPermissions } from '../utils';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetRoleService {
-  constructor(private readonly transformer: TransformerInjectable) {}
+  constructor(
+    private readonly transformer: TransformerInjectable,
+
+    @Inject(Role.name)
+    private readonly roleModel: TenantModelProxy<typeof Role>,
+  ) {}
 
   /**
    * Retrieve the given role metadata.
@@ -17,11 +24,11 @@ export class GetRoleService {
    * @returns {Promise<IRole>}
    */
   public async getRole(roleId: number): Promise<Role> {
-    const role = await Role.query()
+    const role = await this.roleModel()
+      .query()
       .findById(roleId)
-      .withGraphFetched('permissions');
-
-    this.throwRoleNotFound(role);
+      .withGraphFetched('permissions')
+      .throwIfNotFound();
 
     return this.transformer.transform(role, new RoleTransformer());
   }

@@ -1,4 +1,4 @@
-import { Controller, Post, Req, Res } from '@nestjs/common';
+import { Controller, Post, Req } from '@nestjs/common';
 import { LemonSqueezyWebhooks } from './webhooks/LemonSqueezyWebhooks';
 
 @Controller('/webhooks/lemon')
@@ -15,6 +15,7 @@ export class SubscriptionsLemonWebhook {
   async lemonWebhooks(@Req() req: Request) {
     const data = req.body;
     const signature = (req.headers['x-signature'] as string) ?? '';
+    // @ts-ignore
     const rawBody = req.rawBody;
 
     await this.lemonWebhooksService.handlePostWebhook(rawBody, data, signature);

@@ -3,7 +3,6 @@ import { omit, sumBy } from 'lodash';
 import * as moment from 'moment';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  IManualJournalDTO,
   IManualJournalEventEditedPayload,
   IManualJournalEditingPayload,
 } from '../types/ManualJournals.types';

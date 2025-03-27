@@ -8,7 +8,7 @@ export const ERRORS = {
 };
 
 export interface IOrganizationSubscriptionChanged {
-  lemonSubscriptionId: number;
+  lemonSubscriptionId: string;
   newVariantId: number;
 }
 

@@ -6,15 +6,14 @@ import { EditRoleDto } from '../dtos/Role.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Role } from '../models/Role.model';
-import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
+import { validateInvalidPermissions } from '../utils';
 
 @Injectable()
 export class EditRoleService {
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
-    private readonly transformer: TransformerInjectable,
 
     @Inject(Role.name)
     private readonly roleModel: TenantModelProxy<typeof Role>,
@@ -27,11 +26,10 @@ export class EditRoleService {
    */
   public async editRole(roleId: number, editRoleDTO: EditRoleDto) {
     // Validates the invalid permissions.
-    this.validateInvalidPermissions(editRoleDTO.permissions);
+    validateInvalidPermissions(editRoleDTO.permissions);
 
     // Retrieve the given role or throw not found serice error.
-    const oldRole = await this.getRoleOrThrowError(roleId);
-
+    const oldRole = await this.roleModel().query().findById(roleId);
     const permissions = editRoleDTO.permissions;
 
     // Updates the role on the storage.

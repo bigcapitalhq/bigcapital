@@ -1,57 +1,62 @@
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 import {
-  IOrganizationBuildDTO,
   IOrganizationBuildEventPayload,
   IOrganizationBuiltEventPayload,
+  OrganizationBuildQueue,
+  OrganizationBuildQueueJob,
+  OrganizationBuildQueueJobPayload,
 } from '../Organization.types';
 import { Injectable } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
-import { throwIfTenantInitizalized, throwIfTenantIsBuilding } from '../Organization/_utils';
+import {
+  throwIfTenantInitizalized,
+  throwIfTenantIsBuilding,
+} from '../Organization/_utils';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TenantsManagerService } from '@/modules/TenantDBManager/TenantsManager';
 import { events } from '@/common/events/events';
 import { transformBuildDto } from '../Organization.utils';
 import { BuildOrganizationDto } from '../dtos/Organization.dto';
+import { TenantRepository } from '@/modules/System/repositories/Tenant.repository';
 
 @Injectable()
 export class BuildOrganizationService {
   constructor(
     private readonly eventPublisher: EventEmitter2,
     private readonly tenantsManager: TenantsManagerService,
-    private readonly tenancyContext: TenancyContext
+    private readonly tenancyContext: TenancyContext,
+    private readonly tenantRepository: TenantRepository,
+
+    @InjectQueue(OrganizationBuildQueue)
+    private readonly computeItemCostProcessor: Queue,
   ) {}
 
   /**
    * Builds the database schema and seed data of the given organization id.
-   * @param {srting} organizationId
+   * @param {string} organizationId
    * @return {Promise<void>}
    */
-  public async build(
-    buildDTO: BuildOrganizationDto,
-  ): Promise<void> {
+  public async build(buildDTO: BuildOrganizationDto): Promise<void> {
     const tenant = await this.tenancyContext.getTenant();
     const systemUser = await this.tenancyContext.getSystemUser();
 
     // Throw error if the tenant is already initialized.
     throwIfTenantInitizalized(tenant);
 
-    // Drop the database if is already exists.
     await this.tenantsManager.dropDatabaseIfExists(tenant);
-
-    // Creates a new database.
     await this.tenantsManager.createDatabase(tenant);
-
-    // Migrate the tenant.
     await this.tenantsManager.migrateTenant(tenant);
 
     // Migrated tenant.
     const migratedTenant = await tenant.$query().withGraphFetched('metadata');
 
     // Creates a tenancy object from given tenant model.
-    const tenancyContext =
-      this.tenantsManager.getSeedMigrationContext(migratedTenant);
+    // const tenancyContext =
+    //   this.tenantsManager.getSeedMigrationContext(migratedTenant);
 
     // Seed tenant.
-    await this.tenantsManager.seedTenant(migratedTenant, tenancyContext);
+    await this.tenantsManager.seedTenant(migratedTenant, {});
 
     // Throws `onOrganizationBuild` event.
     await this.eventPublisher.emitAsync(events.organization.build, {
@@ -60,12 +65,12 @@ export class BuildOrganizationService {
       systemUser,
     } as IOrganizationBuildEventPayload);
 
-    // Markes the tenant as completed builing.
-    await Tenant.markAsBuilt(tenantId);
-    await Tenant.markAsBuildCompleted(tenantId);
+    // Marks the tenant as completed builing.
+    await this.tenantRepository.markAsBuilt().findById(tenant.id);
+    await this.tenantRepository.markAsBuildCompleted().findById(tenant.id);
 
-    //
-    await this.flagTenantDBBatch(tenantId);
+    // Flags the tenant database batch.
+    await this.tenantRepository.flagTenantDBBatch().findById(tenant.id);
 
     // Triggers the organization built event.
     await this.eventPublisher.emitAsync(events.organization.built, {
@@ -75,13 +80,12 @@ export class BuildOrganizationService {
 
   /**
    *
-   * @param {number} tenantId
-   * @param {IOrganizationBuildDTO} buildDTO
-   * @returns
+   * @param {BuildOrganizationDto} buildDTO
+   * @returns {Promise<{ nextRunAt: Date; jobId: string }>} - Returns the next run date and job id.
    */
   async buildRunJob(
     buildDTO: BuildOrganizationDto,
-  ) {
+  ): Promise<{ nextRunAt: Date; jobId: string }> {
     const tenant = await this.tenancyContext.getTenant();
     const systemUser = await this.tenancyContext.getSystemUser();
 
@@ -91,27 +95,26 @@ export class BuildOrganizationService {
     // Throw error if tenant is currently building.
     throwIfTenantIsBuilding(tenant);
 
-    // Transformes build DTO object.
+    // Transforms build DTO object.
     const transformedBuildDTO = transformBuildDto(buildDTO);
 
     // Saves the tenant metadata.
-    await tenant.saveMetadata(transformedBuildDTO);
+    await this.tenantRepository.saveMetadata(tenant.id, transformedBuildDTO);
 
-    // Send welcome mail to the user.
-    const jobMeta = await this.agenda.now('organization-setup', {
-      tenantId,
-      buildDTO,
-      authorizedUser,
-    });
-    // Transformes the mangodb id to string.
-    const jobId = new ObjectId(jobMeta.attrs._id).toString();
-
-    // Markes the tenant as currently building.
-    await Tenant.markAsBuilding(tenantId, jobId);
+    const jobMeta = await this.computeItemCostProcessor.add(
+      OrganizationBuildQueueJob,
+      {
+        organizationId: tenant.organizationId,
+        userId: systemUser.id,
+        buildDto: transformedBuildDTO,
+      } as OrganizationBuildQueueJobPayload,
+    );
+    // Marks the tenant as currently building.
+    await this.tenantRepository.markAsBuilding(jobMeta.id).findById(tenant.id);
 
     return {
-      nextRunAt: jobMeta.attrs.nextRunAt,
-      jobId: jobMeta.attrs._id,
+      nextRunAt: jobMeta.data.nextRunAt,
+      jobId: jobMeta.data.id,
     };
   }
 
@@ -122,17 +125,5 @@ export class BuildOrganizationService {
    */
   public async revertBuildRunJob() {
     // await Tenant.markAsBuildCompleted(tenantId, jobId);
-  }
-  /**
-   * Adds organization database latest batch number.
-   * @param {number} tenantId
-   * @param {number} version
-   */
-  public async flagTenantDBBatch(tenantId: number) {
-    await Tenant.query()
-      .update({
-        databaseBatch: config.databaseBatch,
-      })
-      .where({ id: tenantId });
   }
 }

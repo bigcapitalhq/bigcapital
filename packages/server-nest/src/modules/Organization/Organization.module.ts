@@ -6,13 +6,15 @@ import { OrganizationController } from './Organization.controller';
 import { BullModule } from '@nestjs/bullmq';
 import { OrganizationBuildQueue } from './Organization.types';
 import { OrganizationBuildProcessor } from './processors/OrganizationBuild.processor';
+import { CommandOrganizationValidators } from './commands/CommandOrganizationValidators.service';
 
 @Module({
   providers: [
     GetCurrentOrganizationService,
     BuildOrganizationService,
     UpdateOrganizationService,
-    OrganizationBuildProcessor
+    OrganizationBuildProcessor,
+    CommandOrganizationValidators,
   ],
   imports: [BullModule.registerQueue({ name: OrganizationBuildQueue })],
   controllers: [OrganizationController],

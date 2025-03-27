@@ -7,6 +7,7 @@ import { events } from '@/common/events/events';
 import { CreateRoleDto } from '../dtos/Role.dto';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Inject, Injectable } from '@nestjs/common';
+import { validateInvalidPermissions } from '../utils';
 
 @Injectable()
 export class CreateRoleService {
@@ -25,7 +26,7 @@ export class CreateRoleService {
    */
   public async createRole(createRoleDTO: CreateRoleDto) {
     // Validates the invalid permissions.
-    this.validateInvalidPermissions(createRoleDTO.permissions);
+    validateInvalidPermissions(createRoleDTO.permissions);
 
     // Transformes the permissions DTO.
     const permissions = createRoleDTO.permissions;

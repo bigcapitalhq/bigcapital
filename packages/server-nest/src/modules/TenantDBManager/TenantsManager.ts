@@ -1,49 +1,30 @@
-import { Injectable } from "@nestjs/common";
-import { TenantDBManager } from "./TenantDBManager";
-import { EventEmitter2 } from "@nestjs/event-emitter";
-import { events } from "@/common/events/events";
-
-// import { Container, Inject, Service } from 'typedi';
-// import { ITenantManager, ITenant, ITenantDBManager } from '@/interfaces';
-// import {
-//   EventDispatcherInterface,
-//   EventDispatcher,
-// } from 'decorators/eventDispatcher';
-// import {
-//   TenantAlreadyInitialized,
-//   TenantAlreadySeeded,
-//   TenantDatabaseNotBuilt,
-// } from '@/exceptions';
-// import TenantDBManager from '@/services/Tenancy/TenantDBManager';
-// import events from '@/subscribers/events';
-// import { Tenant } from '@/system/models';
-// import { SeedMigration } from '@/lib/Seeder/SeedMigration';
-// import i18n from '../../loaders/i18n';
-
-// const ERRORS = {
-//   TENANT_ALREADY_CREATED: 'TENANT_ALREADY_CREATED',
-//   TENANT_NOT_EXISTS: 'TENANT_NOT_EXISTS',
-// };
+import { Injectable } from '@nestjs/common';
+import { TenantDBManager } from './TenantDBManager';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { TenantModel } from '../System/models/TenantModel';
+import {
+  throwErrorIfTenantAlreadyInitialized,
+  throwErrorIfTenantAlreadySeeded,
+  throwErrorIfTenantNotBuilt,
+} from './_utils';
+import { SeedMigration } from '@/libs/migration-seed/SeedMigration';
+import { TenantRepository } from '../System/repositories/Tenant.repository';
 
 @Injectable()
 export class TenantsManagerService {
-
   constructor(
     private readonly tenantDbManager: TenantDBManager,
-    private readonly eventEmitter: EventEmitter2
-  ) {
-  }
+    private readonly eventEmitter: EventEmitter2,
+    private readonly tenantRepository: TenantRepository,
+  ) {}
 
   /**
    * Creates a new teant with unique organization id.
-   * @param {ITenant} tenant
-   * @return {Promise<ITenant>}
+   * @return {Promise<TenantModel>}
    */
-  public async createTenant(): Promise<ITenant> {
-    const { tenantRepository } = this.sysRepositories;
-    const tenant = await tenantRepository.createWithUniqueOrgId();
-
-    return tenant;
+  public async createTenant(): Promise<TenantModel> {
+    return this.tenantRepository.createWithUniqueOrgId();
   }
 
   /**
@@ -51,8 +32,8 @@ export class TenantsManagerService {
    * @param {ITenant} tenant -
    * @return {Promise<void>}
    */
-  public async createDatabase(tenant: ITenant): Promise<void> {
-    this.throwErrorIfTenantAlreadyInitialized(tenant);
+  public async createDatabase(tenant: TenantModel): Promise<void> {
+    throwErrorIfTenantAlreadyInitialized(tenant);
 
     await this.tenantDbManager.createDatabase(tenant);
 
@@ -63,17 +44,17 @@ export class TenantsManagerService {
    * Drops the database if the given tenant.
    * @param {number} tenantId
    */
-  async dropDatabaseIfExists(tenant: ITenant) {
+  async dropDatabaseIfExists(tenant: TenantModel) {
     // Drop the database if exists.
     await this.tenantDbManager.dropDatabaseIfExists(tenant);
   }
 
   /**
-   * Detarmines the tenant has database.
+   * Determines the tenant has database.
    * @param   {ITenant} tenant
    * @returns {Promise<boolean>}
    */
-  public async hasDatabase(tenant: ITenant): Promise<boolean> {
+  public async hasDatabase(tenant: TenantModel): Promise<boolean> {
     return this.tenantDbManager.databaseExists(tenant);
   }
 
@@ -82,18 +63,18 @@ export class TenantsManagerService {
    * @param  {ITenant} tenant
    * @return {Promise<void>}
    */
-  public async migrateTenant(tenant: ITenant): Promise<void> {
+  public async migrateTenant(tenant: TenantModel): Promise<void> {
     // Throw error if the tenant already initialized.
-    this.throwErrorIfTenantAlreadyInitialized(tenant);
+    throwErrorIfTenantAlreadyInitialized(tenant);
 
     // Migrate the database tenant.
     await this.tenantDbManager.migrate(tenant);
 
     // Mark the tenant as initialized.
-    await Tenant.markAsInitialized(tenant.id);
+    await this.tenantRepository.markAsInitialized().findById(tenant.id);
 
     // Triggers `onTenantMigrated` event.
-    this.eventDispatcher.dispatch(events.tenantManager.tenantMigrated, {
+    this.eventEmitter.emitAsync(events.tenantManager.tenantMigrated, {
       tenantId: tenant.id,
     });
   }
@@ -103,21 +84,21 @@ export class TenantsManagerService {
    * @param  {ITenant} tenant
    * @return {Promise<void>}
    */
-  public async seedTenant(tenant: ITenant, tenancyContext): Promise<void> {
+  public async seedTenant(tenant: TenantModel, tenancyContext): Promise<void> {
     // Throw error if the tenant is not built yet.
-    this.throwErrorIfTenantNotBuilt(tenant);
+    throwErrorIfTenantNotBuilt(tenant);
 
     // Throw error if the tenant is not seeded yet.
-    this.throwErrorIfTenantAlreadySeeded(tenant);
+    throwErrorIfTenantAlreadySeeded(tenant);
 
     // Seeds the organization database data.
     await new SeedMigration(tenancyContext.knex, tenancyContext).latest();
 
     // Mark the tenant as seeded in specific date.
-    await Tenant.markAsSeeded(tenant.id);
+    await this.tenantRepository.markAsSeeded().findById(tenant.id);
 
     // Triggers `onTenantSeeded` event.
-    this.eventDispatcher.dispatch(events.tenantManager.tenantSeeded, {
+    this.eventEmitter.emitAsync(events.tenantManager.tenantSeeded, {
       tenantId: tenant.id,
     });
   }
@@ -127,8 +108,8 @@ export class TenantsManagerService {
    * @param {ITenant} tenant
    * @returns {Knex}
    */
-  public setupKnexInstance(tenant: ITenant) {
-    return this.tenantDBManager.setupKnexInstance(tenant);
+  public setupKnexInstance(tenant: TenantModel) {
+    // return this.tenantDbManager.setupKnexInstance(tenant);
   }
 
   /**
@@ -137,55 +118,6 @@ export class TenantsManagerService {
    * @returns {Knex}
    */
   public getKnexInstance(tenantId: number) {
-    return this.tenantDBManager.getKnexInstance(tenantId);
-  }
-
-  /**
-   * Throws error if the tenant already seeded.
-   * @throws {TenantAlreadySeeded}
-   */
-  private throwErrorIfTenantAlreadySeeded(tenant: ITenant) {
-    if (tenant.seededAt) {
-      throw new TenantAlreadySeeded();
-    }
-  }
-
-  /**
-   * Throws error if the tenant database is not built yut.
-   * @param {ITenant} tenant
-   */
-  private throwErrorIfTenantNotBuilt(tenant: ITenant) {
-    if (!tenant.initializedAt) {
-      throw new TenantDatabaseNotBuilt();
-    }
-  }
-
-  /**
-   * Throws error if the tenant already migrated.
-   * @throws {TenantAlreadyInitialized}
-   */
-  private throwErrorIfTenantAlreadyInitialized(tenant: ITenant) {
-    if (tenant.initializedAt) {
-      throw new TenantAlreadyInitialized();
-    }
-  }
-
-  /**
-   * Initialize seed migration contxt.
-   * @param {ITenant} tenant
-   * @returns
-   */
-  public getSeedMigrationContext(tenant: ITenant) {
-    // Initialize the knex instance.
-    const knex = this.setupKnexInstance(tenant);
-    const i18nInstance = i18n();
-
-    i18nInstance.setLocale(tenant.metadata.language);
-
-    return {
-      knex,
-      i18n: i18nInstance,
-      tenant,
-    };
+    return this.tenantDbManager.getKnexInstance(tenantId);
   }
 }

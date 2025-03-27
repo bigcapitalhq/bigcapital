@@ -5,13 +5,15 @@ import { SystemModel } from '@/modules/System/models/SystemModel';
 import { SubscriptionPaymentStatus } from '@/interfaces/SubscriptionPlan';
 
 export class PlanSubscription extends mixin(SystemModel) {
-  public readonly lemonSubscriptionId: number;
-  public readonly endsAt: Date;
-  public readonly startsAt: Date;
-  public readonly canceledAt: Date;
-  public readonly trialEndsAt: Date;
-  public readonly paymentStatus: SubscriptionPaymentStatus;
-  public readonly planId: number;
+  public readonly lemonSubscriptionId!: string;
+  public readonly slug: string;
+  public readonly endsAt!: Date;
+  public readonly startsAt!: Date;
+  public readonly canceledAt!: Date;
+  public readonly trialEndsAt!: Date;
+  public readonly paymentStatus!: SubscriptionPaymentStatus;
+  public readonly tenantId!: number;
+  public readonly planId!: number;
 
   /**
    * Table name.

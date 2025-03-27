@@ -190,7 +190,7 @@ import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module
     RolesModule,
     SubscriptionModule,
     OrganizationModule,
-    TenantDBManagerModule
+    TenantDBManagerModule,
   ],
   controllers: [AppController],
   providers: [

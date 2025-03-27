@@ -1,12 +1,12 @@
 import { Model, mixin } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
-import RolePermission from './RolePermission.model';
-
+import { RolePermission } from './RolePermission.model';
 
 export class Role extends TenantBaseModel {
   name: string;
   description: string;
   slug: string;
+  predefined: boolean;
   permissions: Array<RolePermission>;
 
   /**

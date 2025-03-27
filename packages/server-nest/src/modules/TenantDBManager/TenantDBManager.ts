@@ -4,8 +4,10 @@ import { TenantDBAlreadyExists } from './exceptions/TenantDBAlreadyExists';
 import { sanitizeDatabaseName } from '@/utils/sanitize-database-name';
 import { ConfigService } from '@nestjs/config';
 import { SystemKnexConnection } from '../System/SystemDB/SystemDB.constants';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { TenantModel } from '../System/models/TenantModel';
 
+@Injectable()
 export class TenantDBManager {
   static knexCache: { [key: string]: Knex } = {};
 
@@ -17,20 +19,20 @@ export class TenantDBManager {
   ) {}
 
   /**
-   * Retrieve the tenant database name.
+   * Retrieves the tenant database name.
    * @return {string}
    */
-  private getDatabaseName(tenant: ITenant) {
+  private getDatabaseName(tenant: TenantModel) {
     return sanitizeDatabaseName(
       `${this.configService.get('tenant.db_name_prefix')}${tenant.organizationId}`,
     );
   }
 
   /**
-   * Detarmines the tenant database weather exists.
+   * Determines the tenant database weather exists.
    * @return {Promise<boolean>}
    */
-  public async databaseExists(tenant: ITenant) {
+  public async databaseExists(tenant: TenantModel) {
     const databaseName = this.getDatabaseName(tenant);
     const results = await this.systemKnex.raw(
       'SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "' +
@@ -45,7 +47,7 @@ export class TenantDBManager {
    * @throws {TenantAlreadyInitialized}
    * @return {Promise<void>}
    */
-  public async createDatabase(tenant: ITenant): Promise<void> {
+  public async createDatabase(tenant: TenantModel): Promise<void> {
     await this.throwErrorIfTenantDBExists(tenant);
 
     const databaseName = this.getDatabaseName(tenant);
@@ -58,7 +60,7 @@ export class TenantDBManager {
    * Dropdowns the tenant database if it was exist.
    * @param {ITenant} tenant -
    */
-  public async dropDatabaseIfExists(tenant: ITenant) {
+  public async dropDatabaseIfExists(tenant: TenantModel) {
     const isExists = await this.databaseExists(tenant);
 
     if (!isExists) {
@@ -71,7 +73,7 @@ export class TenantDBManager {
    * dropdowns the tenant's database.
    * @param {ITenant} tenant
    */
-  public async dropDatabase(tenant: ITenant) {
+  public async dropDatabase(tenant: TenantModel) {
     const databaseName = this.getDatabaseName(tenant);
 
     await this.systemKnex.raw(`DROP DATABASE IF EXISTS ${databaseName}`);
@@ -81,7 +83,7 @@ export class TenantDBManager {
    * Migrate tenant database schema to the latest version.
    * @return {Promise<void>}
    */
-  public async migrate(tenant: ITenant): Promise<void> {
+  public async migrate(tenant: TenantModel): Promise<void> {
     const knex = this.setupKnexInstance(tenant);
     await knex.migrate.latest();
   }
@@ -90,7 +92,7 @@ export class TenantDBManager {
    * Seeds initial data to the tenant database.
    * @return {Promise<void>}
    */
-  public async seed(tenant: ITenant): Promise<void> {
+  public async seed(tenant: TenantModel): Promise<void> {
     const knex = this.setupKnexInstance(tenant);
 
     await knex.migrate.latest({
@@ -103,7 +105,7 @@ export class TenantDBManager {
    * Retrieve the knex instance of tenant.
    * @return {Knex}
    */
-  private setupKnexInstance(tenant: ITenant) {
+  private setupKnexInstance(tenant: TenantModel) {
     const key: string = `${tenant.id}`;
     let knexInstance = TenantDBManager.knexCache[key];
 
@@ -134,7 +136,7 @@ export class TenantDBManager {
    * Throws error if the tenant database already exists.
    * @return {Promise<void>}
    */
-  async throwErrorIfTenantDBExists(tenant: ITenant) {
+  async throwErrorIfTenantDBExists(tenant: TenantModel) {
     const isExists = await this.databaseExists(tenant);
     if (isExists) {
       throw new TenantDBAlreadyExists();

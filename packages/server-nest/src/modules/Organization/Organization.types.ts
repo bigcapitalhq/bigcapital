@@ -1,4 +1,6 @@
+import { TenantJobPayload } from '@/interfaces/Tenant';
 import { SystemUser } from '../System/models/SystemUser';
+import { BuildOrganizationDto } from './dtos/Organization.dto';
 
 export interface IOrganizationSetupDTO {
   organizationName: string;
@@ -53,6 +55,6 @@ export interface IOrganizationBuiltEventPayload {
 export const OrganizationBuildQueue = 'OrganizationBuildQueue';
 export const OrganizationBuildQueueJob = 'OrganizationBuildQueueJob';
 
-export interface OrganizationBuildQueueJobPayload {
-  buildDto: IOrganizationBuildDTO;
+export interface OrganizationBuildQueueJobPayload extends TenantJobPayload {
+  buildDto: BuildOrganizationDto;
 }

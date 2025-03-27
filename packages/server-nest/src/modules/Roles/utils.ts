@@ -1,5 +1,9 @@
 import { keyBy } from 'lodash';
 import { ISubjectAbilitiesSchema } from './Roles.types';
+import { CommandRolePermissionDto } from './dtos/Role.dto';
+import { AbilitySchema } from './AbilitySchema';
+import { ServiceError } from '../Items/ServiceError';
+import { ERRORS } from './constants';
 
 /**
  * Transformes ability schema to map.
@@ -11,19 +15,19 @@ export function transformAbilitySchemaToMap(schema: ISubjectAbilitiesSchema[]) {
       abilities: keyBy(item.abilities, 'key'),
       extraAbilities: keyBy(item.extraAbilities, 'key'),
     })),
-    'subject'
+    'subject',
   );
 }
 
 /**
  * Retrieve the invalid permissions from the given defined schema.
- * @param {ISubjectAbilitiesSchema[]} schema 
- * @param permissions 
- * @returns 
+ * @param {ISubjectAbilitiesSchema[]} schema
+ * @param permissions
+ * @returns
  */
 export function getInvalidPermissions(
   schema: ISubjectAbilitiesSchema[],
-  permissions
+  permissions,
 ) {
   const schemaMap = transformAbilitySchemaToMap(schema);
 
@@ -40,3 +44,19 @@ export function getInvalidPermissions(
     return false;
   });
 }
+
+/**
+ * Validates the invalid given permissions.
+ * @param {ICreateRolePermissionDTO[]} permissions -
+ */
+export const validateInvalidPermissions = (
+  permissions: CommandRolePermissionDto[],
+) => {
+  const invalidPerms = getInvalidPermissions(AbilitySchema, permissions);
+
+  if (invalidPerms.length > 0) {
+    throw new ServiceError(ERRORS.INVALIDATE_PERMISSIONS, null, {
+      invalidPermissions: invalidPerms,
+    });
+  }
+};

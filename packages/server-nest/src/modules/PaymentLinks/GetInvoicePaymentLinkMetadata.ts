@@ -8,6 +8,7 @@ import { ServiceError } from '../Items/ServiceError';
 import { GetInvoicePaymentLinkMetaTransformer } from '../SaleInvoices/queries/GetInvoicePaymentLink.transformer';
 import { ClsService } from 'nestjs-cls';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenantModel } from '../System/models/TenantModel';
 
 @Injectable()
 export class GetInvoicePaymentLinkMetadata {
@@ -21,6 +22,9 @@ export class GetInvoicePaymentLinkMetadata {
 
     @Inject(PaymentLink.name)
     private readonly paymentLinkModel: typeof PaymentLink,
+
+    @Inject(TenantModel.name)
+    private readonly systemTenantModel: typeof TenantModel,
   ) {}
 
   /**
@@ -28,7 +32,8 @@ export class GetInvoicePaymentLinkMetadata {
    * @param {string} linkId - Link id.
    */
   async getInvoicePaymentLinkMeta(linkId: string) {
-    const paymentLink = await this.paymentLinkModel.query()
+    const paymentLink = await this.paymentLinkModel
+      .query()
       .findOne('linkId', linkId)
       .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
@@ -42,8 +47,12 @@ export class GetInvoicePaymentLinkMetadata {
         throw new ServiceError('PAYMENT_LINK_EXPIRED');
       }
     }
-    this.clsService.set('organizationId', paymentLink.tenantId);
-    this.clsService.set('userId', paymentLink.userId);
+    const tenant = await this.systemTenantModel
+      .query()
+      .findById(paymentLink.tenantId);
+
+    this.clsService.set('organizationId', tenant.organizationId);
+    // this.clsService.set('userId', paymentLink.userId);
 
     const invoice = await this.saleInvoiceModel()
       .query()

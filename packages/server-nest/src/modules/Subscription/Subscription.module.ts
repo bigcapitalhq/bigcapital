@@ -11,14 +11,24 @@ import { MarkSubscriptionPaymentFailed } from './commands/MarkSubscriptionPaymen
 import { MarkSubscriptionPaymentSucceed } from './commands/MarkSubscriptionPaymentSuccessed.service';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { PlanSubscription } from './models/PlanSubscription';
+import { MarkSubscriptionCanceled } from './commands/MarkSubscriptionCanceled.service';
+import { MarkSubscriptionPlanChanged } from './commands/MarkSubscriptionChanged.service';
+import { MarkSubscriptionResumedService } from './commands/MarkSubscriptionResumed.sevice';
 import { Plan } from './models/Plan';
+import { SubscriptionApplication } from './SubscriptionApplication';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { NewSubscriptionService } from './commands/NewSubscription.service';
+import { GetSubscriptionsService } from './queries/GetSubscriptions.service';
+import { GetLemonSqueezyCheckoutService } from './queries/GetLemonSqueezyCheckout.service';
 
-
-const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)]
+const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
 
 @Module({
   providers: [
     ...models,
+    TenancyContext,
+    NewSubscriptionService,
+    GetSubscriptionsService,
     CancelLemonSubscription,
     ChangeLemonSubscription,
     ResumeLemonSubscription,
@@ -26,9 +36,14 @@ const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)]
     SubscribeFreeOnSignupCommunity,
     TriggerInvalidateCacheOnSubscriptionChange,
     MarkSubscriptionPaymentFailed,
-    MarkSubscriptionPaymentSucceed
+    MarkSubscriptionPaymentSucceed,
+    MarkSubscriptionCanceled,
+    MarkSubscriptionPlanChanged,
+    MarkSubscriptionResumedService,
+    SubscriptionApplication,
+    GetLemonSqueezyCheckoutService,
   ],
   controllers: [SubscriptionsController, SubscriptionsLemonWebhook],
-  exports: [...models]
+  exports: [...models],
 })
 export class SubscriptionModule {}

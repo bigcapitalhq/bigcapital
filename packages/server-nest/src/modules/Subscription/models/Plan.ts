@@ -4,8 +4,8 @@ import { Model, mixin } from 'objection';
 export class Plan extends mixin(SystemModel) {
   public readonly slug: string;
   public readonly price: number;
-  public readonly invoiceInternal: number;
-  public readonly invoicePeriod: string;
+  public readonly invoiceInternal: 'month' | 'year';
+  public readonly invoicePeriod: number;
   public readonly trialPeriod: string;
   public readonly trialInterval: number;
 
