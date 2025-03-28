@@ -1,6 +1,6 @@
+// @ts-nocheck
 import { Injectable } from '@nestjs/common';
 import { isEmpty } from 'lodash';
-
 
 interface MutateBaseCurrencyLockMeta {
   modelName: string;
@@ -16,7 +16,7 @@ export class OrganizationBaseCurrencyLocking {
     const Models = this.tenancy.models(tenantId);
 
     const filteredEntries = Object.entries(Models).filter(
-      ([key, Model]) => !!Model.preventMutateBaseCurrency
+      ([key, Model]) => !!Model.preventMutateBaseCurrency,
     );
     return Object.fromEntries(filteredEntries);
   };
@@ -27,7 +27,7 @@ export class OrganizationBaseCurrencyLocking {
    * @returns {Promise<MutateBaseCurrencyLockMeta | false>}
    */
   private isModelMutateLocked = async (
-    Model
+    Model,
   ): Promise<MutateBaseCurrencyLockMeta | false> => {
     const validateQuery = Model.query();
 
@@ -53,17 +53,17 @@ export class OrganizationBaseCurrencyLocking {
    * @returns {Promise<MutateBaseCurrencyLockMeta[]>}
    */
   public async baseCurrencyMutateLocks(
-    tenantId: number
+    tenantId: number,
   ): Promise<MutateBaseCurrencyLockMeta[]> {
     const PreventedModels = this.getModelsPreventsMutate(tenantId);
 
     const opers = Object.entries(PreventedModels).map(([ModelName, Model]) =>
-      this.isModelMutateLocked(Model)
+      this.isModelMutateLocked(Model),
     );
     const results = await Promise.all(opers);
 
     return results.filter(
-      (result) => result !== false
+      (result) => result !== false,
     ) as MutateBaseCurrencyLockMeta[];
   }
 

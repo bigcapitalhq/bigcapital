@@ -1,4 +1,4 @@
-import moment from 'moment-timezone';
+import * as momentTz from 'moment-timezone';
 import {
   IsHexColor,
   IsIn,
@@ -41,7 +41,7 @@ export class BuildOrganizationDto {
   })
   baseCurrency: string;
 
-  @IsIn(moment.tz.names())
+  @IsIn(momentTz.tz.names())
   @ApiProperty({
     description: 'Timezone of the organization',
     example: 'America/New_York',
@@ -105,7 +105,7 @@ export class UpdateOrganizationDto {
   baseCurrency?: string;
 
   @IsOptional()
-  @IsIn(moment.tz.names())
+  @IsIn(momentTz.tz.names())
   @ApiPropertyOptional({
     description: 'Timezone of the organization',
     example: 'America/New_York',

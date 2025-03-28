@@ -7,6 +7,7 @@ import { SystemKnexConnection } from '../SystemDB/SystemDB.constants';
 import { SystemModelsConnection } from './SystemModels.constants';
 import { SystemUser } from '../models/SystemUser';
 import { TenantMetadata } from '../models/TenantMetadataModel';
+import { TenantRepository } from '../repositories/Tenant.repository';
 
 const models = [SystemUser, PlanSubscription, TenantModel, TenantMetadata];
 
@@ -35,7 +36,7 @@ const providers = [
 
 @Global()
 @Module({
-  providers: [...providers],
-  exports: [...providers],
+  providers: [...providers, TenantRepository],
+  exports: [...providers, TenantRepository],
 })
 export class SystemModelsModule {}

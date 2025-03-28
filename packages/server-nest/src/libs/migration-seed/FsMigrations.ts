@@ -7,8 +7,6 @@ import { importWebpackSeedModule } from './Utils';
 import { DEFAULT_LOAD_EXTENSIONS } from './constants';
 import { filterMigrations } from './MigrateUtils';
 
-const readdir = promisify(fs.readdir);
-
 class FsMigrations {
   private sortDirsSeparately: boolean;
   private migrationsPaths: string[];
@@ -23,7 +21,7 @@ class FsMigrations {
   constructor(
     migrationDirectories: string[],
     sortDirsSeparately: boolean,
-    loadExtensions: string[]
+    loadExtensions: string[],
   ) {
     this.sortDirsSeparately = sortDirsSeparately;
 
@@ -42,6 +40,8 @@ class FsMigrations {
     // Get a list of files in all specified migration directories
     const readMigrationsPromises = this.migrationsPaths.map((configDir) => {
       const absoluteDir = path.resolve(process.cwd(), configDir);
+      const readdir = promisify(fs.readdir);
+
       return readdir(absoluteDir).then((files) => ({
         files,
         configDir,
@@ -56,7 +56,7 @@ class FsMigrations {
           migrationDirectory.files = migrationDirectory.files.sort();
         }
         migrationDirectory.files.forEach((file) =>
-          acc.push({ file, directory: migrationDirectory.configDir })
+          acc.push({ file, directory: migrationDirectory.configDir }),
         );
         return acc;
       }, []);
@@ -67,13 +67,13 @@ class FsMigrations {
         return filterMigrations(
           this,
           migrations,
-          loadExtensions || this.loadExtensions
+          loadExtensions || this.loadExtensions,
         );
       }
       return filterMigrations(
         this,
         sortBy(migrations, 'file'),
-        loadExtensions || this.loadExtensions
+        loadExtensions || this.loadExtensions,
       );
     });
   }

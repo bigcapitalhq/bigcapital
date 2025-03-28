@@ -20,6 +20,7 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { NewSubscriptionService } from './commands/NewSubscription.service';
 import { GetSubscriptionsService } from './queries/GetSubscriptions.service';
 import { GetLemonSqueezyCheckoutService } from './queries/GetLemonSqueezyCheckout.service';
+import { PlanSubscriptionRepository } from './repositories/PlanSubscription.repository';
 
 const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
 
@@ -27,6 +28,7 @@ const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
   providers: [
     ...models,
     TenancyContext,
+    PlanSubscriptionRepository,
     NewSubscriptionService,
     GetSubscriptionsService,
     CancelLemonSubscription,

@@ -1,9 +1,6 @@
 // @ts-nocheck
 import fs from 'fs';
 
-const { promisify } = require('util');
-const readFile = promisify(fs.readFile);
-
 /**
  * Detarmines the module type of the given file path.
  * @param {string} filepath
@@ -11,6 +8,8 @@ const readFile = promisify(fs.readFile);
  */
 async function isModuleType(filepath: string): boolean {
   if (process.env.npm_package_json) {
+    const { promisify } = require('util');
+    const readFile = promisify(fs.readFile);
     // npm >= 7.0.0
     const packageJson = JSON.parse(
       await readFile(process.env.npm_package_json, 'utf-8'),

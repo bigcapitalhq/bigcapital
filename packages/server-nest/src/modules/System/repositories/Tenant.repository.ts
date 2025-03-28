@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { Inject, Injectable } from '@nestjs/common';
+import { Global, Inject, Injectable } from '@nestjs/common';
 import uniqid from 'uniqid';
 import { TenantRepository as TenantBaseRepository } from '@/common/repository/TenantRepository';
 import { SystemKnexConnection } from '../SystemDB/SystemDB.constants';
@@ -10,13 +10,13 @@ import { TenantMetadata } from '../models/TenantMetadataModel';
 @Injectable()
 export class TenantRepository extends TenantBaseRepository {
   constructor(
+    private readonly configService: ConfigService,
+
     @Inject(SystemKnexConnection)
     private readonly tenantDBKnex: Knex,
 
     @Inject(TenantMetadata.name)
     private readonly tenantMetadataModel: typeof TenantMetadata,
-
-    private readonly configService: ConfigService,
   ) {
     super();
   }

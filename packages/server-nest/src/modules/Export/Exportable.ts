@@ -5,8 +5,7 @@ export class Exportable {
    * @returns
    */
   public async exportable(
-    tenantId: number,
-    query: Record<string, any>
+    query: Record<string, any>,
   ): Promise<Array<Record<string, any>>> {
     return [];
   }

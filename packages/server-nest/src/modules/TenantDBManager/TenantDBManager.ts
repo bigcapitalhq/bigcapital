@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Knex, knex } from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
 import { TenantDBAlreadyExists } from './exceptions/TenantDBAlreadyExists';
