@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
   IsArray,
   IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsString,
+  Length,
   MinLength,
   ValidateNested,
 } from 'class-validator';
@@ -34,7 +36,10 @@ export class CommandRolePermissionDto {
     description: 'The value of the permission',
   })
   value: boolean;
+}
 
+export class CreateRolePermissionDto extends CommandRolePermissionDto {}
+export class EditRolePermissionDto extends CommandRolePermissionDto {
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty({
@@ -60,17 +65,28 @@ class CommandRoleDto {
     description: 'The description of the role',
   })
   roleDescription: string;
+}
 
+export class CreateRoleDto extends CommandRoleDto {
   @IsArray()
+  @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @Type(() => CommandRolePermissionDto)
-  @MinLength(1)
   @ApiProperty({
     type: [CommandRolePermissionDto],
     description: 'The permissions of the role',
   })
-  permissions: Array<CommandRolePermissionDto>;
+  permissions: Array<CreateRolePermissionDto>;
 }
 
-export class CreateRoleDto extends CommandRoleDto {}
-export class EditRoleDto extends CommandRoleDto {}
+export class EditRoleDto extends CommandRoleDto {
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => CommandRolePermissionDto)
+  @ApiProperty({
+    type: [CommandRolePermissionDto],
+    description: 'The permissions of the role',
+  })
+  permissions: Array<EditRolePermissionDto>;
+}

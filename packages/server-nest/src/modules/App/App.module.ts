@@ -78,6 +78,7 @@ import { RolesModule } from '../Roles/Roles.module';
 import { SubscriptionModule } from '../Subscription/Subscription.module';
 import { OrganizationModule } from '../Organization/Organization.module';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
+import { PaymentServicesModule } from '../PaymentServices/PaymentServices.module';
 
 @Module({
   imports: [
@@ -191,6 +192,7 @@ import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module
     SubscriptionModule,
     OrganizationModule,
     TenantDBManagerModule,
+    PaymentServicesModule,
   ],
   controllers: [AppController],
   providers: [
