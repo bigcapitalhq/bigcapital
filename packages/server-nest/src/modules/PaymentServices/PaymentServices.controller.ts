@@ -15,9 +15,12 @@ import {
 import { Request, Response, NextFunction } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { PaymentServicesApplication } from './PaymentServicesApplication';
+import { PublicRoute } from '../Auth/Jwt.guard';
+import { EditPaymentMethodDTO } from './types';
 
 @ApiTags('PaymentServices')
 @Controller('payment-services')
+@PublicRoute()
 export class PaymentServicesController {
   constructor(
     private readonly paymentServicesApp: PaymentServicesApplication,
@@ -53,13 +56,10 @@ export class PaymentServicesController {
   }
 
   @Post('/:paymentMethodId')
-  @UsePipes(new ValidationPipe({ whitelist: true }))
   async updatePaymentMethod(
     @Param('paymentMethodId') paymentMethodId: number,
-    @Body() updatePaymentMethodDTO: any,
-    @Req() req: Request,
+    @Body() updatePaymentMethodDTO: EditPaymentMethodDTO,
     @Res() res: Response,
-    @Next() next: NextFunction,
   ) {
     await this.paymentServicesApp.editPaymentMethod(
       paymentMethodId,

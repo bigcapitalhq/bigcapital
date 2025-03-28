@@ -6,8 +6,19 @@ import { GetPaymentServicesSpecificInvoice } from './queries/GetPaymentServicesS
 import { GetPaymentMethodsStateService } from './queries/GetPaymentMethodsState';
 import { PaymentServicesApplication } from './PaymentServicesApplication';
 import { PaymentServicesController } from './PaymentServices.controller';
+import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { PaymentIntegration } from './models/PaymentIntegration.model';
+import { TransactionPaymentServiceEntry } from './models/TransactionPaymentServiceEntry.model';
+import { StripePaymentModule } from '../StripePayment/StripePayment.module';
+
+const models = [
+  RegisterTenancyModel(PaymentIntegration),
+  RegisterTenancyModel(TransactionPaymentServiceEntry),
+];
 
 @Module({
+  imports: [...models, StripePaymentModule],
+  exports: [...models],
   providers: [
     DeletePaymentMethodService,
     EditPaymentMethodService,

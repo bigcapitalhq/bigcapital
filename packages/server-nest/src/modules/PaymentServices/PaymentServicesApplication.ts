@@ -1,12 +1,12 @@
-import { Service, Inject } from 'typedi';
 import { GetPaymentServicesSpecificInvoice } from './queries/GetPaymentServicesSpecificInvoice';
 import { DeletePaymentMethodService } from './commands/DeletePaymentMethodService';
 import { EditPaymentMethodService } from './commands/EditPaymentMethodService';
 import { EditPaymentMethodDTO, GetPaymentMethodsPOJO } from './types';
 import { GetPaymentMethodsStateService } from './queries/GetPaymentMethodsState';
 import { GetPaymentMethodService } from './queries/GetPaymentService';
+import { Injectable } from '@nestjs/common';
 
-@Service()
+@Injectable()
 export class PaymentServicesApplication {
   constructor(
     private readonly getPaymentServicesSpecificInvoice: GetPaymentServicesSpecificInvoice,
@@ -22,9 +22,7 @@ export class PaymentServicesApplication {
    * @returns {Promise<any>} The payment services for the specified invoice.
    */
   public async getPaymentServicesForInvoice(): Promise<any> {
-    return this.getPaymentServicesSpecificInvoice.getPaymentServicesInvoice(
-      tenantId,
-    );
+    return this.getPaymentServicesSpecificInvoice.getPaymentServicesInvoice();
   }
 
   /**
@@ -37,7 +35,7 @@ export class PaymentServicesApplication {
 
   /**
    * Deletes the given payment method.
-   * @param {number} paymentIntegrationId
+   * @param {number} paymentIntegrationId - Payment integration id.
    * @returns {Promise<void>}
    */
   public async deletePaymentMethod(
@@ -50,8 +48,8 @@ export class PaymentServicesApplication {
 
   /**
    * Edits the given payment method.
-   * @param {number} paymentIntegrationId
-   * @param {EditPaymentMethodDTO} editPaymentMethodDTO
+   * @param {number} paymentIntegrationId - Payment integration id.
+   * @param {EditPaymentMethodDTO} editPaymentMethodDTO - Edit payment method DTO.
    * @returns {Promise<void>}
    */
   public async editPaymentMethod(

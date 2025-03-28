@@ -1,6 +1,5 @@
 import { Knex } from 'knex';
 import { EditPaymentMethodDTO } from '../types';
-import { TransactionPaymentServiceEntry } from '../models/TransactionPaymentServiceEntry.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { PaymentIntegration } from '../models/PaymentIntegration.model';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -17,11 +16,6 @@ export class EditPaymentMethodService {
     @Inject(PaymentIntegration.name)
     private readonly paymentIntegrationModel: TenantModelProxy<
       typeof PaymentIntegration
-    >,
-
-    @Inject(TransactionPaymentServiceEntry.name)
-    private readonly transactionPaymentServiceEntryModel: TenantModelProxy<
-      typeof TransactionPaymentServiceEntry
     >,
   ) {}
 

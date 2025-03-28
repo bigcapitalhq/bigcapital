@@ -1,33 +1,34 @@
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '../Tenancy/TenancyService';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { Inject, Injectable } from '@nestjs/common';
+import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { GetPaymentServicesSpecificInvoiceTransformer } from './GetPaymentServicesSpecificInvoiceTransformer';
+import { PaymentIntegration } from '../models/PaymentIntegration.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
-@Service()
+@Injectable()
 export class GetPaymentServicesSpecificInvoice {
-  @Inject()
-  private tenancy: HasTenancyService;
+  constructor(
+    private readonly transform: TransformerInjectable,
 
-  @Inject()
-  private transform: TransformerInjectable;
+    @Inject(PaymentIntegration.name)
+    private readonly paymentIntegrationModel: TenantModelProxy<
+      typeof PaymentIntegration
+    >,
+  ) {}
 
   /**
    * Retrieves the payment services of the given invoice.
-   * @param {number} tenantId
    * @param {number} invoiceId
    * @returns
    */
-  async getPaymentServicesInvoice(tenantId: number) {
-    const { PaymentIntegration } = this.tenancy.models(tenantId);
-
-    const paymentGateways = await PaymentIntegration.query()
+  async getPaymentServicesInvoice() {
+    const paymentGateways = await this.paymentIntegrationModel()
+      .query()
       .modify('fullEnabled')
       .orderBy('name', 'ASC');
 
     return this.transform.transform(
-      tenantId,
       paymentGateways,
-      new GetPaymentServicesSpecificInvoiceTransformer()
+      new GetPaymentServicesSpecificInvoiceTransformer(),
     );
   }
 }

@@ -1,10 +1,12 @@
-import { BaseModel } from "@/models/Model";
+import { BaseModel } from '@/models/Model';
 
 export class PaymentIntegration extends BaseModel {
+  readonly name!: string;
   readonly service!: string;
   readonly paymentEnabled!: boolean;
   readonly payoutEnabled!: boolean;
   readonly accountId!: string;
+  readonly options!: Record<string, any>;
 
   static get tableName() {
     return 'payment_integrations';
@@ -27,7 +29,7 @@ export class PaymentIntegration extends BaseModel {
   }
 
   /**
-   * 
+   *
    */
   static get modifiers() {
     return {
