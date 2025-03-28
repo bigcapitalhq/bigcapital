@@ -20,7 +20,7 @@ export class Role extends TenantBaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const { RolePermission } = require('./RolePermission');
+    const { RolePermission } = require('./RolePermission.model');
 
     return {
       /**

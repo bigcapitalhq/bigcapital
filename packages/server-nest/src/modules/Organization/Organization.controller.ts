@@ -17,9 +17,11 @@ import {
 import { GetCurrentOrganizationService } from './queries/GetCurrentOrganization.service';
 import { UpdateOrganizationService } from './commands/UpdateOrganization.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @ApiTags('Organization')
 @Controller('organization')
+@PublicRoute()
 export class OrganizationController {
   constructor(
     private readonly buildOrganizationService: BuildOrganizationService,
@@ -80,6 +82,7 @@ export class OrganizationController {
     await this.updateOrganizationService.execute(updateDTO);
 
     return res.status(200).send({
+      code: 200,
       message: 'Organization information has been updated successfully.',
     });
   }

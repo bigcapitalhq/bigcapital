@@ -22,10 +22,11 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
+import { PublicRoute } from '../Auth/Jwt.guard';
 
 @ApiTags('Roles')
 @Controller('roles')
-@Injectable()
+@PublicRoute()
 export class RolesController {
   constructor(private readonly rolesApp: RolesApplication) {}
 
