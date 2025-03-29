@@ -9,7 +9,6 @@ import { OrganizationBuildProcessor } from './processors/OrganizationBuild.proce
 import { CommandOrganizationValidators } from './commands/CommandOrganizationValidators.service';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
-import { TenantsManagerService } from '../TenantDBManager/TenantsManager';
 import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBaseCurrencyLocking.service';
 
 @Module({

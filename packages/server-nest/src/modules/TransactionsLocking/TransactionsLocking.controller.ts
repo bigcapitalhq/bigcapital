@@ -1,14 +1,15 @@
-import { Controller, Put, Get, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Put, Get, Body, Param } from '@nestjs/common';
 import { TransactionsLockingService } from './commands/CommandTransactionsLockingService';
 import { TransactionsLockingGroup } from './types/TransactionsLocking.types';
-import { ITransactionsLockingAllDTO } from './types/TransactionsLocking.types';
-import { ICancelTransactionsLockingDTO } from './types/TransactionsLocking.types';
 import { ITransactionLockingPartiallyDTO } from './types/TransactionsLocking.types';
 import { QueryTransactionsLocking } from './queries/QueryTransactionsLocking';
 import { PublicRoute } from '../Auth/Jwt.guard';
 import { ApiOperation } from '@nestjs/swagger';
 import { ApiTags } from '@nestjs/swagger';
-import { CancelTransactionsLockingDto, TransactionsLockingDto, UnlockTransactionsLockingDto } from './dtos/TransactionsLocking.dto';
+import {
+  CancelTransactionsLockingDto,
+  TransactionsLockingDto,
+} from './dtos/TransactionsLocking.dto';
 
 @Controller('transactions-locking')
 @ApiTags('Transactions Locking')
@@ -20,7 +21,9 @@ export class TransactionsLockingController {
   ) {}
 
   @Put('lock')
-  @ApiOperation({ summary: 'Lock all transactions for a module or all modules' })
+  @ApiOperation({
+    summary: 'Lock all transactions for a module or all modules',
+  })
   async commandTransactionsLocking(
     @Body('module') module: TransactionsLockingGroup,
     @Body() transactionLockingDTO: TransactionsLockingDto,
@@ -37,7 +40,9 @@ export class TransactionsLockingController {
   }
 
   @Put('cancel-lock')
-  @ApiOperation({ summary: 'Cancel all transactions locking for a module or all modules' })
+  @ApiOperation({
+    summary: 'Cancel all transactions locking for a module or all modules',
+  })
   async cancelTransactionLocking(
     @Body('module') module: TransactionsLockingGroup,
     @Body() cancelLockingDTO: CancelTransactionsLockingDto,
@@ -53,7 +58,10 @@ export class TransactionsLockingController {
   }
 
   @Put('unlock-partial')
-  @ApiOperation({ summary: 'Partial unlock all transactions locking for a module or all modules' })
+  @ApiOperation({
+    summary:
+      'Partial unlock all transactions locking for a module or all modules',
+  })
   async unlockTransactionsLockingBetweenPeriod(
     @Body('module') module: TransactionsLockingGroup,
     @Body() unlockDTO: ITransactionLockingPartiallyDTO,
@@ -70,7 +78,10 @@ export class TransactionsLockingController {
   }
 
   @Put('cancel-unlock-partial')
-  @ApiOperation({ summary: 'Cancel partial unlocking all transactions locking for a module or all modules' })
+  @ApiOperation({
+    summary:
+      'Cancel partial unlocking all transactions locking for a module or all modules',
+  })
   async cancelPartialUnlocking(
     @Body('module') module: TransactionsLockingGroup,
   ) {

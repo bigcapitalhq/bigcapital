@@ -79,6 +79,7 @@ import { SubscriptionModule } from '../Subscription/Subscription.module';
 import { OrganizationModule } from '../Organization/Organization.module';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
 import { PaymentServicesModule } from '../PaymentServices/PaymentServices.module';
+import { AuthModule } from '../Auth/Auth.module';
 
 @Module({
   imports: [
@@ -193,6 +194,7 @@ import { PaymentServicesModule } from '../PaymentServices/PaymentServices.module
     OrganizationModule,
     TenantDBManagerModule,
     PaymentServicesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

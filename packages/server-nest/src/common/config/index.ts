@@ -8,6 +8,8 @@ import s3 from './s3';
 import openExchange from './open-exchange';
 import posthog from './posthog';
 import stripePayment from './stripe-payment';
+import signupConfirmation from './signup-confirmation';
+import signupRestrictions from './signup-restrictions';
 
 export const config = [
   systemDatabase,
@@ -20,4 +22,6 @@ export const config = [
   openExchange,
   posthog,
   stripePayment,
+  signupConfirmation,
+  signupRestrictions,
 ];

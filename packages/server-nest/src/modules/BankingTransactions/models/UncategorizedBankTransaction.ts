@@ -1,26 +1,22 @@
 /* eslint-disable global-require */
 import * as moment from 'moment';
 import { Model } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import ModelSettings from './ModelSetting';
-// import UncategorizedCashflowTransactionMeta from './UncategorizedCashflowTransaction.meta';
 import { BaseModel } from '@/models/Model';
 
 export class UncategorizedBankTransaction extends BaseModel {
-  amount!: number;
-  date!: Date | string;
-  categorized!: boolean;
-  accountId!: number;
-  referenceNo!: string;
-  payee!: string;
-  description!: string;
-  plaidTransactionId!: string;
-  recognizedTransactionId!: number;
-  excludedAt: Date;
-  pending: boolean;
-
-  categorizeRefId!: number;
-  categorizeRefType!: string;
+  readonly amount!: number;
+  readonly date!: Date | string;
+  readonly categorized!: boolean;
+  readonly accountId!: number;
+  readonly referenceNo!: string;
+  readonly payee!: string;
+  readonly description!: string;
+  readonly plaidTransactionId!: string;
+  readonly recognizedTransactionId!: number;
+  readonly excludedAt: Date;
+  readonly pending: boolean;
+  readonly categorizeRefId!: number;
+  readonly categorizeRefType!: string;
 
   /**
    * Table name.
@@ -199,7 +195,9 @@ export class UncategorizedBankTransaction extends BaseModel {
     const {
       RecognizedBankTransaction,
     } = require('../../BankingTranasctionsRegonize/models/RecognizedBankTransaction');
-    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
+    const {
+      MatchedBankTransaction,
+    } = require('../../BankingMatching/models/MatchedBankTransaction');
 
     return {
       /**

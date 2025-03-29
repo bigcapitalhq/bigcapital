@@ -571,6 +571,9 @@ importers:
       axios:
         specifier: ^1.6.0
         version: 1.7.7
+      bcryptjs:
+        specifier: ^2.4.3
+        version: 2.4.3
       bluebird:
         specifier: ^3.7.2
         version: 3.7.2

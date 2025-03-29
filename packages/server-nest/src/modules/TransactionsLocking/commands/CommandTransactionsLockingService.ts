@@ -1,6 +1,5 @@
 import { omit } from 'lodash';
 import {
-  ICancelTransactionsLockingDTO,
   ITransactionLockingPartiallyDTO,
   ITransactionMeta,
   ITransactionsLockingAllDTO,
@@ -15,7 +14,10 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
-import { CancelTransactionsLockingDto, TransactionsLockingDto } from '../dtos/TransactionsLocking.dto';
+import {
+  CancelTransactionsLockingDto,
+  TransactionsLockingDto,
+} from '../dtos/TransactionsLocking.dto';
 
 const Modules = ['all', 'sales', 'purchases', 'financial'];
 
