@@ -10,22 +10,24 @@ export class BranchTransactionDTOTransformer {
    * Excludes DTO branch id when mutli-warehouses feature is inactive.
    * @returns {any}
    */
-  private excludeDTOBranchIdWhenInactive = <T extends { branchId?: number }>(
+  private excludeDTOBranchIdWhenInactive = async <
+    T extends { branchId?: number },
+  >(
     DTO: T,
-  ): Omit<T, 'branchId'> | T => {
-    const isActive = this.branchesSettings.isMultiBranchesActive();
+  ): Promise<Omit<T, 'branchId'> | T> => {
+    const isActive = await this.branchesSettings.isMultiBranchesActive();
 
     return !isActive ? omit(DTO, ['branchId']) : DTO;
   };
 
   /**
-   * Transformes the input DTO for branches feature.
+   * Transforms the input DTO for branches feature.
    * @param {T} DTO -
    * @returns {Omit<T, 'branchId'> | T}
    */
-  public transformDTO = <T extends { branchId?: number }>(
+  public transformDTO = async <T extends { branchId?: number }>(
     DTO: T,
-  ): Omit<T, 'branchId'> | T => {
+  ): Promise<Omit<T, 'branchId'> | T> => {
     return this.excludeDTOBranchIdWhenInactive<T>(DTO);
   };
 }

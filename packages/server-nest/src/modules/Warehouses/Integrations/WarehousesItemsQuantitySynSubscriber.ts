@@ -24,7 +24,7 @@ export class WarehousesItemsQuantitySyncSubscriber {
     inventoryTransactions,
     trx,
   }: IInventoryTransactionsCreatedPayload) {
-    const isActive = this.warehousesSettings.isMultiWarehousesActive();
+    const isActive = await this.warehousesSettings.isMultiWarehousesActive();
 
     // Can't continue if the warehouses features is not active.
     if (!isActive) return;
@@ -44,7 +44,7 @@ export class WarehousesItemsQuantitySyncSubscriber {
     oldInventoryTransactions,
     trx,
   }: IInventoryTransactionsDeletedPayload) {
-    const isActive = this.warehousesSettings.isMultiWarehousesActive();
+    const isActive = await this.warehousesSettings.isMultiWarehousesActive();
 
     // Can't continue if the warehouses feature is not active yet.
     if (!isActive) return;

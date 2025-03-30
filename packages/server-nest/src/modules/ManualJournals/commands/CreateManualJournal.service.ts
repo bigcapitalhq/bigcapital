@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import * as R from 'ramda';
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
+import * as composeAsync from 'async/compose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   IManualJournalDTO,
@@ -73,7 +74,7 @@ export class CreateManualJournalService {
       entries,
       userId: authorizedUser.id,
     };
-    return R.compose(
+    return composeAsync(
       // Omits the `branchId` from entries if multiply branches feature not active.
       this.branchesDTOTransformer.transformDTO,
     )(initialDTO) as ManualJournal;

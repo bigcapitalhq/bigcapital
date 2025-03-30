@@ -1,25 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { SettingsStore } from '../Settings/SettingsStore';
+import { SETTINGS_PROVIDER } from '../Settings/Settings.types';
+import { Features } from '@/common/types/Features';
 
 @Injectable()
 export class WarehousesSettings {
+  constructor(
+    @Inject(SETTINGS_PROVIDER)
+    private readonly settingsStore: () => SettingsStore,
+  ) {}
+
   /**
    * Marks multi-warehouses as activated.
    */
-  public markMutliwarehoussAsActivated = () => {
-    // const settings = this.tenancy.settings(tenantId);
+  public markMutliwarehoussAsActivated = async () => {
+    const settings = await this.settingsStore();
 
-    // settings.set({ group: 'features', key: Features.WAREHOUSES, value: 1 });
+    settings.set({ group: 'features', key: Features.WAREHOUSES, value: 1 });
   };
 
   /**
-   * Detarmines multi-warehouses is active.
+   * Determines multi-warehouses is active.
    * @param {number} tenantId
    * @returns {boolean}
    */
-  public isMultiWarehousesActive = () => {
-    // const settings = this.tenancy.settings(tenantId);
+  public isMultiWarehousesActive = async () => {
+    const settings = await this.settingsStore();
 
-    // return settings.get({ group: 'features', key: Features.WAREHOUSES });
-    return true;
+    return settings.get({ group: 'features', key: Features.WAREHOUSES });
   };
 }

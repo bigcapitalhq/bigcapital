@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import * as R from 'ramda';
+import * as composeAsync from 'async/compose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   IRefundVendorCreditCreatedPayload,
@@ -81,7 +82,7 @@ export class CreateRefundVendorCredit {
       refundVendorCreditDTO,
     } as IVendorCreditCreatePayload);
 
-    const refundCreditObj = this.transformDTOToModel(
+    const refundCreditObj = await this.transformDTOToModel(
       vendorCredit,
       refundVendorCreditDTO,
     );
@@ -119,7 +120,7 @@ export class CreateRefundVendorCredit {
    * @param {RefundVendorCreditDto} vendorCreditDTO
    * @returns {IRefundVendorCredit}
    */
-  public transformDTOToModel = (
+  public transformDTOToModel = async (
     vendorCredit: VendorCredit,
     vendorCreditDTO: RefundVendorCreditDto,
   ) => {
@@ -129,7 +130,7 @@ export class CreateRefundVendorCredit {
       currencyCode: vendorCredit.currencyCode,
       exchangeRate: vendorCreditDTO.exchangeRate || 1,
     };
-    return R.compose(this.branchDTOTransform.transformDTO)(initialDTO);
+    return this.branchDTOTransform.transformDTO(initialDTO);
   };
 
   /**

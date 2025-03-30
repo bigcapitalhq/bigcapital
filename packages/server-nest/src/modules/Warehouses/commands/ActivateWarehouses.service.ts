@@ -40,7 +40,7 @@ export class ActivateWarehousesService {
    * - Mutate inventory transactions with the primary warehouse.
    */
   public async activateWarehouses(): Promise<void> {
-    const isActivated = this.settings.isMultiWarehousesActive();
+    const isActivated = await this.settings.isMultiWarehousesActive();
     this.throwIfWarehousesActivated(isActivated);
 
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {

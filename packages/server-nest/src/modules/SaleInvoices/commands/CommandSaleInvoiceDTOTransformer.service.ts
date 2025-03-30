@@ -121,17 +121,18 @@ export class CommandSaleInvoiceDTOTransformer {
     } as SaleInvoice;
 
     const initialAsyncDTO = await composeAsync(
+      this.branchDTOTransform.transformDTO<SaleInvoice>,
+      this.warehouseDTOTransform.transformDTO<SaleInvoice>,
+
       // Assigns the default branding template id to the invoice DTO.
       this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
         'SaleInvoice',
       ),
     )(initialDTO);
 
-    return R.compose(
-      this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
-      this.branchDTOTransform.transformDTO<SaleInvoice>,
-      this.warehouseDTOTransform.transformDTO<SaleInvoice>,
-    )(initialAsyncDTO);
+    return R.compose(this.taxDTOTransformer.assocTaxAmountWithheldFromEntries)(
+      initialAsyncDTO,
+    );
   }
 
   /**

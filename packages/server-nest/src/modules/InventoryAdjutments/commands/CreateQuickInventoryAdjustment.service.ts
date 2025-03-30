@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
-import * as R from 'ramda';
 import * as moment from 'moment';
+import * as composeAsync from 'async/compose';
 import { omit } from 'lodash';
 import { events } from '@/common/events/events';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
@@ -79,7 +79,7 @@ export class CreateQuickInventoryAdjustmentService {
         : {}),
       entries,
     };
-    return R.compose(
+    return composeAsync(
       this.warehouseDTOTransform.transformDTO<InventoryAdjustment>,
       this.branchDTOTransform.transformDTO<InventoryAdjustment>,
     )(initialDTO) as InventoryAdjustment;

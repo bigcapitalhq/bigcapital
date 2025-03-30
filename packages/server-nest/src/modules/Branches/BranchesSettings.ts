@@ -1,23 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { SettingsStore } from '../Settings/SettingsStore';
+import { SETTINGS_PROVIDER } from '../Settings/Settings.types';
+import { Features } from '@/common/types/Features';
 
 @Injectable()
 export class BranchesSettingsService {
+  constructor(
+    @Inject(SETTINGS_PROVIDER)
+    private readonly settingsStore: () => SettingsStore,
+  ) {}
+
   /**
    * Marks multi-branches as activated.
    */
-  public markMultiBranchesAsActivated = () => {
-    // const settings = this.tenancy.settings(tenantId);
+  public markMultiBranchesAsActivated = async () => {
+    const settingsStore = await this.settingsStore();
 
-    // settings.set({ group: 'features', key: Features.BRANCHES, value: 1 });
+    settingsStore.set({ group: 'features', key: Features.BRANCHES, value: 1 });
   };
 
   /**
    * Retrieves whether multi-branches is active.
    */
-  public isMultiBranchesActive = () => {
-    // const settings = this.tenancy.settings(tenantId);
+  public isMultiBranchesActive = async () => {
+    const settingsStore = await this.settingsStore();
 
-    // return settings.get({ group: 'features', key: Features.BRANCHES });
-    return false;
+    return settingsStore.get({ group: 'features', key: Features.BRANCHES });
   };
 }

@@ -71,15 +71,15 @@ export class PaymentReceiveDTOTransformer {
       exchangeRate: paymentReceiveDTO.exchangeRate || 1,
       entries,
     };
-    const initialAsyncDTO = await composeAsync(
+    const asyncDto = await composeAsync(
+      this.branchDTOTransform.transformDTO<PaymentReceived>,
+
       // Assigns the default branding template id to the invoice DTO.
       this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
         'SaleInvoice',
       ),
     )(initialDTO);
 
-    return R.compose(this.branchDTOTransform.transformDTO<PaymentReceived>)(
-      initialAsyncDTO,
-    ) as PaymentReceived;
+    return asyncDto;
   }
 }

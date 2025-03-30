@@ -2,6 +2,7 @@ import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
   IsArray,
   IsBoolean,
   IsDate,
@@ -92,7 +93,7 @@ export class CommandSaleEstimateDto {
   branchId?: number;
 
   @IsArray()
-  @MinLength(1)
+  @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @Type(() => SaleEstimateEntryDto)
   @ApiProperty({

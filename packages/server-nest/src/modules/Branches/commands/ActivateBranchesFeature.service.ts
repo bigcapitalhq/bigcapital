@@ -49,8 +49,8 @@ export class ActivateBranches {
    * Activate multi-branches feature.
    * @returns {Promise<void>}
    */
-  public activateBranches = (): Promise<void> => {
-    const isActivated = this.branchesSettings.isMultiBranchesActive();
+  public activateBranches = async (): Promise<void> => {
+    const isActivated = await this.branchesSettings.isMultiBranchesActive();
 
     // Throw error if mutli-branches is already activated.
     this.throwIfMultiBranchesActivated(isActivated);

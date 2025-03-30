@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
 import * as moment from 'moment';
 import * as R from 'ramda';
+import * as composeAsync from 'async/compose';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { Expense } from '../models/Expense.model';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
@@ -48,9 +49,9 @@ export class ExpenseDTOTransformer {
    * @param {ISystemUser} authorizedUser
    * @return {IExpense}
    */
-  private expenseDTOToModel(
+  private async expenseDTOToModel(
     expenseDTO: CreateExpenseDto | EditExpenseDto,
-  ): Expense {
+  ): Promise<Expense> {
     const landedCostAmount = this.getExpenseLandedCostAmount(expenseDTO);
     const totalAmount = this.getExpenseCategoriesTotal(expenseDTO.categories);
 
@@ -71,20 +72,22 @@ export class ExpenseDTOTransformer {
           }
         : {}),
     };
-    return R.compose(this.branchDTOTransform.transformDTO<Expense>)(
-      initialDTO,
-    ) as Expense;
+    const asyncDto = await composeAsync(
+      this.branchDTOTransform.transformDTO<Expense>,
+    )(initialDTO);
+
+    return asyncDto as Expense;
   }
 
   /**
-   * Transformes the expense create DTO.
+   * Transforms the expense create DTO.
    * @param {IExpenseCreateDTO} expenseDTO
    * @returns {Promise<Expense>}
    */
   public expenseCreateDTO = async (
     expenseDTO: CreateExpenseDto | EditExpenseDto,
   ): Promise<Partial<Expense>> => {
-    const initialDTO = this.expenseDTOToModel(expenseDTO);
+    const initialDTO = await this.expenseDTOToModel(expenseDTO);
     const tenant = await this.tenancyContext.getTenant(true);
 
     return {

@@ -15,7 +15,10 @@ import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-ind
 import { SaleReceipt } from '../models/SaleReceipt';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { CreateSaleReceiptDto, EditSaleReceiptDto } from '../dtos/SaleReceipt.dto';
+import {
+  CreateSaleReceiptDto,
+  EditSaleReceiptDto,
+} from '../dtos/SaleReceipt.dto';
 
 @Injectable()
 export class SaleReceiptDTOTransformer {
@@ -96,16 +99,16 @@ export class SaleReceiptDTOTransformer {
         }),
       entries,
     };
-    const initialAsyncDTO = await composeAsync(
+    const asyncDto = await composeAsync(
+      this.branchDTOTransform.transformDTO<SaleReceipt>,
+      this.warehouseDTOTransform.transformDTO<SaleReceipt>,
+
       // Assigns the default branding template id to the invoice DTO.
       this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
         'SaleReceipt',
       ),
     )(initialDTO);
 
-    return R.compose(
-      this.branchDTOTransform.transformDTO<SaleReceipt>,
-      this.warehouseDTOTransform.transformDTO<SaleReceipt>,
-    )(initialAsyncDTO) as SaleReceipt;
+    return asyncDto;
   }
 }

@@ -2,6 +2,7 @@ import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
   IsArray,
   IsBoolean,
   IsDate,
@@ -88,7 +89,7 @@ export class CommandCreditNoteDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreditNoteEntryDto)
-  @Min(1)
+  @ArrayMinSize(1)
   @ApiProperty({
     example: [
       {

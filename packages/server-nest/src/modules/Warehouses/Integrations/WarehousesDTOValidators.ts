@@ -19,7 +19,9 @@ export class WarehousesDTOValidators {
    * Validates the warehouse existance of sale invoice transaction.
    * @param {IWarehouseTransactionDTO} DTO
    */
-  public validateDTOWarehouseExistance = async (DTO: IWarehouseTransactionDTO) => {
+  public validateDTOWarehouseExistance = async (
+    DTO: IWarehouseTransactionDTO,
+  ) => {
     // Validates the sale invoice warehouse id existance.
     this.validateWarehouseExistanceService.validateWarehouseIdExistance(
       DTO,
@@ -47,7 +49,7 @@ export class WarehousesDTOValidators {
   public validateDTOWarehouseWhenActive = async (
     DTO: IWarehouseTransactionDTO,
   ): Promise<void> => {
-    const isActive = this.warehousesSettings.isMultiWarehousesActive();
+    const isActive = await this.warehousesSettings.isMultiWarehousesActive();
 
     // Can't continue if the multi-warehouses feature is inactive.
     if (!isActive) return;

@@ -11,17 +11,18 @@ export class ManualJournalBranchesDTOTransformer {
   ) {}
 
   /**
-   * 
-   * @param DTO 
-   * @returns 
+   *
+   * @param DTO
+   * @returns
    */
-  private excludeDTOBranchIdWhenInactive = (
+  private excludeDTOBranchIdWhenInactive = async (
     DTO: IManualJournalDTO,
-  ): IManualJournalDTO => {
-    const isActive = this.branchesSettings.isMultiBranchesActive();
+  ): Promise<IManualJournalDTO> => {
+    const isActive = await this.branchesSettings.isMultiBranchesActive();
 
-    if (isActive) return DTO;
-
+    if (isActive) {
+      return DTO;
+    }
     return {
       ...DTO,
       entries: DTO.entries.map((e) => omit(e, ['branchId'])),
@@ -29,9 +30,11 @@ export class ManualJournalBranchesDTOTransformer {
   };
 
   /**
-   * 
+   *
    */
-  public transformDTO = (DTO: IManualJournalDTO): IManualJournalDTO => {
-      return this.excludeDTOBranchIdWhenInactive(DTO);
-    };
+  public transformDTO = async (
+    DTO: IManualJournalDTO,
+  ): Promise<IManualJournalDTO> => {
+    return this.excludeDTOBranchIdWhenInactive(DTO);
+  };
 }

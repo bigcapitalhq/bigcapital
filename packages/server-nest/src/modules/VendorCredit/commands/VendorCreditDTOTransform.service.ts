@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import { omit } from 'lodash';
 import * as R from 'ramda';
+import * as composeAsync from 'async/compose';
 import { ERRORS } from '../constants';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
@@ -32,7 +33,7 @@ export class VendorCreditDTOTransformService {
   ) {}
 
   /**
-   * Transformes the credit/edit vendor credit DTO to model.
+   * Transforms the credit/edit vendor credit DTO to model.
    * @param {IVendorCreditCreateDTO | IVendorCreditEditDTO} vendorCreditDTO
    * @param {string} vendorCurrencyCode -
    * @param {IVendorCredit} oldVendorCredit -
@@ -80,7 +81,7 @@ export class VendorCreditDTOTransformService {
           openedAt: moment().toMySqlDateTime(),
         }),
     };
-    return R.compose(
+    return composeAsync(
       this.branchDTOTransform.transformDTO<VendorCredit>,
       this.warehouseDTOTransform.transformDTO<VendorCredit>,
     )(initialDTO) as VendorCredit;

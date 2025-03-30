@@ -24,6 +24,7 @@ import { SaleReceipt } from '../models/SaleReceipt';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
 import { Mail } from '@/modules/Mail/Mail';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleReceiptMailNotification {
@@ -43,7 +44,7 @@ export class SaleReceiptMailNotification {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: typeof SaleReceipt,
+    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
 
     @InjectQueue(SendSaleReceiptMailQueue)
     private readonly sendSaleReceiptMailProcess: Queue,
@@ -74,7 +75,6 @@ export class SaleReceiptMailNotification {
     await this.sendSaleReceiptMailProcess.add(SendSaleReceiptMailJob, {
       ...payload,
     });
-
     // Triggers the event `onSaleReceiptPreMailSend`.
     await this.eventEmitter.emitAsync(events.saleReceipt.onPreMailSend, {
       saleReceiptId,
@@ -90,7 +90,7 @@ export class SaleReceiptMailNotification {
   public async getMailOptions(
     saleReceiptId: number,
   ): Promise<SaleReceiptMailOpts> {
-    const saleReceipt = await this.saleReceiptModel
+    const saleReceipt = await this.saleReceiptModel()
       .query()
       .findById(saleReceiptId)
       .throwIfNotFound();

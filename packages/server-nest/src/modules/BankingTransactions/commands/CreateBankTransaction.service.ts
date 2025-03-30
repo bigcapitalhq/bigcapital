@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { pick } from 'lodash';
 import { Knex } from 'knex';
 import * as R from 'ramda';
+import * as composeAsync from 'async/compose';
 import { CASHFLOW_TRANSACTION_TYPE } from '../constants';
 import { transformCashflowTransactionType } from '../utils';
 import { CommandBankTransactionValidator } from './CommandCasflowValidator.service';
@@ -104,7 +105,7 @@ export class CreateBankTransactionService {
           }
         : {}),
     };
-    return R.compose(this.branchDTOTransform.transformDTO<BankTransaction>)(
+    return composeAsync(this.branchDTOTransform.transformDTO<BankTransaction>)(
       initialDTO,
     ) as BankTransaction;
   };

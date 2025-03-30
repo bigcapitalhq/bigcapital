@@ -39,6 +39,7 @@ describe('Sale Estimates (e2e)', () => {
       .set('organization-id', orgainzationId)
       .send({
         name: faker.commerce.productName(),
+        type: 'inventory',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,

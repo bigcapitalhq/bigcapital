@@ -91,9 +91,10 @@ export function RegisterTenancyModel(model: typeof Model) {
     provide: model.name,
     inject: [TENANCY_DB_CONNECTION],
     global: true,
-    useFactory: async (tenantKnex: () => Knex) => () => {
+    useFactory: (tenantKnex: () => Knex) => () => {
       return model.bindKnex(tenantKnex());
     },
+    strict: true,
     type: 'function',
   });
 }

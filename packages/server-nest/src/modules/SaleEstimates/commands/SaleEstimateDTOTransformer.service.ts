@@ -81,17 +81,17 @@ export class SaleEstimateDTOTransformer {
           deliveredAt: moment().toMySqlDateTime(),
         }),
     };
-    const initialAsyncDTO = await composeAsync(
+    const asyncDto = await composeAsync(
+      this.branchDTOTransform.transformDTO<SaleEstimate>,
+      this.warehouseDTOTransform.transformDTO<SaleEstimate>,
+
       // Assigns the default branding template id to the invoice DTO.
       this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
         'SaleEstimate',
       ),
     )(initialDTO);
 
-    return R.compose(
-      this.branchDTOTransform.transformDTO<SaleEstimate>,
-      this.warehouseDTOTransform.transformDTO<SaleEstimate>,
-    )(initialAsyncDTO);
+    return asyncDto;
   }
 
   /**

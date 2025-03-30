@@ -17,7 +17,11 @@ import { BrandingTemplateDTOTransformer } from '../../PdfTemplate/BrandingTempla
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { CreditNoteAutoIncrementService } from './CreditNoteAutoIncrement.service';
 import { CreditNote } from '../models/CreditNote';
-import { CreateCreditNoteDto, CreditNoteEntryDto, EditCreditNoteDto } from '../dtos/CreditNote.dto';
+import {
+  CreateCreditNoteDto,
+  CreditNoteEntryDto,
+  EditCreditNoteDto,
+} from '../dtos/CreditNote.dto';
 
 @Injectable()
 export class CommandCreditNoteDTOTransform {
@@ -33,11 +37,11 @@ export class CommandCreditNoteDTOTransform {
     private readonly branchDTOTransform: BranchTransactionDTOTransformer,
     private readonly warehouseDTOTransform: WarehouseTransactionDTOTransform,
     private readonly brandingTemplatesTransformer: BrandingTemplateDTOTransformer,
-    private readonly creditNoteAutoIncrement: CreditNoteAutoIncrementService
+    private readonly creditNoteAutoIncrement: CreditNoteAutoIncrementService,
   ) {}
 
   /**
-   * Transformes the credit/edit DTO to model.
+   * Transforms the credit/edit DTO to model.
    * @param {ICreditNoteNewDTO | ICreditNoteEditDTO} creditNoteDTO
    * @param {string} customerCurrencyCode -
    */
@@ -61,10 +65,10 @@ export class CommandCreditNoteDTOTransform {
       })),
     )(creditNoteDTO.entries);
 
-    // Retreive the next credit note number.
+    // Retrieves the next credit note number.
     const autoNextNumber = this.creditNoteAutoIncrement.getNextCreditNumber();
 
-    // Detarmines the credit note number.
+    // Determines the credit note number.
     const creditNoteNumber =
       creditNoteDTO.creditNoteNumber ||
       oldCreditNote?.creditNoteNumber ||
@@ -84,17 +88,17 @@ export class CommandCreditNoteDTOTransform {
       refundedAmount: 0,
       invoicesAmount: 0,
     };
-    const initialAsyncDTO = await composeAsync(
+    const asyncDto = (await composeAsync(
+      this.branchDTOTransform.transformDTO<CreditNote>,
+      this.warehouseDTOTransform.transformDTO<CreditNote>,
+
       // Assigns the default branding template id to the invoice DTO.
       this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
         'CreditNote',
       ),
-    )(initialDTO);
+    )(initialDTO)) as CreditNote;
 
-    return R.compose(
-      this.branchDTOTransform.transformDTO<CreditNote>,
-      this.warehouseDTOTransform.transformDTO<CreditNote>,
-    )(initialAsyncDTO) as CreditNote;
+    return asyncDto;
   };
 
   /**

@@ -27,6 +27,7 @@ export class BillDTOTransformer {
 
     @Inject(ItemEntry.name)
     private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
+
     @Inject(Item.name) private itemModel: TenantModelProxy<typeof Item>,
   ) {}
 
@@ -114,12 +115,16 @@ export class BillDTOTransformer {
         }),
       userId: authorizedUser.id,
     };
+
+    const asyncDto = await composeAsync(
+      this.branchDTOTransform.transformDTO<Bill>,
+      this.warehouseDTOTransform.transformDTO<Bill>,
+    )(initialDTO);
+
     return R.compose(
       // Associates tax amount withheld to the model.
       this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
-      this.branchDTOTransform.transformDTO<Bill>,
-      this.warehouseDTOTransform.transformDTO<Bill>,
-    )(initialDTO) as Bill;
+    )(asyncDto) as Bill;
   }
 
   /**
