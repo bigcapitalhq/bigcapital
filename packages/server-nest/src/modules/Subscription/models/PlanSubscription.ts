@@ -103,8 +103,8 @@ export class PlanSubscription extends mixin(SystemModel) {
    * Relations mappings.
    */
   static get relationMappings() {
-    const Tenant = require('system/models/Tenant');
-    const Plan = require('system/models/Subscriptions/Plan');
+    const { TenantModel } = require('../../System/models/TenantModel');
+    const { Plan } = require('./Plan');
 
     return {
       /**
@@ -112,7 +112,7 @@ export class PlanSubscription extends mixin(SystemModel) {
        */
       tenant: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Tenant.default,
+        modelClass: TenantModel,
         join: {
           from: 'subscription_plan_subscriptions.tenantId',
           to: 'tenants.id',
@@ -124,7 +124,7 @@ export class PlanSubscription extends mixin(SystemModel) {
        */
       plan: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Plan.default,
+        modelClass: Plan,
         join: {
           from: 'subscription_plan_subscriptions.planId',
           to: 'subscription_plans.id',

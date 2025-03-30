@@ -10,6 +10,12 @@ import { AuthSignupConfirmResendService } from './commands/AuthSignupConfirmRese
 import { AuthSignupConfirmService } from './commands/AuthSignupConfirm.service';
 import { AuthSignupService } from './commands/AuthSignup.service';
 import { AuthSigninService } from './commands/AuthSignin.service';
+import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { PasswordReset } from './models/PasswordReset';
+import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
+import { AuthenticationMailMesssages } from './AuthMailMessages.esrvice';
+
+const models = [RegisterTenancyModel(PasswordReset)];
 
 @Module({
   controllers: [AuthController],
@@ -18,7 +24,10 @@ import { AuthSigninService } from './commands/AuthSignin.service';
       secret: 'asdfasdfasdf',
       signOptions: { expiresIn: '60s' },
     }),
+    TenantDBManagerModule,
+    ...models,
   ],
+  exports: [...models],
   providers: [
     AuthService,
     JwtStrategy,
@@ -29,6 +38,7 @@ import { AuthSigninService } from './commands/AuthSignin.service';
     AuthSignupConfirmService,
     AuthSignupService,
     AuthSigninService,
+    AuthenticationMailMesssages,
   ],
 })
 export class AuthModule {}
