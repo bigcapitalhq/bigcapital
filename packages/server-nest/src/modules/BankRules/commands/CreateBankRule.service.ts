@@ -11,6 +11,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { BankRule } from '../models/BankRule';
 import { CreateBankRuleDto } from '../dtos/BankRule.dto';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class CreateBankRuleService {
@@ -18,7 +19,8 @@ export class CreateBankRuleService {
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
 
-    @Inject(BankRule.name) private readonly bankRuleModel: typeof BankRule,
+    @Inject(BankRule.name)
+    private readonly bankRuleModel: TenantModelProxy<typeof BankRule>,
   ) {}
 
   /**
@@ -48,9 +50,11 @@ export class CreateBankRuleService {
         trx,
       } as IBankRuleEventCreatingPayload);
 
-      const bankRule = await this.bankRuleModel.query(trx).upsertGraphAndFetch({
-        ...transformDTO,
-      });
+      const bankRule = await this.bankRuleModel()
+        .query(trx)
+        .upsertGraphAndFetch({
+          ...transformDTO,
+        });
       // Triggers `onBankRuleCreated` event.
       await this.eventPublisher.emitAsync(events.bankRules.onCreated, {
         createRuleDTO,

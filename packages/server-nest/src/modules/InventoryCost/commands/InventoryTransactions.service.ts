@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Knex } from 'knex';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   IInventoryTransactionsDeletedPayload,
@@ -14,6 +14,7 @@ import { transformItemEntriesToInventory } from '../utils';
 import { IItemEntryTransactionType } from '../../TransactionItemEntry/ItemEntry.types';
 import { ItemEntry } from '../../TransactionItemEntry/models/ItemEntry';
 
+@Injectable()
 export class InventoryTransactionsService {
   /**
    * @param {EventEmitter2} eventEmitter - Event emitter.
@@ -143,7 +144,7 @@ export class InventoryTransactionsService {
     trx?: Knex.Transaction,
   ): Promise<{ oldInventoryTransactions: InventoryTransaction[] }> {
     // Retrieve the inventory transactions of the given sale invoice.
-    const oldInventoryTransactions = await this.inventoryTransactionModel
+    const oldInventoryTransactions = await this.inventoryTransactionModel()
       .query(trx)
       .where({ transactionId, transactionType });
 

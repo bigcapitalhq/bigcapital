@@ -5,6 +5,7 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { Customer } from '../Customers/models/Customer';
 import { CommonMailOptions } from './MailNotification.types';
 import { formatMessage } from '@/utils/format-message';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
 export class ContactMailNotification {
@@ -13,7 +14,7 @@ export class ContactMailNotification {
     private readonly tenantContext: TenancyContext,
 
     @Inject(Customer.name)
-    private readonly customerModel: typeof Customer,
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
   ) {}
 
   /**
@@ -26,7 +27,7 @@ export class ContactMailNotification {
   ): Promise<
     Pick<CommonMailOptions, 'to' | 'from' | 'toOptions' | 'fromOptions'>
   > {
-    const customer = await this.customerModel
+    const customer = await this.customerModel()
       .query()
       .findById(customerId)
       .throwIfNotFound();

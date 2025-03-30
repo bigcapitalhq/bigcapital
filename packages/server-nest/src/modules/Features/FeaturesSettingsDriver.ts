@@ -21,7 +21,9 @@ export class FeaturesSettingsDriver {
    * @returns {Promise<void>}
    */
   async turnOn(feature: string) {
-    this.settings().set({ group: 'features', key: feature, value: true });
+    const settingsStore = await this.settings();
+
+    settingsStore.set({ group: 'features', key: feature, value: true });
   }
 
   /**
@@ -30,24 +32,24 @@ export class FeaturesSettingsDriver {
    * @returns {Promise<void>}
    */
   async turnOff(feature: string) {
-    this.settings().set({ group: 'features', key: feature, value: false });
+    const settingsStore = await this.settings();
+
+    settingsStore.set({ group: 'features', key: feature, value: false });
   }
 
   /**
-   * Detarmines the given feature name is accessible.
+   * Determines the given feature name is accessible.
    * @param {string} feature - The feature name.
    * @returns {Promise<boolean|null|undefined>}
    */
   async accessible(feature: string) {
+    const settingsStore = await this.settings();
+
     const defaultValue = this.configure.getFeatureConfigure(
       feature,
       'defaultValue',
     );
-    const settingValue = this.settings().get(
-      { group: 'features', key: feature },
-      defaultValue,
-    );
-    return settingValue;
+    return settingsStore.get({ group: 'features', key: feature }, defaultValue);
   }
 
   /**
@@ -55,11 +57,13 @@ export class FeaturesSettingsDriver {
    * @returns {Promise<IFeatureAllItem>}
    */
   async all(): Promise<IFeatureAllItem[]> {
-    const mappedOpers = this.featuresConfigure.getConfigure().map(async (featureConfigure) => {
-      const { name, defaultValue } = featureConfigure;
-      const isAccessible = await this.accessible(featureConfigure.name);
-      return { name, isAccessible, defaultAccessible: defaultValue };
-    });
+    const mappedOpers = this.featuresConfigure
+      .getConfigure()
+      .map(async (featureConfigure) => {
+        const { name, defaultValue } = featureConfigure;
+        const isAccessible = await this.accessible(featureConfigure.name);
+        return { name, isAccessible, defaultAccessible: defaultValue };
+      });
     return Promise.all(mappedOpers);
   }
 }

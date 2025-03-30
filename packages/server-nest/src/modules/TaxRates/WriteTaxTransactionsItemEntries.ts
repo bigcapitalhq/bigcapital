@@ -1,19 +1,18 @@
 import { sumBy, chain, keyBy } from 'lodash';
 import { Knex } from 'knex';
-import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';
+import { ModelObject } from 'objection';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { TaxRateModel } from './models/TaxRate.model';
 import { Inject, Injectable } from '@nestjs/common';
-import { ModelObject } from 'objection';
 import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
 import { TaxRateTransaction } from './models/TaxRateTransaction.model';
 
 @Injectable()
 export class WriteTaxTransactionsItemEntries {
   constructor(
-    @Inject(SaleInvoice.name)
+    @Inject(TaxRateTransaction.name)
     private readonly taxRateTransactionModel: TenantModelProxy<
-      typeof SaleInvoice
+      typeof TaxRateTransaction
     >,
 
     @Inject(TaxRateModel.name)

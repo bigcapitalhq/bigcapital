@@ -151,7 +151,7 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.getSaleInvoiceState();
   }
 
-  @Post(':id/deliver')
+  @Put(':id/deliver')
   @ApiOperation({ summary: 'Deliver the given sale invoice.' })
   @ApiResponse({
     status: 200,

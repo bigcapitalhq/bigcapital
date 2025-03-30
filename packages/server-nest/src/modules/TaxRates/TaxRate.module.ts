@@ -19,9 +19,13 @@ import { SaleInvoiceTaxRateValidateSubscriber } from './subscribers/SaleInvoiceT
 import { SyncItemTaxRateOnEditTaxSubscriber } from './subscribers/SyncItemTaxRateOnEditTaxSubscriber';
 import { WriteTaxTransactionsItemEntries } from './WriteTaxTransactionsItemEntries';
 import { SyncItemTaxRateOnEditTaxRate } from './SyncItemTaxRateOnEditTaxRate';
+import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { TaxRateTransaction } from './models/TaxRateTransaction.model';
+
+const models = [RegisterTenancyModel(TaxRateTransaction)];
 
 @Module({
-  imports: [],
+  imports: [...models],
   controllers: [TaxRatesController],
   providers: [
     CreateTaxRate,
@@ -42,8 +46,8 @@ import { SyncItemTaxRateOnEditTaxRate } from './SyncItemTaxRateOnEditTaxRate';
     SaleInvoiceTaxRateValidateSubscriber,
     SyncItemTaxRateOnEditTaxSubscriber,
     WriteTaxTransactionsItemEntries,
-    SyncItemTaxRateOnEditTaxRate
+    SyncItemTaxRateOnEditTaxRate,
   ],
-  exports: [ItemEntriesTaxTransactions],
+  exports: [ItemEntriesTaxTransactions, ...models],
 })
 export class TaxRatesModule {}

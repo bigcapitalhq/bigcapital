@@ -2,6 +2,7 @@ import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
   IsArray,
   IsBoolean,
   IsDate,
@@ -12,7 +13,6 @@ import {
   IsOptional,
   IsString,
   Min,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
 
@@ -130,7 +130,7 @@ class CommandSaleInvoiceDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ItemEntryDto)
-  @MinLength(1)
+  @ArrayMinSize(1)
   @ApiProperty({
     description: 'Invoice line items',
     type: [ItemEntryDto],

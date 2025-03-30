@@ -4,8 +4,9 @@ import { AppModule } from '../src/modules/App/App.module';
 
 let app: INestApplication;
 
-let orgainzationId = 'fxdo7u419m5ryy4tb';
-let authenticationToken = '';
+let orgainzationId = 'hpgpqhanm8s4921m';
+let authenticationToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZXhwIjoxNzQ4MzExOTc5LjIzOCwiaWF0IjoxNzQzMTI3OTc5fQ.h3xvmuNjeyFeshEZRVRLCsARgTpx4xeZQHQuZzESm2U';
 
 beforeAll(async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({

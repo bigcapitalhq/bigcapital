@@ -1,8 +1,6 @@
-// import { getUploadedObjectUri } from '@/services/Attachments/utils';
-import { BaseModel } from '@/models/Model';
-// import TenantModel from 'models/TenantModel';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class PdfTemplateModel extends BaseModel {
+export class PdfTemplateModel extends TenantBaseModel {
   public resource!: string;
   public templateName!: string;
   public predefined!: boolean;

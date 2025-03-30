@@ -16,7 +16,7 @@ export class SaveSettingsService {
    */
   public async saveSettings(settingsDTO: ISettingsDTO) {
     const settingsStore = await this.settingsStore();
-    const notDefinedOptions = this.validateNotDefinedSettings(
+    const notDefinedOptions = await this.validateNotDefinedSettings(
       settingsDTO.options,
     );
     const errorReasons: { type: string; code: number; keys: any[] }[] = [];
@@ -41,11 +41,12 @@ export class SaveSettingsService {
    * @param {Array} options
    * @return {Boolean}
    */
-  private validateNotDefinedSettings(options) {
+  private async validateNotDefinedSettings(options) {
     const notDefined = [];
+    const settingStore = await this.settingsStore();
 
     options.forEach((option) => {
-      const setting = this.settingsStore().config.getMetaConfig(
+      const setting = settingStore.config.getMetaConfig(
         option.key,
         option.group,
       );

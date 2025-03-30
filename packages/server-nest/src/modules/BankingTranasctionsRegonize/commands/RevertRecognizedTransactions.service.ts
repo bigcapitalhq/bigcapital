@@ -5,6 +5,7 @@ import { RevertRecognizedTransactionsCriteria } from '../_types';
 import { RecognizedBankTransaction } from '../models/RecognizedBankTransaction';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class RevertRecognizedTransactionsService {
@@ -12,10 +13,14 @@ export class RevertRecognizedTransactionsService {
     private readonly uow: UnitOfWork,
 
     @Inject(RecognizedBankTransaction.name)
-    private readonly recognizedBankTransactionModel: typeof RecognizedBankTransaction,
+    private readonly recognizedBankTransactionModel: TenantModelProxy<
+      typeof RecognizedBankTransaction
+    >,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: typeof UncategorizedBankTransaction,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -36,32 +41,34 @@ export class RevertRecognizedTransactionsService {
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Retrieves all the recognized transactions of the banbk rule.
       const uncategorizedTransactions =
-        await this.uncategorizedBankTransactionModel.query(trx).onBuild((q) => {
-          q.withGraphJoined('recognizedTransaction');
-          q.whereNotNull('recognizedTransaction.id');
+        await this.uncategorizedBankTransactionModel()
+          .query(trx)
+          .onBuild((q) => {
+            q.withGraphJoined('recognizedTransaction');
+            q.whereNotNull('recognizedTransaction.id');
 
-          if (rulesIds.length > 0) {
-            q.whereIn('recognizedTransaction.bankRuleId', rulesIds);
-          }
-          if (transactionsCriteria?.accountId) {
-            q.where('accountId', transactionsCriteria.accountId);
-          }
-          if (transactionsCriteria?.batch) {
-            q.where('batch', transactionsCriteria.batch);
-          }
-        });
+            if (rulesIds.length > 0) {
+              q.whereIn('recognizedTransaction.bankRuleId', rulesIds);
+            }
+            if (transactionsCriteria?.accountId) {
+              q.where('accountId', transactionsCriteria.accountId);
+            }
+            if (transactionsCriteria?.batch) {
+              q.where('batch', transactionsCriteria.batch);
+            }
+          });
       const uncategorizedTransactionIds = uncategorizedTransactions.map(
         (r) => r.id,
       );
-      // Unlink the recongized transactions out of uncategorized transactions.
-      await this.uncategorizedBankTransactionModel
+      // Unlink the recognized transactions out of un-categorized transactions.
+      await this.uncategorizedBankTransactionModel()
         .query(trx)
         .whereIn('id', uncategorizedTransactionIds)
         .patch({
           recognizedTransactionId: null,
         });
-      // Delete the recognized bank transactions that assocaited to bank rule.
-      await this.recognizedBankTransactionModel
+      // Delete the recognized bank transactions that associated to bank rule.
+      await this.recognizedBankTransactionModel()
         .query(trx)
         .whereIn('uncategorizedTransactionId', uncategorizedTransactionIds)
         .delete();

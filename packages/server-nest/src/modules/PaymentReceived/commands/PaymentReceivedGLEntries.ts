@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { Account } from '@/modules/Accounts/models/Account.model';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PaymentReceivedGLEntries {
@@ -17,7 +18,9 @@ export class PaymentReceivedGLEntries {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(PaymentReceived.name)
-    private readonly paymentReceivedModel: typeof PaymentReceived,
+    private readonly paymentReceivedModel: TenantModelProxy<
+      typeof PaymentReceived
+    >,
   ) {}
 
   /**
@@ -28,13 +31,13 @@ export class PaymentReceivedGLEntries {
    */
   public writePaymentGLEntries = async (
     paymentReceiveId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     // Retrieves the given tenant metadata.
     const tenantMeta = await this.tenancyContext.getTenantMetadata();
 
     // Retrieves the payment receive with associated entries.
-    const paymentReceive = await this.paymentReceivedModel
+    const paymentReceive = await this.paymentReceivedModel()
       .query(trx)
       .findById(paymentReceiveId)
       .withGraphFetched('entries.invoice');
@@ -55,12 +58,12 @@ export class PaymentReceivedGLEntries {
    */
   public revertPaymentGLEntries = async (
     paymentReceiveId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     await this.ledgerStorage.deleteByReference(
       paymentReceiveId,
       'PaymentReceive',
-      trx
+      trx,
     );
   };
 
@@ -71,7 +74,7 @@ export class PaymentReceivedGLEntries {
    */
   public rewritePaymentGLEntries = async (
     paymentReceiveId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Reverts the payment GL entries.
     await this.revertPaymentGLEntries(paymentReceiveId, trx);
@@ -94,12 +97,12 @@ export class PaymentReceivedGLEntries {
     // Retrieve the A/R account of the given currency.
     const receivableAccount =
       await this.accountRepository.findOrCreateAccountReceivable(
-        paymentReceive.currencyCode
+        paymentReceive.currencyCode,
       );
     // Exchange gain/loss account.
-    const exGainLossAccount = await this.accountRepository.findBySlug(
-      'exchange-grain-loss'
-    ) as Account;
+    const exGainLossAccount = (await this.accountRepository.findBySlug(
+      'exchange-grain-loss',
+    )) as Account;
 
     const paymentReceivedGL = new PaymentReceivedGL(paymentReceive)
       .setARAccountId(receivableAccount.id)
@@ -108,5 +111,4 @@ export class PaymentReceivedGLEntries {
 
     return paymentReceivedGL.getLedger();
   };
-
 }
