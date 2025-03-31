@@ -17,7 +17,7 @@ import {
 import { GetCurrentOrganizationService } from './queries/GetCurrentOrganization.service';
 import { UpdateOrganizationService } from './commands/UpdateOrganization.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 
 @ApiTags('Organization')
 @Controller('organization')

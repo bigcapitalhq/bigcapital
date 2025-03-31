@@ -1,17 +1,11 @@
-import {
-  Controller,
-  Get,
-  Headers,
-  Query,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { castArray } from 'lodash';
 import { Response } from 'express';
 import { ITrialBalanceSheetQuery } from './TrialBalanceSheet.types';
 import { AcceptType } from '@/constants/accept-type';
 import { TrialBalanceSheetApplication } from './TrialBalanceSheetApplication';
-import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 
 @Controller('reports/trial-balance-sheet')
 @ApiTags('reports')
@@ -35,9 +29,8 @@ export class TrialBalanceSheetController {
     };
     // Retrieves in json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const { table, meta, query } = await this.trialBalanceSheetApp.table(
-        filter,
-      );
+      const { table, meta, query } =
+        await this.trialBalanceSheetApp.table(filter);
       return res.status(200).send({ table, meta, query });
       // Retrieves in xlsx format
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
@@ -66,9 +59,8 @@ export class TrialBalanceSheetController {
       res.send(pdfContent);
       // Retrieves in json format.
     } else {
-      const { data, query, meta } = await this.trialBalanceSheetApp.sheet(
-        filter,
-      );
+      const { data, query, meta } =
+        await this.trialBalanceSheetApp.sheet(filter);
       return res.status(200).send({ data, query, meta });
     }
   }

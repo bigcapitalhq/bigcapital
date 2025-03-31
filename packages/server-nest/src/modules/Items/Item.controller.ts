@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { TenantController } from '../Tenancy/Tenant.controller';
 import { SubscriptionGuard } from '../Subscription/interceptors/Subscription.guard';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { JwtAuthGuard, PublicRoute } from '../Auth/guards/Jwt.local';
 import { ItemsApplicationService } from './ItemsApplication.service';
 import {
   ApiOperation,
@@ -22,13 +22,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { IItemsFilter } from './types/Items.types';
-import { IItemDTO } from '@/interfaces/Item';
 import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 
 @Controller('/items')
 @UseGuards(SubscriptionGuard)
 @ApiTags('items')
-@PublicRoute()
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
     super();
@@ -112,6 +110,7 @@ export class ItemsController extends TenantController {
    * @returns The updated item id.
    */
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Edit the given item (product or service).' })
   @ApiResponse({
     status: 200,

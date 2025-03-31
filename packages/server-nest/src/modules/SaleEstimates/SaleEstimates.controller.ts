@@ -17,7 +17,7 @@ import {
   SaleEstimateMailOptionsDTO,
 } from './types/SaleEstimates.types';
 import { SaleEstimate } from './models/SaleEstimate';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import {
   CreateSaleEstimateDto,
   EditSaleEstimateDto,

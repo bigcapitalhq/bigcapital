@@ -3,7 +3,7 @@ import { SalesTaxLiabilitySummaryQuery } from './SalesTaxLiability.types';
 import { AcceptType } from '@/constants/accept-type';
 import { SalesTaxLiabilitySummaryApplication } from './SalesTaxLiabilitySummaryApplication';
 import { Response } from 'express';
-import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/sales-tax-liability-summary')

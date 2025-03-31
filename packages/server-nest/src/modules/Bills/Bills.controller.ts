@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { BillsApplication } from './Bills.application';
 import { IBillsFilter } from './Bills.types';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
 
 @Controller('bills')

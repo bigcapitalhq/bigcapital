@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { CreditNoteApplication } from './CreditNoteApplication.service';
 import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 

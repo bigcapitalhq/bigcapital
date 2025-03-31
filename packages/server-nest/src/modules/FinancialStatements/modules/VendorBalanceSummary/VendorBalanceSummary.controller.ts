@@ -4,7 +4,7 @@ import { VendorBalanceSummaryApplication } from './VendorBalanceSummaryApplicati
 import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 
 @Controller('/reports/vendor-balance-summary')
 @ApiTags('reports')

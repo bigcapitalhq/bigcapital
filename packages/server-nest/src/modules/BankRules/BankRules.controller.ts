@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { BankRulesApplication } from './BankRulesApplication';
 import { ICreateBankRuleDTO, IEditBankRuleDTO } from './types';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { BankRule } from './models/BankRule';
 import { CreateBankRuleDto } from './dtos/BankRule.dto';
 import { EditBankRuleDto } from './dtos/BankRule.dto';

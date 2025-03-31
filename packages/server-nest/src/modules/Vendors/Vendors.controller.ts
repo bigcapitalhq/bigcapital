@@ -13,7 +13,7 @@ import {
   IVendorOpeningBalanceEditDTO,
   IVendorsFilter,
 } from './types/Vendors.types';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateVendorDto } from './dtos/CreateVendor.dto';
 import { EditVendorDto } from './dtos/EditVendor.dto';

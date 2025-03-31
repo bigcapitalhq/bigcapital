@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { TransactionsByReferenceApplication } from './TransactionsByReferenceApplication';
 import { ITransactionsByReferenceQuery } from './TransactionsByReference.types';
-import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('reports/transactions-by-reference')

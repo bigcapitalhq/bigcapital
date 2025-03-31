@@ -13,7 +13,7 @@ import {
   GetItemCategoriesResponse,
   IItemCategoriesFilter,
 } from './ItemCategory.interfaces';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   CreateItemCategoryDto,

@@ -26,8 +26,8 @@ export class AuthenticationApplication {
    * @param {string} email - Email address.
    * @param {string} password - Password.
    */
-  public async signIn(signinDto: AuthSigninDto) {
-    return this.authSigninService.signIn(signinDto);
+  public async signIn(email: string, password: string) {
+    return this.authSigninService.signin(email, password);
   }
 
   /**

@@ -4,7 +4,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { TransactionsByVendorApplication } from './TransactionsByVendorApplication';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 
 @Controller('/reports/transactions-by-vendors')
 @ApiTags('reports')

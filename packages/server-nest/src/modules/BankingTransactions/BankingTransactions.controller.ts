@@ -8,11 +8,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { BankingTransactionsApplication } from './BankingTransactionsApplication.service';
-import {
-  IBankAccountsFilter,
-  ICashflowNewCommandDTO,
-} from './types/BankingTransactions.types';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { IBankAccountsFilter } from './types/BankingTransactions.types';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateBankTransactionDto } from './dtos/CreateBankTransaction.dto';
 

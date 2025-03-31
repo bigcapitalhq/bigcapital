@@ -3,7 +3,7 @@ import { TransactionsLockingService } from './commands/CommandTransactionsLockin
 import { TransactionsLockingGroup } from './types/TransactionsLocking.types';
 import { ITransactionLockingPartiallyDTO } from './types/TransactionsLocking.types';
 import { QueryTransactionsLocking } from './queries/QueryTransactionsLocking';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation } from '@nestjs/swagger';
 import { ApiTags } from '@nestjs/swagger';
 import {

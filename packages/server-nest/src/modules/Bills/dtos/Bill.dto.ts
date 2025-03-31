@@ -1,6 +1,7 @@
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
   IsArray,
   IsBoolean,
   IsDate,
@@ -81,7 +82,7 @@ export class CommandBillDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => BillEntryDto)
-  @MinLength(1)
+  @ArrayMinSize(1)
   entries: BillEntryDto[];
 
   @IsOptional()

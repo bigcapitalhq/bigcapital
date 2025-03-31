@@ -15,7 +15,7 @@ import {
 import { Request, Response, NextFunction } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { PaymentServicesApplication } from './PaymentServicesApplication';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { EditPaymentMethodDTO } from './types';
 
 @ApiTags('PaymentServices')

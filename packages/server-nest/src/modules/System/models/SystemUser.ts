@@ -1,10 +1,11 @@
+import * as bcrypt from 'bcrypt';
 import { BaseModel } from '@/models/Model';
 
 export class SystemUser extends BaseModel {
   public readonly firstName: string;
   public readonly lastName: string;
   public readonly email: string;
-  public readonly password: string;
+  public password: string;
 
   public readonly active: boolean;
   public readonly tenantId: number;
@@ -14,5 +15,16 @@ export class SystemUser extends BaseModel {
 
   static get tableName() {
     return 'users';
+  }
+
+  async hashPassword(): Promise<void> {
+    const salt = await bcrypt.genSalt();
+    if (!/^\$2[abxy]?\$\d+\$/.test(this.password)) {
+      this.password = await bcrypt.hash(this.password, salt);
+    }
+  }
+
+  async checkPassword(plainPassword: string): Promise<boolean> {
+    return await bcrypt.compare(plainPassword, this.password);
   }
 }

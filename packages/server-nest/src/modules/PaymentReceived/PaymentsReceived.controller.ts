@@ -17,7 +17,7 @@ import {
   IPaymentsReceivedFilter,
   PaymentReceiveMailOptsDTO,
 } from './types/PaymentReceived.types';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('payments-received')
@@ -108,7 +108,8 @@ export class PaymentReceivesController {
   @ApiOperation({ summary: 'Retrieves the payment received invoices.' })
   @ApiResponse({
     status: 200,
-    description: 'The payment received invoices have been successfully retrieved.',
+    description:
+      'The payment received invoices have been successfully retrieved.',
   })
   public getPaymentReceiveInvoices(
     @Param('id', ParseIntPipe) paymentReceiveId: number,
@@ -122,7 +123,8 @@ export class PaymentReceivesController {
   @ApiOperation({ summary: 'Retrieves the payment received details.' })
   @ApiResponse({
     status: 200,
-    description: 'The payment received details have been successfully retrieved.',
+    description:
+      'The payment received details have been successfully retrieved.',
   })
   public getPaymentReceive(
     @Param('id', ParseIntPipe) paymentReceiveId: number,

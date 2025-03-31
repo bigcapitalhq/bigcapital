@@ -4,7 +4,7 @@ import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';
 import { JournalSheetApplication } from './JournalSheetApplication';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PublicRoute } from '@/modules/Auth/Jwt.guard';
+import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 
 @Controller('/reports/journal')
 @ApiTags('reports')

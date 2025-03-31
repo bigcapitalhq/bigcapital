@@ -10,7 +10,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { SaleReceiptApplication } from './SaleReceiptApplication.service';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   CreateSaleReceiptDto,

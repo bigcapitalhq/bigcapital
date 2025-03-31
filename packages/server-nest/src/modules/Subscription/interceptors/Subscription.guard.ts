@@ -26,21 +26,21 @@ export class SubscriptionGuard implements CanActivate {
     context: ExecutionContext,
     subscriptionSlug: string = 'main', // Default value
   ): Promise<boolean> {
-    const tenant = await this.tenancyContext.getTenant();
-    const subscription = await this.planSubscriptionModel
-      .query()
-      .findOne('slug', subscriptionSlug)
-      .where('tenant_id', tenant.id);
+    // const tenant = await this.tenancyContext.getTenant();
+    // const subscription = await this.planSubscriptionModel
+    //   .query()
+    //   .findOne('slug', subscriptionSlug)
+    //   .where('tenant_id', tenant.id);
 
-    if (!subscription) {
-      throw new UnauthorizedException('Tenant has no subscription.');
-    }
+    // if (!subscription) {
+    //   throw new UnauthorizedException('Tenant has no subscription.');
+    // }
 
-    const isSubscriptionInactive = subscription.inactive();
+    // const isSubscriptionInactive = subscription.inactive();
 
-    if (isSubscriptionInactive) {
-      throw new UnauthorizedException('Organization subscription is inactive.');
-    }
+    // if (isSubscriptionInactive) {
+    //   throw new UnauthorizedException('Organization subscription is inactive.');
+    // }
     return true;
   }
 }

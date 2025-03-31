@@ -22,7 +22,7 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 
 @ApiTags('Roles')
 @Controller('roles')

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CustomersApplication } from './CustomersApplication.service';
 import { ICustomerOpeningBalanceEditDTO } from './types/Customers.types';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';

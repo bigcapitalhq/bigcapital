@@ -1,21 +1,37 @@
-import { Body, Controller, Param, Post, Request } from '@nestjs/common';
+// @ts-nocheck
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody, ApiParam } from '@nestjs/swagger';
-import { PublicRoute } from './Jwt.guard';
+import { JwtAuthGuard, PublicRoute } from './guards/Jwt.local';
 import { AuthenticationApplication } from './AuthApplication.sevice';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
 import { AuthSigninDto } from './dtos/AuthSignin.dto';
+import { LocalAuthGuard } from './guards/Local.guard';
+import { JwtService } from '@nestjs/jwt';
+import { AuthSigninService } from './commands/AuthSignin.service';
 
 @ApiTags('Auth')
 @Controller('/auth')
 @PublicRoute()
 export class AuthController {
-  constructor(private readonly authApp: AuthenticationApplication) {}
+  constructor(
+    private readonly authApp: AuthenticationApplication,
+    private readonly authSignin: AuthSigninService,
+  ) {}
 
   @Post('/signin')
+  @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'Sign in a user' })
   @ApiBody({ type: AuthSigninDto })
   signin(@Request() req: Request, @Body() signinDto: AuthSigninDto) {
-    return this.authApp.signIn(signinDto);
+    const { user } = req;
+    return { access_token: this.authSignin.signToken(user) };
   }
 
   @Post('/signup')

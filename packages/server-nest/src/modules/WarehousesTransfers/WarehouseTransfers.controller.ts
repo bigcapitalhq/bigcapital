@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { WarehouseTransferApplication } from './WarehouseTransferApplication';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import {
   CreateWarehouseTransferDto,
   EditWarehouseTransferDto,

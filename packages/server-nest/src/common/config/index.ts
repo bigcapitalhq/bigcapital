@@ -10,6 +10,7 @@ import posthog from './posthog';
 import stripePayment from './stripe-payment';
 import signupConfirmation from './signup-confirmation';
 import signupRestrictions from './signup-restrictions';
+import jwt from './jwt';
 
 export const config = [
   systemDatabase,
@@ -24,4 +25,5 @@ export const config = [
   stripePayment,
   signupConfirmation,
   signupRestrictions,
+  jwt,
 ];

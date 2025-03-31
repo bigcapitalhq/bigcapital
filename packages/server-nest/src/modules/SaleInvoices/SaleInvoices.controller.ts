@@ -17,7 +17,7 @@ import {
   SendInvoiceMailDTO,
 } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import {
   ApiHeader,
   ApiOperation,

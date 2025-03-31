@@ -9,9 +9,12 @@ import {
 } from '@nestjs/common';
 import { ManualJournalsApplication } from './ManualJournalsApplication.service';
 import { IManualJournalDTO } from './types/ManualJournals.types';
-import { PublicRoute } from '../Auth/Jwt.guard';
+import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateManualJournalDto, EditManualJournalDto } from './dtos/ManualJournal.dto';
+import {
+  CreateManualJournalDto,
+  EditManualJournalDto,
+} from './dtos/ManualJournal.dto';
 
 @Controller('manual-journals')
 @ApiTags('manual-journals')
@@ -40,7 +43,7 @@ export class ManualJournalsController {
   })
   public editManualJournal(
     @Param('id') manualJournalId: number,
-    @Body() manualJournalDTO: EditManualJournalDto
+    @Body() manualJournalDTO: EditManualJournalDto,
   ) {
     return this.manualJournalsApplication.editManualJournal(
       manualJournalId,
