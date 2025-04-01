@@ -3,11 +3,9 @@ import { InventoryItemDetailsApplication } from './InventoryItemDetailsApplicati
 import { IInventoryDetailsQuery } from './InventoryItemDetails.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
-import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('reports/inventory-item-details')
-@PublicRoute()
 @ApiTags('reports')
 export class InventoryItemDetailsController {
   constructor(

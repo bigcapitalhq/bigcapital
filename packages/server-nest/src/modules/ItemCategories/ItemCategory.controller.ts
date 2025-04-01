@@ -13,7 +13,6 @@ import {
   GetItemCategoriesResponse,
   IItemCategoriesFilter,
 } from './ItemCategory.interfaces';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   CreateItemCategoryDto,
@@ -22,7 +21,6 @@ import {
 
 @Controller('item-categories')
 @ApiTags('item-categories')
-@PublicRoute()
 export class ItemCategoryController {
   constructor(
     private readonly itemCategoryApplication: ItemCategoryApplication,

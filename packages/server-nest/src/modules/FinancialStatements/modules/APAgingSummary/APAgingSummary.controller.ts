@@ -4,11 +4,9 @@ import { IAPAgingSummaryQuery } from './APAgingSummary.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 
 @Controller('reports/payable-aging-summary')
 @ApiTags('reports')
-@PublicRoute()
 export class APAgingSummaryController {
   constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) {}
 

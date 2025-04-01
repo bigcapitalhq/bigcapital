@@ -4,12 +4,10 @@ import { Query, Res } from '@nestjs/common';
 import { ARAgingSummaryApplication } from './ARAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
-import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('reports/receivable-aging-summary')
 @ApiTags('reports')
-@PublicRoute()
 export class ARAgingSummaryController {
   constructor(private readonly ARAgingSummaryApp: ARAgingSummaryApplication) {}
 

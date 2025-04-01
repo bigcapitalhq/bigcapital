@@ -3,16 +3,9 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { PurchasesByItemsApplication } from './PurchasesByItemsApplication';
 import { IPurchasesByItemsReportQuery } from './types/PurchasesByItems.types';
 import { AcceptType } from '@/constants/accept-type';
-import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
-import {
-  ApiOperation,
-  ApiResponse,
-  ApiResponseProperty,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/purchases-by-items')
-@PublicRoute()
 @ApiTags('reports')
 export class PurchasesByItemReportController {
   constructor(

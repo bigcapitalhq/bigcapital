@@ -8,14 +8,11 @@ import {
   Put,
 } from '@nestjs/common';
 import { WarehousesApplication } from './WarehousesApplication.service';
-import { ICreateWarehouseDTO, IEditWarehouseDTO } from './Warehouse.types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateWarehouseDto, EditWarehouseDto } from './dtos/Warehouse.dto';
 
 @Controller('warehouses')
 @ApiTags('warehouses')
-@PublicRoute()
 export class WarehousesController {
   constructor(private warehousesApplication: WarehousesApplication) {}
 

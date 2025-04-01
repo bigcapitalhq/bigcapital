@@ -8,19 +8,15 @@ import {
   Req,
   Res,
   Next,
-  UsePipes,
-  ValidationPipe,
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { PaymentServicesApplication } from './PaymentServicesApplication';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { EditPaymentMethodDTO } from './types';
 
 @ApiTags('PaymentServices')
 @Controller('payment-services')
-@PublicRoute()
 export class PaymentServicesController {
   constructor(
     private readonly paymentServicesApp: PaymentServicesApplication,

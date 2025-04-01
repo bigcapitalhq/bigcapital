@@ -9,12 +9,10 @@ import {
 } from '@nestjs/common';
 import { BranchesApplication } from './BranchesApplication.service';
 import { CreateBranchDto, EditBranchDto } from './dtos/Branch.dto';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('branches')
 @ApiTags('branches')
-@PublicRoute()
 export class BranchesController {
   constructor(private readonly branchesApplication: BranchesApplication) {}
 

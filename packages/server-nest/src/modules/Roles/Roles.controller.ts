@@ -12,7 +12,6 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { Response, NextFunction } from 'express';
-import { Injectable } from '@nestjs/common';
 import { CreateRoleDto, EditRoleDto } from './dtos/Role.dto';
 import { RolesApplication } from './Roles.application';
 import {
@@ -22,11 +21,9 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 
 @ApiTags('Roles')
 @Controller('roles')
-@PublicRoute()
 export class RolesController {
   constructor(private readonly rolesApp: RolesApplication) {}
 

@@ -8,11 +8,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody, ApiParam } from '@nestjs/swagger';
-import { JwtAuthGuard, PublicRoute } from './guards/Jwt.local';
+import { JwtAuthGuard, PublicRoute } from './guards/jwt.guard';
 import { AuthenticationApplication } from './AuthApplication.sevice';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
 import { AuthSigninDto } from './dtos/AuthSignin.dto';
-import { LocalAuthGuard } from './guards/Local.guard';
+import { LocalAuthGuard } from './guards/local.guard';
 import { JwtService } from '@nestjs/jwt';
 import { AuthSigninService } from './commands/AuthSignin.service';
 

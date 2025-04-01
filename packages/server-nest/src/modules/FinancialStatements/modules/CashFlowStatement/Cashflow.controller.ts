@@ -3,11 +3,9 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { ICashFlowStatementQuery } from './Cashflow.types';
 import { AcceptType } from '@/constants/accept-type';
 import { CashflowSheetApplication } from './CashflowSheetApplication';
-import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('reports/cashflow-statement')
-@PublicRoute()
 @ApiTags('reports')
 export class CashflowController {
   constructor(private readonly cashflowSheetApp: CashflowSheetApplication) {}

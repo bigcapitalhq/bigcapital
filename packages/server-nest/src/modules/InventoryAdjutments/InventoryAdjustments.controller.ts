@@ -9,19 +9,14 @@ import {
   Query,
 } from '@nestjs/common';
 import { InventoryAdjustmentsApplicationService } from './InventoryAdjustmentsApplication.service';
-import {
-  IInventoryAdjustmentsFilter,
-  IQuickInventoryAdjustmentDTO,
-} from './types/InventoryAdjustments.types';
+import { IInventoryAdjustmentsFilter } from './types/InventoryAdjustments.types';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { IPaginationMeta } from '@/interfaces/Model';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAdjustment.dto';
 
 @Controller('inventory-adjustments')
 @ApiTags('inventory-adjustments')
-@PublicRoute()
 export class InventoryAdjustmentsController {
   constructor(
     private readonly inventoryAdjustmentsApplicationService: InventoryAdjustmentsApplicationService,

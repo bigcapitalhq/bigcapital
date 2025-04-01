@@ -9,15 +9,12 @@ import {
   Put,
 } from '@nestjs/common';
 import { BankRulesApplication } from './BankRulesApplication';
-import { ICreateBankRuleDTO, IEditBankRuleDTO } from './types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { BankRule } from './models/BankRule';
 import { CreateBankRuleDto } from './dtos/BankRule.dto';
 import { EditBankRuleDto } from './dtos/BankRule.dto';
 
 @Controller('banking/rules')
 @ApiTags('bank-rules')
-@PublicRoute()
 export class BankRulesController {
   constructor(private readonly bankRulesApplication: BankRulesApplication) {}
 

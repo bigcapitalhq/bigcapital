@@ -1,3 +1,4 @@
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -9,12 +10,9 @@ import {
 } from '@nestjs/common';
 import { PdfTemplateApplication } from './PdfTemplate.application';
 import { ICreateInvoicePdfTemplateDTO, IEditPdfTemplateDTO } from './types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('pdf-templates')
 @ApiTags('pdf-templates')
-@PublicRoute()
 export class PdfTemplatesController {
   constructor(
     private readonly pdfTemplateApplication: PdfTemplateApplication,

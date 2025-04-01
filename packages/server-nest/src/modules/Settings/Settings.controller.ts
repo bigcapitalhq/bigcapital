@@ -1,12 +1,10 @@
 import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { SettingsApplicationService } from './SettingsApplication.service';
 import { ISettingsDTO } from './Settings.types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('settings')
 @ApiTags('settings')
-@PublicRoute()
 export class SettingsController {
   constructor(
     private readonly settingsApplicationService: SettingsApplicationService,

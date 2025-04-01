@@ -9,14 +9,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { ExpensesApplication } from './ExpensesApplication.service';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { IExpensesFilter } from './Expenses.types';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
 
 @Controller('expenses')
 @ApiTags('expenses')
-@PublicRoute()
 export class ExpensesController {
   constructor(private readonly expensesApplication: ExpensesApplication) {}
 

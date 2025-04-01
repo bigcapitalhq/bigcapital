@@ -8,8 +8,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { ManualJournalsApplication } from './ManualJournalsApplication.service';
-import { IManualJournalDTO } from './types/ManualJournals.types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CreateManualJournalDto,
@@ -18,7 +16,6 @@ import {
 
 @Controller('manual-journals')
 @ApiTags('manual-journals')
-@PublicRoute()
 export class ManualJournalsController {
   constructor(private manualJournalsApplication: ManualJournalsApplication) {}
 

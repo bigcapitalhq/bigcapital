@@ -3,12 +3,10 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { IProfitLossSheetQuery } from './ProfitLossSheet.types';
 import { ProfitLossSheetApplication } from './ProfitLossSheetApplication';
 import { AcceptType } from '@/constants/accept-type';
-import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/profit-loss-sheet')
 @ApiTags('reports')
-@PublicRoute()
 export class ProfitLossSheetController {
   constructor(
     private readonly profitLossSheetApp: ProfitLossSheetApplication,

@@ -1,3 +1,4 @@
+import { ClsService } from 'nestjs-cls';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SystemUser } from '@/modules/System/models/SystemUser';
@@ -10,6 +11,7 @@ export class AuthSigninService {
     @Inject(SystemUser.name)
     private readonly systemUserModel: typeof SystemUser,
     private readonly jwtService: JwtService,
+    private readonly clsService: ClsService,
   ) {}
 
   /**
@@ -42,6 +44,11 @@ export class AuthSigninService {
     return user;
   }
 
+  /**
+   * Verifies the given jwt payload.
+   * @param {JwtPayload} payload
+   * @returns {Promise<any>}
+   */
   async verifyPayload(payload: JwtPayload): Promise<any> {
     let user: SystemUser;
 
@@ -50,6 +57,9 @@ export class AuthSigninService {
         .query()
         .findOne({ email: payload.sub })
         .throwIfNotFound();
+
+      this.clsService.set('tenantId', user.tenantId);
+      this.clsService.set('userId', user.id);
     } catch (error) {
       throw new UnauthorizedException(
         `There isn't any user with email: ${payload.sub}`,
@@ -58,6 +68,11 @@ export class AuthSigninService {
     return payload;
   }
 
+  /**
+   *
+   * @param {SystemUser} user
+   * @returns {string}
+   */
   signToken(user: SystemUser): string {
     const payload = {
       sub: user.email,

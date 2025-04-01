@@ -17,7 +17,6 @@ import {
   SaleEstimateMailOptionsDTO,
 } from './types/SaleEstimates.types';
 import { SaleEstimate } from './models/SaleEstimate';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import {
   CreateSaleEstimateDto,
   EditSaleEstimateDto,
@@ -25,7 +24,6 @@ import {
 
 @Controller('sale-estimates')
 @ApiTags('sale-estimates')
-@PublicRoute()
 export class SaleEstimatesController {
   /**
    * @param {SaleEstimatesApplication} saleEstimatesApplication - Sale estimates application.

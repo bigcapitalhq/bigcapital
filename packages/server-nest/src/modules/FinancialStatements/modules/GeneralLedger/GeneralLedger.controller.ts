@@ -4,11 +4,9 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { IGeneralLedgerSheetQuery } from './GeneralLedger.types';
 import { GeneralLedgerApplication } from './GeneralLedgerApplication';
 import { AcceptType } from '@/constants/accept-type';
-import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 
 @Controller('/reports/general-ledger')
 @ApiTags('reports')
-@PublicRoute()
 export class GeneralLedgerController {
   constructor(
     private readonly generalLedgerApplication: GeneralLedgerApplication,

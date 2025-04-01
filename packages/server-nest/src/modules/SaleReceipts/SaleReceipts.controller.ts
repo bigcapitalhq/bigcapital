@@ -10,7 +10,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { SaleReceiptApplication } from './SaleReceiptApplication.service';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   CreateSaleReceiptDto,
@@ -19,7 +18,6 @@ import {
 
 @Controller('sale-receipts')
 @ApiTags('sale-receipts')
-@PublicRoute()
 export class SaleReceiptsController {
   constructor(private saleReceiptApplication: SaleReceiptApplication) {}
 

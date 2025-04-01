@@ -17,11 +17,9 @@ import {
 import { GetCurrentOrganizationService } from './queries/GetCurrentOrganization.service';
 import { UpdateOrganizationService } from './commands/UpdateOrganization.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 
 @ApiTags('Organization')
 @Controller('organization')
-@PublicRoute()
 export class OrganizationController {
   constructor(
     private readonly buildOrganizationService: BuildOrganizationService,

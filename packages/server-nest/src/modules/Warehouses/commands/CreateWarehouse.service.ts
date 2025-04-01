@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import {
-  ICreateWarehouseDTO,
   IWarehouseCreatedPayload,
   IWarehouseCreatePayload,
 } from '../Warehouse.types';

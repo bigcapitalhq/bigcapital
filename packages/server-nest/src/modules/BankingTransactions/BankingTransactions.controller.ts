@@ -7,15 +7,13 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { BankingTransactionsApplication } from './BankingTransactionsApplication.service';
 import { IBankAccountsFilter } from './types/BankingTransactions.types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
-import { ApiTags } from '@nestjs/swagger';
 import { CreateBankTransactionDto } from './dtos/CreateBankTransaction.dto';
 
 @Controller('banking/transactions')
 @ApiTags('banking-transactions')
-@PublicRoute()
 export class BankingTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,

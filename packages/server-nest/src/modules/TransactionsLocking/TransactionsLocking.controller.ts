@@ -1,11 +1,10 @@
+import { ApiOperation } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Controller, Put, Get, Body, Param } from '@nestjs/common';
 import { TransactionsLockingService } from './commands/CommandTransactionsLockingService';
 import { TransactionsLockingGroup } from './types/TransactionsLocking.types';
 import { ITransactionLockingPartiallyDTO } from './types/TransactionsLocking.types';
 import { QueryTransactionsLocking } from './queries/QueryTransactionsLocking';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
-import { ApiOperation } from '@nestjs/swagger';
-import { ApiTags } from '@nestjs/swagger';
 import {
   CancelTransactionsLockingDto,
   TransactionsLockingDto,
@@ -13,7 +12,6 @@ import {
 
 @Controller('transactions-locking')
 @ApiTags('Transactions Locking')
-@PublicRoute()
 export class TransactionsLockingController {
   constructor(
     private readonly transactionsLockingService: TransactionsLockingService,

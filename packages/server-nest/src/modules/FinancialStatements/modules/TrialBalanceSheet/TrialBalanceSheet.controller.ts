@@ -5,11 +5,9 @@ import { Response } from 'express';
 import { ITrialBalanceSheetQuery } from './TrialBalanceSheet.types';
 import { AcceptType } from '@/constants/accept-type';
 import { TrialBalanceSheetApplication } from './TrialBalanceSheetApplication';
-import { PublicRoute } from '@/modules/Auth/guards/Jwt.local';
 
 @Controller('reports/trial-balance-sheet')
 @ApiTags('reports')
-@PublicRoute()
 export class TrialBalanceSheetController {
   constructor(
     private readonly trialBalanceSheetApp: TrialBalanceSheetApplication,

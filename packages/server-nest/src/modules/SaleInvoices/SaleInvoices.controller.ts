@@ -17,7 +17,6 @@ import {
   SendInvoiceMailDTO,
 } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import {
   ApiHeader,
   ApiOperation,
@@ -42,7 +41,6 @@ import {
   description: 'The authentication token',
   required: true,
 })
-@PublicRoute()
 export class SaleInvoicesController {
   constructor(private saleInvoiceApplication: SaleInvoiceApplication) {}
 

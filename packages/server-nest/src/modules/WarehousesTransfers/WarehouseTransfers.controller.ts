@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { WarehouseTransferApplication } from './WarehouseTransferApplication';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import {
   CreateWarehouseTransferDto,
   EditWarehouseTransferDto,
@@ -19,7 +18,6 @@ import {
 
 @Controller('warehouse-transfers')
 @ApiTags('warehouse-transfers')
-@PublicRoute()
 export class WarehouseTransfersController {
   /**
    * @param {WarehouseTransferApplication} warehouseTransferApplication - Warehouse transfer application.

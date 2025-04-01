@@ -10,13 +10,11 @@ import {
 } from '@nestjs/common';
 import { CreditNoteApplication } from './CreditNoteApplication.service';
 import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 
 @Controller('credit-notes')
 @ApiTags('credit-notes')
-@PublicRoute()
 export class CreditNotesController {
   /**
    * @param {CreditNoteApplication} creditNoteApplication - The credit note application service.

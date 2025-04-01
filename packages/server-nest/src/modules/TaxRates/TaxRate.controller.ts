@@ -8,13 +8,11 @@ import {
   Put,
 } from '@nestjs/common';
 import { TaxRatesApplication } from './TaxRate.application';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateTaxRateDto, EditTaxRateDto } from './dtos/TaxRate.dto';
 
 @Controller('tax-rates')
 @ApiTags('tax-rates')
-@PublicRoute()
 export class TaxRatesController {
   constructor(private readonly taxRatesApplication: TaxRatesApplication) {}
 

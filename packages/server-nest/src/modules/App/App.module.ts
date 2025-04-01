@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { join } from 'path';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import {
@@ -12,24 +12,19 @@ import {
   QueryResolver,
 } from 'nestjs-i18n';
 import { BullModule } from '@nestjs/bullmq';
-import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ClsModule } from 'nestjs-cls';
+import { ClsModule, ClsService } from 'nestjs-cls';
 import { AppController } from './App.controller';
 import { AppService } from './App.service';
 import { ItemsModule } from '../Items/items.module';
 import { config } from '../../common/config';
 import { SystemDatabaseModule } from '../System/SystemDB/SystemDB.module';
 import { SystemModelsModule } from '../System/SystemModels/SystemModels.module';
-import { JwtStrategy } from '../Auth/Jwt.strategy';
-import { jwtConstants } from '../Auth/Auth.constants';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { TenancyModelsModule } from '../Tenancy/TenancyModels/Tenancy.module';
 import { LoggerMiddleware } from '@/middleware/logger.middleware';
 import { ExcludeNullInterceptor } from '@/interceptors/ExcludeNull.interceptor';
-import { JwtAuthGuard } from '../Auth/Jwt.guard';
 import { UserIpInterceptor } from '@/interceptors/user-ip.interceptor';
-import { TenancyGlobalMiddleware } from '../Tenancy/TenancyGlobal.middleware';
 import { TransformerModule } from '../Transformer/Transformer.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { ExpensesModule } from '../Expenses/Expenses.module';
@@ -107,10 +102,6 @@ import { AuthModule } from '../Auth/Auth.module';
       ],
     }),
     PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
-    }),
     BullModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -125,9 +116,8 @@ import { AuthModule } from '../Auth/Auth.module';
       global: true,
       middleware: {
         mount: true,
-        setup: (cls, req: Request, res: Response) => {
+        setup: (cls: ClsService, req: Request, res: Response) => {
           cls.set('organizationId', req.headers['organization-id']);
-          cls.set('userId', 1);
         },
         generateId: true,
         saveReq: true,
@@ -148,6 +138,7 @@ import { AuthModule } from '../Auth/Auth.module';
     ChromiumlyTenancyModule,
     TransformerModule,
     MailModule,
+    AuthModule,
     ItemsModule,
     ItemCategoryModule,
     AccountsModule,
@@ -194,17 +185,12 @@ import { AuthModule } from '../Auth/Auth.module';
     OrganizationModule,
     TenantDBManagerModule,
     PaymentServicesModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [
     {
       provide: APP_INTERCEPTOR,
       useClass: SerializeInterceptor,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
     },
     {
       provide: APP_INTERCEPTOR,
@@ -215,17 +201,12 @@ import { AuthModule } from '../Auth/Auth.module';
       useClass: ExcludeNullInterceptor,
     },
     AppService,
-    JwtStrategy,
   ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
-
-    consumer
-      .apply(TenancyGlobalMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

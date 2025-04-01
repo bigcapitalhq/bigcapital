@@ -17,12 +17,10 @@ import {
   IPaymentsReceivedFilter,
   PaymentReceiveMailOptsDTO,
 } from './types/PaymentReceived.types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('payments-received')
 @ApiTags('payments-received')
-@PublicRoute()
 export class PaymentReceivesController {
   constructor(private paymentReceivesApplication: PaymentReceivesApplication) {}
 

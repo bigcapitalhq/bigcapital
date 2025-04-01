@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { TenantController } from '../Tenancy/Tenant.controller';
 import { SubscriptionGuard } from '../Subscription/interceptors/Subscription.guard';
-import { JwtAuthGuard, PublicRoute } from '../Auth/guards/Jwt.local';
+import { JwtAuthGuard } from '../Auth/guards/jwt.guard';
 import { ItemsApplicationService } from './ItemsApplication.service';
 import {
   ApiOperation,

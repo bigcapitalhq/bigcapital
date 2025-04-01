@@ -13,14 +13,12 @@ import {
   IVendorOpeningBalanceEditDTO,
   IVendorsFilter,
 } from './types/Vendors.types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateVendorDto } from './dtos/CreateVendor.dto';
 import { EditVendorDto } from './dtos/EditVendor.dto';
 
 @Controller('vendors')
 @ApiTags('vendors')
-@PublicRoute()
 export class VendorsController {
   constructor(private vendorsApplication: VendorsApplication) {}
 

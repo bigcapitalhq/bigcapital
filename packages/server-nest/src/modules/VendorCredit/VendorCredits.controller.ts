@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { VendorCreditsApplicationService } from './VendorCreditsApplication.service';
 import { IVendorCreditsQueryDTO } from './types/VendorCredit.types';
-import { PublicRoute } from '../Auth/guards/Jwt.local';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   CreateVendorCreditDto,
@@ -19,7 +18,6 @@ import {
 
 @Controller('vendor-credits')
 @ApiTags('vendor-credits')
-@PublicRoute()
 export class VendorCreditsController {
   constructor(
     private readonly vendorCreditsApplication: VendorCreditsApplicationService,

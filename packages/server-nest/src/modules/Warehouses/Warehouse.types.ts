@@ -88,13 +88,11 @@ export interface IWarehouseDeletedPayload {
   trx: Knex.Transaction;
 }
 export interface IWarehouseCreatePayload {
-  // tenantId: number;
   warehouseDTO: ICreateWarehouseDTO;
   trx: Knex.Transaction;
 }
 
 export interface IWarehouseCreatedPayload {
-  // tenantId: number;
   warehouse: IWarehouse;
   warehouseDTO: ICreateWarehouseDTO;
   trx: Knex.Transaction;

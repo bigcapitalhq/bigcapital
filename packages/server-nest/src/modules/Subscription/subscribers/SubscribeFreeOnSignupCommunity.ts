@@ -17,13 +17,9 @@ export class SubscribeFreeOnSignupCommunity {
    * @returns {Promise<void>}
    */
   @OnEvent(events.auth.signUp)
-  async subscribeFreeOnSigupCommunity({
-    signupDTO,
-    tenant,
-    user,
-  }) {
+  async subscribeFreeOnSigupCommunity({ signupDTO, tenant, user }) {
     if (this.configService.get('hostedOnBigcapitalCloud')) return null;
 
-    await this.subscriptionApp.createNewSubscription('free');
+    // await this.subscriptionApp.createNewSubscription('free');
   }
 }

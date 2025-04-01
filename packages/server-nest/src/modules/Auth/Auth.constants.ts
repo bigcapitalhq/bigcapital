@@ -17,3 +17,12 @@ export const ERRORS = {
   SIGNUP_CONFIRM_TOKEN_INVALID: 'SIGNUP_CONFIRM_TOKEN_INVALID',
   USER_ALREADY_VERIFIED: 'USER_ALREADY_VERIFIED',
 };
+
+export const IS_PUBLIC_ROUTE = 'isPublic';
+
+export const SendResetPasswordMailQueue = 'SendResetPasswordMailQueue';
+export const SendResetPasswordMailJob = 'SendResetPasswordMailJob';
+
+export const SendSignupVerificationMailQueue =
+  'SendSignupVerificationMailQueue';
+export const SendSignupVerificationMailJob = 'SendSignupVerificationMailJob';
