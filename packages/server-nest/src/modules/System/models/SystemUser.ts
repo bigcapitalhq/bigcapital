@@ -17,6 +17,20 @@ export class SystemUser extends BaseModel {
     return 'users';
   }
 
+  /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      /**
+       * Filters the invite accepted users.
+       */
+      inviteAccepted(query) {
+        query.whereNotNull('invite_accepted_at');
+      },
+    };
+  }
+
   async hashPassword(): Promise<void> {
     const salt = await bcrypt.genSalt();
     if (!/^\$2[abxy]?\$\d+\$/.test(this.password)) {

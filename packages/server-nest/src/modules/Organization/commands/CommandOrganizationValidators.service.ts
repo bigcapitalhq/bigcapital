@@ -9,14 +9,7 @@ export class CommandOrganizationValidators {
   constructor(
     private readonly baseCurrencyMutateLocking: OrganizationBaseCurrencyLocking,
   ) {}
-
-  /**
-   * Throw base currency mutate locked error.
-   */
-  throwBaseCurrencyMutateLocked() {
-    throw new ServiceError(ERRORS.BASE_CURRENCY_MUTATE_LOCKED);
-  }
-
+  
   /**
    * Validate mutate base currency ability.
    * @param {Tenant} tenant -
@@ -35,7 +28,7 @@ export class CommandOrganizationValidators {
         );
 
       if (isLocked) {
-        this.throwBaseCurrencyMutateLocked();
+        throw new ServiceError(ERRORS.BASE_CURRENCY_MUTATE_LOCKED);
       }
     }
   }

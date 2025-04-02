@@ -29,7 +29,7 @@ export class BuildOrganizationService {
     private readonly tenantRepository: TenantRepository,
 
     @InjectQueue(OrganizationBuildQueue)
-    private readonly computeItemCostProcessor: Queue,
+    private readonly organizationBuildQueue: Queue,
   ) {}
 
   /**
@@ -44,9 +44,9 @@ export class BuildOrganizationService {
     // Throw error if the tenant is already initialized.
     throwIfTenantInitizalized(tenant);
 
-    await this.tenantsManager.dropDatabaseIfExists(tenant);
-    await this.tenantsManager.createDatabase(tenant);
-    await this.tenantsManager.migrateTenant(tenant);
+    await this.tenantsManager.dropDatabaseIfExists();
+    await this.tenantsManager.createDatabase();
+    await this.tenantsManager.migrateTenant();
 
     // Migrated tenant.
     const migratedTenant = await tenant.$query().withGraphFetched('metadata');
@@ -56,7 +56,7 @@ export class BuildOrganizationService {
     //   this.tenantsManager.getSeedMigrationContext(migratedTenant);
 
     // Seed tenant.
-    await this.tenantsManager.seedTenant(migratedTenant, {});
+    // await this.tenantsManager.seedTenant(migratedTenant, {});
 
     // Throws `onOrganizationBuild` event.
     await this.eventPublisher.emitAsync(events.organization.build, {
@@ -101,7 +101,8 @@ export class BuildOrganizationService {
     // Saves the tenant metadata.
     await this.tenantRepository.saveMetadata(tenant.id, transformedBuildDTO);
 
-    const jobMeta = await this.computeItemCostProcessor.add(
+    // Run the organization database build job.
+    const jobMeta = await this.organizationBuildQueue.add(
       OrganizationBuildQueueJob,
       {
         organizationId: tenant.organizationId,
@@ -124,6 +125,8 @@ export class BuildOrganizationService {
    * @param {number} jobId
    */
   public async revertBuildRunJob() {
-    // await Tenant.markAsBuildCompleted(tenantId, jobId);
+    const tenant = await this.tenancyContext.getTenant();
+
+    await this.tenantRepository.markAsBuildCompleted().findById(tenant.id);
   }
 }

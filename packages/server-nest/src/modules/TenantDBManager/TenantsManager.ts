@@ -10,11 +10,13 @@ import {
 } from './_utils';
 import { SeedMigration } from '@/libs/migration-seed/SeedMigration';
 import { TenantRepository } from '../System/repositories/Tenant.repository';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Injectable()
 export class TenantsManagerService {
   constructor(
     private readonly tenantDbManager: TenantDBManager,
+    private readonly tenancyContext: TenancyContext,
     private readonly eventEmitter: EventEmitter2,
     private readonly tenantRepository: TenantRepository,
   ) {}
@@ -29,14 +31,13 @@ export class TenantsManagerService {
 
   /**
    * Creates a new tenant database.
-   * @param {ITenant} tenant -
    * @return {Promise<void>}
    */
-  public async createDatabase(tenant: TenantModel): Promise<void> {
+  public async createDatabase(): Promise<void> {
+    const tenant = await this.tenancyContext.getTenant();
     throwErrorIfTenantAlreadyInitialized(tenant);
 
-    await this.tenantDbManager.createDatabase(tenant);
-
+    await this.tenantDbManager.createDatabase();
     await this.eventEmitter.emitAsync(events.tenantManager.databaseCreated);
   }
 
@@ -44,9 +45,8 @@ export class TenantsManagerService {
    * Drops the database if the given tenant.
    * @param {number} tenantId
    */
-  async dropDatabaseIfExists(tenant: TenantModel) {
-    // Drop the database if exists.
-    await this.tenantDbManager.dropDatabaseIfExists(tenant);
+  async dropDatabaseIfExists() {
+    await this.tenantDbManager.dropDatabaseIfExists();
   }
 
   /**
@@ -54,21 +54,22 @@ export class TenantsManagerService {
    * @param   {ITenant} tenant
    * @returns {Promise<boolean>}
    */
-  public async hasDatabase(tenant: TenantModel): Promise<boolean> {
-    return this.tenantDbManager.databaseExists(tenant);
+  public async hasDatabase(): Promise<boolean> {
+    return this.tenantDbManager.databaseExists();
   }
 
   /**
    * Migrates the tenant database.
-   * @param  {ITenant} tenant
    * @return {Promise<void>}
    */
-  public async migrateTenant(tenant: TenantModel): Promise<void> {
+  public async migrateTenant(): Promise<void> {
+    const tenant = await this.tenancyContext.getTenant();
+   
     // Throw error if the tenant already initialized.
     throwErrorIfTenantAlreadyInitialized(tenant);
 
     // Migrate the database tenant.
-    await this.tenantDbManager.migrate(tenant);
+    await this.tenantDbManager.migrate();
 
     // Mark the tenant as initialized.
     await this.tenantRepository.markAsInitialized().findById(tenant.id);
@@ -81,7 +82,6 @@ export class TenantsManagerService {
 
   /**
    * Seeds the tenant database.
-   * @param  {ITenant} tenant
    * @return {Promise<void>}
    */
   public async seedTenant(tenant: TenantModel, tenancyContext): Promise<void> {
@@ -101,23 +101,5 @@ export class TenantsManagerService {
     this.eventEmitter.emitAsync(events.tenantManager.tenantSeeded, {
       tenantId: tenant.id,
     });
-  }
-
-  /**
-   * Initialize knex instance or retrieve the instance of cache map.
-   * @param {ITenant} tenant
-   * @returns {Knex}
-   */
-  public setupKnexInstance(tenant: TenantModel) {
-    // return this.tenantDbManager.setupKnexInstance(tenant);
-  }
-
-  /**
-   * Retrieve tenant knex instance or throw error in case was not initialized.
-   * @param {number} tenantId
-   * @returns {Knex}
-   */
-  public getKnexInstance(tenantId: number) {
-    return this.tenantDbManager.getKnexInstance(tenantId);
   }
 }

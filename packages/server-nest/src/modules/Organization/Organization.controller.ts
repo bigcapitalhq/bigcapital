@@ -1,3 +1,4 @@
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import {
   Controller,
   Post,
@@ -16,10 +17,13 @@ import {
 } from './dtos/Organization.dto';
 import { GetCurrentOrganizationService } from './queries/GetCurrentOrganization.service';
 import { UpdateOrganizationService } from './commands/UpdateOrganization.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { IgnoreTenantInitializedRoute } from '../Tenancy/EnsureTenantIsInitialized.guard';
+import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
 
 @ApiTags('Organization')
 @Controller('organization')
+@IgnoreTenantInitializedRoute()
+@IgnoreTenantSeededRoute()
 export class OrganizationController {
   constructor(
     private readonly buildOrganizationService: BuildOrganizationService,

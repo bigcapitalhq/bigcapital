@@ -12,6 +12,7 @@
     "server2:start": "lerna run start:dev --scope \"@bigcapital/server2\"",
     "test:watch": "lerna run test:watch",
     "test:e2e": "lerna run test:e2e",
+    "start:debug": "lerna run start:debug",
     "prepare": "husky install"
   },
   "devDependencies": {

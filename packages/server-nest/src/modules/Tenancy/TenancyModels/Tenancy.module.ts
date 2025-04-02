@@ -40,8 +40,6 @@ import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceive
 import { Model } from 'objection';
 import { ClsModule } from 'nestjs-cls';
 import { TenantUser } from './models/TenantUser.model';
-import { APP_GUARD } from '@nestjs/core';
-import { TenancyGlobalGuard } from '../TenancyGlobal.guard';
 
 const models = [
   Item,
@@ -108,11 +106,5 @@ const modelProviders = models.map((model) => RegisterTenancyModel(model));
 @Module({
   imports: [...modelProviders],
   exports: [...modelProviders],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: TenancyGlobalGuard,
-    },
-  ],
 })
 export class TenancyModelsModule {}

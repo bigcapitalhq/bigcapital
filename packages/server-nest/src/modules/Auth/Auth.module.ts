@@ -26,6 +26,7 @@ import {
 import { SendResetPasswordMailProcessor } from './processors/SendResetPasswordMail.processor';
 import { SendSignupVerificationMailProcessor } from './processors/SendSignupVerificationMail.processor';
 import { MailModule } from '../Mail/Mail.module';
+import { ConfigService } from '@nestjs/config';
 
 const models = [RegisterTenancyModel(PasswordReset)];
 
@@ -34,9 +35,13 @@ const models = [RegisterTenancyModel(PasswordReset)];
   imports: [
     MailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      signOptions: { expiresIn: '1d', algorithm: 'HS384' },
-      verifyOptions: { algorithms: ['HS384'] },
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('jwt.secret'),
+        signOptions: { expiresIn: '1d', algorithm: 'HS384' },
+        verifyOptions: { algorithms: ['HS384'] },
+      }),
     }),
     TenantDBManagerModule,
     BullModule.registerQueue({ name: SendResetPasswordMailQueue }),

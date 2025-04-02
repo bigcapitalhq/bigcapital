@@ -22,9 +22,7 @@ import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBase
     OrganizationBaseCurrencyLocking,
   ],
   imports: [
-    BullModule.registerQueue({
-      name: OrganizationBuildQueue,
-    }),
+    BullModule.registerQueue({ name: OrganizationBuildQueue }),
     TenantDBManagerModule,
   ],
   controllers: [OrganizationController],

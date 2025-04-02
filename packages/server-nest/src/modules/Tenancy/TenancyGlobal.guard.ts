@@ -3,9 +3,14 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  SetMetadata,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_ROUTE } from '../Auth/Auth.constants';
+
+export const IS_TENANT_AGNOSTIC = 'IS_TENANT_AGNOSTIC';
+
+export const TenantAgnosticRoute = () => SetMetadata(IS_TENANT_AGNOSTIC, true);
 
 @Injectable()
 export class TenancyGlobalGuard implements CanActivate {
@@ -23,8 +28,12 @@ export class TenancyGlobalGuard implements CanActivate {
     const isPublic = this.reflector.getAllAndOverride<boolean>(
       IS_PUBLIC_ROUTE,
       [context.getHandler(), context.getClass()],
+    )
+    const isTenantAgnostic = this.reflector.getAllAndOverride<boolean>(
+      IS_TENANT_AGNOSTIC,
+      [context.getHandler(), context.getClass()],
     );
-    if (isPublic) {
+    if (isPublic || isTenantAgnostic) {
       return true;
     }
     if (!organizationId) {

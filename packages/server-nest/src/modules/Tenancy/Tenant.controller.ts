@@ -1,7 +1,4 @@
-import { UseGuards } from '@nestjs/common';
-import { EnsureTenantIsSeededGuard } from '../Tenancy/EnsureTenantIsSeeded.guards';
-import { EnsureTenantIsInitializedGuard } from '../Tenancy/EnsureTenantIsInitialized.guard';
+import { Controller } from "@nestjs/common";
 
-@UseGuards(EnsureTenantIsInitializedGuard)
-@UseGuards(EnsureTenantIsSeededGuard)
+@Controller('/')
 export class TenantController {}

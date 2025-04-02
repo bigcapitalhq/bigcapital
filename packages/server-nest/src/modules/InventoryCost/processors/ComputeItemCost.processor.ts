@@ -1,6 +1,6 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { JOB_REF, Processor, WorkerHost } from '@nestjs/bullmq';
-import { Inject, Scope } from '@nestjs/common';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Scope } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { ClsService } from 'nestjs-cls';
 import { TenantJobPayload } from '@/interfaces/Tenant';

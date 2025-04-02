@@ -7,6 +7,8 @@ import { ConfigService } from '@nestjs/config';
 import { SystemKnexConnection } from '../System/SystemDB/SystemDB.constants';
 import { Inject, Injectable } from '@nestjs/common';
 import { TenantModel } from '../System/models/TenantModel';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TENANCY_DB_CONNECTION } from '../Tenancy/TenancyDB/TenancyDB.constants';
 
 @Injectable()
 export class TenantDBManager {
@@ -14,6 +16,10 @@ export class TenantDBManager {
 
   constructor(
     private readonly configService: ConfigService,
+    private readonly tenancyContext: TenancyContext,
+
+    @Inject(TENANCY_DB_CONNECTION)
+    private readonly tenantKnex: () => Knex,
 
     @Inject(SystemKnexConnection)
     private readonly systemKnex: Knex,
@@ -25,7 +31,7 @@ export class TenantDBManager {
    */
   private getDatabaseName(tenant: TenantModel) {
     return sanitizeDatabaseName(
-      `${this.configService.get('tenant.db_name_prefix')}${tenant.organizationId}`,
+      `${this.configService.get('tenantDatabase.dbNamePrefix')}${tenant.organizationId}`,
     );
   }
 
@@ -33,8 +39,10 @@ export class TenantDBManager {
    * Determines the tenant database weather exists.
    * @return {Promise<boolean>}
    */
-  public async databaseExists(tenant: TenantModel) {
+  public async databaseExists() {
+    const tenant = await this.tenancyContext.getTenant();
     const databaseName = this.getDatabaseName(tenant);
+
     const results = await this.systemKnex.raw(
       'SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "' +
         databaseName +
@@ -48,10 +56,14 @@ export class TenantDBManager {
    * @throws {TenantAlreadyInitialized}
    * @return {Promise<void>}
    */
-  public async createDatabase(tenant: TenantModel): Promise<void> {
+  public async createDatabase(): Promise<void> {
+    const tenant = await this.tenancyContext.getTenant();
+    const databaseName = this.getDatabaseName(tenant);
+
+    console.log(databaseName, 'name')
+
     await this.throwErrorIfTenantDBExists(tenant);
 
-    const databaseName = this.getDatabaseName(tenant);
     await this.systemKnex.raw(
       `CREATE DATABASE ${databaseName} DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci`,
     );
@@ -61,7 +73,8 @@ export class TenantDBManager {
    * Dropdowns the tenant database if it was exist.
    * @param {ITenant} tenant -
    */
-  public async dropDatabaseIfExists(tenant: TenantModel) {
+  public async dropDatabaseIfExists() {
+    const tenant = await this.tenancyContext.getTenant();
     const isExists = await this.databaseExists(tenant);
 
     if (!isExists) {
@@ -72,9 +85,9 @@ export class TenantDBManager {
 
   /**
    * dropdowns the tenant's database.
-   * @param {ITenant} tenant
    */
-  public async dropDatabase(tenant: TenantModel) {
+  public async dropDatabase() {
+    const tenant = await this.tenancyContext.getTenant();
     const databaseName = this.getDatabaseName(tenant);
 
     await this.systemKnex.raw(`DROP DATABASE IF EXISTS ${databaseName}`);
@@ -84,53 +97,19 @@ export class TenantDBManager {
    * Migrate tenant database schema to the latest version.
    * @return {Promise<void>}
    */
-  public async migrate(tenant: TenantModel): Promise<void> {
-    const knex = this.setupKnexInstance(tenant);
-    await knex.migrate.latest();
+  public async migrate(): Promise<void> {
+    await this.tenantKnex().migrate.latest();
   }
 
   /**
    * Seeds initial data to the tenant database.
    * @return {Promise<void>}
    */
-  public async seed(tenant: TenantModel): Promise<void> {
-    const knex = this.setupKnexInstance(tenant);
-
-    await knex.migrate.latest({
+  public async seed(): Promise<void> {
+    await this.systemKnex.migrate.latest({
       ...tenantSeedConfig(tenant),
       disableMigrationsListValidation: true,
     });
-  }
-
-  /**
-   * Retrieve the knex instance of tenant.
-   * @return {Knex}
-   */
-  private setupKnexInstance(tenant: TenantModel) {
-    const key: string = `${tenant.id}`;
-    let knexInstance = TenantDBManager.knexCache[key];
-
-    if (!knexInstance) {
-      knexInstance = knex({
-        ...tenantKnexConfig(tenant),
-        ...knexSnakeCaseMappers({ upperCase: true }),
-      });
-      TenantDBManager.knexCache[key] = knexInstance;
-    }
-    return knexInstance;
-  }
-
-  /**
-   * Retrieve knex instance from the givne tenant.
-   */
-  public getKnexInstance(tenantId: number) {
-    const key: string = `${tenantId}`;
-    let knexInstance = TenantDBManager.knexCache[key];
-
-    if (!knexInstance) {
-      throw new Error('Knex instance is not initialized yut.');
-    }
-    return knexInstance;
   }
 
   /**

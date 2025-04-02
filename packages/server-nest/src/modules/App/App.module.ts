@@ -75,6 +75,7 @@ import { OrganizationModule } from '../Organization/Organization.module';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
 import { PaymentServicesModule } from '../PaymentServices/PaymentServices.module';
 import { AuthModule } from '../Auth/Auth.module';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 
 @Module({
   imports: [
@@ -135,6 +136,7 @@ import { AuthModule } from '../Auth/Auth.module';
     }),
     TenancyDatabaseModule,
     TenancyModelsModule,
+    TenancyModule,
     ChromiumlyTenancyModule,
     TransformerModule,
     MailModule,
