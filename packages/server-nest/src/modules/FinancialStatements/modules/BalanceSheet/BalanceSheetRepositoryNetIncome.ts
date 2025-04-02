@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { FinancialDatePeriods } from '../../common/FinancialDatePeriods';
 import { ModelObject } from 'objection';

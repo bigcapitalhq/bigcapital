@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { TenantDBManager } from './TenantDBManager';
+import { Inject, Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { I18nService } from 'nestjs-i18n';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { TenantDBManager } from './TenantDBManager';
 import { events } from '@/common/events/events';
 import { TenantModel } from '../System/models/TenantModel';
 import {
@@ -11,6 +13,7 @@ import {
 import { SeedMigration } from '@/libs/migration-seed/SeedMigration';
 import { TenantRepository } from '../System/repositories/Tenant.repository';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TENANCY_DB_CONNECTION } from '../Tenancy/TenancyDB/TenancyDB.constants';
 
 @Injectable()
 export class TenantsManagerService {
@@ -19,6 +22,10 @@ export class TenantsManagerService {
     private readonly tenancyContext: TenancyContext,
     private readonly eventEmitter: EventEmitter2,
     private readonly tenantRepository: TenantRepository,
+    private readonly i18nService: I18nService,
+
+    @Inject(TENANCY_DB_CONNECTION)
+    private readonly tenantKnex: () => Knex,
   ) {}
 
   /**
@@ -84,15 +91,19 @@ export class TenantsManagerService {
    * Seeds the tenant database.
    * @return {Promise<void>}
    */
-  public async seedTenant(tenant: TenantModel, tenancyContext): Promise<void> {
+  public async seedTenant(): Promise<void> {
+    const tenant = await this.tenancyContext.getTenant();
+
     // Throw error if the tenant is not built yet.
     throwErrorIfTenantNotBuilt(tenant);
 
     // Throw error if the tenant is not seeded yet.
     throwErrorIfTenantAlreadySeeded(tenant);
 
+    const seedContext = await this.getSeedMigrationContext();
+
     // Seeds the organization database data.
-    await new SeedMigration(tenancyContext.knex, tenancyContext).latest();
+    await new SeedMigration(this.tenantKnex(), seedContext).latest();
 
     // Mark the tenant as seeded in specific date.
     await this.tenantRepository.markAsSeeded().findById(tenant.id);
@@ -101,5 +112,20 @@ export class TenantsManagerService {
     this.eventEmitter.emitAsync(events.tenantManager.tenantSeeded, {
       tenantId: tenant.id,
     });
+  }
+
+  /**
+   * Initialize seed migration contxt.
+   * @param {ITenant} tenant
+   * @returns
+   */
+  public async getSeedMigrationContext() {
+    const tenant = await this.tenancyContext.getTenant();
+
+    return {
+      knex: this.tenantKnex(),
+      i18n: this.i18nService,
+      tenant,
+    };
   }
 }

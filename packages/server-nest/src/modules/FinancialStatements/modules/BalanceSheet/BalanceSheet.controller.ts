@@ -1,10 +1,12 @@
 import { Response } from 'express';
-import { Controller, Headers, Query, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { IBalanceSheetQuery } from './BalanceSheet.types';
 import { AcceptType } from '@/constants/accept-type';
 import { BalanceSheetApplication } from './BalanceSheetApplication';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/balance-sheet')
+@ApiTags('reports')
 export class BalanceSheetStatementController {
   constructor(private readonly balanceSheetApp: BalanceSheetApplication) {}
 
@@ -14,6 +16,9 @@ export class BalanceSheetStatementController {
    * @param {Response} res - Response.
    * @param {string} acceptHeader - Accept header.
    */
+  @Get('')
+  @ApiOperation({ summary: 'Get balance sheet statement' })
+  @ApiResponse({ status: 200, description: 'Balance sheet statement' })
   public async balanceSheet(
     @Query() query: IBalanceSheetQuery,
     @Res() res: Response,

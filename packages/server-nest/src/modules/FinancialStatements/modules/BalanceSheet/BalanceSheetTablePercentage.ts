@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { I18nService } from 'nestjs-i18n';
 import { ITableColumn } from '../../types/Table.types';

@@ -16,10 +16,12 @@ import { JournalSheetModule } from './modules/JournalSheet/JournalSheet.module';
 import { ProfitLossSheetModule } from './modules/ProfitLossSheet/ProfitLossSheet.module';
 import { CashflowStatementModule } from './modules/CashFlowStatement/CashflowStatement.module';
 import { VendorBalanceSummaryModule } from './modules/VendorBalanceSummary/VendorBalanceSummary.module';
+import { BalanceSheetModule } from './modules/BalanceSheet/BalanceSheet.module';
 
 @Module({
   providers: [],
   imports: [
+    BalanceSheetModule,
     PurchasesByItemsModule,
     CustomerBalanceSummaryModule,
     VendorBalanceSummaryModule,

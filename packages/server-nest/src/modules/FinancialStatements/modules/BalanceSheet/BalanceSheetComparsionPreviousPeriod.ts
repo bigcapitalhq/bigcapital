@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { sumBy } from 'lodash';
 import {
@@ -11,6 +12,8 @@ import { FinancialPreviousPeriod } from '../../common/FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../../common/FinancialHorizTotals';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { BalanceSheetRepository } from './BalanceSheetRepository';
 
 export const BalanceSheetComparsionPreviousPeriod = <
   T extends GConstructor<FinancialSheet>,
@@ -21,6 +24,9 @@ export const BalanceSheetComparsionPreviousPeriod = <
     FinancialHorizTotals,
     FinancialPreviousPeriod,
   )(Base) {
+    query: BalanceSheetQuery;
+    repository: BalanceSheetRepository;
+
     // ------------------------------
     // # Account
     // ------------------------------

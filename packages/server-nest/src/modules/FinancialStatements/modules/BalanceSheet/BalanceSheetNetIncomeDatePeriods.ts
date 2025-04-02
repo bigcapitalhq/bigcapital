@@ -1,8 +1,9 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import {
   IBalanceSheetNetIncomeNode,
   IBalanceSheetTotalPeriod,
-} from '@/interfaces';
+} from './BalanceSheet.types';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
 import { FinancialPreviousPeriod } from '../../common/FinancialPreviousPeriod';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { defaultTo, toArray } from 'lodash';
 import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';

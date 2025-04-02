@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,

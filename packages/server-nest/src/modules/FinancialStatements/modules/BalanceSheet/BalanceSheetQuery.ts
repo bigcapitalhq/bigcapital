@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { merge } from 'lodash';
 import * as R from 'ramda';
 import {

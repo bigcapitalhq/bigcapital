@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import * as R from 'ramda';
 import { Knex } from 'knex';

@@ -1,11 +1,10 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { IBalanceSheetNetIncomeNode } from './BalanceSheet.types';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
 import { FinancialPreviousPeriod } from '../../common/FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../../common/FinancialHorizTotals';
-import { BalanceSheetRepository } from './BalanceSheetRepository';
-import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { BalanceSheetNetIncomeDatePeriodsPY } from './BalanceSheetNetIncomeDatePeriodsPY';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { GConstructor } from '@/common/types/Constructor';

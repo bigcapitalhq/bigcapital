@@ -47,16 +47,7 @@ export class BuildOrganizationService {
     await this.tenantsManager.dropDatabaseIfExists();
     await this.tenantsManager.createDatabase();
     await this.tenantsManager.migrateTenant();
-
-    // Migrated tenant.
-    const migratedTenant = await tenant.$query().withGraphFetched('metadata');
-
-    // Creates a tenancy object from given tenant model.
-    // const tenancyContext =
-    //   this.tenantsManager.getSeedMigrationContext(migratedTenant);
-
-    // Seed tenant.
-    await this.tenantsManager.seedTenant(migratedTenant, {});
+    await this.tenantsManager.seedTenant()
 
     // Throws `onOrganizationBuild` event.
     await this.eventPublisher.emitAsync(events.organization.build, {
@@ -79,8 +70,8 @@ export class BuildOrganizationService {
   }
 
   /**
-   *
-   * @param {BuildOrganizationDto} buildDTO
+   * Execute the tenant database build process.
+   * @param {BuildOrganizationDto} buildDTO - Organization build dto.
    * @returns {Promise<{ nextRunAt: Date; jobId: string }>} - Returns the next run date and job id.
    */
   async buildRunJob(
@@ -121,8 +112,6 @@ export class BuildOrganizationService {
 
   /**
    * Unlocks tenant build run job.
-   * @param {number} tenantId
-   * @param {number} jobId
    */
   public async revertBuildRunJob() {
     const tenant = await this.tenancyContext.getTenant();

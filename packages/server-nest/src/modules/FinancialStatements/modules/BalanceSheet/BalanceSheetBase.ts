@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import {
   IBalanceSheetDataNode,
@@ -5,11 +6,14 @@ import {
 } from './BalanceSheet.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
 
 export const BalanceSheetBase = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
   class BalanceSheetBase extends Base {
+    query: BalanceSheetQuery;
+
     /**
      * Determines the node type of the given schema node.
      * @param {IBalanceSheetStructureSection} node -

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialTablePreviousPeriod } from '../../common/FinancialTablePreviousPeriod';

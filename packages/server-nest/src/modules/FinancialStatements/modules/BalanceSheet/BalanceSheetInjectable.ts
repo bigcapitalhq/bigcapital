@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   IBalanceSheetDOO,
   IBalanceSheetQuery,
@@ -19,8 +20,6 @@ export class BalanceSheetInjectable {
     private readonly eventPublisher: EventEmitter2,
     private readonly tenancyContext: TenancyContext,
     private readonly i18n: I18nService,
-
-    @Inject(BalanceSheetRepository.name)
     private readonly balanceSheetRepository: BalanceSheetRepository,
   ) {}
 

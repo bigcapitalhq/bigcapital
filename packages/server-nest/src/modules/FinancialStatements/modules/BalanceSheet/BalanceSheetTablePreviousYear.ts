@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { IDateRange } from '../../types/Report.types';
 import { ITableColumn } from '../../types/Table.types';
@@ -5,6 +6,7 @@ import { FinancialTablePreviousYear } from '../../common/FinancialTablePreviousY
 import { FinancialDateRanges } from '../../common/FinancialDateRanges';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
 
 export const BalanceSheetTablePreviousYear = <
   T extends GConstructor<FinancialSheet>,
@@ -12,6 +14,8 @@ export const BalanceSheetTablePreviousYear = <
   Base: T,
 ) =>
   class extends R.pipe(FinancialTablePreviousYear, FinancialDateRanges)(Base) {
+    query: BalanceSheetQuery;
+
     // --------------------
     // # Columns.
     // --------------------

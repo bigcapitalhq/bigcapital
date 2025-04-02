@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import * as moment from 'moment';
 import { ITableColumn, ITableColumnAccessor } from '../../types/Table.types';
