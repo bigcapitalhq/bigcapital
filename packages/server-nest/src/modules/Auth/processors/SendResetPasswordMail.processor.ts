@@ -25,11 +25,14 @@ export class SendResetPasswordMailProcessor extends WorkerHost {
 
   @Process(SendResetPasswordMailJob)
   async process(job: Job<SendResetPasswordMailJobPayload>) {
-    const mail = this.authMailMesssages.sendResetPasswordMessage(
-      job.data.user,
-      job.data.token,
-    );
-    await this.mailTransporter.send(mail);
+    try {
+      await this.authMailMesssages.sendResetPasswordMail(
+        job.data.user,
+        job.data.token,
+      );
+    } catch (error) {
+      console.log('Error occured during send reset password mail', error);
+    }
   }
 }
 

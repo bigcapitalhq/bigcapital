@@ -9,7 +9,6 @@ import { AuthSignupConfirmResendService } from './commands/AuthSignupConfirmRese
 import { AuthSignupConfirmService } from './commands/AuthSignupConfirm.service';
 import { AuthSignupService } from './commands/AuthSignup.service';
 import { AuthSigninService } from './commands/AuthSignin.service';
-import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { PasswordReset } from './models/PasswordReset';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
 import { AuthenticationMailMesssages } from './AuthMailMessages.esrvice';
@@ -27,8 +26,10 @@ import { SendResetPasswordMailProcessor } from './processors/SendResetPasswordMa
 import { SendSignupVerificationMailProcessor } from './processors/SendSignupVerificationMail.processor';
 import { MailModule } from '../Mail/Mail.module';
 import { ConfigService } from '@nestjs/config';
+import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
+import { GetAuthMetaService } from './queries/GetAuthMeta.service';
 
-const models = [RegisterTenancyModel(PasswordReset)];
+const models = [InjectSystemModel(PasswordReset)];
 
 @Module({
   controllers: [AuthController],
@@ -46,10 +47,11 @@ const models = [RegisterTenancyModel(PasswordReset)];
     TenantDBManagerModule,
     BullModule.registerQueue({ name: SendResetPasswordMailQueue }),
     BullModule.registerQueue({ name: SendSignupVerificationMailQueue }),
-    ...models,
+    
   ],
   exports: [...models],
   providers: [
+    ...models,
     LocalStrategy,
     JwtStrategy,
     AuthenticationApplication,
@@ -62,6 +64,7 @@ const models = [RegisterTenancyModel(PasswordReset)];
     AuthenticationMailMesssages,
     SendResetPasswordMailProcessor,
     SendSignupVerificationMailProcessor,
+    GetAuthMetaService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

@@ -56,7 +56,7 @@ export class BuildOrganizationService {
     //   this.tenantsManager.getSeedMigrationContext(migratedTenant);
 
     // Seed tenant.
-    // await this.tenantsManager.seedTenant(migratedTenant, {});
+    await this.tenantsManager.seedTenant(migratedTenant, {});
 
     // Throws `onOrganizationBuild` event.
     await this.eventPublisher.emitAsync(events.organization.build, {

@@ -59,10 +59,6 @@ export interface IAuthSendedResetPassword {
 
 export interface IAuthGetMetaPOJO {
   signupDisabled: boolean;
-  oneClickDemo: {
-    enable: boolean;
-    demoUrl: string;
-  };
 }
 
 export interface IAuthSignUpVerifingEventPayload {

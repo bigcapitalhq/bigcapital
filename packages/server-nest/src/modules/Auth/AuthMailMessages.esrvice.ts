@@ -1,19 +1,25 @@
 import { Injectable } from '@nestjs/common';
+import * as path from 'path';
 import { SystemUser } from '../System/models/SystemUser';
 import { ModelObject } from 'objection';
 import { ConfigService } from '@nestjs/config';
 import { Mail } from '../Mail/Mail';
+import { MailTransporter } from '../Mail/MailTransporter.service';
 
 @Injectable()
 export class AuthenticationMailMesssages {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly mailTransporter: MailTransporter,
+  ) {}
+
   /**
    * Sends reset password message.
    * @param {ISystemUser} user - The system user.
    * @param {string} token - Reset password token.
    * @returns {Mail}
    */
-  sendResetPasswordMessage(user: ModelObject<SystemUser>, token: string) {
+  resetPasswordMessage(user: ModelObject<SystemUser>, token: string) {
     const baseURL = this.configService.get('baseURL');
 
     return new Mail()
@@ -23,7 +29,7 @@ export class AuthenticationMailMesssages {
       .setAttachments([
         {
           filename: 'bigcapital.png',
-          path: `${global.__views_dir}/images/bigcapital.png`,
+          path: path.join(global.__static_dirname, `/images/bigcapital.png`),
           cid: 'bigcapital_logo',
         },
       ])
@@ -34,6 +40,12 @@ export class AuthenticationMailMesssages {
       });
   }
 
+  sendResetPasswordMail(user: ModelObject<SystemUser>, token: string) {
+      const mail = this.resetPasswordMessage(user, token);
+
+      return this.mailTransporter.send(mail);
+  }
+
   /**
    * Sends signup verification mail.
    * @param {string} email - Email address
@@ -41,7 +53,7 @@ export class AuthenticationMailMesssages {
    * @param {string} token - Verification token.
    * @returns {Mail}
    */
-  sendSignupVerificationMail(email: string, fullName: string, token: string) {
+  signupVerificationMail(email: string, fullName: string, token: string) {
     const baseURL = this.configService.get('baseURL');
     const verifyUrl = `${baseURL}/auth/email_confirmation?token=${token}&email=${email}`;
 
@@ -52,10 +64,19 @@ export class AuthenticationMailMesssages {
       .setAttachments([
         {
           filename: 'bigcapital.png',
-          path: `${global.__views_dir}/images/bigcapital.png`,
+          path: path.join(global.__static_dirname, `/images/bigcapital.png`),
           cid: 'bigcapital_logo',
         },
       ])
       .setData({ verifyUrl, fullName });
+  }
+
+  sendSignupVerificationMail(email: string, fullName: string, token: string) {
+    const mail = this.signupVerificationMail(
+      email,
+      fullName,
+      token,
+    );
+    return this.mailTransporter.send(mail);
   }
 }

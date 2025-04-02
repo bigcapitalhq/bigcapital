@@ -7,6 +7,7 @@ import { AuthSigninDto } from './dtos/AuthSignin.dto';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
 import { AuthSendResetPasswordService } from './commands/AuthSendResetPassword.service';
 import { AuthResetPasswordService } from './commands/AuthResetPassword.service';
+import { GetAuthMetaService } from './queries/GetAuthMeta.service';
 
 @Injectable()
 export class AuthenticationApplication {
@@ -17,7 +18,7 @@ export class AuthenticationApplication {
     private readonly authSignUpConfirmResendService: AuthSignupConfirmResendService,
     private readonly authResetPasswordService: AuthResetPasswordService,
     private readonly authSendResetPasswordService: AuthSendResetPasswordService,
-    // private readonly authGetMeta: GetAuthMeta,
+    private readonly authGetMeta: GetAuthMetaService,
   ) {}
 
   /**
@@ -81,6 +82,6 @@ export class AuthenticationApplication {
    * @returns {Promise<IAuthGetMetaPOJO>}
    */
   public async getAuthMeta() {
-    // return this.authGetMeta.getAuthMeta();
+    return this.authGetMeta.getAuthMeta();
   }
 }

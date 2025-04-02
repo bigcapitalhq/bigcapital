@@ -60,8 +60,6 @@ export class TenantDBManager {
     const tenant = await this.tenancyContext.getTenant();
     const databaseName = this.getDatabaseName(tenant);
 
-    console.log(databaseName, 'name')
-
     await this.throwErrorIfTenantDBExists(tenant);
 
     await this.systemKnex.raw(

@@ -2,6 +2,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Post,
   Request,
@@ -86,5 +87,10 @@ export class AuthController {
     @Body('password') password: string,
   ) {
     return this.authApp.resetPassword(token, password);
+  }
+
+  @Get('/meta')
+  meta() {
+    return this.authApp.getAuthMeta();
   }
 }

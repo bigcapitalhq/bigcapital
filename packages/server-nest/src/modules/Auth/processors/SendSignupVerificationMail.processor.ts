@@ -23,13 +23,15 @@ export class SendSignupVerificationMailProcessor extends WorkerHost {
 
   @Process(SendSignupVerificationMailJob)
   async process(job: Job<SendSignupVerificationMailJobPayload>) {
-    console.log('triggerd');
-    const mail = this.authMailMesssages.sendSignupVerificationMail(
-      job.data.email,
-      job.data.fullName,
-      job.data.token,
-    );
-    await this.mailTransporter.send(mail);
+    try {
+      await this.authMailMesssages.sendSignupVerificationMail(
+        job.data.email,
+        job.data.fullName,
+        job.data.token,
+      );
+    } catch (error) {
+      console.log('Error occured during send signup verification mail', error);
+    }
   }
 }
 
