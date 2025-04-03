@@ -46,6 +46,7 @@ export class BuildOrganizationService {
 
     await this.tenantsManager.dropDatabaseIfExists();
     await this.tenantsManager.createDatabase();
+
     await this.tenantsManager.migrateTenant();
     await this.tenantsManager.seedTenant()
 

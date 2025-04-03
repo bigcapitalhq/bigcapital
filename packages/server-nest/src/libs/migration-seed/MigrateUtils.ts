@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { differenceWith } from 'lodash';
-import path from 'path';
+import * as path from 'path';
 import { FsMigrations } from './FsMigrations';
 import {
   getTable,

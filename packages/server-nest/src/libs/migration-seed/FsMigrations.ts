@@ -1,6 +1,6 @@
-import path from 'path';
+import * as path from 'path';
+import * as fs from 'fs';
 import { sortBy } from 'lodash';
-import fs from 'fs';
 import { promisify } from 'util';
 import { MigrateItem } from './interfaces';
 import { importWebpackSeedModule } from './Utils';
@@ -93,7 +93,7 @@ class FsMigrations {
    * @returns {string}
    */
   public getMigration(migration: MigrateItem): string {
-    return importWebpackSeedModule(migration.file);
+    return importWebpackSeedModule(migration.file.replace('.ts', ''));
   }
 }
 

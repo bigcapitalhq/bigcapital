@@ -1,5 +1,5 @@
 // @ts-nocheck
-import fs from 'fs';
+import * as fs from 'fs';
 
 /**
  * Detarmines the module type of the given file path.
@@ -38,5 +38,5 @@ export async function importFile(filepath: string): any {
  * @returns
  */
 export async function importWebpackSeedModule(moduleName: string): any {
-  return import(`@/database/seeds/core/${moduleName}`);
+  return import(`../../database/seeds/core/${moduleName}`);
 }

@@ -1,9 +1,10 @@
 // @ts-nocheck
+import { I18nService } from 'nestjs-i18n';
 import { Seeder } from './Seeder';
 
 export class TenantSeeder extends Seeder {
   public knex: any;
-  public i18n: i18nAPI;
+  public i18n: I18nService;
   public models: any;
   public tenant: any;
 

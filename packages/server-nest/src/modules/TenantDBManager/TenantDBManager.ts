@@ -104,7 +104,7 @@ export class TenantDBManager {
    * @return {Promise<void>}
    */
   public async seed(): Promise<void> {
-    await this.systemKnex.migrate.latest({
+    await this.tenantKnex().migrate.latest({
       ...tenantSeedConfig(tenant),
       disableMigrationsListValidation: true,
     });

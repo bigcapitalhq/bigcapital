@@ -120,7 +120,7 @@ export class TenantsManagerService {
    * @returns
    */
   public async getSeedMigrationContext() {
-    const tenant = await this.tenancyContext.getTenant();
+    const tenant = await this.tenancyContext.getTenant(true);
 
     return {
       knex: this.tenantKnex(),

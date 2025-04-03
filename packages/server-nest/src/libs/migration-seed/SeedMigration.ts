@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Knex } from 'knex';
-import Bluebird from 'bluebird';
+import * as Bluebird from 'bluebird';
 import { getTable, getTableName, getLockTableName } from './TableUtils';
 import getMergedConfig from './SeederConfig';
 import {

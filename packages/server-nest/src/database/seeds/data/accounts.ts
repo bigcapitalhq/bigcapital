@@ -25,6 +25,7 @@ export const UnearnedRevenueAccount = {
   slug: 'unearned-revenue',
   account_type: 'other-current-liability',
   parent_account_id: null,
+  description: '',
   code: '50005',
   active: true,
   index: 1,
@@ -36,6 +37,7 @@ export const PrepardExpenses = {
   slug: 'prepaid-expenses',
   account_type: 'other-current-asset',
   parent_account_id: null,
+  description: '',
   code: '100010',
   active: true,
   index: 1,
@@ -47,6 +49,7 @@ export const StripeClearingAccount = {
   slug: 'stripe-clearing',
   account_type: 'other-current-asset',
   parent_account_id: null,
+  description: '',
   code: '100020',
   active: true,
   index: 1,
@@ -57,6 +60,7 @@ export const DiscountExpenseAccount = {
   name: 'Discount',
   slug: 'discount',
   account_type: 'other-income',
+  description: '',
   code: '40008',
   active: true,
   index: 1,
@@ -67,6 +71,7 @@ export const PurchaseDiscountAccount = {
   name: 'Purchase Discount',
   slug: 'purchase-discount',
   account_type: 'other-expense',
+  description: '',
   code: '40009',
   active: true,
   index: 1,
@@ -77,13 +82,14 @@ export const OtherChargesAccount = {
   name: 'Other Charges',
   slug: 'other-charges',
   account_type: 'other-income',
+  description: '',
   code: '40010',
   active: true,
   index: 1,
   predefined: true,
 };
 
-export default [
+export const AccountsData = [
   {
     name: 'Bank Account',
     slug: 'bank-account',
