@@ -17,8 +17,8 @@ import { LocalAuthGuard } from './guards/local.guard';
 import { JwtService } from '@nestjs/jwt';
 import { AuthSigninService } from './commands/AuthSignin.service';
 
-@ApiTags('Auth')
 @Controller('/auth')
+@ApiTags('Auth')
 @PublicRoute()
 export class AuthController {
   constructor(

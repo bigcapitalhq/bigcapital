@@ -76,6 +76,7 @@ import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module
 import { PaymentServicesModule } from '../PaymentServices/PaymentServices.module';
 import { AuthModule } from '../Auth/Auth.module';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
+import { LoopsModule } from '../Loops/Loops.module';
 
 @Module({
   imports: [
@@ -187,6 +188,7 @@ import { TenancyModule } from '../Tenancy/Tenancy.module';
     OrganizationModule,
     TenantDBManagerModule,
     PaymentServicesModule,
+    LoopsModule
   ],
   controllers: [AppController],
   providers: [
