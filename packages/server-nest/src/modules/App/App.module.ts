@@ -77,6 +77,8 @@ import { PaymentServicesModule } from '../PaymentServices/PaymentServices.module
 import { AuthModule } from '../Auth/Auth.module';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { LoopsModule } from '../Loops/Loops.module';
+import { AttachmentsModule } from '../Attachments/Attachment.module';
+import { S3Module } from '../S3/S3.module';
 
 @Module({
   imports: [
@@ -188,7 +190,9 @@ import { LoopsModule } from '../Loops/Loops.module';
     OrganizationModule,
     TenantDBManagerModule,
     PaymentServicesModule,
-    LoopsModule
+    LoopsModule,
+    AttachmentsModule,
+    S3Module
   ],
   controllers: [AppController],
   providers: [
