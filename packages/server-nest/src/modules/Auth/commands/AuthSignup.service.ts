@@ -80,6 +80,7 @@ export class AuthSignupService {
     return {
       userId: user.id,
       tenantId: user.tenantId,
+      organizationId: tenant.organizationId,
     };
   }
 

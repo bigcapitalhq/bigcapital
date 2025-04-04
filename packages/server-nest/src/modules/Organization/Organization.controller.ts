@@ -53,7 +53,7 @@ export class OrganizationController {
     });
   }
 
-  @Get()
+  @Get('current')
   @ApiOperation({ summary: 'Get current organization' })
   @ApiResponse({
     status: 200,

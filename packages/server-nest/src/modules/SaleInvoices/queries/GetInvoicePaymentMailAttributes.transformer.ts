@@ -126,7 +126,6 @@ class GetInvoiceMailTemplateItemAttrsTransformer extends Transformer {
   }
 
   public label(entry): string {
-    console.log(entry);
     return entry?.item?.name;
   }
 

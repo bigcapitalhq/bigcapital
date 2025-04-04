@@ -23,7 +23,6 @@ export class AuthenticationApplication {
 
   /**
    * Signin and generates JWT token.
-   * @throws {ServiceError}
    * @param {string} email - Email address.
    * @param {string} password - Password.
    */

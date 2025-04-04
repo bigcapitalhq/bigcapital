@@ -25,7 +25,7 @@ export class OrganizationBuildProcessor extends WorkerHost {
   @Process(OrganizationBuildQueueJob)
   @UseCls()
   async process(job: Job<OrganizationBuildQueueJobPayload>) {
-    console.log('Processing organization build job:', job.data);
+    console.log('Processing organization build job:', job.id);
 
       this.clsService.set('organizationId', job.data.organizationId);
       this.clsService.set('userId', job.data.userId);
