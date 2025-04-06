@@ -1,12 +1,13 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe.only('Vendors (e2e)', () => {
   it('/vendors (POST)', () => {
     return request(app.getHttpServer())
       .post('/vendors')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),
@@ -20,6 +21,7 @@ describe.only('Vendors (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/vendors')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),
@@ -31,6 +33,7 @@ describe.only('Vendors (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/vendors/${vendorId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),
@@ -44,6 +47,7 @@ describe.only('Vendors (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/vendors')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),
@@ -62,6 +66,7 @@ describe.only('Vendors (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/vendors')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         displayName: faker.commerce.productName(),
       });
@@ -70,6 +75,7 @@ describe.only('Vendors (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/vendors/${vendorId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

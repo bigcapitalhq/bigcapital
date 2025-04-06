@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 export const createInventoryAdjustment = ({ itemId }) => ({
   date: '2020-01-01',
@@ -29,6 +29,7 @@ describe('Inventory Adjustments (e2e)', () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest())
       .expect(201);
 
@@ -37,6 +38,7 @@ describe('Inventory Adjustments (e2e)', () => {
     return request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(createInventoryAdjustment({ itemId }))
       .expect(201);
   });
@@ -45,6 +47,7 @@ describe('Inventory Adjustments (e2e)', () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest())
       .expect(201);
 
@@ -52,6 +55,7 @@ describe('Inventory Adjustments (e2e)', () => {
 
     const inventoryAdjustmentResponse = await request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .send(createInventoryAdjustment({ itemId }))
       .expect(201);
@@ -61,6 +65,7 @@ describe('Inventory Adjustments (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/inventory-adjustments/${inventoryAdjustmentId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -68,6 +73,7 @@ describe('Inventory Adjustments (e2e)', () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest())
       .expect(201);
 
@@ -75,6 +81,7 @@ describe('Inventory Adjustments (e2e)', () => {
     const inventoryAdjustmentResponse = await request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(createInventoryAdjustment({ itemId }))
       .expect(201);
 
@@ -83,6 +90,7 @@ describe('Inventory Adjustments (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/inventory-adjustments/${inventoryAdjustmentId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -90,6 +98,7 @@ describe('Inventory Adjustments (e2e)', () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest())
       .expect(201);
 
@@ -97,6 +106,7 @@ describe('Inventory Adjustments (e2e)', () => {
     const inventoryAdjustmentResponse = await request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         ...createInventoryAdjustment({ itemId }),
         publish: false,
@@ -108,6 +118,7 @@ describe('Inventory Adjustments (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/inventory-adjustments/${inventoryAdjustmentId}/publish`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

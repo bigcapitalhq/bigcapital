@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 let invoice;
 let customerId;
@@ -52,6 +52,7 @@ describe('Payment Received (e2e)', () => {
     const item = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         sellable: true,
@@ -68,6 +69,7 @@ describe('Payment Received (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     invoice = response.body;
@@ -77,6 +79,7 @@ describe('Payment Received (e2e)', () => {
     return request(app.getHttpServer())
       .post('/payments-received')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestPaymentReceivedBody(invoice.id))
       .expect(201);
   });
@@ -85,6 +88,7 @@ describe('Payment Received (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/payments-received')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestPaymentReceivedBody(invoice.id));
 
     const paymentReceivedId = response.body.id;
@@ -99,6 +103,7 @@ describe('Payment Received (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/payments-received')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestPaymentReceivedBody(invoice.id));
 
     const paymentReceivedId = response.body.id;
@@ -106,6 +111,7 @@ describe('Payment Received (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/payments-received/${paymentReceivedId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -113,6 +119,7 @@ describe('Payment Received (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/payments-received')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestPaymentReceivedBody(invoice.id));
 
     const paymentReceivedId = response.body.id;
@@ -120,6 +127,7 @@ describe('Payment Received (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/payments-received/${paymentReceivedId}/invoices`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -127,6 +135,7 @@ describe('Payment Received (e2e)', () => {
     return request(app.getHttpServer())
       .get('/payments-received/state')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -134,6 +143,7 @@ describe('Payment Received (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/payments-received')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestPaymentReceivedBody(invoice.id));
 
     const paymentReceivedId = response.body.id;
@@ -141,6 +151,7 @@ describe('Payment Received (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/payments-received/${paymentReceivedId}/mail`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         subject: 'Email subject from here',
         to: 'a.bouhuolia@gmail.com',
@@ -153,6 +164,7 @@ describe('Payment Received (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/payments-received')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestPaymentReceivedBody(invoice.id));
 
     const paymentReceivedId = response.body.id;
@@ -160,6 +172,7 @@ describe('Payment Received (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/payments-received/${paymentReceivedId}/mail`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

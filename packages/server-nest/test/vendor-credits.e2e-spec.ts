@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 let vendorId;
 let itemId;
@@ -28,6 +28,7 @@ describe('Vendor Credits (e2e)', () => {
     const vendor = await request(app.getHttpServer())
       .post('/vendors')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({ displayName: 'Test Customer' });
 
     vendorId = vendor.body.id;
@@ -35,6 +36,7 @@ describe('Vendor Credits (e2e)', () => {
     const item = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         sellable: true,
@@ -51,6 +53,7 @@ describe('Vendor Credits (e2e)', () => {
     return request(app.getHttpServer())
       .post('/vendor-credits')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestVendorCredit())
       .expect(201);
   });
@@ -59,6 +62,7 @@ describe('Vendor Credits (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/vendor-credits')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestVendorCredit());
 
     const vendorCreditId = response.body.id;
@@ -66,6 +70,7 @@ describe('Vendor Credits (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/vendor-credits/${vendorCreditId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -73,6 +78,7 @@ describe('Vendor Credits (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/vendor-credits')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestVendorCredit());
 
     const vendorCreditId = response.body.id;
@@ -80,6 +86,7 @@ describe('Vendor Credits (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/vendor-credits/${vendorCreditId}/open`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -87,6 +94,7 @@ describe('Vendor Credits (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/vendor-credits')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestVendorCredit());
 
     const vendorCreditId = response.body.id;
@@ -94,6 +102,7 @@ describe('Vendor Credits (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/vendor-credits/${vendorCreditId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

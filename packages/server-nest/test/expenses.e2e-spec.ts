@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 const makeExpenseRequest = () => ({
   exchangeRate: 1,
@@ -24,6 +24,7 @@ describe('Expenses (e2e)', () => {
     return request(app.getHttpServer())
       .post('/expenses')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeExpenseRequest())
       .expect(201);
   });
@@ -32,6 +33,7 @@ describe('Expenses (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/expenses')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeExpenseRequest());
 
     const expenseId = response.body.id;
@@ -39,6 +41,7 @@ describe('Expenses (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/expenses/${expenseId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeExpenseRequest())
       .expect(200);
   });
@@ -47,6 +50,7 @@ describe('Expenses (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/expenses')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeExpenseRequest());
 
     const expenseId = response.body.id;
@@ -54,6 +58,7 @@ describe('Expenses (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/expenses/${expenseId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -61,6 +66,7 @@ describe('Expenses (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/expenses')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeExpenseRequest());
 
     const expenseId = response.body.id;
@@ -68,6 +74,7 @@ describe('Expenses (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/expenses/${expenseId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Item Categories(e2e)', () => {
   it('/item-categories (POST)', () => {
@@ -18,6 +18,7 @@ describe('Item Categories(e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/item-categories')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.person.fullName(),
         description: faker.lorem.sentence(),
@@ -27,6 +28,7 @@ describe('Item Categories(e2e)', () => {
     return request(app.getHttpServer())
       .get(`/item-categories/${itemCategoryId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -34,6 +36,7 @@ describe('Item Categories(e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/item-categories')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.person.fullName(),
         description: faker.lorem.sentence(),
@@ -44,6 +47,7 @@ describe('Item Categories(e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/item-categories/${itemCategoryId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

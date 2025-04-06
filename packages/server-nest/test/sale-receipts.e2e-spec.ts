@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 let customerId;
 let itemId;
@@ -31,6 +31,7 @@ describe('Sale Receipts (e2e)', () => {
     const customer = await request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({ displayName: 'Test Customer' });
 
     customerId = customer.body.id;
@@ -38,6 +39,7 @@ describe('Sale Receipts (e2e)', () => {
     const item = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         sellable: true,
@@ -54,6 +56,7 @@ describe('Sale Receipts (e2e)', () => {
     return request(app.getHttpServer())
       .post('/sale-receipts')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeReceiptRequest())
       .expect(201);
   });
@@ -62,6 +65,7 @@ describe('Sale Receipts (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-receipts')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeReceiptRequest());
 
     const receiptId = response.body.id;
@@ -76,6 +80,7 @@ describe('Sale Receipts (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-receipts')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeReceiptRequest());
 
     const receiptId = response.body.id;
@@ -83,6 +88,7 @@ describe('Sale Receipts (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/sale-receipts/${receiptId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         ...makeReceiptRequest(),
         referenceNo: '321',
@@ -94,6 +100,7 @@ describe('Sale Receipts (e2e)', () => {
     return request(app.getHttpServer())
       .get('/sale-receipts')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -101,6 +108,7 @@ describe('Sale Receipts (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-receipts')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeReceiptRequest());
 
     const receiptId = response.body.id;
@@ -108,6 +116,7 @@ describe('Sale Receipts (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/sale-receipts/${receiptId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -115,11 +124,13 @@ describe('Sale Receipts (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-receipts')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeReceiptRequest());
 
     return request(app.getHttpServer())
       .get(`/sale-receipts/${response.body.id}/mail`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

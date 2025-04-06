@@ -22,7 +22,7 @@ export class DocumentLinkModel extends TenantBaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const { DocumentModel } = require('./Document');
+    const { DocumentModel } = require('./Document.model');
 
     return {
       /**

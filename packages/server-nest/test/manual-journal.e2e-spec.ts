@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 const makeManualJournalRequest = () => ({
   date: '2022-06-01',
@@ -28,6 +28,7 @@ describe.only('Manual Journals (e2e)', () => {
     return request(app.getHttpServer())
       .post('/manual-journals')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeManualJournalRequest())
       .expect(201);
   });
@@ -36,6 +37,7 @@ describe.only('Manual Journals (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeManualJournalRequest());
 
     const journalId = response.body.id;
@@ -43,6 +45,7 @@ describe.only('Manual Journals (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/manual-journals/${journalId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send()
       .expect(200);
   });
@@ -51,6 +54,7 @@ describe.only('Manual Journals (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeManualJournalRequest());
 
     const journalId = response.body.id;
@@ -58,6 +62,7 @@ describe.only('Manual Journals (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/manual-journals/${journalId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send()
       .expect(200);
   });
@@ -67,6 +72,7 @@ describe.only('Manual Journals (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(manualJournal);
 
     const journalId = response.body.id;
@@ -74,6 +80,7 @@ describe.only('Manual Journals (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/manual-journals/${journalId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(manualJournal)
       .expect(200);
   });
@@ -82,6 +89,7 @@ describe.only('Manual Journals (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeManualJournalRequest());
 
     const journalId = response.body.id;
@@ -89,6 +97,7 @@ describe.only('Manual Journals (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/manual-journals/${journalId}/publish`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send()
       .expect(200);
   });

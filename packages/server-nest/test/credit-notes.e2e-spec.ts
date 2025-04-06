@@ -1,5 +1,5 @@
 import * as request from 'supertest';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 import { faker } from '@faker-js/faker';
 
 let customerId;
@@ -28,6 +28,7 @@ describe('Credit Notes (e2e)', () => {
     const customer = await request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({ displayName: 'Test Customer' });
 
     customerId = customer.body.id;
@@ -35,6 +36,7 @@ describe('Credit Notes (e2e)', () => {
     const item = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         sellable: true,
@@ -51,6 +53,7 @@ describe('Credit Notes (e2e)', () => {
     return request(app.getHttpServer())
       .post('/credit-notes')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestCreditNote())
       .expect(201);
   });
@@ -59,12 +62,14 @@ describe('Credit Notes (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/credit-notes')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestCreditNote());
     const creditNoteId = response.body.id;
 
     return request(app.getHttpServer())
       .delete(`/credit-notes/${creditNoteId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -73,12 +78,14 @@ describe('Credit Notes (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/credit-notes')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(creditNote);
     const creditNoteId = response.body.id;
 
     return request(app.getHttpServer())
       .put(`/credit-notes/${creditNoteId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(creditNote)
       .expect(200);
   });
@@ -87,12 +94,14 @@ describe('Credit Notes (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/credit-notes')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestCreditNote());
     const creditNoteId = response.body.id;
 
     return request(app.getHttpServer())
       .put(`/credit-notes/${creditNoteId}/open`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

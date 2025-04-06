@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Branches (e2e)', () => {
   it('/branches (POST)', () => {
@@ -27,6 +27,7 @@ describe('Branches (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/branches/${branchId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -34,6 +35,7 @@ describe('Branches (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/branches')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         code: faker.string.alpha(4),
@@ -43,6 +45,7 @@ describe('Branches (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/branches/${branchId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -50,6 +53,7 @@ describe('Branches (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/branches')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         code: faker.string.alpha(4),
@@ -59,6 +63,7 @@ describe('Branches (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/branches/${branchId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -66,6 +71,7 @@ describe('Branches (e2e)', () => {
     return request(app.getHttpServer())
       .get('/branches')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

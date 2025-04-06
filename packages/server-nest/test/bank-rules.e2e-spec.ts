@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 const requestBankRule = () => ({
   name: faker.company.name(),
@@ -25,6 +25,7 @@ describe('Bank Rules (e2e)', () => {
     return request(app.getHttpServer())
       .post('/banking/rules')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestBankRule())
       .expect(201);
   });
@@ -33,6 +34,7 @@ describe('Bank Rules (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/banking/rules')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestBankRule());
 
     const ruleId = response.body.id;
@@ -40,6 +42,7 @@ describe('Bank Rules (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/banking/rules/${ruleId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestBankRule())
       .expect(200);
   });
@@ -48,6 +51,7 @@ describe('Bank Rules (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/banking/rules')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestBankRule());
 
     const ruleId = response.body.id;
@@ -55,6 +59,7 @@ describe('Bank Rules (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/banking/rules/${ruleId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -62,6 +67,7 @@ describe('Bank Rules (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/banking/rules')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestBankRule());
 
     const ruleId = response.body.id;
@@ -69,6 +75,7 @@ describe('Bank Rules (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/banking/rules/${ruleId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -76,6 +83,7 @@ describe('Bank Rules (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/banking/rules')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestBankRule());
 
     const ruleId = response.body.id;
@@ -83,6 +91,7 @@ describe('Bank Rules (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/banking/rules/${ruleId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

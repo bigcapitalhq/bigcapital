@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 const createOwnerContributionTransaction = () => ({
   date: '2024-01-01',
@@ -23,6 +23,7 @@ describe('Banking Transactions (e2e)', () => {
     return request(app.getHttpServer())
       .post('/banking/transactions')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(createOwnerContributionTransaction())
       .expect(201);
   });
@@ -32,6 +33,7 @@ describe('Banking Transactions (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/banking/transactions')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(transaction)
       .expect(201);
 
@@ -40,6 +42,7 @@ describe('Banking Transactions (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/banking/transactions/${transactionId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -48,6 +51,7 @@ describe('Banking Transactions (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/banking/transactions')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(transaction)
       .expect(201);
 
@@ -56,6 +60,7 @@ describe('Banking Transactions (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/banking/transactions/${transactionId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

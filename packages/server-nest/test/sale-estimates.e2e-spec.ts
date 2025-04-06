@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 let customerId;
 let itemId;
@@ -29,6 +29,7 @@ describe('Sale Estimates (e2e)', () => {
   beforeAll(async () => {
     const customer = await request(app.getHttpServer())
       .post('/customers')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .send({ displayName: 'Test Customer' });
 
@@ -53,6 +54,7 @@ describe('Sale Estimates (e2e)', () => {
   it('/sale-estimates (POST)', async () => {
     return request(app.getHttpServer())
       .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .send(makeEstimateRequest())
       .expect(201);
@@ -61,6 +63,7 @@ describe('Sale Estimates (e2e)', () => {
   it('/sale-estimates (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .send(makeEstimateRequest());
 
@@ -68,6 +71,7 @@ describe('Sale Estimates (e2e)', () => {
 
     return request(app.getHttpServer())
       .delete(`/sale-estimates/${estimateId}`)
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .expect(200);
   });
@@ -75,6 +79,7 @@ describe('Sale Estimates (e2e)', () => {
   it('/sale-estimates/state (GET)', async () => {
     return request(app.getHttpServer())
       .get('/sale-estimates/state')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .expect(200);
   });
@@ -82,6 +87,7 @@ describe('Sale Estimates (e2e)', () => {
   it('/sale-estimates/:id (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .send(makeEstimateRequest());
 
@@ -89,6 +95,7 @@ describe('Sale Estimates (e2e)', () => {
 
     return request(app.getHttpServer())
       .get(`/sale-estimates/${estimateId}`)
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .expect(200);
   });
@@ -96,6 +103,7 @@ describe('Sale Estimates (e2e)', () => {
   it('/sale-estimates/:id/approve (PUT)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .send({ ...makeEstimateRequest(), delivered: true });
 
@@ -103,6 +111,7 @@ describe('Sale Estimates (e2e)', () => {
 
     return request(app.getHttpServer())
       .put(`/sale-estimates/${estimateId}/approve`)
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .expect(200);
   });
@@ -110,6 +119,7 @@ describe('Sale Estimates (e2e)', () => {
   it('/sale-estimates/:id/reject (PUT)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .send({ ...makeEstimateRequest(), delivered: true });
 
@@ -117,6 +127,7 @@ describe('Sale Estimates (e2e)', () => {
 
     return request(app.getHttpServer())
       .put(`/sale-estimates/${estimateId}/reject`)
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .expect(200);
   });
@@ -124,6 +135,7 @@ describe('Sale Estimates (e2e)', () => {
   it('/sale-estimates (GET)', async () => {
     return request(app.getHttpServer())
       .get('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .expect(200);
   });
@@ -131,11 +143,13 @@ describe('Sale Estimates (e2e)', () => {
   it('/sale-estimates/:id/mail (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .send(makeEstimateRequest());
 
     return request(app.getHttpServer())
       .get(`/sale-estimates/${response.body.id}/mail`)
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .expect(200);
   });
@@ -143,12 +157,14 @@ describe('Sale Estimates (e2e)', () => {
   it('/sale-estimates/:id/mail (POST)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
       .send(makeEstimateRequest());
 
     return request(app.getHttpServer())
       .post(`/sale-estimates/${response.body.id}/mail`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         subject: 'Email subject from here',
         to: 'a.bouhuolia@gmail.com',

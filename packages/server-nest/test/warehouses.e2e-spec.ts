@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Warehouses (e2e)', () => {
   it('/warehouses (POST)', () => {
@@ -18,6 +18,7 @@ describe('Warehouses (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/warehouses')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         code: faker.string.alpha(4),
@@ -34,6 +35,7 @@ describe('Warehouses (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/warehouses')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         code: faker.string.alpha(4),
@@ -50,6 +52,7 @@ describe('Warehouses (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/warehouses')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         code: faker.string.alpha(4),
@@ -59,6 +62,7 @@ describe('Warehouses (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/warehouses/${warehouseId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -66,6 +70,7 @@ describe('Warehouses (e2e)', () => {
     return request(app.getHttpServer())
       .get('/warehouses')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

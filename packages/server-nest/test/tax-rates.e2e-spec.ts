@@ -1,12 +1,13 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Item Categories(e2e)', () => {
   it('/tax-rates (POST)', () => {
     return request(app.getHttpServer())
       .post('/tax-rates')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.person.fullName(),
         rate: 2,
@@ -20,6 +21,7 @@ describe('Item Categories(e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/tax-rates')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.person.fullName(),
         rate: 2,
@@ -31,6 +33,7 @@ describe('Item Categories(e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/tax-rates/${taxRateId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });

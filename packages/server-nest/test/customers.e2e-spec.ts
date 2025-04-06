@@ -1,12 +1,13 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Customers (e2e)', () => {
   it('/customers (POST)', () => {
     return request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         customerType: 'business',
         displayName: faker.commerce.productName(),
@@ -21,6 +22,7 @@ describe('Customers (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         customerType: 'business',
         displayName: faker.commerce.productName(),
@@ -33,6 +35,7 @@ describe('Customers (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/customers/${customerId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader) 
       .expect(200);
   });
 
@@ -40,6 +43,7 @@ describe('Customers (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         customerType: 'business',
         displayName: faker.commerce.productName(),
@@ -52,6 +56,7 @@ describe('Customers (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/customers/${customerId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -59,6 +64,7 @@ describe('Customers (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         customerType: 'business',
         displayName: faker.commerce.productName(),
@@ -71,6 +77,7 @@ describe('Customers (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/customers/${customerId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),

@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 let customerId;
 let itemId;
@@ -32,6 +32,7 @@ describe('Sale Invoices (e2e)', () => {
     const customer = await request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({ displayName: 'Test Customer' });
 
     customerId = customer.body.id;
@@ -39,6 +40,7 @@ describe('Sale Invoices (e2e)', () => {
     const item = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         sellable: true,
@@ -55,6 +57,7 @@ describe('Sale Invoices (e2e)', () => {
     return request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody())
       .expect(201);
   });
@@ -63,11 +66,13 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
       .delete(`/sale-invoices/${response.body.id}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -75,11 +80,13 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
       .put(`/sale-invoices/${response.body.id}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody())
       .expect(200);
   });
@@ -88,11 +95,13 @@ describe('Sale Invoices (e2e)', () => {
     await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
       .get('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -100,11 +109,13 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
       .get(`/sale-invoices/${response.body.id}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -112,11 +123,13 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
       .get(`/sale-invoices/${response.body.id}/state`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -124,11 +137,13 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
       .get(`/sale-invoices/${response.body.id}/payments`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -136,11 +151,13 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
       .post(`/sale-invoices/${response.body.id}/writeoff`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         expenseAccountId: 1024,
         date: '2023-01-01',
@@ -153,11 +170,13 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     await request(app.getHttpServer())
       .post(`/sale-invoices/${response.body.id}/writeoff`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         expenseAccountId: 1024,
         date: '2023-01-01',
@@ -167,6 +186,7 @@ describe('Sale Invoices (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/sale-invoices/${response.body.id}/cancel-writeoff`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -174,6 +194,7 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         ...requestSaleInvoiceBody(),
         delivered: false,
@@ -182,6 +203,7 @@ describe('Sale Invoices (e2e)', () => {
     return request(app.getHttpServer())
       .post(`/sale-invoices/${response.body.id}/deliver`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -189,11 +211,13 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
       .get(`/sale-invoices/${response.body.id}/mail-state`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -201,11 +225,13 @@ describe('Sale Invoices (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
       .put(`/sale-invoices/${response.body.id}/mail`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         subject: 'Email subject from here',
         to: 'a.bouhuolia@gmail.com',

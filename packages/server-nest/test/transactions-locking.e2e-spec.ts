@@ -1,5 +1,5 @@
 import * as request from 'supertest';
-import { app, orgainzationId } from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe.only('Transactions Locking (e2e)', () => {
   it('/transactions-locking/lock (PUT)', () => {
@@ -18,6 +18,7 @@ describe.only('Transactions Locking (e2e)', () => {
     await request(app.getHttpServer())
       .put('/transactions-locking/lock')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         module: 'all',
         lock_to_date: '2025-01-01',
@@ -28,6 +29,7 @@ describe.only('Transactions Locking (e2e)', () => {
     return request(app.getHttpServer())
       .put('/transactions-locking/cancel-lock')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -35,6 +37,7 @@ describe.only('Transactions Locking (e2e)', () => {
     await request(app.getHttpServer())
       .put('/transactions-locking/lock')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         module: 'all',
         lock_to_date: '2025-01-01',
@@ -45,6 +48,7 @@ describe.only('Transactions Locking (e2e)', () => {
     return request(app.getHttpServer())
       .put('/transactions-locking/cancel-lock')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         module: 'all',
         unlockFromDate: '2025-01-01',
@@ -58,6 +62,7 @@ describe.only('Transactions Locking (e2e)', () => {
     await request(app.getHttpServer())
       .put('/transactions-locking/lock')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         module: 'all',
         lock_to_date: '2025-01-01',
@@ -68,6 +73,7 @@ describe.only('Transactions Locking (e2e)', () => {
     await request(app.getHttpServer())
       .put('/transactions-locking/unlock-partial')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         module: 'all',
         unlockFromDate: '2025-01-01',
@@ -79,6 +85,7 @@ describe.only('Transactions Locking (e2e)', () => {
     return request(app.getHttpServer())
       .put('/transactions-locking/cancel-unlock-partial')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         module: 'all',
         unlockFromDate: '2025-01-01',
@@ -92,6 +99,7 @@ describe.only('Transactions Locking (e2e)', () => {
     return request(app.getHttpServer())
       .get('/transactions-locking')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -99,6 +107,7 @@ describe.only('Transactions Locking (e2e)', () => {
     return request(app.getHttpServer())
       .get('/transactions-locking/all')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 });
