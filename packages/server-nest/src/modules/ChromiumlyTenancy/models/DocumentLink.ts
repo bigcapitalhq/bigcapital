@@ -6,7 +6,7 @@ import { BaseModel } from '@/models/Model';
 
 export class DocumentLink extends BaseModel{
   public modelRef: string;
-  public modelId: string;
+  public modelId: number;
   public documentId: number;
   public expiresAt?: Date;
 

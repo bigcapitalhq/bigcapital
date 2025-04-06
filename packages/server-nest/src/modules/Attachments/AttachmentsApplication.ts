@@ -19,7 +19,6 @@ export class AttachmentsApplication {
 
   /**
    * Saves the metadata of uploaded document to S3 on database.
-   * @param {number} tenantId
    * @param {} file
    * @returns {Promise<Document>}
    */
@@ -38,7 +37,6 @@ export class AttachmentsApplication {
 
   /**
    * Retrieves the document data.
-   * @param {number} tenantId
    * @param {string} documentKey
    */
   public get(documentKey: string) {
@@ -58,7 +56,6 @@ export class AttachmentsApplication {
 
   /**
    * Unlinks the given document from resource model.
-   * @param {number} tenantId
    * @param {string} filekey
    * @param {string} modelRef
    * @param {number} modelId
@@ -70,7 +67,6 @@ export class AttachmentsApplication {
 
   /**
    * Retrieves the presigned url of the given attachment key.
-   * @param {number} tenantId
    * @param {string} key
    * @returns {Promise<string>}
    */

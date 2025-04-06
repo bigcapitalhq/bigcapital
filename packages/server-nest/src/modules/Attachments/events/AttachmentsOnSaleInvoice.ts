@@ -1,68 +1,40 @@
-import { Inject, Service } from 'typedi';
+import { Injectable } from '@nestjs/common';
 import { isEmpty } from 'lodash';
+import { OnEvent } from '@nestjs/event-emitter';
 import {
   ISaleInvoiceCreatedPayload,
   ISaleInvoiceCreatingPaylaod,
   ISaleInvoiceDeletingPayload,
   ISaleInvoiceEditedPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { LinkAttachment } from '../LinkAttachment';
+} from '@/modules/SaleInvoices/SaleInvoice.types';
 import { ValidateAttachments } from '../ValidateAttachments';
+import { LinkAttachment } from '../LinkAttachment';
 import { UnlinkAttachment } from '../UnlinkAttachment';
+import { events } from '@/common/events/events';
 
-@Service()
+@Injectable()
 export class AttachmentsOnSaleInvoiceCreated {
-  @Inject()
-  private linkAttachmentService: LinkAttachment;
-
-  @Inject()
-  private unlinkAttachmentService: UnlinkAttachment;
-
-  @Inject()
-  private validateDocuments: ValidateAttachments;
-
-  /**
-   * Constructor method.
-   */
-  public attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreating,
-      this.validateAttachmentsOnSaleInvoiceCreate.bind(this)
-    );
-    bus.subscribe(
-      events.saleInvoice.onCreated,
-      this.handleAttachmentsOnSaleInvoiceCreated.bind(this)
-    );
-    bus.subscribe(
-      events.saleInvoice.onEdited,
-      this.handleUnlinkUnpresentedKeysOnInvoiceEdited.bind(this)
-    );
-    bus.subscribe(
-      events.saleInvoice.onEdited,
-      this.handleLinkPresentedKeysOnInvoiceEdited.bind(this)
-    );
-    bus.subscribe(
-      events.saleInvoice.onDeleting,
-      this.handleUnlinkAttachmentsOnInvoiceDeleted.bind(this)
-    );
-  }
+  constructor(
+    private readonly linkAttachmentService: LinkAttachment,
+    private readonly unlinkAttachmentService: UnlinkAttachment,
+    private readonly validateDocuments: ValidateAttachments,
+  ) {}
 
   /**
    * Validates the attachment keys on creating sale invoice.
    * @param {ISaleInvoiceCreatingPaylaod}
    * @returns {Promise<void>}
    */
-  private async validateAttachmentsOnSaleInvoiceCreate({
+  @OnEvent(events.saleInvoice.onCreating)
+  async validateAttachmentsOnSaleInvoiceCreate({
     saleInvoiceDTO,
-    tenantId,
   }: ISaleInvoiceCreatingPaylaod): Promise<void> {
     if (isEmpty(saleInvoiceDTO.attachments)) {
       return;
     }
     const documentKeys = saleInvoiceDTO?.attachments?.map((a) => a.key);
 
-    await this.validateDocuments.validate(tenantId, documentKeys);
+    await this.validateDocuments.validate(documentKeys);
   }
 
   /**
@@ -70,8 +42,8 @@ export class AttachmentsOnSaleInvoiceCreated {
    * @param {ISaleInvoiceCreatedPayload}
    * @returns {Promise<void>}
    */
-  private async handleAttachmentsOnSaleInvoiceCreated({
-    tenantId,
+  @OnEvent(events.saleInvoice.onCreated)
+  async handleAttachmentsOnSaleInvoiceCreated({
     saleInvoiceDTO,
     saleInvoice,
     trx,
@@ -79,14 +51,13 @@ export class AttachmentsOnSaleInvoiceCreated {
     if (isEmpty(saleInvoiceDTO.attachments)) return;
 
     const keys = saleInvoiceDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'SaleInvoice',
       saleInvoice.id,
-      trx
+      trx,
     );
   }
 
@@ -94,8 +65,8 @@ export class AttachmentsOnSaleInvoiceCreated {
    * Handles unlinking all the unpresented keys of the edited sale invoice.
    * @param {ISaleInvoiceEditedPayload}
    */
-  private async handleUnlinkUnpresentedKeysOnInvoiceEdited({
-    tenantId,
+  @OnEvent(events.saleInvoice.onEdited)
+  async handleUnlinkUnpresentedKeysOnInvoiceEdited({
     saleInvoiceDTO,
     saleInvoice,
     trx,
@@ -103,14 +74,13 @@ export class AttachmentsOnSaleInvoiceCreated {
     // if (isEmpty(saleInvoiceDTO.attachments)) return;
 
     const keys = saleInvoiceDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.unlinkAttachmentService.unlinkUnpresentedKeys(
-      tenantId,
       keys,
       'SaleInvoice',
       saleInvoice.id,
-      trx
+      trx,
     );
   }
 
@@ -119,8 +89,8 @@ export class AttachmentsOnSaleInvoiceCreated {
    * @param {ISaleInvoiceEditedPayload}
    * @returns {Promise<void>}
    */
-  private async handleLinkPresentedKeysOnInvoiceEdited({
-    tenantId,
+  @OnEvent(events.saleInvoice.onEdited)
+  async handleLinkPresentedKeysOnInvoiceEdited({
     saleInvoiceDTO,
     oldSaleInvoice,
     trx,
@@ -128,14 +98,13 @@ export class AttachmentsOnSaleInvoiceCreated {
     if (isEmpty(saleInvoiceDTO.attachments)) return;
 
     const keys = saleInvoiceDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'SaleInvoice',
       oldSaleInvoice.id,
-      trx
+      trx,
     );
   }
 
@@ -144,16 +113,15 @@ export class AttachmentsOnSaleInvoiceCreated {
    * @param {ISaleInvoiceDeletedPayload}
    * @returns {Promise<void>}
    */
-  private async handleUnlinkAttachmentsOnInvoiceDeleted({
-    tenantId,
+  @OnEvent(events.saleInvoice.onDeleting)
+  async handleUnlinkAttachmentsOnInvoiceDeleted({
     oldSaleInvoice,
     trx,
   }: ISaleInvoiceDeletingPayload) {
     await this.unlinkAttachmentService.unlinkAllModelKeys(
-      tenantId,
       'SaleInvoice',
       oldSaleInvoice.id,
-      trx
+      trx,
     );
   }
 }

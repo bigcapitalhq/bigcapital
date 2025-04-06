@@ -29,6 +29,12 @@ class PaymentMethodDto {
   enable: boolean;
 }
 
+
+class AttachmentDto {
+  @IsString()
+  key: string;
+}
+
 class CommandSaleInvoiceDto {
   @IsInt()
   @IsNotEmpty()
@@ -186,6 +192,16 @@ class CommandSaleInvoiceDto {
     example: 1,
   })
   fromEstimateId?: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AttachmentDto)
+  @ApiProperty({
+    description: 'The attachments of the sale receipt',
+    example: [{ key: '123456' }],
+  })
+  attachments?: AttachmentDto[];
 }
 
 export class CreateSaleInvoiceDto extends CommandSaleInvoiceDto {}

@@ -3,7 +3,6 @@ import { Knex } from 'knex';
 import {
   ISaleReceiptCreatedPayload,
   ISaleReceiptCreatingPayload,
-  ISaleReceiptDTO,
 } from '../types/SaleReceipts.types';
 import { SaleReceiptDTOTransformer } from './SaleReceiptDTOTransformer.service';
 import { SaleReceiptValidators } from './SaleReceiptValidators.service';

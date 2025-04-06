@@ -1,68 +1,40 @@
-import { Inject, Service } from 'typedi';
 import { isEmpty } from 'lodash';
 import {
   IBillPaymentCreatingPayload,
   IBillPaymentDeletingPayload,
   IBillPaymentEventCreatedPayload,
   IBillPaymentEventEditedPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { LinkAttachment } from '../LinkAttachment';
+} from '@/modules/BillPayments/types/BillPayments.types';
 import { ValidateAttachments } from '../ValidateAttachments';
+import { Injectable } from '@nestjs/common';
+import { LinkAttachment } from '../LinkAttachment';
 import { UnlinkAttachment } from '../UnlinkAttachment';
+import { events } from '@/common/events/events';
+import { OnEvent } from '@nestjs/event-emitter';
 
-@Service()
+@Injectable()
 export class AttachmentsOnBillPayments {
-  @Inject()
-  private linkAttachmentService: LinkAttachment;
-
-  @Inject()
-  private unlinkAttachmentService: UnlinkAttachment;
-
-  @Inject()
-  private validateDocuments: ValidateAttachments;
-
-  /**
-   * Constructor method.
-   */
-  public attach(bus) {
-    bus.subscribe(
-      events.billPayment.onCreating,
-      this.validateAttachmentsOnBillPaymentCreate.bind(this)
-    );
-    bus.subscribe(
-      events.billPayment.onCreated,
-      this.handleAttachmentsOnBillPaymentCreated.bind(this)
-    );
-    bus.subscribe(
-      events.billPayment.onEdited,
-      this.handleUnlinkUnpresentedKeysOnBillPaymentEdited.bind(this)
-    );
-    bus.subscribe(
-      events.billPayment.onEdited,
-      this.handleLinkPresentedKeysOnBillPaymentEdited.bind(this)
-    );
-    bus.subscribe(
-      events.billPayment.onDeleting,
-      this.handleUnlinkAttachmentsOnBillPaymentDeleted.bind(this)
-    );
-  }
+  constructor(
+    private readonly linkAttachmentService: LinkAttachment,
+    private readonly unlinkAttachmentService: UnlinkAttachment,
+    private readonly validateDocuments: ValidateAttachments,
+  ) {}
 
   /**
    * Validates the attachment keys on creating bill payment.
    * @param {IBillPaymentCreatingPayload}
    * @returns {Promise<void>}
    */
-  private async validateAttachmentsOnBillPaymentCreate({
+  @OnEvent(events.billPayment.onCreating)
+  async validateAttachmentsOnBillPaymentCreate({
     billPaymentDTO,
-    tenantId,
   }: IBillPaymentCreatingPayload): Promise<void> {
     if (isEmpty(billPaymentDTO.attachments)) {
       return;
     }
     const documentKeys = billPaymentDTO?.attachments?.map((a) => a.key);
 
-    await this.validateDocuments.validate(tenantId, documentKeys);
+    await this.validateDocuments.validate(documentKeys);
   }
 
   /**
@@ -70,8 +42,8 @@ export class AttachmentsOnBillPayments {
    * @param {IBillPaymentEventCreatedPayload}
    * @returns {Promise<void>}
    */
-  private async handleAttachmentsOnBillPaymentCreated({
-    tenantId,
+  @OnEvent(events.billPayment.onCreated)
+  async handleAttachmentsOnBillPaymentCreated({
     billPaymentDTO,
     billPayment,
     trx,
@@ -79,14 +51,13 @@ export class AttachmentsOnBillPayments {
     if (isEmpty(billPaymentDTO.attachments)) return;
 
     const keys = billPaymentDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'BillPayment',
       billPayment.id,
-      trx
+      trx,
     );
   }
 
@@ -94,21 +65,20 @@ export class AttachmentsOnBillPayments {
    * Handles unlinking all the unpresented keys of the edited bill payment.
    * @param {IBillPaymentEventEditedPayload}
    */
-  private async handleUnlinkUnpresentedKeysOnBillPaymentEdited({
-    tenantId,
+  @OnEvent(events.billPayment.onEdited)
+  async handleUnlinkUnpresentedKeysOnBillPaymentEdited({
     billPaymentDTO,
     oldBillPayment,
     trx,
   }: IBillPaymentEventEditedPayload) {
     const keys = billPaymentDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.unlinkAttachmentService.unlinkUnpresentedKeys(
-      tenantId,
       keys,
       'BillPayment',
       oldBillPayment.id,
-      trx
+      trx,
     );
   }
 
@@ -117,8 +87,8 @@ export class AttachmentsOnBillPayments {
    * @param {IBillPaymentEventEditedPayload}
    * @returns {Promise<void>}
    */
-  private async handleLinkPresentedKeysOnBillPaymentEdited({
-    tenantId,
+  @OnEvent(events.billPayment.onEdited)
+  async handleLinkPresentedKeysOnBillPaymentEdited({
     billPaymentDTO,
     oldBillPayment,
     trx,
@@ -126,14 +96,13 @@ export class AttachmentsOnBillPayments {
     if (isEmpty(billPaymentDTO.attachments)) return;
 
     const keys = billPaymentDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'BillPayment',
       oldBillPayment.id,
-      trx
+      trx,
     );
   }
 
@@ -142,16 +111,15 @@ export class AttachmentsOnBillPayments {
    * @param {IBillPaymentDeletingPayload}
    * @returns {Promise<void>}
    */
-  private async handleUnlinkAttachmentsOnBillPaymentDeleted({
-    tenantId,
+  @OnEvent(events.billPayment.onDeleting)
+  async handleUnlinkAttachmentsOnBillPaymentDeleted({
     oldBillPayment,
     trx,
   }: IBillPaymentDeletingPayload) {
     await this.unlinkAttachmentService.unlinkAllModelKeys(
-      tenantId,
       'BillPayment',
       oldBillPayment.id,
-      trx
+      trx,
     );
   }
 }

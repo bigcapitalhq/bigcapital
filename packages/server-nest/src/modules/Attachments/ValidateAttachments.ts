@@ -1,24 +1,21 @@
 import { castArray, difference } from 'lodash';
-import HasTenancyService from '../Tenancy/TenancyService';
-import { ServiceError } from '@/exceptions';
-import { Inject, Service } from 'typedi';
+import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { DocumentModel } from './models/Document.model';
+import { ServiceError } from '../Items/ServiceError';
 
-@Service()
+@Injectable()
 export class ValidateAttachments {
-
   constructor(
-    private readonly documentModel: TenantModelProxy<typeof DocumentModel>
-  ) {
+    @Inject(DocumentModel.name)
+    private readonly documentModel: TenantModelProxy<typeof DocumentModel>,
+  ) {}
 
-  }
   /**
    * Validates the given file keys existance.
-   * @param {number} tenantId
    * @param {string|string[]} key
    */
-  async validate(tenantId: number, key: string | string[]) {
+  async validate(key: string | string[]) {
     const keys = castArray(key);
     const documents = await this.documentModel().query().whereIn('key', key);
     const documentKeys = documents.map((document) => document.key);

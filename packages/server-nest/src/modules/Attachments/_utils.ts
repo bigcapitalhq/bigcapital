@@ -1,4 +1,4 @@
-import { ServiceError } from '@/exceptions';
+import { ServiceError } from '../Items/ServiceError';
 import { ERRORS } from './constants';
 
 export const validateLinkModelExists = (LinkModel) => {

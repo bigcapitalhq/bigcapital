@@ -1,68 +1,40 @@
-import { Inject, Service } from 'typedi';
 import { isEmpty } from 'lodash';
 import {
   IManualJournalCreatingPayload,
   IManualJournalEventCreatedPayload,
   IManualJournalEventDeletedPayload,
   IManualJournalEventEditedPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { LinkAttachment } from '../LinkAttachment';
+} from '@/modules/ManualJournals/types/ManualJournals.types';
 import { ValidateAttachments } from '../ValidateAttachments';
+import { OnEvent } from '@nestjs/event-emitter';
 import { UnlinkAttachment } from '../UnlinkAttachment';
+import { LinkAttachment } from '../LinkAttachment';
+import { Injectable } from '@nestjs/common';
+import { events } from '@/common/events/events';
 
-@Service()
+@Injectable()
 export class AttachmentsOnManualJournals {
-  @Inject()
-  private linkAttachmentService: LinkAttachment;
-
-  @Inject()
-  private unlinkAttachmentService: UnlinkAttachment;
-
-  @Inject()
-  private validateDocuments: ValidateAttachments;
-
-  /**
-   * Constructor method.
-   */
-  public attach(bus) {
-    bus.subscribe(
-      events.manualJournals.onCreating,
-      this.validateAttachmentsOnManualJournalCreate.bind(this)
-    );
-    bus.subscribe(
-      events.manualJournals.onCreated,
-      this.handleAttachmentsOnManualJournalCreated.bind(this)
-    );
-    bus.subscribe(
-      events.manualJournals.onEdited,
-      this.handleUnlinkUnpresentedKeysOnManualJournalEdited.bind(this)
-    );
-    bus.subscribe(
-      events.manualJournals.onEdited,
-      this.handleLinkPresentedKeysOnManualJournalEdited.bind(this)
-    );
-    bus.subscribe(
-      events.manualJournals.onDeleting,
-      this.handleUnlinkAttachmentsOnManualJournalDeleted.bind(this)
-    );
-  }
+  constructor(
+    private readonly linkAttachmentService: LinkAttachment,
+    private readonly unlinkAttachmentService: UnlinkAttachment,
+    private readonly validateDocuments: ValidateAttachments,
+  ) {}
 
   /**
    * Validates the attachment keys on creating manual journal.
    * @param {IManualJournalCreatingPayload}
    * @returns {Promise<void>}
    */
-  private async validateAttachmentsOnManualJournalCreate({
+  @OnEvent(events.manualJournals.onCreating)
+  async validateAttachmentsOnManualJournalCreate({
     manualJournalDTO,
-    tenantId,
   }: IManualJournalCreatingPayload): Promise<void> {
     if (isEmpty(manualJournalDTO.attachments)) {
       return;
     }
     const documentKeys = manualJournalDTO?.attachments?.map((a) => a.key);
 
-    await this.validateDocuments.validate(tenantId, documentKeys);
+    await this.validateDocuments.validate(documentKeys);
   }
 
   /**
@@ -70,8 +42,8 @@ export class AttachmentsOnManualJournals {
    * @param {IManualJournalEventCreatedPayload}
    * @returns {Promise<void>}
    */
-  private async handleAttachmentsOnManualJournalCreated({
-    tenantId,
+  @OnEvent(events.manualJournals.onCreated)
+  async handleAttachmentsOnManualJournalCreated({
     manualJournalDTO,
     manualJournal,
     trx,
@@ -79,14 +51,13 @@ export class AttachmentsOnManualJournals {
     if (isEmpty(manualJournalDTO.attachments)) return;
 
     const keys = manualJournalDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'ManualJournal',
       manualJournal.id,
-      trx
+      trx,
     );
   }
 
@@ -94,21 +65,20 @@ export class AttachmentsOnManualJournals {
    * Handles unlinking all the unpresented keys of the edited manual journal.
    * @param {ISaleInvoiceEditedPayload}
    */
-  private async handleUnlinkUnpresentedKeysOnManualJournalEdited({
-    tenantId,
+  @OnEvent(events.manualJournals.onEdited)
+  async handleUnlinkUnpresentedKeysOnManualJournalEdited({
     manualJournalDTO,
     manualJournal,
-    trx
+    trx,
   }: IManualJournalEventEditedPayload) {
     const keys = manualJournalDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.unlinkAttachmentService.unlinkUnpresentedKeys(
-      tenantId,
       keys,
       'SaleInvoice',
       manualJournal.id,
-      trx
+      trx,
     );
   }
 
@@ -117,8 +87,8 @@ export class AttachmentsOnManualJournals {
    * @param {ISaleInvoiceEditedPayload}
    * @returns {Promise<void>}
    */
-  private async handleLinkPresentedKeysOnManualJournalEdited({
-    tenantId,
+  @OnEvent(events.manualJournals.onEdited)
+  async handleLinkPresentedKeysOnManualJournalEdited({
     manualJournalDTO,
     oldManualJournal,
     trx,
@@ -126,14 +96,13 @@ export class AttachmentsOnManualJournals {
     if (isEmpty(manualJournalDTO.attachments)) return;
 
     const keys = manualJournalDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'ManualJournal',
       oldManualJournal.id,
-      trx
+      trx,
     );
   }
 
@@ -142,16 +111,15 @@ export class AttachmentsOnManualJournals {
    * @param {ISaleInvoiceDeletedPayload}
    * @returns {Promise<void>}
    */
-  private async handleUnlinkAttachmentsOnManualJournalDeleted({
-    tenantId,
+  @OnEvent(events.manualJournals.onDeleting)
+  async handleUnlinkAttachmentsOnManualJournalDeleted({
     oldManualJournal,
     trx,
   }: IManualJournalEventDeletedPayload) {
     await this.unlinkAttachmentService.unlinkAllModelKeys(
-      tenantId,
       'SaleInvoice',
       oldManualJournal.id,
-      trx
+      trx,
     );
   }
 }

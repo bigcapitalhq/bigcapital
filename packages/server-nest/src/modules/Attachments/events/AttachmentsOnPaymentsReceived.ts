@@ -1,68 +1,40 @@
-import { Inject, Service } from 'typedi';
 import { isEmpty } from 'lodash';
 import {
   IPaymentReceivedCreatedPayload,
   IPaymentReceivedCreatingPayload,
   IPaymentReceivedDeletingPayload,
   IPaymentReceivedEditedPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { LinkAttachment } from '../LinkAttachment';
+} from '@/modules/PaymentReceived/types/PaymentReceived.types';
 import { ValidateAttachments } from '../ValidateAttachments';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
 import { UnlinkAttachment } from '../UnlinkAttachment';
+import { LinkAttachment } from '../LinkAttachment';
+import { events } from '@/common/events/events';
 
-@Service()
+@Injectable()
 export class AttachmentsOnPaymentsReceived {
-  @Inject()
-  private linkAttachmentService: LinkAttachment;
-
-  @Inject()
-  private unlinkAttachmentService: UnlinkAttachment;
-
-  @Inject()
-  private validateDocuments: ValidateAttachments;
-
-  /**
-   * Constructor method.
-   */
-  public attach(bus) {
-    bus.subscribe(
-      events.paymentReceive.onCreating,
-      this.validateAttachmentsOnPaymentCreate.bind(this)
-    );
-    bus.subscribe(
-      events.paymentReceive.onCreated,
-      this.handleAttachmentsOnPaymentCreated.bind(this)
-    );
-    bus.subscribe(
-      events.paymentReceive.onEdited,
-      this.handleUnlinkUnpresentedKeysOnPaymentEdited.bind(this)
-    );
-    bus.subscribe(
-      events.paymentReceive.onEdited,
-      this.handleLinkPresentedKeysOnPaymentEdited.bind(this)
-    );
-    bus.subscribe(
-      events.paymentReceive.onDeleting,
-      this.handleUnlinkAttachmentsOnPaymentDelete.bind(this)
-    );
-  }
+  constructor(
+    private readonly linkAttachmentService: LinkAttachment,
+    private readonly unlinkAttachmentService: UnlinkAttachment,
+    private readonly validateDocuments: ValidateAttachments,
+  ) {}
 
   /**
    * Validates the attachment keys on creating payment.
    * @param {IPaymentReceivedCreatingPayload}
    * @returns {Promise<void>}
    */
-  private async validateAttachmentsOnPaymentCreate({
+  @OnEvent(events.paymentReceive.onCreating)
+  async validateAttachmentsOnPaymentCreate({
     paymentReceiveDTO,
-    tenantId,
   }: IPaymentReceivedCreatingPayload): Promise<void> {
     if (isEmpty(paymentReceiveDTO.attachments)) {
       return;
     }
     const documentKeys = paymentReceiveDTO?.attachments?.map((a) => a.key);
 
-    await this.validateDocuments.validate(tenantId, documentKeys);
+    await this.validateDocuments.validate(documentKeys);
   }
 
   /**
@@ -70,8 +42,8 @@ export class AttachmentsOnPaymentsReceived {
    * @param {IPaymentReceivedCreatedPayload}
    * @returns {Promise<void>}
    */
-  private async handleAttachmentsOnPaymentCreated({
-    tenantId,
+  @OnEvent(events.paymentReceive.onCreated)
+  async handleAttachmentsOnPaymentCreated({
     paymentReceiveDTO,
     paymentReceive,
     trx,
@@ -79,14 +51,13 @@ export class AttachmentsOnPaymentsReceived {
     if (isEmpty(paymentReceiveDTO.attachments)) return;
 
     const keys = paymentReceiveDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'PaymentReceive',
       paymentReceive.id,
-      trx
+      trx,
     );
   }
 
@@ -94,21 +65,20 @@ export class AttachmentsOnPaymentsReceived {
    * Handles unlinking all the unpresented keys of the edited payment.
    * @param {IPaymentReceivedEditedPayload}
    */
+  @OnEvent(events.paymentReceive.onEdited)
   private async handleUnlinkUnpresentedKeysOnPaymentEdited({
-    tenantId,
     paymentReceiveDTO,
     oldPaymentReceive,
     trx,
   }: IPaymentReceivedEditedPayload) {
     const keys = paymentReceiveDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.unlinkAttachmentService.unlinkUnpresentedKeys(
-      tenantId,
       keys,
       'PaymentReceive',
       oldPaymentReceive.id,
-      trx
+      trx,
     );
   }
 
@@ -117,8 +87,8 @@ export class AttachmentsOnPaymentsReceived {
    * @param {IPaymentReceivedEditedPayload}
    * @returns {Promise<void>}
    */
-  private async handleLinkPresentedKeysOnPaymentEdited({
-    tenantId,
+  @OnEvent(events.paymentReceive.onEdited)
+  async handleLinkPresentedKeysOnPaymentEdited({
     paymentReceiveDTO,
     oldPaymentReceive,
     trx,
@@ -126,14 +96,13 @@ export class AttachmentsOnPaymentsReceived {
     if (isEmpty(paymentReceiveDTO.attachments)) return;
 
     const keys = paymentReceiveDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'PaymentReceive',
       oldPaymentReceive.id,
-      trx
+      trx,
     );
   }
 
@@ -142,16 +111,15 @@ export class AttachmentsOnPaymentsReceived {
    * @param {ISaleInvoiceDeletedPayload}
    * @returns {Promise<void>}
    */
-  private async handleUnlinkAttachmentsOnPaymentDelete({
-    tenantId,
+  @OnEvent(events.paymentReceive.onDeleting)
+  async handleUnlinkAttachmentsOnPaymentDelete({
     oldPaymentReceive,
     trx,
   }: IPaymentReceivedDeletingPayload) {
     await this.unlinkAttachmentService.unlinkAllModelKeys(
-      tenantId,
       'PaymentReceive',
       oldPaymentReceive.id,
-      trx
+      trx,
     );
   }
 }

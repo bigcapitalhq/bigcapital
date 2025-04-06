@@ -1,68 +1,40 @@
-import { Inject, Service } from 'typedi';
 import { isEmpty } from 'lodash';
 import {
   ISaleEstimateCreatedPayload,
   ISaleEstimateCreatingPayload,
   ISaleEstimateDeletingPayload,
   ISaleEstimateEditedPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { LinkAttachment } from '../LinkAttachment';
+} from '@/modules/SaleEstimates/types/SaleEstimates.types';
 import { ValidateAttachments } from '../ValidateAttachments';
+import { Injectable } from '@nestjs/common';
 import { UnlinkAttachment } from '../UnlinkAttachment';
+import { LinkAttachment } from '../LinkAttachment';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
 
-@Service()
+@Injectable()
 export class AttachmentsOnSaleEstimates {
-  @Inject()
-  private linkAttachmentService: LinkAttachment;
-
-  @Inject()
-  private unlinkAttachmentService: UnlinkAttachment;
-
-  @Inject()
-  private validateDocuments: ValidateAttachments;
-
-  /**
-   * Constructor method.
-   */
-  public attach(bus) {
-    bus.subscribe(
-      events.saleEstimate.onCreating,
-      this.validateAttachmentsOnSaleEstimateCreated.bind(this)
-    );
-    bus.subscribe(
-      events.saleEstimate.onCreated,
-      this.handleAttachmentsOnSaleEstimateCreated.bind(this)
-    );
-    bus.subscribe(
-      events.saleEstimate.onEdited,
-      this.handleUnlinkUnpresentedKeysOnSaleEstimateEdited.bind(this)
-    );
-    bus.subscribe(
-      events.saleEstimate.onEdited,
-      this.handleLinkPresentedKeysOnSaleEstimateEdited.bind(this)
-    );
-    bus.subscribe(
-      events.saleEstimate.onDeleting,
-      this.handleUnlinkAttachmentsOnSaleEstimateDelete.bind(this)
-    );
-  }
+  constructor(
+    private readonly linkAttachmentService: LinkAttachment,
+    private readonly unlinkAttachmentService: UnlinkAttachment,
+    private readonly validateDocuments: ValidateAttachments,
+  ) {}
 
   /**
    * Validates the attachment keys on creating sale estimate.
    * @param {ISaleEstimateCreatingPayload}
    * @returns {Promise<void>}
    */
-  private async validateAttachmentsOnSaleEstimateCreated({
+  @OnEvent(events.saleEstimate.onCreating)
+  async validateAttachmentsOnSaleEstimateCreated({
     estimateDTO,
-    tenantId,
   }: ISaleEstimateCreatingPayload): Promise<void> {
     if (isEmpty(estimateDTO.attachments)) {
       return;
     }
     const documentKeys = estimateDTO?.attachments?.map((a) => a.key);
 
-    await this.validateDocuments.validate(tenantId, documentKeys);
+    await this.validateDocuments.validate(documentKeys);
   }
 
   /**
@@ -70,8 +42,8 @@ export class AttachmentsOnSaleEstimates {
    * @param {ISaleEstimateCreatedPayload}
    * @returns {Promise<void>}
    */
-  private async handleAttachmentsOnSaleEstimateCreated({
-    tenantId,
+  @OnEvent(events.saleEstimate.onCreated)
+  async handleAttachmentsOnSaleEstimateCreated({
     saleEstimateDTO,
     saleEstimate,
     trx,
@@ -79,14 +51,13 @@ export class AttachmentsOnSaleEstimates {
     if (isEmpty(saleEstimateDTO.attachments)) return;
 
     const keys = saleEstimateDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'SaleEstimate',
       saleEstimate.id,
-      trx
+      trx,
     );
   }
 
@@ -94,20 +65,19 @@ export class AttachmentsOnSaleEstimates {
    * Handles unlinking all the unpresented keys of the edited sale estimate.
    * @param {ISaleEstimateEditedPayload}
    */
-  private async handleUnlinkUnpresentedKeysOnSaleEstimateEdited({
-    tenantId,
+  @OnEvent(events.saleEstimate.onEdited)
+  async handleUnlinkUnpresentedKeysOnSaleEstimateEdited({
     estimateDTO,
     oldSaleEstimate,
-    trx
+    trx,
   }: ISaleEstimateEditedPayload) {
     const keys = estimateDTO.attachments?.map((attachment) => attachment.key);
 
     await this.unlinkAttachmentService.unlinkUnpresentedKeys(
-      tenantId,
       keys,
       'SaleEstimate',
       oldSaleEstimate.id,
-      trx
+      trx,
     );
   }
 
@@ -116,8 +86,8 @@ export class AttachmentsOnSaleEstimates {
    * @param {ISaleEstimateEditedPayload}
    * @returns {Promise<void>}
    */
-  private async handleLinkPresentedKeysOnSaleEstimateEdited({
-    tenantId,
+  @OnEvent(events.saleEstimate.onEdited)
+  async handleLinkPresentedKeysOnSaleEstimateEdited({
     estimateDTO,
     oldSaleEstimate,
     trx,
@@ -125,12 +95,12 @@ export class AttachmentsOnSaleEstimates {
     if (isEmpty(estimateDTO.attachments)) return;
 
     const keys = estimateDTO.attachments?.map((attachment) => attachment.key);
+
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'SaleEstimate',
       oldSaleEstimate.id,
-      trx
+      trx,
     );
   }
 
@@ -139,16 +109,15 @@ export class AttachmentsOnSaleEstimates {
    * @param {ISaleEstimateDeletingPayload}
    * @returns {Promise<void>}
    */
-  private async handleUnlinkAttachmentsOnSaleEstimateDelete({
-    tenantId,
+  @OnEvent(events.saleEstimate.onDeleting)
+  async handleUnlinkAttachmentsOnSaleEstimateDelete({
     oldSaleEstimate,
     trx,
   }: ISaleEstimateDeletingPayload) {
     await this.unlinkAttachmentService.unlinkAllModelKeys(
-      tenantId,
       'SaleEstimate',
       oldSaleEstimate.id,
-      trx
+      trx,
     );
   }
 }

@@ -1,43 +1,9 @@
 import { Knex } from 'knex';
 import { CreditNote } from '../models/CreditNote';
-import { RefundCreditNote } from '../../CreditNoteRefunds/models/RefundCreditNote';
-import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
-import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
-import { EditCreditNoteDto } from '../dtos/CreditNote.dto';
-
-export interface ICreditNoteEntryNewDTO extends IItemEntryDTO {}
-
-export interface ICreditNoteNewDTO {
-  customerId: number;
-  exchangeRate?: number;
-  creditNoteDate: Date;
-  creditNoteNumber: string;
-  note: string;
-  open: boolean;
-  entries: ICreditNoteEntryNewDTO[];
-  branchId?: number;
-  warehouseId?: number;
-  attachments?: AttachmentLinkDTO[];
-  discount?: number;
-  // discountType?: DiscountType;
-  adjustment?: number;
-}
-
-export interface ICreditNoteEditDTO {
-  customerId: number;
-  exchangeRate?: number;
-  creditNoteDate: Date;
-  creditNoteNumber: string;
-  note: string;
-  open: boolean;
-  entries: ICreditNoteEntryNewDTO[];
-  branchId?: number;
-  warehouseId?: number;
-  attachments?: AttachmentLinkDTO[];
-}
+import { CreateCreditNoteDto, EditCreditNoteDto } from '../dtos/CreditNote.dto';
 
 export enum CreditNoteAction {
   Create = 'Create',
@@ -74,13 +40,13 @@ export interface ICreditNoteEditedPayload {
 }
 
 export interface ICreditNoteCreatedPayload {
-  creditNoteDTO: ICreditNoteNewDTO;
+  creditNoteDTO: CreateCreditNoteDto;
   creditNote: CreditNote;
   trx: Knex.Transaction;
 }
 
 export interface ICreditNoteCreatingPayload {
-  creditNoteDTO: ICreditNoteNewDTO;
+  creditNoteDTO: CreateCreditNoteDto;
   trx: Knex.Transaction;
 }
 

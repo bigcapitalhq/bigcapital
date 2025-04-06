@@ -13,7 +13,9 @@ import { ISearchRole } from '@/modules/DynamicListing/DynamicFilter/DynamicFilte
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { PaymentIntegrationTransactionLink } from '../SaleInvoice.types';
 import { TransactionPaymentServiceEntry } from '@/modules/PaymentServices/models/TransactionPaymentServiceEntry.model';
+import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
 
+@InjectAttachable()
 export class SaleInvoice extends TenantBaseModel{
   public taxAmountWithheld: number;
   public balance: number;

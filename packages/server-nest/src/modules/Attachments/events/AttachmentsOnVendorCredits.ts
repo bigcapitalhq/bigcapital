@@ -1,68 +1,40 @@
-import { Inject, Service } from 'typedi';
 import { isEmpty } from 'lodash';
 import {
   IVendorCreditCreatedPayload,
   IVendorCreditCreatingPayload,
   IVendorCreditDeletingPayload,
   IVendorCreditEditedPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { LinkAttachment } from '../LinkAttachment';
+} from '../../VendorCredit/types/VendorCredit.types';
 import { ValidateAttachments } from '../ValidateAttachments';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
 import { UnlinkAttachment } from '../UnlinkAttachment';
+import { LinkAttachment } from '../LinkAttachment';
+import { events } from '@/common/events/events';
 
-@Service()
+@Injectable()
 export class AttachmentsOnVendorCredits {
-  @Inject()
-  private linkAttachmentService: LinkAttachment;
-
-  @Inject()
-  private unlinkAttachmentService: UnlinkAttachment;
-
-  @Inject()
-  private validateDocuments: ValidateAttachments;
-
-  /**
-   * Constructor method.
-   */
-  public attach(bus) {
-    bus.subscribe(
-      events.vendorCredit.onCreating,
-      this.validateAttachmentsOnVendorCreditCreate.bind(this)
-    );
-    bus.subscribe(
-      events.vendorCredit.onCreated,
-      this.handleAttachmentsOnVendorCreditCreated.bind(this)
-    );
-    bus.subscribe(
-      events.vendorCredit.onEdited,
-      this.handleUnlinkUnpresentedKeysOnVendorCreditEdited.bind(this)
-    );
-    bus.subscribe(
-      events.vendorCredit.onEdited,
-      this.handleLinkPresentedKeysOnVendorCreditEdited.bind(this)
-    );
-    bus.subscribe(
-      events.vendorCredit.onDeleting,
-      this.handleUnlinkAttachmentsOnVendorCreditDeleted.bind(this)
-    );
-  }
+  constructor(
+    private readonly linkAttachmentService: LinkAttachment,
+    private readonly unlinkAttachmentService: UnlinkAttachment,
+    private readonly validateDocuments: ValidateAttachments,
+  ) {}
 
   /**
    * Validates the attachment keys on creating vendor credit.
    * @param {IVendorCreditCreatingPayload}
    * @returns {Promise<void>}
    */
-  private async validateAttachmentsOnVendorCreditCreate({
+  @OnEvent(events.vendorCredit.onCreating)
+  async validateAttachmentsOnVendorCreditCreate({
     vendorCreditCreateDTO,
-    tenantId,
   }: IVendorCreditCreatingPayload): Promise<void> {
     if (isEmpty(vendorCreditCreateDTO.attachments)) {
       return;
     }
     const documentKeys = vendorCreditCreateDTO?.attachments?.map((a) => a.key);
 
-    await this.validateDocuments.validate(tenantId, documentKeys);
+    await this.validateDocuments.validate(documentKeys);
   }
 
   /**
@@ -70,8 +42,8 @@ export class AttachmentsOnVendorCredits {
    * @param {IVendorCreditCreatedPayload}
    * @returns {Promise<void>}
    */
-  private async handleAttachmentsOnVendorCreditCreated({
-    tenantId,
+  @OnEvent(events.vendorCredit.onCreated)
+  async handleAttachmentsOnVendorCreditCreated({
     vendorCreditCreateDTO,
     vendorCredit,
     trx,
@@ -79,14 +51,13 @@ export class AttachmentsOnVendorCredits {
     if (isEmpty(vendorCreditCreateDTO.attachments)) return;
 
     const keys = vendorCreditCreateDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'VendorCredit',
       vendorCredit.id,
-      trx
+      trx,
     );
   }
 
@@ -94,21 +65,20 @@ export class AttachmentsOnVendorCredits {
    * Handles unlinking all the unpresented keys of the edited vendor credit.
    * @param {IVendorCreditEditedPayload}
    */
-  private async handleUnlinkUnpresentedKeysOnVendorCreditEdited({
-    tenantId,
+  @OnEvent(events.vendorCredit.onEdited)
+  async handleUnlinkUnpresentedKeysOnVendorCreditEdited({
     vendorCreditDTO,
     oldVendorCredit,
     trx,
   }: IVendorCreditEditedPayload) {
     const keys = vendorCreditDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.unlinkAttachmentService.unlinkUnpresentedKeys(
-      tenantId,
       keys,
       'VendorCredit',
       oldVendorCredit.id,
-      trx
+      trx,
     );
   }
 
@@ -117,8 +87,8 @@ export class AttachmentsOnVendorCredits {
    * @param {IVendorCreditEditedPayload}
    * @returns {Promise<void>}
    */
-  private async handleLinkPresentedKeysOnVendorCreditEdited({
-    tenantId,
+  @OnEvent(events.vendorCredit.onEdited)
+  async handleLinkPresentedKeysOnVendorCreditEdited({
     vendorCreditDTO,
     oldVendorCredit,
     trx,
@@ -126,14 +96,13 @@ export class AttachmentsOnVendorCredits {
     if (isEmpty(vendorCreditDTO.attachments)) return;
 
     const keys = vendorCreditDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'VendorCredit',
       oldVendorCredit.id,
-      trx
+      trx,
     );
   }
 
@@ -142,16 +111,15 @@ export class AttachmentsOnVendorCredits {
    * @param {IVendorCreditDeletingPayload}
    * @returns {Promise<void>}
    */
-  private async handleUnlinkAttachmentsOnVendorCreditDeleted({
-    tenantId,
+  @OnEvent(events.vendorCredit.onDeleting)
+  async handleUnlinkAttachmentsOnVendorCreditDeleted({
     oldVendorCredit,
     trx,
   }: IVendorCreditDeletingPayload) {
     await this.unlinkAttachmentService.unlinkAllModelKeys(
-      tenantId,
       'VendorCredit',
       oldVendorCredit.id,
-      trx
+      trx,
     );
   }
 }

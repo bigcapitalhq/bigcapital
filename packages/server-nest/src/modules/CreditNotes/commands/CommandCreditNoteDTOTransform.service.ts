@@ -4,11 +4,6 @@ import * as moment from 'moment';
 import * as composeAsync from 'async/compose';
 import * as R from 'ramda';
 import { ERRORS } from '../constants';
-import {
-  ICreditNoteEditDTO,
-  ICreditNoteEntryNewDTO,
-  ICreditNoteNewDTO,
-} from '../types/CreditNotes.types';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';

@@ -1,8 +1,8 @@
+import { Inject, Injectable } from '@nestjs/common';
 import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Knex } from 'knex';
-import { Inject, Injectable } from '@nestjs/common';
-import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { ConfigService } from '@nestjs/config';
+import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { S3_CLIENT } from '../S3/S3.module';
 import { DocumentModel } from './models/Document.model';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
@@ -17,14 +17,14 @@ export class DeleteAttachment {
     @Inject(S3_CLIENT)
     private readonly s3Client: S3Client,
 
-    @Inject(Document.name)
+    @Inject(DocumentModel.name)
     private readonly documentModel: TenantModelProxy<typeof DocumentModel>,
 
     @Inject(DocumentLinkModel.name)
-    private readonly documentLinkModel: TenantModelProxy<typeof DocumentLinkModel>
-  ) {
-
-  }
+    private readonly documentLinkModel: TenantModelProxy<
+      typeof DocumentLinkModel
+    >,
+  ) {}
 
   /**
    * Deletes the give file attachment file key.
@@ -37,13 +37,15 @@ export class DeleteAttachment {
     };
     await this.s3Client.send(new DeleteObjectCommand(params));
 
-    const foundDocument = await this.documentModel().query()
+    const foundDocument = await this.documentModel()
+      .query()
       .findOne('key', filekey)
       .throwIfNotFound();
 
     await this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Delete all document links
-      await this.documentLinkModel().query(trx)
+      await this.documentLinkModel()
+        .query(trx)
         .where('documentId', foundDocument.id)
         .delete();
 

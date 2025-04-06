@@ -1,68 +1,45 @@
-import { Inject, Service } from 'typedi';
 import { isEmpty } from 'lodash';
 import {
   ICreditNoteCreatedPayload,
   ICreditNoteCreatingPayload,
   ICreditNoteDeletingPayload,
   ICreditNoteEditedPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { LinkAttachment } from '../LinkAttachment';
+} from '@/modules/CreditNotes/types/CreditNotes.types';
 import { ValidateAttachments } from '../ValidateAttachments';
+import { Injectable } from '@nestjs/common';
+import { LinkAttachment } from '../LinkAttachment';
 import { UnlinkAttachment } from '../UnlinkAttachment';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
 
-@Service()
+@Injectable()
 export class AttachmentsOnCreditNote {
-  @Inject()
-  private linkAttachmentService: LinkAttachment;
-
-  @Inject()
-  private unlinkAttachmentService: UnlinkAttachment;
-
-  @Inject()
-  private validateDocuments: ValidateAttachments;
-
   /**
-   * Constructor method.
+   * @param {LinkAttachment} linkAttachmentService - 
+   * @param {UnlinkAttachment} unlinkAttachmentService - 
+   * @param {ValidateAttachments} validateDocuments - 
    */
-  public attach(bus) {
-    bus.subscribe(
-      events.creditNote.onCreating,
-      this.validateAttachmentsOnCreditNoteCreate.bind(this)
-    );
-    bus.subscribe(
-      events.creditNote.onCreated,
-      this.handleAttachmentsOnCreditNoteCreated.bind(this)
-    );
-    bus.subscribe(
-      events.creditNote.onEdited,
-      this.handleUnlinkUnpresentedKeysOnCreditNoteEdited.bind(this)
-    );
-    bus.subscribe(
-      events.creditNote.onEdited,
-      this.handleLinkPresentedKeysOnCreditNoteEdited.bind(this)
-    );
-    bus.subscribe(
-      events.creditNote.onDeleting,
-      this.handleUnlinkAttachmentsOnCreditNoteDeleted.bind(this)
-    );
-  }
+  constructor(
+    private readonly linkAttachmentService: LinkAttachment,
+    private readonly unlinkAttachmentService: UnlinkAttachment,
+    private readonly validateDocuments: ValidateAttachments,
+  ) {}
 
   /**
    * Validates the attachment keys on creating credit note.
    * @param {ICreditNoteCreatingPayload}
    * @returns {Promise<void>}
    */
-  private async validateAttachmentsOnCreditNoteCreate({
+  @OnEvent(events.creditNote.onCreating)
+  async validateAttachmentsOnCreditNoteCreate({
     creditNoteDTO,
-    tenantId,
   }: ICreditNoteCreatingPayload): Promise<void> {
     if (isEmpty(creditNoteDTO.attachments)) {
       return;
     }
     const documentKeys = creditNoteDTO?.attachments?.map((a) => a.key);
 
-    await this.validateDocuments.validate(tenantId, documentKeys);
+    await this.validateDocuments.validate(documentKeys);
   }
 
   /**
@@ -70,8 +47,8 @@ export class AttachmentsOnCreditNote {
    * @param {ICreditNoteCreatedPayload}
    * @returns {Promise<void>}
    */
-  private async handleAttachmentsOnCreditNoteCreated({
-    tenantId,
+  @OnEvent(events.creditNote.onCreated)
+  async handleAttachmentsOnCreditNoteCreated({
     creditNote,
     creditNoteDTO,
     trx,
@@ -79,12 +56,12 @@ export class AttachmentsOnCreditNote {
     if (isEmpty(creditNoteDTO.attachments)) return;
 
     const keys = creditNoteDTO.attachments?.map((attachment) => attachment.key);
+
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'CreditNote',
       creditNote.id,
-      trx
+      trx,
     );
   }
 
@@ -92,21 +69,20 @@ export class AttachmentsOnCreditNote {
    * Handles unlinking all the unpresented keys of the edited credit note.
    * @param {ICreditNoteEditedPayload}
    */
-  private async handleUnlinkUnpresentedKeysOnCreditNoteEdited({
-    tenantId,
+  @OnEvent(events.creditNote.onEdited)
+  async handleUnlinkUnpresentedKeysOnCreditNoteEdited({
     creditNoteEditDTO,
     oldCreditNote,
     trx,
   }: ICreditNoteEditedPayload) {
     const keys = creditNoteEditDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.unlinkAttachmentService.unlinkUnpresentedKeys(
-      tenantId,
       keys,
       'CreditNote',
       oldCreditNote.id,
-      trx
+      trx,
     );
   }
 
@@ -115,8 +91,8 @@ export class AttachmentsOnCreditNote {
    * @param {ICreditNoteEditedPayload}
    * @returns {Promise<void>}
    */
-  private async handleLinkPresentedKeysOnCreditNoteEdited({
-    tenantId,
+  @OnEvent(events.creditNote.onEdited)
+  async handleLinkPresentedKeysOnCreditNoteEdited({
     creditNoteEditDTO,
     oldCreditNote,
     trx,
@@ -124,14 +100,13 @@ export class AttachmentsOnCreditNote {
     if (isEmpty(creditNoteEditDTO.attachments)) return;
 
     const keys = creditNoteEditDTO.attachments?.map(
-      (attachment) => attachment.key
+      (attachment) => attachment.key,
     );
     await this.linkAttachmentService.bulkLink(
-      tenantId,
       keys,
       'CreditNote',
       oldCreditNote.id,
-      trx
+      trx,
     );
   }
 
@@ -140,16 +115,15 @@ export class AttachmentsOnCreditNote {
    * @param {ICreditNoteDeletingPayload}
    * @returns {Promise<void>}
    */
-  private async handleUnlinkAttachmentsOnCreditNoteDeleted({
-    tenantId,
+  @OnEvent(events.creditNote.onDeleting)
+  async handleUnlinkAttachmentsOnCreditNoteDeleted({
     oldCreditNote,
     trx,
   }: ICreditNoteDeletingPayload) {
     await this.unlinkAttachmentService.unlinkAllModelKeys(
-      tenantId,
       'CreditNote',
       oldCreditNote.id,
-      trx
+      trx,
     );
   }
 }

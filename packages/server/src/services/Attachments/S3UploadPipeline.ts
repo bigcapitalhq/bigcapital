@@ -15,7 +15,7 @@ export class AttachmentUploadPipeline {
    * @param res The HTTP response object.
    * @param next The callback to pass control to the next middleware function.
    */
-  public validateS3Configured(req: Request, res: Response, next: NextFunction) {
+  validateS3Configured(req: Request, res: Response, next: NextFunction) {
     if (
       !config.s3.region ||
       !config.s3.accessKeyId ||
@@ -42,6 +42,7 @@ export class AttachmentUploadPipeline {
         s3,
         bucket: config.s3.bucket,
         contentType: multerS3.AUTO_CONTENT_TYPE,
+
         metadata: function (req, file, cb) {
           cb(null, { fieldName: file.fieldname });
         },

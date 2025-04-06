@@ -2,6 +2,8 @@ import { Knex } from 'knex';
 import { Expense } from './models/Expense.model';
 import { SystemUser } from '../System/models/SystemUser';
 import { IFilterRole } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
+import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
+import { CreateExpense } from './commands/CreateExpense.service';
 
 export interface IPaginationMeta {
   total: number;
@@ -19,59 +21,28 @@ export interface IExpensesFilter {
   filterQuery?: (query: any) => void;
 }
 
-export interface IExpenseCommonDTO {
-  currencyCode: string;
-  exchangeRate?: number;
-  description?: string;
-  paymentAccountId: number;
-  peyeeId?: number;
-  referenceNo?: string;
-  publish: boolean;
-  userId: number;
-  paymentDate: Date;
-  payeeId: number;
-  categories: IExpenseCategoryDTO[];
-
-  branchId?: number;
-  // attachments?: AttachmentLinkDTO[];
-}
-
-export interface IExpenseCreateDTO extends IExpenseCommonDTO {}
-export interface IExpenseEditDTO extends IExpenseCommonDTO {}
-
-export interface IExpenseCategoryDTO {
-  id?: number;
-  expenseAccountId: number;
-  index: number;
-  amount: number;
-  description?: string;
-  expenseId: number;
-  landedCost?: boolean;
-  projectId?: number;
-}
-
 export interface IExpenseCreatingPayload {
   trx: Knex.Transaction;
-  expenseDTO: IExpenseCreateDTO;
+  expenseDTO: CreateExpenseDto;
 }
 
 export interface IExpenseEventEditingPayload {
   oldExpense: Expense;
-  expenseDTO: IExpenseEditDTO;
+  expenseDTO: EditExpenseDto;
   trx: Knex.Transaction;
 }
 
 export interface IExpenseCreatedPayload {
   expenseId: number;
   expense: Expense;
-  expenseDTO: IExpenseCreateDTO;
+  expenseDTO: CreateExpenseDto;
   trx?: Knex.Transaction;
 }
 
 export interface IExpenseEventEditPayload {
   expenseId: number;
   expense: Expense;
-  expenseDTO: IExpenseEditDTO;
+  expenseDTO: EditExpenseDto;
   authorizedUser: SystemUser;
   oldExpense: Expense;
   trx: Knex.Transaction;

@@ -1,46 +1,59 @@
-import { Inject, Service } from 'typedi';
+import { ModuleRef } from '@nestjs/core';
 import bluebird from 'bluebird';
 import { Knex } from 'knex';
 import {
   validateLinkModelEntryExists,
   validateLinkModelExists,
-} from './Attachments/_utils';
-import HasTenancyService from '../Tenancy/TenancyService';
-import { ServiceError } from '@/exceptions';
+} from './_utils';
 import { ERRORS } from './constants';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { DocumentLink } from '../ChromiumlyTenancy/models/DocumentLink';
+import { Inject, Injectable } from '@nestjs/common';
+import { ServiceError } from '../Items/ServiceError';
+import { getAttachableModelsMap } from './decorators/InjectAttachable.decorator';
+import { DocumentModel } from './models/Document.model';
+import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';
 
-@Service()
+@Injectable()
 export class LinkAttachment {
-  @Inject()
-  private tenancy: HasTenancyService;
+  constructor(
+    private moduleRef: ModuleRef,
+
+    @Inject(DocumentLink.name)
+    private readonly documentLinkModel: TenantModelProxy<typeof DocumentLink>,
+
+    @Inject(DocumentModel.name)
+    private readonly documentModel: TenantModelProxy<typeof DocumentModel>,
+  ) {}
 
   /**
    * Links the given file key to the given model type and id.
-   * @param {number} tenantId
-   * @param {string} filekey
-   * @param {string} modelRef
-   * @param {number} modelId
+   * @param {string} filekey - File key.
+   * @param {string} modelRef - Model reference.
+   * @param {number} modelId - Model id.
    * @returns {Promise<void>}
    */
   async link(
-    tenantId: number,
     filekey: string,
     modelRef: string,
     modelId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
-    const { DocumentLink, Document, ...models } = this.tenancy.models(tenantId);
-    const LinkModel = models[modelRef];
-    validateLinkModelExists(LinkModel);
+    const attachmentsAttachableModels = getAttachableModelsMap();
+    const attachableModel = attachmentsAttachableModels.get(modelRef);
 
-    const foundFile = await Document.query(trx)
+    validateLinkModelExists(attachableModel);
+
+    const LinkModel = this.moduleRef.get(modelRef, { strict: false });
+    const foundFile = await this.documentModel()
+      .query(trx)
       .findOne('key', filekey)
       .throwIfNotFound();
 
-    const foundLinkModel = await LinkModel.query(trx).findById(modelId);
+    const foundLinkModel = await LinkModel().query(trx).findById(modelId);
     validateLinkModelEntryExists(foundLinkModel);
 
-    const foundLinks = await DocumentLink.query(trx)
+    const foundLinks = await this.documentLinkModel().query(trx)
       .where('modelRef', modelRef)
       .where('modelId', modelId)
       .where('documentId', foundFile.id);
@@ -48,7 +61,7 @@ export class LinkAttachment {
     if (foundLinks.length > 0) {
       throw new ServiceError(ERRORS.DOCUMENT_LINK_ALREADY_LINKED);
     }
-    await DocumentLink.query(trx).insert({
+    await this.documentLinkModel().query(trx).insert({
       modelRef,
       modelId,
       documentId: foundFile.id,
@@ -57,23 +70,21 @@ export class LinkAttachment {
 
   /**
    * Links the given file keys to the given model type and id.
-   * @param {number} tenantId
-   * @param {string[]} filekeys
-   * @param {string} modelRef
-   * @param {number} modelId
-   * @param {Knex.Transaction} trx
+   * @param {string[]} filekeys - File keys. 
+   * @param {string} modelRef - Model reference.
+   * @param {number} modelId - Model id.
+   * @param {Knex.Transaction} trx - Knex transaction.
    * @returns {Promise<void>}
    */
   async bulkLink(
-    tenantId: number,
     filekeys: string[],
     modelRef: string,
     modelId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
     return bluebird.each(filekeys, async (fieldKey: string) => {
       try {
-        await this.link(tenantId, fieldKey, modelRef, modelId, trx);
+        await this.link(fieldKey, modelRef, modelId, trx);
       } catch {
         // Ignore catching exceptions in bulk action.
       }

@@ -547,6 +547,9 @@ importers:
       '@supercharge/promise-pool':
         specifier: ^3.2.0
         version: 3.2.0
+      '@types/multer':
+        specifier: ^1.4.11
+        version: 1.4.11
       '@types/nodemailer':
         specifier: ^6.4.17
         version: 6.4.17
@@ -631,6 +634,9 @@ importers:
       mathjs:
         specifier: ^9.4.0
         version: 9.5.2
+      mime-types:
+        specifier: ^2.1.35
+        version: 2.1.35
       moment:
         specifier: ^2.30.1
         version: 2.30.1
@@ -640,6 +646,12 @@ importers:
       moment-timezone:
         specifier: ^0.5.43
         version: 0.5.45
+      multer:
+        specifier: 1.4.5-lts.1
+        version: 1.4.5-lts.1
+      multer-s3:
+        specifier: ^3.0.1
+        version: 3.0.1(@aws-sdk/client-s3@3.583.0)
       mysql:
         specifier: ^2.18.1
         version: 2.18.1
@@ -12460,7 +12472,6 @@ packages:
     resolution: {integrity: sha512-svK240gr6LVWvv3YGyhLlA+6LRRWA4mnGIU7RcNmgjBYFl6665wcXrRfxGp5tEPVHUNm5FMcmq7too9bxCwX/w==}
     dependencies:
       '@types/express': 4.17.21
-    dev: true
 
   /@types/node-fetch@2.6.11:
     resolution: {integrity: sha512-24xFj9R5+rfQJLRyM56qh+wnVSYhyXC2tkoBndtY0U+vubqNsYXGjufB2nn8Q6gt0LrARwL6UBtMCSVCwl4B1g==}
@@ -12653,7 +12664,7 @@ packages:
   /@types/serve-index@1.9.4:
     resolution: {integrity: sha512-qLpGZ/c2fhSs5gnYsQxtDEq3Oy8SXPClIXkW5ghvAvsNuVSA8k+gCONcUCS/UjLEYvYps+e8uBtfgXgvhwfNug==}
     dependencies:
-      '@types/express': 4.17.21
+      '@types/express': 5.0.0
     dev: false
 
   /@types/serve-static@1.15.7:

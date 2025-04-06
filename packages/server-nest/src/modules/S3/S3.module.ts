@@ -7,6 +7,7 @@ export const S3_CLIENT = 'S3_CLIENT';
 const services = [
   {
     provide: S3_CLIENT,
+    inject: [ConfigService],
     useFactory: (configService: ConfigService) => {
       const config = configService.get('s3');
 

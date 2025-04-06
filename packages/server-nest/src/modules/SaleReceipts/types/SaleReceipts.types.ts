@@ -1,30 +1,12 @@
 import { Knex } from 'knex';
-// import { IItemEntry } from './ItemEntry';
-// import { CommonMailOptions, CommonMailOptionsDTO } from '../SaleInvoices/types/Mailable';
-import { AttachmentLinkDTO } from '../../Attachments/Attachments.types';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
 import { CommonMailOptions } from '@/modules/MailNotification/MailNotification.types';
 import { TenantJobPayload } from '@/interfaces/Tenant';
+import { CreateSaleReceiptDto, EditSaleReceiptDto } from '../dtos/SaleReceipt.dto';
 
 export interface ISalesReceiptsFilter {
   filterQuery?: (query: any) => void;
-}
-
-export interface ISaleReceiptDTO {
-  customerId: number;
-  exchangeRate?: number;
-  depositAccountId: number;
-  receiptDate: Date;
-  sendToEmail: string;
-  referenceNo?: string;
-  receiptNumber?: string;
-  receiptMessage: string;
-  statement: string;
-  closed: boolean;
-  entries: any[];
-  branchId?: number;
-  attachments?: AttachmentLinkDTO[];
 }
 
 export interface ISaleReceiptSmsDetails {
@@ -33,7 +15,7 @@ export interface ISaleReceiptSmsDetails {
   smsMessage: string;
 }
 export interface ISaleReceiptCreatingPayload {
-  saleReceiptDTO: ISaleReceiptDTO;
+  saleReceiptDTO: CreateSaleReceiptDto;
   trx: Knex.Transaction;
 }
 
@@ -41,21 +23,20 @@ export interface ISaleReceiptCreatedPayload {
   // tenantId: number;
   saleReceipt: SaleReceipt;
   saleReceiptId: number;
-  saleReceiptDTO: ISaleReceiptDTO;
+  saleReceiptDTO: CreateSaleReceiptDto;
   trx: Knex.Transaction;
 }
 
 export interface ISaleReceiptEditedPayload {
   oldSaleReceipt: SaleReceipt;
   saleReceipt: SaleReceipt;
-  // saleReceiptId: number;
-  saleReceiptDTO: ISaleReceiptDTO;
+  saleReceiptDTO: EditSaleReceiptDto;
   trx: Knex.Transaction;
 }
 
 export interface ISaleReceiptEditingPayload {
   oldSaleReceipt: SaleReceipt;
-  saleReceiptDTO: ISaleReceiptDTO;
+  saleReceiptDTO: EditSaleReceiptDto;
   trx: Knex.Transaction;
 }
 export interface ISaleReceiptEventClosedPayload {

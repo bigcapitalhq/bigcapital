@@ -9,13 +9,11 @@ export class GetAttachment {
     private readonly configService: ConfigService,
 
     @Inject(S3_CLIENT)
-    private readonly s3: S3Client
-  ) {
-
-  }
+    private readonly s3: S3Client,
+  ) {}
+  
   /**
    * Retrieves data of the given document key.
-   * @param {number} tenantId
    * @param {string} filekey
    */
   async getAttachment(filekey: string) {

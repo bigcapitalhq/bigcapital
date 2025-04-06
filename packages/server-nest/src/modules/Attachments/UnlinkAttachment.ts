@@ -1,40 +1,56 @@
 import bluebird from 'bluebird';
+import { difference } from 'lodash';
 import {
   validateLinkModelEntryExists,
   validateLinkModelExists,
 } from './_utils';
 import { Knex } from 'knex';
-import { difference } from 'lodash';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { DocumentLinkModel } from './models/DocumentLink.model';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { DocumentModel } from './models/Document.model';
+import { getAttachableModelsMap } from './decorators/InjectAttachable.decorator';
+import { ModuleRef } from '@nestjs/core';
 
 @Injectable()
 export class UnlinkAttachment {
+  constructor(
+    private moduleRef: ModuleRef,
+
+    @Inject(DocumentModel.name)
+    private readonly documentModel: TenantModelProxy<typeof DocumentModel>,
+
+    @Inject(DocumentLinkModel.name)
+    private readonly documentLinkModel: TenantModelProxy<
+      typeof DocumentLinkModel
+    >,
+  ) {}
+
   /**
    * Unlink the attachments from the model entry.
-   * @param {number} tenantId
-   * @param {string} filekey
-   * @param {string} modelRef
-   * @param {number} modelId
+   * @param {string} filekey - File key.
+   * @param {string} modelRef - Model reference.
+   * @param {number} modelId - Model id.
    */
   async unlink(
-    tenantId: number,
     filekey: string,
     modelRef: string,
     modelId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
-    const { DocumentLink, Document, ...models } = this.tenancy.models(tenantId);
-    
-    const LinkModel = models[modelRef];
-    validateLinkModelExists(LinkModel);
+    const attachmentsAttachableModels = getAttachableModelsMap();
+    const attachableModel = attachmentsAttachableModels.get(modelRef);
 
+    validateLinkModelExists(attachableModel);
+
+    const LinkModel = this.moduleRef.get(modelRef, { strict: false });
     const foundLinkModel = await LinkModel.query(trx).findById(modelId);
     validateLinkModelEntryExists(foundLinkModel);
 
-    const document = await Document.query(trx).findOne('key', filekey);
+    const document = await this.documentModel().query(trx).findOne('key', filekey);
 
     // Delete the document link.
-    await DocumentLink.query(trx)
+    await this.documentLinkModel().query(trx)
       .where('modelRef', modelRef)
       .where('modelId', modelId)
       .where('documentId', document.id)
@@ -43,22 +59,20 @@ export class UnlinkAttachment {
 
   /**
    * Bulk unlink the attachments from the model entry.
-   * @param {number} tenantId
    * @param {string} fieldkey
    * @param {string} modelRef
    * @param {number} modelId
    * @returns {Promise<void>}
    */
   async bulkUnlink(
-    tenantId: number,
     filekeys: string[],
     modelRef: string,
     modelId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     await bluebird.each(filekeys, (fieldKey: string) => {
       try {
-        this.unlink(tenantId, fieldKey, modelRef, modelId, trx);
+        this.unlink(fieldKey, modelRef, modelId, trx);
       } catch {
         // Ignore catching exceptions on bulk action.
       }
@@ -74,15 +88,13 @@ export class UnlinkAttachment {
    * @param {Knex.Transaction} trx
    */
   async unlinkUnpresentedKeys(
-    tenantId: number,
     presentedKeys: string[],
     modelRef: string,
     modelId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
-    const { DocumentLink } = this.tenancy.models(tenantId);
-
-    const modelLinks = await DocumentLink.query(trx)
+    const modelLinks = await this.documentLinkModel()
+      .query(trx)
       .where('modelRef', modelRef)
       .where('modelId', modelId)
       .withGraphFetched('document');
@@ -90,33 +102,30 @@ export class UnlinkAttachment {
     const modelLinkKeys = modelLinks.map((link) => link.document.key);
     const unpresentedKeys = difference(modelLinkKeys, presentedKeys);
 
-    await this.bulkUnlink(tenantId, unpresentedKeys, modelRef, modelId, trx);
+    await this.bulkUnlink(unpresentedKeys, modelRef, modelId, trx);
   }
 
   /**
    * Unlink all attachments of the given model type and id.
-   * @param {number} tenantId
    * @param {string} modelRef
    * @param {number} modelId
    * @param {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
   async unlinkAllModelKeys(
-    tenantId: number,
     modelRef: string,
     modelId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
-    const { DocumentLink } = this.tenancy.models(tenantId);
-
     // Get all the keys of the modelRef and modelId.
-    const modelLinks = await DocumentLink.query(trx)
+    const modelLinks = await this.documentLinkModel()
+      .query(trx)
       .where('modelRef', modelRef)
       .where('modelId', modelId)
       .withGraphFetched('document');
 
     const modelLinkKeys = modelLinks.map((link) => link.document.key);
 
-    await this.bulkUnlink(tenantId, modelLinkKeys, modelRef, modelId, trx);
+    await this.bulkUnlink(modelLinkKeys, modelRef, modelId, trx);
   }
 }
