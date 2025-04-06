@@ -39,6 +39,8 @@ export interface IModelMetaFieldCommon {
   order?: number;
   unique?: number;
   dataTransferObjectKey?: string;
+  filterCustomQuery?: Function;
+  sortCustomQuery?: Function;
 }
 
 export interface IModelMetaFieldText {
@@ -122,7 +124,7 @@ export type IModelMetaCollectionField = IModelMetaCollectionFieldCommon &
 export type IModelMetaRelationField = IModelMetaRelationFieldCommon &
   IModelMetaRelationEnumerationField;
 
-interface IModelPrintMeta{
+interface IModelPrintMeta {
   pageTitle: string;
 }
 
@@ -140,8 +142,9 @@ export interface IModelMeta {
 
   print?: IModelPrintMeta;
 
-  fields: { [key: string]: IModelMetaField };
-  columns: { [key: string]: IModelMetaColumn };
+  fields: Record<string, IModelMetaField>;
+  fields2: Record<string, IModelMetaField2>;
+  columns: Record<string, IModelMetaColumn>;
 }
 
 // ----
@@ -151,7 +154,7 @@ export interface IModelMetaFieldCommon2 {
   importHint?: string;
   order?: number;
   unique?: number;
-  features?: Array<any>
+  features?: Array<any>;
 }
 
 export interface IModelMetaRelationField2 {

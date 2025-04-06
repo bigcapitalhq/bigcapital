@@ -1,4 +1,4 @@
-import { IContact } from '@/interfaces';
+import { Contact } from "@/modules/Contacts/models/Contact";
 
 interface OrganizationAddressFormatArgs {
   organizationName?: string;
@@ -83,7 +83,7 @@ export const defaultContactAddressFormat = `{CONTACT_NAME}
 `;
 
 export const contactAddressTextFormat = (
-  contact: IContact,
+  contact: Contact,
   message: string = defaultContactAddressFormat
 ) => {
   const args = {

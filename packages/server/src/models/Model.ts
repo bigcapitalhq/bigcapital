@@ -1,48 +1,43 @@
-import { Model, mixin } from 'objection';
-import { snakeCase, transform } from 'lodash';
-import { mapKeysDeep } from 'utils';
-import PaginationQueryBuilder from 'models/Pagination';
-import DateSession from 'models/DateSession';
+import { QueryBuilder, Model } from 'objection';
 
-export default class ModelBase extends mixin(Model, [DateSession]) {
-  get timestamps() {
-    return [];
+interface PaginationResult<M extends Model> {
+  results: M[];
+  pagination: {
+    total: number;
+    page: number;
+    pageSize: number;
+  };
+}
+
+export type PaginationQueryBuilderType<M extends Model> = QueryBuilder<
+  M,
+  PaginationResult<M>
+>;
+
+class PaginationQueryBuilder<M extends Model, R = M[]> extends QueryBuilder<
+  M,
+  R
+> {
+  pagination(page: number, pageSize: number): PaginationQueryBuilderType<M> {
+    const query = super.page(page, pageSize);
+    
+    return query.runAfter(({ results, total }) => {
+      return {
+        results,
+        pagination: {
+          total,
+          page: page + 1,
+          pageSize,
+        },
+      };
+    }) as unknown as PaginationQueryBuilderType<M>;
   }
+}
 
-  static get knexBinded() {
-    return this.knexBindInstance;
-  }
+export class BaseModel extends Model {
+  public readonly id: number;
+  public readonly tableName: string;
 
-  static set knexBinded(knex) {
-    this.knexBindInstance = knex;
-  }
-
-  static get collection() {
-    return Array;
-  }
-
-  static query(...args) {
-    return super.query(...args).runAfter((result) => {
-      if (Array.isArray(result)) {
-        return this.collection.from(result);
-      }
-      return result;
-    });
-  }
-
-  static get QueryBuilder() {
-    return PaginationQueryBuilder;
-  }
-
-  static relationBindKnex(model) {
-    return this.knexBinded ? model.bindKnex(this.knexBinded) : model;
-  }
-
-  static changeAmount(whereAttributes, attribute, amount, trx) {
-    const changeMethod = amount > 0 ? 'increment' : 'decrement';
-
-    return this.query(trx)
-      .where(whereAttributes)
-      [changeMethod](attribute, Math.abs(amount));
-  }
+  QueryBuilderType!: PaginationQueryBuilder<this>;
+  static QueryBuilder = PaginationQueryBuilder;
 }

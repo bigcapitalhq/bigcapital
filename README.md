@@ -1,3 +1,5 @@
+
+
 <p align="center">
   <p align="center">
     <a href="https://bigcapital.app" target="_blank">
@@ -33,6 +35,9 @@
     <a href="https://my.bigcapital.app">Bigcapital Cloud</a>
   </p>
 </p>
+
+> We are currently in the process of migrating all server-side API endpoints to NestJS to establish a more solid architecture. Some endpoints in development mode may be temporarily do not work during this stabilization phase. However, this migration doesn't affect the production Docker images, which remain on the latest stable version.
+
 
 # What's Bigcapital?
 

@@ -1,5 +1,5 @@
-import { TenantSeeder } from '@/lib/Seeder/TenantSeeder';
-import AccountsData from '../data/accounts';
+import { TenantSeeder } from '@/libs/migration-seed/TenantSeeder';
+import { AccountsData } from '../data/accounts';
 
 export default class SeedAccounts extends TenantSeeder {
   /**
@@ -8,8 +8,8 @@ export default class SeedAccounts extends TenantSeeder {
   up(knex) {
     const data = AccountsData.map((account) => ({
       ...account,
-      name: this.i18n.__(account.name),
-      description: this.i18n.__(account.description),
+      name: this.i18n.t(account.name),
+      description: account.description ? this.i18n.t(account.description) : '',
       currencyCode: this.tenant.metadata.baseCurrency,
       seededAt: new Date(),
     }));

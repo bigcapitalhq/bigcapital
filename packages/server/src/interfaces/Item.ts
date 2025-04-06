@@ -1,6 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Knex } from 'knex';
-import { AbilitySubject } from '@/interfaces';
-import { IFilterRole } from '@/interfaces/DynamicFilter';
+import { Item } from '@/modules/Items/models/Item';
+// import { AbilitySubject } from '@/interfaces';
+// import { IFilterRole } from '@/interfaces/DynamicFilter';
 
 export interface IItem {
   id: number;
@@ -37,92 +39,119 @@ export interface IItem {
   updatedAt: Date;
 }
 
-export interface IItemDTO {
+export class IItemDTO {
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   type: string;
+
+  @ApiProperty()
   code: string;
 
+  @ApiProperty()
   sellable: boolean;
+
+  @ApiProperty()
   purchasable: boolean;
 
+  @ApiProperty()
   costPrice: number;
+
+  @ApiProperty()
   sellPrice: number;
 
+  @ApiProperty()
   currencyCode: string;
 
+  @ApiProperty()
   costAccountId: number;
+
+  @ApiProperty()
   sellAccountId: number;
+
+  @ApiProperty()
   inventoryAccountId: number;
 
+  @ApiProperty()
   sellDescription: string;
+
+  @ApiProperty()
   purchaseDescription: string;
 
+  @ApiProperty()
   sellTaxRateId: number;
+
+  @ApiProperty()
   purchaseTaxRateId: number;
 
+  @ApiProperty()
   quantityOnHand: number;
 
+  @ApiProperty()
   note: string;
+
+  @ApiProperty()
   active: boolean;
 
+  @ApiProperty()
   categoryId: number;
 }
 
 export interface IItemCreateDTO extends IItemDTO {}
 export interface IItemEditDTO extends IItemDTO {}
 
-export interface IItemsService {
-  getItem(tenantId: number, itemId: number): Promise<IItem>;
-  deleteItem(tenantId: number, itemId: number): Promise<void>;
-  editItem(tenantId: number, itemId: number, itemDTO: IItemDTO): Promise<IItem>;
-  newItem(tenantId: number, itemDTO: IItemDTO): Promise<IItem>;
-  itemsList(
-    tenantId: number,
-    itemsFilter: IItemsFilter
-  ): Promise<{ items: IItem[] }>;
-}
+// export interface IItemsService {
+//   getItem(tenantId: number, itemId: number): Promise<IItem>;
+//   deleteItem(tenantId: number, itemId: number): Promise<void>;
+//   editItem(tenantId: number, itemId: number, itemDTO: IItemDTO): Promise<IItem>;
+//   newItem(tenantId: number, itemDTO: IItemDTO): Promise<IItem>;
+//   itemsList(
+//     tenantId: number,
+//     itemsFilter: IItemsFilter,
+//   ): Promise<{ items: IItem[] }>;
+// }
 
-export interface IItemsFilter extends IDynamicListFilterDTO {
-  stringifiedFilterRoles?: string;
-  page: number;
-  pageSize: number;
-  inactiveMode: boolean;
-  viewSlug?: string;
-}
+// export interface IItemsFilter extends IDynamicListFilterDTO {
+//   stringifiedFilterRoles?: string;
+//   page: number;
+//   pageSize: number;
+//   inactiveMode: boolean;
+//   viewSlug?: string;
+// }
 
-export interface IItemsAutoCompleteFilter {
-  limit: number;
-  keyword: string;
-  filterRoles?: IFilterRole[];
-  columnSortBy: string;
-  sortOrder: string;
-}
+// export interface IItemsAutoCompleteFilter {
+//   limit: number;
+//   keyword: string;
+//   filterRoles?: IFilterRole[];
+//   columnSortBy: string;
+//   sortOrder: string;
+// }
 
 export interface IItemEventCreatedPayload {
-  tenantId: number;
-  item: IItem;
+  // tenantId: number;
+  item: Item;
   itemId: number;
   trx: Knex.Transaction;
 }
 
 export interface IItemEventEditedPayload {
-  tenantId: number;
-  item: IItem;
-  oldItem: IItem;
+  item: Item;
+  oldItem: Item;
   itemId: number;
   trx: Knex.Transaction;
 }
 
 export interface IItemEventDeletingPayload {
-  tenantId: number;
+  // tenantId: number;
   trx: Knex.Transaction;
-  oldItem: IItem;
+  oldItem: Item;
 }
 
 export interface IItemEventDeletedPayload {
-  tenantId: number;
-  oldItem: IItem;
+  // tenantId: number;
   itemId: number;
+  oldItem: Item;
   trx: Knex.Transaction;
 }
 
@@ -133,4 +162,4 @@ export enum ItemAction {
   VIEW = 'View',
 }
 
-export type ItemAbility = [ItemAction, AbilitySubject.Item];
+// export type ItemAbility = [ItemAction, AbilitySubject.Item];

@@ -1,5 +1,6 @@
+// @ts-nocheck
 import * as _ from 'lodash';
-import * as deepdash from 'deepdash';
+import * as addDeepdash from 'deepdash';
 
 const {
   condense,
@@ -16,6 +17,7 @@ const {
   mapDeep,
   mapKeysDeep,
   mapValuesDeep,
+  mapValues,
   omitDeep,
   pathMatches,
   pathToString,
@@ -24,7 +26,7 @@ const {
   reduceDeep,
   someDeep,
   iteratee,
-} = deepdash.default(_);
+} = addDeepdash(_);
 
 const mapValuesDeepReverse = (nodes, callback, config?) => {
   const clonedNodes = _.clone(nodes);
@@ -115,6 +117,7 @@ export {
   mapDeep,
   mapKeysDeep,
   mapValuesDeep,
+  mapValues,
   omitDeep,
   pathMatches,
   pathToString,
