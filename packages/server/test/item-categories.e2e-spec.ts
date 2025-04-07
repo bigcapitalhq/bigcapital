@@ -7,6 +7,7 @@ describe('Item Categories(e2e)', () => {
     return request(app.getHttpServer())
       .post('/item-categories')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.person.fullName(),
         description: faker.lorem.sentence(),

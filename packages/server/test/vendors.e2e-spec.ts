@@ -59,6 +59,7 @@ describe.only('Vendors (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/vendors/${vendorId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 

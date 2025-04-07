@@ -7,6 +7,7 @@ describe('Branches (e2e)', () => {
     return request(app.getHttpServer())
       .post('/branches')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         code: faker.string.alpha(4),
@@ -18,6 +19,7 @@ describe('Branches (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/branches')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         code: faker.string.alpha(4),

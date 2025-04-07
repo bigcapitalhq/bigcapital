@@ -19,22 +19,19 @@ beforeAll(async () => {
 
   app = moduleFixture.createNestApplication();
   await app.init();
+
+  const signinResponse = await request(app.getHttpServer())
+    .post('/auth/signin')
+    .send({ email, password })
+    .expect(201);
+
+  authenticationToken = signinResponse.body.access_token;
+  AuthorizationHeader = `Bearer ${authenticationToken}`;
 });
 
 afterAll(async () => {
   await app.close();
 });
-
 // jest.retryTimes(3, { logErrorsBeforeRetry: true });
-
-beforeAll(async () => {
-  const signinResponse = await request(app.getHttpServer())
-      .post('/auth/signin')
-      .send({ email, password })
-      .expect(201);
-
-  authenticationToken = signinResponse.body.access_token; 
-  AuthorizationHeader = `Bearer ${authenticationToken}`;
-})
 
 export { app, orgainzationId, authenticationToken, AuthorizationHeader };

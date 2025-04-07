@@ -1,12 +1,19 @@
 import * as request from 'supertest';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
-describe.only('Transactions Locking (e2e)', () => {
+describe('Transactions Locking (e2e)', () => {
+  afterAll(() => {
+    return request(app.getHttpServer())
+      .put('/transactions-locking/cancel-lock')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader);
+  });
+
   it('/transactions-locking/lock (PUT)', () => {
     return request(app.getHttpServer())
       .put('/transactions-locking/lock')
       .set('organization-id', orgainzationId)
-      .set('Authorization', AuthorizationHeader) 
+      .set('Authorization', AuthorizationHeader)
       .send({
         module: 'all',
         lock_to_date: '2025-01-01',

@@ -7,6 +7,7 @@ describe('Warehouses (e2e)', () => {
     return request(app.getHttpServer())
       .post('/warehouses')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
         code: faker.string.alpha(4),
@@ -28,6 +29,7 @@ describe('Warehouses (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/warehouses/${warehouseId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -45,6 +47,7 @@ describe('Warehouses (e2e)', () => {
     return request(app.getHttpServer())
       .put(`/warehouses/${warehouseId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 

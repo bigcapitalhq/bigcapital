@@ -4,12 +4,16 @@ import { BankTransaction } from '../models/BankTransaction';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { BankTransactionTransformer } from './BankTransactionTransformer';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetBankTransactionService {
   constructor(
     @Inject(BankTransaction.name)
-    private readonly bankTransactionModel: typeof BankTransaction,
+    private readonly bankTransactionModel: TenantModelProxy<
+      typeof BankTransaction
+    >,
+
     private readonly transformer: TransformerInjectable,
   ) {}
 
@@ -19,7 +23,7 @@ export class GetBankTransactionService {
    * @returns
    */
   public async getBankTransaction(cashflowTransactionId: number) {
-    const cashflowTransaction = await this.bankTransactionModel
+    const cashflowTransaction = await this.bankTransactionModel()
       .query()
       .findById(cashflowTransactionId)
       .withGraphFetched('entries.cashflowAccount')

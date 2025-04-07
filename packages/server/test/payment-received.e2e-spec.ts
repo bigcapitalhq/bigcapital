@@ -45,6 +45,7 @@ describe('Payment Received (e2e)', () => {
     const customer = await request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send({ displayName: 'Test Customer' });
 
     customerId = customer.body.id;
@@ -96,6 +97,7 @@ describe('Payment Received (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/payments-received/${paymentReceivedId}`)
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 

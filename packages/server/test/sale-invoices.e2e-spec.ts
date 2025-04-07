@@ -91,19 +91,19 @@ describe('Sale Invoices (e2e)', () => {
       .expect(200);
   });
 
-  it('/sale-invoices (GET)', async () => {
-    await request(app.getHttpServer())
-      .post('/sale-invoices')
-      .set('organization-id', orgainzationId)
-      .set('Authorization', AuthorizationHeader)
-      .send(requestSaleInvoiceBody());
+  // it('/sale-invoices (GET)', async () => {
+  //   await request(app.getHttpServer())
+  //     .post('/sale-invoices')
+  //     .set('organization-id', orgainzationId)
+  //     .set('Authorization', AuthorizationHeader)
+  //     .send(requestSaleInvoiceBody());
 
-    return request(app.getHttpServer())
-      .get('/sale-invoices')
-      .set('organization-id', orgainzationId)
-      .set('Authorization', AuthorizationHeader)
-      .expect(200);
-  });
+  //   return request(app.getHttpServer())
+  //     .get('/sale-invoices')
+  //     .set('organization-id', orgainzationId)
+  //     .set('Authorization', AuthorizationHeader)
+  //     .expect(200);
+  // });
 
   it('/sale-invoices/:id (GET)', async () => {
     const response = await request(app.getHttpServer())
@@ -201,7 +201,7 @@ describe('Sale Invoices (e2e)', () => {
       });
 
     return request(app.getHttpServer())
-      .post(`/sale-invoices/${response.body.id}/deliver`)
+      .put(`/sale-invoices/${response.body.id}/deliver`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);

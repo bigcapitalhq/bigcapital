@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { BankTransaction } from '../models/BankTransaction';
 import { BankTransactionGL } from './BankTransactionGL';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class BankTransactionGLEntriesService {
@@ -10,12 +11,11 @@ export class BankTransactionGLEntriesService {
     private readonly ledgerStorage: LedgerStorageService,
 
     @Inject(BankTransaction.name)
-    private readonly bankTransactionModel: typeof BankTransaction,
+    private readonly bankTransactionModel: TenantModelProxy<typeof BankTransaction>,
   ) {}
 
   /**
    * Write the journal entries of the given cashflow transaction.
-   * @param {number} tenantId
    * @param {ICashflowTransaction} cashflowTransaction
    * @return {Promise<void>}
    */
@@ -24,7 +24,7 @@ export class BankTransactionGLEntriesService {
     trx?: Knex.Transaction,
   ): Promise<void> => {
     // Retrieves the cashflow transactions with associated entries.
-    const transaction = await this.bankTransactionModel
+    const transaction = await this.bankTransactionModel()
       .query(trx)
       .findById(cashflowTransactionId)
       .withGraphFetched('cashflowAccount')
