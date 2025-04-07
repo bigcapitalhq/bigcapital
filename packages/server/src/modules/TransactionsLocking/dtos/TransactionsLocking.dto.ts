@@ -1,9 +1,14 @@
+import { Type } from 'class-transformer';
 import { IsString } from 'class-validator';
 import { IsNotEmpty } from 'class-validator';
 import { IsDate } from 'class-validator';
 
 export class TransactionsLockingDto {
+  @IsString()
+  module: string;
+
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   lockToDate: Date;
 

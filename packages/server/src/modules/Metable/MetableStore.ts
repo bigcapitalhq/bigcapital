@@ -119,8 +119,8 @@ export class MetableStore implements IMetableStore {
         value: newValue,
         key,
         ...extraColumns,
+        group: extraColumns?.group || 'default',
         _markAsInserted: true,
-        group: 'default',
       });
     }
   }

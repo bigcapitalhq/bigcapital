@@ -1,7 +1,7 @@
-import { TransactionsLockingGroup } from '../types/TransactionsLocking.types';
 import { Injectable } from '@nestjs/common';
-import { TransactionsLockingGuard } from './TransactionsLockingGuard';
 import { MomentInput } from 'moment';
+import { TransactionsLockingGroup } from '../types/TransactionsLocking.types';
+import { TransactionsLockingGuard } from './TransactionsLockingGuard';
 
 @Injectable()
 export class SalesTransactionLockingGuard {

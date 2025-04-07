@@ -6,6 +6,7 @@ describe.only('Transactions Locking (e2e)', () => {
     return request(app.getHttpServer())
       .put('/transactions-locking/lock')
       .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader) 
       .send({
         module: 'all',
         lock_to_date: '2025-01-01',

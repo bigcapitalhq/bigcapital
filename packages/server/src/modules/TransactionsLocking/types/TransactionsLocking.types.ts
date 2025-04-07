@@ -19,13 +19,11 @@ export enum TransactionsLockingType {
 }
 
 export interface ITransactionsLockingPartialUnlocked {
-  tenantId: number;
   module: TransactionsLockingGroup;
   transactionLockingDTO: ITransactionsLockingAllDTO;
 }
 
 export interface ITransactionsLockingCanceled {
-  tenantId: number;
   module: TransactionsLockingGroup;
   cancelLockingDTO: ICancelTransactionsLockingDTO;
 }

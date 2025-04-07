@@ -22,7 +22,7 @@ export class ValidateBranchExistance {
   public validateTransactionBranchWhenActive = async (
     branchId: number | null,
   ) => {
-    const isActive = this.branchesSettings.isMultiBranchesActive();
+    const isActive = await this.branchesSettings.isMultiBranchesActive();
 
     // Can't continue if the multi-warehouses feature is inactive.
     if (!isActive) return;

@@ -64,26 +64,22 @@ export interface IEditWarehouseTransferDTO {
 }
 
 export interface IWarehouseEditPayload {
-  tenantId: number;
   warehouseId: number;
   warehouseDTO: IEditWarehouseDTO;
   trx: Knex.Transaction;
 }
 
 export interface IWarehouseEditedPayload {
-  tenantId: number;
   warehouse: IWarehouse;
   warehouseDTO: IEditWarehouseDTO;
   trx: Knex.Transaction;
 }
 
 export interface IWarehouseDeletePayload {
-  // tenantId: number;
   warehouseId: number;
   trx: Knex.Transaction;
 }
 export interface IWarehouseDeletedPayload {
-  tenantId: number;
   warehouseId: number;
   trx: Knex.Transaction;
 }
@@ -101,7 +97,6 @@ export interface IWarehouseCreatedPayload {
 export interface IWarehouseTransferCreate {
   trx: Knex.Transaction;
   warehouseTransferDTO: ICreateWarehouseTransferDTO;
-  tenantId: number;
 }
 
 export interface IWarehouseTransferCreated {
@@ -146,10 +141,8 @@ export interface IItemWarehouseQuantityChange {
 }
 
 export interface IWarehousesActivatePayload {
-  // tenantId: number;
 }
 export interface IWarehousesActivatedPayload {
-  // tenantId: number;
   primaryWarehouse: Warehouse;
 }
 

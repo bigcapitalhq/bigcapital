@@ -70,7 +70,8 @@ export class TransactionsLockingGuard {
   ) => {
     const { lockToDate } =
       await this.transactionsLockingRepo.getTransactionsLocking(lockingGroup);
-    throw new ServiceError(ERRORS.TRANSACTIONS_DATE_LOCKED, null, {
+
+    throw new ServiceError(ERRORS.TRANSACTIONS_DATE_LOCKED, 'Transactions locked', {
       lockedToDate: lockToDate,
       formattedLockedToDate: moment(lockToDate).format('YYYY/MM/DD'),
     });
@@ -88,14 +89,12 @@ export class TransactionsLockingGuard {
     const lockingType =
       await this.transactionsLockingRepo.getTransactionsLockingType();
 
-    //
     if (lockingType === TransactionsLockingGroup.All) {
       return this.validateTransactionsLocking(
         transactionDate,
         TransactionsLockingGroup.All,
       );
     }
-    //
     return this.validateTransactionsLocking(transactionDate, moduleType);
   };
 }
