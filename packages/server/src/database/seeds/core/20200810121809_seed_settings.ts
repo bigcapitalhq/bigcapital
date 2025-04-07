@@ -1,4 +1,4 @@
-import { TenantSeeder } from '@/lib/Seeder/TenantSeeder';
+import { TenantSeeder } from '@/libs/migration-seed/TenantSeeder';
 
 export default class SeedSettings extends TenantSeeder {
   /**

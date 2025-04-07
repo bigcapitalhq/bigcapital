@@ -1,4 +1,4 @@
-import { TenantSeeder } from '@/lib/Seeder/TenantSeeder';
+import { TenantSeeder } from '@/libs/migration-seed/TenantSeeder';
 import { InitialTaxRates } from '../data/TaxRates';
 
 export default class SeedTaxRates extends TenantSeeder {

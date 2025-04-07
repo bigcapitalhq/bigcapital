@@ -1,2 +1,0 @@
-export const EXPORT_SIZE_LIMIT = 9999999;
-export const EXPORT_DTE_FORMAT = 'YYYY-MM-DD';
