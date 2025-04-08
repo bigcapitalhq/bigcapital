@@ -17,6 +17,7 @@ import { LedgerModule } from '../Ledger/Ledger.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { GetExpensesService } from './queries/GetExpenses.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { ExpensesExportable } from './ExpensesExportable';
 
 @Module({
   imports: [LedgerModule, BranchesModule, DynamicListModule],
@@ -37,6 +38,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     ExpenseGLEntriesStorageService,
     ExpenseGLEntriesService,
     GetExpensesService,
+    ExpensesExportable
   ],
 })
 export class ExpensesModule {}

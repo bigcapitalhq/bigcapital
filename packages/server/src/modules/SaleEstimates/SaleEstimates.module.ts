@@ -35,6 +35,7 @@ import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectab
 import { SaleEstimatePdfTemplate } from '../SaleInvoices/queries/SaleEstimatePdfTemplate.service';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { SendSaleEstimateMailQueue } from './types/SaleEstimates.types';
+import { SaleEstimatesExportable } from './SaleEstimatesExportable';
 
 @Module({
   imports: [
@@ -74,7 +75,8 @@ import { SendSaleEstimateMailQueue } from './types/SaleEstimates.types';
     SaleEstimatesApplication,
     SendSaleEstimateMail,
     GetSaleEstimatePdf,
-    SaleEstimatePdfTemplate
+    SaleEstimatePdfTemplate,
+    SaleEstimatesExportable
   ],
 })
 export class SaleEstimatesModule {}

@@ -1,6 +1,8 @@
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { Model } from 'objection';
 
+@ExportableModel()
 export class ItemCategory extends TenantBaseModel {
   name!: string;
   description!: string;

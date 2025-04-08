@@ -56,6 +56,7 @@ import { SaleInvoiceCostGLEntries } from './SaleInvoiceCostGLEntries';
 import { InvoicePaymentsGLEntriesRewrite } from './InvoicePaymentsGLRewrite';
 import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.module';
 import { SaleInvoicesCost } from './SalesInvoicesCost';
+import { SaleInvoicesExportable } from './commands/SaleInvoicesExportable';
 
 @Module({
   imports: [
@@ -118,6 +119,7 @@ import { SaleInvoicesCost } from './SalesInvoicesCost';
     SaleInvoiceWriteInventoryTransactionsSubscriber,
     InvoicePaymentsGLEntriesRewrite,
     SaleInvoicesCost,
+    SaleInvoicesExportable
   ],
   exports: [GetSaleInvoice, SaleInvoicesCost, SaleInvoicePdf],
 })

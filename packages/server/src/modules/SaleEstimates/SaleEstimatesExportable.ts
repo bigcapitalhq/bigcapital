@@ -1,35 +1,38 @@
-// import { Inject, Service } from 'typedi';
-// import { ISalesInvoicesFilter } from '@/interfaces';
-// import { Exportable } from '@/services/Export/Exportable';
-// import { SaleEstimatesApplication } from './SaleEstimates.application';
-// import { EXPORT_SIZE_LIMIT } from '@/services/Export/constants';
+import { Injectable } from '@nestjs/common';
+import { EXPORT_SIZE_LIMIT } from '../Export/constants';
+import { Exportable } from '../Export/Exportable';
+import { ISalesInvoicesFilter } from '../SaleInvoices/SaleInvoice.types';
+import { SaleEstimatesApplication } from './SaleEstimates.application';
+import { ISalesEstimatesFilter } from './types/SaleEstimates.types';
 
-// @Service()
-// export class SaleEstimatesExportable extends Exportable {
-//   @Inject()
-//   private saleEstimatesApplication: SaleEstimatesApplication;
+@Injectable()
+export class SaleEstimatesExportable extends Exportable {
+  constructor(
+    private readonly saleEstimatesApplication: SaleEstimatesApplication,
+  ) {
+    super();
+  }
 
-//   /**
-//    * Retrieves the accounts data to exportable sheet.
-//    * @param {number} tenantId
-//    * @returns
-//    */
-//   public exportable(tenantId: number, query: ISalesInvoicesFilter) {
-//     const filterQuery = (query) => {
-//       query.withGraphFetched('branch');
-//       query.withGraphFetched('warehouse');
-//     };
-//     const parsedQuery = {
-//       sortOrder: 'desc',
-//       columnSortBy: 'created_at',
-//       ...query,
-//       page: 1,
-//       pageSize: EXPORT_SIZE_LIMIT,
-//       filterQuery,
-//     } as ISalesInvoicesFilter;
+  /**
+   * Retrieves the accounts data to exportable sheet.
+   * @param {ISalesEstimatesFilter} query -
+   */
+  public exportable(query: ISalesEstimatesFilter) {
+    const filterQuery = (query) => {
+      query.withGraphFetched('branch');
+      query.withGraphFetched('warehouse');
+    };
+    const parsedQuery = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      ...query,
+      page: 1,
+      pageSize: EXPORT_SIZE_LIMIT,
+      filterQuery,
+    } as ISalesInvoicesFilter;
 
-//     return this.saleEstimatesApplication
-//       .getSaleEstimates(tenantId, parsedQuery)
-//       .then((output) => output.salesEstimates);
-//   }
-// }
+    return this.saleEstimatesApplication
+      .getSaleEstimates(parsedQuery)
+      .then((output) => output.salesEstimates);
+  }
+}

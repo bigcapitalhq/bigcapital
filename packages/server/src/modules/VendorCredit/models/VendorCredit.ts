@@ -5,7 +5,9 @@ import { Branch } from '@/modules/Branches/models/Branch.model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { DiscountType } from '@/common/types/Discount';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 
+@ExportableModel()
 export class VendorCredit extends TenantBaseModel {
   vendorId: number;
   amount: number;

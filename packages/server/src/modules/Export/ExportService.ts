@@ -22,7 +22,6 @@ export class ExportResourceService {
   ) {}
 
   /**
-   *
    * @param {string} resourceName
    * @param {ExportFormat} format
    * @returns
@@ -46,15 +45,14 @@ export class ExportResourceService {
     format: ExportFormat = ExportFormat.Csv
   ) {
     const resource = sanitizeResourceName(resourceName);
-    const resourceMeta = this.getResourceMeta(tenantId, resource);
+    const resourceMeta = this.getResourceMeta(resource);
     const resourceColumns = this.resourceService.getResourceColumns(
-      tenantId,
       resource
     );
     this.validateResourceMeta(resourceMeta);
 
-    const data = await this.getExportableData(tenantId, resource);
-    const transformed = this.transformExportedData(tenantId, resource, data);
+    const data = await this.getExportableData(resource);
+    const transformed = this.transformExportedData(resource, data);
 
     // Returns the csv, xlsx format.
     if (format === ExportFormat.Csv || format === ExportFormat.Xlsx) {
@@ -67,7 +65,6 @@ export class ExportResourceService {
       const printableColumns = this.getPrintableColumns(resourceMeta);
 
       return this.exportPdf.pdf(
-        tenantId,
         printableColumns,
         transformed,
         resourceMeta?.print?.pageTitle

@@ -9,7 +9,9 @@ import { Model, mixin } from 'objection';
 import { ManualJournalEntry } from './ManualJournalEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 
+@ExportableModel()
 export class ManualJournal extends TenantBaseModel {
   date: Date;
   journalNumber: string;

@@ -1,30 +1,34 @@
-// import { Inject, Service } from 'typedi';
-// import { IItemsFilter } from '@/interfaces';
-// import { Exportable } from '@/services/Export/Exportable';
-// import { VendorsApplication } from './VendorsApplication';
-// import { EXPORT_SIZE_LIMIT } from '@/services/Export/constants';
+import { Injectable } from '@nestjs/common';
+import { VendorsApplication } from './VendorsApplication.service';
+import { Exportable } from '../Export/Exportable';
+import { IVendorsFilter } from './types/Vendors.types';
+import { EXPORT_SIZE_LIMIT } from '../Export/constants';
+import { ExportableService } from '../Export/decorators/ExportableModel.decorator';
+import { Vendor } from './models/Vendor';
 
-// @Service()
-// export class VendorsExportable extends Exportable {
-//   @Inject()
-//   private vendorsApplication: VendorsApplication;
+@Injectable()
+@ExportableService({ name: Vendor.name })
+export class VendorsExportable extends Exportable {
+  constructor(
+    private readonly vendorsApplication: VendorsApplication,
+  ) {
+    super();
+  }
 
-//   /**
-//    * Retrieves the accounts data to exportable sheet.
-//    * @param {number} tenantId
-//    * @returns
-//    */
-//   public exportable(tenantId: number, query: IItemsFilter) {
-//     const parsedQuery = {
-//       sortOrder: 'DESC',
-//       columnSortBy: 'created_at',
-//       ...query,
-//       page: 1,
-//       pageSize: EXPORT_SIZE_LIMIT,
-//     } as IItemsFilter;
+  /**
+   * Retrieves the vendors data to exportable sheet.
+   */
+  public exportable(query: IVendorsFilter) {
+    const parsedQuery = {
+      sortOrder: 'DESC',
+      columnSortBy: 'created_at',
+      ...query,
+      page: 1,
+      pageSize: EXPORT_SIZE_LIMIT,
+    } as IVendorsFilter;
 
-//     return this.vendorsApplication
-//       .getVendors(tenantId, parsedQuery)
-//       .then((output) => output.vendors);
-//   }
-// }
+    return this.vendorsApplication
+      .getVendors(parsedQuery)
+      .then((output) => output.vendors);
+  }
+}

@@ -1,29 +1,29 @@
-// import { Inject, Service } from 'typedi';
-// import { Exportable } from '../Export/Exportable';
-// import { IAccountsFilter, IAccountsStructureType } from '@/interfaces';
-// import ItemCategoriesService from './ItemCategoriesService';
+import { Injectable } from '@nestjs/common';
+import { Exportable } from '../Export/Exportable';
+import { ItemCategoryApplication } from './ItemCategory.application';
+import { IItemCategoriesFilter } from './ItemCategory.interfaces';
+import { ExportableService } from '../Export/decorators/ExportableModel.decorator';
+import { ItemCategory } from './models/ItemCategory.model';
 
-// @Service()
-// export class ItemCategoriesExportable extends Exportable {
-//   @Inject()
-//   private itemCategoriesApplication: ItemCategoriesService;
+@Injectable()
+@ExportableService({ name: ItemCategory.name })
+export class ItemCategoriesExportable extends Exportable {
+  constructor(private readonly itemCategoryApp: ItemCategoryApplication) {
+    super();
+  }
 
-//   /**
-//    * Retrieves the accounts data to exportable sheet.
-//    * @param {number} tenantId
-//    * @returns
-//    */
-//   public exportable(tenantId: number, query: IAccountsFilter) {
-//     const parsedQuery = {
-//       sortOrder: 'desc',
-//       columnSortBy: 'created_at',
-//       inactiveMode: false,
-//       ...query,
-//       structure: IAccountsStructureType.Flat,
-//     } as IAccountsFilter;
+  /**
+   * Retrieves the accounts data to exportable sheet.
+   * @param {number} tenantId
+   * @returns
+   */
+  public exportable(query: Partial<IItemCategoriesFilter>) {
+    const parsedQuery = {
+      ...query
+    } as IItemCategoriesFilter;
 
-//     return this.itemCategoriesApplication
-//       .getItemCategoriesList(tenantId, parsedQuery, {})
-//       .then((output) => output.itemCategories);
-//   }
-// }
+    return this.itemCategoryApp
+      .getItemCategories(parsedQuery)
+      .then((output) => output.itemCategories);
+  }
+}

@@ -11,6 +11,7 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { GetItemCategoriesService } from './queries/GetItemCategories.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { ItemCategoriesExportable } from './ItemCategoriesExportable';
 
 @Module({
   imports: [TenancyDatabaseModule, DynamicListModule],
@@ -23,6 +24,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     DeleteItemCategoryService,
     ItemCategoryApplication,
     CommandItemCategoryValidatorService,
+    ItemCategoriesExportable,
     TransformerInjectable,
     TenancyContext,
   ],

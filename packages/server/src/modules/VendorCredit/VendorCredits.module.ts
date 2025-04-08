@@ -25,6 +25,7 @@ import { VendorCreditInventoryTransactions } from './commands/VendorCreditInvent
 import { GetVendorCreditsService } from './queries/GetVendorCredits.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
+import { VendorCreditsExportable } from './commands/VendorCreditsExportable';
 
 @Module({
   imports: [
@@ -54,7 +55,8 @@ import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
     VendorCreditGLEntries,
     VendorCreditGlEntriesSubscriber,
     VendorCreditInventoryTransactions,
-    VendorCreditInventoryTransactionsSubscriber
+    VendorCreditInventoryTransactionsSubscriber,
+    VendorCreditsExportable
   ],
   exports: [
     CreateVendorCreditService,

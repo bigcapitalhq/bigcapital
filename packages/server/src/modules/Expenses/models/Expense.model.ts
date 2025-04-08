@@ -3,7 +3,9 @@ import * as moment from 'moment';
 import { ExpenseCategory } from './ExpenseCategory.model';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 
+@ExportableModel()
 export class Expense extends TenantBaseModel {
   totalAmount!: number;
   currencyCode!: string;

@@ -15,12 +15,13 @@ import { Model } from 'objection';
 import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
+import { ExportableModel } from '../../Export/decorators/ExportableModel.decorator';
 // import AccountSettings from './Account.Settings';
 // import { DEFAULT_VIEWS } from '@/modules/Accounts/constants';
 // import { buildFilterQuery, buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
 // import { flatToNestedArray } from 'utils';
 
-
+@ExportableModel()
 export class Account extends TenantBaseModel {
   public name!: string;
   public slug!: string;

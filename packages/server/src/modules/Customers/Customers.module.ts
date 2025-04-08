@@ -12,6 +12,7 @@ import { CreateEditCustomerDTO } from './commands/CreateEditCustomerDTO.service'
 import { CustomersController } from './Customers.controller';
 import { CustomersApplication } from './CustomersApplication.service';
 import { DeleteCustomer } from './commands/DeleteCustomer.service';
+import { CustomersExportable } from './CustomersExportable';
 
 @Module({
   imports: [TenancyDatabaseModule],
@@ -29,7 +30,8 @@ import { DeleteCustomer } from './commands/DeleteCustomer.service';
     DeleteCustomer,
     TenancyContext,
     TransformerInjectable,
-    GetCustomerService
+    GetCustomerService,
+    CustomersExportable
   ],
 })
 export class CustomersModule {}

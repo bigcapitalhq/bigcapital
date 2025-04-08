@@ -20,9 +20,9 @@ import {
 } from 'lodash';
 import pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
-import { IModelMetaField, IModelMetaField2 } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import { multiNumberParse } from '@/utils/multi-number-parse';
+import { ServiceError } from '../Items/ServiceError';
+import { IModelMetaField, IModelMetaField2 } from '@/interfaces/Model';
 
 export const ERRORS = {
   RESOURCE_NOT_IMPORTABLE: 'RESOURCE_NOT_IMPORTABLE',
@@ -336,7 +336,7 @@ export const valueParser =
  * @param {string} key - Mapped key path. formats: `group.key` or `key`.
  * @returns {string}
  */
-export const parseKey: R.Curry<string> = R.curry(
+export const parseKey = R.curry(
   (fields: { [key: string]: IModelMetaField2 }, key: string) => {
     const fieldKey = getFieldKey(key);
     const field = fields[fieldKey];

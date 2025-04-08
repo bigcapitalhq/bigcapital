@@ -8,6 +8,7 @@ export class Import extends BaseModel {
   mapping!: string;
   columns!: string;
   params!: string;
+  importId!: string;
 
   /**
    * Table name.

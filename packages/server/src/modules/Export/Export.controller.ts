@@ -1,20 +1,24 @@
 import { Response } from 'express';
-import { convertAcceptFormatToFormat } from './_utils';
-import { Controller, Headers, Query, Res } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
+import { AcceptType } from '@/constants/accept-type';
 import { ExportQuery } from './dtos/ExportQuery.dto';
 import { ExportResourceService } from './ExportService';
-import { AcceptType } from '@/constants/accept-type';
+import { convertAcceptFormatToFormat } from './Export.utils';
 
 @Controller('/export')
+@ApiTags('export')
 export class ExportController {
   constructor(private readonly exportResourceApp: ExportResourceService) {}
 
+  @Get()
+  @ApiOperation({ summary: 'Retrieves exported the given resource.' })
   async export(
     @Query() query: ExportQuery,
     @Res() res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
-    const applicationFormat = convertAcceptFormatToFormat(acceptType);
+    const applicationFormat = convertAcceptFormatToFormat(acceptHeader);
 
     const data = await this.exportResourceApp.export(
       query.resource,

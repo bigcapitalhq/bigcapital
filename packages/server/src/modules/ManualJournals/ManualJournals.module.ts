@@ -15,6 +15,7 @@ import { GetManualJournal } from './queries/GetManualJournal.service';
 import { ManualJournalWriteGLSubscriber } from './commands/ManualJournalGLEntriesSubscriber';
 import { ManualJournalGLEntries } from './commands/ManualJournalGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
+import { ManualJournalsExportable } from './commands/ManualJournalExportable';
 
 @Module({
   imports: [BranchesModule, LedgerModule],
@@ -33,7 +34,8 @@ import { LedgerModule } from '../Ledger/Ledger.module';
     ManualJournalsApplication,
     GetManualJournal,
     ManualJournalGLEntries,
-    ManualJournalWriteGLSubscriber
+    ManualJournalWriteGLSubscriber,
+    ManualJournalsExportable
   ],
 })
 export class ManualJournalsModule {}

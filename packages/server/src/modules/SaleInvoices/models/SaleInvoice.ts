@@ -14,8 +14,10 @@ import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { PaymentIntegrationTransactionLink } from '../SaleInvoice.types';
 import { TransactionPaymentServiceEntry } from '@/modules/PaymentServices/models/TransactionPaymentServiceEntry.model';
 import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 
 @InjectAttachable()
+@ExportableModel()
 export class SaleInvoice extends TenantBaseModel{
   public taxAmountWithheld: number;
   public balance: number;

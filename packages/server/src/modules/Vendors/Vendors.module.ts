@@ -14,6 +14,7 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { VendorsController } from './Vendors.controller';
 import { GetVendorsService } from './queries/GetVendors.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { VendorsExportable } from './VendorsExportable';
 
 @Module({
   imports: [TenancyDatabaseModule, DynamicListModule],
@@ -31,6 +32,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     VendorsApplication,
     TransformerInjectable,
     TenancyContext,
+    VendorsExportable
   ],
 })
 export class VendorsModule {}

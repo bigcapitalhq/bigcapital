@@ -8,6 +8,7 @@ import { Model, mixin } from 'objection';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 
 // class VendorQueryBuilder extends PaginationQueryBuilder {
 //   constructor(...args) {
@@ -21,6 +22,7 @@ import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 //   }
 // }
 
+@ExportableModel()
 export class Vendor extends TenantBaseModel {
   contactService: string;
   contactType: string;

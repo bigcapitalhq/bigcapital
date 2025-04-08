@@ -4,8 +4,12 @@ import { EditManualJournal } from './commands/EditManualJournal.service';
 import { PublishManualJournal } from './commands/PublishManualJournal.service';
 import { GetManualJournal } from './queries/GetManualJournal.service';
 import { DeleteManualJournalService } from './commands/DeleteManualJournal.service';
-import { IManualJournalDTO,  } from './types/ManualJournals.types';
-import { CreateManualJournalDto, EditManualJournalDto } from './dtos/ManualJournal.dto';
+import { IManualJournalsFilter } from './types/ManualJournals.types';
+import {
+  CreateManualJournalDto,
+  EditManualJournalDto,
+} from './dtos/ManualJournal.dto';
+import { GetManualJournals } from './queries/GetManualJournals.service';
 // import { GetManualJournals } from './queries/GetManualJournals';
 
 @Injectable()
@@ -16,7 +20,7 @@ export class ManualJournalsApplication {
     private deleteManualJournalService: DeleteManualJournalService,
     private publishManualJournalService: PublishManualJournal,
     private getManualJournalService: GetManualJournal,
-    // private getManualJournalsService: GetManualJournals,
+    private getManualJournalsService: GetManualJournals,
   ) {}
 
   /**
@@ -50,9 +54,7 @@ export class ManualJournalsApplication {
    * @return {Promise<void>}
    */
   public deleteManualJournal = (manualJournalId: number) => {
-    return this.deleteManualJournalService.deleteManualJournal(
-      manualJournalId,
-    );
+    return this.deleteManualJournalService.deleteManualJournal(manualJournalId);
   };
 
   /**
@@ -68,23 +70,16 @@ export class ManualJournalsApplication {
   /**
    * Retrieves the specific manual journal.
    * @param {number} manualJournalId
-   * @returns
    */
   public getManualJournal = (manualJournalId: number) => {
-    return this.getManualJournalService.getManualJournal(
-      manualJournalId,
-    );
+    return this.getManualJournalService.getManualJournal(manualJournalId);
   };
 
   /**
    * Retrieves the paginated manual journals.
-   * @param {number} tenantId
    * @param {IManualJournalsFilter} filterDTO
-   * @returns
    */
-  // public getManualJournals = (
-  //   filterDTO: IManualJournalsFilter,
-  // ) => {
-  //   // return this.getManualJournalsService.getManualJournals(filterDTO);
-  // };
+  public getManualJournals = (filterDTO: IManualJournalsFilter) => {
+    return this.getManualJournalsService.getManualJournals(filterDTO);
+  };
 }

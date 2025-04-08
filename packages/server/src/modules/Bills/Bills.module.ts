@@ -26,6 +26,7 @@ import { BillInventoryTransactions } from './commands/BillInventoryTransactions'
 import { GetBillsService } from './queries/GetBills.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
+import { BillsExportable } from './commands/BillsExportable';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
     BillGLEntriesSubscriber,
     BillInventoryTransactions,
     BillWriteInventoryTransactionsSubscriber,
+    BillsExportable
   ],
   controllers: [BillsController],
 })

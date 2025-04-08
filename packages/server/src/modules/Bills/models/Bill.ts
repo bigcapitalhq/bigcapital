@@ -14,7 +14,9 @@ import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost'
 import { DiscountType } from '@/common/types/Discount';
 import type { Knex, QueryBuilder } from 'knex';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 
+@ExportableModel()
 export class Bill extends TenantBaseModel {
   public amount: number;
   public paymentAmount: number;

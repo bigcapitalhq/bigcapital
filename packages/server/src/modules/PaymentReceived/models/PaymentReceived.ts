@@ -1,7 +1,9 @@
 import { Model } from 'objection';
 import { PaymentReceivedEntry } from './PaymentReceivedEntry';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 
+@ExportableModel()
 export class PaymentReceived extends TenantBaseModel {
   customerId: number;
   paymentDate: string;
