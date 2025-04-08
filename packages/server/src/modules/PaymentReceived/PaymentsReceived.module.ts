@@ -35,6 +35,7 @@ import { SendPaymentReceivedMailProcessor } from './processors/PaymentReceivedMa
 import { BullModule } from '@nestjs/bull';
 import { SEND_PAYMENT_RECEIVED_MAIL_QUEUE } from './constants';
 import { PaymentsReceivedExportable } from './commands/PaymentsReceivedExportable';
+import { PaymentsReceivedImportable } from './commands/PaymentsReceivedImportable';
 
 @Module({
   controllers: [PaymentReceivesController],
@@ -60,7 +61,8 @@ import { PaymentsReceivedExportable } from './commands/PaymentsReceivedExportabl
     GetPaymentsReceivedService,
     SendPaymentReceiveMailNotification,
     SendPaymentReceivedMailProcessor,
-    PaymentsReceivedExportable
+    PaymentsReceivedExportable,
+    PaymentsReceivedImportable
   ],
   exports: [
     PaymentReceivesApplication,

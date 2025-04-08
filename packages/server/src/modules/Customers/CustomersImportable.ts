@@ -1,34 +1,34 @@
-// import { Inject, Service } from 'typedi';
-// import { Importable } from '@/services/Import/Importable';
-// import { CreateCustomer } from './CRUD/CreateCustomer';
-// import { Knex } from 'knex';
-// import { ICustomer, ICustomerNewDTO } from '@/interfaces';
-// import { CustomersSampleData } from './_SampleData';
+import { Knex } from 'knex';
+import { CustomersSampleData } from './_SampleData';
+import { Injectable } from '@nestjs/common';
+import { Importable } from '../Import/Importable';
+import { CreateCustomer } from './commands/CreateCustomer.service';
+import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 
-// @Service()
-// export class CustomersImportable extends Importable {
-//   @Inject()
-//   private createCustomerService: CreateCustomer;
+@Injectable()
+export class CustomersImportable extends Importable {
+  constructor(private readonly createCustomerService: CreateCustomer) {
+    super();
+  }
 
-//   /**
-//    * Mapps the imported data to create a new customer service.
-//    * @param {number} tenantId
-//    * @param {ICustomerNewDTO} createDTO
-//    * @param {Knex.Transaction} trx
-//    * @returns {Promise<void>}
-//    */
-//   public async importable(
-//     tenantId: number,
-//     createDTO: ICustomerNewDTO,
-//     trx?: Knex.Transaction<any, any[]>
-//   ): Promise<void> {
-//     await this.createCustomerService.createCustomer(tenantId, createDTO, trx);
-//   }
+  /**
+   * Mapps the imported data to create a new customer service.
+   * @param {number} tenantId
+   * @param {ICustomerNewDTO} createDTO
+   * @param {Knex.Transaction} trx
+   * @returns {Promise<void>}
+   */
+  public async importable(
+    createDTO: CreateCustomerDto,
+    trx?: Knex.Transaction<any, any[]>,
+  ): Promise<void> {
+    await this.createCustomerService.createCustomer(createDTO, trx);
+  }
 
-//   /**
-//    * Retrieves the sample data of customers used to download sample sheet.
-//    */
-//   public sampleData(): any[] {
-//     return CustomersSampleData;
-//   }
-// }
+  /**
+   * Retrieves the sample data of customers used to download sample sheet.
+   */
+  public sampleData(): any[] {
+    return CustomersSampleData;
+  }
+}

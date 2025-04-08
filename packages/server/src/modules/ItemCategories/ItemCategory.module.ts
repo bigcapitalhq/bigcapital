@@ -12,6 +12,7 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { GetItemCategoriesService } from './queries/GetItemCategories.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { ItemCategoriesExportable } from './ItemCategoriesExportable';
+import { ItemCategoriesImportable } from './ItemCategoriesImportable';
 
 @Module({
   imports: [TenancyDatabaseModule, DynamicListModule],
@@ -27,6 +28,7 @@ import { ItemCategoriesExportable } from './ItemCategoriesExportable';
     ItemCategoriesExportable,
     TransformerInjectable,
     TenancyContext,
+    ItemCategoriesImportable
   ],
 })
 export class ItemCategoryModule {}

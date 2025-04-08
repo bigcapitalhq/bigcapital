@@ -16,6 +16,7 @@ import { ManualJournalWriteGLSubscriber } from './commands/ManualJournalGLEntrie
 import { ManualJournalGLEntries } from './commands/ManualJournalGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { ManualJournalsExportable } from './commands/ManualJournalExportable';
+import { ManualJournalImportable } from './commands/ManualJournalsImport';
 
 @Module({
   imports: [BranchesModule, LedgerModule],
@@ -35,7 +36,8 @@ import { ManualJournalsExportable } from './commands/ManualJournalExportable';
     GetManualJournal,
     ManualJournalGLEntries,
     ManualJournalWriteGLSubscriber,
-    ManualJournalsExportable
+    ManualJournalsExportable,
+    ManualJournalImportable
   ],
 })
 export class ManualJournalsModule {}

@@ -1,32 +1,34 @@
-// import { Importable } from '@/services/Import/Importable';
-// import { CreateVendor } from './CRUD/CreateVendor.service';
-// import { Knex } from 'knex';
-// import { Inject, Service } from 'typedi';
-// import { VendorsSampleData } from './_SampleData';
+import { Knex } from 'knex';
+import { VendorsSampleData } from './_SampleData';
+import { Injectable } from '@nestjs/common';
+import { Importable } from '../Import/Importable';
+import { CreateVendorService } from './commands/CreateVendor.service';
+import { CreateVendorDto } from './dtos/CreateVendor.dto';
 
-// @Service()
-// export class VendorsImportable extends Importable {
-//   @Inject()
-//   private createVendorService: CreateVendor;
+@Injectable()
+export class VendorsImportable extends Importable {
+  constructor(
+    private readonly createVendorService: CreateVendorService,
+  ) {
+    super();
+  }
 
-//   /**
-//    * Maps the imported data to create a new vendor service.
-//    * @param {number} tenantId
-//    * @param {} createDTO
-//    * @param {Knex.Transaction} trx
-//    */
-//   public async importable(
-//     tenantId: number,
-//     createDTO: any,
-//     trx?: Knex.Transaction<any, any[]>
-//   ): Promise<void> {
-//     await this.createVendorService.createVendor(tenantId, createDTO, trx);
-//   }
+  /**
+   * Maps the imported data to create a new vendor service.
+   * @param {CreateVendorDto} createDTO
+   * @param {Knex.Transaction} trx
+   */
+  public async importable(
+    createDTO: CreateVendorDto,
+    trx?: Knex.Transaction<any, any[]>
+  ): Promise<void> {
+    await this.createVendorService.createVendor(createDTO, trx);
+  }
 
-//   /**
-//    * Retrieves the sample data of vendors sample sheet.
-//    */
-//   public sampleData(): any[] {
-//     return VendorsSampleData;
-//   }
-// }
+  /**
+   * Retrieves the sample data of vendors sample sheet.
+   */
+  public sampleData(): any[] {
+    return VendorsSampleData;
+  }
+}

@@ -36,6 +36,7 @@ import { SaleEstimatePdfTemplate } from '../SaleInvoices/queries/SaleEstimatePdf
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { SendSaleEstimateMailQueue } from './types/SaleEstimates.types';
 import { SaleEstimatesExportable } from './SaleEstimatesExportable';
+import { SaleEstimatesImportable } from './SaleEstimatesImportable';
 
 @Module({
   imports: [
@@ -76,7 +77,8 @@ import { SaleEstimatesExportable } from './SaleEstimatesExportable';
     SendSaleEstimateMail,
     GetSaleEstimatePdf,
     SaleEstimatePdfTemplate,
-    SaleEstimatesExportable
+    SaleEstimatesExportable,
+    SaleEstimatesImportable
   ],
 })
 export class SaleEstimatesModule {}

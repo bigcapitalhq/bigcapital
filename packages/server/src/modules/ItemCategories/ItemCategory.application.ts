@@ -9,6 +9,7 @@ import { EditItemCategoryService } from './commands/EditItemCategory.service';
 import { GetItemCategoryService } from './queries/GetItemCategory.service';
 import { GetItemCategoriesService } from './queries/GetItemCategories.service';
 import { CreateItemCategoryDto, EditItemCategoryDto } from './dtos/ItemCategory.dto';
+import { Knex } from 'knex';
 
 @Injectable()
 export class ItemCategoryApplication {
@@ -33,8 +34,9 @@ export class ItemCategoryApplication {
    */
   public createItemCategory(
     itemCategoryDTO: CreateItemCategoryDto,
+    trx?: Knex.Transaction,
   ) {
-    return this.createItemCategoryService.newItemCategory(itemCategoryDTO);
+    return this.createItemCategoryService.newItemCategory(itemCategoryDTO, trx);
   }
 
   /**
