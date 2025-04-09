@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { fromPairs, isUndefined } from 'lodash';
 import {
   ImportDateFormats,
@@ -8,15 +8,19 @@ import {
 import { ResourceService } from '../Resource/ResourceService';
 import { ServiceError } from '../Items/ServiceError';
 import { ERRORS } from './_utils';
-import { Import } from './models/Import';
+import { ImportModel } from './models/Import';
 
 @Injectable()
 export class ImportFileMapping {
-  constructor(private readonly resource: ResourceService) {}
+  constructor(
+    private readonly resource: ResourceService,
+
+    @Inject(ImportModel.name)
+    private readonly importModel: () => typeof ImportModel,
+  ) {}
 
   /**
    * Mapping the excel sheet columns with resource columns.
-   * @param {number} tenantId
    * @param {number} importId
    * @param {ImportMappingAttr} maps
    */
@@ -24,7 +28,8 @@ export class ImportFileMapping {
     importId: string,
     maps: ImportMappingAttr[],
   ): Promise<ImportFileMapPOJO> {
-    const importFile = await Import.query()
+    const importFile = await this.importModel()
+      .query()
       .findOne('filename', importId)
       .throwIfNotFound();
 
@@ -41,7 +46,7 @@ export class ImportFileMapping {
 
     const mappingStringified = JSON.stringify(maps);
 
-    await Import.query().findById(importFile.id).patch({
+    await this.importModel().query().findById(importFile.id).patch({
       mapping: mappingStringified,
     });
     return {
@@ -54,7 +59,6 @@ export class ImportFileMapping {
 
   /**
    * Validate the mapping attributes.
-   * @param {number} tenantId -
    * @param {} importFile -
    * @param {ImportMappingAttr[]} maps
    * @throws {ServiceError(ERRORS.INVALID_MAP_ATTRS)}
@@ -116,7 +120,6 @@ export class ImportFileMapping {
 
   /**
    * Validates the date format mapping.
-   * @param {number} tenantId
    * @param {string} resource
    * @param {ImportMappingAttr[]} maps
    */

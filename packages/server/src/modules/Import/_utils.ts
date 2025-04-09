@@ -111,6 +111,7 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
     } else if (field.fieldType === 'url') {
       fieldSchema = fieldSchema.url();
     } else if (field.fieldType === 'collection') {
+      // @ts-expect-error
       const nestedFieldShema = convertFieldsToYupValidation(field.fields);
       fieldSchema = Yup.array().label(field.name);
 

@@ -1,10 +1,10 @@
 import { Model, ModelObject } from 'objection';
-// import SystemModel from './SystemModel';
 import { BaseModel } from '@/models/Model';
 
-export class Import extends BaseModel {
-  resource: string;
-  tenantId: number;
+export class ImportModel extends BaseModel {
+  resource!: string;
+  tenantId!: number;
+  filename!: string;
   mapping!: string;
   columns!: string;
   params!: string;
@@ -85,4 +85,4 @@ export class Import extends BaseModel {
   }
 }
 
-export type ImportShape = ModelObject<Import>;
+export type ImportModelShape = ModelObject<ImportModel>;

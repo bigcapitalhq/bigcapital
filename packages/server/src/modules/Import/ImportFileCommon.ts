@@ -12,9 +12,9 @@ import {
 import { getUniqueImportableValue, trimObject } from './_utils';
 import { ImportableResources } from './ImportableResources';
 import { ResourceService } from '../Resource/ResourceService';
-import { Import } from '@/system/models';
 import { Injectable } from '@nestjs/common';
 import { ServiceError } from '../Items/ServiceError';
+import { ImportModelShape } from './models/Import';
 
 @Injectable()
 export class ImportFileCommon {
@@ -32,7 +32,7 @@ export class ImportFileCommon {
    * @returns {Promise<[ImportOperSuccess[], ImportOperError[]]>}
    */
   public async import(
-    importFile: Import,
+    importFile: ImportModelShape,
     parsedData: Record<string, any>[],
     trx?: Knex.Transaction,
   ): Promise<[ImportOperSuccess[], ImportOperError[]]> {
@@ -68,7 +68,6 @@ export class ImportFileCommon {
         try {
           // Run the importable function and listen to the errors.
           const data = await importable.importable(
-            tenantId,
             transformedDTO,
             trx,
           );
@@ -135,14 +134,13 @@ export class ImportFileCommon {
    * @param {Record<string, any>} params
    */
   public async validateParams(
-    tenantId: number,
     resourceName: string,
     params: Record<string, any>,
   ) {
     const ImportableRegistry = this.importable.registry;
     const importable = ImportableRegistry.getImportable(resourceName);
 
-    await importable.validateParams(tenantId, params);
+    await importable.validateParams(params);
   }
 
   /**

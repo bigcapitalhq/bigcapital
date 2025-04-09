@@ -59,8 +59,8 @@ export class BillPaymentsApplication {
   /**
    * Retrieves bill payments list.
    */
-  public getBillPayments(filterDTO: IBillPaymentsFilter) {
-    return this.getBillPaymentsService.getBillPayments(filterDTO);
+  public getBillPayments() {
+    // return this.getBillPaymentsService.getBillPayments(filterDTO);
   }
 
   /**

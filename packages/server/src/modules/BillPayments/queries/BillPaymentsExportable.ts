@@ -19,7 +19,7 @@ export class BillPaymentsExportable extends Exportable {
    * @param {number} tenantId
    * @returns
    */
-  public exportable(query: any) {
+  public async exportable(query: any) {
     const filterQuery = (builder) => {
       builder.withGraphFetched('entries.bill');
       builder.withGraphFetched('branch');
