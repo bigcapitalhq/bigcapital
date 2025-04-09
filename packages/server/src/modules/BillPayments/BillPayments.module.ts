@@ -17,6 +17,7 @@ import { BillPaymentGLEntriesSubscriber } from './subscribers/BillPaymentGLEntri
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { BillPaymentsExportable } from './queries/BillPaymentsExportable';
+import { GetBillPayments } from '../Bills/queries/GetBillPayments';
 
 @Module({
   imports: [LedgerModule, AccountsModule],
@@ -35,6 +36,7 @@ import { BillPaymentsExportable } from './queries/BillPaymentsExportable';
     TenancyContext,
     BillPaymentGLEntries,
     BillPaymentGLEntriesSubscriber,
+    GetBillPayments,
     BillPaymentsExportable
   ],
   exports: [BillPaymentValidators, CreateBillPaymentService],

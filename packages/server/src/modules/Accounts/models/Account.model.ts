@@ -1,27 +1,27 @@
 /* eslint-disable global-require */
-// import { mixin, Model } from 'objection';
 import { castArray } from 'lodash';
+import { Model } from 'objection';
 import DependencyGraph from '@/libs/dependency-graph';
 import {
   ACCOUNT_TYPES,
   getAccountsSupportsMultiCurrency,
 } from '@/constants/accounts';
-import { TenantModel } from '@/modules/System/models/TenantModel';
 // import { SearchableModel } from '@/modules/Search/SearchableMdel';
 // import { CustomViewBaseModel } from '@/modules/CustomViews/CustomViewBaseModel';
 // import { ModelSettings } from '@/modules/Settings/ModelSettings';
 import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';
-import { Model } from 'objection';
 import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
 import { ExportableModel } from '../../Export/decorators/ExportableModel.decorator';
+import { AccountMeta } from './Account.meta';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 // import AccountSettings from './Account.Settings';
 // import { DEFAULT_VIEWS } from '@/modules/Accounts/constants';
 // import { buildFilterQuery, buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
-// import { flatToNestedArray } from 'utils';
 
 @ExportableModel()
+@InjectModelMeta(AccountMeta)
 export class Account extends TenantBaseModel {
   public name!: string;
   public slug!: string;

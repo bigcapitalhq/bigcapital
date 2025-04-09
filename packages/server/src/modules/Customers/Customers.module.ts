@@ -14,9 +14,11 @@ import { CustomersApplication } from './CustomersApplication.service';
 import { DeleteCustomer } from './commands/DeleteCustomer.service';
 import { CustomersExportable } from './CustomersExportable';
 import { CustomersImportable } from './CustomersImportable';
+import { GetCustomers } from './queries/GetCustomers.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 
 @Module({
-  imports: [TenancyDatabaseModule],
+  imports: [TenancyDatabaseModule, DynamicListModule],
   controllers: [CustomersController],
   providers: [
     ActivateCustomer,
@@ -33,7 +35,8 @@ import { CustomersImportable } from './CustomersImportable';
     TransformerInjectable,
     GetCustomerService,
     CustomersExportable,
-    CustomersImportable
+    CustomersImportable,
+    GetCustomers
   ],
 })
 export class CustomersModule {}

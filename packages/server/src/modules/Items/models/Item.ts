@@ -2,8 +2,11 @@ import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { Model } from 'objection';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { ItemMeta } from './Item.meta';
 
 @ExportableModel()
+@InjectModelMeta(ItemMeta)
 export class Item extends TenantBaseModel {
   public readonly quantityOnHand: number;
   public readonly name: string;

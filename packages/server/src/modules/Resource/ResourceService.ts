@@ -28,7 +28,7 @@ export class ResourceService {
    */
   public getResourceModel(inputModelName: string) {
     const modelName = resourceToModelName(inputModelName);
-    const resourceModel = this.moduleRef.get(modelName);
+    const resourceModel = this.moduleRef.get(modelName, { strict: false });
 
     if (!resourceModel) {
       throw new ServiceError(ERRORS.RESOURCE_MODEL_NOT_FOUND);
@@ -46,7 +46,7 @@ export class ResourceService {
     const resourceModel = this.getResourceModel(modelName);
 
     // Retrieve the resource meta.
-    const resourceMeta = resourceModel.getMeta(metakey);
+    const resourceMeta = resourceModel().getMeta(metakey);
 
     // Localization the fields names.
     return resourceMeta;

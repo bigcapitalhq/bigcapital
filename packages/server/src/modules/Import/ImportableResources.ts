@@ -35,7 +35,7 @@ export class ImportableResources {
     //   resource: 'UncategorizedCashflowTransaction',
     //   importable: UncategorizedTransactionsImportable,
     // },
-    // { resource: 'Customer', importable: CustomersImportable },
+  // { resource: 'Customer', importable: CustomersImportable },
     // { resource: 'Vendor', importable: VendorsImportable },
     // { resource: 'Item', importable: ItemsImportable },
     // { resource: 'ItemCategory', importable: ItemCategoriesImportable },

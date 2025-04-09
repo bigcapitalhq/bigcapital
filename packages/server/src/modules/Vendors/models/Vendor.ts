@@ -9,6 +9,8 @@ import { Model, mixin } from 'objection';
 import { BaseModel } from '@/models/Model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { VendorMeta } from './Vendor.meta';
 
 // class VendorQueryBuilder extends PaginationQueryBuilder {
 //   constructor(...args) {
@@ -23,6 +25,7 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 // }
 
 @ExportableModel()
+@InjectModelMeta(VendorMeta)
 export class Vendor extends TenantBaseModel {
   contactService: string;
   contactType: string;
