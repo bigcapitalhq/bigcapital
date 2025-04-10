@@ -6,7 +6,7 @@ export class Exportable {
    */
   public async exportable(
     query: Record<string, any>,
-  ): Promise<Array<Record<string, any>>> {
+  ): Promise<any> {
     return [];
   }
 

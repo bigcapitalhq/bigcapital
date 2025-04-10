@@ -12,9 +12,13 @@ import { CreateEditCustomerDTO } from './commands/CreateEditCustomerDTO.service'
 import { CustomersController } from './Customers.controller';
 import { CustomersApplication } from './CustomersApplication.service';
 import { DeleteCustomer } from './commands/DeleteCustomer.service';
+import { CustomersExportable } from './CustomersExportable';
+import { CustomersImportable } from './CustomersImportable';
+import { GetCustomers } from './queries/GetCustomers.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 
 @Module({
-  imports: [TenancyDatabaseModule],
+  imports: [TenancyDatabaseModule, DynamicListModule],
   controllers: [CustomersController],
   providers: [
     ActivateCustomer,
@@ -29,7 +33,10 @@ import { DeleteCustomer } from './commands/DeleteCustomer.service';
     DeleteCustomer,
     TenancyContext,
     TransformerInjectable,
-    GetCustomerService
+    GetCustomerService,
+    CustomersExportable,
+    CustomersImportable,
+    GetCustomers
   ],
 })
 export class CustomersModule {}

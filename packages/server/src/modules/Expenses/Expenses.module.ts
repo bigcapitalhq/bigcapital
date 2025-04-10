@@ -17,11 +17,13 @@ import { LedgerModule } from '../Ledger/Ledger.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { GetExpensesService } from './queries/GetExpenses.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { ExpensesExportable } from './ExpensesExportable';
+import { ExpensesImportable } from './ExpensesImportable';
 
 @Module({
   imports: [LedgerModule, BranchesModule, DynamicListModule],
   controllers: [ExpensesController],
-  exports: [CreateExpense],
+  exports: [CreateExpense, ExpensesExportable, ExpensesImportable],
   providers: [
     CreateExpense,
     ExpenseDTOTransformer,
@@ -37,6 +39,8 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     ExpenseGLEntriesStorageService,
     ExpenseGLEntriesService,
     GetExpensesService,
+    ExpensesExportable,
+    ExpensesImportable,
   ],
 })
 export class ExpensesModule {}

@@ -164,6 +164,7 @@ export interface IModelMetaRelationField2 {
 }
 
 export type IModelMetaField2 = IModelMetaFieldCommon2 &
+  IModelMetaFieldWithFields &
   (
     | IModelMetaFieldText
     | IModelMetaFieldNumber

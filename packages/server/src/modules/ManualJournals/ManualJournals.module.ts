@@ -15,9 +15,13 @@ import { GetManualJournal } from './queries/GetManualJournal.service';
 import { ManualJournalWriteGLSubscriber } from './commands/ManualJournalGLEntriesSubscriber';
 import { ManualJournalGLEntries } from './commands/ManualJournalGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
+import { ManualJournalsExportable } from './commands/ManualJournalExportable';
+import { ManualJournalImportable } from './commands/ManualJournalsImport';
+import { GetManualJournals } from './queries/GetManualJournals.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 
 @Module({
-  imports: [BranchesModule, LedgerModule],
+  imports: [BranchesModule, LedgerModule, DynamicListModule],
   controllers: [ManualJournalsController],
   providers: [
     TenancyContext,
@@ -32,8 +36,12 @@ import { LedgerModule } from '../Ledger/Ledger.module';
     AutoIncrementOrdersService,
     ManualJournalsApplication,
     GetManualJournal,
+    GetManualJournals,
     ManualJournalGLEntries,
-    ManualJournalWriteGLSubscriber
+    ManualJournalWriteGLSubscriber,
+    ManualJournalsExportable,
+    ManualJournalImportable,
   ],
+  exports: [ManualJournalsExportable, ManualJournalImportable],
 })
 export class ManualJournalsModule {}

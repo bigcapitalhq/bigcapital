@@ -1,39 +1,37 @@
-// @ts-nocheck
-import xlsx from 'xlsx';
+import { Injectable } from '@nestjs/common';
+import * as xlsx from 'xlsx';
 import * as R from 'ramda';
 import { get } from 'lodash';
 import { sanitizeResourceName } from '../Import/_utils';
-import { ExportableResources } from './ExportResources';
-import { ServiceError } from '@/exceptions';
 import { Errors, ExportFormat } from './common';
-import { IModelMeta, IModelMetaColumn } from '@/interfaces';
 import { flatDataCollections, getDataAccessor } from './utils';
 import { ExportPdf } from './ExportPdf';
 import { ExportAls } from './ExportAls';
-import { Injectable } from '@nestjs/common';
+import { IModelMeta, IModelMetaColumn } from '@/interfaces/Model';
+import { ServiceError } from '../Items/ServiceError';
+import { ResourceService } from '../Resource/ResourceService';
+import { getExportableService } from './decorators/ExportableModel.decorator';
+import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 
 @Injectable()
 export class ExportResourceService {
   constructor(
     private readonly exportAls: ExportAls,
     private readonly exportPdf: ExportPdf,
-    private readonly exportableResources: ExportableResources,
     private readonly resourceService: ResourceService,
+    private readonly moduleRef: ModuleRef,
   ) {}
 
   /**
-   *
    * @param {string} resourceName
    * @param {ExportFormat} format
    * @returns
    */
   public async export(
     resourceName: string,
-    format: ExportFormat = ExportFormat.Csv
+    format: ExportFormat = ExportFormat.Csv,
   ) {
-    return this.exportAls.run(() =>
-      this.exportAlsRun(resourceName, format)
-    );
+    return this.exportAls.run(() => this.exportAlsRun(resourceName, format));
   }
 
   /**
@@ -43,18 +41,18 @@ export class ExportResourceService {
    */
   public async exportAlsRun(
     resourceName: string,
-    format: ExportFormat = ExportFormat.Csv
+    format: ExportFormat = ExportFormat.Csv,
   ) {
     const resource = sanitizeResourceName(resourceName);
-    const resourceMeta = this.getResourceMeta(tenantId, resource);
-    const resourceColumns = this.resourceService.getResourceColumns(
-      tenantId,
-      resource
-    );
+    const resourceMeta = this.getResourceMeta(resource);
+
+    const resourceColumns = this.resourceService.getResourceColumns(resource);
     this.validateResourceMeta(resourceMeta);
 
-    const data = await this.getExportableData(tenantId, resource);
-    const transformed = this.transformExportedData(tenantId, resource, data);
+    const data = await this.getExportableData(resource);
+    const transformed = this.transformExportedData(resource, data);
+
+    console.log(format);
 
     // Returns the csv, xlsx format.
     if (format === ExportFormat.Csv || format === ExportFormat.Xlsx) {
@@ -67,10 +65,9 @@ export class ExportResourceService {
       const printableColumns = this.getPrintableColumns(resourceMeta);
 
       return this.exportPdf.pdf(
-        tenantId,
         printableColumns,
         transformed,
-        resourceMeta?.print?.pageTitle
+        resourceMeta?.print?.pageTitle,
       );
     }
   }
@@ -106,14 +103,14 @@ export class ExportResourceService {
    */
   private transformExportedData(
     resource: string,
-    data: Array<Record<string, any>>
+    data: Array<Record<string, any>>,
   ): Array<Record<string, any>> {
     const resourceMeta = this.getResourceMeta(resource);
 
     return R.when<Array<Record<string, any>>, Array<Record<string, any>>>(
       R.always(Boolean(resourceMeta.exportFlattenOn)),
       (data) => flatDataCollections(data, resourceMeta.exportFlattenOn),
-      data
+      data,
     );
   }
   /**
@@ -123,10 +120,14 @@ export class ExportResourceService {
    * @returns A promise that resolves to the exportable data.
    */
   private async getExportableData(resource: string) {
-    const exportable =
-      this.exportableResources.registry.getExportable(resource);
-
-    return exportable.exportable({});
+    const exportable = getExportableService(resource);
+    const contextId = ContextIdFactory.create();
+    const exportableInstance = await this.moduleRef.resolve(
+      exportable,
+      contextId,
+      { strict: false },
+    );
+    return exportableInstance.exportable({});
   }
 
   /**
@@ -137,7 +138,7 @@ export class ExportResourceService {
   private getExportableColumns(resourceColumns: any) {
     const processColumns = (
       columns: { [key: string]: IModelMetaColumn },
-      parent = ''
+      parent = '',
     ) => {
       return Object.entries(columns)
         .filter(([_, value]) => value.exportable !== false)
@@ -163,9 +164,10 @@ export class ExportResourceService {
   private getPrintableColumns(resourceMeta: IModelMeta) {
     const processColumns = (
       columns: { [key: string]: IModelMetaColumn },
-      parent = ''
+      parent = '',
     ) => {
       return Object.entries(columns)
+        // @ts-expect-error
         .filter(([_, value]) => value.printable !== false)
         .flatMap(([key, value]) => {
           if (value.type === 'collection' && value.collectionOf === 'object') {
@@ -195,7 +197,7 @@ export class ExportResourceService {
   private createWorkbook(data: any[], exportableColumns: any[]) {
     const workbook = xlsx.utils.book_new();
     const worksheetData = data.map((item) =>
-      exportableColumns.map((col) => get(item, getDataAccessor(col)))
+      exportableColumns.map((col) => get(item, getDataAccessor(col))),
     );
     worksheetData.unshift(exportableColumns.map((col) => col.name));
 

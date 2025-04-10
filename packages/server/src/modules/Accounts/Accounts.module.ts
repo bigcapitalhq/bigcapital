@@ -17,7 +17,7 @@ import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { BankAccount } from '../BankingTransactions/models/BankAccount';
 import { GetAccountsService } from './GetAccounts.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
-// import { GetAccountsService } from './GetAccounts.service';
+import { AccountsExportable } from './AccountsExportable.service';
 
 const models = [RegisterTenancyModel(BankAccount)];
 
@@ -38,7 +38,13 @@ const models = [RegisterTenancyModel(BankAccount)];
     GetAccountTypesService,
     GetAccountTransactionsService,
     GetAccountsService,
+    AccountsExportable,
   ],
-  exports: [AccountRepository, CreateAccountService, ...models],
+  exports: [
+    AccountRepository,
+    CreateAccountService,
+    ...models,
+    AccountsExportable,
+  ],
 })
 export class AccountsModule {}

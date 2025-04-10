@@ -90,6 +90,6 @@ const models = [RegisterTenancyModel(Warehouse)];
     InventoryTransactionsWarehouses,
     ValidateWarehouseExistance
   ],
-  exports: [WarehouseTransactionDTOTransform, ...models],
+  exports: [WarehousesSettings, WarehouseTransactionDTOTransform, ...models],
 })
 export class WarehousesModule {}

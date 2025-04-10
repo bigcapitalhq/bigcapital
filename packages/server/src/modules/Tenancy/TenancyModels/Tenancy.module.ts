@@ -82,6 +82,7 @@ const models = [
   TenantUser,
 ];
 
+
 /**
  * Decorator factory that registers a model with the tenancy system.
  * @param model The model class to register

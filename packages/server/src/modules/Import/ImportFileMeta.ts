@@ -1,20 +1,29 @@
-import { Import } from './models/Import';
+import { ImportModel } from './models/Import';
 import { ImportFileMetaTransformer } from './ImportFileMetaTransformer';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Injectable()
 export class ImportFileMeta {
-  constructor(private readonly transformer: TransformerInjectable) {}
+  constructor(
+    private readonly transformer: TransformerInjectable,
+    private readonly tenancyContext: TenancyContext,
+
+    @Inject(ImportModel.name)
+    private readonly importModel: () => typeof ImportModel,
+  ) {}
 
   /**
    * Retrieves the import meta of the given import model id.
-   * @param {number} tenantId
    * @param {number} importId
-   * @returns {}
    */
   async getImportMeta(importId: string) {
-    const importFile = await Import.query()
+    const tenant = await this.tenancyContext.getTenant();
+    const tenantId = tenant.id;
+
+    const importFile = await this.importModel()
+      .query()
       .where('tenantId', tenantId)
       .findOne('importId', importId);
 

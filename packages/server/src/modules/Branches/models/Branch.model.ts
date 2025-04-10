@@ -3,7 +3,10 @@
 // import BranchMetadata from './Branch.settings';
 // import ModelSetting from './ModelSetting';
 import { BaseModel } from '@/models/Model';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { BranchMeta } from './Branch.meta';
 
+@InjectModelMeta(BranchMeta)
 export class Branch extends BaseModel{
   name!: string;
   code!: string;

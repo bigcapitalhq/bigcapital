@@ -1,18 +1,22 @@
 import * as R from 'ramda';
+import { Knex } from 'knex';
+import { Inject, Injectable } from '@nestjs/common';
 import { SaleInvoiceTransformer } from './SaleInvoice.transformer';
-import { Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { ISalesInvoicesFilter } from '../SaleInvoice.types';
-import { Knex } from 'knex';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class GetSaleInvoicesService {
   constructor(
     private readonly dynamicListService: DynamicListService,
     private readonly transformer: TransformerInjectable,
+
+    @Inject(SaleInvoice.name)
+    private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
   ) {}
 
   /**
@@ -33,7 +37,8 @@ export class GetSaleInvoicesService {
       SaleInvoice,
       filter,
     );
-    const { results, pagination } = await SaleInvoice.query()
+    const { results, pagination } = await this.saleInvoiceModel()
+      .query()
       .onBuild((builder) => {
         builder.withGraphFetched('entries.item');
         builder.withGraphFetched('customer');

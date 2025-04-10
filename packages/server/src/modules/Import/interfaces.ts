@@ -1,5 +1,5 @@
 import { IModelMetaField2 } from "@/interfaces/Model";
-import { Import } from "./models/Import";
+import { ImportModelShape } from "./models/Import";
 
 export interface ImportMappingAttr {
   from: string;
@@ -65,7 +65,7 @@ export interface ImportOperError {
 }
 
 export interface ImportableContext {
-  import: Import;
+  import: ImportModelShape;
   rowIndex: number;
 }
 
@@ -75,3 +75,9 @@ export const ImportDateFormats = [
   'MM/dd/yy',
   'dd/MMM/yyyy',
 ];
+
+
+export interface IImportFileCommitedEventPayload {
+  importId: string;
+  meta: ImportFilePreviewPOJO;
+}

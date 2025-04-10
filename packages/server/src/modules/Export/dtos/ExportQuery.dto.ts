@@ -4,8 +4,4 @@ export class ExportQuery {
   @IsString()
   @IsNotEmpty()
   resource: string;
-
-  @IsString()
-  @IsNotEmpty()
-  format: string;
 }

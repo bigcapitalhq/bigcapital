@@ -3,12 +3,14 @@ import { CreateUncategorizedTransactionService } from './commands/CreateUncatego
 import { CategorizeTransactionAsExpense } from './commands/CategorizeTransactionAsExpense';
 import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 import { ExpensesModule } from '../Expenses/Expenses.module';
+import { UncategorizedTransactionsImportable } from './commands/UncategorizedTransactionsImportable';
 
 @Module({
   imports: [BankingTransactionsModule, ExpensesModule],
   providers: [
     CreateUncategorizedTransactionService,
     CategorizeTransactionAsExpense,
+    UncategorizedTransactionsImportable
   ],
   exports: [
     CreateUncategorizedTransactionService,

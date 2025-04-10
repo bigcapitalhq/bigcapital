@@ -12,6 +12,7 @@ import { MetadataModelMixin } from '@/modules/DynamicListing/models/MetadataMode
 import { ResourceableModelMixin } from '@/modules/Resource/models/ResourcableModel';
 import { CustomViewBaseModelMixin } from '@/modules/CustomViews/CustomViewBaseModel';
 import { SearchableBaseModelMixin } from '@/modules/DynamicListing/models/SearchableBaseModel';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 
 const ExtendedModel = R.pipe(
   CustomViewBaseModelMixin,
@@ -20,6 +21,7 @@ const ExtendedModel = R.pipe(
   MetadataModelMixin,
 )(BaseModel);
 
+@ExportableModel()
 export class SaleReceipt extends ExtendedModel {
   public amount!: number;
   public exchangeRate!: number;

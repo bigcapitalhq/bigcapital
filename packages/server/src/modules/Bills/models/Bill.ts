@@ -1,4 +1,5 @@
-import { Model, raw, mixin } from 'objection';
+import type { Knex } from 'knex';
+import { Model, raw } from 'objection';
 import { castArray, difference, defaultTo } from 'lodash';
 import * as moment from 'moment';
 import * as R from 'ramda';
@@ -12,9 +13,13 @@ import { BaseModel, PaginationQueryBuilderType } from '@/models/Model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { DiscountType } from '@/common/types/Discount';
-import type { Knex, QueryBuilder } from 'knex';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { BillMeta } from './Bill.meta';
 
+@ExportableModel()
+@InjectModelMeta(BillMeta)
 export class Bill extends TenantBaseModel {
   public amount: number;
   public paymentAmount: number;

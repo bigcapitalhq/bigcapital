@@ -5,7 +5,9 @@ import { mixin, Model, raw } from 'objection';
 // import TaxRateMeta from './TaxRate.settings';
 // import ModelSetting from './ModelSetting';
 import { BaseModel } from '@/models/Model';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 
+@ExportableModel()
 export class TaxRateModel extends BaseModel {
   active!: boolean;
   code!: string;

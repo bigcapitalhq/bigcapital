@@ -1,6 +1,11 @@
-import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { Model } from 'objection';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { ItemCategoryMeta } from './ItemCategory.meta';
 
+@ExportableModel()
+@InjectModelMeta(ItemCategoryMeta)
 export class ItemCategory extends TenantBaseModel {
   name!: string;
   description!: string;

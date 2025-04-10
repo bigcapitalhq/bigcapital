@@ -35,6 +35,8 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
 import { SendSaleReceiptMailProcess } from './processes/SendSaleReceiptMail.process';
 import { MailModule } from '../Mail/Mail.module';
 import { SendSaleReceiptMailQueue } from './constants';
+import { SaleReceiptsExportable } from './commands/SaleReceiptsExportable';
+import { SaleReceiptsImportable } from './commands/SaleReceiptsImportable';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -75,6 +77,8 @@ import { SendSaleReceiptMailQueue } from './constants';
     SaleReceiptInventoryTransactions,
     SaleReceiptInventoryTransactionsSubscriber,
     SendSaleReceiptMailProcess,
+    SaleReceiptsExportable,
+    SaleReceiptsImportable,
   ],
 })
 export class SaleReceiptsModule {}

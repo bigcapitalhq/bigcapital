@@ -9,9 +9,10 @@ import { ResourceService } from '../Resource/ResourceService';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileUploadPOJO } from './interfaces';
-import { Import } from '@/system/models';
 import { parseSheetData } from './sheet_utils';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ImportModel } from './models/Import';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Injectable()
 export class ImportFileUploadService {
@@ -19,6 +20,10 @@ export class ImportFileUploadService {
     private resourceService: ResourceService,
     private importFileCommon: ImportFileCommon,
     private importValidator: ImportFileDataValidator,
+    private tenancyContext: TenancyContext,
+
+    @Inject(ImportModel.name)
+    private readonly importModel: typeof ImportModel,
   ) {}
 
   /**
@@ -36,12 +41,7 @@ export class ImportFileUploadService {
     params: Record<string, number | string>,
   ): Promise<ImportFileUploadPOJO> {
     try {
-      return await this.importUnhandled(
-        tenantId,
-        resourceName,
-        filename,
-        params,
-      );
+      return await this.importUnhandled(resourceName, filename, params);
     } catch (err) {
       deleteImportFile(filename);
       throw err;
@@ -81,15 +81,18 @@ export class ImportFileUploadService {
       await this.importFileCommon.validateParamsSchema(resource, params);
 
       // Validates importable params asyncly.
-      await this.importFileCommon.validateParams(tenantId, resource, params);
+      await this.importFileCommon.validateParams(resource, params);
     } catch (error) {
       throw error;
     }
     const _params = this.importFileCommon.transformParams(resource, params);
     const paramsStringified = JSON.stringify(_params);
 
+    const tenant = await this.tenancyContext.getTenant();
+    const tenantId = tenant.id;
+
     // Store the import model with related metadata.
-    const importFile = await Import.query().insert({
+    const importFile = await this.importModel.query().insert({
       filename,
       resource,
       tenantId,
@@ -97,10 +100,8 @@ export class ImportFileUploadService {
       columns: coumnsStringified,
       params: paramsStringified,
     });
-    const resourceColumnsMap = this.resourceService.getResourceFields2(
-      tenantId,
-      resource,
-    );
+    const resourceColumnsMap =
+      this.resourceService.getResourceFields2(resource);
     const resourceColumns = getResourceColumns(resourceColumnsMap);
 
     return {

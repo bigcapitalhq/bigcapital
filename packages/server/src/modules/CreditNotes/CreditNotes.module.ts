@@ -24,6 +24,7 @@ import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { GetCreditNotesService } from './queries/GetCreditNotes.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { CreditNotesExportable } from './commands/CreditNotesExportable';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     AutoIncrementOrdersModule,
     LedgerModule,
     AccountsModule,
-    DynamicListModule
+    DynamicListModule,
   ],
   providers: [
     CreateCreditNoteService,
@@ -53,6 +54,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     CreditNoteBrandingTemplate,
     CreditNoteGLEntries,
     CreditNoteGLEntriesSubscriber,
+    CreditNotesExportable,
   ],
   exports: [
     CreateCreditNoteService,
@@ -66,6 +68,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     GetCreditNoteState,
     CreditNoteApplication,
     CreditNoteBrandingTemplate,
+    CreditNotesExportable,
   ],
   controllers: [CreditNotesController],
 })

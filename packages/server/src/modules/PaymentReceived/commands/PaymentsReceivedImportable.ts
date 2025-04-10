@@ -1,46 +1,45 @@
-// import { Inject, Service } from 'typedi';
-// import { Knex } from 'knex';
-// import { IPaymentReceivedCreateDTO } from '@/interfaces';
-// import { Importable } from '@/services/Import/Importable';
-// import { CreatePaymentReceived } from './commands/CreatePaymentReceived.serivce';
-// import { PaymentsReceiveSampleData } from './constants';
+import { Knex } from 'knex';
+import { CreatePaymentReceivedDto } from '../dtos/PaymentReceived.dto';
+import { Injectable } from '@nestjs/common';
+import { PaymentsReceiveSampleData } from '../constants';
+import { CreatePaymentReceivedService } from './CreatePaymentReceived.serivce';
+import { Importable } from '@/modules/Import/Importable';
 
-// @Service()
-// export class PaymentsReceivedImportable extends Importable {
-//   @Inject()
-//   private createPaymentReceiveService: CreatePaymentReceived;
+@Injectable()
+export class PaymentsReceivedImportable extends Importable {
+  constructor(
+    private readonly createPaymentReceiveService: CreatePaymentReceivedService,
+  ) {
+    super();
+  }
 
-//   /**
-//    * Importing to account service.
-//    * @param {number} tenantId
-//    * @param {IAccountCreateDTO} createAccountDTO
-//    * @returns
-//    */
-//   public importable(
-//     tenantId: number,
-//     createPaymentDTO: IPaymentReceivedCreateDTO,
-//     trx?: Knex.Transaction
-//   ) {
-//     return this.createPaymentReceiveService.createPaymentReceived(
-//       tenantId,
-//       createPaymentDTO,
-//       {},
-//       trx
-//     );
-//   }
+  /**
+   * Importing to account service.
+   * @param {CreatePaymentReceivedDto} createAccountDTO
+   * @returns
+   */
+  public importable(
+    createPaymentDTO: CreatePaymentReceivedDto,
+    trx?: Knex.Transaction,
+  ) {
+    return this.createPaymentReceiveService.createPaymentReceived(
+      createPaymentDTO,
+      trx,
+    );
+  }
 
-//   /**
-//    * Concurrrency controlling of the importing process.
-//    * @returns {number}
-//    */
-//   public get concurrency() {
-//     return 1;
-//   }
+  /**
+   * Concurrrency controlling of the importing process.
+   * @returns {number}
+   */
+  public get concurrency() {
+    return 1;
+  }
 
-//   /**
-//    * Retrieves the sample data that used to download accounts sample sheet.
-//    */
-//   public sampleData(): any[] {
-//     return PaymentsReceiveSampleData;
-//   }
-// }
+  /**
+   * Retrieves the sample data that used to download accounts sample sheet.
+   */
+  public sampleData(): any[] {
+    return PaymentsReceiveSampleData;
+  }
+}

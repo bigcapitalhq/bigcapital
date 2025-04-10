@@ -1,35 +1,39 @@
-// import { Inject, Service } from 'typedi';
-// import { ISalesInvoicesFilter } from '@/interfaces';
-// import { SaleInvoiceApplication } from './SaleInvoices.application';
-// import { Exportable } from '@/services/Export/Exportable';
-// import { EXPORT_SIZE_LIMIT } from '@/services/Export/constants';
+import { Exportable } from '@/modules/Export/Exportable';
+import { Injectable } from '@nestjs/common';
+import { SaleInvoiceApplication } from '../SaleInvoices.application';
+import { ISalesInvoicesFilter } from '../SaleInvoice.types';
+import { EXPORT_SIZE_LIMIT } from '@/modules/Export/constants';
+import { ExportableService } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { SaleInvoice } from '../models/SaleInvoice';
 
-// @Service()
-// export class SaleInvoicesExportable extends Exportable {
-//   @Inject()
-//   private saleInvoicesApplication: SaleInvoiceApplication;
+@Injectable()
+@ExportableService({ name: SaleInvoice.name })
+export class SaleInvoicesExportable extends Exportable{
+  constructor(
+    private readonly saleInvoicesApplication: SaleInvoiceApplication,
+  ) {
+    super();
+  }
 
-//   /**
-//    * Retrieves the accounts data to exportable sheet.
-//    * @param {number} tenantId
-//    * @returns
-//    */
-//   public exportable(tenantId: number, query: ISalesInvoicesFilter) {
-//     const filterQuery = (query) => {
-//       query.withGraphFetched('branch');
-//       query.withGraphFetched('warehouse');
-//     };
-//     const parsedQuery = {
-//       sortOrder: 'desc',
-//       columnSortBy: 'created_at',
-//       ...query,
-//       page: 1,
-//       pageSize: EXPORT_SIZE_LIMIT,
-//       filterQuery,
-//     } as ISalesInvoicesFilter;
+  /**
+   * Retrieves the accounts data to exportable sheet.
+   */
+  public exportable(query: ISalesInvoicesFilter) {
+    const filterQuery = (query) => {
+      query.withGraphFetched('branch');
+      query.withGraphFetched('warehouse');
+    };
+    const parsedQuery = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      ...query,
+      page: 1,
+      pageSize: EXPORT_SIZE_LIMIT,
+      filterQuery,
+    } as ISalesInvoicesFilter;
 
-//     return this.saleInvoicesApplication
-//       .getSaleInvoices(tenantId, parsedQuery)
-//       .then((output) => output.salesInvoices);
-//   }
-// }
+    return this.saleInvoicesApplication
+      .getSaleInvoices(parsedQuery)
+      .then((output) => output.salesInvoices);
+  }
+}

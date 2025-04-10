@@ -13,8 +13,7 @@ export class GetBillPayments {
 
   /**
    * Retrieve the specific bill associated payment transactions.
-   * @param {number} billId
-   * @returns {}
+   * @param {number} billId - Bill id.
    */
   public getBillPayments = async (billId: number) => {
     const billsEntries = await this.billPaymentEntryModel

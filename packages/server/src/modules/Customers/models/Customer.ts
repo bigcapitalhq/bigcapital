@@ -1,6 +1,9 @@
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { CustomerMeta } from './Customer.meta';
 
 
+@InjectModelMeta(CustomerMeta)
 export class Customer extends TenantBaseModel{
   contactService: string;
   contactType: string;

@@ -2,11 +2,13 @@ import { DiscountType } from '@/common/types/Discount';
 import { BaseModel } from '@/models/Model';
 import { Branch } from '@/modules/Branches/models/Branch.model';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { mixin, Model, raw } from 'objection';
 
+@ExportableModel()
 export class CreditNote extends TenantBaseModel {
   public amount: number;
   public exchangeRate: number;

@@ -20,12 +20,12 @@ export class BillPaymentsApplication {
     private deleteBillPaymentService: DeleteBillPayment,
     private getBillPaymentService: GetBillPayment,
     private getPaymentBillsService: GetPaymentBills,
-    // private getBillPaymentsService: GetBillPayments,
+    private getBillPaymentsService: GetBillPayments,
   ) {}
 
   /**
    * Creates a bill payment with associated GL entries.
-   * @param {IBillPaymentDTO} billPaymentDTO
+   * @param {IBillPaymentDTO} billPaymentDTO - Create bill payment dto.
    * @returns {Promise<IBillPayment>}
    */
   public createBillPayment(billPaymentDTO: CreateBillPaymentDto) {
@@ -34,7 +34,7 @@ export class BillPaymentsApplication {
 
   /**
    * Delets the given bill payment with associated GL entries.
-   * @param {number} billPaymentId
+   * @param {number} billPaymentId - Bill payment id.
    */
   public deleteBillPayment(billPaymentId: number) {
     return this.deleteBillPaymentService.deleteBillPayment(billPaymentId);
@@ -58,13 +58,10 @@ export class BillPaymentsApplication {
 
   /**
    * Retrieves bill payments list.
-   * @param {number} tenantId
-   * @param filterDTO
-   * @returns
    */
-  // public getBillPayments(filterDTO: IBillPaymentsFilter) {
-  // return this.getBillPaymentsService.getBillPayments(filterDTO);
-  // }
+  public getBillPayments() {
+    // return this.getBillPaymentsService.getBillPayments(filterDTO);
+  }
 
   /**
    * Retrieve specific bill payment.

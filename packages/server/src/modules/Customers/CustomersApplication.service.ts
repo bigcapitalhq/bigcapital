@@ -4,9 +4,10 @@ import { CreateCustomer } from './commands/CreateCustomer.service';
 import { EditCustomer } from './commands/EditCustomer.service';
 import { DeleteCustomer } from './commands/DeleteCustomer.service';
 import { EditOpeningBalanceCustomer } from './commands/EditOpeningBalanceCustomer.service';
-import { ICustomerOpeningBalanceEditDTO } from './types/Customers.types';
+import { ICustomerOpeningBalanceEditDTO, ICustomersFilter } from './types/Customers.types';
 import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';
+import { GetCustomers } from './queries/GetCustomers.service';
 
 @Injectable()
 export class CustomersApplication {
@@ -16,13 +17,12 @@ export class CustomersApplication {
     private editCustomerService: EditCustomer,
     private deleteCustomerService: DeleteCustomer,
     private editOpeningBalanceService: EditOpeningBalanceCustomer,
-    // private getCustomersService: GetCustomers,
+    private getCustomersService: GetCustomers,
   ) {}
 
   /**
    * Retrieves the given customer details.
-   * @param {number} tenantId
-   * @param {number} customerId
+   * @param {number} customerId - Customer id.
    */
   public getCustomer = (customerId: number) => {
     return this.getCustomerService.getCustomer(customerId);
@@ -30,7 +30,7 @@ export class CustomersApplication {
 
   /**
    * Creates a new customer.
-   * @param {ICustomerNewDTO} customerDTO
+   * @param {ICustomerNewDTO} customerDTO - Create customer dto.
    * @returns {Promise<ICustomer>}
    */
   public createCustomer = (customerDTO: CreateCustomerDto) => {
@@ -49,9 +49,7 @@ export class CustomersApplication {
 
   /**
    * Deletes the given customer and associated transactions.
-   * @param {number} tenantId
-   * @param {number} customerId
-   * @param {ISystemUser} authorizedUser
+   * @param {number} customerId - Customer id.
    * @returns {Promise<void>}
    */
   public deleteCustomer = (customerId: number) => {
@@ -60,9 +58,8 @@ export class CustomersApplication {
 
   /**
    * Changes the opening balance of the given customer.
-   * @param {number} tenantId
-   * @param {number} customerId
-   * @param {Date|string} openingBalanceEditDTO
+   * @param {number} customerId - Customer id.
+   * @param {Date|string} openingBalanceEditDTO - Opening balance edit dto.
    * @returns {Promise<ICustomer>}
    */
   public editOpeningBalance = (
@@ -77,10 +74,9 @@ export class CustomersApplication {
 
   /**
    * Retrieve customers paginated list.
-   * @param {number} tenantId - Tenant id.
    * @param {ICustomersFilter} filter - Cusotmers filter.
    */
-  // public getCustomers = (filterDTO: ICustomersFilter) => {
-  // return this.getCustomersService.getCustomersList(filterDTO);
-  // };
+  public getCustomers = (filterDTO: ICustomersFilter) => {
+    return this.getCustomersService.getCustomersList(filterDTO);
+  };
 }

@@ -1,30 +1,34 @@
-// import { Inject, Service } from 'typedi';
-// import { IItemsFilter } from '@/interfaces';
-// import { CustomersApplication } from './CustomersApplication';
-// import { Exportable } from '@/services/Export/Exportable';
-// import { EXPORT_SIZE_LIMIT } from '@/services/Export/constants';
+import { Injectable } from '@nestjs/common';
+import { CustomersApplication } from './CustomersApplication.service';
+import { IItemsFilter } from '../Items/types/Items.types';
+import { EXPORT_SIZE_LIMIT } from '../Export/constants';
+import { Exportable } from '../Export/Exportable';
+import { ICustomersFilter } from './types/Customers.types';
+import { ExportableService } from '../Export/decorators/ExportableModel.decorator';
+import { Customer } from './models/Customer';
 
-// @Service()
-// export class CustomersExportable extends Exportable {
-//   @Inject()
-//   private customersApplication: CustomersApplication;
+@Injectable()
+@ExportableService({ name: Customer.name })
+export class CustomersExportable extends Exportable {
+  constructor(private readonly customersApplication: CustomersApplication) {
+    super();
+  }
 
-//   /**
-//    * Retrieves the accounts data to exportable sheet.
-//    * @param {number} tenantId
-//    * @returns
-//    */
-//   public exportable(tenantId: number, query: IItemsFilter) {
-//     const parsedQuery = {
-//       sortOrder: 'DESC',
-//       columnSortBy: 'created_at',
-//       ...query,
-//       page: 1,
-//       pageSize: EXPORT_SIZE_LIMIT,
-//     } as IItemsFilter;
+  /**
+   * Retrieves the accounts data to exportable sheet.
+   * @param {ICustomersFilter} query - Customers query.
+   */
+  public exportable(query: ICustomersFilter) {
+    const parsedQuery = {
+      sortOrder: 'DESC',
+      columnSortBy: 'created_at',
+      ...query,
+      page: 1,
+      pageSize: EXPORT_SIZE_LIMIT,
+    } as IItemsFilter;
 
-//     return this.customersApplication
-//       .getCustomers(tenantId, parsedQuery)
-//       .then((output) => output.customers);
-//   }
-// }
+    return this.customersApplication
+      .getCustomers(parsedQuery)
+      .then((output) => output.customers);
+  }
+}

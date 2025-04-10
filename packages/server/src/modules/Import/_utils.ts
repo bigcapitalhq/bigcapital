@@ -2,8 +2,8 @@ import * as Yup from 'yup';
 import * as moment from 'moment';
 import * as R from 'ramda';
 import { Knex } from 'knex';
-import fs from 'fs/promises';
-import path from 'path';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import {
   defaultTo,
   upperFirst,
@@ -18,11 +18,11 @@ import {
   split,
   last,
 } from 'lodash';
-import pluralize from 'pluralize';
+import * as pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
-import { IModelMetaField, IModelMetaField2 } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import { multiNumberParse } from '@/utils/multi-number-parse';
+import { ServiceError } from '../Items/ServiceError';
+import { IModelMetaField, IModelMetaField2 } from '@/interfaces/Model';
 
 export const ERRORS = {
   RESOURCE_NOT_IMPORTABLE: 'RESOURCE_NOT_IMPORTABLE',
@@ -70,13 +70,13 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
       if (!isUndefined(field.minLength)) {
         fieldSchema = fieldSchema.min(
           field.minLength,
-          `Minimum length is ${field.minLength} characters`
+          `Minimum length is ${field.minLength} characters`,
         );
       }
       if (!isUndefined(field.maxLength)) {
         fieldSchema = fieldSchema.max(
           field.maxLength,
-          `Maximum length is ${field.maxLength} characters`
+          `Maximum length is ${field.maxLength} characters`,
         );
       }
     } else if (field.fieldType === 'number') {
@@ -106,11 +106,12 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
             return true;
           }
           return moment(val, 'YYYY-MM-DD', true).isValid();
-        }
+        },
       );
     } else if (field.fieldType === 'url') {
       fieldSchema = fieldSchema.url();
     } else if (field.fieldType === 'collection') {
+      // @ts-expect-error
       const nestedFieldShema = convertFieldsToYupValidation(field.fields);
       fieldSchema = Yup.array().label(field.name);
 
@@ -149,12 +150,12 @@ const parseFieldName = (fieldName: string, field: IModelMetaField) => {
  */
 export const getUnmappedSheetColumns = (columns, mapping) => {
   return columns.filter(
-    (column) => !mapping.some((map) => map.from === column)
+    (column) => !mapping.some((map) => map.from === column),
   );
 };
 
 export const sanitizeResourceName = (resourceName: string) => {
-  return upperFirst(camelCase(pluralize.singular(resourceName)));
+  return upperFirst(camelCase(pluralize(resourceName, 1)));
 };
 
 export const getSheetColumns = (sheetData: unknown[]) => {
@@ -170,11 +171,11 @@ export const getSheetColumns = (sheetData: unknown[]) => {
  */
 export const getUniqueImportableValue = (
   importableFields: { [key: string]: IModelMetaField2 },
-  objectDTO: Record<string, any>
+  objectDTO: Record<string, any>,
 ) => {
   const uniqueImportableValue = pickBy(
     importableFields,
-    (field) => field.unique
+    (field) => field.unique,
   );
   const uniqueImportableKeys = Object.keys(uniqueImportableValue);
   const uniqueImportableKey = first(uniqueImportableKeys);
@@ -254,7 +255,7 @@ export const getResourceColumns = (resourceColumns: {
     (group: string) =>
     ([fieldKey, { name, importHint, required, order, ...field }]: [
       string,
-      IModelMetaField2
+      IModelMetaField2,
     ]) => {
       const extra: Record<string, any> = {};
       const key = fieldKey;
@@ -299,7 +300,7 @@ export const valueParser =
       // Parses the enumeration value.
     } else if (field.fieldType === 'enumeration') {
       const option = get(field, 'options', []).find(
-        (option) => option.label?.toLowerCase() === value?.toLowerCase()
+        (option) => option.label?.toLowerCase() === value?.toLowerCase(),
       );
       _value = get(option, 'key');
       // Parses the numeric value.
@@ -336,7 +337,7 @@ export const valueParser =
  * @param {string} key - Mapped key path. formats: `group.key` or `key`.
  * @returns {string}
  */
-export const parseKey: R.Curry<string> = R.curry(
+export const parseKey = R.curry(
   (fields: { [key: string]: IModelMetaField2 }, key: string) => {
     const fieldKey = getFieldKey(key);
     const field = fields[fieldKey];
@@ -355,7 +356,7 @@ export const parseKey: R.Curry<string> = R.curry(
       }
     }
     return _key;
-  }
+  },
 );
 
 /**
@@ -398,11 +399,11 @@ export const getFieldKey = (input: string) => {
 export function aggregate(
   input: Array<any>,
   comparatorAttr: string,
-  groupOn: string
+  groupOn: string,
 ): Array<Record<string, any>> {
   return input.reduce((acc, curr) => {
     const existingEntry = acc.find(
-      (entry) => entry[comparatorAttr] === curr[comparatorAttr]
+      (entry) => entry[comparatorAttr] === curr[comparatorAttr],
     );
 
     if (existingEntry) {
