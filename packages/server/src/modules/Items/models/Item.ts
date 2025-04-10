@@ -53,6 +53,13 @@ export class Item extends TenantBaseModel {
         }
         return q;
       },
+
+      /**
+       * Inactive/Active mode.
+       */
+      inactiveMode(query, active = false) {
+        query.where('items.active', !active);
+      },
     };
   }
 

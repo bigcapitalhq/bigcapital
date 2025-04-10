@@ -16,6 +16,7 @@ import { ItemsEntriesService } from './ItemsEntries.service';
 import { GetItemsService } from './GetItems.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdjustments.module';
+import { ItemsExportable } from './ItemsExportable.service';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdju
     TenancyContext,
     TransformerInjectable,
     ItemsEntriesService,
+    ItemsExportable,
   ],
-  exports: [ItemsEntriesService],
+  exports: [ItemsEntriesService, ItemsExportable],
 })
 export class ItemsModule {}

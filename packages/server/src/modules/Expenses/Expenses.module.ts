@@ -23,7 +23,7 @@ import { ExpensesImportable } from './ExpensesImportable';
 @Module({
   imports: [LedgerModule, BranchesModule, DynamicListModule],
   controllers: [ExpensesController],
-  exports: [CreateExpense],
+  exports: [CreateExpense, ExpensesExportable, ExpensesImportable],
   providers: [
     CreateExpense,
     ExpenseDTOTransformer,
@@ -40,7 +40,7 @@ import { ExpensesImportable } from './ExpensesImportable';
     ExpenseGLEntriesService,
     GetExpensesService,
     ExpensesExportable,
-    ExpensesImportable
+    ExpensesImportable,
   ],
 })
 export class ExpensesModule {}

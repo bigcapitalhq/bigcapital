@@ -3,7 +3,6 @@ import * as xlsx from 'xlsx';
 import * as R from 'ramda';
 import { get } from 'lodash';
 import { sanitizeResourceName } from '../Import/_utils';
-import { ExportableResources } from './ExportResources';
 import { Errors, ExportFormat } from './common';
 import { flatDataCollections, getDataAccessor } from './utils';
 import { ExportPdf } from './ExportPdf';
@@ -19,7 +18,6 @@ export class ExportResourceService {
   constructor(
     private readonly exportAls: ExportAls,
     private readonly exportPdf: ExportPdf,
-    private readonly exportableResources: ExportableResources,
     private readonly resourceService: ResourceService,
     private readonly moduleRef: ModuleRef,
   ) {}

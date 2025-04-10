@@ -37,7 +37,7 @@ import { CreditNotesExportable } from './commands/CreditNotesExportable';
     AutoIncrementOrdersModule,
     LedgerModule,
     AccountsModule,
-    DynamicListModule
+    DynamicListModule,
   ],
   providers: [
     CreateCreditNoteService,
@@ -54,7 +54,7 @@ import { CreditNotesExportable } from './commands/CreditNotesExportable';
     CreditNoteBrandingTemplate,
     CreditNoteGLEntries,
     CreditNoteGLEntriesSubscriber,
-    CreditNotesExportable
+    CreditNotesExportable,
   ],
   exports: [
     CreateCreditNoteService,
@@ -68,6 +68,7 @@ import { CreditNotesExportable } from './commands/CreditNotesExportable';
     GetCreditNoteState,
     CreditNoteApplication,
     CreditNoteBrandingTemplate,
+    CreditNotesExportable,
   ],
   controllers: [CreditNotesController],
 })

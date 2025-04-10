@@ -7,7 +7,6 @@ import { ExportApplication } from './ExportApplication';
 import { ResourceModule } from '../Resource/Resource.module';
 import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { ImportModel } from '../Import/models/Import';
-import { ExportableResources } from './ExportResources';
 import { ExportableRegistry } from './ExportRegistery';
 import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
@@ -28,7 +27,6 @@ const models = [RegisterTenancyModel(ImportModel)];
     ExportPdf,
     ExportAls,
     ExportApplication,
-    ExportableResources,
     ExportableRegistry
   ],
   exports: [...models],

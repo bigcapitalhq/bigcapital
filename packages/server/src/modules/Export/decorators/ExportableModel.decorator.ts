@@ -1,3 +1,5 @@
+import { Global } from "@nestjs/common";
+
 const exportableModels = new Map<string, boolean>();
 const exportableService = new Map<string, any>()
 
@@ -15,6 +17,9 @@ export function ExportableModel() {
 export function ExportableService({ name }: { name: string }) {
   return function (target: any) {
     exportableService.set(name, target);
+
+    // Apply the @Global() decorator to make the service globally available
+    Global()(target);
   };
 }
 

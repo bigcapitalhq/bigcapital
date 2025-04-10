@@ -80,5 +80,9 @@ import { SaleEstimatesImportable } from './SaleEstimatesImportable';
     SaleEstimatesExportable,
     SaleEstimatesImportable
   ],
+  exports: [
+    SaleEstimatesExportable,
+    SaleEstimatesImportable
+  ]
 })
 export class SaleEstimatesModule {}

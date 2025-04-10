@@ -4,8 +4,11 @@ import { Exportable } from '../Export/Exportable';
 import { ISalesInvoicesFilter } from '../SaleInvoices/SaleInvoice.types';
 import { SaleEstimatesApplication } from './SaleEstimates.application';
 import { ISalesEstimatesFilter } from './types/SaleEstimates.types';
+import { ExportableService } from '../Export/decorators/ExportableModel.decorator';
+import { SaleEstimate } from './models/SaleEstimate';
 
 @Injectable()
+@ExportableService({ name: SaleEstimate.name })
 export class SaleEstimatesExportable extends Exportable {
   constructor(
     private readonly saleEstimatesApplication: SaleEstimatesApplication,

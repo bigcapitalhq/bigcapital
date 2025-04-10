@@ -25,10 +25,14 @@ import { ItemCategoriesImportable } from './ItemCategoriesImportable';
     DeleteItemCategoryService,
     ItemCategoryApplication,
     CommandItemCategoryValidatorService,
-    ItemCategoriesExportable,
     TransformerInjectable,
     TenancyContext,
-    ItemCategoriesImportable
+    ItemCategoriesExportable,
+    ItemCategoriesImportable,
+  ],
+  exports: [
+    ItemCategoriesExportable,
+    ItemCategoriesImportable,
   ],
 })
 export class ItemCategoryModule {}

@@ -40,7 +40,8 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     ManualJournalGLEntries,
     ManualJournalWriteGLSubscriber,
     ManualJournalsExportable,
-    ManualJournalImportable
+    ManualJournalImportable,
   ],
+  exports: [ManualJournalsExportable, ManualJournalImportable],
 })
 export class ManualJournalsModule {}

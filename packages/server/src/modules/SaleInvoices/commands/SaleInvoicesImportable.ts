@@ -1,46 +1,39 @@
-// import { Inject, Service } from 'typedi';
-// import { Knex } from 'knex';
-// import { ISaleInvoiceCreateDTO } from '@/interfaces';
-// import { CreateSaleInvoice } from './commands/CreateSaleInvoice.service';
-// import { Importable } from '@/services/Import/Importable';
-// import { SaleInvoicesSampleData } from './constants';
+import { Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { CreateSaleInvoice } from './CreateSaleInvoice.service';
+import { Importable } from '@/modules/Import/Importable';
+import { CreateSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
+import { SaleInvoicesSampleData } from '../constants';
 
-// @Service()
-// export class SaleInvoicesImportable extends Importable {
-//   @Inject()
-//   private createInvoiceService: CreateSaleInvoice;
+@Injectable()
+export class SaleInvoicesImportable extends Importable {
+  constructor(private readonly createInvoiceService: CreateSaleInvoice) {
+    super();
+  }
 
-//   /**
-//    * Importing to account service.
-//    * @param {number} tenantId
-//    * @param {IAccountCreateDTO} createAccountDTO
-//    * @returns
-//    */
-//   public importable(
-//     tenantId: number,
-//     createAccountDTO: ISaleInvoiceCreateDTO,
-//     trx?: Knex.Transaction
-//   ) {
-//     return this.createInvoiceService.createSaleInvoice(
-//       tenantId,
-//       createAccountDTO,
-//       {},
-//       trx
-//     );
-//   }
+  /**
+   * Importing to account service.
+   * @param {CreateSaleInvoiceDto} createAccountDTO
+   */
+  public importable(
+    createAccountDTO: CreateSaleInvoiceDto,
+    trx?: Knex.Transaction,
+  ) {
+    return this.createInvoiceService.createSaleInvoice(createAccountDTO, trx);
+  }
 
-//   /**
-//    * Concurrrency controlling of the importing process.
-//    * @returns {number}
-//    */
-//   public get concurrency() {
-//     return 1;
-//   }
+  /**
+   * Concurrrency controlling of the importing process.
+   * @returns {number}
+   */
+  public get concurrency() {
+    return 1;
+  }
 
-//   /**
-//    * Retrieves the sample data that used to download accounts sample sheet.
-//    */
-//   public sampleData(): any[] {
-//     return SaleInvoicesSampleData;
-//   }
-// }
+  /**
+   * Retrieves the sample data that used to download accounts sample sheet.
+   */
+  public sampleData(): any[] {
+    return SaleInvoicesSampleData;
+  }
+}

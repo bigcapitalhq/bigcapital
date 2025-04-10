@@ -1,3 +1,4 @@
+import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
@@ -7,8 +8,6 @@ import {
 } from '../types/CreditNotes.types';
 import { CreditNote } from '../models/CreditNote';
 import { CreditNoteTransformer } from './CreditNoteTransformer';
-import { Inject } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()

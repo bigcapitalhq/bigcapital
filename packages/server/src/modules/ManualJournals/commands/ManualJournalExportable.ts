@@ -3,8 +3,11 @@ import { EXPORT_SIZE_LIMIT } from '../../Export/constants';
 import { Injectable } from '@nestjs/common';
 import { IManualJournalsFilter } from '../types/ManualJournals.types';
 import { ManualJournalsApplication } from '../ManualJournalsApplication.service';
+import { ExportableService } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { ManualJournal } from '../models/ManualJournal';
 
 @Injectable()
+@ExportableService({ name: ManualJournal.name })
 export class ManualJournalsExportable extends Exportable {
   constructor(
     private readonly manualJournalsApplication: ManualJournalsApplication,
@@ -14,6 +17,7 @@ export class ManualJournalsExportable extends Exportable {
 
   /**
    * Retrieves the manual journals data to exportable sheet.
+   * @param {IManualJournalsFilter} query - 
    */
   public exportable(query: IManualJournalsFilter) {
     const parsedQuery = {

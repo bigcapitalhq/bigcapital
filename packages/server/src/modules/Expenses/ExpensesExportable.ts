@@ -17,6 +17,7 @@ export class ExpensesExportable extends Exportable {
 
   /**
    * Retrieves the accounts data to exportable sheet.
+   * @param {IExpensesFilter}
    */
   public exportable(query: IExpensesFilter) {
     const filterQuery = (query) => {
