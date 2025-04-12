@@ -17,6 +17,7 @@ import { GetItemsService } from './GetItems.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdjustments.module';
 import { ItemsExportable } from './ItemsExportable.service';
+import { ItemsImportable } from './ItemsImportable.service';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { ItemsExportable } from './ItemsExportable.service';
     TransformerInjectable,
     ItemsEntriesService,
     ItemsExportable,
+    ItemsImportable
   ],
-  exports: [ItemsEntriesService, ItemsExportable],
+  exports: [ItemsEntriesService, ItemsExportable, ItemsImportable],
 })
 export class ItemsModule {}

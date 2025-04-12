@@ -1,28 +1,28 @@
-import XLSX from 'xlsx';
-import { ImportableResources } from './ImportableResources';
+import * as XLSX from 'xlsx';
 import { sanitizeResourceName } from './_utils';
 import { Injectable } from '@nestjs/common';
+import { getImportableService } from './decorators/Import.decorator';
+import { ImportableRegistry } from './ImportableRegistry';
 
 @Injectable()
 export class ImportSampleService {
   constructor(
-    private readonly importable: ImportableResources,
-  ) {}
+    private readonly importableRegistry: ImportableRegistry,
+  ) {
 
+  }
   /**
    * Retrieves the sample sheet of the given resource.
    * @param {string} resource
    * @param {string} format
    * @returns {Buffer | string}
    */
-  public sample(
+  public async sample(
     resource: string,
     format: 'csv' | 'xlsx'
-  ): Buffer | string {
+  ): Promise<Buffer | string> {
     const _resource = sanitizeResourceName(resource);
-
-    const ImportableRegistry = this.importable.registry;
-    const importable = ImportableRegistry.getImportable(_resource);
+    const importable = await this.importableRegistry.getImportable(_resource);
 
     const data = importable.sampleData();
 
@@ -30,6 +30,7 @@ export class ImportSampleService {
     const worksheet = XLSX.utils.json_to_sheet(data);
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
+    
     // Determine the output format
     if (format === 'csv') {
       const csvOutput = XLSX.utils.sheet_to_csv(worksheet);

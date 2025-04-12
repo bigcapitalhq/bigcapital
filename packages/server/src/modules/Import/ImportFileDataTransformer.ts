@@ -1,6 +1,7 @@
-import bluebird from 'bluebird';
+import * as bluebird from 'bluebird';
 import { isUndefined, pickBy, set } from 'lodash';
 import { Knex } from 'knex';
+import { Injectable } from '@nestjs/common';
 import { ImportMappingAttr, ResourceMetaFieldsMap } from './interfaces';
 import {
   valueParser,
@@ -12,7 +13,6 @@ import {
 } from './_utils';
 import { ResourceService } from '../Resource/ResourceService';
 import { CurrencyParsingDTOs } from './_constants';
-import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ImportFileDataTransformer {

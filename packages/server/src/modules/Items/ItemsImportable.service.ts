@@ -4,8 +4,11 @@ import { Importable } from '../Import/Importable';
 import { CreateItemService } from './CreateItem.service';
 import { CreateItemDto } from './dtos/Item.dto';
 import { ItemsSampleData } from './Items.constants';
+import { ImportableService } from '../Import/decorators/Import.decorator';
+import { Item } from './models/Item';
 
 @Injectable()
+@ImportableService({ name: Item.name })
 export class ItemsImportable extends Importable {
   constructor(
     private readonly createItemService: CreateItemService,

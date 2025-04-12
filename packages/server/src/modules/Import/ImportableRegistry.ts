@@ -1,43 +1,26 @@
 import { camelCase, upperFirst } from 'lodash';
 import { Importable } from './Importable';
+import { getImportableService } from './decorators/Import.decorator';
+import { Injectable } from '@nestjs/common';
+import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 
+@Injectable()
 export class ImportableRegistry {
-  private static instance: ImportableRegistry;
-  private importables: Record<string, Importable>;
-
-  constructor() {
-    this.importables = {};
-  }
-
-  /**
-   * Gets singleton instance of registry.
-   * @returns {ImportableRegistry}
-   */
-  public static getInstance(): ImportableRegistry {
-    if (!ImportableRegistry.instance) {
-      ImportableRegistry.instance = new ImportableRegistry();
-    }
-    return ImportableRegistry.instance;
-  }
-
-  /**
-   * Registers the given importable service.
-   * @param {string} resource 
-   * @param {Importable} importable 
-   */
-  public registerImportable(resource: string, importable: Importable): void {
-    const _resource = this.sanitizeResourceName(resource);
-    this.importables[_resource] = importable;
-  }
-
+  constructor(private readonly moduleRef: ModuleRef) {}
   /**
    * Retrieves the importable service instance of the given resource name.
-   * @param {string} name 
+   * @param {string} name
    * @returns {Importable}
    */
-  public getImportable(name: string): Importable {
+  public async getImportable(name: string) {
     const _name = this.sanitizeResourceName(name);
-    return this.importables[_name];
+    const importable = getImportableService(_name);
+    const contextId = ContextIdFactory.create();
+
+    const importableInstance = await this.moduleRef.resolve(importable, contextId, {
+      strict: false,
+    });
+    return importableInstance;
   }
 
   private sanitizeResourceName(resource: string) {

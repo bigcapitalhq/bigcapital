@@ -4,8 +4,10 @@ import { Model } from 'objection';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ItemMeta } from './Item.meta';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 
 @ExportableModel()
+@ImportableModel()
 @InjectModelMeta(ItemMeta)
 export class Item extends TenantBaseModel {
   public readonly quantityOnHand: number;

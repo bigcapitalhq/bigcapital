@@ -12,17 +12,17 @@ import { ImportFileMapping } from './ImportFileMapping';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileDataTransformer } from './ImportFileDataTransformer';
 import { ImportFileCommon } from './ImportFileCommon';
-import { ImportableResources } from './ImportableResources';
 import { ResourceModule } from '../Resource/Resource.module';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { ImportController } from './Import.controller';
+import { ImportableRegistry } from './ImportableRegistry';
 
 @Module({
   imports: [ResourceModule, TenancyModule, AccountsModule],
   providers: [
     ImportAls,
     ImportSampleService,
-    ImportableResources,
     ImportResourceApplication,
     ImportDeleteExpiredFiles,
     ImportFileUploadService,
@@ -34,7 +34,9 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     ImportFileDataValidator,
     ImportFileDataTransformer,
     ImportFileCommon,
+    ImportableRegistry
   ],
+  controllers: [ImportController],
   exports: [ImportAls],
 })
 export class ImportModule {}

@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import bluebird from 'bluebird';
+import * as bluebird from 'bluebird';
 import { deleteImportFile } from './_utils';
 import { Inject, Injectable } from '@nestjs/common';
 import { ImportModel } from './models/Import';
