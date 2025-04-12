@@ -13,8 +13,10 @@ import { flatToNestedArray } from '@/utils/flat-to-nested-array';
 import { ExportableModel } from '../../Export/decorators/ExportableModel.decorator';
 import { AccountMeta } from './Account.meta';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 
 @ExportableModel()
+@ImportableModel()
 @InjectModelMeta(AccountMeta)
 export class Account extends TenantBaseModel {
   public name!: string;

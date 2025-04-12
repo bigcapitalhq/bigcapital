@@ -3,12 +3,17 @@ import { BaseModel } from '@/models/Model';
 import { Branch } from '@/modules/Branches/models/Branch.model';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { mixin, Model, raw } from 'objection';
+import { CreditNoteMeta } from './CreditNote.meta';
 
 @ExportableModel()
+@ImportableModel()
+@InjectModelMeta(CreditNoteMeta)
 export class CreditNote extends TenantBaseModel {
   public amount: number;
   public exchangeRate: number;

@@ -9,8 +9,15 @@ import { BaseModel } from '@/models/Model';
 import { BillPaymentEntry } from './BillPaymentEntry';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { BillPaymentMeta } from './BillPayment.meta';
 
-export class BillPayment extends BaseModel{
+@ImportableModel()
+@ExportableModel()
+@InjectModelMeta(BillPaymentMeta)
+export class BillPayment extends BaseModel {
   vendorId: number;
   amount: number;
   currencyCode: string;

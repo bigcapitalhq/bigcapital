@@ -18,6 +18,7 @@ import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { BillPaymentsExportable } from './queries/BillPaymentsExportable';
 import { GetBillPayments } from '../Bills/queries/GetBillPayments';
+import { BillPaymentsImportable } from './commands/BillPaymentsImportable';
 
 @Module({
   imports: [LedgerModule, AccountsModule],
@@ -37,9 +38,15 @@ import { GetBillPayments } from '../Bills/queries/GetBillPayments';
     BillPaymentGLEntries,
     BillPaymentGLEntriesSubscriber,
     GetBillPayments,
-    BillPaymentsExportable
+    BillPaymentsExportable,
+    BillPaymentsImportable,
   ],
-  exports: [BillPaymentValidators, CreateBillPaymentService],
+  exports: [
+    BillPaymentValidators,
+    CreateBillPaymentService,
+    BillPaymentsExportable,
+    BillPaymentsImportable,
+  ],
   controllers: [BillPaymentsController],
 })
 export class BillPaymentsModule {}

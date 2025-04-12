@@ -20,12 +20,13 @@ import { VendorCreditGlEntriesSubscriber } from './subscribers/VendorCreditGLEnt
 import { VendorCreditGLEntries } from './commands/VendorCreditGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
-import VendorCreditInventoryTransactionsSubscriber from './subscribers/VendorCreditInventoryTransactionsSusbcriber';
+import { VendorCreditInventoryTransactionsSubscriber } from './subscribers/VendorCreditInventoryTransactionsSusbcriber';
 import { VendorCreditInventoryTransactions } from './commands/VendorCreditInventoryTransactions';
 import { GetVendorCreditsService } from './queries/GetVendorCredits.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { VendorCreditsExportable } from './commands/VendorCreditsExportable';
+import { VendorCreditsImportable } from './commands/VendorCreditsImportable';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { VendorCreditsExportable } from './commands/VendorCreditsExportable';
     LedgerModule,
     AccountsModule,
     DynamicListModule,
-    InventoryCostModule
+    InventoryCostModule,
   ],
   providers: [
     CreateVendorCreditService,
@@ -56,7 +57,8 @@ import { VendorCreditsExportable } from './commands/VendorCreditsExportable';
     VendorCreditGlEntriesSubscriber,
     VendorCreditInventoryTransactions,
     VendorCreditInventoryTransactionsSubscriber,
-    VendorCreditsExportable
+    VendorCreditsExportable,
+    VendorCreditsImportable,
   ],
   exports: [
     CreateVendorCreditService,
@@ -67,7 +69,9 @@ import { VendorCreditsExportable } from './commands/VendorCreditsExportable';
     GetRefundVendorCreditService,
     GetVendorCreditService,
     VendorCreditsApplicationService,
-    OpenVendorCreditService
+    OpenVendorCreditService,
+    VendorCreditsExportable,
+    VendorCreditsImportable,
   ],
   controllers: [VendorCreditsController],
 })

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
 import { PaymentReceivesController } from './PaymentsReceived.controller';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
 import { CreatePaymentReceivedService } from './commands/CreatePaymentReceived.serivce';
@@ -32,7 +33,6 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { MailModule } from '../Mail/Mail.module';
 import { SendPaymentReceivedMailProcessor } from './processors/PaymentReceivedMailNotification.processor';
-import { BullModule } from '@nestjs/bull';
 import { SEND_PAYMENT_RECEIVED_MAIL_QUEUE } from './constants';
 import { PaymentsReceivedExportable } from './commands/PaymentsReceivedExportable';
 import { PaymentsReceivedImportable } from './commands/PaymentsReceivedImportable';
@@ -62,12 +62,14 @@ import { PaymentsReceivedImportable } from './commands/PaymentsReceivedImportabl
     SendPaymentReceiveMailNotification,
     SendPaymentReceivedMailProcessor,
     PaymentsReceivedExportable,
-    PaymentsReceivedImportable
+    PaymentsReceivedImportable,
   ],
   exports: [
     PaymentReceivesApplication,
     CreatePaymentReceivedService,
     PaymentReceivedGLEntries,
+    PaymentsReceivedExportable,
+    PaymentsReceivedImportable,
   ],
   imports: [
     ChromiumlyTenancyModule,

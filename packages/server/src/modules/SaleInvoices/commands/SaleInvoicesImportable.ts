@@ -4,8 +4,11 @@ import { CreateSaleInvoice } from './CreateSaleInvoice.service';
 import { Importable } from '@/modules/Import/Importable';
 import { CreateSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
 import { SaleInvoicesSampleData } from '../constants';
+import { ImportableService } from '@/modules/Import/decorators/Import.decorator';
+import { ManualJournal } from '@/modules/ManualJournals/models/ManualJournal';
 
 @Injectable()
+@ImportableService({ name: ManualJournal.name })
 export class SaleInvoicesImportable extends Importable {
   constructor(private readonly createInvoiceService: CreateSaleInvoice) {
     super();

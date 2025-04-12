@@ -2,8 +2,13 @@ import { Model } from 'objection';
 import { PaymentReceivedEntry } from './PaymentReceivedEntry';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { PaymentReceivedMeta } from './PaymentReceived.meta';
 
 @ExportableModel()
+@ImportableModel()
+@InjectModelMeta(PaymentReceivedMeta)
 export class PaymentReceived extends TenantBaseModel {
   customerId: number;
   paymentDate: string;

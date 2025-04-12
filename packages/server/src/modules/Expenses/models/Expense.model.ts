@@ -4,8 +4,13 @@ import { ExpenseCategory } from './ExpenseCategory.model';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { ExpenseMeta } from './Expense.meta';
 
 @ExportableModel()
+@ImportableModel()
+@InjectModelMeta(ExpenseMeta)
 export class Expense extends TenantBaseModel {
   totalAmount!: number;
   currencyCode!: string;

@@ -25,6 +25,7 @@ import { AccountsModule } from '../Accounts/Accounts.module';
 import { GetCreditNotesService } from './queries/GetCreditNotes.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { CreditNotesExportable } from './commands/CreditNotesExportable';
+import { CreditNotesImportable } from './commands/CreditNotesImportable';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { CreditNotesExportable } from './commands/CreditNotesExportable';
     CreditNoteGLEntries,
     CreditNoteGLEntriesSubscriber,
     CreditNotesExportable,
+    CreditNotesImportable,
   ],
   exports: [
     CreateCreditNoteService,
@@ -69,6 +71,7 @@ import { CreditNotesExportable } from './commands/CreditNotesExportable';
     CreditNoteApplication,
     CreditNoteBrandingTemplate,
     CreditNotesExportable,
+    CreditNotesImportable,
   ],
   controllers: [CreditNotesController],
 })

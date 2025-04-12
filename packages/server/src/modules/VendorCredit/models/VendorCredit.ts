@@ -6,8 +6,13 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { DiscountType } from '@/common/types/Discount';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { VendorCreditMeta } from './VendorCredit.meta';
 
 @ExportableModel()
+@ImportableModel()
+@InjectModelMeta(VendorCreditMeta)
 export class VendorCredit extends TenantBaseModel {
   vendorId: number;
   amount: number;

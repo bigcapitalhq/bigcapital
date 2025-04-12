@@ -4,8 +4,11 @@ import { Injectable } from '@nestjs/common';
 import { PaymentsReceiveSampleData } from '../constants';
 import { CreatePaymentReceivedService } from './CreatePaymentReceived.serivce';
 import { Importable } from '@/modules/Import/Importable';
+import { ImportableService } from '@/modules/Import/decorators/Import.decorator';
+import { PaymentReceived } from '../models/PaymentReceived';
 
 @Injectable()
+@ImportableService({ name: PaymentReceived.name })
 export class PaymentsReceivedImportable extends Importable {
   constructor(
     private readonly createPaymentReceiveService: CreatePaymentReceivedService,

@@ -3,8 +3,13 @@ import { Model } from 'objection';
 import { Injectable } from '@nestjs/common';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { SaleEstimateMeta } from './SaleEstimate.meta';
 
 @ExportableModel()
+@ImportableModel()
+@InjectModelMeta(SaleEstimateMeta)
 export class SaleEstimate extends TenantBaseModel {
   exchangeRate!: number;
   amount!: number;

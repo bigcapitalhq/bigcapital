@@ -1,45 +1,49 @@
-// import { Inject, Service } from 'typedi';
-// import { Knex } from 'knex';
-// import { Importable } from '@/services/Import/Importable';
-// import CreateVendorCredit from './CreateVendorCredit.service';
-// import { IVendorCreditCreateDTO } from '@/interfaces';
-// import { VendorCreditsSampleData } from '../constants';
+import { Knex } from 'knex';
+import { VendorCreditsSampleData } from '../constants';
+import { Injectable } from '@nestjs/common';
+import { CreateVendorCreditService } from './CreateVendorCredit.service';
+import { CreateVendorCreditDto } from '../dtos/VendorCredit.dto';
+import { Importable } from '@/modules/Import/Importable';
+import { ImportableService } from '@/modules/Import/decorators/Import.decorator';
+import { VendorCredit } from '../models/VendorCredit';
 
-// @Service()
-// export class VendorCreditsImportable extends Importable {
-//   @Inject()
-//   private createVendorCreditService: CreateVendorCredit;
+@Injectable()
+@ImportableService({ name: VendorCredit.name })
+export class VendorCreditsImportable extends Importable {
+  constructor(
+      private readonly createVendorCreditService: CreateVendorCreditService,
+  ) {
+    super()
+  }
 
-//   /**
-//    * Importing to account service.
-//    * @param {number} tenantId
-//    * @param {IAccountCreateDTO} createAccountDTO
-//    * @returns
-//    */
-//   public importable(
-//     tenantId: number,
-//     createPaymentDTO: IVendorCreditCreateDTO,
-//     trx?: Knex.Transaction
-//   ) {
-//     return this.createVendorCreditService.newVendorCredit(
-//       tenantId,
-//       createPaymentDTO,
-//       trx
-//     );
-//   }
+  /**
+   * Importing to account service.
+   * @param {number} tenantId
+   * @param {IAccountCreateDTO} createAccountDTO
+   * @returns
+   */
+  public importable(
+    createPaymentDTO: CreateVendorCreditDto,
+    trx?: Knex.Transaction
+  ) {
+    return this.createVendorCreditService.newVendorCredit(
+      createPaymentDTO,
+      trx
+    );
+  }
 
-//   /**
-//    * Concurrrency controlling of the importing process.
-//    * @returns {number}
-//    */
-//   public get concurrency() {
-//     return 1;
-//   }
+  /**
+   * Concurrrency controlling of the importing process.
+   * @returns {number}
+   */
+  public get concurrency() {
+    return 1;
+  }
 
-//   /**
-//    * Retrieves the sample data that used to download accounts sample sheet.
-//    */
-//   public sampleData(): any[] {
-//     return VendorCreditsSampleData;
-//   }
-// }
+  /**
+   * Retrieves the sample data that used to download accounts sample sheet.
+   */
+  public sampleData(): any[] {
+    return VendorCreditsSampleData;
+  }
+}

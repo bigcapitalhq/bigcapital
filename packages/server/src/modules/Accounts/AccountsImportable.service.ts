@@ -4,8 +4,11 @@ import { Importable } from '../Import/Importable';
 import { AccountsSampleData } from './AccountsImportable.SampleData';
 import { CreateAccountDTO } from './CreateAccount.dto';
 import { CreateAccountService } from './CreateAccount.service';
+import { ImportableService } from '../Import/decorators/Import.decorator';
+import { Account } from './models/Account.model';
 
 @Injectable()
+@ImportableService({ name: Account.name })
 export class AccountsImportable extends Importable {
   constructor(private readonly createAccountService: CreateAccountService) {
     super();

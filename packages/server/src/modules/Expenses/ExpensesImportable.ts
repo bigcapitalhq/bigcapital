@@ -1,27 +1,28 @@
 import { Knex } from 'knex';
+import { Injectable } from '@nestjs/common';
 import { Importable } from '../Import/Importable';
 import { ExpensesSampleData } from './constants';
-import { Injectable } from '@nestjs/common';
 import { CreateExpense } from './commands/CreateExpense.service';
 import { CreateExpenseDto } from './dtos/Expense.dto';
+import { ImportableService } from '../Import/decorators/Import.decorator';
+import { ManualJournal } from '../ManualJournals/models/ManualJournal';
 
 @Injectable()
+@ImportableService({ name: ManualJournal.name })
 export class ExpensesImportable extends Importable {
   constructor(private readonly createExpenseService: CreateExpense) {
     super();
   }
 
   /**
-   * Importing to account service.
-   * @param {number} tenantId
-   * @param {IAccountCreateDTO} createAccountDTO
-   * @returns
+   * Importing to expense service.
+   * @param {CreateExpenseDto} createAccountDTO
    */
   public importable(
-    createAccountDTO: CreateExpenseDto,
+    createExpenseDto: CreateExpenseDto,
     trx?: Knex.Transaction,
   ) {
-    return this.createExpenseService.newExpense(createAccountDTO, trx);
+    return this.createExpenseService.newExpense(createExpenseDto, trx);
   }
 
   /**

@@ -18,6 +18,7 @@ import { BankAccount } from '../BankingTransactions/models/BankAccount';
 import { GetAccountsService } from './GetAccounts.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { AccountsExportable } from './AccountsExportable.service';
+import { AccountsImportable } from './AccountsImportable.service';
 
 const models = [RegisterTenancyModel(BankAccount)];
 
@@ -39,12 +40,14 @@ const models = [RegisterTenancyModel(BankAccount)];
     GetAccountTransactionsService,
     GetAccountsService,
     AccountsExportable,
+    AccountsImportable
   ],
   exports: [
     AccountRepository,
     CreateAccountService,
     ...models,
     AccountsExportable,
+    AccountsImportable
   ],
 })
 export class AccountsModule {}

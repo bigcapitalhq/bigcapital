@@ -12,8 +12,10 @@ import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ManualJournalMeta } from './ManualJournal.meta';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 
 @ExportableModel()
+@ImportableModel()
 @InjectModelMeta(ManualJournalMeta)
 export class ManualJournal extends TenantBaseModel {
   date: Date;

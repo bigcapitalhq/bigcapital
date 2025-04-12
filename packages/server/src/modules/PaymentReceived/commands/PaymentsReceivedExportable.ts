@@ -3,8 +3,11 @@ import { PaymentReceivesApplication } from '../PaymentReceived.application';
 import { IPaymentsReceivedFilter } from '../types/PaymentReceived.types';
 import { EXPORT_SIZE_LIMIT } from '@/modules/Export/constants';
 import { Exportable } from '@/modules/Export/Exportable';
+import { ExportableService } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { PaymentReceived } from '../models/PaymentReceived';
 
 @Injectable()
+@ExportableService({ name: PaymentReceived.name })
 export class PaymentsReceivedExportable extends Exportable {
   constructor(private readonly paymentReceivedApp: PaymentReceivesApplication) {
     super();

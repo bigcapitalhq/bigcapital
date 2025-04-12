@@ -1,11 +1,16 @@
 import { Knex } from 'knex';
 import * as Yup from 'yup';
+import { Injectable } from '@nestjs/common';
 import { Importable } from '../../Import/Importable';
 import { CreateManualJournalService } from './CreateManualJournal.service';
 import { ImportableContext } from '../../Import/interfaces';
 import { ManualJournalsSampleData } from '../constants';
 import { CreateManualJournalDto } from '../dtos/ManualJournal.dto';
+import { ImportableService } from '@/modules/Import/decorators/Import.decorator';
+import { ManualJournal } from '../models/ManualJournal';
 
+@Injectable()
+@ImportableService({ name: ManualJournal.name })
 export class ManualJournalImportable extends Importable {
   constructor(
     private readonly createManualJournalService: CreateManualJournalService,

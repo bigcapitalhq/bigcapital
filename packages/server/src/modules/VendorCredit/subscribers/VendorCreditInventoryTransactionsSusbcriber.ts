@@ -9,7 +9,7 @@ import { Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
 
 @Injectable()
-export default class VendorCreditInventoryTransactionsSubscriber {
+export class VendorCreditInventoryTransactionsSubscriber {
   constructor(
     private readonly inventoryTransactions: VendorCreditInventoryTransactions,
   ) {}

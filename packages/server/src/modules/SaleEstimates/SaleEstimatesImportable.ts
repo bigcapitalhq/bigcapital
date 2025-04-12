@@ -4,8 +4,11 @@ import { SaleEstimatesSampleData } from './constants';
 import { Injectable } from '@nestjs/common';
 import { CreateSaleEstimateDto } from './dtos/SaleEstimate.dto';
 import { Importable } from '../Import/Importable';
+import { ImportableService } from '../Import/decorators/Import.decorator';
+import { SaleEstimate } from './models/SaleEstimate';
 
 @Injectable()
+@ImportableService({ name: SaleEstimate.name })
 export class SaleEstimatesImportable extends Importable{
   constructor(
     private readonly createEstimateService: CreateSaleEstimate
