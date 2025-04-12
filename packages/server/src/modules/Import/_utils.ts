@@ -434,7 +434,7 @@ export const getMapToPath = (to: string, group = '') =>
   group ? `${group}.${to}` : to;
 
 export const getImportsStoragePath = () => {
-  return path.join(global.__storage_dir, `/imports`);
+  return path.join(global.__static_dirname, `/imports`);
 };
 
 /**

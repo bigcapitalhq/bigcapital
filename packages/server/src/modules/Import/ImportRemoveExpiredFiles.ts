@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import bluebird from 'bluebird';
+import * as bluebird from 'bluebird';
 import { deleteImportFile } from './_utils';
 import { Inject, Injectable } from '@nestjs/common';
 import { ImportModel } from './models/Import';
@@ -19,6 +19,7 @@ export class ImportDeleteExpiredFiles {
     const expiredImports = await this.importModel
       .query()
       .where('createdAt', '<', yesterday);
+
     await bluebird.map(
       expiredImports,
       async (expiredImport) => {

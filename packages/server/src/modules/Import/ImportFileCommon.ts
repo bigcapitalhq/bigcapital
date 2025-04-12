@@ -1,4 +1,4 @@
-import bluebird from 'bluebird';
+import * as bluebird from 'bluebird';
 import * as R from 'ramda';
 import { first } from 'lodash';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
@@ -10,18 +10,18 @@ import {
   ImportableContext,
 } from './interfaces';
 import { getUniqueImportableValue, trimObject } from './_utils';
-import { ImportableResources } from './ImportableResources';
 import { ResourceService } from '../Resource/ResourceService';
 import { Injectable } from '@nestjs/common';
 import { ServiceError } from '../Items/ServiceError';
 import { ImportModelShape } from './models/Import';
+import { ImportableRegistry } from './ImportableRegistry';
 
 @Injectable()
 export class ImportFileCommon {
   constructor(
     private readonly importFileValidator: ImportFileDataValidator,
-    private readonly importable: ImportableResources,
     private readonly resource: ResourceService,
+    private readonly importableRegistry: ImportableRegistry,
   ) {}
 
   /**
@@ -39,9 +39,9 @@ export class ImportFileCommon {
     const resourceFields = this.resource.getResourceFields2(
       importFile.resource,
     );
-    const ImportableRegistry = this.importable.registry;
-    const importable = ImportableRegistry.getImportable(importFile.resource);
-
+    const importable = await this.importableRegistry.getImportable(
+      importFile.resource,
+    );
     const concurrency = importable.concurrency || 10;
 
     const success: ImportOperSuccess[] = [];
@@ -67,10 +67,7 @@ export class ImportFileCommon {
         );
         try {
           // Run the importable function and listen to the errors.
-          const data = await importable.importable(
-            transformedDTO,
-            trx,
-          );
+          const data = await importable.importable(transformedDTO, trx);
           success.push({ index, data });
         } catch (err) {
           if (err instanceof ServiceError) {
@@ -112,9 +109,8 @@ export class ImportFileCommon {
     resourceName: string,
     params: Record<string, any>,
   ) {
-    const ImportableRegistry = this.importable.registry;
-    const importable = ImportableRegistry.getImportable(resourceName);
-
+    const importable =
+      await this.importableRegistry.getImportable(resourceName);
     const yupSchema = importable.paramsValidationSchema();
 
     try {
@@ -137,8 +133,8 @@ export class ImportFileCommon {
     resourceName: string,
     params: Record<string, any>,
   ) {
-    const ImportableRegistry = this.importable.registry;
-    const importable = ImportableRegistry.getImportable(resourceName);
+    const importable =
+      await this.importableRegistry.getImportable(resourceName);
 
     await importable.validateParams(params);
   }
@@ -149,9 +145,12 @@ export class ImportFileCommon {
    * @param {Record<string, any>} params
    * @returns
    */
-  public transformParams(resourceName: string, params: Record<string, any>) {
-    const ImportableRegistry = this.importable.registry;
-    const importable = ImportableRegistry.getImportable(resourceName);
+  public async transformParams(
+    resourceName: string,
+    params: Record<string, any>,
+  ) {
+    const importable =
+      await this.importableRegistry.getImportable(resourceName);
 
     return importable.transformParams(params);
   }

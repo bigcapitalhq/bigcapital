@@ -3,8 +3,10 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ItemCategoryMeta } from './ItemCategory.meta';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 
 @ExportableModel()
+@ImportableModel()
 @InjectModelMeta(ItemCategoryMeta)
 export class ItemCategory extends TenantBaseModel {
   name!: string;

@@ -12,6 +12,7 @@ import {
   QueryResolver,
 } from 'nestjs-i18n';
 import { BullModule } from '@nestjs/bullmq';
+import { ScheduleModule } from '@nestjs/schedule';
 import { PassportModule } from '@nestjs/passport';
 import { ClsModule, ClsService } from 'nestjs-cls';
 import { AppController } from './App.controller';
@@ -139,6 +140,7 @@ import { ImportModule } from '../Import/Import.module';
       }),
       inject: [ConfigService],
     }),
+    ScheduleModule.forRoot(),
     TenancyDatabaseModule,
     TenancyModelsModule,
     TenancyModule,

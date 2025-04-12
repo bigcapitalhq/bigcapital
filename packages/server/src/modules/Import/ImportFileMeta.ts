@@ -1,6 +1,6 @@
+import { Inject, Injectable } from '@nestjs/common';
 import { ImportModel } from './models/Import';
 import { ImportFileMetaTransformer } from './ImportFileMetaTransformer';
-import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 

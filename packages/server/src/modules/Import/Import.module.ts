@@ -12,17 +12,23 @@ import { ImportFileMapping } from './ImportFileMapping';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileDataTransformer } from './ImportFileDataTransformer';
 import { ImportFileCommon } from './ImportFileCommon';
-import { ImportableResources } from './ImportableResources';
 import { ResourceModule } from '../Resource/Resource.module';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { ImportController } from './Import.controller';
+import { ImportableRegistry } from './ImportableRegistry';
+import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
+import { ImportModel } from './models/Import';
+import { ImportDeleteExpiredFilesJobs } from './jobs/ImportDeleteExpiredFilesJob';
+
+const models = [InjectSystemModel(ImportModel)];
 
 @Module({
   imports: [ResourceModule, TenancyModule, AccountsModule],
   providers: [
+    ...models,
     ImportAls,
     ImportSampleService,
-    ImportableResources,
     ImportResourceApplication,
     ImportDeleteExpiredFiles,
     ImportFileUploadService,
@@ -34,7 +40,10 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     ImportFileDataValidator,
     ImportFileDataTransformer,
     ImportFileCommon,
+    ImportableRegistry,
+    ImportDeleteExpiredFilesJobs
   ],
-  exports: [ImportAls],
+  controllers: [ImportController],
+  exports: [ImportAls, ...models],
 })
 export class ImportModule {}
