@@ -30,7 +30,7 @@ export class ImportController {
   @ApiOperation({ summary: 'Upload import file' })
   @ApiResponse({ status: 200, description: 'File uploaded successfully' })
   @UseInterceptors(
-    FileInterceptor('file', { storage: uploadImportFileMulterOptions }),
+    FileInterceptor('file', uploadImportFileMulterOptions),
   )
   async fileUpload(
     @Res() res: Response,

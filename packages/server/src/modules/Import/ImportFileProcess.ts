@@ -27,7 +27,6 @@ export class ImportFileProcess {
 
   /**
    * Preview the imported file results before commiting the transactions.
-   * @param {number} tenantId
    * @param {number} importId
    * @returns {Promise<ImportFilePreviewPOJO>}
    */

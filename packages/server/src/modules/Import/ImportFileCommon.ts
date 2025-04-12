@@ -1,4 +1,4 @@
-import bluebird from 'bluebird';
+import * as bluebird from 'bluebird';
 import * as R from 'ramda';
 import { first } from 'lodash';
 import { ImportFileDataValidator } from './ImportFileDataValidator';

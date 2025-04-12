@@ -16,7 +16,7 @@ export class ImportFileMapping {
     private readonly resource: ResourceService,
 
     @Inject(ImportModel.name)
-    private readonly importModel: () => typeof ImportModel,
+    private readonly importModel: typeof ImportModel,
   ) {}
 
   /**
@@ -28,7 +28,7 @@ export class ImportFileMapping {
     importId: string,
     maps: ImportMappingAttr[],
   ): Promise<ImportFileMapPOJO> {
-    const importFile = await this.importModel()
+    const importFile = await this.importModel
       .query()
       .findOne('filename', importId)
       .throwIfNotFound();
@@ -46,7 +46,7 @@ export class ImportFileMapping {
 
     const mappingStringified = JSON.stringify(maps);
 
-    await this.importModel().query().findById(importFile.id).patch({
+    await this.importModel.query().findById(importFile.id).patch({
       mapping: mappingStringified,
     });
     return {

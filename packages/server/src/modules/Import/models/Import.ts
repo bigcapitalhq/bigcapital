@@ -67,7 +67,7 @@ export class ImportModel extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Tenant = require('system/models/Tenant');
+    const { TenantModel } = require('../../System/models/TenantModel');
 
     return {
       /**
@@ -75,7 +75,7 @@ export class ImportModel extends BaseModel {
        */
       tenant: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Tenant.default,
+        modelClass: TenantModel,
         join: {
           from: 'imports.tenantId',
           to: 'tenants.id',

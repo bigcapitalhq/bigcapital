@@ -19,6 +19,7 @@ export class ImportDeleteExpiredFiles {
     const expiredImports = await this.importModel
       .query()
       .where('createdAt', '<', yesterday);
+
     await bluebird.map(
       expiredImports,
       async (expiredImport) => {

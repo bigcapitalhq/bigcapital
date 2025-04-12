@@ -17,10 +17,16 @@ import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { ImportController } from './Import.controller';
 import { ImportableRegistry } from './ImportableRegistry';
+import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
+import { ImportModel } from './models/Import';
+import { ImportDeleteExpiredFilesJobs } from './jobs/ImportDeleteExpiredFilesJob';
+
+const models = [InjectSystemModel(ImportModel)];
 
 @Module({
   imports: [ResourceModule, TenancyModule, AccountsModule],
   providers: [
+    ...models,
     ImportAls,
     ImportSampleService,
     ImportResourceApplication,
@@ -34,9 +40,10 @@ import { ImportableRegistry } from './ImportableRegistry';
     ImportFileDataValidator,
     ImportFileDataTransformer,
     ImportFileCommon,
-    ImportableRegistry
+    ImportableRegistry,
+    ImportDeleteExpiredFilesJobs
   ],
   controllers: [ImportController],
-  exports: [ImportAls],
+  exports: [ImportAls, ...models],
 })
 export class ImportModule {}

@@ -6,7 +6,6 @@ export const getImportsStoragePath = () => {
   return path.join(global.__static_dirname, `/imports`);
 };
 
-
 export function allowSheetExtensions(req, file, cb) {
   if (
     file.mimetype !== 'text/csv' &&
@@ -35,5 +34,5 @@ const storage = Multer.diskStorage({
 export const uploadImportFileMulterOptions = {
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: allowSheetExtensions,
+  // fileFilter: allowSheetExtensions,
 };

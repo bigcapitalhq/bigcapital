@@ -1,3 +1,4 @@
+import { Inject, Injectable } from '@nestjs/common';
 import {
   deleteImportFile,
   getResourceColumns,
@@ -10,7 +11,6 @@ import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileUploadPOJO } from './interfaces';
 import { parseSheetData } from './sheet_utils';
-import { Inject, Injectable } from '@nestjs/common';
 import { ImportModel } from './models/Import';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
@@ -29,9 +29,8 @@ export class ImportFileUploadService {
   /**
    * Imports the specified file for the given resource.
    * Deletes the file if an error occurs during the import process.
-   * @param {number} tenantId
-   * @param {string} resourceName
-   * @param {string} filename
+   * @param {string} resourceName - Resource name.
+   * @param {string} filename - File name.
    * @param {Record<string, number | string>} params
    * @returns {Promise<ImportFileUploadPOJO>}
    */

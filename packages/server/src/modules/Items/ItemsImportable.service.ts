@@ -18,8 +18,7 @@ export class ItemsImportable extends Importable {
 
   /**
    * Mapps the imported data to create a new item service.
-   * @param {number} tenantId
-   * @param {ICustomerNewDTO} createDTO
+   * @param {CreateItemDto} createDTO
    * @param {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
