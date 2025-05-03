@@ -1,5 +1,6 @@
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 import { Knex } from 'knex';
+import { CreditNoteAppliedInvoice } from '../models/CreditNoteAppliedInvoice';
 
 export interface ICreditNoteApplyInvoiceDTO {
   entries: { invoiceId: number; amount: number }[];
@@ -17,12 +18,12 @@ export interface IApplyCreditToInvoicesDTO {
 export interface IApplyCreditToInvoicesCreatedPayload {
   trx: Knex.Transaction;
   creditNote: CreditNote;
-  creditNoteAppliedInvoices: ICreditNoteAppliedToInvoice[];
+  creditNoteAppliedInvoices: CreditNoteAppliedInvoice[];
 }
 export interface IApplyCreditToInvoicesDeletedPayload {
   trx: Knex.Transaction;
   creditNote: CreditNote;
-  creditNoteAppliedToInvoice: ICreditNoteAppliedToInvoice;
+  creditNoteAppliedToInvoice: CreditNoteAppliedInvoice;
 }
 
 export interface ICreditNoteAppliedToInvoice {

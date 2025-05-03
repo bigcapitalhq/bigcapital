@@ -1,48 +1,34 @@
-// import { Inject, Service } from 'typedi';
-// import { ServiceError } from '@/exceptions';
-// import TenancyService from '@/services/Tenancy/TenancyService';
-// import events from '@/subscribers/events';
-// import { ICustomerDeletingPayload } from '@/interfaces';
-// import DeleteCustomerLinkedCreidtNote from '../commands/DeleteCustomerLinkedCreditNote.service';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import { DeleteCustomerLinkedCreditNoteService } from '@/modules/CreditNotesApplyInvoice/commands/DeleteCustomerLinkedCreditNote.service';
+import { events } from '@/common/events/events';
+import { ICustomerDeletingPayload } from '@/modules/Customers/types/Customers.types';
+import { ServiceError } from '@/modules/Items/ServiceError';
 
-// const ERRORS = {
-//   CUSTOMER_HAS_TRANSACTIONS: 'CUSTOMER_HAS_TRANSACTIONS',
-// };
+const ERRORS = {
+  CUSTOMER_HAS_TRANSACTIONS: 'CUSTOMER_HAS_TRANSACTIONS',
+};
 
-// @Service()
-// export default class DeleteCustomerLinkedCreditSubscriber {
-//   @Inject()
-//   tenancy: TenancyService;
+@Injectable()
+export class DeleteCustomerLinkedCreditSubscriber {
+  constructor(
+    private readonly deleteCustomerLinkedCredit: DeleteCustomerLinkedCreditNoteService,
+  ) {}
 
-//   @Inject()
-//   deleteCustomerLinkedCredit: DeleteCustomerLinkedCreidtNote;
-
-//   /**
-//    * Attaches events with handlers.
-//    * @param bus
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.customers.onDeleting,
-//       this.validateCustomerHasNoLinkedCreditsOnDeleting
-//     );
-//   };
-
-//   /**
-//    * Validate vendor has no associated credit transaction once the vendor deleting.
-//    * @param {IVendorEventDeletingPayload} payload -
-//    */
-//   public validateCustomerHasNoLinkedCreditsOnDeleting = async ({
-//     tenantId,
-//     customerId,
-//   }: ICustomerDeletingPayload) => {
-//     try {
-//       await this.deleteCustomerLinkedCredit.validateCustomerHasNoCreditTransaction(
-//         tenantId,
-//         customerId
-//       );
-//     } catch (error) {
-//       throw new ServiceError(ERRORS.CUSTOMER_HAS_TRANSACTIONS);
-//     }
-//   };
-// }
+  /**
+   * Validate vendor has no associated credit transaction once the vendor deleting.
+   * @param {IVendorEventDeletingPayload} payload -
+   */
+  @OnEvent(events.customers.onDeleting)
+  public async validateCustomerHasNoLinkedCreditsOnDeleting({
+    customerId,
+  }: ICustomerDeletingPayload) {
+    try {
+      await this.deleteCustomerLinkedCredit.validateCustomerHasNoCreditTransaction(
+        customerId,
+      );
+    } catch (error) {
+      throw new ServiceError(ERRORS.CUSTOMER_HAS_TRANSACTIONS);
+    }
+  }
+}

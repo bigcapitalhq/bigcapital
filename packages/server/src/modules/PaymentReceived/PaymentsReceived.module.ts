@@ -70,6 +70,7 @@ import { PaymentsReceivedImportable } from './commands/PaymentsReceivedImportabl
     PaymentReceivedGLEntries,
     PaymentsReceivedExportable,
     PaymentsReceivedImportable,
+    PaymentReceivedValidators
   ],
   imports: [
     ChromiumlyTenancyModule,

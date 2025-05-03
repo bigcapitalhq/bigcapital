@@ -14,15 +14,14 @@ export class PaymentReceivedBrandingTemplate {
   /**
    * Retrieves the payment received pdf template.
    * @param {number} paymentTemplateId
-   * @returns 
+   * @returns
    */
   public async getPaymentReceivedPdfTemplate(paymentTemplateId: number) {
-    const template = await this.getPdfTemplateService.getPdfTemplate(
-      paymentTemplateId
-    );
+    const template =
+      await this.getPdfTemplateService.getPdfTemplate(paymentTemplateId);
     // Retrieves the organization branding attributes.
     const commonOrgBrandingAttrs =
-      await this.getOrgBrandingAttributes.getOrganizationBrandingAttributes();
+      await this.getOrgBrandingAttributes.execute();
 
     // Merges the default branding attributes with common organization branding attrs.
     const organizationBrandingAttrs = {
@@ -35,7 +34,7 @@ export class PaymentReceivedBrandingTemplate {
     };
     const attributes = mergePdfTemplateWithDefaultAttributes(
       brandingTemplateAttrs,
-      organizationBrandingAttrs
+      organizationBrandingAttrs,
     );
     return {
       ...template,

@@ -22,7 +22,7 @@ export class CreditNoteBrandingTemplate {
 
     // Retrieves the organization branding attributes.
     const commonOrgBrandingAttrs =
-      await this.getOrgBrandingAttributes.getOrganizationBrandingAttributes();
+      await this.getOrgBrandingAttributes.execute();
 
     // Merges the default branding attributes with common organization branding attrs.
     const organizationBrandingAttrs = {

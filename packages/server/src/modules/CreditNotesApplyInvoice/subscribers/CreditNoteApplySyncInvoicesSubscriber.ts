@@ -1,61 +1,47 @@
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import {
-//   IApplyCreditToInvoicesCreatedPayload,
-//   IApplyCreditToInvoicesDeletedPayload,
-// } from '@/interfaces';
-// import CreditNoteApplySyncInvoicesCreditedAmount from '../commands/CreditNoteApplySyncInvoices.service';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
+import {
+  IApplyCreditToInvoicesCreatedPayload,
+  IApplyCreditToInvoicesDeletedPayload,
+} from '../types/CreditNoteApplyInvoice.types';
+import { CreditNoteApplySyncInvoicesCreditedAmount } from '../commands/CreditNoteApplySyncInvoices.service';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export default class CreditNoteApplySyncInvoicesCreditedAmountSubscriber {
-//   @Inject()
-//   private syncInvoicesWithCreditNote: CreditNoteApplySyncInvoicesCreditedAmount;
+@Injectable()
+export default class CreditNoteApplySyncInvoicesCreditedAmountSubscriber {
+  constructor(
+    private readonly syncInvoicesWithCreditNote: CreditNoteApplySyncInvoicesCreditedAmount,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.creditNote.onApplyToInvoicesCreated,
-//       this.incrementAppliedInvoicesOnceCreditCreated
-//     );
-//     bus.subscribe(
-//       events.creditNote.onApplyToInvoicesDeleted,
-//       this.decrementAppliedInvoicesOnceCreditDeleted
-//     );
-//   }
+  /**
+   * Increment invoices credited amount once the credit note apply to invoices transaction
+   * @param {IApplyCreditToInvoicesCreatedPayload} payload -
+   */
+  @OnEvent(events.creditNote.onApplyToInvoicesCreated)
+  async incrementAppliedInvoicesOnceCreditCreated({
+    trx,
+    creditNoteAppliedInvoices,
+  }: IApplyCreditToInvoicesCreatedPayload) {
+    await this.syncInvoicesWithCreditNote.incrementInvoicesCreditedAmount(
+      creditNoteAppliedInvoices,
+      trx,
+    );
+  }
 
-//   /**
-//    * Increment invoices credited amount once the credit note apply to invoices transaction
-//    * @param {IApplyCreditToInvoicesCreatedPayload} payload -
-//    */
-//   private incrementAppliedInvoicesOnceCreditCreated = async ({
-//     trx,
-//     tenantId,
-//     creditNoteAppliedInvoices,
-//   }: IApplyCreditToInvoicesCreatedPayload) => {
-//     await this.syncInvoicesWithCreditNote.incrementInvoicesCreditedAmount(
-//       tenantId,
-//       creditNoteAppliedInvoices,
-//       trx
-//     );
-//   };
-
-//   /**
-//    *
-//    * @param {IApplyCreditToInvoicesDeletedPayload} payload -
-//    */
-//   private decrementAppliedInvoicesOnceCreditDeleted = async ({
-//     trx,
-//     creditNoteAppliedToInvoice,
-//     tenantId,
-//   }: IApplyCreditToInvoicesDeletedPayload) => {
-//     // Decrement invoice credited amount.
-//     await this.syncInvoicesWithCreditNote.decrementInvoiceCreditedAmount(
-//       tenantId,
-//       creditNoteAppliedToInvoice.invoiceId,
-//       creditNoteAppliedToInvoice.amount,
-//       trx
-//     );
-//   };
-// }
+  /**
+   *
+   * @param {IApplyCreditToInvoicesDeletedPayload} payload -
+   */
+  @OnEvent(events.creditNote.onApplyToInvoicesDeleted)
+  async decrementAppliedInvoicesOnceCreditDeleted({
+    trx,
+    creditNoteAppliedToInvoice,
+  }: IApplyCreditToInvoicesDeletedPayload) {
+    // Decrement invoice credited amount.
+    await this.syncInvoicesWithCreditNote.decrementInvoiceCreditedAmount(
+      creditNoteAppliedToInvoice.invoiceId,
+      creditNoteAppliedToInvoice.amount,
+      trx,
+    );
+  }
+}

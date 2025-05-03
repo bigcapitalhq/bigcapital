@@ -1,4 +1,4 @@
-import bluebird from 'bluebird';
+import * as bluebird from 'bluebird';
 import { difference } from 'lodash';
 import {
   validateLinkModelEntryExists,

@@ -11,6 +11,8 @@ import { PdfTemplatesController } from './PdfTemplates.controller';
 import { GetPdfTemplateService } from './queries/GetPdfTemplate.service';
 import { BrandingTemplateDTOTransformer } from './BrandingTemplateDTOTransformer';
 import { GetOrganizationBrandingAttributesService } from './queries/GetOrganizationBrandingAttributes.service';
+import { GetPdfTemplates } from './queries/GetPdfTemplates.service';
+import { GetPdfTemplateBrandingState } from './queries/GetPdfTemplateBrandingState.service';
 
 @Module({
   exports: [
@@ -25,12 +27,14 @@ import { GetOrganizationBrandingAttributesService } from './queries/GetOrganizat
     CreatePdfTemplateService,
     DeletePdfTemplateService,
     GetPdfTemplateService,
+    GetPdfTemplates,
     EditPdfTemplateService,
     AssignPdfTemplateDefaultService,
     TenancyContext,
     TransformerInjectable,
     BrandingTemplateDTOTransformer,
     GetOrganizationBrandingAttributesService,
+    GetPdfTemplateBrandingState
   ],
 })
 export class PdfTemplatesModule {}

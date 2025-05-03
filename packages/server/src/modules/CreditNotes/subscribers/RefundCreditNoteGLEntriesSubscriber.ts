@@ -1,61 +1,47 @@
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import RefundCreditNoteGLEntries from '../commands/RefundCreditNoteGLEntries';
-// import {
-//   IRefundCreditNoteCreatedPayload,
-//   IRefundCreditNoteDeletedPayload,
-// } from '@/interfaces';
+import { events } from '@/common/events/events';
+import { RefundCreditNoteGLEntries } from '@/modules/CreditNoteRefunds/commands/RefundCreditNoteGLEntries';
+import {
+  IRefundCreditNoteCreatedPayload,
+  IRefundCreditNoteDeletedPayload,
+} from '@/modules/CreditNoteRefunds/types/CreditNoteRefunds.types';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 
-// @Service()
-// export default class RefundCreditNoteGLEntriesSubscriber {
-//   @Inject()
-//   refundCreditGLEntries: RefundCreditNoteGLEntries;
+@Injectable()
+export class RefundCreditNoteGLEntriesSubscriber {
+  constructor(
+    private readonly refundCreditGLEntries: RefundCreditNoteGLEntries,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach = (bus) => {
-//     bus.subscribe(
-//       events.creditNote.onRefundCreated,
-//       this.writeRefundCreditGLEntriesOnceCreated
-//     );
-//     bus.subscribe(
-//       events.creditNote.onRefundDeleted,
-//       this.revertRefundCreditGLEntriesOnceDeleted
-//     );
-//   };
+  /**
+   * Writes refund credit note GL entries once the transaction created.
+   * @param {IRefundCreditNoteCreatedPayload} payload -
+   */
+  @OnEvent(events.creditNote.onRefundCreated)
+  async writeRefundCreditGLEntriesOnceCreated({
+    trx,
+    refundCreditNote,
+    creditNote,
+  }: IRefundCreditNoteCreatedPayload) {
+    await this.refundCreditGLEntries.createRefundCreditGLEntries(
+      refundCreditNote.id,
+      trx,
+    );
+  }
 
-//   /**
-//    * Writes refund credit note GL entries once the transaction created.
-//    * @param {IRefundCreditNoteCreatedPayload} payload -
-//    */
-//   private writeRefundCreditGLEntriesOnceCreated = async ({
-//     trx,
-//     refundCreditNote,
-//     creditNote,
-//     tenantId,
-//   }: IRefundCreditNoteCreatedPayload) => {
-//     await this.refundCreditGLEntries.createRefundCreditGLEntries(
-//       tenantId,
-//       refundCreditNote.id,
-//       trx
-//     );
-//   };
-
-//   /**
-//    * Reverts refund credit note GL entries once the transaction deleted.
-//    * @param {IRefundCreditNoteDeletedPayload} payload -
-//    */
-//   private revertRefundCreditGLEntriesOnceDeleted = async ({
-//     trx,
-//     refundCreditId,
-//     oldRefundCredit,
-//     tenantId,
-//   }: IRefundCreditNoteDeletedPayload) => {
-//     await this.refundCreditGLEntries.revertRefundCreditGLEntries(
-//       tenantId,
-//       refundCreditId,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Reverts refund credit note GL entries once the transaction deleted.
+   * @param {IRefundCreditNoteDeletedPayload} payload -
+   */
+  @OnEvent(events.creditNote.onRefundDeleted)
+  async revertRefundCreditGLEntriesOnceDeleted({
+    trx,
+    refundCreditId,
+    oldRefundCredit,
+  }: IRefundCreditNoteDeletedPayload) {
+    await this.refundCreditGLEntries.revertRefundCreditGLEntries(
+      refundCreditId,
+      trx,
+    );
+  }
+}

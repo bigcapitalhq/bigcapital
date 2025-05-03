@@ -65,7 +65,7 @@ export class PdfTemplatesController {
     description: 'The PDF templates have been successfully retrieved.',
   })
   async getPdfTemplates(@Body('resource') resource: string) {
-    return this.pdfTemplateApplication.getPdfTemplates(resource);
+    return this.pdfTemplateApplication.getPdfTemplates({ resource });
   }
 
   @Put(':id')

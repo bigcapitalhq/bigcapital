@@ -19,9 +19,10 @@ export class SaleInvoicePdfTemplate {
   async getInvoicePdfTemplate(invoiceTemplateId: number) {
     const template =
       await this.getPdfTemplateService.getPdfTemplate(invoiceTemplateId);
+
     // Retrieves the organization branding attributes.
     const commonOrgBrandingAttrs =
-      await this.getOrgBrandingAttributes.getOrganizationBrandingAttributes();
+      await this.getOrgBrandingAttributes.execute();
 
     const organizationBrandingAttrs = {
       ...defaultInvoicePdfTemplateAttributes,

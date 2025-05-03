@@ -82,6 +82,7 @@ import { AttachmentsModule } from '../Attachments/Attachment.module';
 import { S3Module } from '../S3/S3.module';
 import { ExportModule } from '../Export/Export.module';
 import { ImportModule } from '../Import/Import.module';
+import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/CreditNotesApplyInvoice.module';
 
 @Module({
   imports: [
@@ -169,6 +170,7 @@ import { ImportModule } from '../Import/Import.module';
     VendorCreditApplyBillsModule,
     VendorCreditsRefundModule,
     CreditNoteRefundsModule,
+    CreditNotesApplyInvoiceModule,
     BillPaymentsModule,
     PaymentsReceivedModule,
     LedgerModule,

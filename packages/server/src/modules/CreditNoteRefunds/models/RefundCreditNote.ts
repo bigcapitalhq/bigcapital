@@ -4,8 +4,9 @@ import { Model, mixin } from 'objection';
 // import CustomViewBaseModel from './CustomViewBaseModel';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
+import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
 
-export class RefundCreditNote extends BaseModel{
+export class RefundCreditNote extends BaseModel {
   date: Date;
   referenceNo: string;
   amount: number;
@@ -14,11 +15,13 @@ export class RefundCreditNote extends BaseModel{
   fromAccountId: number;
   description: string;
   creditNoteId: number;
-  
+
   userId?: number;
   branchId?: number;
-  
+
   createdAt?: Date | null;
+
+  creditNote!: CreditNote;
 
   /**
    * Table name.

@@ -11,7 +11,7 @@ import { ERRORS } from '../../CreditNotes/constants';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
-export default class DeleteCreditNoteApplyToInvoices {
+export class DeleteCreditNoteApplyToInvoices {
   /**
    * @param {UnitOfWork} uow - Unit of work.
    * @param {EventEmitter2} eventPublisher - Event emitter.

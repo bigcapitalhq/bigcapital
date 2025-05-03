@@ -19,9 +19,9 @@ export class SaleEstimatePdfTemplate {
   public async getEstimatePdfTemplate(estimateTemplateId: number) {
     const template =
       await this.getPdfTemplateService.getPdfTemplate(estimateTemplateId);
+
     // Retreives the organization branding attributes.
-    const commonOrgBrandingAttrs =
-      await this.getOrgBrandingAttrs.getOrganizationBrandingAttributes();
+    const commonOrgBrandingAttrs = await this.getOrgBrandingAttrs.execute();
 
     // Merge the default branding attributes with organization attrs.
     const orgainizationBrandingAttrs = {

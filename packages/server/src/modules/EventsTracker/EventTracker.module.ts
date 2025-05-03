@@ -18,6 +18,7 @@ import { PaymentMethodEventsTracker } from './events/PaymentMethodEventsTracker'
 import { PaymentLinkEventsTracker } from './events/PaymentLinkEventsTracker';
 import { StripeIntegrationEventsTracker } from './events/StripeIntegrationEventsTracker';
 import { PostHogModule } from './postHog.module';
+import { ReportsEventsTracker } from './events/ReportsEventsTracker';
 
 @Module({
   imports: [PostHogModule],
@@ -40,7 +41,7 @@ import { PostHogModule } from './postHog.module';
     PaymentMethodEventsTracker,
     PaymentLinkEventsTracker,
     StripeIntegrationEventsTracker,
-    // ReportsEventsTracker,
+    ReportsEventsTracker,
   ],
 })
 export class EventTrackerModule {}

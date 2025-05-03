@@ -1,30 +1,21 @@
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import BaseCreditNotes from '../commands/CommandCreditNoteDTOTransform.service';
-// import { ICreditNoteCreatedPayload } from '@/interfaces';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { CreditNoteAutoIncrementService } from '../commands/CreditNoteAutoIncrement.service';
+import { ICreditNoteCreatedPayload } from '../types/CreditNotes.types';
+import { events } from '@/common/events/events';
 
-// @Service()
-// export default class CreditNoteAutoSerialSubscriber {
-//   @Inject()
-//   creditNotesService: BaseCreditNotes;
+@Injectable()
+export default class CreditNoteAutoSerialSubscriber {
+  constructor(
+    private readonly creditNoteIncrementService: CreditNoteAutoIncrementService,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(
-//       events.creditNote.onCreated,
-//       this.autoSerialIncrementOnceCreated
-//     );
-//   }
-
-//   /**
-//    * Auto serial increment once credit note created.
-//    * @param {ICreditNoteCreatedPayload} payload - 
-//    */
-//   private autoSerialIncrementOnceCreated = async ({
-//     tenantId,
-//   }: ICreditNoteCreatedPayload) => {
-//     await this.creditNotesService.incrementSerialNumber(tenantId);
-//   };
-// }
+  /**
+   * Auto serial increment once credit note created.
+   * @param {ICreditNoteCreatedPayload} payload -
+   */
+  @OnEvent(events.creditNote.onCreated)
+  async autoSerialIncrementOnceCreated({}: ICreditNoteCreatedPayload) {
+    await this.creditNoteIncrementService.incrementSerialNumber();
+  }
+}

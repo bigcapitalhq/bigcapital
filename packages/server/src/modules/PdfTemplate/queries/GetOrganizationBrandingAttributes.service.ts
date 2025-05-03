@@ -10,7 +10,7 @@ export class GetOrganizationBrandingAttributesService {
    * Retrieves the given organization branding attributes initial state.
    * @returns {Promise<CommonOrganizationBrandingAttributes>}
    */
-  public async getOrganizationBrandingAttributes(): Promise<CommonOrganizationBrandingAttributes> {
+  public async execute(): Promise<CommonOrganizationBrandingAttributes> {
     const tenant = await this.tenancyContext.getTenant(true);
     const tenantMetadata = tenant.metadata;
 

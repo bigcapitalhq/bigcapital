@@ -1,62 +1,47 @@
-// import { Inject, Service } from 'typedi';
-// import {
-//   IRefundCreditNoteCreatedPayload,
-//   IRefundCreditNoteDeletedPayload,
-// } from '@/interfaces';
-// import events from '@/subscribers/events';
-// import RefundSyncCreditNoteBalance from '../commands/RefundSyncCreditNoteBalance';
+import { events } from '@/common/events/events';
+import { RefundSyncCreditNoteBalanceService } from '@/modules/CreditNoteRefunds/commands/RefundSyncCreditNoteBalance';
+import {
+  IRefundCreditNoteCreatedPayload,
+  IRefundCreditNoteDeletedPayload,
+} from '@/modules/CreditNoteRefunds/types/CreditNoteRefunds.types';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 
-// @Service()
-// export default class RefundSyncCreditNoteBalanceSubscriber {
-//   @Inject()
-//   refundSyncCreditBalance: RefundSyncCreditNoteBalance;
+@Injectable()
+export class RefundSyncCreditNoteBalanceSubscriber {
+  constructor(
+    private readonly refundSyncCreditBalance: RefundSyncCreditNoteBalanceService,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   attach(bus) {
-//     bus.subscribe(
-//       events.creditNote.onRefundCreated,
-//       this.incrementRefundedAmountOnceRefundCreated
-//     );
-//     bus.subscribe(
-//       events.creditNote.onRefundDeleted,
-//       this.decrementRefundedAmountOnceRefundDeleted
-//     );
-//     return bus;
-//   }
+  /**
+   * Increment credit note refunded amount once associated refund transaction created.
+   * @param {IRefundCreditNoteCreatedPayload} payload -
+   */
+  @OnEvent(events.creditNote.onRefundCreated)
+  async incrementRefundedAmountOnceRefundCreated({
+    trx,
+    refundCreditNote,
+  }: IRefundCreditNoteCreatedPayload) {
+    await this.refundSyncCreditBalance.incrementCreditNoteRefundAmount(
+      refundCreditNote.creditNoteId,
+      refundCreditNote.amount,
+      trx,
+    );
+  }
 
-//   /**
-//    * Increment credit note refunded amount once associated refund transaction created.
-//    * @param {IRefundCreditNoteCreatedPayload} payload -
-//    */
-//   private incrementRefundedAmountOnceRefundCreated = async ({
-//     trx,
-//     refundCreditNote,
-//     tenantId,
-//   }: IRefundCreditNoteCreatedPayload) => {
-//     await this.refundSyncCreditBalance.incrementCreditNoteRefundAmount(
-//       tenantId,
-//       refundCreditNote.creditNoteId,
-//       refundCreditNote.amount,
-//       trx
-//     );
-//   };
-
-//   /**
-//    * Decrement credit note refunded amount once associated refuned transaction deleted.
-//    * @param {IRefundCreditNoteDeletedPayload} payload -
-//    */
-//   private decrementRefundedAmountOnceRefundDeleted = async ({
-//     trx,
-//     oldRefundCredit,
-//     tenantId,
-//   }: IRefundCreditNoteDeletedPayload) => {
-//     await this.refundSyncCreditBalance.decrementCreditNoteRefundAmount(
-//       tenantId,
-//       oldRefundCredit.creditNoteId,
-//       oldRefundCredit.amount,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Decrement credit note refunded amount once associated refuned transaction deleted.
+   * @param {IRefundCreditNoteDeletedPayload} payload -
+   */
+  @OnEvent(events.creditNote.onRefundDeleted)
+  async decrementRefundedAmountOnceRefundDeleted({
+    trx,
+    oldRefundCredit,
+  }: IRefundCreditNoteDeletedPayload) {
+    await this.refundSyncCreditBalance.decrementCreditNoteRefundAmount(
+      oldRefundCredit.creditNoteId,
+      oldRefundCredit.amount,
+      trx,
+    );
+  }
+}

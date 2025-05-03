@@ -6,6 +6,8 @@ import { GetPdfTemplateService } from './queries/GetPdfTemplate.service';
 import { EditPdfTemplateService } from './commands/EditPdfTemplate.service';
 import { AssignPdfTemplateDefaultService } from './commands/AssignPdfTemplateDefault.service';
 import { GetOrganizationBrandingAttributesService } from './queries/GetOrganizationBrandingAttributes.service';
+import { GetPdfTemplates } from './queries/GetPdfTemplates.service';
+import { GetPdfTemplateBrandingState } from './queries/GetPdfTemplateBrandingState.service';
 
 @Injectable()
 export class PdfTemplateApplication {
@@ -13,11 +15,11 @@ export class PdfTemplateApplication {
     private readonly createPdfTemplateService: CreatePdfTemplateService,
     private readonly getPdfTemplateService: GetPdfTemplateService,
     private readonly deletePdfTemplateService: DeletePdfTemplateService,
-    // private readonly getPdfTemplatesService: GetPdfTemplatesService,
+    private readonly getPdfTemplatesService: GetPdfTemplates,
     private readonly editPdfTemplateService: EditPdfTemplateService,
     private readonly assignPdfTemplateDefaultService: AssignPdfTemplateDefaultService,
-    // private readonly getPdfTemplateBrandingStateService: GetPdfTemplateBrandingStateService,
-    // private readonly getOrganizationBrandingAttributesService: GetOrganizationBrandingAttributesService,
+    private readonly getPdfTemplateBrandingStateService: GetPdfTemplateBrandingState,
+    private readonly getOrganizationBrandingAttributesService: GetOrganizationBrandingAttributesService,
   ) {}
 
   /**
@@ -59,8 +61,8 @@ export class PdfTemplateApplication {
    * Retrieves all PDF templates.
    * @param {string} resource - The resource type to filter templates.
    */
-  public async getPdfTemplates(resource: string) {
-    // return this.getPdfTemplatesService.execute(resource);
+  public async getPdfTemplates(query?: { resource?: string }) {
+    return this.getPdfTemplatesService.getPdfTemplates(query);
   }
 
   /**
@@ -77,10 +79,9 @@ export class PdfTemplateApplication {
 
   /**
    * Gets the PDF template branding state.
-   * @param {number} tenantId - The tenant ID.
    */
-  public async getPdfTemplateBrandingState(tenantId: number) {
-    // return this.getPdfTemplateBrandingStateService.execute(tenantId);
+  public async getPdfTemplateBrandingState() {
+    return this.getPdfTemplateBrandingStateService.execute();
   }
 
   /**
@@ -92,5 +93,13 @@ export class PdfTemplateApplication {
     return this.assignPdfTemplateDefaultService.assignDefaultTemplate(
       templateId,
     );
+  }
+
+  /**
+   * Retrieves the organization branding attributes.
+   * @returns {Promise<CommonOrganizationBrandingAttributes>} The organization branding attributes.
+   */
+  getOrganizationBrandingAttributes() {
+    return this.getOrganizationBrandingAttributesService.execute();
   }
 }

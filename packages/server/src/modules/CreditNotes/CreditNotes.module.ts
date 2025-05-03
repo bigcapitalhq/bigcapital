@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CreateCreditNoteService } from './commands/CreateCreditNote.service';
 import { CommandCreditNoteDTOTransform } from './commands/CommandCreditNoteDTOTransform.service';
 import { EditCreditNoteService } from './commands/EditCreditNote.service';
@@ -26,6 +26,13 @@ import { GetCreditNotesService } from './queries/GetCreditNotes.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { CreditNotesExportable } from './commands/CreditNotesExportable';
 import { CreditNotesImportable } from './commands/CreditNotesImportable';
+import { CreditNoteInventoryTransactionsSubscriber } from './subscribers/CreditNoteInventoryTransactionsSubscriber';
+import { RefundSyncCreditNoteBalanceSubscriber } from './subscribers/RefundSyncCreditNoteBalanceSubscriber';
+import { DeleteCustomerLinkedCreditSubscriber } from './subscribers/DeleteCustomerLinkedCreditSubscriber';
+import { CreditNoteInventoryTransactions } from './commands/CreditNotesInventoryTransactions';
+import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
+import { CreditNoteRefundsModule } from '../CreditNoteRefunds/CreditNoteRefunds.module';
+import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/CreditNotesApplyInvoice.module';
 
 @Module({
   imports: [
@@ -39,6 +46,9 @@ import { CreditNotesImportable } from './commands/CreditNotesImportable';
     LedgerModule,
     AccountsModule,
     DynamicListModule,
+    InventoryCostModule,
+    forwardRef(() => CreditNoteRefundsModule),
+    forwardRef(() => CreditNotesApplyInvoiceModule)
   ],
   providers: [
     CreateCreditNoteService,
@@ -57,6 +67,10 @@ import { CreditNotesImportable } from './commands/CreditNotesImportable';
     CreditNoteGLEntriesSubscriber,
     CreditNotesExportable,
     CreditNotesImportable,
+    CreditNoteInventoryTransactions,
+    CreditNoteInventoryTransactionsSubscriber,
+    RefundSyncCreditNoteBalanceSubscriber,
+    DeleteCustomerLinkedCreditSubscriber,
   ],
   exports: [
     CreateCreditNoteService,
