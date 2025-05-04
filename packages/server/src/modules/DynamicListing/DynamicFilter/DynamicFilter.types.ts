@@ -1,6 +1,9 @@
 import { BaseModel } from '@/models/Model';
 
-export type ISortOrder = 'DESC' | 'ASC';
+export enum ISortOrder {
+  DESC = 'DESC',
+  ASC = 'ASC'
+}
 
 export interface IDynamicFilter {
   setModel(model: typeof BaseModel): void;
@@ -18,7 +21,7 @@ export interface IFilterRole {
 export interface IDynamicListFilter {
   customViewId?: number;
   filterRoles?: IFilterRole[];
-  columnSortBy: ISortOrder;
+  columnSortBy: string;
   sortOrder: ISortOrder;
   stringifiedFilterRoles?: string;
   searchKeyword?: string;

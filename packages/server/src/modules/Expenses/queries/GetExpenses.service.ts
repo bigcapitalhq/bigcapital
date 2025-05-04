@@ -23,13 +23,20 @@ export class GetExpensesService {
    * @param  {IExpensesFilter} expensesFilter
    * @return {IExpense[]}
    */
-  public async getExpensesList(filterDTO: IExpensesFilter): Promise<{
+  public async getExpensesList(filterDto: Partial<IExpensesFilter>): Promise<{
     expenses: Expense[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
+    const _filterDto = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDto,
+    };
     // Parses list filter DTO.
-    const filter = this.parseListFilterDTO(filterDTO);
+    const filter = this.parseListFilterDTO(_filterDto);
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
@@ -44,7 +51,7 @@ export class GetExpensesService {
         builder.withGraphFetched('categories.expenseAccount');
 
         dynamicList.buildQuery()(builder);
-        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
+        _filterDto?.filterQuery && _filterDto?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

@@ -1,3 +1,4 @@
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -17,7 +18,6 @@ import {
   IPaymentsReceivedFilter,
   PaymentReceiveMailOptsDTO,
 } from './types/PaymentReceived.types';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('payments-received')
 @ApiTags('payments-received')
@@ -88,7 +88,7 @@ export class PaymentReceivesController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the payment received list.' })
-  public getPaymentsReceived(@Query() filterDTO: IPaymentsReceivedFilter) {
+  public getPaymentsReceived(@Query() filterDTO: Partial<IPaymentsReceivedFilter>) {
     return this.paymentReceivesApplication.getPaymentsReceived(filterDTO);
   }
 

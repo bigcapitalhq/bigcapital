@@ -92,10 +92,10 @@ export class ItemsApplicationService {
 
   /**
    * Retrieves the paginated filterable items list.
-   * @param {IItemsFilter} filterDTO 
+   * @param {Partial<IItemsFilter>} filterDTO
    */
-  async getItems(filterDTO: IItemsFilter) {
-    return this.getItemsService.getItems(filterDTO)
+  async getItems(filterDTO: Partial<IItemsFilter>) {
+    return this.getItemsService.getItems(filterDTO);
   }
 
   /**

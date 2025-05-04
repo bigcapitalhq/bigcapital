@@ -24,13 +24,22 @@ export class GetSaleInvoicesService {
    * @param {ISalesInvoicesFilter} filterDTO -
    * @returns {Promise<{ salesInvoices: SaleInvoice[]; pagination: IPaginationMeta; filterMeta: IFilterMeta; }>}
    */
-  public async getSaleInvoices(filterDTO: ISalesInvoicesFilter): Promise<{
+  public async getSaleInvoices(
+    filterDTO: Partial<ISalesInvoicesFilter>,
+  ): Promise<{
     salesInvoices: SaleInvoice[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
+    const _filterDto = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDTO,
+    };
     // Parses stringified filter roles.
-    const filter = this.parseListFilterDTO(filterDTO);
+    const filter = this.parseListFilterDTO(_filterDto);
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
@@ -44,7 +53,7 @@ export class GetSaleInvoicesService {
         builder.withGraphFetched('customer');
 
         dynamicFilter.buildQuery()(builder);
-        filterDTO?.filterQuery?.(builder as any);
+        _filterDto?.filterQuery?.(builder as any);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

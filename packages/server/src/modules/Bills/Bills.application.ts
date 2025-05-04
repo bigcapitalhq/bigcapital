@@ -56,7 +56,7 @@ export class BillsApplication {
    * Retrieve bills data table list.
    * @param {IBillsFilter} billsFilter -
    */
-  public getBills(filterDTO: IBillsFilter) {
+  public getBills(filterDTO: Partial<IBillsFilter>) {
     return this.getBillsService.getBills(filterDTO);
   }
 

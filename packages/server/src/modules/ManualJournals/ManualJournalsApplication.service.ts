@@ -79,7 +79,7 @@ export class ManualJournalsApplication {
    * Retrieves the paginated manual journals.
    * @param {IManualJournalsFilter} filterDTO
    */
-  public getManualJournals = (filterDTO: IManualJournalsFilter) => {
+  public getManualJournals = (filterDTO: Partial<IManualJournalsFilter>) => {
     return this.getManualJournalsService.getManualJournals(filterDTO);
   };
 }

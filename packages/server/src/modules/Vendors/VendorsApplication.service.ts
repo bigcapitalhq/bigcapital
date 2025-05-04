@@ -79,10 +79,10 @@ export class VendorsApplication {
 
   /**
    * Retrieves the vendors paginated list.
-   * @param {IVendorsFilter} filterDTO
+   * @param {Partial<IVendorsFilter>} filterDTO
    * @returns {Promise<{ vendors: Vendor[], pagination: IPaginationMeta, filterMeta: IFilterMeta }>>}
    */
-  public getVendors(filterDTO: IVendorsFilter) {
+  public getVendors(filterDTO: Partial<IVendorsFilter>) {
     return this.getVendorsService.getVendorsList(filterDTO);
   }
 }

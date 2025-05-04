@@ -35,7 +35,7 @@ export class ItemCategoryController {
   @Get()
   @ApiOperation({ summary: 'Retrieves the item categories.' })
   async getItemCategories(
-    @Query() filterDTO: IItemCategoriesFilter,
+    @Query() filterDTO: Partial<IItemCategoriesFilter>,
   ): Promise<GetItemCategoriesResponse> {
     return this.itemCategoryApplication.getItemCategories(filterDTO);
   }

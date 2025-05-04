@@ -77,7 +77,7 @@ export class PaymentReceivesApplication {
    * @param {IPaymentsReceivedFilter} filterDTO
    * @returns
    */
-  public async getPaymentsReceived(filterDTO: IPaymentsReceivedFilter) {
+  public async getPaymentsReceived(filterDTO: Partial<IPaymentsReceivedFilter>) {
     return this.getPaymentsReceivedService.getPaymentReceives(filterDTO);
   }
 

@@ -117,7 +117,7 @@ export class SaleInvoicesController {
     status: 200,
     description: 'The sale invoices have been successfully retrieved.',
   })
-  getSaleInvoices(@Query() filterDTO: ISalesInvoicesFilter) {
+  getSaleInvoices(@Query() filterDTO: Partial<ISalesInvoicesFilter>) {
     return this.saleInvoiceApplication.getSaleInvoices(filterDTO);
   }
 

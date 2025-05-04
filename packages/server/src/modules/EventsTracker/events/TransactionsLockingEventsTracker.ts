@@ -8,8 +8,8 @@ import {
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
 import { EventTrackerService } from '../EventTracker.service';
-
 import { events } from '@/common/events/events';
+
 @Injectable()
 export class TransactionsLockingEventsTracker {
   constructor(public readonly posthog: EventTrackerService) {}

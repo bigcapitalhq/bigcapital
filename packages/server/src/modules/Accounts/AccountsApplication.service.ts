@@ -115,7 +115,7 @@ export class AccountsApplication {
    * @returns {Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }>}
    */
   public getAccounts = (
-    filterDTO: IAccountsFilter,
+    filterDTO: Partial<IAccountsFilter>,
   ): Promise<{ accounts: Account[]; filterMeta: IFilterMeta }> => {
     return this.getAccountsService.getAccountsList(filterDTO);
   };

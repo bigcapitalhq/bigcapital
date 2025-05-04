@@ -34,10 +34,18 @@ export class GetCustomers {
    * @returns {Promise<GetCustomersResponse>}
    */
   public async getCustomersList(
-    filterDTO: ICustomersFilter,
+    filterDto: Partial<ICustomersFilter>,
   ): Promise<GetCustomersResponse> {
+    const _filterDto = {
+      inactiveMode: false,
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDto,
+    };
     // Parses customers list filter DTO.
-    const filter = this.parseCustomersListFilterDTO(filterDTO);
+    const filter = this.parseCustomersListFilterDTO(_filterDto);
 
     const dynamicList = await this.dynamicListService.dynamicList(
       this.customerModel(),

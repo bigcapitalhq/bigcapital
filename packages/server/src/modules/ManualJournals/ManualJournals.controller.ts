@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ManualJournalsApplication } from './ManualJournalsApplication.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -13,6 +14,7 @@ import {
   CreateManualJournalDto,
   EditManualJournalDto,
 } from './dtos/ManualJournal.dto';
+import { IManualJournalsFilter } from './types/ManualJournals.types';
 
 @Controller('manual-journals')
 @ApiTags('manual-journals')
@@ -98,4 +100,19 @@ export class ManualJournalsController {
   public getManualJournal(@Param('id') manualJournalId: number) {
     return this.manualJournalsApplication.getManualJournal(manualJournalId);
   }
+
+  @Get()
+  @ApiOperation({ summary: 'Retrieves the manual journals paginated list.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The manual journal details have been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The manual journal not found.' })
+  public getManualJournals(
+    @Query() filterDto: Partial<IManualJournalsFilter>
+  ) {
+    return this.manualJournalsApplication.getManualJournals(filterDto);
+  }
+
+    
 }

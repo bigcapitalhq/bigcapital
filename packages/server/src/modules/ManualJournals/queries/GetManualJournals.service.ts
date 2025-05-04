@@ -31,14 +31,21 @@ export class GetManualJournals {
    * @param {IManualJournalsFilter} filter -
    */
   public getManualJournals = async (
-    filterDTO: IManualJournalsFilter,
+    filterDTO: Partial<IManualJournalsFilter>,
   ): Promise<{
     manualJournals: ManualJournal[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> => {
+    const _filterDto = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDTO,
+    };
     // Parses filter DTO.
-    const filter = this.parseListFilterDTO(filterDTO);
+    const filter = this.parseListFilterDTO(_filterDto);
 
     // Dynamic service.
     const dynamicService = await this.dynamicListService.dynamicList(

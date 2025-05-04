@@ -24,7 +24,7 @@ export class VendorsController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the vendors.' })
-  getVendors(@Query() filterDTO: IVendorsFilter) {
+  getVendors(@Query() filterDTO: Partial<IVendorsFilter>) {
     return this.vendorsApplication.getVendors(filterDTO);
   }
 

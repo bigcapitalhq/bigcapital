@@ -81,7 +81,7 @@ export class SaleInvoiceApplication {
    * @param {ISalesInvoicesFilter} filterDTO
    * @returns {Promise<{ salesInvoices: SaleInvoice[]; pagination: IPaginationMeta; filterMeta: IFilterMeta; }>}
    */
-  public getSaleInvoices(filterDTO: ISalesInvoicesFilter) {
+  public getSaleInvoices(filterDTO: Partial<ISalesInvoicesFilter>) {
     return this.getSaleInvoicesService.getSaleInvoices(filterDTO);
   }
 

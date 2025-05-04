@@ -28,10 +28,18 @@ export class GetVendorsService {
    * @returns {Promise<GetVendorsResponse>}
    */
   public async getVendorsList(
-    filterDTO: IVendorsFilter,
+    filterDto: Partial<IVendorsFilter>,
   ): Promise<GetVendorsResponse> {
+    const _filterDto = {
+      inactiveMode: false,
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDto,
+    };
     // Parses vendors list filter DTO.
-    const filter = this.parseVendorsListFilterDTO(filterDTO);
+    const filter = this.parseVendorsListFilterDTO(_filterDto);
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(

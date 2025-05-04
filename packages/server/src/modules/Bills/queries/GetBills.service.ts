@@ -21,13 +21,20 @@ export class GetBillsService {
    * Retrieve bills data table list.
    * @param {IBillsFilter} billsFilter -
    */
-  public async getBills(filterDTO: IBillsFilter): Promise<{
+  public async getBills(filterDTO: Partial<IBillsFilter>): Promise<{
     bills: Bill;
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
+    const _filterDto = {
+      page: 1,
+      pageSize: 12,
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      ...filterDTO,
+    };
     // Parses bills list filter DTO.
-    const filter = this.parseListFilterDTO(filterDTO);
+    const filter = this.parseListFilterDTO(_filterDto);
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
@@ -42,7 +49,7 @@ export class GetBillsService {
         dynamicFilter.buildQuery()(builder);
 
         // Filter query.
-        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
+        _filterDto?.filterQuery && _filterDto?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

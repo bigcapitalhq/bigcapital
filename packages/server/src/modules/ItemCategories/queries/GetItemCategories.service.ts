@@ -7,6 +7,7 @@ import {
   IItemCategoriesFilter,
 } from '../ItemCategory.interfaces';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { ISortOrder } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 
 export class GetItemCategoriesService {
   constructor(
@@ -34,16 +35,21 @@ export class GetItemCategoriesService {
    * @returns {Promise<GetItemCategoriesResponse>}
    */
   public async getItemCategories(
-    filterDTO: IItemCategoriesFilter,
+    filterDto: Partial<IItemCategoriesFilter>,
   ): Promise<GetItemCategoriesResponse> {
+    const _filterDto = {
+      sortOrder: ISortOrder.ASC,
+      columnSortBy: 'created_at',
+      ...filterDto,
+    };
     // Parses list filter DTO.
-    const filter = this.parsesListFilterDTO(filterDTO);
+    const filter = this.parsesListFilterDTO(_filterDto);
 
     // Dynamic list service.
-    // const dynamicList = await this.dynamicListService.dynamicList(
-    //   this.itemCategoryModel(),
-    //   filter,
-    // );
+    const dynamicList = await this.dynamicListService.dynamicList(
+      this.itemCategoryModel(),
+      filter,
+    );
     // Items categories.
     const itemCategories = await this.itemCategoryModel()
       .query()
@@ -53,8 +59,7 @@ export class GetItemCategoriesService {
           '*',
           this.itemCategoryModel().relatedQuery('items').count().as('count'),
         );
-
-        // dynamicList.buildQuery()(query);
+        dynamicList.buildQuery()(query);
       });
 
     return { itemCategories };

@@ -3,7 +3,6 @@ import { ISortOrder } from './DynamicFilter/DynamicFilter.types';
 import { ERRORS } from './constants';
 import { DynamicFilterSortBy } from './DynamicFilter';
 import { ServiceError } from '../Items/ServiceError';
-import { BaseModel } from '@/models/Model';
 import { DynamicFilterAbstractor } from './DynamicFilter/DynamicFilterAbstractor';
 import { MetableModel } from './types/DynamicList.types';
 

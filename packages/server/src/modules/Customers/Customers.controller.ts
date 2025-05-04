@@ -6,9 +6,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CustomersApplication } from './CustomersApplication.service';
-import { ICustomerOpeningBalanceEditDTO } from './types/Customers.types';
+import {
+  ICustomerOpeningBalanceEditDTO,
+  ICustomersFilter,
+} from './types/Customers.types';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';
@@ -22,6 +26,12 @@ export class CustomersController {
   @ApiOperation({ summary: 'Retrieves the customer details.' })
   getCustomer(@Param('id') customerId: number) {
     return this.customersApplication.getCustomer(customerId);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Retrieves the customers paginated list.' })
+  getCustomers(@Query() filterDTO: Partial<ICustomersFilter>) {
+    return this.customersApplication.getCustomers(filterDTO);
   }
 
   @Post()

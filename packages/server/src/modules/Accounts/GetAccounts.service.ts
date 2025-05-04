@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
-import { IAccountsFilter } from './Accounts.types';
+import { IAccountsFilter, IAccountsStructureType } from './Accounts.types';
 import { DynamicListService } from '../DynamicListing/DynamicList.service';
 import { AccountTransformer } from './Account.transformer';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
@@ -26,10 +26,17 @@ export class GetAccountsService {
    * @returns {Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }>}
    */
   public async getAccountsList(
-    filterDTO: IAccountsFilter,
+    filterDto: Partial<IAccountsFilter>,
   ): Promise<{ accounts: Account[]; filterMeta: IFilterMeta }> {
+    const parsedFilterDto = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      inactiveMode: false,
+      structure: IAccountsStructureType.Tree,
+      ...filterDto,
+    };
     // Parses the stringified filter roles.
-    const filter = this.parseListFilterDTO(filterDTO);
+    const filter = this.parseListFilterDTO(parsedFilterDto);
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
@@ -49,7 +56,7 @@ export class GetAccountsService {
     const transformedAccounts = await this.transformerService.transform(
       accounts,
       new AccountTransformer(),
-      { accountsGraph, structure: filterDTO.structure },
+      { accountsGraph, structure: parsedFilterDto.structure },
     );
 
     return {

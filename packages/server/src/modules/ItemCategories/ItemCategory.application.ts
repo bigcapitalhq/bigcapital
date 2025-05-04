@@ -78,7 +78,7 @@ export class ItemCategoryApplication {
    * @param {IItemCategoriesFilter} filterDTO - The item categories filter DTO.
    * @returns {Promise<GetItemCategoriesResponse>}
    */
-  public getItemCategories(filterDTO: IItemCategoriesFilter) {
+  public getItemCategories(filterDTO: Partial<IItemCategoriesFilter>) {
     return this.getItemCategoriesService.getItemCategories(filterDTO);
   }
 }

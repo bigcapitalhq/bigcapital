@@ -143,7 +143,7 @@ export class AccountsController {
     status: 200,
     description: 'The accounts have been successfully retrieved.',
   })
-  async getAccounts(@Query() filter: IAccountsFilter) {
+  async getAccounts(@Query() filter: Partial<IAccountsFilter>) {
     return this.accountsApplication.getAccounts(filter);
   }
 }

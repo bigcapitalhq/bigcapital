@@ -56,7 +56,7 @@ export class BillsController {
     type: Number,
     description: 'The bill id',
   })
-  getBills(@Query() filterDTO: IBillsFilter) {
+  getBills(@Query() filterDTO: Partial<IBillsFilter>) {
     return this.billsApplication.getBills(filterDTO);
   }
 

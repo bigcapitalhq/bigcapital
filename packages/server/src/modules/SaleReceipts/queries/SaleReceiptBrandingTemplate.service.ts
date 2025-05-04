@@ -23,9 +23,10 @@ export class SaleReceiptBrandingTemplate {
   public async getSaleReceiptBrandingTemplate(templateId: number) {
     const template =
       await this.getPdfTemplateService.getPdfTemplate(templateId);
+
     // Retrieves the organization branding attributes.
     const commonOrgBrandingAttrs =
-      await this.getOrgBrandingAttributes.getOrganizationBrandingAttributes();
+      await this.getOrgBrandingAttributes.execute();
 
     // Merges the default branding attributes with organization common branding attrs.
     const organizationBrandingAttrs = {

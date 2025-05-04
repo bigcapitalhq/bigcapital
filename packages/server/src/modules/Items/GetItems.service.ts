@@ -6,12 +6,14 @@ import { Item } from './models/Item';
 import { IItemsFilter } from './types/Items.types';
 import { ItemTransformer } from './Item.transformer';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { ISortOrder } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
 
 @Injectable()
 export class GetItemsService {
   constructor(
     private readonly dynamicListService: DynamicListService,
     private readonly transformer: TransformerInjectable,
+
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
   ) {}
@@ -30,9 +32,17 @@ export class GetItemsService {
    * Retrieves items datatable list.
    * @param {IItemsFilter} itemsFilter - Items filter.
    */
-  public async getItems(filterDTO: IItemsFilter) {
+  public async getItems(filterDto: Partial<IItemsFilter>) {
+    const _filterDto = {
+      sortOrder: ISortOrder.DESC,
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      inactiveMode: false,
+      ...filterDto,
+    };
     // Parses items list filter DTO.
-    const filter = this.parseItemsListFilterDTO(filterDTO);
+    const filter = this.parseItemsListFilterDTO(_filterDto);
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(

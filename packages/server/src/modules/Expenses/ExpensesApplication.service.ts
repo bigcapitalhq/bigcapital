@@ -69,7 +69,7 @@ export class ExpensesApplication {
    * Retrieve expenses paginated list.
    * @param  {IExpensesFilter} expensesFilter
    */
-  public getExpenses(filterDTO: IExpensesFilter) {
+  public getExpenses(filterDTO: Partial<IExpensesFilter>) {
     return this.getExpensesService.getExpensesList(filterDTO);
   }
 }

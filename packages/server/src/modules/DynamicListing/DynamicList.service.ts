@@ -1,9 +1,9 @@
 import { castArray, isEmpty } from 'lodash';
+import { Injectable } from '@nestjs/common';
 import { IDynamicListFilter } from './DynamicFilter/DynamicFilter.types';
 import { DynamicListSortBy } from './DynamicListSortBy.service';
 import { DynamicListSearch } from './DynamicListSearch.service';
 import { DynamicListCustomView } from './DynamicListCustomView.service';
-import { Injectable } from '@nestjs/common';
 import { DynamicListFilterRoles } from './DynamicListFilterRoles.service';
 import { DynamicFilter } from './DynamicFilter';
 import { MetableModel } from './types/DynamicList.types';

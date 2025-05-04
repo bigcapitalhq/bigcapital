@@ -22,13 +22,22 @@ export class GetSaleEstimatesService {
    * Retrieves estimates filterable and paginated list.
    * @param {IEstimatesFilter} estimatesFilter -
    */
-  public async getEstimates(filterDTO: ISalesEstimatesFilter): Promise<{
+  public async getEstimates(
+    filterDTO: Partial<ISalesEstimatesFilter>,
+  ): Promise<{
     salesEstimates: SaleEstimate[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
+    const _filterDto = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDTO,
+    };
     // Parses filter DTO.
-    const filter = this.parseListFilterDTO(filterDTO);
+    const filter = this.parseListFilterDTO(_filterDto);
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
@@ -43,7 +52,7 @@ export class GetSaleEstimatesService {
         builder.withGraphFetched('entries.item');
 
         dynamicFilter.buildQuery()(builder);
-        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
+        _filterDto?.filterQuery && _filterDto?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

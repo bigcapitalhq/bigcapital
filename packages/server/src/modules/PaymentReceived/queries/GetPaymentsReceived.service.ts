@@ -24,13 +24,22 @@ export class GetPaymentsReceivedService {
    * Retrieve payment receives paginated and filterable list.
    * @param {IPaymentsReceivedFilter} filterDTO
    */
-  public async getPaymentReceives(filterDTO: IPaymentsReceivedFilter): Promise<{
+  public async getPaymentReceives(
+    filterDTO: Partial<IPaymentsReceivedFilter>,
+  ): Promise<{
     paymentReceives: PaymentReceived[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
+    const _filterDto = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDTO,
+    };
     // Parses filter DTO.
-    const filter = this.parseListFilterDTO(filterDTO);
+    const filter = this.parseListFilterDTO(_filterDto);
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
@@ -44,7 +53,7 @@ export class GetPaymentsReceivedService {
         builder.withGraphFetched('depositAccount');
 
         dynamicList.buildQuery()(builder);
-        filterDTO?.filterQuery && filterDTO.filterQuery(builder as any);
+        _filterDto?.filterQuery && _filterDto.filterQuery(builder as any);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

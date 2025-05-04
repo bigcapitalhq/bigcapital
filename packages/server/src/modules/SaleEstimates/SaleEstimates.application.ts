@@ -79,7 +79,7 @@ export class SaleEstimatesApplication {
    * @param {ISalesEstimatesFilter} filterDTO - Sales estimates filter DTO.
    * @returns
    */
-  public getSaleEstimates(filterDTO: ISalesEstimatesFilter) {
+  public getSaleEstimates(filterDTO: Partial<ISalesEstimatesFilter>) {
     return this.getSaleEstimatesService.getEstimates(filterDTO);
   }
 

@@ -76,7 +76,7 @@ export class CustomersApplication {
    * Retrieve customers paginated list.
    * @param {ICustomersFilter} filter - Cusotmers filter.
    */
-  public getCustomers = (filterDTO: ICustomersFilter) => {
+  public getCustomers = (filterDTO: Partial<ICustomersFilter>) => {
     return this.getCustomersService.getCustomersList(filterDTO);
   };
 }
