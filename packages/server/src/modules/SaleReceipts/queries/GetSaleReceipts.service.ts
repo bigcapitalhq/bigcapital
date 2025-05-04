@@ -30,8 +30,15 @@ export class GetSaleReceiptsService {
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
+    const _filterDto = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDTO,
+    };
     // Parses the stringified filter roles.
-    const filter = this.parseListFilterDTO(filterDTO);
+    const filter = this.parseListFilterDTO(_filterDto);
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
@@ -46,7 +53,7 @@ export class GetSaleReceiptsService {
         builder.withGraphFetched('entries.item');
 
         dynamicFilter.buildQuery()(builder);
-        filterDTO?.filterQuery && filterDTO?.filterQuery(builder);
+        _filterDto?.filterQuery && _filterDto?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

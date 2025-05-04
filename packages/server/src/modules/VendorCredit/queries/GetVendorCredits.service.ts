@@ -33,8 +33,15 @@ export class GetVendorCreditsService {
   public getVendorCredits = async (
     vendorCreditQuery: IVendorCreditsQueryDTO,
   ) => {
+    const filterDto = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...vendorCreditQuery,
+    };
     // Parses stringified filter roles.
-    const filter = this.parseListFilterDTO(vendorCreditQuery);
+    const filter = this.parseListFilterDTO(filterDto);
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
@@ -49,8 +56,7 @@ export class GetVendorCreditsService {
         dynamicFilter.buildQuery()(builder);
 
         // Gives ability to inject custom query to filter results.
-        vendorCreditQuery?.filterQuery &&
-          vendorCreditQuery?.filterQuery(builder);
+        filterDto?.filterQuery && filterDto?.filterQuery(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

@@ -13,6 +13,9 @@ import { ResourceableModelMixin } from '@/modules/Resource/models/ResourcableMod
 import { CustomViewBaseModelMixin } from '@/modules/CustomViews/CustomViewBaseModel';
 import { SearchableBaseModelMixin } from '@/modules/DynamicListing/models/SearchableBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { SaleReceiptMeta } from './SaleReceipt.meta';
 
 const ExtendedModel = R.pipe(
   CustomViewBaseModelMixin,
@@ -22,6 +25,8 @@ const ExtendedModel = R.pipe(
 )(BaseModel);
 
 @ExportableModel()
+@ImportableModel()
+@InjectModelMeta(SaleReceiptMeta)
 export class SaleReceipt extends ExtendedModel {
   public amount!: number;
   public exchangeRate!: number;

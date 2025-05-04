@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { SaleReceiptApplication } from './SaleReceiptApplication.service';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -15,6 +16,7 @@ import {
   CreateSaleReceiptDto,
   EditSaleReceiptDto,
 } from './dtos/SaleReceipt.dto';
+import { ISalesReceiptsFilter } from './types/SaleReceipts.types';
 
 @Controller('sale-receipts')
 @ApiTags('sale-receipts')
@@ -78,6 +80,12 @@ export class SaleReceiptsController {
   })
   getSaleReceipt(@Param('id', ParseIntPipe) id: number) {
     return this.saleReceiptApplication.getSaleReceipt(id);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Retrieves the sale receipts paginated list' })
+  getSaleReceipts(@Query() filterDTO: Partial<ISalesReceiptsFilter>) {
+    return this.saleReceiptApplication.getSaleReceipts(filterDTO);
   }
 
   @Delete(':id')
