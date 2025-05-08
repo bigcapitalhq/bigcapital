@@ -29,8 +29,6 @@ export class DashboardService {
 
   /**
    * Retrieve dashboard meta.
-   * @param {number} tenantId
-   * @param {number} authorizedUser
    */
   public getBootMeta = async (): Promise<IDashboardBootMeta> => {
     // Retrieves all orgnaization abilities.
@@ -60,17 +58,19 @@ export class DashboardService {
 
   /**
    * Retrieve the boot abilities.
-   * @returns
+   * @returns {Promise<IRoleAbility[]>}
    */
   private getBootAbilities = async (): Promise<IRoleAbility[]> => {
     const authorizedUser = await this.tenancyContext.getSystemUser();
 
-    const tenantUser = await this.tenantUserModel().query()
+    const tenantUser = await this.tenantUserModel()
+      .query()
       .findOne('systemUserId', authorizedUser.id)
-      .withGraphFetched('role.permissions');
+      .withGraphFetched('role.permissions')
+      .throwIfNotFound();
 
     return tenantUser.role.slug === 'admin'
-      ? [{ subject: 'all', action: 'manage' }]
+      ? [{ subject: 'all', ability: 'manage' }]
       : this.transformRoleAbility(tenantUser.role.permissions);
   };
 }

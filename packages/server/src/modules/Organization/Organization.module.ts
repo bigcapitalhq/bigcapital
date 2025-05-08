@@ -10,6 +10,8 @@ import { CommandOrganizationValidators } from './commands/CommandOrganizationVal
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
 import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBaseCurrencyLocking.service';
+import { SyncSystemUserToTenantService } from './commands/SyncSystemUserToTenant.service';
+import { SyncSystemUserToTenantSubscriber } from './subscribers/SyncSystemUserToTenant.subscriber';
 
 @Module({
   providers: [
@@ -20,6 +22,8 @@ import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBase
     OrganizationBuildProcessor,
     CommandOrganizationValidators,
     OrganizationBaseCurrencyLocking,
+    SyncSystemUserToTenantService,
+    SyncSystemUserToTenantSubscriber
   ],
   imports: [
     BullModule.registerQueue({ name: OrganizationBuildQueue }),

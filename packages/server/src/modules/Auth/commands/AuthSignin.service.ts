@@ -43,7 +43,7 @@ export class AuthSigninService {
     }
     if (!user.verified) {
       throw new UnauthorizedException(
-       `The user is not verified yet, check out your mail inbox.`
+        `The user is not verified yet, check out your mail inbox.`,
       );
     }
     return user;

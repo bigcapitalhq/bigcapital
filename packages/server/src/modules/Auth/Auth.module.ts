@@ -28,11 +28,14 @@ import { MailModule } from '../Mail/Mail.module';
 import { ConfigService } from '@nestjs/config';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { GetAuthMetaService } from './queries/GetAuthMeta.service';
+import { AuthedController } from './Authed.controller';
+import { GetAuthenticatedAccount } from './queries/GetAuthedAccount.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 
 const models = [InjectSystemModel(PasswordReset)];
 
 @Module({
-  controllers: [AuthController],
+  controllers: [AuthController, AuthedController],
   imports: [
     MailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -45,9 +48,9 @@ const models = [InjectSystemModel(PasswordReset)];
       }),
     }),
     TenantDBManagerModule,
+    TenancyModule,
     BullModule.registerQueue({ name: SendResetPasswordMailQueue }),
     BullModule.registerQueue({ name: SendSignupVerificationMailQueue }),
-    
   ],
   exports: [...models],
   providers: [
@@ -65,6 +68,7 @@ const models = [InjectSystemModel(PasswordReset)];
     SendResetPasswordMailProcessor,
     SendSignupVerificationMailProcessor,
     GetAuthMetaService,
+    GetAuthenticatedAccount,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

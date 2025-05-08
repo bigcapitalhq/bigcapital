@@ -137,13 +137,14 @@ export function useAuthenticatedAccount(props) {
     ['AuthenticatedAccount'],
     {
       method: 'get',
-      url: `account`,
+      url: `auth/account`,
     },
     {
       select: (response) => response.data.data,
       defaultData: {},
       onSuccess: (data) => {
-        setEmailConfirmed(data.is_verified, data.email);
+        debugger;
+        setEmailConfirmed(data.verified, data.email);
       },
       ...props,
     },
@@ -160,7 +161,7 @@ export const useDashboardMeta = (props) => {
     [t.DASHBOARD_META],
     { method: 'get', url: 'dashboard/boot' },
     {
-      select: (res) => res.data.meta,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

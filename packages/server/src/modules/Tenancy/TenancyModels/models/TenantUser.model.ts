@@ -49,7 +49,7 @@ export class TenantUser extends TenantBaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Role = require('models/Role');
+    const { Role } = require('../../../Roles/models/Role.model');
 
     return {
       /**
@@ -57,7 +57,7 @@ export class TenantUser extends TenantBaseModel {
        */
       role: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Role.default,
+        modelClass: Role,
         join: {
           from: 'users.roleId',
           to: 'roles.id',

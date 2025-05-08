@@ -6,6 +6,7 @@ import './utils/moment-mysql';
 import { AppModule } from './modules/App/App.module';
 import { ServiceErrorFilter } from './common/filters/service-error.filter';
 import { ValidationPipe } from './common/pipes/ClassValidation.pipe';
+import { ToJsonInterceptor } from './common/interceptors/to-json.interceptor';
 
 global.__static_dirname = path.join(__dirname, '../static');
 global.__views_dirname = path.join(global.__static_dirname, '/views');
@@ -17,6 +18,8 @@ async function bootstrap() {
 
   // create and mount the middleware manually here
   app.use(new ClsMiddleware({}).use);
+
+  app.useGlobalInterceptors(new ToJsonInterceptor());
 
   // use the validation pipe globally
   app.useGlobalPipes(new ValidationPipe());

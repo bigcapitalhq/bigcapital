@@ -1,21 +1,22 @@
-// @ts-nocheck
 import {
   Body,
   Controller,
   Get,
+  Inject,
   Param,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody, ApiParam } from '@nestjs/swagger';
-import { JwtAuthGuard, PublicRoute } from './guards/jwt.guard';
+import { PublicRoute } from './guards/jwt.guard';
 import { AuthenticationApplication } from './AuthApplication.sevice';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
 import { AuthSigninDto } from './dtos/AuthSignin.dto';
 import { LocalAuthGuard } from './guards/local.guard';
-import { JwtService } from '@nestjs/jwt';
 import { AuthSigninService } from './commands/AuthSignin.service';
+import { TenantModel } from '../System/models/TenantModel';
+import { SystemUser } from '../System/models/SystemUser';
 
 @Controller('/auth')
 @ApiTags('Auth')
@@ -24,15 +25,25 @@ export class AuthController {
   constructor(
     private readonly authApp: AuthenticationApplication,
     private readonly authSignin: AuthSigninService,
+
+    @Inject(TenantModel.name)
+    private readonly tenantModel: typeof TenantModel,
   ) {}
 
   @Post('/signin')
   @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'Sign in a user' })
   @ApiBody({ type: AuthSigninDto })
-  signin(@Request() req: Request, @Body() signinDto: AuthSigninDto) {
+  async signin(@Request() req: Request & { user: SystemUser }, @Body() signinDto: AuthSigninDto) {
     const { user } = req;
-    return { access_token: this.authSignin.signToken(user) };
+    const tenant = await this.tenantModel.query().findById(user.tenantId);
+
+    return {
+      accessToken: this.authSignin.signToken(user),
+      organizationId: tenant.organizationId,
+      tenantId: tenant.id,
+      userId: user.id,
+    };
   }
 
   @Post('/signup')

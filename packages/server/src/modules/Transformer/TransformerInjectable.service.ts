@@ -36,7 +36,7 @@ export class TransformerInjectable {
    */
   async getTenantDateFormat() {
     const tenant = await this.tenancyContext.getTenant(true);
-    return tenant.metadata.dateFormat;
+    return tenant.metadata?.dateFormat;
   }
 
   /**
@@ -55,7 +55,8 @@ export class TransformerInjectable {
     transformer.setContext(context);
 
     const dateFormat = await this.getTenantDateFormat();
-    transformer.setDateFormat(dateFormat);
+
+    transformer.setDateFormat(dateFormat || 'DD-MM-YYYY');
     transformer.setOptions(options);
 
     return transformer.work(object);

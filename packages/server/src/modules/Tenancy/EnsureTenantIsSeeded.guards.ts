@@ -11,11 +11,15 @@ import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_ROUTE } from '../Auth/Auth.constants';
 
 export const IS_IGNORE_TENANT_SEEDED = 'IS_IGNORE_TENANT_SEEDED';
-export const IgnoreTenantSeededRoute = () => SetMetadata(IS_IGNORE_TENANT_SEEDED, true);
+export const IgnoreTenantSeededRoute = () =>
+  SetMetadata(IS_IGNORE_TENANT_SEEDED, true);
 
 @Injectable()
 export class EnsureTenantIsSeededGuard implements CanActivate {
-  constructor(private readonly tenancyContext: TenancyContext, private reflector: Reflector) {}
+  constructor(
+    private readonly tenancyContext: TenancyContext,
+    private reflector: Reflector,
+  ) {}
 
   /**
    * Validate the tenant of the current request is seeded.
@@ -27,15 +31,16 @@ export class EnsureTenantIsSeededGuard implements CanActivate {
       IS_PUBLIC_ROUTE,
       [context.getHandler(), context.getClass()],
     );
-    const isIgnoreEnsureTenantSeeded = this.reflector.getAllAndOverride<boolean>(
-      IS_IGNORE_TENANT_SEEDED,
-      [context.getHandler(), context.getClass()],
-    );
+    const isIgnoreEnsureTenantSeeded =
+      this.reflector.getAllAndOverride<boolean>(IS_IGNORE_TENANT_SEEDED, [
+        context.getHandler(),
+        context.getClass(),
+      ]);
     if (isPublic || isIgnoreEnsureTenantSeeded) {
       return true;
     }
     const tenant = await this.tenancyContext.getTenant();
-    
+
     if (!tenant.seededAt) {
       throw new UnauthorizedException({
         message: 'Tenant database is not seeded with initial data yet.',

@@ -13,17 +13,27 @@ import {
   useSetTenantId,
 } from '../state';
 
+const AuthRoute = {
+  Signin: 'auth/signin',
+  Signup: 'auth/signup',
+  SignupVerify: 'auth/signup/verify',
+  SignupVerifyResend: 'auth/signup/verify/resend',
+  SendResetPassword: 'auth/send_reset_password',
+  ForgetPassword: 'auth/reset_password/:token',
+  AuthMeta: 'auth/meta',
+};
+
 /**
  * Saves the response data to cookies.
  */
 export function setAuthLoginCookies(data) {
-  setCookie('token', data.token);
-  setCookie('authenticated_user_id', data.user.id);
-  setCookie('organization_id', data.tenant.organization_id);
-  setCookie('tenant_id', data.tenant.id);
+  setCookie('token', data.access_token);
+  setCookie('authenticated_user_id', data.user_id);
+  setCookie('organization_id', data.organization_id);
+  setCookie('tenant_id', data.tenant_id);
 
-  if (data?.tenant?.metadata?.language)
-    setCookie('locale', data.tenant.metadata.language);
+  // if (data?.tenant?.metadata?.language)
+  //   setCookie('locale', data.tenant.metadata.language);
 }
 
 /**
@@ -38,7 +48,7 @@ export const useAuthLogin = (props) => {
   const setTenantId = useSetTenantId();
   const setLocale = useSetLocale();
 
-  return useMutation((values) => apiRequest.post('auth/login', values), {
+  return useMutation((values) => apiRequest.post(AuthRoute.Signin, values), {
     select: (res) => res.data,
     onSuccess: (res) => {
       // Set authentication cookies.
@@ -46,14 +56,14 @@ export const useAuthLogin = (props) => {
 
       batch(() => {
         // Sets the auth metadata to global state.
-        setAuthToken(res.data.token);
-        setOrganizationId(res.data.tenant.organization_id);
-        setUserId(res.data.user.id);
-        setTenantId(res.data.tenant.id);
+        setAuthToken(res.data.access_token);
+        setOrganizationId(res.data.organization_id);
+        setTenantId(res.data.tenant_id);
+        setUserId(res.data.user_id);
 
-        if (res.data?.tenant?.metadata?.language) {
-          setLocale(res.data?.tenant?.metadata?.language);
-        }
+        // if (res.data?.tenant?.metadata?.language) {
+        //   setLocale(res.data?.tenant?.metadata?.language);
+        // }
       });
       props?.onSuccess && props?.onSuccess(...args);
     },
@@ -68,7 +78,7 @@ export const useAuthRegister = (props) => {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post('auth/register', values),
+    (values) => apiRequest.post(AuthRoute.Signup, values),
     props,
   );
 };
@@ -80,7 +90,7 @@ export const useAuthSendResetPassword = (props) => {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (email) => apiRequest.post('auth/send_reset_password', email),
+    (values) => apiRequest.post(AuthRoute.SendResetPassword, values),
     props,
   );
 };
@@ -105,7 +115,7 @@ export const useAuthMetadata = (props = {}) => {
     [t.AUTH_METADATA_PAGE],
     {
       method: 'get',
-      url: `auth/meta`,
+      url: AuthRoute.AuthMeta,
     },
     {
       select: (res) => res.data,
@@ -116,13 +126,13 @@ export const useAuthMetadata = (props = {}) => {
 };
 
 /**
- *
+ * Resend the mail of signup verification.
  */
 export const useAuthSignUpVerifyResendMail = (props) => {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    () => apiRequest.post('auth/register/verify/resend'),
+    () => apiRequest.post(AuthRoute.SignupVerifyResend),
     props,
   );
 };
@@ -133,14 +143,14 @@ interface AuthSignUpVerifyValues {
 }
 
 /**
- *
+ * Signup verification.
  */
 export const useAuthSignUpVerify = (props) => {
   const apiRequest = useApiRequest();
 
   return useMutation(
     (values: AuthSignUpVerifyValues) =>
-      apiRequest.post('auth/register/verify', values),
+      apiRequest.post(AuthRoute.SignupVerify, values),
     props,
   );
 };

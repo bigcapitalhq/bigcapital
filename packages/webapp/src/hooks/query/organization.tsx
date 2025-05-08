@@ -7,6 +7,11 @@ import useApiRequest from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
 import { useSetOrganizations, useSetSubscriptions } from '../state';
 
+const OrganizationRoute = {
+  Current: '/organization/current',
+  Build: '/organization/build',
+};
+
 /**
  * Retrieve organizations of the authenticated user.
  */
@@ -36,7 +41,7 @@ export function useCurrentOrganization(props) {
 
   return useRequestQuery(
     [t.ORGANIZATION_CURRENT],
-    { method: 'get', url: `organization` },
+    { method: 'get', url: OrganizationRoute.Current },
     {
       select: (res) => res.data.organization,
       defaultData: {},
@@ -64,7 +69,7 @@ export function useOrganizationSetup() {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (values) => apiRequest.post(`organization/build`, values),
+    (values) => apiRequest.post(OrganizationRoute.Build, values),
     {
       onSuccess: (res) => {
         queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);

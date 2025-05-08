@@ -30,7 +30,7 @@ export default function useApiRequest() {
         const locale = currentLocale;
 
         if (token) {
-          request.headers['X-Access-Token'] = token;
+          request.headers['Authorization'] = `Bearer ${token}`;
         }
         if (organizationId) {
           request.headers['organization-id'] = organizationId;

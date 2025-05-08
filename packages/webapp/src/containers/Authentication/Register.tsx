@@ -53,22 +53,20 @@ export default function RegisterUserForm() {
           },
         );
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
-          const formErrors = transformRegisterErrorsToForm(errors);
-          const toastMessages = transformRegisterToastMessages(errors);
+      .catch(({ response }) => {
+        const {
+          data: { errors },
+        } = response;
+        
+        const formErrors = transformRegisterErrorsToForm(errors);
+        const toastMessages = transformRegisterToastMessages(errors);
 
-          toastMessages.forEach((toastMessage) => {
-            AppToaster.show(toastMessage);
-          });
-          setErrors(formErrors);
-          setSubmitting(false);
-        },
-      );
+        toastMessages.forEach((toastMessage) => {
+          AppToaster.show(toastMessage);
+        });
+        setErrors(formErrors);
+        setSubmitting(false);
+      });
   };
 
   return (

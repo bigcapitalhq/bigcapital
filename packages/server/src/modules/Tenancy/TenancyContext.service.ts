@@ -49,6 +49,6 @@ export class TenancyContext {
     // Get the user from the request headers.
     const userId = this.cls.get('userId');
 
-    return this.systemUserModel.query().findOne({ id: userId });
+    return this.systemUserModel.query().findById(userId);
   }
 }

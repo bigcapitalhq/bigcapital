@@ -8,6 +8,7 @@ import {
   Req,
   Res,
   Next,
+  HttpCode,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { BuildOrganizationService } from './commands/BuildOrganization.service';
@@ -32,60 +33,52 @@ export class OrganizationController {
   ) {}
 
   @Post('build')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Build organization database' })
   @ApiBody({ type: BuildOrganizationDto })
   @ApiResponse({
     status: 200,
     description: 'The organization database has been initialized',
   })
-  async build(
-    @Body() buildDTO: BuildOrganizationDto,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
+  async build(@Body() buildDTO: BuildOrganizationDto) {
     const result = await this.buildOrganizationService.buildRunJob(buildDTO);
 
-    return res.status(200).send({
+    return {
       type: 'success',
       code: 'ORGANIZATION.DATABASE.INITIALIZED',
       message: 'The organization database has been initialized.',
       data: result,
-    });
+    };
   }
 
   @Get('current')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Get current organization' })
   @ApiResponse({
     status: 200,
     description: 'Returns the current organization',
   })
-  async currentOrganization(
-    @Req() req: Request,
-    @Res() res: Response,
-    @Next() next: NextFunction,
-  ) {
+  async currentOrganization() {
     const organization =
       await this.getCurrentOrgService.getCurrentOrganization();
 
-    return res.status(200).send({ organization });
+    return { organization };
   }
 
   @Put()
+  @HttpCode(200)
   @ApiOperation({ summary: 'Update organization information' })
   @ApiBody({ type: UpdateOrganizationDto })
   @ApiResponse({
     status: 200,
     description: 'Organization information has been updated successfully',
   })
-  async updateOrganization(
-    @Body() updateDTO: UpdateOrganizationDto,
-    @Res() res: Response,
-  ) {
+  async updateOrganization(@Body() updateDTO: UpdateOrganizationDto) {
     await this.updateOrganizationService.execute(updateDTO);
 
-    return res.status(200).send({
+    return {
       code: 200,
       message: 'Organization information has been updated successfully.',
-    });
+    };
   }
 }
