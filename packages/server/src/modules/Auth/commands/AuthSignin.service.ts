@@ -41,11 +41,6 @@ export class AuthSigninService {
         `Wrong password for user with email: ${email}`,
       );
     }
-    if (!user.verified) {
-      throw new UnauthorizedException(
-        `The user is not verified yet, check out your mail inbox.`,
-      );
-    }
     return user;
   }
 

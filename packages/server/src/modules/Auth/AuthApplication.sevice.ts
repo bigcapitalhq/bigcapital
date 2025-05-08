@@ -8,6 +8,7 @@ import { AuthSignupDto } from './dtos/AuthSignup.dto';
 import { AuthSendResetPasswordService } from './commands/AuthSendResetPassword.service';
 import { AuthResetPasswordService } from './commands/AuthResetPassword.service';
 import { GetAuthMetaService } from './queries/GetAuthMeta.service';
+import { GetAuthenticatedAccount } from './queries/GetAuthedAccount.service';
 
 @Injectable()
 export class AuthenticationApplication {
@@ -19,6 +20,7 @@ export class AuthenticationApplication {
     private readonly authResetPasswordService: AuthResetPasswordService,
     private readonly authSendResetPasswordService: AuthSendResetPasswordService,
     private readonly authGetMeta: GetAuthMetaService,
+    private readonly getAuthedAccountService: GetAuthenticatedAccount,
   ) {}
 
   /**
@@ -53,8 +55,8 @@ export class AuthenticationApplication {
    * @param {number} userId - System user id.
    * @returns {Promise<void>}
    */
-  public async signUpConfirmResend(userId: number) {
-    return this.authSignUpConfirmResendService.signUpConfirmResend(userId);
+  public async signUpConfirmResend() {
+    return this.authSignUpConfirmResendService.signUpConfirmResend();
   }
 
   /**
@@ -82,5 +84,12 @@ export class AuthenticationApplication {
    */
   public async getAuthMeta() {
     return this.authGetMeta.getAuthMeta();
+  }
+
+  /**
+   * Retrieves the authenticated account meta.
+   */
+  public getAuthedAccount() {
+    return this.getAuthedAccountService.getAccount();
   }
 }

@@ -4,6 +4,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import {
   IAuthSendedResetPassword,
   IAuthSignedUpEventPayload,
+  ISignUpConfigmResendedEventPayload,
 } from '../Auth.interfaces';
 import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
@@ -27,12 +28,15 @@ export class AuthMailSubscriber {
   ) {}
 
   /**
-   * @param {IAuthSignedUpEventPayload} payload
+   * @param {IAuthSignedUpEventPayload | ISignUpConfigmResendedEventPayload} payload
    */
   @OnEvent(events.auth.signUp)
-  async handleSignupSendVerificationMail(payload: IAuthSignedUpEventPayload) {
+  @OnEvent(events.auth.signUpConfirmResended)
+  async handleSignupSendVerificationMail(
+    payload: IAuthSignedUpEventPayload | ISignUpConfigmResendedEventPayload,
+  ) {
     try {
-      const job = await this.sendSignupVerificationMailQueue.add(
+      await this.sendSignupVerificationMailQueue.add(
         SendSignupVerificationMailJob,
         {
           email: payload.user.email,
@@ -43,7 +47,6 @@ export class AuthMailSubscriber {
           delay: 0,
         },
       );
-      console.log(job);
     } catch (error) {
       console.log(error);
     }

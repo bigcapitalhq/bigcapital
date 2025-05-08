@@ -1,23 +1,47 @@
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetAuthenticatedAccount } from './queries/GetAuthedAccount.service';
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
 import { IgnoreTenantInitializedRoute } from '../Tenancy/EnsureTenantIsInitialized.guard';
+import { AuthenticationApplication } from './AuthApplication.sevice';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { IgnoreUserVerifiedRoute } from './guards/EnsureUserVerified.guard';
 
 @Controller('/auth')
 @ApiTags('Auth')
 @IgnoreTenantSeededRoute()
 @IgnoreTenantInitializedRoute()
+@IgnoreUserVerifiedRoute()
 export class AuthedController {
   constructor(
     private readonly getAuthedAccountService: GetAuthenticatedAccount,
+    private readonly authApp: AuthenticationApplication,
+    private readonly tenancyContext: TenancyContext,
   ) {}
+
+  @Post('/signup/confirm/resend')
+  @ApiOperation({ summary: 'Resend the signup confirmation message' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        code: { type: 'number', example: 200 },
+        message: { type: 'string', example: 'resent successfully.' },
+      },
+    },
+  })
+  async resendSignupConfirm() {
+    await this.authApp.signUpConfirmResend();
+
+    return {
+      code: 200,
+      message: 'The signup confirmation message has been resent successfully.',
+    };
+  }
 
   @Get('/account')
   @ApiOperation({ summary: 'Retrieve the authenticated account' })
   async getAuthedAcccount() {
-    const data = await this.getAuthedAccountService.getAccount();
-
-    return { data };
+    return this.getAuthedAccountService.getAccount();
   }
 }

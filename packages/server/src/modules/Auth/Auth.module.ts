@@ -31,6 +31,7 @@ import { GetAuthMetaService } from './queries/GetAuthMeta.service';
 import { AuthedController } from './Authed.controller';
 import { GetAuthenticatedAccount } from './queries/GetAuthedAccount.service';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
+import { EnsureUserVerifiedGuard } from './guards/EnsureUserVerified.guard';
 
 const models = [InjectSystemModel(PasswordReset)];
 
@@ -72,6 +73,10 @@ const models = [InjectSystemModel(PasswordReset)];
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: EnsureUserVerifiedGuard,
     },
     AuthMailSubscriber,
   ],

@@ -72,3 +72,7 @@ export interface IAuthSignUpVerifiedEventPayload {
   verifyToken: string;
   userId: number;
 }
+
+export interface ISignUpConfigmResendedEventPayload {
+  user: SystemUser;
+}

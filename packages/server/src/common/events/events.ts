@@ -12,6 +12,9 @@ export const events = {
     signUpConfirming: 'signUpConfirming',
     signUpConfirmed: 'signUpConfirmed',
 
+    signUpConfirmResending: 'signUpConfirmResending',
+    signUpConfirmResended: 'signUpConfirmResended',
+
     sendingResetPassword: 'onSendingResetPassword',
     sendResetPassword: 'onSendResetPassword',
 
@@ -771,5 +774,4 @@ export const events = {
     onSalesByItemViewed: 'onSalesByItemViewed',
     onPurchasesByItemViewed: 'onPurchasesByItemViewed',
   },
-  
 };
