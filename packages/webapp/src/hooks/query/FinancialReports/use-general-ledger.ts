@@ -12,7 +12,7 @@ export function useGeneralLedgerSheet(query, props) {
     [t.FINANCIAL_REPORT, t.GENERAL_LEDGER, query],
     {
       method: 'get',
-      url: '/financial_statements/general_ledger',
+      url: '/reports/general-ledger',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -26,7 +26,7 @@ export function useGeneralLedgerSheet(query, props) {
 }
 export const useGeneralLedgerSheetXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/general_ledger',
+    url: '/reports/general-ledger',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -40,7 +40,7 @@ export const useGeneralLedgerSheetXlsxExport = (query, args) => {
 
 export const useGeneralLedgerSheetCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/general_ledger',
+    url: '/reports/general-ledger',
     config: {
       headers: {
         accept: 'application/csv',
@@ -57,7 +57,7 @@ export const useGeneralLedgerSheetCsvExport = (query, args) => {
  */
 export function useGeneralLedgerPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/general_ledger`,
-    params: query
+    url: `/reports/general-ledger`,
+    params: query,
   });
 }

@@ -11,7 +11,7 @@ export const LOGIN_ERRORS = {
 
 const REGISTER_ERRORS = {
   PHONE_NUMBER_EXISTS: 'PHONE_NUMBER_EXISTS',
-  EMAIL_EXISTS: 'EMAIL.EXISTS',
+  EMAIL_EXISTS: 'EMAIL_EXISTS',
 };
 
 export const LoginSchema = Yup.object().shape({

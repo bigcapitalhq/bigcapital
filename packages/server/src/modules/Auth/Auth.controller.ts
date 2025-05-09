@@ -68,6 +68,7 @@ export class AuthController {
     return this.authApp.signUpConfirm(email, token);
   }
 
+
   @Post('/send_reset_password')
   @ApiOperation({ summary: 'Send reset password email' })
   @ApiBody({

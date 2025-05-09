@@ -1,5 +1,6 @@
 // @ts-nocheck
 import * as R from 'ramda';
+import { I18nService } from 'nestjs-i18n';
 import {
   IBalanceSheetStatementData,
   IBalanceSheetQuery,
@@ -43,6 +44,8 @@ export class BalanceSheetTable extends R.pipe(
   BalanceSheetTablePreviousYear,
   BalanceSheetTablePreviousPeriod,
 )(FinancialSheet) {
+  public i18n: I18nService;
+
   /**
    * Balance sheet data.
    * @param {IBalanceSheetStatementData}
@@ -225,9 +228,7 @@ export class BalanceSheetTable extends R.pipe(
     return R.compose(
       R.unless(
         R.isEmpty,
-        R.concat([
-          { key: 'total', label: this.i18n.__('balance_sheet.total') },
-        ]),
+        R.concat([{ key: 'total', label: this.i18n.t('balance_sheet.total') }]),
       ),
       R.concat(this.percentageColumns()),
       R.concat(this.getPreviousYearColumns()),
@@ -243,7 +244,7 @@ export class BalanceSheetTable extends R.pipe(
     return [
       {
         key: 'total',
-        label: this.i18n.__('balance_sheet.total'),
+        label: this.i18n.t('balance_sheet.total'),
         children: this.totalColumnChildren(),
       },
     ];
@@ -271,7 +272,7 @@ export class BalanceSheetTable extends R.pipe(
     return R.compose(
       this.tableColumnsCellIndexing,
       R.concat([
-        { key: 'name', label: this.i18n.__('balance_sheet.account_name') },
+        { key: 'name', label: this.i18n.t('balance_sheet.account_name') },
       ]),
       R.ifElse(
         this.query.isDatePeriodsColumnsType,

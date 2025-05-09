@@ -15,10 +15,14 @@ export class ServiceErrorFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     response.status(status).json({
-      statusCode: status,
-      errorType: exception.errorType,
-      message: exception.message,
-      payload: exception.payload,
+      errors: [
+        {
+          statusCode: status,
+          type: exception.errorType,
+          message: exception.message,
+          payload: exception.payload,
+        }
+      ]
     });
   }
 }

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import * as R from 'ramda';
+import { I18nService } from 'nestjs-i18n';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
   IBalanceSheetAggregateNode,
@@ -31,6 +32,8 @@ export const BalanceSheetAggregators = <T extends GConstructor<FinancialSheet>>(
     FinancialSheetStructure,
     BalanceSheetBase,
   )(Base) {
+    public readonly i18n: I18nService;
+
     /**
      * Balance sheet query.
      * @param {BalanceSheetQuery}
@@ -89,7 +92,7 @@ export const BalanceSheetAggregators = <T extends GConstructor<FinancialSheet>>(
       const total = this.getTotalOfNodes(node.children);
 
       return {
-        name: this.i18n.__(node.name),
+        name: this.i18n.t(node.name),
         id: node.id,
         nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE,
         type: BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE,

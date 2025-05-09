@@ -1,5 +1,6 @@
 // @ts-nocheck
 import * as R from 'ramda';
+import { I18nService } from 'nestjs-i18n';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
   IBalanceSheetDataNode,
@@ -32,6 +33,7 @@ export const BalanceSheetNetIncome = <T extends GConstructor<FinancialSheet>>(
   )(Base) {
     public repository: BalanceSheetRepository;
     public query: BalanceSheetQuery;
+    public i18n: I18nService;
 
     /**
      * Retrieves the closing balance of income accounts.
@@ -74,7 +76,7 @@ export const BalanceSheetNetIncome = <T extends GConstructor<FinancialSheet>>(
 
       return {
         id: node.id,
-        name: this.i18n.__(node.name),
+        name: this.i18n.t(node.name),
         nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME,
         total: this.getTotalAmountMeta(total),
       };

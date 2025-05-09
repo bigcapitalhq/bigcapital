@@ -12,7 +12,7 @@ export function useCustomerBalanceSummaryReport(query, props) {
     [t.FINANCIAL_REPORT, t.CUSTOMERS_BALANCE_SUMMARY, query],
     {
       method: 'get',
-      url: '/financial_statements/customer-balance-summary',
+      url: '/reports/customer-balance-summary',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -34,7 +34,7 @@ export function useCustomerBalanceSummaryReport(query, props) {
 
 export const useCustomerBalanceSummaryXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/customer-balance-summary',
+    url: '/reports/customer-balance-summary',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -48,7 +48,7 @@ export const useCustomerBalanceSummaryXlsxExport = (query, args) => {
 
 export const useCustomerBalanceSummaryCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/customer-balance-summary',
+    url: '/reports/customer-balance-summary',
     config: {
       headers: {
         accept: 'application/csv',
@@ -65,7 +65,7 @@ export const useCustomerBalanceSummaryCsvExport = (query, args) => {
  */
 export function useCustomerBalanceSummaryPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/customer-balance-summary`,
+    url: `/reports/customer-balance-summary`,
     params: query,
   });
 }

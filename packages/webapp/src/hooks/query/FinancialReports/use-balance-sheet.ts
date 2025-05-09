@@ -16,7 +16,7 @@ export function useBalanceSheet(query, props) {
     [t.FINANCIAL_REPORT, t.BALANCE_SHEET, query],
     {
       method: 'get',
-      url: '/financial_statements/balance_sheet',
+      url: '/reports/balance-sheet',
       params: query,
       headers: {
         Accept: 'application/json+table',

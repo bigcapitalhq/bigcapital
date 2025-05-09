@@ -12,7 +12,7 @@ export function useProfitLossSheet(query, props) {
     [t.FINANCIAL_REPORT, t.PROFIT_LOSS_SHEET, query],
     {
       method: 'get',
-      url: '/financial_statements/profit_loss_sheet',
+      url: '/reports/profit-loss-sheet',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -27,7 +27,7 @@ export function useProfitLossSheet(query, props) {
 
 export const useProfitLossSheetXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/profit_loss_sheet',
+    url: '/reports/profit-loss-sheet',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -41,7 +41,7 @@ export const useProfitLossSheetXlsxExport = (query, args) => {
 
 export const useProfitLossSheetCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/profit_loss_sheet',
+    url: '/reports/profit-loss-sheet',
     config: {
       headers: {
         accept: 'application/csv',
@@ -58,7 +58,7 @@ export const useProfitLossSheetCsvExport = (query, args) => {
  */
 export function useProfitLossSheetPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/profit_loss_sheet`,
+    url: `/reports/profit-loss-sheet`,
     params: query,
   });
 }

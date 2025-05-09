@@ -13,6 +13,8 @@ export const BalanceSheetTableDatePeriods = <
   Base: T,
 ) =>
   class extends R.pipe(FinancialDatePeriods)(Base) {
+    public i18n: I18nService;
+
     /**
      * Retrieves the date periods based on the report query.
      * @returns {IDateRange[]}
@@ -104,7 +106,7 @@ export const BalanceSheetTableDatePeriods = <
         R.unless(
           R.isEmpty,
           R.concat([
-            { key: `total`, label: this.i18n.__('balance_sheet.total') },
+            { key: `total`, label: this.i18n.t('balance_sheet.total') },
           ]),
         ),
         R.concat(this.percentageColumns()),

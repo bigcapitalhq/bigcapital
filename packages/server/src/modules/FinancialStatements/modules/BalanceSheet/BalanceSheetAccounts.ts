@@ -1,6 +1,7 @@
 // @ts-nocheck
 import * as R from 'ramda';
 import { defaultTo, toArray } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
 import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
@@ -61,7 +62,7 @@ export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
     /**
      * Localization.
      */
-    readonly i18n: any;
+    readonly i18n: I18nService;
 
     /**
      * Balance sheet repository.
@@ -172,7 +173,7 @@ export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
 
       return {
         id: node.id,
-        name: this.i18n.__(node.name),
+        name: this.i18n.t(node.name),
         nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS,
         type: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS,
         children: [...accounts, ...children],

@@ -92,7 +92,10 @@ export class AuthSignupService {
     const isEmailExists = await this.systemUserModel.query().findOne({ email });
 
     if (isEmailExists) {
-      throw new ServiceError(ERRORS.EMAIL_EXISTS);
+      throw new ServiceError(
+        ERRORS.EMAIL_EXISTS,
+        'The given email address is already signed-up',
+      );
     }
   }
 
@@ -120,11 +123,17 @@ export class AuthSignupService {
       );
 
       if (!isAllowedEmail && !isAllowedDomain) {
-        throw new ServiceError(ERRORS.SIGNUP_RESTRICTED_NOT_ALLOWED);
+        throw new ServiceError(
+          ERRORS.SIGNUP_RESTRICTED_NOT_ALLOWED,
+          'The given email address format is not allowed to signup.',
+        );
       }
       // Throw error if the signup is disabled with no exceptions.
     } else {
-      throw new ServiceError(ERRORS.SIGNUP_RESTRICTED);
+      throw new ServiceError(
+        ERRORS.SIGNUP_RESTRICTED,
+        'The sign-up is disabled',
+      );
     }
   }
 }

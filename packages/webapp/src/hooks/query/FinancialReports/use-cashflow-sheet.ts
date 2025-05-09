@@ -12,7 +12,7 @@ export function useCashFlowStatementReport(query, props) {
     [t.FINANCIAL_REPORT, t.CASH_FLOW_STATEMENT, query],
     {
       method: 'get',
-      url: '/financial_statements/cash-flow',
+      url: '/reports/cashflow-statement',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -37,7 +37,7 @@ export function useCashFlowStatementReport(query, props) {
 }
 
 export const useCashFlowStatementXlsxExport = (query, args) => {
-  const url = '/financial_statements/cash-flow';
+  const url = '/reports/cashflow-statement';
   const config = {
     headers: {
       accept: 'application/xlsx',
@@ -55,7 +55,7 @@ export const useCashFlowStatementXlsxExport = (query, args) => {
 };
 
 export const useCashFlowStatementCsvExport = (query, args) => {
-  const url = '/financial_statements/cash-flow';
+  const url = '/reports/cashflow-statement';
   const config = {
     headers: {
       accept: 'application/csv',
@@ -77,7 +77,7 @@ export const useCashFlowStatementCsvExport = (query, args) => {
  */
 export function useCashflowSheetPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/cash-flow`,
+    url: `/reports/cashflow-statement`,
     params: query,
   });
 }

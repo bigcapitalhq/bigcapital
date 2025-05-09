@@ -140,7 +140,7 @@ export function useAuthenticatedAccount(props) {
       url: `auth/account`,
     },
     {
-      select: (response) => response.data.data,
+      select: (response) => response.data,
       defaultData: {},
       onSuccess: (data) => {
         debugger;
