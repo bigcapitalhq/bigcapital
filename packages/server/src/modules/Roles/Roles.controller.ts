@@ -5,7 +5,6 @@ import {
   Delete,
   Param,
   Body,
-  Req,
   Res,
   Next,
   HttpStatus,
@@ -35,16 +34,15 @@ export class RolesController {
     description: 'Role created successfully',
   })
   async createRole(
-    @Res() res: Response,
     @Next() next: NextFunction,
     @Body() createRoleDto: CreateRoleDto,
   ) {
     const role = await this.rolesApp.createRole(createRoleDto);
 
-    return res.status(HttpStatus.OK).send({
+    return {
       data: { roleId: role.id },
       message: 'The role has been created successfully.',
-    });
+    };
   }
 
   @Post(':id')
@@ -56,17 +54,15 @@ export class RolesController {
     description: 'Role updated successfully',
   })
   async editRole(
-    @Res() res: Response,
-    @Next() next: NextFunction,
     @Param('id', ParseIntPipe) roleId: number,
     @Body() editRoleDto: EditRoleDto,
   ) {
     const role = await this.rolesApp.editRole(roleId, editRoleDto);
 
-    return res.status(HttpStatus.OK).send({
+    return {
       data: { roleId },
       message: 'The given role has been updated successfully.',
-    });
+    };
   }
 
   @Delete(':id')
@@ -77,16 +73,14 @@ export class RolesController {
     description: 'Role deleted successfully',
   })
   async deleteRole(
-    @Res() res: Response,
-    @Next() next: NextFunction,
     @Param('id', ParseIntPipe) roleId: number,
   ) {
     await this.rolesApp.deleteRole(roleId);
 
-    return res.status(HttpStatus.OK).send({
+    return {
       data: { roleId },
       message: 'The given role has been deleted successfully.',
-    });
+    };
   }
 
   @Get()
@@ -95,7 +89,7 @@ export class RolesController {
   async getRoles(@Res() res: Response) {
     const roles = await this.rolesApp.getRoles();
 
-    return res.status(HttpStatus.OK).send({ roles });
+    return { roles };
   }
 
   @Get(':id')
@@ -103,11 +97,10 @@ export class RolesController {
   @ApiParam({ name: 'id', description: 'Role ID' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Role details' })
   async getRole(
-    @Res() res: Response,
     @Param('id', ParseIntPipe) roleId: number,
   ) {
     const role = await this.rolesApp.getRole(roleId);
 
-    return res.status(HttpStatus.OK).send({ role });
+    return { role };
   }
 }

@@ -33,12 +33,12 @@ export class ProfitLossSheetController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(sheet);
+      res.send(sheet);
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.profitLossSheetApp.table(query);
 
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const sheet = await this.profitLossSheetApp.xlsx(query);
@@ -48,7 +48,7 @@ export class ProfitLossSheetController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(sheet);
+      res.send(sheet);
       // Retrieves the json format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJson)) {
       const pdfContent = await this.profitLossSheetApp.pdf(query);
@@ -57,11 +57,11 @@ export class ProfitLossSheetController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.send(pdfContent);
+      res.send(pdfContent);
     } else {
       const sheet = await this.profitLossSheetApp.sheet(query);
 
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

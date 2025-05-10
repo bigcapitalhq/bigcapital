@@ -23,7 +23,7 @@ export class TransactionsByCustomerController {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.transactionsByCustomersApp.table(filter);
-      return res.status(200).send(table);
+      res.status(200).send(table);
 
       // Retrieve the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
@@ -32,7 +32,7 @@ export class TransactionsByCustomerController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(csv);
+      res.send(csv);
 
       // Retrieve the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
@@ -42,7 +42,7 @@ export class TransactionsByCustomerController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
 
       // Retrieve the json format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
@@ -51,10 +51,10 @@ export class TransactionsByCustomerController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.send(pdfContent);
+      res.send(pdfContent);
     } else {
       const sheet = await this.transactionsByCustomersApp.sheet(filter);
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

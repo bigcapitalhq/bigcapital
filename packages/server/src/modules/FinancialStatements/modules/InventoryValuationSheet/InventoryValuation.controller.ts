@@ -27,7 +27,7 @@ export class InventoryValuationController {
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.inventoryValuationApp.table(query);
 
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.inventoryValuationApp.csv(query);
@@ -35,7 +35,7 @@ export class InventoryValuationController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the xslx buffer format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.inventoryValuationApp.xlsx(query);
@@ -45,7 +45,7 @@ export class InventoryValuationController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.inventoryValuationApp.pdf(query);
@@ -54,12 +54,12 @@ export class InventoryValuationController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.status(200).send(pdfContent);
+      res.status(200).send(pdfContent);
       // Retrieves the json format.
     } else {
       const sheet = await this.inventoryValuationApp.sheet(query);
 
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

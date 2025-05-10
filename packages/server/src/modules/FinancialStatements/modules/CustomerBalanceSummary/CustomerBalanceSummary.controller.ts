@@ -28,18 +28,18 @@ export class CustomerBalanceSummaryController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.customerBalanceSummaryApp.csv(filter);
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.customerBalanceSummaryApp.table(filter);
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const buffer = await this.customerBalanceSummaryApp.pdf(filter);
@@ -48,11 +48,11 @@ export class CustomerBalanceSummaryController {
         'Content-Type': 'application/pdf',
         'Content-Length': buffer.length,
       });
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the json format.
     } else {
       const sheet = await this.customerBalanceSummaryApp.sheet(filter);
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

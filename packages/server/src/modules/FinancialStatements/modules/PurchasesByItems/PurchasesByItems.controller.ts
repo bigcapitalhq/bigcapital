@@ -24,7 +24,7 @@ export class PurchasesByItemReportController {
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.purchasesByItemsApp.table(filter);
 
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // CSV response format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.purchasesByItemsApp.csv(filter);
@@ -32,7 +32,7 @@ export class PurchasesByItemReportController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Xlsx response format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.purchasesByItemsApp.xlsx(filter);
@@ -42,7 +42,7 @@ export class PurchasesByItemReportController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // PDF response format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.purchasesByItemsApp.pdf(filter);
@@ -51,12 +51,12 @@ export class PurchasesByItemReportController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.send(pdfContent);
+      res.send(pdfContent);
       // Json response format.
     } else {
       const sheet = await this.purchasesByItemsApp.sheet(filter);
 
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

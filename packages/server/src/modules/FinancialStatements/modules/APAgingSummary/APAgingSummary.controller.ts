@@ -21,7 +21,7 @@ export class APAgingSummaryController {
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.APAgingSummaryApp.table(filter);
 
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const csv = await this.APAgingSummaryApp.csv(filter);
@@ -29,7 +29,7 @@ export class APAgingSummaryController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(csv);
+      res.send(csv);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.APAgingSummaryApp.xlsx(filter);
@@ -39,7 +39,7 @@ export class APAgingSummaryController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.APAgingSummaryApp.pdf(filter);
@@ -48,12 +48,12 @@ export class APAgingSummaryController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.send(pdfContent);
+      res.send(pdfContent);
       // Retrieves the json format.
     } else {
       const sheet = await this.APAgingSummaryApp.sheet(filter);
 
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

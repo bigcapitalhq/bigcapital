@@ -26,7 +26,7 @@ export class SalesTaxLiabilitySummaryController {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.salesTaxLiabilitySummaryApp.table(query);
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.salesTaxLiabilitySummaryApp.xlsx(query);
@@ -35,14 +35,14 @@ export class SalesTaxLiabilitySummaryController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.salesTaxLiabilitySummaryApp.csv(query);
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the json format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.salesTaxLiabilitySummaryApp.pdf(query);
@@ -50,10 +50,10 @@ export class SalesTaxLiabilitySummaryController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.status(200).send(pdfContent);
+      res.status(200).send(pdfContent);
     } else {
       const sheet = await this.salesTaxLiabilitySummaryApp.sheet(query);
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

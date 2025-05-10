@@ -22,7 +22,7 @@ export class CashflowController {
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.cashflowSheetApp.table(query);
 
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.cashflowSheetApp.csv(query);
@@ -30,7 +30,7 @@ export class CashflowController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.status(200).send(buffer);
+      res.status(200).send(buffer);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.cashflowSheetApp.xlsx(query);
@@ -40,7 +40,7 @@ export class CashflowController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.cashflowSheetApp.pdf(query);
@@ -49,12 +49,12 @@ export class CashflowController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.send(pdfContent);
+      res.send(pdfContent);
       // Retrieves the json format.
     } else {
       const cashflow = await this.cashflowSheetApp.sheet(query);
 
-      return res.status(200).send(cashflow);
+      res.status(200).send(cashflow);
     }
   }
 }

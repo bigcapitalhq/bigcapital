@@ -6,6 +6,7 @@ import {
   Req,
   Res,
   Next,
+  HttpCode,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { ApiOperation, ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
@@ -22,13 +23,15 @@ export class SubscriptionsController {
     status: 200,
     description: 'List of subscriptions retrieved successfully',
   })
-  async getSubscriptions(@Res() res: Response) {
+  @HttpCode(200)
+  async getSubscriptions() {
     const subscriptions = await this.subscriptionApp.getSubscriptions();
 
-    return res.status(200).send({ subscriptions });
+    return { subscriptions };
   }
 
   @Post('lemon/checkout_url')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Get LemonSqueezy checkout URL' })
   @ApiBody({
     schema: {
@@ -46,14 +49,11 @@ export class SubscriptionsController {
     status: 200,
     description: 'Checkout URL retrieved successfully',
   })
-  async getCheckoutUrl(
-    @Body('variantId') variantId: number,
-    @Res() res: Response,
-  ) {
+  async getCheckoutUrl(@Body('variantId') variantId: number) {
     const checkout =
       await this.subscriptionApp.getLemonSqueezyCheckoutUri(variantId);
 
-    return res.status(200).send(checkout);
+    return checkout;
   }
 
   @Post('cancel')
@@ -62,38 +62,31 @@ export class SubscriptionsController {
     status: 200,
     description: 'Subscription canceled successfully',
   })
-  async cancelSubscription(
-    @Req() req: Request,
-    @Res() res: Response,
-    @Next() next: NextFunction,
-  ) {
+  async cancelSubscription(@Req() req: Request, @Next() next: NextFunction) {
     const tenantId = req.headers['organization-id'] as string;
     await this.subscriptionApp.cancelSubscription(tenantId);
 
-    return res.status(200).send({
+    return {
       status: 200,
       message: 'The organization subscription has been canceled.',
-    });
+    };
   }
 
   @Post('resume')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Resume the current organization subscription' })
   @ApiResponse({
     status: 200,
     description: 'Subscription resumed successfully',
   })
-  async resumeSubscription(
-    @Req() req: Request,
-    @Res() res: Response,
-    @Next() next: NextFunction,
-  ) {
+  async resumeSubscription(@Req() req: Request, @Next() next: NextFunction) {
     const tenantId = req.headers['organization-id'] as string;
     await this.subscriptionApp.resumeSubscription(tenantId);
 
-    return res.status(200).send({
+    return {
       status: 200,
       message: 'The organization subscription has been resumed.',
-    });
+    };
   }
 
   @Post('change')
@@ -116,14 +109,11 @@ export class SubscriptionsController {
     status: 200,
     description: 'Subscription plan changed successfully',
   })
-  async changeSubscriptionPlan(
-    @Body('variant_id') variantId: number,
-    @Res() res: Response,
-  ) {
+  async changeSubscriptionPlan(@Body('variant_id') variantId: number) {
     await this.subscriptionApp.changeSubscriptionPlan(variantId);
 
-    return res.status(200).send({
+    return {
       message: 'The subscription plan has been changed.',
-    });
+    };
   }
 }

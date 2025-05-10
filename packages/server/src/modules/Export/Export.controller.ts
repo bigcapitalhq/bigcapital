@@ -29,7 +29,7 @@ export class ExportController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(data);
+      res.send(data);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
@@ -37,7 +37,7 @@ export class ExportController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(data);
+      res.send(data);
       // Retrieve the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       res.set({

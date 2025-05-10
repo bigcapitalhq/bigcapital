@@ -25,7 +25,7 @@ export class InventoryItemDetailsController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.inventoryItemDetailsApp.xlsx(query);
@@ -35,11 +35,11 @@ export class InventoryItemDetailsController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.inventoryItemDetailsApp.table(query);
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const buffer = await this.inventoryItemDetailsApp.pdf(query);
@@ -48,11 +48,11 @@ export class InventoryItemDetailsController {
         'Content-Type': 'application/pdf',
         'Content-Length': buffer.length,
       });
-      return res.send(buffer);
+      res.send(buffer);
     } else {
       const sheet = await this.inventoryItemDetailsApp.sheet(query);
 
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

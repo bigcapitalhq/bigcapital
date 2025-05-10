@@ -29,7 +29,7 @@ export class TrialBalanceSheetController {
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const { table, meta, query } =
         await this.trialBalanceSheetApp.table(filter);
-      return res.status(200).send({ table, meta, query });
+      res.status(200).send({ table, meta, query });
       // Retrieves in xlsx format
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.trialBalanceSheetApp.xlsx(filter);
@@ -38,7 +38,7 @@ export class TrialBalanceSheetController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves in csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.trialBalanceSheetApp.csv(filter);
@@ -46,7 +46,7 @@ export class TrialBalanceSheetController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves in pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.trialBalanceSheetApp.pdf(filter);
@@ -59,7 +59,7 @@ export class TrialBalanceSheetController {
     } else {
       const { data, query, meta } =
         await this.trialBalanceSheetApp.sheet(filter);
-      return res.status(200).send({ data, query, meta });
+      res.status(200).send({ data, query, meta });
     }
   }
 }

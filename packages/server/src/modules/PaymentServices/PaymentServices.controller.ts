@@ -5,12 +5,8 @@ import {
   Delete,
   Param,
   Body,
-  Req,
-  Res,
-  Next,
-  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { PaymentServicesApplication } from './PaymentServicesApplication';
 import { EditPaymentMethodDTO } from './types';
@@ -23,60 +19,53 @@ export class PaymentServicesController {
   ) {}
 
   @Get('/')
-  async getPaymentServicesSpecificInvoice(@Res() res: Response) {
+  async getPaymentServicesSpecificInvoice() {
     const paymentServices =
       await this.paymentServicesApp.getPaymentServicesForInvoice();
 
-    return res.status(HttpStatus.OK).send({ paymentServices });
+    return { paymentServices };
   }
 
   @Get('/state')
-  async getPaymentMethodsState(@Res() res: Response) {
+  async getPaymentMethodsState() {
     const paymentMethodsState =
       await this.paymentServicesApp.getPaymentMethodsState();
 
-    return res.status(HttpStatus.OK).send({ data: paymentMethodsState });
+    return { data: paymentMethodsState };
   }
 
   @Get('/:paymentServiceId')
-  async getPaymentService(
-    @Param('paymentServiceId') paymentServiceId: number,
-    @Req() req: Request,
-    @Res() res: Response,
-    @Next() next: NextFunction,
-  ) {
+  async getPaymentService(@Param('paymentServiceId') paymentServiceId: number) {
     const paymentService =
       await this.paymentServicesApp.getPaymentService(paymentServiceId);
 
-    return res.status(HttpStatus.OK).send({ data: paymentService });
+    return { data: paymentService };
   }
 
   @Post('/:paymentMethodId')
+  @HttpCode(200)
   async updatePaymentMethod(
     @Param('paymentMethodId') paymentMethodId: number,
     @Body() updatePaymentMethodDTO: EditPaymentMethodDTO,
-    @Res() res: Response,
   ) {
     await this.paymentServicesApp.editPaymentMethod(
       paymentMethodId,
       updatePaymentMethodDTO,
     );
-    return res.status(HttpStatus.OK).send({
+    return {
       id: paymentMethodId,
       message: 'The given payment method has been updated.',
-    });
+    };
   }
 
   @Delete('/:paymentMethodId')
-  async deletePaymentMethod(
-    @Param('paymentMethodId') paymentMethodId: number,
-    @Res() res: Response,
-  ) {
+  @HttpCode(200)
+  async deletePaymentMethod(@Param('paymentMethodId') paymentMethodId: number) {
     await this.paymentServicesApp.deletePaymentMethod(paymentMethodId);
 
-    return res.status(HttpStatus.NO_CONTENT).send({
+    return {
       id: paymentMethodId,
       message: 'The payment method has been deleted.',
-    });
+    };
   }
 }

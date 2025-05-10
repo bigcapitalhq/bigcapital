@@ -28,7 +28,7 @@ export class BalanceSheetStatementController {
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.balanceSheetApp.table(query);
 
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.balanceSheetApp.csv(query);
@@ -36,7 +36,7 @@ export class BalanceSheetStatementController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.balanceSheetApp.xlsx(query);
@@ -46,7 +46,7 @@ export class BalanceSheetStatementController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.balanceSheetApp.pdf(query);
@@ -59,7 +59,7 @@ export class BalanceSheetStatementController {
     } else {
       const sheet = await this.balanceSheetApp.sheet(query);
 
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

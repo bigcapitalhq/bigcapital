@@ -33,12 +33,12 @@ export class SalesByItemsController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.salesByItemsApp.table(filter);
 
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = this.salesByItemsApp.xlsx(filter);
@@ -48,7 +48,7 @@ export class SalesByItemsController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the json format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.salesByItemsApp.pdf(filter);
@@ -57,10 +57,10 @@ export class SalesByItemsController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.send(pdfContent);
+      res.send(pdfContent);
     } else {
       const sheet = await this.salesByItemsApp.sheet(filter);
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

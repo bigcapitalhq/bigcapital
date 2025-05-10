@@ -27,12 +27,12 @@ export class ARAgingSummaryController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.ARAgingSummaryApp.table(filter);
 
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.ARAgingSummaryApp.csv(filter);
@@ -40,7 +40,7 @@ export class ARAgingSummaryController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.ARAgingSummaryApp.pdf(filter);
@@ -49,12 +49,12 @@ export class ARAgingSummaryController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.send(pdfContent);
+      res.send(pdfContent);
       // Retrieves the json format.
     } else {
       const sheet = await this.ARAgingSummaryApp.sheet(filter);
 
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

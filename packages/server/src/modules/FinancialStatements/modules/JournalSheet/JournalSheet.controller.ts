@@ -21,7 +21,7 @@ export class JournalSheetController {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.journalSheetApp.table(query);
-      return res.status(200).send(table);
+      res.status(200).send(table);
 
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
@@ -30,7 +30,7 @@ export class JournalSheetController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.journalSheetApp.xlsx(query);
@@ -40,7 +40,7 @@ export class JournalSheetController {
         'Content-Type',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       );
-      return res.send(buffer);
+      res.send(buffer);
       // Retrieves the json format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.journalSheetApp.pdf(query);
@@ -53,7 +53,7 @@ export class JournalSheetController {
     } else {
       const sheet = await this.journalSheetApp.sheet(query);
 
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

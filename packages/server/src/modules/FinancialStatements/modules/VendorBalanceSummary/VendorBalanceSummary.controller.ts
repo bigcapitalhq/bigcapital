@@ -27,20 +27,20 @@ export class VendorBalanceSummaryController {
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(buffer);
+      res.send(buffer);
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.vendorBalanceSummaryApp.xlsx(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
       res.setHeader('Content-Type', 'application/vnd.openxmlformats');
 
-      return res.send(buffer);
+      res.send(buffer);
 
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.vendorBalanceSummaryApp.table(filter);
 
-      return res.status(200).send(table);
+      res.status(200).send(table);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.vendorBalanceSummaryApp.pdf(filter);
@@ -49,11 +49,11 @@ export class VendorBalanceSummaryController {
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
-      return res.send(pdfContent);
+      res.send(pdfContent);
       // Retrieves the json format.
     } else {
       const sheet = await this.vendorBalanceSummaryApp.sheet(filter);
-      return res.status(200).send(sheet);
+      res.status(200).send(sheet);
     }
   }
 }

@@ -13,6 +13,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Res,
@@ -47,6 +48,7 @@ export class AttachmentsController {
    * Uploads the attachments to S3 and store the file metadata to DB.
    */
   @Post()
+  @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Upload attachment to S3' })
@@ -59,11 +61,7 @@ export class AttachmentsController {
     status: 401,
     description: 'Unauthorized - File upload failed',
   })
-  async uploadAttachment(
-    @UploadedFile() file: Express.Multer.File,
-    res: Response,
-    next: NextFunction,
-  ): Promise<Response | void> {
+  async uploadAttachment(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new UnauthorizedException({
         errorType: 'FILE_UPLOAD_FAILED',
@@ -72,11 +70,11 @@ export class AttachmentsController {
     }
     const data = await this.attachmentsApplication.upload(file);
 
-    return res.status(200).send({
+    return {
       status: 200,
       message: 'The document has uploaded successfully.',
       data,
-    });
+    };
   }
 
   /**
@@ -112,15 +110,14 @@ export class AttachmentsController {
     description: 'The document has been deleted successfully',
   })
   async deleteAttachment(
-    @Res() res: Response,
     @Param('id') documentId: string,
-  ): Promise<Response | void> {
+  ) {
     await this.attachmentsApplication.delete(documentId);
 
-    return res.status(200).send({
+    return {
       status: 200,
       message: 'The document has been delete successfully.',
-    });
+    };
   }
 
   /**
@@ -137,18 +134,17 @@ export class AttachmentsController {
   async linkDocument(
     @Body() linkDocumentDto: LinkAttachmentDto,
     @Param('id') documentId: string,
-    @Res() res: Response,
-  ): Promise<Response | void> {
+  ) {
     await this.attachmentsApplication.link(
       documentId,
       linkDocumentDto.modelRef,
       linkDocumentDto.modelId,
     );
 
-    return res.status(200).send({
+    return {
       status: 200,
       message: 'The document has been linked successfully.',
-    });
+    };
   }
 
   /**
@@ -165,18 +161,17 @@ export class AttachmentsController {
   async unlinkDocument(
     @Body() unlinkDto: UnlinkAttachmentDto,
     @Param('id') documentId: string,
-    @Res() res: Response,
-  ): Promise<Response | void> {
+  ) {
     await this.attachmentsApplication.link(
       documentId,
       unlinkDto.modelRef,
       unlinkDto.modelId,
     );
 
-    return res.status(200).send({
+    return {
       status: 200,
       message: 'The document has been linked successfully.',
-    });
+    };
   }
 
   /**
@@ -189,14 +184,10 @@ export class AttachmentsController {
     status: 200,
     description: 'Returns the presigned URL for the attachment',
   })
-  async getAttachmentPresignedUrl(
-    @Param('id') documentKey: string,
-    res: Response,
-    next: NextFunction,
-  ): Promise<Response | void> {
+  async getAttachmentPresignedUrl(@Param('id') documentKey: string) {
     const presignedUrl =
       await this.attachmentsApplication.getPresignedUrl(documentKey);
 
-    return res.status(200).send({ presignedUrl });
+    return { presignedUrl };
   }
 }
