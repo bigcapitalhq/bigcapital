@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ERRORS } from '../Bills.constants';
 import { Bill } from '../models/Bill';
 import { ServiceError } from '@/modules/Items/ServiceError';
-import { IItemEntryDTO } from '@/modules/TransactionItemEntry/ItemEntry.types';
 import { Item } from '@/modules/Items/models/Item';
 import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';

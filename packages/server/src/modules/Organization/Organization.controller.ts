@@ -1,4 +1,10 @@
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import {
   Controller,
   Post,
@@ -9,6 +15,7 @@ import {
   Res,
   Next,
   HttpCode,
+  Param,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { BuildOrganizationService } from './commands/BuildOrganization.service';
@@ -20,6 +27,7 @@ import { GetCurrentOrganizationService } from './queries/GetCurrentOrganization.
 import { UpdateOrganizationService } from './commands/UpdateOrganization.service';
 import { IgnoreTenantInitializedRoute } from '../Tenancy/EnsureTenantIsInitialized.guard';
 import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
+import { GetBuildOrganizationBuildJob } from './commands/GetBuildOrganizationJob.service';
 
 @ApiTags('Organization')
 @Controller('organization')
@@ -30,6 +38,7 @@ export class OrganizationController {
     private readonly buildOrganizationService: BuildOrganizationService,
     private readonly getCurrentOrgService: GetCurrentOrganizationService,
     private readonly updateOrganizationService: UpdateOrganizationService,
+    private readonly getBuildOrganizationJobService: GetBuildOrganizationBuildJob,
   ) {}
 
   @Post('build')
@@ -49,6 +58,13 @@ export class OrganizationController {
       message: 'The organization database has been initialized.',
       data: result,
     };
+  }
+
+  @Get('build/:buildJobId')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Gets the organization build job details' })
+  async buildJob(@Param('buildJobId') buildJobId: string) {
+    return this.getBuildOrganizationJobService.getJobDetails(buildJobId);
   }
 
   @Get('current')

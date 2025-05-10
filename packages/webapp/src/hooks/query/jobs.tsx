@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { transformToCamelCase } from '@/utils';
 import { useRequestQuery } from '../useQueryRequest';
 
 /**
@@ -7,9 +8,9 @@ import { useRequestQuery } from '../useQueryRequest';
 export function useJob(jobId, props = {}) {
   return useRequestQuery(
     ['JOB', jobId],
-    { method: 'get', url: `jobs/${jobId}` },
+    { method: 'get', url: `organization/build/${jobId}` },
     {
-      select: (res) => res.data.job,
+      select: (res) => transformToCamelCase(res.data),
       defaultData: {},
       ...props,
     },

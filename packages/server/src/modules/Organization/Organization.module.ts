@@ -12,6 +12,7 @@ import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module
 import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBaseCurrencyLocking.service';
 import { SyncSystemUserToTenantService } from './commands/SyncSystemUserToTenant.service';
 import { SyncSystemUserToTenantSubscriber } from './subscribers/SyncSystemUserToTenant.subscriber';
+import { GetBuildOrganizationBuildJob } from './commands/GetBuildOrganizationJob.service';
 
 @Module({
   providers: [
@@ -23,7 +24,8 @@ import { SyncSystemUserToTenantSubscriber } from './subscribers/SyncSystemUserTo
     CommandOrganizationValidators,
     OrganizationBaseCurrencyLocking,
     SyncSystemUserToTenantService,
-    SyncSystemUserToTenantSubscriber
+    SyncSystemUserToTenantSubscriber,
+    GetBuildOrganizationBuildJob
   ],
   imports: [
     BullModule.registerQueue({ name: OrganizationBuildQueue }),

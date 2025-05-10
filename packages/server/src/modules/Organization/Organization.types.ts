@@ -58,3 +58,9 @@ export const OrganizationBuildQueueJob = 'OrganizationBuildQueueJob';
 export interface OrganizationBuildQueueJobPayload extends TenantJobPayload {
   buildDto: BuildOrganizationDto;
 }
+
+export interface BuildOrganizationResult {
+  delay: number;
+  processedOn: number;
+  jobId: string;
+}

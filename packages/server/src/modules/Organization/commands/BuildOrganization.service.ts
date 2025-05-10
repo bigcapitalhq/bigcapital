@@ -1,13 +1,14 @@
 import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
+import { Injectable } from '@nestjs/common';
 import {
+  BuildOrganizationResult,
   IOrganizationBuildEventPayload,
   IOrganizationBuiltEventPayload,
   OrganizationBuildQueue,
   OrganizationBuildQueueJob,
   OrganizationBuildQueueJobPayload,
 } from '../Organization.types';
-import { Injectable } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import {
   throwIfTenantInitizalized,
@@ -48,7 +49,7 @@ export class BuildOrganizationService {
     await this.tenantsManager.createDatabase();
 
     await this.tenantsManager.migrateTenant();
-    await this.tenantsManager.seedTenant()
+    await this.tenantsManager.seedTenant();
 
     // Throws `onOrganizationBuild` event.
     await this.eventPublisher.emitAsync(events.organization.build, {
@@ -77,7 +78,7 @@ export class BuildOrganizationService {
    */
   async buildRunJob(
     buildDTO: BuildOrganizationDto,
-  ): Promise<{ nextRunAt: Date; jobId: string }> {
+  ): Promise<BuildOrganizationResult> {
     const tenant = await this.tenancyContext.getTenant();
     const systemUser = await this.tenancyContext.getSystemUser();
 
@@ -106,8 +107,9 @@ export class BuildOrganizationService {
     await this.tenantRepository.markAsBuilding(jobMeta.id).findById(tenant.id);
 
     return {
-      nextRunAt: jobMeta.data.nextRunAt,
-      jobId: jobMeta.data.id,
+      delay: jobMeta.delay,
+      processedOn: jobMeta.processedOn,
+      jobId: jobMeta.id,
     };
   }
 
