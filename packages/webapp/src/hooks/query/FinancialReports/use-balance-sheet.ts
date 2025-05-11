@@ -37,7 +37,7 @@ export function useBalanceSheet(query, props) {
  */
 export const useBalanceSheetXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/balance_sheet',
+    url: '/reports/balance_sheet',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -57,7 +57,7 @@ export const useBalanceSheetXlsxExport = (query, args) => {
  */
 export const useBalanceSheetCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/balance_sheet',
+    url: '/reports/balance_sheet',
     config: {
       headers: {
         accept: 'application/csv',
@@ -76,7 +76,7 @@ export const useBalanceSheetCsvExport = (query, args) => {
  */
 export function useBalanceSheetPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/balance_sheet`,
+    url: `/reports/balance_sheet`,
     params: query,
   });
 }

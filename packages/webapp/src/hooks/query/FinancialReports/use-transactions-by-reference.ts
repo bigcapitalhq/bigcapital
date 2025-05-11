@@ -9,7 +9,7 @@ export function useTransactionsByReference(query, props) {
     [t.TRANSACTIONS_BY_REFERENCE, query],
     {
       method: 'get',
-      url: `/financial_statements/transactions-by-reference`,
+      url: `/reports/transactions-by-reference`,
       params: query,
     },
     {

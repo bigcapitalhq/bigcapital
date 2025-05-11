@@ -12,7 +12,7 @@ export function useInventoryItemDetailsReport(query, props) {
     [t.FINANCIAL_REPORT, t.INVENTORY_ITEM_DETAILS, query],
     {
       method: 'get',
-      url: '/financial_statements/inventory-item-details',
+      url: '/reports/inventory-item-details',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -38,7 +38,7 @@ export function useInventoryItemDetailsReport(query, props) {
 
 export const useInventoryItemDetailsXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/inventory-item-details',
+    url: '/reports/inventory-item-details',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -52,7 +52,7 @@ export const useInventoryItemDetailsXlsxExport = (query, args) => {
 
 export const useInventoryItemDetailsCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/inventory-item-details',
+    url: '/reports/inventory-item-details',
     config: {
       headers: {
         accept: 'application/csv',
@@ -69,7 +69,7 @@ export const useInventoryItemDetailsCsvExport = (query, args) => {
  */
 export function useInventoryItemDetailsPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/inventory-item-details`,
+    url: `/reports/inventory-item-details`,
     params: query,
   });
 }

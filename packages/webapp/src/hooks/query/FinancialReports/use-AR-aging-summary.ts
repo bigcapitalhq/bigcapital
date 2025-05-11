@@ -57,7 +57,7 @@ export const useARAgingSheetCsvExport = (query, args) => {
  */
 export function useARAgingSummaryPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/receivable_aging_summary`,
+    url: `/reports/receivable_aging_summary`,
     params: query,
   });
 }
