@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export const getSalesByItemsDefaultQuery = () => {
   return {
     fromDate: moment().startOf('month').format('YYYY-MM-DD'),

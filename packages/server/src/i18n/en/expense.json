@@ -1,0 +1,18 @@
+{
+  "field.payment_date": "Payment Date",
+  "field.payment_account": "Payment Account",
+  "field.amount": "Amount",
+  "field.currency_code": "Currency",
+  "field.exchange_rate": "Exchange Rate",
+  "field.reference_no": "Reference No.",
+  "field.description": "Description",
+  "field.line_description": "Line Description",
+  "field.published": "Published",
+  "field.categories": "Categories",
+  "field.expense_account": "Expense Account",
+  "field.publish": "Publish",
+  "field.status": "Status",
+  "field.status.draft": "Draft",
+  "field.status.published": "Published",
+  "field.created_at": "Created at"
+}

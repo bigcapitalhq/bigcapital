@@ -8,17 +8,17 @@ import {
 export const CASH_FLOW_SCHEMA = [
   {
     id: CASH_FLOW_SECTION_ID.OPERATING,
-    label: 'OPERATING ACTIVITIES',
+    label: 'cash_flow_statement.operating_activities',
     sectionType: ICashFlowStatementSectionType.AGGREGATE,
     children: [
       {
         id: CASH_FLOW_SECTION_ID.NET_INCOME,
-        label: 'Net income',
+        label: 'cash_flow_statement.net_income',
         sectionType: ICashFlowStatementSectionType.NET_INCOME,
       },
       {
         id: CASH_FLOW_SECTION_ID.OPERATING_ACCOUNTS,
-        label: 'Adjustments net income by operating activities.',
+        label: 'cash_flow_statement.operating_accounts',
         sectionType: ICashFlowStatementSectionType.ACCOUNTS,
         accountsRelations: [
           { type: ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE, direction: 'mines' },
@@ -34,29 +34,29 @@ export const CASH_FLOW_SCHEMA = [
         showAlways: true,
       },
     ],
-    footerLabel: 'Net cash provided by operating activities',
+    footerLabel: 'cash_flow_statement.net_cash_operating',
   },
   {
     id: CASH_FLOW_SECTION_ID.INVESTMENT,
     sectionType: ICashFlowStatementSectionType.ACCOUNTS,
-    label: 'INVESTMENT ACTIVITIES',
+    label: 'cash_flow_statement.investment_activities',
     accountsRelations: [{ type: ACCOUNT_TYPE.FIXED_ASSET, direction: 'mines' }],
-    footerLabel: 'Net cash provided by investing activities',
+    footerLabel: 'cash_flow_statement.net_cash_investing',
   },
   {
     id: CASH_FLOW_SECTION_ID.FINANCIAL,
-    label: 'FINANCIAL ACTIVITIES',
+    label: 'cash_flow_statement.financial_activities',
     sectionType: ICashFlowStatementSectionType.ACCOUNTS,
     accountsRelations: [
       { type: ACCOUNT_TYPE.LOGN_TERM_LIABILITY, direction: 'plus' },
       { type: ACCOUNT_TYPE.EQUITY, direction: 'plus' },
     ],
-    footerLabel: 'Net cash provided by financing activities',
+    footerLabel: 'cash_flow_statement.net_cash_financing',
   },
   {
     id: CASH_FLOW_SECTION_ID.CASH_BEGINNING_PERIOD,
     sectionType: ICashFlowStatementSectionType.CASH_AT_BEGINNING,
-    label: 'Cash at beginning of period',
+    label: 'cash_flow_statement.cash_beginning_period',
     accountsRelations: [
       { type: ACCOUNT_TYPE.CASH, direction: 'plus' },
       { type: ACCOUNT_TYPE.BANK, direction: 'plus' },
@@ -66,11 +66,11 @@ export const CASH_FLOW_SCHEMA = [
     id: CASH_FLOW_SECTION_ID.NET_CASH_INCREASE,
     sectionType: ICashFlowStatementSectionType.TOTAL,
     equation: 'OPERATING + INVESTMENT + FINANCIAL',
-    label: 'NET CASH INCREASE FOR PERIOD',
+    label: 'cash_flow_statement.net_cash_increase',
   },
   {
     id: CASH_FLOW_SECTION_ID.CASH_END_PERIOD,
-    label: 'CASH AT END OF PERIOD',
+    label: 'cash_flow_statement.cash_end_period',
     sectionType: ICashFlowStatementSectionType.TOTAL,
     equation: 'NET_CASH_INCREASE + CASH_BEGINNING_PERIOD',
   },

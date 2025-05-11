@@ -17,5 +17,15 @@
     "other": "Every {count} days",
     "zero": "Never"
   },
-  "nested": "We go shopping: $t(test.day_interval, {{\"count\": {count} }})"
+  "nested": "We go shopping: $t(test.day_interval, {{\"count\": {count} }})",
+
+  "financial_sheet.previoud_period_date": "{{date}} (PP)",
+  "fianncial_sheet.previous_period_change": "Change (PP)",
+  "financial_sheet.previous_period_percentage": "% Change (PP)",
+
+  "financial_sheet.previous_year_date": "{{date}} (PY)",
+  "financial_sheet.previous_year_change": "Change (PY)",
+  "financial_sheet.previous_year_percentage": "% Change (PY)",
+  "financial_sheet.total_row": "Total {{value}}"
 }
+

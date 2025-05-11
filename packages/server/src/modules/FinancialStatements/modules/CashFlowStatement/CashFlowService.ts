@@ -1,17 +1,17 @@
+import { Injectable } from '@nestjs/common';
 import { ModelObject } from 'objection';
 import * as R from 'ramda';
+import { I18nService } from 'nestjs-i18n';
 import {
   ICashFlowStatementQuery,
   ICashFlowStatementDOO,
 } from './Cashflow.types';
 import { CashFlowStatement } from './CashFlow';
 import { CashflowSheetMeta } from './CashflowSheetMeta';
-import { Injectable } from '@nestjs/common';
 import { CashFlowRepository } from './CashFlowRepository';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
-import { I18nService } from 'nestjs-i18n';
 import { getDefaultCashflowQuery } from './constants';
 
 @Injectable()

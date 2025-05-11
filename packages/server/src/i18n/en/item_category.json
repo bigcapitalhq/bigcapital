@@ -1,0 +1,6 @@
+{
+  "field.name": "Name",
+  "field.description": "Description",
+  "field.count": "Count",
+  "field.created_at": "Created at"
+}

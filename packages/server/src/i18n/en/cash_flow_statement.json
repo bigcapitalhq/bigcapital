@@ -1,0 +1,13 @@
+{
+  "operating_activities": "OPERATING ACTIVITIES",
+  "net_income": "Net income",
+  "operating_accounts": "Adjustments net income by operating activities.",
+  "net_cash_operating": "Net cash provided by operating activities",
+  "investment_activities": "INVESTMENT ACTIVITIES",
+  "net_cash_investing": "Net cash provided by investing activities",
+  "financial_activities": "FINANCIAL ACTIVITIES",
+  "net_cash_financing": "Net cash provided by financing activities",
+  "cash_beginning_period": "Cash at beginning of period",
+  "net_cash_increase": "NET CASH INCREASE FOR PERIOD",
+  "cash_end_period": "CASH AT END OF PERIOD"
+}

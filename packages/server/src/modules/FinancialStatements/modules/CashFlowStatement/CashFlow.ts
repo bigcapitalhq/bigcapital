@@ -83,7 +83,6 @@ export class CashFlowStatement extends R.pipe(
     this.initDateRangeCollection();
   }
 
-
   // --------------------------------------------
   // # NET INCOME NODE
   // --------------------------------------------
@@ -228,11 +227,13 @@ export class CashFlowStatement extends R.pipe(
     const accountsTotal = this.getAccountsMetaTotal(accounts);
     const total = this.getTotalAmountMeta(accountsTotal);
 
+    console.log(sectionSchema.label, 'label');
+
     const node = {
       sectionType: ICashFlowStatementSectionType.ACCOUNTS,
       id: sectionSchema.id,
-      label: this.i18n.t(sectionSchema.label),
-      footerLabel: this.i18n.t(sectionSchema.footerLabel),
+      label: sectionSchema.label,
+      footerLabel: sectionSchema.footerLabel,
       children: accounts,
       total,
     };
@@ -254,7 +255,7 @@ export class CashFlowStatement extends R.pipe(
     (type: string, section: ICashFlowSchemaSection): boolean => {
       return type === section.sectionType;
     },
-);
+  );
 
   // --------------------------------------------
   // # AGGREGATE NODE

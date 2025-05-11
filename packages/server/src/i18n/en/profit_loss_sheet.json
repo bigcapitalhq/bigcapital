@@ -1,0 +1,16 @@
+{
+  "income": "Income",
+  "cost_of_sales": "Cost of sales",
+  "gross_profit": "GROSS PROFIT",
+  "expenses": "Expenses",
+  "net_operating_income": "NET OPERATING INCOME",
+  "other_income": "Other income",
+  "other_expenses": "Other expenses",
+  "net_income": "NET INCOME",
+  "account_name": "Account name",
+  "total": "Total",
+  "percentage_of_income": "% of Income",
+  "percentage_of_expenses": "% of Expenses",
+  "percentage_of_column": "% of Column",
+  "percentage_of_row": "% of Row"
+}
