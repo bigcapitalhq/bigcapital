@@ -86,7 +86,7 @@ export class RolesController {
   @Get()
   @ApiOperation({ summary: 'Get all roles' })
   @ApiResponse({ status: HttpStatus.OK, description: 'List of all roles' })
-  async getRoles(@Res() res: Response) {
+  async getRoles() {
     const roles = await this.rolesApp.getRoles();
 
     return { roles };

@@ -20,14 +20,12 @@ export class InventoryValuationController {
   })
   public async getInventoryValuationSheet(
     @Query() query: IInventoryValuationReportQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.inventoryValuationApp.table(query);
-
-      res.status(200).send(table);
+      return this.inventoryValuationApp.table(query);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.inventoryValuationApp.csv(query);
@@ -57,9 +55,7 @@ export class InventoryValuationController {
       res.status(200).send(pdfContent);
       // Retrieves the json format.
     } else {
-      const sheet = await this.inventoryValuationApp.sheet(query);
-
-      res.status(200).send(sheet);
+      return this.inventoryValuationApp.sheet(query);
     }
   }
 }

@@ -15,7 +15,7 @@ export class ExportController {
   @ApiOperation({ summary: 'Retrieves exported the given resource.' })
   async export(
     @Query() query: ExportQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     const applicationFormat = convertAcceptFormatToFormat(acceptHeader);

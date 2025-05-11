@@ -15,7 +15,7 @@ export class ARAgingSummaryController {
   @ApiOperation({ summary: 'Get receivable aging summary' })
   public async get(
     @Query() filter: IARAgingSummaryQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the xlsx format.
@@ -30,9 +30,8 @@ export class ARAgingSummaryController {
       res.send(buffer);
       // Retrieves the table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.ARAgingSummaryApp.table(filter);
+      return this.ARAgingSummaryApp.table(filter);
 
-      res.status(200).send(table);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.ARAgingSummaryApp.csv(filter);
@@ -52,9 +51,7 @@ export class ARAgingSummaryController {
       res.send(pdfContent);
       // Retrieves the json format.
     } else {
-      const sheet = await this.ARAgingSummaryApp.sheet(filter);
-
-      res.status(200).send(sheet);
+      return this.ARAgingSummaryApp.sheet(filter);
     }
   }
 }

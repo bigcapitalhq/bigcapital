@@ -17,14 +17,12 @@ export class PurchasesByItemReportController {
   @ApiOperation({ summary: 'Get purchases by items report' })
   async purchasesByItems(
     @Query() filter: IPurchasesByItemsReportQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // JSON table response format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.purchasesByItemsApp.table(filter);
-
-      res.status(200).send(table);
+      return this.purchasesByItemsApp.table(filter);
       // CSV response format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.purchasesByItemsApp.csv(filter);
@@ -54,9 +52,7 @@ export class PurchasesByItemReportController {
       res.send(pdfContent);
       // Json response format.
     } else {
-      const sheet = await this.purchasesByItemsApp.sheet(filter);
-
-      res.status(200).send(sheet);
+      return this.purchasesByItemsApp.sheet(filter);
     }
   }
 }

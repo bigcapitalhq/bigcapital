@@ -14,14 +14,13 @@ export class APAgingSummaryController {
   @ApiOperation({ summary: 'Get payable aging summary' })
   public async get(
     @Query() filter: IAPAgingSummaryQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.APAgingSummaryApp.table(filter);
+      return this.APAgingSummaryApp.table(filter);
 
-      res.status(200).send(table);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const csv = await this.APAgingSummaryApp.csv(filter);
@@ -51,9 +50,7 @@ export class APAgingSummaryController {
       res.send(pdfContent);
       // Retrieves the json format.
     } else {
-      const sheet = await this.APAgingSummaryApp.sheet(filter);
-
-      res.status(200).send(sheet);
+      return this.APAgingSummaryApp.sheet(filter);
     }
   }
 }

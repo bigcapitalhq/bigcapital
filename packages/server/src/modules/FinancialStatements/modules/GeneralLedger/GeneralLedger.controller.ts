@@ -17,14 +17,12 @@ export class GeneralLedgerController {
   @ApiOperation({ summary: 'Get general ledger report' })
   public async getGeneralLedger(
     @Query() query: IGeneralLedgerSheetQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.generalLedgerApplication.table(query);
-
-      res.status(200).send(table);
+      return this.generalLedgerApplication.table(query);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.generalLedgerApplication.csv(query);
@@ -53,9 +51,7 @@ export class GeneralLedgerController {
       res.send(pdfContent);
       // Retrieves the json format.
     } else {
-      const sheet = await this.generalLedgerApplication.sheet(query);
-
-      res.status(200).send(sheet);
+      return this.generalLedgerApplication.sheet(query);
     }
   }
 }

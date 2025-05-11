@@ -16,7 +16,7 @@ export class InventoryItemDetailsController {
   @ApiOperation({ summary: 'Get inventory item details' })
   async inventoryItemDetails(
     @Query() query: IInventoryDetailsQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
@@ -38,8 +38,7 @@ export class InventoryItemDetailsController {
       res.send(buffer);
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.inventoryItemDetailsApp.table(query);
-      res.status(200).send(table);
+      return this.inventoryItemDetailsApp.table(query);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const buffer = await this.inventoryItemDetailsApp.pdf(query);
@@ -50,9 +49,7 @@ export class InventoryItemDetailsController {
       });
       res.send(buffer);
     } else {
-      const sheet = await this.inventoryItemDetailsApp.sheet(query);
-
-      res.status(200).send(sheet);
+      return this.inventoryItemDetailsApp.sheet(query);
     }
   }
 }

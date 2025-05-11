@@ -15,14 +15,13 @@ export class JournalSheetController {
   @ApiOperation({ summary: 'Journal report' })
   async journalSheet(
     @Query() query: IJournalReportQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.journalSheetApp.table(query);
-      res.status(200).send(table);
-
+      return this.journalSheetApp.table(query);
+      
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.journalSheetApp.csv(query);
@@ -51,9 +50,7 @@ export class JournalSheetController {
       });
       res.send(pdfContent);
     } else {
-      const sheet = await this.journalSheetApp.sheet(query);
-
-      res.status(200).send(sheet);
+      return this.journalSheetApp.sheet(query);
     }
   }
 }

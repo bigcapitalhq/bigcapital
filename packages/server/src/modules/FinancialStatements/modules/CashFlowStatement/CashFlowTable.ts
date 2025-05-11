@@ -1,7 +1,7 @@
 // @ts-nocheck
 import * as R from 'ramda';
 import { isEmpty } from 'lodash';
-import moment from 'moment';
+import * as moment from 'moment';
 import { I18nService } from 'nestjs-i18n';
 import {
   ICashFlowStatementSection,

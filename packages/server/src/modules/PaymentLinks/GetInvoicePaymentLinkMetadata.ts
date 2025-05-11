@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';

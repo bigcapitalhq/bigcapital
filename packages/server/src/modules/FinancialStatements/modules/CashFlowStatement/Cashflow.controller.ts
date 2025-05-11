@@ -15,14 +15,12 @@ export class CashflowController {
   @ApiOperation({ summary: 'Get cashflow statement report' })
   async getCashflow(
     @Query() query: ICashFlowStatementQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.cashflowSheetApp.table(query);
-
-      res.status(200).send(table);
+      return  this.cashflowSheetApp.table(query);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.cashflowSheetApp.csv(query);
@@ -52,9 +50,7 @@ export class CashflowController {
       res.send(pdfContent);
       // Retrieves the json format.
     } else {
-      const cashflow = await this.cashflowSheetApp.sheet(query);
-
-      res.status(200).send(cashflow);
+      return this.cashflowSheetApp.sheet(query);
     }
   }
 }

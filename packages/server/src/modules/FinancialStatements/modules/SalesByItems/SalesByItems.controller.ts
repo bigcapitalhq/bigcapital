@@ -23,7 +23,7 @@ export class SalesByItemsController {
   @ApiOperation({ summary: 'Get sales by items report' })
   public async salesByitems(
     @Query() filter: ISalesByItemsReportQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the csv format.
@@ -36,9 +36,7 @@ export class SalesByItemsController {
       res.send(buffer);
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.salesByItemsApp.table(filter);
-
-      res.status(200).send(table);
+      return this.salesByItemsApp.table(filter);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = this.salesByItemsApp.xlsx(filter);
@@ -59,8 +57,7 @@ export class SalesByItemsController {
       });
       res.send(pdfContent);
     } else {
-      const sheet = await this.salesByItemsApp.sheet(filter);
-      res.status(200).send(sheet);
+      return this.salesByItemsApp.sheet(filter);
     }
   }
 }

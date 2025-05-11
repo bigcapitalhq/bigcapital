@@ -1,6 +1,6 @@
 import { I18nService } from 'nestjs-i18n';
 import { sumBy, chain, get, head } from 'lodash';
-import moment from 'moment';
+import * as moment from 'moment';
 import {
   IJournalReportEntriesGroup,
   IJournalReportQuery,
@@ -9,17 +9,18 @@ import {
 } from './JournalSheet.types';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { JournalSheetRepository } from './JournalSheetRepository';
-import { Ledger } from '@/modules/Ledger/Ledger';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 
 export class JournalSheet extends FinancialSheet {
-  readonly ledger: Ledger;
   readonly query: IJournalReportQuery;
   readonly repository: JournalSheetRepository;
   readonly i18n: I18nService;
 
   /**
    * Constructor method.
+   * @param {IJournalReportQuery} query -
+   * @param {JournalSheetRepository} repository -
+   * @param {I18nService} i18n -
    */
   constructor(
     query: IJournalReportQuery,
@@ -130,6 +131,6 @@ export class JournalSheet extends FinancialSheet {
    * @return {IJournalReport}
    */
   reportData(): IJournalTableData {
-    return this.entriesWalker(this.ledger.entries);
+    return this.entriesWalker(this.repository.ledger.entries);
   }
 }

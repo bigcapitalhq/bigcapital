@@ -17,7 +17,7 @@ export class VendorBalanceSummaryController {
   @ApiResponse({ status: 200, description: 'Vendor balance summary' })
   async vendorBalanceSummary(
     @Query() filter: IVendorBalanceSummaryQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the csv format.
@@ -38,9 +38,7 @@ export class VendorBalanceSummaryController {
 
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.vendorBalanceSummaryApp.table(filter);
-
-      res.status(200).send(table);
+      return this.vendorBalanceSummaryApp.table(filter);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.vendorBalanceSummaryApp.pdf(filter);
@@ -52,8 +50,7 @@ export class VendorBalanceSummaryController {
       res.send(pdfContent);
       // Retrieves the json format.
     } else {
-      const sheet = await this.vendorBalanceSummaryApp.sheet(filter);
-      res.status(200).send(sheet);
+      return this.vendorBalanceSummaryApp.sheet(filter);
     }
   }
 }

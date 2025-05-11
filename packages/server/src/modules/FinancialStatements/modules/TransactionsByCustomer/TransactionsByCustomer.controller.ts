@@ -17,13 +17,12 @@ export class TransactionsByCustomerController {
   @ApiResponse({ status: 200, description: 'Transactions by customer' })
   async transactionsByCustomer(
     @Query() filter: ITransactionsByCustomersFilter,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.transactionsByCustomersApp.table(filter);
-      res.status(200).send(table);
+      return this.transactionsByCustomersApp.table(filter);
 
       // Retrieve the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
@@ -53,8 +52,7 @@ export class TransactionsByCustomerController {
       });
       res.send(pdfContent);
     } else {
-      const sheet = await this.transactionsByCustomersApp.sheet(filter);
-      res.status(200).send(sheet);
+      return this.transactionsByCustomersApp.sheet(filter);
     }
   }
 }

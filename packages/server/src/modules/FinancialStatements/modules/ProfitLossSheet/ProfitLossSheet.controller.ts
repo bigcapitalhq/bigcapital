@@ -23,7 +23,7 @@ export class ProfitLossSheetController {
   @ApiOperation({ summary: 'Get profit/loss statement report' })
   async profitLossSheet(
     @Query() query: IProfitLossSheetQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the csv format.
@@ -36,9 +36,8 @@ export class ProfitLossSheetController {
       res.send(sheet);
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.profitLossSheetApp.table(query);
+      return this.profitLossSheetApp.table(query);
 
-      res.status(200).send(table);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const sheet = await this.profitLossSheetApp.xlsx(query);
@@ -59,9 +58,7 @@ export class ProfitLossSheetController {
       });
       res.send(pdfContent);
     } else {
-      const sheet = await this.profitLossSheetApp.sheet(query);
-
-      res.status(200).send(sheet);
+      return this.profitLossSheetApp.sheet(query);
     }
   }
 }

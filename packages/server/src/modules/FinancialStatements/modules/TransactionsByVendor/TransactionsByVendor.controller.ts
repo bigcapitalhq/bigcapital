@@ -17,7 +17,7 @@ export class TransactionsByVendorController {
   @ApiResponse({ status: 200, description: 'Transactions by vendor' })
   async transactionsByVendor(
     @Query() filter: ITransactionsByVendorsFilter,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the xlsx format.
@@ -38,9 +38,7 @@ export class TransactionsByVendorController {
       res.send(buffer);
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.transactionsByVendorsApp.table(filter);
-
-      res.status(200).send(table);
+      return this.transactionsByVendorsApp.table(filter);
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.transactionsByVendorsApp.pdf(filter);
@@ -51,8 +49,7 @@ export class TransactionsByVendorController {
       res.send(pdfContent);
       // Retrieves the json format.
     } else {
-      const sheet = await this.transactionsByVendorsApp.sheet(filter);
-      res.status(200).send(sheet);
+      return this.transactionsByVendorsApp.sheet(filter);
     }
   }
 }

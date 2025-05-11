@@ -12,7 +12,7 @@ export function useJournalSheet(query, props) {
     [t.FINANCIAL_REPORT, t.JOURNAL, query],
     {
       method: 'get',
-      url: '/financial_statements/journal',
+      url: '/reports/journal',
       params: query,
       headers: {
         Accept: 'application/json+table',

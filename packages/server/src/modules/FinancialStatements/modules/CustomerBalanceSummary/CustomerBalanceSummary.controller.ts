@@ -17,7 +17,7 @@ export class CustomerBalanceSummaryController {
   @ApiOperation({ summary: 'Get customer balance summary report' })
   async customerBalanceSummary(
     @Query() filter: ICustomerBalanceSummaryQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the xlsx format.
@@ -38,8 +38,8 @@ export class CustomerBalanceSummaryController {
       res.send(buffer);
       // Retrieves the json table format.
     } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.customerBalanceSummaryApp.table(filter);
-      res.status(200).send(table);
+      return this.customerBalanceSummaryApp.table(filter);
+
       // Retrieves the pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const buffer = await this.customerBalanceSummaryApp.pdf(filter);
@@ -51,8 +51,7 @@ export class CustomerBalanceSummaryController {
       res.send(buffer);
       // Retrieves the json format.
     } else {
-      const sheet = await this.customerBalanceSummaryApp.sheet(filter);
-      res.status(200).send(sheet);
+      return this.customerBalanceSummaryApp.sheet(filter);
     }
   }
 }

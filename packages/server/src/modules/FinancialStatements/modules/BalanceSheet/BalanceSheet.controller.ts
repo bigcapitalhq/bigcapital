@@ -21,14 +21,14 @@ export class BalanceSheetStatementController {
   @ApiResponse({ status: 200, description: 'Balance sheet statement' })
   public async balanceSheet(
     @Query() query: IBalanceSheetQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.balanceSheetApp.table(query);
 
-      res.status(200).send(table);
+      return table;
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.balanceSheetApp.csv(query);
@@ -59,7 +59,7 @@ export class BalanceSheetStatementController {
     } else {
       const sheet = await this.balanceSheetApp.sheet(query);
 
-      res.status(200).send(sheet);
+      return sheet;
     }
   }
 }

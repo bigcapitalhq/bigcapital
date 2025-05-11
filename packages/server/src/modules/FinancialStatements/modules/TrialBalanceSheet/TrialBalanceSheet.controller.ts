@@ -18,7 +18,7 @@ export class TrialBalanceSheetController {
   @ApiResponse({ status: 200, description: 'Trial balance sheet' })
   async getTrialBalanceSheet(
     @Query() query: ITrialBalanceSheetQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     const filter = {
@@ -27,12 +27,11 @@ export class TrialBalanceSheetController {
     };
     // Retrieves in json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const { table, meta, query } =
-        await this.trialBalanceSheetApp.table(filter);
-      res.status(200).send({ table, meta, query });
+      return this.trialBalanceSheetApp.table(filter);
       // Retrieves in xlsx format
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.trialBalanceSheetApp.xlsx(filter);
+
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
       res.setHeader(
         'Content-Type',
@@ -50,6 +49,7 @@ export class TrialBalanceSheetController {
       // Retrieves in pdf format.
     } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.trialBalanceSheetApp.pdf(filter);
+
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
@@ -57,9 +57,7 @@ export class TrialBalanceSheetController {
       res.send(pdfContent);
       // Retrieves in json format.
     } else {
-      const { data, query, meta } =
-        await this.trialBalanceSheetApp.sheet(filter);
-      res.status(200).send({ data, query, meta });
+      return this.trialBalanceSheetApp.sheet(filter);
     }
   }
 }

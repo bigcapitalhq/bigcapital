@@ -1,6 +1,6 @@
 import { Mutex } from 'async-mutex';
 import { chain } from 'lodash';
-import moment from 'moment';
+import * as moment from 'moment';
 import { Knex } from 'knex';
 import { Injectable } from '@nestjs/common';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';

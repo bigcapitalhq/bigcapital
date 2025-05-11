@@ -1,9 +1,9 @@
+import { Response } from 'express';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { SalesTaxLiabilitySummaryQuery } from './SalesTaxLiability.types';
 import { AcceptType } from '@/constants/accept-type';
 import { SalesTaxLiabilitySummaryApplication } from './SalesTaxLiabilitySummaryApplication';
-import { Response } from 'express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('/reports/sales-tax-liability-summary')
 @ApiTags('reports')
@@ -20,16 +20,16 @@ export class SalesTaxLiabilitySummaryController {
   @ApiOperation({ summary: 'Get sales tax liability summary report' })
   public async getSalesTaxLiabilitySummary(
     @Query() query: SalesTaxLiabilitySummaryQuery,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      const table = await this.salesTaxLiabilitySummaryApp.table(query);
-      res.status(200).send(table);
+      return this.salesTaxLiabilitySummaryApp.table(query);
       // Retrieves the xlsx format.
     } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.salesTaxLiabilitySummaryApp.xlsx(query);
+
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
       res.setHeader(
         'Content-Type',
@@ -52,8 +52,7 @@ export class SalesTaxLiabilitySummaryController {
       });
       res.status(200).send(pdfContent);
     } else {
-      const sheet = await this.salesTaxLiabilitySummaryApp.sheet(query);
-      res.status(200).send(sheet);
+      return this.salesTaxLiabilitySummaryApp.sheet(query);
     }
   }
 }
