@@ -5,6 +5,7 @@ import {
   IInventoryDetailsClosing,
   IInventoryDetailsNode,
   IInventoryDetailsOpening,
+  IInvetoryItemDetailDOO,
 } from './InventoryItemDetails.types';
 import { I18nService } from 'nestjs-i18n';
 import { IInventoryDetailsData } from './InventoryItemDetails.types';
@@ -33,7 +34,7 @@ export class InventoryItemDetailsTable {
    * Constructor method.
    * @param {ICashFlowStatement} report - Report statement.
    */
-  constructor(reportStatement: IInventoryDetailsData, i18n: I18nService) {
+  constructor(reportStatement: IInvetoryItemDetailDOO, i18n: I18nService) {
     this.report = reportStatement;
     this.i18n = i18n;
   }
@@ -146,6 +147,8 @@ export class InventoryItemDetailsTable {
    * @return {ITableRow}
    */
   private itemMapper = (node: IInventoryDetailsNode): ITableRow => {
+    console.log(node, 'node');
+
     // @ts-ignore
     return R.compose(
       R.when(

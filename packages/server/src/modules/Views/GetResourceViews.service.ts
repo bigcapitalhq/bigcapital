@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { BaseModel } from '@/models/Model';
 import { View } from './models/View.model';
+import { ResourceService } from '../Resource/ResourceService';
 
 @Injectable()
 export class GetResourceViewsService {
   constructor(private readonly resourceService: ResourceService) {}
   /**
    * Listing resource views.
-   * @param {number} tenantId -
    * @param {string} resourceModel -
    */
   public async getResourceViews(resourceName: string): Promise<View[]> {
@@ -15,7 +14,7 @@ export class GetResourceViewsService {
     const resourceModel = this.resourceService.getResourceModel(resourceName);
 
     // Default views.
-    const defaultViews = resourceModel.getDefaultViews();
+    const defaultViews = resourceModel().getDefaultViews();
 
     return defaultViews;
   }

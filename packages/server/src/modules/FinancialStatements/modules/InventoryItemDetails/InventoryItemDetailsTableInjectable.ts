@@ -25,7 +25,7 @@ export class InventoryDetailsTableInjectable {
     const inventoryDetails =
       await this.inventoryDetails.inventoryDetails(query);
 
-    const table = new InventoryItemDetailsTable(inventoryDetails.data, this.i18n);
+    const table = new InventoryItemDetailsTable(inventoryDetails, this.i18n);
 
     return {
       table: {

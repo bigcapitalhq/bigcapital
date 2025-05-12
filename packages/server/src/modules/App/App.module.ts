@@ -83,6 +83,8 @@ import { S3Module } from '../S3/S3.module';
 import { ExportModule } from '../Export/Export.module';
 import { ImportModule } from '../Import/Import.module';
 import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/CreditNotesApplyInvoice.module';
+import { ResourceModule } from '../Resource/Resource.module';
+import { ViewsModule } from '../Views/Views.module';
 
 @Module({
   imports: [
@@ -200,7 +202,9 @@ import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/Credit
     AttachmentsModule,
     S3Module,
     ExportModule,
-    ImportModule
+    ImportModule,
+    ResourceModule,
+    ViewsModule
   ],
   controllers: [AppController],
   providers: [

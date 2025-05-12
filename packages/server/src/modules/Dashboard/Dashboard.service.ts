@@ -1,14 +1,14 @@
+import { Inject } from '@nestjs/common';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { FeaturesManager } from '../Features/FeaturesManager';
 import { ConfigService } from '@nestjs/config';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { IFeatureAllItem } from '@/common/types/Features';
-import { Inject } from '@nestjs/common';
 import { TenantUser } from '../Tenancy/TenancyModels/models/TenantUser.model';
 
 interface IRoleAbility {
   subject: string;
-  ability: string;
+  action: string;
 }
 
 interface IDashboardBootMeta {
@@ -70,7 +70,7 @@ export class DashboardService {
       .throwIfNotFound();
 
     return tenantUser.role.slug === 'admin'
-      ? [{ subject: 'all', ability: 'manage' }]
+      ? [{ subject: 'all', action: 'manage' }]
       : this.transformRoleAbility(tenantUser.role.permissions);
   };
 }
