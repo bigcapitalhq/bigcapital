@@ -27,7 +27,7 @@ export function useCreateEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('sales/estimates', values), {
+  return useMutation((values) => apiRequest.post('sale-estimates', values), {
     onSuccess: () => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -47,7 +47,7 @@ export function useEditEstimate(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/estimates/${id}`, values),
+    ([id, values]) => apiRequest.post(`sale-estimates/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
@@ -67,7 +67,7 @@ export function useEditEstimate(props) {
 export function useEstimate(id, props) {
   return useRequestQuery(
     [t.SALE_ESTIMATE, id],
-    { method: 'get', url: `sales/estimates/${id}` },
+    { method: 'get', url: `sale-estimates/${id}` },
     {
       select: (res) => res.data.estimate,
       defaultData: {},
@@ -88,7 +88,7 @@ const transformEstimates = (res) => ({
 export function useEstimates(query, props) {
   return useRequestQuery(
     [t.SALE_ESTIMATES, query],
-    { method: 'get', url: 'sales/estimates', params: query },
+    { method: 'get', url: 'sale-estimates', params: query },
     {
       select: transformEstimates,
       defaultData: {
@@ -112,7 +112,7 @@ export function useDeleteEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`sales/estimates/${id}`), {
+  return useMutation((id) => apiRequest.delete(`sale-estimates/${id}`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -131,7 +131,7 @@ export function useDeliverEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/estimates/${id}/deliver`), {
+  return useMutation((id) => apiRequest.post(`sale-estimates/${id}/deliver`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -150,7 +150,7 @@ export function useApproveEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/estimates/${id}/approve`), {
+  return useMutation((id) => apiRequest.post(`sale-estimates/${id}/approve`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -169,7 +169,7 @@ export function useRejectEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/estimates/${id}/reject`), {
+  return useMutation((id) => apiRequest.post(`sale-estimates/${id}/reject`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -187,7 +187,7 @@ export function useRejectEstimate(props) {
 
 export function usePdfEstimate(estimateId) {
   return useRequestPdf({
-    url: `sales/estimates/${estimateId}`,
+    url: `sale-estimates/${estimateId}`,
   });
 }
 
@@ -210,7 +210,7 @@ export function useCreateNotifyEstimateBySMS(props) {
 
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`sales/estimates/${id}/notify-by-sms`, values),
+      apiRequest.post(`sale-estimates/${id}/notify-by-sms`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate
@@ -236,7 +236,7 @@ export function useEstimateSMSDetail(estimateId, props, requestProps) {
     [t.SALE_ESTIMATE_SMS_DETAIL, estimateId],
     {
       method: 'get',
-      url: `sales/estimates/${estimateId}/sms-details`,
+      url: `sale-estimates/${estimateId}/sms-details`,
       ...requestProps,
     },
     {
@@ -252,7 +252,7 @@ export function useSendSaleEstimateMail(props = {}) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/estimates/${id}/mail`, values),
+    ([id, values]) => apiRequest.post(`sale-estimates/${id}/mail`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
@@ -320,7 +320,7 @@ export function useSaleEstimateMailState(
   const apiRequest = useApiRequest();
   return useQuery([t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId], () =>
     apiRequest
-      .get(`sales/estimates/${estimateId}/mail/state`)
+      .get(`sale-estimates/${estimateId}/mail/state`)
       .then((res) => transformToCamelCase(res.data.data)),
   );
 }
@@ -338,7 +338,7 @@ export function useGetSaleEstimatesState(
     ['SALE_ESTIMATE_STATE'],
     () =>
       apiRequest
-        .get('/sales/estimates/state')
+        .get('/sale-estimates/state')
         .then((res) => transformToCamelCase(res.data?.data)),
     { ...options },
   );
@@ -363,7 +363,7 @@ export const useGetSaleEstimateHtml = (
     ['SALE_ESTIMATE_HTML', estimateId],
     () =>
       apiRequest
-        .get(`sales/estimates/${estimateId}`, {
+        .get(`sale-estimates/${estimateId}`, {
           headers: {
             Accept: 'application/json+html',
           },

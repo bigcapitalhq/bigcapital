@@ -42,7 +42,7 @@ const commonInvalidateQueries = (client) => {
 export function usePaymentMades(query, props) {
   return useRequestQuery(
     [t.PAYMENT_MADES, query],
-    { url: 'purchases/bill_payments', params: query },
+    { url: 'bill-payments', params: query },
     {
       select: (res) => ({
         paymentMades: res.data.bill_payments,
@@ -67,7 +67,7 @@ export function useCreatePaymentMade(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post('purchases/bill_payments', values),
+    (values) => apiRequest.post('bill-payments', values),
     {
       onSuccess: (res, values) => {
         // Common invalidation queries.
@@ -86,7 +86,7 @@ export function useEditPaymentMade(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`purchases/bill_payments/${id}`, values),
+    ([id, values]) => apiRequest.post(`bill-payments/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidation queries.
@@ -108,7 +108,7 @@ export function useDeletePaymentMade(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.delete(`purchases/bill_payments/${id}`),
+    (id) => apiRequest.delete(`bill-payments/${id}`),
     {
       onSuccess: (res, id) => {
         // Common invalidation queries.
@@ -130,7 +130,7 @@ export function usePaymentMadeEditPage(id, props) {
     [t.PAYMENT_MADE_EDIT_PAGE, id],
     {
       method: 'get',
-      url: `purchases/bill_payments/${id}/edit-page`,
+      url: `bill-payments/${id}/edit-page`,
     },
     {
       select: (res) => ({
@@ -155,7 +155,7 @@ export function usePaymentMadeNewPageEntries(vendorId, props) {
     [t.PAYMENT_MADE_NEW_ENTRIES, vendorId],
     {
       method: 'get',
-      url: `purchases/bill_payments/new-page/entries`,
+      url: `bill-payments/new-page/entries`,
       params: { vendor_id: vendorId },
     },
     {
@@ -183,7 +183,7 @@ export function useRefreshPaymentMades() {
 export function usePaymentMade(id, props) {
   return useRequestQuery(
     [t.PAYMENT_MADE, id],
-    { method: 'get', url: `purchases/bill_payments/${id}` },
+    { method: 'get', url: `bill-payments/${id}` },
     {
       select: (res) => res.data.bill_payment,
       defaultData: {},

@@ -35,10 +35,17 @@ export class GetCreditNotesService {
    * @param {ICreditNotesQueryDTO} creditNotesQuery -
    */
   public async getCreditNotesList(
-    creditNotesQuery: ICreditNotesQueryDTO,
+    filterDto: ICreditNotesQueryDTO,
   ): Promise<GetCreditNotesResponse> {
+    const _filterDto = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDto,
+    };
     // Parses stringified filter roles.
-    const filter = this.parseListFilterDTO(creditNotesQuery);
+    const filter = this.parseListFilterDTO(_filterDto);
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
@@ -52,7 +59,7 @@ export class GetCreditNotesService {
         builder.withGraphFetched('customer');
 
         dynamicFilter.buildQuery()(builder);
-        creditNotesQuery?.filterQuery?.(builder as any);
+        _filterDto?.filterQuery?.(builder as any);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

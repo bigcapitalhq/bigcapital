@@ -24,6 +24,6 @@ export class ItemCategoriesExportable extends Exportable {
 
     return this.itemCategoryApp
       .getItemCategories(parsedQuery)
-      .then((output) => output.itemCategories);
+      .then((output) => output.data);
   }
 }

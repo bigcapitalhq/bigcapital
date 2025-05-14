@@ -75,12 +75,7 @@ export class InventoryAdjustmentsApplicationService {
    * Retrieves the inventory adjustments paginated list.
    * @param {IInventoryAdjustmentsFilter} adjustmentsFilter - Inventory adjustments filter.
    */
-  public async getInventoryAdjustments(
-    filterDTO: IInventoryAdjustmentsFilter,
-  ): Promise<{
-    inventoryAdjustments: InventoryAdjustment[];
-    pagination: IPaginationMeta;
-  }> {
+  public async getInventoryAdjustments(filterDTO: IInventoryAdjustmentsFilter) {
     return this.getInventoryAdjustmentsService.getInventoryAdjustments(
       filterDTO,
     );

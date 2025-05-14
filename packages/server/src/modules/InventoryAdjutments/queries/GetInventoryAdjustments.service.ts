@@ -7,6 +7,7 @@ import { IInventoryAdjustmentsFilter } from '../types/InventoryAdjustments.types
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { ISortOrder } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 
 @Injectable()
 export class GetInventoryAdjustmentsService {
@@ -27,17 +28,25 @@ export class GetInventoryAdjustmentsService {
   public async getInventoryAdjustments(
     filterDTO: IInventoryAdjustmentsFilter,
   ): Promise<{
-    inventoryAdjustments: InventoryAdjustment[];
+    data: InventoryAdjustment[];
     pagination: IPaginationMeta;
   }> {
+    const parsedFilterDto = {
+      sortOrder: ISortOrder.DESC,
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDTO,
+    };
     // Parses inventory adjustments list filter DTO.
-    const filter = this.parseListFilterDTO(filterDTO);
+    const filter = this.parseListFilterDTO(parsedFilterDto);
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       this.inventoryAdjustmentModel(),
       filter,
     );
+
     const { results, pagination } = await this.inventoryAdjustmentModel()
       .query()
       .onBuild((query) => {
@@ -49,12 +58,12 @@ export class GetInventoryAdjustmentsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed inventory adjustments.
-    const inventoryAdjustments = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new InventoryAdjustmentTransformer(),
     );
     return {
-      inventoryAdjustments,
+      data,
       pagination,
     };
   }

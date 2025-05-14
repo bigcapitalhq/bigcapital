@@ -58,10 +58,7 @@ export class InventoryAdjustmentsController {
   })
   public async getInventoryAdjustments(
     @Query() filterDTO: IInventoryAdjustmentsFilter,
-  ): Promise<{
-    inventoryAdjustments: InventoryAdjustment[];
-    pagination: IPaginationMeta;
-  }> {
+  ) {
     return this.inventoryAdjustmentsApplicationService.getInventoryAdjustments(
       filterDTO,
     );

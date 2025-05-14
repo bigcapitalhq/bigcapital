@@ -66,7 +66,7 @@ const transformPaymentReceives = (res) => ({
 export function usePaymentReceives(query, props) {
   return useRequestQuery(
     [t.PAYMENT_RECEIVES, query],
-    { method: 'get', url: 'sales/payment_receives', params: query },
+    { method: 'get', url: 'payments-received', params: query },
     {
       select: transformPaymentReceives,
       defaultData: {
@@ -87,7 +87,7 @@ export function useCreatePaymentReceive(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post('sales/payment_receives', values),
+    (values) => apiRequest.post('payments-received', values),
     {
       onSuccess: (data, values) => {
         // Invalidate specific payment receive.
@@ -111,7 +111,7 @@ export function useEditPaymentReceive(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/payment_receives/${id}`, values),
+    ([id, values]) => apiRequest.post(`payments-received/${id}`, values),
     {
       onSuccess: (data, [id, values]) => {
         // Invalidate specific payment receive.
@@ -135,7 +135,7 @@ export function useDeletePaymentReceive(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.delete(`sales/payment_receives/${id}`),
+    (id) => apiRequest.delete(`payments-received/${id}`),
     {
       onSuccess: (data, id) => {
         // Invalidate specific payment receive.
@@ -157,7 +157,7 @@ export function useDeletePaymentReceive(props) {
 export function usePaymentReceive(id, props) {
   return useRequestQuery(
     [t.PAYMENT_RECEIVE, id],
-    { method: 'get', url: `sales/payment_receives/${id}` },
+    { method: 'get', url: `payments-received/${id}` },
     {
       select: (res) => res.data.payment_receive,
       defaultData: {},
@@ -173,7 +173,7 @@ export function usePaymentReceive(id, props) {
 export function usePaymentReceiveEditPage(id, props) {
   return useRequestQuery(
     [t.PAYMENT_RECEIVE_EDIT_PAGE, id],
-    { method: 'get', url: `sales/payment_receives/${id}/edit-page` },
+    { method: 'get', url: `payments-received/${id}/edit-page` },
     {
       select: (res) => ({
         paymentReceive: res.data.payment_receive,
@@ -204,7 +204,7 @@ export function useCreateNotifyPaymentReceiveBySMS(props) {
 
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`sales/payment_receives/${id}/notify-by-sms`, values),
+      apiRequest.post(`payments-received/${id}/notify-by-sms`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate
@@ -227,7 +227,7 @@ export function usePaymentReceiveSMSDetail(
     [t.PAYMENT_RECEIVE_SMS_DETAIL, paymentReceiveId],
     {
       method: 'get',
-      url: `sales/payment_receives/${paymentReceiveId}/sms-details`,
+      url: `payments-received/${paymentReceiveId}/sms-details`,
       ...requestProps,
     },
     {
@@ -243,7 +243,7 @@ export function usePaymentReceiveSMSDetail(
  * @param {number} paymentReceiveId - Payment receive id.
  */
 export function usePdfPaymentReceive(paymentReceiveId) {
-  return useRequestPdf({ url: `sales/payment_receives/${paymentReceiveId}` });
+  return useRequestPdf({ url: `payments-received/${paymentReceiveId}` });
 }
 
 interface SendPaymentReceiveMailValues {
@@ -286,7 +286,7 @@ export function useSendPaymentReceiveMail(
     [number, SendPaymentReceiveMailValues]
   >(
     ([id, values]) =>
-      apiRequest.post(`sales/payment_receives/${id}/mail`, values),
+      apiRequest.post(`payments-received/${id}/mail`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
@@ -335,7 +335,7 @@ export function usePaymentReceivedMailState(
     [t.PAYMENT_RECEIVE_MAIL_OPTIONS, paymentReceiveId],
     () =>
       apiRequest
-        .get(`sales/payment_receives/${paymentReceiveId}/mail`)
+        .get(`payments-received/${paymentReceiveId}/mail`)
         .then((res) => transformToCamelCase(res.data?.data)),
   );
 }
@@ -359,7 +359,7 @@ export function usePaymentReceivedState(
     ['PAYMENT_RECEIVED_STATE'],
     () =>
       apiRequest
-        .get('/sales/payment_receives/state')
+        .get('/payments-received/state')
         .then((res) => transformToCamelCase(res.data?.data)),
     {
       ...options,
@@ -387,7 +387,7 @@ export function useGetPaymentReceiveHtml(
     ['PAYMENT_RECEIVED_HTML', paymentReceivedId],
     () =>
       apiRequest
-        .get(`/sales/payment_receives/${paymentReceivedId}`, {
+        .get(`/payments-received/${paymentReceivedId}`, {
           headers: {
             Accept: 'application/json+html',
           },

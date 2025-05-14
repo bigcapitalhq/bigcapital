@@ -13,7 +13,7 @@ function InventoryAdjustmentsProvider({ query, ...props }) {
   const {
     isLoading: isAdjustmentsLoading,
     isFetching: isAdjustmentsFetching,
-    data: { transactions: inventoryAdjustments, pagination },
+    data: { inventoryAdjustments, pagination },
   } = useInventoryAdjustments(query, { keepPreviousData: true });
 
   // Provider payload.

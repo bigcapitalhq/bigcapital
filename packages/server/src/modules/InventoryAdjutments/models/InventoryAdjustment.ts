@@ -1,7 +1,10 @@
 import { Model } from 'objection';
 import { InventoryAdjustmentEntry } from './InventoryAdjustmentEntry';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { InventoryAdjustmentMeta } from './InventoryAdjustment.meta';
 
+@InjectModelMeta(InventoryAdjustmentMeta)
 export class InventoryAdjustment extends TenantBaseModel {
   public readonly date!: string;
   public readonly type!: string;
@@ -16,7 +19,6 @@ export class InventoryAdjustment extends TenantBaseModel {
   public readonly warehouseId!: number;
 
   public readonly createdAt!: Date | string;
-
   public readonly entries: InventoryAdjustmentEntry[];
 
   /**
@@ -116,11 +118,4 @@ export class InventoryAdjustment extends TenantBaseModel {
       },
     };
   }
-
-  /**
-   * Model settings.
-   */
-  // static get meta() {
-  //   return InventoryAdjustmentSettings;
-  // }
 }

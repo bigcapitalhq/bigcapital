@@ -51,7 +51,7 @@ export class GetItemCategoriesService {
       filter,
     );
     // Items categories.
-    const itemCategories = await this.itemCategoryModel()
+    const data = await this.itemCategoryModel()
       .query()
       .onBuild((query) => {
         // Subquery to calculate sumation of associated items to the item category.
@@ -61,7 +61,6 @@ export class GetItemCategoriesService {
         );
         dynamicList.buildQuery()(query);
       });
-
-    return { itemCategories };
+    return { data };
   }
 }

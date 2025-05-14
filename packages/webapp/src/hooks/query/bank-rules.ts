@@ -201,7 +201,7 @@ export function useBankRules(
 
   return useQuery<BankRulesResponse, Error>(
     [BANK_QUERY_KEY.BANK_RULES],
-    () => apiRequest.get('/banking/rules').then((res) => res.data.bank_rules),
+    () => apiRequest.get('/banking/rules').then((res) => res.data),
     { ...options },
   );
 }

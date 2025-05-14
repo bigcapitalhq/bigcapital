@@ -61,7 +61,7 @@ export function useCreateInvoice(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('sales/invoices', values), {
+  return useMutation((values) => apiRequest.post('sale-invoices', values), {
     onSuccess: (res, values) => {
       // Invalidate invoice customer.
       queryClient.invalidateQueries([t.CUSTOMER, values.customer_id]);
@@ -85,7 +85,7 @@ export function useEditInvoice(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}`, values),
+    ([id, values]) => apiRequest.post(`sale-invoices/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific sale invoice.
@@ -109,7 +109,7 @@ export function useDeleteInvoice(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`sales/invoices/${id}`), {
+  return useMutation((id) => apiRequest.delete(`sale-invoices/${id}`), {
     onSuccess: (res, id) => {
       // Invalidate specific invoice.
       queryClient.invalidateQueries([t.SALE_INVOICE, id]);
@@ -137,7 +137,7 @@ const transformInvoices = (res) => ({
 export function useInvoices(query, props) {
   return useRequestQuery(
     [t.SALE_INVOICES, query],
-    { method: 'get', url: 'sales/invoices', params: query },
+    { method: 'get', url: 'sale-invoices', params: query },
     {
       select: transformInvoices,
       defaultData: {
@@ -162,7 +162,7 @@ export function useDeliverInvoice(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (invoiceId) => apiRequest.post(`sales/invoices/${invoiceId}/deliver`),
+    (invoiceId) => apiRequest.post(`sale-invoices/${invoiceId}/deliver`),
     {
       onSuccess: (res, invoiceId) => {
         // Invalidate specific invoice.
@@ -183,7 +183,7 @@ export function useDeliverInvoice(props) {
 export function useInvoice(invoiceId, props, requestProps) {
   return useRequestQuery(
     [t.SALE_INVOICE, invoiceId],
-    { method: 'get', url: `sales/invoices/${invoiceId}`, ...requestProps },
+    { method: 'get', url: `sale-invoices/${invoiceId}`, ...requestProps },
     {
       select: (res) => res.data.sale_invoice,
       defaultData: {},
@@ -197,7 +197,7 @@ export function useInvoice(invoiceId, props, requestProps) {
  */
 export function usePdfInvoice(invoiceId) {
   return useRequestPdf({
-    url: `sales/invoices/${invoiceId}`,
+    url: `sale-invoices/${invoiceId}`,
   });
 }
 
@@ -220,7 +220,7 @@ export const useInvoiceHtml = (
     ['SALE_INVOICE_HTML', invoiceId],
     () =>
       apiRequest
-        .get(`sales/invoices/${invoiceId}`, {
+        .get(`sale-invoices/${invoiceId}`, {
           headers: {
             Accept: 'application/json+html',
           },
@@ -238,7 +238,7 @@ export function useDueInvoices(customerId, props) {
     [t.SALE_INVOICES, t.SALE_INVOICES_DUE, customerId],
     {
       method: 'get',
-      url: `sales/invoices/payable`,
+      url: `sale-invoices/payable`,
       params: { customer_id: customerId },
     },
     {
@@ -264,7 +264,7 @@ export function useCreateBadDebt(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}/writeoff`, values),
+    ([id, values]) => apiRequest.post(`sale-invoices/${id}/writeoff`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate
@@ -283,7 +283,7 @@ export function useCancelBadDebt(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.post(`sales/invoices/${id}/writeoff/cancel`),
+    (id) => apiRequest.post(`sale-invoices/${id}/writeoff/cancel`),
     {
       onSuccess: (res, id) => {
         // Invalidate
@@ -303,7 +303,7 @@ export function useCreateNotifyInvoiceBySMS(props) {
 
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`sales/invoices/${id}/notify-by-sms`, values),
+      apiRequest.post(`sale-invoices/${id}/notify-by-sms`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate
@@ -322,7 +322,7 @@ export function useInvoiceSMSDetail(invoiceId, query, props) {
     [t.SALE_INVOICE_SMS_DETAIL, invoiceId, query],
     {
       method: 'get',
-      url: `sales/invoices/${invoiceId}/sms-details`,
+      url: `sale-invoices/${invoiceId}/sms-details`,
       params: query,
     },
     {
@@ -338,7 +338,7 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
     [t.SALE_INVOICE_PAYMENT_TRANSACTIONS, invoiceId],
     {
       method: 'get',
-      url: `sales/invoices/${invoiceId}/payment-transactions`,
+      url: `sale-invoices/${invoiceId}/payment-transactions`,
     },
     {
       select: (res) => res.data.data,
@@ -386,7 +386,7 @@ export function useSendSaleInvoiceMail(
     Error,
     SendSaleInvoiceMailValues
   >(
-    (value) => apiRequest.post(`sales/invoices/${value.id}/mail`, value.values),
+    (value) => apiRequest.post(`sale-invoices/${value.id}/mail`, value.values),
     {
       onSuccess: (res) => {
         commonInvalidateQueries(queryClient);
@@ -460,7 +460,7 @@ export function useSaleInvoiceMailState(
     [t.SALE_INVOICE_DEFAULT_OPTIONS, invoiceId],
     () =>
       apiRequest
-        .get(`/sales/invoices/${invoiceId}/mail/state`)
+        .get(`/sale-invoices/${invoiceId}/mail/state`)
         .then((res) => transformToCamelCase(res.data?.data)),
     options,
   );
@@ -481,7 +481,7 @@ export function useGetSaleInvoiceState(
     ['SALE_INVOICE_STATE'],
     () =>
       apiRequest
-        .get(`/sales/invoices/state`)
+        .get(`/sale-invoices/state`)
         .then((res) => transformToCamelCase(res.data?.data)),
     { ...options },
   );
@@ -546,7 +546,7 @@ export function useGetSaleInvoiceBrandingTemplate(
     ['SALE_INVOICE_BRANDING_TEMPLATE', invoiceId],
     () =>
       apiRequest
-        .get(`/sales/invoices/${invoiceId}/template`)
+        .get(`/sale-invoices/${invoiceId}/template`)
         .then((res) => transformToCamelCase(res.data?.data)),
     { ...options },
   );

@@ -54,7 +54,7 @@ export function useCreateReceipt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('sales/receipts', values), {
+  return useMutation((values) => apiRequest.post('sale-receipts', values), {
     onSuccess: () => {
       // Invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -71,7 +71,7 @@ export function useEditReceipt(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/receipts/${id}`, values),
+    ([id, values]) => apiRequest.post(`sale-receipts/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific receipt.
@@ -92,7 +92,7 @@ export function useDeleteReceipt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`sales/receipts/${id}`), {
+  return useMutation((id) => apiRequest.delete(`sale-receipts/${id}`), {
     onSuccess: (res, id) => {
       // Invalidate specific receipt.
       queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
@@ -111,7 +111,7 @@ export function useCloseReceipt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/receipts/${id}/close`), {
+  return useMutation((id) => apiRequest.post(`sale-receipts/${id}/close`), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
 
@@ -134,7 +134,7 @@ const transformReceipts = (res) => ({
 export function useReceipts(query, props) {
   return useRequestQuery(
     ['SALE_RECEIPTS', query],
-    { method: 'get', url: 'sales/receipts', params: query },
+    { method: 'get', url: 'sale-receipts', params: query },
     {
       select: transformReceipts,
       defaultData: {
@@ -157,7 +157,7 @@ export function useReceipts(query, props) {
 export function useReceipt(id, props) {
   return useRequestQuery(
     ['SALE_RECEIPT', id],
-    { method: 'get', url: `sales/receipts/${id}` },
+    { method: 'get', url: `sale-receipts/${id}` },
     {
       select: (res) => res.data.sale_receipt,
       defaultData: {},
@@ -171,7 +171,7 @@ export function useReceipt(id, props) {
  * @param {number} receiptId -
  */
 export function usePdfReceipt(receiptId: number) {
-  return useRequestPdf({ url: `sales/receipts/${receiptId}` });
+  return useRequestPdf({ url: `sale-receipts/${receiptId}` });
 }
 
 export function useRefreshReceipts() {
@@ -189,7 +189,7 @@ export function useCreateNotifyReceiptBySMS(props) {
   const apiRequest = useApiRequest();
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`sales/receipts/${id}/notify-by-sms`, values),
+      apiRequest.post(`sale-receipts/${id}/notify-by-sms`, values),
     {
       onSuccess: (res, [id, values]) => {
         queryClient.invalidateQueries([t.NOTIFY_SALE_RECEIPT_BY_SMS, id]);
@@ -207,7 +207,7 @@ export function useReceiptSMSDetail(receiptId, props, requestProps) {
     [t.SALE_RECEIPT_SMS_DETAIL, receiptId],
     {
       method: 'get',
-      url: `sales/receipts/${receiptId}/sms-details`,
+      url: `sale-receipts/${receiptId}/sms-details`,
       ...requestProps,
     },
     {
@@ -226,7 +226,7 @@ export function useSendSaleReceiptMail(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/receipts/${id}/mail`, values),
+    ([id, values]) => apiRequest.post(`sale-receipts/${id}/mail`, values),
     {
       onSuccess: () => {
         // Invalidate queries.
@@ -303,7 +303,7 @@ export function useSaleReceiptMailState(
     [t.SALE_RECEIPT_MAIL_OPTIONS, receiptId],
     () =>
       apiRequest
-        .get(`sales/receipts/${receiptId}/mail`)
+        .get(`sale-receipts/${receiptId}/mail`)
         .then((res) => transformToCamelCase(res.data.data)),
   );
 }
@@ -321,7 +321,7 @@ export function useGetReceiptState(
     ['SALE_RECEIPT_STATE'],
     () =>
       apiRequest
-        .get(`/sales/receipts/state`)
+        .get(`/sale-receipts/state`)
         .then((res) => transformToCamelCase(res.data?.data)),
     { ...options },
   );
@@ -347,7 +347,7 @@ export const useGetSaleReceiptHtml = (
     ['SALE_RECEIPT_HTML', receiptId],
     () =>
       apiRequest
-        .get(`sales/receipts/${receiptId}`, {
+        .get(`sale-receipts/${receiptId}`, {
           headers: {
             Accept: 'application/json+html',
           },

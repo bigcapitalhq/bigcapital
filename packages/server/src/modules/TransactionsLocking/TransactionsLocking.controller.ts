@@ -96,7 +96,7 @@ export class TransactionsLockingController {
   @Get('/')
   @ApiOperation({ summary: 'Get all transactions locking meta' })
   async getTransactionLockingMetaList() {
-    return await this.queryTransactionsLocking.getTransactionsLockingAll();
+    return await this.queryTransactionsLocking.getTransactionsLockingList();
   }
 
   @Get(':module')

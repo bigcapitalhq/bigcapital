@@ -1,11 +1,3 @@
-import { Model, mixin } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import ModelSetting from './ModelSetting';
-// import BillPaymentSettings from './BillPayment.Settings';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Sales/PaymentReceived/constants';
-// import ModelSearchable from './ModelSearchable';
-import { BaseModel } from '@/models/Model';
 import { BillPaymentEntry } from './BillPaymentEntry';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
@@ -13,11 +5,12 @@ import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { BillPaymentMeta } from './BillPayment.meta';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
 @ImportableModel()
 @ExportableModel()
 @InjectModelMeta(BillPaymentMeta)
-export class BillPayment extends BaseModel {
+export class BillPayment extends TenantBaseModel {
   vendorId: number;
   amount: number;
   currencyCode: string;

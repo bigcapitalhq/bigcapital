@@ -43,6 +43,6 @@ export interface IItemCategoriesFilter extends IDynamicListFilter {
 }
 
 export interface GetItemCategoriesResponse {
-  itemCategories: ItemCategory[];
+  data: ItemCategory[];
   // filterMeta: IFilterMeta;
 }

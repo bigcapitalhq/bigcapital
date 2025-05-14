@@ -37,7 +37,7 @@ const commonInvalidateQueries = (queryClient) => {
 export function useCashflowAccounts(query, props) {
   return useRequestQuery(
     [t.CASH_FLOW_ACCOUNTS, query],
-    { method: 'get', url: 'cashflow/accounts', params: query },
+    { method: 'get', url: 'banking/accounts', params: query },
     {
       select: (res) => res.data.cashflow_accounts,
       defaultData: [],
