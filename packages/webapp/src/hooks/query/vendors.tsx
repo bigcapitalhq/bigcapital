@@ -112,7 +112,7 @@ export function useVendor(id, props) {
     [t.VENDOR, id],
     { method: 'get', url: `vendors/${id}` },
     {
-      select: (res) => res.data.vendor,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

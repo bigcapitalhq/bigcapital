@@ -1,3 +1,5 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { CommandItemCategoryValidatorService } from './CommandItemCategoryValidator.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -7,13 +9,12 @@ import {
   IItemCategoryOTD,
 } from '../ItemCategory.interfaces';
 import { SystemUser } from '@/modules/System/models/SystemUser';
-import { Knex } from 'knex';
 import { ItemCategory } from '../models/ItemCategory.model';
-import { Inject } from '@nestjs/common';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditItemCategoryDto } from '../dtos/ItemCategory.dto';
 
+@Injectable()
 export class EditItemCategoryService {
   /**
    * @param {UnitOfWork} uow - Unit of work.

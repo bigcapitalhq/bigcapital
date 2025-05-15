@@ -124,7 +124,7 @@ export function useCustomer(id, props) {
     [t.CUSTOMER, id],
     { method: 'get', url: `customers/${id}` },
     {
-      select: (res) => res.data.customer,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

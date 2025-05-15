@@ -39,7 +39,7 @@ export function useCashflowAccounts(query, props) {
     [t.CASH_FLOW_ACCOUNTS, query],
     { method: 'get', url: 'banking/accounts', params: query },
     {
-      select: (res) => res.data.cashflow_accounts,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

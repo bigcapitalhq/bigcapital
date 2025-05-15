@@ -24,6 +24,8 @@ import { GetBankAccountsService } from './queries/GetBankAccounts.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { BankAccount } from './models/BankAccount';
 import { LedgerModule } from '../Ledger/Ledger.module';
+import { GetBankAccountTransactionsService } from './queries/GetBankAccountTransactions/GetBankAccountTransactions.service';
+import { GetBankAccountTransactionsRepository } from './queries/GetBankAccountTransactions/GetBankAccountTransactionsRepo.service';
 
 const models = [
   RegisterTenancyModel(UncategorizedBankTransaction),
@@ -57,6 +59,8 @@ const models = [
     CommandBankTransactionValidator,
     BranchTransactionDTOTransformer,
     RemovePendingUncategorizedTransaction,
+    GetBankAccountTransactionsRepository,
+    GetBankAccountTransactionsService,
   ],
   exports: [...models, RemovePendingUncategorizedTransaction],
 })

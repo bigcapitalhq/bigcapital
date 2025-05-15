@@ -1,11 +1,24 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { BankAccountsApplication } from './BankAccountsApplication.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ICashflowAccountsFilter } from './types/BankAccounts.types';
 
 @Controller('banking/accounts')
 @ApiTags('banking-accounts')
 export class BankAccountsController {
   constructor(private bankAccountsApplication: BankAccountsApplication) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Retrieve the bank accounts.' })
+  getBankAccounts(@Query() filterDto: ICashflowAccountsFilter) {
+    return this.bankAccountsApplication.getBankAccounts(filterDto);
+  }
+
+  @Get(':bankAccountId/summary')
+  @ApiOperation({ summary: 'Retrieve the bank account summary.' })
+  getBankAccountSummary(@Param('bankAccountId') bankAccountId: number) {
+    return this.bankAccountsApplication.getBankAccountSumnmary(bankAccountId);
+  }
 
   @Post(':id/disconnect')
   @ApiOperation({

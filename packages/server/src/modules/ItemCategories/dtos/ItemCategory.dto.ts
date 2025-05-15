@@ -18,14 +18,6 @@ class CommandItemCategoryDto {
   description?: string;
 
   @IsNumber()
-  @IsNotEmpty()
-  @ApiProperty({
-    example: 1,
-    description: 'The user ID',
-  })
-  userId: number;
-
-  @IsNumber()
   @IsOptional()
   @ApiProperty({ example: 1, description: 'The cost account ID' })
   costAccountId?: number;

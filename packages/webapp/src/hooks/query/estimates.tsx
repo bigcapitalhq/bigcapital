@@ -69,7 +69,7 @@ export function useEstimate(id, props) {
     [t.SALE_ESTIMATE, id],
     { method: 'get', url: `sale-estimates/${id}` },
     {
-      select: (res) => res.data.estimate,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

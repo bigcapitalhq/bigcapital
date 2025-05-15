@@ -3,15 +3,38 @@ import { DisconnectBankAccountService } from './commands/DisconnectBankAccount.s
 import { RefreshBankAccountService } from './commands/RefreshBankAccount.service';
 import { ResumeBankAccountFeedsService } from './commands/ResumeBankAccountFeeds.service';
 import { PauseBankAccountFeeds } from './commands/PauseBankAccountFeeds.service';
+import { GetBankAccountsService } from './queries/GetBankAccounts';
+import { ICashflowAccountsFilter } from './types/BankAccounts.types';
+import { GetBankAccountSummary } from './queries/GetBankAccountSummary';
 
 @Injectable()
 export class BankAccountsApplication {
   constructor(
-    private disconnectBankAccountService: DisconnectBankAccountService,
+    private readonly getBankAccountsService: GetBankAccountsService,
+    private readonly getBankAccountSummaryService: GetBankAccountSummary,
+    private readonly disconnectBankAccountService: DisconnectBankAccountService,
     private readonly refreshBankAccountService: RefreshBankAccountService,
     private readonly resumeBankAccountFeedsService: ResumeBankAccountFeedsService,
     private readonly pauseBankAccountFeedsService: PauseBankAccountFeeds,
   ) {}
+
+  /**
+   * Retrieves the bank accounts.
+   * @param {ICashflowAccountsFilter} filterDto -
+   */
+  getBankAccounts(filterDto: ICashflowAccountsFilter) {
+    return this.getBankAccountsService.getCashflowAccounts(filterDto);
+  }
+
+  /**
+   * Retrieves the given bank account summary.
+   * @param {number} bankAccountId
+   */
+  getBankAccountSumnmary(bankAccountId: number) {
+    return this.getBankAccountSummaryService.getBankAccountSummary(
+      bankAccountId,
+    );
+  }
 
   /**
    * Disconnects the given bank account.

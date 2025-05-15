@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';
 import { BankTransaction } from '../models/BankTransaction';
 import { CreateBankTransactionDto } from '../dtos/CreateBankTransaction.dto';
+import { INumberFormatQuery } from '@/modules/FinancialStatements/types/Report.types';
 
 export interface IPendingTransactionRemovingEventPayload {
   uncategorizedTransactionId: number;
@@ -127,4 +128,40 @@ export interface IGetUncategorizedTransactionsQuery {
   maxDate?: Date;
   minAmount?: number;
   maxAmount?: number;
+}
+
+export interface ICashflowAccountTransactionsQuery {
+  page: number;
+  pageSize: number;
+  accountId: number;
+  numberFormat: INumberFormatQuery;
+}
+
+export interface ICashflowAccountTransaction {
+  withdrawal: number;
+  deposit: number;
+  runningBalance: number;
+
+  formattedWithdrawal: string;
+  formattedDeposit: string;
+  formattedRunningBalance: string;
+
+  transactionNumber: string;
+  referenceNumber: string;
+
+  referenceId: number;
+  referenceType: string;
+
+  formattedTransactionType: string;
+
+  balance: number;
+  formattedBalance: string;
+
+  date: Date;
+  formattedDate: string;
+
+  status: string;
+  formattedStatus: string;
+
+  uncategorizedTransactionId: number;
 }

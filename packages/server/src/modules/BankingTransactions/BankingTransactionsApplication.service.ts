@@ -4,9 +4,11 @@ import { CreateBankTransactionService } from './commands/CreateBankTransaction.s
 import { GetBankTransactionService } from './queries/GetBankTransaction.service';
 import {
   IBankAccountsFilter,
+  ICashflowAccountTransactionsQuery,
 } from './types/BankingTransactions.types';
 import { GetBankAccountsService } from './queries/GetBankAccounts.service';
 import { CreateBankTransactionDto } from './dtos/CreateBankTransaction.dto';
+import { GetBankAccountTransactionsService } from './queries/GetBankAccountTransactions/GetBankAccountTransactions.service';
 
 @Injectable()
 export class BankingTransactionsApplication {
@@ -15,6 +17,7 @@ export class BankingTransactionsApplication {
     private readonly deleteTransactionService: DeleteCashflowTransaction,
     private readonly getCashflowTransactionService: GetBankTransactionService,
     private readonly getBankAccountsService: GetBankAccountsService,
+    private readonly getBankAccountTransactionsService: GetBankAccountTransactionsService,
   ) {}
 
   /**
@@ -34,6 +37,16 @@ export class BankingTransactionsApplication {
   public deleteTransaction(cashflowTransactionId: number) {
     return this.deleteTransactionService.deleteCashflowTransaction(
       cashflowTransactionId,
+    );
+  }
+
+  /**
+   * Retrieves the bank transactions of the given bank id.
+   * @param {ICashflowAccountTransactionsQuery} query
+   */
+  public getBankAccountTransactions(query: ICashflowAccountTransactionsQuery) {
+    return this.getBankAccountTransactionsService.bankAccountTransactions(
+      query,
     );
   }
 
