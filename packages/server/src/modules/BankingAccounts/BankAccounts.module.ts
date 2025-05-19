@@ -15,6 +15,8 @@ import { BankingTransactionsModule } from '../BankingTransactions/BankingTransac
 import { GetBankAccountsService } from './queries/GetBankAccounts';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { GetBankAccountSummary } from './queries/GetBankAccountSummary';
+import { MutateBaseCurrencyAccountsSubscriber } from '../Accounts/susbcribers/MutateBaseCurrencyAccounts.subscriber';
+import { MutateBaseCurrencyAccounts } from '../Accounts/MutateBaseCurrencyAccounts';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { GetBankAccountSummary } from './queries/GetBankAccountSummary';
     BankRulesModule,
     BankingTransactionsRegonizeModule,
     BankingTransactionsModule,
-    DynamicListModule
+    DynamicListModule,
   ],
   providers: [
     DisconnectBankAccountService,
@@ -34,7 +36,9 @@ import { GetBankAccountSummary } from './queries/GetBankAccountSummary';
     DisconnectPlaidItemOnAccountDeleted,
     BankAccountsApplication,
     GetBankAccountsService,
-    GetBankAccountSummary
+    GetBankAccountSummary,
+    MutateBaseCurrencyAccounts,
+    MutateBaseCurrencyAccountsSubscriber,
   ],
   exports: [BankAccountsApplication],
   controllers: [BankAccountsController],

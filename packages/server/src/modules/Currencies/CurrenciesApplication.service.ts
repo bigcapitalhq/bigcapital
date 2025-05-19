@@ -27,8 +27,8 @@ export class CurrenciesApplication {
   /**
    * Edits an existing currency.
    */
-  public editCurrency(currencyId: number, currencyDTO: EditCurrencyDto) {
-    return this.editCurrencyService.editCurrency(currencyId, currencyDTO);
+  public editCurrency(currencyCode: string, currencyDTO: EditCurrencyDto) {
+    return this.editCurrencyService.editCurrency(currencyCode, currencyDTO);
   }
 
   /**

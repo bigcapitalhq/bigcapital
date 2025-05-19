@@ -86,6 +86,8 @@ import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/Credit
 import { ResourceModule } from '../Resource/Resource.module';
 import { ViewsModule } from '../Views/Views.module';
 import { CurrenciesModule } from '../Currencies/Currencies.module';
+import { MiscellaneousModule } from '../Miscellaneous/Miscellaneous.module';
+import { UsersModule } from '../UsersModule/Users.module';
 
 @Module({
   imports: [
@@ -206,7 +208,9 @@ import { CurrenciesModule } from '../Currencies/Currencies.module';
     ImportModule,
     ResourceModule,
     ViewsModule,
-    CurrenciesModule
+    CurrenciesModule,
+    MiscellaneousModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [

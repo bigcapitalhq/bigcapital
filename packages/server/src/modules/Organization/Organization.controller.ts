@@ -28,6 +28,7 @@ import { UpdateOrganizationService } from './commands/UpdateOrganization.service
 import { IgnoreTenantInitializedRoute } from '../Tenancy/EnsureTenantIsInitialized.guard';
 import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
 import { GetBuildOrganizationBuildJob } from './commands/GetBuildOrganizationJob.service';
+import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBaseCurrencyLocking.service';
 
 @ApiTags('Organization')
 @Controller('organization')
@@ -39,6 +40,7 @@ export class OrganizationController {
     private readonly getCurrentOrgService: GetCurrentOrganizationService,
     private readonly updateOrganizationService: UpdateOrganizationService,
     private readonly getBuildOrganizationJobService: GetBuildOrganizationBuildJob,
+    private readonly orgBaseCurrencyLockingService: OrganizationBaseCurrencyLocking,
   ) {}
 
   @Post('build')
@@ -79,6 +81,14 @@ export class OrganizationController {
       await this.getCurrentOrgService.getCurrentOrganization();
 
     return { organization };
+  }
+
+  @Get('base-currency-mutate')
+  async baseCurrencyMutate() {
+    const abilities =
+      await this.orgBaseCurrencyLockingService.baseCurrencyMutateLocks();
+
+    return res.status(200).send({ abilities });
   }
 
   @Put()

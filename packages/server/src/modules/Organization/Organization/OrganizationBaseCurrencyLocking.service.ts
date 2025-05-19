@@ -53,7 +53,6 @@ export class OrganizationBaseCurrencyLocking {
    * @returns {Promise<MutateBaseCurrencyLockMeta[]>}
    */
   public async baseCurrencyMutateLocks(
-    tenantId: number,
   ): Promise<MutateBaseCurrencyLockMeta[]> {
     const PreventedModels = this.getModelsPreventsMutate(tenantId);
 

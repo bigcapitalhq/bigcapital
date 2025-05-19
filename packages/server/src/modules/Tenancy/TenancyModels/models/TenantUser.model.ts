@@ -6,9 +6,12 @@ export class TenantUser extends TenantBaseModel {
   firstName!: string;
   lastName!: string;
   inviteAcceptedAt!: Date;
+  invitedAt!: Date;
   roleId!: number;
-
+  active!: boolean;
   role!: Role;
+  email!: string;
+  systemUserId!: number;
 
   /**
    * Table name.
