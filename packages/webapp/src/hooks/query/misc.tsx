@@ -7,9 +7,9 @@ import { useRequestQuery } from '../useQueryRequest';
 export function useDateFormats(props = {}) {
   return useRequestQuery(
     ['DATE_FORMATS'],
-    { method: 'get', url: `/date_formats` },
+    { method: 'get', url: `/date-formats` },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

@@ -5,10 +5,12 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ItemMeta } from './Item.meta';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import { PreventMutateBaseCurrency } from '@/common/decorators/LockMutateBaseCurrency.decorator';
 
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(ItemMeta)
+@PreventMutateBaseCurrency()
 export class Item extends TenantBaseModel {
   public readonly quantityOnHand: number;
   public readonly name: string;

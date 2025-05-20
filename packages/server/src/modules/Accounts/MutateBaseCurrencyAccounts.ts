@@ -1,22 +1,19 @@
-// import { Inject, Service } from 'typedi';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Injectable } from '@nestjs/common';
+import { Account } from './models/Account.model';
+import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
-// @Service()
-// export class MutateBaseCurrencyAccounts {
-//   @Inject()
-//   tenancy: HasTenancyService;
+@Injectable()
+export class MutateBaseCurrencyAccounts {
+  constructor(
+    @Inject(Account.name)
+    private readonly accountModel: TenantModelProxy<typeof Account>,
+  ) {}
 
-//   /**
-//    * Mutates the all accounts or the organziation.
-//    * @param {number} tenantId
-//    * @param {string} currencyCode
-//    */
-//   public mutateAllAccountsCurrency = async (
-//     tenantId: number,
-//     currencyCode: string
-//   ) => {
-//     const { Account } = this.tenancy.models(tenantId);
-
-//     await Account.query().update({ currencyCode });
-//   };
-// }
+  /**
+   * Mutates the all accounts or the organziation.
+   * @param {string} currencyCode
+   */
+  async mutateAllAccountsCurrency(currencyCode: string) {
+    await this.accountModel().query().update({ currencyCode });
+  }
+}

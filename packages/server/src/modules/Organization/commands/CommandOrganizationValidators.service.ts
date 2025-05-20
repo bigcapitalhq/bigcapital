@@ -9,7 +9,7 @@ export class CommandOrganizationValidators {
   constructor(
     private readonly baseCurrencyMutateLocking: OrganizationBaseCurrencyLocking,
   ) {}
-  
+
   /**
    * Validate mutate base currency ability.
    * @param {Tenant} tenant -
@@ -23,9 +23,7 @@ export class CommandOrganizationValidators {
   ) {
     if (tenant.isReady && newBaseCurrency !== oldBaseCurrency) {
       const isLocked =
-        await this.baseCurrencyMutateLocking.isBaseCurrencyMutateLocked(
-          tenant.id,
-        );
+        await this.baseCurrencyMutateLocking.isBaseCurrencyMutateLocked();
 
       if (isLocked) {
         throw new ServiceError(ERRORS.BASE_CURRENCY_MUTATE_LOCKED);
