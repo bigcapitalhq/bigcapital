@@ -101,7 +101,7 @@ export function useUpdateOrganization(props = {}) {
 export function useOrgBaseCurrencyMutateAbilities(props) {
   return useRequestQuery(
     [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES],
-    { method: 'get', url: `organization/base_currency_mutate` },
+    { method: 'get', url: `organization/base-currency-mutate` },
     {
       select: (res) => res.data.abilities,
       defaultData: [],

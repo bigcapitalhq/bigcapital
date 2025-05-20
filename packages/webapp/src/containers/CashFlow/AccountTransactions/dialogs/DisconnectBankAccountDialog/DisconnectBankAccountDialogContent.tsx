@@ -36,7 +36,6 @@ function DisconnectBankAccountDialogContent({
     values: DisconnectFormValues,
     { setErrors, setSubmitting }: FormikHelpers<DisconnectFormValues>,
   ) => {
-    debugger;
     setSubmitting(true);
 
     if (values.label !== 'DISCONNECT ACCOUNT') {

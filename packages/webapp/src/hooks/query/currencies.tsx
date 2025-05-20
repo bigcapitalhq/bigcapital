@@ -67,7 +67,7 @@ export function useCurrencies(props) {
     [t.CURRENCIES],
     { method: 'get', url: 'currencies' },
     {
-      select: (res) => res.data.currencies,
+      select: (res) => res.data,
       defaultData: [],
       ...props
     },

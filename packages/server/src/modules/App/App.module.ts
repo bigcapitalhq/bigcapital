@@ -88,6 +88,7 @@ import { ViewsModule } from '../Views/Views.module';
 import { CurrenciesModule } from '../Currencies/Currencies.module';
 import { MiscellaneousModule } from '../Miscellaneous/Miscellaneous.module';
 import { UsersModule } from '../UsersModule/Users.module';
+import { ContactsModule } from '../Contacts/Contacts.module';
 
 @Module({
   imports: [
@@ -210,7 +211,8 @@ import { UsersModule } from '../UsersModule/Users.module';
     ViewsModule,
     CurrenciesModule,
     MiscellaneousModule,
-    UsersModule
+    UsersModule,
+    ContactsModule
   ],
   controllers: [AppController],
   providers: [

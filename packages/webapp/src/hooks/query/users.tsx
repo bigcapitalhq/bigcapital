@@ -105,7 +105,7 @@ export function useUsers(props) {
       url: 'users',
     },
     {
-      select: (res) => res.data.users,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -123,7 +123,7 @@ export function useUser(id, props) {
       url: `users/${id}`,
     },
     {
-      select: (response) => response.data.user,
+      select: (response) => response.data,
       defaultData: {},
       ...props,
     },
@@ -143,7 +143,6 @@ export function useAuthenticatedAccount(props) {
       select: (response) => response.data,
       defaultData: {},
       onSuccess: (data) => {
-        debugger;
         setEmailConfirmed(data.verified, data.email);
       },
       ...props,

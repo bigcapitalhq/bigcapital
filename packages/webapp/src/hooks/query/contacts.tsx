@@ -38,7 +38,7 @@ export function useAutoCompleteContacts(props) {
     ['CONTACTS', 'AUTO-COMPLETE'],
     () => apiRequest.get('contacts/auto-complete'),
     {
-      select: (res) => res.data.contacts,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
