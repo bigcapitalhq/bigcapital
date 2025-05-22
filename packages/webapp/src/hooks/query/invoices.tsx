@@ -185,7 +185,7 @@ export function useInvoice(invoiceId, props, requestProps) {
     [t.SALE_INVOICE, invoiceId],
     { method: 'get', url: `sale-invoices/${invoiceId}`, ...requestProps },
     {
-      select: (res) => res.data.sale_invoice,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -338,7 +338,7 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
     [t.SALE_INVOICE_PAYMENT_TRANSACTIONS, invoiceId],
     {
       method: 'get',
-      url: `sale-invoices/${invoiceId}/payment-transactions`,
+      url: `sale-invoices/${invoiceId}/payments`,
     },
     {
       select: (res) => res.data.data,

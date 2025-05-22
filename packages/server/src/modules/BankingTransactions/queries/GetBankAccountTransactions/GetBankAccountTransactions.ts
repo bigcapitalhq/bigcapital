@@ -1,6 +1,6 @@
 // @ts-nocheck
-import R from 'ramda';
-import moment from 'moment';
+import * as R from 'ramda';
+import * as moment from 'moment';
 import { first, isEmpty } from 'lodash';
 import {
   ICashflowAccountTransaction,

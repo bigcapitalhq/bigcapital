@@ -9,11 +9,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BankingTransactionsApplication } from './BankingTransactionsApplication.service';
-import {
-  IBankAccountsFilter,
-  ICashflowAccountTransactionsQuery,
-} from './types/BankingTransactions.types';
 import { CreateBankTransactionDto } from './dtos/CreateBankTransaction.dto';
+import { GetBankTransactionsQueryDto } from './dtos/GetBankTranasctionsQuery.dto';
 
 @Controller('banking/transactions')
 @ApiTags('banking-transactions')
@@ -24,7 +21,7 @@ export class BankingTransactionsController {
 
   @Get()
   async getBankAccountTransactions(
-    @Query() query: ICashflowAccountTransactionsQuery,
+    @Query() query: GetBankTransactionsQueryDto,
   ) {
     return this.bankingTransactionsApplication.getBankAccountTransactions(
       query,

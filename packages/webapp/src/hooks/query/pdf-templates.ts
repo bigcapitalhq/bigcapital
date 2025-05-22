@@ -230,7 +230,7 @@ export const useGetPdfTemplateBrandingState = (
     () =>
       apiRequest
         .get('/pdf-templates/state')
-        .then((res) => transformToCamelCase(res.data?.data)),
+        .then((res) => transformToCamelCase(res.data)),
     options,
   );
 };

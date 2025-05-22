@@ -18,14 +18,14 @@ const PaymentsReceivedListContext = createContext();
 function PaymentsReceivedListProvider({ query, tableStateChanged, ...props }) {
   // Fetch payment receives resource views and fields.
   const { data: paymentReceivesViews, isLoading: isViewsLoading } =
-    useResourceViews('payment_receives');
+    useResourceViews('payment-received');
 
   // Fetch the payment receives resource fields.
   const {
     data: resourceMeta,
     isLoading: isResourceLoading,
     isFetching: isResourceFetching,
-  } = useResourceMeta('payment_receives');
+  } = useResourceMeta('payment-received');
 
   // Fetch payment receives list according to the given custom view id.
   const {

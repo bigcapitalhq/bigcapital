@@ -1,13 +1,16 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { ICashflowAccountTransactionsQuery } from '../../types/BankingTransactions.types';
 import {
   groupMatchedBankTransactions,
   groupUncategorizedTransactions,
 } from './_utils';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
+import { UncategorizedBankTransaction } from '../../models/UncategorizedBankTransaction';
+import { MatchedBankTransaction } from '@/modules/BankingMatching/models/MatchedBankTransaction';
 
 @Injectable({ scope: Scope.REQUEST })
 export class GetBankAccountTransactionsRepository {
-  private models: any;
   public query: ICashflowAccountTransactionsQuery;
   public transactions: any;
   public uncategorizedTransactions: any;
@@ -16,6 +19,28 @@ export class GetBankAccountTransactionsRepository {
   public matchedBankTransactionsMapByRef: Map<string, any>;
   public pagination: any;
   public openingBalance: any;
+
+  /**
+   * @param {TenantModelProxy<typeof AccountTransaction>} accountTransactionModel - Account transaction model.
+   * @param {TenantModelProxy<typeof UncategorizedBankTransaction>} uncategorizedBankTransactionModel - Uncategorized transaction model
+   * @param {TenantModelProxy<typeof MatchedBankTransaction>} matchedBankTransactionModel - Matched bank transaction model.
+   */
+  constructor(
+    @Inject(AccountTransaction.name)
+    private readonly accountTransactionModel: TenantModelProxy<
+      typeof AccountTransaction
+    >,
+
+    @Inject(UncategorizedBankTransaction.name)
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
+
+    @Inject(MatchedBankTransaction.name)
+    private readonly matchedBankTransactionModel: TenantModelProxy<
+      typeof MatchedBankTransaction
+    >,
+  ) {}
 
   setQuery(query: ICashflowAccountTransactionsQuery) {
     this.query = query;
@@ -37,9 +62,8 @@ export class GetBankAccountTransactionsRepository {
    * @param {ICashflowAccountTransactionsQuery} query -
    */
   async initCashflowAccountTransactions() {
-    const { AccountTransaction } = this.models;
-
-    const { results, pagination } = await AccountTransaction.query()
+    const { results, pagination } = await this.accountTransactionModel()
+      .query()
       .where('account_id', this.query.accountId)
       .orderBy([
         { column: 'date', order: 'desc' },
@@ -59,10 +83,9 @@ export class GetBankAccountTransactionsRepository {
    * @return {Promise<number>}
    */
   async initCashflowAccountOpeningBalance(): Promise<void> {
-    const { AccountTransaction } = this.models;
-
     // Retrieve the opening balance of credit and debit balances.
-    const openingBalancesSubquery = AccountTransaction.query()
+    const openingBalancesSubquery = this.accountTransactionModel()
+      .query()
       .where('account_id', this.query.accountId)
       .orderBy([
         { column: 'date', order: 'desc' },
@@ -72,7 +95,8 @@ export class GetBankAccountTransactionsRepository {
       .offset(this.pagination.pageSize * (this.pagination.page - 1));
 
     // Sumation of credit and debit balance.
-    const openingBalances = await AccountTransaction.query()
+    const openingBalances = await this.accountTransactionModel()
+      .query()
       .sum('credit as credit')
       .sum('debit as debit')
       .from(openingBalancesSubquery.as('T'))
@@ -87,14 +111,11 @@ export class GetBankAccountTransactionsRepository {
    * Initialize the uncategorized transactions of the bank account.
    */
   async initCategorizedTransactions() {
-    const { UncategorizedCashflowTransaction } = this.models;
     const refs = this.transactions.map((t) => [t.referenceType, t.referenceId]);
-
     const uncategorizedTransactions =
-      await UncategorizedCashflowTransaction.query().whereIn(
-        ['categorizeRefType', 'categorizeRefId'],
-        refs,
-      );
+      await this.uncategorizedBankTransactionModel()
+        .query()
+        .whereIn(['categorizeRefType', 'categorizeRefId'], refs);
 
     this.uncategorizedTransactions = uncategorizedTransactions;
     this.uncategorizedTransactionsMapByRef = groupUncategorizedTransactions(
@@ -106,14 +127,11 @@ export class GetBankAccountTransactionsRepository {
    * Initialize the matched bank transactions of the bank account.
    */
   async initMatchedTransactions(): Promise<void> {
-    const { MatchedBankTransaction } = this.models;
     const refs = this.transactions.map((t) => [t.referenceType, t.referenceId]);
 
-    const matchedBankTransactions =
-      await MatchedBankTransaction.query().whereIn(
-        ['referenceType', 'referenceId'],
-        refs,
-      );
+    const matchedBankTransactions = await this.matchedBankTransactionModel()
+      .query()
+      .whereIn(['referenceType', 'referenceId'], refs);
     this.matchedBankTransactions = matchedBankTransactions;
     this.matchedBankTransactionsMapByRef = groupMatchedBankTransactions(
       matchedBankTransactions,

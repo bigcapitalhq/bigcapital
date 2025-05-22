@@ -1,8 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
-import { BaseModel } from '@/models/Model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { Knex } from 'knex';
+import { TENANCY_DB_CONNECTION } from '@/modules/Tenancy/TenancyDB/TenancyDB.constants';
+import { initialize } from 'objection';
+import { MatchedBankTransaction } from '@/modules/BankingMatching/models/MatchedBankTransaction';
+import { TenantModel } from '@/modules/System/models/TenantModel';
+import { RecognizedBankTransaction } from '@/modules/BankingTranasctionsRegonize/models/RecognizedBankTransaction';
 
 @Injectable()
 export class GetBankAccountSummary {
@@ -14,6 +19,19 @@ export class GetBankAccountSummary {
     private readonly uncategorizedBankTransactionModel: TenantModelProxy<
       typeof UncategorizedBankTransaction
     >,
+
+    @Inject(MatchedBankTransaction.name)
+    private readonly matchedBankTransactionModel: TenantModelProxy<
+      typeof MatchedBankTransaction
+    >,
+
+    @Inject(RecognizedBankTransaction.name)
+    private readonly recognizedBankTransaction: TenantModelProxy<
+      typeof RecognizedBankTransaction
+    >,
+
+    @Inject(TENANCY_DB_CONNECTION)
+    private readonly tenantDb: () => Knex,
   ) {}
 
   /**
@@ -27,6 +45,11 @@ export class GetBankAccountSummary {
       .findById(bankAccountId)
       .throwIfNotFound();
 
+    await initialize(this.tenantDb(), [
+      this.uncategorizedBankTransactionModel(),
+      this.matchedBankTransactionModel(),
+      this.recognizedBankTransaction(),
+    ]);
     const commonQuery = (q) => {
       // Include just the given account.
       q.where('accountId', bankAccountId);
@@ -37,11 +60,6 @@ export class GetBankAccountSummary {
       // Only the not categorized.
       q.modify('notCategorized');
     };
-
-    interface UncategorizedTransactionsCount {
-      total: number;
-    }
-
     // Retrieves the uncategorized transactions count of the given bank account.
     const uncategorizedTranasctionsCount =
       await this.uncategorizedBankTransactionModel()

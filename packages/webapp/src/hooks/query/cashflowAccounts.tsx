@@ -54,7 +54,7 @@ export function useCreateCashflowTransaction(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post('cashflow/transactions', values),
+    (values) => apiRequest.post('banking/transactions', values),
     {
       onSuccess: () => {
         // Invalidate queries.
@@ -73,7 +73,7 @@ export function useCreateCashflowTransaction(props) {
 export function useCashflowTransaction(id, props) {
   return useRequestQuery(
     [t.CASH_FLOW_TRANSACTIONS, id],
-    { method: 'get', url: `cashflow/transactions/${id}` },
+    { method: 'get', url: `banking/transactions/${id}` },
     {
       select: (res) => res.data.cashflow_transaction,
       defaultData: [],
@@ -89,7 +89,7 @@ export function useDeleteCashflowTransaction(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`cashflow/transactions/${id}`), {
+  return useMutation((id) => apiRequest.delete(`banking/transactions/${id}`), {
     onSuccess: (res, id) => {
       // Invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -118,7 +118,7 @@ export function useAccountTransactionsInfinity(
       const response = await apiRequest.http({
         ...axios,
         method: 'get',
-        url: `/api/financial_statements/cashflow-account-transactions`,
+        url: `/api/banking/transactions`,
         params: { page: pageParam, ...query },
       });
       return response.data;
@@ -157,7 +157,7 @@ export function useAccountUncategorizedTransactionsInfinity(
       const response = await apiRequest.http({
         ...axios,
         method: 'get',
-        url: `/api/cashflow/transactions/${accountId}/uncategorized`,
+        url: `/api/banking/transactions/${accountId}/uncategorized`,
         params: { page: pageParam, ...query },
       });
       return response.data;
@@ -231,7 +231,7 @@ export function useUncategorizedTransaction(
     [t.CASHFLOW_UNCAATEGORIZED_TRANSACTION, uncategorizedTranasctionId],
     {
       method: 'get',
-      url: `cashflow/transactions/uncategorized/${uncategorizedTranasctionId}`,
+      url: `banking/transactions/uncategorized/${uncategorizedTranasctionId}`,
     },
     {
       select: (res) => res.data?.data,
@@ -248,7 +248,7 @@ export function useCategorizeTransaction(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post(`cashflow/transactions/categorize`, values),
+    (values) => apiRequest.post(`banking/transactions/categorize`, values),
     {
       onSuccess: (res, id) => {
         // Invalidate queries.
@@ -274,7 +274,7 @@ export function useUncategorizeTransaction(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id: number) => apiRequest.post(`cashflow/transactions/${id}/uncategorize`),
+    (id: number) => apiRequest.post(`banking/transactions/${id}/uncategorize`),
     {
       onSuccess: (res, id) => {
         // Invalidate queries.

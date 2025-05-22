@@ -1,9 +1,9 @@
 /* eslint-disable global-require */
 import * as moment from 'moment';
 import { Model } from 'objection';
-import { BaseModel } from '@/models/Model';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class UncategorizedBankTransaction extends BaseModel {
+export class UncategorizedBankTransaction extends TenantBaseModel {
   readonly amount!: number;
   readonly date!: Date | string;
   readonly categorized!: boolean;

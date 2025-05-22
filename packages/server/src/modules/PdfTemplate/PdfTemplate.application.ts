@@ -29,7 +29,7 @@ export class PdfTemplateApplication {
    * @param {ICreateInvoicePdfTemplateDTO} invoiceTemplateDTO - The data transfer object containing the details for the new PDF template.
    * @returns {Promise<any>}
    */
-  public async createPdfTemplate(
+  public createPdfTemplate(
     templateName: string,
     resource: string,
     invoiceTemplateDTO: ICreateInvoicePdfTemplateDTO,
@@ -45,7 +45,7 @@ export class PdfTemplateApplication {
    * Deletes a PDF template.
    * @param {number} templateId - The ID of the template to delete.
    */
-  public async deletePdfTemplate(templateId: number) {
+  public deletePdfTemplate(templateId: number) {
     return this.deletePdfTemplateService.deletePdfTemplate(templateId);
   }
 
@@ -53,7 +53,7 @@ export class PdfTemplateApplication {
    * Retrieves a specific PDF template.
    * @param {number} templateId - The ID of the template to retrieve.
    */
-  public async getPdfTemplate(templateId: number) {
+  public getPdfTemplate(templateId: number) {
     return this.getPdfTemplateService.getPdfTemplate(templateId);
   }
 
@@ -61,7 +61,7 @@ export class PdfTemplateApplication {
    * Retrieves all PDF templates.
    * @param {string} resource - The resource type to filter templates.
    */
-  public async getPdfTemplates(query?: { resource?: string }) {
+  public getPdfTemplates(query?: { resource?: string }) {
     return this.getPdfTemplatesService.getPdfTemplates(query);
   }
 
@@ -70,7 +70,7 @@ export class PdfTemplateApplication {
    * @param {number} templateId - The ID of the template to edit.
    * @param {IEditPdfTemplateDTO} editDTO - The data transfer object containing the updates.
    */
-  public async editPdfTemplate(
+  public editPdfTemplate(
     templateId: number,
     editDTO: IEditPdfTemplateDTO,
   ) {
@@ -80,7 +80,7 @@ export class PdfTemplateApplication {
   /**
    * Gets the PDF template branding state.
    */
-  public async getPdfTemplateBrandingState() {
+  public getPdfTemplateBrandingState() {
     return this.getPdfTemplateBrandingStateService.execute();
   }
 
@@ -89,7 +89,7 @@ export class PdfTemplateApplication {
    * @param {number} templateId - The ID of the PDF template to assign as default.
    * @returns {Promise<any>}
    */
-  public async assignPdfTemplateAsDefault(templateId: number) {
+  public assignPdfTemplateAsDefault(templateId: number) {
     return this.assignPdfTemplateDefaultService.assignDefaultTemplate(
       templateId,
     );
@@ -99,7 +99,7 @@ export class PdfTemplateApplication {
    * Retrieves the organization branding attributes.
    * @returns {Promise<CommonOrganizationBrandingAttributes>} The organization branding attributes.
    */
-  getOrganizationBrandingAttributes() {
+  public getOrganizationBrandingAttributes() {
     return this.getOrganizationBrandingAttributesService.execute();
   }
 }

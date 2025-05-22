@@ -47,6 +47,17 @@ export class PdfTemplatesController {
     return this.pdfTemplateApplication.deletePdfTemplate(templateId);
   }
 
+  @Get('/state')
+  @ApiOperation({ summary: 'Retrieves the PDF template branding state.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The PDF template branding state has been successfully retrieved.',
+  })
+  async getPdfTemplateBrandingState() {
+    return this.pdfTemplateApplication.getPdfTemplateBrandingState();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Retrieves the PDF template details.' })
   @ApiResponse({

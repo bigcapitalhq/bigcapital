@@ -83,7 +83,7 @@ export function useDisconnectBankAccount(
     DisconnectBankAccountValues
   >(
     ({ bankAccountId }) =>
-      apiRequest.post(`/banking/bank_accounts/${bankAccountId}/disconnect`),
+      apiRequest.post(`/banking/accounts/${bankAccountId}/disconnect`),
     {
       ...options,
       onSuccess: (res, values) => {
@@ -115,7 +115,7 @@ export function useUpdateBankAccount(
 
   return useMutation<DisconnectBankAccountRes, Error, UpdateBankAccountValues>(
     ({ bankAccountId }) =>
-      apiRequest.post(`/banking/bank_accounts/${bankAccountId}/update`),
+      apiRequest.post(`/banking/accounts/${bankAccountId}/update`),
     {
       ...options,
       onSuccess: () => {},
@@ -254,7 +254,7 @@ export function useGetBankTransactionsMatches(
     [BANK_QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizeTransactionsIds],
     () =>
       apiRequest
-        .get(`/cashflow/transactions/matches`, {
+        .get(`/banking/matching/matched`, {
           params: { uncategorizeTransactionsIds },
         })
         .then((res) => transformToCamelCase(res.data)),
@@ -312,7 +312,7 @@ export function useExcludeUncategorizedTransaction(
   >(
     (uncategorizedTransactionId: number) =>
       apiRequest.put(
-        `/cashflow/transactions/${uncategorizedTransactionId}/exclude`,
+        `/banking/transactions/${uncategorizedTransactionId}/exclude`,
       ),
     {
       onSuccess: (res, id) => {
@@ -353,7 +353,7 @@ export function useUnexcludeUncategorizedTransaction(
   >(
     (uncategorizedTransactionId: number) =>
       apiRequest.put(
-        `/cashflow/transactions/${uncategorizedTransactionId}/unexclude`,
+        `/banking/transactions/${uncategorizedTransactionId}/unexclude`,
       ),
     {
       onSuccess: (res, id) => {
@@ -392,7 +392,7 @@ export function useExcludeUncategorizedTransactions(
     ExcludeBankTransactionsValue
   >(
     (value: { ids: Array<number | string> }) =>
-      apiRequest.put(`/cashflow/transactions/exclude`, { ids: value.ids }),
+      apiRequest.put(`/banking/transactions/exclude`, { ids: value.ids }),
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
@@ -430,7 +430,7 @@ export function useUnexcludeUncategorizedTransactions(
     UnexcludeBankTransactionsValue
   >(
     (value: { ids: Array<number | string> }) =>
-      apiRequest.put(`/cashflow/transactions/unexclude`, { ids: value.ids }),
+      apiRequest.put(`/banking/transactions/unexclude`, { ids: value.ids }),
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
@@ -515,7 +515,7 @@ export function useUnmatchMatchedUncategorizedTransaction(
     UnmatchUncategorizedTransactionRes,
     Error,
     UnmatchUncategorizedTransactionValues
-  >(({ id }) => apiRequest.post(`/banking/matches/unmatch/${id}`), {
+  >(({ id }) => apiRequest.post(`/banking/matching/unmatch/${id}`), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries(
         t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
@@ -579,7 +579,7 @@ export function useGetBankAccountSummaryMeta(
     [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META, bankAccountId],
     () =>
       apiRequest
-        .get(`/banking/bank_accounts/${bankAccountId}/meta`)
+        .get(`/banking/accounts/${bankAccountId}/summary`)
         .then((res) => transformToCamelCase(res.data?.data)),
     { ...options },
   );
@@ -668,7 +668,7 @@ export function useExcludedBankTransactionsInfinity(
       const response = await apiRequest.http({
         ...axios,
         method: 'get',
-        url: `/api/cashflow/excluded`,
+        url: `/api/banking/excluded`,
         params: { page: pageParam, ...query },
       });
       return response.data;
@@ -700,7 +700,7 @@ export function usePendingBankTransactionsInfinity(
       const response = await apiRequest.http({
         ...axios,
         method: 'get',
-        url: `/api/banking/bank_accounts/pending_transactions`,
+        url: `/api/banking/accounts/pending_transactions`,
         params: { page: pageParam, ...query },
       });
       return response.data;

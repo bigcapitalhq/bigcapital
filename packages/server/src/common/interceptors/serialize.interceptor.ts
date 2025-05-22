@@ -70,7 +70,10 @@ export class SerializeInterceptor implements NestInterceptor<any, any> {
     next: CallHandler<any>,
   ): Observable<any> {
     const request = context.switchToHttp().getRequest();
+
+    // Transform both body and query parameters
     request.body = this.strategy.in(request.body);
+    request.query = this.strategy.in(request.query);
 
     // handle returns stream..
     return next.handle().pipe(map(this.strategy.out));
