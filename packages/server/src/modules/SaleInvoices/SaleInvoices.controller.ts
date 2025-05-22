@@ -111,14 +111,33 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.deleteSaleInvoice(id);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Retrieves the sale invoices.' })
+  @Get('receivable/:customerId?')
+  @ApiOperation({ summary: 'Retrieves the receivable sale invoices.' })
   @ApiResponse({
     status: 200,
-    description: 'The sale invoices have been successfully retrieved.',
+    description:
+      'The receivable sale invoices have been successfully retrieved.',
   })
-  getSaleInvoices(@Query() filterDTO: Partial<ISalesInvoicesFilter>) {
-    return this.saleInvoiceApplication.getSaleInvoices(filterDTO);
+  @ApiResponse({ status: 404, description: 'The customer not found.' })
+  @ApiParam({
+    name: 'customerId',
+    required: false,
+    type: Number,
+    description: 'The customer id',
+  })
+  getReceivableSaleInvoices(@Param('customerId') customerId?: number) {
+    return this.saleInvoiceApplication.getReceivableSaleInvoices(customerId);
+  }
+
+  @Get('state')
+  @ApiOperation({ summary: 'Retrieves the sale invoice state.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice state has been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  getSaleInvoiceState() {
+    return this.saleInvoiceApplication.getSaleInvoiceState();
   }
 
   @Get(':id')
@@ -138,15 +157,14 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.getSaleInvoice(id);
   }
 
-  @Get(':id/state')
-  @ApiOperation({ summary: 'Retrieves the sale invoice state.' })
+  @Get()
+  @ApiOperation({ summary: 'Retrieves the sale invoices.' })
   @ApiResponse({
     status: 200,
-    description: 'The sale invoice state has been successfully retrieved.',
+    description: 'The sale invoices have been successfully retrieved.',
   })
-  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
-  getSaleInvoiceState() {
-    return this.saleInvoiceApplication.getSaleInvoiceState();
+  getSaleInvoices(@Query() filterDTO: Partial<ISalesInvoicesFilter>) {
+    return this.saleInvoiceApplication.getSaleInvoices(filterDTO);
   }
 
   @Put(':id/deliver')
@@ -165,24 +183,6 @@ export class SaleInvoicesController {
   @HttpCode(200)
   deliverSaleInvoice(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.deliverSaleInvoice(id);
-  }
-
-  @Get('receivable/:customerId?')
-  @ApiOperation({ summary: 'Retrieves the receivable sale invoices.' })
-  @ApiResponse({
-    status: 200,
-    description:
-      'The receivable sale invoices have been successfully retrieved.',
-  })
-  @ApiResponse({ status: 404, description: 'The customer not found.' })
-  @ApiParam({
-    name: 'customerId',
-    required: false,
-    type: Number,
-    description: 'The customer id',
-  })
-  getReceivableSaleInvoices(@Param('customerId') customerId?: number) {
-    return this.saleInvoiceApplication.getReceivableSaleInvoices(customerId);
   }
 
   @Post(':id/writeoff')

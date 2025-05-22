@@ -40,9 +40,7 @@ export function OneClickDemoPageContent() {
   // One the job done request sign-in using the demo id.
   useEffect(() => {
     if (isJobDone) {
-      oneClickDemoSignIn({ demoId }).then((res) => {
-        debugger;
-      });
+      oneClickDemoSignIn({ demoId }).then((res) => {});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isJobDone]);

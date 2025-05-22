@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -10,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { CreditNoteApplication } from './CreditNoteApplication.service';
 import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
-import { ApiTags } from '@nestjs/swagger';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 
 @Controller('credit-notes')

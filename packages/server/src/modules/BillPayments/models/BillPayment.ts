@@ -6,6 +6,7 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { BillPaymentMeta } from './BillPayment.meta';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { Model } from 'objection';
 
 @ImportableModel()
 @ExportableModel()
@@ -60,103 +61,98 @@ export class BillPayment extends TenantBaseModel {
   get localAmount() {
     return this.amount * this.exchangeRate;
   }
-
-  /**
-   * Model settings.
-   */
-  // static get meta() {
-  //   return BillPaymentSettings;
-  // }
-
+  
   /**
    * Relationship mapping.
    */
-  // static get relationMappings() {
-  //   const BillPaymentEntry = require('models/BillPaymentEntry');
-  //   const AccountTransaction = require('models/AccountTransaction');
-  //   const Vendor = require('models/Vendor');
-  //   const Account = require('models/Account');
-  //   const Branch = require('models/Branch');
-  //   const Document = require('models/Document');
+  static get relationMappings() {
+    const { BillPaymentEntry } = require('./BillPaymentEntry');
+    const {
+      AccountTransaction,
+    } = require('../../Accounts/models/AccountTransaction.model');
+    const { Vendor } = require('../../Vendors/models/Vendor');
+    const { Account } = require('../../Accounts/models/Account.model');
+    const { Branch } = require('../../Branches/models/Branch.model');
+    const { Document } = require('../../ChromiumlyTenancy/models/Document');
 
-  //   return {
-  //     entries: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: BillPaymentEntry.default,
-  //       join: {
-  //         from: 'bills_payments.id',
-  //         to: 'bills_payments_entries.billPaymentId',
-  //       },
-  //       filter: (query) => {
-  //         query.orderBy('index', 'ASC');
-  //       },
-  //     },
+    return {
+      entries: {
+        relation: Model.HasManyRelation,
+        modelClass: BillPaymentEntry,
+        join: {
+          from: 'bills_payments.id',
+          to: 'bills_payments_entries.billPaymentId',
+        },
+        filter: (query) => {
+          query.orderBy('index', 'ASC');
+        },
+      },
 
-  //     vendor: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Vendor.default,
-  //       join: {
-  //         from: 'bills_payments.vendorId',
-  //         to: 'contacts.id',
-  //       },
-  //       filter(query) {
-  //         query.where('contact_service', 'vendor');
-  //       },
-  //     },
+      vendor: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Vendor,
+        join: {
+          from: 'bills_payments.vendorId',
+          to: 'contacts.id',
+        },
+        filter(query) {
+          query.where('contact_service', 'vendor');
+        },
+      },
 
-  //     paymentAccount: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Account.default,
-  //       join: {
-  //         from: 'bills_payments.paymentAccountId',
-  //         to: 'accounts.id',
-  //       },
-  //     },
+      paymentAccount: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Account,
+        join: {
+          from: 'bills_payments.paymentAccountId',
+          to: 'accounts.id',
+        },
+      },
 
-  //     transactions: {
-  //       relation: Model.HasManyRelation,
-  //       modelClass: AccountTransaction.default,
-  //       join: {
-  //         from: 'bills_payments.id',
-  //         to: 'accounts_transactions.referenceId',
-  //       },
-  //       filter(builder) {
-  //         builder.where('reference_type', 'BillPayment');
-  //       },
-  //     },
+      transactions: {
+        relation: Model.HasManyRelation,
+        modelClass: AccountTransaction,
+        join: {
+          from: 'bills_payments.id',
+          to: 'accounts_transactions.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'BillPayment');
+        },
+      },
 
-  //     /**
-  //      * Bill payment may belongs to branch.
-  //      */
-  //     branch: {
-  //       relation: Model.BelongsToOneRelation,
-  //       modelClass: Branch.default,
-  //       join: {
-  //         from: 'bills_payments.branchId',
-  //         to: 'branches.id',
-  //       },
-  //     },
+      /**
+       * Bill payment may belongs to branch.
+       */
+      branch: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Branch,
+        join: {
+          from: 'bills_payments.branchId',
+          to: 'branches.id',
+        },
+      },
 
-  //     /**
-  //      * Bill payment may has many attached attachments.
-  //      */
-  //     attachments: {
-  //       relation: Model.ManyToManyRelation,
-  //       modelClass: Document.default,
-  //       join: {
-  //         from: 'bills_payments.id',
-  //         through: {
-  //           from: 'document_links.modelId',
-  //           to: 'document_links.documentId',
-  //         },
-  //         to: 'documents.id',
-  //       },
-  //       filter(query) {
-  //         query.where('model_ref', 'BillPayment');
-  //       },
-  //     },
-  //   };
-  // }
+      /**
+       * Bill payment may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document,
+        join: {
+          from: 'bills_payments.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'BillPayment');
+        },
+      },
+    };
+  }
 
   /**
    * Retrieve the default custom views, roles and columns.

@@ -17,11 +17,12 @@ import { BillPaymentGLEntriesSubscriber } from './subscribers/BillPaymentGLEntri
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { BillPaymentsExportable } from './queries/BillPaymentsExportable';
-import { GetBillPayments } from '../Bills/queries/GetBillPayments';
 import { BillPaymentsImportable } from './commands/BillPaymentsImportable';
+import { GetBillPaymentsService } from './queries/GetBillPayments.service';
+import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 
 @Module({
-  imports: [LedgerModule, AccountsModule],
+  imports: [LedgerModule, AccountsModule, DynamicListModule],
   providers: [
     BillPaymentsApplication,
     CreateBillPaymentService,
@@ -37,9 +38,9 @@ import { BillPaymentsImportable } from './commands/BillPaymentsImportable';
     TenancyContext,
     BillPaymentGLEntries,
     BillPaymentGLEntriesSubscriber,
-    GetBillPayments,
     BillPaymentsExportable,
     BillPaymentsImportable,
+    GetBillPaymentsService,
   ],
   exports: [
     BillPaymentValidators,

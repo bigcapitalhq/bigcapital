@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { CreateBillPaymentService } from './commands/CreateBillPayment.service';
 import { DeleteBillPayment } from './commands/DeleteBillPayment.service';
 import { EditBillPayment } from './commands/EditBillPayment.service';
-// import { GetBillPayments } from './GetBillPayments';
 import { GetBillPayment } from './queries/GetBillPayment.service';
 import { GetPaymentBills } from './queries/GetPaymentBills.service';
-import { GetBillPayments } from '../Bills/queries/GetBillPayments';
 import { CreateBillPaymentDto, EditBillPaymentDto } from './dtos/BillPayment.dto';
+import { GetBillPaymentsService } from './queries/GetBillPayments.service';
+import { GetBillPaymentsFilterDto } from './dtos/GetBillPaymentsFilter.dto';
 
 /**
  * Bill payments application.
@@ -20,7 +20,7 @@ export class BillPaymentsApplication {
     private deleteBillPaymentService: DeleteBillPayment,
     private getBillPaymentService: GetBillPayment,
     private getPaymentBillsService: GetPaymentBills,
-    private getBillPaymentsService: GetBillPayments,
+    private getBillPaymentsService: GetBillPaymentsService,
   ) {}
 
   /**
@@ -58,9 +58,10 @@ export class BillPaymentsApplication {
 
   /**
    * Retrieves bill payments list.
+   * @param {GetBillPaymentsFilterDto} filterDTO - The given bill payments filter dto.
    */
-  public getBillPayments() {
-    // return this.getBillPaymentsService.getBillPayments(filterDTO);
+  public getBillPayments(filterDTO: GetBillPaymentsFilterDto) {
+    return this.getBillPaymentsService.getBillPayments(filterDTO);
   }
 
   /**
