@@ -18,6 +18,7 @@ import {
   IPaymentsReceivedFilter,
   PaymentReceiveMailOptsDTO,
 } from './types/PaymentReceived.types';
+import { CreatePaymentReceivedDto, EditPaymentReceivedDto } from './dtos/PaymentReceived.dto';
 
 @Controller('payments-received')
 @ApiTags('payments-received')
@@ -57,7 +58,7 @@ export class PaymentReceivesController {
   @Post()
   @ApiOperation({ summary: 'Create a new payment received.' })
   public createPaymentReceived(
-    @Body() paymentReceiveDTO: IPaymentReceivedCreateDTO,
+    @Body() paymentReceiveDTO: CreatePaymentReceivedDto,
   ) {
     return this.paymentReceivesApplication.createPaymentReceived(
       paymentReceiveDTO,
@@ -68,7 +69,7 @@ export class PaymentReceivesController {
   @ApiOperation({ summary: 'Edit the given payment received.' })
   public editPaymentReceive(
     @Param('id', ParseIntPipe) paymentReceiveId: number,
-    @Body() paymentReceiveDTO: IPaymentReceivedEditDTO,
+    @Body() paymentReceiveDTO: EditPaymentReceivedDto,
   ) {
     return this.paymentReceivesApplication.editPaymentReceive(
       paymentReceiveId,

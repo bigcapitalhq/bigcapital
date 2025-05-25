@@ -1,3 +1,4 @@
+import { ToNumber } from '@/common/decorators/Validators';
 import { DiscountType } from '@/common/types/Discount';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -12,30 +13,35 @@ import {
 
 export class ItemEntryDto {
   @IsInt()
+  @IsOptional()
   @ApiProperty({
     description: 'The index of the item entry',
     example: 1,
   })
   index: number;
 
-  @IsInt()
   @IsNotEmpty()
+  @IsInt()
   @ApiProperty({
     description: 'The id of the item',
     example: 1,
   })
   itemId: number;
 
-  @IsNumber()
+  @IsOptional()
   @IsNotEmpty()
+  @ToNumber()
+  @IsNumber()
   @ApiProperty({
     description: 'The rate of the item entry',
     example: 1,
   })
   rate: number;
 
-  @IsNumber()
+  @IsOptional()
   @IsNotEmpty()
+  @ToNumber()
+  @IsNumber()
   @ApiProperty({
     description: 'The quantity of the item entry',
     example: 1,
@@ -43,7 +49,9 @@ export class ItemEntryDto {
   quantity: number;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
+  @ToNumber()
   @ApiProperty({
     description: 'The discount of the item entry',
     example: 1,
@@ -67,6 +75,7 @@ export class ItemEntryDto {
   description?: string;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     description: 'The tax code of the item entry',
@@ -75,6 +84,7 @@ export class ItemEntryDto {
   taxCode?: string;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The tax rate id of the item entry',
@@ -83,6 +93,7 @@ export class ItemEntryDto {
   taxRateId?: number;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The warehouse id of the item entry',
@@ -91,6 +102,7 @@ export class ItemEntryDto {
   warehouseId?: number;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The project id of the item entry',
@@ -99,6 +111,7 @@ export class ItemEntryDto {
   projectId?: number;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The project ref id of the item entry',
@@ -107,6 +120,7 @@ export class ItemEntryDto {
   projectRefId?: number;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @IsIn(['TASK', 'BILL', 'EXPENSE'])
   @ApiProperty({
@@ -116,6 +130,7 @@ export class ItemEntryDto {
   projectRefType?: string;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   @ApiProperty({
     description: 'The project ref invoiced amount of the item entry',
@@ -124,6 +139,7 @@ export class ItemEntryDto {
   projectRefInvoicedAmount?: number;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The sell account id of the item entry',
@@ -132,6 +148,7 @@ export class ItemEntryDto {
   sellAccountId?: number;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsInt()
   @ApiProperty({
     description: 'The cost account id of the item entry',

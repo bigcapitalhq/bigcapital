@@ -238,11 +238,11 @@ export function useDueInvoices(customerId, props) {
     [t.SALE_INVOICES, t.SALE_INVOICES_DUE, customerId],
     {
       method: 'get',
-      url: `sale-invoices/payable`,
+      url: `sale-invoices/receivable`,
       params: { customer_id: customerId },
     },
     {
-      select: (res) => res.data.sales_invoices,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

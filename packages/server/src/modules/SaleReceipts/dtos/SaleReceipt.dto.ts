@@ -1,10 +1,13 @@
+import { ToNumber } from '@/common/decorators/Validators';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
   IsArray,
   IsBoolean,
   IsDate,
+  IsDateString,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -28,8 +31,9 @@ class AttachmentDto {
 }
 
 export class CommandSaleReceiptDto {
-  @IsNumber()
   @IsNotEmpty()
+  @ToNumber()
+  @IsNumber()
   @ApiProperty({
     description: 'The id of the customer',
     example: 1,
@@ -37,6 +41,7 @@ export class CommandSaleReceiptDto {
   customerId: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @IsPositive()
   @ApiProperty({
@@ -46,11 +51,12 @@ export class CommandSaleReceiptDto {
   exchangeRate?: number;
 
   @IsNumber()
+  @ToNumber()
   @IsNotEmpty()
   @ApiProperty({ description: 'The id of the deposit account', example: 1 })
   depositAccountId: number;
 
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   @ApiProperty({
     description: 'The date of the sale receipt',
@@ -83,6 +89,7 @@ export class CommandSaleReceiptDto {
 
   @IsOptional()
   @IsNumber()
+  @ToNumber()
   @ApiProperty({
     description: 'The id of the warehouse',
     example: 1,
@@ -90,6 +97,7 @@ export class CommandSaleReceiptDto {
   warehouseId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @ApiProperty({
     description: 'The id of the branch',
@@ -100,7 +108,7 @@ export class CommandSaleReceiptDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => SaleReceiptEntryDto)
-  @Min(1)
+  @ArrayMinSize(1)
   @ApiProperty({
     description: 'The entries of the sale receipt',
     example: [{ key: '123456' }],
@@ -134,6 +142,7 @@ export class CommandSaleReceiptDto {
   attachments?: AttachmentDto[];
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @ApiProperty({
     description: 'The id of the pdf template',
@@ -142,6 +151,7 @@ export class CommandSaleReceiptDto {
   pdfTemplateId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @ApiProperty({
     description: 'The discount of the sale receipt',
@@ -158,6 +168,7 @@ export class CommandSaleReceiptDto {
   discountType?: DiscountType;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @ApiProperty({
     description: 'The adjustment of the sale receipt',

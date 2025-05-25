@@ -225,7 +225,7 @@ export function useBankRule(
     () =>
       apiRequest
         .get(`/banking/rules/${bankRuleId}`)
-        .then((res) => res.data.bank_rule),
+        .then((res) => res.data),
     { ...options },
   );
 }

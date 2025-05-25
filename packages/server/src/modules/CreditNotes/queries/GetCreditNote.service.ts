@@ -7,7 +7,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
-export class GetCreditNote {
+export class GetCreditNoteService {
   constructor(
     private readonly transformer: TransformerInjectable,
 

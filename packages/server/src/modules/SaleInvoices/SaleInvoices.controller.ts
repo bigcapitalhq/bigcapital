@@ -21,6 +21,7 @@ import {
   ApiHeader,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -111,7 +112,7 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.deleteSaleInvoice(id);
   }
 
-  @Get('receivable/:customerId?')
+  @Get('receivable')
   @ApiOperation({ summary: 'Retrieves the receivable sale invoices.' })
   @ApiResponse({
     status: 200,
@@ -119,13 +120,13 @@ export class SaleInvoicesController {
       'The receivable sale invoices have been successfully retrieved.',
   })
   @ApiResponse({ status: 404, description: 'The customer not found.' })
-  @ApiParam({
+  @ApiQuery({
     name: 'customerId',
     required: false,
     type: Number,
     description: 'The customer id',
   })
-  getReceivableSaleInvoices(@Param('customerId') customerId?: number) {
+  getReceivableSaleInvoices(@Query('customerId') customerId?: number) {
     return this.saleInvoiceApplication.getReceivableSaleInvoices(customerId);
   }
 

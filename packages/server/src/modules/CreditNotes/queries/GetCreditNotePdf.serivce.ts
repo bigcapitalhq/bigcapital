@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetCreditNote } from './GetCreditNote.service';
+import { GetCreditNoteService } from './GetCreditNote.service';
 import { CreditNoteBrandingTemplate } from './CreditNoteBrandingTemplate.service';
 import { transformCreditNoteToPdfTemplate } from '../utils';
 import { CreditNote } from '../models/CreditNote';
@@ -25,7 +25,7 @@ export class GetCreditNotePdf {
   constructor(
     private readonly chromiumlyTenancy: ChromiumlyTenancy,
     private readonly templateInjectable: TemplateInjectable,
-    private readonly getCreditNoteService: GetCreditNote,
+    private readonly getCreditNoteService: GetCreditNoteService,
     private readonly creditNoteBrandingTemplate: CreditNoteBrandingTemplate,
     private readonly eventPublisher: EventEmitter2,
 

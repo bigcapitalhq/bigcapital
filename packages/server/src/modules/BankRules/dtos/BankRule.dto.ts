@@ -12,6 +12,7 @@ import {
 } from 'class-validator';
 import { BankRuleComparator } from '../types';
 import { ApiProperty } from '@nestjs/swagger';
+import { ToNumber } from '@/common/decorators/Validators';
 
 class BankRuleConditionDto {
   @IsNotEmpty()
@@ -44,6 +45,8 @@ export class CommandBankRuleDto {
   })
   name: string;
 
+  @IsNotEmpty()
+  @ToNumber()
   @IsInt()
   @Min(0)
   @ApiProperty({
@@ -53,6 +56,7 @@ export class CommandBankRuleDto {
   order: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @Min(0)
   @ApiProperty({
@@ -61,6 +65,7 @@ export class CommandBankRuleDto {
   })
   applyIfAccountId?: number;
 
+  @IsNotEmpty()
   @IsIn(['deposit', 'withdrawal'])
   @ApiProperty({
     description: 'The transaction type to apply the rule if',
@@ -82,11 +87,14 @@ export class CommandBankRuleDto {
   @Type(() => BankRuleConditionDto)
   @ApiProperty({
     description: 'The conditions to apply the rule if',
-    example: [{ field: 'description', comparator: 'contains', value: 'Salary' }],
+    example: [
+      { field: 'description', comparator: 'contains', value: 'Salary' },
+    ],
   })
   conditions: BankRuleConditionDto[];
 
   @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     description: 'The category to assign the rule if',
     example: 'Income:Salary',
@@ -95,6 +103,8 @@ export class CommandBankRuleDto {
 
   @IsInt()
   @Min(0)
+  @ToNumber()
+  @IsNotEmpty()
   @ApiProperty({
     description: 'The account ID to assign the rule if',
     example: 1,

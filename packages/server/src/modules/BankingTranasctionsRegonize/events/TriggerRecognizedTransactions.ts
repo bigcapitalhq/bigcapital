@@ -24,7 +24,7 @@ export class TriggerRecognizedTransactionsSubscriber {
    * @param {IBankRuleEventEditedPayload} payload -
    */
   @OnEvent(events.bankRules.onEdited)
-  private async recognizedTransactionsOnRuleEdited({
+  async recognizedTransactionsOnRuleEdited({
     editRuleDTO,
     oldBankRule,
     bankRule,

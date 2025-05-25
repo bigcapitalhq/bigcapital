@@ -1,6 +1,6 @@
-import { TenantModel } from "@/modules/System/models/TenantModel";
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class Currency extends TenantModel {
+export class Currency extends TenantBaseModel {
   public readonly currencySign: string;
   public readonly currencyName: string;
   public readonly currencyCode: string;

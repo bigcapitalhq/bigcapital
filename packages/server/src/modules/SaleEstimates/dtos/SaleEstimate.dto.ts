@@ -5,16 +5,16 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
-  IsDate,
+  IsDateString,
+  IsEmail,
   IsEnum,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
   Min,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
+import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 
 enum DiscountType {
   Percentage = 'percentage',
@@ -28,24 +28,22 @@ class AttachmentDto {
   key: string;
 }
 export class CommandSaleEstimateDto {
-  @IsNumber()
   @IsNotEmpty()
-  @ApiProperty({
-    description: 'The id of the customer',
-    example: 1,
-  })
+  @ToNumber()
+  @IsNumber()
+  @ApiProperty({ description: 'The id of the customer', example: 1 })
   customerId: number;
 
-  @IsDate()
-  @Type(() => Date)
+  @IsNotEmpty()
+  @IsDateString()
   @ApiProperty({
     description: 'The date of the estimate',
     example: '2021-01-01',
   })
   estimateDate: Date;
 
-  @IsDate()
-  @Type(() => Date)
+  @IsNotEmpty()
+  @IsDateString()
   @ApiProperty({
     description: 'The expiration date of the estimate',
     example: '2021-01-01',
@@ -65,31 +63,26 @@ export class CommandSaleEstimateDto {
   estimateNumber?: string;
 
   @IsBoolean()
-  delivered: boolean = false;
+  @IsOptional()
+  delivered?: boolean = false;
 
+  @IsOptional()
+  @ToNumber()
   @IsNumber()
   @Min(0.01)
-  @IsOptional()
-  @ApiProperty({
-    description: 'The exchange rate of the estimate',
-    example: 1,
-  })
+  @ApiProperty({ description: 'The exchange rate of the estimate', example: 1 })
   exchangeRate?: number;
 
-  @IsNumber()
   @IsOptional()
-  @ApiProperty({
-    description: 'The id of the warehouse',
-    example: 1,
-  })
+  @ToNumber()
+  @IsNumber()
+  @ApiProperty({ description: 'The id of the warehouse', example: 1 })
   warehouseId?: number;
 
-  @IsNumber()
   @IsOptional()
-  @ApiProperty({
-    description: 'The id of the branch',
-    example: 1,
-  })
+  @ToNumber()
+  @IsNumber()
+  @ApiProperty({ description: 'The id of the branch', example: 1 })
   branchId?: number;
 
   @IsArray()
@@ -110,32 +103,33 @@ export class CommandSaleEstimateDto {
   })
   entries: SaleEstimateEntryDto[];
 
-  @IsString()
   @IsOptional()
+  @IsString()
   @ApiProperty({
     description: 'The note of the estimate',
     example: 'This is a note',
   })
   note?: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   @ApiProperty({
     description: 'The terms and conditions of the estimate',
     example: 'This is a terms and conditions',
   })
   termsConditions?: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
+  @IsEmail()
   @ApiProperty({
     description: 'The email to send the estimate to',
     example: 'test@test.com',
   })
   sendToEmail?: string;
 
-  @IsArray()
   @IsOptional()
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AttachmentDto)
   @ApiProperty({
@@ -146,22 +140,26 @@ export class CommandSaleEstimateDto {
       },
     ],
   })
-  @IsNumber()
+
   @IsOptional()
+  @ToNumber()
+  @IsNumber()
   @ApiProperty({
     description: 'The id of the pdf template',
     example: 1,
   })
   pdfTemplateId?: number;
 
-  @IsNumber()
   @IsOptional()
+  @ToNumber()
+  @IsNumber()
   @ApiProperty({
     description: 'The discount of the estimate',
     example: 1,
   })
   discount?: number;
 
+  @IsOptional()
   @IsEnum(DiscountType)
   @ApiProperty({
     description: 'The type of the discount',
@@ -169,8 +167,9 @@ export class CommandSaleEstimateDto {
   })
   discountType: DiscountType = DiscountType.Amount;
 
-  @IsNumber()
+  @ToNumber()
   @IsOptional()
+  @IsNumber()
   @ApiProperty({
     description: 'The adjustment of the estimate',
     example: 1,

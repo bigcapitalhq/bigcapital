@@ -108,11 +108,7 @@ export class ManualJournalsController {
     description: 'The manual journal details have been successfully retrieved.',
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
-  public getManualJournals(
-    @Query() filterDto: Partial<IManualJournalsFilter>
-  ) {
+  public getManualJournals(@Query() filterDto: Partial<IManualJournalsFilter>) {
     return this.manualJournalsApplication.getManualJournals(filterDto);
   }
-
-    
 }

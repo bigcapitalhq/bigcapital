@@ -1,3 +1,4 @@
+import { ToNumber } from '@/common/decorators/Validators';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -5,9 +6,10 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsEnum,
   IsInt,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsPositive,
@@ -25,21 +27,25 @@ export class CreditNoteEntryDto extends ItemEntryDto {}
 
 class AttachmentDto {
   @IsString()
+  @IsNotEmpty()
   key: string;
 }
 
 export class CommandCreditNoteDto {
+  @ToNumber()
   @IsInt()
+  @IsNotEmpty()
   @ApiProperty({ example: 1, description: 'The customer ID' })
   customerId: number;
 
   @IsOptional()
+  @ToNumber()
   @IsPositive()
   @ApiProperty({ example: 3.43, description: 'The exchange rate' })
   exchangeRate?: number;
 
-  @IsDate()
-  @Type(() => Date)
+  @IsNotEmpty()
+  @IsDateString()
   @ApiProperty({ example: '2021-09-01', description: 'The credit note date' })
   creditNoteDate: Date;
 
@@ -64,26 +70,19 @@ export class CommandCreditNoteDto {
   termsConditions?: string;
 
   @IsBoolean()
-  @ApiProperty({
-    example: false,
-    description: 'The credit note is open',
-  })
+  @ApiProperty({ example: false, description: 'The credit note is open' })
   open: boolean = false;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
-  @ApiProperty({
-    example: 1,
-    description: 'The warehouse ID',
-  })
+  @ApiProperty({ example: 1, description: 'The warehouse ID' })
   warehouseId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
-  @ApiProperty({
-    example: 1,
-    description: 'The branch ID',
-  })
+  @ApiProperty({ example: 1, description: 'The branch ID' })
   branchId?: number;
 
   @IsArray()
@@ -91,14 +90,7 @@ export class CommandCreditNoteDto {
   @Type(() => CreditNoteEntryDto)
   @ArrayMinSize(1)
   @ApiProperty({
-    example: [
-      {
-        itemId: 1,
-        quantity: 1,
-        rate: 10,
-        taxRateId: 1,
-      },
-    ],
+    example: [{ itemId: 1, quantity: 1, rate: 10, taxRateId: 1 }],
     description: 'The credit note entries',
   })
   entries: CreditNoteEntryDto[];
@@ -110,19 +102,15 @@ export class CommandCreditNoteDto {
   attachments?: AttachmentDto[];
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
-  @ApiProperty({
-    example: 1,
-    description: 'The pdf template ID',
-  })
+  @ApiProperty({ example: 1, description: 'The pdf template ID' })
   pdfTemplateId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
-  @ApiProperty({
-    example: 10,
-    description: 'The discount amount',
-  })
+  @ApiProperty({ example: 10, description: 'The discount amount' })
   discount?: number;
 
   @IsOptional()
@@ -135,6 +123,7 @@ export class CommandCreditNoteDto {
   discountType?: DiscountType;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   adjustment?: number;
 }

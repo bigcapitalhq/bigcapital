@@ -1,10 +1,13 @@
+import { ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsDateString,
   IsInt,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsPositive,
@@ -20,18 +23,21 @@ export class ManualJournalEntryDto {
   index: number;
 
   @ApiPropertyOptional({ description: 'Credit amount' })
+  @ToNumber()
   @IsOptional()
   @IsNumber()
   @Min(0)
   credit?: number;
 
   @ApiPropertyOptional({ description: 'Debit amount' })
+  @ToNumber()
   @IsOptional()
   @IsNumber()
   @Min(0)
   debit?: number;
 
   @ApiProperty({ description: 'Account ID' })
+  @IsNotEmpty()
   @IsInt()
   accountId: number;
 
@@ -41,16 +47,19 @@ export class ManualJournalEntryDto {
   note?: string;
 
   @ApiPropertyOptional({ description: 'Contact ID' })
-  @IsOptional()
+  @ToNumber()
   @IsInt()
+  @IsOptional()
   contactId?: number;
 
   @ApiPropertyOptional({ description: 'Branch ID' })
+  @ToNumber()
   @IsOptional()
   @IsInt()
   branchId?: number;
 
   @ApiPropertyOptional({ description: 'Project ID' })
+  @ToNumber()
   @IsOptional()
   @IsInt()
   projectId?: number;
@@ -64,8 +73,7 @@ class AttachmentDto {
 
 export class CommandManualJournalDto {
   @ApiProperty({ description: 'Journal date' })
-  @IsDate()
-  @Type(() => Date)
+  @IsDateString()
   date: Date;
 
   @ApiPropertyOptional({ description: 'Currency code' })
@@ -74,6 +82,7 @@ export class CommandManualJournalDto {
   currencyCode?: string;
 
   @ApiPropertyOptional({ description: 'Exchange rate' })
+  @ToNumber()
   @IsOptional()
   @IsNumber()
   @IsPositive()
@@ -103,6 +112,7 @@ export class CommandManualJournalDto {
   description?: string;
 
   @ApiPropertyOptional({ description: 'Branch ID' })
+  @ToNumber()
   @IsOptional()
   @IsInt()
   branchId?: number;

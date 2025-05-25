@@ -1,16 +1,25 @@
-import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsNotEmpty, ValidateNested } from 'class-validator';
-import { IsString } from 'class-validator';
-import { IsDateString, IsNumber, IsOptional } from 'class-validator';
-import { IsInt } from 'class-validator';
+import {
+  IsString,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  IsNotEmpty,
+  IsInt,
+  ValidateNested,
+} from 'class-validator';
+import { ToNumber } from '@/common/decorators/Validators';
+import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
 
 export class PaymentReceivedEntryDto {
+  @ToNumber()
   @IsOptional()
   @IsInt()
   id?: number;
 
+  @ToNumber()
   @IsOptional()
   @IsInt()
   index?: number;
@@ -20,13 +29,16 @@ export class PaymentReceivedEntryDto {
   paymentReceiveId?: number;
 
   @IsInt()
+  @IsNotEmpty()
   invoiceId: number;
 
   @IsNumber()
+  @IsNotEmpty()
   paymentAmount: number;
 }
 
 export class CommandPaymentReceivedDto {
+  @ToNumber()
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({ description: 'The id of the customer', example: 1 })
@@ -40,6 +52,7 @@ export class CommandPaymentReceivedDto {
   paymentDate: Date | string;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @ApiProperty({
     description: 'The amount of the payment received',
@@ -48,6 +61,7 @@ export class CommandPaymentReceivedDto {
   amount?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @ApiProperty({
     description: 'The exchange rate of the payment received',
@@ -63,6 +77,7 @@ export class CommandPaymentReceivedDto {
   })
   referenceNo?: string;
 
+  @ToNumber()
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({
@@ -72,6 +87,7 @@ export class CommandPaymentReceivedDto {
   depositAccountId: number;
 
   @IsOptional()
+  @ToNumber()
   @IsString()
   @ApiProperty({
     description: 'The payment receive number of the payment received',
@@ -97,6 +113,7 @@ export class CommandPaymentReceivedDto {
   entries: PaymentReceivedEntryDto[];
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @ApiProperty({
     description: 'The id of the branch',

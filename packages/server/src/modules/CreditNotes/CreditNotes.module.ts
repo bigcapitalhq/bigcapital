@@ -15,7 +15,7 @@ import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
 import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
-import { GetCreditNote } from './queries/GetCreditNote.service';
+import { GetCreditNoteService } from './queries/GetCreditNote.service';
 import { CreditNoteBrandingTemplate } from './queries/CreditNoteBrandingTemplate.service';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
 import { CreditNoteGLEntries } from './commands/CreditNoteGLEntries';
@@ -52,7 +52,7 @@ import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/Credit
   ],
   providers: [
     CreateCreditNoteService,
-    GetCreditNote,
+    GetCreditNoteService,
     CommandCreditNoteDTOTransform,
     EditCreditNoteService,
     OpenCreditNoteService,
@@ -74,7 +74,7 @@ import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/Credit
   ],
   exports: [
     CreateCreditNoteService,
-    GetCreditNote,
+    GetCreditNoteService,
     CommandCreditNoteDTOTransform,
     EditCreditNoteService,
     OpenCreditNoteService,

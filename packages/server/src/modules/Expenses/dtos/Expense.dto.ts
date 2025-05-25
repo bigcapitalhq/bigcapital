@@ -1,10 +1,12 @@
+import { ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsInt,
+  IsISO4217CurrencyCode,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -23,10 +25,12 @@ export class ExpenseCategoryDto {
   @IsNotEmpty()
   index: number;
 
-  @IsInt()
   @IsNotEmpty()
+  @ToNumber()
+  @IsInt()
   expenseAccountId: number;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   amount?: number;
@@ -40,6 +44,7 @@ export class ExpenseCategoryDto {
   @IsOptional()
   landedCost?: boolean;
 
+  @ToNumber()
   @IsInt()
   @IsOptional()
   projectId?: number;
@@ -55,7 +60,7 @@ export class CommandExpenseDto {
   })
   referenceNo?: string;
 
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   @ApiProperty({
     description: 'The payment date of the expense',
@@ -63,8 +68,9 @@ export class CommandExpenseDto {
   })
   paymentDate: Date;
 
-  @IsInt()
   @IsNotEmpty()
+  @ToNumber()
+  @IsInt()
   @ApiProperty({
     description: 'The payment account id of the expense',
     example: 1,
@@ -80,30 +86,21 @@ export class CommandExpenseDto {
   })
   description?: string;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
-  @ApiProperty({
-    description: 'The exchange rate of the expense',
-    example: 1,
-  })
+  @ApiProperty({ description: 'The exchange rate of the expense', example: 1 })
   exchangeRate?: number;
 
   @IsString()
   @MaxLength(3)
   @IsOptional()
+  @IsISO4217CurrencyCode()
   @ApiProperty({
     description: 'The currency code of the expense',
     example: 'USD',
   })
   currencyCode?: string;
-
-  @IsNumber()
-  @IsOptional()
-  @ApiProperty({
-    description: 'The exchange rate of the expense',
-    example: 1,
-  })
-  exchange_rate?: number;
 
   @IsBoolean()
   @IsOptional()
@@ -113,14 +110,16 @@ export class CommandExpenseDto {
   })
   publish?: boolean;
 
-  @IsInt()
   @IsOptional()
+  @ToNumber()
+  @IsInt()
   @ApiProperty({
     description: 'The payee id of the expense',
     example: 1,
   })
   payeeId?: number;
 
+  @ToNumber()
   @IsInt()
   @IsOptional()
   @ApiProperty({

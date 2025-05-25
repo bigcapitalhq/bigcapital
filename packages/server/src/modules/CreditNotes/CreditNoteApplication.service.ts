@@ -7,6 +7,8 @@ import { GetCreditNotePdf } from './queries/GetCreditNotePdf.serivce';
 import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
 import { GetCreditNotesService } from './queries/GetCreditNotes.service';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
+import { GetCreditNoteState } from './queries/GetCreditNoteState.service';
+import { GetCreditNoteService } from './queries/GetCreditNote.service';
 
 @Injectable()
 export class CreditNoteApplication {
@@ -17,6 +19,8 @@ export class CreditNoteApplication {
     private readonly deleteCreditNoteService: DeleteCreditNoteService,
     private readonly getCreditNotePdfService: GetCreditNotePdf,
     private readonly getCreditNotesService: GetCreditNotesService,
+    private readonly getCreditNoteStateService: GetCreditNoteState,
+    private readonly getCreditNoteService: GetCreditNoteService
   ) {}
 
   /**
@@ -75,5 +79,22 @@ export class CreditNoteApplication {
    */
   getCreditNotes(creditNotesQuery: ICreditNotesQueryDTO) {
     return this.getCreditNotesService.getCreditNotesList(creditNotesQuery);
+  }
+
+  /**
+   * Retrieves the create/edit initial state of the credit note.
+   * @returns {Promise<ICreditNoteState>}
+   */
+  getCreditNoteState() {
+    return this.getCreditNoteStateService.getCreditNoteState();
+  }
+
+  /**
+   * Retrieves the credit note.
+   * @param {number} creditNoteId
+   * @returns {Promise<CreditNote>}
+   */
+  getCreditNote(creditNoteId: number) {
+    return this.getCreditNoteService.getCreditNote(creditNoteId);
   }
 }

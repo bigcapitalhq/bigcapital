@@ -14,7 +14,10 @@ export class ValidationPipe implements PipeTransform<any> {
       return value;
     }
     const object = plainToInstance(metatype, value);
-    const errors = await validate(object);
+    const errors = await validate(object, {
+      // Strip validated object of any properties that do not have any decorators.
+      whitelist: true,
+    });
 
     if (errors.length > 0) {
       throw new BadRequestException(errors);

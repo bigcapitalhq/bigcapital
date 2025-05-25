@@ -1,3 +1,4 @@
+import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -5,12 +6,11 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
   Min,
   ValidateNested,
@@ -29,26 +29,24 @@ class PaymentMethodDto {
   enable: boolean;
 }
 
-
 class AttachmentDto {
   @IsString()
   key: string;
 }
 
 class CommandSaleInvoiceDto {
+  @ToNumber()
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({ description: 'Customer ID', example: 1 })
   customerId: number;
 
-  @IsDate()
-  @Type(() => Date)
+  @IsDateString()
   @IsNotEmpty()
   @ApiProperty({ description: 'Invoice date', example: '2023-01-01T00:00:00Z' })
   invoiceDate: Date;
 
-  @IsDate()
-  @Type(() => Date)
+  @IsDateString()
   @IsNotEmpty()
   @ApiProperty({ description: 'Due date', example: '2023-01-15T00:00:00Z' })
   dueDate: Date;
@@ -99,6 +97,7 @@ class CommandSaleInvoiceDto {
   termsConditions?: string;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @Min(0)
   @ApiProperty({
@@ -110,16 +109,19 @@ class CommandSaleInvoiceDto {
   exchangeRate?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @ApiProperty({ description: 'Warehouse ID', required: false, example: 1 })
   warehouseId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @ApiProperty({ description: 'Branch ID', required: false, example: 1 })
   branchId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @ApiProperty({ description: 'Project ID', required: false, example: 1 })
   projectId?: number;
@@ -145,6 +147,7 @@ class CommandSaleInvoiceDto {
   entries: ItemEntryDto[];
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @ApiProperty({ description: 'PDF template ID', required: false, example: 1 })
   pdfTemplateId?: number;
@@ -161,6 +164,7 @@ class CommandSaleInvoiceDto {
   paymentMethods?: PaymentMethodDto[];
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @ApiProperty({ description: 'Discount value', required: false, example: 10 })
   discount?: number;
@@ -176,6 +180,7 @@ class CommandSaleInvoiceDto {
   discountType?: DiscountType;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @ApiProperty({
     description: 'Adjustment amount',
@@ -185,6 +190,7 @@ class CommandSaleInvoiceDto {
   adjustment?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @ApiProperty({
     description: 'ID of the estimate this invoice is created from',
