@@ -1,7 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsDate,
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -9,25 +10,33 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { ToNumber } from '@/common/decorators/Validators';
 
 export class BillPaymentEntryDto {
+  @ToNumber()
   @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ description: 'The id of the bill', example: 1 })
   billId: number;
 
+  @ToNumber()
   @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'The payment amount of the bill payment',
+    example: 100,
+  })
   paymentAmount: number;
 }
 
 export class CommandBillPaymentDTO {
+  @ToNumber()
   @IsNumber()
   @IsNotEmpty()
-  @ApiProperty({
-    description: 'The id of the vendor',
-    example: 1,
-  })
+  @ApiProperty({ description: 'The id of the vendor', example: 1 })
   vendorId: number;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   @ApiProperty({
@@ -36,12 +45,10 @@ export class CommandBillPaymentDTO {
   })
   amount?: number;
 
+  @ToNumber()
   @IsNumber()
   @IsNotEmpty()
-  @ApiProperty({
-    description: 'The id of the payment account',
-    example: 1,
-  })
+  @ApiProperty({ description: 'The id of the payment account', example: 1 })
   paymentAccountId: number;
 
   @IsString()
@@ -52,8 +59,8 @@ export class CommandBillPaymentDTO {
   })
   paymentNumber?: string;
 
-  @IsDate()
-  @Type(() => Date)
+  @IsDateString()
+  @IsNotEmpty()
   @ApiProperty({
     description: 'The payment date of the bill payment',
     example: '2021-01-01',
@@ -76,7 +83,6 @@ export class CommandBillPaymentDTO {
   })
   statement?: string;
 
-  @IsString()
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
@@ -92,12 +98,10 @@ export class CommandBillPaymentDTO {
   })
   entries: BillPaymentEntryDto[];
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
-  @ApiProperty({
-    description: 'The id of the branch',
-    example: 1,
-  })
+  @ApiProperty({ description: 'The id of the branch', example: 1 })
   branchId?: number;
 
   @IsArray()

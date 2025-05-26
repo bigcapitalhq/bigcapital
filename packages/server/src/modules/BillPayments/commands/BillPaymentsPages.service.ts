@@ -8,7 +8,7 @@ import { ServiceError } from '../../Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
-export default class BillPaymentsPages {
+export class BillPaymentsPages {
   /**
    * @param {TenantModelProxy<typeof Bill>} billModel - Bill model.
    * @param {TenantModelProxy<typeof BillPayment>} billPaymentModel - Bill payment model.

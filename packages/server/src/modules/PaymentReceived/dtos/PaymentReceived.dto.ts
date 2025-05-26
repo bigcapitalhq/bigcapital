@@ -20,19 +20,22 @@ export class PaymentReceivedEntryDto {
   id?: number;
 
   @ToNumber()
-  @IsOptional()
   @IsInt()
+  @IsOptional()
   index?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   paymentReceiveId?: number;
 
+  @ToNumber()
   @IsInt()
   @IsNotEmpty()
   invoiceId: number;
 
-  @IsNumber()
+  @ToNumber()
+  @IsInt()
   @IsNotEmpty()
   paymentAmount: number;
 }

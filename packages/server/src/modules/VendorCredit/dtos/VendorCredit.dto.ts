@@ -1,15 +1,19 @@
-import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
+  IsDateString,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { ToNumber } from '@/common/decorators/Validators';
+import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 
 enum DiscountType {
   Percentage = 'percentage',
@@ -20,10 +24,12 @@ export class VendorCreditEntryDto extends ItemEntryDto {}
 
 class AttachmentDto {
   @IsString()
+  @IsNotEmpty()
   key: string;
 }
 
 export class CommandVendorCreditDto {
+  @ToNumber()
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty({
@@ -32,6 +38,7 @@ export class CommandVendorCreditDto {
   })
   vendorId: number;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   @ApiProperty({
@@ -42,10 +49,7 @@ export class CommandVendorCreditDto {
 
   @IsString()
   @IsOptional()
-  @ApiProperty({
-    description: 'The vendor credit number',
-    example: '123456',
-  })
+  @ApiProperty({ description: 'The vendor credit number', example: '123456' })
   vendorCreditNumber?: string;
 
   @IsString()
@@ -56,7 +60,7 @@ export class CommandVendorCreditDto {
   })
   referenceNo?: string;
 
-  @IsString()
+  @IsDateString()
   @IsNotEmpty()
   @ApiProperty({
     description: 'The date of the vendor credit',
@@ -73,13 +77,15 @@ export class CommandVendorCreditDto {
   note?: string;
 
   @IsOptional()
+  @IsBoolean()
   @ApiProperty({
     description: 'The open status of the vendor credit',
     example: true,
   })
   open: boolean = false;
 
-  @IsNumber()
+  @ToNumber()
+  @IsInt()
   @IsOptional()
   @ApiProperty({
     description: 'The warehouse id of the vendor credit',
@@ -87,7 +93,8 @@ export class CommandVendorCreditDto {
   })
   warehouseId?: number;
 
-  @IsNumber()
+  @ToNumber()
+  @IsInt()
   @IsOptional()
   @ApiProperty({
     description: 'The branch id of the vendor credit',
@@ -120,14 +127,11 @@ export class CommandVendorCreditDto {
   @IsOptional()
   @ApiProperty({
     description: 'The attachments of the vendor credit',
-    example: [
-      {
-        key: '123456',
-      },
-    ],
+    example: [{ key: '123456' }],
   })
   attachments?: AttachmentDto[];
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   @ApiProperty({
@@ -144,6 +148,7 @@ export class CommandVendorCreditDto {
   })
   discountType?: DiscountType;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   @ApiProperty({

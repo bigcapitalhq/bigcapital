@@ -159,7 +159,7 @@ export function usePaymentMadeNewPageEntries(vendorId, props) {
       params: { vendor_id: vendorId },
     },
     {
-      select: (res) => res.data.entries,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

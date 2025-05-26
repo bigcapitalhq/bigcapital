@@ -20,6 +20,7 @@ import { BillPaymentsExportable } from './queries/BillPaymentsExportable';
 import { BillPaymentsImportable } from './commands/BillPaymentsImportable';
 import { GetBillPaymentsService } from './queries/GetBillPayments.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
 
 @Module({
   imports: [LedgerModule, AccountsModule, DynamicListModule],
@@ -41,6 +42,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     BillPaymentsExportable,
     BillPaymentsImportable,
     GetBillPaymentsService,
+    BillPaymentsPages,
   ],
   exports: [
     BillPaymentValidators,

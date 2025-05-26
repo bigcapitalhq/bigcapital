@@ -1,3 +1,4 @@
+import { ToNumber } from '@/common/decorators/Validators';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { Type } from 'class-transformer';
 import {
@@ -5,14 +6,14 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsDateString,
   IsEnum,
   IsInt,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsPositive,
   IsString,
-  Min,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
 
@@ -29,10 +30,12 @@ export class BillEntryDto extends ItemEntryDto {
 
 class AttachmentDto {
   @IsString()
+  @IsNotEmpty()
   key: string;
 }
 
 export class CommandBillDto {
+  @IsOptional()
   @IsString()
   billNumber: string;
 
@@ -40,32 +43,36 @@ export class CommandBillDto {
   @IsString()
   referenceNo?: string;
 
-  @IsDate()
-  @Type(() => Date)
+  @IsNotEmpty()
+  @IsDateString()
   billDate: Date;
 
   @IsOptional()
-  @IsDate()
-  @Type(() => Date)
+  @IsDateString()
   dueDate?: Date;
 
   @IsInt()
+  @IsNotEmpty()
   vendorId: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   @IsPositive()
   exchangeRate?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   warehouseId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   branchId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   projectId?: number;
 
@@ -74,9 +81,11 @@ export class CommandBillDto {
   note?: string;
 
   @IsBoolean()
+  @IsOptional()
   open: boolean = false;
 
   @IsBoolean()
+  @IsOptional()
   isInclusiveTax: boolean = false;
 
   @IsArray()
@@ -92,13 +101,17 @@ export class CommandBillDto {
   attachments?: AttachmentDto[];
 
   @IsEnum(DiscountType)
+  @IsOptional()
   discountType: DiscountType = DiscountType.Amount;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
+  @IsPositive()
   discount?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber()
   adjustment?: number;
 }
