@@ -17,6 +17,8 @@ export class WarehousesSettings {
     const settings = await this.settingsStore();
 
     settings.set({ group: 'features', key: Features.WAREHOUSES, value: 1 });
+
+    await settings.save();
   };
 
   /**

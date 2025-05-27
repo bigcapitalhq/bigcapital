@@ -159,7 +159,7 @@ export function useReceipt(id, props) {
     ['SALE_RECEIPT', id],
     { method: 'get', url: `sale-receipts/${id}` },
     {
-      select: (res) => res.data.sale_receipt,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -211,7 +211,7 @@ export function useReceiptSMSDetail(receiptId, props, requestProps) {
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -304,7 +304,7 @@ export function useSaleReceiptMailState(
     () =>
       apiRequest
         .get(`sale-receipts/${receiptId}/mail`)
-        .then((res) => transformToCamelCase(res.data.data)),
+        .then((res) => transformToCamelCase(res.data)),
   );
 }
 
@@ -322,7 +322,7 @@ export function useGetReceiptState(
     () =>
       apiRequest
         .get(`/sale-receipts/state`)
-        .then((res) => transformToCamelCase(res.data?.data)),
+        .then((res) => transformToCamelCase(res.data)),
     { ...options },
   );
 }

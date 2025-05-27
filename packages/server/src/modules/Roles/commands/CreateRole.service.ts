@@ -1,12 +1,12 @@
 import { Knex } from 'knex';
+import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IRoleCreatedPayload } from '../Roles.types';
 import { Role } from './../models/Role.model';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { CreateRoleDto } from '../dtos/Role.dto';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { Inject, Injectable } from '@nestjs/common';
 import { validateInvalidPermissions } from '../utils';
 
 @Injectable()

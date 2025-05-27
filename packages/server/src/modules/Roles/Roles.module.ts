@@ -9,6 +9,7 @@ import { Role } from './models/Role.model';
 import { RolePermission } from './models/RolePermission.model';
 import { RolesController } from './Roles.controller';
 import { RolesApplication } from './Roles.application';
+import { RolePermissionsSchema } from './queries/RolePermissionsSchema';
 
 const models = [
   RegisterTenancyModel(Role),
@@ -24,6 +25,7 @@ const models = [
     GetRoleService,
     GetRolesService,
     RolesApplication,
+    RolePermissionsSchema
   ],
   controllers: [RolesController],
   exports: [...models],

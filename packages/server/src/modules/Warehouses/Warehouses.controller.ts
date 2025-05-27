@@ -57,7 +57,7 @@ export class WarehousesController {
     return this.warehousesApplication.activateWarehouses();
   }
 
-  @Post(':id/mark-primary')
+  @Put(':id/mark-primary')
   @ApiOperation({ summary: 'Mark a warehouse as primary' })
   markWarehousePrimary(@Param('id') warehouseId: string) {
     return this.warehousesApplication.markWarehousePrimary(Number(warehouseId));

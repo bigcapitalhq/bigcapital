@@ -6,6 +6,9 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { SaleEstimateMeta } from './SaleEstimate.meta';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
+import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
+import { Customer } from '@/modules/Customers/models/Customer';
 
 @ExportableModel()
 @ImportableModel()
@@ -39,6 +42,10 @@ export class SaleEstimate extends TenantBaseModel {
 
   branchId?: number;
   warehouseId?: number;
+
+  public entries!: ItemEntry[];
+  public attachments!: Document[];
+  public customer!: Customer;
 
   /**
    * Table name

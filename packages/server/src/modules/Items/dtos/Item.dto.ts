@@ -1,7 +1,6 @@
 import {
   IsString,
   IsIn,
-  IsOptional,
   IsBoolean,
   IsNumber,
   IsInt,
@@ -9,11 +8,10 @@ import {
   ValidateIf,
   MaxLength,
   Min,
-  Max,
   IsNotEmpty,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 
 export class CommandItemDto {
   @IsString()
@@ -23,6 +21,7 @@ export class CommandItemDto {
   name: string;
 
   @IsString()
+  @IsNotEmpty()
   @IsIn(['service', 'non-inventory', 'inventory'])
   @ApiProperty({
     description: 'Item type',
@@ -52,6 +51,7 @@ export class CommandItemDto {
   purchasable?: boolean;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber({ maxDecimalPlaces: 3 })
   @Min(0)
   @ValidateIf((o) => o.purchasable === true)
@@ -64,6 +64,7 @@ export class CommandItemDto {
   costPrice?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @Min(0)
   @ValidateIf((o) => o.purchasable === true)
@@ -86,6 +87,7 @@ export class CommandItemDto {
   sellable?: boolean;
 
   @IsOptional()
+  @ToNumber()
   @IsNumber({ maxDecimalPlaces: 3 })
   @Min(0)
   @ValidateIf((o) => o.sellable === true)
@@ -98,6 +100,7 @@ export class CommandItemDto {
   sellPrice?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @Min(0)
   @ValidateIf((o) => o.sellable === true)
@@ -110,6 +113,7 @@ export class CommandItemDto {
   sellAccountId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @Min(0)
   @ValidateIf((o) => o.type === 'inventory')
@@ -140,6 +144,7 @@ export class CommandItemDto {
   purchaseDescription?: string;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @ApiProperty({
     description: 'ID of the tax rate applied to sales',
@@ -149,6 +154,7 @@ export class CommandItemDto {
   sellTaxRateId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @ApiProperty({
     description: 'ID of the tax rate applied to purchases',
@@ -158,6 +164,7 @@ export class CommandItemDto {
   purchaseTaxRateId?: number;
 
   @IsOptional()
+  @ToNumber()
   @IsInt()
   @Min(0)
   @ApiProperty({
@@ -189,7 +196,6 @@ export class CommandItemDto {
 
   @IsOptional()
   @IsArray()
-  @Type(() => Number)
   @IsInt({ each: true })
   @ApiProperty({
     description: 'IDs of media files associated with the item',

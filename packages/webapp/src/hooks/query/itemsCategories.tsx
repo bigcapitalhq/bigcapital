@@ -101,7 +101,7 @@ export function useItemCategory(id, props) {
     [t.ITEM_CATEGORY, id],
     { method: 'get', url: `item-categories/${id}` },
     {
-      select: (res) => res.data.category,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

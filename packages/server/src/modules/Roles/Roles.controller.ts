@@ -72,9 +72,7 @@ export class RolesController {
     status: HttpStatus.OK,
     description: 'Role deleted successfully',
   })
-  async deleteRole(
-    @Param('id', ParseIntPipe) roleId: number,
-  ) {
+  async deleteRole(@Param('id', ParseIntPipe) roleId: number) {
     await this.rolesApp.deleteRole(roleId);
 
     return {
@@ -83,24 +81,34 @@ export class RolesController {
     };
   }
 
+  @Get('permissions/schema')
+  @ApiOperation({ summary: 'Get role permissions schema' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Role permissions schema',
+  })
+  async getRolePermissionsSchema() {
+    const schema = await this.rolesApp.getRolePermissionsSchema();
+
+    return schema;
+  }
+
   @Get()
   @ApiOperation({ summary: 'Get all roles' })
   @ApiResponse({ status: HttpStatus.OK, description: 'List of all roles' })
   async getRoles() {
     const roles = await this.rolesApp.getRoles();
 
-    return { roles };
+    return roles;
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a specific role by ID' })
   @ApiParam({ name: 'id', description: 'Role ID' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Role details' })
-  async getRole(
-    @Param('id', ParseIntPipe) roleId: number,
-  ) {
+  async getRole(@Param('id', ParseIntPipe) roleId: number) {
     const role = await this.rolesApp.getRole(roleId);
 
-    return { role };
+    return role;
   }
 }

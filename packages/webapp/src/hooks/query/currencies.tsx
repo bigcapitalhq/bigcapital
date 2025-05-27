@@ -21,15 +21,15 @@ export function useCreateCurrency(props) {
 }
 
 /**
- * Edits the given currency code.
+ * Edits the given currency by ID.
  */
 export function useEditCurrency(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([currencyCode, values]) =>
-      apiRequest.post(`currencies/${currencyCode}`, values),
+    ([currencyId, values]) =>
+      apiRequest.put(`currencies/${currencyId}`, values),
     {
       onSuccess: () => {
         // Invalidate currencies.

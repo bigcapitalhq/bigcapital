@@ -17,6 +17,8 @@ export class BranchesSettingsService {
     const settingsStore = await this.settingsStore();
 
     settingsStore.set({ group: 'features', key: Features.BRANCHES, value: 1 });
+
+    await settingsStore.save();
   };
 
   /**

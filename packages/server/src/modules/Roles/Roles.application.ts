@@ -4,6 +4,7 @@ import { DeleteRoleService } from './commands/DeleteRole.service';
 import { EditRoleService } from './commands/EditRole.service';
 import { GetRoleService } from './queries/GetRole.service';
 import { GetRolesService } from './queries/GetRoles.service';
+import { RolePermissionsSchema } from './queries/RolePermissionsSchema';
 
 @Injectable()
 export class RolesApplication {
@@ -13,6 +14,7 @@ export class RolesApplication {
     private readonly deleteRoleService: DeleteRoleService,
     private readonly getRoleService: GetRoleService,
     private readonly getRolesService: GetRolesService,
+    private readonly getRolePermissionsSchemaService: RolePermissionsSchema,
   ) {}
 
   /**
@@ -58,5 +60,13 @@ export class RolesApplication {
    */
   async getRoles() {
     return this.getRolesService.getRoles();
+  }
+
+  /**
+   * Gets the role permissions schema.
+   * @returns The role permissions schema.
+   */
+  async getRolePermissionsSchema() {
+    return this.getRolePermissionsSchemaService.getRolePermissionsSchema();
   }
 }

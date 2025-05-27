@@ -1,9 +1,9 @@
+import { IsOptional } from '@/common/decorators/Validators';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   IsUrl,
 } from 'class-validator';

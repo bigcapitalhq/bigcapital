@@ -76,8 +76,13 @@ export class BranchesController {
     status: 200,
     description: 'The branches feature has been successfully activated.',
   })
-  activateBranches() {
-    return this.branchesApplication.activateBranches();
+  async activateBranches() {
+    await this.branchesApplication.activateBranches();
+
+    return {
+      code: 200,
+      message: 'The branches activated successfully.',
+    };
   }
 
   @Put(':id/mark-as-primary')

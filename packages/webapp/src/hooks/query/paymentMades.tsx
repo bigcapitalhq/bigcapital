@@ -185,7 +185,7 @@ export function usePaymentMade(id, props) {
     [t.PAYMENT_MADE, id],
     { method: 'get', url: `bill-payments/${id}` },
     {
-      select: (res) => res.data.bill_payment,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

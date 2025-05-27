@@ -37,15 +37,15 @@ export class CurrenciesController {
     return this.currenciesApp.createCurrency(dto);
   }
 
-  @Put(':code')
+  @Put(':id')
   @ApiOperation({ summary: 'Edit an existing currency' })
   @ApiParam({ name: 'id', type: Number, description: 'Currency ID' })
   @ApiBody({ type: EditCurrencyDto })
   @ApiOkResponse({ description: 'The currency has been successfully updated.' })
   @ApiNotFoundResponse({ description: 'Currency not found.' })
   @ApiBadRequestResponse({ description: 'Invalid input data.' })
-  edit(@Param('code') code: string, @Body() dto: EditCurrencyDto) {
-    return this.currenciesApp.editCurrency(code, dto);
+  edit(@Param('id') id: number, @Body() dto: EditCurrencyDto) {
+    return this.currenciesApp.editCurrency(id, dto);
   }
 
   @Delete(':code')

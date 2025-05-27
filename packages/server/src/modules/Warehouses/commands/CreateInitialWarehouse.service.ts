@@ -1,16 +1,16 @@
 import { CreateWarehouse } from './CreateWarehouse.service';
 import { Injectable } from '@nestjs/common';
-import { I18nContext } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class CreateInitialWarehouse {
   /**
    * @param {CreateWarehouse} createWarehouse - Create warehouse service.
-   * @param {I18nContext} i18n - I18n context.
+   * @param {I18nService} i18n - I18n service.
    */
   constructor(
     private readonly createWarehouse: CreateWarehouse,
-    private readonly i18n: I18nContext,
+    private readonly i18n: I18nService,
   ) {}
 
   /**

@@ -76,7 +76,7 @@ export function useExpense(id, props) {
       url: `expenses/${id}`,
     },
     {
-      select: (res) => res.data.expense,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

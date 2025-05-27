@@ -139,7 +139,7 @@ export function useJournal(id, props) {
     [t.MANUAL_JOURNAL, id],
     { method: 'get', url: `manual-journals/${id}` },
     {
-      select: (res) => res.data.manual_journal,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

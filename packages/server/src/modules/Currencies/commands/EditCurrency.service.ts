@@ -12,21 +12,22 @@ export class EditCurrencyService {
 
   /**
    * Edit details of the given currency.
-   * @param {number} currencyCode - Currency code.
+   * @param {number} currencyId - Currency ID.
    * @param {ICurrencyDTO} currencyDTO - Edit currency dto.
    */
   public async editCurrency(
-    currencyCode: string,
+    currencyId: number,
     currencyDTO: EditCurrencyDto,
   ): Promise<Currency> {
-    const foundCurrency = await this.currencyModel()
+    const foundCurrency = this.currencyModel()
       .query()
-      .findOne('currencyCode', currencyCode)
+      .findById(currencyId)
       .throwIfNotFound();
 
+    // Directly use the provided ID to update the currency
     const currency = await this.currencyModel()
       .query()
-      .patchAndFetchById(foundCurrency.id, {
+      .patchAndFetchById(currencyId, {
         ...currencyDTO,
       });
     return currency;

@@ -156,7 +156,7 @@ export function useVendorCredit(id, props, requestProps) {
     [t.VENDOR_CREDIT, id],
     { method: 'get', url: `vendor-credits/${id}`, ...requestProps },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -232,7 +232,7 @@ export function useRefundVendorCredit(id, props, requestProps) {
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -298,7 +298,7 @@ export function useReconcileVendorCredit(id, props, requestProps) {
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -317,7 +317,7 @@ export function useReconcileVendorCredits(id, props, requestProps) {
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -359,7 +359,7 @@ export function useRefundVendorCreditTransaction(id, props, requestProps) {
       ...requestProps,
     },
     {
-      select: (res) => res.data.refund_credit,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

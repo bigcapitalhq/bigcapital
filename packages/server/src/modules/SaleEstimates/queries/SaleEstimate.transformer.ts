@@ -1,10 +1,7 @@
-// import { Transformer } from '@/lib/Transformer/Transformer';
-// import { ItemEntryTransformer } from '../Invoices/ItemEntryTransformer';
-// import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
-
 import { Transformer } from '@/modules/Transformer/Transformer';
 import { SaleEstimate } from '../models/SaleEstimate';
 import { ItemEntryTransformer } from '@/modules/TransactionItemEntry/ItemEntry.transformer';
+import { AttachmentTransformer } from '@/modules/Attachments/Attachment.transformer';
 
 export class SaleEstimateTransfromer extends Transformer {
   /**
@@ -106,9 +103,9 @@ export class SaleEstimateTransfromer extends Transformer {
    * @returns {}
    */
   protected entries = (estimate: SaleEstimate) => {
-    // return this.item(estimate.entries, new ItemEntryTransformer(), {
-    //   currencyCode: estimate.currencyCode,
-    // });
+    return this.item(estimate.entries, new ItemEntryTransformer(), {
+      currencyCode: estimate.currencyCode,
+    });
   };
 
   /**
@@ -117,6 +114,6 @@ export class SaleEstimateTransfromer extends Transformer {
    * @returns
    */
   protected attachments = (estimate: SaleEstimate) => {
-    // return this.item(estimate.attachments, new AttachmentTransformer());
+    return this.item(estimate.attachments, new AttachmentTransformer());
   };
 }
