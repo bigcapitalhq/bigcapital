@@ -1,5 +1,5 @@
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ICreditNoteRefundDTO } from '../CreditNotes/types/CreditNotes.types';
 import { CreditNotesRefundsApplication } from './CreditNotesRefundsApplication.service';
 import { RefundCreditNote } from './models/RefundCreditNote';
@@ -11,6 +11,14 @@ export class CreditNoteRefundsController {
   constructor(
     private readonly creditNotesRefundsApplication: CreditNotesRefundsApplication,
   ) {}
+
+  @Get(':creditNoteId/refunds')
+  @ApiOperation({ summary: 'Retrieve the credit note graph.' })
+  getCreditNoteRefunds(@Param('creditNoteId') creditNoteId: number) {
+    return this.creditNotesRefundsApplication.getCreditNoteRefunds(
+      creditNoteId,
+    );
+  }
 
   /**
    * Create a refund credit note.

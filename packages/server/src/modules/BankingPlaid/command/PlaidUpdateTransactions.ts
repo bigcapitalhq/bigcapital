@@ -15,6 +15,13 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class PlaidUpdateTransactions {
+  /**
+   * Constructor method.
+   * @param {PlaidSyncDb} plaidSync - Plaid sync service.
+   * @param {UnitOfWork} uow - Unit of work.
+   * @param {TenantModelProxy<typeof PlaidItem>} plaidItemModel - Plaid item model.
+   * @param {PlaidApi} plaidClient - Plaid client.
+   */
   constructor(
     private readonly plaidSync: PlaidSyncDb,
     private readonly uow: UnitOfWork,
@@ -28,8 +35,7 @@ export class PlaidUpdateTransactions {
 
   /**
    * Handles sync the Plaid item to Bigcaptial under UOW.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} plaidItemId - Plaid item id.
+   * @param {string} plaidItemId - Plaid item id.
    * @returns {Promise<{ addedCount: number; modifiedCount: number; removedCount: number; }>}
    */
   public async updateTransactions(plaidItemId: string) {
@@ -44,9 +50,9 @@ export class PlaidUpdateTransactions {
    *  - New bank accounts.
    *  - Last accounts feeds updated at.
    *  - Turn on the accounts feed flag.
-   * @param {number} tenantId - Tenant ID.
    * @param {string} plaidItemId - The Plaid ID for the item.
-   * @returns {Promise<{  addedCount: number; modifiedCount: number; removedCount: number; }>}
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Promise<{ addedCount: number; modifiedCount: number; removedCount: number; }>}
    */
   public async updateTransactionsWork(
     plaidItemId: string,

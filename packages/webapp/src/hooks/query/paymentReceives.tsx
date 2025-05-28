@@ -159,7 +159,7 @@ export function usePaymentReceive(id, props) {
     [t.PAYMENT_RECEIVE, id],
     { method: 'get', url: `payments-received/${id}` },
     {
-      select: (res) => res.data.payment_receive,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -176,7 +176,7 @@ export function usePaymentReceiveEditPage(id, props) {
     { method: 'get', url: `payments-received/${id}/edit-page` },
     {
       select: (res) => ({
-        paymentReceive: res.data.payment_receive,
+        paymentReceive: res.data,
         entries: res.data.entries,
       }),
       defaultData: {
@@ -231,7 +231,7 @@ export function usePaymentReceiveSMSDetail(
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -336,7 +336,7 @@ export function usePaymentReceivedMailState(
     () =>
       apiRequest
         .get(`payments-received/${paymentReceiveId}/mail`)
-        .then((res) => transformToCamelCase(res.data?.data)),
+        .then((res) => transformToCamelCase(res.data)),
   );
 }
 
@@ -360,7 +360,7 @@ export function usePaymentReceivedState(
     () =>
       apiRequest
         .get('/payments-received/state')
-        .then((res) => transformToCamelCase(res.data?.data)),
+        .then((res) => transformToCamelCase(res.data)),
     {
       ...options,
     },

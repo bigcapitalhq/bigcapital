@@ -1,6 +1,7 @@
+import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { IsNotEmpty } from 'class-validator';
 
 class CommandItemCategoryDto {
@@ -17,16 +18,19 @@ class CommandItemCategoryDto {
   })
   description?: string;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   @ApiProperty({ example: 1, description: 'The cost account ID' })
   costAccountId?: number;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   @ApiProperty({ example: 1, description: 'The sell account ID' })
   sellAccountId?: number;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   @ApiProperty({ example: 1, description: 'The inventory account ID' })

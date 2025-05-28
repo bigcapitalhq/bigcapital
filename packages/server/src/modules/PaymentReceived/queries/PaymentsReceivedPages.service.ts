@@ -41,11 +41,10 @@ export class PaymentsReceivedPagesService {
 
   /**
    * Retrieve payment receive new page receivable entries.
-   * @param {number} tenantId - Tenant id.
    * @param {number} vendorId - Vendor id.
    * @return {IPaymentReceivePageEntry[]}
    */
-  public async getNewPageEntries(tenantId: number, customerId: number) {
+  public async getNewPageEntries(customerId: number) {
     // Retrieve due invoices.
     const entries = await this.saleInvoice()
       .query()
@@ -62,10 +61,7 @@ export class PaymentsReceivedPagesService {
    * @param {number} tenantId - Tenant id.
    * @param {Integer} paymentReceiveId - Payment receive id.
    */
-  public async getPaymentReceiveEditPage(
-    tenantId: number,
-    paymentReceiveId: number,
-  ): Promise<{
+  public async getPaymentReceiveEditPage(paymentReceiveId: number): Promise<{
     paymentReceive: Omit<PaymentReceived, 'entries'>;
     entries: IPaymentReceivePageEntry[];
   }> {

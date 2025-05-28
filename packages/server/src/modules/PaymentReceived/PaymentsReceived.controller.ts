@@ -44,6 +44,20 @@ export class PaymentReceivesController {
     );
   }
 
+  @Get(':id/edit-page')
+  @ApiResponse({
+    status: 200,
+    description:
+      'The payment received edit page has been successfully retrieved.',
+  })
+  public getPaymentReceiveEditPage(
+    @Param('id', ParseIntPipe) paymentReceiveId: number,
+  ) {
+    return this.paymentReceivesApplication.getPaymentReceivedEditPage(
+      paymentReceiveId,
+    );
+  }
+
   @Get(':id/mail')
   @ApiResponse({
     status: 200,

@@ -13,6 +13,7 @@ import signupRestrictions from './signup-restrictions';
 import jwt from './jwt';
 import mail from './mail';
 import loops from './loops';
+import bankfeed from './bankfeed';
 
 export const config = [
   systemDatabase,
@@ -29,5 +30,6 @@ export const config = [
   signupRestrictions,
   jwt,
   mail,
-  loops
+  loops,
+  bankfeed,
 ];

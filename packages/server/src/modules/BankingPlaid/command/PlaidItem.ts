@@ -6,11 +6,9 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { SystemPlaidItem } from '../models/SystemPlaidItem';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
-import {
-  IPlaidItemCreatedEventPayload,
-  PlaidItemDTO,
-} from '../types/BankingPlaid.types';
+import { IPlaidItemCreatedEventPayload } from '../types/BankingPlaid.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { PlaidItemDto } from '../dtos/PlaidItem.dto';
 
 @Injectable()
 export class PlaidItemService {
@@ -33,10 +31,10 @@ export class PlaidItemService {
   /**
    * Exchanges the public token to get access token and item id and then creates
    * a new Plaid item.
-   * @param {PlaidItemDTO} itemDTO - Plaid item data transfer object.
+   * @param {PlaidItemDto} itemDTO - Plaid item data transfer object.
    * @returns {Promise<void>}
    */
-  public async item(itemDTO: PlaidItemDTO): Promise<void> {
+  public async item(itemDTO: PlaidItemDto): Promise<void> {
     const { publicToken, institutionId } = itemDTO;
 
     const tenant = await this.tenancyContext.getTenant();

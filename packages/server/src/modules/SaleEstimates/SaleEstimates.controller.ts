@@ -232,7 +232,7 @@ export class SaleEstimatesController {
   public async getSaleEstimate(
     @Param('id', ParseIntPipe) estimateId: number,
     @Headers('accept') acceptHeader: string,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent =

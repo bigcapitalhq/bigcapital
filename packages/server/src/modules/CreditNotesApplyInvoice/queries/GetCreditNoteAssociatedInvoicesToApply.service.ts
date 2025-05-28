@@ -10,7 +10,7 @@ export class GetCreditNoteAssociatedInvoicesToApply {
   /**
    * @param {TransformerInjectable} transformer - Transformer service.
    * @param {GetCreditNote} getCreditNote - Get credit note service.
-   * @param {typeof SaleInvoice} saleInvoiceModel - Sale invoice model.
+   * @param {TenantModelProxy<typeof SaleInvoice>} saleInvoiceModel - Sale invoice model.
    */
   constructor(
     private transformer: TransformerInjectable,

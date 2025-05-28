@@ -3,6 +3,7 @@ import { PlaidItemService } from './command/PlaidItem';
 import { PlaidWebooks } from './command/PlaidWebhooks';
 import { Injectable } from '@nestjs/common';
 import { PlaidItemDTO } from './types/BankingPlaid.types';
+import { PlaidItemDto } from './dtos/PlaidItem.dto';
 
 @Injectable()
 export class PlaidApplication {
@@ -25,7 +26,7 @@ export class PlaidApplication {
    * @param {PlaidItemDTO} itemDTO
    * @returns
    */
-  public exchangeToken(itemDTO: PlaidItemDTO): Promise<void> {
+  public exchangeToken(itemDTO: PlaidItemDto): Promise<void> {
     return this.plaidItemService.item(itemDTO);
   }
 

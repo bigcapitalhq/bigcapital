@@ -46,6 +46,12 @@ export class SaleReceiptsController {
     return this.saleReceiptApplication.getSaleReceiptMail(id);
   }
 
+  @Get('state')
+  @ApiOperation({ summary: 'Retrieves the sale receipt state.' })
+  getSaleReceiptState() {
+    return this.saleReceiptApplication.getSaleReceiptState();
+  }
+
   @Get(':id/mail')
   @HttpCode(200)
   @ApiOperation({ summary: 'Retrieves the sale receipt mail.' })
@@ -86,7 +92,7 @@ export class SaleReceiptsController {
     required: true,
     type: Number,
     description: 'The sale receipt id',
-})
+  })
   async getSaleReceipt(
     @Param('id', ParseIntPipe) id: number,
     @Headers('accept') acceptHeader: string,
@@ -134,11 +140,5 @@ export class SaleReceiptsController {
   })
   closeSaleReceipt(@Param('id', ParseIntPipe) id: number) {
     return this.saleReceiptApplication.closeSaleReceipt(id);
-  }
-
-  @Get('state')
-  @ApiOperation({ summary: 'Retrieves the sale receipt state.' })
-  getSaleReceiptState() {
-    return this.saleReceiptApplication.getSaleReceiptState();
   }
 }

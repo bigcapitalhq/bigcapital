@@ -18,6 +18,7 @@ import {
   CreatePaymentReceivedDto,
   EditPaymentReceivedDto,
 } from './dtos/PaymentReceived.dto';
+import { PaymentsReceivedPagesService } from './queries/PaymentsReceivedPages.service';
 
 @Injectable()
 export class PaymentReceivesApplication {
@@ -31,6 +32,7 @@ export class PaymentReceivesApplication {
     private sendPaymentReceiveMailNotification: SendPaymentReceiveMailNotification,
     private getPaymentReceivePdfService: GetPaymentReceivedPdfService,
     private getPaymentReceivedStateService: GetPaymentReceivedStateService,
+    private paymentsReceivedPagesService: PaymentsReceivedPagesService,
   ) {}
 
   /**
@@ -146,5 +148,15 @@ export class PaymentReceivesApplication {
    */
   public getPaymentReceivedState() {
     return this.getPaymentReceivedStateService.getPaymentReceivedState();
+  }
+
+  /**
+   * Retrieve the payment received edit page.
+   * @param {number} paymentReceiveId - Payment receive id.
+   */
+  public getPaymentReceivedEditPage(paymentReceiveId: number) {
+    return this.paymentsReceivedPagesService.getPaymentReceiveEditPage(
+      paymentReceiveId,
+    );
   }
 }

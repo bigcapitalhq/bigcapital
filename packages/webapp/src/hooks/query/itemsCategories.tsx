@@ -36,7 +36,7 @@ export function useEditItemCategory(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`item-categories/${id}`, values),
+    ([id, values]) => apiRequest.put(`item-categories/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific item category.

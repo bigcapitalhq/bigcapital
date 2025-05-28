@@ -6,6 +6,7 @@ import { RefundSyncCreditNoteBalanceService } from './commands/RefundSyncCreditN
 import { CreditNotesRefundsApplication } from './CreditNotesRefundsApplication.service';
 import { CreditNoteRefundsController } from './CreditNoteRefunds.controller';
 import { CreditNotesModule } from '../CreditNotes/CreditNotes.module';
+import { GetCreditNoteRefundsService } from './queries/GetCreditNoteRefunds.service';
 
 @Module({
   imports: [forwardRef(() => CreditNotesModule)],
@@ -15,10 +16,9 @@ import { CreditNotesModule } from '../CreditNotes/CreditNotes.module';
     RefundCreditNoteService,
     RefundSyncCreditNoteBalanceService,
     CreditNotesRefundsApplication,
+    GetCreditNoteRefundsService,
   ],
-  exports: [
-    RefundSyncCreditNoteBalanceService 
-  ],
+  exports: [RefundSyncCreditNoteBalanceService],
   controllers: [CreditNoteRefundsController],
 })
 export class CreditNoteRefundsModule {}

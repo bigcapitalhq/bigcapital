@@ -36,6 +36,7 @@ import { SendPaymentReceivedMailProcessor } from './processors/PaymentReceivedMa
 import { SEND_PAYMENT_RECEIVED_MAIL_QUEUE } from './constants';
 import { PaymentsReceivedExportable } from './commands/PaymentsReceivedExportable';
 import { PaymentsReceivedImportable } from './commands/PaymentsReceivedImportable';
+import { PaymentsReceivedPagesService } from './queries/PaymentsReceivedPages.service';
 
 @Module({
   controllers: [PaymentReceivesController],
@@ -63,6 +64,7 @@ import { PaymentsReceivedImportable } from './commands/PaymentsReceivedImportabl
     SendPaymentReceivedMailProcessor,
     PaymentsReceivedExportable,
     PaymentsReceivedImportable,
+    PaymentsReceivedPagesService
   ],
   exports: [
     PaymentReceivesApplication,

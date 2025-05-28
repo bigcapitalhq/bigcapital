@@ -74,11 +74,10 @@ export class EditItemCategoryService {
     );
     // Creates item category under unit-of-work evnirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
-      //
-      const itemCategory = await ItemCategory.query().patchAndFetchById(
-        itemCategoryId,
-        { ...itemCategoryObj },
-      );
+      const itemCategory = await this.itemCategoryModel()
+        .query(trx)
+        .patchAndFetchById(itemCategoryId, { ...itemCategoryObj });
+
       // Triggers `onItemCategoryEdited` event.
       await this.eventEmitter.emitAsync(events.itemCategory.onEdited, {
         oldItemCategory,

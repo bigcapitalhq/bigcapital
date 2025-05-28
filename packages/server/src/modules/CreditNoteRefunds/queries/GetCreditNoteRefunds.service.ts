@@ -6,7 +6,7 @@ import { IRefundCreditNotePOJO } from '../types/CreditNoteRefunds.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
-export class ListCreditNoteRefunds {
+export class GetCreditNoteRefundsService {
   constructor(
     private readonly transformer: TransformerInjectable,
 
@@ -18,7 +18,7 @@ export class ListCreditNoteRefunds {
 
   /**
    * Retrieve the credit note graph.
-   * @param {number} creditNoteId
+   * @param {number} creditNoteId - Credit note id.
    * @returns {Promise<IRefundCreditNotePOJO[]>}
    */
   public async getCreditNoteRefunds(

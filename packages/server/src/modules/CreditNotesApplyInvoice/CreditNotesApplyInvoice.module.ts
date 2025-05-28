@@ -8,6 +8,7 @@ import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.modu
 import { CreditNotesModule } from '../CreditNotes/CreditNotes.module';
 import { GetCreditNoteAssociatedAppliedInvoices } from './queries/GetCreditNoteAssociatedAppliedInvoices.service';
 import { GetCreditNoteAssociatedInvoicesToApply } from './queries/GetCreditNoteAssociatedInvoicesToApply.service';
+import { CreditNotesApplyInvoiceController } from './CreditNotesApplyInvoice.controller';
 
 @Module({
   providers: [
@@ -16,12 +17,11 @@ import { GetCreditNoteAssociatedInvoicesToApply } from './queries/GetCreditNoteA
     CreditNoteApplyToInvoices,
     CreditNoteApplySyncInvoicesCreditedAmount,
     CreditNoteApplySyncCredit,
-    // GetCreditNoteAssociatedAppliedInvoices,
-    // GetCreditNoteAssociatedInvoicesToApply
+    GetCreditNoteAssociatedAppliedInvoices,
+    GetCreditNoteAssociatedInvoicesToApply,
   ],
-  exports: [
-    DeleteCustomerLinkedCreditNoteService,
-  ],
+  exports: [DeleteCustomerLinkedCreditNoteService],
   imports: [PaymentsReceivedModule, forwardRef(() => CreditNotesModule)],
+  controllers: [CreditNotesApplyInvoiceController],
 })
 export class CreditNotesApplyInvoiceModule {}

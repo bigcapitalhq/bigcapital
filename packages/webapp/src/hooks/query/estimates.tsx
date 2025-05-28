@@ -150,7 +150,7 @@ export function useApproveEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sale-estimates/${id}/approve`), {
+  return useMutation((id) => apiRequest.put(`sale-estimates/${id}/approve`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -169,7 +169,7 @@ export function useRejectEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sale-estimates/${id}/reject`), {
+  return useMutation((id) => apiRequest.put(`sale-estimates/${id}/reject`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -240,7 +240,7 @@ export function useEstimateSMSDetail(estimateId, props, requestProps) {
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -321,7 +321,7 @@ export function useSaleEstimateMailState(
   return useQuery([t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId], () =>
     apiRequest
       .get(`sale-estimates/${estimateId}/mail/state`)
-      .then((res) => transformToCamelCase(res.data.data)),
+      .then((res) => transformToCamelCase(res.data)),
   );
 }
 
@@ -339,7 +339,7 @@ export function useGetSaleEstimatesState(
     () =>
       apiRequest
         .get('/sale-estimates/state')
-        .then((res) => transformToCamelCase(res.data?.data)),
+        .then((res) => transformToCamelCase(res.data)),
     { ...options },
   );
 }

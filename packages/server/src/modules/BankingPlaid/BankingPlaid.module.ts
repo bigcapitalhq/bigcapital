@@ -15,6 +15,7 @@ import { PlaidItemService } from './command/PlaidItem';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { SystemPlaidItem } from './models/SystemPlaidItem';
+import { BankingPlaidController } from './BankingPlaid.controller';
 
 const models = [RegisterTenancyModel(PlaidItem)];
 
@@ -38,5 +39,6 @@ const models = [RegisterTenancyModel(PlaidItem)];
     TenancyContext,
   ],
   exports: [...models],
+  controllers: [BankingPlaidController]
 })
 export class BankingPlaidModule {}

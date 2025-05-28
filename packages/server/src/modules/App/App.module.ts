@@ -89,6 +89,7 @@ import { CurrenciesModule } from '../Currencies/Currencies.module';
 import { MiscellaneousModule } from '../Miscellaneous/Miscellaneous.module';
 import { UsersModule } from '../UsersModule/Users.module';
 import { ContactsModule } from '../Contacts/Contacts.module';
+import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 
 @Module({
   imports: [
@@ -186,6 +187,7 @@ import { ContactsModule } from '../Contacts/Contacts.module';
     BankingTransactionsExcludeModule,
     BankingTransactionsRegonizeModule,
     BankingMatchingModule,
+    BankingPlaidModule,
     TransactionsLockingModule,
     SettingsModule,
     FeaturesModule,
