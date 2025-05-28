@@ -1,14 +1,17 @@
+import { Response } from 'express';
 import {
   Body,
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   ParseIntPipe,
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import {
   ISaleInvoiceWriteoffDTO,
@@ -29,6 +32,7 @@ import {
   CreateSaleInvoiceDto,
   EditSaleInvoiceDto,
 } from './dtos/SaleInvoice.dto';
+import { AcceptType } from '@/constants/accept-type';
 
 @Controller('sale-invoices')
 @ApiTags('sale-invoices')
@@ -154,8 +158,22 @@ export class SaleInvoicesController {
     type: Number,
     description: 'The sale invoice id',
   })
-  getSaleInvoice(@Param('id', ParseIntPipe) id: number) {
-    return this.saleInvoiceApplication.getSaleInvoice(id);
+  async getSaleInvoice(
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('accept') acceptHeader: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+      const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(id);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      res.send(pdfContent);
+    } else {
+      return this.saleInvoiceApplication.getSaleInvoice(id);
+    }
   }
 
   @Get()
@@ -237,19 +255,6 @@ export class SaleInvoicesController {
   })
   getInvoicePayments(@Param('id', ParseIntPipe) id: number) {
     return this.saleInvoiceApplication.getInvoicePayments(id);
-  }
-
-  @Get(':id/pdf')
-  @ApiOperation({ summary: 'Retrieves the sale invoice PDF.' })
-  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
-  @ApiParam({
-    name: 'id',
-    required: true,
-    type: Number,
-    description: 'The sale invoice id',
-  })
-  saleInvoicePdf(@Param('id', ParseIntPipe) id: number) {
-    return this.saleInvoiceApplication.saleInvoicePdf(id);
   }
 
   @Get(':id/html')

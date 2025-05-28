@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import path from 'path';
+import * as path from 'path';
 import { promises as fs } from 'fs';
 import { PageProperties, PdfFormat } from '@/libs/Chromiumly/_types';
 import { UrlConverter } from '@/libs/Chromiumly/UrlConvert';
@@ -40,7 +40,7 @@ export class ChromiumlyHtmlConvert {
 
     const cleanup = async () => {
       await fs.unlink(filePath);
-      await Document.query().where('key', filename).delete();
+      await this.documentModel().query().where('key', filename).delete();
     };
     return [filename, cleanup];
   }

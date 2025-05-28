@@ -105,11 +105,9 @@ export class SaleReceiptApplication {
 
   /**
    * Retrieves the given sale receipt pdf.
-   * @param {number} tenantId
    * @param {number} saleReceiptId
-   * @returns
    */
-  public getSaleReceiptPdf(tenantId: number, saleReceiptId: number) {
+  public getSaleReceiptPdf(saleReceiptId: number) {
     return this.getSaleReceiptPdfService.saleReceiptPdf(saleReceiptId);
   }
 

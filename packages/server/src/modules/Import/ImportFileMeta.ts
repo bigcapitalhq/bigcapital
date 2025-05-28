@@ -6,23 +6,28 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Injectable()
 export class ImportFileMeta {
+  /**
+   * @param {TransformerInjectable} transformer - Transformer injectable service.
+   * @param {TenancyContext} tenancyContext - Tenancy context service.
+   * @param {typeof ImportModel} importModel - Import model.
+   */
   constructor(
     private readonly transformer: TransformerInjectable,
     private readonly tenancyContext: TenancyContext,
 
     @Inject(ImportModel.name)
-    private readonly importModel: () => typeof ImportModel,
+    private readonly importModel: typeof ImportModel,
   ) {}
 
   /**
    * Retrieves the import meta of the given import model id.
-   * @param {number} importId
+   * @param {string} importId - Import id.
    */
   async getImportMeta(importId: string) {
     const tenant = await this.tenancyContext.getTenant();
     const tenantId = tenant.id;
 
-    const importFile = await this.importModel()
+    const importFile = await this.importModel
       .query()
       .where('tenantId', tenantId)
       .findOne('importId', importId);

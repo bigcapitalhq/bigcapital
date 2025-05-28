@@ -1,5 +1,5 @@
 import { constants, createReadStream, PathLike, promises } from 'fs';
-import FormData from 'form-data';
+import * as FormData from 'form-data';
 import { GotenbergUtils } from './GotenbergUtils';
 import { IConverter, PageProperties } from './_types';
 import { PdfFormat, ChromiumRoute } from './_types';

@@ -1,4 +1,4 @@
-import FormData from 'form-data';
+import * as  FormData from 'form-data';
 import { IConverter, PageProperties, PdfFormat, ChromiumRoute } from './_types';
 import { ConverterUtils } from './ConvertUtils';
 import { Converter } from './Converter';

@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 // import config from '@/config';
 
 export const getUploadedObjectUri = (objectKey: string) => {

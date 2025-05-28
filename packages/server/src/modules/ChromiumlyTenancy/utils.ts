@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 
 export const PDF_FILE_SUB_DIR = '/pdf';
 export const PDF_FILE_EXPIRE_IN = 40; // ms
@@ -9,6 +9,5 @@ export const getPdfFilesStorageDir = (filename: string) => {
 
 export const getPdfFilePath = (filename: string) => {
   const storageDir = getPdfFilesStorageDir(filename);
-
-  return path.join(global.__storage_dir, storageDir);
+  return path.join(global.__static_dirname, storageDir);
 };

@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   ParseIntPipe,
@@ -13,12 +14,14 @@ import {
 } from '@nestjs/common';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
 import {
-  IPaymentReceivedCreateDTO,
-  IPaymentReceivedEditDTO,
   IPaymentsReceivedFilter,
   PaymentReceiveMailOptsDTO,
 } from './types/PaymentReceived.types';
-import { CreatePaymentReceivedDto, EditPaymentReceivedDto } from './dtos/PaymentReceived.dto';
+import {
+  CreatePaymentReceivedDto,
+  EditPaymentReceivedDto,
+} from './dtos/PaymentReceived.dto';
+import { AcceptType } from '@/constants/accept-type';
 
 @Controller('payments-received')
 @ApiTags('payments-received')
@@ -89,7 +92,9 @@ export class PaymentReceivesController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the payment received list.' })
-  public getPaymentsReceived(@Query() filterDTO: Partial<IPaymentsReceivedFilter>) {
+  public getPaymentsReceived(
+    @Query() filterDTO: Partial<IPaymentsReceivedFilter>,
+  ) {
     return this.paymentReceivesApplication.getPaymentsReceived(filterDTO);
   }
 
@@ -127,21 +132,16 @@ export class PaymentReceivesController {
   })
   public getPaymentReceive(
     @Param('id', ParseIntPipe) paymentReceiveId: number,
+    @Headers('accept') acceptHeader: string,
   ) {
-    return this.paymentReceivesApplication.getPaymentReceive(paymentReceiveId);
-  }
-
-  @Get(':id/pdf')
-  @ApiOperation({ summary: 'Retrieves the payment received pdf.' })
-  @ApiResponse({
-    status: 200,
-    description: 'The payment received pdf has been successfully retrieved.',
-  })
-  public getPaymentReceivePdf(
-    @Param('id', ParseIntPipe) paymentReceivedId: number,
-  ) {
-    return this.paymentReceivesApplication.getPaymentReceivePdf(
-      paymentReceivedId,
-    );
+    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+      return this.paymentReceivesApplication.getPaymentReceivePdf(
+        paymentReceiveId,
+      );
+    } else {
+      return this.paymentReceivesApplication.getPaymentReceive(
+        paymentReceiveId,
+      );
+    }
   }
 }

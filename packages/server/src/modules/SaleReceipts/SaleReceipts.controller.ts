@@ -3,20 +3,24 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   ParseIntPipe,
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import { SaleReceiptApplication } from './SaleReceiptApplication.service';
-import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CreateSaleReceiptDto,
   EditSaleReceiptDto,
 } from './dtos/SaleReceipt.dto';
 import { ISalesReceiptsFilter } from './types/SaleReceipts.types';
+import { AcceptType } from '@/constants/accept-type';
+import { Response } from 'express';
 
 @Controller('sale-receipts')
 @ApiTags('sale-receipts')
@@ -72,14 +76,34 @@ export class SaleReceiptsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieves the sale receipt details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale receipt details have been successfully retrieved.',
+  })
+  @ApiResponse({ status: 404, description: 'The sale receipt not found.' })
   @ApiParam({
     name: 'id',
     required: true,
     type: Number,
     description: 'The sale receipt id',
-  })
-  getSaleReceipt(@Param('id', ParseIntPipe) id: number) {
-    return this.saleReceiptApplication.getSaleReceipt(id);
+})
+  async getSaleReceipt(
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('accept') acceptHeader: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+      const pdfContent =
+        await this.saleReceiptApplication.getSaleReceiptPdf(id);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      res.send(pdfContent);
+    } else {
+      return this.saleReceiptApplication.getSaleReceipt(id);
+    }
   }
 
   @Get()
@@ -110,18 +134,6 @@ export class SaleReceiptsController {
   })
   closeSaleReceipt(@Param('id', ParseIntPipe) id: number) {
     return this.saleReceiptApplication.closeSaleReceipt(id);
-  }
-
-  @Get(':id/pdf')
-  @ApiOperation({ summary: 'Retrieves the sale receipt PDF.' })
-  @ApiParam({
-    name: 'id',
-    required: true,
-    type: Number,
-    description: 'The sale receipt id',
-  })
-  getSaleReceiptPdf(@Param('id', ParseIntPipe) id: number) {
-    return this.saleReceiptApplication.getSaleReceiptPdf(0, id);
   }
 
   @Get('state')

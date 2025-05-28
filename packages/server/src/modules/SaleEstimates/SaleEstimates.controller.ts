@@ -4,12 +4,14 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   ParseIntPipe,
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import { SaleEstimatesApplication } from './SaleEstimates.application';
 import {
@@ -21,6 +23,8 @@ import {
   CreateSaleEstimateDto,
   EditSaleEstimateDto,
 } from './dtos/SaleEstimate.dto';
+import { AcceptType } from '@/constants/accept-type';
+import { Response } from 'express';
 
 @Controller('sale-estimates')
 @ApiTags('sale-estimates')
@@ -184,18 +188,6 @@ export class SaleEstimatesController {
     );
   }
 
-  @Get(':id/pdf')
-  @ApiOperation({ summary: 'Retrieves the sale estimate PDF.' })
-  @ApiParam({
-    name: 'id',
-    required: true,
-    type: Number,
-    description: 'The sale estimate id',
-  })
-  public getSaleEstimatePdf(@Param('id', ParseIntPipe) saleEstimateId: number) {
-    return this.saleEstimatesApplication.getSaleEstimatePdf(saleEstimateId);
-  }
-
   @Post(':id/mail')
   @HttpCode(200)
   @ApiOperation({ summary: 'Send the given sale estimate by mail.' })
@@ -237,7 +229,22 @@ export class SaleEstimatesController {
     type: Number,
     description: 'The sale estimate id',
   })
-  public getSaleEstimate(@Param('id', ParseIntPipe) estimateId: number) {
-    return this.saleEstimatesApplication.getSaleEstimate(estimateId);
+  public async getSaleEstimate(
+    @Param('id', ParseIntPipe) estimateId: number,
+    @Headers('accept') acceptHeader: string,
+    @Res() res: Response,
+  ) {
+    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+      const pdfContent =
+        await this.saleEstimatesApplication.getSaleEstimatePdf(estimateId);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      res.send(pdfContent);
+    } else {
+      return this.saleEstimatesApplication.getSaleEstimate(estimateId);
+    }
   }
 }
