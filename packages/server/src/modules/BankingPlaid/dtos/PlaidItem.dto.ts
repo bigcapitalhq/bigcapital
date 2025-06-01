@@ -9,3 +9,18 @@ export class PlaidItemDto {
   @IsNotEmpty()
   institutionId: string;
 }
+
+export class PlaidWebhookDto {
+  @IsString()
+  @IsNotEmpty()
+  itemId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  webhookType: string;
+
+  @IsString()
+  @IsNotEmpty()
+  webhookCode: string;
+}
+  

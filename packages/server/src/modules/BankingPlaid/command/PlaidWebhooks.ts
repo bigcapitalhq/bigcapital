@@ -1,3 +1,4 @@
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { PlaidItem } from '../models/PlaidItem';
 import { PlaidUpdateTransactions } from './PlaidUpdateTransactions';
 import { Inject, Injectable } from '@nestjs/common';
@@ -8,7 +9,7 @@ export class PlaidWebooks {
     private readonly updateTransactionsService: PlaidUpdateTransactions,
 
     @Inject(PlaidItem.name)
-    private readonly plaidItemModel: typeof PlaidItem,
+    private readonly plaidItemModel: TenantModelProxy<typeof PlaidItem>,
   ) {}
 
   /**
@@ -76,11 +77,10 @@ export class PlaidWebooks {
    * @returns {Promise<void>}
    */
   public async handleTransactionsWebooks(
-    tenantId: number,
     plaidItemId: string,
     webhookCode: string,
   ): Promise<void> {
-    const plaidItem = await this.plaidItemModel
+    const plaidItem = await this.plaidItemModel()
       .query()
       .findOne({ plaidItemId })
       .throwIfNotFound();
@@ -122,9 +122,8 @@ export class PlaidWebooks {
 
   /**
    * Handles all Item webhook events.
-   * @param {number} tenantId - Tenant ID
-   * @param {string} webhookCode - The webhook code
    * @param {string} plaidItemId - The Plaid ID for the item
+   * @param {string} webhookCode - The webhook code
    * @returns {Promise<void>}
    */
   public async itemsHandler(

@@ -1,3 +1,4 @@
+import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { PlaidUpdateTransactionsOnItemCreatedSubscriber } from './subscribers/PlaidUpdateTransactionsOnItemCreatedSubscriber';
 import { PlaidUpdateTransactions } from './command/PlaidUpdateTransactions';
@@ -16,6 +17,10 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { SystemPlaidItem } from './models/SystemPlaidItem';
 import { BankingPlaidController } from './BankingPlaid.controller';
+import { BankingPlaidWebhooksController } from './BankingPlaidWebhooks.controller';
+import { SetupPlaidItemTenantService } from './command/SetupPlaidItemTenant.service';
+import { UpdateBankingPlaidTransitionsQueueJob } from './types/BankingPlaid.types';
+import { PlaidFetchTransactionsProcessor } from './jobs/PlaidFetchTransactionsJob';
 
 const models = [RegisterTenancyModel(PlaidItem)];
 
@@ -25,6 +30,7 @@ const models = [RegisterTenancyModel(PlaidItem)];
     AccountsModule,
     BankingCategorizeModule,
     BankingTransactionsModule,
+    BullModule.registerQueue({ name: UpdateBankingPlaidTransitionsQueueJob }),
     ...models,
   ],
   providers: [
@@ -35,10 +41,12 @@ const models = [RegisterTenancyModel(PlaidItem)];
     PlaidWebooks,
     PlaidLinkTokenService,
     PlaidApplication,
-    PlaidUpdateTransactionsOnItemCreatedSubscriber,
+    SetupPlaidItemTenantService,
     TenancyContext,
+    PlaidFetchTransactionsProcessor,
+    PlaidUpdateTransactionsOnItemCreatedSubscriber,
   ],
   exports: [...models],
-  controllers: [BankingPlaidController]
+  controllers: [BankingPlaidController, BankingPlaidWebhooksController],
 })
 export class BankingPlaidModule {}

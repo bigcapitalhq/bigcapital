@@ -1,5 +1,6 @@
 import * as R from 'ramda';
-import bluebird from 'bluebird';
+import * as bluebird from 'bluebird';
+import * as uniqid from 'uniqid';
 import { entries, groupBy } from 'lodash';
 import {
   AccountBase as PlaidAccountBase,
@@ -12,7 +13,6 @@ import {
   transformPlaidTrxsToCashflowCreate,
 } from '../utils';
 import { Knex } from 'knex';
-import uniqid from 'uniqid';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { RemovePendingUncategorizedTransaction } from '../../BankingTransactions/commands/RemovePendingUncategorizedTransaction.service';
 import { CreateAccountService } from '../../Accounts/CreateAccount.service';

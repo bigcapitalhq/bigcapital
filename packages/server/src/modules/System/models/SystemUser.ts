@@ -28,6 +28,10 @@ export class SystemUser extends BaseModel {
       inviteAccepted(query) {
         query.whereNotNull('invite_accepted_at');
       },
+
+      active(query) {
+        query.where('active', true);
+      },
     };
   }
 

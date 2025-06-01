@@ -17,9 +17,7 @@ export class PlaidItemService {
     private readonly tenancyContext: TenancyContext,
 
     @Inject(SystemPlaidItem.name)
-    private readonly systemPlaidItemModel: TenantModelProxy<
-      typeof SystemPlaidItem
-    >,
+    private readonly systemPlaidItemModel: typeof SystemPlaidItem,
 
     @Inject(PlaidItem.name)
     private readonly plaidItemModel: TenantModelProxy<typeof PlaidItem>,
@@ -55,7 +53,7 @@ export class PlaidItemService {
       plaidInstitutionId: institutionId,
     });
     // Stores the Plaid item id on system scope.
-    await this.systemPlaidItemModel().query().insert({ tenantId, plaidItemId });
+    await this.systemPlaidItemModel.query().insert({ tenantId, plaidItemId });
 
     // Triggers `onPlaidItemCreated` event.
     await this.eventEmitter.emitAsync(events.plaid.onItemCreated, {

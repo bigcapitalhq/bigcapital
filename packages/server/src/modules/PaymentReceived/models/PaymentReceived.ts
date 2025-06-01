@@ -76,7 +76,7 @@ export class PaymentReceived extends TenantBaseModel {
     const { Customer } = require('../../Customers/models/Customer');
     const { Account } = require('../../Accounts/models/Account.model');
     const { Branch } = require('../../Branches/models/Branch.model');
-    // const Document = require('../../Documents/models/Document');
+    const { DocumentModel } = require('../../Attachments/models/Document.model');
 
     return {
       customer: {
@@ -139,21 +139,21 @@ export class PaymentReceived extends TenantBaseModel {
       /**
        * Payment transaction may has many attached attachments.
        */
-      // attachments: {
-      //   relation: Model.ManyToManyRelation,
-      //   modelClass: Document.default,
-      //   join: {
-      //     from: 'payment_receives.id',
-      //     through: {
-      //       from: 'document_links.modelId',
-      //       to: 'document_links.documentId',
-      //     },
-      //     to: 'documents.id',
-      //   },
-      //   filter(query) {
-      //     query.where('model_ref', 'PaymentReceive');
-      //   },
-      // },
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: DocumentModel,
+        join: {
+          from: 'payment_receives.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'PaymentReceive');
+        },
+      },
     };
   }
 

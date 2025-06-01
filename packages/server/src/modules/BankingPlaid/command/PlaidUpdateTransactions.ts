@@ -103,7 +103,6 @@ export class PlaidUpdateTransactions {
 
   /**
    * Fetches transactions from the `Plaid API` for a given item.
-   * @param {number} tenantId - Tenant ID.
    * @param {string} plaidItemId - The Plaid ID for the item.
    * @returns {Promise<PlaidFetchedTransactionsUpdates>}
    */

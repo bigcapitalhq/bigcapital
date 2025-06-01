@@ -8,12 +8,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DecrementUncategorizedTransactionOnCategorizeSubscriber {
   constructor(
     @Inject(Account.name)
-    private readonly accountModel: typeof Account,
+    private readonly accountModel: TenantModelProxy<typeof Account>,
   ) {}
 
   /**
@@ -33,7 +34,7 @@ export class DecrementUncategorizedTransactionOnCategorizeSubscriber {
           if (uncategorizedTransaction.isPending) {
             return;
           }
-          await this.accountModel
+          await this.accountModel()
             .query(trx)
             .findById(uncategorizedTransaction.accountId)
             .decrement('uncategorizedTransactions', 1);
@@ -58,7 +59,7 @@ export class DecrementUncategorizedTransactionOnCategorizeSubscriber {
           if (uncategorizedTransaction.isPending) {
             return;
           }
-          await this.accountModel
+          await this.accountModel()
             .query(trx)
             .findById(uncategorizedTransaction.accountId)
             .increment('uncategorizedTransactions', 1);
@@ -80,7 +81,7 @@ export class DecrementUncategorizedTransactionOnCategorizeSubscriber {
     // Cannot continue if the transaction is still pending.
     if (uncategorizedTransaction.isPending) return;
 
-    await this.accountModel
+    await this.accountModel()
       .query(trx)
       .findById(uncategorizedTransaction.accountId)
       .increment('uncategorizedTransactions', 1);

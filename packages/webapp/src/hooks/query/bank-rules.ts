@@ -552,7 +552,7 @@ export function useGetRecognizedBankTransaction(
     () =>
       apiRequest
         .get(`/banking/recognized/transactions/${uncategorizedTransactionId}`)
-        .then((res) => transformToCamelCase(res.data?.data)),
+        .then((res) => transformToCamelCase(res.data)),
     options,
   );
 }
@@ -580,7 +580,7 @@ export function useGetBankAccountSummaryMeta(
     () =>
       apiRequest
         .get(`/banking/accounts/${bankAccountId}/summary`)
-        .then((res) => transformToCamelCase(res.data?.data)),
+        .then((res) => transformToCamelCase(res.data)),
     { ...options },
   );
 }
@@ -616,7 +616,7 @@ export function useGetAutofillCategorizeTransaction(
         .get(`/banking/categorize/autofill`, {
           params: { uncategorizedTransactionIds },
         })
-        .then((res) => transformToCamelCase(res.data?.data)),
+        .then((res) => transformToCamelCase(res.data)),
     { ...options },
   );
 }

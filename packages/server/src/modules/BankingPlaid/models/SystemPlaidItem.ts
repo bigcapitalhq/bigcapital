@@ -30,7 +30,7 @@ export class SystemPlaidItem extends BaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Tenant = require('system/models/Tenant');
+    const { TenantModel } = require('../../System/models/TenantModel');
 
     return {
       /**
@@ -38,7 +38,7 @@ export class SystemPlaidItem extends BaseModel {
        */
       tenant: {
         relation: Model.BelongsToOneRelation,
-        modelClass: Tenant.default,
+        modelClass: TenantModel,
         join: {
           from: 'users.tenantId',
           to: 'tenants.id',
