@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GetRecognizedTransactionTransformer } from './GetRecognizedTransactionTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
-import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';
+import { UncategorizedBankTransaction } from '../../BankingTransactions/models/UncategorizedBankTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()

@@ -668,7 +668,7 @@ export function useExcludedBankTransactionsInfinity(
       const response = await apiRequest.http({
         ...axios,
         method: 'get',
-        url: `/api/banking/excluded`,
+        url: `/api/banking/exclude`,
         params: { page: pageParam, ...query },
       });
       return response.data;
@@ -700,7 +700,7 @@ export function usePendingBankTransactionsInfinity(
       const response = await apiRequest.http({
         ...axios,
         method: 'get',
-        url: `/api/banking/accounts/pending_transactions`,
+        url: `/api/banking/pending`,
         params: { page: pageParam, ...query },
       });
       return response.data;

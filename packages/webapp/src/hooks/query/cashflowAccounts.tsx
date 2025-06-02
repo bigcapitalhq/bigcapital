@@ -157,7 +157,7 @@ export function useAccountUncategorizedTransactionsInfinity(
       const response = await apiRequest.http({
         ...axios,
         method: 'get',
-        url: `/api/banking/transactions/${accountId}/uncategorized`,
+        url: `/api/banking/uncategorized/accounts/${accountId}`,
         params: { page: pageParam, ...query },
       });
       return response.data;
@@ -231,7 +231,7 @@ export function useUncategorizedTransaction(
     [t.CASHFLOW_UNCAATEGORIZED_TRANSACTION, uncategorizedTranasctionId],
     {
       method: 'get',
-      url: `banking/transactions/uncategorized/${uncategorizedTranasctionId}`,
+      url: `banking/uncategorized/${uncategorizedTranasctionId}`,
     },
     {
       select: (res) => res.data?.data,

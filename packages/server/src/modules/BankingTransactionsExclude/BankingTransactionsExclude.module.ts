@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ExcludeBankTransactionsApplication } from './ExcludeBankTransactionsApplication';
 import { ExcludeBankTransactionService } from './commands/ExcludeBankTransaction.service';
 import { UnexcludeBankTransactionService } from './commands/UnexcludeBankTransaction.service';
@@ -10,7 +10,9 @@ import { BankingTransactionsExcludeController } from './BankingTransactionsExclu
 import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 
 @Module({
-  imports: [BankingTransactionsModule],
+  imports: [
+    forwardRef(() => BankingTransactionsModule),
+  ],
   providers: [
     ExcludeBankTransactionsApplication,
     ExcludeBankTransactionService,

@@ -7,6 +7,10 @@ import { RecognizeTranasctionsService } from './commands/RecognizeTranasctions.s
 import { TriggerRecognizedTransactionsSubscriber } from './events/TriggerRecognizedTransactions';
 import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 import { BankRulesModule } from '../BankRules/BankRules.module';
+import { BankingRecognizedTransactionsController } from './BankingRecognizedTransactions.controller';
+import { RecognizedTransactionsApplication } from './RecognizedTransactions.application';
+import { GetRecognizedTransactionsService } from './GetRecongizedTransactions';
+import { GetRecognizedTransactionService } from './queries/GetRecognizedTransaction.service';
 
 const models = [RegisterTenancyModel(RecognizedBankTransaction)];
 
@@ -17,10 +21,13 @@ const models = [RegisterTenancyModel(RecognizedBankTransaction)];
     ...models,
   ],
   providers: [
+    RecognizedTransactionsApplication,
+    GetRecognizedTransactionsService,
     GetAutofillCategorizeTransactionService,
     RevertRecognizedTransactionsService,
     RecognizeTranasctionsService,
     TriggerRecognizedTransactionsSubscriber,
+    GetRecognizedTransactionService,
   ],
   exports: [
     ...models,
@@ -28,5 +35,6 @@ const models = [RegisterTenancyModel(RecognizedBankTransaction)];
     RevertRecognizedTransactionsService,
     RecognizeTranasctionsService,
   ],
+  controllers: [BankingRecognizedTransactionsController],
 })
 export class BankingTransactionsRegonizeModule {}

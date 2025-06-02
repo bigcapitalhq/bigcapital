@@ -9,6 +9,11 @@ import {
 import { GetBankAccountsService } from './queries/GetBankAccounts.service';
 import { CreateBankTransactionDto } from './dtos/CreateBankTransaction.dto';
 import { GetBankAccountTransactionsService } from './queries/GetBankAccountTransactions/GetBankAccountTransactions.service';
+import { GetUncategorizedTransactions } from './queries/GetUncategorizedTransactions';
+import { GetUncategorizedBankTransactionService } from './queries/GetUncategorizedBankTransaction.service';
+import { GetUncategorizedTransactionsQueryDto } from './dtos/GetUncategorizedTransactionsQuery.dto';
+import { GetPendingBankAccountTransactions } from './queries/GetPendingBankAccountTransaction.service';
+import { GetPendingTransactionsQueryDto } from './dtos/GetPendingTransactionsQuery.dto';
 
 @Injectable()
 export class BankingTransactionsApplication {
@@ -18,6 +23,9 @@ export class BankingTransactionsApplication {
     private readonly getCashflowTransactionService: GetBankTransactionService,
     private readonly getBankAccountsService: GetBankAccountsService,
     private readonly getBankAccountTransactionsService: GetBankAccountTransactionsService,
+    private readonly getBankAccountUncategorizedTransitionsService: GetUncategorizedTransactions,
+    private readonly getBankAccountUncategorizedTransactionService: GetUncategorizedBankTransactionService,
+    private readonly getPendingBankAccountTransactionsService: GetPendingBankAccountTransactions
   ) {}
 
   /**
@@ -67,5 +75,38 @@ export class BankingTransactionsApplication {
    */
   public getBankAccounts(filterDTO: IBankAccountsFilter) {
     return this.getBankAccountsService.getBankAccounts(filterDTO);
+  }
+
+  /**
+   * Retrieves the uncategorized cashflow transactions.
+   * @param {number} accountId - Account id.
+   * @param {IGetUncategorizedTransactionsQuery} query - Query.
+   */
+  public getBankAccountUncategorizedTransactions(
+    accountId: number,
+    query: GetUncategorizedTransactionsQueryDto,
+  ) {
+    return this.getBankAccountUncategorizedTransitionsService.getTransactions(
+      accountId,
+      query,
+    );
+  }
+
+  /**
+   * Retrieves specific uncategorized cashflow transaction.
+   * @param {number} uncategorizedTransactionId - Uncategorized transaction id.
+   */
+  public getUncategorizedTransaction(uncategorizedTransactionId: number) {
+    return this.getBankAccountUncategorizedTransactionService.getTransaction(
+      uncategorizedTransactionId,
+    );
+  }
+
+  /**
+   * Retrieves the pending bank account transactions.
+   * @param {GetPendingTransactionsQueryDto} filter - Pending transactions query.
+   */
+  public getPendingBankAccountTransactions(filter?: GetPendingTransactionsQueryDto) {
+    return this.getPendingBankAccountTransactionsService.getPendingTransactions(filter);
   }
 }

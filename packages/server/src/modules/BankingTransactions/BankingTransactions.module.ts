@@ -19,13 +19,18 @@ import { CommandBankTransactionValidator } from './commands/CommandCasflowValida
 import { BranchTransactionDTOTransformer } from '../Branches/integrations/BranchTransactionDTOTransform';
 import { BranchesModule } from '../Branches/Branches.module';
 import { RemovePendingUncategorizedTransaction } from './commands/RemovePendingUncategorizedTransaction.service';
-import { BankingTransactionsController } from './BankingTransactions.controller';
+import { BankingTransactionsController } from './controllers/BankingTransactions.controller';
 import { GetBankAccountsService } from './queries/GetBankAccounts.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { BankAccount } from './models/BankAccount';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { GetBankAccountTransactionsService } from './queries/GetBankAccountTransactions/GetBankAccountTransactions.service';
 import { GetBankAccountTransactionsRepository } from './queries/GetBankAccountTransactions/GetBankAccountTransactionsRepo.service';
+import { GetUncategorizedTransactions } from './queries/GetUncategorizedTransactions';
+import { GetUncategorizedBankTransactionService } from './queries/GetUncategorizedBankTransaction.service';
+import { BankingUncategorizedTransactionsController } from './controllers/BankingUncategorizedTransactions.controller';
+import { BankingPendingTransactionsController } from './controllers/BankingPendingTransactions.controller';
+import { GetPendingBankAccountTransactions } from './queries/GetPendingBankAccountTransaction.service';
 
 const models = [
   RegisterTenancyModel(UncategorizedBankTransaction),
@@ -42,7 +47,11 @@ const models = [
     DynamicListModule,
     ...models,
   ],
-  controllers: [BankingTransactionsController],
+  controllers: [
+    BankingTransactionsController,
+    BankingUncategorizedTransactionsController,
+    BankingPendingTransactionsController,
+  ],
   providers: [
     BankTransactionAutoIncrement,
     BankTransactionGLEntriesService,
@@ -61,6 +70,9 @@ const models = [
     RemovePendingUncategorizedTransaction,
     GetBankAccountTransactionsRepository,
     GetBankAccountTransactionsService,
+    GetUncategorizedTransactions,
+    GetUncategorizedBankTransactionService,
+    GetPendingBankAccountTransactions
   ],
   exports: [...models, RemovePendingUncategorizedTransaction],
 })
