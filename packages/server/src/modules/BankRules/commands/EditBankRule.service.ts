@@ -23,13 +23,13 @@ export class EditBankRuleService {
   ) {}
 
   /**
-   *
-   * @param createDTO
+   * Transforms the given edit bank rule dto to model object.
+   * @param editDTO
    * @returns
    */
-  private transformDTO(createDTO: EditBankRuleDto): ModelObject<BankRule> {
+  private transformDTO(editDTO: EditBankRuleDto): ModelObject<BankRule> {
     return {
-      ...createDTO,
+      ...editDTO,
     } as ModelObject<BankRule>;
   }
 

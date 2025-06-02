@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { ExcludeBankTransactionsApplication } from './ExcludeBankTransactionsApplication';
@@ -18,7 +19,7 @@ export class BankingTransactionsExcludeController {
     private readonly excludeBankTransactionsApplication: ExcludeBankTransactionsApplication,
   ) {}
 
-  @Post('bulk')
+  @Put('bulk')
   @ApiOperation({ summary: 'Exclude the given bank transactions.' })
   public excludeBankTransactions(@Body('ids') ids: number[]) {
     return this.excludeBankTransactionsApplication.excludeBankTransactions(ids);
@@ -42,7 +43,7 @@ export class BankingTransactionsExcludeController {
     );
   }
 
-  @Post(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Exclude the given bank transaction.' })
   public excludeBankTransaction(@Param('id') id: string) {
     return this.excludeBankTransactionsApplication.excludeBankTransaction(

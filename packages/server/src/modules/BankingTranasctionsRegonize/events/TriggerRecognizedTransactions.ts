@@ -2,21 +2,47 @@ import { isEqual, omit } from 'lodash';
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
-import { IBankRuleEventCreatedPayload, IBankRuleEventDeletedPayload, IBankRuleEventEditedPayload } from '@/modules/BankRules/types';
+import {
+  IBankRuleEventCreatedPayload,
+  IBankRuleEventDeletedPayload,
+  IBankRuleEventEditedPayload,
+} from '@/modules/BankRules/types';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
+import {
+  RecognizeUncategorizedTransactionsJob,
+  RecognizeUncategorizedTransactionsJobPayload,
+  RecognizeUncategorizedTransactionsQueue,
+} from '../_types';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class TriggerRecognizedTransactionsSubscriber {
+  constructor(
+    private readonly tenancyContect: TenancyContext,
+
+    @InjectQueue(RecognizeUncategorizedTransactionsQueue)
+    private readonly recognizeTransactionsQueue: Queue,
+  ) {}
+
   /**
    * Triggers the recognize uncategorized transactions job on rule created.
    * @param {IBankRuleEventCreatedPayload} payload -
    */
   @OnEvent(events.bankRules.onCreated)
-  private async recognizedTransactionsOnRuleCreated({
+  async recognizedTransactionsOnRuleCreated({
     bankRule,
   }: IBankRuleEventCreatedPayload) {
-    const payload = { ruleId: bankRule.id };
+    const tenantPayload = await this.tenancyContect.getTenantJobPayload();
+    const payload = {
+      ruleId: bankRule.id,
+      ...tenantPayload,
+    } as RecognizeUncategorizedTransactionsJobPayload;
 
-    // await this.agenda.now('recognize-uncategorized-transactions-job', payload);
+    await this.recognizeTransactionsQueue.add(
+      RecognizeUncategorizedTransactionsJob,
+      payload,
+    );
   }
 
   /**
@@ -29,22 +55,28 @@ export class TriggerRecognizedTransactionsSubscriber {
     oldBankRule,
     bankRule,
   }: IBankRuleEventEditedPayload) {
-    const payload = { ruleId: bankRule.id };
-
+    
     // Cannot continue if the new and old bank rule values are the same,
     // after excluding `createdAt` and `updatedAt` dates.
     if (
       isEqual(
         omit(bankRule, ['createdAt', 'updatedAt']),
-        omit(oldBankRule, ['createdAt', 'updatedAt'])
+        omit(oldBankRule, ['createdAt', 'updatedAt']),
       )
     ) {
       return;
     }
-    // await this.agenda.now(
-    //   'rerecognize-uncategorized-transactions-job',
-    //   payload
-    // );
+    const tenantPayload = await this.tenancyContect.getTenantJobPayload();
+    const payload = {
+      ruleId: bankRule.id,
+      ...tenantPayload,
+    } as RecognizeUncategorizedTransactionsJobPayload;
+
+    // Re-recognize the transactions based on the new rules.
+    await this.recognizeTransactionsQueue.add(
+      RecognizeUncategorizedTransactionsJob,
+      payload,
+    );
   }
 
   /**
@@ -52,15 +84,20 @@ export class TriggerRecognizedTransactionsSubscriber {
    * @param {IBankRuleEventDeletedPayload} payload -
    */
   @OnEvent(events.bankRules.onDeleted)
-  private async recognizedTransactionsOnRuleDeleted({
+  async recognizedTransactionsOnRuleDeleted({
     ruleId,
   }: IBankRuleEventDeletedPayload) {
-    const payload = { ruleId };
+    const tenantPayload = await this.tenancyContect.getTenantJobPayload();
+    const payload = {
+      ruleId,
+      ...tenantPayload,
+    } as RecognizeUncategorizedTransactionsJobPayload;
 
-    // await this.agenda.now(
-    //   'revert-recognized-uncategorized-transactions-job',
-    //   payload
-    // );
+    // Re-recognize the transactions based on the new rules.
+    await this.recognizeTransactionsQueue.add(
+      RecognizeUncategorizedTransactionsJob,
+      payload,
+    );
   }
 
   /**
@@ -68,7 +105,7 @@ export class TriggerRecognizedTransactionsSubscriber {
    * @param {IImportFileCommitedEventPayload} payload -
    */
   @OnEvent(events.import.onImportCommitted)
-  private async triggerRecognizeTransactionsOnImportCommitted({
+  async triggerRecognizeTransactionsOnImportCommitted({
     importId,
 
     // @ts-ignore
@@ -76,10 +113,8 @@ export class TriggerRecognizedTransactionsSubscriber {
     // const importFile = await Import.query().findOne({ importId });
     // const batch = importFile.paramsParsed.batch;
     // const payload = { transactionsCriteria: { batch } };
-
     // // Cannot continue if the imported resource is not bank account transactions.
     // if (importFile.resource !== 'UncategorizedCashflowTransaction') return;
-
     // await this.agenda.now('recognize-uncategorized-transactions-job', payload);
   }
 }

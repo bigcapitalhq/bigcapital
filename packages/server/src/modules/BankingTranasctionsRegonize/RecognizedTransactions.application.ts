@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { GetRecognizedTransactionsService } from './GetRecongizedTransactions';
 import { GetRecognizedTransactionService } from './queries/GetRecognizedTransaction.service';
 import { RevertRecognizedTransactionsService } from './commands/RevertRecognizedTransactions.service';
-import { GetAutofillCategorizeTransactionService } from './queries/GetAutofillCategorizeTransaction.service';
 import { IGetRecognizedTransactionsQuery } from '../BankingTransactions/types/BankingTransactions.types';
 import { RevertRecognizedTransactionsCriteria } from './_types';
 
@@ -13,7 +12,6 @@ export class RecognizedTransactionsApplication {
     private readonly getRecognizedTransactionsService: GetRecognizedTransactionsService,
     private readonly getRecognizedTransactionService: GetRecognizedTransactionService,
     private readonly revertRecognizedTransactionsService: RevertRecognizedTransactionsService,
-    private readonly getAutofillCategorizeTransactionService: GetAutofillCategorizeTransactionService,
   ) {}
 
   /**
@@ -54,17 +52,6 @@ export class RecognizedTransactionsApplication {
       ruleId,
       transactionsCriteria,
       trx,
-    );
-  }
-
-  /**
-   * Gets autofill categorize suggestions for a transaction.
-   * @param {number} uncategorizedTransactionId - The ID of the uncategorized transaction.
-   * @returns {Promise<any>}
-   */
-  public getAutofillCategorizeTransaction(uncategorizedTransactionId: number) {
-    return this.getAutofillCategorizeTransactionService.getAutofillCategorizeTransaction(
-      uncategorizedTransactionId,
     );
   }
 }

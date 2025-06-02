@@ -1,36 +1,48 @@
-// import Container, { Service } from 'typedi';
-// import { RecognizeTranasctionsService } from '../commands/RecognizeTranasctions.service';
+import { Job } from 'bullmq';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Scope } from '@nestjs/common';
+import { ClsService, UseCls } from 'nestjs-cls';
+import { RecognizeTranasctionsService } from '../commands/RecognizeTranasctions.service';
+import {
+  RecognizeUncategorizedTransactionsJobPayload,
+  RecognizeUncategorizedTransactionsQueue,
+} from '../_types';
+import { Process } from '@nestjs/bull';
 
-// @Service()
-// export class RegonizeTransactionsJob {
-//   /**
-//    * Constructor method.
-//    */
-//   constructor(agenda) {
-//     agenda.define(
-//       'recognize-uncategorized-transactions-job',
-//       { priority: 'high', concurrency: 2 },
-//       this.handler
-//     );
-//   }
+@Processor({
+  name: RecognizeUncategorizedTransactionsQueue,
+  scope: Scope.REQUEST,
+})
+export class RegonizeTransactionsPrcessor extends WorkerHost {
+  /**
+   * @param {RecognizeTranasctionsService} recognizeTranasctionsService -
+   * @param {ClsService} clsService -
+   */
+  constructor(
+    private readonly recognizeTranasctionsService: RecognizeTranasctionsService,
+    private readonly clsService: ClsService,
+  ) {
+    super();
+  }
 
-//   /**
-//    * Triggers sending invoice mail.
-//    */
-//   private handler = async (job, done: Function) => {
-//     const { tenantId, ruleId, transactionsCriteria } = job.attrs.data;
-//     const regonizeTransactions = Container.get(RecognizeTranasctionsService);
+  /**
+   * Triggers sending invoice mail.
+   */
+  @Process(RecognizeUncategorizedTransactionsQueue)
+  @UseCls()
+  async process(job: Job<RecognizeUncategorizedTransactionsJobPayload>) {
+    const { ruleId, transactionsCriteria } = job.data;
 
-//     try {
-//       await regonizeTransactions.recognizeTransactions(
-//         tenantId,
-//         ruleId,
-//         transactionsCriteria
-//       );
-//       done();
-//     } catch (error) {
-//       console.log(error);
-//       done(error);
-//     }
-//   };
-// }
+    this.clsService.set('organizationId', job.data.organizationId);
+    this.clsService.set('userId', job.data.userId);
+
+    try {
+      await this.recognizeTranasctionsService.recognizeTransactions(
+        ruleId,
+        transactionsCriteria,
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}

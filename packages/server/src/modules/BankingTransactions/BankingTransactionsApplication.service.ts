@@ -14,6 +14,7 @@ import { GetUncategorizedBankTransactionService } from './queries/GetUncategoriz
 import { GetUncategorizedTransactionsQueryDto } from './dtos/GetUncategorizedTransactionsQuery.dto';
 import { GetPendingBankAccountTransactions } from './queries/GetPendingBankAccountTransaction.service';
 import { GetPendingTransactionsQueryDto } from './dtos/GetPendingTransactionsQuery.dto';
+import { GetAutofillCategorizeTransactionService } from './queries/GetAutofillCategorizeTransaction/GetAutofillCategorizeTransaction.service';
 
 @Injectable()
 export class BankingTransactionsApplication {
@@ -25,7 +26,8 @@ export class BankingTransactionsApplication {
     private readonly getBankAccountTransactionsService: GetBankAccountTransactionsService,
     private readonly getBankAccountUncategorizedTransitionsService: GetUncategorizedTransactions,
     private readonly getBankAccountUncategorizedTransactionService: GetUncategorizedBankTransactionService,
-    private readonly getPendingBankAccountTransactionsService: GetPendingBankAccountTransactions
+    private readonly getPendingBankAccountTransactionsService: GetPendingBankAccountTransactions,
+    private readonly getAutofillCategorizeTransactionService: GetAutofillCategorizeTransactionService,
   ) {}
 
   /**
@@ -106,7 +108,23 @@ export class BankingTransactionsApplication {
    * Retrieves the pending bank account transactions.
    * @param {GetPendingTransactionsQueryDto} filter - Pending transactions query.
    */
-  public getPendingBankAccountTransactions(filter?: GetPendingTransactionsQueryDto) {
-    return this.getPendingBankAccountTransactionsService.getPendingTransactions(filter);
+  public getPendingBankAccountTransactions(
+    filter?: GetPendingTransactionsQueryDto,
+  ) {
+    return this.getPendingBankAccountTransactionsService.getPendingTransactions(
+      filter,
+    );
+  }
+
+  /**
+   * Retrieves the autofill values of categorize transactions form.
+   * @param {Array<number> | number} uncategorizeTransactionsId - Uncategorized transactions ids.
+   */
+  public getAutofillCategorizeTransaction(
+    uncategorizeTransactionsId: Array<number> | number,
+  ) {
+    return this.getAutofillCategorizeTransactionService.getAutofillCategorizeTransaction(
+      uncategorizeTransactionsId,
+    );
   }
 }

@@ -38,7 +38,7 @@ export function usePauseFeedsBankAccount(
   >(
     (values) =>
       apiRequest.post(
-        `/banking/bank_accounts/${values.bankAccountId}/pause_feeds`,
+        `/banking/accounts/${values.bankAccountId}/pause`,
       ),
     {
       onSuccess: (res, values) => {

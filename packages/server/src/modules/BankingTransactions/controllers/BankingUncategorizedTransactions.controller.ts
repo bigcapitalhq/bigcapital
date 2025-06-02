@@ -1,5 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { GetUncategorizedTransactionsQueryDto } from '../dtos/GetUncategorizedTransactionsQuery.dto';
 import { BankingTransactionsApplication } from '../BankingTransactionsApplication.service';
 
@@ -10,11 +16,41 @@ export class BankingUncategorizedTransactionsController {
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,
   ) {}
 
-  @Get('accounts/:accountId')
-  @ApiOperation({ summary: 'Get uncategorized transactions for a specific bank account' })
+  @Get('autofill')
+  @ApiOperation({ summary: 'Get autofill values for categorize transactions' })
   @ApiResponse({
     status: 200,
-    description: 'Returns a list of uncategorized transactions for the specified bank account',
+    description: 'Returns autofill values for categorize transactions',
+  })
+  @ApiParam({
+    name: 'accountId',
+    required: true,
+    type: Number,
+    description: 'Bank account ID',
+  })
+  @ApiQuery({
+    name: 'uncategorizeTransactionsId',
+    required: true,
+    type: Number,
+    description: 'Uncategorize transactions ID',
+  })
+  async getAutofillCategorizeTransaction(
+    @Query('uncategorizedTransactionIds') uncategorizedTransactionIds: Array<number> | number,
+  ) {
+    console.log(uncategorizedTransactionIds)
+    return this.bankingTransactionsApplication.getAutofillCategorizeTransaction(
+      uncategorizedTransactionIds,
+    );
+  }
+
+  @Get('accounts/:accountId')
+  @ApiOperation({
+    summary: 'Get uncategorized transactions for a specific bank account',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Returns a list of uncategorized transactions for the specified bank account',
   })
   @ApiParam({
     name: 'accountId',

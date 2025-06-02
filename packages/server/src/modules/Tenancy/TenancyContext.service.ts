@@ -51,4 +51,14 @@ export class TenancyContext {
 
     return this.systemUserModel.query().findById(userId);
   }
+
+  async getTenantJobPayload() {
+    const tenant = await this.getTenant();
+    const user = await this.getSystemUser();
+
+    const organizationId = tenant.organizationId;
+    const userId = user.id;
+
+    return { organizationId, userId };
+  }
 }

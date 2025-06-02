@@ -115,7 +115,7 @@ export function useUpdateBankAccount(
 
   return useMutation<DisconnectBankAccountRes, Error, UpdateBankAccountValues>(
     ({ bankAccountId }) =>
-      apiRequest.post(`/banking/accounts/${bankAccountId}/update`),
+      apiRequest.post(`/banking/accounts/${bankAccountId}/refresh`),
     {
       ...options,
       onSuccess: () => {},
@@ -141,7 +141,7 @@ export function useEditBankRule(
   const apiRequest = useApiRequest();
 
   return useMutation<EditBankRuleResponse, Error, EditBankRuleValues>(
-    ({ id, value }) => apiRequest.post(`/banking/rules/${id}`, value),
+    ({ id, value }) => apiRequest.put(`/banking/rules/${id}`, value),
     {
       ...options,
       onSuccess: () => {
@@ -223,9 +223,7 @@ export function useBankRule(
   return useQuery<GetBankRuleRes, Error>(
     [BANK_QUERY_KEY.BANK_RULES, bankRuleId],
     () =>
-      apiRequest
-        .get(`/banking/rules/${bankRuleId}`)
-        .then((res) => res.data),
+      apiRequest.get(`/banking/rules/${bankRuleId}`).then((res) => res.data),
     { ...options },
   );
 }
@@ -245,17 +243,17 @@ interface GetBankTransactionsMatchesResponse {
  * @returns {UseQueryResult<GetBankTransactionsMatchesResponse, Error>}
  */
 export function useGetBankTransactionsMatches(
-  uncategorizeTransactionsIds: Array<number>,
+  uncategorizedTransactionIds: Array<number>,
   options?: UseQueryOptions<GetBankTransactionsMatchesResponse, Error>,
 ): UseQueryResult<GetBankTransactionsMatchesResponse, Error> {
   const apiRequest = useApiRequest();
 
   return useQuery<GetBankTransactionsMatchesResponse, Error>(
-    [BANK_QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizeTransactionsIds],
+    [BANK_QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizedTransactionIds],
     () =>
       apiRequest
         .get(`/banking/matching/matched`, {
-          params: { uncategorizeTransactionsIds },
+          params: { uncategorizedTransactionIds },
         })
         .then((res) => transformToCamelCase(res.data)),
     options,
@@ -311,9 +309,7 @@ export function useExcludeUncategorizedTransaction(
     ExcludeUncategorizedTransactionValue
   >(
     (uncategorizedTransactionId: number) =>
-      apiRequest.put(
-        `/banking/transactions/${uncategorizedTransactionId}/exclude`,
-      ),
+      apiRequest.put(`/banking/exclude/${uncategorizedTransactionId}`),
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
@@ -352,9 +348,7 @@ export function useUnexcludeUncategorizedTransaction(
     ExcludeBankTransactionValue
   >(
     (uncategorizedTransactionId: number) =>
-      apiRequest.put(
-        `/banking/transactions/${uncategorizedTransactionId}/unexclude`,
-      ),
+      apiRequest.delete(`/banking/exclude/${uncategorizedTransactionId}`),
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
@@ -392,7 +386,7 @@ export function useExcludeUncategorizedTransactions(
     ExcludeBankTransactionsValue
   >(
     (value: { ids: Array<number | string> }) =>
-      apiRequest.put(`/banking/transactions/exclude`, { ids: value.ids }),
+      apiRequest.put(`/banking/exclude/bulk`, { ids: value.ids }),
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
@@ -430,7 +424,7 @@ export function useUnexcludeUncategorizedTransactions(
     UnexcludeBankTransactionsValue
   >(
     (value: { ids: Array<number | string> }) =>
-      apiRequest.put(`/banking/transactions/unexclude`, { ids: value.ids }),
+      apiRequest.delete(`/banking/exclude/bulk`, { ids: value.ids }),
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
@@ -613,7 +607,7 @@ export function useGetAutofillCategorizeTransaction(
     ],
     () =>
       apiRequest
-        .get(`/banking/categorize/autofill`, {
+        .get(`/banking/uncategorized/autofill`, {
           params: { uncategorizedTransactionIds },
         })
         .then((res) => transformToCamelCase(res.data)),

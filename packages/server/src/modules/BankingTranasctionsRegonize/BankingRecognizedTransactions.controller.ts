@@ -1,5 +1,4 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { BankingTransactionsApplication } from '../BankingTransactions/BankingTransactionsApplication.service';
 import { ApiTags } from '@nestjs/swagger';
 import { RecognizedTransactionsApplication } from './RecognizedTransactions.application';
 

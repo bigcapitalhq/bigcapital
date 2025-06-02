@@ -11,7 +11,7 @@ export class BankingMatchingController {
     private readonly bankingMatchingApplication: BankingMatchingApplication
   ) {}
 
-  @Get('matched/transactions')
+  @Get('matched')
   @ApiOperation({ summary: 'Retrieves the matched transactions.' })
   async getMatchedTransactions(
     @Query('uncategorizedTransactionIds') uncategorizedTransactionIds: number[],
