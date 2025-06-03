@@ -1,3 +1,4 @@
+import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { first } from 'lodash';
 import { GetMatchedTransactionInvoicesTransformer } from './GetMatchedTransactionInvoicesTransformer';
@@ -9,7 +10,6 @@ import {
 } from '../types';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { CreatePaymentReceivedService } from '@/modules/PaymentReceived/commands/CreatePaymentReceived.serivce';
-import { Inject, Injectable } from '@nestjs/common';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
@@ -86,7 +86,6 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
 
   /**
    * Creates the common matched transaction.
-   * @param {number} tenantId
    * @param {Array<number>} uncategorizedTransactionIds
    * @param {IMatchTransactionDTO} matchTransactionDTO
    * @param {Knex.Transaction} trx

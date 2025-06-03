@@ -492,7 +492,7 @@ export class Bill extends TenantBaseModel {
       TaxRateTransaction,
     } = require('../../TaxRates/models/TaxRateTransaction.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
-    // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
+    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
 
     return {
       vendor: {
@@ -590,17 +590,17 @@ export class Bill extends TenantBaseModel {
       /**
        * Bill may belongs to matched bank transaction.
        */
-      // matchedBankTransaction: {
-      //   relation: Model.HasManyRelation,
-      //   modelClass: MatchedBankTransaction,
-      //   join: {
-      //     from: 'bills.id',
-      //     to: 'matched_bank_transactions.referenceId',
-      //   },
-      //   filter(query) {
-      //     query.where('reference_type', 'Bill');
-      //   },
-      // },
+      matchedBankTransaction: {
+        relation: Model.HasManyRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'bills.id',
+          to: 'matched_bank_transactions.referenceId',
+        },
+        filter(query) {
+          query.where('reference_type', 'Bill');
+        },
+      },
     };
   }
 

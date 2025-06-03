@@ -1,6 +1,5 @@
 import { Knex } from 'knex';
 import {
-  CreateUncategorizedTransactionDTO,
   IUncategorizedTransactionCreatedEventPayload,
   IUncategorizedTransactionCreatingEventPayload,
 } from '../types/BankingCategorize.types';
@@ -10,6 +9,7 @@ import { UncategorizedBankTransaction } from '../../BankingTransactions/models/U
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { UncategorizedBankTransactionDto } from '../dtos/CreateUncategorizedBankTransaction.dto';
 
 @Injectable()
 export class CreateUncategorizedTransactionService {
@@ -30,7 +30,7 @@ export class CreateUncategorizedTransactionService {
    * @returns {Promise<UncategorizedBankTransaction>}
    */
   public create(
-    createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO,
+    createUncategorizedTransactionDTO: UncategorizedBankTransactionDto,
     trx?: Knex.Transaction,
   ) {
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {

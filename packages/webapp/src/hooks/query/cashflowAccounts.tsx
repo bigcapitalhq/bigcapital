@@ -248,7 +248,7 @@ export function useCategorizeTransaction(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post(`banking/transactions/categorize`, values),
+    (values) => apiRequest.post(`banking/categorize`, values),
     {
       onSuccess: (res, id) => {
         // Invalidate queries.
@@ -274,7 +274,7 @@ export function useUncategorizeTransaction(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id: number) => apiRequest.post(`banking/transactions/${id}/uncategorize`),
+    (id: number) => apiRequest.delete(`banking/categorize/${id}`),
     {
       onSuccess: (res, id) => {
         // Invalidate queries.

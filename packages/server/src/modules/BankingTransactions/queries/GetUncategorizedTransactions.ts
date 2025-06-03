@@ -1,35 +1,23 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { initialize } from 'objection';
-import { Knex } from 'knex';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';
 import { UncategorizedTransactionTransformer } from '../../BankingCategorize/commands/UncategorizedTransaction.transformer';
 import { GetUncategorizedTransactionsQueryDto } from '../dtos/GetUncategorizedTransactionsQuery.dto';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { TENANCY_DB_CONNECTION } from '@/modules/Tenancy/TenancyDB/TenancyDB.constants';
-import { Account } from '@/modules/Accounts/models/Account.model';
-import { RecognizedBankTransaction } from '@/modules/BankingTranasctionsRegonize/models/RecognizedBankTransaction';
-import { MatchedBankTransaction } from '@/modules/BankingMatching/models/MatchedBankTransaction';
 
 @Injectable()
 export class GetUncategorizedTransactions {
+  /**
+   * @param {TransformerInjectable} transformer 
+   * @param {UncategorizedBankTransaction.name} uncategorizedBankTransactionModel 
+   */
   constructor(
     private readonly transformer: TransformerInjectable,
 
-    @Inject(TENANCY_DB_CONNECTION)
-    private readonly tenantDb: () => Knex,
-
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: TenantModelProxy<typeof UncategorizedBankTransaction>,
-
-    @Inject(Account.name)
-    private readonly accountModel: TenantModelProxy<typeof Account>,
-
-    @Inject(RecognizedBankTransaction.name)
-    private readonly recognizedTransactionModel: TenantModelProxy<typeof RecognizedBankTransaction>,
-
-    @Inject(MatchedBankTransaction.name)  
-    private readonly matchedTransactionModel: TenantModelProxy<typeof MatchedBankTransaction>,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -39,7 +27,7 @@ export class GetUncategorizedTransactions {
    */
   public async getTransactions(
     accountId: number,
-    query: GetUncategorizedTransactionsQueryDto
+    query: GetUncategorizedTransactionsQueryDto,
   ) {
     // Parsed query with default values.
     const _query = {
@@ -47,16 +35,9 @@ export class GetUncategorizedTransactions {
       pageSize: 20,
       ...query,
     };
-
-    await initialize(this.tenantDb(), [
-      this.accountModel(),
-      this.uncategorizedBankTransactionModel(),
-      this.recognizedTransactionModel(),
-      this.matchedTransactionModel(),
-    ]);
-
     const { results, pagination } =
-      await this.uncategorizedBankTransactionModel().query()
+      await this.uncategorizedBankTransactionModel()
+        .query()
         .onBuild((q) => {
           q.where('accountId', accountId);
           q.where('categorized', false);
@@ -89,7 +70,7 @@ export class GetUncategorizedTransactions {
 
     const data = await this.transformer.transform(
       results,
-      new UncategorizedTransactionTransformer()
+      new UncategorizedTransactionTransformer(),
     );
     return {
       data,

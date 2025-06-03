@@ -1,47 +1,64 @@
+import { ToNumber } from '@/common/decorators/Validators';
 import {
   IsBoolean,
-  IsDate,
+  IsDateString,
+  IsInt,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 
 export class CreateBankTransactionDto {
-  @IsDate()
+  @IsDateString()
+  @IsNotEmpty()
   date: Date;
 
   @IsString()
-  transactionNumber: string;
+  @IsOptional()
+  transactionNumber?: string;
 
   @IsString()
-  referenceNo: string;
+  @IsOptional()
+  referenceNo?: string;
 
+  @IsNotEmpty()
   @IsString()
   transactionType: string;
 
   @IsString()
   description: string;
 
+  @IsNotEmpty()
+  @ToNumber()
   @IsNumber()
   amount: number;
 
+  @ToNumber()
   @IsNumber()
-  exchangeRate: number;
+  exchangeRate: number = 1;
 
   @IsString()
+  @IsOptional()
   currencyCode: string;
 
-  @IsNumber()
+  @IsNotEmpty()
+  @ToNumber()
+  @IsInt()  
   creditAccountId: number;
 
-  @IsNumber()
+  @IsNotEmpty()
+  @ToNumber()
+  @IsInt()  
   cashflowAccountId: number;
 
   @IsBoolean()
-  publish: boolean;
+  @IsOptional()
+  publish: boolean = true;
 
   @IsOptional()
-  @IsNumber()
+  @ToNumber()
+  @IsInt()
   branchId?: number;
 
   @IsOptional()
@@ -53,6 +70,6 @@ export class CreateBankTransactionDto {
   plaidAccountId?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   uncategorizedTransactionId?: number;
 }

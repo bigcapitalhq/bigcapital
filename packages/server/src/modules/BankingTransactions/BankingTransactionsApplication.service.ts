@@ -15,6 +15,7 @@ import { GetUncategorizedTransactionsQueryDto } from './dtos/GetUncategorizedTra
 import { GetPendingBankAccountTransactions } from './queries/GetPendingBankAccountTransaction.service';
 import { GetPendingTransactionsQueryDto } from './dtos/GetPendingTransactionsQuery.dto';
 import { GetAutofillCategorizeTransactionService } from './queries/GetAutofillCategorizeTransaction/GetAutofillCategorizeTransaction.service';
+import { GetBankTransactionsQueryDto } from './dtos/GetBankTranasctionsQuery.dto';
 
 @Injectable()
 export class BankingTransactionsApplication {
@@ -54,7 +55,7 @@ export class BankingTransactionsApplication {
    * Retrieves the bank transactions of the given bank id.
    * @param {ICashflowAccountTransactionsQuery} query
    */
-  public getBankAccountTransactions(query: ICashflowAccountTransactionsQuery) {
+  public getBankAccountTransactions(query: GetBankTransactionsQueryDto) {
     return this.getBankAccountTransactionsService.bankAccountTransactions(
       query,
     );

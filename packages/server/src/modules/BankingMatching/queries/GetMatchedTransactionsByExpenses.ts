@@ -1,10 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetMatchedTransactionsFilter, MatchedTransactionPOJO } from '../types';
+import { GetMatchedTransactionsFilter, MatchedTransactionPOJO, MatchedTransactionsPOJO } from '../types';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { GetMatchedTransactionExpensesTransformer } from './GetMatchedTransactionExpensesTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Expense } from '@/modules/Expenses/models/Expense.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { Knex } from 'knex';
+import { TENANCY_DB_CONNECTION } from '@/modules/Tenancy/TenancyDB/TenancyDB.constants';
+import { initialize } from 'objection';
 
 @Injectable()
 export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByType {
@@ -13,17 +16,26 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
 
     @Inject(Expense.name)
     protected readonly expenseModel: TenantModelProxy<typeof Expense>,
+
+    @Inject(TENANCY_DB_CONNECTION)
+    private readonly tenantDb: () => Knex,
+
+    @Inject('TENANT_MODELS_INIT')
+    private readonly tenantModelsInit: () => Promise<boolean>,
+    
   ) {
     super();
   }
 
   /**
    * Retrieves the matched transactions of expenses.
-   * @param {number} tenantId
    * @param {GetMatchedTransactionsFilter} filter
    * @returns
    */
-  async getMatchedTransactions(filter: GetMatchedTransactionsFilter) {
+  async getMatchedTransactions(
+    filter: GetMatchedTransactionsFilter,
+  ): Promise<MatchedTransactionsPOJO> {
+    // await this.tenantModelsInit();
     // Retrieve the expense matches.
     const expenses = await this.expenseModel()
       .query()
@@ -49,6 +61,7 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
         }
         query.orderBy('paymentDate', 'DESC');
       });
+
     return this.transformer.transform(
       expenses,
       new GetMatchedTransactionExpensesTransformer(),

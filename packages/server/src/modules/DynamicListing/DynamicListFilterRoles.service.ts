@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { Injectable } from '@nestjs/common';
-import validator from 'is-my-json-valid';
+import * as validator from 'is-my-json-valid';
 import { IFilterRole } from './DynamicFilter/DynamicFilter.types';
 import { DynamicFilterAdvancedFilter } from './DynamicFilter/DynamicFilterAdvancedFilter';
 import { DynamicFilterRoleAbstractor } from './DynamicFilter/DynamicFilterRoleAbstractor';
@@ -21,7 +21,7 @@ export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
       properties: {
         condition: { type: 'string' },
         fieldKey: { type: 'string' },
-        value: { type: 'string' },
+        // value: { type: ['number', 'string'] },
       },
     });
     const invalidFields = filterRoles.filter((filterRole) => {

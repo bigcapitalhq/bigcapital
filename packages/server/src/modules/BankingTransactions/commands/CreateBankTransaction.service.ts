@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { pick } from 'lodash';
 import { Knex } from 'knex';
-import * as R from 'ramda';
 import * as composeAsync from 'async/compose';
 import { CASHFLOW_TRANSACTION_TYPE } from '../constants';
 import { transformCashflowTransactionType } from '../utils';
@@ -14,12 +13,12 @@ import { events } from '@/common/events/events';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { BankTransaction } from '../models/BankTransaction';
 import {
-  ICashflowNewCommandDTO,
   ICommandCashflowCreatedPayload,
   ICommandCashflowCreatingPayload,
 } from '../types/BankingTransactions.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateBankTransactionDto } from '../dtos/CreateBankTransaction.dto';
+import { formatDateFields } from '@/utils/format-date-fields';
 
 @Injectable()
 export class CreateBankTransactionService {
@@ -42,7 +41,7 @@ export class CreateBankTransactionService {
    * @param {ICashflowNewCommandDTO} newCashflowTransactionDTO
    */
   public authorize = async (
-    newCashflowTransactionDTO: ICashflowNewCommandDTO,
+    newCashflowTransactionDTO: CreateBankTransactionDto,
     creditAccount: Account,
   ) => {
     const transactionType = transformCashflowTransactionType(
@@ -60,7 +59,7 @@ export class CreateBankTransactionService {
 
   /**
    * Transformes owner contribution DTO to cashflow transaction.
-   * @param {ICashflowNewCommandDTO} newCashflowTransactionDTO - New transaction DTO.
+   * @param {CreateBankTransactionDto} newCashflowTransactionDTO - New transaction DTO.
    * @returns {ICashflowTransactionInput} - Cashflow transaction object.
    */
   private transformCashflowTransactionDTO = async (
@@ -91,7 +90,7 @@ export class CreateBankTransactionService {
 
     const initialDTO = {
       amount,
-      ...fromDTO,
+      ...formatDateFields(fromDTO, ['date']),
       transactionNumber,
       currencyCode: cashflowAccount.currencyCode,
       exchangeRate: fromDTO?.exchangeRate || 1,
@@ -117,7 +116,7 @@ export class CreateBankTransactionService {
    * @returns {Promise<ICashflowTransaction>}
    */
   public newCashflowTransaction = async (
-    newTransactionDTO: ICashflowNewCommandDTO,
+    newTransactionDTO: CreateBankTransactionDto,
     userId?: number,
   ): Promise<BankTransaction> => {
     // Retrieves the cashflow account or throw not found error.

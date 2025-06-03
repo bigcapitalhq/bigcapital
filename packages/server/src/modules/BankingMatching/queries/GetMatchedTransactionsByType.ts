@@ -12,7 +12,7 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 export abstract class GetMatchedTransactionsByType {
   @Inject(MatchedBankTransaction.name)
-  private readonly matchedBankTransactionModel: TenantModelProxy<
+  matchedBankTransactionModel: TenantModelProxy<
     typeof MatchedBankTransaction
   >;
 

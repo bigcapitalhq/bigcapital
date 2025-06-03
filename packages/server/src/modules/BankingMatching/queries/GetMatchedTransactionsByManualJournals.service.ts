@@ -1,10 +1,13 @@
+import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
+import { initialize } from 'objection';
 import { GetMatchedTransactionManualJournalsTransformer } from './GetMatchedTransactionManualJournalsTransformer';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { GetMatchedTransactionsFilter } from '../types';
 import { ManualJournal } from '@/modules/ManualJournals/models/ManualJournal';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { TENANCY_DB_CONNECTION } from '@/modules/Tenancy/TenancyDB/TenancyDB.constants';
 
 @Injectable()
 export class GetMatchedTransactionsByManualJournals extends GetMatchedTransactionsByType {

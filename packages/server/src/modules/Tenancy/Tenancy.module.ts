@@ -5,6 +5,7 @@ import { EnsureTenantIsSeededGuard } from "./EnsureTenantIsSeeded.guards";
 import { APP_GUARD } from "@nestjs/core";
 import { TenancyContext } from "./TenancyContext.service";
 import { TenantController } from "./Tenant.controller";
+import { TenancyInitializeModelsGuard } from "./TenancyInitializeModels.guard";
 
 
 @Module({
@@ -23,6 +24,10 @@ import { TenantController } from "./Tenant.controller";
     {
       provide: APP_GUARD,
       useClass: EnsureTenantIsSeededGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: TenancyInitializeModelsGuard
     }
   ]
 })

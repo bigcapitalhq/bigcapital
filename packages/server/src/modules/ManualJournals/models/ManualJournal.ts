@@ -123,7 +123,7 @@ export class ManualJournal extends TenantBaseModel {
     const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
     const { ManualJournalEntry } = require('./ManualJournalEntry');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
-    // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
+    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
 
     return {
       entries: {
@@ -171,17 +171,17 @@ export class ManualJournal extends TenantBaseModel {
       /**
        * Manual journal may belongs to matched bank transaction.
        */
-      // matchedBankTransaction: {
-      //   relation: Model.BelongsToOneRelation,
-      //   modelClass: MatchedBankTransaction,
-      //   join: {
-      //     from: 'manual_journals.id',
-      //     to: 'matched_bank_transactions.referenceId',
-      //   },
-      //   filter(query) {
-      //     query.where('reference_type', 'ManualJournal');
-      //   },
-      // },
+      matchedBankTransaction: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'manual_journals.id',
+          to: 'matched_bank_transactions.referenceId',
+        },
+        filter(query) {
+          query.where('reference_type', 'ManualJournal');
+        },
+      },
     };
   }
 

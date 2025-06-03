@@ -12,7 +12,7 @@ import { UncategorizedBankTransaction } from '../../BankingTransactions/models/U
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
-export class UncategorizeCashflowTransactionService {
+export class UncategorizeBankTransactionService {
   constructor(
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { getBankAccountTransactionsDefaultQuery } from './_utils';
 import { GetBankAccountTransactionsRepository } from './GetBankAccountTransactionsRepo.service';
 import { GetBankAccountTransactions } from './GetBankAccountTransactions';
-import { ICashflowAccountTransactionsQuery } from '../../types/BankingTransactions.types';
+import { GetBankTransactionsQueryDto } from '../../dtos/GetBankTranasctionsQuery.dto';
 
 @Injectable()
 export class GetBankAccountTransactionsService {
@@ -16,7 +16,7 @@ export class GetBankAccountTransactionsService {
    * @return {Promise<IInvetoryItemDetailDOO>}
    */
   public async bankAccountTransactions(
-    query: ICashflowAccountTransactionsQuery,
+    query: GetBankTransactionsQueryDto,
   ) {
     const parsedQuery = {
       ...getBankAccountTransactionsDefaultQuery(),

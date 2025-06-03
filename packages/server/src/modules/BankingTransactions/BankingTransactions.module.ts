@@ -76,6 +76,11 @@ const models = [
     GetPendingBankAccountTransactions,
     GetAutofillCategorizeTransactionService,
   ],
-  exports: [...models, RemovePendingUncategorizedTransaction],
+  exports: [
+    ...models,
+    RemovePendingUncategorizedTransaction,
+    CommandBankTransactionValidator,
+    CreateBankTransactionService
+  ],
 })
 export class BankingTransactionsModule {}

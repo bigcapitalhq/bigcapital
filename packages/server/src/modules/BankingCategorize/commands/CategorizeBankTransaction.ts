@@ -5,7 +5,6 @@ import { Knex } from 'knex';
 import {
   ICashflowTransactionCategorizedPayload,
   ICashflowTransactionUncategorizingPayload,
-  ICategorizeCashflowTransactioDTO,
 } from '../types/BankingCategorize.types';
 import {
   transformCategorizeTransToCashflow,
@@ -17,9 +16,10 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CategorizeBankTransactionDto } from '../dtos/CategorizeBankTransaction.dto';
 
 @Injectable()
-export class CategorizeCashflowTransaction {
+export class CategorizeBankTransaction {
   constructor(
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
@@ -38,7 +38,7 @@ export class CategorizeCashflowTransaction {
    */
   public async categorize(
     uncategorizedTransactionId: number | Array<number>,
-    categorizeDTO: ICategorizeCashflowTransactioDTO,
+    categorizeDTO: CategorizeBankTransactionDto,
   ) {
     const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
 
@@ -68,7 +68,6 @@ export class CategorizeCashflowTransaction {
       await this.eventPublisher.emitAsync(
         events.cashflow.onTransactionCategorizing,
         {
-          // tenantId,
           oldUncategorizedTransactions,
           trx,
         } as ICashflowTransactionUncategorizingPayload,

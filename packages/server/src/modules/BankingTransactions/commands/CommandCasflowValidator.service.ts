@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { includes, camelCase, upperFirst, sumBy } from 'lodash';
 import { getCashflowTransactionType } from '../utils';
 import {
@@ -6,7 +7,6 @@ import {
   ERRORS,
 } from '../constants';
 import { Account } from '@/modules/Accounts/models/Account.model';
-import { Injectable } from '@nestjs/common';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { BankTransaction } from '../models/BankTransaction';
 import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';

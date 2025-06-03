@@ -202,7 +202,7 @@ export class Expense extends TenantBaseModel {
     const { ExpenseCategory } = require('./ExpenseCategory.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     const { Branch } = require('../../Branches/models/Branch.model');
-    // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
+    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
 
     return {
       /**
@@ -263,20 +263,20 @@ export class Expense extends TenantBaseModel {
         },
       },
 
-      // /**
-      //  * Expense may belongs to matched bank transaction.
-      //  */
-      // matchedBankTransaction: {
-      //   relation: Model.HasManyRelation,
-      //   modelClass: MatchedBankTransaction,
-      //   join: {
-      //     from: 'expenses_transactions.id',
-      //     to: 'matched_bank_transactions.referenceId',
-      //   },
-      //   filter(query) {
-      //     query.where('reference_type', 'Expense');
-      //   },
-      // },
+      /**
+       * Expense may belongs to matched bank transaction.
+       */
+      matchedBankTransaction: {
+        relation: Model.HasManyRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'expenses_transactions.id',
+          to: 'matched_bank_transactions.referenceId',
+        },
+        filter(query) {
+          query.where('reference_type', 'Expense');
+        },
+      },
     };
   }
 

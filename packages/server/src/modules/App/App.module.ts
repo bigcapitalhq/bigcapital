@@ -90,6 +90,8 @@ import { MiscellaneousModule } from '../Miscellaneous/Miscellaneous.module';
 import { UsersModule } from '../UsersModule/Users.module';
 import { ContactsModule } from '../Contacts/Contacts.module';
 import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
+import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
+import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 
 @Module({
   imports: [
@@ -151,6 +153,7 @@ import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
     ScheduleModule.forRoot(),
     TenancyDatabaseModule,
     TenancyModelsModule,
+    TenantModelsInitializeModule,
     AuthModule,
     TenancyModule,
     ChromiumlyTenancyModule,
@@ -188,6 +191,7 @@ import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
     BankingTransactionsModule,
     BankingMatchingModule,
     BankingPlaidModule,
+    BankingCategorizeModule,
     TransactionsLockingModule,
     SettingsModule,
     FeaturesModule,

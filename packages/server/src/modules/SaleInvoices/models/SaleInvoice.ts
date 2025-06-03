@@ -512,7 +512,7 @@ export class SaleInvoice extends TenantBaseModel{
       TaxRateTransaction,
     } = require('../../TaxRates/models/TaxRateTransaction.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
-    // const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
+    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
     const {
       TransactionPaymentServiceEntry,
     } = require('../../PaymentServices/models/TransactionPaymentServiceEntry.model');
@@ -667,17 +667,17 @@ export class SaleInvoice extends TenantBaseModel{
       /**
        * Sale invocie may belongs to matched bank transaction.
        */
-      // matchedBankTransaction: {
-      //   relation: Model.HasManyRelation,
-      //   modelClass: MatchedBankTransaction,
-      //   join: {
-      //     from: 'sales_invoices.id',
-      //     to: 'matched_bank_transactions.referenceId',
-      //   },
-      //   filter(query) {
-      //     query.where('reference_type', 'SaleInvoice');
-      //   },
-      // },
+      matchedBankTransaction: {
+        relation: Model.HasManyRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'matched_bank_transactions.referenceId',
+        },
+        filter(query) {
+          query.where('reference_type', 'SaleInvoice');
+        },
+      },
 
       /**
        * Sale invoice may belongs to payment methods entries.

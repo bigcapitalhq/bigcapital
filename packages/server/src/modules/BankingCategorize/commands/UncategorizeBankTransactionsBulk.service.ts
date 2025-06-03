@@ -1,18 +1,17 @@
 import { castArray } from 'lodash';
 import { PromisePool } from '@supercharge/promise-pool';
 import { Injectable } from '@nestjs/common';
-import { UncategorizeCashflowTransactionService } from './UncategorizeCashflowTransaction.service';
+import { UncategorizeBankTransactionService } from './UncategorizeBankTransaction.service';
 
 @Injectable()
-export class UncategorizeCashflowTransactionsBulk {
+export class UncategorizeBankTransactionsBulk {
   constructor(
-    private readonly uncategorizeTransactionService: UncategorizeCashflowTransactionService
+    private readonly uncategorizeTransactionService: UncategorizeBankTransactionService
   ) {}
 
   /**
    * Uncategorize the given bank transactions in bulk.
-   * @param {number} tenantId
-   * @param {number} uncategorizedTransactionId
+   * @param {number | Array<number>} uncategorizedTransactionId
    */
   public async uncategorizeBulk(
     uncategorizedTransactionId: number | Array<number>
