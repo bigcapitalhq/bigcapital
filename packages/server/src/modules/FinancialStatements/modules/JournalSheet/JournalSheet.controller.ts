@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';
 import { JournalSheetApplication } from './JournalSheetApplication';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JournalSheetQueryDto } from './JournalSheetQuery.dto';
 
 @Controller('/reports/journal')
 @ApiTags('reports')
@@ -14,7 +15,7 @@ export class JournalSheetController {
   @ApiResponse({ status: 200, description: 'Journal report' })
   @ApiOperation({ summary: 'Journal report' })
   async journalSheet(
-    @Query() query: IJournalReportQuery,
+    @Query() query: JournalSheetQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

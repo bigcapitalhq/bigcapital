@@ -7,14 +7,18 @@ import { transfromToSnakeCase, flatten } from '@/utils';
  * Associate display columns by and type properties to query object.
  */
 export const transformDisplayColumnsType = (form) => {
-  const columnType = displayColumnsByOptions.find(
-    (o) => o.key === form.displayColumnsType,
+  const columnType = R.find(
+    R.propEq('key', form.displayColumnsType),
+    displayColumnsByOptions,
   );
-  return {
-    ...form,
-    displayColumnsBy: columnType ? columnType.by : '',
-    displayColumnsType: columnType ? columnType.type : 'total',
-  };
+  return R.pipe(
+    R.mergeRight(form),
+    R.when(
+      () => R.pathOr(false, ['by'], columnType),
+      R.assoc('displayColumnsBy', columnType?.by),
+    ),
+    R.assoc('displayColumnsType', R.propOr('total', 'type', columnType)),
+  )({});
 };
 
 /**

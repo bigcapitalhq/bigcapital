@@ -4,6 +4,7 @@ import { ITransactionsByCustomersFilter } from './TransactionsByCustomer.types';
 import { TransactionsByCustomerApplication } from './TransactionsByCustomersApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
+import { TransactionsByCustomerQueryDto } from './TransactionsByCustomerQuery.dto';
 
 @Controller('/reports/transactions-by-customers')
 @ApiTags('reports')
@@ -16,7 +17,7 @@ export class TransactionsByCustomerController {
   @ApiOperation({ summary: 'Get transactions by customer' })
   @ApiResponse({ status: 200, description: 'Transactions by customer' })
   async transactionsByCustomer(
-    @Query() filter: ITransactionsByCustomersFilter,
+    @Query() filter: TransactionsByCustomerQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

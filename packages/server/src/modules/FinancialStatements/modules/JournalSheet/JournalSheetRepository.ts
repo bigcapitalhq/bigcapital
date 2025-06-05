@@ -112,6 +112,7 @@ export class JournalSheetRepository {
         if (this.filter.transactionType && this.filter.transactionId) {
           query.where('reference_id', this.filter.transactionId);
         }
+        query.withGraphFetched('account');
       });
     this.accountTransactions = transactions;
   }

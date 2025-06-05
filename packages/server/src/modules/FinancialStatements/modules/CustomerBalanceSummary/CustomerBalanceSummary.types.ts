@@ -9,7 +9,7 @@ import {
 
 export interface ICustomerBalanceSummaryQuery
   extends IContactBalanceSummaryQuery {
-  customersIds?: number[];
+  customersIds: number[];
 }
 
 export interface ICustomerBalanceSummaryAmount

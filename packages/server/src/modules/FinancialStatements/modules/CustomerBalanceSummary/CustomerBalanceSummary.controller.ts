@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
-import { ICustomerBalanceSummaryQuery } from './CustomerBalanceSummary.types';
 import { CustomerBalanceSummaryApplication } from './CustomerBalanceSummaryApplication';
+import { CustomerBalanceSummaryQueryDto } from './CustomerBalanceSummaryQuery.dto';
 import { AcceptType } from '@/constants/accept-type';
 
 @Controller('/reports/customer-balance-summary')
@@ -16,7 +16,7 @@ export class CustomerBalanceSummaryController {
   @ApiResponse({ status: 200, description: 'Customer balance summary report' })
   @ApiOperation({ summary: 'Get customer balance summary report' })
   async customerBalanceSummary(
-    @Query() filter: ICustomerBalanceSummaryQuery,
+    @Query() filter: CustomerBalanceSummaryQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

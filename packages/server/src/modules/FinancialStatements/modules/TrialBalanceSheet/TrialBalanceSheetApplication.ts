@@ -1,8 +1,9 @@
+import { Injectable } from '@nestjs/common';
 import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';
 import { TrialBalanceExportInjectable } from './TrialBalanceExportInjectable';
-import { ITrialBalanceSheetQuery, ITrialBalanceStatement } from './TrialBalanceSheet.types';
+import { ITrialBalanceStatement } from './TrialBalanceSheet.types';
 import { TrialBalanceSheetService } from './TrialBalanceSheetInjectable';
-import { Injectable } from '@nestjs/common';
+import { TrialBalanceSheetQueryDto } from './TrialBalanceSheetQuery.dto';
 
 @Injectable()
 export class TrialBalanceSheetApplication {
@@ -19,48 +20,48 @@ export class TrialBalanceSheetApplication {
 
   /**
    * Retrieves the trial balance sheet.
-   * @param {ITrialBalanceSheetQuery} query
+   * @param {TrialBalanceSheetQueryDto} query
    * @returns {Promise<ITrialBalanceStatement>}
    */
   public sheet(
-    query: ITrialBalanceSheetQuery,
+    query: TrialBalanceSheetQueryDto,
   ): Promise<ITrialBalanceStatement> {
     return this.sheetService.trialBalanceSheet(query);
   }
 
   /**
    * Retrieves the trial balance sheet in table format.
-   * @param {ITrialBalanceSheetQuery} query
+   * @param {TrialBalanceSheetQueryDto} query
    * @returns {Promise<ITrialBalanceSheetTable>}
    */
-  public table(query: ITrialBalanceSheetQuery) {
+  public table(query: TrialBalanceSheetQueryDto) {
     return this.tablable.table(query);
   }
 
   /**
    * Retrieve the trial balance sheet in CSV format.
-   * @param {ITrialBalanceSheetQuery} query
+   * @param {TrialBalanceSheetQueryDto} query
    * @returns {Promise<Buffer>}
    */
-  public csv(query: ITrialBalanceSheetQuery) {
+  public csv(query: TrialBalanceSheetQueryDto) {
     return this.exportable.csv(query);
   }
 
   /**
    * Retrieve the trial balance sheet in XLSX format.
-   * @param {ITrialBalanceSheetQuery} query
+   * @param {TrialBalanceSheetQueryDto} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(query: ITrialBalanceSheetQuery) {
+  public async xlsx(query: TrialBalanceSheetQueryDto) {
     return this.exportable.xlsx(query);
   }
 
   /**
    * Retrieve the trial balance sheet in pdf format.
-   * @param {ITrialBalanceSheetQuery} query
+   * @param {TrialBalanceSheetQueryDto} query
    * @returns {Promise<Buffer>}
    */
-  public async pdf(query: ITrialBalanceSheetQuery) {
+  public async pdf(query: TrialBalanceSheetQueryDto) {
     return this.exportable.pdf(query);
   }
 }

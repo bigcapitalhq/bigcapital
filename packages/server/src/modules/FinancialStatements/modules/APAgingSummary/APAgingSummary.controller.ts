@@ -4,6 +4,7 @@ import { IAPAgingSummaryQuery } from './APAgingSummary.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
 @Controller('reports/payable-aging-summary')
 @ApiTags('reports')
@@ -13,7 +14,7 @@ export class APAgingSummaryController {
   @Get()
   @ApiOperation({ summary: 'Get payable aging summary' })
   public async get(
-    @Query() filter: IAPAgingSummaryQuery,
+    @Query() filter: APAgingSummaryQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

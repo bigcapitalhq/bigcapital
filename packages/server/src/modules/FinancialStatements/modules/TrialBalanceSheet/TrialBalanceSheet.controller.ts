@@ -2,9 +2,9 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { castArray } from 'lodash';
 import { Response } from 'express';
-import { ITrialBalanceSheetQuery } from './TrialBalanceSheet.types';
 import { AcceptType } from '@/constants/accept-type';
 import { TrialBalanceSheetApplication } from './TrialBalanceSheetApplication';
+import { TrialBalanceSheetQueryDto } from './TrialBalanceSheetQuery.dto';
 
 @Controller('reports/trial-balance-sheet')
 @ApiTags('reports')
@@ -17,7 +17,7 @@ export class TrialBalanceSheetController {
   @ApiOperation({ summary: 'Get trial balance sheet' })
   @ApiResponse({ status: 200, description: 'Trial balance sheet' })
   async getTrialBalanceSheet(
-    @Query() query: ITrialBalanceSheetQuery,
+    @Query() query: TrialBalanceSheetQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

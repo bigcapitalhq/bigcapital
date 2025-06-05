@@ -1,9 +1,9 @@
 import { Response } from 'express';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { PurchasesByItemsApplication } from './PurchasesByItemsApplication';
-import { IPurchasesByItemsReportQuery } from './types/PurchasesByItems.types';
 import { AcceptType } from '@/constants/accept-type';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PurchasesByItemsQueryDto } from './PurchasesByItemsQuery.dto';
 
 @Controller('/reports/purchases-by-items')
 @ApiTags('reports')
@@ -16,7 +16,7 @@ export class PurchasesByItemReportController {
   @ApiResponse({ status: 200, description: 'Purchases by items report' })
   @ApiOperation({ summary: 'Get purchases by items report' })
   async purchasesByItems(
-    @Query() filter: IPurchasesByItemsReportQuery,
+    @Query() filter: PurchasesByItemsQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

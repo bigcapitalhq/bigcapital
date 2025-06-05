@@ -4,6 +4,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { TransactionsByVendorApplication } from './TransactionsByVendorApplication';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { TransactionsByVendorQueryDto } from './TransactionsByVendorQuery.dto';
 
 @Controller('/reports/transactions-by-vendors')
 @ApiTags('reports')
@@ -16,7 +17,7 @@ export class TransactionsByVendorController {
   @ApiOperation({ summary: 'Get transactions by vendor' })
   @ApiResponse({ status: 200, description: 'Transactions by vendor' })
   async transactionsByVendor(
-    @Query() filter: ITransactionsByVendorsFilter,
+    @Query() filter: TransactionsByVendorQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

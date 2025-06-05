@@ -1,9 +1,9 @@
 import { Response } from 'express';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
-import { IBalanceSheetQuery } from './BalanceSheet.types';
 import { AcceptType } from '@/constants/accept-type';
 import { BalanceSheetApplication } from './BalanceSheetApplication';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BalanceSheetQueryDto } from './BalanceSheet.dto';
 
 @Controller('/reports/balance-sheet')
 @ApiTags('reports')
@@ -12,7 +12,7 @@ export class BalanceSheetStatementController {
 
   /**
    * Retrieve the balance sheet.
-   * @param {IBalanceSheetQuery} query - Balance sheet query.
+   * @param {BalanceSheetQueryDto} query - Balance sheet query.
    * @param {Response} res - Response.
    * @param {string} acceptHeader - Accept header.
    */
@@ -20,7 +20,7 @@ export class BalanceSheetStatementController {
   @ApiOperation({ summary: 'Get balance sheet statement' })
   @ApiResponse({ status: 200, description: 'Balance sheet statement' })
   public async balanceSheet(
-    @Query() query: IBalanceSheetQuery,
+    @Query() query: BalanceSheetQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

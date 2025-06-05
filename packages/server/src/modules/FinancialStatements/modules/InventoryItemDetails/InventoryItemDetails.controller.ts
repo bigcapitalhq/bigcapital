@@ -1,9 +1,9 @@
-import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
-import { InventoryItemDetailsApplication } from './InventoryItemDetailsApplication';
-import { IInventoryDetailsQuery } from './InventoryItemDetails.types';
-import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
+import { InventoryItemDetailsApplication } from './InventoryItemDetailsApplication';
+import { AcceptType } from '@/constants/accept-type';
+import { InventoryItemDetailsQueryDto } from './InventoryItemDetailsQuery.dto';
 
 @Controller('reports/inventory-item-details')
 @ApiTags('reports')
@@ -15,7 +15,7 @@ export class InventoryItemDetailsController {
   @Get('/')
   @ApiOperation({ summary: 'Get inventory item details' })
   async inventoryItemDetails(
-    @Query() query: IInventoryDetailsQuery,
+    @Query() query: InventoryItemDetailsQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

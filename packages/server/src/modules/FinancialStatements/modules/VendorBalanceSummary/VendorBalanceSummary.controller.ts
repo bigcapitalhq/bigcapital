@@ -4,6 +4,7 @@ import { VendorBalanceSummaryApplication } from './VendorBalanceSummaryApplicati
 import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { VendorBalanceSummaryQueryDto } from './VendorBalanceSummaryQuery.dto';
 
 @Controller('/reports/vendor-balance-summary')
 @ApiTags('reports')
@@ -16,7 +17,7 @@ export class VendorBalanceSummaryController {
   @ApiOperation({ summary: 'Get vendor balance summary' })
   @ApiResponse({ status: 200, description: 'Vendor balance summary' })
   async vendorBalanceSummary(
-    @Query() filter: IVendorBalanceSummaryQuery,
+    @Query() filter: VendorBalanceSummaryQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

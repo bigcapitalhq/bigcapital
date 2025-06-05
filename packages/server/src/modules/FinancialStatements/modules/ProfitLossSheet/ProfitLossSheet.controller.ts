@@ -1,9 +1,9 @@
 import { Response } from 'express';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
-import { IProfitLossSheetQuery } from './ProfitLossSheet.types';
 import { ProfitLossSheetApplication } from './ProfitLossSheetApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ProfitLossSheetQueryDto } from './ProfitLossSheetQuery.dto';
 
 @Controller('/reports/profit-loss-sheet')
 @ApiTags('reports')
@@ -14,7 +14,7 @@ export class ProfitLossSheetController {
 
   /**
    * Retrieves the profit/loss sheet.
-   * @param {IProfitLossSheetQuery} query
+   * @param {ProfitLossSheetQueryDto} query
    * @param {Response} res
    * @param {string} acceptHeader
    */
@@ -22,7 +22,7 @@ export class ProfitLossSheetController {
   @ApiResponse({ status: 200, description: 'Profit & loss statement' })
   @ApiOperation({ summary: 'Get profit/loss statement report' })
   async profitLossSheet(
-    @Query() query: IProfitLossSheetQuery,
+    @Query() query: ProfitLossSheetQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

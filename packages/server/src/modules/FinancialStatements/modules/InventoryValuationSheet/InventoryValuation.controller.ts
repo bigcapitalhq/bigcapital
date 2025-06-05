@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { InventoryValuationSheetApplication } from './InventoryValuationSheetApplication';
-import { IInventoryValuationReportQuery } from './InventoryValuationSheet.types';
+import { InventoryValuationQueryDto } from './InventoryValuationQuery.dto';
 import { AcceptType } from '@/constants/accept-type';
 
 @Controller('reports/inventory-valuation')
@@ -19,7 +19,7 @@ export class InventoryValuationController {
     description: 'The inventory valuation sheet',
   })
   public async getInventoryValuationSheet(
-    @Query() query: IInventoryValuationReportQuery,
+    @Query() query: InventoryValuationQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

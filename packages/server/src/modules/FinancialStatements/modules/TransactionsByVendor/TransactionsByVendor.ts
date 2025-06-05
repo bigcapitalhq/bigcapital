@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import { isEmpty } from 'lodash';
 import { ModelObject } from 'objection';
+import { I18nService } from 'nestjs-i18n';
 import {
   ITransactionsByVendorsFilter,
   ITransactionsByVendorsTransaction,
@@ -10,7 +11,6 @@ import {
 import { TransactionsByContact } from '../TransactionsByContact/TransactionsByContact';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { INumberFormatQuery } from '../../types/Report.types';
-import { I18nService } from 'nestjs-i18n';
 import { TransactionsByVendorRepository } from './TransactionsByVendorRepository';
 
 const VENDOR_NORMAL = 'credit';

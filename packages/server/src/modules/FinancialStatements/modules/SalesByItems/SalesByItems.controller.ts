@@ -12,6 +12,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { SalesByItemsApplication } from './SalesByItemsApplication';
 import { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SalesByItemsQueryDto } from './SalesByItemsQuery.dto';
 
 @Controller('/reports/sales-by-items')
 @ApiTags('reports')
@@ -22,7 +23,7 @@ export class SalesByItemsController {
   @ApiResponse({ status: 200, description: 'Sales by items report' })
   @ApiOperation({ summary: 'Get sales by items report' })
   public async salesByitems(
-    @Query() filter: ISalesByItemsReportQuery,
+    @Query() filter: SalesByItemsQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

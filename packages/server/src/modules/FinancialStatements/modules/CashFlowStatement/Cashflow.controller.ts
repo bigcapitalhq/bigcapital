@@ -1,9 +1,9 @@
 import { Response } from 'express';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
-import { ICashFlowStatementQuery } from './Cashflow.types';
 import { AcceptType } from '@/constants/accept-type';
 import { CashflowSheetApplication } from './CashflowSheetApplication';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CashFlowStatementQueryDto } from './CashFlowStatementQuery.dto';
 
 @Controller('reports/cashflow-statement')
 @ApiTags('reports')
@@ -14,7 +14,7 @@ export class CashflowController {
   @ApiResponse({ status: 200, description: 'Cashflow statement report' })
   @ApiOperation({ summary: 'Get cashflow statement report' })
   async getCashflow(
-    @Query() query: ICashFlowStatementQuery,
+    @Query() query: CashFlowStatementQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
