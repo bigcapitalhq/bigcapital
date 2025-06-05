@@ -1,4 +1,4 @@
-import async from 'async';
+import * as async from 'async';
 import { Knex } from 'knex';
 import { uniq } from 'lodash';
 import {

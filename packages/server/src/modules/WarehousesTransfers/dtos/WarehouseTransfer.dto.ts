@@ -1,18 +1,18 @@
+import { ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
-  IsDate,
   IsDecimal,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsPositive,
   IsString,
   ValidateNested,
   ArrayMinSize,
+  IsDateString,
 } from 'class-validator';
 
 export class WarehouseTransferEntryDto {
@@ -39,6 +39,7 @@ export class WarehouseTransferEntryDto {
 
 export class CommandWarehouseTransferDto {
   @IsNotEmpty()
+  @ToNumber()
   @IsInt()
   @ApiProperty({
     description: 'The id of the warehouse to transfer from',
@@ -47,6 +48,7 @@ export class CommandWarehouseTransferDto {
   fromWarehouseId: number;
 
   @IsNotEmpty()
+  @ToNumber()
   @IsInt()
   @ApiProperty({
     description: 'The id of the warehouse to transfer to',
@@ -55,7 +57,7 @@ export class CommandWarehouseTransferDto {
   toWarehouseId: number;
 
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   @ApiProperty({
     description: 'The date of the warehouse transfer',
     example: '2021-01-01',

@@ -15,6 +15,7 @@ import {
   CreateWarehouseTransferDto,
   EditWarehouseTransferDto,
 } from './dtos/WarehouseTransfer.dto';
+import { GetWarehouseTransfersQueryDto } from '../Warehouses/dtos/GetWarehouseTransfersQuery.dto';
 
 @Controller('warehouse-transfers')
 @ApiTags('warehouse-transfers')
@@ -129,7 +130,7 @@ export class WarehouseTransfersController {
     description:
       'The warehouse transfer transactions have been retrieved successfully.',
   })
-  async getWarehousesTransfers(@Query() query: any) {
+  async getWarehousesTransfers(@Query() query: GetWarehouseTransfersQueryDto) {
     const { warehousesTransfers, pagination, filter } =
       await this.warehouseTransferApplication.getWarehousesTransfers(query);
 

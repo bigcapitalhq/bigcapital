@@ -23,6 +23,8 @@ import { InventoryItemOpeningAvgCostService } from './commands/InventoryItemOpen
 import { InventoryCostSubscriber } from './subscribers/InventoryCost.subscriber';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
 import { ImportModule } from '../Import/Import.module';
+import { GetItemsInventoryValuationListService } from './queries/GetItemsInventoryValuationList.service';
+import { InventoryCostController } from './InventoryCost.controller';
 
 const models = [
   RegisterTenancyModel(InventoryCostLotTracker),
@@ -54,6 +56,7 @@ const models = [
     InventoryItemCostService,
     InventoryItemOpeningAvgCostService,
     InventoryCostSubscriber,
+    GetItemsInventoryValuationListService
   ],
   exports: [
     ...models,
@@ -61,5 +64,6 @@ const models = [
     InventoryItemCostService,
     InventoryComputeCostService,
   ],
+  controllers: [InventoryCostController]
 })
 export class InventoryCostModule {}

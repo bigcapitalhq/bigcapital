@@ -23,16 +23,12 @@ export class BankingMatchingController {
     );
   }
 
-  @Post('/match/:uncategorizedTransactionId')
+  @Post('/match')
   @ApiOperation({ summary: 'Match the given uncategorized transaction.' })
-  async matchTransaction(
-    @Param('uncategorizedTransactionId')
-    uncategorizedTransactionId: number | number[],
-    @Body() matchedTransactions: MatchBankTransactionDto,
-  ) {
+  async matchTransaction(@Body() matchedTransactions: MatchBankTransactionDto) {
     return this.bankingMatchingApplication.matchTransaction(
-      uncategorizedTransactionId,
-      matchedTransactions,
+      matchedTransactions.uncategorizedTransactions,
+      matchedTransactions.matchedTransactions,
     );
   }
 

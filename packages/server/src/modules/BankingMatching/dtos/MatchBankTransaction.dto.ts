@@ -1,4 +1,5 @@
 import {
+  ArrayMinSize,
   IsArray,
   IsNotEmpty,
   IsNumber,
@@ -28,6 +29,10 @@ export class MatchTransactionEntryDto {
 
 export class MatchBankTransactionDto {
   @IsArray()
+  @ArrayMinSize(1)
+  uncategorizedTransactions: Array<number>
+
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MatchTransactionEntryDto)
   @ApiProperty({
@@ -37,5 +42,5 @@ export class MatchBankTransactionDto {
       { referenceType: 'SaleInvoice', referenceId: 2 },
     ],
   })
-  entries: MatchTransactionEntryDto[];
+  matchedTransactions: MatchTransactionEntryDto[];
 }

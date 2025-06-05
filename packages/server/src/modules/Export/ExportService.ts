@@ -52,8 +52,6 @@ export class ExportResourceService {
     const data = await this.getExportableData(resource);
     const transformed = this.transformExportedData(resource, data);
 
-    console.log(format);
-
     // Returns the csv, xlsx format.
     if (format === ExportFormat.Csv || format === ExportFormat.Xlsx) {
       const exportableColumns = this.getExportableColumns(resourceColumns);

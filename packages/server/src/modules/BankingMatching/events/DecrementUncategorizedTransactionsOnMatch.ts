@@ -1,14 +1,14 @@
+import PromisePool from '@supercharge/promise-pool';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   IBankTransactionMatchedEventPayload,
   IBankTransactionUnmatchedEventPayload,
 } from '../types';
-import PromisePool from '@supercharge/promise-pool';
-import { OnEvent } from '@nestjs/event-emitter';
 import { Account } from '@/modules/Accounts/models/Account.model';
-import { Inject, Injectable } from '@nestjs/common';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { events } from '@/common/events/events';
-import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class DecrementUncategorizedTransactionOnMatchingSubscriber {

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { GetMatchedTransactions } from './queries/GetMatchedTransactions.service';
 import { MatchBankTransactions } from './commands/MatchTransactions';
 import { UnmatchMatchedBankTransaction } from './commands/UnmatchMatchedTransaction.service';
-import { GetMatchedTransactionsFilter, IMatchTransactionDTO } from './types';
-import { MatchBankTransactionDto } from './dtos/MatchBankTransaction.dto';
+import { GetMatchedTransactionsFilter } from './types';
+import { MatchTransactionEntryDto } from './dtos/MatchBankTransaction.dto';
 
 @Injectable()
 export class BankingMatchingApplication {
@@ -31,17 +31,18 @@ export class BankingMatchingApplication {
 
   /**
    * Matches the given uncategorized transaction with the given system transaction.
-   * @param {number} uncategorizedTransactionId
-   * @param {IMatchTransactionDTO} matchTransactionsDTO
+   * @param {IMatchBankTransactionDto} matchedTransactionsDTO
    * @returns {Promise<void>}
    */
   public matchTransaction(
     uncategorizedTransactionId: number | Array<number>,
-    matchedTransactions: MatchBankTransactionDto,
+    matchedTransactionsDto:
+      | MatchTransactionEntryDto
+      | Array<MatchTransactionEntryDto>,
   ): Promise<void> {
     return this.matchTransactionService.matchTransaction(
       uncategorizedTransactionId,
-      matchedTransactions,
+      matchedTransactionsDto,
     );
   }
 

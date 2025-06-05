@@ -7,6 +7,7 @@ import { IItemsFilter } from './types/Items.types';
 import { ItemTransformer } from './Item.transformer';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { ISortOrder } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
+import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 
 @Injectable()
 export class GetItemsService {
@@ -32,7 +33,7 @@ export class GetItemsService {
    * Retrieves items datatable list.
    * @param {IItemsFilter} itemsFilter - Items filter.
    */
-  public async getItems(filterDto: Partial<IItemsFilter>) {
+  public async getItems(filterDto: Partial<GetItemsQueryDto>) {
     const _filterDto = {
       sortOrder: ISortOrder.DESC,
       columnSortBy: 'created_at',

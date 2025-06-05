@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import { IEditWarehouseDTO, IWarehouse } from '../Warehouse.types';
 import { WarehouseValidator } from './WarehouseValidator.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';

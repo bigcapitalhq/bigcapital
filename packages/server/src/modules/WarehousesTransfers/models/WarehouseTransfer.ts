@@ -2,7 +2,10 @@ import { Model, mixin } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { WarehouseTransferEntry } from './WarehouseTransferEntry';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
+import { WarehouseTransferMeta } from './WarehouseTransfer.meta';
 
+@InjectModelMeta(WarehouseTransferMeta)
 export class WarehouseTransfer extends TenantBaseModel {
   public date!: Date;
   public transferInitiatedAt!: Date;
@@ -13,7 +16,6 @@ export class WarehouseTransfer extends TenantBaseModel {
   public entries!: WarehouseTransferEntry[];
   public fromWarehouse!: Warehouse;
   public toWarehouse!: Warehouse;
-
 
   /**
    * Table name.
@@ -104,7 +106,7 @@ export class WarehouseTransfer extends TenantBaseModel {
       },
 
       /**
-       *
+       * 
        */
       fromWarehouse: {
         relation: Model.BelongsToOneRelation,
@@ -127,26 +129,12 @@ export class WarehouseTransfer extends TenantBaseModel {
   }
 
   /**
-   * Model settings.
-   */
-  // static get meta() {
-  //   return WarehouseTransferSettings;
-  // }
-
-  // /**
-  //  * Retrieve the default custom views, roles and columns.
-  //  */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
-
-  /**
    * Model search roles.
    */
   static get searchRoles() {
     return [
-      // { fieldKey: 'name', comparator: 'contains' },
-      // { condition: 'or', fieldKey: 'code', comparator: 'like' },
+      { fieldKey: 'name', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'code', comparator: 'like' },
     ];
   }
 }

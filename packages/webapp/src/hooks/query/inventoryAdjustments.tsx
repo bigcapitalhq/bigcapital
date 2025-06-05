@@ -7,7 +7,7 @@ import t from './types';
 
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate inventory adjustments.
-  queryClient.invalidateQueries(t.inventory-adjustments);
+  queryClient.invalidateQueries(t.INVENTORY_ADJUSTMENTS);
   queryClient.invalidateQueries(t.INVENTORY_ADJUSTMENT);
 
   // Invalidate items.
@@ -120,7 +120,7 @@ export function useInventoryAdjustment(id, props, requestProps) {
     [t.INVENTORY_ADJUSTMENT, id],
     { method: 'get', url: `inventory-adjustments/${id}`, ...requestProps },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

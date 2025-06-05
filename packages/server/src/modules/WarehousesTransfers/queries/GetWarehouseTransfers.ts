@@ -6,6 +6,7 @@ import { TransformerInjectable } from '../../Transformer/TransformerInjectable.s
 import { DynamicListService } from '../../DynamicListing/DynamicList.service';
 import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 import { WarehouseTransfer } from '../models/WarehouseTransfer';
+import { GetWarehouseTransfersQueryDto } from '@/modules/Warehouses/dtos/GetWarehouseTransfersQuery.dto';
 
 @Injectable()
 export class GetWarehouseTransfers {
@@ -30,16 +31,19 @@ export class GetWarehouseTransfers {
 
   /**
    * Retrieves warehouse transfers paginated list.
-   * @param   {number} tenantId
-   * @param   {IGetWarehousesTransfersFilterDTO} filterDTO
-   * @returns {}
+   * @param {IGetWarehousesTransfersFilterDTO} filterDTO
    */
   public getWarehouseTransfers = async (
-    filterDTO: IGetWarehousesTransfersFilterDTO,
+    filterDTO: GetWarehouseTransfersQueryDto,
   ) => {
     // Parses stringified filter roles.
-    const filter = this.parseListFilterDTO(filterDTO);
-
+    const filter = this.parseListFilterDTO({
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
+      page: 1,
+      pageSize: 12,
+      ...filterDTO,
+    });
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       this.warehouseTransferModel(),

@@ -1,11 +1,12 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { PlaidWebhookDto } from './dtos/PlaidItem.dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PlaidApplication } from './PlaidApplication';
 import { PublicRoute } from '../Auth/guards/jwt.guard';
 import { SetupPlaidItemTenantService } from './command/SetupPlaidItemTenant.service';
 
 @Controller('banking/plaid')
+@ApiTags('banking-plaid')
 @PublicRoute()
 export class BankingPlaidWebhooksController {
   constructor(

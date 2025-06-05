@@ -260,7 +260,7 @@ export function useItemInventoryCost(query, props) {
     [t.ITEM_INVENTORY_COST, query],
     {
       method: 'get',
-      url: `inventory/items-cost`,
+      url: `inventory-cost/items`,
       params: { ...query },
     },
     {

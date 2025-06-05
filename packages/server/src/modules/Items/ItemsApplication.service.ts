@@ -12,6 +12,7 @@ import { Injectable } from '@nestjs/common';
 import { GetItemsService } from './GetItems.service';
 import { IItemsFilter } from './types/Items.types';
 import { EditItemDto, CreateItemDto } from './dtos/Item.dto';
+import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 
 @Injectable()
 export class ItemsApplicationService {
@@ -94,7 +95,7 @@ export class ItemsApplicationService {
    * Retrieves the paginated filterable items list.
    * @param {Partial<IItemsFilter>} filterDTO
    */
-  async getItems(filterDTO: Partial<IItemsFilter>) {
+  async getItems(filterDTO: Partial<GetItemsQueryDto>) {
     return this.getItemsService.getItems(filterDTO);
   }
 

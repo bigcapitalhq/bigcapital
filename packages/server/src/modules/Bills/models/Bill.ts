@@ -1,14 +1,8 @@
+import * as moment from 'moment';
+import * as R from 'ramda';
 import type { Knex } from 'knex';
 import { Model, raw } from 'objection';
 import { castArray, difference, defaultTo } from 'lodash';
-import * as moment from 'moment';
-import * as R from 'ramda';
-// import TenantModel from 'models/TenantModel';
-// import BillSettings from './Bill.Settings';
-// import ModelSetting from './ModelSetting';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Purchases/Bills/constants';
-// import ModelSearchable from './ModelSearchable';
 import { BaseModel, PaginationQueryBuilderType } from '@/models/Model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';

@@ -13,6 +13,7 @@ import {
   CreateWarehouseTransferDto,
   EditWarehouseTransferDto,
 } from './dtos/WarehouseTransfer.dto';
+import { GetWarehouseTransfersQueryDto } from '../Warehouses/dtos/GetWarehouseTransfersQuery.dto';
 
 @Injectable()
 export class WarehouseTransferApplication {
@@ -86,7 +87,7 @@ export class WarehouseTransferApplication {
    * @returns {Promise<IWarehouseTransfer>}
    */
   public getWarehousesTransfers = (
-    filterDTO: IGetWarehousesTransfersFilterDTO,
+    filterDTO: GetWarehouseTransfersQueryDto,
   ) => {
     return this.getWarehousesTransfersService.getWarehouseTransfers(filterDTO);
   };

@@ -1,15 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDate,
+  IsDateString,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsPositive,
   IsString,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
+import { IsOptional, ToNumber } from '@/common/decorators/Validators';
+import { parseBoolean } from '@/utils/parse-boolean';
 
 enum IAdjustmentTypes {
   INCREMENT = 'increment',
@@ -19,8 +21,7 @@ enum IAdjustmentTypes {
 export class CreateQuickInventoryAdjustmentDto {
   @ApiProperty({ description: 'Date of the inventory adjustment' })
   @IsNotEmpty()
-  @IsDate()
-  @Type(() => Date)
+  @IsDateString()
   date: Date;
 
   @ApiProperty({ description: 'Type of adjustment', enum: IAdjustmentTypes })
@@ -30,7 +31,8 @@ export class CreateQuickInventoryAdjustmentDto {
 
   @ApiProperty({ description: 'ID of the adjustment account' })
   @IsNotEmpty()
-  @IsNumber()
+  @ToNumber()
+  @IsInt()
   @IsPositive()
   adjustmentAccountId: number;
 
@@ -40,47 +42,52 @@ export class CreateQuickInventoryAdjustmentDto {
   reason: string;
 
   @ApiProperty({ description: 'Description of the adjustment' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   description: string;
 
   @ApiProperty({ description: 'Reference number' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   referenceNo: string;
 
   @ApiProperty({ description: 'ID of the item being adjusted' })
   @IsNotEmpty()
+  @ToNumber()
   @IsNumber()
   @IsPositive()
   itemId: number;
 
   @ApiProperty({ description: 'Quantity to adjust' })
   @IsNotEmpty()
+  @ToNumber()
   @IsNumber()
   @IsPositive()
   quantity: number;
 
   @ApiProperty({ description: 'Cost of the item' })
-  @IsNotEmpty()
+  @IsOptional()
+  @ToNumber()
   @IsNumber()
-  @IsPositive()
   cost: number;
 
   @ApiProperty({ description: 'Whether to publish the adjustment immediately' })
   @IsNotEmpty()
+  @Transform((param) => parseBoolean(param.value, false))
   @IsBoolean()
   publish: boolean;
 
   @ApiPropertyOptional({ description: 'ID of the warehouse (optional)' })
   @IsOptional()
-  @IsNumber()
+  @ToNumber()
+  @IsInt()
   @IsPositive()
   warehouseId?: number;
 
   @ApiPropertyOptional({ description: 'ID of the branch (optional)' })
   @IsOptional()
-  @IsNumber()
+  @ToNumber()
+  @IsInt()
   @IsPositive()
   branchId?: number;
 }

@@ -1,7 +1,7 @@
-import { Model, raw } from 'objection';
-import { castArray } from 'lodash';
 import * as moment from 'moment';
 import * as R from 'ramda';
+import { Model, raw } from 'objection';
+import { castArray } from 'lodash';
 import { MomentInput, unitOfTime } from 'moment';
 import { defaultTo } from 'ramda';
 import { TaxRateTransaction } from '@/modules/TaxRates/models/TaxRateTransaction.model';

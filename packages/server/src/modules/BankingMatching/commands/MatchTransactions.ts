@@ -21,7 +21,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { MatchBankTransactionDto } from '../dtos/MatchBankTransaction.dto';
+import { MatchTransactionEntryDto } from '../dtos/MatchBankTransaction.dto';
 
 @Injectable()
 export class MatchBankTransactions {
@@ -107,16 +107,15 @@ export class MatchBankTransactions {
 
   /**
    * Matches the given uncategorized transaction to the given references.
-   * @param {number} tenantId
    * @param {number} uncategorizedTransactionId
    * @returns {Promise<void>}
    */
   public async matchTransaction(
     uncategorizedTransactionId: number | Array<number>,
-    matchedTransactionsDto: MatchBankTransactionDto,
+    matchedTransactionsDto: MatchTransactionEntryDto | Array<MatchTransactionEntryDto>,
   ): Promise<void> {
     const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
-    const matchedTransactions = matchedTransactionsDto.entries;
+    const matchedTransactions = castArray(matchedTransactionsDto);
 
     // Validates the given matching transactions DTO.
     await this.validate(uncategorizedTransactionIds, matchedTransactions);
@@ -131,7 +130,7 @@ export class MatchBankTransactions {
       // Matches the given transactions under promise pool concurrency controlling.
       await PromisePool.withConcurrency(10)
         .for(matchedTransactions)
-        .process(async (matchedTransaction) => {
+        .process(async (matchedTransaction: MatchTransactionEntryDto) => {
           const getMatchedTransactionsService =
             this.matchedBankTransactions.registry.get(
               matchedTransaction.referenceType,

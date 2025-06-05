@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import async from 'async';
+import * as async from 'async';
 import { Inject, Injectable } from '@nestjs/common';
 import { PaymentReceivedGLEntries } from '../PaymentReceived/commands/PaymentReceivedGLEntries';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';

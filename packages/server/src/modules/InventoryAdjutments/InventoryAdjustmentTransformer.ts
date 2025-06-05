@@ -17,8 +17,8 @@ export class InventoryAdjustmentTransformer extends Transformer {
    */
   formattedType(inventoryAdjustment: InventoryAdjustment) {
     const types = {
-      increment: 'inventory_adjustment.type.increment',
-      decrement: 'inventory_adjustment.type.decrement',
+      increment: 'inventory_adjustment.increment',
+      decrement: 'inventory_adjustment.decrement',
     };
     return this.context.i18n.t(types[inventoryAdjustment.type] || '');
   }

@@ -23,6 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { IItemsFilter } from './types/Items.types';
 import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
+import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 
 @Controller('/items')
 @UseGuards(SubscriptionGuard)
@@ -99,7 +100,7 @@ export class ItemsController extends TenantController {
     type: Boolean,
     description: 'Filter for inactive items',
   })
-  async getItems(@Query() filterDTO: IItemsFilter): Promise<any> {
+  async getItems(@Query() filterDTO: GetItemsQueryDto): Promise<any> {
     return this.itemsApplication.getItems(filterDTO);
   }
 

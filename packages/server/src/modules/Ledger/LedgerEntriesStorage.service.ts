@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import async from 'async';
+import * as async from 'async';
 import { Inject, Injectable } from '@nestjs/common';
 import { transformLedgerEntryToTransaction } from './utils';
 import {
@@ -33,7 +33,7 @@ export class LedgerEntriesStorageService {
    * @returns {Promise<void>}
    */
   public saveEntries = async (ledger: ILedger, trx?: Knex.Transaction) => {
-    const saveEntryQueue = async.queue(this.saveEntryTask, 10);
+    const saveEntryQueue = async.queue(this.saveEntryTask.bind(this), 10);
     const entries = ledger.filter(filterBlankEntry).getEntries();
 
     entries.forEach((entry) => {

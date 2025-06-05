@@ -463,7 +463,7 @@ export function useMatchUncategorizedTransaction(
     MatchUncategorizedTransactionRes,
     Error,
     MatchUncategorizedTransactionValues
-  >((value) => apiRequest.post('/banking/matches/match', value), {
+  >((value) => apiRequest.post('/banking/matching/match', value), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries(
         t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
