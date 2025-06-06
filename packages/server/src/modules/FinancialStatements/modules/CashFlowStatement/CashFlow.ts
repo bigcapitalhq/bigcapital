@@ -227,12 +227,10 @@ export class CashFlowStatement extends R.pipe(
     const accountsTotal = this.getAccountsMetaTotal(accounts);
     const total = this.getTotalAmountMeta(accountsTotal);
 
-    console.log(sectionSchema.label, 'label');
-
     const node = {
       sectionType: ICashFlowStatementSectionType.ACCOUNTS,
       id: sectionSchema.id,
-      label: sectionSchema.label,
+      label: this.i18n.t(sectionSchema.label),
       footerLabel: sectionSchema.footerLabel,
       children: accounts,
       total,

@@ -240,8 +240,9 @@ export class CashFlowTable {
   ): ICashFlowStatementSection => {
     const label = section.footerLabel
       ? section.footerLabel
-      : this.i18n.t('Total {{accountName}}', { accountName: section.label });
-
+      : this.i18n.t('financial_sheet.total_row', {
+          args: { value: section.label },
+        });
     section.children.push({
       sectionType: ICashFlowStatementSectionType.TOTAL,
       label,

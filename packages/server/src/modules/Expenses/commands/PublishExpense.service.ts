@@ -21,8 +21,8 @@ export class PublishExpense {
    */
   constructor(
     private readonly eventPublisher: EventEmitter2,
-    private readonly uow: UnitOfWork,
     private readonly validator: CommandExpenseValidator,
+    private readonly uow: UnitOfWork,
 
     @Inject(Expense.name)
     private readonly expenseModel: TenantModelProxy<typeof Expense>,

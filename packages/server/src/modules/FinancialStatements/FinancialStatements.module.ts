@@ -19,7 +19,6 @@ import { VendorBalanceSummaryModule } from './modules/VendorBalanceSummary/Vendo
 import { BalanceSheetModule } from './modules/BalanceSheet/BalanceSheet.module';
 
 @Module({
-  providers: [],
   imports: [
     BalanceSheetModule,
     PurchasesByItemsModule,

@@ -12,9 +12,7 @@ export class UnitOfWork {
   ) {}
 
   /**
-   *
-   * @param {number} tenantId
-   * @param {} work
+   * @param {function} work - The work to be done in the transaction.
    * @param {IsolationLevel} isolationLevel
    * @returns {}
    */
