@@ -1,22 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { renderPaymentReceivedPaperTemplateHtml } from '@bigcapital/pdf-templates';
 import { GetPaymentReceivedService } from './GetPaymentReceived.service';
 import { PaymentReceivedBrandingTemplate } from './PaymentReceivedBrandingTemplate.service';
 import { transformPaymentReceivedToPdfTemplate } from '../utils';
-
 import { PaymentReceived } from '../models/PaymentReceived';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
 import { ChromiumlyTenancy } from '@/modules/ChromiumlyTenancy/ChromiumlyTenancy.service';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { TemplateInjectable } from '@/modules/TemplateInjectable/TemplateInjectable.service';
 import { PaymentReceivedPdfTemplateAttributes } from '../types/PaymentReceived.types';
-import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { events } from '@/common/events/events';
 
 @Injectable()
 export class GetPaymentReceivedPdfService {
   constructor(
     private chromiumlyTenancy: ChromiumlyTenancy,
-    private templateInjectable: TemplateInjectable,
     private getPaymentService: GetPaymentReceivedService,
     private paymentBrandingTemplateService: PaymentReceivedBrandingTemplate,
     private eventPublisher: EventEmitter2,
@@ -29,22 +27,30 @@ export class GetPaymentReceivedPdfService {
   ) {}
 
   /**
+   * Retrieves payment received html content.
+   * @param {number} paymentReceivedId
+   * @returns {Promise<string>}
+   */
+  public async getPaymentReceivedHtml(
+    paymentReceivedId: number,
+  ): Promise<string> {
+    const brandingAttributes =
+      await this.getPaymentBrandingAttributes(paymentReceivedId);
+
+    return renderPaymentReceivedPaperTemplateHtml(brandingAttributes);
+  }
+
+  /**
    * Retrieve sale invoice pdf content.
-   * @param {number} tenantId -
-   * @param {IPaymentReceived} paymentReceive -
+   * @param {number} paymentReceivedId - Payment received id.
    * @returns {Promise<Buffer>}
    */
   async getPaymentReceivePdf(
     paymentReceivedId: number,
   ): Promise<[Buffer, string]> {
-    const brandingAttributes =
-      await this.getPaymentBrandingAttributes(paymentReceivedId);
-
-    const htmlContent = await this.templateInjectable.render(
-      'modules/payment-receive-standard',
-      brandingAttributes,
-    );
+    const htmlContent = await this.getPaymentReceivedHtml(paymentReceivedId);
     const filename = await this.getPaymentReceivedFilename(paymentReceivedId);
+
     // Converts the given html content to pdf document.
     const content =
       await this.chromiumlyTenancy.convertHtmlContent(htmlContent);
@@ -98,7 +104,6 @@ export class GetPaymentReceivedPdfService {
       await this.paymentBrandingTemplateService.getPaymentReceivedPdfTemplate(
         templateId,
       );
-
     return {
       ...brandingTemplate.attributes,
       ...transformPaymentReceivedToPdfTemplate(paymentReceived),

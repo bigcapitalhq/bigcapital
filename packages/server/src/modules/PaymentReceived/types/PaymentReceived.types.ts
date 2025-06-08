@@ -130,23 +130,9 @@ export enum PaymentReceiveAction {
   NotifyBySms = 'NotifyBySms',
 }
 
-// export type IPaymentReceiveGLCommonEntry = Pick<
-//   ILedgerEntry,
-//   | 'debit'
-//   | 'credit'
-//   | 'currencyCode'
-//   | 'exchangeRate'
-//   | 'transactionId'
-//   | 'transactionType'
-//   | 'transactionNumber'
-//   | 'referenceNumber'
-//   | 'date'
-//   | 'userId'
-//   | 'createdAt'
-//   | 'branchId'
-// >;
-
-export interface PaymentReceiveMailOpts extends CommonMailOptions {}
+export interface PaymentReceiveMailOpts extends CommonMailOptions {
+  attachPdf?: boolean;
+}
 export interface PaymentReceiveMailOptsDTO extends CommonMailOptionsDTO {}
 export interface PaymentReceiveMailPresendEvent {
   paymentReceivedId: number;

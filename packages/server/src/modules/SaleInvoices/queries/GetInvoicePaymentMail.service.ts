@@ -39,7 +39,7 @@ export class GetInvoicePaymentMail {
 
   /**
    * Retrieves the mail template html content.
-   * @param {number} invoiceId - Invoice id.
+   * @param {number} invoiceId - Sale invoice id.
    */
   public async getMailTemplate(
     invoiceId: number,

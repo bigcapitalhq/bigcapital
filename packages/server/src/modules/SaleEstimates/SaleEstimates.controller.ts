@@ -208,7 +208,7 @@ export class SaleEstimatesController {
   }
 
   @Get(':id/mail')
-  @ApiOperation({ summary: 'Retrieves the sale estimate mail details.' })
+  @ApiOperation({ summary: 'Retrieves the sale estimate mail state.' })
   @ApiParam({
     name: 'id',
     required: true,
@@ -218,7 +218,9 @@ export class SaleEstimatesController {
   public getSaleEstimateMail(
     @Param('id', ParseIntPipe) saleEstimateId: number,
   ) {
-    return this.saleEstimatesApplication.getSaleEstimateMail(saleEstimateId);
+    return this.saleEstimatesApplication.getSaleEstimateMailState(
+      saleEstimateId,
+    );
   }
 
   @Get(':id')
@@ -243,6 +245,11 @@ export class SaleEstimatesController {
         'Content-Length': pdfContent.length,
       });
       res.send(pdfContent);
+    } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
+      const htmlContent =
+        await this.saleEstimatesApplication.getSaleEstimateHtml(estimateId);
+
+      return { htmlContent };
     } else {
       return this.saleEstimatesApplication.getSaleEstimate(estimateId);
     }

@@ -44,7 +44,10 @@ export const transformInvoiceToPdfTemplate = (
       label: tax.name,
       amount: tax.taxRateAmountFormatted,
     })),
-
+    discount: invoice.discountAmountFormatted,
+    discountLabel: invoice.discountPercentageFormatted
+      ? `Discount [${invoice.discountPercentageFormatted}]`
+      : 'Discount',
     customerAddress: contactAddressTextFormat(invoice.customer),
   };
 };

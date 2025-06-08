@@ -4,18 +4,17 @@ import { GetSaleEstimate } from './GetSaleEstimate.service';
 import { transformEstimateToPdfTemplate } from '../utils';
 import { EstimatePdfBrandingAttributes } from '../constants';
 import { SaleEstimatePdfTemplate } from '@/modules/SaleInvoices/queries/SaleEstimatePdfTemplate.service';
-import { TemplateInjectable } from '@/modules/TemplateInjectable/TemplateInjectable.service';
 import { ChromiumlyTenancy } from '@/modules/ChromiumlyTenancy/ChromiumlyTenancy.service';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
 import { events } from '@/common/events/events';
 import { SaleEstimate } from '../models/SaleEstimate';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { renderEstimatePaperTemplateHtml } from '@bigcapital/pdf-templates';
 
 @Injectable()
 export class GetSaleEstimatePdf {
   constructor(
     private readonly chromiumlyTenancy: ChromiumlyTenancy,
-    private readonly templateInjectable: TemplateInjectable,
     private readonly getSaleEstimate: GetSaleEstimate,
     private readonly estimatePdfTemplate: SaleEstimatePdfTemplate,
     private readonly eventPublisher: EventEmitter2,
@@ -30,21 +29,28 @@ export class GetSaleEstimatePdf {
   ) {}
 
   /**
+   * Retrieve sale estimate html content.
+   * @param {number} invoiceId -
+   */
+  public async saleEstimateHtml(estimateId: number): Promise<string> {
+    const brandingAttributes =
+      await this.getEstimateBrandingAttributes(estimateId);
+
+    return renderEstimatePaperTemplateHtml({ ...brandingAttributes });
+  }
+
+  /**
    * Retrieve sale invoice pdf content.
-   * @param {number} tenantId -
-   * @param {ISaleInvoice} saleInvoice -
+   * @param {ISaleInvoice} saleInvoice - Sale estimate id.
    */
   public async getSaleEstimatePdf(
     saleEstimateId: number,
   ): Promise<[Buffer, string]> {
     const filename = await this.getSaleEstimateFilename(saleEstimateId);
-    const brandingAttributes =
-      await this.getEstimateBrandingAttributes(saleEstimateId);
 
-    const htmlContent = await this.templateInjectable.render(
-      'modules/estimate-regular',
-      brandingAttributes,
-    );
+    // Retrieves the sale estimate html.
+    const htmlContent = await this.saleEstimateHtml(saleEstimateId);
+
     const content =
       await this.chromiumlyTenancy.convertHtmlContent(htmlContent);
     const eventPayload = { saleEstimateId };
@@ -72,7 +78,6 @@ export class GetSaleEstimatePdf {
 
   /**
    * Retrieves the given estimate branding attributes.
-   * @param {number} tenantId - Tenant id.
    * @param {number} estimateId - Estimate id.
    * @returns {Promise<EstimatePdfBrandingAttributes>}
    */

@@ -1,18 +1,18 @@
 export const DEFAULT_RECEIPT_MAIL_SUBJECT =
   'Receipt {Receipt Number} from {Company Name}';
-export const DEFAULT_RECEIPT_MAIL_CONTENT = `
-<p>Dear {Customer Name}</p>
-<p>Thank you for your business, You can view or print your receipt from attachements.</p>
-<p>
-Receipt <strong>#{Receipt Number}</strong><br />
-Amount  : <strong>{Receipt Amount}</strong></br />
-</p>
+  
+export const DEFAULT_RECEIPT_MAIL_CONTENT = `Hi {Customer Name},
 
-<p>
-<i>Regards</i><br />
-<i>{Company Name}</i>
-</p>
-`;
+Here's receipt # {Receipt Number} for Receipt {Receipt Amount}
+
+The receipt paid on {Receipt Date}, and the total amount paid is {Receipt Amount}.
+
+Please find your sale receipt attached to this email for your reference
+
+If you have any questions, please let us know.
+
+Thanks,
+{Company Name}`;
 
 export const SendSaleReceiptMailQueue = 'SendSaleReceiptMailQueue';
 export const SendSaleReceiptMailJob = 'SendSaleReceiptMailJob';

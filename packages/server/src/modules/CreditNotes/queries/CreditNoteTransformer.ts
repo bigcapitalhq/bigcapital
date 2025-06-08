@@ -119,7 +119,6 @@ export class CreditNoteTransformer extends Transformer {
 
   /**
    * Retrieves formatted discount percentage.
-   * @param credit
    * @returns {string}
    */
   protected discountPercentageFormatted = (credit): string => {
@@ -128,7 +127,6 @@ export class CreditNoteTransformer extends Transformer {
 
   /**
    * Retrieves formatted adjustment amount.
-   * @param credit
    * @returns {string}
    */
   protected adjustmentFormatted = (credit): string => {

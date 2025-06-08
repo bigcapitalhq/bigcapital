@@ -23,8 +23,9 @@ import {
 import { SaleReceipt } from '../models/SaleReceipt';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
 import { Mail } from '@/modules/Mail/Mail';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GetSaleReceiptMailTemplateService } from '../queries/GetSaleReceiptMailTemplate.service';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class SaleReceiptMailNotification {
@@ -42,6 +43,7 @@ export class SaleReceiptMailNotification {
     private readonly eventEmitter: EventEmitter2,
     private readonly mailTransporter: MailTransporter,
     private readonly tenancyContext: TenancyContext,
+    private readonly getReceiptMailTemplateService: GetSaleReceiptMailTemplateService,
 
     @Inject(SaleReceipt.name)
     private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
@@ -119,8 +121,12 @@ export class SaleReceiptMailNotification {
     receiptId: number,
   ): Promise<Record<string, string>> => {
     const receipt = await this.getSaleReceiptService.getSaleReceipt(receiptId);
+    const commonArgs = await this.contactMailNotification.getCommonFormatArgs();
 
-    return transformReceiptToMailDataArgs(receipt);
+    return {
+      ...commonArgs,
+      ...transformReceiptToMailDataArgs(receipt),
+    };
   };
 
   /**
@@ -139,7 +145,14 @@ export class SaleReceiptMailNotification {
         mailOptions,
         formatterArgs,
       )) as SaleReceiptMailOpts;
-    return formattedOptions;
+
+    const message = await this.getReceiptMailTemplateService.getMailTemplate(
+      receiptId,
+      {
+        message: formattedOptions.message,
+      },
+    );
+    return { ...formattedOptions, message };
   }
 
   /**

@@ -4,12 +4,12 @@ import { SaleReceiptBrandingTemplate } from './SaleReceiptBrandingTemplate.servi
 import { transformReceiptToBrandingTemplateAttributes } from '../utils';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { ChromiumlyTenancy } from '@/modules/ChromiumlyTenancy/ChromiumlyTenancy.service';
-import { TemplateInjectable } from '@/modules/TemplateInjectable/TemplateInjectable.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
 import { ISaleReceiptBrandingTemplateAttributes } from '../types/SaleReceipts.types';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { renderReceiptPaperTemplateHtml } from '@bigcapital/pdf-templates';
 
 @Injectable()
 export class SaleReceiptsPdfService {
@@ -24,7 +24,6 @@ export class SaleReceiptsPdfService {
    */
   constructor(
     private readonly chromiumlyTenancy: ChromiumlyTenancy,
-    private readonly templateInjectable: TemplateInjectable,
     private readonly getSaleReceiptService: GetSaleReceipt,
     private readonly saleReceiptBrandingTemplate: SaleReceiptBrandingTemplate,
     private readonly eventPublisher: EventEmitter2,
@@ -39,6 +38,16 @@ export class SaleReceiptsPdfService {
   ) {}
 
   /**
+   * Retrieves sale receipt html content.
+   * @param {number} saleReceiptId
+   */
+  public async saleReceiptHtml(saleReceiptId: number) {
+    const brandingAttributes =
+      await this.getReceiptBrandingAttributes(saleReceiptId);
+    return renderReceiptPaperTemplateHtml(brandingAttributes);
+  }
+
+  /**
    * Retrieves sale invoice pdf content.
    * @param {number} saleReceiptId - Sale receipt identifier.
    * @returns {Promise<Buffer>}
@@ -47,14 +56,8 @@ export class SaleReceiptsPdfService {
     saleReceiptId: number,
   ): Promise<[Buffer, string]> {
     const filename = await this.getSaleReceiptFilename(saleReceiptId);
+    const htmlContent = await this.saleReceiptHtml(saleReceiptId);
 
-    const brandingAttributes =
-      await this.getReceiptBrandingAttributes(saleReceiptId);
-    // Converts the receipt template to html content.
-    const htmlContent = await this.templateInjectable.render(
-      'modules/receipt-regular',
-      brandingAttributes,
-    );
     // Renders the html content to pdf document.
     const content =
       await this.chromiumlyTenancy.convertHtmlContent(htmlContent);

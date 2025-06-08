@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
   /**
@@ -25,6 +25,15 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
 
       'total',
       'totalLabel',
+
+      'subtotal',
+      'subtotalLabel',
+
+      'discount',
+      'discountLabel',
+
+      'adjustment',
+      'adjustmentLabel',
 
       'dueAmount',
       'dueAmountLabel',
@@ -76,6 +85,30 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
     return 'Invoice # {invoiceNumber}';
   }
 
+  public subtotal(): string {
+    return this.options.invoice?.subtotalFormatted;
+  }
+
+  public subtotalLabel(): string {
+    return 'Subtotal';
+  }
+
+  public discount(): string {
+    return this.options.invoice?.discountAmountFormatted;
+  }
+
+  public discountLabel(): string {
+    return 'Discount';
+  }
+
+  public adjustment(): string {
+    return this.options.invoice?.adjustmentFormatted;
+  }
+
+  public adjustmentLabel(): string {
+    return 'Adjustment';
+  }
+
   public total(): string {
     return this.options.invoice?.totalFormatted;
   }
@@ -103,7 +136,7 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
   public items(): Array<any> {
     return this.item(
       this.options.invoice?.entries,
-      new GetInvoiceMailTemplateItemAttrsTransformer()
+      new GetInvoiceMailTemplateItemAttrsTransformer(),
     );
   }
 }

@@ -460,8 +460,8 @@ export function useSaleInvoiceMailState(
     [t.SALE_INVOICE_DEFAULT_OPTIONS, invoiceId],
     () =>
       apiRequest
-        .get(`/sale-invoices/${invoiceId}/mail/state`)
-        .then((res) => transformToCamelCase(res.data?.data)),
+        .get(`/sale-invoices/${invoiceId}/mail`)
+        .then((res) => transformToCamelCase(res.data)),
     options,
   );
 }

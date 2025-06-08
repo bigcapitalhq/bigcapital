@@ -76,7 +76,10 @@ export class PaymentReceived extends TenantBaseModel {
     const { Customer } = require('../../Customers/models/Customer');
     const { Account } = require('../../Accounts/models/Account.model');
     const { Branch } = require('../../Branches/models/Branch.model');
-    const { DocumentModel } = require('../../Attachments/models/Document.model');
+    const {
+      DocumentModel,
+    } = require('../../Attachments/models/Document.model');
+    const { PdfTemplateModel } = require('../../PdfTemplate/models/PdfTemplate');
 
     return {
       customer: {
@@ -152,6 +155,18 @@ export class PaymentReceived extends TenantBaseModel {
         },
         filter(query) {
           query.where('model_ref', 'PaymentReceive');
+        },
+      },
+
+      /**
+       * Payment received may belongs to pdf branding template.
+       */
+      pdfTemplate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PdfTemplateModel,
+        join: {
+          from: 'payment_receives.pdfTemplateId',
+          to: 'pdf_templates.id',
         },
       },
     };

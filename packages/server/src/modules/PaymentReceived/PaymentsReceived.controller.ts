@@ -144,7 +144,7 @@ export class PaymentReceivesController {
     description:
       'The payment received details have been successfully retrieved.',
   })
-  public getPaymentReceive(
+  public async getPaymentReceive(
     @Param('id', ParseIntPipe) paymentReceiveId: number,
     @Headers('accept') acceptHeader: string,
   ) {
@@ -152,6 +152,12 @@ export class PaymentReceivesController {
       return this.paymentReceivesApplication.getPaymentReceivePdf(
         paymentReceiveId,
       );
+    } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
+      const htmlContent =
+        await this.paymentReceivesApplication.getPaymentReceivedHtml(
+          paymentReceiveId,
+        );
+      return { htmlContent };
     } else {
       return this.paymentReceivesApplication.getPaymentReceive(
         paymentReceiveId,

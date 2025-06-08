@@ -320,7 +320,7 @@ export function useSaleEstimateMailState(
   const apiRequest = useApiRequest();
   return useQuery([t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId], () =>
     apiRequest
-      .get(`sale-estimates/${estimateId}/mail/state`)
+      .get(`sale-estimates/${estimateId}/mail`)
       .then((res) => transformToCamelCase(res.data)),
   );
 }

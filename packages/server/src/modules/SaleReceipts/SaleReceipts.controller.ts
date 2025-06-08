@@ -107,6 +107,11 @@ export class SaleReceiptsController {
         'Content-Length': pdfContent.length,
       });
       res.send(pdfContent);
+    } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
+      const htmlContent =
+        await this.saleReceiptApplication.getSaleReceiptHtml(id);
+
+      return { htmlContent };
     } else {
       return this.saleReceiptApplication.getSaleReceipt(id);
     }

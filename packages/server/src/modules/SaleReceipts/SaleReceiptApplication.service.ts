@@ -17,7 +17,11 @@ import { GetSaleReceiptsService } from './queries/GetSaleReceipts.service';
 import { SaleReceipt } from './models/SaleReceipt';
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { SaleReceiptMailNotification } from './commands/SaleReceiptMailNotification';
-import { CreateSaleReceiptDto, EditSaleReceiptDto } from './dtos/SaleReceipt.dto';
+import {
+  CreateSaleReceiptDto,
+  EditSaleReceiptDto,
+} from './dtos/SaleReceipt.dto';
+import { GetSaleReceiptMailStateService } from './queries/GetSaleReceiptMailState.service';
 
 @Injectable()
 export class SaleReceiptApplication {
@@ -31,6 +35,7 @@ export class SaleReceiptApplication {
     private getSaleReceiptPdfService: SaleReceiptsPdfService,
     private getSaleReceiptStateService: GetSaleReceiptState,
     private saleReceiptNotifyByMailService: SaleReceiptMailNotification,
+    private getSaleReceiptMailStateService: GetSaleReceiptMailStateService,
   ) {}
 
   /**
@@ -171,5 +176,24 @@ export class SaleReceiptApplication {
    */
   public getSaleReceiptState(): Promise<ISaleReceiptState> {
     return this.getSaleReceiptStateService.getSaleReceiptState();
+  }
+
+  /**
+   * Retrieves the given sale receipt html.
+   * @param {number} saleReceiptId
+   * @returns {Promise<string>}
+   */
+  public getSaleReceiptHtml(saleReceiptId: number) {
+    return this.getSaleReceiptPdfService.saleReceiptHtml(saleReceiptId);
+  }
+
+  /**
+   * Retrieves the mail state of the given sale receipt.
+   * @param {number} saleReceiptId
+   */
+  public getSaleReceiptMailState(
+    saleReceiptId: number,
+  ): Promise<ISaleReceiptState> {
+    return this.getSaleReceiptMailStateService.getMailState(saleReceiptId);
   }
 }

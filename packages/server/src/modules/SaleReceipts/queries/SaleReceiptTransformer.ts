@@ -15,6 +15,10 @@ export class SaleReceiptTransformer extends Transformer {
       'formattedReceiptDate',
       'formattedClosedAtDate',
       'formattedCreatedAt',
+      'subtotalFormatted',
+      'subtotalLocalFormatted',
+      'totalFormatted',
+      'totalLocalFormatted',
       'entries',
       'attachments',
     ];
@@ -48,6 +52,40 @@ export class SaleReceiptTransformer extends Transformer {
   };
 
   /**
+   * Retrieves the formatted subtotal.
+   */
+  protected subtotalFormatted = (receipt: SaleReceipt): string => {
+    return this.formatNumber(receipt.subtotal, { money: false });
+  };
+
+  /**
+   * Retrieves the estimate formatted subtotal in local currency.
+   * @param {ISaleReceipt} receipt
+   * @returns {string}
+   */
+  protected subtotalLocalFormatted = (receipt: SaleReceipt): string => {
+    return this.formatNumber(receipt.subtotalLocal, {
+      currencyCode: receipt.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the receipt formatted total.
+   * @returns {string}
+   */
+  protected totalFormatted = (receipt: SaleReceipt): string => {
+    return this.formatNumber(receipt.total, { money: false });
+  };
+
+  /**
+   * Retrieves the receipt formatted total in local currency.
+   * @returns {string}
+   */
+  protected totalLocalFormatted = (receipt: SaleReceipt): string => {
+    return this.formatNumber(receipt.totalLocal, { money: false });
+  };
+
+  /**
    * Retrieves the estimate formatted subtotal.
    * @param {ISaleReceipt} receipt
    * @returns {string}
@@ -63,6 +101,37 @@ export class SaleReceiptTransformer extends Transformer {
    */
   protected formattedAmount = (receipt: SaleReceipt): string => {
     return this.formatNumber(receipt.amount, {
+      currencyCode: receipt.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted discount amount.
+   * @param receipt
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (receipt: SaleReceipt): string => {
+    return this.formatNumber(receipt.discountAmount, {
+      currencyCode: receipt.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted discount percentage.
+   * @param receipt
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (receipt: SaleReceipt): string => {
+    return receipt.discountPercentage ? `${receipt.discountPercentage}%` : '';
+  };
+
+  /**
+   * Retrieves formatted adjustment amount.
+   * @param receipt
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (receipt: SaleReceipt): string => {
+    return this.formatMoney(receipt.adjustment, {
       currencyCode: receipt.currencyCode,
     });
   };

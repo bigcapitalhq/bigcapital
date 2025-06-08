@@ -1,6 +1,5 @@
 import * as moment from 'moment';
 import { Model } from 'objection';
-import { Injectable } from '@nestjs/common';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
@@ -307,12 +306,6 @@ export class SaleEstimate extends TenantBaseModel {
       },
     };
   }
-  /**
-   * Model settings.
-   */
-  // static get meta() {
-  // return SaleEstimateSettings;
-  // }
 
   /**
    * Retrieve the default custom views, roles and columns.

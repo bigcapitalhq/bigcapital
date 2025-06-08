@@ -18,6 +18,7 @@ import {
   CreateSaleEstimateDto,
   EditSaleEstimateDto,
 } from './dtos/SaleEstimate.dto';
+import { GetSaleEstimateMailStateService } from './queries/GetSaleEstimateMailState.service';
 
 @Injectable()
 export class SaleEstimatesApplication {
@@ -33,6 +34,7 @@ export class SaleEstimatesApplication {
     private readonly sendEstimateMailService: SendSaleEstimateMail,
     private readonly getSaleEstimateStateService: GetSaleEstimateState,
     private readonly saleEstimatesPdfService: GetSaleEstimatePdf,
+    private readonly getSaleEstimateMailStateService: GetSaleEstimateMailStateService,
   ) {}
 
   /**
@@ -171,5 +173,24 @@ export class SaleEstimatesApplication {
    */
   public getSaleEstimateState() {
     return this.getSaleEstimateStateService.getSaleEstimateState();
+  }
+
+  /**
+   * Retrieves the sale estimate mail state.
+   * @param {number} saleEstimateId
+   * @returns {Promise<SaleEstimateMailOptions>}
+   */
+  public getSaleEstimateMailState(saleEstimateId: number) {
+    return this.getSaleEstimateMailStateService.getEstimateMailState(
+      saleEstimateId,
+    );
+  }
+
+  /**
+   * Retrieve the HTML content of the given sale estimate.
+   * @param {number} saleEstimateId
+   */
+  public getSaleEstimateHtml(saleEstimateId: number) {
+    return this.saleEstimatesPdfService.saleEstimateHtml(saleEstimateId);
   }
 }

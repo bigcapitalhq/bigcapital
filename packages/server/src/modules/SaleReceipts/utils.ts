@@ -9,8 +9,8 @@ export const transformReceiptToBrandingTemplateAttributes = (
   saleReceipt: ISaleReceipt
 ): Partial<ISaleReceiptBrandingTemplateAttributes> => {
   return {
-    total: saleReceipt.formattedAmount,
-    subtotal: saleReceipt.formattedSubtotal,
+    total: saleReceipt.totalFormatted,
+    subtotal: saleReceipt.subtotalFormatted,
     lines: saleReceipt.entries?.map((entry) => ({
       item: entry.item.name,
       description: entry.description,
@@ -20,6 +20,11 @@ export const transformReceiptToBrandingTemplateAttributes = (
     })),
     receiptNumber: saleReceipt.receiptNumber,
     receiptDate: saleReceipt.formattedReceiptDate,
+    adjustment: saleReceipt.adjustmentFormatted,
+    discount: saleReceipt.discountAmountFormatted,
+    discountLabel: saleReceipt.discountPercentageFormatted
+      ? `Discount [${saleReceipt.discountPercentageFormatted}]`
+      : 'Discount',
     customerAddress: contactAddressTextFormat(saleReceipt.customer),
   };
 };

@@ -1,6 +1,4 @@
 import {
-  IPaymentReceivedCreateDTO,
-  IPaymentReceivedEditDTO,
   IPaymentsReceivedFilter,
   PaymentReceiveMailOptsDTO,
 } from './types/PaymentReceived.types';
@@ -79,7 +77,9 @@ export class PaymentReceivesApplication {
    * @param {IPaymentsReceivedFilter} filterDTO
    * @returns
    */
-  public async getPaymentsReceived(filterDTO: Partial<IPaymentsReceivedFilter>) {
+  public async getPaymentsReceived(
+    filterDTO: Partial<IPaymentsReceivedFilter>,
+  ) {
     return this.getPaymentsReceivedService.getPaymentReceives(filterDTO);
   }
 
@@ -139,6 +139,17 @@ export class PaymentReceivesApplication {
   public getPaymentReceivePdf(paymentReceiveId: number) {
     return this.getPaymentReceivePdfService.getPaymentReceivePdf(
       paymentReceiveId,
+    );
+  }
+
+  /**
+   * Retrieves html content of the given payment receive.
+   * @param {number} paymentReceivedId 
+   * @returns {Promise<string>}
+   */
+  public getPaymentReceivedHtml(paymentReceivedId: number) {
+    return this.getPaymentReceivePdfService.getPaymentReceivedHtml(
+      paymentReceivedId,
     );
   }
 

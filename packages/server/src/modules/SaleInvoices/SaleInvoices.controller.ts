@@ -171,6 +171,9 @@ export class SaleInvoicesController {
         'Content-Length': pdfContent.length,
       });
       res.send(pdfContent);
+    } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
+      const htmlContent = await this.saleInvoiceApplication.saleInvoiceHtml(id);
+      return { htmlContent };
     } else {
       return this.saleInvoiceApplication.getSaleInvoice(id);
     }
@@ -270,7 +273,7 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.saleInvoiceHtml(id);
   }
 
-  @Get(':id/mail-state')
+  @Get(':id/mail')
   @ApiOperation({ summary: 'Retrieves the sale invoice mail state.' })
   @ApiResponse({
     status: 200,

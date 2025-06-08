@@ -31,6 +31,15 @@ export class GetSaleInvoiceMailStateTransformer extends SaleInvoiceTransformer {
       'subtotal',
       'subtotalFormatted',
 
+      'discountAmount',
+      'discountAmountFormatted',
+      'discountPercentage',
+      'discountPercentageFormatted',
+      'discountLabel',
+
+      'adjustment',
+      'adjustmentFormatted',
+
       'invoiceNo',
 
       'entries',
@@ -77,6 +86,17 @@ export class GetSaleInvoiceMailStateTransformer extends SaleInvoiceTransformer {
   };
 
   /**
+   * Retrieves the discount label of the estimate.
+   * @param estimate
+   * @returns {string}
+   */
+  protected discountLabel(invoice) {
+    return invoice.discountType === 'percentage'
+      ? `Discount [${invoice.discountPercentageFormatted}]`
+      : 'Discount';
+  }
+
+  /**
    *
    * @param invoice
    * @returns
@@ -87,7 +107,7 @@ export class GetSaleInvoiceMailStateTransformer extends SaleInvoiceTransformer {
       new GetSaleInvoiceMailStateEntryTransformer(),
       {
         currencyCode: invoice.currencyCode,
-      }
+      },
     );
   };
 

@@ -37,6 +37,8 @@ import { MailModule } from '../Mail/Mail.module';
 import { SendSaleReceiptMailQueue } from './constants';
 import { SaleReceiptsExportable } from './commands/SaleReceiptsExportable';
 import { SaleReceiptsImportable } from './commands/SaleReceiptsImportable';
+import { GetSaleReceiptMailStateService } from './queries/GetSaleReceiptMailState.service';
+import { GetSaleReceiptMailTemplateService } from './queries/GetSaleReceiptMailTemplate.service';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -79,6 +81,8 @@ import { SaleReceiptsImportable } from './commands/SaleReceiptsImportable';
     SendSaleReceiptMailProcess,
     SaleReceiptsExportable,
     SaleReceiptsImportable,
+    GetSaleReceiptMailStateService,
+    GetSaleReceiptMailTemplateService
   ],
 })
 export class SaleReceiptsModule {}
