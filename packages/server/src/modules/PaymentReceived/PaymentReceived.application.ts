@@ -17,6 +17,7 @@ import {
   EditPaymentReceivedDto,
 } from './dtos/PaymentReceived.dto';
 import { PaymentsReceivedPagesService } from './queries/PaymentsReceivedPages.service';
+import { GetPaymentReceivedMailState } from './queries/GetPaymentReceivedMailState.service';
 
 @Injectable()
 export class PaymentReceivesApplication {
@@ -28,6 +29,7 @@ export class PaymentReceivesApplication {
     private getPaymentReceivedService: GetPaymentReceivedService,
     private getPaymentReceiveInvoicesService: GetPaymentReceivedInvoices,
     private sendPaymentReceiveMailNotification: SendPaymentReceiveMailNotification,
+    private getPaymentReceivedMailStateService: GetPaymentReceivedMailState,
     private getPaymentReceivePdfService: GetPaymentReceivedPdfService,
     private getPaymentReceivedStateService: GetPaymentReceivedStateService,
     private paymentsReceivedPagesService: PaymentsReceivedPagesService,
@@ -125,7 +127,7 @@ export class PaymentReceivesApplication {
    * @returns {Promise<void>}
    */
   public getPaymentMailOptions(paymentReceiveId: number) {
-    return this.sendPaymentReceiveMailNotification.getMailOptions(
+    return this.getPaymentReceivedMailStateService.getMailOptions(
       paymentReceiveId,
     );
   }

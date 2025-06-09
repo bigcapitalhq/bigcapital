@@ -117,32 +117,6 @@ export class SaleReceiptApplication {
   }
 
   /**
-   * Notify receipt customer by SMS of the given sale receipt.
-   * @param {number} tenantId
-   * @param {number} saleReceiptId
-   * @returns
-   */
-  // public saleReceiptNotifyBySms(tenantId: number, saleReceiptId: number) {
-  //   return this.saleReceiptNotifyBySmsService.notifyBySms(
-  //     tenantId,
-  //     saleReceiptId,
-  //   );
-  // }
-
-  /**
-   * Retrieves sms details of the given sale receipt.
-   * @param {number} tenantId
-   * @param {number} saleReceiptId
-   * @returns
-   */
-  // public getSaleReceiptSmsDetails(tenantId: number, saleReceiptId: number) {
-  //   return this.saleReceiptNotifyBySmsService.smsDetails(
-  //     tenantId,
-  //     saleReceiptId,
-  //   );
-  // }
-
-  /**
    * Sends the receipt mail of the given sale receipt.
    * @param {number} tenantId
    * @param {number} saleReceiptId
@@ -157,17 +131,6 @@ export class SaleReceiptApplication {
       saleReceiptId,
       messageOpts,
     );
-  }
-
-  /**
-   * Retrieves the default mail options of the given sale receipt.
-   * @param {number} saleReceiptId - Sale receipt identifier.
-   * @returns {Promise<SaleReceiptMailOpts>}
-   */
-  public getSaleReceiptMail(
-    saleReceiptId: number,
-  ): Promise<SaleReceiptMailOpts> {
-    return this.saleReceiptNotifyByMailService.getMailOptions(saleReceiptId);
   }
 
   /**
@@ -191,7 +154,7 @@ export class SaleReceiptApplication {
    * Retrieves the mail state of the given sale receipt.
    * @param {number} saleReceiptId
    */
-  public getSaleReceiptMailState(
+  public getSaleReceiptMail(
     saleReceiptId: number,
   ): Promise<ISaleReceiptState> {
     return this.getSaleReceiptMailStateService.getMailState(saleReceiptId);

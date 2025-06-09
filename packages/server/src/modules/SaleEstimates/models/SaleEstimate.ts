@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { Model } from 'objection';
+import { defaultTo } from 'lodash';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
@@ -8,6 +9,7 @@ import { SaleEstimateMeta } from './SaleEstimate.meta';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { DiscountType } from '@/common/types/Discount';
 
 @ExportableModel()
 @ImportableModel()
@@ -42,6 +44,11 @@ export class SaleEstimate extends TenantBaseModel {
   branchId?: number;
   warehouseId?: number;
 
+  discount: number;
+  discountType: DiscountType;
+
+  adjustment: number;
+
   public entries!: ItemEntry[];
   public attachments!: Document[];
   public customer!: Customer;
@@ -71,8 +78,68 @@ export class SaleEstimate extends TenantBaseModel {
       'isConvertedToInvoice',
       'isApproved',
       'isRejected',
+      'discountAmount',
+      'discountPercentage',
+      'total',
+      'totalLocal',
+      'subtotal',
+      'subtotalLocal',
     ];
   }
+
+    /**
+   * Estimate subtotal.
+   * @returns {number}
+   */
+    get subtotal() {
+      return this.amount;;
+    }
+  
+    /**
+     * Estimate subtotal in local currency.
+     * @returns {number}
+     */
+    get subtotalLocal() {
+      return this.localAmount;
+    }
+  
+    /**
+     * Discount amount.
+     * @returns {number}
+     */ 
+    get discountAmount() {
+      return this.discountType === DiscountType.Amount
+        ? this.discount
+        : this.subtotal * (this.discount / 100);
+    }
+  
+    /**
+     * Discount percentage.
+     * @returns {number | null}
+     */
+    get discountPercentage(): number | null {
+      return this.discountType === DiscountType.Percentage
+        ? this.discount
+        : null;
+    }
+  
+    /**
+     * Estimate total.
+     * @returns {number}
+     */
+    get total() {
+      const adjustmentAmount = defaultTo(this.adjustment, 0);
+  
+      return this.subtotal - this.discountAmount - adjustmentAmount;
+    }
+  
+    /**
+     * Estimate total in local currency.
+     * @returns {number}
+     */
+    get totalLocal() {
+      return this.total * this.exchangeRate;
+    }
 
   /**
    * Estimate amount in local currency.

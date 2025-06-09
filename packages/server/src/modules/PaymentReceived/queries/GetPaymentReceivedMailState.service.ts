@@ -36,6 +36,7 @@ export class GetPaymentReceivedMailState {
 
     const mailOptions =
       await this.paymentReceivedMail.getMailOptions(paymentId);
+
     const transformed = await this.transformer.transform(
       paymentReceive,
       new GetPaymentReceivedMailStateTransformer(),

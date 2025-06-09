@@ -19,6 +19,11 @@ export class SaleReceiptTransformer extends Transformer {
       'subtotalLocalFormatted',
       'totalFormatted',
       'totalLocalFormatted',
+
+      'discountAmountFormatted',
+      'discountPercentageFormatted',
+      'adjustmentFormatted',
+      
       'entries',
       'attachments',
     ];
@@ -107,7 +112,6 @@ export class SaleReceiptTransformer extends Transformer {
 
   /**
    * Retrieves formatted discount amount.
-   * @param receipt
    * @returns {string}
    */
   protected discountAmountFormatted = (receipt: SaleReceipt): string => {
@@ -118,7 +122,6 @@ export class SaleReceiptTransformer extends Transformer {
 
   /**
    * Retrieves formatted discount percentage.
-   * @param receipt
    * @returns {string}
    */
   protected discountPercentageFormatted = (receipt: SaleReceipt): string => {
@@ -127,7 +130,6 @@ export class SaleReceiptTransformer extends Transformer {
 
   /**
    * Retrieves formatted adjustment amount.
-   * @param receipt
    * @returns {string}
    */
   protected adjustmentFormatted = (receipt: SaleReceipt): string => {

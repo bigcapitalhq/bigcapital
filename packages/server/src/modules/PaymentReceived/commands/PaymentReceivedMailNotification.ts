@@ -25,6 +25,7 @@ import { Mail } from '@/modules/Mail/Mail';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { GetPaymentReceivedMailTemplate } from '../queries/GetPaymentReceivedMailTemplate.service';
 
 @Injectable()
 export class SendPaymentReceiveMailNotification {
@@ -34,6 +35,7 @@ export class SendPaymentReceiveMailNotification {
     private readonly eventEmitter: EventEmitter2,
     private readonly mailTransport: MailTransporter,
     private readonly tenancyContext: TenancyContext,
+    private readonly paymentMailTemplate: GetPaymentReceivedMailTemplate,
 
     @InjectQueue(SEND_PAYMENT_RECEIVED_MAIL_QUEUE)
     private readonly sendPaymentMailQueue: Queue,
@@ -86,23 +88,27 @@ export class SendPaymentReceiveMailNotification {
    */
   public getMailOptions = async (
     paymentId: number,
+    defaultSubject: string = DEFAULT_PAYMENT_MAIL_SUBJECT,
+    defaultContent: string = DEFAULT_PAYMENT_MAIL_CONTENT,
   ): Promise<PaymentReceiveMailOpts> => {
-    const paymentReceive = await this.paymentReceiveModel()
+    const paymentReceived = await this.paymentReceiveModel()
       .query()
       .findById(paymentId)
       .throwIfNotFound();
 
-    const formatArgs = await this.textFormatter(paymentId);
+    const formatArgs = await this.textFormatter(paymentReceived.id);
 
+    // Retrieves the default mail options.
     const mailOptions =
       await this.contactMailNotification.getDefaultMailOptions(
-        paymentReceive.customerId,
+        paymentReceived.customerId,
       );
     return {
       ...mailOptions,
-      subject: DEFAULT_PAYMENT_MAIL_SUBJECT,
-      message: DEFAULT_PAYMENT_MAIL_CONTENT,
-      ...formatArgs,
+      message: defaultContent,
+      subject: defaultSubject,
+      attachPdf: true,
+      formatArgs,
     };
   };
 
@@ -115,7 +121,40 @@ export class SendPaymentReceiveMailNotification {
     invoiceId: number,
   ): Promise<Record<string, string>> => {
     const payment = await this.getPaymentService.getPaymentReceive(invoiceId);
-    return transformPaymentReceivedToMailDataArgs(payment);
+    const commonArgs = await this.contactMailNotification.getCommonFormatArgs();
+    const paymentArgs = transformPaymentReceivedToMailDataArgs(payment);
+
+    return {
+      ...commonArgs,
+      ...paymentArgs,
+    };
+  };
+
+  /**
+   * Formats the mail options of the given payment receive.
+   * @param {number} paymentReceiveId
+   * @param {PaymentReceiveMailOpts} mailOptions
+   * @returns {Promise<PaymentReceiveMailOpts>}
+   */
+  public formattedMailOptions = async (
+    paymentReceiveId: number,
+    mailOptions: PaymentReceiveMailOpts,
+  ): Promise<PaymentReceiveMailOpts> => {
+    const formatterArgs = await this.textFormatter(paymentReceiveId);
+    const formattedOptions =
+      await this.contactMailNotification.formatMailOptions(
+        mailOptions,
+        formatterArgs,
+      );
+    // Retrieves the mail template.
+    const message = await this.paymentMailTemplate.getMailTemplate(
+      paymentReceiveId,
+      {
+        message: formattedOptions.message,
+        preview: formattedOptions.message,
+      },
+    );
+    return { ...formattedOptions, message };
   };
 
   /**

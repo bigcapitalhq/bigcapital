@@ -1,8 +1,5 @@
 import { Transformer } from '@/modules/Transformer/Transformer';
 import { Bill } from '../models/Bill';
-import { AttachmentTransformer } from '@/modules/Attachments/Attachment.transformer';
-import { ItemEntryTransformer } from '@/modules/TransactionItemEntry/ItemEntry.transformer';
-import { SaleInvoiceTaxEntryTransformer } from '@/modules/SaleInvoices/queries/SaleInvoiceTaxEntry.transformer';
 
 export class BillTransformer extends Transformer {
   /**
@@ -23,6 +20,9 @@ export class BillTransformer extends Transformer {
       'subtotalLocalFormatted',
       'subtotalExcludingTaxFormatted',
       'taxAmountWithheldLocalFormatted',
+      'discountAmountFormatted',
+      'discountPercentageFormatted',
+      'adjustmentFormatted',
       'totalFormatted',
       'totalLocalFormatted',
       'taxes',
@@ -180,6 +180,37 @@ export class BillTransformer extends Transformer {
   protected totalLocalFormatted = (bill: Bill): string => {
     return this.formatNumber(bill.totalLocal, {
       currencyCode: this.context.organization.baseCurrency,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount amount.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected discountAmountFormatted = (bill: Bill): string => {
+    return this.formatNumber(bill.discountAmount, {
+      currencyCode: bill.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount percentage.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (bill: Bill): string => {
+    return bill.discountPercentage ? `${bill.discountPercentage}%` : '';
+  };
+
+  /**
+   * Retrieves the formatted adjustment amount.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected adjustmentFormatted = (bill: Bill): string => {
+    return this.formatNumber(bill.adjustment, {
+      currencyCode: bill.currencyCode,
     });
   };
 

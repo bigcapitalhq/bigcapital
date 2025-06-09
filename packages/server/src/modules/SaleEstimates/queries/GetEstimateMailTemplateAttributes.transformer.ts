@@ -28,6 +28,12 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
       'dueAmount',
       'dueAmountLabel',
 
+      'discount',
+      'discountLabel',
+
+      'adjustment',
+      'adjustmentLabel',
+
       'viewEstimateButtonLabel',
       'viewEstimateButtonUrl',
 
@@ -103,7 +109,7 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * Estimate total.
    */
   public total(): string {
-    return this.options.estimate.formattedAmount;
+    return this.options.estimate.totalFormatted;
   }
 
   /**
@@ -115,10 +121,42 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
   }
 
   /**
+   * Estimate discount.
+   * @returns {string}
+   */
+  public discount(): string {
+    return this.options.estimate?.discountAmountFormatted;
+  }
+
+  /**
+   * Estimate discount label.
+   * @returns {string}
+   */
+  public discountLabel(): string {
+    return 'Discount';
+  }
+
+  /**
+   * Estimate adjustment.
+   * @returns {string}
+   */
+  public adjustment(): string {
+    return this.options.estimate?.adjustmentFormatted;
+  }
+
+  /**
+   * Estimate adjustment label.
+   * @returns {string}
+   */
+  public adjustmentLabel(): string {
+    return 'Adjustment';
+  }
+
+  /**
    * Estimate subtotal.
    */
   public subtotal(): string {
-    return this.options.estimate.formattedAmount;
+    return this.options.estimate.formattedSubtotal;
   }
 
   /**
