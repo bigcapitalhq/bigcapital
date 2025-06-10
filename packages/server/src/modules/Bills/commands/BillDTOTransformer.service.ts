@@ -10,7 +10,6 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Item } from '@/modules/Items/models/Item';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { ItemEntriesTaxTransactions } from '@/modules/TaxRates/ItemEntriesTaxTransactions.service';
-import { IBillDTO } from '../Bills.types';
 import { Bill } from '../models/Bill';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';

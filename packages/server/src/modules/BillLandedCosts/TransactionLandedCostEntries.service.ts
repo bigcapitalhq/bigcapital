@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ServiceError } from '../Items/ServiceError';
 import { transformToMap } from '@/utils/transform-to-key';
-import { ICommonLandedCostEntry, ICommonLandedCostEntryDTO } from './types/BillLandedCosts.types';
+import {
+  ICommonLandedCostEntry,
+  ICommonLandedCostEntryDTO,
+} from './types/BillLandedCosts.types';
 
 const ERRORS = {
   ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED:
@@ -19,7 +22,7 @@ export class TransactionLandedCostEntriesService {
    */
   public getLandedCostEntriesDeleted(
     oldCommonEntries: ICommonLandedCostEntry[],
-    newCommonEntriesDTO: ICommonLandedCostEntryDTO[]
+    newCommonEntriesDTO: ICommonLandedCostEntryDTO[],
   ): ICommonLandedCostEntry[] {
     const newBillEntriesById = transformToMap(newCommonEntriesDTO, 'id');
 
@@ -40,11 +43,11 @@ export class TransactionLandedCostEntriesService {
    */
   public validateLandedCostEntriesNotDeleted(
     oldCommonEntries: ICommonLandedCostEntry[],
-    newCommonEntriesDTO: ICommonLandedCostEntryDTO[]
+    newCommonEntriesDTO: ICommonLandedCostEntryDTO[],
   ): void {
     const entriesDeleted = this.getLandedCostEntriesDeleted(
       oldCommonEntries,
-      newCommonEntriesDTO
+      newCommonEntriesDTO,
     );
     if (entriesDeleted.length > 0) {
       throw new ServiceError(ERRORS.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED);
@@ -58,7 +61,7 @@ export class TransactionLandedCostEntriesService {
    */
   public validateLocatedCostEntriesSmallerThanNewEntries(
     oldCommonEntries: ICommonLandedCostEntry[],
-    newCommonEntriesDTO: ICommonLandedCostEntryDTO[]
+    newCommonEntriesDTO: ICommonLandedCostEntryDTO[],
   ): void {
     const oldBillEntriesById = transformToMap(oldCommonEntries, 'id');
 
@@ -67,7 +70,7 @@ export class TransactionLandedCostEntriesService {
 
       if (oldEntry && oldEntry.allocatedCostAmount > entry.amount) {
         throw new ServiceError(
-          ERRORS.LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES
+          ERRORS.LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES,
         );
       }
     });

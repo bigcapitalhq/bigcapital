@@ -2,6 +2,10 @@ import { Model } from 'objection';
 import { lowerCase } from 'lodash';
 // import TenantModel from 'models/TenantModel';
 import { BaseModel } from '@/models/Model';
+import { Bill } from '@/modules/Bills/models/Bill';
+import { BillLandedCostEntry } from './BillLandedCostEntry';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
+import { ExpenseCategory } from '@/modules/Expenses/models/ExpenseCategory.model';
 
 export class BillLandedCost extends BaseModel {
   amount!: number;
@@ -13,6 +17,12 @@ export class BillLandedCost extends BaseModel {
   description!: string;
   billId!: number;
   exchangeRate!: number;
+  currencyCode!: string;
+
+  bill!: Bill;
+  allocateEntries!: BillLandedCostEntry[];
+  allocatedFromBillEntry!: ItemEntry;
+  allocatedFromExpenseEntry!: ExpenseCategory;
 
   /**
    * Table name

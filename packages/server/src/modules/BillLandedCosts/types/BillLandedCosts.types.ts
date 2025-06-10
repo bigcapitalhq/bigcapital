@@ -107,14 +107,12 @@ export interface IBillLandedCostTransactionEntry {
 }
 
 export interface IAllocatedLandedCostDeletedPayload {
-  tenantId: number;
   oldBillLandedCost: IBillLandedCostTransaction;
   billId: number;
   trx: Knex.Transaction;
 }
 
 export interface IAllocatedLandedCostCreatedPayload {
-  tenantId: number;
   bill: Bill;
   billLandedCostId: number;
   billLandedCost: IBillLandedCostTransaction;
