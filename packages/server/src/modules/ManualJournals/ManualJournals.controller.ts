@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -67,7 +68,7 @@ export class ManualJournalsController {
     return this.manualJournalsApplication.deleteManualJournal(manualJournalId);
   }
 
-  @Put(':id/publish')
+  @Patch(':id/publish')
   @ApiOperation({ summary: 'Publish the given manual journal.' })
   @ApiResponse({
     status: 200,

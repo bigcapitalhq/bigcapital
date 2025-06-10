@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { ApplyVendorCreditToBillsService } from './command/ApplyVendorCreditToBills.service';
 import { DeleteApplyVendorCreditToBillService } from './command/DeleteApplyVendorCreditToBill.service';
 import { GetAppliedBillsToVendorCreditService } from './queries/GetAppliedBillsToVendorCredit.service';
 import { GetVendorCreditToApplyBills } from './queries/GetVendorCreditToApplyBills.service';
 import { IVendorCreditApplyToInvoicesDTO } from './types/VendorCreditApplyBills.types';
 
+@Injectable()
 export class VendorCreditApplyBillsApplicationService {
   /**
    * @param {ApplyVendorCreditToBillsService} applyVendorCreditToBillsService

@@ -56,7 +56,7 @@ export function useEditJournal(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`manual-journals/${id}`, values),
+    ([id, values]) => apiRequest.put(`manual-journals/${id}`, values),
     {
       onSuccess: (res, [id]) => {
         // Invalidate specific manual journal.
@@ -95,7 +95,7 @@ export function usePublishJournal(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`manual-journals/${id}/publish`), {
+  return useMutation((id) => apiRequest.patch(`manual-journals/${id}/publish`), {
     onSuccess: (res, id) => {
       // Invalidate specific manual journal.
       queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);

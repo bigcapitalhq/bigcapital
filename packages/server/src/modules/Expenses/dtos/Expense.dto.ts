@@ -1,6 +1,7 @@
 import { ToNumber } from '@/common/decorators/Validators';
+import { parseBoolean } from '@/utils/parse-boolean';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -41,6 +42,7 @@ export class ExpenseCategoryDto {
   description?: string;
 
   @IsBoolean()
+  @Transform(({ value }) => parseBoolean(value, false))
   @IsOptional()
   landedCost?: boolean;
 
@@ -103,6 +105,7 @@ export class CommandExpenseDto {
   currencyCode?: string;
 
   @IsBoolean()
+  @Transform(({ value }) => parseBoolean(value, false))
   @IsOptional()
   @ApiProperty({
     description: 'The publish status of the expense',
