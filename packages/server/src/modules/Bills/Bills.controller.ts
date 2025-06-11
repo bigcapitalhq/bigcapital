@@ -60,6 +60,18 @@ export class BillsController {
     return this.billsApplication.getBills(filterDTO);
   }
 
+  @Get(':id/payment-transactions')
+  @ApiOperation({ summary: 'Retrieve the specific bill associated payment transactions.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The bill id',
+  })
+  getBillPaymentTransactions(@Param('id') billId: number) {
+    return this.billsApplication.getBillPaymentTransactions(billId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Retrieves the bill details.' })
   @ApiParam({

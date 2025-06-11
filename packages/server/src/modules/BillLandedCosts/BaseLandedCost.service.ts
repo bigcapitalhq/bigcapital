@@ -1,11 +1,10 @@
 import { Inject } from '@nestjs/common';
 import { difference, sumBy } from 'lodash';
 import {
-  ILandedCostItemDTO,
-  ILandedCostDTO,
-  IBillLandedCostTransaction,
   ILandedCostTransaction,
   ILandedCostTransactionEntry,
+  LandedCostTransactionModel,
+  LandedCostTransactionType,
 } from './types/BillLandedCosts.types';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { BillLandedCost } from './models/BillLandedCost';
@@ -14,13 +13,19 @@ import { CONFIG, ERRORS } from './utils';
 import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
 import { Bill } from '../Bills/models/Bill';
 import { TransactionLandedCost } from './commands/TransctionLandedCost.service';
+import {
+  AllocateBillLandedCostDto,
+  AllocateBillLandedCostItemDto,
+} from './dtos/AllocateBillLandedCost.dto';
 
 export class BaseLandedCostService {
   @Inject()
-  public readonly transactionLandedCost: TransactionLandedCost;
+  protected readonly transactionLandedCost: TransactionLandedCost;
 
   @Inject(BillLandedCost.name)
-  private readonly billLandedCostModel: TenantModelProxy<typeof BillLandedCost>;
+  protected readonly billLandedCostModel: TenantModelProxy<
+    typeof BillLandedCost
+  >;
 
   /**
    * Validates allocate cost items association with the purchase invoice entries.
@@ -29,7 +34,7 @@ export class BaseLandedCostService {
    */
   protected validateAllocateCostItems = (
     purchaseInvoiceEntries: ItemEntry[],
-    landedCostItems: ILandedCostItemDTO[],
+    landedCostItems: AllocateBillLandedCostItemDto[],
   ): void => {
     // Purchase invoice entries items ids.
     const purchaseInvoiceItems = purchaseInvoiceEntries.map((e) => e.id);
@@ -55,7 +60,7 @@ export class BaseLandedCostService {
    * @returns
    */
   protected transformToBillLandedCost(
-    landedCostDTO: ILandedCostDTO,
+    landedCostDTO: AllocateBillLandedCostDto,
     bill: Bill,
     costTransaction: ILandedCostTransaction,
     costTransactionEntry: ILandedCostTransactionEntry,
@@ -88,20 +93,18 @@ export class BaseLandedCostService {
    * @param {transactionId} transactionId -
    */
   public getLandedCostOrThrowError = async (
-    transactionType: string,
+    transactionType: LandedCostTransactionType,
     transactionId: number,
   ) => {
-    const Model = this.transactionLandedCost.getModel(
-      transactionType,
-    );
-    const model = await Model.query().findById(transactionId);
+    const Model = await this.transactionLandedCost.getModel(transactionType);
+    const model = await Model().query().findById(transactionId);
 
     if (!model) {
       throw new ServiceError(ERRORS.LANDED_COST_TRANSACTION_NOT_FOUND);
     }
     return this.transactionLandedCost.transformToLandedCost(
       transactionType,
-      model,
+      model as LandedCostTransactionModel,
     );
   };
 
@@ -117,13 +120,11 @@ export class BaseLandedCostService {
     transactionId: number,
     transactionEntryId: number,
   ): Promise<any> => {
-    const Model = this.transactionLandedCost.getModel(
-      tenantId,
-      transactionType,
-    );
+    const Model = await this.transactionLandedCost.getModel(transactionType);
     const relation = CONFIG.COST_TYPES[transactionType].entries;
 
-    const entry = await Model.relatedQuery(relation)
+    const entry = await Model()
+      .relatedQuery(relation)
       .for(transactionId)
       .findOne('id', transactionEntryId)
       .where('landedCost', true)
@@ -139,7 +140,7 @@ export class BaseLandedCostService {
       throw new ServiceError(ERRORS.LANDED_COST_ENTRY_NOT_FOUND);
     }
     return this.transactionLandedCost.transformToLandedCostEntry(
-      transactionType,
+      transactionType as LandedCostTransactionType,
       entry,
     );
   };
@@ -150,7 +151,7 @@ export class BaseLandedCostService {
    * @returns {number}
    */
   protected getAllocateItemsCostTotal = (
-    landedCostDTO: ILandedCostDTO,
+    landedCostDTO: AllocateBillLandedCostDto,
   ): number => {
     return sumBy(landedCostDTO.items, 'cost');
   };

@@ -1,70 +1,73 @@
-import { Inject, Service } from 'typedi';
+import { Injectable } from '@nestjs/common';
 import { ref } from 'objection';
+import { curry, pipe, map } from 'lodash/fp';
 import * as R from 'ramda';
 import {
-  ILandedCostTransactionsQueryDTO,
   ILandedCostTransaction,
   ILandedCostTransactionDOJO,
   ILandedCostTransactionEntry,
   ILandedCostTransactionEntryDOJO,
-} from '@/interfaces';
-import TransactionLandedCost from './TransctionLandedCost';
-import { formatNumber } from 'utils';
+} from '../types/BillLandedCosts.types';
+import { TransactionLandedCost } from './TransctionLandedCost.service';
+import { formatNumber } from '@/utils/format-number';
+import { LandedCostTransactionsQueryDto } from '../dtos/LandedCostTransactionsQuery.dto';
 
-@Service()
-export default class LandedCostTranasctions {
-  @Inject()
-  private transactionLandedCost: TransactionLandedCost;
+@Injectable()
+export class LandedCostTranasctions {
+  constructor(private readonly transactionLandedCost: TransactionLandedCost) {}
 
   /**
    * Retrieve the landed costs based on the given query.
-   * @param {number} tenantId
-   * @param {ILandedCostTransactionsQueryDTO} query
+   * @param {LandedCostTransactionsQueryDto} query -
    * @returns {Promise<ILandedCostTransaction[]>}
    */
   public getLandedCostTransactions = async (
-    query: ILandedCostTransactionsQueryDTO
+    query: LandedCostTransactionsQueryDto,
   ): Promise<ILandedCostTransaction[]> => {
     const { transactionType } = query;
-    const Model = this.transactionLandedCost.getModel(
-      query.transactionType
+    const Model = await this.transactionLandedCost.getModel(
+      query.transactionType,
     );
     // Retrieve the model entities.
-    const transactions = await Model.query().onBuild((q) => {
-      q.where('allocated_cost_amount', '<', ref('landed_cost_amount'));
+    const transactions = await Model()
+      .query()
+      .onBuild((q) => {
+        q.where('allocated_cost_amount', '<', ref('landed_cost_amount'));
 
-      if (query.transactionType === 'Bill') {
-        q.withGraphFetched('entries.item');
-      } else if (query.transactionType === 'Expense') {
-        q.withGraphFetched('categories.expenseAccount');
-      }
-    });
-    const transformLandedCost =
-      this.transactionLandedCost.transformToLandedCost(transactionType);
+        if (query.transactionType === 'Bill') {
+          q.withGraphFetched('entries.item');
+        } else if (query.transactionType === 'Expense') {
+          q.withGraphFetched('categories.expenseAccount');
+        }
+      });
+    const transformLandedCost = curry(
+      this.transactionLandedCost.transformToLandedCost,
+    )(transactionType);
 
-    return R.compose(
+    return pipe(
       this.transformLandedCostTransactions,
-      R.map(transformLandedCost)
+      R.map(transformLandedCost),
     )(transactions);
   };
 
   /**
-   *
-   * @param transactions
-   * @returns
+   * Transformes the landed cost transactions.
+   * @param {ILandedCostTransaction[]} transactions
+   * @returns {ILandedCostTransactionDOJO[]}
    */
   public transformLandedCostTransactions = (
-    transactions: ILandedCostTransaction[]
+    transactions: ILandedCostTransaction[],
   ) => {
     return R.map(this.transformLandedCostTransaction)(transactions);
   };
 
   /**
    * Transformes the landed cost transaction.
-   * @param {ILandedCostTransaction} transaction
+   * @param {ILandedCostTransaction} transaction - Landed cost transaction.
+   * @returns {ILandedCostTransactionDOJO}
    */
   public transformLandedCostTransaction = (
-    transaction: ILandedCostTransaction
+    transaction: ILandedCostTransaction,
   ): ILandedCostTransactionDOJO => {
     const { currencyCode } = transaction;
 
@@ -74,57 +77,60 @@ export default class LandedCostTranasctions {
     // Formatted transaction unallocated cost amount.
     const formattedUnallocatedCostAmount = formatNumber(
       transaction.unallocatedCostAmount,
-      { currencyCode }
+      { currencyCode },
     );
     // Formatted transaction allocated cost amount.
     const formattedAllocatedCostAmount = formatNumber(
       transaction.allocatedCostAmount,
-      { currencyCode }
+      { currencyCode },
     );
+    const transformLandedCostEntry = R.curry(this.transformLandedCostEntry)(
+      transaction,
+    );
+    const entries = R.map<
+      ILandedCostTransactionEntry,
+      ILandedCostTransactionEntryDOJO
+    >(transformLandedCostEntry)(transaction.entries);
 
     return {
       ...transaction,
       formattedAmount,
       formattedUnallocatedCostAmount,
       formattedAllocatedCostAmount,
-      entries: R.map(this.transformLandedCostEntry(transaction))(
-        transaction.entries
-      ),
+      entries,
     };
   };
 
   /**
-   *
-   * @param {ILandedCostTransaction} transaction
-   * @param {ILandedCostTransactionEntry} entry
+   * Transformes the landed cost transaction entry.
+   * @param {ILandedCostTransaction} transaction - Landed cost transaction.
+   * @param {ILandedCostTransactionEntry} entry - Landed cost transaction entry.
    * @returns {ILandedCostTransactionEntryDOJO}
    */
-  public transformLandedCostEntry = R.curry(
-    (
-      transaction: ILandedCostTransaction,
-      entry: ILandedCostTransactionEntry
-    ): ILandedCostTransactionEntryDOJO => {
-      const { currencyCode } = transaction;
+  public transformLandedCostEntry = (
+    transaction: ILandedCostTransaction,
+    entry: ILandedCostTransactionEntry,
+  ): ILandedCostTransactionEntryDOJO => {
+    const { currencyCode } = transaction;
 
-      // Formatted entry amount.
-      const formattedAmount = formatNumber(entry.amount, { currencyCode });
+    // Formatted entry amount.
+    const formattedAmount = formatNumber(entry.amount, { currencyCode });
 
-      // Formatted entry unallocated cost amount.
-      const formattedUnallocatedCostAmount = formatNumber(
-        entry.unallocatedCostAmount,
-        { currencyCode }
-      );
-      // Formatted entry allocated cost amount.
-      const formattedAllocatedCostAmount = formatNumber(
-        entry.allocatedCostAmount,
-        { currencyCode }
-      );
-      return {
-        ...entry,
-        formattedAmount,
-        formattedUnallocatedCostAmount,
-        formattedAllocatedCostAmount,
-      };
-    }
-  );
+    // Formatted entry unallocated cost amount.
+    const formattedUnallocatedCostAmount = formatNumber(
+      entry.unallocatedCostAmount,
+      { currencyCode },
+    );
+    // Formatted entry allocated cost amount.
+    const formattedAllocatedCostAmount = formatNumber(
+      entry.allocatedCostAmount,
+      { currencyCode },
+    );
+    return {
+      ...entry,
+      formattedAmount,
+      formattedUnallocatedCostAmount,
+      formattedAllocatedCostAmount,
+    };
+  };
 }

@@ -10,8 +10,9 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ToNumber } from '@/common/decorators/Validators';
+import { LandedCostTransactionType } from '../types/BillLandedCosts.types';
 
-class AllocateBillLandedCostItemDto {
+export class AllocateBillLandedCostItemDto {
   @IsInt()
   @ToNumber()
   entryId: number;
@@ -26,7 +27,7 @@ export class AllocateBillLandedCostDto {
   transactionId: number;
 
   @IsIn(['Expense', 'Bill'])
-  transactionType: string;
+  transactionType: LandedCostTransactionType;
 
   @IsInt()
   transactionEntryId: number;

@@ -8,6 +8,7 @@ import { OpenBillService } from './commands/OpenBill.service';
 import { Injectable } from '@nestjs/common';
 import { GetBillsService } from './queries/GetBills.service';
 import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
+import { GetBillPaymentTransactionsService } from './queries/GetBillPayments';
 // import { GetBillPayments } from './queries/GetBillPayments';
 // import { GetBills } from './queries/GetBills';
 
@@ -21,7 +22,7 @@ export class BillsApplication {
     private getDueBillsService: GetDueBills,
     private openBillService: OpenBillService,
     private getBillsService: GetBillsService,
-    // private getBillPaymentsService: GetBillPayments,
+    private getBillPaymentTransactionsService: GetBillPaymentTransactionsService,
   ) {}
 
   /**
@@ -71,7 +72,6 @@ export class BillsApplication {
 
   /**
    * Open the given bill.
-   * @param {number} tenantId
    * @param {number} billId
    * @returns {Promise<void>}
    */
@@ -91,10 +91,11 @@ export class BillsApplication {
 
   /**
    * Retrieve the specific bill associated payment transactions.
-   * @param {number} tenantId
    * @param {number} billId
    */
-  // public getBillPayments(billId: number) {
-  //   return this.getBillPaymentsService.getBillPayments(billId);
-  // }
+  public getBillPaymentTransactions(billId: number) {
+    return this.getBillPaymentTransactionsService.getBillPaymentTransactions(
+      billId,
+    );
+  }
 }

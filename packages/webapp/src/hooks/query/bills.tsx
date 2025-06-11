@@ -163,7 +163,7 @@ export function useBill(id, props) {
     [t.BILL, id],
     { method: 'get', url: `/bills/${id}` },
     {
-      select: (res) => res.data.bill,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -208,7 +208,7 @@ export function useBillPaymentTransactions(id, props) {
       url: `bills/${id}/payment-transactions`,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

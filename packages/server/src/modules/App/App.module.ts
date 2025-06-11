@@ -92,6 +92,7 @@ import { ContactsModule } from '../Contacts/Contacts.module';
 import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
+import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
 
 @Module({
   imports: [
@@ -174,6 +175,7 @@ import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.
     SaleEstimatesModule,
     SaleReceiptsModule,
     BillsModule,
+    BillLandedCostsModule,
     ManualJournalsModule,
     CreditNotesModule,
     VendorCreditsModule,

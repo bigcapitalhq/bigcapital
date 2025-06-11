@@ -6,6 +6,8 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { BillLandedCost } from '../models/BillLandedCost';
 import { IBillLandedCostTransaction } from '../types/BillLandedCosts.types';
+import { ModelObject } from 'objection';
+import { formatNumber } from '@/utils/format-number';
 
 @Injectable()
 export class BillAllocatedLandedCostTransactions {
@@ -23,19 +25,17 @@ export class BillAllocatedLandedCostTransactions {
 
   /**
    * Retrieve the bill associated landed cost transactions.
-   * @param  {number} tenantId - Tenant id.
    * @param  {number} billId - Bill id.
    * @return {Promise<IBillLandedCostTransaction>}
    */
   public getBillLandedCostTransactions = async (
     billId: number,
-  ): Promise<IBillLandedCostTransaction> => {
+  ): Promise<Array<IBillLandedCostTransaction>> => {
     // Retrieve the given bill id or throw not found service error.
     const bill = await this.billModel()
       .query()
       .findById(billId)
       .throwIfNotFound();
-
     // Retrieve the bill associated allocated landed cost with bill and expense entry.
     const landedCostTransactions = await this.billLandedCostModel()
       .query()
@@ -45,11 +45,8 @@ export class BillAllocatedLandedCostTransactions {
       .withGraphFetched('allocatedFromExpenseEntry.expenseAccount')
       .withGraphFetched('bill');
 
-    const transactionsJson = this.i18nService.i18nApply(
-      [[qim.$each, 'allocationMethodFormatted']],
-      landedCostTransactions.map((a) => a.toJSON()),
-      tenantId,
-    );
+    const transactionsJson = landedCostTransactions.map((a) => a.toJSON());
+
     return this.transformBillLandedCostTransactions(transactionsJson);
   };
 
@@ -59,7 +56,7 @@ export class BillAllocatedLandedCostTransactions {
    * @returns
    */
   private transformBillLandedCostTransactions = (
-    landedCostTransactions: IBillLandedCostTransaction[],
+    landedCostTransactions: ModelObject<BillLandedCost>[],
   ) => {
     return landedCostTransactions.map(this.transformBillLandedCostTransaction);
   };
@@ -70,15 +67,16 @@ export class BillAllocatedLandedCostTransactions {
    * @returns
    */
   private transformBillLandedCostTransaction = (
-    transaction: IBillLandedCostTransaction,
-  ) => {
-    const getTransactionName = R.curry(this.condBillLandedTransactionName)(
+    transaction: ModelObject<BillLandedCost>,
+  ): IBillLandedCostTransaction => {
+    const name = this.condBillLandedTransactionName(
       transaction.fromTransactionType,
+      transaction,
     );
-    const getTransactionDesc = R.curry(
-      this.condBillLandedTransactionDescription,
-    )(transaction.fromTransactionType);
-
+    const description = this.condBillLandedTransactionDescription(
+      transaction.fromTransactionType,
+      transaction,
+    );
     return {
       formattedAmount: formatNumber(transaction.amount, {
         currencyCode: transaction.currencyCode,
@@ -87,8 +85,8 @@ export class BillAllocatedLandedCostTransactions {
         'allocatedFromBillEntry',
         'allocatedFromExpenseEntry',
       ]),
-      name: getTransactionName(transaction),
-      description: getTransactionDesc(transaction),
+      name,
+      description,
       formattedLocalAmount: formatNumber(transaction.localAmount, {
         currencyCode: 'USD',
       }),

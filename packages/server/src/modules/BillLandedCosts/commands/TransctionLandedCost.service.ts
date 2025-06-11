@@ -3,35 +3,46 @@ import { Model } from 'objection';
 import {
   ILandedCostTransaction,
   ILandedCostTransactionEntry,
+  LandedCostTransactionModel,
+  LandedCostTransactionType,
 } from '../types/BillLandedCosts.types';
 import { Injectable } from '@nestjs/common';
-import { BillLandedCost } from '../models/BillLandedCost';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { Expense } from '@/modules/Expenses/models/Expense.model';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { ContextIdFactory, ModuleRef } from '@nestjs/core';
+import { sanitizeModelName } from '@/utils/sanitize-model-name';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { ExpenseLandedCost } from './ExpenseLandedCost.service';
+import { BillLandedCost } from './BillLandedCost.service';
 import { ERRORS } from '../utils';
-import { ExpenseLandedCost } from '../models/ExpenseLandedCost';
 
 @Injectable()
 export class TransactionLandedCost {
   constructor(
     private readonly billLandedCost: BillLandedCost,
     private readonly expenseLandedCost: ExpenseLandedCost,
+    private readonly moduleRef: ModuleRef,
   ) {}
+
   /**
    * Retrieve the cost transaction code model.
-   * @param {number} tenantId - Tenant id.
    * @param {string} transactionType - Transaction type.
    * @returns
    */
-  public getModel = (tenantId: number, transactionType: string): Model => {
-    const Models = this.tenancy.models(tenantId);
-    const Model = Models[transactionType];
+  public getModel = async (
+    transactionType: string,
+  ): Promise<TenantModelProxy<typeof Model>> => {
+    const contextId = ContextIdFactory.create();
+    const modelName = sanitizeModelName(transactionType);
 
-    if (!Model) {
+    const instance = await this.moduleRef.resolve(modelName, contextId, {
+      strict: false,
+    });
+    if (!instance) {
       throw new ServiceError(ERRORS.COST_TYPE_UNDEFINED);
     }
-    return Model;
+    return instance;
   };
 
   /**
@@ -40,10 +51,10 @@ export class TransactionLandedCost {
    * @param {IBill|IExpense} transaction - Expense or bill transaction.
    * @returns {ILandedCostTransaction}
    */
-  public transformToLandedCost = R.curry(
+  public transformToLandedCost = 
     (
-      transactionType: string,
-      transaction: Bill | Expense,
+      transactionType: LandedCostTransactionType,
+      transaction: LandedCostTransactionModel,
     ): ILandedCostTransaction => {
       return R.compose(
         R.when(
@@ -54,9 +65,8 @@ export class TransactionLandedCost {
           R.always(transactionType === 'Expense'),
           this.expenseLandedCost.transformToLandedCost,
         ),
-      )(transaction);
-    },
-  );
+      )(transaction) as ILandedCostTransaction;
+    };
 
   /**
    * Transformes the given expense or bill entry to landed cost transaction entry.
@@ -65,7 +75,7 @@ export class TransactionLandedCost {
    * @returns {ILandedCostTransactionEntry}
    */
   public transformToLandedCostEntry = (
-    transactionType: 'Bill' | 'Expense',
+    transactionType: LandedCostTransactionType,
     transactionEntry,
   ): ILandedCostTransactionEntry => {
     return R.compose(
@@ -77,6 +87,6 @@ export class TransactionLandedCost {
         R.always(transactionType === 'Expense'),
         this.expenseLandedCost.transformToLandedCostEntry,
       ),
-    )(transactionEntry);
+    )(transactionEntry) as ILandedCostTransactionEntry;
   };
 }

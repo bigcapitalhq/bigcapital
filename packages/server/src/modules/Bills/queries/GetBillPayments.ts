@@ -2,12 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
 import { BillPaymentTransactionTransformer } from '@/modules/BillPayments/queries/BillPaymentTransactionTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
-export class GetBillPayments {
+export class GetBillPaymentTransactionsService {
   constructor(
     @Inject(BillPaymentEntry.name)
-    private billPaymentEntryModel: typeof BillPaymentEntry,
+    private billPaymentEntryModel: TenantModelProxy<typeof BillPaymentEntry>,
     private transformer: TransformerInjectable,
   ) {}
 
@@ -15,8 +16,8 @@ export class GetBillPayments {
    * Retrieve the specific bill associated payment transactions.
    * @param {number} billId - Bill id.
    */
-  public getBillPayments = async (billId: number) => {
-    const billsEntries = await this.billPaymentEntryModel
+  public getBillPaymentTransactions = async (billId: number) => {
+    const billsEntries = await this.billPaymentEntryModel()
       .query()
       .where('billId', billId)
       .withGraphJoined('payment.paymentAccount')

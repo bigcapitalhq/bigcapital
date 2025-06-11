@@ -23,7 +23,7 @@ export class AllocateLandedCostService extends BaseLandedCostService {
     private readonly billModel: TenantModelProxy<typeof Bill>,
 
     @Inject(BillLandedCost.name)
-    private readonly billLandedCostModel: TenantModelProxy<typeof BillLandedCost>
+    protected readonly billLandedCostModel: TenantModelProxy<typeof BillLandedCost>
   ) {
     super();
   }
@@ -54,7 +54,7 @@ export class AllocateLandedCostService extends BaseLandedCostService {
     const amount = this.getAllocateItemsCostTotal(allocateCostDTO);
 
     // Retrieve the purchase invoice or throw not found error.
-    const bill = await Bill.query()
+    const bill = await this.billModel().query()
       .findById(billId)
       .withGraphFetched('entries')
       .throwIfNotFound();

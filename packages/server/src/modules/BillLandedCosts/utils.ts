@@ -1,5 +1,7 @@
-import { IItemEntry, IBillLandedCostTransactionEntry } from '@/interfaces';
-import { transformToMap } from 'utils';
+import { ModelObject } from 'objection';
+import { transformToMap } from '@/utils/transform-to-key';
+import { IBillLandedCostTransactionEntry } from './types/BillLandedCosts.types';
+import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
 
 export const ERRORS = {
   COST_TYPE_UNDEFINED: 'COST_TYPE_UNDEFINED',
@@ -23,8 +25,8 @@ export const ERRORS = {
  */
 export const mergeLocatedWithBillEntries = (
   locatedEntries: IBillLandedCostTransactionEntry[],
-  billEntries: IItemEntry[]
-): (IBillLandedCostTransactionEntry & { entry: IItemEntry })[] => {
+  billEntries: ModelObject<ItemEntry>[]
+): (IBillLandedCostTransactionEntry & { entry: ModelObject<ItemEntry> })[] => {
   const billEntriesByEntryId = transformToMap(billEntries, 'id');
 
   return locatedEntries.map((entry) => ({

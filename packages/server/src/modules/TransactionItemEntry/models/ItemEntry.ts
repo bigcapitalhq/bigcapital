@@ -162,6 +162,14 @@ export class ItemEntry extends BaseModel {
       : getExlusiveTaxAmount(this.amount, this.taxRate);
   }
 
+  /**
+   * Remain unallocated landed cost.
+   * @return {number}
+   */
+  get unallocatedCostAmount() {
+    return Math.max(this.amount - this.allocatedCostAmount, 0);
+  }
+
   static calcAmount(itemEntry) {
     const { discount, quantity, rate } = itemEntry;
     const total = quantity * rate;

@@ -7,18 +7,12 @@ import { events } from '@/common/events/events';
 import { IAllocatedLandedCostDeletedPayload } from '../types/BillLandedCosts.types';
 import { BillLandedCostEntry } from '../models/BillLandedCostEntry';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { BillLandedCost } from '../models/BillLandedCost';
 
 @Injectable()
 export class RevertAllocatedLandedCost extends BaseLandedCostService {
   constructor(
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
-
-    @Inject(BillLandedCost.name)
-    private readonly billLandedCostModel: TenantModelProxy<
-      typeof BillLandedCost
-    >,
 
     @Inject(BillLandedCostEntry.name)
     private readonly billLandedCostEntryModel: TenantModelProxy<
