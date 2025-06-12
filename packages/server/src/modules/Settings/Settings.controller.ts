@@ -1,22 +1,22 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Put } from '@nestjs/common';
 import { SettingsApplicationService } from './SettingsApplication.service';
 import { ISettingsDTO } from './Settings.types';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('settings')
-@ApiTags('settings')
+@ApiTags('Settings')
 export class SettingsController {
   constructor(
     private readonly settingsApplicationService: SettingsApplicationService,
   ) {}
 
-  @Put('')
+  @Put()
   @ApiOperation({ summary: 'Save the given settings.' })
   async saveSettings(@Body() settingsDTO: ISettingsDTO) {
     return this.settingsApplicationService.saveSettings(settingsDTO);
   }
 
-  @Get('')
+  @Get()
   @ApiOperation({ summary: 'Retrieves the settings.' })
   async getSettings() {
     return this.settingsApplicationService.getSettings();

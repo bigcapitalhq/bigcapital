@@ -13,7 +13,7 @@ import { ApiOperation, ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { SubscriptionApplication } from './SubscriptionApplication';
 
 @Controller('subscription')
-@ApiTags('subscriptions')
+@ApiTags('Subscriptions')
 export class SubscriptionsController {
   constructor(private readonly subscriptionApp: SubscriptionApplication) {}
 

@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetCreditNoteAssociatedAppliedInvoices } from './queries/GetCreditNoteAssociatedAppliedInvoices.service';
 
 @Controller('credit-notes')
-@ApiTags('credit-notes-apply-invoice')
+@ApiTags('Credit Notes Apply Invoice')
 export class CreditNotesApplyInvoiceController {
   constructor(
     private readonly getCreditNoteAssociatedAppliedInvoicesService: GetCreditNoteAssociatedAppliedInvoices,

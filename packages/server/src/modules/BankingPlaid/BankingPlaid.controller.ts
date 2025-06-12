@@ -4,7 +4,7 @@ import { PlaidItemDto } from './dtos/PlaidItem.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('banking/plaid')
-@ApiTags('banking-plaid')
+@ApiTags('Banking Plaid')
 export class BankingPlaidController {
   constructor(private readonly plaidApplication: PlaidApplication) {}
 

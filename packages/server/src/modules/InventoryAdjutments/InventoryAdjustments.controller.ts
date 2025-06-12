@@ -1,3 +1,4 @@
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -11,12 +12,10 @@ import {
 import { InventoryAdjustmentsApplicationService } from './InventoryAdjustmentsApplication.service';
 import { IInventoryAdjustmentsFilter } from './types/InventoryAdjustments.types';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
-import { IPaginationMeta } from '@/interfaces/Model';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAdjustment.dto';
 
 @Controller('inventory-adjustments')
-@ApiTags('inventory-adjustments')
+@ApiTags('Inventory Adjustments')
 export class InventoryAdjustmentsController {
   constructor(
     private readonly inventoryAdjustmentsApplicationService: InventoryAdjustmentsApplicationService,

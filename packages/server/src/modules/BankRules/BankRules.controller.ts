@@ -14,7 +14,7 @@ import { CreateBankRuleDto } from './dtos/BankRule.dto';
 import { EditBankRuleDto } from './dtos/BankRule.dto';
 
 @Controller('banking/rules')
-@ApiTags('bank-rules')
+@ApiTags('Bank Rules')
 export class BankRulesController {
   constructor(private readonly bankRulesApplication: BankRulesApplication) {}
 

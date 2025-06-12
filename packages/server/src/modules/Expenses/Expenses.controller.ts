@@ -14,7 +14,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
 
 @Controller('expenses')
-@ApiTags('expenses')
+@ApiTags('Expenses')
 export class ExpensesController {
   constructor(private readonly expensesApplication: ExpensesApplication) {}
 

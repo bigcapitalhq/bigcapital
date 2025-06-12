@@ -11,7 +11,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PaymentServicesApplication } from './PaymentServicesApplication';
 import { EditPaymentMethodDTO } from './types';
 
-@ApiTags('PaymentServices')
+@ApiTags('Payment Services')
 @Controller('payment-services')
 export class PaymentServicesController {
   constructor(

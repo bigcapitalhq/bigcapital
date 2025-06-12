@@ -6,7 +6,7 @@ import { InventoryValuationQueryDto } from './InventoryValuationQuery.dto';
 import { AcceptType } from '@/constants/accept-type';
 
 @Controller('reports/inventory-valuation')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class InventoryValuationController {
   constructor(
     private readonly inventoryValuationApp: InventoryValuationSheetApplication,

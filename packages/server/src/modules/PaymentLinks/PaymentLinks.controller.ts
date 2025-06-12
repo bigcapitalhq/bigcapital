@@ -4,7 +4,7 @@ import { PaymentLinksApplication } from './PaymentLinksApplication';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('payment-links')
-@ApiTags('payment-links')
+@ApiTags('Payment Links')
 export class PaymentLinksController {
   constructor(private readonly paymentLinkApp: PaymentLinksApplication) {}
 
@@ -44,7 +44,8 @@ export class PaymentLinksController {
   @Get('/:paymentLinkId/stripe_checkout_session')
   @ApiOperation({
     summary: 'Create Stripe checkout session',
-    description: 'Creates a Stripe checkout session for an invoice payment link',
+    description:
+      'Creates a Stripe checkout session for an invoice payment link',
   })
   @ApiParam({
     name: 'paymentLinkId',
@@ -83,7 +84,8 @@ export class PaymentLinksController {
   @Get('/:paymentLinkId/invoice/pdf')
   @ApiOperation({
     summary: 'Get payment link invoice PDF',
-    description: 'Retrieves the PDF of the invoice associated with a payment link',
+    description:
+      'Retrieves the PDF of the invoice associated with a payment link',
   })
   @ApiParam({
     name: 'paymentLinkId',
@@ -103,7 +105,10 @@ export class PaymentLinksController {
       },
     },
   })
-  @ApiResponse({ status: 404, description: 'Payment link or invoice not found' })
+  @ApiResponse({
+    status: 404,
+    description: 'Payment link or invoice not found',
+  })
   public async getPaymentLinkInvoicePdf(
     @Param('paymentLinkId') paymentLinkId: string,
     @Res() res: Response,

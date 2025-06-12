@@ -18,7 +18,7 @@ import { uploadImportFileMulterOptions } from './ImportMulter.utils';
 import { parseJsonSafe } from '@/utils/parse-json';
 
 @Controller('import')
-@ApiTags('import')
+@ApiTags('Import')
 export class ImportController {
   constructor(private readonly importResourceApp: ImportResourceApplication) {}
 

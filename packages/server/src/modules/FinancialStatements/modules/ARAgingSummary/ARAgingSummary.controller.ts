@@ -7,7 +7,7 @@ import { Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('reports/receivable-aging-summary')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class ARAgingSummaryController {
   constructor(private readonly ARAgingSummaryApp: ARAgingSummaryApplication) {}
 

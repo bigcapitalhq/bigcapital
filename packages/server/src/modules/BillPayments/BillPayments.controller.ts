@@ -18,7 +18,7 @@ import { GetBillPaymentsFilterDto } from './dtos/GetBillPaymentsFilter.dto';
 import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
 
 @Controller('bill-payments')
-@ApiTags('bill-payments')
+@ApiTags('Bill Payments')
 export class BillPaymentsController {
   constructor(
     private billPaymentsApplication: BillPaymentsApplication,

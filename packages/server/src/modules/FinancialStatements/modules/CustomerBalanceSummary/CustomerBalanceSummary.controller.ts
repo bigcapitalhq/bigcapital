@@ -6,7 +6,7 @@ import { CustomerBalanceSummaryQueryDto } from './CustomerBalanceSummaryQuery.dt
 import { AcceptType } from '@/constants/accept-type';
 
 @Controller('/reports/customer-balance-summary')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class CustomerBalanceSummaryController {
   constructor(
     private readonly customerBalanceSummaryApp: CustomerBalanceSummaryApplication,

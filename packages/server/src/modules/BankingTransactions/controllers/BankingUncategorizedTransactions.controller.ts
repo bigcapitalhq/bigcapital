@@ -10,7 +10,7 @@ import { GetUncategorizedTransactionsQueryDto } from '../dtos/GetUncategorizedTr
 import { BankingTransactionsApplication } from '../BankingTransactionsApplication.service';
 
 @Controller('banking/uncategorized')
-@ApiTags('banking-uncategorized')
+@ApiTags('Banking Uncategorized Transactions')
 export class BankingUncategorizedTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,

@@ -21,7 +21,7 @@ import { CurrenciesApplication } from './CurrenciesApplication.service';
 import { CreateCurrencyDto } from './dtos/CreateCurrency.dto';
 import { EditCurrencyDto } from './dtos/EditCurrency.dto';
 
-@ApiTags('currencies')
+@ApiTags('Currencies')
 @Controller('/currencies')
 export class CurrenciesController {
   constructor(private readonly currenciesApp: CurrenciesApplication) {}

@@ -6,7 +6,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BalanceSheetQueryDto } from './BalanceSheet.dto';
 
 @Controller('/reports/balance-sheet')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class BalanceSheetStatementController {
   constructor(private readonly balanceSheetApp: BalanceSheetApplication) {}
 

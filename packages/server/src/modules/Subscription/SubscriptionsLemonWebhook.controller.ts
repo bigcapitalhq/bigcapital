@@ -1,7 +1,9 @@
 import { Controller, Post, Req } from '@nestjs/common';
 import { LemonSqueezyWebhooks } from './webhooks/LemonSqueezyWebhooks';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('/webhooks/lemon')
+@ApiTags('Subscriptions')
 export class SubscriptionsLemonWebhook {
   constructor(private readonly lemonWebhooksService: LemonSqueezyWebhooks) {}
 

@@ -7,7 +7,7 @@ import { TrialBalanceSheetApplication } from './TrialBalanceSheetApplication';
 import { TrialBalanceSheetQueryDto } from './TrialBalanceSheetQuery.dto';
 
 @Controller('reports/trial-balance-sheet')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class TrialBalanceSheetController {
   constructor(
     private readonly trialBalanceSheetApp: TrialBalanceSheetApplication,

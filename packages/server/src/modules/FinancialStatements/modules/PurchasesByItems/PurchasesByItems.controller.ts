@@ -6,7 +6,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PurchasesByItemsQueryDto } from './PurchasesByItemsQuery.dto';
 
 @Controller('/reports/purchases-by-items')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class PurchasesByItemReportController {
   constructor(
     private readonly purchasesByItemsApp: PurchasesByItemsApplication,

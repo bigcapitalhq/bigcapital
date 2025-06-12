@@ -6,7 +6,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { SalesTaxLiabilitySummaryApplication } from './SalesTaxLiabilitySummaryApplication';
 
 @Controller('/reports/sales-tax-liability-summary')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class SalesTaxLiabilitySummaryController {
   constructor(
     private readonly salesTaxLiabilitySummaryApp: SalesTaxLiabilitySummaryApplication,

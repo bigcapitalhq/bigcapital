@@ -6,7 +6,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CashFlowStatementQueryDto } from './CashFlowStatementQuery.dto';
 
 @Controller('reports/cashflow-statement')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class CashflowController {
   constructor(private readonly cashflowSheetApp: CashflowSheetApplication) {}
 

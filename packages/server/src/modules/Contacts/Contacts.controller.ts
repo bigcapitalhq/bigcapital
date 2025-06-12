@@ -13,7 +13,7 @@ import { ActivateContactService } from './commands/ActivateContact.service';
 import { InactivateContactService } from './commands/InactivateContact.service';
 
 @Controller('contacts')
-@ApiTags('contacts')
+@ApiTags('Contacts')
 export class ContactsController {
   constructor(
     private readonly getAutoCompleteService: GetAutoCompleteContactsService,

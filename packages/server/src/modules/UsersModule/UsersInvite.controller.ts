@@ -4,7 +4,7 @@ import { UsersApplication } from './Users.application';
 import { InviteUserDto, SendInviteUserDto } from './dtos/InviteUser.dto';
 
 @Controller('invite')
-@ApiTags('users')
+@ApiTags('Users')
 export class UsersInviteController {
   constructor(private readonly usersApplication: UsersApplication) {}
 

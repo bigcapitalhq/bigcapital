@@ -17,7 +17,7 @@ import {
 } from './dtos/VendorCredit.dto';
 
 @Controller('vendor-credits')
-@ApiTags('vendor-credits')
+@ApiTags('Vendor Credits')
 export class VendorCreditsController {
   constructor(
     private readonly vendorCreditsApplication: VendorCreditsApplicationService,

@@ -4,7 +4,7 @@ import { IVendorCreditApplyToInvoicesDTO } from './types/VendorCreditApplyBills.
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('vendor-credits')
-@ApiTags('vendor-credits-apply-bills')
+@ApiTags('Vendor Credits Apply Bills')
 export class VendorCreditApplyBillsController {
   constructor(
     private readonly vendorCreditApplyBillsApplication: VendorCreditApplyBillsApplicationService,

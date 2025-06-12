@@ -5,7 +5,7 @@ import { CategorizeBankTransactionRouteDto } from './dtos/CategorizeBankTransact
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('banking/categorize')
-@ApiTags('banking-categorization')
+@ApiTags('Banking Categorization')
 export class BankingCategorizeController {
   constructor(
     private readonly bankingCategorizeApplication: BankingCategorizeApplication,

@@ -7,7 +7,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
 @Controller('reports/payable-aging-summary')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class APAgingSummaryController {
   constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) {}
 

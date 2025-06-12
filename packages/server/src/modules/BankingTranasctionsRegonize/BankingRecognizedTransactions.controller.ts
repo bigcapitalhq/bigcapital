@@ -3,7 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { RecognizedTransactionsApplication } from './RecognizedTransactions.application';
 
 @Controller('banking/recognized')
-@ApiTags('banking-recognized')
+@ApiTags('Banking Recognized Transactions')
 export class BankingRecognizedTransactionsController {
   constructor(
     private readonly recognizedTransactionsApplication: RecognizedTransactionsApplication,

@@ -15,7 +15,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SalesByItemsQueryDto } from './SalesByItemsQuery.dto';
 
 @Controller('/reports/sales-by-items')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class SalesByItemsController {
   constructor(private readonly salesByItemsApp: SalesByItemsApplication) {}
 

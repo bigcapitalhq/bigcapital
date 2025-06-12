@@ -7,7 +7,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VendorBalanceSummaryQueryDto } from './VendorBalanceSummaryQuery.dto';
 
 @Controller('/reports/vendor-balance-summary')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class VendorBalanceSummaryController {
   constructor(
     private readonly vendorBalanceSummaryApp: VendorBalanceSummaryApplication,

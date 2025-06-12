@@ -12,7 +12,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateWarehouseDto, EditWarehouseDto } from './dtos/Warehouse.dto';
 
 @Controller('warehouses')
-@ApiTags('warehouses')
+@ApiTags('Warehouses')
 export class WarehousesController {
   constructor(private warehousesApplication: WarehousesApplication) {}
 

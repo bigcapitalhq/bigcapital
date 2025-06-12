@@ -5,7 +5,7 @@ import { GetMatchedTransactionsFilter } from './types';
 import { MatchBankTransactionDto } from './dtos/MatchBankTransaction.dto';
 
 @Controller('banking/matching')
-@ApiTags('banking-transactions-matching')
+@ApiTags('Banking Transactions Matching')
 export class BankingMatchingController {
   constructor(
     private readonly bankingMatchingApplication: BankingMatchingApplication,

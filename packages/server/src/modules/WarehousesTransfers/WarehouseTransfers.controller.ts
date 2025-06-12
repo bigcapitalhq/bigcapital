@@ -18,7 +18,7 @@ import {
 import { GetWarehouseTransfersQueryDto } from '../Warehouses/dtos/GetWarehouseTransfersQuery.dto';
 
 @Controller('warehouse-transfers')
-@ApiTags('warehouse-transfers')
+@ApiTags('Warehouse Transfers')
 export class WarehouseTransfersController {
   /**
    * @param {WarehouseTransferApplication} warehouseTransferApplication - Warehouse transfer application.

@@ -12,7 +12,7 @@ import { CreateBranchDto, EditBranchDto } from './dtos/Branch.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('branches')
-@ApiTags('branches')
+@ApiTags('Branches')
 export class BranchesController {
   constructor(private readonly branchesApplication: BranchesApplication) {}
 

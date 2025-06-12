@@ -27,7 +27,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 
 @Controller('sale-estimates')
-@ApiTags('sale-estimates')
+@ApiTags('Sale Estimates')
 export class SaleEstimatesController {
   /**
    * @param {SaleEstimatesApplication} saleEstimatesApplication - Sale estimates application.

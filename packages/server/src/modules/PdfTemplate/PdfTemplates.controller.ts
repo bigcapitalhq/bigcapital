@@ -12,7 +12,7 @@ import { PdfTemplateApplication } from './PdfTemplate.application';
 import { ICreateInvoicePdfTemplateDTO, IEditPdfTemplateDTO } from './types';
 
 @Controller('pdf-templates')
-@ApiTags('pdf-templates')
+@ApiTags('Pdf Templates')
 export class PdfTemplatesController {
   constructor(
     private readonly pdfTemplateApplication: PdfTemplateApplication,

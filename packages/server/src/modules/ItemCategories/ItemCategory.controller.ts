@@ -20,7 +20,7 @@ import {
 } from './dtos/ItemCategory.dto';
 
 @Controller('item-categories')
-@ApiTags('item-categories')
+@ApiTags('Item Categories')
 export class ItemCategoryController {
   constructor(
     private readonly itemCategoryApplication: ItemCategoryApplication,

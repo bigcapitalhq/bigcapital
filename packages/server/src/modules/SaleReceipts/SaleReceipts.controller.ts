@@ -23,7 +23,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 
 @Controller('sale-receipts')
-@ApiTags('sale-receipts')
+@ApiTags('Sale Receipts')
 export class SaleReceiptsController {
   constructor(private saleReceiptApplication: SaleReceiptApplication) {}
 

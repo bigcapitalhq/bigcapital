@@ -5,7 +5,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RefundVendorCreditDto } from './dtos/RefundVendorCredit.dto';
 
 @Controller('vendor-credits')
-@ApiTags('vendor-credits-refunds')
+@ApiTags('Vendor Credits Refunds')
 export class VendorCreditsRefundController {
   constructor(
     private readonly vendorCreditsRefundApplication: VendorCreditsRefundApplication,

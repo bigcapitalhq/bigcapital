@@ -14,7 +14,7 @@ import { IBillsFilter } from './Bills.types';
 import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
 
 @Controller('bills')
-@ApiTags('bills')
+@ApiTags('Bills')
 export class BillsController {
   constructor(private billsApplication: BillsApplication) {}
 

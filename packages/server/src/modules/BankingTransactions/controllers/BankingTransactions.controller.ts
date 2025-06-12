@@ -13,7 +13,7 @@ import { CreateBankTransactionDto } from '../dtos/CreateBankTransaction.dto';
 import { GetBankTransactionsQueryDto } from '../dtos/GetBankTranasctionsQuery.dto';
 
 @Controller('banking/transactions')
-@ApiTags('banking-transactions')
+@ApiTags('Banking Transactions')
 export class BankingTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,

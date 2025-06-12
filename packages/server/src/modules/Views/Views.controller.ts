@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetResourceViewsService } from './GetResourceViews.service';
 
 @Controller('views')
-@ApiTags('views')
+@ApiTags('Views')
 export class ViewsController {
   constructor(
     private readonly getResourceViewsService: GetResourceViewsService,

@@ -13,7 +13,7 @@ import { ExcludedBankTransactionsQuery } from './types/BankTransactionsExclude.t
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('banking/exclude')
-@ApiTags('banking-transactions')
+@ApiTags('Banking Transactions')
 export class BankingTransactionsExcludeController {
   constructor(
     private readonly excludeBankTransactionsApplication: ExcludeBankTransactionsApplication,

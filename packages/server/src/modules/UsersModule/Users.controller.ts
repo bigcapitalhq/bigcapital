@@ -13,7 +13,7 @@ import { UsersApplication } from './Users.application';
 import { EditUserDto } from './dtos/EditUser.dto';
 
 @Controller('users')
-@ApiTags('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersApplication: UsersApplication) {}
 

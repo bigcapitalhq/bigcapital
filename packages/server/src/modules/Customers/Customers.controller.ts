@@ -18,7 +18,7 @@ import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';
 
 @Controller('customers')
-@ApiTags('customers')
+@ApiTags('Customers')
 export class CustomersController {
   constructor(private customersApplication: CustomersApplication) {}
 

@@ -15,7 +15,7 @@ import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('accounts')
-@ApiTags('accounts')
+@ApiTags('Accounts')
 export class AccountsController {
   constructor(private readonly accountsApplication: AccountsApplication) {}
 

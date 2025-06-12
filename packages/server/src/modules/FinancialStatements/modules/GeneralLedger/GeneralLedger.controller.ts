@@ -6,7 +6,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { GeneralLedgerQueryDto } from './GeneralLedgerQuery.dto';
 
 @Controller('/reports/general-ledger')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class GeneralLedgerController {
   constructor(
     private readonly generalLedgerApplication: GeneralLedgerApplication,

@@ -6,7 +6,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProfitLossSheetQueryDto } from './ProfitLossSheetQuery.dto';
 
 @Controller('/reports/profit-loss-sheet')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class ProfitLossSheetController {
   constructor(
     private readonly profitLossSheetApp: ProfitLossSheetApplication,

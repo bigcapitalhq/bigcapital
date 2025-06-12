@@ -7,7 +7,7 @@ import { ExportResourceService } from './ExportService';
 import { convertAcceptFormatToFormat } from './Export.utils';
 
 @Controller('/export')
-@ApiTags('export')
+@ApiTags('Export')
 export class ExportController {
   constructor(private readonly exportResourceApp: ExportResourceService) {}
 

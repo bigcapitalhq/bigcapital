@@ -35,7 +35,7 @@ import {
 import { AcceptType } from '@/constants/accept-type';
 
 @Controller('sale-invoices')
-@ApiTags('sale-invoices')
+@ApiTags('Sale Invoices')
 @ApiHeader({
   name: 'organization-id',
   description: 'The organization id',

@@ -6,7 +6,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { InventoryItemDetailsQueryDto } from './InventoryItemDetailsQuery.dto';
 
 @Controller('reports/inventory-item-details')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class InventoryItemDetailsController {
   constructor(
     private readonly inventoryItemDetailsApp: InventoryItemDetailsApplication,

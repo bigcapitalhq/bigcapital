@@ -7,7 +7,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JournalSheetQueryDto } from './JournalSheetQuery.dto';
 
 @Controller('/reports/journal')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class JournalSheetController {
   constructor(private readonly journalSheetApp: JournalSheetApplication) {}
 

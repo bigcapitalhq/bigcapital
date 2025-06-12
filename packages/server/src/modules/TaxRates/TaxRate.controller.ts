@@ -12,7 +12,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateTaxRateDto, EditTaxRateDto } from './dtos/TaxRate.dto';
 
 @Controller('tax-rates')
-@ApiTags('tax-rates')
+@ApiTags('Tax Rates')
 export class TaxRatesController {
   constructor(private readonly taxRatesApplication: TaxRatesApplication) {}
 

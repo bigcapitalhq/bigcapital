@@ -4,7 +4,7 @@ import { GetInventoyItemsCostQueryDto } from './dtos/GetInventoryItemsCostQuery.
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('inventory-cost')
-@ApiTags('inventory-cost')
+@ApiTags('Inventory Cost')
 export class InventoryCostController {
   constructor(
     private readonly inventoryItemCost: GetItemsInventoryValuationListService,

@@ -7,7 +7,7 @@ import { Response } from 'express';
 import { TransactionsByCustomerQueryDto } from './TransactionsByCustomerQuery.dto';
 
 @Controller('/reports/transactions-by-customers')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class TransactionsByCustomerController {
   constructor(
     private readonly transactionsByCustomersApp: TransactionsByCustomerApplication,

@@ -4,7 +4,7 @@ import { BankingTransactionsApplication } from '../BankingTransactionsApplicatio
 import { GetPendingTransactionsQueryDto } from '../dtos/GetPendingTransactionsQuery.dto';
 
 @Controller('banking/pending')
-@ApiTags('banking-pending')
+@ApiTags('Banking Pending Transactions')
 export class BankingPendingTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,

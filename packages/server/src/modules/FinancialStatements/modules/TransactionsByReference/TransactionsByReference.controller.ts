@@ -4,7 +4,7 @@ import { ITransactionsByReferenceQuery } from './TransactionsByReference.types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('reports/transactions-by-reference')
-@ApiTags('reports')
+@ApiTags('Reports')
 export class TransactionsByReferenceController {
   constructor(
     private readonly transactionsByReferenceApp: TransactionsByReferenceApplication,

@@ -4,7 +4,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ICashflowAccountsFilter } from './types/BankAccounts.types';
 
 @Controller('banking/accounts')
-@ApiTags('banking-accounts')
+@ApiTags('Bank Accounts')
 export class BankAccountsController {
   constructor(private bankAccountsApplication: BankAccountsApplication) {}
 

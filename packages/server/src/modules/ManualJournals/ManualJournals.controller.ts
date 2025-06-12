@@ -18,7 +18,7 @@ import {
 import { IManualJournalsFilter } from './types/ManualJournals.types';
 
 @Controller('manual-journals')
-@ApiTags('manual-journals')
+@ApiTags('Manual Journals')
 export class ManualJournalsController {
   constructor(private manualJournalsApplication: ManualJournalsApplication) {}
 

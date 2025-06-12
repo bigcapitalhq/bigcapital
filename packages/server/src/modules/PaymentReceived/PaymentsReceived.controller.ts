@@ -24,7 +24,7 @@ import {
 import { AcceptType } from '@/constants/accept-type';
 
 @Controller('payments-received')
-@ApiTags('payments-received')
+@ApiTags('Payments Received')
 export class PaymentReceivesController {
   constructor(private paymentReceivesApplication: PaymentReceivesApplication) {}
 
