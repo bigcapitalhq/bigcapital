@@ -49,7 +49,7 @@ export class ProfitLossSheetController {
       );
       res.send(sheet);
       // Retrieves the json format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationJson)) {
+    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.profitLossSheetApp.pdf(query);
 
       res.set({

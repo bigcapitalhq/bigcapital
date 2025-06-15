@@ -1,5 +1,4 @@
-import { ACCOUNT_TYPE } from "@/constants/accounts";
-
+import { ACCOUNT_TYPE } from '@/constants/accounts';
 
 export const ERRORS = {
   CASHFLOW_TRANSACTION_TYPE_INVALID: 'CASHFLOW_TRANSACTION_TYPE_INVALID',
@@ -111,35 +110,34 @@ export const BankTransactionsSampleData = [
   },
 ];
 
-
 export const CashflowTransactionTypes = {
-  OtherIncome: 'Other income',
-  OtherExpense: 'Other expense',
-  OwnerDrawing: 'Owner drawing',
-  OwnerContribution: 'Owner contribution',
-  TransferToAccount: 'Transfer to account',
-  TransferFromAccount: 'Transfer from account',
+  OtherIncome: 'transaction_type.other_income',
+  OtherExpense: 'transaction_type.other_expense',
+  OwnerDrawing: 'transaction_type.owner_drawing',
+  OwnerContribution: 'transaction_type.owner_contribution',
+  TransferToAccount: 'transaction_type.transfer_to_account',
+  TransferFromAccount: 'transaction_type.transfer_from_account',
 };
 
 export const TransactionTypes = {
-  SaleInvoice: 'Sale invoice',
-  SaleReceipt: 'Sale receipt',
-  PaymentReceive: 'Payment received',
-  Bill: 'Bill',
-  BillPayment: 'Payment made',
-  VendorOpeningBalance: 'Vendor opening balance',
-  CustomerOpeningBalance: 'Customer opening balance',
-  InventoryAdjustment: 'Inventory adjustment',
-  ManualJournal: 'Manual journal',
-  Journal: 'Manual journal',
-  Expense: 'Expense',
-  OwnerContribution: 'Owner contribution',
-  TransferToAccount: 'Transfer to account',
-  TransferFromAccount: 'Transfer from account',
-  OtherIncome: 'Other income',
-  OtherExpense: 'Other expense',
-  OwnerDrawing: 'Owner drawing',
-  InvoiceWriteOff: 'Invoice write-off',
+  SaleInvoice: 'transaction_type.sale_invoice',
+  SaleReceipt: 'transaction_type.sale_receipt',
+  PaymentReceive: 'transaction_type.payment_received',
+  Bill: 'transaction_type.bill',
+  BillPayment: 'transaction_type.payment_made',
+  VendorOpeningBalance: 'transaction_type.vendor_opening_balance',
+  CustomerOpeningBalance: 'transaction_type.customer_opening_balance',
+  InventoryAdjustment: 'transaction_type.inventory_adjustment',
+  ManualJournal: 'transaction_type.manual_journal',
+  Journal: 'transaction_type.manual_journal',
+  Expense: 'transaction_type.expense',
+  OwnerContribution: 'transaction_type.owner_contribution',
+  TransferToAccount: 'transaction_type.transfer_to_account',
+  TransferFromAccount: 'transaction_type.transfer_from_account',
+  OtherIncome: 'transaction_type.other_income',
+  OtherExpense: 'transaction_type.other_expense',
+  OwnerDrawing: 'transaction_type.owner_drawing',
+  InvoiceWriteOff: 'transaction_type.invoice_write_off',
   CreditNote: 'transaction_type.credit_note',
   VendorCredit: 'transaction_type.vendor_credit',
   RefundCreditNote: 'transaction_type.refund_credit_note',

@@ -38,7 +38,7 @@ export class TableSheetPdf {
 
     // Generate HTML content from the template
     const htmlContent = await this.templateInjectable.render(
-      'modules/financial-sheet',
+      'financial-sheet',
       {
         table: { rows, columns },
         sheetName,

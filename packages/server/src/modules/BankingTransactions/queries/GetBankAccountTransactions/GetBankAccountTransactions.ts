@@ -11,11 +11,13 @@ import { FinancialSheet } from '@/modules/FinancialStatements/common/FinancialSh
 import { formatBankTransactionsStatus } from './_utils';
 import { GetBankAccountTransactionsRepository } from './GetBankAccountTransactionsRepo.service';
 import { runningBalance } from '@/utils/running-balance';
+import { I18nService } from 'nestjs-i18n';
 
 export class GetBankAccountTransactions extends FinancialSheet {
   private runningBalance: any;
   private query: ICashflowAccountTransactionsQuery;
   private repo: GetBankAccountTransactionsRepository;
+  private i18n: I18nService;
 
   /**
    * Constructor method.
@@ -26,11 +28,14 @@ export class GetBankAccountTransactions extends FinancialSheet {
   constructor(
     repo: GetBankAccountTransactionsRepository,
     query: ICashflowAccountTransactionsQuery,
+    i18n: I18nService,
   ) {
     super();
 
     this.repo = repo;
     this.query = query;
+    this.i18n = i18n;
+
     this.runningBalance = runningBalance(this.repo.openingBalance);
   }
 
@@ -104,7 +109,7 @@ export class GetBankAccountTransactions extends FinancialSheet {
       referenceId: transaction.referenceId,
       referenceType: transaction.referenceType,
 
-      formattedTransactionType: transaction.referenceTypeFormatted,
+      formattedTransactionType: this.i18n.t(transaction.referenceTypeFormatted),
 
       transactionNumber: transaction.transactionNumber,
       referenceNumber: transaction.referenceNumber,

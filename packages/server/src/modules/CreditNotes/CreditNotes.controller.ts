@@ -14,7 +14,7 @@ import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 
 @Controller('credit-notes')
-@ApiTags('credit-notes')
+@ApiTags('Credit Notes')
 export class CreditNotesController {
   /**
    * @param {CreditNoteApplication} creditNoteApplication - The credit note application service.

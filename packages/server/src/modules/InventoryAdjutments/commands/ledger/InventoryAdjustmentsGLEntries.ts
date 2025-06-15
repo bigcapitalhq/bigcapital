@@ -46,8 +46,7 @@ export class InventoryAdjustmentsGLEntries {
 
   /**
    * Reverts the adjustment transactions GL entries.
-   * @param   {number} tenantId
-   * @param   {number} inventoryAdjustmentId
+   * @param {number} inventoryAdjustmentId
    * @returns {Promise<void>}
    */
   public revertAdjustmentGLEntries = (
@@ -63,7 +62,6 @@ export class InventoryAdjustmentsGLEntries {
 
   /**
    * Rewrite inventory adjustment GL entries.
-   * @param {number} tenantId
    * @param {number} inventoryAdjustmentId
    * @param {Knex.Transaction} trx
    */

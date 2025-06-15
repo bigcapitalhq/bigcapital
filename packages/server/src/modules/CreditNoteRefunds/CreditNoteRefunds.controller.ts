@@ -6,7 +6,7 @@ import { RefundCreditNote } from './models/RefundCreditNote';
 import { CreditNoteRefundDto } from './dto/CreditNoteRefund.dto';
 
 @Controller('credit-notes')
-@ApiTags('credit-notes-refunds')
+@ApiTags('Credit Note Refunds')
 export class CreditNoteRefundsController {
   constructor(
     private readonly creditNotesRefundsApplication: CreditNotesRefundsApplication,

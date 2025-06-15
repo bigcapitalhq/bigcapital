@@ -9,5 +9,5 @@ export const getPdfFilesStorageDir = (filename: string) => {
 
 export const getPdfFilePath = (filename: string) => {
   const storageDir = getPdfFilesStorageDir(filename);
-  return path.join(global.__static_dirname, storageDir);
+  return path.join(global.__public_dirname, storageDir);
 };

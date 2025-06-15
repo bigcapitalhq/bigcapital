@@ -42,7 +42,7 @@ export function useEditItem(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(([id, values]) => apiRequest.post(`items/${id}`, values), {
+  return useMutation(([id, values]) => apiRequest.put(`items/${id}`, values), {
     onSuccess: (res, [id, values]) => {
       // Invalidate specific item.
       queryClient.invalidateQueries([t.ITEM, id]);

@@ -24,31 +24,52 @@ class AttachmentDto {
 export class ExpenseCategoryDto {
   @IsInt()
   @IsNotEmpty()
+  @ApiProperty({ example: 1, description: 'The index of the expense category' })
   index: number;
 
   @IsNotEmpty()
   @ToNumber()
   @IsInt()
+  @ApiProperty({
+    example: 1,
+    description: 'The expense account id of the expense category',
+  })
   expenseAccountId: number;
 
   @ToNumber()
   @IsNumber()
   @IsOptional()
+  @ApiProperty({
+    example: 100,
+    description: 'The amount of the expense category',
+  })
   amount?: number;
 
   @IsString()
   @MaxLength(255)
   @IsOptional()
+  @ApiProperty({
+    example: 'This is a description',
+    description: 'The description of the expense category',
+  })
   description?: string;
 
   @IsBoolean()
   @Transform(({ value }) => parseBoolean(value, false))
   @IsOptional()
+  @ApiProperty({
+    example: true,
+    description: 'The landed cost of the expense category',
+  })
   landedCost?: boolean;
 
   @ToNumber()
   @IsInt()
   @IsOptional()
+  @ApiProperty({
+    example: 1,
+    description: 'The project id of the expense category',
+  })
   projectId?: number;
 }
 

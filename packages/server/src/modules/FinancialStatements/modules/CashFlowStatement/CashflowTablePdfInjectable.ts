@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common';
 import { TableSheetPdf } from '../../common/TableSheetPdf';
 import { ICashFlowStatementQuery } from './Cashflow.types';
 import { CashflowTableInjectable } from './CashflowTableInjectable';
 import { HtmlTableCustomCss } from './constants';
 
+@Injectable()
 export class CashflowTablePdfInjectable {
   constructor(
     private readonly cashflowTable: CashflowTableInjectable,

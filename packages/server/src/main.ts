@@ -8,6 +8,7 @@ import { ServiceErrorFilter } from './common/filters/service-error.filter';
 import { ValidationPipe } from './common/pipes/ClassValidation.pipe';
 import { ToJsonInterceptor } from './common/interceptors/to-json.interceptor';
 
+global.__public_dirname = path.join(__dirname, '..', 'public');
 global.__static_dirname = path.join(__dirname, '../static');
 global.__views_dirname = path.join(global.__static_dirname, '/views');
 global.__images_dirname = path.join(global.__static_dirname, '/images');

@@ -21,13 +21,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { IItemsFilter } from './types/Items.types';
 import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 
 @Controller('/items')
 @UseGuards(SubscriptionGuard)
-@ApiTags('items')
+@ApiTags('Items')
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
     super();
@@ -118,6 +117,12 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The item id',
+  })
   async editItem(
     @Param('id') id: string,
     @Body() editItemDto: EditItemDto,

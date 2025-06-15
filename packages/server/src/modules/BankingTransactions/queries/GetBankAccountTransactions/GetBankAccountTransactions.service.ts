@@ -3,11 +3,13 @@ import { getBankAccountTransactionsDefaultQuery } from './_utils';
 import { GetBankAccountTransactionsRepository } from './GetBankAccountTransactionsRepo.service';
 import { GetBankAccountTransactions } from './GetBankAccountTransactions';
 import { GetBankTransactionsQueryDto } from '../../dtos/GetBankTranasctionsQuery.dto';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class GetBankAccountTransactionsService {
   constructor(
     private readonly getBankAccountTransactionsRepository: GetBankAccountTransactionsRepository,
+    private readonly i18nService: I18nService
   ) {}
 
   /**
@@ -30,6 +32,7 @@ export class GetBankAccountTransactionsService {
     const report = new GetBankAccountTransactions(
       this.getBankAccountTransactionsRepository,
       parsedQuery,
+      this.i18nService
     );
     const transactions = report.reportData();
     const pagination = this.getBankAccountTransactionsRepository.pagination;

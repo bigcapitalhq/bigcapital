@@ -4,6 +4,7 @@ import { unitOfTime } from 'moment';
 import { isEmpty, castArray } from 'lodash';
 import { BaseModel } from '@/models/Model';
 import { Account } from './Account.model';
+import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
 // import { getTransactionTypeLabel } from '@/utils/transactions-types';
 
 export class AccountTransaction extends BaseModel {
@@ -19,7 +20,6 @@ export class AccountTransaction extends BaseModel {
   public readonly date: Date | string;
   public readonly transactionType: string;
   public readonly currencyCode: string;
-  public readonly referenceTypeFormatted: string;
   public readonly transactionNumber!: string;
   public readonly referenceNumber!: string;
   public readonly note!: string;
@@ -72,13 +72,13 @@ export class AccountTransaction extends BaseModel {
     return this.debit * this.exchangeRate;
   }
 
-  // /**
-  //  * Retrieve formatted reference type.
-  //  * @return {string}
-  //  */
-  // get referenceTypeFormatted() {
-  //   return getTransactionTypeLabel(this.referenceType, this.transactionType);
-  // }
+  /**
+   * Retrieve formatted reference type.
+   * @return {string}
+   */
+  get referenceTypeFormatted() {
+    return getTransactionTypeLabel(this.referenceType, this.transactionType);
+  }
 
   /**
    * Model modifiers.

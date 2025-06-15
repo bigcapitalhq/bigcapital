@@ -7,7 +7,6 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { ISalesByItemsReportQuery } from './SalesByItems.types';
 import { AcceptType } from '@/constants/accept-type';
 import { SalesByItemsApplication } from './SalesByItemsApplication';
 import { Response } from 'express';
@@ -21,7 +20,10 @@ export class SalesByItemsController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'Sales by items report' })
-  @ApiOperation({ summary: 'Get sales by items report' })
+  @ApiOperation({
+    summary: 'Sales by items report',
+    description: 'Retrieves the sales by items report.',
+  })
   public async salesByitems(
     @Query() filter: SalesByItemsQueryDto,
     @Res({ passthrough: true }) res: Response,

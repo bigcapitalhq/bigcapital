@@ -14,10 +14,7 @@ export class CommandTaxRateDto {
    */
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({
-    description: 'The name of the tax rate.',
-    example: 'VAT',
-  })
+  @ApiProperty({ description: 'The name of the tax rate.', example: 'VAT' })
   name: string;
 
   /**
@@ -25,10 +22,7 @@ export class CommandTaxRateDto {
    */
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({
-    description: 'The code of the tax rate.',
-    example: 'VAT',
-  })
+  @ApiProperty({ description: 'The code of the tax rate.', example: 'VAT' })
   code: string;
 
   /**

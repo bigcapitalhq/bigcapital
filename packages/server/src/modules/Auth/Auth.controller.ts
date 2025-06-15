@@ -34,7 +34,10 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'Sign in a user' })
   @ApiBody({ type: AuthSigninDto })
-  async signin(@Request() req: Request & { user: SystemUser }, @Body() signinDto: AuthSigninDto) {
+  async signin(
+    @Request() req: Request & { user: SystemUser },
+    @Body() signinDto: AuthSigninDto,
+  ) {
     const { user } = req;
     const tenant = await this.tenantModel.query().findById(user.tenantId);
 
@@ -67,7 +70,6 @@ export class AuthController {
   signupConfirm(@Body('email') email: string, @Body('token') token: string) {
     return this.authApp.signUpConfirm(email, token);
   }
-
 
   @Post('/send_reset_password')
   @ApiOperation({ summary: 'Send reset password email' })

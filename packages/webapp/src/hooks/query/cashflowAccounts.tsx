@@ -75,7 +75,7 @@ export function useCashflowTransaction(id, props) {
     [t.CASH_FLOW_TRANSACTIONS, id],
     { method: 'get', url: `banking/transactions/${id}` },
     {
-      select: (res) => res.data.cashflow_transaction,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

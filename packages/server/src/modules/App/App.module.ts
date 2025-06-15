@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import {
   AcceptLanguageResolver,
@@ -96,6 +97,10 @@ import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../../..', 'public'),
+      serveRoot: '/public',
+    }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       load: config,
@@ -220,7 +225,7 @@ import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module
     CurrenciesModule,
     MiscellaneousModule,
     UsersModule,
-    ContactsModule
+    ContactsModule,
   ],
   controllers: [AppController],
   providers: [
