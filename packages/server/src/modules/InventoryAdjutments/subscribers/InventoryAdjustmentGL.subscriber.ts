@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { InventoryAdjustmentsGLEntries } from '../commands/ledger/InventoryAdjustmentsGLEntries';
-import { IInventoryAdjustmentEventDeletedPayload } from '../types/InventoryAdjustments.types';
+import {
+  IInventoryAdjustmentDeletingPayload,
+  IInventoryAdjustmentEventPublishedPayload,
+} from '../types/InventoryAdjustments.types';
 import { IInventoryAdjustmentEventCreatedPayload } from '../types/InventoryAdjustments.types';
 import { events } from '@/common/events/events';
 
@@ -13,10 +16,11 @@ export class InventoryAdjustmentsGLSubscriber {
 
   /**
    * Handles writing increment inventory adjustment GL entries.
+   * @param {IInventoryAdjustmentEventCreatedPayload} payload - 
    */
   @OnEvent(events.inventoryAdjustment.onQuickCreated)
   @OnEvent(events.inventoryAdjustment.onPublished)
-  public async handleGLEntriesOnceIncrementAdjustmentCreated({
+  async handleGLEntriesOnceIncrementAdjustmentCreated({
     inventoryAdjustmentId,
     inventoryAdjustment,
     trx,
@@ -37,19 +41,20 @@ export class InventoryAdjustmentsGLSubscriber {
 
   /**
    * Reverts the inventory adjustment GL entries once the transaction deleted.
-   * @param {IInventoryAdjustmentEventDeletedPayload} payload -
+   * @param {IInventoryAdjustmentDeletingPayload} payload -
    */
-  @OnEvent(events.inventoryAdjustment.onDeleted)
-  public async revertAdjustmentGLEntriesOnceDeleted({
-    inventoryAdjustmentId,
-    oldInventoryAdjustment,
-  }: IInventoryAdjustmentEventDeletedPayload) {
+  @OnEvent(events.inventoryAdjustment.onDeleting)
+  async revertAdjustmentGLEntriesOnceDeleted({
+    inventoryAdjustment,
+    trx,
+  }: IInventoryAdjustmentDeletingPayload) {
     // Can't continue if the inventory adjustment is not published.
-    if (!oldInventoryAdjustment.isPublished) {
+    if (!inventoryAdjustment.isPublished) {
       return;
     }
     await this.inventoryAdjustmentGL.revertAdjustmentGLEntries(
-      inventoryAdjustmentId,
+      inventoryAdjustment.id,
+      trx,
     );
   }
 
@@ -58,39 +63,16 @@ export class InventoryAdjustmentsGLSubscriber {
    * @param {IInventoryAdjustmentEventPublishedPayload} payload
    * @param {IInventoryAdjustmentEventCreatedPayload} payload -
    */
-  // private handleWriteInventoryTransactionsOncePublished = async ({
-  //   inventoryAdjustment,
-  //   trx,
-  // }:
-  //   | IInventoryAdjustmentEventPublishedPayload
-  //   | IInventoryAdjustmentEventCreatedPayload) => {
-  //   await this.inventoryAdjustment.writeInventoryTransactions(
-  //     tenantId,
-  //     inventoryAdjustment,
-  //     false,
-  //     trx
-  //   );
-  // };
-
-  /**
-   * Handles reverting invetory transactions once the inventory adjustment deleted.
-   * @param {IInventoryAdjustmentEventDeletedPayload} payload -
-   */
-  // private handleRevertInventoryTransactionsOnceDeleted = async ({
-  //   tenantId,
-  //   inventoryAdjustmentId,
-  //   oldInventoryAdjustment,
-  //   trx,
-  // }: IInventoryAdjustmentEventDeletedPayload) => {
-  //   // Can't continue if the inventory adjustment is not published.
-  //   if (!oldInventoryAdjustment.isPublished) {
-  //     return;
-  //   }
-  //   // Reverts the inventory transactions of adjustment transaction.
-  //   await this.inventoryAdjustment.revertInventoryTransactions(
-  //     tenantId,
-  //     inventoryAdjustmentId,
-  //     trx
-  //   );
-  // };
+  @OnEvent(events.inventoryAdjustment.onPublished)
+  async handleWriteInventoryTransactionsOncePublished({
+    inventoryAdjustmentId,
+    trx,
+  }:
+    | IInventoryAdjustmentEventPublishedPayload
+    | IInventoryAdjustmentEventCreatedPayload) {
+    await this.inventoryAdjustmentGL.writeAdjustmentGLEntries(
+      inventoryAdjustmentId,
+      trx,
+    );
+  }
 }

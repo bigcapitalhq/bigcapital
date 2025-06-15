@@ -46,7 +46,7 @@ export class DeleteInventoryAdjustmentService {
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Triggers `onInventoryAdjustmentDeleting` event.
       await this.eventEmitter.emitAsync(events.inventoryAdjustment.onDeleting, {
-        oldInventoryAdjustment,
+        inventoryAdjustment: oldInventoryAdjustment,
         trx,
       } as IInventoryAdjustmentDeletingPayload);
 

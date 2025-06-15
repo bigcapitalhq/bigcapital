@@ -31,7 +31,7 @@ export class InventoryAdjustmentsGLEntries {
     const adjustment = await this.inventoryAdjustment()
       .query(trx)
       .findById(inventoryAdjustmentId)
-      .withGraphFetched('entries.item');
+      .withGraphFetched('entries.item.inventoryAccount');
 
     const tenantMeta = await this.tenancyContext.getTenantMetadata();
 

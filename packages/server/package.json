@@ -39,6 +39,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/schedule": "^4.1.2",
+    "@nestjs/serve-static": "^5.0.3",
     "@nestjs/swagger": "^7.4.2",
     "@nestjs/throttler": "^6.2.1",
     "@supercharge/promise-pool": "^3.2.0",

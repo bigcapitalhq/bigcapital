@@ -51,7 +51,7 @@ export interface IInventoryAdjustmentEventDeletedPayload {
 }
 
 export interface IInventoryAdjustmentDeletingPayload {
-  oldInventoryAdjustment: InventoryAdjustment;
+  inventoryAdjustment: InventoryAdjustment;
   trx: Knex.Transaction;
 }
 
