@@ -1,5 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { RecognizedTransactionsApplication } from './RecognizedTransactions.application';
 
 @Controller('banking/recognized')
@@ -10,6 +16,20 @@ export class BankingRecognizedTransactionsController {
   ) {}
 
   @Get(':recognizedTransactionId')
+  @ApiOperation({ summary: 'Get recognized transaction' })
+  @ApiParam({
+    name: 'recognizedTransactionId',
+    description: 'The ID of the recognized transaction',
+    type: 'number',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the recognized transaction details',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Recognized transaction not found',
+  })
   async getRecognizedTransaction(
     @Param('recognizedTransactionId') recognizedTransactionId: number,
   ) {
@@ -19,7 +39,19 @@ export class BankingRecognizedTransactionsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get a list of recognized transactions' })
+  @ApiQuery({
+    name: 'query',
+    required: false,
+    description: 'Query parameters for filtering recognized transactions',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns a list of recognized transactions',
+  })
   async getRecognizedTransactions(@Query() query: any) {
-    return this.recognizedTransactionsApplication.getRecognizedTransactions(query);
+    return this.recognizedTransactionsApplication.getRecognizedTransactions(
+      query,
+    );
   }
 }

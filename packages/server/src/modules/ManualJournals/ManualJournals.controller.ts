@@ -10,20 +10,34 @@ import {
   Query,
 } from '@nestjs/common';
 import { ManualJournalsApplication } from './ManualJournalsApplication.service';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   CreateManualJournalDto,
   EditManualJournalDto,
 } from './dtos/ManualJournal.dto';
 import { IManualJournalsFilter } from './types/ManualJournals.types';
+import { ManualJournalResponseDto } from './dtos/ManualJournalResponse.dto';
 
 @Controller('manual-journals')
 @ApiTags('Manual Journals')
+@ApiExtraModels(ManualJournalResponseDto)
 export class ManualJournalsController {
   constructor(private manualJournalsApplication: ManualJournalsApplication) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new manual journal.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The manual journal has been successfully created.',
+    schema: { $ref: getSchemaPath(ManualJournalResponseDto) },
+  })
   public createManualJournal(@Body() manualJournalDTO: CreateManualJournalDto) {
     return this.manualJournalsApplication.createManualJournal(manualJournalDTO);
   }
@@ -33,6 +47,7 @@ export class ManualJournalsController {
   @ApiResponse({
     status: 200,
     description: 'The manual journal has been successfully edited.',
+    schema: { $ref: getSchemaPath(ManualJournalResponseDto) },
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
   @ApiParam({
@@ -73,6 +88,9 @@ export class ManualJournalsController {
   @ApiResponse({
     status: 200,
     description: 'The manual journal has been successfully published.',
+    schema: {
+      $ref: getSchemaPath(ManualJournalResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
   @ApiParam({
@@ -90,6 +108,9 @@ export class ManualJournalsController {
   @ApiResponse({
     status: 200,
     description: 'The manual journal details have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(ManualJournalResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
   @ApiParam({
@@ -107,6 +128,12 @@ export class ManualJournalsController {
   @ApiResponse({
     status: 200,
     description: 'The manual journal details have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: {
+        $ref: getSchemaPath(ManualJournalResponseDto),
+      },
+    },
   })
   @ApiResponse({ status: 404, description: 'The manual journal not found.' })
   public getManualJournals(@Query() filterDto: Partial<IManualJournalsFilter>) {

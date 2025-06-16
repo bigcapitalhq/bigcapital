@@ -1,4 +1,9 @@
-import { ApiOperation } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiExtraModels,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { ApiTags } from '@nestjs/swagger';
 import { Controller, Put, Get, Body, Param } from '@nestjs/common';
 import { TransactionsLockingService } from './commands/CommandTransactionsLockingService';
@@ -9,9 +14,11 @@ import {
   CancelTransactionsLockingDto,
   TransactionsLockingDto,
 } from './dtos/TransactionsLocking.dto';
+import { TransactionLockingResponseDto } from './dtos/TransactionLockingResponse.dto';
 
 @Controller('transactions-locking')
 @ApiTags('Transactions Locking')
+@ApiExtraModels(TransactionLockingResponseDto)
 export class TransactionsLockingController {
   constructor(
     private readonly transactionsLockingService: TransactionsLockingService,
@@ -21,6 +28,13 @@ export class TransactionsLockingController {
   @Put('lock')
   @ApiOperation({
     summary: 'Lock all transactions for a module or all modules',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The transactions have been successfully locked.',
+    schema: {
+      $ref: getSchemaPath(TransactionLockingResponseDto),
+    },
   })
   async commandTransactionsLocking(
     @Body('module') module: TransactionsLockingGroup,
@@ -41,6 +55,13 @@ export class TransactionsLockingController {
   @ApiOperation({
     summary: 'Cancel all transactions locking for a module or all modules',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'The transactions locking has been successfully canceled.',
+    schema: {
+      $ref: getSchemaPath(TransactionLockingResponseDto),
+    },
+  })
   async cancelTransactionLocking(
     @Body('module') module: TransactionsLockingGroup,
     @Body() cancelLockingDTO: CancelTransactionsLockingDto,
@@ -59,6 +80,13 @@ export class TransactionsLockingController {
   @ApiOperation({
     summary:
       'Partial unlock all transactions locking for a module or all modules',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The transactions have been successfully partially unlocked.',
+    schema: {
+      $ref: getSchemaPath(TransactionLockingResponseDto),
+    },
   })
   async unlockTransactionsLockingBetweenPeriod(
     @Body('module') module: TransactionsLockingGroup,
@@ -80,6 +108,14 @@ export class TransactionsLockingController {
     summary:
       'Cancel partial unlocking all transactions locking for a module or all modules',
   })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The partial transaction unlocking has been successfully canceled.',
+    schema: {
+      $ref: getSchemaPath(TransactionLockingResponseDto),
+    },
+  })
   async cancelPartialUnlocking(
     @Body('module') module: TransactionsLockingGroup,
   ) {
@@ -95,12 +131,28 @@ export class TransactionsLockingController {
 
   @Get('/')
   @ApiOperation({ summary: 'Get all transactions locking meta' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The transactions locking meta has been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(TransactionLockingResponseDto),
+    },
+  })
   async getTransactionLockingMetaList() {
     return await this.queryTransactionsLocking.getTransactionsLockingList();
   }
 
   @Get(':module')
   @ApiOperation({ summary: 'Get transactions locking meta for a module' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The module transactions locking meta has been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(TransactionLockingResponseDto),
+    },
+  })
   async getTransactionLockingMeta(@Param('module') module: string) {
     return await this.queryTransactionsLocking.getTransactionsLockingModuleMeta(
       module as TransactionsLockingGroup,

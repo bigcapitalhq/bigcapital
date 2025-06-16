@@ -1,4 +1,4 @@
-import { IsArray, IsOptional } from "class-validator";
+import { IsArray, IsOptional } from 'class-validator';
 
 export class FinancialSheetBranchesQueryDto {
   @IsArray()

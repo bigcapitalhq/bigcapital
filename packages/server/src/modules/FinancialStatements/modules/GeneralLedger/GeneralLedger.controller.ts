@@ -4,6 +4,7 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { GeneralLedgerApplication } from './GeneralLedgerApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { GeneralLedgerQueryDto } from './GeneralLedgerQuery.dto';
+import { GeneralLedgerResponseExample } from './GeneralLedger.swagger';
 
 @Controller('/reports/general-ledger')
 @ApiTags('Reports')
@@ -13,7 +14,11 @@ export class GeneralLedgerController {
   ) {}
 
   @Get()
-  @ApiResponse({ status: 200, description: 'General ledger report' })
+  @ApiResponse({
+    status: 200,
+    description: 'General ledger report',
+    example: GeneralLedgerResponseExample,
+  })
   @ApiOperation({ summary: 'Get general ledger report' })
   public async getGeneralLedger(
     @Query() query: GeneralLedgerQueryDto,

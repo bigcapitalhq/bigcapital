@@ -15,18 +15,22 @@ import { SubscriptionGuard } from '../Subscription/interceptors/Subscription.gua
 import { JwtAuthGuard } from '../Auth/guards/jwt.guard';
 import { ItemsApplicationService } from './ItemsApplication.service';
 import {
+  ApiExtraModels,
   ApiOperation,
   ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
+import { ItemResponseDto } from './dtos/itemResponse.dto';
 
 @Controller('/items')
 @ApiTags('Items')
 @UseGuards(SubscriptionGuard)
+@ApiExtraModels(ItemResponseDto)
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
     super();
@@ -221,7 +225,10 @@ export class ItemsController extends TenantController {
   @ApiOperation({ summary: 'Get the given item (product or service).' })
   @ApiResponse({
     status: 200,
-    description: 'The item has been successfully retrieved.',
+    description: 'The item details have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(ItemResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
   @ApiParam({

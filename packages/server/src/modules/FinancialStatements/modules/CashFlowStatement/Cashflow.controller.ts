@@ -4,6 +4,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { CashflowSheetApplication } from './CashflowSheetApplication';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CashFlowStatementQueryDto } from './CashFlowStatementQuery.dto';
+import { CashflowStatementResponseExample } from './CashflowStatement.swagger';
 
 @Controller('reports/cashflow-statement')
 @ApiTags('Reports')
@@ -11,7 +12,11 @@ export class CashflowController {
   constructor(private readonly cashflowSheetApp: CashflowSheetApplication) {}
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Cashflow statement report' })
+  @ApiResponse({
+    status: 200,
+    description: 'Cashflow statement report',
+    example: CashflowStatementResponseExample,
+  })
   @ApiOperation({ summary: 'Get cashflow statement report' })
   async getCashflow(
     @Query() query: CashFlowStatementQueryDto,
@@ -20,7 +25,7 @@ export class CashflowController {
   ) {
     // Retrieves the json table format.
     if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
-      return  this.cashflowSheetApp.table(query);
+      return this.cashflowSheetApp.table(query);
       // Retrieves the csv format.
     } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.cashflowSheetApp.csv(query);

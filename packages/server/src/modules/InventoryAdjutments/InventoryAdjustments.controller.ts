@@ -1,4 +1,10 @@
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -13,9 +19,11 @@ import { InventoryAdjustmentsApplicationService } from './InventoryAdjustmentsAp
 import { IInventoryAdjustmentsFilter } from './types/InventoryAdjustments.types';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAdjustment.dto';
+import { InventoryAdjustmentResponseDto } from './dtos/InventoryAdjustmentResponse.dto';
 
 @Controller('inventory-adjustments')
 @ApiTags('Inventory Adjustments')
+@ApiExtraModels(InventoryAdjustmentResponseDto)
 export class InventoryAdjustmentsController {
   constructor(
     private readonly inventoryAdjustmentsApplicationService: InventoryAdjustmentsApplicationService,
@@ -69,6 +77,7 @@ export class InventoryAdjustmentsController {
     status: 200,
     description:
       'The inventory adjustment details have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(InventoryAdjustmentResponseDto) },
   })
   public async getInventoryAdjustment(
     @Param('id') inventoryAdjustmentId: number,

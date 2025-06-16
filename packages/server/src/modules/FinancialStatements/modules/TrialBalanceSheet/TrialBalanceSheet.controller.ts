@@ -5,6 +5,7 @@ import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';
 import { TrialBalanceSheetApplication } from './TrialBalanceSheetApplication';
 import { TrialBalanceSheetQueryDto } from './TrialBalanceSheetQuery.dto';
+import { TrialBalanceSheetResponseExample } from './TrialBalanceSheet.swagger';
 
 @Controller('reports/trial-balance-sheet')
 @ApiTags('Reports')
@@ -15,7 +16,11 @@ export class TrialBalanceSheetController {
 
   @Get()
   @ApiOperation({ summary: 'Get trial balance sheet' })
-  @ApiResponse({ status: 200, description: 'Trial balance sheet' })
+  @ApiResponse({
+    status: 200,
+    description: 'Trial balance sheet',
+    example: TrialBalanceSheetResponseExample,
+  })
   async getTrialBalanceSheet(
     @Query() query: TrialBalanceSheetQueryDto,
     @Res({ passthrough: true }) res: Response,
