@@ -25,8 +25,8 @@ import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 
 @Controller('/items')
-@UseGuards(SubscriptionGuard)
 @ApiTags('Items')
+@UseGuards(SubscriptionGuard)
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
     super();

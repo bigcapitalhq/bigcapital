@@ -47,7 +47,7 @@ class AttachmentDto {
 export class CommandBillDto {
   @ApiProperty({
     description: 'Unique bill number',
-    example: 'BILL-0001',
+    example: 'BILL-2024-001',
     required: false,
   })
   @IsOptional()
@@ -56,7 +56,7 @@ export class CommandBillDto {
 
   @ApiProperty({
     description: 'Reference number',
-    example: 'REF-12345',
+    example: 'PO-2024-001',
     required: false,
   })
   @IsOptional()
@@ -65,7 +65,7 @@ export class CommandBillDto {
 
   @ApiProperty({
     description: 'Date the bill was issued',
-    example: '2025-06-01',
+    example: '2024-03-15',
   })
   @IsNotEmpty()
   @IsDateString()
@@ -73,7 +73,7 @@ export class CommandBillDto {
 
   @ApiProperty({
     description: 'Date the bill is due',
-    example: '2025-07-01',
+    example: '2024-04-15',
     required: false,
   })
   @IsOptional()
@@ -82,7 +82,7 @@ export class CommandBillDto {
 
   @ApiProperty({
     description: 'Vendor identifier',
-    example: 10,
+    example: 1001,
   })
   @IsInt()
   @IsNotEmpty()
@@ -90,7 +90,7 @@ export class CommandBillDto {
 
   @ApiProperty({
     description: 'Exchange rate applied to bill amounts',
-    example: 3.67,
+    example: 1.25,
     required: false,
   })
   @IsOptional()
@@ -101,7 +101,7 @@ export class CommandBillDto {
 
   @ApiProperty({
     description: 'Warehouse identifier',
-    example: 4,
+    example: 101,
     required: false,
   })
   @IsOptional()
@@ -111,7 +111,7 @@ export class CommandBillDto {
 
   @ApiProperty({
     description: 'Branch identifier',
-    example: 2,
+    example: 201,
     required: false,
   })
   @IsOptional()
@@ -121,7 +121,7 @@ export class CommandBillDto {
 
   @ApiProperty({
     description: 'Project identifier',
-    example: 5,
+    example: 301,
     required: false,
   })
   @IsOptional()
@@ -131,7 +131,7 @@ export class CommandBillDto {
 
   @ApiProperty({
     description: 'Additional notes about the bill',
-    example: 'Payment due next month',
+    example: 'Office supplies and equipment for Q2 2024',
     required: false,
   })
   @IsOptional()

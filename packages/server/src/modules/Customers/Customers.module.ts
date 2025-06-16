@@ -36,7 +36,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     GetCustomerService,
     CustomersExportable,
     CustomersImportable,
-    GetCustomers
+    GetCustomers,
   ],
 })
 export class CustomersModule {}

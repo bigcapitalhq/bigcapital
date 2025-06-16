@@ -2,8 +2,9 @@ import { BaseModel } from '@/models/Model';
 import { Model } from 'objection';
 import { BankRuleCondition } from './BankRuleCondition';
 import { BankRuleAssignCategory, BankRuleConditionType } from '../types';
+import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 
-export class BankRule extends BaseModel {
+export class BankRule extends TenantBaseModel {
   public readonly id!: number;
   public readonly name!: string;
   public readonly order!: number;
@@ -17,6 +18,9 @@ export class BankRule extends BaseModel {
 
   public readonly conditions!: BankRuleCondition[];
 
+  public readonly createdAt: string;
+  public readonly updatedAt: string;
+
   /**
    * Table name
    */
@@ -28,7 +32,7 @@ export class BankRule extends BaseModel {
    * Timestamps columns.
    */
   static get timestamps() {
-    return ['created_at', 'updated_at'];
+    return ['createdAt', 'updatedAt'];
   }
 
   /**

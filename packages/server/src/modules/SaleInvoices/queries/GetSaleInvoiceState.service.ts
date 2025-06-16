@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
-import { ISaleInvocieState } from '../SaleInvoice.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { SaleInvoiceStateResponseDto } from '../dtos/SaleInvoiceState.dto';
 
 @Injectable()
 export class GetSaleInvoiceState {
@@ -12,9 +12,9 @@ export class GetSaleInvoiceState {
 
   /**
    * Retrieves the create/edit invoice state.
-   * @return {Promise<ISaleInvoice>}
+   * @returns {Promise<SaleInvoiceStateResponseDto>}
    */
-  public async getSaleInvoiceState(): Promise<ISaleInvocieState> {
+  public async getSaleInvoiceState(): Promise<SaleInvoiceStateResponseDto> {
     const defaultPdfTemplate = await this.pdfTemplateModel()
       .query()
       .findOne({ resource: 'SaleInvoice' })

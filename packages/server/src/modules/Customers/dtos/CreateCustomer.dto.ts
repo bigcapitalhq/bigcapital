@@ -10,22 +10,38 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ContactAddressDto } from './ContactAddress.dto';
 
 export class CreateCustomerDto extends ContactAddressDto {
-  @ApiProperty({ required: true, description: 'Customer type' })
+  @ApiProperty({
+    required: true,
+    description: 'Customer type',
+    example: 'business',
+  })
   @IsString()
   @IsNotEmpty()
   customerType: string;
 
-  @ApiProperty({ required: true, description: 'Currency code' })
+  @ApiProperty({
+    required: true,
+    description: 'Currency code',
+    example: 'USD',
+  })
   @IsString()
   @IsNotEmpty()
   currencyCode: string;
 
-  @ApiProperty({ required: false, description: 'Opening balance' })
+  @ApiProperty({
+    required: false,
+    description: 'Opening balance',
+    example: 5000.0,
+  })
   @IsOptional()
   @IsNumber()
   openingBalance?: number;
 
-  @ApiProperty({ required: false, description: 'Opening balance date' })
+  @ApiProperty({
+    required: false,
+    description: 'Opening balance date',
+    example: '2024-01-01',
+  })
   @IsOptional()
   @IsString()
   openingBalanceAt?: string;
@@ -33,52 +49,89 @@ export class CreateCustomerDto extends ContactAddressDto {
   @ApiProperty({
     required: false,
     description: 'Opening balance exchange rate',
+    example: 1.0,
   })
   @IsOptional()
   @IsNumber()
   openingBalanceExchangeRate?: number;
 
-  @ApiProperty({ required: false, description: 'Opening balance branch ID' })
+  @ApiProperty({
+    required: false,
+    description: 'Opening balance branch ID',
+    example: 101,
+  })
   @IsOptional()
   @IsNumber()
   openingBalanceBranchId?: number;
 
-  @ApiProperty({ required: false, description: 'Salutation' })
+  @ApiProperty({
+    required: false,
+    description: 'Salutation',
+    example: 'Mr.',
+  })
   @IsOptional()
   @IsString()
   salutation?: string;
 
-  @ApiProperty({ required: false, description: 'First name' })
+  @ApiProperty({
+    required: false,
+    description: 'First name',
+    example: 'John',
+  })
   @IsOptional()
   @IsString()
   firstName?: string;
 
-  @ApiProperty({ required: false, description: 'Last name' })
+  @ApiProperty({
+    required: false,
+    description: 'Last name',
+    example: 'Smith',
+  })
   @IsOptional()
   @IsString()
   lastName?: string;
 
-  @ApiProperty({ required: false, description: 'Company name' })
+  @ApiProperty({
+    required: false,
+    description: 'Company name',
+    example: 'Acme Corporation',
+  })
   @IsOptional()
   @IsString()
   companyName?: string;
 
-  @ApiProperty({ required: true, description: 'Display name' })
+  @ApiProperty({
+    required: true,
+    description: 'Display name',
+    example: 'Acme Corporation',
+  })
   @IsString()
   @IsNotEmpty()
   displayName: string;
 
-  @ApiProperty({ required: false, description: 'Website' })
+  @ApiProperty({
+    required: false,
+    description: 'Website',
+    example: 'https://www.acmecorp.com',
+  })
   @IsOptional()
   @IsString()
   website?: string;
 
-  @ApiProperty({ required: false, description: 'Email' })
+  @ApiProperty({
+    required: false,
+    description: 'Email',
+    example: 'contact@acmecorp.com',
+  })
   @IsOptional()
   @IsEmail()
   email?: string;
 
-  @ApiProperty({ required: false, description: 'Work phone' })
+  @ApiProperty({
+    required: false,
+    description: 'Work phone',
+    example: '+1 (555) 123-4567',
+  })
   @IsOptional()
   @IsString()
   workPhone?: string;

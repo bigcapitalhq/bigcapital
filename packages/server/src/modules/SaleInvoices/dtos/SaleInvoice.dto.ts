@@ -21,10 +21,18 @@ enum DiscountType {
   Amount = 'amount',
 }
 
-class PaymentMethodDto {
+export class PaymentMethodDto {
+  @ApiProperty({
+    description: 'The ID of the payment integration',
+    example: 1,
+  })
   @IsInt()
   paymentIntegrationId: number;
 
+  @ApiProperty({
+    description: 'Whether the payment method is enabled',
+    example: true,
+  })
   @IsBoolean()
   enable: boolean;
 }

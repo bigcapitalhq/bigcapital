@@ -8,11 +8,19 @@ import {
   Put,
 } from '@nestjs/common';
 import { WarehousesApplication } from './WarehousesApplication.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CreateWarehouseDto, EditWarehouseDto } from './dtos/Warehouse.dto';
+import { WarehouseResponseDto } from './dtos/WarehouseResponse.dto';
 
 @Controller('warehouses')
 @ApiTags('Warehouses')
+@ApiExtraModels(WarehouseResponseDto)
 export class WarehousesController {
   constructor(private warehousesApplication: WarehousesApplication) {}
 
@@ -41,6 +49,11 @@ export class WarehousesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a warehouse' })
+  @ApiResponse({
+    status: 200,
+    description: 'The warehouse details have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(WarehouseResponseDto) },
+  })
   getWarehouse(@Param('id') warehouseId: string) {
     return this.warehousesApplication.getWarehouse(Number(warehouseId));
   }

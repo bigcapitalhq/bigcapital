@@ -6,6 +6,7 @@ import { SaleInvoiceTransformer } from './SaleInvoice.transformer';
 import { CommandSaleInvoiceValidators } from '../commands/CommandSaleInvoiceValidators.service';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { SaleInvoiceResponseDto } from '../dtos/SaleInvoiceResponse.dto';
 
 @Injectable()
 export class GetSaleInvoice {
@@ -24,7 +25,9 @@ export class GetSaleInvoice {
    * @param {ISystemUser} authorizedUser -
    * @return {Promise<ISaleInvoice>}
    */
-  public async getSaleInvoice(saleInvoiceId: number): Promise<SaleInvoice> {
+  public async getSaleInvoice(
+    saleInvoiceId: number,
+  ): Promise<SaleInvoiceResponseDto> {
     const saleInvoice = await this.saleInvoiceModel()
       .query()
       .findById(saleInvoiceId)

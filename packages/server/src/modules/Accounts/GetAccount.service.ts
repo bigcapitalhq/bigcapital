@@ -6,6 +6,7 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { AccountResponseDto } from './dtos/AccountResponse.dto';
 
 @Injectable()
 export class GetAccount {
@@ -19,9 +20,10 @@ export class GetAccount {
 
   /**
    * Retrieve the given account details.
-   * @param {number} accountId
+   * @param {number} accountId - The account id.
+   * @returns {Promise<IAccount>} - The account details.
    */
-  public getAccount = async (accountId: number) => {
+  public async getAccount(accountId: number): Promise<AccountResponseDto> {
     // Find the given account or throw not found error.
     const account = await this.accountModel()
       .query()
@@ -43,5 +45,5 @@ export class GetAccount {
     await this.eventEmitter.emitAsync(events.accounts.onViewed, eventPayload);
 
     return transformed;
-  };
+  }
 }

@@ -12,7 +12,14 @@ import { AccountsApplication } from './AccountsApplication.service';
 import { CreateAccountDTO } from './CreateAccount.dto';
 import { EditAccountDTO } from './EditAccount.dto';
 import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import { AccountResponseDto } from './dtos/AccountResponse.dto';
 
 @Controller('accounts')
 @ApiTags('Accounts')
@@ -133,6 +140,11 @@ export class AccountsController {
     type: Number,
     description: 'The account id',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'The account details have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(AccountResponseDto) },
+  })
   async getAccount(@Param('id', ParseIntPipe) id: number) {
     return this.accountsApplication.getAccount(id);
   }
@@ -142,7 +154,12 @@ export class AccountsController {
   @ApiResponse({
     status: 200,
     description: 'The accounts have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(AccountResponseDto) },
+    },
   })
+  @ApiResponse({})
   async getAccounts(@Query() filter: Partial<IAccountsFilter>) {
     return this.accountsApplication.getAccounts(filter);
   }

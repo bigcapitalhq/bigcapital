@@ -13,14 +13,22 @@ import {
   GetItemCategoriesResponse,
   IItemCategoriesFilter,
 } from './ItemCategory.interfaces';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   CreateItemCategoryDto,
   EditItemCategoryDto,
 } from './dtos/ItemCategory.dto';
+import { ItemCategoryResponseDto } from './dtos/ItemCategoryResponse.dto';
 
 @Controller('item-categories')
 @ApiTags('Item Categories')
+@ApiExtraModels(ItemCategoryResponseDto)
 export class ItemCategoryController {
   constructor(
     private readonly itemCategoryApplication: ItemCategoryApplication,
@@ -34,6 +42,14 @@ export class ItemCategoryController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the item categories.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item categories have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(ItemCategoryResponseDto) },
+    },
+  })
   async getItemCategories(
     @Query() filterDTO: Partial<IItemCategoriesFilter>,
   ): Promise<GetItemCategoriesResponse> {
@@ -51,6 +67,11 @@ export class ItemCategoryController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieves the item category details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item category details have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(ItemCategoryResponseDto) },
+  })
   async getItemCategory(@Param('id') id: number) {
     return this.itemCategoryApplication.getItemCategory(id);
   }

@@ -8,7 +8,10 @@ import {
   CommonMailOptionsDTO,
 } from '../MailNotification/MailNotification.types';
 import { TenantJobPayload } from '@/interfaces/Tenant';
-import { CreateSaleInvoiceDto, EditSaleInvoiceDto } from './dtos/SaleInvoice.dto';
+import {
+  CreateSaleInvoiceDto,
+  EditSaleInvoiceDto,
+} from './dtos/SaleInvoice.dto';
 
 export interface PaymentIntegrationTransactionLink {
   id: number;
@@ -299,10 +302,6 @@ export interface InvoicePdfTemplateAttributes {
   statementLabel: string;
   showStatement: boolean;
   statement: string;
-}
-
-export interface ISaleInvocieState {
-  defaultTemplateId: number;
 }
 
 export interface SaleInvoiceSendMailData {

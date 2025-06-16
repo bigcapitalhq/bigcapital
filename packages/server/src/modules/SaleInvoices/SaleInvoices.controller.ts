@@ -27,15 +27,19 @@ import {
   ApiQuery,
   ApiResponse,
   ApiTags,
+  ApiExtraModels,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import {
   CreateSaleInvoiceDto,
   EditSaleInvoiceDto,
 } from './dtos/SaleInvoice.dto';
 import { AcceptType } from '@/constants/accept-type';
+import { SaleInvoiceResponseDto } from './dtos/SaleInvoiceResponse.dto';
 
 @Controller('sale-invoices')
 @ApiTags('Sale Invoices')
+@ApiExtraModels(SaleInvoiceResponseDto)
 @ApiHeader({
   name: 'organization-id',
   description: 'The organization id',
@@ -150,6 +154,9 @@ export class SaleInvoicesController {
   @ApiResponse({
     status: 200,
     description: 'The sale invoice details have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(SaleInvoiceResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
   @ApiParam({

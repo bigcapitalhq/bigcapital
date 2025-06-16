@@ -9,10 +9,18 @@ import {
 } from '@nestjs/common';
 import { BranchesApplication } from './BranchesApplication.service';
 import { CreateBranchDto, EditBranchDto } from './dtos/Branch.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import { BranchResponseDto } from './dtos/BranchResponse.dto';
 
 @Controller('branches')
 @ApiTags('Branches')
+@ApiExtraModels(BranchResponseDto)
 export class BranchesController {
   constructor(private readonly branchesApplication: BranchesApplication) {}
 
@@ -21,6 +29,12 @@ export class BranchesController {
   @ApiResponse({
     status: 200,
     description: 'The branches have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: {
+        $ref: getSchemaPath(BranchResponseDto),
+      },
+    },
   })
   getBranches() {
     return this.branchesApplication.getBranches();
@@ -31,6 +45,9 @@ export class BranchesController {
   @ApiResponse({
     status: 200,
     description: 'The branch details have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(BranchResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The branch not found.' })
   getBranch(@Param('id') id: string) {
@@ -42,6 +59,9 @@ export class BranchesController {
   @ApiResponse({
     status: 200,
     description: 'The branch has been successfully created.',
+    schema: {
+      $ref: getSchemaPath(BranchResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The branch not found.' })
   createBranch(@Body() createBranchDTO: CreateBranchDto) {
@@ -53,6 +73,9 @@ export class BranchesController {
   @ApiResponse({
     status: 200,
     description: 'The branch has been successfully edited.',
+    schema: {
+      $ref: getSchemaPath(BranchResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The branch not found.' })
   editBranch(@Param('id') id: string, @Body() editBranchDTO: EditBranchDto) {
@@ -90,6 +113,9 @@ export class BranchesController {
   @ApiResponse({
     status: 200,
     description: 'The branch has been successfully marked as primary.',
+    schema: {
+      $ref: getSchemaPath(BranchResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The branch not found.' })
   markBranchAsPrimary(@Param('id') id: string) {

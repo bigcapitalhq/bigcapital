@@ -17,7 +17,10 @@ export class CommandItemDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
-  @ApiProperty({ description: 'Item name', example: 'Office Chair' })
+  @ApiProperty({
+    description: 'Item name',
+    example: 'Ergonomic Office Chair Model X-2000',
+  })
   name: string;
 
   @IsString()
@@ -36,7 +39,7 @@ export class CommandItemDto {
   @ApiProperty({
     description: 'Item code/SKU',
     required: false,
-    example: 'ITEM-001',
+    example: 'CHAIR-X2000',
   })
   code?: string;
 
@@ -59,7 +62,7 @@ export class CommandItemDto {
     description: 'Cost price of the item',
     required: false,
     minimum: 0,
-    example: 100.5,
+    example: 299.99,
   })
   costPrice?: number;
 
@@ -72,7 +75,7 @@ export class CommandItemDto {
     description: 'ID of the cost account',
     required: false,
     minimum: 0,
-    example: 1,
+    example: 1001,
   })
   costAccountId?: number;
 
@@ -95,7 +98,7 @@ export class CommandItemDto {
     description: 'Selling price of the item',
     required: false,
     minimum: 0,
-    example: 150.75,
+    example: 399.99,
   })
   sellPrice?: number;
 
@@ -108,7 +111,7 @@ export class CommandItemDto {
     description: 'ID of the sell account',
     required: false,
     minimum: 0,
-    example: 2,
+    example: 2001,
   })
   sellAccountId?: number;
 
@@ -121,7 +124,7 @@ export class CommandItemDto {
     description: 'ID of the inventory account (required for inventory items)',
     required: false,
     minimum: 0,
-    example: 3,
+    example: 3001,
   })
   inventoryAccountId?: number;
 
@@ -130,7 +133,8 @@ export class CommandItemDto {
   @ApiProperty({
     description: 'Description shown on sales documents',
     required: false,
-    example: 'High-quality ergonomic office chair',
+    example:
+      'Premium ergonomic office chair with adjustable height, lumbar support, and breathable mesh back',
   })
   sellDescription?: string;
 
@@ -139,7 +143,7 @@ export class CommandItemDto {
   @ApiProperty({
     description: 'Description shown on purchase documents',
     required: false,
-    example: 'Ergonomic office chair with adjustable height',
+    example: 'Ergonomic office chair - Model X-2000 with standard features',
   })
   purchaseDescription?: string;
 
@@ -180,7 +184,8 @@ export class CommandItemDto {
   @ApiProperty({
     description: 'Additional notes about the item',
     required: false,
-    example: 'Available in multiple colors',
+    example:
+      'Available in black, gray, and navy colors. 5-year warranty included.',
   })
   note?: string;
 
