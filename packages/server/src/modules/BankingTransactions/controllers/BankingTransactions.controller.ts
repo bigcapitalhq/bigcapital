@@ -7,13 +7,25 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiBody,
+  getSchemaPath,
+  ApiExtraModels,
+} from '@nestjs/swagger';
 import { BankingTransactionsApplication } from '../BankingTransactionsApplication.service';
 import { CreateBankTransactionDto } from '../dtos/CreateBankTransaction.dto';
 import { GetBankTransactionsQueryDto } from '../dtos/GetBankTranasctionsQuery.dto';
+import { BankTransactionResponseDto } from '../dtos/BankTransactionResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 
 @Controller('banking/transactions')
 @ApiTags('Banking Transactions')
+@ApiExtraModels(BankTransactionResponseDto, PaginatedResponseDto)
 export class BankingTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,
@@ -24,6 +36,21 @@ export class BankingTransactionsController {
   @ApiResponse({
     status: 200,
     description: 'Returns a list of bank account transactions',
+    schema: {
+      allOf: [
+        {
+          $ref: getSchemaPath(PaginatedResponseDto),
+        },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(BankTransactionResponseDto) },
+            },
+          },
+        },
+      ],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -89,6 +116,9 @@ export class BankingTransactionsController {
   @ApiResponse({
     status: 200,
     description: 'Returns the bank transaction details',
+    schema: {
+      $ref: getSchemaPath(BankTransactionResponseDto),
+    },
   })
   @ApiResponse({
     status: 404,

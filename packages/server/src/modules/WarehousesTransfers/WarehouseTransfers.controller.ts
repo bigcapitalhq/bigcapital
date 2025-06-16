@@ -9,16 +9,25 @@ import {
   Query,
   Inject,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { WarehouseTransferApplication } from './WarehouseTransferApplication';
 import {
   CreateWarehouseTransferDto,
   EditWarehouseTransferDto,
 } from './dtos/WarehouseTransfer.dto';
 import { GetWarehouseTransfersQueryDto } from '../Warehouses/dtos/GetWarehouseTransfersQuery.dto';
+import { WarehouseTransferResponseDto } from './dtos/WarehouseTransferResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 
 @Controller('warehouse-transfers')
 @ApiTags('Warehouse Transfers')
+@ApiExtraModels(WarehouseTransferResponseDto, PaginatedResponseDto)
 export class WarehouseTransfersController {
   /**
    * @param {WarehouseTransferApplication} warehouseTransferApplication - Warehouse transfer application.
@@ -129,6 +138,19 @@ export class WarehouseTransfersController {
     status: 200,
     description:
       'The warehouse transfer transactions have been retrieved successfully.',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(WarehouseTransferResponseDto) },
+            },
+          },
+        },
+      ],
+    },
   })
   async getWarehousesTransfers(@Query() query: GetWarehouseTransfersQueryDto) {
     const { warehousesTransfers, pagination, filter } =
@@ -150,6 +172,9 @@ export class WarehouseTransfersController {
     status: 200,
     description:
       'The warehouse transfer transaction details have been retrieved successfully.',
+    schema: {
+      $ref: getSchemaPath(WarehouseTransferResponseDto),
+    },
   })
   async getWarehouseTransfer(@Param('id') id: number) {
     const warehouseTransfer =

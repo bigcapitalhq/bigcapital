@@ -10,11 +10,20 @@ import {
 } from '@nestjs/common';
 import { ExpensesApplication } from './ExpensesApplication.service';
 import { IExpensesFilter } from './Expenses.types';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { ExpenseResponseDto } from './dtos/ExpenseResponse.dto';
 
 @Controller('expenses')
 @ApiTags('Expenses')
+@ApiExtraModels(PaginatedResponseDto, ExpenseResponseDto)
 export class ExpensesController {
   constructor(private readonly expensesApplication: ExpensesApplication) {}
 
@@ -65,8 +74,25 @@ export class ExpensesController {
   /**
    * Get the expense transaction details.
    */
-  @Get('')
-  @ApiOperation({ summary: 'Get the expense transaction details.' })
+  @Get()
+  @ApiOperation({ summary: 'Get the expense transactions.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The item list has been successfully retrieved.',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(ExpenseResponseDto) },
+            },
+          },
+        },
+      ],
+    },
+  })
   public getExpenses(@Query() filterDTO: IExpensesFilter) {
     return this.expensesApplication.getExpenses(filterDTO);
   }
@@ -77,6 +103,13 @@ export class ExpensesController {
    */
   @Get(':id')
   @ApiOperation({ summary: 'Get the expense transaction details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The expense transaction have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(ExpenseResponseDto),
+    },
+  })
   public getExpense(@Param('id') expenseId: number) {
     return this.expensesApplication.getExpense(expenseId);
   }

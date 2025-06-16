@@ -26,11 +26,13 @@ import {
 import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 import { ItemResponseDto } from './dtos/itemResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 
 @Controller('/items')
 @ApiTags('Items')
 @UseGuards(SubscriptionGuard)
 @ApiExtraModels(ItemResponseDto)
+@ApiExtraModels(PaginatedResponseDto)
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
     super();
@@ -41,6 +43,19 @@ export class ItemsController extends TenantController {
   @ApiResponse({
     status: 200,
     description: 'The item list has been successfully retrieved.',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(ItemResponseDto) },
+            },
+          },
+        },
+      ],
+    },
   })
   @ApiQuery({
     name: 'customViewId',
