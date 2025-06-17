@@ -14,10 +14,13 @@ import { ExportableModel } from '../../Export/decorators/ExportableModel.decorat
 import { AccountMeta } from './Account.meta';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { AccountDefaultViews } from '../constants';
 
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(AccountMeta)
+@InjectModelDefaultViews(AccountDefaultViews)
 export class Account extends TenantBaseModel {
   public name!: string;
   public slug!: string;
@@ -227,7 +230,7 @@ export class Account extends TenantBaseModel {
           to: 'accounts_transactions.accountId',
         },
       },
-     
+
       /**
        * Account may has many items as cost account.
        */
@@ -421,20 +424,6 @@ export class Account extends TenantBaseModel {
       parentItemId: 'parentAccountId',
     });
   }
-
-  /**
-   * Model settings.
-   */
-  // static get meta() {
-  // return AccountSettings;
-  // }
-
-  /**
-   * Retrieve the default custom views, roles and columns.
-   */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search roles.

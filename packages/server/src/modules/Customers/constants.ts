@@ -1,6 +1,6 @@
 export const DEFAULT_VIEW_COLUMNS = [];
 
-export const DEFAULT_VIEWS = [
+export const CustomerDefaultViews = [
   {
     name: 'Overdue',
     slug: 'overdue',

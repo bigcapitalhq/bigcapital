@@ -1,3 +1,4 @@
+import { Model } from 'objection';
 import { BillPaymentEntry } from './BillPaymentEntry';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
@@ -6,11 +7,13 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { BillPaymentMeta } from './BillPayment.meta';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
-import { Model } from 'objection';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { BillPaymentDefaultViews } from '../constants';
 
 @ImportableModel()
 @ExportableModel()
 @InjectModelMeta(BillPaymentMeta)
+@InjectModelDefaultViews(BillPaymentDefaultViews)
 export class BillPayment extends TenantBaseModel {
   vendorId: number;
   amount: number;
@@ -61,7 +64,7 @@ export class BillPayment extends TenantBaseModel {
   get localAmount() {
     return this.amount * this.exchangeRate;
   }
-  
+
   /**
    * Relationship mapping.
    */
@@ -153,13 +156,6 @@ export class BillPayment extends TenantBaseModel {
       },
     };
   }
-
-  /**
-   * Retrieve the default custom views, roles and columns.
-   */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search attributes.

@@ -5,10 +5,13 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { PaymentReceivedMeta } from './PaymentReceived.meta';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { PaymentReceivedDefaultViews } from '../constants';
 
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(PaymentReceivedMeta)
+@InjectModelDefaultViews(PaymentReceivedDefaultViews)
 export class PaymentReceived extends TenantBaseModel {
   customerId: number;
   paymentDate: string;
@@ -79,7 +82,9 @@ export class PaymentReceived extends TenantBaseModel {
     const {
       DocumentModel,
     } = require('../../Attachments/models/Document.model');
-    const { PdfTemplateModel } = require('../../PdfTemplate/models/PdfTemplate');
+    const {
+      PdfTemplateModel,
+    } = require('../../PdfTemplate/models/PdfTemplate');
 
     return {
       customer: {
@@ -171,20 +176,6 @@ export class PaymentReceived extends TenantBaseModel {
       },
     };
   }
-
-  /**
-   *
-   */
-  // static get meta() {
-  //   return PaymentReceiveSettings;
-  // }
-
-  // /**
-  //  * Retrieve the default custom views, roles and columns.
-  //  */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search attributes.

@@ -7,10 +7,13 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ExpenseMeta } from './Expense.meta';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { ExpenseDefaultViews } from '../constants';
 
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(ExpenseMeta)
+@InjectModelDefaultViews(ExpenseDefaultViews)
 export class Expense extends TenantBaseModel {
   totalAmount!: number;
   currencyCode!: string;
@@ -202,7 +205,9 @@ export class Expense extends TenantBaseModel {
     const { ExpenseCategory } = require('./ExpenseCategory.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     const { Branch } = require('../../Branches/models/Branch.model');
-    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
+    const {
+      MatchedBankTransaction,
+    } = require('../../BankingMatching/models/MatchedBankTransaction');
 
     return {
       /**
@@ -279,17 +284,6 @@ export class Expense extends TenantBaseModel {
       },
     };
   }
-
-  // static get meta() {
-  //   return ExpenseSettings;
-  // }
-
-  // /**
-  //  * Retrieve the default custom views, roles and columns.
-  //  */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search attributes.

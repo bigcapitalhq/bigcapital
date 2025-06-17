@@ -32,7 +32,7 @@ export const ERRORS = {
   NO_INVOICE_CUSTOMER_EMAIL_ADDR: 'NO_INVOICE_CUSTOMER_EMAIL_ADDR',
 };
 
-export const DEFAULT_VIEWS = [];
+export const PaymentReceivedDefaultViews = [];
 
 export const PaymentsReceiveSampleData = [
   {

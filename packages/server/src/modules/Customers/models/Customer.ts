@@ -1,10 +1,12 @@
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { CustomerMeta } from './Customer.meta';
-
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { CustomerDefaultViews } from '../constants';
 
 @InjectModelMeta(CustomerMeta)
-export class Customer extends TenantBaseModel{
+@InjectModelDefaultViews(CustomerDefaultViews)
+export class Customer extends TenantBaseModel {
   contactService: string;
   contactType: string;
 
@@ -48,7 +50,6 @@ export class Customer extends TenantBaseModel{
 
   note: string;
   active: boolean;
-
 
   /**
    * Query builder.
@@ -110,7 +111,7 @@ export class Customer extends TenantBaseModel{
       {
         mail: this.email,
         label: this.displayName,
-        primary: true
+        primary: true,
       },
     ].filter((c) => c.mail);
   }
@@ -147,7 +148,7 @@ export class Customer extends TenantBaseModel{
           '*',
           Customer.relatedQuery('overDueInvoices', query.knex())
             .count()
-            .as('countOverdue')
+            .as('countOverdue'),
         );
         query.having('countOverdue', '>', 0);
       },
@@ -188,17 +189,6 @@ export class Customer extends TenantBaseModel{
   //       },
   //     },
   //   };
-  // }
-
-  // static get meta() {
-  //   return CustomerSettings;
-  // }
-
-  // /**
-  //  * Retrieve the default custom views, roles and columns.
-  //  */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
   // }
 
   /**

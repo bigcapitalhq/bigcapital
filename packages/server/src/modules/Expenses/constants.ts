@@ -1,7 +1,7 @@
-import { ACCOUNT_TYPE } from "@/constants/accounts";
+import { ACCOUNT_TYPE } from '@/constants/accounts';
 
 export const DEFAULT_VIEW_COLUMNS = [];
-export const DEFAULT_VIEWS = [
+export const ExpenseDefaultViews = [
   {
     name: 'Draft',
     slug: 'draft',

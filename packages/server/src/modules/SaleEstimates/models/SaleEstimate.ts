@@ -10,10 +10,13 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { DiscountType } from '@/common/types/Discount';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { SaleEstimateDefaultViews } from '../constants';
 
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(SaleEstimateMeta)
+@InjectModelDefaultViews(SaleEstimateDefaultViews)
 export class SaleEstimate extends TenantBaseModel {
   exchangeRate!: number;
   amount!: number;
@@ -87,59 +90,57 @@ export class SaleEstimate extends TenantBaseModel {
     ];
   }
 
-    /**
+  /**
    * Estimate subtotal.
    * @returns {number}
    */
-    get subtotal() {
-      return this.amount;;
-    }
-  
-    /**
-     * Estimate subtotal in local currency.
-     * @returns {number}
-     */
-    get subtotalLocal() {
-      return this.localAmount;
-    }
-  
-    /**
-     * Discount amount.
-     * @returns {number}
-     */ 
-    get discountAmount() {
-      return this.discountType === DiscountType.Amount
-        ? this.discount
-        : this.subtotal * (this.discount / 100);
-    }
-  
-    /**
-     * Discount percentage.
-     * @returns {number | null}
-     */
-    get discountPercentage(): number | null {
-      return this.discountType === DiscountType.Percentage
-        ? this.discount
-        : null;
-    }
-  
-    /**
-     * Estimate total.
-     * @returns {number}
-     */
-    get total() {
-      const adjustmentAmount = defaultTo(this.adjustment, 0);
-  
-      return this.subtotal - this.discountAmount - adjustmentAmount;
-    }
-  
-    /**
-     * Estimate total in local currency.
-     * @returns {number}
-     */
-    get totalLocal() {
-      return this.total * this.exchangeRate;
-    }
+  get subtotal() {
+    return this.amount;
+  }
+
+  /**
+   * Estimate subtotal in local currency.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.localAmount;
+  }
+
+  /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.discountType === DiscountType.Amount
+      ? this.discount
+      : this.subtotal * (this.discount / 100);
+  }
+
+  /**
+   * Discount percentage.
+   * @returns {number | null}
+   */
+  get discountPercentage(): number | null {
+    return this.discountType === DiscountType.Percentage ? this.discount : null;
+  }
+
+  /**
+   * Estimate total.
+   * @returns {number}
+   */
+  get total() {
+    const adjustmentAmount = defaultTo(this.adjustment, 0);
+
+    return this.subtotal - this.discountAmount - adjustmentAmount;
+  }
+
+  /**
+   * Estimate total in local currency.
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
+  }
 
   /**
    * Estimate amount in local currency.
@@ -373,13 +374,6 @@ export class SaleEstimate extends TenantBaseModel {
       },
     };
   }
-
-  /**
-   * Retrieve the default custom views, roles and columns.
-   */
-  // static get defaultViews() {
-  // return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search roles.

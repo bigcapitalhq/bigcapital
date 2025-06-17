@@ -1,11 +1,4 @@
 import { Model, mixin } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import { formatNumber } from 'utils';
-// import ModelSetting from './ModelSetting';
-// import ManualJournalSettings from './ManualJournal.Settings';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/ManualJournals/constants';
-// import ModelSearchable from './ModelSearchable';
 import { ManualJournalEntry } from './ManualJournalEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
@@ -13,10 +6,13 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ManualJournalMeta } from './ManualJournal.meta';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { ManualJournalDefaultViews } from '../constants';
 
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(ManualJournalMeta)
+@InjectModelDefaultViews(ManualJournalDefaultViews)
 export class ManualJournal extends TenantBaseModel {
   date: Date;
   journalNumber: string;
@@ -120,10 +116,14 @@ export class ManualJournal extends TenantBaseModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
+    const {
+      AccountTransaction,
+    } = require('../../Accounts/models/AccountTransaction.model');
     const { ManualJournalEntry } = require('./ManualJournalEntry');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
-    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
+    const {
+      MatchedBankTransaction,
+    } = require('../../BankingMatching/models/MatchedBankTransaction');
 
     return {
       entries: {
@@ -184,17 +184,6 @@ export class ManualJournal extends TenantBaseModel {
       },
     };
   }
-
-  // static get meta() {
-  //   return ManualJournalSettings;
-  // }
-
-  // /**
-  //  * Retrieve the default custom views, roles and columns.
-  //  */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search attributes.

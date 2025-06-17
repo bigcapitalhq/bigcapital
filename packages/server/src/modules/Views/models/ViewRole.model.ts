@@ -2,6 +2,10 @@ import { BaseModel } from '@/models/Model';
 import { Model } from 'objection';
 
 export class ViewRole extends BaseModel {
+  index: number;
+  fieldKey: string;
+  comparator: string;
+  value: string;
 
   /**
    * Virtual attributes.
@@ -11,9 +15,7 @@ export class ViewRole extends BaseModel {
   }
 
   static get comparators() {
-    return [
-      'equals', 'not_equal', 'contains', 'not_contain',
-    ];
+    return ['equals', 'not_equal', 'contains', 'not_contain'];
   }
 
   /**

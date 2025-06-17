@@ -10,10 +10,13 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { mixin, Model, raw } from 'objection';
 import { CreditNoteMeta } from './CreditNote.meta';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { CreditNoteDefaultViews } from '../constants';
 
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(CreditNoteMeta)
+@InjectModelDefaultViews(CreditNoteDefaultViews)
 export class CreditNote extends TenantBaseModel {
   public amount: number;
   public exchangeRate: number;
@@ -401,20 +404,6 @@ export class CreditNote extends TenantBaseModel {
       },
     };
   }
-
-  // /**
-  //  * Sale invoice meta.
-  //  */
-  // static get meta() {
-  //   return CreditNoteMeta;
-  // }
-
-  // /**
-  //  * Retrieve the default custom views, roles and columns.
-  //  */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model searchable.

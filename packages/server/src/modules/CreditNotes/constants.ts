@@ -13,7 +13,7 @@ export const ERRORS = {
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];
-export const DEFAULT_VIEWS = [
+export const CreditNoteDefaultViews = [
   {
     name: 'credit_note.view.draft',
     slug: 'draft',
@@ -71,7 +71,7 @@ export const defaultCreditNoteBrandingAttributes = {
   // # Colors
   primaryColor: '',
   secondaryColor: '',
-  
+
   // # Company logo
   showCompanyLogo: true,
   companyLogoKey: '',

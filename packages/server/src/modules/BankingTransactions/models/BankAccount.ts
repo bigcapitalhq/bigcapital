@@ -109,23 +109,9 @@ export class BankAccount extends TenantBaseModel {
   isParentType(parentType) {
     return AccountTypesUtils.isParentTypeEqualsKey(
       this.accountType,
-      parentType
+      parentType,
     );
   }
-
-  // /**
-  //  * Model settings.
-  //  */
-  // static get meta() {
-  //   return CashflowAccountSettings;
-  // }
-
-  // /**
-  //  * Retrieve the default custom views, roles and columns.
-  //  */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search roles.

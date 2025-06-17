@@ -1,6 +1,6 @@
 export const DEFAULT_RECEIPT_MAIL_SUBJECT =
   'Receipt {Receipt Number} from {Company Name}';
-  
+
 export const DEFAULT_RECEIPT_MAIL_CONTENT = `Hi {Customer Name},
 
 Here's receipt # {Receipt Number} for Receipt {Receipt Amount}
@@ -29,7 +29,7 @@ export const ERRORS = {
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];
-export const DEFAULT_VIEWS = [
+export const SaleReceiptDefaultViews = [
   {
     name: 'Draft',
     slug: 'draft',

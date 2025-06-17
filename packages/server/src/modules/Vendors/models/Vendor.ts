@@ -11,21 +11,12 @@ import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { VendorMeta } from './Vendor.meta';
-
-// class VendorQueryBuilder extends PaginationQueryBuilder {
-//   constructor(...args) {
-//     super(...args);
-
-//     this.onBuild((builder) => {
-//       if (builder.isFind() || builder.isDelete() || builder.isUpdate()) {
-//         builder.where('contact_service', 'vendor');
-//       }
-//     });
-//   }
-// }
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { VendorDefaultViews } from '../constants';
 
 @ExportableModel()
 @InjectModelMeta(VendorMeta)
+@InjectModelDefaultViews(VendorDefaultViews)
 export class Vendor extends TenantBaseModel {
   contactService: string;
   contactType: string;
@@ -195,17 +186,6 @@ export class Vendor extends TenantBaseModel {
       },
     };
   }
-
-  // static get meta() {
-  //   return VendorSettings;
-  // }
-
-  // /**
-  //  * Retrieve the default custom views, roles and columns.
-  //  */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search attributes.

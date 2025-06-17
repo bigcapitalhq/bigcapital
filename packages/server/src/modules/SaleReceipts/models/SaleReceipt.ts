@@ -16,6 +16,8 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { SaleReceiptMeta } from './SaleReceipt.meta';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { SaleReceiptDefaultViews } from '../constants';
 
 const ExtendedModel = R.pipe(
   CustomViewBaseModelMixin,
@@ -27,6 +29,7 @@ const ExtendedModel = R.pipe(
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(SaleReceiptMeta)
+@InjectModelDefaultViews(SaleReceiptDefaultViews)
 export class SaleReceipt extends ExtendedModel {
   public amount!: number;
   public exchangeRate!: number;
@@ -370,20 +373,6 @@ export class SaleReceipt extends ExtendedModel {
       },
     };
   }
-
-  /**
-   * Sale invoice meta.
-   */
-  // static get meta() {
-  //   return SaleReceiptSettings;
-  // }
-
-  /**
-   * Retrieve the default custom views, roles and columns.
-   */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search attributes.

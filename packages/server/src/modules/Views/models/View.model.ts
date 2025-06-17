@@ -1,7 +1,14 @@
 import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
+import { ViewRole } from './ViewRole.model';
 
 export class View extends BaseModel {
+  name: string;
+  slug: string;
+  rolesLogicExpression: number;
+
+  roles!: Array<ViewRole>;
+
   /**
    * Table name.
    */

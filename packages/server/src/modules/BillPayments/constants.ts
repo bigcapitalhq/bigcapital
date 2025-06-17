@@ -14,7 +14,7 @@ export const ERRORS = {
   WITHDRAWAL_ACCOUNT_CURRENCY_INVALID: 'WITHDRAWAL_ACCOUNT_CURRENCY_INVALID',
 };
 
-export const DEFAULT_VIEWS = [];
+export const BillPaymentDefaultViews = [];
 
 export const BillsPaymentsSampleData = [
   {

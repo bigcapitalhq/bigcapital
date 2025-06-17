@@ -9,10 +9,13 @@ import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.dec
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { VendorCreditMeta } from './VendorCredit.meta';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { VendorCreditDefaultViews } from '../constants';
 
 @ExportableModel()
 @ImportableModel()
 @InjectModelMeta(VendorCreditMeta)
+@InjectModelDefaultViews(VendorCreditDefaultViews)
 export class VendorCredit extends TenantBaseModel {
   vendorId: number;
   amount: number;
@@ -366,20 +369,6 @@ export class VendorCredit extends TenantBaseModel {
       },
     };
   }
-
-  /**
-   *
-   */
-  // static get meta() {
-  //   return VendorCreditMeta;
-  // }
-
-  /**
-   * Retrieve the default custom views, roles and columns.
-   */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search attributes.

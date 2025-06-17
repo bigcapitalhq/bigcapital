@@ -23,7 +23,7 @@ export const ERRORS = {
 
 export const DEFAULT_VIEW_COLUMNS = [];
 
-export const DEFAULT_VIEWS = [
+export const BillDefaultViews = [
   {
     name: 'Draft',
     slug: 'draft',

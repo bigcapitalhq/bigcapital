@@ -28,7 +28,7 @@ export const CONTACTS_CONFIG = [
   },
 ];
 
-export const DEFAULT_VIEWS = [];
+export const ManualJournalDefaultViews = [];
 
 export const ManualJournalsSampleData = [
   {

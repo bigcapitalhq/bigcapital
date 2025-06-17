@@ -11,9 +11,12 @@ import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { BillMeta } from './Bill.meta';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { BillDefaultViews } from '../Bills.constants';
 
 @ExportableModel()
 @InjectModelMeta(BillMeta)
+@InjectModelDefaultViews(BillDefaultViews)
 export class Bill extends TenantBaseModel {
   public amount: number;
   public paymentAmount: number;
@@ -486,7 +489,9 @@ export class Bill extends TenantBaseModel {
       TaxRateTransaction,
     } = require('../../TaxRates/models/TaxRateTransaction.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
-    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
+    const {
+      MatchedBankTransaction,
+    } = require('../../BankingMatching/models/MatchedBankTransaction');
 
     return {
       vendor: {
@@ -630,13 +635,6 @@ export class Bill extends TenantBaseModel {
       .where('id', billId)
       [changeMethod]('payment_amount', Math.abs(amount));
   }
-
-  /**
-   * Retrieve the default custom views, roles and columns.
-   */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model search attributes.

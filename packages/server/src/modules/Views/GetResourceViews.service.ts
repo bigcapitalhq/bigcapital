@@ -1,10 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { View } from './models/View.model';
 import { ResourceService } from '../Resource/ResourceService';
+import { I18nService } from 'nestjs-i18n';
+import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+import { GetResourceViewTransformer } from './GetResourceView.transformer';
 
 @Injectable()
 export class GetResourceViewsService {
-  constructor(private readonly resourceService: ResourceService) {}
+  constructor(
+    private readonly resourceService: ResourceService,
+    private readonly transformerInjectable: TransformerInjectable,
+  ) {}
+
   /**
    * Listing resource views.
    * @param {string} resourceModel -
@@ -16,6 +23,9 @@ export class GetResourceViewsService {
     // Default views.
     const defaultViews = resourceModel().getDefaultViews();
 
-    return defaultViews;
+    return this.transformerInjectable.transform(
+      defaultViews,
+      new GetResourceViewTransformer(),
+    );
   }
 }

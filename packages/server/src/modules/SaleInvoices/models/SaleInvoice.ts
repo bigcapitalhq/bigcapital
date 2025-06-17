@@ -16,11 +16,14 @@ import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttacha
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { SaleInvoiceMeta } from './SaleInvoice.meta';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { SaleInvoiceDefaultViews } from '../constants';
 
 @InjectAttachable()
 @ExportableModel()
 @InjectModelMeta(SaleInvoiceMeta)
-export class SaleInvoice extends TenantBaseModel{
+@InjectModelDefaultViews(SaleInvoiceDefaultViews)
+export class SaleInvoice extends TenantBaseModel {
   public taxAmountWithheld: number;
   public balance: number;
   public paymentAmount: number;
@@ -512,7 +515,9 @@ export class SaleInvoice extends TenantBaseModel{
       TaxRateTransaction,
     } = require('../../TaxRates/models/TaxRateTransaction.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
-    const { MatchedBankTransaction } = require('../../BankingMatching/models/MatchedBankTransaction');
+    const {
+      MatchedBankTransaction,
+    } = require('../../BankingMatching/models/MatchedBankTransaction');
     const {
       TransactionPaymentServiceEntry,
     } = require('../../PaymentServices/models/TransactionPaymentServiceEntry.model');
@@ -724,23 +729,9 @@ export class SaleInvoice extends TenantBaseModel{
       [changeMethod]('payment_amount', Math.abs(amount));
   }
 
-  /**
-   * Sale invoice meta.
-   */
-  // static get meta() {
-  //   return SaleInvoiceMeta;
-  // }
-
   static dueAmountFieldSortQuery(query, role) {
     query.modify('sortByDueAmount', role.order);
   }
-
-  /**
-   * Retrieve the default custom views, roles and columns.
-   */
-  // static get defaultViews() {
-  //   return DEFAULT_VIEWS;
-  // }
 
   /**
    * Model searchable.

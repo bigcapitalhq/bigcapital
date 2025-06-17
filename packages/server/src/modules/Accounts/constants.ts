@@ -34,7 +34,7 @@ export const DEFAULT_VIEW_COLUMNS = [
 export const MAX_ACCOUNTS_CHART_DEPTH = 5;
 
 // Accounts default views.
-export const DEFAULT_VIEWS = [
+export const AccountDefaultViews = [
   {
     name: 'Assets',
     slug: 'assets',

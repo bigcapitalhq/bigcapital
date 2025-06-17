@@ -6,11 +6,14 @@ import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/Inje
 import { ItemMeta } from './Item.meta';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { PreventMutateBaseCurrency } from '@/common/decorators/LockMutateBaseCurrency.decorator';
+import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import { ItemDefaultViews } from '../Items.constants';
 
 @ExportableModel()
 @ImportableModel()
-@InjectModelMeta(ItemMeta)
 @PreventMutateBaseCurrency()
+@InjectModelMeta(ItemMeta)
+@InjectModelDefaultViews(ItemDefaultViews)
 export class Item extends TenantBaseModel {
   public readonly quantityOnHand: number;
   public readonly name: string;

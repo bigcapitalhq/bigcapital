@@ -10,7 +10,7 @@ export function useResourceViews(resourceSlug) {
     ['RESOURCE_VIEW', resourceSlug],
     { method: 'get', url: `views/resource/${resourceSlug}` },
     {
-      select: (response) => response.data.views,
+      select: (response) => response.data,
       defaultData: [],
     },
   );
