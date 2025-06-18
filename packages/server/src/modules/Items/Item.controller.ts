@@ -27,12 +27,21 @@ import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 import { ItemResponseDto } from './dtos/itemResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { ItemInvoiceResponseDto } from './dtos/itemInvoiceResponse.dto';
+import { ItemEstimatesResponseDto } from './dtos/ItemEstimatesResponse.dto';
+import { ItemBillsResponseDto } from './dtos/itemBillsResponse.dto';
+import { ItemReceiptsResponseDto } from './dtos/ItemReceiptsResponse.dto';
 
 @Controller('/items')
 @ApiTags('Items')
 @UseGuards(SubscriptionGuard)
 @ApiExtraModels(ItemResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
+@ApiExtraModels(ItemInvoiceResponseDto)
+@ApiExtraModels(ItemEstimatesResponseDto)
+@ApiExtraModels(ItemBillsResponseDto)
+@ApiExtraModels(ItemEstimatesResponseDto)
+@ApiExtraModels(ItemReceiptsResponseDto)
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
     super();
@@ -150,11 +159,6 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.editItem(itemId, editItemDto);
   }
 
-  /**
-   * Create item.
-   * @param createItemDto - The item DTO.
-   * @returns The created item id.
-   */
   @Post()
   @ApiOperation({ summary: 'Create a new item (product or service).' })
   @ApiResponse({
@@ -166,10 +170,6 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.createItem(createItemDto);
   }
 
-  /**
-   * Delete item.
-   * @param id - The item id.
-   */
   @Delete(':id')
   @ApiOperation({ summary: 'Delete the given item (product or service).' })
   @ApiResponse({
@@ -188,10 +188,6 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.deleteItem(itemId);
   }
 
-  /**
-   * Inactivate item.
-   * @param id - The item id.
-   */
   @Patch(':id/inactivate')
   @ApiOperation({ summary: 'Inactivate the given item (product or service).' })
   @ApiResponse({
@@ -210,10 +206,6 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.inactivateItem(itemId);
   }
 
-  /**
-   * Activate item.
-   * @param id - The item id.
-   */
   @Patch(':id/activate')
   @ApiOperation({ summary: 'Activate the given item (product or service).' })
   @ApiResponse({
@@ -232,10 +224,6 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.activateItem(itemId);
   }
 
-  /**
-   * Get item.
-   * @param id - The item id.
-   */
   @Get(':id')
   @ApiOperation({ summary: 'Get the given item (product or service).' })
   @ApiResponse({
@@ -257,11 +245,6 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.getItem(itemId);
   }
 
-  /**
-   * Retrieves the item associated invoices transactions.
-   * @param {string} id
-   * @returns {Promise<any>}
-   */
   @Get(':id/invoices')
   @ApiOperation({
     summary: 'Retrieves the item associated invoices transactions.',
@@ -270,6 +253,10 @@ export class ItemsController extends TenantController {
     status: 200,
     description:
       'The item associated invoices transactions have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(ItemInvoiceResponseDto) },
+    },
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
   @ApiParam({
@@ -283,11 +270,6 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.getItemInvoicesTransactions(itemId);
   }
 
-  /**
-   * Retrieves the item associated bills transactions.
-   * @param {string} id
-   * @returns {Promise<any>}
-   */
   @Get(':id/bills')
   @ApiOperation({
     summary: 'Retrieves the item associated bills transactions.',
@@ -296,6 +278,10 @@ export class ItemsController extends TenantController {
     status: 200,
     description:
       'The item associated bills transactions have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(ItemBillsResponseDto) },
+    },
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
   @ApiParam({
@@ -309,11 +295,6 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.getItemBillTransactions(itemId);
   }
 
-  /**
-   * Retrieves the item associated estimates transactions.
-   * @param {string} id
-   * @returns {Promise<any>}
-   */
   @Get(':id/estimates')
   @ApiOperation({
     summary: 'Retrieves the item associated estimates transactions.',
@@ -322,6 +303,10 @@ export class ItemsController extends TenantController {
     status: 200,
     description:
       'The item associated estimate transactions have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(ItemEstimatesResponseDto) },
+    },
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
   @ApiParam({
@@ -335,11 +320,6 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.getItemEstimatesTransactions(itemId);
   }
 
-  /**
-   * Retrieves the item associated receipts transactions.
-   * @param {string} id
-   * @returns {Promise<any>}
-   */
   @Get(':id/receipts')
   @ApiOperation({
     summary: 'Retrieves the item associated receipts transactions.',
@@ -348,6 +328,9 @@ export class ItemsController extends TenantController {
     status: 200,
     description:
       'The item associated receipts transactions have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(ItemReceiptsResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
   @ApiParam({

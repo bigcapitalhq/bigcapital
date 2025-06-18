@@ -13,6 +13,7 @@ import { CreateAccountDTO } from './CreateAccount.dto';
 import { EditAccountDTO } from './EditAccount.dto';
 import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
 import {
+  ApiExtraModels,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -20,9 +21,12 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { AccountResponseDto } from './dtos/AccountResponse.dto';
+import { AccountTypeResponseDto } from './dtos/AccountTypeResponse.dto';
 
 @Controller('accounts')
 @ApiTags('Accounts')
+@ApiExtraModels(AccountResponseDto)
+@ApiExtraModels(AccountTypeResponseDto)
 export class AccountsController {
   constructor(private readonly accountsApplication: AccountsApplication) {}
 
@@ -112,6 +116,9 @@ export class AccountsController {
   @ApiResponse({
     status: 200,
     description: 'The account types have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(AccountTypeResponseDto),
+    },
   })
   async getAccountTypes() {
     return this.accountsApplication.getAccountTypes();

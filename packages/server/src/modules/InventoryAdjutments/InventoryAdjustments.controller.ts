@@ -62,6 +62,10 @@ export class InventoryAdjustmentsController {
   @ApiResponse({
     status: 200,
     description: 'The inventory adjustments have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(InventoryAdjustmentResponseDto) },
+    },
   })
   public async getInventoryAdjustments(
     @Query() filterDTO: IInventoryAdjustmentsFilter,
