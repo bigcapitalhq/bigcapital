@@ -60,6 +60,14 @@ export class WarehousesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all warehouses' })
+  @ApiResponse({
+    status: 200,
+    description: 'The warehouses have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(WarehouseResponseDto) },
+    },
+  })
   getWarehouses() {
     return this.warehousesApplication.getWarehouses();
   }

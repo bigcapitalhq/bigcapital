@@ -66,7 +66,7 @@ export class RolesApplication {
    * Gets the role permissions schema.
    * @returns The role permissions schema.
    */
-  async getRolePermissionsSchema() {
+  getRolePermissionsSchema() {
     return this.getRolePermissionsSchemaService.getRolePermissionsSchema();
   }
 }

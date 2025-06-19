@@ -19,10 +19,14 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  getSchemaPath,
+  ApiExtraModels,
 } from '@nestjs/swagger';
+import { RoleResponseDto } from './dtos/RoleResponse.dto';
 
 @ApiTags('Roles')
 @Controller('roles')
+@ApiExtraModels(RoleResponseDto)
 export class RolesController {
   constructor(private readonly rolesApp: RolesApplication) {}
 
@@ -88,14 +92,21 @@ export class RolesController {
     description: 'Role permissions schema',
   })
   async getRolePermissionsSchema() {
-    const schema = await this.rolesApp.getRolePermissionsSchema();
+    const schema = this.rolesApp.getRolePermissionsSchema();
 
     return schema;
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all roles' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'List of all roles' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'List of all roles',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(RoleResponseDto) },
+    },
+  })
   async getRoles() {
     const roles = await this.rolesApp.getRoles();
 
@@ -105,7 +116,13 @@ export class RolesController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a specific role by ID' })
   @ApiParam({ name: 'id', description: 'Role ID' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Role details' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Role details',
+    schema: {
+      $ref: getSchemaPath(RoleResponseDto),
+    },
+  })
   async getRole(@Param('id', ParseIntPipe) roleId: number) {
     const role = await this.rolesApp.getRole(roleId);
 

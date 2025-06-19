@@ -139,6 +139,7 @@ export class AccountsController {
   @ApiResponse({
     status: 200,
     description: 'The account details have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(AccountResponseDto) },
   })
   @ApiResponse({ status: 404, description: 'The account not found.' })
   @ApiParam({
@@ -146,11 +147,6 @@ export class AccountsController {
     required: true,
     type: Number,
     description: 'The account id',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The account details have been successfully retrieved.',
-    schema: { $ref: getSchemaPath(AccountResponseDto) },
   })
   async getAccount(@Param('id', ParseIntPipe) id: number) {
     return this.accountsApplication.getAccount(id);
