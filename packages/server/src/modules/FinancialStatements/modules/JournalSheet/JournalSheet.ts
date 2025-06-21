@@ -118,7 +118,7 @@ export class JournalSheet extends FinancialSheet {
    */
   entriesWalker(entries: ILedgerEntry[]): IJournalReportEntriesGroup[] {
     return chain(entries)
-      .groupBy((entry) => `${entry.referenceId}-${entry.referenceType}`)
+      .groupBy((entry) => `${entry.transactionId}-${entry.transactionType}`)
       .map((entriesGroup: ILedgerEntry[], key: string) => {
         const headEntry = head(entriesGroup);
         return this.entriesGroupsMapper(entriesGroup, headEntry);

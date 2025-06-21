@@ -20,5 +20,6 @@
   "vendor_credit": "Vendor Credit",
   "refund_credit_note": "Refund Credit Note",
   "refund_vendor_credit": "Refund Vendor Credit",
-  "landed_cost": "Landed Cost"
+  "landed_cost": "Landed Cost",
+  "payment_made": "Payment made"
 }

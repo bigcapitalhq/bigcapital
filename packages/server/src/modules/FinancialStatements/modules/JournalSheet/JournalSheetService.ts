@@ -14,7 +14,7 @@ export class JournalSheetService {
     private readonly journalSheetMeta: JournalSheetMeta,
     private readonly journalRepository: JournalSheetRepository,
     private readonly eventPublisher: EventEmitter2,
-    private readonly i18n: I18nService
+    private readonly i18n: I18nService,
   ) {}
 
   /**

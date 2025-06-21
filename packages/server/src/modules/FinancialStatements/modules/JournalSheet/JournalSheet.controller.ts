@@ -9,14 +9,19 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JournalSheetQueryDto } from './JournalSheetQuery.dto';
+import { JournalSheetResponseExample } from './JournalSheet.swagger';
 
 @Controller('/reports/journal')
 @ApiTags('Reports')
 export class JournalSheetController {
   constructor(private readonly journalSheetApp: JournalSheetApplication) {}
 
-  @Get('/')
-  @ApiResponse({ status: 200, description: 'Journal report' })
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Journal report',
+    example: JournalSheetResponseExample,
+  })
   @ApiOperation({ summary: 'Journal report' })
   @ApiProduces(
     AcceptType.ApplicationJson,
