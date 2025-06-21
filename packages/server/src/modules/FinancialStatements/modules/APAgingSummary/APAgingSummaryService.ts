@@ -1,14 +1,12 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
-import {
-  IAPAgingSummaryQuery,
-  IAPAgingSummarySheet,
-} from './APAgingSummary.types';
+import { IAPAgingSummarySheet } from './APAgingSummary.types';
 import { APAgingSummarySheet } from './APAgingSummarySheet';
 import { APAgingSummaryMeta } from './APAgingSummaryMeta';
 import { getAPAgingSummaryDefaultQuery } from './utils';
 import { APAgingSummaryRepository } from './APAgingSummaryRepository';
+import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
 @Injectable()
 export class APAgingSummaryService {
@@ -20,13 +18,12 @@ export class APAgingSummaryService {
 
   /**
    * Retrieve A/P aging summary report.
-   * @param {IAPAgingSummaryQuery} query - A/P aging summary query.
+   * @param {APAgingSummaryQueryDto} query - A/P aging summary query.
    * @returns {Promise<IAPAgingSummarySheet>}
    */
   public async APAgingSummary(
-    query: IAPAgingSummaryQuery,
+    query: APAgingSummaryQueryDto,
   ): Promise<IAPAgingSummarySheet> {
-
     const filter = {
       ...getAPAgingSummaryDefaultQuery(),
       ...query,

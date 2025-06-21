@@ -1,16 +1,12 @@
 import {
   IAgingPeriod,
-  IAgingSummaryQuery,
   IAgingSummaryTotal,
   IAgingSummaryContact,
   IAgingSummaryData,
   IAgingSummaryMeta,
 } from '../AgingSummary/AgingSummary.types';
 import { IFinancialTable } from '../../types/Table.types';
-
-export interface IARAgingSummaryQuery extends IAgingSummaryQuery {
-  customersIds: number[];
-}
+import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 
 export interface IARAgingSummaryCustomer extends IAgingSummaryContact {
   customerName: string;
@@ -31,13 +27,12 @@ export interface IARAgingSummaryMeta extends IAgingSummaryMeta {
 
 export interface IARAgingSummaryTable extends IFinancialTable {
   meta: IARAgingSummaryMeta;
-  query: IARAgingSummaryQuery;
+  query: ARAgingSummaryQueryDto;
 }
 
 export interface IARAgingSummarySheet {
   data: IARAgingSummaryData;
   meta: IARAgingSummaryMeta;
-  query: IARAgingSummaryQuery;
+  query: ARAgingSummaryQueryDto;
   columns: IARAgingSummaryColumns;
 }
-

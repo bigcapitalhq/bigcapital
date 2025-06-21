@@ -1,7 +1,7 @@
 import { ARAgingSummaryTableInjectable } from './ARAgingSummaryTableInjectable';
-import { IARAgingSummaryQuery } from './ARAgingSummary.types';
 import { TableSheet } from '../../common/TableSheet';
 import { Injectable } from '@nestjs/common';
+import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 
 @Injectable()
 export class ARAgingSummaryExportInjectable {
@@ -11,12 +11,10 @@ export class ARAgingSummaryExportInjectable {
 
   /**
    * Retrieves the A/R aging summary sheet in XLSX format.
-   * @param {IARAgingSummaryQuery} query - A/R aging summary query.
+   * @param {ARAgingSummaryQueryDto} query - A/R aging summary query.
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(
-    query: IARAgingSummaryQuery
-  ): Promise<Buffer> {
+  public async xlsx(query: ARAgingSummaryQueryDto): Promise<Buffer> {
     const table = await this.ARAgingSummaryTable.table(query);
 
     const tableSheet = new TableSheet(table.table);
@@ -27,12 +25,10 @@ export class ARAgingSummaryExportInjectable {
 
   /**
    * Retrieves the A/R aging summary sheet in CSV format.
-   * @param {IARAgingSummaryQuery} query - A/R aging summary query.
+   * @param {ARAgingSummaryQueryDto} query - A/R aging summary query.
    * @returns {Promise<string>}
    */
-  public async csv(
-    query: IARAgingSummaryQuery
-  ): Promise<string> {
+  public async csv(query: ARAgingSummaryQueryDto): Promise<string> {
     const table = await this.ARAgingSummaryTable.table(query);
 
     const tableSheet = new TableSheet(table.table);

@@ -1,9 +1,9 @@
+import { Injectable } from '@nestjs/common';
 import { APAgingSummaryExportInjectable } from './APAgingSummaryExportInjectable';
 import { APAgingSummaryTableInjectable } from './APAgingSummaryTableInjectable';
-import { IAPAgingSummaryQuery } from './APAgingSummary.types';
 import { APAgingSummaryService } from './APAgingSummaryService';
 import { APAgingSummaryPdfInjectable } from './APAgingSummaryPdfInjectable';
-import { Injectable } from '@nestjs/common';
+import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
 @Injectable()
 export class APAgingSummaryApplication {
@@ -16,42 +16,42 @@ export class APAgingSummaryApplication {
 
   /**
    * Retrieve the A/P aging summary in sheet format.
-   * @param {IAPAgingSummaryQuery} query
+   * @param {APAgingSummaryQueryDto} query
    */
-  public sheet(query: IAPAgingSummaryQuery) {
+  public sheet(query: APAgingSummaryQueryDto) {
     return this.APAgingSummarySheet.APAgingSummary(query);
   }
 
   /**
    * Retrieve the A/P aging summary in table format.
-   * @param {IAPAgingSummaryQuery} query
+   * @param {APAgingSummaryQueryDto} query
    */
-  public table(query: IAPAgingSummaryQuery) {
+  public table(query: APAgingSummaryQueryDto) {
     return this.APAgingSummaryTable.table(query);
   }
 
   /**
    * Retrieve the A/P aging summary in CSV format.
-   * @param {IAPAgingSummaryQuery} query
+   * @param {APAgingSummaryQueryDto} query
    */
-  public csv(query: IAPAgingSummaryQuery) {
+  public csv(query: APAgingSummaryQueryDto) {
     return this.APAgingSummaryExport.csv(query);
   }
 
   /**
    * Retrieve the A/P aging summary in XLSX format.
-   * @param {IAPAgingSummaryQuery} query
+   * @param {APAgingSummaryQueryDto} query
    */
-  public xlsx(query: IAPAgingSummaryQuery) {
+  public xlsx(query: APAgingSummaryQueryDto) {
     return this.APAgingSummaryExport.xlsx(query);
   }
 
   /**
    * Retrieves the A/P aging summary in pdf format.
-   * @param {IAPAgingSummaryQuery} query
+   * @param {APAgingSummaryQueryDto} query
    * @returns {Promise<Buffer>}
    */
-  public pdf(query: IAPAgingSummaryQuery) {
+  public pdf(query: APAgingSummaryQueryDto) {
     return this.APAgingSumaryPdf.pdf(query);
   }
 }

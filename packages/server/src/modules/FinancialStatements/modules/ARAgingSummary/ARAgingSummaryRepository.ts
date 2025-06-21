@@ -1,12 +1,13 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { isEmpty, groupBy } from 'lodash';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { ModelObject } from 'objection';
-import { IARAgingSummaryQuery } from './ARAgingSummary.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 
+@Injectable({ scope: Scope.REQUEST })
 export class ARAgingSummaryRepository {
   @Inject(TenancyContext)
   private tenancyContext: TenancyContext;
@@ -19,9 +20,9 @@ export class ARAgingSummaryRepository {
 
   /**
    * Filter.
-   * @param {IARAgingSummaryQuery} filter
+   * @param {ARAgingSummaryQueryDto} filter
    */
-  filter: IARAgingSummaryQuery;
+  filter: ARAgingSummaryQueryDto;
 
   /**
    * Base currency.
@@ -61,9 +62,9 @@ export class ARAgingSummaryRepository {
 
   /**
    * Set the filter.
-   * @param {IARAgingSummaryQuery} filter
+   * @param {ARAgingSummaryQueryDto} filter
    */
-  setFilter(filter: IARAgingSummaryQuery) {
+  setFilter(filter: ARAgingSummaryQueryDto) {
     this.filter = filter;
   }
 
@@ -139,9 +140,6 @@ export class ARAgingSummaryRepository {
       .onBuild(commonQuery);
 
     this.currentInvoices = currentInvoices;
-    this.currentInvoicesByContactId = groupBy(
-      currentInvoices,
-      'customerId',
-    );
+    this.currentInvoicesByContactId = groupBy(currentInvoices, 'customerId');
   }
 }

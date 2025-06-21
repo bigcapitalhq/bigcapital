@@ -7,10 +7,7 @@ import {
   IAgingSummaryContact,
   IAgingSummaryData,
 } from '../AgingSummary/AgingSummary.types';
-
-export interface IAPAgingSummaryQuery extends IAgingSummaryQuery {
-  vendorsIds: number[];
-}
+import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
 export interface IAPAgingSummaryVendor extends IAgingSummaryContact {
   vendorName: string;
@@ -33,13 +30,13 @@ export interface IAPAgingSummaryMeta extends IFinancialSheetCommonMeta {
 }
 
 export interface IAPAgingSummaryTable extends IFinancialTable {
-  query: IAPAgingSummaryQuery;
+  query: APAgingSummaryQueryDto;
   meta: IAPAgingSummaryMeta;
 }
 
 export interface IAPAgingSummarySheet {
   data: IAPAgingSummaryData;
   meta: IAPAgingSummaryMeta;
-  query: IAPAgingSummaryQuery;
+  query: APAgingSummaryQueryDto;
   columns: any;
 }

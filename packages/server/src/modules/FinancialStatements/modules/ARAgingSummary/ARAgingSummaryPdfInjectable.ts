@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ARAgingSummaryTableInjectable } from './ARAgingSummaryTableInjectable';
-import { IARAgingSummaryQuery } from './ARAgingSummary.types';
 import { TableSheetPdf } from '../../common/TableSheetPdf';
 import { HtmlTableCss } from '../AgingSummary/_constants';
+import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 
 @Injectable()
 export class ARAgingSummaryPdfInjectable {
@@ -16,7 +16,7 @@ export class ARAgingSummaryPdfInjectable {
    * @param {IBalanceSheetQuery} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
-  public async pdf(query: IARAgingSummaryQuery): Promise<Buffer> {
+  public async pdf(query: ARAgingSummaryQueryDto): Promise<Buffer> {
     const table = await this.ARAgingSummaryTable.table(query);
 
     return this.tableSheetPdf.convertToPdf(

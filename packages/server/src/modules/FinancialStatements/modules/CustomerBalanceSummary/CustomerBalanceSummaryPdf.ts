@@ -13,7 +13,7 @@ export class CustomerBalanceSummaryPdf {
 
   /**
    * Converts the given customer balance summary sheet table to pdf.
-   * @param {IAPAgingSummaryQuery} query - Balance sheet query.
+   * @param {ICustomerBalanceSummaryQuery} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
   public async pdf(query: ICustomerBalanceSummaryQuery): Promise<Buffer> {

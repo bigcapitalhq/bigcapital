@@ -1,7 +1,6 @@
 import { sum, isEmpty } from 'lodash';
 import * as R from 'ramda';
 import {
-  IAPAgingSummaryQuery,
   IAPAgingSummaryData,
   IAPAgingSummaryVendor,
   IAPAgingSummaryColumns,
@@ -13,21 +12,24 @@ import { ModelObject } from 'objection';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { APAgingSummaryRepository } from './APAgingSummaryRepository';
+import { Bill } from '@/modules/Bills/models/Bill';
+import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
 export class APAgingSummarySheet extends AgingSummaryReport {
   readonly repository: APAgingSummaryRepository;
-  readonly query: IAPAgingSummaryQuery;
+  readonly query: APAgingSummaryQueryDto;
   readonly agingPeriods: IAgingPeriod[];
+
+  readonly overdueInvoicesByContactId: Record<string, Array<ModelObject<Bill>>>;
+  readonly currentInvoicesByContactId: Record<number, Array<ModelObject<Bill>>>;
 
   /**
    * Constructor method.
-   * @param {number} tenantId - Tenant id.
-   * @param {IAPAgingSummaryQuery} query - Report query.
-   * @param {ModelObject<Vendor>[]} vendors - Unpaid bills.
-   * @param {string} baseCurrency - Base currency of the organization.
+   * @param {APAgingSummaryQueryDto} query - Report query.
+   * @param {APAgingSummaryRepository} repository - Repository
    */
   constructor(
-    query: IAPAgingSummaryQuery,
+    query: APAgingSummaryQueryDto,
     repository: APAgingSummaryRepository,
   ) {
     super();
@@ -35,6 +37,9 @@ export class APAgingSummarySheet extends AgingSummaryReport {
     this.query = query;
     this.repository = repository;
     this.numberFormat = this.query.numberFormat;
+
+    this.overdueInvoicesByContactId = this.repository.overdueBillsByVendorId;
+    this.currentInvoicesByContactId = this.repository.dueBillsByVendorId;
 
     // Initializes the aging periods.
     this.agingPeriods = this.agingRangePeriods(

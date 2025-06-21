@@ -1,12 +1,13 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { isEmpty, groupBy } from 'lodash';
+import { ModelObject } from 'objection';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
-import { IAPAgingSummaryQuery } from './APAgingSummary.types';
-import { ModelObject } from 'objection';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
+@Injectable({ scope: Scope.REQUEST })
 export class APAgingSummaryRepository {
   @Inject(Vendor.name)
   private readonly vendorModel: TenantModelProxy<typeof Vendor>;
@@ -18,10 +19,10 @@ export class APAgingSummaryRepository {
   private readonly tenancyContext: TenancyContext;
 
   /**
-   * Filter.
-   * @param {IAPAgingSummaryQuery} filter
+   * A/P aging filter.
+   * @param {APAgingSummaryQueryDto} filter
    */
-  filter: IAPAgingSummaryQuery;
+  filter: APAgingSummaryQueryDto;
 
   /**
    * Due bills.
@@ -45,7 +46,7 @@ export class APAgingSummaryRepository {
    * Overdue bills by vendor id.
    * @param {Record<string, Bill[]>} overdueBillsByVendorId - Overdue bills by vendor id.
    */
-  overdueBillsByVendorId: ModelObject<Bill>[];
+  overdueBillsByVendorId: Record<string, Array<ModelObject<Bill>>>;
 
   /**
    * Vendors.
@@ -61,9 +62,9 @@ export class APAgingSummaryRepository {
 
   /**
    * Set the filter.
-   * @param {IAPAgingSummaryQuery} filter
+   * @param {APAgingSummaryQueryDto} filter
    */
-  setFilter(filter: IAPAgingSummaryQuery) {
+  setFilter(filter: APAgingSummaryQueryDto) {
     this.filter = filter;
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TableSheet } from '../../common/TableSheet';
-import { IAPAgingSummaryQuery } from './APAgingSummary.types';
 import { APAgingSummaryTableInjectable } from './APAgingSummaryTableInjectable';
+import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
 @Injectable()
 export class APAgingSummaryExportInjectable {
@@ -11,10 +11,10 @@ export class APAgingSummaryExportInjectable {
 
   /**
    * Retrieves the A/P aging summary sheet in XLSX format.
-   * @param {IAPAgingSummaryQuery} query
+   * @param {APAgingSummaryQueryDto} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(query: IAPAgingSummaryQuery) {
+  public async xlsx(query: APAgingSummaryQueryDto) {
     const table = await this.APAgingSummaryTable.table(query);
 
     const tableSheet = new TableSheet(table.table);
@@ -25,10 +25,10 @@ export class APAgingSummaryExportInjectable {
 
   /**
    * Retrieves the A/P aging summary sheet in CSV format.
-   * @param {IAPAgingSummaryQuery} query
+   * @param {APAgingSummaryQueryDto} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(query: IAPAgingSummaryQuery): Promise<string> {
+  public async csv(query: APAgingSummaryQueryDto): Promise<string> {
     const table = await this.APAgingSummaryTable.table(query);
 
     const tableSheet = new TableSheet(table.table);

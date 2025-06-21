@@ -1,10 +1,10 @@
-import { IARAgingSummaryQuery } from './ARAgingSummary.types';
 import { Controller, Get, Headers } from '@nestjs/common';
 import { Query, Res } from '@nestjs/common';
 import { ARAgingSummaryApplication } from './ARAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 
 @Controller('reports/receivable-aging-summary')
 @ApiTags('Reports')
@@ -14,7 +14,7 @@ export class ARAgingSummaryController {
   @Get()
   @ApiOperation({ summary: 'Get receivable aging summary' })
   public async get(
-    @Query() filter: IARAgingSummaryQuery,
+    @Query() filter: ARAgingSummaryQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

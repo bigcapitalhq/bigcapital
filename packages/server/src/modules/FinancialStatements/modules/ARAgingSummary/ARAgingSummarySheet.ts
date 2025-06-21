@@ -2,7 +2,6 @@ import * as R from 'ramda';
 import { isEmpty, sum } from 'lodash';
 import { IAgingPeriod } from '../AgingSummary/AgingSummary.types';
 import {
-  IARAgingSummaryQuery,
   IARAgingSummaryCustomer,
   IARAgingSummaryData,
   IARAgingSummaryColumns,
@@ -11,23 +10,31 @@ import {
 import { AgingSummaryReport } from '../AgingSummary/AgingSummary';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { ModelObject } from 'objection';
-import { Customer } from '@/modules/Customers/models/Customer';
 import { ARAgingSummaryRepository } from './ARAgingSummaryRepository';
+import { Customer } from '@/modules/Customers/models/Customer';
+import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
+import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 
 export class ARAgingSummarySheet extends AgingSummaryReport {
-  readonly query: IARAgingSummaryQuery;
+  readonly query: ARAgingSummaryQueryDto;
   readonly agingPeriods: IAgingPeriod[];
   readonly repository: ARAgingSummaryRepository;
+  readonly overdueInvoicesByContactId: Record<
+    string,
+    ModelObject<SaleInvoice>[]
+  >;
+  readonly currentInvoicesByContactId: Record<
+    number,
+    Array<ModelObject<SaleInvoice>>
+  >;
 
   /**
    * Constructor method.
-   * @param {number} tenantId
-   * @param {IARAgingSummaryQuery} query
-   * @param {ICustomer[]} customers
-   * @param {IJournalPoster} journal
+   * @param {ARAgingSummaryQueryDto} query - Query
+   * @param {ARAgingSummaryRepository} repository - Repository.
    */
   constructor(
-    query: IARAgingSummaryQuery,
+    query: ARAgingSummaryQueryDto,
     repository: ARAgingSummaryRepository,
   ) {
     super();
@@ -35,6 +42,11 @@ export class ARAgingSummarySheet extends AgingSummaryReport {
     this.query = query;
     this.repository = repository;
     this.numberFormat = this.query.numberFormat;
+
+    this.overdueInvoicesByContactId =
+      this.repository.overdueInvoicesByContactId;
+    this.currentInvoicesByContactId =
+      this.repository.currentInvoicesByContactId;
 
     // Initializes the aging periods.
     this.agingPeriods = this.agingRangePeriods(

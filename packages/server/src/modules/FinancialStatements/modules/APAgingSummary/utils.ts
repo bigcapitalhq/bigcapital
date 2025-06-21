@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export const getAPAgingSummaryDefaultQuery = () => {
   return {
     asDate: moment().format('YYYY-MM-DD'),

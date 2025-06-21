@@ -1,8 +1,7 @@
+import { Response } from 'express';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { APAgingSummaryApplication } from './APAgingSummaryApplication';
-import { IAPAgingSummaryQuery } from './APAgingSummary.types';
 import { AcceptType } from '@/constants/accept-type';
-import { Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
