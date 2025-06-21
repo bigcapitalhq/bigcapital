@@ -19,7 +19,6 @@ export class InventoryItemDetailsApplication {
 
   /**
    * Retrieves the inventory details report in sheet format.
-   * @param {number} tenantId
    * @param {IInventoryDetailsQuery} query
    * @returns {Promise<IInvetoryItemDetailDOO>}
    */

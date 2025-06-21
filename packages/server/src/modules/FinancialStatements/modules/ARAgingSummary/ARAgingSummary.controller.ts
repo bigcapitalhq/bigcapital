@@ -3,7 +3,7 @@ import { Query, Res } from '@nestjs/common';
 import { ARAgingSummaryApplication } from './ARAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiProduces, ApiTags } from '@nestjs/swagger';
 import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 
 @Controller('reports/receivable-aging-summary')
@@ -13,6 +13,13 @@ export class ARAgingSummaryController {
 
   @Get()
   @ApiOperation({ summary: 'Get receivable aging summary' })
+  @ApiProduces(
+    AcceptType.ApplicationJson,
+    AcceptType.ApplicationJsonTable,
+    AcceptType.ApplicationPdf,
+    AcceptType.ApplicationXlsx,
+    AcceptType.ApplicationCsv,
+  )
   public async get(
     @Query() filter: ARAgingSummaryQueryDto,
     @Res({ passthrough: true }) res: Response,

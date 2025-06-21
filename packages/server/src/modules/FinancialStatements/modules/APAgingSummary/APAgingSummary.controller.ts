@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { APAgingSummaryApplication } from './APAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiProduces, ApiTags } from '@nestjs/swagger';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 
 @Controller('reports/payable-aging-summary')
@@ -12,6 +12,13 @@ export class APAgingSummaryController {
 
   @Get()
   @ApiOperation({ summary: 'Get payable aging summary' })
+  @ApiProduces(
+    AcceptType.ApplicationJson,
+    AcceptType.ApplicationJsonTable,
+    AcceptType.ApplicationPdf,
+    AcceptType.ApplicationXlsx,
+    AcceptType.ApplicationCsv,
+  )
   public async get(
     @Query() filter: APAgingSummaryQueryDto,
     @Res({ passthrough: true }) res: Response,

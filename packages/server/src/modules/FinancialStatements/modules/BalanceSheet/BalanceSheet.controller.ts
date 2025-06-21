@@ -2,7 +2,12 @@ import { Response } from 'express';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { AcceptType } from '@/constants/accept-type';
 import { BalanceSheetApplication } from './BalanceSheetApplication';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiProduces,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { BalanceSheetQueryDto } from './BalanceSheet.dto';
 import { BalanceSheetResponseExample } from './BalanceSheet.swagger';
 
@@ -24,6 +29,13 @@ export class BalanceSheetStatementController {
     description: 'Balance sheet statement',
     example: BalanceSheetResponseExample,
   })
+  @ApiProduces(
+    AcceptType.ApplicationJson,
+    AcceptType.ApplicationJsonTable,
+    AcceptType.ApplicationPdf,
+    AcceptType.ApplicationXlsx,
+    AcceptType.ApplicationCsv,
+  )
   public async balanceSheet(
     @Query() query: BalanceSheetQueryDto,
     @Res({ passthrough: true }) res: Response,

@@ -1,4 +1,9 @@
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiProduces,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { GeneralLedgerApplication } from './GeneralLedgerApplication';
@@ -20,6 +25,13 @@ export class GeneralLedgerController {
     example: GeneralLedgerResponseExample,
   })
   @ApiOperation({ summary: 'Get general ledger report' })
+  @ApiProduces(
+    AcceptType.ApplicationJson,
+    AcceptType.ApplicationJsonTable,
+    AcceptType.ApplicationPdf,
+    AcceptType.ApplicationXlsx,
+    AcceptType.ApplicationCsv,
+  )
   public async getGeneralLedger(
     @Query() query: GeneralLedgerQueryDto,
     @Res({ passthrough: true }) res: Response,

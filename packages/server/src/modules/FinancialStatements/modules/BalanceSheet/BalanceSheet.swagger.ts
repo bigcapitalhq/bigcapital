@@ -499,3 +499,737 @@ export const BalanceSheetResponseExample = {
     formatted_date_range: 'As 2025/06/16',
   },
 };
+
+export const BalanceSheetTableResponseExample = {
+  table: {
+    columns: [
+      {
+        key: 'name',
+        label: 'Account name',
+        cell_index: 0,
+      },
+      {
+        key: 'total',
+        label: 'Total',
+        children: [],
+        cell_index: 1,
+      },
+    ],
+    rows: [
+      {
+        cells: [
+          {
+            key: 'name',
+            value: 'Assets',
+          },
+          {
+            key: 'total',
+            value: '-$122,623.00',
+          },
+        ],
+        row_types: ['AGGREGATE'],
+        id: 'ASSETS',
+        children: [
+          {
+            cells: [
+              {
+                key: 'name',
+                value: 'Current Asset',
+              },
+              {
+                key: 'total',
+                value: '-$122,623.00',
+              },
+            ],
+            row_types: ['AGGREGATE'],
+            id: 'CURRENT_ASSETS',
+            children: [
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Cash and cash equivalents',
+                  },
+                  {
+                    key: 'total',
+                    value: '-$500.00',
+                  },
+                ],
+                row_types: ['AGGREGATE'],
+                id: 'CASH_EQUIVALENTS',
+                children: [
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Undeposited Funds',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1002,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Petty Cash',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1003,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Bank Account',
+                      },
+                      {
+                        key: 'total',
+                        value: '-500.00',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1000,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Saving Bank Account',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1001,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Chase - Plaid Checking',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1034,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Total Cash and cash equivalents',
+                      },
+                      {
+                        key: 'total',
+                        value: '-$500.00',
+                      },
+                    ],
+                    row_types: ['TOTAL'],
+                    id: 'CASH_EQUIVALENTS',
+                  },
+                ],
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Accounts Receivable',
+                  },
+                  {
+                    key: 'total',
+                    value: '$0.00',
+                  },
+                ],
+                row_types: ['AGGREGATE'],
+                id: 'ACCOUNTS_RECEIVABLE',
+                children: [
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Accounts Receivable (A/R)',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1006,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Total Accounts Receivable',
+                      },
+                      {
+                        key: 'total',
+                        value: '$0.00',
+                      },
+                    ],
+                    row_types: ['TOTAL'],
+                    id: 'ACCOUNTS_RECEIVABLE',
+                  },
+                ],
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Inventory',
+                  },
+                  {
+                    key: 'total',
+                    value: '$1,000.00',
+                  },
+                ],
+                row_types: ['AGGREGATE'],
+                id: 'INVENTORY',
+                children: [
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Inventory Asset',
+                      },
+                      {
+                        key: 'total',
+                        value: '1,000.00',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1007,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Total Inventory',
+                      },
+                      {
+                        key: 'total',
+                        value: '$1,000.00',
+                      },
+                    ],
+                    row_types: ['TOTAL'],
+                    id: 'INVENTORY',
+                  },
+                ],
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Other current assets',
+                  },
+                  {
+                    key: 'total',
+                    value: '-$123,123.00',
+                  },
+                ],
+                row_types: ['AGGREGATE'],
+                id: 'OTHER_CURRENT_ASSET',
+                children: [
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Prepaid Expenses',
+                      },
+                      {
+                        key: 'total',
+                        value: '-123,123.00',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1030,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Total Other current assets',
+                      },
+                      {
+                        key: 'total',
+                        value: '-$123,123.00',
+                      },
+                    ],
+                    row_types: ['TOTAL'],
+                    id: 'OTHER_CURRENT_ASSET',
+                  },
+                ],
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Total Current Asset',
+                  },
+                  {
+                    key: 'total',
+                    value: '-$122,623.00',
+                  },
+                ],
+                row_types: ['TOTAL'],
+                id: 'CURRENT_ASSETS',
+              },
+            ],
+          },
+          {
+            cells: [
+              {
+                key: 'name',
+                value: 'Fixed Asset',
+              },
+              {
+                key: 'total',
+                value: '$0.00',
+              },
+            ],
+            row_types: ['AGGREGATE'],
+            id: 'FIXED_ASSET',
+            children: [
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Computer Equipment',
+                  },
+                  {
+                    key: 'total',
+                    value: '',
+                  },
+                ],
+                row_types: ['ACCOUNT'],
+                id: 1004,
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Office Equipment',
+                  },
+                  {
+                    key: 'total',
+                    value: '',
+                  },
+                ],
+                row_types: ['ACCOUNT'],
+                id: 1005,
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Total Fixed Asset',
+                  },
+                  {
+                    key: 'total',
+                    value: '$0.00',
+                  },
+                ],
+                row_types: ['TOTAL'],
+                id: 'FIXED_ASSET',
+              },
+            ],
+          },
+          {
+            cells: [
+              {
+                key: 'name',
+                value: 'Non-Current Assets',
+              },
+              {
+                key: 'total',
+                value: '$0.00',
+              },
+            ],
+            row_types: ['AGGREGATE'],
+            id: 'NON_CURRENT_ASSET',
+          },
+          {
+            cells: [
+              {
+                key: 'name',
+                value: 'Total Assets',
+              },
+              {
+                key: 'total',
+                value: '-$122,623.00',
+              },
+            ],
+            row_types: ['TOTAL'],
+            id: 'ASSETS',
+          },
+        ],
+      },
+      {
+        cells: [
+          {
+            key: 'name',
+            value: 'Liabilities and Equity',
+          },
+          {
+            key: 'total',
+            value: '-$122,623.00',
+          },
+        ],
+        row_types: ['AGGREGATE'],
+        id: 'LIABILITY_EQUITY',
+        children: [
+          {
+            cells: [
+              {
+                key: 'name',
+                value: 'Liabilities',
+              },
+              {
+                key: 'total',
+                value: '-$8,700.00',
+              },
+            ],
+            row_types: ['AGGREGATE'],
+            id: 'LIABILITY',
+            children: [
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Current Liabilties',
+                  },
+                  {
+                    key: 'total',
+                    value: '-$8,700.00',
+                  },
+                ],
+                row_types: ['AGGREGATE'],
+                id: 'CURRENT_LIABILITY',
+                children: [
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Accounts Payable (A/P)',
+                      },
+                      {
+                        key: 'total',
+                        value: '1,300.00',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1008,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Tax Payable',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1013,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Owner A Drawings',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1009,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Loan',
+                      },
+                      {
+                        key: 'total',
+                        value: '-10,000.00',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1010,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Opening Balance Liabilities',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1011,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Revenue Received in Advance',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1012,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Unearned Revenue',
+                      },
+                      {
+                        key: 'total',
+                        value: '',
+                      },
+                    ],
+                    row_types: ['ACCOUNT'],
+                    id: 1029,
+                  },
+                  {
+                    cells: [
+                      {
+                        key: 'name',
+                        value: 'Total Current Liabilties',
+                      },
+                      {
+                        key: 'total',
+                        value: '-$8,700.00',
+                      },
+                    ],
+                    row_types: ['TOTAL'],
+                    id: 'CURRENT_LIABILITY',
+                  },
+                ],
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Long-Term Liabilities',
+                  },
+                  {
+                    key: 'total',
+                    value: '$0.00',
+                  },
+                ],
+                row_types: ['AGGREGATE'],
+                id: 'LOGN_TERM_LIABILITY',
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Non-Current Liabilities',
+                  },
+                  {
+                    key: 'total',
+                    value: '$0.00',
+                  },
+                ],
+                row_types: ['AGGREGATE'],
+                id: 'NON_CURRENT_LIABILITY',
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Total Liabilities',
+                  },
+                  {
+                    key: 'total',
+                    value: '-$8,700.00',
+                  },
+                ],
+                row_types: ['TOTAL'],
+                id: 'LIABILITY',
+              },
+            ],
+          },
+          {
+            cells: [
+              {
+                key: 'name',
+                value: 'Equity',
+              },
+              {
+                key: 'total',
+                value: '-$113,923.00',
+              },
+            ],
+            row_types: ['AGGREGATE'],
+            id: 'EQUITY',
+            children: [
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Retained Earnings',
+                  },
+                  {
+                    key: 'total',
+                    value: '',
+                  },
+                ],
+                row_types: ['ACCOUNT'],
+                id: 1014,
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Opening Balance Equity',
+                  },
+                  {
+                    key: 'total',
+                    value: '',
+                  },
+                ],
+                row_types: ['ACCOUNT'],
+                id: 1015,
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: "Owner's Equity",
+                  },
+                  {
+                    key: 'total',
+                    value: '',
+                  },
+                ],
+                row_types: ['ACCOUNT'],
+                id: 1016,
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Drawings',
+                  },
+                  {
+                    key: 'total',
+                    value: '',
+                  },
+                ],
+                row_types: ['ACCOUNT'],
+                id: 1017,
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Net Income',
+                  },
+                  {
+                    key: 'total',
+                    value: '-$113,923.00',
+                  },
+                ],
+                row_types: ['NET_INCOME'],
+                id: 'NET_INCOME',
+              },
+              {
+                cells: [
+                  {
+                    key: 'name',
+                    value: 'Total Equity',
+                  },
+                  {
+                    key: 'total',
+                    value: '-$113,923.00',
+                  },
+                ],
+                row_types: ['TOTAL'],
+                id: 'EQUITY',
+              },
+            ],
+          },
+          {
+            cells: [
+              {
+                key: 'name',
+                value: 'Total Liabilities and Equity',
+              },
+              {
+                key: 'total',
+                value: '-$122,623.00',
+              },
+            ],
+            row_types: ['TOTAL'],
+            id: 'LIABILITY_EQUITY',
+          },
+        ],
+      },
+    ],
+  },
+  query: {
+    display_columns_type: 'total',
+    display_columns_by: 'year',
+    from_date: '2025-01-01',
+    to_date: '2025-06-21',
+    number_format: {
+      precision: 2,
+      divide_on1000: false,
+      show_zero: false,
+      format_money: 'total',
+      negative_format: 'mines',
+    },
+    none_zero: false,
+    none_transactions: false,
+    basis: 'cash',
+    account_ids: [],
+    percentage_of_column: false,
+    percentage_of_row: false,
+    previous_period: false,
+    previous_period_amount_change: false,
+    previous_period_percentage_change: false,
+    previous_year: false,
+    previous_year_amount_change: false,
+    previous_year_percentage_change: false,
+  },
+  meta: {
+    organization_name: 'BIGCAPITAL, INC',
+    base_currency: 'USD',
+    date_format: 'DD MMM yyyy',
+    is_cost_compute_running: false,
+    sheet_name: 'Balance Sheet Statement',
+    formatted_as_date: '2025/06/21',
+    formatted_date_range: 'As 2025/06/21',
+  },
+};

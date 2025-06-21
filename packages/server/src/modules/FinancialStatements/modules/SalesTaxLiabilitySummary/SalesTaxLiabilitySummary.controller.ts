@@ -1,9 +1,14 @@
 import { Response } from 'express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiProduces,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
-import { SalesTaxLiabilitySummaryQuery } from './SalesTaxLiability.types';
 import { AcceptType } from '@/constants/accept-type';
 import { SalesTaxLiabilitySummaryApplication } from './SalesTaxLiabilitySummaryApplication';
+import { SalesTaxLiabilitySummaryQueryDto } from './dtos/SalesTaxLiabilityQuery.dto';
 
 @Controller('/reports/sales-tax-liability-summary')
 @ApiTags('Reports')
@@ -18,8 +23,15 @@ export class SalesTaxLiabilitySummaryController {
     description: 'Sales tax liability summary report',
   })
   @ApiOperation({ summary: 'Get sales tax liability summary report' })
+  @ApiProduces(
+    AcceptType.ApplicationJson,
+    AcceptType.ApplicationJsonTable,
+    AcceptType.ApplicationPdf,
+    AcceptType.ApplicationXlsx,
+    AcceptType.ApplicationCsv,
+  )
   public async getSalesTaxLiabilitySummary(
-    @Query() query: SalesTaxLiabilitySummaryQuery,
+    @Query() query: SalesTaxLiabilitySummaryQueryDto,
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {

@@ -1,5 +1,10 @@
 import { Response } from 'express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiProduces,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { CustomerBalanceSummaryApplication } from './CustomerBalanceSummaryApplication';
 import { CustomerBalanceSummaryQueryDto } from './CustomerBalanceSummaryQuery.dto';
@@ -15,6 +20,13 @@ export class CustomerBalanceSummaryController {
   @Get()
   @ApiResponse({ status: 200, description: 'Customer balance summary report' })
   @ApiOperation({ summary: 'Get customer balance summary report' })
+  @ApiProduces(
+    AcceptType.ApplicationJson,
+    AcceptType.ApplicationJsonTable,
+    AcceptType.ApplicationPdf,
+    AcceptType.ApplicationXlsx,
+    AcceptType.ApplicationCsv,
+  )
   async customerBalanceSummary(
     @Query() filter: CustomerBalanceSummaryQueryDto,
     @Res({ passthrough: true }) res: Response,

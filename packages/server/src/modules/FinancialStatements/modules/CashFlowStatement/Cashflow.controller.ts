@@ -2,7 +2,12 @@ import { Response } from 'express';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { AcceptType } from '@/constants/accept-type';
 import { CashflowSheetApplication } from './CashflowSheetApplication';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiProduces,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CashFlowStatementQueryDto } from './CashFlowStatementQuery.dto';
 import { CashflowStatementResponseExample } from './CashflowStatement.swagger';
 
@@ -18,6 +23,13 @@ export class CashflowController {
     example: CashflowStatementResponseExample,
   })
   @ApiOperation({ summary: 'Get cashflow statement report' })
+  @ApiProduces(
+    AcceptType.ApplicationJson,
+    AcceptType.ApplicationJsonTable,
+    AcceptType.ApplicationPdf,
+    AcceptType.ApplicationXlsx,
+    AcceptType.ApplicationCsv,
+  )
   async getCashflow(
     @Query() query: CashFlowStatementQueryDto,
     @Res({ passthrough: true }) res: Response,
