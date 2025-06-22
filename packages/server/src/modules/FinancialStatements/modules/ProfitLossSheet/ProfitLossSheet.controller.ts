@@ -9,6 +9,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ProfitLossSheetQueryDto } from './ProfitLossSheetQuery.dto';
+import { ProfitLossSheetResponseExample } from './ProfitLossSheet.swagger';
 
 @Controller('/reports/profit-loss-sheet')
 @ApiTags('Reports')
@@ -24,7 +25,11 @@ export class ProfitLossSheetController {
    * @param {string} acceptHeader
    */
   @Get('/')
-  @ApiResponse({ status: 200, description: 'Profit & loss statement' })
+  @ApiResponse({
+    status: 200,
+    description: 'Profit & loss statement',
+    example: ProfitLossSheetResponseExample,
+  })
   @ApiOperation({ summary: 'Get profit/loss statement report' })
   @ApiProduces(
     AcceptType.ApplicationJson,
