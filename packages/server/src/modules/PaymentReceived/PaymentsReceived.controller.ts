@@ -1,4 +1,10 @@
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -22,9 +28,15 @@ import {
   EditPaymentReceivedDto,
 } from './dtos/PaymentReceived.dto';
 import { AcceptType } from '@/constants/accept-type';
+import { PaymentReceivedResponseDto } from './dtos/PaymentReceivedResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { PaymentReceivedStateResponseDto } from './dtos/PaymentReceivedStateResponse.dto';
 
 @Controller('payments-received')
 @ApiTags('Payments Received')
+@ApiExtraModels(PaymentReceivedResponseDto)
+@ApiExtraModels(PaginatedResponseDto)
+@ApiExtraModels(PaymentReceivedStateResponseDto)
 export class PaymentReceivesController {
   constructor(private paymentReceivesApplication: PaymentReceivesApplication) {}
 
@@ -106,6 +118,23 @@ export class PaymentReceivesController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the payment received list.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The payment received has been retrieved successfully.',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(PaymentReceivedResponseDto) },
+            },
+          },
+        },
+      ],
+    },
+  })
   public getPaymentsReceived(
     @Query() filterDTO: Partial<IPaymentsReceivedFilter>,
   ) {
@@ -117,6 +146,9 @@ export class PaymentReceivesController {
   @ApiResponse({
     status: 200,
     description: 'The payment received state has been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(PaymentReceivedStateResponseDto),
+    },
   })
   public getPaymentReceivedState() {
     return this.paymentReceivesApplication.getPaymentReceivedState();
@@ -143,6 +175,9 @@ export class PaymentReceivesController {
     status: 200,
     description:
       'The payment received details have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(PaymentReceivedResponseDto),
+    },
   })
   public async getPaymentReceive(
     @Param('id', ParseIntPipe) paymentReceiveId: number,

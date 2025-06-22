@@ -1,4 +1,11 @@
-import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   Controller,
   Post,
@@ -12,9 +19,13 @@ import {
 import { BillsApplication } from './Bills.application';
 import { IBillsFilter } from './Bills.types';
 import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
+import { BillResponseDto } from './dtos/BillResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 
 @Controller('bills')
 @ApiTags('Bills')
+@ApiExtraModels(BillResponseDto)
+@ApiExtraModels(PaginatedResponseDto)
 export class BillsController {
   constructor(private billsApplication: BillsApplication) {}
 
@@ -50,6 +61,23 @@ export class BillsController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the bills.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The bill details has been retrieved successfully',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(BillResponseDto) },
+            },
+          },
+        },
+      ],
+    },
+  })
   @ApiParam({
     name: 'id',
     required: true,
@@ -61,7 +89,9 @@ export class BillsController {
   }
 
   @Get(':id/payment-transactions')
-  @ApiOperation({ summary: 'Retrieve the specific bill associated payment transactions.' })
+  @ApiOperation({
+    summary: 'Retrieve the specific bill associated payment transactions.',
+  })
   @ApiParam({
     name: 'id',
     required: true,
@@ -74,6 +104,13 @@ export class BillsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieves the bill details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The bill details have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(BillResponseDto),
+    },
+  })
   @ApiParam({
     name: 'id',
     required: true,

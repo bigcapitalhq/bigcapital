@@ -117,7 +117,10 @@ export class AccountsController {
     status: 200,
     description: 'The account types have been successfully retrieved.',
     schema: {
-      $ref: getSchemaPath(AccountTypeResponseDto),
+      type: 'array',
+      items: {
+        $ref: getSchemaPath(AccountTypeResponseDto),
+      },
     },
   })
   async getAccountTypes() {

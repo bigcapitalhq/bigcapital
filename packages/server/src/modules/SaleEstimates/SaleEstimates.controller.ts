@@ -1,4 +1,11 @@
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -25,9 +32,15 @@ import {
 } from './dtos/SaleEstimate.dto';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
+import { SaleEstimateResponseDto } from './dtos/SaleEstimateResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { SaleEstiamteStateResponseDto } from './dtos/SaleEstimateStateResponse.dto';
 
 @Controller('sale-estimates')
 @ApiTags('Sale Estimates')
+@ApiExtraModels(SaleEstimateResponseDto)
+@ApiExtraModels(PaginatedResponseDto)
+@ApiExtraModels(SaleEstiamteStateResponseDto)
 export class SaleEstimatesController {
   /**
    * @param {SaleEstimatesApplication} saleEstimatesApplication - Sale estimates application.
@@ -101,6 +114,9 @@ export class SaleEstimatesController {
   @ApiResponse({
     status: 200,
     description: 'Sale estimate state retrieved successfully',
+    schema: {
+      $ref: getSchemaPath(SaleEstiamteStateResponseDto),
+    },
   })
   public getSaleEstimateState() {
     return this.saleEstimatesApplication.getSaleEstimateState();
@@ -111,6 +127,19 @@ export class SaleEstimatesController {
   @ApiResponse({
     status: 200,
     description: 'Sale estimates retrieved successfully',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(SaleEstimateResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(SaleEstimateResponseDto) },
+            },
+          },
+        },
+      ],
+    },
   })
   public getSaleEstimates(@Query() filterDTO: ISalesEstimatesFilter) {
     return this.saleEstimatesApplication.getSaleEstimates(filterDTO);
@@ -224,7 +253,16 @@ export class SaleEstimatesController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Retrieves the sale estimate details.' })
+  @ApiOperation({
+    summary: 'Retrieves the sale estimate details.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale estimate details have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(SaleEstimateResponseDto),
+    },
+  })
   @ApiParam({
     name: 'id',
     required: true,

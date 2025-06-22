@@ -9,16 +9,27 @@ import {
   Query,
 } from '@nestjs/common';
 import { BillPaymentsApplication } from './BillPaymentsApplication.service';
-import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   CreateBillPaymentDto,
   EditBillPaymentDto,
 } from './dtos/BillPayment.dto';
 import { GetBillPaymentsFilterDto } from './dtos/GetBillPaymentsFilter.dto';
 import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
+import { BillPaymentResponseDto } from './dtos/BillPaymentResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 
 @Controller('bill-payments')
 @ApiTags('Bill Payments')
+@ApiExtraModels(BillPaymentResponseDto)
+@ApiExtraModels(PaginatedResponseDto)
 export class BillPaymentsController {
   constructor(
     private billPaymentsApplication: BillPaymentsApplication,
@@ -114,6 +125,13 @@ export class BillPaymentsController {
 
   @Get(':billPaymentId')
   @ApiOperation({ summary: 'Retrieves the bill payment details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The bill payment details have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(BillPaymentResponseDto),
+    },
+  })
   @ApiParam({
     name: 'billPaymentId',
     required: true,
@@ -126,6 +144,23 @@ export class BillPaymentsController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the bill payments list.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The bill payments have been successfully retrieved.',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(BillPaymentResponseDto) },
+            },
+          },
+        },
+      ],
+    },
+  })
   @ApiParam({
     name: 'filterDTO',
     required: true,

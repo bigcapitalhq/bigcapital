@@ -13,7 +13,14 @@ import {
   Res,
 } from '@nestjs/common';
 import { SaleReceiptApplication } from './SaleReceiptApplication.service';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   CreateSaleReceiptDto,
   EditSaleReceiptDto,
@@ -21,9 +28,15 @@ import {
 import { ISalesReceiptsFilter } from './types/SaleReceipts.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
+import { SaleReceiptResponseDto } from './dtos/SaleReceiptResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { SaleReceiptStateResponseDto } from './dtos/SaleReceiptState.dto';
 
 @Controller('sale-receipts')
 @ApiTags('Sale Receipts')
+@ApiExtraModels(SaleReceiptResponseDto)
+@ApiExtraModels(PaginatedResponseDto)
+@ApiExtraModels(SaleReceiptStateResponseDto)
 export class SaleReceiptsController {
   constructor(private saleReceiptApplication: SaleReceiptApplication) {}
 
@@ -48,6 +61,13 @@ export class SaleReceiptsController {
 
   @Get('state')
   @ApiOperation({ summary: 'Retrieves the sale receipt state.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale receipt has been retrieved.',
+    schema: {
+      $ref: getSchemaPath(SaleReceiptStateResponseDto),
+    },
+  })
   getSaleReceiptState() {
     return this.saleReceiptApplication.getSaleReceiptState();
   }
@@ -85,6 +105,9 @@ export class SaleReceiptsController {
   @ApiResponse({
     status: 200,
     description: 'The sale receipt details have been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(SaleReceiptResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The sale receipt not found.' })
   @ApiParam({
@@ -119,6 +142,23 @@ export class SaleReceiptsController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the sale receipts paginated list' })
+  @ApiResponse({
+    status: 200,
+    description: '',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(SaleReceiptResponseDto) },
+            },
+          },
+        },
+      ],
+    },
+  })
   getSaleReceipts(@Query() filterDTO: Partial<ISalesReceiptsFilter>) {
     return this.saleReceiptApplication.getSaleReceipts(filterDTO);
   }

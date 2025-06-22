@@ -46,7 +46,6 @@ export class GetInventoryAdjustmentsService {
       this.inventoryAdjustmentModel(),
       filter,
     );
-
     const { results, pagination } = await this.inventoryAdjustmentModel()
       .query()
       .onBuild((query) => {
@@ -62,10 +61,7 @@ export class GetInventoryAdjustmentsService {
       results,
       new InventoryAdjustmentTransformer(),
     );
-    return {
-      data,
-      pagination,
-    };
+    return { data, pagination };
   }
 
   /**

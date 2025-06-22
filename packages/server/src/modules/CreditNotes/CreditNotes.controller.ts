@@ -1,4 +1,11 @@
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiExtraModels,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -12,9 +19,13 @@ import {
 import { CreditNoteApplication } from './CreditNoteApplication.service';
 import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
+import { CreditNoteResponseDto } from './dtos/CreditNoteResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 
 @Controller('credit-notes')
 @ApiTags('Credit Notes')
+@ApiExtraModels(CreditNoteResponseDto)
+@ApiExtraModels(PaginatedResponseDto)
 export class CreditNotesController {
   /**
    * @param {CreditNoteApplication} creditNoteApplication - The credit note application service.
@@ -39,7 +50,13 @@ export class CreditNotesController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a specific credit note by ID' })
   @ApiParam({ name: 'id', description: 'Credit note ID', type: 'number' })
-  @ApiResponse({ status: 200, description: 'Returns the credit note' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the credit note',
+    schema: {
+      $ref: getSchemaPath(CreditNoteResponseDto),
+    },
+  })
   @ApiResponse({ status: 404, description: 'Credit note not found' })
   getCreditNote(@Param('id') creditNoteId: number) {
     return this.creditNoteApplication.getCreditNote(creditNoteId);
@@ -47,7 +64,23 @@ export class CreditNotesController {
 
   @Get()
   @ApiOperation({ summary: 'Get all credit notes' })
-  @ApiResponse({ status: 200, description: 'Returns a list of credit notes' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns a list of credit notes',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(CreditNoteResponseDto) },
+            },
+          },
+        },
+      ],
+    },
+  })
   getCreditNotes(@Query() creditNotesQuery: ICreditNotesQueryDTO) {
     return this.creditNoteApplication.getCreditNotes(creditNotesQuery);
   }

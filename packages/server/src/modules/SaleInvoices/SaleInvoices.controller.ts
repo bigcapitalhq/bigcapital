@@ -36,10 +36,14 @@ import {
 } from './dtos/SaleInvoice.dto';
 import { AcceptType } from '@/constants/accept-type';
 import { SaleInvoiceResponseDto } from './dtos/SaleInvoiceResponse.dto';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { SaleInvoiceStateResponseDto } from './dtos/SaleInvoiceState.dto';
 
 @Controller('sale-invoices')
 @ApiTags('Sale Invoices')
 @ApiExtraModels(SaleInvoiceResponseDto)
+@ApiExtraModels(PaginatedResponseDto)
+@ApiExtraModels(SaleInvoiceStateResponseDto)
 @ApiHeader({
   name: 'organization-id',
   description: 'The organization id',
@@ -143,6 +147,9 @@ export class SaleInvoicesController {
   @ApiResponse({
     status: 200,
     description: 'The sale invoice state has been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(SaleInvoiceStateResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
   getSaleInvoiceState() {
@@ -191,6 +198,19 @@ export class SaleInvoicesController {
   @ApiResponse({
     status: 200,
     description: 'The sale invoices have been successfully retrieved.',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(SaleInvoiceResponseDto) },
+            },
+          },
+        },
+      ],
+    },
   })
   getSaleInvoices(@Query() filterDTO: Partial<ISalesInvoicesFilter>) {
     return this.saleInvoiceApplication.getSaleInvoices(filterDTO);
