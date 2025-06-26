@@ -22,6 +22,7 @@ import {
   CreateSaleInvoiceDto,
   EditSaleInvoiceDto,
 } from './dtos/SaleInvoice.dto';
+import { GenerateShareLink } from './commands/GenerateInvoicePaymentLink.service';
 
 @Injectable()
 export class SaleInvoiceApplication {
@@ -39,6 +40,7 @@ export class SaleInvoiceApplication {
     private getSaleInvoiceStateService: GetSaleInvoiceState,
     private sendSaleInvoiceMailService: SendSaleInvoiceMail,
     private getSaleInvoiceMailStateService: GetSaleInvoiceMailState,
+    private generateShareLinkService: GenerateShareLink,
   ) {}
 
   /**
@@ -200,6 +202,25 @@ export class SaleInvoiceApplication {
   ): Promise<SaleInvoiceMailState> {
     return this.getSaleInvoiceMailStateService.getInvoiceMailState(
       saleInvoiceid,
+    );
+  }
+
+  /**
+   * Generate the given sale invoice sharable link.
+   * @param {number} saleInvoiceId
+   * @param {string} publicity
+   * @param {string} expiryTime
+   * @returns
+   */
+  public generateSaleInvoiceSharableLink(
+    saleInvoiceId: number,
+    publicity: string = 'private',
+    expiryTime: string = '',
+  ) {
+    return this.generateShareLinkService.generatePaymentLink(
+      saleInvoiceId,
+      publicity,
+      expiryTime,
     );
   }
 }

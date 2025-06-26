@@ -29,7 +29,6 @@ import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
 import { CreditNoteAppliedInvoice } from '@/modules/CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
-import { PaymentLink } from '@/modules/PaymentLinks/models/PaymentLink';
 import { SaleReceipt } from '@/modules/SaleReceipts/models/SaleReceipt';
 import { ManualJournal } from '@/modules/ManualJournals/models/ManualJournal';
 import { ManualJournalEntry } from '@/modules/ManualJournals/models/ManualJournalEntry';
@@ -70,7 +69,6 @@ const models = [
   CreditNoteAppliedInvoice,
   CreditNote,
   RefundCreditNote,
-  PaymentLink,
   SaleReceipt,
   ManualJournal,
   ManualJournalEntry,
@@ -81,7 +79,6 @@ const models = [
   PaymentReceivedEntry,
   TenantUser,
 ];
-
 
 /**
  * Decorator factory that registers a model with the tenancy system.

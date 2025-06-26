@@ -45,7 +45,10 @@ export function useCreatePaymentLink(
   return useMutation<CreatePaymentLinkResponse, Error, CreatePaymentLinkValues>(
     (values) =>
       apiRequest
-        .post('/payment-links/generate', transfromToSnakeCase(values))
+        .post(
+          `/sale-invoices/${values.transactionId}/generate-link`,
+          transfromToSnakeCase(values),
+        )
         .then((res) => res.data),
     {
       ...options,

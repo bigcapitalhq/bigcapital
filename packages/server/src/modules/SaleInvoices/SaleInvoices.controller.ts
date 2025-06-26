@@ -38,12 +38,14 @@ import { AcceptType } from '@/constants/accept-type';
 import { SaleInvoiceResponseDto } from './dtos/SaleInvoiceResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleInvoiceStateResponseDto } from './dtos/SaleInvoiceState.dto';
+import { GenerateSaleInvoiceSharableLinkResponseDto } from './dtos/generateSaleInvoiceSharableLinkResponse.dto';
 
 @Controller('sale-invoices')
 @ApiTags('Sale Invoices')
 @ApiExtraModels(SaleInvoiceResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(SaleInvoiceStateResponseDto)
+@ApiExtraModels(GenerateSaleInvoiceSharableLinkResponseDto)
 @ApiHeader({
   name: 'organization-id',
   description: 'The organization id',
@@ -317,5 +319,26 @@ export class SaleInvoicesController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<SaleInvoiceMailState> {
     return this.saleInvoiceApplication.getSaleInvoiceMailState(id);
+  }
+
+  @Post(':id/generate-link')
+  @ApiOperation({
+    summary: 'Generate sharable sale invoice link (private or public)',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'The link has been generated successfully.',
+    schema: {
+      $ref: getSchemaPath(GenerateSaleInvoiceSharableLinkResponseDto),
+    },
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
+  generateSaleInvoiceSharableLink(@Param('id', ParseIntPipe) id: number) {
+    return this.saleInvoiceApplication.generateSaleInvoiceSharableLink(id);
   }
 }

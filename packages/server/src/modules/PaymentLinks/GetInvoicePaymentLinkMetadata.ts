@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { ClsService } from 'nestjs-cls';
 import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';
@@ -6,8 +7,6 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { PaymentLink } from './models/PaymentLink';
 import { ServiceError } from '../Items/ServiceError';
 import { GetInvoicePaymentLinkMetaTransformer } from '../SaleInvoices/queries/GetInvoicePaymentLink.transformer';
-import { ClsService } from 'nestjs-cls';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TenantModel } from '../System/models/TenantModel';
 
 @Injectable()
@@ -15,7 +14,6 @@ export class GetInvoicePaymentLinkMetadata {
   constructor(
     private readonly transformer: TransformerInjectable,
     private readonly clsService: ClsService,
-    private readonly tenancyContext: TenancyContext,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,

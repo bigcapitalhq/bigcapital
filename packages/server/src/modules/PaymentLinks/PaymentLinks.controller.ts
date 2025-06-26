@@ -25,10 +25,7 @@ export class PaymentLinksController {
     schema: {
       type: 'object',
       properties: {
-        data: {
-          type: 'object',
-          description: 'Payment link metadata',
-        },
+        data: { type: 'object', description: 'Payment link metadata' },
       },
     },
   })

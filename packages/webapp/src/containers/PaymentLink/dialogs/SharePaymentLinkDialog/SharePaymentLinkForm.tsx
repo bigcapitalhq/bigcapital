@@ -49,7 +49,7 @@ export const SharePaymentLinkForm = ({
     generateShareLink(values)
       .then((res) => {
         setSubmitting(false);
-        setUrl(res.link?.link);
+        setUrl(res.link);
       })
       .catch(() => {
         setSubmitting(false);

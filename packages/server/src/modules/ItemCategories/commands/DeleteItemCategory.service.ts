@@ -1,9 +1,9 @@
+import { Knex } from 'knex';
+import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { CommandItemCategoryValidatorService } from './CommandItemCategoryValidator.service';
 import { ItemCategory } from '../models/ItemCategory.model';
-import { Inject, Injectable } from '@nestjs/common';
-import { Knex } from 'knex';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { IItemCategoryDeletedPayload } from '../ItemCategory.interfaces';
 import { Item } from '@/modules/Items/models/Item';
@@ -46,7 +46,10 @@ export class DeleteItemCategoryService {
       await this.unassociateItemsWithCategories(itemCategoryId, trx);
 
       // Delete item category.
-      await ItemCategory.query(trx).findById(itemCategoryId).delete();
+      await this.itemCategoryModel()
+        .query(trx)
+        .findById(itemCategoryId)
+        .delete();
 
       // Triggers `onItemCategoryDeleted` event.
       await this.eventEmitter.emitAsync(events.itemCategory.onDeleted, {
