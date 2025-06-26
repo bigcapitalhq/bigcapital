@@ -1,5 +1,5 @@
 import { ToNumber } from '@/common/decorators/Validators';
-import { IsArray, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 import { IFilterRole, ISortOrder } from '../DynamicFilter/DynamicFilter.types';
 
 export class DynamicFilterQueryDto {

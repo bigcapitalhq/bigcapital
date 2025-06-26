@@ -6,6 +6,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { VendorTransfromer } from './VendorTransformer';
 import { GetVendorsResponse, IVendorsFilter } from '../types/Vendors.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GetVendorsQueryDto } from '../dtos/GetVendorsQuery.dto';
 
 @Injectable()
 export class GetVendorsService {
@@ -28,7 +29,7 @@ export class GetVendorsService {
    * @returns {Promise<GetVendorsResponse>}
    */
   public async getVendorsList(
-    filterDto: Partial<IVendorsFilter>,
+    filterDto: GetVendorsQueryDto,
   ): Promise<GetVendorsResponse> {
     const _filterDto = {
       inactiveMode: false,

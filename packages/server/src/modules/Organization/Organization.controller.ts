@@ -25,6 +25,10 @@ import { IgnoreTenantInitializedRoute } from '../Tenancy/EnsureTenantIsInitializ
 import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
 import { GetBuildOrganizationBuildJob } from './commands/GetBuildOrganizationJob.service';
 import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBaseCurrencyLocking.service';
+import {
+  OrganizationBuildResponseExample,
+  OrganizationBuiltResponseExample,
+} from './Organization.swagger';
 
 @ApiTags('Organization')
 @Controller('organization')
@@ -46,6 +50,11 @@ export class OrganizationController {
   @ApiResponse({
     status: 200,
     description: 'The organization database has been initialized',
+    example: OrganizationBuildResponseExample,
+  })
+  @ApiResponse({
+    status: 500,
+    example: OrganizationBuiltResponseExample,
   })
   async build(@Body() buildDTO: BuildOrganizationDto) {
     const result = await this.buildOrganizationService.buildRunJob(buildDTO);

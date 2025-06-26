@@ -76,15 +76,13 @@ export class WarehousesItemsQuantitySync {
       .first();
 
     if (itemWarehouseQuantity) {
-      // @ts-ignore
-      await ItemWarehouseQuantity.changeAmount(
+      await this.itemWarehouseQuantityModel().query(trx).changeAmount(
         {
           itemId: warehouseItemQuantity.itemId,
           warehouseId: warehouseItemQuantity.warehouseId,
         },
         'quantityOnHand',
         warehouseItemQuantity.amount,
-        trx,
       );
     } else {
       await ItemWarehouseQuantity.query(trx).insert({
@@ -96,7 +94,6 @@ export class WarehousesItemsQuantitySync {
 
   /**
    * Mutates warehouses items quantity from inventory transactions.
-   * @param {number} tenantId -
    * @param {IInventoryTransaction[]} inventoryTransactions -
    * @param {Knex.Transaction}
    */

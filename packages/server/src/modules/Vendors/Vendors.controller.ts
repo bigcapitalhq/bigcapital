@@ -16,6 +16,7 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateVendorDto } from './dtos/CreateVendor.dto';
 import { EditVendorDto } from './dtos/EditVendor.dto';
+import { GetVendorsQueryDto } from './dtos/GetVendorsQuery.dto';
 
 @Controller('vendors')
 @ApiTags('vendors')
@@ -24,7 +25,7 @@ export class VendorsController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the vendors.' })
-  getVendors(@Query() filterDTO: Partial<IVendorsFilter>) {
+  getVendors(@Query() filterDTO: GetVendorsQueryDto) {
     return this.vendorsApplication.getVendors(filterDTO);
   }
 

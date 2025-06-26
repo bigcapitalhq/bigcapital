@@ -1,8 +1,27 @@
+import { Model } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { CustomerMeta } from './Customer.meta';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { CustomerDefaultViews } from '../constants';
+import { BaseQueryBuilder } from '@/models/Model';
+import { Knex } from 'knex';
+
+export class CustomerQueryBuilder<
+  M extends Model,
+  R = M[],
+> extends BaseQueryBuilder<M, R> {
+  constructor(...args) {
+    // @ts-ignore
+    super(...args);
+
+    this.onBuild((builder) => {
+      if (builder.isFind() || builder.isDelete() || builder.isUpdate()) {
+        builder.where('contact_service', 'customer');
+      }
+    });
+  }
+}
 
 @InjectModelMeta(CustomerMeta)
 @InjectModelDefaultViews(CustomerDefaultViews)
@@ -54,9 +73,7 @@ export class Customer extends TenantBaseModel {
   /**
    * Query builder.
    */
-  // static get QueryBuilder() {
-  //   return CustomerQueryBuilder;
-  // }
+  static QueryBuilder = CustomerQueryBuilder;
 
   /**
    * Table name
@@ -152,6 +169,7 @@ export class Customer extends TenantBaseModel {
         );
         query.having('countOverdue', '>', 0);
       },
+
       /**
        * Filters the unpaid customers.
        */

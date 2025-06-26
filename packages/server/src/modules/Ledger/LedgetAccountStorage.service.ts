@@ -157,11 +157,8 @@ export class LedegrAccountsStorage {
       .whereNull('amount')
       .patch({ amount: 0 });
 
-    // await this.accountModel.changeAmount(
-    //   { id: accountId },
-    //   'amount',
-    //   change,
-    //   trx,
-    // );
+    await this.accountModel()
+      .query(trx)
+      .changeAmount({ id: accountId }, 'amount', change);
   };
 }

@@ -1,9 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsString } from 'class-validator';
+import {
+  IsISO8601,
+  IsInt,
+  IsNumber,
+  Min,
+  IsBoolean,
+  IsEmail,
+  IsString,
+} from 'class-validator';
 import { ContactAddressDto } from '@/modules/Customers/dtos/ContactAddress.dto';
-import { IsInt, IsNumber } from 'class-validator';
-import { IsOptional, Min } from 'class-validator';
-import { IsISO8601 } from 'class-validator';
+import { IsOptional } from '@/common/decorators/Validators';
 
 export class CreateVendorDto extends ContactAddressDto {
   @ApiProperty({ required: false, description: 'Vendor opening balance' })

@@ -85,7 +85,6 @@ export class LedgerContactsBalanceStorage {
 
   /**
    *
-   * @param {number} tenantId
    * @param {ILedger} ledger
    * @param {number} contactId
    * @returns {Promise<void>}
@@ -130,11 +129,8 @@ export class LedgerContactsBalanceStorage {
     change: number,
     trx?: Knex.Transaction,
   ) => {
-    // return this.contactModel.changeAmount(
-    //   { id: contactId },
-    //   'balance',
-    //   change,
-    //   trx,
-    // );
+    return this.contactModel()
+      .query(trx)
+      .changeAmount({ id: contactId }, 'balance', change);
   };
 }

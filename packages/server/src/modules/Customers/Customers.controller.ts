@@ -23,6 +23,7 @@ import {
 import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';
 import { CustomerResponseDto } from './dtos/CustomerResponse.dto';
+import { GetCustomersQueryDto } from './dtos/GetCustomersQuery.dto';
 
 @Controller('customers')
 @ApiTags('Customers')
@@ -51,7 +52,7 @@ export class CustomersController {
       items: { $ref: getSchemaPath(CustomerResponseDto) },
     },
   })
-  getCustomers(@Query() filterDTO: Partial<ICustomersFilter>) {
+  getCustomers(@Query() filterDTO: GetCustomersQueryDto) {
     return this.customersApplication.getCustomers(filterDTO);
   }
 

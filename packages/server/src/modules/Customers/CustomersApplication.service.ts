@@ -4,10 +4,14 @@ import { CreateCustomer } from './commands/CreateCustomer.service';
 import { EditCustomer } from './commands/EditCustomer.service';
 import { DeleteCustomer } from './commands/DeleteCustomer.service';
 import { EditOpeningBalanceCustomer } from './commands/EditOpeningBalanceCustomer.service';
-import { ICustomerOpeningBalanceEditDTO, ICustomersFilter } from './types/Customers.types';
+import {
+  ICustomerOpeningBalanceEditDTO,
+  ICustomersFilter,
+} from './types/Customers.types';
 import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';
 import { GetCustomers } from './queries/GetCustomers.service';
+import { GetCustomersQueryDto } from './dtos/GetCustomersQuery.dto';
 
 @Injectable()
 export class CustomersApplication {
@@ -76,7 +80,7 @@ export class CustomersApplication {
    * Retrieve customers paginated list.
    * @param {ICustomersFilter} filter - Cusotmers filter.
    */
-  public getCustomers = (filterDTO: Partial<ICustomersFilter>) => {
+  public getCustomers = (filterDTO: GetCustomersQueryDto) => {
     return this.getCustomersService.getCustomersList(filterDTO);
   };
 }

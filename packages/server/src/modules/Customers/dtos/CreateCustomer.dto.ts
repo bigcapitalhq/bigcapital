@@ -3,11 +3,11 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ContactAddressDto } from './ContactAddress.dto';
+import { IsOptional } from '@/common/decorators/Validators';
 
 export class CreateCustomerDto extends ContactAddressDto {
   @ApiProperty({

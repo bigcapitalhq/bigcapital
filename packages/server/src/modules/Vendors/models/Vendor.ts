@@ -1,18 +1,27 @@
-import { Model, mixin } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import PaginationQueryBuilder from './Pagination';
-// import ModelSetting from './ModelSetting';
-// import VendorSettings from './Vendor.Settings';
-// import CustomViewBaseModel from './CustomViewBaseModel';
-// import { DEFAULT_VIEWS } from '@/services/Contacts/Vendors/constants';
-// import ModelSearchable from './ModelSearchable';
-import { BaseModel } from '@/models/Model';
+import { Model } from 'objection';
+import { BaseQueryBuilder } from '@/models/Model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { VendorMeta } from './Vendor.meta';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { VendorDefaultViews } from '../constants';
+
+export class VendorQueryBuilder<
+  M extends Model,
+  R = M[],
+> extends BaseQueryBuilder<M, R> {
+  constructor(...args) {
+    // @ts-ignore
+    super(...args);
+
+    this.onBuild((builder) => {
+      if (builder.isFind() || builder.isDelete() || builder.isUpdate()) {
+        builder.where('contact_service', 'vendor');
+      }
+    });
+  }
+}
 
 @ExportableModel()
 @InjectModelMeta(VendorMeta)
@@ -64,9 +73,7 @@ export class Vendor extends TenantBaseModel {
   /**
    * Query builder.
    */
-  // static get QueryBuilder() {
-  //   return VendorQueryBuilder;
-  // }
+  static QueryBuilder = VendorQueryBuilder;
 
   /**
    * Table name

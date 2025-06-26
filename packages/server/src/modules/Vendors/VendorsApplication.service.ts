@@ -12,6 +12,7 @@ import {
 import { GetVendorsService } from './queries/GetVendors.service';
 import { CreateVendorDto } from './dtos/CreateVendor.dto';
 import { EditVendorDto } from './dtos/EditVendor.dto';
+import { GetVendorsQueryDto } from './dtos/GetVendorsQuery.dto';
 
 @Injectable()
 export class VendorsApplication {
@@ -82,7 +83,7 @@ export class VendorsApplication {
    * @param {Partial<IVendorsFilter>} filterDTO
    * @returns {Promise<{ vendors: Vendor[], pagination: IPaginationMeta, filterMeta: IFilterMeta }>>}
    */
-  public getVendors(filterDTO: Partial<IVendorsFilter>) {
+  public getVendors(filterDTO: GetVendorsQueryDto) {
     return this.getVendorsService.getVendorsList(filterDTO);
   }
 }

@@ -9,6 +9,7 @@ import {
   ICustomersFilter,
 } from '../types/Customers.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GetCustomersQueryDto } from '../dtos/GetCustomersQuery.dto';
 
 @Injectable()
 export class GetCustomers {
@@ -29,12 +30,12 @@ export class GetCustomers {
   }
 
   /**
-   * Retrieve customers paginated list.
-   * @param {ICustomersFilter} filter - Cusotmers filter.
+   * Retrieves customers paginated list.
+   * @param {GetCustomersQueryDto} filter - Cusotmers filter.
    * @returns {Promise<GetCustomersResponse>}
    */
   public async getCustomersList(
-    filterDto: Partial<ICustomersFilter>,
+    filterDto: GetCustomersQueryDto,
   ): Promise<GetCustomersResponse> {
     const _filterDto = {
       inactiveMode: false,
