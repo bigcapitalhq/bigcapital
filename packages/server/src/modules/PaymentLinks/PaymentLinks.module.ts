@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CreateInvoiceCheckoutSession } from './CreateInvoiceCheckoutSession';
 import { GetPaymentLinkInvoicePdf } from './GetPaymentLinkInvoicePdf';
 import { PaymentLinksApplication } from './PaymentLinksApplication';
@@ -13,7 +13,10 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 const models = [InjectSystemModel(PaymentLink)];
 
 @Module({
-  imports: [StripePaymentModule, SaleInvoicesModule],
+  imports: [
+    forwardRef(() => StripePaymentModule),
+    forwardRef(() => SaleInvoicesModule),
+  ],
   providers: [
     ...models,
     TenancyContext,

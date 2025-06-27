@@ -58,6 +58,7 @@ import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.modu
 import { SaleInvoicesCost } from './SalesInvoicesCost';
 import { SaleInvoicesExportable } from './commands/SaleInvoicesExportable';
 import { SaleInvoicesImportable } from './commands/SaleInvoicesImportable';
+import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
 
 @Module({
   imports: [
@@ -74,6 +75,7 @@ import { SaleInvoicesImportable } from './commands/SaleInvoicesImportable';
     MailModule,
     MailNotificationModule,
     forwardRef(() => InventoryCostModule),
+    forwardRef(() => PaymentLinksModule),
     DynamicListModule,
     BullModule.registerQueue({ name: SendSaleInvoiceQueue }),
   ],

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CreateStripeAccountLinkService } from './CreateStripeAccountLink';
 import { CreateStripeAccountService } from './CreateStripeAccountService';
 import { StripePaymentApplication } from './StripePaymentApplication';
@@ -19,7 +19,11 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 const models = [InjectSystemModel(PaymentIntegration)];
 
 @Module({
-  imports: [AccountsModule, SaleInvoicesModule, PaymentsReceivedModule],
+  imports: [
+    AccountsModule,
+    PaymentsReceivedModule,
+    forwardRef(() => SaleInvoicesModule),
+  ],
   providers: [
     ...models,
     StripePaymentService,
