@@ -5,6 +5,7 @@ import * as path from 'path';
 import './utils/moment-mysql';
 import { AppModule } from './modules/App/App.module';
 import { ServiceErrorFilter } from './common/filters/service-error.filter';
+import { ModelHasRelationsFilter } from './common/filters/model-has-relations.filter';
 import { ValidationPipe } from './common/pipes/ClassValidation.pipe';
 import { ToJsonInterceptor } from './common/interceptors/to-json.interceptor';
 
@@ -36,6 +37,7 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, documentFactory);
 
   app.useGlobalFilters(new ServiceErrorFilter());
+  app.useGlobalFilters(new ModelHasRelationsFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }

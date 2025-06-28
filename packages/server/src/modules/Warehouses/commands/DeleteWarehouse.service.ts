@@ -49,9 +49,6 @@ export class DeleteWarehouseService {
       .query()
       .findById(warehouseId)
       .throwIfNotFound();
-    // .queryAndThrowIfHasRelations({
-    //   type: ERRORS.WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS,
-    // });
 
     // Validates the given warehouse before deleting.
     await this.authorize(warehouseId);
@@ -70,8 +67,13 @@ export class DeleteWarehouseService {
         eventPayload,
       );
       // Deletes the given warehouse from the storage.
-      await this.warehouseModel().query().findById(warehouseId).delete();
-
+      await this.warehouseModel()
+        .query()
+        .findById(warehouseId)
+        .deleteIfNoRelations({
+          type: ERRORS.WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS,
+          message: 'Warehouse has associated transactions',
+        });
       // Triggers `onWarehouseCreated`.
       await this.eventPublisher.emitAsync(
         events.warehouse.onDeleted,

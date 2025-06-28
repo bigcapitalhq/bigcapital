@@ -1,4 +1,5 @@
 import { QueryBuilder, Model } from 'objection';
+import { ModelHasRelationsError } from '@/common/exceptions/ModelHasRelations.exception';
 
 interface PaginationResult<M extends Model> {
   results: M[];
@@ -32,15 +33,44 @@ export class PaginationQueryBuilder<
       };
     }) as unknown as PaginationQueryBuilderType<M>;
   }
+
+  async deleteIfNoRelations({
+    type,
+    message,
+  }: {
+    type?: string;
+    message?: string;
+  }) {
+    const relationMappings = this.modelClass().relationMappings;
+    const relationNames = Object.keys(relationMappings || {});
+
+    if (relationNames.length === 0) {
+      // No relations defined
+      return this.delete();
+    }
+    const recordQuery = this.clone();
+
+    relationNames.forEach((relationName: string) => {
+      recordQuery.withGraphFetched(relationName);
+    });
+    const record = await recordQuery;
+
+    const hasRelations = relationNames.some((name) => {
+      const val = record[name];
+      return Array.isArray(val) ? val.length > 0 : val != null;
+    });
+    if (!hasRelations) {
+      return this.clone().delete();
+    } else {
+      throw new ModelHasRelationsError(type, message);
+    }
+  }
 }
 
-// New BaseQueryBuilder extending PaginationQueryBuilder
 export class BaseQueryBuilder<
   M extends Model,
   R = M[],
 > extends PaginationQueryBuilder<M, R> {
-  // You can add more shared query methods here in the future
-
   changeAmount(whereAttributes, attribute, amount) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
 

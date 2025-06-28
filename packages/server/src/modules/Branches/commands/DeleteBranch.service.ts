@@ -39,9 +39,6 @@ export class DeleteBranchService {
       .query()
       .findById(branchId)
       .throwIfNotFound();
-    // .queryAndThrowIfHasRelations({
-    //   type: ERRORS.BRANCH_HAS_ASSOCIATED_TRANSACTIONS,
-    // });
 
     // Authorize the branch before deleting.
     await this.authorize(branchId);
@@ -54,8 +51,10 @@ export class DeleteBranchService {
         trx,
       } as IBranchDeletePayload);
 
-      await this.branchModel().query().findById(branchId).delete();
-
+      await this.branchModel().query().findById(branchId).deleteIfNoRelations({
+        type: ERRORS.BRANCH_HAS_ASSOCIATED_TRANSACTIONS,
+        message: 'Branch has associated transactions',
+      });
       // Triggers `onBranchCreate` event.
       await this.eventPublisher.emitAsync(events.warehouse.onEdited, {
         oldBranch,

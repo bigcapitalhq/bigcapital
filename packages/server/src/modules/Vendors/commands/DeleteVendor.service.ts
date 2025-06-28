@@ -9,6 +9,7 @@ import {
   IVendorEventDeletingPayload,
 } from '../types/Vendors.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { ERRORS } from '../constants';
 
 @Injectable()
 export class DeleteVendorService {
@@ -34,9 +35,6 @@ export class DeleteVendorService {
       .query()
       .findById(vendorId)
       .throwIfNotFound();
-    // .queryAndThrowIfHasRelations({
-    //   type: ERRORS.VENDOR_HAS_TRANSACTIONS,
-    // });
 
     // Triggers `onVendorDeleting` event.
     await this.eventPublisher.emitAsync(events.vendors.onDeleting, {
@@ -47,8 +45,13 @@ export class DeleteVendorService {
     // Deletes vendor contact under unit-of-work.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Deletes the vendor contact from the storage.
-      await this.vendorModel().query(trx).findById(vendorId).delete();
-
+      await this.vendorModel()
+        .query(trx)
+        .findById(vendorId)
+        .deleteIfNoRelations({
+          type: ERRORS.VENDOR_HAS_TRANSACTIONS,
+          message: 'Vendor has associated transactions',
+        });
       // Triggers `onVendorDeleted` event.
       await this.eventPublisher.emitAsync(events.vendors.onDeleted, {
         vendorId,

@@ -9,6 +9,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Customer } from '../models/Customer';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { ERRORS } from '../constants';
 
 @Injectable()
 export class DeleteCustomer {
@@ -36,9 +37,6 @@ export class DeleteCustomer {
       .query()
       .findById(customerId)
       .throwIfNotFound();
-    // .queryAndThrowIfHasRelations({
-    //   type: ERRORS.CUSTOMER_HAS_TRANSACTIONS,
-    // });
 
     // Triggers `onCustomerDeleting` event.
     await this.eventPublisher.emitAsync(events.customers.onDeleting, {
@@ -49,8 +47,13 @@ export class DeleteCustomer {
     // Deletes the customer and associated entities under UOW transaction.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Delete the customer from the storage.
-      await this.customerModel().query(trx).findById(customerId).delete();
-
+      await this.customerModel()
+        .query(trx)
+        .findById(customerId)
+        .deleteIfNoRelations({
+          type: ERRORS.CUSTOMER_HAS_TRANSACTIONS,
+          message: 'Customer has associated transactions',
+        });
       // Throws `onCustomerDeleted` event.
       await this.eventPublisher.emitAsync(events.customers.onDeleted, {
         customerId,
