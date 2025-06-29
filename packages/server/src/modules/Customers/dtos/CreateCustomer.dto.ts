@@ -6,8 +6,8 @@ import {
   IsString,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 import { ContactAddressDto } from './ContactAddress.dto';
-import { IsOptional } from '@/common/decorators/Validators';
 
 export class CreateCustomerDto extends ContactAddressDto {
   @ApiProperty({
@@ -35,6 +35,7 @@ export class CreateCustomerDto extends ContactAddressDto {
   })
   @IsOptional()
   @IsNumber()
+  @ToNumber()
   openingBalance?: number;
 
   @ApiProperty({
@@ -53,6 +54,7 @@ export class CreateCustomerDto extends ContactAddressDto {
   })
   @IsOptional()
   @IsNumber()
+  @ToNumber()
   openingBalanceExchangeRate?: number;
 
   @ApiProperty({
@@ -62,6 +64,7 @@ export class CreateCustomerDto extends ContactAddressDto {
   })
   @IsOptional()
   @IsNumber()
+  @ToNumber()
   openingBalanceBranchId?: number;
 
   @ApiProperty({

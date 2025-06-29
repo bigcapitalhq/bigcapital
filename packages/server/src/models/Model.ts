@@ -40,7 +40,7 @@ export class PaginationQueryBuilder<
   }: {
     type?: string;
     message?: string;
-  }) {
+  } = {}) {
     const relationMappings = this.modelClass().relationMappings;
     const relationNames = Object.keys(relationMappings || {});
 

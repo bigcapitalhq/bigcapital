@@ -9,13 +9,14 @@ import {
   IsString,
 } from 'class-validator';
 import { ContactAddressDto } from '@/modules/Customers/dtos/ContactAddress.dto';
-import { IsOptional } from '@/common/decorators/Validators';
+import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 
 export class CreateVendorDto extends ContactAddressDto {
   @ApiProperty({ required: false, description: 'Vendor opening balance' })
   @IsOptional()
   @IsInt()
   @Min(0)
+  @ToNumber()
   openingBalance?: number;
 
   @ApiProperty({
@@ -26,6 +27,7 @@ export class CreateVendorDto extends ContactAddressDto {
   @IsOptional()
   @IsNumber()
   @Min(0.01)
+  @ToNumber()
   openingBalanceExchangeRate?: number;
 
   @ApiProperty({ required: false, description: 'Date of the opening balance' })
@@ -39,6 +41,7 @@ export class CreateVendorDto extends ContactAddressDto {
   })
   @IsOptional()
   @IsInt()
+  @ToNumber()
   openingBalanceBranchId?: number;
 
   @ApiProperty({ description: 'Currency code for the vendor' })

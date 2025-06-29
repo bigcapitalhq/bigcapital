@@ -326,7 +326,7 @@ export function useInvoiceSMSDetail(invoiceId, query, props) {
       params: query,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -341,7 +341,7 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
       url: `sale-invoices/${invoiceId}/payments`,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

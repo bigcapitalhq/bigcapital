@@ -40,7 +40,7 @@ export class DeleteItemService {
     const oldItem = await this.itemModel()
       .query()
       .findOne('id', itemId)
-      .deleteIfNoRelations();
+      .throwIfNotFound();
 
     // Delete item in unit of work.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
@@ -51,8 +51,9 @@ export class DeleteItemService {
       } as IItemEventDeletingPayload);
 
       // Deletes the item.
-      await this.itemModel().query(trx).findById(itemId).delete();
-
+      await this.itemModel().query(trx).findById(itemId).deleteIfNoRelations({
+        type: ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTINS,
+      });
       // Triggers `onItemDeleted` event.
       await this.eventEmitter.emitAsync(events.item.onDeleted, {
         itemId,
