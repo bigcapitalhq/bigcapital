@@ -1,10 +1,19 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiQuery,
+  getSchemaPath,
+  ApiExtraModels,
+} from '@nestjs/swagger';
 import { BankingTransactionsApplication } from '../BankingTransactionsApplication.service';
 import { GetPendingTransactionsQueryDto } from '../dtos/GetPendingTransactionsQuery.dto';
+import { GetPendingTransactionResponseDto } from '../dtos/GetPendingTransactionResponse.dto';
 
 @Controller('banking/pending')
 @ApiTags('Banking Pending Transactions')
+@ApiExtraModels(GetPendingTransactionResponseDto)
 export class BankingPendingTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,
@@ -15,6 +24,9 @@ export class BankingPendingTransactionsController {
   @ApiResponse({
     status: 200,
     description: 'Returns a list of pending bank account transactions',
+    schema: {
+      $ref: getSchemaPath(GetPendingTransactionResponseDto),
+    },
   })
   @ApiQuery({
     name: 'page',

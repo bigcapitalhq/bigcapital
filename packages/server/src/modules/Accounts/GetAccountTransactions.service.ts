@@ -8,6 +8,7 @@ import { Account } from './models/Account.model';
 import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionResponse.dto';
 
 @Injectable()
 export class GetAccountTransactionsService {
@@ -29,7 +30,7 @@ export class GetAccountTransactionsService {
    */
   public getAccountsTransactions = async (
     filter: IAccountsTransactionsFilter,
-  ): Promise<IGetAccountTransactionPOJO[]> => {
+  ): Promise<Array<GetAccountTransactionResponseDto>> => {
     // Retrieve the given account or throw not found error.
     if (filter.accountId) {
       await this.account().query().findById(filter.accountId).throwIfNotFound();

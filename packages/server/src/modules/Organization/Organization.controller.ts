@@ -4,6 +4,9 @@ import {
   ApiResponse,
   ApiBody,
   ApiOkResponse,
+  ApiExtraModels,
+  getSchemaPath,
+  ApiParam,
 } from '@nestjs/swagger';
 import {
   Controller,
@@ -29,11 +32,13 @@ import {
   OrganizationBuildResponseExample,
   OrganizationBuiltResponseExample,
 } from './Organization.swagger';
+import { GetCurrentOrganizationResponseDto } from './dtos/GetCurrentOrganizationResponse.dto';
 
 @ApiTags('Organization')
 @Controller('organization')
 @IgnoreTenantInitializedRoute()
 @IgnoreTenantSeededRoute()
+@ApiExtraModels(GetCurrentOrganizationResponseDto)
 export class OrganizationController {
   constructor(
     private readonly buildOrganizationService: BuildOrganizationService,
@@ -68,6 +73,12 @@ export class OrganizationController {
   }
 
   @Get('build/:buildJobId')
+  @ApiParam({
+    name: 'buildJobId',
+    required: true,
+    type: Number,
+    description: 'The build job id',
+  })
   @HttpCode(200)
   @ApiOperation({ summary: 'Gets the organization build job details' })
   async buildJob(@Param('buildJobId') buildJobId: string) {
@@ -80,12 +91,15 @@ export class OrganizationController {
   @ApiResponse({
     status: 200,
     description: 'Returns the current organization',
+    schema: {
+      $ref: getSchemaPath(GetCurrentOrganizationResponseDto),
+    },
   })
   async currentOrganization() {
     const organization =
       await this.getCurrentOrgService.getCurrentOrganization();
 
-    return { organization };
+    return organization;
   }
 
   @Get('base-currency-mutate')

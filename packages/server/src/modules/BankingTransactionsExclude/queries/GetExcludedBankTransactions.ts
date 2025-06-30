@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { ExcludedBankTransactionsQuery } from '../types/BankTransactionsExclude.types';
-import { UncategorizedTransactionTransformer } from '@/modules/BankingCategorize/commands/UncategorizedTransaction.transformer';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { ExcludedBankTransactionTransformer } from './ExcludedBankTransaction.transformer';
 
 @Injectable()
 export class GetExcludedBankTransactionsService {
@@ -60,7 +60,7 @@ export class GetExcludedBankTransactionsService {
 
     const data = await this.transformer.transform(
       results,
-      new UncategorizedTransactionTransformer(),
+      new ExcludedBankTransactionTransformer(),
     );
     return { data, pagination };
   }

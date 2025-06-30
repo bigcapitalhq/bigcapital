@@ -11,7 +11,7 @@ import {
 import { AccountsApplication } from './AccountsApplication.service';
 import { CreateAccountDTO } from './CreateAccount.dto';
 import { EditAccountDTO } from './EditAccount.dto';
-import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
+import { IAccountsFilter } from './Accounts.types';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -22,11 +22,14 @@ import {
 } from '@nestjs/swagger';
 import { AccountResponseDto } from './dtos/AccountResponse.dto';
 import { AccountTypeResponseDto } from './dtos/AccountTypeResponse.dto';
+import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionResponse.dto';
+import { GetAccountTransactionsQueryDto } from './dtos/GetAccountTransactionsQuery.dto';
 
 @Controller('accounts')
 @ApiTags('Accounts')
 @ApiExtraModels(AccountResponseDto)
 @ApiExtraModels(AccountTypeResponseDto)
+@ApiExtraModels(GetAccountTransactionResponseDto)
 export class AccountsController {
   constructor(private readonly accountsApplication: AccountsApplication) {}
 
@@ -132,8 +135,16 @@ export class AccountsController {
   @ApiResponse({
     status: 200,
     description: 'The account transactions have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: {
+        $ref: getSchemaPath(GetAccountTransactionResponseDto),
+      },
+    },
   })
-  async getAccountTransactions(@Query() filter: IAccountsTransactionsFilter) {
+  async getAccountTransactions(
+    @Query() filter: GetAccountTransactionsQueryDto,
+  ) {
     return this.accountsApplication.getAccountsTransactions(filter);
   }
 

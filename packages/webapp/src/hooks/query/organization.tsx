@@ -43,7 +43,7 @@ export function useCurrentOrganization(props) {
     [t.ORGANIZATION_CURRENT],
     { method: 'get', url: OrganizationRoute.Current },
     {
-      select: (res) => res.data.organization,
+      select: (res) => res.data,
       defaultData: {},
       onSuccess: (data) => {
         const organization = omit(data, ['subscriptions']);

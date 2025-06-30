@@ -10,13 +10,10 @@ import { GetAccount } from './GetAccount.service';
 import { ActivateAccount } from './ActivateAccount.service';
 import { GetAccountTypesService } from './GetAccountTypes.service';
 import { GetAccountTransactionsService } from './GetAccountTransactions.service';
-import {
-  IAccountsFilter,
-  IAccountsTransactionsFilter,
-  IGetAccountTransactionPOJO,
-} from './Accounts.types';
+import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
 import { GetAccountsService } from './GetAccounts.service';
 import { IFilterMeta } from '@/interfaces/Model';
+import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionResponse.dto';
 
 @Injectable()
 export class AccountsApplication {
@@ -127,7 +124,7 @@ export class AccountsApplication {
    */
   public getAccountsTransactions = (
     filter: IAccountsTransactionsFilter,
-  ): Promise<IGetAccountTransactionPOJO[]> => {
+  ): Promise<Array<GetAccountTransactionResponseDto>> => {
     return this.getAccountTransactionsService.getAccountsTransactions(filter);
   };
 }

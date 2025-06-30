@@ -1,6 +1,5 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
-// import { IAccountEventDeletedPayload } from '@/interfaces';
 import { CommandAccountValidators } from './CommandAccountValidators.service';
 import { Account } from './models/Account.model';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -8,6 +7,7 @@ import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { IAccountEventDeletedPayload } from './Accounts.types';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { ERRORS } from './constants';
 
 @Injectable()
 export class DeleteAccount {
@@ -70,8 +70,12 @@ export class DeleteAccount {
       await this.unassociateChildrenAccountsFromParent(accountId, trx);
 
       // Deletes account by the given id.
-      await this.accountModel().query(trx).deleteById(accountId);
-
+      await this.accountModel()
+        .query(trx)
+        .findById(accountId)
+        .deleteIfNoRelations({
+          type: ERRORS.ACCOUNT_HAS_ASSOCIATED_TRANSACTIONS,
+        });
       // Triggers `onAccountDeleted` event.
       await this.eventEmitter.emitAsync(events.accounts.onDeleted, {
         accountId,

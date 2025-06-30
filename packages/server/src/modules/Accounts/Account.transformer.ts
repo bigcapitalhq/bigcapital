@@ -85,9 +85,7 @@ export class AccountTransformer extends Transformer {
    * @returns {boolean}
    */
   protected isFeedsPaused = (account: Account): boolean => {
-    // return account.plaidItem?.isPaused || false;
-
-    return false;
+    return account.plaidItem?.isPaused || false;
   };
 
   /**

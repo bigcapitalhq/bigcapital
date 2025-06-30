@@ -5,11 +5,15 @@ import {
   ApiParam,
   ApiQuery,
   ApiResponse,
+  ApiExtraModels,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { RecognizedTransactionsApplication } from './RecognizedTransactions.application';
+import { GetRecognizedTransactionResponseDto } from './dtos/GetRecognizedTransactionResponse.dto';
 
 @Controller('banking/recognized')
 @ApiTags('Banking Recognized Transactions')
+@ApiExtraModels(GetRecognizedTransactionResponseDto)
 export class BankingRecognizedTransactionsController {
   constructor(
     private readonly recognizedTransactionsApplication: RecognizedTransactionsApplication,
@@ -25,6 +29,9 @@ export class BankingRecognizedTransactionsController {
   @ApiResponse({
     status: 200,
     description: 'Returns the recognized transaction details',
+    schema: {
+      $ref: getSchemaPath(GetRecognizedTransactionResponseDto),
+    },
   })
   @ApiResponse({
     status: 404,
@@ -48,6 +55,12 @@ export class BankingRecognizedTransactionsController {
   @ApiResponse({
     status: 200,
     description: 'Returns a list of recognized transactions',
+    schema: {
+      type: 'array',
+      items: {
+        $ref: getSchemaPath(GetRecognizedTransactionResponseDto),
+      },
+    },
   })
   async getRecognizedTransactions(@Query() query: any) {
     return this.recognizedTransactionsApplication.getRecognizedTransactions(

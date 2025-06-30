@@ -10,10 +10,18 @@ import {
 } from '@nestjs/common';
 import { ExcludeBankTransactionsApplication } from './ExcludeBankTransactionsApplication';
 import { ExcludedBankTransactionsQuery } from './types/BankTransactionsExclude.types';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import { GetExcludedBankTransactionResponseDto } from './dtos/GetExcludedBankTransactionResponse.dto';
 
 @Controller('banking/exclude')
 @ApiTags('Banking Transactions')
+@ApiExtraModels(GetExcludedBankTransactionResponseDto)
 export class BankingTransactionsExcludeController {
   constructor(
     private readonly excludeBankTransactionsApplication: ExcludeBankTransactionsApplication,
@@ -35,6 +43,17 @@ export class BankingTransactionsExcludeController {
 
   @Get()
   @ApiOperation({ summary: 'Retrieves the excluded bank transactions.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The excluded bank transactions has been retrieved successfully.',
+    schema: {
+      type: 'array',
+      items: {
+        $ref: getSchemaPath(GetExcludedBankTransactionResponseDto),
+      },
+    },
+  })
   public getExcludedBankTransactions(
     @Query() query: ExcludedBankTransactionsQuery,
   ) {
