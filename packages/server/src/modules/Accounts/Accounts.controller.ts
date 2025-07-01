@@ -176,7 +176,6 @@ export class AccountsController {
       items: { $ref: getSchemaPath(AccountResponseDto) },
     },
   })
-  @ApiResponse({})
   async getAccounts(@Query() filter: Partial<IAccountsFilter>) {
     return this.accountsApplication.getAccounts(filter);
   }

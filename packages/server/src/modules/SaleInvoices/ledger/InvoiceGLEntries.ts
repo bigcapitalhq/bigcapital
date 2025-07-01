@@ -63,7 +63,6 @@ export class SaleInvoiceGLEntries {
 
   /**
    * Rewrites the given invoice GL entries.
-   * @param {number} tenantId
    * @param {number} saleInvoiceId
    * @param {Knex.Transaction} trx
    */
