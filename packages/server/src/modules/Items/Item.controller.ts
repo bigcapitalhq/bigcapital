@@ -11,8 +11,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { TenantController } from '../Tenancy/Tenant.controller';
-// import { SubscriptionGuard } from '../Subscription/interceptors/Subscription.guard';
-// import { JwtAuthGuard } from '../Auth/guards/jwt.guard';
 import { ItemsApplicationService } from './ItemsApplication.service';
 import {
   ApiExtraModels,
@@ -31,11 +29,9 @@ import { ItemInvoiceResponseDto } from './dtos/itemInvoiceResponse.dto';
 import { ItemEstimatesResponseDto } from './dtos/ItemEstimatesResponse.dto';
 import { ItemBillsResponseDto } from './dtos/itemBillsResponse.dto';
 import { ItemReceiptsResponseDto } from './dtos/ItemReceiptsResponse.dto';
-import { SubscriptionGuard } from '../Subscription/interceptors/Subscription.guard';
 
 @Controller('/items')
 @ApiTags('Items')
-@UseGuards(SubscriptionGuard)
 @ApiExtraModels(ItemResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(ItemInvoiceResponseDto)
