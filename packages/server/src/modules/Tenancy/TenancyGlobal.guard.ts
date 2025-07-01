@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import {
   Injectable,
   CanActivate,
@@ -24,11 +25,12 @@ export class TenancyGlobalGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const organizationId = request.headers['organization-id'];
+    const authorization = request.headers['authorization']?.trim();
 
     const isPublic = this.reflector.getAllAndOverride<boolean>(
       IS_PUBLIC_ROUTE,
       [context.getHandler(), context.getClass()],
-    )
+    );
     const isTenantAgnostic = this.reflector.getAllAndOverride<boolean>(
       IS_TENANT_AGNOSTIC,
       [context.getHandler(), context.getClass()],
@@ -36,7 +38,7 @@ export class TenancyGlobalGuard implements CanActivate {
     if (isPublic || isTenantAgnostic) {
       return true;
     }
-    if (!organizationId) {
+    if (!isEmpty(authorization) && !organizationId) {
       throw new UnauthorizedException('Organization ID is required.');
     }
     return true;

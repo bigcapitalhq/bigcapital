@@ -11,8 +11,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { TenantController } from '../Tenancy/Tenant.controller';
-import { SubscriptionGuard } from '../Subscription/interceptors/Subscription.guard';
-import { JwtAuthGuard } from '../Auth/guards/jwt.guard';
 import { ItemsApplicationService } from './ItemsApplication.service';
 import {
   ApiExtraModels,
@@ -34,7 +32,6 @@ import { ItemReceiptsResponseDto } from './dtos/ItemReceiptsResponse.dto';
 
 @Controller('/items')
 @ApiTags('Items')
-@UseGuards(SubscriptionGuard)
 @ApiExtraModels(ItemResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(ItemInvoiceResponseDto)
@@ -138,7 +135,6 @@ export class ItemsController extends TenantController {
    * @returns The updated item id.
    */
   @Put(':id')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Edit the given item (product or service).' })
   @ApiResponse({
     status: 200,

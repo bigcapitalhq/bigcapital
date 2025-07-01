@@ -32,11 +32,22 @@ import { AuthedController } from './Authed.controller';
 import { GetAuthenticatedAccount } from './queries/GetAuthedAccount.service';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { EnsureUserVerifiedGuard } from './guards/EnsureUserVerified.guard';
+import { ApiKeyAuthGuard } from './api-key/AuthApiKey.guard';
+import { MixedAuthGuard } from './api-key/MixedAuth.guard';
+import { ApiKeyStrategy } from './api-key/AuthApiKey.strategy';
+import { ApiKeyModel } from './models/ApiKey.model';
+import { AuthApiKeysController } from './AuthApiKeys.controllers';
+import { AuthApiKeyAuthorizeService } from './commands/AuthApiKeyAuthorization.service';
+import { GenerateApiKey } from './commands/GenerateApiKey.service';
+import { GetApiKeysService } from './queries/GetApiKeys.service';
 
-const models = [InjectSystemModel(PasswordReset)];
+const models = [
+  InjectSystemModel(PasswordReset),
+  InjectSystemModel(ApiKeyModel),
+];
 
 @Module({
-  controllers: [AuthController, AuthedController],
+  controllers: [AuthController, AuthedController, AuthApiKeysController],
   imports: [
     MailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -70,9 +81,15 @@ const models = [InjectSystemModel(PasswordReset)];
     SendSignupVerificationMailProcessor,
     GetAuthMetaService,
     GetAuthenticatedAccount,
+    ApiKeyAuthGuard,
+    ApiKeyStrategy,
+    AuthApiKeyAuthorizeService,
+    GenerateApiKey,
+    GetApiKeysService,
+    JwtAuthGuard,
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: MixedAuthGuard,
     },
     {
       provide: APP_GUARD,

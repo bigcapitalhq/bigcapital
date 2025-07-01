@@ -87,6 +87,7 @@
     "object-hash": "^2.0.3",
     "objection": "^3.1.5",
     "passport": "^0.7.0",
+    "passport-headerapikey": "^1.2.2",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "plaid": "^10.3.0",

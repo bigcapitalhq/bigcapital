@@ -240,6 +240,9 @@ importers:
       passport:
         specifier: ^0.7.0
         version: 0.7.0
+      passport-headerapikey:
+        specifier: ^1.2.2
+        version: 1.2.2
       passport-jwt:
         specifier: ^4.0.1
         version: 4.0.1
@@ -23356,6 +23359,13 @@ packages:
   /pascalcase@0.1.1:
     resolution: {integrity: sha512-XHXfu/yOQRy9vYOtUDVMN60OEJjW013GoObG1o+xwQTpB9eYJX/BjXMsdW13ZDPruFhYYn0AG22w0xgQMwl3Nw==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /passport-headerapikey@1.2.2:
+    resolution: {integrity: sha512-4BvVJRrWsNJPrd3UoZfcnnl4zvUWYKEtfYkoDsaOKBsrWHYmzTApCjs7qUbncOLexE9ul0IRiYBFfBG0y9IVQA==}
+    dependencies:
+      lodash: 4.17.21
+      passport-strategy: 1.0.0
     dev: false
 
   /passport-jwt@4.0.1:
