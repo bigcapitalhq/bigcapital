@@ -18,6 +18,7 @@ export class GetApiKeysService {
     const tenant = await this.tenancyContext.getTenant();
     const apiKeys = await this.apiKeyModel
       .query()
+      .modify('notRevoked')
       .where({ tenantId: tenant.id });
 
     return this.injectableTransformer.transform(

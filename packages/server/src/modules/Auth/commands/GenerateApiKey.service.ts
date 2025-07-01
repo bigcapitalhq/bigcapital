@@ -12,8 +12,9 @@ export class GenerateApiKey {
   ) {}
 
   /**
-   *
-   * @returns
+   * Generates a new secure API key for the current tenant and system user.
+   * The key is saved in the database and returned (only the key and id for security).
+   * @returns {Promise<{ key: string; id: number }>} The generated API key and its database id.
    */
   async generate() {
     const tenant = await this.tenancyContext.getTenant();
@@ -27,15 +28,23 @@ export class GenerateApiKey {
       tenantId: tenant.id,
       userId: user.id,
       createdAt: new Date(),
-      revoked: false,
+      revokedAt: null,
     });
     // Return the created API key (not the full record for security)
     return { key: apiKeyRecord.key, id: apiKeyRecord.id };
   }
 
+  /**
+   * Revokes an API key by setting its revokedAt timestamp.
+   * @param {number} apiKeyId - The id of the API key to revoke.
+   * @returns {Promise<{ id: number; revoked: boolean }>} The id of the revoked API key and a revoked flag.
+   */
   async revoke(apiKeyId: number) {
     // Set the revoked flag to true for the given API key
-    await ApiKeyModel.query().findById(apiKeyId).patch({ revoked: true });
+    await ApiKeyModel.query()
+      .findById(apiKeyId)
+      .patch({ revokedAt: new Date() });
+
     return { id: apiKeyId, revoked: true };
   }
 }

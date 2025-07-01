@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Get } from '@nestjs/common';
+import { Controller, Post, Param, Get, Put } from '@nestjs/common';
 import { GenerateApiKey } from './commands/GenerateApiKey.service';
 import { GetApiKeysService } from './queries/GetApiKeys.service';
 
@@ -14,7 +14,7 @@ export class AuthApiKeysController {
     return this.generateApiKeyService.generate();
   }
 
-  @Post(':id/revoke')
+  @Put(':id/revoke')
   async revoke(@Param('id') id: number) {
     return this.generateApiKeyService.revoke(id);
   }
