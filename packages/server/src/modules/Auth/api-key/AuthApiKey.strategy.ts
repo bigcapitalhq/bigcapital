@@ -13,8 +13,8 @@ export class ApiKeyStrategy extends PassportStrategy(
   ) {
     super(
       {
-        header: 'x-api-key',
-        prefix: '',
+        header: 'Authorization',
+        prefix: 'Bearer ',
       },
       false,
     );
