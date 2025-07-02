@@ -34,8 +34,6 @@
   </p>
 </p>
 
-> We are currently in the process of migrating all server-side API endpoints to NestJS to establish a more solid architecture. Some endpoints in development mode may be temporarily do not work during this stabilization phase. However, this migration doesn't affect the production Docker images, which remain on the latest stable version.
-
 # What's Bigcapital?
 
 Bigcapital is a smart and open-source accounting and inventory software, Bigcapital keeps all business finances in right place and automates accounting processes to give the business powerful and intelligent financial statements and reports to help in making decisions.
@@ -80,6 +78,7 @@ You can integrate Bigcapital API with your system to organize your transactions 
 # Resources
 
 - [Documentation](https://docs.bigcapital.app/) - Learn how to use.
+- [API Reference](https://docs.bigcapital.app/api-reference) - API reference docs
 - [Contribution](https://github.com/bigcapitalhq/bigcapital/blob/develop/CONTRIBUTING.md) - Welcome to any contributions.
 - [Discord](https://discord.com/invite/c8nPBJafeb) - Ask for help.
 - [Bug Tracker](https://github.com/bigcapitalhq/bigcapital/issues) - Notify us new bugs.
