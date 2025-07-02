@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_ROUTE } from '../Auth/Auth.constants';
+import { getAuthApiKey } from '../Auth/Auth.utils';
 
 export const IS_TENANT_AGNOSTIC = 'IS_TENANT_AGNOSTIC';
 
@@ -26,6 +27,7 @@ export class TenancyGlobalGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const organizationId = request.headers['organization-id'];
     const authorization = request.headers['authorization']?.trim();
+    const isAuthApiKey = !!getAuthApiKey(authorization || '');
 
     const isPublic = this.reflector.getAllAndOverride<boolean>(
       IS_PUBLIC_ROUTE,
@@ -35,10 +37,10 @@ export class TenancyGlobalGuard implements CanActivate {
       IS_TENANT_AGNOSTIC,
       [context.getHandler(), context.getClass()],
     );
-    if (isPublic || isTenantAgnostic) {
+    if (isPublic || isTenantAgnostic || isAuthApiKey) {
       return true;
     }
-    if (!isEmpty(authorization) && !organizationId) {
+    if (!organizationId) {
       throw new UnauthorizedException('Organization ID is required.');
     }
     return true;

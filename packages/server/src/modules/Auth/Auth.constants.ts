@@ -26,3 +26,5 @@ export const SendResetPasswordMailJob = 'SendResetPasswordMailJob';
 export const SendSignupVerificationMailQueue =
   'SendSignupVerificationMailQueue';
 export const SendSignupVerificationMailJob = 'SendSignupVerificationMailJob';
+
+export const AuthApiKeyPrefix = 'bc_';
