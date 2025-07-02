@@ -30,9 +30,11 @@ import { AttachmentsApplication } from './AttachmentsApplication';
 import { AttachmentUploadPipeline } from './S3UploadPipeline';
 import { FileInterceptor } from '@/common/interceptors/file.interceptor';
 import { ConfigService } from '@nestjs/config';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @ApiTags('Attachments')
 @Controller('/attachments')
+@ApiCommonHeaders()
 export class AttachmentsController {
   /**
    * @param {AttachmentsApplication} attachmentsApplication - Attachments application.
@@ -109,9 +111,7 @@ export class AttachmentsController {
     status: 200,
     description: 'The document has been deleted successfully',
   })
-  async deleteAttachment(
-    @Param('id') documentId: string,
-  ) {
+  async deleteAttachment(@Param('id') documentId: string) {
     await this.attachmentsApplication.delete(documentId);
 
     return {

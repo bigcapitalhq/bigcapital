@@ -11,9 +11,11 @@ import {
 import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { UsersApplication } from './Users.application';
 import { EditUserDto } from './dtos/EditUser.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('users')
 @ApiTags('Users')
+@ApiCommonHeaders()
 export class UsersController {
   constructor(private readonly usersApplication: UsersApplication) {}
 

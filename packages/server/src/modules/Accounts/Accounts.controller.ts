@@ -24,12 +24,14 @@ import { AccountResponseDto } from './dtos/AccountResponse.dto';
 import { AccountTypeResponseDto } from './dtos/AccountTypeResponse.dto';
 import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionResponse.dto';
 import { GetAccountTransactionsQueryDto } from './dtos/GetAccountTransactionsQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('accounts')
 @ApiTags('Accounts')
 @ApiExtraModels(AccountResponseDto)
 @ApiExtraModels(AccountTypeResponseDto)
 @ApiExtraModels(GetAccountTransactionResponseDto)
+@ApiCommonHeaders()
 export class AccountsController {
   constructor(private readonly accountsApplication: AccountsApplication) {}
 

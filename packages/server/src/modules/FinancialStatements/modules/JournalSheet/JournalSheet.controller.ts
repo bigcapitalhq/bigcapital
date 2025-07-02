@@ -10,9 +10,11 @@ import {
 } from '@nestjs/swagger';
 import { JournalSheetQueryDto } from './JournalSheetQuery.dto';
 import { JournalSheetResponseExample } from './JournalSheet.swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/journal')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class JournalSheetController {
   constructor(private readonly journalSheetApp: JournalSheetApplication) {}
 

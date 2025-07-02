@@ -10,9 +10,11 @@ import {
 } from '@nestjs/common';
 import { PdfTemplateApplication } from './PdfTemplate.application';
 import { ICreateInvoicePdfTemplateDTO, IEditPdfTemplateDTO } from './types';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('pdf-templates')
 @ApiTags('Pdf Templates')
+@ApiCommonHeaders()
 export class PdfTemplatesController {
   constructor(
     private readonly pdfTemplateApplication: PdfTemplateApplication,

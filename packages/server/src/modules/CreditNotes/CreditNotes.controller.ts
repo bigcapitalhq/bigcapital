@@ -21,11 +21,13 @@ import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 import { CreditNoteResponseDto } from './dtos/CreditNoteResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('credit-notes')
 @ApiTags('Credit Notes')
 @ApiExtraModels(CreditNoteResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
+@ApiCommonHeaders()
 export class CreditNotesController {
   /**
    * @param {CreditNoteApplication} creditNoteApplication - The credit note application service.

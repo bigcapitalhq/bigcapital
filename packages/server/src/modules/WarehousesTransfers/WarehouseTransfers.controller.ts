@@ -24,10 +24,12 @@ import {
 import { GetWarehouseTransfersQueryDto } from '../Warehouses/dtos/GetWarehouseTransfersQuery.dto';
 import { WarehouseTransferResponseDto } from './dtos/WarehouseTransferResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('warehouse-transfers')
 @ApiTags('Warehouse Transfers')
 @ApiExtraModels(WarehouseTransferResponseDto, PaginatedResponseDto)
+@ApiCommonHeaders()
 export class WarehouseTransfersController {
   /**
    * @param {WarehouseTransferApplication} warehouseTransferApplication - Warehouse transfer application.

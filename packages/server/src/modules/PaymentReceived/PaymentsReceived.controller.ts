@@ -31,12 +31,14 @@ import { AcceptType } from '@/constants/accept-type';
 import { PaymentReceivedResponseDto } from './dtos/PaymentReceivedResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { PaymentReceivedStateResponseDto } from './dtos/PaymentReceivedStateResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('payments-received')
 @ApiTags('Payments Received')
 @ApiExtraModels(PaymentReceivedResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(PaymentReceivedStateResponseDto)
+@ApiCommonHeaders()
 export class PaymentReceivesController {
   constructor(private paymentReceivesApplication: PaymentReceivesApplication) {}
 

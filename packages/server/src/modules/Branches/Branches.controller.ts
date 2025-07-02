@@ -17,10 +17,12 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { BranchResponseDto } from './dtos/BranchResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('branches')
 @ApiTags('Branches')
 @ApiExtraModels(BranchResponseDto)
+@ApiCommonHeaders()
 export class BranchesController {
   constructor(private readonly branchesApplication: BranchesApplication) {}
 

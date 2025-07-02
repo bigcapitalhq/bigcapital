@@ -11,9 +11,11 @@ import { AcceptType } from '@/constants/accept-type';
 import { TrialBalanceSheetApplication } from './TrialBalanceSheetApplication';
 import { TrialBalanceSheetQueryDto } from './TrialBalanceSheetQuery.dto';
 import { TrialBalanceSheetResponseExample } from './TrialBalanceSheet.swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('reports/trial-balance-sheet')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class TrialBalanceSheetController {
   constructor(
     private readonly trialBalanceSheetApp: TrialBalanceSheetApplication,

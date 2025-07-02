@@ -25,11 +25,13 @@ import { GetBillPaymentsFilterDto } from './dtos/GetBillPaymentsFilter.dto';
 import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
 import { BillPaymentResponseDto } from './dtos/BillPaymentResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('bill-payments')
 @ApiTags('Bill Payments')
 @ApiExtraModels(BillPaymentResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
+@ApiCommonHeaders()
 export class BillPaymentsController {
   constructor(
     private billPaymentsApplication: BillPaymentsApplication,

@@ -2,9 +2,11 @@ import { Response } from 'express';
 import { Controller, Get, Param, Res } from '@nestjs/common';
 import { PaymentLinksApplication } from './PaymentLinksApplication';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('payment-links')
 @ApiTags('Payment Links')
+@ApiCommonHeaders()
 export class PaymentLinksController {
   constructor(private readonly paymentLinkApp: PaymentLinksApplication) {}
 

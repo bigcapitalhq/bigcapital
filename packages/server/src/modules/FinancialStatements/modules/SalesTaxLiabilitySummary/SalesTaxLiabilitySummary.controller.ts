@@ -9,9 +9,11 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { AcceptType } from '@/constants/accept-type';
 import { SalesTaxLiabilitySummaryApplication } from './SalesTaxLiabilitySummaryApplication';
 import { SalesTaxLiabilitySummaryQueryDto } from './dtos/SalesTaxLiabilityQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/sales-tax-liability-summary')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class SalesTaxLiabilitySummaryController {
   constructor(
     private readonly salesTaxLiabilitySummaryApp: SalesTaxLiabilitySummaryApplication,

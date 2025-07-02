@@ -22,10 +22,12 @@ import { CreateBankTransactionDto } from '../dtos/CreateBankTransaction.dto';
 import { GetBankTransactionsQueryDto } from '../dtos/GetBankTranasctionsQuery.dto';
 import { BankTransactionResponseDto } from '../dtos/BankTransactionResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/transactions')
 @ApiTags('Banking Transactions')
 @ApiExtraModels(BankTransactionResponseDto, PaginatedResponseDto)
+@ApiCommonHeaders()
 export class BankingTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,

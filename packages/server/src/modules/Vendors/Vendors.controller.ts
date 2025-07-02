@@ -17,9 +17,11 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateVendorDto } from './dtos/CreateVendor.dto';
 import { EditVendorDto } from './dtos/EditVendor.dto';
 import { GetVendorsQueryDto } from './dtos/GetVendorsQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('vendors')
-@ApiTags('vendors')
+@ApiTags('Vendors')
+@ApiCommonHeaders()
 export class VendorsController {
   constructor(private vendorsApplication: VendorsApplication) {}
 

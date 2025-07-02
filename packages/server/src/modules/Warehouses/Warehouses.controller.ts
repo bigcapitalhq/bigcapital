@@ -17,10 +17,12 @@ import {
 } from '@nestjs/swagger';
 import { CreateWarehouseDto, EditWarehouseDto } from './dtos/Warehouse.dto';
 import { WarehouseResponseDto } from './dtos/WarehouseResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('warehouses')
 @ApiTags('Warehouses')
 @ApiExtraModels(WarehouseResponseDto)
+@ApiCommonHeaders()
 export class WarehousesController {
   constructor(private warehousesApplication: WarehousesApplication) {}
 

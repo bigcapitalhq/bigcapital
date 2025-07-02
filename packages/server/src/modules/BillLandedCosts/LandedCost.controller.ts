@@ -14,9 +14,11 @@ import { BillAllocatedLandedCostTransactions } from './commands/BillAllocatedLan
 import { RevertAllocatedLandedCost } from './commands/RevertAllocatedLandedCost.service';
 import { LandedCostTranasctions } from './commands/LandedCostTransactions.service';
 import { LandedCostTransactionsQueryDto } from './dtos/LandedCostTransactionsQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @ApiTags('Landed Cost')
 @Controller('landed-cost')
+@ApiCommonHeaders()
 export class BillAllocateLandedCostController {
   constructor(
     private allocateLandedCost: AllocateLandedCostService,

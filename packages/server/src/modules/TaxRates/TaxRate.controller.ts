@@ -17,10 +17,12 @@ import {
 } from '@nestjs/swagger';
 import { CreateTaxRateDto, EditTaxRateDto } from './dtos/TaxRate.dto';
 import { TaxRateResponseDto } from './dtos/TaxRateResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('tax-rates')
 @ApiTags('Tax Rates')
 @ApiExtraModels(TaxRateResponseDto)
+@ApiCommonHeaders()
 export class TaxRatesController {
   constructor(private readonly taxRatesApplication: TaxRatesApplication) {}
 

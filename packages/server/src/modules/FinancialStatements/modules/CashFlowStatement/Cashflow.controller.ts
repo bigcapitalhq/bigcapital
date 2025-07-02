@@ -10,9 +10,11 @@ import {
 } from '@nestjs/swagger';
 import { CashFlowStatementQueryDto } from './CashFlowStatementQuery.dto';
 import { CashflowStatementResponseExample } from './CashflowStatement.swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('reports/cashflow-statement')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class CashflowController {
   constructor(private readonly cashflowSheetApp: CashflowSheetApplication) {}
 

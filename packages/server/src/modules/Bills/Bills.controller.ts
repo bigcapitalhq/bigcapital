@@ -21,11 +21,13 @@ import { IBillsFilter } from './Bills.types';
 import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
 import { BillResponseDto } from './dtos/BillResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('bills')
 @ApiTags('Bills')
 @ApiExtraModels(BillResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
+@ApiCommonHeaders()
 export class BillsController {
   constructor(private billsApplication: BillsApplication) {}
 

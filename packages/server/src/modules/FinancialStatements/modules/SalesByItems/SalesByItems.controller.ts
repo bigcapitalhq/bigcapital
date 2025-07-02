@@ -12,9 +12,11 @@ import { SalesByItemsApplication } from './SalesByItemsApplication';
 import { Response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SalesByItemsQueryDto } from './SalesByItemsQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/sales-by-items')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class SalesByItemsController {
   constructor(private readonly salesByItemsApp: SalesByItemsApplication) {}
 

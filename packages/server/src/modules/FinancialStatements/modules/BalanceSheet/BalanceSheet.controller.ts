@@ -10,9 +10,11 @@ import {
 } from '@nestjs/swagger';
 import { BalanceSheetQueryDto } from './BalanceSheet.dto';
 import { BalanceSheetResponseExample } from './BalanceSheet.swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/balance-sheet')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class BalanceSheetStatementController {
   constructor(private readonly balanceSheetApp: BalanceSheetApplication) {}
 

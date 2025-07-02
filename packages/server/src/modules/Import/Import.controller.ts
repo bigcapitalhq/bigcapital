@@ -16,9 +16,11 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ImportResourceApplication } from './ImportResourceApplication';
 import { uploadImportFileMulterOptions } from './ImportMulter.utils';
 import { parseJsonSafe } from '@/utils/parse-json';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('import')
 @ApiTags('Import')
+@ApiCommonHeaders()
 export class ImportController {
   constructor(private readonly importResourceApp: ImportResourceApplication) {}
 

@@ -10,9 +10,11 @@ import { GeneralLedgerApplication } from './GeneralLedgerApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { GeneralLedgerQueryDto } from './GeneralLedgerQuery.dto';
 import { GeneralLedgerResponseExample } from './GeneralLedger.swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/general-ledger')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class GeneralLedgerController {
   constructor(
     private readonly generalLedgerApplication: GeneralLedgerApplication,

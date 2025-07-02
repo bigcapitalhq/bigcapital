@@ -9,9 +9,11 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { InventoryValuationSheetApplication } from './InventoryValuationSheetApplication';
 import { InventoryValuationQueryDto } from './InventoryValuationQuery.dto';
 import { AcceptType } from '@/constants/accept-type';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('reports/inventory-valuation')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class InventoryValuationController {
   constructor(
     private readonly inventoryValuationApp: InventoryValuationSheetApplication,

@@ -30,7 +30,6 @@ async function bootstrap() {
     .setTitle('Bigcapital')
     .setDescription('Financial accounting software')
     .setVersion('1.0')
-    .addTag('cats')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

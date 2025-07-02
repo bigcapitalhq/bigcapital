@@ -5,12 +5,11 @@ import {
   Delete,
   Param,
   Body,
-  Res,
   Next,
   HttpStatus,
   ParseIntPipe,
 } from '@nestjs/common';
-import { Response, NextFunction } from 'express';
+import { NextFunction } from 'express';
 import { CreateRoleDto, EditRoleDto } from './dtos/Role.dto';
 import { RolesApplication } from './Roles.application';
 import {
@@ -23,10 +22,12 @@ import {
   ApiExtraModels,
 } from '@nestjs/swagger';
 import { RoleResponseDto } from './dtos/RoleResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @ApiTags('Roles')
 @Controller('roles')
 @ApiExtraModels(RoleResponseDto)
+@ApiCommonHeaders()
 export class RolesController {
   constructor(private readonly rolesApp: RolesApplication) {}
 

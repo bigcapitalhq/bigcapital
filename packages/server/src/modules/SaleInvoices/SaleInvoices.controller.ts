@@ -21,7 +21,6 @@ import {
 } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
 import {
-  ApiHeader,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -39,6 +38,7 @@ import { SaleInvoiceResponseDto } from './dtos/SaleInvoiceResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleInvoiceStateResponseDto } from './dtos/SaleInvoiceState.dto';
 import { GenerateSaleInvoiceSharableLinkResponseDto } from './dtos/generateSaleInvoiceSharableLinkResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('sale-invoices')
 @ApiTags('Sale Invoices')
@@ -46,16 +46,7 @@ import { GenerateSaleInvoiceSharableLinkResponseDto } from './dtos/generateSaleI
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(SaleInvoiceStateResponseDto)
 @ApiExtraModels(GenerateSaleInvoiceSharableLinkResponseDto)
-@ApiHeader({
-  name: 'organization-id',
-  description: 'The organization id',
-  required: true,
-})
-@ApiHeader({
-  name: 'x-access-token',
-  description: 'The authentication token',
-  required: true,
-})
+@ApiCommonHeaders()
 export class SaleInvoicesController {
   constructor(private saleInvoiceApplication: SaleInvoiceApplication) {}
 

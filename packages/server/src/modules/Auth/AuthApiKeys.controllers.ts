@@ -1,8 +1,12 @@
 import { Controller, Post, Param, Get, Put } from '@nestjs/common';
 import { GenerateApiKey } from './commands/GenerateApiKey.service';
 import { GetApiKeysService } from './queries/GetApiKeys.service';
+import { ApiExcludeController, ApiTags } from '@nestjs/swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('api-keys')
+@ApiTags('Api keys')
+@ApiCommonHeaders()
 export class AuthApiKeysController {
   constructor(
     private readonly getApiKeysService: GetApiKeysService,

@@ -4,9 +4,11 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { InventoryItemDetailsApplication } from './InventoryItemDetailsApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { InventoryItemDetailsQueryDto } from './InventoryItemDetailsQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('reports/inventory-item-details')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class InventoryItemDetailsController {
   constructor(
     private readonly inventoryItemDetailsApp: InventoryItemDetailsApplication,

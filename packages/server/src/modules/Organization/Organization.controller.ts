@@ -33,12 +33,14 @@ import {
   OrganizationBuiltResponseExample,
 } from './Organization.swagger';
 import { GetCurrentOrganizationResponseDto } from './dtos/GetCurrentOrganizationResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @ApiTags('Organization')
 @Controller('organization')
 @IgnoreTenantInitializedRoute()
 @IgnoreTenantSeededRoute()
 @ApiExtraModels(GetCurrentOrganizationResponseDto)
+@ApiCommonHeaders()
 export class OrganizationController {
   constructor(
     private readonly buildOrganizationService: BuildOrganizationService,

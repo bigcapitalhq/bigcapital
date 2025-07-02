@@ -5,9 +5,11 @@ import { Response } from 'express';
 import { TransactionsByVendorApplication } from './TransactionsByVendorApplication';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionsByVendorQueryDto } from './TransactionsByVendorQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/transactions-by-vendors')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class TransactionsByVendorController {
   constructor(
     private readonly transactionsByVendorsApp: TransactionsByVendorApplication,

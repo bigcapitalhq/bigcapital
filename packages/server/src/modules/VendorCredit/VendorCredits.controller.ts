@@ -15,9 +15,11 @@ import {
   CreateVendorCreditDto,
   EditVendorCreditDto,
 } from './dtos/VendorCredit.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('vendor-credits')
 @ApiTags('Vendor Credits')
+@ApiCommonHeaders()
 export class VendorCreditsController {
   constructor(
     private readonly vendorCreditsApplication: VendorCreditsApplicationService,

@@ -9,9 +9,11 @@ import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { CustomerBalanceSummaryApplication } from './CustomerBalanceSummaryApplication';
 import { CustomerBalanceSummaryQueryDto } from './CustomerBalanceSummaryQuery.dto';
 import { AcceptType } from '@/constants/accept-type';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/customer-balance-summary')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class CustomerBalanceSummaryController {
   constructor(
     private readonly customerBalanceSummaryApp: CustomerBalanceSummaryApplication,

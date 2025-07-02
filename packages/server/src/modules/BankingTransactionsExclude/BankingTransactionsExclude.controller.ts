@@ -18,10 +18,12 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { GetExcludedBankTransactionResponseDto } from './dtos/GetExcludedBankTransactionResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/exclude')
 @ApiTags('Banking Transactions')
 @ApiExtraModels(GetExcludedBankTransactionResponseDto)
+@ApiCommonHeaders()
 export class BankingTransactionsExcludeController {
   constructor(
     private readonly excludeBankTransactionsApplication: ExcludeBankTransactionsApplication,

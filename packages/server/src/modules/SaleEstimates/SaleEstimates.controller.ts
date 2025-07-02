@@ -35,12 +35,14 @@ import { Response } from 'express';
 import { SaleEstimateResponseDto } from './dtos/SaleEstimateResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleEstiamteStateResponseDto } from './dtos/SaleEstimateStateResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('sale-estimates')
 @ApiTags('Sale Estimates')
 @ApiExtraModels(SaleEstimateResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(SaleEstiamteStateResponseDto)
+@ApiCommonHeaders()
 export class SaleEstimatesController {
   /**
    * @param {SaleEstimatesApplication} saleEstimatesApplication - Sale estimates application.

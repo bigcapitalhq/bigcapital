@@ -10,9 +10,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { VendorBalanceSummaryQueryDto } from './VendorBalanceSummaryQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/vendor-balance-summary')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class VendorBalanceSummaryController {
   constructor(
     private readonly vendorBalanceSummaryApp: VendorBalanceSummaryApplication,

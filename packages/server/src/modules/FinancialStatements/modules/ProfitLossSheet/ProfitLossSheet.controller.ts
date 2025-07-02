@@ -10,9 +10,11 @@ import {
 } from '@nestjs/swagger';
 import { ProfitLossSheetQueryDto } from './ProfitLossSheetQuery.dto';
 import { ProfitLossSheetResponseExample } from './ProfitLossSheet.swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/profit-loss-sheet')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class ProfitLossSheetController {
   constructor(
     private readonly profitLossSheetApp: ProfitLossSheetApplication,

@@ -11,9 +11,11 @@ import {
 } from '@nestjs/swagger';
 import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
 import { ARAgingSummaryResponseExample } from './ARAgingSummary.swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('reports/receivable-aging-summary')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class ARAgingSummaryController {
   constructor(private readonly ARAgingSummaryApp: ARAgingSummaryApplication) {}
 

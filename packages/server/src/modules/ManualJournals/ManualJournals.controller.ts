@@ -24,10 +24,12 @@ import {
 } from './dtos/ManualJournal.dto';
 import { IManualJournalsFilter } from './types/ManualJournals.types';
 import { ManualJournalResponseDto } from './dtos/ManualJournalResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('manual-journals')
 @ApiTags('Manual Journals')
 @ApiExtraModels(ManualJournalResponseDto)
+@ApiCommonHeaders()
 export class ManualJournalsController {
   constructor(private manualJournalsApplication: ManualJournalsApplication) {}
 

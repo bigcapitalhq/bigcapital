@@ -3,9 +3,11 @@ import { castArray, omit } from 'lodash';
 import { BankingCategorizeApplication } from './BankingCategorize.application';
 import { CategorizeBankTransactionRouteDto } from './dtos/CategorizeBankTransaction.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/categorize')
 @ApiTags('Banking Categorization')
+@ApiCommonHeaders()
 export class BankingCategorizeController {
   constructor(
     private readonly bankingCategorizeApplication: BankingCategorizeApplication,

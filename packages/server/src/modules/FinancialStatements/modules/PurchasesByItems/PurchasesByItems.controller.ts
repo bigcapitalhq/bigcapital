@@ -4,9 +4,11 @@ import { PurchasesByItemsApplication } from './PurchasesByItemsApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PurchasesByItemsQueryDto } from './PurchasesByItemsQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/purchases-by-items')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class PurchasesByItemReportController {
   constructor(
     private readonly purchasesByItemsApp: PurchasesByItemsApplication,

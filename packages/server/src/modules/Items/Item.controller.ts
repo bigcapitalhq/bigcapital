@@ -4,7 +4,6 @@ import {
   Delete,
   Param,
   Post,
-  UseGuards,
   Patch,
   Get,
   Put,
@@ -29,6 +28,7 @@ import { ItemInvoiceResponseDto } from './dtos/itemInvoiceResponse.dto';
 import { ItemEstimatesResponseDto } from './dtos/ItemEstimatesResponse.dto';
 import { ItemBillsResponseDto } from './dtos/itemBillsResponse.dto';
 import { ItemReceiptsResponseDto } from './dtos/ItemReceiptsResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/items')
 @ApiTags('Items')
@@ -39,6 +39,7 @@ import { ItemReceiptsResponseDto } from './dtos/ItemReceiptsResponse.dto';
 @ApiExtraModels(ItemBillsResponseDto)
 @ApiExtraModels(ItemEstimatesResponseDto)
 @ApiExtraModels(ItemReceiptsResponseDto)
+@ApiCommonHeaders()
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
     super();

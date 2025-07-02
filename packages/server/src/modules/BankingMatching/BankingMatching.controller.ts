@@ -3,9 +3,11 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { BankingMatchingApplication } from './BankingMatchingApplication';
 import { GetMatchedTransactionsFilter } from './types';
 import { MatchBankTransactionDto } from './dtos/MatchBankTransaction.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/matching')
 @ApiTags('Banking Transactions Matching')
+@ApiCommonHeaders()
 export class BankingMatchingController {
   constructor(
     private readonly bankingMatchingApplication: BankingMatchingApplication,

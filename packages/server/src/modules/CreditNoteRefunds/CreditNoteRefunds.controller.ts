@@ -4,9 +4,11 @@ import { ICreditNoteRefundDTO } from '../CreditNotes/types/CreditNotes.types';
 import { CreditNotesRefundsApplication } from './CreditNotesRefundsApplication.service';
 import { RefundCreditNote } from './models/RefundCreditNote';
 import { CreditNoteRefundDto } from './dto/CreditNoteRefund.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('credit-notes')
 @ApiTags('Credit Note Refunds')
+@ApiCommonHeaders()
 export class CreditNoteRefundsController {
   constructor(
     private readonly creditNotesRefundsApplication: CreditNotesRefundsApplication,

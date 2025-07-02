@@ -18,10 +18,12 @@ import { BankRulesApplication } from './BankRulesApplication';
 import { CreateBankRuleDto } from './dtos/BankRule.dto';
 import { EditBankRuleDto } from './dtos/BankRule.dto';
 import { BankRuleResponseDto } from './dtos/BankRuleResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/rules')
 @ApiTags('Bank Rules')
 @ApiExtraModels(BankRuleResponseDto)
+@ApiCommonHeaders()
 export class BankRulesController {
   constructor(private readonly bankRulesApplication: BankRulesApplication) {}
 

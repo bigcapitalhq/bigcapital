@@ -8,7 +8,13 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBody, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBody,
+  ApiParam,
+  ApiExcludeController,
+} from '@nestjs/swagger';
 import { PublicRoute } from './guards/jwt.guard';
 import { AuthenticationApplication } from './AuthApplication.sevice';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
@@ -20,6 +26,7 @@ import { SystemUser } from '../System/models/SystemUser';
 
 @Controller('/auth')
 @ApiTags('Auth')
+@ApiExcludeController()
 @PublicRoute()
 export class AuthController {
   constructor(

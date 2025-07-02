@@ -31,12 +31,14 @@ import { Response } from 'express';
 import { SaleReceiptResponseDto } from './dtos/SaleReceiptResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleReceiptStateResponseDto } from './dtos/SaleReceiptState.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('sale-receipts')
 @ApiTags('Sale Receipts')
 @ApiExtraModels(SaleReceiptResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(SaleReceiptStateResponseDto)
+@ApiCommonHeaders()
 export class SaleReceiptsController {
   constructor(private saleReceiptApplication: SaleReceiptApplication) {}
 

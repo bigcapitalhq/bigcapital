@@ -24,10 +24,12 @@ import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';
 import { CustomerResponseDto } from './dtos/CustomerResponse.dto';
 import { GetCustomersQueryDto } from './dtos/GetCustomersQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('customers')
 @ApiTags('Customers')
 @ApiExtraModels(CustomerResponseDto)
+@ApiCommonHeaders()
 export class CustomersController {
   constructor(private customersApplication: CustomersApplication) {}
 

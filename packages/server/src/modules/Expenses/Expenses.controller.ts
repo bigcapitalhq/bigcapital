@@ -20,10 +20,12 @@ import {
 import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ExpenseResponseDto } from './dtos/ExpenseResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('expenses')
 @ApiTags('Expenses')
 @ApiExtraModels(PaginatedResponseDto, ExpenseResponseDto)
+@ApiCommonHeaders()
 export class ExpensesController {
   constructor(private readonly expensesApplication: ExpensesApplication) {}
 

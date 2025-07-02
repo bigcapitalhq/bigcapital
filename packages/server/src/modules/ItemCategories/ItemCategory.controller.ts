@@ -25,10 +25,12 @@ import {
   EditItemCategoryDto,
 } from './dtos/ItemCategory.dto';
 import { ItemCategoryResponseDto } from './dtos/ItemCategoryResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('item-categories')
 @ApiTags('Item Categories')
 @ApiExtraModels(ItemCategoryResponseDto)
+@ApiCommonHeaders()
 export class ItemCategoryController {
   constructor(
     private readonly itemCategoryApplication: ItemCategoryApplication,

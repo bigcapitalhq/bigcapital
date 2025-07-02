@@ -5,9 +5,11 @@ import { TransactionsByCustomerApplication } from './TransactionsByCustomersAppl
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { TransactionsByCustomerQueryDto } from './TransactionsByCustomerQuery.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('/reports/transactions-by-customers')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class TransactionsByCustomerController {
   constructor(
     private readonly transactionsByCustomersApp: TransactionsByCustomerApplication,

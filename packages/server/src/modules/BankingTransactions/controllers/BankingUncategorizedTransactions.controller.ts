@@ -8,9 +8,11 @@ import {
 } from '@nestjs/swagger';
 import { GetUncategorizedTransactionsQueryDto } from '../dtos/GetUncategorizedTransactionsQuery.dto';
 import { BankingTransactionsApplication } from '../BankingTransactionsApplication.service';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/uncategorized')
 @ApiTags('Banking Uncategorized Transactions')
+@ApiCommonHeaders()
 export class BankingUncategorizedTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,
@@ -35,9 +37,10 @@ export class BankingUncategorizedTransactionsController {
     description: 'Uncategorize transactions ID',
   })
   async getAutofillCategorizeTransaction(
-    @Query('uncategorizedTransactionIds') uncategorizedTransactionIds: Array<number> | number,
+    @Query('uncategorizedTransactionIds')
+    uncategorizedTransactionIds: Array<number> | number,
   ) {
-    console.log(uncategorizedTransactionIds)
+    console.log(uncategorizedTransactionIds);
     return this.bankingTransactionsApplication.getAutofillCategorizeTransaction(
       uncategorizedTransactionIds,
     );

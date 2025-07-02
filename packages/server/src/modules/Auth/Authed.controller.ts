@@ -1,4 +1,9 @@
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiExcludeController,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetAuthenticatedAccount } from './queries/GetAuthedAccount.service';
 import { Controller, Get, Post } from '@nestjs/common';
 import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
@@ -9,6 +14,7 @@ import { IgnoreUserVerifiedRoute } from './guards/EnsureUserVerified.guard';
 
 @Controller('/auth')
 @ApiTags('Auth')
+@ApiExcludeController()
 @IgnoreTenantSeededRoute()
 @IgnoreTenantInitializedRoute()
 @IgnoreUserVerifiedRoute()

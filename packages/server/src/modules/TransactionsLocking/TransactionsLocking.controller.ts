@@ -15,10 +15,12 @@ import {
   TransactionsLockingDto,
 } from './dtos/TransactionsLocking.dto';
 import { TransactionLockingResponseDto } from './dtos/TransactionLockingResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('transactions-locking')
 @ApiTags('Transactions Locking')
 @ApiExtraModels(TransactionLockingResponseDto)
+@ApiCommonHeaders()
 export class TransactionsLockingController {
   constructor(
     private readonly transactionsLockingService: TransactionsLockingService,

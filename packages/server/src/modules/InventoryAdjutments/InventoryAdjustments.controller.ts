@@ -20,10 +20,12 @@ import { IInventoryAdjustmentsFilter } from './types/InventoryAdjustments.types'
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAdjustment.dto';
 import { InventoryAdjustmentResponseDto } from './dtos/InventoryAdjustmentResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('inventory-adjustments')
 @ApiTags('Inventory Adjustments')
 @ApiExtraModels(InventoryAdjustmentResponseDto)
+@ApiCommonHeaders()
 export class InventoryAdjustmentsController {
   constructor(
     private readonly inventoryAdjustmentsApplicationService: InventoryAdjustmentsApplicationService,

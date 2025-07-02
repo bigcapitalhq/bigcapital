@@ -10,9 +10,11 @@ import {
 } from '@nestjs/swagger';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 import { APAgingSummaryResponseExample } from './APAgingSummary.swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('reports/payable-aging-summary')
 @ApiTags('Reports')
+@ApiCommonHeaders()
 export class APAgingSummaryController {
   constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) {}
 

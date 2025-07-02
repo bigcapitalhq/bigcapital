@@ -2,9 +2,11 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { GetItemsInventoryValuationListService } from './queries/GetItemsInventoryValuationList.service';
 import { GetInventoyItemsCostQueryDto } from './dtos/GetInventoryItemsCostQuery.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('inventory-cost')
 @ApiTags('Inventory Cost')
+@ApiCommonHeaders()
 export class InventoryCostController {
   constructor(
     private readonly inventoryItemCost: GetItemsInventoryValuationListService,

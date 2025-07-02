@@ -23,10 +23,12 @@ import { CurrenciesApplication } from './CurrenciesApplication.service';
 import { CreateCurrencyDto } from './dtos/CreateCurrency.dto';
 import { EditCurrencyDto } from './dtos/EditCurrency.dto';
 import { CurrencyResponseDto } from './dtos/CurrencyResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @ApiTags('Currencies')
 @Controller('/currencies')
 @ApiExtraModels(CurrencyResponseDto)
+@ApiCommonHeaders()
 export class CurrenciesController {
   constructor(private readonly currenciesApp: CurrenciesApplication) {}
 

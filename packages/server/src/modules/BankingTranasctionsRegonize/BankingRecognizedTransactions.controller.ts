@@ -10,10 +10,12 @@ import {
 } from '@nestjs/swagger';
 import { RecognizedTransactionsApplication } from './RecognizedTransactions.application';
 import { GetRecognizedTransactionResponseDto } from './dtos/GetRecognizedTransactionResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/recognized')
 @ApiTags('Banking Recognized Transactions')
 @ApiExtraModels(GetRecognizedTransactionResponseDto)
+@ApiCommonHeaders()
 export class BankingRecognizedTransactionsController {
   constructor(
     private readonly recognizedTransactionsApplication: RecognizedTransactionsApplication,

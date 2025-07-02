@@ -10,10 +10,12 @@ import {
 import { BankingTransactionsApplication } from '../BankingTransactionsApplication.service';
 import { GetPendingTransactionsQueryDto } from '../dtos/GetPendingTransactionsQuery.dto';
 import { GetPendingTransactionResponseDto } from '../dtos/GetPendingTransactionResponse.dto';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('banking/pending')
 @ApiTags('Banking Pending Transactions')
 @ApiExtraModels(GetPendingTransactionResponseDto)
+@ApiCommonHeaders()
 export class BankingPendingTransactionsController {
   constructor(
     private readonly bankingTransactionsApplication: BankingTransactionsApplication,
