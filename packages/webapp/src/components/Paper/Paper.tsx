@@ -1,5 +1,7 @@
 import React from 'react';
 import { x, SystemProps } from '@xstyled/emotion';
+import clsx from 'classnames';
+import styles from './Paper.module.scss';
 
 interface PaperProps extends SystemProps {
   children: React.ReactNode;
@@ -8,10 +10,8 @@ interface PaperProps extends SystemProps {
 export const Paper = ({ children, ...props }: PaperProps) => {
   return (
     <x.div
-      background={'white'}
-      p={'10px'}
-      border={'1px solid #d2dce2'}
       {...props}
+      className={clsx(styles.root)}
     >
       {children}
     </x.div>

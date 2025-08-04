@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { InputGroup, FormGroup, Position } from '@blueprintjs/core';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 
@@ -16,12 +16,12 @@ import {
   Hint,
   FieldRequiredHint,
   Icon,
-  CurrencySelectList,
+  FSelect,
   FormattedMessage as T,
+  FFormGroup,
 } from '@/components';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { JournalExchangeRateInputField } from './components';
-import { currenciesFieldShouldUpdate } from './utils';
 import { MakeJournalTransactionNoField } from './MakeJournalTransactionNoField';
 
 /**
@@ -29,6 +29,7 @@ import { MakeJournalTransactionNoField } from './MakeJournalTransactionNoField';
  */
 export default function MakeJournalEntriesHeader({}) {
   const { currencies } = useMakeJournalFormContext();
+  const form = useFormikContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -105,29 +106,30 @@ export default function MakeJournalEntriesHeader({}) {
       </FastField>
 
       {/*------------ Currency  -----------*/}
-      <FastField
+      <FFormGroup
         name={'currency_code'}
-        currencies={currencies}
-        shouldUpdate={currenciesFieldShouldUpdate}
+        label={<T id={'currency'} />}
+        inline
+        fastField
       >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'currency'} />}
-            className={classNames('form-group--currency', CLASSES.FILL)}
-            inline={true}
-          >
-            <CurrencySelectList
-              currenciesList={currencies}
-              selectedCurrencyCode={value}
-              onCurrencySelected={(currencyItem) => {
-                form.setFieldValue('currency_code', currencyItem.currency_code);
-                form.setFieldValue('exchange_rate', '');
-              }}
-              defaultSelectText={value}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+        <FSelect
+          name={'currency_code'}
+          items={currencies}
+          onItemChange={(currencyItem) => {
+            form.setFieldValue('currency_code', currencyItem.currency_code);
+            form.setFieldValue('exchange_rate', '');
+          }}
+          popoverProps={{
+            inline: true,
+            minimal: true,
+            captureDismiss: true,
+          }}
+          valueAccessor={'currency_code'}
+          labelAccessor={'currency_name'}
+          textAccessor={'currency_code'}
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Exchange rate ----------- */}
       <JournalExchangeRateInputField

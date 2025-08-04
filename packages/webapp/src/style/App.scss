@@ -40,6 +40,8 @@
 
 .App {
   min-width: 1100px;
+  min-height: 100vh;
+  background-color: $app-bg;
 }
 
 // =======
@@ -254,7 +256,7 @@ html[lang^='ar'] {
 }
 
 .bp4-drawer {
-  border-left: 1px solid #00115e;
+  border-left: 1px solid var(--color-drawer-border-left);
 }
 
 .drawer-portal {

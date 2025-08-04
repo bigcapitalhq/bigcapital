@@ -48,10 +48,16 @@ const PageFormFooter: FC<{ children: React.ReactNode } & SystemProps> = ({ child
 PageFormFooter.displayName = 'PageFormFooter';
 
 const footerActionsStyle = `
+  --x-color-background: #fff;
+  --x-color-border: rgb(210, 221, 226);
+
+  --x-color-background: var(--color-dark-gray1);
+  --x-color-border: rgba(255, 255, 255, 0.1);
+
   width: 100%;
-  background: #fff;
+  background: var(--x-color-background);
   padding: 14px 20px;
-  border-top: 1px solid rgb(210, 221, 226);
+  border-top: 1px solid var(--x-color-border);
   box-shadow: 0px -1px 4px 0px rgba(0, 0, 0, 0.05);
 
   .bp4-button-group{

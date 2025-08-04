@@ -45,6 +45,6 @@ export const CategorizeTransactionFormFooter = R.compose(withBankingActions)(
 );
 
 const Root = styled.div`
-  border-top: 1px solid #c7d5db;
+  border-top: 1px solid var(--color-aside-divider);
   padding: 14px 20px;
 `;

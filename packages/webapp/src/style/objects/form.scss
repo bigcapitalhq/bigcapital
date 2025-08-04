@@ -29,13 +29,16 @@ label.bp4-label {
 
 // Form input.
 .#{$ns}-input {
-  box-shadow: 0 0 0 transparent;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--color-ui-input-border);
   border-radius: 2px;
   height: 32px;
   line-height: 32px;
   color: #333;
 
+  &,
+  .bp4-dark & {
+    box-shadow: 0 0 0 transparent;
+  }
   &:focus,
   &.bp4-active {
     box-shadow: 0 0 0 1px #116cd0;
@@ -102,12 +105,14 @@ label.bp4-label {
   border-radius: 2px;
 
   &,
-  &:hover {
-    background: #fff;
+  &:hover,
+  .bp4-dark &,
+  .bp4-dark &:hover {
     box-shadow: none;
-    border: 1px solid #ced4da;
+    background-color: var(--color-ui-input-background);
+    border: 1px solid var(--color-ui-input-border);
   }
-
+  
   &:focus {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     border-color: #80bdff;
@@ -123,11 +128,11 @@ label.bp4-label {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #495057;
+    color: var(--color-ui-input-group-prepend-color);
     text-align: center;
     white-space: nowrap;
-    background-color: #e9ecef;
-    border: 1px solid #ced4da;
+    background-color: var(--color-ui-input-group-prepend-background);
+    border: 1px solid var(--color-ui-input-group-prepend-border);
     border-radius: 0.25rem;
     height: 100%;
 
@@ -144,7 +149,6 @@ label.bp4-label {
   .bp4-input-group {
     flex: 1 1 auto;
   }
-
   .bp4-control-group {
     >.input-group-prepend:first-child .input-group-text {
       border-top-right-radius: 0;
@@ -295,8 +299,8 @@ label.bp4-label {
       color: #495057;
       text-align: center;
       white-space: nowrap;
-      background-color: #e9ecef;
-      border: 1px solid #ced4da;
+      background-color: var(--color-ui-input-group-prepend-background);
+      border: 1px solid var(--color-ui-input-group-prepend-border);
       border-radius: 0 3px 3px 0;
 
       .bp4-icon {

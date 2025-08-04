@@ -1,15 +1,13 @@
 @import 'src/style/_base.scss';
 
 .sidebar {
-  background: $sidebar-background;
-  width: $sidebar-width;
-  color: $sidebar-text-color;
+  background: var(--color-sidebar-background);
+  width: 100%;
   height: 100%;
   z-index: $sidebar-zindex;
   position: relative;
 
   .ScrollbarsCustom-Track {
-
     &.ScrollbarsCustom-TrackY,
     &.ScrollbarsCustom-TrackX {
       background: rgba(0, 0, 0, 0);
@@ -17,7 +15,6 @@
   }
 
   .ScrollbarsCustom-Thumb {
-
     &.ScrollbarsCustom-ThumbX,
     &.ScrollbarsCustom-ThumbY {
       background: rgba(0, 0, 0, 0);
@@ -32,10 +29,9 @@
 
   &:hover {
     .ScrollbarsCustom-Thumb {
-
       &.ScrollbarsCustom-ThumbX,
       &.ScrollbarsCustom-ThumbY {
-        background: rgba(255, 255, 255, 0.25);
+        background: var(--color-sidebar-scrollbars-background);
       }
     }
   }
@@ -138,7 +134,7 @@
     padding-bottom: 2rem;
 
     .#{$ns}-menu-item {
-      color: $sidebar-menu-item-color;
+      color: var(--color-sidebar-menu-item-text);
       border-radius: 0;
       padding: 8px 20px;
       font-size: 15px;
@@ -146,13 +142,12 @@
 
       &:hover,
       &.bp4-active {
-        background: $sidebar-submenu-item-bg-color;
-        color: $sidebar-menu-item-color-active;
+        background: var(--color-sidebar-menu-item-hover-background);
+        color: var(--color-sidebar-menu-item-text-hover);
       }
-
       &:focus,
       &:active {
-        background: #01143e;
+        background: var(--color-sidebar-menu-item-focus-background);
       }
 
       >.#{$ns}-icon {
@@ -169,7 +164,7 @@
 
       &-labeler {
         display: block;
-        color: $sidebar-menu-label-color;
+        color: var(--color-sidebar-menu-label-color);
         font-size: 11px;
         padding: 8px 20px;
         margin-top: 4px;

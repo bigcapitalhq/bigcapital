@@ -24,8 +24,8 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   Can,
   Icon,
-  DashboardActionsBar,
   FormattedMessage as T,
+  DrawerActionsBar,
 } from '@/components';
 import { VendorMoreMenuItem } from './utils';
 import {
@@ -80,7 +80,7 @@ function VendorDetailsActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Popover
           content={
@@ -135,7 +135,7 @@ function VendorDetailsActionsBar({
           }}
         />
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

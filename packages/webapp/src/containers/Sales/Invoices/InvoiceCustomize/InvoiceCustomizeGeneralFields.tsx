@@ -17,6 +17,7 @@ import { BrandingCompanyLogoUploadField } from '@/containers/ElementCustomize/co
 import { MANAGE_LINK_URL } from './constants';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
+import styles from './InvoiceCustomizeGeneralFields.module.scss';
 
 export function InvoiceCustomizeGeneralField() {
   const isTemplateNameFilled = useIsTemplateNamedFilled();
@@ -28,7 +29,8 @@ export function InvoiceCustomizeGeneralField() {
           General Branding
         </h2>
         <p className={Classes.TEXT_MUTED}>
-          Set your company logo and branding colors to be automatically applied to your invoices.
+          Set your company logo and branding colors to be automatically applied
+          to your invoices.
         </p>
       </Stack>
 
@@ -106,15 +108,7 @@ function InvoiceCustomizePaymentManage() {
   };
 
   return (
-    <Group
-      style={{
-        backgroundColor: '#FBFBFB',
-        border: '1px solid #E1E1E1',
-        padding: 10,
-        borderRadius: 5,
-      }}
-      position={'apart'}
-    >
+    <Group className={styles.customizePayment} position={'apart'}>
       <Group spacing={10}>
         <CreditCardIcon fill={'#7D8897'} height={16} width={16} />
         <Text>Accept payment methods</Text>

@@ -15,6 +15,7 @@ export function Alert({ title, description, children, intent, className }) {
 
 const AlertRoot = styled.div`
   border: 1px solid rgb(223, 227, 230);
+  background: var(--color-alert-default-background);
   padding: 12px;
   border-radius: 6px;
   margin-bottom: 20px;
@@ -22,40 +23,40 @@ const AlertRoot = styled.div`
   ${(props) =>
     props.intent === 'danger' &&
     `
-    border-color: rgb(249, 198, 198);
-    background: rgb(255, 248, 248);
+    border-color: var(--color-alert-danger-border);
+    background: var(--color-alert-danger-background);
 
     ${AlertDesc} {
-      color: #d95759;
+      color: var(--color-alert-danger-description-text);
     }
     ${AlertTitle} {
-      color: rgb(205, 43, 49);
+      color: var(--color-alert-danger-title-text);
     }
   `}
 
   ${(props) =>
     props.intent === 'primary' &&
     `
-    background: #fff;
-    border-color: #98a8ee;
+    background: var(--color-alert-primary-background);
+    border-color: var(--color-alert-primary-border);
 
     ${AlertTitle} {
-      color: #1a3bd4;
+      color: var(--color-alert-primary-title-text);
     }
     ${AlertDesc} {
-      color: #455883;
+      color: var(--color-alert-primary-description-text);
     }
   `}
 `;
 
 export const AlertTitle = styled.h3`
-  color: rgb(17, 24, 28);
+  color: var(--color-alert-default-title-text);
   margin-bottom: 4px;
   font-size: 14px;
   font-weight: 600;
 `;
 
 export const AlertDesc = styled.p`
-  color: rgb(104, 112, 118);
+  color: var(--color-alert-default-description-text);
   margin: 0;
 `;

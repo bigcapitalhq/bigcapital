@@ -50,6 +50,9 @@ export function CreditNoteFormFooterRight() {
 }
 
 const CreditNoteTotalLines = styled(TotalLines)`
+  --x-color-text: #555555;
+  --x-color-text: var(--color-light-gray4);
+
   width: 100%;
-  color: #555555;
+  color: var(--x-color-text);
 `;

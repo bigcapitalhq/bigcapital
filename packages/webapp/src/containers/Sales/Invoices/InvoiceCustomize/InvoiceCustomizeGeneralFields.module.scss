@@ -1,3 +1,16 @@
-.showCompanyLogoField{
+.showCompanyLogoField {
   font-size: 14px;
+}
+
+.customizePayment {
+  --color-background: #fbfbfb;
+  --color-divider: #e1e1e1;
+
+  --color-background: transparent;
+  --color-divider: rgba(255, 255, 255, 0.2);
+
+  background-color: var(--background);
+  border: 1px solid var(--color-divider);
+  padding: 10px;
+  border-radius: 5px;
 }

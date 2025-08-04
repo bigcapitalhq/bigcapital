@@ -21,9 +21,9 @@ export const FinancialComputeAlert = styled.div`
   position: relative;
   padding: 8px 20px;
   border-radius: 2px;
-  background-color: #fdecda;
   color: #342515;
   font-size: 13px;
+  background-color: var(--color-financial-report-background);
 
   button {
     font-size: 12px;

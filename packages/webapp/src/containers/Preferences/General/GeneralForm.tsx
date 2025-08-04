@@ -271,8 +271,11 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
 }
 
 const CardFooterActions = styled.div`
+  --x-color-border: #e0e7ea;
+  --x-color-border: rgba(255, 255, 255, 0.15);
+
   padding-top: 16px;
-  border-top: 1px solid #e0e7ea;
+  border-top: 1px solid var(--x-color-border);
   margin-top: 30px;
 
   .bp4-button {

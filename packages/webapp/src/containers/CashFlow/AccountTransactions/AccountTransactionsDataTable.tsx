@@ -166,7 +166,7 @@ const DashboardConstrantTable = styled(DataTable)`
   .table {
     .thead {
       .th {
-        background: #fff;
+        // background: #fff;
         letter-spacing: 1px;
         text-transform: uppercase;
         font-size: 13px;

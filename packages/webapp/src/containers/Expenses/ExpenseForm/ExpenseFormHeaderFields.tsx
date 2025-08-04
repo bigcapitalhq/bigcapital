@@ -3,7 +3,11 @@ import React from 'react';
 import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { CustomersSelect, FInputGroup, FormattedMessage as T } from '@/components';
+import {
+  CustomersSelect,
+  FInputGroup,
+  FormattedMessage as T,
+} from '@/components';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -14,8 +18,8 @@ import {
 } from '@/utils';
 import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
 import {
-  CurrencySelectList,
   FFormGroup,
+  FSelect,
   AccountsSelect,
   FieldRequiredHint,
   Hint,
@@ -75,30 +79,24 @@ export default function ExpenseFormHeader() {
         />
       </FFormGroup>
 
-      <FastField name={'currency_code'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'currency'} />}
-            className={classNames(
-              'form-group--select-list',
-              'form-group--currency',
-              Classes.FILL,
-            )}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="currency_code" />}
-            inline={true}
-          >
-            <CurrencySelectList
-              currenciesList={currencies}
-              selectedCurrencyCode={value}
-              onCurrencySelected={(currencyItem) => {
-                form.setFieldValue('currency_code', currencyItem.currency_code);
-              }}
-              defaultSelectText={value}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'currency_code'}
+        label={<T id={'currency'} />}
+        className={classNames(Classes.FILL)}
+        inline={true}
+        fastField={true}
+      >
+        <FSelect
+          name={'currency_code'}
+          items={currencies}
+          valueAccessor={'currency_code'}
+          textAccessor={'currency_code'}
+          labelAccessor={'currency_code'}
+          popoverProps={{ minimal: true }}
+          fill={true}
+          fastField={true}
+        />
+      </FFormGroup>
 
       {/* ----------- Exchange rate ----------- */}
       <ExpensesExchangeRateInputField

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
-import { ListSelect } from '../Select';
+import { FSelect } from '../Forms';
 import { getConditionTypeCompatators } from './utils';
 
 export default function DynamicFilterCompatatorField({
@@ -11,9 +11,9 @@ export default function DynamicFilterCompatatorField({
   const options = getConditionTypeCompatators(dataType);
 
   return (
-    <ListSelect
-      textProp={'label'}
-      selectedItemProp={'value'}
+    <FSelect
+      textAccessor={'label'}
+      valueAccessor={'value'}
       items={options}
       className={Classes.FILL}
       filterable={false}

@@ -1,11 +1,19 @@
 .root {
+  --color-dropzone-background: #fff;
+  --color-dropzone-border: #c5cbd3;
+
+  --color-dropzone-background: rgba(255, 255, 255, 0.05);
+  --color-dropzone-border: rgba(255, 255, 255, 0.1);
+
   padding: 20px;
-  border: 2px dotted #c5cbd3;
   border-radius: 6px;
   min-height: 200px;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  border-style: dotted;
+  border-width: 2px;
+  border-color: var(--color-dropzone-border);
+  background: var(--color-dropzone-background);
   position: relative;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 
@@ -13,6 +21,7 @@
     border-color: rgb(0, 82, 204);
     background: rgba(0, 82, 204, 0.05);
   }
+
   &.dropzoneReject {
     border-color: #AC2F33;
     background: rgba(172, 47, 51, 0.05)

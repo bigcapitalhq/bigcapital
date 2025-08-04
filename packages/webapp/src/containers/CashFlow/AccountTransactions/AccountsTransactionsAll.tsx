@@ -11,10 +11,10 @@ const Box = styled.div`
 `;
 
 const CashflowTransactionsTableCard = styled.div`
-  border: 2px solid #f0f0f0;
+  background: var(--color-bank-transactions-content-background);
+  border: 2px solid var(--color-bank-transactions-content-border);
   border-radius: 10px;
   padding: 30px 18px;
-  background: #fff;
   flex: 0 1;
 `;
 

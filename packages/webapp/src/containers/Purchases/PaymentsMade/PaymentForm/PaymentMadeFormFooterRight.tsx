@@ -41,6 +41,9 @@ export function PaymentMadeFormFooterRight() {
 }
 
 const PaymentMadeTotalLines = styled(TotalLines)`
+  --x-color-text: #555;
+  --x-color-text: var(--color-light-gray4);
+
   width: 100%;
-  color: #555555;
+  color: var(--x-color-text);
 `;

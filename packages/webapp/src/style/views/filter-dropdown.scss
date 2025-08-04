@@ -29,14 +29,14 @@
     .bp4-html-select::after,
     .form-group--select-list .bp4-button::after{
       margin-right: 6px;
-      border-top-color: #c5c5c5;
+      // border-top-color: #c5c5c5;
     }
     .bp4-html-select,
     .bp4-input,
     .form-group--select-list .bp4-button{
       
       &:not(:focus){
-        border-color: #d3d9de;
+        // border-color: #d3d9de;
       }
     }
 

@@ -3,17 +3,19 @@ import { x } from '@xstyled/emotion';
 import { Box, Group, Stack } from '@/components';
 import { useSendInvoiceMailForm, useSendInvoiceMailSubject } from './_hooks';
 import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 export function InvoiceSendMailHeaderPreview() {
   const mailSubject = useSendInvoiceMailSubject();
   const { invoiceMailState } = useInvoiceSendMailBoot();
   const toAddresses = useMailHeaderToAddresses();
   const fromAddresses = useMailHeaderFromAddresses();
+  const isDarkmode = useIsDarkMode();
 
   return (
     <Stack
-      bg={'white'}
-      borderBottom={'1px solid #dcdcdd'}
+      bg={isDarkmode ? 'var(--color-dark-gray2)' : 'white'}
+      borderBottom={'1px solid var(--color-element-customize-divider)'}
       padding={'22px 30px'}
       spacing={8}
       position={'sticky'}
@@ -46,10 +48,10 @@ export function InvoiceSendMailHeaderPreview() {
           <Stack spacing={2}>
             <Group spacing={2}>
               <Box fontWeight={600}>{invoiceMailState?.companyName} </Box>
-              <Box color={'#738091'}>{fromAddresses}</Box>
+              <Box color={isDarkmode ? 'rgba(255, 255, 255, 0.6)' : '#738091'}>{fromAddresses}</Box>
             </Group>
 
-            <Box fontSize={'sm'} color={'#738091'}>
+            <Box fontSize={'sm'} color={isDarkmode ? 'rgba(255, 255, 255, 0.6)' : '#738091'}>
               Send to: {invoiceMailState?.customerName} {toAddresses};
             </Box>
           </Stack>

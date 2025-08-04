@@ -28,7 +28,6 @@ export function Aside({
     <Box className={clsx(styles.root, className, classNames?.root)}>
       <Group position="apart" className={clsx(styles.title, classNames?.title)}>
         {title}
-
         {hideCloseButton !== true && (
           <Button
             aria-label="Close"
@@ -45,13 +44,13 @@ export function Aside({
   );
 }
 
-interface AsideContentProps extends BoxProps {}
+interface AsideContentProps extends BoxProps { }
 
 function AsideContent({ ...props }: AsideContentProps) {
   return <Box {...props} className={clsx(styles.content, props?.className)} />;
 }
 
-interface AsideFooterProps extends BoxProps {}
+interface AsideFooterProps extends BoxProps { }
 
 function AsideFooter({ ...props }: AsideFooterProps) {
   return <Box {...props} />;

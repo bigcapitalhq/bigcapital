@@ -16,10 +16,10 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import {
-  DashboardActionsBar,
   Icon,
   FormattedMessage as T,
   Can,
+  DrawerActionsBar,
 } from '@/components';
 import { ItemDetailActionsMoreBtn } from './ItemDetailActionsMoreBtn';
 
@@ -53,7 +53,7 @@ function ItemDetailActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={ItemAction.Edit} a={AbilitySubject.Item}>
           <Button
@@ -75,7 +75,7 @@ function ItemDetailActionsBar({
         </Can>
         <ItemDetailActionsMoreBtn />
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

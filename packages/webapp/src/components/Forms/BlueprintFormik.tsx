@@ -9,6 +9,7 @@ import {
   Switch,
   EditableText,
   TextArea,
+  HTMLSelect,
 } from '@blueprintjs-formik/core';
 import { MultiSelect, SuggestField } from '@blueprintjs-formik/select';
 import { DateInput } from '@blueprintjs-formik/datetime';
@@ -27,4 +28,5 @@ export {
   SuggestField as FSuggest,
   TextArea as FTextArea,
   DateInput as FDateInput,
+  HTMLSelect as FHTMLSelect,
 };

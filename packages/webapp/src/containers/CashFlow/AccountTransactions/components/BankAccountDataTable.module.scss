@@ -2,7 +2,7 @@
   :global .table{    
     .thead {
       .th {
-        background: #fff;
+        // background: #fff;
         text-transform: uppercase;
         letter-spacing: 1px;
         font-size: 13px;
@@ -22,7 +22,7 @@
 
     .tbody-inner {
       .tr .td{
-        border-bottom: 1px solid #ececec;
+        border-bottom-width: 1px;
       }
     }
   }

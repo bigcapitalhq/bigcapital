@@ -17,10 +17,10 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import {
-  DashboardActionsBar,
   Can,
   Icon,
   FormattedMessage as T,
+  DrawerActionsBar,
 } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
@@ -52,7 +52,7 @@ function PaymentMadeDetailActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={PaymentMadeAction.Edit} a={AbilitySubject.PaymentMade}>
           <Button
@@ -62,6 +62,7 @@ function PaymentMadeDetailActionsBar({
             onClick={handleEditPaymentMade}
           />
         </Can>
+
         <Can I={PaymentMadeAction.Delete} a={AbilitySubject.PaymentMade}>
           <NavbarDivider />
           <Button
@@ -73,7 +74,7 @@ function PaymentMadeDetailActionsBar({
           />
         </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 
