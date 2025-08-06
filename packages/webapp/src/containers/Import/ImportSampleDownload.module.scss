@@ -4,11 +4,12 @@
   --color-sample-download-title-text: #5f6b7c;
   --color-sample-download-desc-text: #8f99a8;
 
-  --color-sample-download-background: var(--color-dark-gray3);
-  --color-sample-download-border: var(--color-dark-gray5);
-  --color-sample-download-title-text: var(--color-light-gray1);
-  --color-sample-download-desc-text: var(--color-light-gray1);
-
+  :global(.bp4-dark) & {
+    --color-sample-download-background: var(--color-dark-gray3);
+    --color-sample-download-border: var(--color-dark-gray5);
+    --color-sample-download-title-text: var(--color-light-gray1);
+    --color-sample-download-desc-text: var(--color-light-gray1);
+  }
   background: var(--color-sample-download-background);
   border: 1px solid var(--color-sample-download-border);
   border-radius: 5px;

@@ -1,12 +1,12 @@
 .root {
   --color-background: #fff;
-  --color-background: #c5cbd3;
-
   --color-border: #e1e2e8;
-  --color-border: rgba(255, 255, 255, 0.2);
-
   --color-text: var(--color-dark-gray1);
-
+  
+  :global(.bp4-dark) & {
+    --color-background: #c5cbd3;
+    --color-border: rgba(255, 255, 255, 0.2);
+  }
   min-height: 26px;
   border-radius: 15px;
   font-size: 13px;

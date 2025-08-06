@@ -1,17 +1,36 @@
+@mixin dark-mode {
+  .bp4-dark & {
+    @content;
+  }
+}
+
 //
 // Financial sheet - Drawer header.
 // --------------------
 .financial-header-drawer {
-  --x-color-background: var(--color-dark-gray1);
-  --x-color-backdrop-background: rgba(2, 9, 19, 0.65);
+    --x-color-background: #fff;
+    --x-color-backdrop-background: rgba(2, 9, 19, 0.65);
 
-  --x-color-tabs-border: var(--color-dark-gray2);
-  --x-color-tabs-tab-item-background: var(--color-dark-gray3);
-  --x-color-tabs-indicator-background: var(--color-dark-gray2);
-  --x-color-tabs-indicator-border: var(--color-primary);
+    --x-color-tabs-border: #c3cdd5;
+    --x-color-tabs-tab-item-background: var(--color-dark-gray3);
+    --x-color-tabs-indicator-background: #edf5ff;
+    --x-color-tabs-indicator-border: #0350f8;
+    
+    --x-color-footer-background: #ecf0f3;
+    --x-color-footer-border: #c3cdd5;
 
-  --x-color-footer-background: var(--color-dark-gray3);
-  --x-color-footer-border: var(--color-dark-gray1);
+  @include dark-mode {
+    --x-color-background: var(--color-dark-gray1);
+    --x-color-backdrop-background: rgba(2, 9, 19, 0.65);
+
+    --x-color-tabs-border: var(--color-dark-gray2);
+    --x-color-tabs-tab-item-background: var(--color-dark-gray3);
+    --x-color-tabs-indicator-background: var(--color-dark-gray2);
+    --x-color-tabs-indicator-border: var(--color-primary);
+    
+    --x-color-footer-background: var(--color-dark-gray3);
+    --x-color-footer-border: var(--color-dark-gray1);
+  }
 
   padding: 25px 26px 25px;
   position: absolute;

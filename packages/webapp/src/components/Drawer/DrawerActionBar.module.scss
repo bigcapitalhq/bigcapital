@@ -2,11 +2,12 @@
 
 .root {
   --x-color-background: var(--color-white);
-  --x-color-background: transparent;
-
-  --x-color-border: var(--color-dark-gray1);
   --x-color-border: rgba(255, 255, 255, 0.2);
-
+  
+  :global(.bp4-dark) {
+    --x-color-background: transparent;
+    --x-color-border: var(--color-dark-gray1);
+  }
   &:global(.bp4-navbar){
     background-color: var(--x-color-background);
     box-shadow: 0 1px 0 var(--x-color-border);

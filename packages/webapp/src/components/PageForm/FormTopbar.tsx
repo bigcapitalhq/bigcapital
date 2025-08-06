@@ -16,9 +16,10 @@ const FormTopBarRoot = styled(Navbar)`
   --color-form-topbar-background: #fff;
   --color-form-topbar-border: #c7d5db;
 
-  --color-form-topbar-background: var(--color-dark-gray1);
-  --color-form-topbar-border: rgba(255, 255, 255, 0.15);
-
+  .bp4-dark & {
+    --color-form-topbar-background: var(--color-dark-gray1);
+    --color-form-topbar-border: rgba(255, 255, 255, 0.15);
+  }
   height: 35px;
   padding: 0 20px;
 

@@ -1,18 +1,16 @@
 .root {
   --item-background: #fff;
-  --item-background: var(--color-dark-gray4);
-
   --item-border: #d6dbe3;
-  --item-border: rgba(255, 255, 255, 0.2);
-
   --item-active-border: #88abdb;
-
   --item-label-text: #252a33;
-  --item-label-text: var(--color-light-gray4);
-
   --item-date-text: #5c7080;
-  --item-date-text: var(--color-light-gray1);
-
+  
+  :global(.bp4-dark) & {
+    --item-background: var(--color-dark-gray4);
+    --item-border: rgba(255, 255, 255, 0.2);
+    --item-date-text: var(--color-light-gray1);
+    --item-label-text: var(--color-light-gray4);    
+  }
   background: var(--item-background);
   border-radius: 5px;
   border: 1px solid var(--item-border);

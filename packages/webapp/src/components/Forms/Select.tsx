@@ -22,10 +22,11 @@ const SelectButton = styled(Button)`
   --x-color-select-border: #ced4da;
   --x-color-select-caret: #8d8d8d;
 
-  --x-color-select-background: rgba(17, 20, 24, 0.3);
-  --x-color-select-border: rgba(255, 255, 255, 0.15);
-  --x-color-select-caret: rgba(255, 255, 255, 0.25);
-  
+  .bp4-dark & {
+    --x-color-select-background: rgba(17, 20, 24, 0.3);
+    --x-color-select-border: rgba(255, 255, 255, 0.15);
+    --x-color-select-caret: rgba(255, 255, 255, 0.25);
+  }
   outline: none;
   box-shadow: 0 0 0 transparent;
   border: 1px solid var(--x-color-select-border);

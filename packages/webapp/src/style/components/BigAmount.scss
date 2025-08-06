@@ -3,9 +3,10 @@
   --x-color-amount-text: #343463;
   --x-color-label-text: #5d6f90;
 
-  --x-color-label-text: var(--color-light-gray1);
-  --x-color-amount-text: var(--color-light-gray2);
-
+  :global(.bp4-dark) & {
+    --x-color-label-text: var(--color-light-gray1);
+    --x-color-amount-text: var(--color-light-gray2);
+  }
   text-align: right;
 
   &__label{

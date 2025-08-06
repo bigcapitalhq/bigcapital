@@ -60,6 +60,8 @@ $ns: bp4;
   --color-ui-menu-select-item-hover-background: #edeff2;
   --color-ui-menu-select-item-active-background: var(--color-primary);
 
+  --color-app-background: #fff;
+
   // Splash screen.
   --color-splash-screen-background: #fff;
 
@@ -340,6 +342,9 @@ body.bp4-dark  {
   --color-ui-menu-select-item-hover-background: #edeff2;
   --color-ui-menu-select-item-hover-background: rgba(143, 153, 168, .15);
   --color-ui-menu-select-item-active-background: var(--color-primary);
+
+  // App
+  --color-app-background: var(--color-dark-gray1);
 
   // Splash screen.
   --color-splash-screen-background: #fff;

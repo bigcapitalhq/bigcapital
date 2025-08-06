@@ -1,9 +1,11 @@
 .root {
   --x-border-color: #E1E1E1;
-  --x-border-color: rgba(225, 225, 225, 0.15);
   --x-color-placeholder-text: #738091;
-  --x-color-placeholder-text: rgba(225, 225, 225, 0.65);
   
+  .bp4-dark & {    
+    --x-border-color: rgba(225, 225, 225, 0.15);
+    --x-color-placeholder-text: rgba(225, 225, 225, 0.65);
+  }
   min-height: 120px;
   height: 120px;
   padding: 10px;

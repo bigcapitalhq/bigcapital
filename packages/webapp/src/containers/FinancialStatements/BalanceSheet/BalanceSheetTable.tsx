@@ -55,9 +55,13 @@ export default function BalanceSheetTable({
 }
 
 const BalanceSheetDataTable = styled(ReportDataTable)`
-  --color-table-text-color: var(--color-light-gray1);
-  --color-table-total-text-color: var(--color-light-gray4);
+  --color-table-text-color: #252a31;
+  --color-table-total-text-color: #000;
 
+  .bp4-dark & {
+    --color-table-text-color: var(--color-light-gray1);
+    --color-table-total-text-color: var(--color-light-gray4);
+  }
   .table {
     .tbody .tr {
       .td {

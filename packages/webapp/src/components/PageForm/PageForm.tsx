@@ -41,7 +41,9 @@ PageFormBody.displayName = 'PageFormBody';
  * Page form footer.
  * @returns {React.ReactNode}
  */
-const PageFormFooter: FC<{ children: React.ReactNode } & SystemProps> = ({ children }) => {
+const PageFormFooter: FC<{ children: React.ReactNode } & SystemProps> = ({
+  children,
+}) => {
   return <x.div>{children} </x.div>;
 };
 
@@ -51,9 +53,10 @@ const footerActionsStyle = `
   --x-color-background: #fff;
   --x-color-border: rgb(210, 221, 226);
 
-  --x-color-background: var(--color-dark-gray1);
-  --x-color-border: rgba(255, 255, 255, 0.1);
-
+  .bp4-dark & {
+    --x-color-background: var(--color-dark-gray1);
+    --x-color-border: rgba(255, 255, 255, 0.1);
+  }
   width: 100%;
   background: var(--x-color-background);
   padding: 14px 20px;
