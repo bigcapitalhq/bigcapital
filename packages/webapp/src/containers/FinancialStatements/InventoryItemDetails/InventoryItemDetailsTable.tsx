@@ -61,7 +61,7 @@ const InventoryItemDetailsDataTable = styled(ReportDataTable)`
   --color-table-border: #ececec;
   --color-report-table-border: var(--color-dark-gray4);
   --color-table-total-border: #ddd;
-  --color-table-total-border: var(--color-dark-gray4);;
+  --color-table-total-border: var(--color-dark-gray4);
 
   .table {
     .tbody {

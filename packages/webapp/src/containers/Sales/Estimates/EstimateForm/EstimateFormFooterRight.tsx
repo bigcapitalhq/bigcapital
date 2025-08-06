@@ -43,8 +43,10 @@ export function EstimateFormFooterRight() {
 
 const EstimateTotalLines = styled(TotalLines)`
   --x-color-text: #555;
-  --x-color-text: var(--color-light-gray4);
 
+  .bp4-dark & {
+    --x-color-text: var(--color-light-gray4);
+  }
   width: 100%;
   color: var(--x-color-text);
 `;
