@@ -3,7 +3,7 @@
   --x-color-amount-text: #343463;
   --x-color-label-text: #5d6f90;
 
-  :global(.bp4-dark)w & {
+  :global(.bp4-dark) & {
     --x-color-label-text: var(--color-light-gray1);
     --x-color-amount-text: var(--color-light-gray2);
   }

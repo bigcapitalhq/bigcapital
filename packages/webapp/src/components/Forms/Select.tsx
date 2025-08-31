@@ -17,7 +17,7 @@ export function FSelect({ ...props }) {
   return <Select input={input} fill={true} {...props} />;
 }
 
-const SelectButton = styled(Button)`
+export const SelectButton = styled(Button)`
   --x-color-select-background: #fff;
   --x-color-select-border: #ced4da;
   --x-color-select-caret: #8d8d8d;
