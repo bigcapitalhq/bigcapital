@@ -103,6 +103,7 @@ $ns: bp4;
   --color-datatable-no-results-text: #777;
   --color-datatable-caret: #b5b5b5;
   --color-datatable-caret-hover: #7d8593;
+  --color-datatable-checkbox-border: #C5CBD3;
 
   // Datatable - Empty status
   --color-datatable-empty-status-title: #2c3a5d;
@@ -391,6 +392,7 @@ body.bp4-dark  {
   --color-datatable-no-results-text: rgba(255, 255, 255, 0.5);
   --color-datatable-caret: rgba(255, 255, 255, 0.25);
   --color-datatable-caret-hover: rgba(255, 255, 255, 0.25);
+  --color-datatable-checkbox-border: rgba(255, 255, 255, 0.3);
 
   // Datatable - Empty status
   --color-datatable-empty-status-title: var(--color-light-gray4);

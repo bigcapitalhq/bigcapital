@@ -100,7 +100,6 @@
       .bp4-control {
         margin-bottom: 0;
       }
-
       .resizer {
         display: inline-block;
         background: transparent;
@@ -134,11 +133,8 @@
           width: 15px;
         }
       }
-
-      .bp4-control.bp4-checkbox
-        input:not(:checked):not(:indeterminate)
-        ~ .bp4-control-indicator {
-        // box-shadow: inset 0 0 0 1px #c5cbd3;
+      .bp4-control.bp4-checkbox input:not(:checked):not(:indeterminate) ~ .bp4-control-indicator{
+        box-shadow: inset 0 0 0 1px var(--color-datatable-checkbox-border);
       }
 
       .skeleton {

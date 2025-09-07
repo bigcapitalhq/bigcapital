@@ -126,6 +126,14 @@
     flex-direction: column;
   }
 
+  &__head-organization {
+    .bp4-button:not([class*=bp4-intent-]):not(.bp4-minimal) {
+      background-color: transparent;
+      border-color: transparent;
+      box-shadow: 0 0 0
+    }
+  }
+
   &-menu {
     background: transparent;
     padding: 0;
@@ -269,7 +277,6 @@
       .ScrollbarsCustom-Scroller {
         overflow: hidden !important;
       }
-
       &:hover {
         min-width: 190px;
 
