@@ -10,8 +10,10 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { CLASSES } from '@/constants/classes';
+import { useTheme } from '@emotion/react';
+import { css } from '@emotion/css';
 
+import { CLASSES } from '@/constants/classes';
 import {
   FFormGroup,
   FieldRequiredHint,
@@ -20,6 +22,7 @@ import {
   FormattedMessage as T,
   VendorDrawerLink,
   VendorsSelect,
+  Stack,
 } from '@/components';
 import {
   vendorsFieldShouldUpdate,
@@ -39,6 +42,23 @@ import {
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
+const getFieldsStyle = (theme: Theme) => css`
+  .${theme.bpPrefix}-form-group {
+    margin-bottom: 0;
+
+    &.${theme.bpPrefix}-inline {
+      max-width: 500px;
+    }
+    .${theme.bpPrefix}-label {
+      min-width: 150px;
+      font-weight: 500;
+    }
+    .${theme.bpPrefix}-form-content {
+      width: 100%;
+    }
+  }
+`;
+
 /**
  * Vendor Credit note form header fields.
  */
@@ -51,6 +71,9 @@ function VendorCreditNoteFormHeaderFields({
   vendorcreditNumberPrefix,
   vendorcreditNextNumber,
 }) {
+  const theme = useTheme();
+  const fieldsClassName = getFieldsStyle(theme);
+
   // Handle vendor credit number changing.
   const handleVendorCreditNumberChange = () => {
     openDialog('vendor-credit-form');
@@ -76,7 +99,7 @@ function VendorCreditNoteFormHeaderFields({
   );
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+    <Stack spacing={18} flex={1} className={fieldsClassName}>
       {/* ----------- Vendor name ----------- */}
       <VendorCreditFormVendorSelect />
 
@@ -165,7 +188,7 @@ function VendorCreditNoteFormHeaderFields({
           </FormGroup>
         )}
       </FastField>
-    </div>
+    </Stack>
   );
 }
 
