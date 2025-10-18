@@ -13,6 +13,7 @@ on:
       - 'pnpm-lock.yaml'
       - 'package.json'
       - 'packages/*/package.json'
+      - 'shared/*/package.json'
       - '.github/workflows/typecheck.yml'
   pull_request:
     paths:
@@ -23,6 +24,7 @@ on:
       - 'pnpm-lock.yaml'
       - 'package.json'
       - 'packages/*/package.json'
+      - 'shared/*/package.json'
       - '.github/workflows/typecheck.yml'
 
 defaults:
@@ -52,6 +54,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm run build --scope "@bigcapital/utils" --scope "@bigcapital/email-components" --scope "@bigcapital/pdf-templates"
 
       - name: Run TypeScript type check
         run: pnpm run typecheck
