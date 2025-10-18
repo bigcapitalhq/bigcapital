@@ -10,6 +10,7 @@ import {
 } from '../types/BankingPlaid.types';
 import { PlaidUpdateTransactions } from '../command/PlaidUpdateTransactions';
 import { SetupPlaidItemTenantService } from '../command/SetupPlaidItemTenant.service';
+import { SocketGateway } from '../../Socket/Socket.gateway';
 
 @Processor({
   name: UpdateBankingPlaidTransitionsQueueJob,
@@ -19,6 +20,7 @@ export class PlaidFetchTransactionsProcessor extends WorkerHost {
   constructor(
     private readonly plaidFetchTransactionsService: PlaidUpdateTransactions,
     private readonly setupPlaidItemService: SetupPlaidItemTenantService,
+    private readonly socketGateway: SocketGateway,
   ) {
     super();
   }
@@ -38,7 +40,7 @@ export class PlaidFetchTransactionsProcessor extends WorkerHost {
         );
       });
       // Notify the frontend to reflect the new transactions changes.
-      // io.emit('NEW_TRANSACTIONS_DATA', { plaidItemId });
+      this.socketGateway.emitNewTransactionsData();
     } catch (error) {
       console.log(error);
     }
