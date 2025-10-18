@@ -1,5 +1,6 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
+import { SocketModule } from '../Socket/Socket.module';
 import { PlaidUpdateTransactionsOnItemCreatedSubscriber } from './subscribers/PlaidUpdateTransactionsOnItemCreatedSubscriber';
 import { PlaidUpdateTransactions } from './command/PlaidUpdateTransactions';
 import { PlaidSyncDb } from './command/PlaidSyncDB';
@@ -26,6 +27,7 @@ const models = [RegisterTenancyModel(PlaidItem)];
 
 @Module({
   imports: [
+    SocketModule,
     PlaidModule,
     AccountsModule,
     BankingCategorizeModule,
@@ -49,4 +51,4 @@ const models = [RegisterTenancyModel(PlaidItem)];
   exports: [...models],
   controllers: [BankingPlaidController, BankingPlaidWebhooksController],
 })
-export class BankingPlaidModule {}
+export class BankingPlaidModule { }

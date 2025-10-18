@@ -94,6 +94,7 @@ import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
+import { SocketModule } from '../Socket/Socket.module';
 
 @Module({
   imports: [
@@ -226,6 +227,7 @@ import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module
     MiscellaneousModule,
     UsersModule,
     ContactsModule,
+    SocketModule,
   ],
   controllers: [AppController],
   providers: [

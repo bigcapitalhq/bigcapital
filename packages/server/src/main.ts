@@ -18,6 +18,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
 
+  // Enable CORS for socket.io
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
+
   // create and mount the middleware manually here
   app.use(new ClsMiddleware({}).use);
 
