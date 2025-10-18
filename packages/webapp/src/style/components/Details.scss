@@ -1,4 +1,6 @@
 .details-menu {
+  --color-detail-item-label: #727983;
+  --color-detail-item-label: rgba(255, 255, 255, 0.65);
 
   &--vertical {
     display: flex;
@@ -41,7 +43,7 @@
     display: flex;
 
     &__label {
-      color: #727983;
+      color: var(--color-detail-item-label);
       font-weight: 500;
     }
 

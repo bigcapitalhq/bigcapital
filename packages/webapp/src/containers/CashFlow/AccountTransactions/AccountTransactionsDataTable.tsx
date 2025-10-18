@@ -166,7 +166,7 @@ const DashboardConstrantTable = styled(DataTable)`
   .table {
     .thead {
       .th {
-        background: #fff;
+        // background: #fff;
         letter-spacing: 1px;
         text-transform: uppercase;
         font-size: 13px;
@@ -182,6 +182,12 @@ const DashboardConstrantTable = styled(DataTable)`
 `;
 
 const CashflowTransactionsTable = styled(DashboardConstrantTable)`
+  --table-cell-border-color: #e6e6e6;
+
+  .bp4-dark & {
+    --table-cell-border-color: rgba(255, 255, 255, 0.15);
+  }
+
   .table .tbody {
     .tbody-inner .tr.no-results {
       .td {
@@ -195,7 +201,7 @@ const CashflowTransactionsTable = styled(DashboardConstrantTable)`
 
     .tbody-inner {
       .tr .td:not(:first-child) {
-        border-left: 1px solid #e6e6e6;
+        border-left: 1px solid var(--table-cell-border-color);
       }
     }
   }

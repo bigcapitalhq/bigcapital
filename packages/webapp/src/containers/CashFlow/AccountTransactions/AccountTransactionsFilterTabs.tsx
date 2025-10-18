@@ -37,7 +37,7 @@ export function AccountTransactionsFilterTabs() {
           id={'uncategorized'}
           title={
             <>
-              <span style={{ color: '#ff0000' }}>
+              <span style={{ color: 'var(--color-danger)' }}>
                 {currentAccount.uncategorized_transactions}
               </span>{' '}
               Uncategorized Transactions

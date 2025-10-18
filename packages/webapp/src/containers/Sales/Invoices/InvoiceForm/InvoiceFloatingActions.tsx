@@ -23,12 +23,14 @@ import {
 import { PageForm } from '@/components/PageForm';
 import { MoreIcon } from '@/icons/More';
 import { DRAWERS } from '@/constants/drawers';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 /**
  * Invoice floating actions bar.
  */
 export default function InvoiceFloatingActions() {
   const history = useHistory();
+  const isDarkMode = useIsDarkMode();
   const { openDrawer } = useDrawerActions();
 
   // Formik context.
@@ -245,7 +247,7 @@ export default function InvoiceFloatingActions() {
             </Menu>
           }
         >
-          <Button minimal icon={<MoreIcon height={'14px'} width={'14px'} />} />
+          <Button minimal icon={<MoreIcon fill={isDarkMode ? "#fff" : "#000"} height={'14px'} width={'14px'} />} />
         </Popover>
       </Group>
     </PageForm.FooterActions>

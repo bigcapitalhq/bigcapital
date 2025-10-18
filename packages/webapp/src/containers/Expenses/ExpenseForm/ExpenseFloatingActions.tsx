@@ -11,11 +11,9 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { Group, FormattedMessage as T } from '@/components';
+import { FormattedMessage as T, PageForm, Group } from '@/components';
 import { useHistory } from 'react-router-dom';
 
-import { CLASSES } from '@/constants/classes';
-import classNames from 'classnames';
 import { Icon, If } from '@/components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
@@ -78,121 +76,120 @@ export default function ExpenseFloatingFooter() {
   };
 
   return (
-    <Group
-      spacing={10}
-      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
-    >
-      {/* ----------- Save And Publish ----------- */}
-      <If condition={isNewMode}>
-        <ButtonGroup>
-          <Button
-            disabled={isSubmitting}
-            loading={isSubmitting}
-            intent={Intent.PRIMARY}
-            onClick={handleSubmitPublishBtnClick}
-            text={<T id={'save_publish'} />}
-          />
-          <Popover
-            content={
-              <Menu>
-                <MenuItem
-                  text={<T id={'publish_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
-                />
-                <MenuItem
-                  text={<T id={'publish_continue_editing'} />}
-                  onClick={handleSubmitPublishContinueEditingBtnClick}
-                />
-              </Menu>
-            }
-            minimal={true}
-            interactionKind={PopoverInteractionKind.CLICK}
-            position={Position.BOTTOM_LEFT}
-          >
+    <PageForm.FooterActions spacing={10} position="apart">
+      <Group spacing={10}>
+        {/* ----------- Save And Publish ----------- */}
+        <If condition={isNewMode}>
+          <ButtonGroup>
             <Button
               disabled={isSubmitting}
+              loading={isSubmitting}
               intent={Intent.PRIMARY}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              onClick={handleSubmitPublishBtnClick}
+              text={<T id={'save_publish'} />}
             />
-          </Popover>
-        </ButtonGroup>
-        {/* ----------- Save As Draft ----------- */}
-        <ButtonGroup>
-          <Button
-            disabled={isSubmitting}
-            className={'ml1'}
-            onClick={handleSubmitDraftBtnClick}
-            text={<T id={'save_as_draft'} />}
-          />
-          <Popover
-            content={
-              <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitDraftAndNewBtnClick}
-                />
-                <MenuItem
-                  text={<T id={'save_continue_editing'} />}
-                  onClick={handleSubmitDraftContinueEditingBtnClick}
-                />
-              </Menu>
-            }
-            minimal={true}
-            interactionKind={PopoverInteractionKind.CLICK}
-            position={Position.BOTTOM_LEFT}
-          >
+            <Popover
+              content={
+                <Menu>
+                  <MenuItem
+                    text={<T id={'publish_and_new'} />}
+                    onClick={handleSubmitPublishAndNewBtnClick}
+                  />
+                  <MenuItem
+                    text={<T id={'publish_continue_editing'} />}
+                    onClick={handleSubmitPublishContinueEditingBtnClick}
+                  />
+                </Menu>
+              }
+              minimal={true}
+              interactionKind={PopoverInteractionKind.CLICK}
+              position={Position.BOTTOM_LEFT}
+            >
+              <Button
+                disabled={isSubmitting}
+                intent={Intent.PRIMARY}
+                rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              />
+            </Popover>
+          </ButtonGroup>
+          {/* ----------- Save As Draft ----------- */}
+          <ButtonGroup>
             <Button
               disabled={isSubmitting}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              className={'ml1'}
+              onClick={handleSubmitDraftBtnClick}
+              text={<T id={'save_as_draft'} />}
             />
-          </Popover>
-        </ButtonGroup>
-      </If>
-      {/* ----------- Save and New ----------- */}
-      <If condition={!isNewMode}>
-        <ButtonGroup>
-          <Button
-            disabled={isSubmitting}
-            loading={isSubmitting}
-            intent={Intent.PRIMARY}
-            onClick={handleSubmitPublishBtnClick}
-            style={{ minWidth: '85px' }}
-            text={<T id={'save'} />}
-          />
-          <Popover
-            content={
-              <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
-                />
-              </Menu>
-            }
-            minimal={true}
-            interactionKind={PopoverInteractionKind.CLICK}
-            position={Position.BOTTOM_LEFT}
-          >
+            <Popover
+              content={
+                <Menu>
+                  <MenuItem
+                    text={<T id={'save_and_new'} />}
+                    onClick={handleSubmitDraftAndNewBtnClick}
+                  />
+                  <MenuItem
+                    text={<T id={'save_continue_editing'} />}
+                    onClick={handleSubmitDraftContinueEditingBtnClick}
+                  />
+                </Menu>
+              }
+              minimal={true}
+              interactionKind={PopoverInteractionKind.CLICK}
+              position={Position.BOTTOM_LEFT}
+            >
+              <Button
+                disabled={isSubmitting}
+                rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              />
+            </Popover>
+          </ButtonGroup>
+        </If>
+        {/* ----------- Save and New ----------- */}
+        <If condition={!isNewMode}>
+          <ButtonGroup>
             <Button
               disabled={isSubmitting}
+              loading={isSubmitting}
               intent={Intent.PRIMARY}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              onClick={handleSubmitPublishBtnClick}
+              style={{ minWidth: '85px' }}
+              text={<T id={'save'} />}
             />
-          </Popover>
-        </ButtonGroup>
-      </If>
-      {/* ----------- Clear & Reset----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleClearBtnClick}
-        text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
-      />
-      {/* ----------- Cancel ----------- */}
-      <Button
-        className={'ml1'}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
-    </Group>
+            <Popover
+              content={
+                <Menu>
+                  <MenuItem
+                    text={<T id={'save_and_new'} />}
+                    onClick={handleSubmitPublishAndNewBtnClick}
+                  />
+                </Menu>
+              }
+              minimal={true}
+              interactionKind={PopoverInteractionKind.CLICK}
+              position={Position.BOTTOM_LEFT}
+            >
+              <Button
+                disabled={isSubmitting}
+                intent={Intent.PRIMARY}
+                rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              />
+            </Popover>
+          </ButtonGroup>
+        </If>
+        {/* ----------- Clear & Reset----------- */}
+        <Button
+          className={'ml1'}
+          disabled={isSubmitting}
+          onClick={handleClearBtnClick}
+          text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
+        />
+        {/* ----------- Cancel ----------- */}
+        <Button
+          className={'ml1'}
+          onClick={handleCancelBtnClick}
+          text={<T id={'cancel'} />}
+        />
+      </Group>
+    </PageForm.FooterActions>
   );
 }

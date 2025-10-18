@@ -5,7 +5,7 @@
   width: 100%;
   position: fixed;
   display: flex;
-  background: #fff;
+  background: var(--color-splash-screen-background);
   z-index: $zindex-dashboard-splash-screen;
 
   .center {

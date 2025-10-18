@@ -3,8 +3,16 @@ import React from 'react';
 import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { CustomersSelect, FInputGroup, FormattedMessage as T } from '@/components';
+import { css } from '@emotion/css';
 import classNames from 'classnames';
+import { useTheme } from '@emotion/react';
+
+import {
+  CustomersSelect,
+  FInputGroup,
+  Stack,
+  FormattedMessage as T,
+} from '@/components';
 import { CLASSES } from '@/constants/classes';
 import {
   momentFormatter,
@@ -14,8 +22,8 @@ import {
 } from '@/utils';
 import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
 import {
-  CurrencySelectList,
   FFormGroup,
+  FSelect,
   AccountsSelect,
   FieldRequiredHint,
   Hint,
@@ -24,14 +32,33 @@ import { ExpensesExchangeRateInputField } from './components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from './constants';
 
+const getFieldsStyle = (theme: Theme) => css`
+  .${theme.bpPrefix}-form-group {
+    margin-bottom: 0;
+
+    &.${theme.bpPrefix}-inline {
+      max-width: 450px;
+    }
+    .${theme.bpPrefix}-label {
+      min-width: 150px;
+      font-weight: 500;
+    }
+    .${theme.bpPrefix}-form-content {
+      width: 100%;
+    }
+  }
+`;
+
 /**
  * Expense form header.
  */
 export default function ExpenseFormHeader() {
   const { currencies, accounts, customers } = useExpenseFormContext();
+  const theme = useTheme();
+  const fieldsClassName = getFieldsStyle(theme);
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+    <Stack spacing={18} flex={1} className={fieldsClassName}>
       <FastField name={'payment_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
@@ -75,30 +102,24 @@ export default function ExpenseFormHeader() {
         />
       </FFormGroup>
 
-      <FastField name={'currency_code'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'currency'} />}
-            className={classNames(
-              'form-group--select-list',
-              'form-group--currency',
-              Classes.FILL,
-            )}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="currency_code" />}
-            inline={true}
-          >
-            <CurrencySelectList
-              currenciesList={currencies}
-              selectedCurrencyCode={value}
-              onCurrencySelected={(currencyItem) => {
-                form.setFieldValue('currency_code', currencyItem.currency_code);
-              }}
-              defaultSelectText={value}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'currency_code'}
+        label={<T id={'currency'} />}
+        className={classNames(Classes.FILL)}
+        inline={true}
+        fastField={true}
+      >
+        <FSelect
+          name={'currency_code'}
+          items={currencies}
+          valueAccessor={'currency_code'}
+          textAccessor={'currency_code'}
+          labelAccessor={'currency_code'}
+          popoverProps={{ minimal: true }}
+          fill={true}
+          fastField={true}
+        />
+      </FFormGroup>
 
       {/* ----------- Exchange rate ----------- */}
       <ExpensesExchangeRateInputField
@@ -118,7 +139,7 @@ export default function ExpenseFormHeader() {
 
       {/* ----------- Customer ----------- */}
       <ExpenseFormCustomerSelect />
-    </div>
+    </Stack>
   );
 }
 

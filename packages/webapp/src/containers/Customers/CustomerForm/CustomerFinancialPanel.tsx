@@ -39,28 +39,18 @@ export default function CustomerFinancialPanel() {
       <Row>
         <Col xs={6}>
           {/*------------ Currency  -----------*/}
-          <FastField name={'currency_code'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'currency'} />}
-                className={classNames(
-                  'form-group--select-list',
-                  'form-group--balance-currency',
-                  Classes.FILL,
-                )}
-                inline={true}
-              >
-                <CurrencySelectList
-                  currenciesList={currencies}
-                  selectedCurrencyCode={value}
-                  onCurrencySelected={(currency) => {
-                    form.setFieldValue('currency_code', currency.currency_code);
-                  }}
-                  disabled={customerId}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'currency_code'}
+            label={<T id={'currency'} />}
+            fastField
+            inline
+          >
+            <CurrencySelectList
+              name="currency_code"
+              items={currencies}
+              disabled={customerId}
+            />
+          </FFormGroup>
 
           {/*------------ Opening balance  -----------*/}
           <CustomerOpeningBalanceField />

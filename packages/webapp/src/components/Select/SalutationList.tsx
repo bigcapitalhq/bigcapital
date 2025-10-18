@@ -1,10 +1,16 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
+import { FSelect } from '../Forms';
 
-import { ListSelect } from './ListSelect';
+export type SalutationItem = { key: string; label: string };
 
-export function SalutationList({ ...restProps }) {
+export interface SalutationListProps
+  extends Omit<
+    React.ComponentProps<typeof FSelect>,
+    'items' | 'valueAccessor' | 'textAccessor' | 'labelAccessor'
+  > {}
+
+export function SalutationList({ ...restProps }: SalutationListProps) {
   const saluations = [
     intl.get('mr'),
     intl.get('mrs'),
@@ -12,17 +18,17 @@ export function SalutationList({ ...restProps }) {
     intl.get('miss'),
     intl.get('dr'),
   ];
-  const items = saluations.map((saluation) => ({
+  const items: SalutationItem[] = saluations.map((saluation) => ({
     key: saluation,
     label: saluation,
   }));
 
   return (
-    <ListSelect
+    <FSelect
       items={items}
-      selectedItemProp={'key'}
-      textProp={'label'}
-      defaultText={intl.get('salutation')}
+      valueAccessor={'key'}
+      textAccessor={'label'}
+      placeholder={intl.get('salutation')}
       filterable={false}
       {...restProps}
     />

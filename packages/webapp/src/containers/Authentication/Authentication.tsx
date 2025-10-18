@@ -11,14 +11,22 @@ import { Box, Icon, FormattedMessage as T } from '@/components';
 import { AuthMetaBootProvider } from './AuthMetaBoot';
 
 import '@/style/pages/Authentication/Auth.scss';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
+import { BigcapitalAlt } from '@/components/Icons/BigcapitalAlt';
 
 export function Authentication() {
+  const isDarkMode = useIsDarkMode();
+
   return (
     <BodyClassName className={'authentication'}>
       <AuthPage>
         <AuthInsider>
           <AuthLogo>
-            <Icon icon="bigcapital" height={37} width={214} />
+            {isDarkMode ? (
+              <BigcapitalAlt color={"rgba(255, 255, 255, 0.6)"} height={37} width={214} />
+            ) : (
+              <Icon icon="bigcapital" height={37} width={214} />
+            )}
           </AuthLogo>
 
           <AuthMetaBootProvider>

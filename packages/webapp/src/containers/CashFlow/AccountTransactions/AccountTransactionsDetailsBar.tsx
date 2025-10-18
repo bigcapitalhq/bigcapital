@@ -173,13 +173,14 @@ const DetailsBarSkeletonBase = styled.div`
 
 const AccountBalanceItemWrap = styled.div`
   margin-left: 18px;
-  color: #5f6d86;
+  // color: #5f6d86;
 `;
 
 const AccountTransactionDetailsWrap = styled.div`
   display: flex;
-  background: #fff;
-  border-bottom: 1px solid #d2dce2;
+  background: var(--color-bank-transactions-details-bar-background);
+  color: var(--color-bank-transactions-details-bar-text);
+  border-bottom: 1px solid var(--color-bank-transactions-details-bar-divider);
   padding: 0 22px;
   height: 42px;
   align-items: center;
@@ -192,7 +193,7 @@ const AccountSwitchText = styled.div`
 const AccountBalanceAmount = styled.span`
   font-weight: 600;
   display: inline-block;
-  color: rgb(31, 50, 85);
+  // color: rgb(31, 50, 85);
   margin-left: 10px;
 `;
 

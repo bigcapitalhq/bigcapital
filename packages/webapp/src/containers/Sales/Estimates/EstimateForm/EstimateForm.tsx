@@ -37,7 +37,7 @@ import {
 } from './utils';
 import { PageForm } from '@/components/PageForm';
 
-/**6
+/**
  * Estimate form.
  */
 function EstimateForm({
@@ -70,18 +70,18 @@ function EstimateForm({
     ...(!isEmpty(estimate)
       ? { ...transformToEditForm(estimate) }
       : {
-          ...defaultEstimate,
-          // If the auto-increment mode is enabled, take the next estimate
-          // number from the settings.
-          ...(estimateAutoIncrementMode && {
-            estimate_number: estimateNumber,
-          }),
-          entries: orderingLinesIndexes(defaultEstimate.entries),
-          currency_code: base_currency,
-          terms_conditions: defaultTo(estimateTermsConditions, ''),
-          note: defaultTo(estimateCustomerNotes, ''),
-          pdf_template_id: saleEstimateState?.defaultTemplateId,
+        ...defaultEstimate,
+        // If the auto-increment mode is enabled, take the next estimate
+        // number from the settings.
+        ...(estimateAutoIncrementMode && {
+          estimate_number: estimateNumber,
         }),
+        entries: orderingLinesIndexes(defaultEstimate.entries),
+        currency_code: base_currency,
+        terms_conditions: defaultTo(estimateTermsConditions, ''),
+        note: defaultTo(estimateCustomerNotes, ''),
+        pdf_template_id: saleEstimateState?.defaultTemplateId,
+      }),
   };
 
   // Handles form submit.

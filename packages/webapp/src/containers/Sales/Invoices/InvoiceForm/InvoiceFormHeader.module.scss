@@ -1,0 +1,11 @@
+.root {
+  --color-invoice-form-header-background: #fff;
+  --color-invoice-form-header-border: #d2dce2;
+
+  :global(.bp4-dark) & {
+    --color-invoice-form-header-background: var(--color-dark-gray1);
+    --color-invoice-form-header-border: rgba(255, 255, 255, 0.1);
+  }    
+  border-bottom: 1px solid var(--color-invoice-form-header-border);
+  background-color: var(--color-invoice-form-header-background);
+}

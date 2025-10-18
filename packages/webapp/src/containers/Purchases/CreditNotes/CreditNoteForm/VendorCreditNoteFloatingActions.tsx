@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import {
@@ -13,8 +12,8 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { If, Icon, FormattedMessage as T, Group } from '@/components';
-import { CLASSES } from '@/constants/classes';
+import { If, Icon, FormattedMessage as T } from '@/components';
+import { PageForm } from '@/components/PageForm';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
 /**
@@ -74,10 +73,7 @@ export default function VendorCreditNoteFloatingActions() {
     resetForm();
   };
   return (
-    <Group
-      spacing={10}
-      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
-    >
+    <PageForm.FooterActions spacing={10}>
       {/* ----------- Save And Open  ----------- */}
       <If condition={!vendorCredit || !vendorCredit?.is_open}>
         <ButtonGroup>
@@ -189,6 +185,6 @@ export default function VendorCreditNoteFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </Group>
+    </PageForm.FooterActions>
   );
 }

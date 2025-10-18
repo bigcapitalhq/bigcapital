@@ -42,4 +42,6 @@ export default function InvoiceGLEntriesTable() {
 
 const InvoiceGLEntriesDatatable = styled(JournalEntriesTable)``;
 
-const InvoiceGLEntriesRoot = styled(Card)``;
+const InvoiceGLEntriesRoot = styled(Card)`
+  
+`;

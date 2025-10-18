@@ -2,18 +2,15 @@
   .bigcapital-datatable {
     .table {
       max-height: 300px;
-      border: 1px solid #d1dee2;
+      border: 1px solid var(--color-datatable-cell-border);
       min-width: auto;
       margin: 15px;
-      .tbody,
-      .thead .tr .td,
-      .tr .th {
-        background: #fff;
-      }
+
       .tbody,
       .tbody-inner {
         height: 250px;
         scrollbar-width: none;
+
         &::-webkit-scrollbar {
           display: none;
         }
@@ -22,7 +19,10 @@
         .tr .td {
           padding: 0.4rem;
           margin-left: -1px;
-          border-left: 1px solid #ececec;
+          border-left: 1px solid var(--color-datatable-cell-border);
+        }
+        .tr:last-of-type .td {
+          border-bottom: 0;
         }
       }
     }

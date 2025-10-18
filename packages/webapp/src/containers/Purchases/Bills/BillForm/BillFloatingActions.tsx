@@ -11,6 +11,7 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { Group, FormattedMessage as T } from '@/components';
+import { PageForm } from '@/components/PageForm';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
@@ -76,7 +77,7 @@ export default function BillFloatingActions() {
   };
 
   return (
-    <Group
+    <PageForm.FooterActions
       spacing={10}
       className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
     >
@@ -192,6 +193,6 @@ export default function BillFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </Group>
+    </PageForm.FooterActions>
   );
 }

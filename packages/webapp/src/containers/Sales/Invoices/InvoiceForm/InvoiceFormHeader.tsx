@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import { Group, PageFormBigNumber } from '@/components';
 import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
 import { useInvoiceTotalFormatted } from './utils';
+import styles from './InvoiceFormHeader.module.scss';
 
 /**
  * Invoice form header section.
@@ -13,9 +14,8 @@ function InvoiceFormHeader() {
     <Group
       position="apart"
       align={'flex-start'}
-      bg="white"
       p="25px 32px"
-      borderBottom="1px solid #d2dce2"
+      className={styles.root}
     >
       <InvoiceFormHeaderFields />
       <InvoiceFormBigTotal />

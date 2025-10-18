@@ -27,6 +27,7 @@ import {
   Can,
   Icon,
   FormattedMessage as T,
+  DrawerActionsBar,
 } from '@/components';
 import { CustomerMoreMenuItem } from './utils';
 import {
@@ -91,7 +92,7 @@ function CustomerDetailsActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Popover
           content={
@@ -163,7 +164,7 @@ function CustomerDetailsActionsBar({
           }}
         />
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 

@@ -57,6 +57,11 @@ export default function CustomersTransactionsTable({
 }
 
 const CustomersTransactionsDataTable = styled(DataTable)`
+  --color-table-border-left-color: #ececec;
+  --color-table-customer-border-color: #ddd;
+  --color-table-border-left-color: var(--color-dark-gray4);
+  --color-table-customer-border-color: var(--color-dark-gray4);
+
   .table {
     .tbody {
       .tr .td {
@@ -64,10 +69,10 @@ const CustomersTransactionsDataTable = styled(DataTable)`
         padding-bottom: 0.36rem;
       }
       .tr:not(.no-results) .td:not(:first-of-type) {
-        border-left: 1px solid #ececec;
+        border-left: 1px solid var(--color-table-border-left-color);
       }
       .tr:last-child .td {
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom-width: 1px;
       }
 
       .tr.row_type {
@@ -83,7 +88,7 @@ const CustomersTransactionsDataTable = styled(DataTable)`
             }
           }
           &:not(:first-child).is-expanded .td {
-            border-top: 1px solid #ddd;
+            border-top: 1px solid var(--color-table-customer-border-color);
           }
         }
         &--OPENING_BALANCE,
@@ -97,12 +102,12 @@ const CustomersTransactionsDataTable = styled(DataTable)`
             }
           }
           &:not(:first-child).is-expanded .td {
-            border-top: 1px solid #ddd;
+            border-top: 1px solid var(--color-table-customer-border-color);
           }
         }
         &--CUSTOMER:last-child {
           .td {
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--color-table-customer-border-color);
           }
         }
       }

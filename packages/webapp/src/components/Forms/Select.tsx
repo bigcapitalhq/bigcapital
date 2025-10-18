@@ -17,17 +17,25 @@ export function FSelect({ ...props }) {
   return <Select input={input} fill={true} {...props} />;
 }
 
-const SelectButton = styled(Button)`
+export const SelectButton = styled(Button)`
+  --x-color-select-background: #fff;
+  --x-color-select-border: #ced4da;
+  --x-color-select-caret: #8d8d8d;
+
+  .bp4-dark & {
+    --x-color-select-background: rgba(17, 20, 24, 0.3);
+    --x-color-select-border: rgba(255, 255, 255, 0.15);
+    --x-color-select-caret: rgba(255, 255, 255, 0.25);
+  }
   outline: none;
   box-shadow: 0 0 0 transparent;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--x-color-select-border);
   position: relative;
   padding-right: 30px;
 
   &.bp4-small {
     padding-right: 24px;
   }
-
   &:not(.is-selected):not([class*='bp4-intent-']):not(.bp4-minimal) {
     color: #8f99a8;
   }
@@ -36,10 +44,9 @@ const SelectButton = styled(Button)`
     display: inline-block;
     width: 0;
     height: 0;
-
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-top: 5px solid #8d8d8d;
+    border-top: 5px solid var(--x-color-select-caret);
 
     position: absolute;
     right: 0;
@@ -51,7 +58,7 @@ const SelectButton = styled(Button)`
   &:not([class*='bp4-intent-']):not(.bp4-disabled) {
     &,
     &:hover {
-      background: #fff;
+      background: var(--x-color-select-background);
     }
   }
   .bp4-intent-danger & {

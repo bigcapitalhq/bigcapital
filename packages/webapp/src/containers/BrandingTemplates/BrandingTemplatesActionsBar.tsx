@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
 import { Button, NavbarGroup, Intent } from '@blueprintjs/core';
-import { DashboardActionsBar, Icon } from '@/components';
+import { DrawerActionsBar, Icon } from '@/components';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import {
   getButtonLabelFromResource,
@@ -26,7 +26,7 @@ function BrandingTemplateActionsBarRoot({ openDrawer }) {
   const label = useMemo(() => getButtonLabelFromResource(resource), [resource]);
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Button
           intent={Intent.PRIMARY}
@@ -37,7 +37,7 @@ function BrandingTemplateActionsBarRoot({ openDrawer }) {
           {label}
         </Button>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 export const BrandingTemplateActionsBar = compose(withDrawerActions)(

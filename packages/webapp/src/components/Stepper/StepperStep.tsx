@@ -74,21 +74,27 @@ const StepIcon = styled.span`
   border-radius: 24px;
   text-align: center;
   background-color: ${(props) =>
-    props.isCompleted || props.isActive ? 'rgb(0, 82, 204)' : '#9e9e9e'};
-  color: #fff;
+    props.isCompleted || props.isActive
+      ? 'var(--color-stepper-step-active-background)'
+      : 'var(--color-stepper-step-background)'};
+  color: var(--color-stepper-step-text);
   margin: auto;
   font-size: 12px;
 `;
 
 const StepTitle = styled.div`
   color: ${(props) =>
-    props.isCompleted || props.isActive ? 'rgb(0, 82, 204)' : '#738091'};
+    props.isCompleted || props.isActive
+      ? 'var(--color-stepper-step-title-active-text)'
+      : 'var(--color-stepper-step-title-text)'};
 `;
 const StepDescription = styled.div`
   font-size: 12px;
   margin-top: 10px;
   color: ${(props) =>
-    props.isCompleted || props.isActive ? 'rgb(0, 82, 204)' : '#738091'};
+    props.isCompleted || props.isActive
+      ? 'var(--color-stepper-step-description-active-text)'
+      : 'var(--color-stepper-step-description-text)'};
 `;
 
 const StepIconWrap = styled.div`
