@@ -27,8 +27,8 @@ import { PaymentMadeBranchValidateSubscriber } from './subscribers/Validators/Pa
 import { PaymentReceiveBranchValidateSubscriber } from './subscribers/Validators/PaymentReceiveBranchSubscriber';
 import { SaleReceiptBranchValidateSubscriber } from './subscribers/Validators/SaleReceiptBranchesSubscriber';
 import { VendorCreditBranchValidateSubscriber } from './subscribers/Validators/VendorCreditBranchSubscriber';
-import { ValidateBranchExistance } from './Integrations/ValidateBranchExistance';
-import { ManualJournalBranchesValidator } from './Integrations/ManualJournals/ManualJournalsBranchesValidator';
+import { ValidateBranchExistance } from './integrations/ValidateBranchExistance';
+import { ManualJournalBranchesValidator } from './integrations/ManualJournals/ManualJournalsBranchesValidator';
 import { CashflowTransactionsActivateBranches } from './integrations/Cashflow/CashflowActivateBranches';
 import { ExpensesActivateBranches } from './integrations/Expense/ExpensesActivateBranches';
 import { FeaturesModule } from '../Features/Features.module';
@@ -74,4 +74,4 @@ import { FeaturesModule } from '../Features/Features.module';
     ManualJournalBranchesDTOTransformer,
   ],
 })
-export class BranchesModule {}
+export class BranchesModule { }

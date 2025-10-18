@@ -7,7 +7,7 @@ import { VendorCreditAutoIncrementService } from './commands/VendorCreditAutoInc
 import { GetRefundVendorCreditService } from '../VendorCreditsRefund/queries/GetRefundVendorCredit.service';
 import { GetVendorCreditService } from './queries/GetVendorCredit.service';
 import { VendorCreditsController } from './VendorCredits.controller';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
@@ -75,4 +75,4 @@ import { VendorCreditsImportable } from './commands/VendorCreditsImportable';
   ],
   controllers: [VendorCreditsController],
 })
-export class VendorCreditsModule {}
+export class VendorCreditsModule { }

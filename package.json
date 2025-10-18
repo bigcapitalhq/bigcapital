@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "lerna run dev",
     "build": "lerna run build",
+    "typecheck": "lerna run typecheck",
     "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\"",
     "build:webapp": "lerna run build --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\"",
     "dev:server": "lerna run dev --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\" --scope \"@bigcapital/email-components\"",

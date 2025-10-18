@@ -1,10 +1,10 @@
-import { PageProperties, PdfFormat } from '@/libs/Chromiumly/_types';
+import { PageProperties, PdfFormat } from '@/libs/chromiumly/_types';
 import { ChromiumlyHtmlConvert } from './ChromiumlyHtmlConvert.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ChromiumlyTenancy {
-  constructor(private htmlConvert: ChromiumlyHtmlConvert) {}
+  constructor(private htmlConvert: ChromiumlyHtmlConvert) { }
 
   /**
    * Converts the given HTML content to PDF.

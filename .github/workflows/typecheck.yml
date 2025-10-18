@@ -1,0 +1,62 @@
+name: TypeCheck
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '**.ts'
+      - '**.tsx'
+      - '**/tsconfig.json'
+      - '**/tsconfig.*.json'
+      - 'pnpm-lock.yaml'
+      - 'package.json'
+      - 'packages/*/package.json'
+      - 'shared/*/package.json'
+      - '.github/workflows/typecheck.yml'
+  pull_request:
+    paths:
+      - '**.ts'
+      - '**.tsx'
+      - '**/tsconfig.json'
+      - '**/tsconfig.*.json'
+      - 'pnpm-lock.yaml'
+      - 'package.json'
+      - 'packages/*/package.json'
+      - 'shared/*/package.json'
+      - '.github/workflows/typecheck.yml'
+
+defaults:
+  run:
+    shell: 'bash'
+
+jobs:
+  typecheck:
+    name: TypeScript Type Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm run build --scope "@bigcapital/utils" --scope "@bigcapital/email-components" --scope "@bigcapital/pdf-templates"
+
+      - name: Run TypeScript type check
+        run: pnpm run typecheck

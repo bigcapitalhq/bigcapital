@@ -1,6 +1,6 @@
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
-import { CashflowTransactionsActivateBranches } from '../../Integrations/Cashflow/CashflowActivateBranches';
+import { CashflowTransactionsActivateBranches } from '../../integrations/Cashflow/CashflowActivateBranches';
 import { IBranchesActivatedPayload } from '../../Branches.types';
 import { events } from '@/common/events/events';
 
@@ -8,8 +8,8 @@ import { events } from '@/common/events/events';
 export class CreditNoteActivateBranchesSubscriber {
   constructor(
     private readonly cashflowActivateBranches: CashflowTransactionsActivateBranches,
-  ) {}
-  
+  ) { }
+
   /**
    * Updates accounts transactions with the primary branch once
    * the multi-branches is activated.
@@ -17,7 +17,7 @@ export class CreditNoteActivateBranchesSubscriber {
    */
   @OnEvent(events.branch.onActivated)
   async updateCashflowWithBranchOnActivated({
-    
+
     primaryBranch,
     trx,
   }: IBranchesActivatedPayload) {

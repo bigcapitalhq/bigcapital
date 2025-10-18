@@ -19,7 +19,7 @@ import { PublicRoute } from './guards/jwt.guard';
 import { AuthenticationApplication } from './AuthApplication.sevice';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
 import { AuthSigninDto } from './dtos/AuthSignin.dto';
-import { LocalAuthGuard } from './guards/local.guard';
+import { LocalAuthGuard } from './guards/Local.guard';
 import { AuthSigninService } from './commands/AuthSignin.service';
 import { TenantModel } from '../System/models/TenantModel';
 import { SystemUser } from '../System/models/SystemUser';
@@ -35,7 +35,7 @@ export class AuthController {
 
     @Inject(TenantModel.name)
     private readonly tenantModel: typeof TenantModel,
-  ) {}
+  ) { }
 
   @Post('/signin')
   @UseGuards(LocalAuthGuard)

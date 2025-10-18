@@ -2,7 +2,7 @@ import {
   IVendorCreditCreatingPayload,
   IVendorCreditEditingPayload,
 } from '@/modules/VendorCredit/types/VendorCredit.types';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistance } from '../../integrations/ValidateBranchExistance';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
@@ -11,7 +11,7 @@ import { events } from '@/common/events/events';
 export class VendorCreditBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) {}
+  ) { }
 
   /**
    * Validate branch existance on estimate creating.

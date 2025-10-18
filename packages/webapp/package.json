@@ -131,6 +131,7 @@
   "scripts": {
     "dev": "cross-env PORT=4000 craco start",
     "build": "craco build",
+    "typecheck": "tsc --noEmit",
     "test": "node scripts/test.js",
     "storybook": "start-storybook -p 6006"
   },

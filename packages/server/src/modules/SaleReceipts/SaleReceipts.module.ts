@@ -8,7 +8,7 @@ import { DeleteSaleReceipt } from './commands/DeleteSaleReceipt.service';
 import { CloseSaleReceipt } from './commands/CloseSaleReceipt.service';
 import { SaleReceiptsPdfService } from './queries/SaleReceiptsPdf.service';
 import { GetSaleReceiptState } from './queries/GetSaleReceiptState.service';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { SaleReceiptDTOTransformer } from './commands/SaleReceiptDTOTransformer.service';
 import { SaleReceiptValidators } from './commands/SaleReceiptValidators.service';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
@@ -85,4 +85,4 @@ import { GetSaleReceiptMailTemplateService } from './queries/GetSaleReceiptMailT
     GetSaleReceiptMailTemplateService
   ],
 })
-export class SaleReceiptsModule {}
+export class SaleReceiptsModule { }
