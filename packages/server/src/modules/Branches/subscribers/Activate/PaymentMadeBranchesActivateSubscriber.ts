@@ -1,4 +1,4 @@
-import { BillPaymentsActivateBranches } from '../../Integrations/Purchases/PaymentMadeBranchesActivate';
+import { BillPaymentsActivateBranches } from '../../integrations/Purchases/PaymentMadeBranchesActivate';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
@@ -8,7 +8,7 @@ import { IBranchesActivatedPayload } from '../../Branches.types';
 export class PaymentMadeActivateBranchesSubscriber {
   constructor(
     private readonly paymentsActivateBranches: BillPaymentsActivateBranches,
-  ) {}
+  ) { }
 
   /**
    * Updates accounts transactions with the primary branch once

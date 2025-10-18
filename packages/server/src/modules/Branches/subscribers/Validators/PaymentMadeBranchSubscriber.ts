@@ -4,14 +4,14 @@ import {
   IBillPaymentCreatingPayload,
   IBillPaymentEditingPayload,
 } from '@/modules/BillPayments/types/BillPayments.types';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistance } from '../../integrations/ValidateBranchExistance';
 import { events } from '@/common/events/events';
 
 @Injectable()
 export class PaymentMadeBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) {}
+  ) { }
 
   /**
    * Validate branch existance on estimate creating.

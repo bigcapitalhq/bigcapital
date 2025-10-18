@@ -5,7 +5,6 @@ import { PageProperties, PdfFormat } from '@/libs/Chromiumly/_types';
 import { UrlConverter } from '@/libs/Chromiumly/UrlConvert';
 import { Chromiumly } from '@/libs/Chromiumly/Chromiumly';
 import {
-  PDF_FILE_EXPIRE_IN,
   getPdfFilePath,
   getPdfFilesStorageDir,
 } from './utils';
@@ -20,7 +19,7 @@ export class ChromiumlyHtmlConvert {
   constructor(
     @Inject(Document.name)
     private documentModel: TenantModelProxy<typeof Document>,
-  ) {}
+  ) { }
 
   /**
    * Write HTML content to temporary file.

@@ -5,13 +5,13 @@ import {
   ISaleEstimateCreatingPayload,
   ISaleEstimateEditingPayload,
 } from '@/modules/SaleEstimates/types/SaleEstimates.types';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistance } from '../../integrations/ValidateBranchExistance';
 
 @Injectable()
 export class SaleEstimateBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) {}
+  ) { }
 
   /**
    * Validate branch existance on estimate creating.

@@ -24,9 +24,9 @@ import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 import { ItemResponseDto } from './dtos/itemResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
-import { ItemInvoiceResponseDto } from './dtos/itemInvoiceResponse.dto';
+import { ItemInvoiceResponseDto } from './dtos/ItemInvoiceResponse.dto';
 import { ItemEstimatesResponseDto } from './dtos/ItemEstimatesResponse.dto';
-import { ItemBillsResponseDto } from './dtos/itemBillsResponse.dto';
+import { ItemBillsResponseDto } from './dtos/ItemBillsResponse.dto';
 import { ItemReceiptsResponseDto } from './dtos/ItemReceiptsResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 

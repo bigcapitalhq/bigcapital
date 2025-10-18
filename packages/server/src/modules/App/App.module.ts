@@ -18,7 +18,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ClsModule, ClsService } from 'nestjs-cls';
 import { AppController } from './App.controller';
 import { AppService } from './App.service';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { config } from '../../common/config';
 import { SystemDatabaseModule } from '../System/SystemDB/SystemDB.module';
 import { SystemModelsModule } from '../System/SystemModels/SystemModels.module';

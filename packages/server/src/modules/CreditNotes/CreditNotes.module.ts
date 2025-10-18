@@ -9,7 +9,7 @@ import { CreditNoteApplication } from './CreditNoteApplication.service';
 import { CreditNotesController } from './CreditNotes.controller';
 import { GetCreditNoteState } from './queries/GetCreditNoteState.service';
 import { GetCreditNotePdf } from './queries/GetCreditNotePdf.serivce';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
@@ -89,4 +89,4 @@ import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/Credit
   ],
   controllers: [CreditNotesController],
 })
-export class CreditNotesModule {}
+export class CreditNotesModule { }
