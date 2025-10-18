@@ -50,7 +50,6 @@
         opacity: $sidebar-logo-opacity;
       }
     }
-
     &-organization {
       .title {
         background: transparent;
@@ -148,8 +147,7 @@
       font-size: 15px;
       font-weight: 400;
 
-      &:hover,
-      &.bp4-active {
+      &:hover {
         background: var(--color-sidebar-menu-item-hover-background);
         color: var(--color-sidebar-menu-item-text-hover);
       }
@@ -157,7 +155,10 @@
       &:active {
         background: var(--color-sidebar-menu-item-focus-background);
       }
-
+      &.bp4-active.bp4-intent-primary {
+        background: var(--color-sidebar-menu-item-active-background);
+        color: var(--color-sidebar-menu-item-active-text);
+      }
       >.#{$ns}-icon {
         color: #767b9b;
         margin-right: 16px;

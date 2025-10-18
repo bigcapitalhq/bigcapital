@@ -60,6 +60,7 @@ $ns: bp4;
   --color-ui-menu-select-item-hover-background: #edeff2;
   --color-ui-menu-select-item-active-background: var(--color-primary);
 
+  --color-app-body: #fff;
   --color-app-background: #fff;
 
   // Splash screen.
@@ -114,6 +115,7 @@ $ns: bp4;
   --color-sidebar-background: #01115e;
   --color-sidebar-text: #fff;
   --color-sidebar-scrollbars-background: rgba(255, 255, 255, 0.25);
+  
 
   // Sidebar - Items  
   --color-sidebar-menu-item-text: rgb(255, 255, 255);
@@ -345,6 +347,7 @@ body.bp4-dark  {
   --color-ui-menu-select-item-active-background: var(--color-primary);
 
   // App
+  --color-app-body: var(--color-dark-gray1);
   --color-app-background: var(--color-dark-gray1);
 
   // Splash screen.
@@ -406,11 +409,11 @@ body.bp4-dark  {
 
   // Sidebar - Items  
   --color-sidebar-menu-item-text: #ffff;
-  --color-sidebar-menu-item-hover-background: var(--color-dark-gray5);
+  --color-sidebar-menu-item-hover-background: var(--color-dark-gray4);
   --color-sidebar-menu-item-text-hover: #fff;
-  --color-sidebar-menu-item-active-background: var(--color-dark-gray5);
+  --color-sidebar-menu-item-active-background: var(--color-dark-gray4);
   --color-sidebar-menu-item-active-text: #fff;
-  --color-sidebar-menu-item-focus-background: #01143e;
+  --color-sidebar-menu-item-focus-background: var(--color-dark-gray5);
   --color-sidebar-menu-label-color: rgba(255, 255, 255, 0.4);
 
   // Sidebar overlay

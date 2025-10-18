@@ -1,8 +1,13 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 
-export function Card({ className, style, children }) {
+interface CardProps {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+}
+
+export function Card({ className, style, children }: CardProps) {
   return (
     <CardRoot className={className} style={style}>
       {children}

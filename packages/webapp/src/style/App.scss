@@ -44,13 +44,16 @@
 @import 'pages/fonts';
 @import "section";
 
+body {
+  background-color: var(--color-app-body);
+  overflow: hidden;
+}
 // App
 .App {
   min-width: 1100px;
   min-height: 100vh;
   background-color: var(--color-app-background);
 }
-
 // =======
 
 body.hide-scrollbar .Pane2 {
