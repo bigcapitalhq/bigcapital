@@ -498,8 +498,8 @@ $dashboard-views-bar-height: 44px;
   }
 
   &__card {
-    border: 1px solid #d2dce2;
-    background: #fff;
+    border: 1px solid var(--color-dashboard-card-border);
+    background: var(--color-dashboard-card-background);
 
     &--page {
       flex: 1 0 0;

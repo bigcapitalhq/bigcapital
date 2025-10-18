@@ -3,6 +3,14 @@
   $self: '.page-form';
   padding: 20px;
 
+  --x-header-border: #eaeaea;
+  --x-section-border: #eaeaea;
+  
+  .bp4-dark & {
+    --x-header-border: var(--color-dark-gray3);
+    --x-section-border: var(--color-dark-gray3);
+  }
+  
   #{$self}__header {
     padding: 0;
   }
@@ -10,7 +18,7 @@
     overflow: hidden;
     padding-top: 5px;
     margin-bottom: 20px;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid var(--x-header-border);
     padding-bottom: 5px;
     max-width: 1000px;
   }
@@ -66,7 +74,7 @@
     }
 
     &--selling-cost {
-      border-bottom: 1px solid #eaeaea;
+      border-bottom: 1px solid var(--x-section-border);
       margin-bottom: 1.25rem;
       padding-bottom: 0.25rem;
     }

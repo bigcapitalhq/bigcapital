@@ -110,6 +110,9 @@ $ns: bp4;
   --color-datatable-empty-status-title: #2c3a5d;
   --color-datatable-empty-status-description: #1f3255;
 
+  --color-dashboard-card-background: #fff;
+  --color-dashboard-card-border: #d2dce2;
+
   // Sidebar
   --color-sidebar-toggle: #6b8193;
   --color-sidebar-background: #01115e;
@@ -400,6 +403,9 @@ body.bp4-dark  {
   // Datatable - Empty status
   --color-datatable-empty-status-title: var(--color-light-gray4);
   --color-datatable-empty-status-description: var(--color-light-gray5);
+
+  --color-dashboard-card-background: var(--color-dark-gray1);
+  --color-dashboard-card-border: var(--color-dark-gray3);
 
   // Sidebar
   --color-sidebar-toggle: rgba(255, 255, 255, 0.5);

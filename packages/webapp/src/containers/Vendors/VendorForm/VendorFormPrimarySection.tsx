@@ -58,6 +58,7 @@ function VendorFormPrimarySection() {
       >
         <FInputGroup name={'company_name'} />
       </FFormGroup>
+
       {/*----------- Display Name -----------*/}
       <FFormGroup
         name={'display_name'}
@@ -68,8 +69,8 @@ function VendorFormPrimarySection() {
             <Hint />
           </>
         }
-        className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, CLASSES.FILL)}
-        inline={true}
+        fastField
+        inline
       >
         <DisplayNameList
           name={'display_name'}
