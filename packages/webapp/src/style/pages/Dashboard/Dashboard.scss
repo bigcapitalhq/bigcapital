@@ -399,8 +399,8 @@ $dashboard-views-bar-height: 44px;
   &__fallback-loading {
     display: flex;
     flex-direction: column;
+    background-color: var(--color-dashboard-fallback-loading-background);
     height: 100%;
-    background-color: #fbfbfb;
 
     .bp4-spinner {
       margin: auto;

@@ -69,7 +69,7 @@
     .bp4-input-group {
       .bp4-icon {
         margin: 16px;
-        color: #5c707f;
+        color: var(--color-universal-search-icon);
 
         svg {
           stroke-width: 2;
@@ -139,6 +139,7 @@
 
     .bp4-tag {
       background: var(--color-universal-search-tag-background);
+      color: var(--color-universal-search-tag-text);
     }
     &--arrows {
       .bp4-tag {
@@ -148,7 +149,7 @@
         margin-left: 4px;
 
         svg {
-          fill: #fff;
+          fill: var(--color-universal-search-tag-text);
           height: 100%;
           display: block;
           width: 100%;

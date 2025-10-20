@@ -10,7 +10,7 @@
     "dev:server": "lerna run dev --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\" --scope \"@bigcapital/email-components\"",
     "build:server": "lerna run build --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\" --scope \"@bigcapital/email-components\"",
     "serve:server": "lerna run serve --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\"",
-    "server2:start": "lerna run start:dev --scope \"@bigcapital/server2\"",
+    "server:start": "lerna run start:dev --scope \"@bigcapital/server\"",
     "test:watch": "lerna run test:watch",
     "test:e2e": "lerna run test:e2e",
     "start:debug": "lerna run start:debug",

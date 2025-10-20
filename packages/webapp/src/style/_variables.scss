@@ -69,6 +69,7 @@ $ns: bp4;
   // Main Dashboard.
   --color-dashboard-insider-background: #fbfbfb;
   --color-dashboard-topbar-background: #fff;
+  --color-dashboard-fallback-loading-background: #fbfbfb;
   --color-dashboard-topbar-border-color: #c7d5db;
   --color-dashboard-datatable-background: #fff;
   --color-dashboard-datatable-border: #d2dce2;
@@ -242,7 +243,9 @@ $ns: bp4;
   // Universal search
   --color-universal-search-background: #fff;
   --color-universal-search-footer-divider: #d3dce2;
+  --color-universal-search-icon: #5c707f;
   --color-universal-search-tag-background: #708392;
+  --color-universal-search-tag-text: #fff;
   --color-universal-search-menu-border: #d3dce2;
 
   // Content tabs
@@ -255,9 +258,7 @@ $ns: bp4;
 
   // Aside
   --color-aside-background: #fff;
-
   --color-aside-title-background: #fff;
-
   --color-aside-divider: #E1E2E9;
 
   // App shell
@@ -284,6 +285,13 @@ $ns: bp4;
   --color-drawer-header-text: #354152;
   --color-drawer-insider-background: #fbfbfb;
   --color-drawer-tabs-background: #fff;
+
+  // Skeleton
+  --color-skeleton-background-start: rgba(206, 217, 224, 0.3);
+  --color-skeleton-background-end: rgba(92, 112, 128, 0.3);
+  --color-skeleton-border-start: rgba(206, 217, 224, 0.3);
+  --color-skeleton-border-end: rgba(92, 112, 128, 0.3);
+  --color-skeleton-border-radius: 2px;
 }
 
 $pt-popover-box-shadow:
@@ -360,6 +368,7 @@ body.bp4-dark  {
   // Main Dashboard.
   --color-dashboard-insider-background: var(--color-dark-gray1);
   --color-dashboard-topbar-background: var(--color-dark-gray1);
+  --color-dashboard-fallback-loading-background: var(--color-dark-gray1);
   --color-dashboard-topbar-border-color: transparent;
   --color-dashboard-datatable-background: var(--color-dark-gray1);
   --color-dashboard-datatable-border: var(--color-dark-gray3);
@@ -436,6 +445,7 @@ body.bp4-dark  {
 
   --color-financial-report-background: var(--color-dark-gray2);
 
+  // Datatable
   --color-datatable-text: var(--color-white);
 
   --color-datatable-constrant-text: var(--color-light-gray2);
@@ -544,9 +554,9 @@ body.bp4-dark  {
   // Universal search
   --color-universal-search-background: var(--color-dark-gray3);
   --color-universal-search-footer-divider: var(--color-dark-gray4);
-  --color-universal-search-tag-background: #708392;
-  --color-universal-search-tag-background: var(--color-dark-gray4);
-  --color-universal-search-menu-border: #d3dce2;
+  --color-universal-search-icon: rgba(255, 255, 255, 0.25);
+  --color-universal-search-tag-background: rgba(255, 255, 255, 0.15);
+  --color-universal-search-tag-text: var(--color-white);
   --color-universal-search-menu-border: rgba(255, 255, 255, 0.15);
 
   // Content tabs
@@ -594,6 +604,13 @@ body.bp4-dark  {
   --color-drawer-header-text: #fff;
   --color-drawer-insider-background: transparent;
   --color-drawer-tabs-background: transparent;
+
+  // Skeleton
+  --color-skeleton-background-start: rgba(255, 255, 255, 0.1);
+  --color-skeleton-background-end: rgba(255, 255, 255, 0.2);
+  --color-skeleton-border-start: rgba(255, 255, 255, 0.1);
+  --color-skeleton-border-end: rgba(255, 255, 255, 0.2);
+  --color-skeleton-border-radius: 2px;
 }
 
 $pt-popover-box-shadow:

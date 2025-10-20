@@ -1,5 +1,5 @@
 {
-  "name": "@bigcapital/server2",
+  "name": "@bigcapital/server",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -48,6 +48,7 @@
     "@supercharge/promise-pool": "^3.2.0",
     "@types/multer": "^1.4.11",
     "@types/nodemailer": "^6.4.17",
+    "@types/passport-google-oauth20": "^2.0.16",
     "@types/passport-local": "^1.0.38",
     "@types/ramda": "^0.30.2",
     "accounting": "^0.4.1",
@@ -90,6 +91,7 @@
     "object-hash": "^2.0.3",
     "objection": "^3.1.5",
     "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-headerapikey": "^1.2.2",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
