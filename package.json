@@ -14,7 +14,15 @@
     "test:watch": "lerna run test:watch",
     "test:e2e": "lerna run test:e2e",
     "start:debug": "lerna run start:debug",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "system:migrate:make": "lerna run cli:system:migrate:make --scope \"@bigcapital/server\"",
+    "tenants:migrate:make": "lerna run cli:tenants:migrate:make --scope \"@bigcapital/server\"",
+    "system:migrate:rollback": "lerna run cli:system:migrate:rollback --scope \"@bigcapital/server\"",
+    "tenants:migrate:rollback": "lerna run cli:tenants:migrate:rollback --scope \"@bigcapital/server\"",
+    "system:migrate:latest": "lerna run cli:system:migrate:latest --scope \"@bigcapital/server\"",
+    "tenants:migrate:latest": "lerna run cli:tenants:migrate:latest --scope \"@bigcapital/server\"",
+    "system:seed:latest": "lerna run cli:system:seed:latest --scope \"@bigcapital/server\"",
+    "tenants:seed:latest": "lerna run cli:tenants:seed:latest --scope \"@bigcapital/server\""
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
