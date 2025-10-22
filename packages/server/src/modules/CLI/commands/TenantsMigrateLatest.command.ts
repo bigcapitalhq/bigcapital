@@ -35,7 +35,7 @@ export class TenantsMigrateLatestCommand extends BaseCommand {
       const tenantsOrgsIds = tenants.map((tenant: any) => tenant.organizationId);
 
       if (options.tenant_id && tenantsOrgsIds.indexOf(options.tenant_id) === -1) {
-        this.exit(`The given tenant id ${options.tenant_id} is not exists.`);
+        this.exit(`The given tenant id ${options.tenant_id} does not exist.`);
       }
 
       const migrateTenant = async (organizationId: string) => {
