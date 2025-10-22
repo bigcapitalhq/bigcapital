@@ -53,7 +53,7 @@ export class TenantsMigrateLatestCommand extends BaseCommand {
           );
           this.log('-------------------');
         } catch (error) {
-          this.log(error);
+          this.exit(error);
         }
       };
 
