@@ -6,7 +6,7 @@ import { BaseCommand } from './BaseCommand';
 @Injectable()
 @Command({
   name: 'system:migrate:rollback',
-  description: 'Migrate the system database of the application.',
+  description: 'Rollback the last batch of system migrations.',
 })
 export class SystemMigrateRollbackCommand extends BaseCommand {
   constructor(configService: ConfigService) {
