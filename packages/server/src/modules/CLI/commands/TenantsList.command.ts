@@ -19,7 +19,7 @@ export class TenantsListCommand extends BaseCommand {
 
   @Option({
     flags: '-a, --all',
-    description: 'All tenants even are not initialized.',
+    description: 'All tenants even if not initialized.',
   })
   parseAll(val: string): boolean {
     return true;
