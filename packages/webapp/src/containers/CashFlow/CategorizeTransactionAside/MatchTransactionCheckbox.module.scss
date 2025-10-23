@@ -4,12 +4,14 @@
   --item-active-border: #88abdb;
   --item-label-text: #252a33;
   --item-date-text: #5c7080;
+  --item-border-hover: #c0c0c0;
   
   :global(.bp4-dark) & {
-    --item-background: var(--color-dark-gray4);
+    --item-background: var(--color-dark-gray3);
     --item-border: rgba(255, 255, 255, 0.2);
     --item-date-text: var(--color-light-gray1);
     --item-label-text: var(--color-light-gray4);    
+    --item-border-hover: rgba(255, 255, 255, 0.45);
   }
   background: var(--item-background);
   border-radius: 5px;
@@ -27,7 +29,7 @@
     }
   }
   &:hover:not(.active) {
-    border-color: #c0c0c0;
+    border-color: var(--item-border-hover);
   }
 }
 

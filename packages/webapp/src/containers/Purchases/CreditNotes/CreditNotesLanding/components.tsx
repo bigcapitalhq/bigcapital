@@ -81,19 +81,19 @@ export function StatusAccessor(creditNote) {
     <div>
       <Choose>
         <Choose.When condition={creditNote.is_open}>
-          <Tag minimal={true} intent={Intent.WARNING} round={true}>
+          <Tag intent={Intent.WARNING} round>
             <T id={'open'} />
           </Tag>
         </Choose.When>
 
         <Choose.When condition={creditNote.is_closed}>
-          <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
+          <Tag intent={Intent.SUCCESS} round>
             <T id={'closed'} />
           </Tag>
         </Choose.When>
 
         <Choose.When condition={creditNote.is_draft}>
-          <Tag minimal={true} round={true}>
+          <Tag round>
             <T id={'draft'} />
           </Tag>
         </Choose.When>
