@@ -7,7 +7,6 @@ import {
   MenuItem,
   MenuDivider,
   Tag,
-  ProgressBar,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
 import {
@@ -21,7 +20,6 @@ import {
 import {
   formattedAmount,
   safeCallback,
-  calculateStatus,
 } from '@/utils';
 import {
   BillAction,
@@ -108,42 +106,35 @@ export function StatusAccessor(bill) {
     <div className={'status-accessor'}>
       <Choose>
         <Choose.When condition={bill.is_fully_paid && bill.is_open}>
-          <span className={'fully-paid-icon'}>
-            <Icon icon="small-tick" iconSize={18} />
-          </span>
-          <span class="fully-paid-text">
+          <Tag round intent={Intent.SUCCESS}>
             <T id={'paid'} />
-          </span>
+          </Tag>
         </Choose.When>
+
         <Choose.When condition={bill.is_open}>
           <Choose>
             <Choose.When condition={bill.is_overdue}>
-              <span className={'overdue-status'}>
+              <Tag round intent={Intent.DANGER}>
                 {intl.get('overdue_by', { overdue: bill.overdue_days })}
-              </span>
+              </Tag>
             </Choose.When>
             <Choose.Otherwise>
-              <span className={'due-status'}>
+              <Tag round intent={Intent.WARNING}>
                 {intl.get('due_in', { due: bill.remaining_days })}
-              </span>
+              </Tag>
             </Choose.Otherwise>
           </Choose>
           <If condition={bill.is_partially_paid}>
-            <span className="partial-paid">
+            <Tag round intent={Intent.PRIMARY}>
               {intl.get('day_partially_paid', {
                 due: formattedAmount(bill.due_amount, bill.currency_code),
               })}
-            </span>
-            <ProgressBar
-              animate={false}
-              stripes={false}
-              intent={Intent.PRIMARY}
-              value={calculateStatus(bill.balance, bill.amount)}
-            />
+            </Tag>
           </If>
         </Choose.When>
+
         <Choose.Otherwise>
-          <Tag minimal={true} round={true}>
+          <Tag round>
             <T id={'draft'} />
           </Tag>
         </Choose.Otherwise>

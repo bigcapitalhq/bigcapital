@@ -1,5 +1,6 @@
 import { Button, Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 import { Box, BoxProps, Group } from '../Layout';
 import { Icon } from '../Icon';
 import styles from './Aside.module.scss';
@@ -21,6 +22,7 @@ export function Aside({
   classNames,
   className
 }: AsideProps) {
+  const isDarkMode = useIsDarkMode();
   const handleClose = () => {
     onClose && onClose();
   };
@@ -32,7 +34,7 @@ export function Aside({
           <Button
             aria-label="Close"
             className={Classes.DIALOG_CLOSE_BUTTON}
-            icon={<Icon icon={'smallCross'} color={'#000'} />}
+            icon={<Icon icon={'smallCross'} color={isDarkMode ? '#fff' : '#000'} />}
             minimal={true}
             onClick={handleClose}
           />

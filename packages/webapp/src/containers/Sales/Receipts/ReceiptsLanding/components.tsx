@@ -96,13 +96,13 @@ export function StatusAccessor(receipt) {
   return (
     <Choose>
       <Choose.When condition={receipt.is_closed}>
-        <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
+        <Tag intent={Intent.SUCCESS} round>
           <T id={'closed'} />
         </Tag>
       </Choose.When>
 
       <Choose.Otherwise>
-        <Tag minimal={true} intent={Intent.WARNING} round={true}>
+        <Tag intent={Intent.WARNING} round>
           <T id={'draft'} />
         </Tag>
       </Choose.Otherwise>
