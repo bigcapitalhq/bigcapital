@@ -19,7 +19,7 @@ export class EnsureTenantIsSeededGuard implements CanActivate {
   constructor(
     private readonly tenancyContext: TenancyContext,
     private reflector: Reflector,
-  ) {}
+  ) { }
 
   /**
    * Validate the tenant of the current request is seeded.
@@ -41,6 +41,12 @@ export class EnsureTenantIsSeededGuard implements CanActivate {
     }
     const tenant = await this.tenancyContext.getTenant();
 
+    if (!tenant) {
+      throw new UnauthorizedException({
+        message: 'Tenant not found.',
+        errors: [{ type: 'TENANT.NOT.FOUND' }],
+      });
+    }
     if (!tenant.seededAt) {
       throw new UnauthorizedException({
         message: 'Tenant database is not seeded with initial data yet.',

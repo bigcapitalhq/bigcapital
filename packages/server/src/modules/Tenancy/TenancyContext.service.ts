@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
 import { SystemUser } from '../System/models/SystemUser';
 import { TenantModel } from '../System/models/TenantModel';
+import { ServiceError } from '../Items/ServiceError';
 
 @Injectable()
 export class TenancyContext {
@@ -13,14 +14,14 @@ export class TenancyContext {
 
     @Inject(TenantModel.name)
     private readonly systemTenantModel: typeof TenantModel,
-  ) {}
+  ) { }
 
   /**
    * Get the current tenant.
    * @param {boolean} withMetadata - If true, the tenant metadata will be fetched.
    * @returns
    */
-  getTenant(withMetadata: boolean = false) {
+  async getTenant(withMetadata: boolean = false) {
     // Get the tenant from the request headers.
     const organizationId = this.cls.get('organizationId');
 
@@ -32,7 +33,12 @@ export class TenancyContext {
     if (withMetadata) {
       query.withGraphFetched('metadata');
     }
-    return query;
+    const queryResult = await query;
+
+    if (!queryResult) {
+      throw new ServiceError('TENANT_NOT_FOUND', 'Tenant not found');
+    }
+    return queryResult;
   }
 
   async getTenantMetadata() {
