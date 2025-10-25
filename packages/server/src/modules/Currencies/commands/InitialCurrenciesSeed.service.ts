@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { uniq } from 'lodash';
-import Currencies from 'js-money/lib/currency';
+import * as Currencies from 'js-money/lib/currency';
 import { InitialCurrencies } from '../Currencies.constants';
 import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 import { Currency } from '../models/Currency.model';
@@ -10,7 +10,7 @@ export class InitialCurrenciesSeedService {
   constructor(
     @Inject(Currency.name)
     private readonly currencyModel: TenantModelProxy<typeof Currency>,
-  ) {}
+  ) { }
 
   /**
    * Seeds the given base currency to the currencies list.
