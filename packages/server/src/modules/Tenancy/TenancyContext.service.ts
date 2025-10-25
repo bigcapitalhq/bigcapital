@@ -21,7 +21,7 @@ export class TenancyContext {
    * @param {boolean} withMetadata - If true, the tenant metadata will be fetched.
    * @returns
    */
-  async getTenant(withMetadata: boolean = false) {
+  getTenant(withMetadata: boolean = false) {
     // Get the tenant from the request headers.
     const organizationId = this.cls.get('organizationId');
 
@@ -33,12 +33,7 @@ export class TenancyContext {
     if (withMetadata) {
       query.withGraphFetched('metadata');
     }
-    const queryResult = await query;
-
-    if (!queryResult) {
-      throw new ServiceError('TENANT_NOT_FOUND', 'Tenant not found');
-    }
-    return queryResult;
+    return query;
   }
 
   async getTenantMetadata() {
