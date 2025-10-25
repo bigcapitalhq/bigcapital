@@ -26,6 +26,7 @@ import { GetCurrentOrganizationService } from './queries/GetCurrentOrganization.
 import { UpdateOrganizationService } from './commands/UpdateOrganization.service';
 import { IgnoreTenantInitializedRoute } from '../Tenancy/EnsureTenantIsInitialized.guard';
 import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
+import { IgnoreTenantModelsInitialize } from '../Tenancy/TenancyInitializeModels.guard';
 import { GetBuildOrganizationBuildJob } from './commands/GetBuildOrganizationJob.service';
 import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBaseCurrencyLocking.service';
 import {
@@ -39,6 +40,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @Controller('organization')
 @IgnoreTenantInitializedRoute()
 @IgnoreTenantSeededRoute()
+@IgnoreTenantModelsInitialize()
 @ApiExtraModels(GetCurrentOrganizationResponseDto)
 @ApiCommonHeaders()
 export class OrganizationController {
@@ -48,7 +50,7 @@ export class OrganizationController {
     private readonly updateOrganizationService: UpdateOrganizationService,
     private readonly getBuildOrganizationJobService: GetBuildOrganizationBuildJob,
     private readonly orgBaseCurrencyLockingService: OrganizationBaseCurrencyLocking,
-  ) {}
+  ) { }
 
   @Post('build')
   @HttpCode(200)
