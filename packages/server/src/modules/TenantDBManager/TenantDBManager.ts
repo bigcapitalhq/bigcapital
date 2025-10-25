@@ -23,7 +23,7 @@ export class TenantDBManager {
 
     @Inject(SystemKnexConnection)
     private readonly systemKnex: Knex,
-  ) {}
+  ) { }
 
   /**
    * Retrieves the tenant database name.
@@ -45,8 +45,8 @@ export class TenantDBManager {
 
     const results = await this.systemKnex.raw(
       'SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "' +
-        databaseName +
-        '"',
+      databaseName +
+      '"',
     );
     return results[0].length > 0;
   }
@@ -73,12 +73,12 @@ export class TenantDBManager {
    */
   public async dropDatabaseIfExists() {
     const tenant = await this.tenancyContext.getTenant();
-    const isExists = await this.databaseExists(tenant);
+    const isExists = await this.databaseExists();
 
     if (!isExists) {
       return;
     }
-    await this.dropDatabase(tenant);
+    await this.dropDatabase();
   }
 
   /**
@@ -115,7 +115,7 @@ export class TenantDBManager {
    * @return {Promise<void>}
    */
   async throwErrorIfTenantDBExists(tenant: TenantModel) {
-    const isExists = await this.databaseExists(tenant);
+    const isExists = await this.databaseExists();
     if (isExists) {
       throw new TenantDBAlreadyExists();
     }
