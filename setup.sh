@@ -22,7 +22,7 @@ fi
 
 REPO=https://github.com/bigcapitalhq/bigcapital
 
-# Prints the Bigcaptial logo once running the script.
+# Prints the Bigcapital logo once running the script.
 function print_logo() {
 clear
 
