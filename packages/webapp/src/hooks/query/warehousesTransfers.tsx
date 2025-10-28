@@ -45,7 +45,7 @@ export function useEditWarehouseTransfer(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`warehouse-transfers/${id}`, values),
+    ([id, values]) => apiRequest.put(`warehouse-transfers/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific sale invoice.

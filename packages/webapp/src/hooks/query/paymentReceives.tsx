@@ -111,7 +111,7 @@ export function useEditPaymentReceive(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`payments-received/${id}`, values),
+    ([id, values]) => apiRequest.put(`payments-received/${id}`, values),
     {
       onSuccess: (data, [id, values]) => {
         // Invalidate specific payment receive.

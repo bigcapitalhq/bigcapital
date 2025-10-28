@@ -39,7 +39,7 @@ export function useEditProject(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`/projects/${id}`, values),
+    ([id, values]) => apiRequest.put(`/projects/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific project.

@@ -185,5 +185,5 @@ export class CommandExpenseDto {
   attachments?: AttachmentDto[];
 }
 
-export class CreateExpenseDto extends CommandExpenseDto {}
-export class EditExpenseDto extends CommandExpenseDto {}
+export class CreateExpenseDto extends CommandExpenseDto { }
+export class EditExpenseDto extends CommandExpenseDto { }

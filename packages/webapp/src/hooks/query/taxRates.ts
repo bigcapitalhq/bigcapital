@@ -54,7 +54,7 @@ export function useEditTaxRate(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`tax-rates/${id}`, values),
+    ([id, values]) => apiRequest.put(`tax-rates/${id}`, values),
     {
       onSuccess: (res, id) => {
         commonInvalidateQueries(queryClient);
