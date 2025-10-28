@@ -40,7 +40,7 @@ Self-hosted modern core accounting software
 EOF
 }
 
-# Downloads /dokcer folder from Bigcapital repository
+# Downloads /docker folder from Bigcapital repository
 clone_github_folder() {
     # Create a temporary directory to clone into
     temp_dir=$BIGCAPITAL_CLONE_TEMP_DIR
