@@ -29,7 +29,6 @@ export class EditBillService {
 
     @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
     @Inject(Vendor.name) private vendorModel: TenantModelProxy<typeof Vendor>,
-
   ) { }
 
   /**
