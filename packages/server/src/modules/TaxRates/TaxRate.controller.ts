@@ -24,7 +24,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiExtraModels(TaxRateResponseDto)
 @ApiCommonHeaders()
 export class TaxRatesController {
-  constructor(private readonly taxRatesApplication: TaxRatesApplication) {}
+  constructor(private readonly taxRatesApplication: TaxRatesApplication) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new tax rate.' })

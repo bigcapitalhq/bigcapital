@@ -10,6 +10,7 @@ import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations
 import { WarehouseTransactionDTOTransform } from '@/modules/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { BrandingTemplateDTOTransformer } from '../../PdfTemplate/BrandingTemplateDTOTransformer';
 import { assocItemEntriesDefaultIndex } from '@/utils/associate-item-entries-index';
+import { formatDateFields } from '@/utils/format-date-fields';
 import { CreditNoteAutoIncrementService } from './CreditNoteAutoIncrement.service';
 import { CreditNote } from '../models/CreditNote';
 import {
@@ -33,7 +34,7 @@ export class CommandCreditNoteDTOTransform {
     private readonly warehouseDTOTransform: WarehouseTransactionDTOTransform,
     private readonly brandingTemplatesTransformer: BrandingTemplateDTOTransformer,
     private readonly creditNoteAutoIncrement: CreditNoteAutoIncrementService,
-  ) {}
+  ) { }
 
   /**
    * Transforms the credit/edit DTO to model.
@@ -70,7 +71,10 @@ export class CommandCreditNoteDTOTransform {
       autoNextNumber;
 
     const initialDTO = {
-      ...omit(creditNoteDTO, ['open', 'attachments']),
+      ...formatDateFields(
+        omit(creditNoteDTO, ['open', 'attachments']),
+        ['creditNoteDate'],
+      ),
       creditNoteNumber,
       amount,
       currencyCode: customerCurrencyCode,
@@ -78,8 +82,8 @@ export class CommandCreditNoteDTOTransform {
       entries,
       ...(creditNoteDTO.open &&
         !oldCreditNote?.openedAt && {
-          openedAt: moment().toMySqlDateTime(),
-        }),
+        openedAt: moment().toMySqlDateTime(),
+      }),
       refundedAmount: 0,
       invoicesAmount: 0,
     };

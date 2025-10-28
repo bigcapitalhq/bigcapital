@@ -77,7 +77,7 @@ export function useEditVendorCredit(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`vendor-credits/${id}`, values),
+    ([id, values]) => apiRequest.put(`vendor-credits/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.

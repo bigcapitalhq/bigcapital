@@ -35,7 +35,7 @@ export function useEditUser(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(([id, values]) => apiRequest.post(`users/${id}`, values), {
+  return useMutation(([id, values]) => apiRequest.put(`users/${id}`, values), {
     onSuccess: (res, [id, values]) => {
       queryClient.invalidateQueries([t.USER, id]);
 

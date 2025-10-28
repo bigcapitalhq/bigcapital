@@ -78,7 +78,7 @@ export function useEditCreditNote(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`credit-notes/${id}`, values),
+    ([id, values]) => apiRequest.put(`credit-notes/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
