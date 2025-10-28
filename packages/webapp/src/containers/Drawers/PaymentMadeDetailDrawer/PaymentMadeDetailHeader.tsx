@@ -37,7 +37,7 @@ export default function PaymentMadeDetailHeader() {
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem
               label={intl.get('payment_date')}
-              children={<FormatDate value={paymentMade.payment_date} />}
+              children={paymentMade.formatted_payment_date}
             />
             <DetailItem
               label={intl.get('payment_made.details.payment_number')}
@@ -58,6 +58,7 @@ export default function PaymentMadeDetailHeader() {
             />
           </DetailsMenu>
         </Col>
+
         <Col xs={6}>
           <DetailsMenu
             textAlign={'right'}
@@ -70,7 +71,7 @@ export default function PaymentMadeDetailHeader() {
             />
             <DetailItem
               label={intl.get('created_at')}
-              children={<FormatDate value={paymentMade.created_at} />}
+              children={paymentMade.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

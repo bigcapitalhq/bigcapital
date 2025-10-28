@@ -6,8 +6,10 @@ import {
   FFormGroup,
   FInputGroup,
   FTextArea,
+  Icon,
 } from '@/components';
 import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
+import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 
 export default function CategorizeTransactionOtherIncome() {
   const { accounts } = useCategorizeTransactionBoot();
@@ -20,7 +22,7 @@ export default function CategorizeTransactionOtherIncome() {
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           formatDate={(date) => date.toLocaleDateString()}
           parseDate={(str) => new Date(str)}
-          inputProps={{ fill: true }}
+          inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
         />
       </FFormGroup>
 
@@ -57,7 +59,7 @@ export default function CategorizeTransactionOtherIncome() {
       </FFormGroup>
 
       <FFormGroup name={'referenceNo'} label={'Reference No.'} fastField inline>
-        <FInputGroup name={'reference_no'} fill />
+        <FInputGroup name={'referenceNo'} fill />
       </FFormGroup>
 
       <FFormGroup name={'description'} label={'Description'} fastField inline>
@@ -68,6 +70,8 @@ export default function CategorizeTransactionOtherIncome() {
           fill={true}
         />
       </FFormGroup>
+
+      <CategorizeTransactionBranchField />
     </>
   );
 }

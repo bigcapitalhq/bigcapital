@@ -2,6 +2,271 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.22.0]
+
+* feat: estimate, receipt, credit note mail preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/757
+* feat: Add discount to transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/758
+* fix: update financial forms to use new formatted amount utilities and… by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/760
+* fix: total lines style by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/761
+* fix: discount & adjustment sale transactions bugs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/762
+* fix: discount transactions GL entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/763
+
+# [0.21.2]
+
+* hotbug: upload attachments by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/755
+
+# [0.21.1]
+
+* fix: download invoice document on payment page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/750
+* fix: attach branding template attrs to payment page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/751
+* fix: make manual entries adjust decimal credit/debit amounts by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/754
+* feat: allow quantity of entries accept decimal value by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/753
+
+# [0.21.0]
+
+* fix: Credit and debit totals not balancing when decimal values are used by @nklmantey in https://github.com/bigcapitalhq/bigcapital/pull/722
+* docs: add nklmantey as a contributor for bug by @allcontributors in https://github.com/bigcapitalhq/bigcapital/pull/725
+* feat: track more services events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/721
+* feat: Invoice mail receipt preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/723
+* fix: change the send mail button on invoice drawer by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/730
+* refactor: notification mail services by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/731
+* fix: attach payment link in sending invoice mail receipt by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/732
+* fix: send invoice drawer layout by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/733
+* fix: hook up cc and bcc fields to mail sender by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/734
+* fix: company logo does not show up in mail receipt preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/736
+* fix: change default invoice mail message by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/737
+* fix: typing invoice send mail fields by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/738
+* fix: clean up ivnoice mail receipt preview component by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/739
+* feat: add shared package to pdf templates to render in the server and… by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/735
+* feat: getting invoice preview on send mail view by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/740
+* fix: style SSR invoice paper template by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/741
+* fix: send invoice receipt addresses by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/742
+* fix: due invoice server invoice by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/744
+* fix: `BIG-265` forgot password text by @ibutiti in https://github.com/bigcapitalhq/bigcapital/pull/745
+* Crims on sv translation by @Crims-on in https://github.com/bigcapitalhq/bigcapital/pull/671
+* feat: Added Spanish language to the App 🇪🇸 by @angelosorno in https://github.com/bigcapitalhq/bigcapital/pull/530
+* fix: mail services by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/746
+* fix: company logo of the template by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/747
+* fix: monorepo dependencies scope by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/748
+
+# [0.20.6] 
+
+* fix: Import category column of item resource by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/710
+* fix: Parse the uppercase values in importing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/711
+* chore: Move i18nApply localization to the account transformer by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/713
+* fix: Sync Plaid credit card account type by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/714
+* fix: Sync account normal of cashflow GL entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/715
+* feat: Add quantity column to pdf templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/716
+* feat: Pre-line invoice statements by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/717
+* feat: Invoice number in downloaded pdf document by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/718
+* feat: Track events of pdf documents views by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/719
+* fix: Customer note does not appear in pdf document by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/720
+
+# [0.20.5]
+
+* fix: Disable tabs of the pdf customization if the first field not filed up by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/701
+* fix: Invoice form layout by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/705
+* refactor: Invoice, estimate, receipt, credit note and payment received date input fields by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/707
+* feat: Add customize templates button to edit forms by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/708
+* feat: Track account, invoice and item viewed events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/709
+
+# [0.20.4]
+
+* fix: Delete company logo from the PDF template by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/699
+* fix: Set max width/height to company logo of pdf templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/700
+
+# [0.20.3]
+
+* feat: Assign default PDF template automatically by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/687
+* fix: pdf template addresses controlling by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/688
+* fix: Remove empty lines from address formats by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/690
+* fix: Pdf templates layout by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/691
+* feat: Download invoice pdf of the payment link by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/689
+* fix: Display country name by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/693
+* feat: Add shared packages to Docker container by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/694
+
+# [0.20.2]
+
+* feat: Assign default PDF template automatically by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/687
+* fix: pdf template addresses controlling by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/688
+* fix: Remove empty lines from address formats by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/690
+* fix: Pdf templates layout by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/691
+* feat: Download invoice pdf of the payment link by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/689
+* fix: Display country name by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/693
+* feat: Add shared packages to Docker container by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/694
+
+# [0.20.1]
+
+* fix: Getting uploaded object uri by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/684
+
+# [0.20.0]
+
+* feat: Customize pdf templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/667
+* feat: Onboard accounts to Stripe Connect by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/668
+* feat: Upload company logo to invoice templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/670
+* fix: Invoice pdf customize by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/672
+* fix: Invoice customize bugs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/673
+* feat: Clean up payment links endpoints by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/674
+* feat: Hook up company logo to server-side pdf templates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/675
+* feat: Company branding preferences by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/677
+* feat: Pdf templates customer/company addresses by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/678
+* fix: Listen to Stripe session completed event by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/679
+* feat: Track pdf templates Posthog events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/680
+* fix: Branding customize content by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/681
+* feat: Listen to Stripe integration events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/682
+* feat: Hook up customer/company address to invoice preview of payment page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/683
+
+# [0.19.17]
+
+* fix: Un-categorize bank transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/663
+
+# [0.19.16]
+
+* feat: Tracking more Posthog events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/653
+* fix: Expense cannot accept credit card as payment account by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/654
+* fix: Suspense the lazy loaded components in banking pages by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/657
+* feat: Add help dropdown menu by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/656
+* feat: Bank pages layout breaking by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/658
+* feat: Datatable UI improvements by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/655
+* fix: Array cast of recognize function rule ids by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/660
+* fix: Payment made filling the form full amount field by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/661
+* feat: Tabular number of all money columns by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/659
+* refactor: The expense G/L writer by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/662
+
+## [0.19.15] - 
+
+* fix: Bank transactions infinity scrolling by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/648
+* feat: Integrate multiple branches and warehouses to resource importing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/645
+* fix: Integrate multiple branches with expense resource by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/649
+* feat: Cover more tracking events. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/650
+* feat: Track banking service events by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/651
+
+## [0.19.14]
+
+* fix: Import bugs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/643
+* fix: Set default index to transaction entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/644
+* feat(server): Events tracking using Posthog by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/646
+
+## [0.19.13]
+
+* fix: Subscription middleware by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/624
+* fix: Getting the sheet columns in import sheet by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/641
+
+## [0.19.12]
+
+* fix: Typo one-click demo page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/640
+
+## [0.19.11]
+
+* fix: Avoid running the cost job in import preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/635
+* fix: Debounce scheduling calculating items cost by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/634
+* fix: Expand the resources export page size limitation by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/636
+* feat: Optimize loading perf. by splitting big chunks and lazy loading them by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/632
+* fix: Use standard ISO 8601 format for exported data by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/638
+* fix: Add customer type to customers resource by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/639
+
+## [0.19.10]
+
+* fix: Add subscription plans offer text by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/629
+
+## [0.19.9]
+
+* fix: Make webapp package env variables dynamic by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/628
+
+## [v0.19.8]
+
+* fix: Cannot import items income and cost accounts by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/617
+* fix: Some bank account details hidden by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/618
+* feat(ee): One-click demo account by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/616
+* feat: change banking service language by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/619
+* feat(banking): Filter uncategorized bank transactions by date by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/590
+* Fix: Syntax error caused error by @wolone in https://github.com/bigcapitalhq/bigcapital/pull/622
+* fix: Listen to payment webhooks by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/623
+* fix: Add prefix J-00001 to manual journals increments by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/625
+* fix: Disable sms service until Twilo integration by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/626
+* fix: Style tweaks in onboarding page by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/627
+
+## [0.19.5] - 18-08-2024
+
+* fix: Allow multi-lines to statements transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/594
+* feat: Add amount comparators to amount bank rule field by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/595
+* fix: Transaction type and description do not show in general ledger. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/596
+* fix: Refresh accounts and account transactions. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/597
+* fix: Typo payments made by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/598
+* fix: Typo categories list by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/600
+* fix: Autofill the quick created customer/vendor by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/601
+* fix: Remove views tabs from receipts list by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/602
+* fix: Typo payment receive messages by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/599
+* fix: Enhance Dropzone visual of  accept and reject modes by @Champetaman in https://github.com/bigcapitalhq/bigcapital/pull/603
+* fix:  Matching bank transactions should create associate payment transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/606
+* fix: Change Dropzone title and subtitle by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/607
+* fix: Inconsistance page size of paginated data tables by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/604
+* fix: Database connection lost error by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/611
+* fix: Language typos by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/613
+* Fix: Correctly display Date, Published At, and Created At in ExpenseDrawerHeader by @Champetaman in https://github.com/bigcapitalhq/bigcapital/pull/612
+* fix: Delete bank account with uncategorized transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/614
+* feat: activate/inactivate account from drawer details by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/615
+
+## [v0.19.4]
+
+* feat: Import and export tax rates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/591
+* feat: Un-categorize bank transactions in bulk by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/587
+* feat: Pending bank transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/589
+* fix: Update `dev` Script in `package.json` to Use `cross-env` by @Champetaman in https://github.com/bigcapitalhq/bigcapital/pull/588
+* fix: Should not load branches on reconcile matching form if the branches not enabled by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/592
+* fix: Rounding the total amount the pending and matched transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/593
+
+## [v0.18.0] - 10-08-2024
+
+* feat: Bank rules for automated categorization by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/511
+* feat: Categorize & match bank transaction by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/511
+* feat: Reconcile match transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/522
+* fix: Issues in matching transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/523
+* fix: Cashflow transactions types by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/524
+
+## [v0.17.5] - 17-06-2024
+
+* fix: Balance sheet and P/L nested accounts by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/501
+* fix: add space between buttons on floating actions bar by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/508
+* feat: Migrating to Envoy proxy instead of Nginx by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/509
+* fix: Disable email confirmation does not work with invited users by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/497
+* feat: Setting up the date format in the whole system dates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/506
+
+## [0.17.0] - 04-06-2024
+
+### New
+
+* feat: Upload and attach documents by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/461
+* feat: Export resource tables to pdf by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/460
+* feat: Build and deploy develop Docker container by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/476
+* feat: Internal docker virtual network by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/478
+
+### Fixes
+
+* fix: Skip send confirmation email if disabled by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/459
+* fix: Lemon Squeezy redirect to base url by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/479
+* fix: Organize Plaid env variables for development and sandbox envs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/480
+* fix: Plaid syncs deposit imports as withdrawals by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/481
+* fix: Validate the s3 configures exist by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/482
+* fix: Run migrations only for initialized tenants by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/484
+
+## [0.16.16] - 
+
+* feat: handle http exceptions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/456
+* feat: add the missing Newrelic env vars to docker-compose.prod file by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/457
+* fix: add the signup email confirmation env var by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/458
+
+## [0.16.14] - 
+
+* fix: Typo in setup wizard by @ccantrell72 in https://github.com/bigcapitalhq/bigcapital/pull/440
+* fix: Showing the real mail address on email confirmation view by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/445
+* fix: Auto-increment setting parsing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/453
+
+## [0.16.12] - 
+
+* feat: Create a manifest list for `webapp` Docker image and push it to DockerHub. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/436
+* feat: Combine arm64 and amd64 in one Github action runner by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/437
+
 ## [0.16.11] - 06-05-2024
 
 ### improvements

@@ -6,3 +6,4 @@ export * from './InputPrependText';
 export * from './InputPrependButton';
 export * from './MoneyInputGroup';
 export * from './FRichEditor';
+export * from './Select';

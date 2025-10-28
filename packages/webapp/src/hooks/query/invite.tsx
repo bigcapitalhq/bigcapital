@@ -35,7 +35,7 @@ export const useResendInvitation = (props) => {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (userId) => apiRequest.post(`invite/resend/${userId}`),
+    (userId) => apiRequest.post(`invite/users/${userId}/resend`),
     props
   )
 }

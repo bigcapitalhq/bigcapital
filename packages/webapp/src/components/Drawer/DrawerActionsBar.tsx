@@ -1,13 +1,8 @@
 // @ts-nocheck
 import React from 'react';
-import styled from 'styled-components';
+import { Navbar } from '@blueprintjs/core';
+import styles from './DrawerActionBar.module.scss';
 
-import { DashboardActionsBar } from '../Dashboard';
-
-export function DrawerActionsBar({ ...props }) {
-  return <DrawerActionsBarRoot {...props} />;
+export function DrawerActionsBar({ children, ...props }) {
+  return <Navbar className={styles.root}>{children}</Navbar>;
 }
-
-const DrawerActionsBarRoot = styled(DashboardActionsBar)`
-  border-bottom: 1px solid #d9d9da;
-`;

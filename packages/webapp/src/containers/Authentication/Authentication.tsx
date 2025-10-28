@@ -2,25 +2,43 @@
 import { Route, Switch, useLocation } from 'react-router-dom';
 import BodyClassName from 'react-body-classname';
 import styled from 'styled-components';
+import { Suspense } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { Spinner } from '@blueprintjs/core';
 
 import authenticationRoutes from '@/routes/authentication';
-import { Icon, FormattedMessage as T } from '@/components';
+import { Box, Icon, FormattedMessage as T } from '@/components';
 import { AuthMetaBootProvider } from './AuthMetaBoot';
 
 import '@/style/pages/Authentication/Auth.scss';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
+import { BigcapitalAlt } from '@/components/Icons/BigcapitalAlt';
 
 export function Authentication() {
+  const isDarkMode = useIsDarkMode();
+
   return (
     <BodyClassName className={'authentication'}>
       <AuthPage>
         <AuthInsider>
           <AuthLogo>
-            <Icon icon="bigcapital" height={37} width={214} />
+            {isDarkMode ? (
+              <BigcapitalAlt color={"rgba(255, 255, 255, 0.6)"} height={37} width={214} />
+            ) : (
+              <Icon icon="bigcapital" height={37} width={214} />
+            )}
           </AuthLogo>
 
           <AuthMetaBootProvider>
-            <AuthenticationRoutes />
+            <Suspense
+              fallback={
+                <Box style={{ marginTop: '5rem' }}>
+                  <Spinner size={30} />
+                </Box>
+              }
+            >
+              <AuthenticationRoutes />
+            </Suspense>
           </AuthMetaBootProvider>
         </AuthInsider>
       </AuthPage>

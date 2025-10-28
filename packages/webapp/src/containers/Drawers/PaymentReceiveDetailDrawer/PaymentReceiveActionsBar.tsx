@@ -28,17 +28,17 @@ import {
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
-import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Payment receive actions bar.
  */
-function PaymentReceiveActionsBar({
+function PaymentsReceivedActionsBar({
   // #withAlertsActions
   openAlert,
 
   // #withDrawerActions
   closeDrawer,
+  openDrawer,
 
   // #withDialogActions
   openDialog,
@@ -50,13 +50,13 @@ function PaymentReceiveActionsBar({
 
   // Handle edit payment receive.
   const handleEditPaymentReceive = () => {
-    history.push(`/payment-receives/${paymentReceiveId}/edit`);
-    closeDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS);
+    history.push(`/payments-received/${paymentReceiveId}/edit`);
+    closeDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS);
   };
 
   // Handle delete payment receive.
   const handleDeletePaymentReceive = () => {
-    openAlert('payment-receive-delete', { paymentReceiveId });
+    openAlert('payment-received-delete', { paymentReceiveId });
   };
 
   // Handle notify via SMS.
@@ -69,8 +69,11 @@ function PaymentReceiveActionsBar({
     openDialog('payment-pdf-preview', { paymentReceiveId });
   };
 
+  // Handle mail action.
   const handleMailPaymentReceive = () => {
-    openDialog(DialogsName.PaymentMail, { paymentReceiveId });
+    openDrawer(DRAWERS.PAYMENT_RECEIVED_SEND_MAIL, {
+      paymentReceivedId: paymentReceiveId,
+    });
   };
 
   return (
@@ -80,7 +83,7 @@ function PaymentReceiveActionsBar({
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="pen-18" />}
-            text={<T id={'edit_payment_receive'} />}
+            text={<T id={'edit_payment_received'} />}
             onClick={handleEditPaymentReceive}
           />
           <NavbarDivider />
@@ -129,4 +132,4 @@ export default compose(
   withDialogActions,
   withDrawerActions,
   withAlertsActions,
-)(PaymentReceiveActionsBar);
+)(PaymentsReceivedActionsBar);

@@ -136,6 +136,7 @@ function CustomersTable({
         sticky={true}
         spinnerProps={{ size: 30 }}
         pagination={true}
+        initialPageSize={customersTableState.pageSize}
         manualSortBy={true}
         manualPagination={true}
         pagesCount={pagination.pagesCount}

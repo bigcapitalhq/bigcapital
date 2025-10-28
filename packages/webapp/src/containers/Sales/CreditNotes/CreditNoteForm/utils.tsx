@@ -8,9 +8,9 @@ import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
-  transactionNumber,
   formattedAmount,
   orderingLinesIndexes,
+  toSafeNumber,
 } from '@/utils';
 import { useFormikContext } from 'formik';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
@@ -21,6 +21,11 @@ import {
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import { getEntriesTotal } from '@/containers/Entries/utils';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
+import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -51,6 +56,11 @@ export const defaultCreditNote = {
   exchange_rate: 1,
   currency_code: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
+  attachments: [],
+  pdf_template_id: '',
+  discount: '',
+  discount_type: 'amount',
+  adjustment: '',
 };
 
 /**
@@ -71,9 +81,12 @@ export function transformToEditForm(creditNote) {
     updateItemsEntriesTotal,
   )(initialEntries);
 
+  const attachment = transformAttachmentsToForm(creditNote);
+
   return {
     ...transformToForm(creditNote, defaultCreditNote),
     entries,
+    attachment,
   };
 }
 
@@ -103,11 +116,13 @@ export const filterNonZeroEntries = (entries) => {
  */
 export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);
+  const attachments = transformAttachmentsToRequest(values);
 
   return {
     ...values,
     entries: transformEntriesToSubmit(entries),
     open: false,
+    attachments,
   };
 };
 
@@ -163,32 +178,108 @@ export const useSetPrimaryWarehouseToForm = () => {
 };
 
 /**
- * Retreives the credit note totals.
+ * Retrieves the credit note subtotal.
+ * @returns {number}
  */
-export const useCreditNoteTotals = () => {
+export const useCreditNoteSubtotal = () => {
   const {
-    values: { entries, currency_code: currencyCode },
+    values: { entries },
   } = useFormikContext();
 
-  // Retrieves the invoice entries total.
   const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(total, currencyCode, { money: false }),
-    [total, currencyCode],
-  );
+  return total;
+};
 
-  return {
-    total,
-    formattedTotal,
-    formattedSubtotal,
-  };
+/**
+ * Retrieves the credit note subtotal formatted.
+ * @returns {string}
+ */
+export const useCreditNoteSubtotalFormatted = () => {
+  const subtotal = useCreditNoteSubtotal();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(subtotal, currencyCode, { money: true });
+};
+
+/**
+ * Retrieves the credit note discount amount.
+ * @returns {number}
+ */
+export const useCreditNoteDiscountAmount = () => {
+  const { values } = useFormikContext();
+  const subtotal = useCreditNoteSubtotal();
+  const discount = toSafeNumber(values.discount);
+
+  return values?.discount_type === 'percentage'
+    ? (discount * subtotal) / 100
+    : discount;
+};
+
+/**
+ * Retrieves the credit note discount amount formatted.
+ * @returns {string}
+ */
+export const useCreditNoteDiscountAmountFormatted = () => {
+  const discountAmount = useCreditNoteDiscountAmount();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(discountAmount, currencyCode, { money: true });
+};
+
+/**
+ * Retrieves the credit note adjustment amount.
+ * @returns {number}
+ */
+export const useCreditNoteAdjustmentAmount = () => {
+  const { values } = useFormikContext();
+
+  return toSafeNumber(values.adjustment);
+};
+
+/**
+ * Retrieves the credit note adjustment amount formatted.
+ * @returns {string}
+ */
+export const useCreditNoteAdjustmentFormatted = () => {
+  const adjustmentAmount = useCreditNoteAdjustmentAmount();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(adjustmentAmount, currencyCode, { money: true });
+};
+
+/**
+ * Retrieves the credit note total.
+ * @returns {number}
+ */
+export const useCreditNoteTotal = () => {
+  const subtotal = useCreditNoteSubtotal();
+  const discountAmount = useCreditNoteDiscountAmount();
+  const adjustmentAmount = useCreditNoteAdjustmentAmount();
+
+  return R.compose(
+    R.subtract(R.__, discountAmount),
+    R.add(R.__, adjustmentAmount),
+  )(subtotal);
+};
+
+/**
+ * Retrieves the credit note total formatted.
+ * @returns {string}
+ */
+export const useCreditNoteTotalFormatted = () => {
+  const total = useCreditNoteTotal();
+  const {
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
+
+  return formattedAmount(total, currencyCode, { money: true });
 };
 
 /**
@@ -204,4 +295,13 @@ export const useCreditNoteIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+export const useCreditNoteFormBrandingTemplatesOptions = () => {
+  const { brandingTemplates } = useCreditNoteFormContext();
+
+  return React.useMemo(
+    () => convertBrandingTemplatesToOptions(brandingTemplates),
+    [brandingTemplates],
+  );
 };

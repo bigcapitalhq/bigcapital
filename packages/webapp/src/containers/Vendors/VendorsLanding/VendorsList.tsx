@@ -7,7 +7,6 @@ import { DashboardPageContent } from '@/components';
 
 import { VendorsListProvider } from './VendorsListProvider';
 import VendorActionsBar from './VendorActionsBar';
-import VendorViewsTabs from './VendorViewsTabs';
 import VendorsTable from './VendorsTable';
 
 import withVendors from './withVendors';
@@ -42,7 +41,6 @@ function VendorsList({
       <VendorActionsBar />
 
       <DashboardPageContent>
-        <VendorViewsTabs />
         <VendorsTable />
       </DashboardPageContent>
     </VendorsListProvider>

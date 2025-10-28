@@ -48,20 +48,28 @@ export default function TrialBalanceSheetTable({ companyName }) {
 }
 
 const TrialBalanceDataTable = styled(ReportDataTable)`
+  --color-table-text-color: #252a31;
+  --color-table-total-text-color: #000;
+
+  .bp4-dark & {
+    --color-table-text-color: var(--color-light-gray1);
+    --color-table-total-text-color: var(--color-light-gray4);
+  }
   .table {
     .tbody {
       .tr .td {
-        border-bottom: 0;
+        border-bottom-width: 0;
         padding-top: 0.36rem;
         padding-bottom: 0.36rem;
-      }
-      .balance.td {
-        border-top-color: #000;
+        color: var(--color-table-text-color);
       }
       .tr.row_type--TOTAL .td {
-        border-top: 1px solid #bbb;
         font-weight: 500;
-        border-bottom: 3px double #000;
+        color: var(--color-table-total-text-color);
+        border-top-width: 1px;
+        border-top-style: solid;
+        border-bottom-width: 3px;
+        border-bottom-style: double;
       }
     }
   }

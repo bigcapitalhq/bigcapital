@@ -41,6 +41,7 @@ const numericColumnAccessor = R.curry((data, column) => {
     ...column,
     align: Align.Right,
     width,
+    money: true
   };
 });
 

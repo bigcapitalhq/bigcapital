@@ -1,36 +1,77 @@
 // @ts-nocheck
-import styled from 'styled-components';
-import { Tag } from '@blueprintjs/core';
-
-const Root = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  margin-bottom: 18px;
-`;
-
-const FilterTag = styled(Tag)`
-  min-height: 26px;
-
-  &.bp4-minimal:not([class*='bp4-intent-']) {
-    background: #fff;
-    border: 1px solid #e1e2e8;
-
-    &.bp4-interactive:hover {
-      background-color: rgba(143, 153, 168, 0.05);
-    }
-  }
-`;
+import { useMemo } from 'react';
+import * as R from 'ramda';
+import { useAppQueryString } from '@/hooks';
+import { Group, Stack, } from '@/components';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { TagsControl } from '@/components/TagsControl';
+import { AccountUncategorizedDateFilter } from './UncategorizedTransactions/AccountUncategorizedDateFilter';
+import { Divider } from '@blueprintjs/core';
 
 export function AccountTransactionsUncategorizeFilter() {
+  const { bankAccountMetaSummary } = useAccountTransactionsContext();
+  const [locationQuery, setLocationQuery] = useAppQueryString();
+
+  const totalUncategorized =
+    bankAccountMetaSummary?.totalUncategorizedTransactions;
+  const totalRecognized = bankAccountMetaSummary?.totalRecognizedTransactions;
+
+  const totalPending = bankAccountMetaSummary?.totalPendingTransactions;
+
+  const handleTabsChange = (value) => {
+    setLocationQuery({ uncategorizedFilter: value });
+  };
+
+  const options = useMemo(
+    () =>
+      R.when(
+        () => totalPending > 0,
+        R.append({
+          value: 'pending',
+          label: (
+            <>
+              Pending <strong>({totalPending})</strong>
+            </>
+          ),
+        }),
+      )([
+        {
+          value: 'all',
+          label: (
+            <>
+              All <strong>({totalUncategorized})</strong>
+            </>
+          ),
+        },
+        {
+          value: 'recognized',
+          label: (
+            <>
+              Recognized <strong>({totalRecognized})</strong>
+            </>
+          ),
+        },
+      ]),
+    [totalPending, totalRecognized, totalUncategorized],
+  );
+
   return (
-    <Root>
-      <FilterTag round interactive>
-        All <strong>(2)</strong>
-      </FilterTag>
-      <FilterTag round minimal interactive>
-        Recognized <strong>(0)</strong>
-      </FilterTag>
-    </Root>
+    <Group position={'apart'} style={{ marginBottom: 14 }}>
+      <Group align={'stretch'} spacing={10}>
+        <TagsControl
+          options={options}
+          value={locationQuery?.uncategorizedFilter || 'all'}
+          onValueChange={handleTabsChange}
+        />
+        <Divider />
+        <AccountUncategorizedDateFilter />
+      </Group>
+
+      <TagsControl
+        options={[{ value: 'excluded', label: 'Excluded' }]}
+        value={locationQuery?.uncategorizedFilter || 'all'}
+        onValueChange={handleTabsChange}
+      />
+    </Group>
   );
 }

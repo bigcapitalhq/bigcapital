@@ -11,13 +11,21 @@ import {
   useSettingsEstimates,
   useCreateEstimate,
   useEditEstimate,
+  useGetSaleEstimatesState,
+  ISaleEstimatesStateResponse,
 } from '@/hooks/query';
-import { Features } from '@/constants';
 import { useProjects } from '@/containers/Projects/hooks';
+import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { ITEMS_FILTER_ROLES } from './utils';
 
-const EstimateFormContext = createContext();
+interface EstimateFormProviderValues {
+  saleEstimateState: ISaleEstimatesStateResponse;
+  isSaleEstimateStateLoading: boolean;
+}
+
+const EstimateFormContext = createContext({} as EstimateFormProviderValues);
 
 /**
  * Estimate form provider.
@@ -71,6 +79,14 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
+  // Fetches branding templates of invoice.
+  const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
+    useGetPdfTemplates({ resource: 'SaleEstimate' });
+
+  // Fetches the sale estimate state.
+  const { data: saleEstimateState, isLoading: isSaleEstimateStateLoading } =
+    useGetSaleEstimatesState();
+
   // Handle fetch settings.
   useSettingsEstimates();
 
@@ -86,6 +102,13 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
     isWarehouesLoading || isBranchesLoading || isProjectsLoading;
+
+  const isBootLoading =
+    isCustomersLoading ||
+    isItemsLoading ||
+    isEstimateLoading ||
+    isBrandingTemplatesLoading ||
+    isSaleEstimateStateLoading;
 
   // Provider payload.
   const provider = {
@@ -112,18 +135,22 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
 
     createEstimateMutate,
     editEstimateMutate,
+
+    // Branding templates
+    brandingTemplates,
+    isBrandingTemplatesLoading,
+
+    // Estimate state
+    saleEstimateState,
+    isSaleEstimateStateLoading,
+
+    isBootLoading,
   };
 
-  return (
-    <DashboardInsider
-      loading={isCustomersLoading || isItemsLoading || isEstimateLoading}
-      name={'estimate-form'}
-    >
-      <EstimateFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <EstimateFormContext.Provider value={provider} {...props} />;
 }
 
-const useEstimateFormContext = () => useContext(EstimateFormContext);
+const useEstimateFormContext = () =>
+  useContext<EstimateFormProviderValues>(EstimateFormContext);
 
 export { EstimateFormProvider, useEstimateFormContext };

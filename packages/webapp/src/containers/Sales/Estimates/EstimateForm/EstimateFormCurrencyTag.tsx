@@ -13,7 +13,6 @@ export default function EstimateFromCurrencyTag() {
   if (!isForeignCustomer) {
     return null;
   }
-
   return (
     <BaseCurrencyRoot>
       <BaseCurrency currency={selectCustomer?.currency_code} />

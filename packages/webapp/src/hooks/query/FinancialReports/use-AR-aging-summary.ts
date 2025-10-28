@@ -11,7 +11,7 @@ export function useARAgingSummaryReport(query, props) {
     [t.FINANCIAL_REPORT, t.AR_AGING_SUMMARY, query],
     {
       method: 'get',
-      url: '/financial_statements/receivable_aging_summary',
+      url: '/reports/receivable-aging-summary',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -26,7 +26,7 @@ export function useARAgingSummaryReport(query, props) {
 
 export const useARAgingSheetXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/receivable_aging_summary',
+    url: '/reports/receivable-aging-summary',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -40,7 +40,7 @@ export const useARAgingSheetXlsxExport = (query, args) => {
 
 export const useARAgingSheetCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/receivable_aging_summary',
+    url: '/reports/receivable-aging-summary',
     config: {
       headers: {
         accept: 'application/csv',
@@ -57,7 +57,7 @@ export const useARAgingSheetCsvExport = (query, args) => {
  */
 export function useARAgingSummaryPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/receivable_aging_summary`,
+    url: `/reports/receivable_aging_summary`,
     params: query,
   });
 }

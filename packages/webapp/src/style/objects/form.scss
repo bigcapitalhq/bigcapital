@@ -29,13 +29,16 @@ label.bp4-label {
 
 // Form input.
 .#{$ns}-input {
-  box-shadow: 0 0 0 transparent;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--color-ui-input-border);
   border-radius: 2px;
   height: 32px;
   line-height: 32px;
   color: #333;
 
+  &,
+  .bp4-dark & {
+    box-shadow: 0 0 0 transparent;
+  }
   &:focus,
   &.bp4-active {
     box-shadow: 0 0 0 1px #116cd0;
@@ -102,12 +105,14 @@ label.bp4-label {
   border-radius: 2px;
 
   &,
-  &:hover {
-    background: #fff;
+  &:hover,
+  .bp4-dark &,
+  .bp4-dark &:hover {
     box-shadow: none;
-    border: 1px solid #ced4da;
+    background-color: var(--color-ui-input-background);
+    border: 1px solid var(--color-ui-input-border);
   }
-
+  
   &:focus {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     border-color: #80bdff;
@@ -123,11 +128,11 @@ label.bp4-label {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #495057;
+    color: var(--color-ui-input-group-prepend-color);
     text-align: center;
     white-space: nowrap;
-    background-color: #e9ecef;
-    border: 1px solid #ced4da;
+    background-color: var(--color-ui-input-group-prepend-background);
+    border: 1px solid var(--color-ui-input-group-prepend-border);
     border-radius: 0.25rem;
     height: 100%;
 
@@ -144,7 +149,6 @@ label.bp4-label {
   .bp4-input-group {
     flex: 1 1 auto;
   }
-
   .bp4-control-group {
     >.input-group-prepend:first-child .input-group-text {
       border-top-right-radius: 0;
@@ -271,203 +275,6 @@ label.bp4-label {
 .select-list--tooltip-items .bp4-popover-target {
   display: block;
 }
-
-@mixin control-checked-colors($selector: ':checked') {
-  input#{$selector}~.#{$ns}-control-indicator {
-    box-shadow: none;
-    background-color: $control-checked-background-color;
-    color: $white;
-  }
-
-  &:hover input#{$selector}~.#{$ns}-control-indicator {
-    box-shadow: none;
-    background-color: $control-checked-background-color-hover;
-    border-color: $control-checked-background-color-active;
-  }
-
-  input:not(:disabled):active#{$selector}~.#{$ns}-control-indicator {
-    box-shadow: none;
-    background-color: $control-checked-background-color-active;
-    border-color: $control-checked-background-color-active;
-  }
-
-  input:disabled#{$selector}~.#{$ns}-control-indicator {
-    box-shadow: none;
-    background: rgba($control-checked-background-color, 0.5);
-  }
-}
-
-///@extend
-.#{$ns}-control {
-  input:checked~.#{$ns}-control-indicator {
-    box-shadow: none;
-    background-color: transparent;
-    background-image: none;
-  }
-
-  &:hover input:checked~.#{$ns}-control-indicator {
-    box-shadow: none;
-    background-color: transparent;
-  }
-
-  input:not(:disabled):active:checked~.#{$ns}-control-indicator {
-    box-shadow: none;
-    background: transparent;
-  }
-
-  input:disabled:checked~.#{$ns}-control-indicator {
-    box-shadow: none;
-    background: transparent;
-  }
-
-  &.#{$ns}-disabled {
-    cursor: not-allowed;
-    color: $pt-text-color-disabled;
-  }
-
-  &.#{$ns}-inline {
-    display: inline-block;
-    margin-right: $pt-grid-size * 2;
-  }
-
-  .#{$ns}-control-indicator {
-    box-shadow: 0 0 0 transparent;
-    background-clip: padding-box;
-    background-color: transparent;
-    background-image: none;
-    width: 18px;
-    height: 18px;
-
-    &::before {
-      width: 18px;
-      height: 18px;
-    }
-  }
-
-  &.bp4-large .#{$ns}-control-indicator {
-    width: 20px;
-    height: 20px;
-
-    &::before {
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  &:hover .#{$ns}-control-indicator {
-    background-color: transparent;
-  }
-
-  input:not(:disabled):active~.#{$ns}-control-indicator {
-    box-shadow: 0 0 0 transparent;
-    background: transparent;
-  }
-
-  /*
-    Checkbox
-
-    Markup:
-    <label class="#{$ns}-control #{$ns}-checkbox {{.modifier}}">
-      <input type="checkbox" {{:modifier}} />
-      <span class="#{$ns}-control-indicator"></span>
-      Checkbox
-    </label>
-
-    :checked  - Checked
-    :disabled - Disabled. Also add <code>.#{$ns}-disabled</code> to <code>.#{$ns}-control</code> to change text color (not shown below).
-    :indeterminate - Indeterminate. Note that this style can only be achieved via JavaScript
-                     <code>input.indeterminate = true</code>.
-    .#{$ns}-align-right - Right-aligned indicator
-    .#{$ns}-large - Large
-
-    Styleguide checkbox
-  */
-  &.#{$ns}-checkbox {
-    &:hover input:indeterminate~.#{$ns}-control-indicator {
-      // box-shadow: 0 0 0 transparent;
-    }
-
-    @mixin indicator-inline-icon($icon) {
-      &::before {
-        // embed SVG icon image as backgroud-image above gradient.
-        // the SVG image content is inlined into the CSS, so use this sparingly.
-        height: 100%;
-        width: 100%;
-      }
-    }
-
-    @include control-checked-colors(':checked');
-
-    // make :indeterminate look like :checked _for Checkbox only_
-    @include control-checked-colors(':indeterminate');
-
-    .#{$ns}-control-indicator {
-      border: 1px solid #c6c6c6;
-      border-radius: $pt-border-radius;
-      background-color: #fff;
-    }
-
-    input:checked~.#{$ns}-control-indicator {
-      background-image: escape-svg($form-check-input-checked-bg-image);
-      border-color: $form-check-input-checked-bg-color;
-      background-color: $form-check-input-checked-bg-color;
-    }
-
-    input:indeterminate~.#{$ns}-control-indicator {
-      // background-image: escape-svg($form-check-input-indeterminate-bg-image);
-      border-color: $form-check-input-checked-bg-color;
-      background-color: $form-check-input-checked-bg-color;
-      box-shadow: 0 0 0 0 transparent;
-    }
-  }
-
-  /*
-    Radio
-
-    Markup:
-    <label class="#{$ns}-control #{$ns}-radio {{.modifier}}">
-      <input type="radio" name="docs-radio-regular" {{:modifier}} />
-      <span class="#{$ns}-control-indicator"></span>
-      Radio
-    </label>
-
-    :checked  - Selected
-    :disabled - Disabled. Also add <code>.#{$ns}-disabled</code> to <code>.#{$ns}-control</code> to change text color (not shown below).
-    .#{$ns}-align-right - Right-aligned indicator
-    .#{$ns}-large - Large
-
-    Styleguide radio
-  */
-  &.#{$ns}-radio {
-    .#{$ns}-control-indicator {
-      border: 2px solid #cecece;
-      background-color: #fff;
-
-      &::before {
-        height: 14px;
-        width: 14px;
-      }
-    }
-
-    input:checked~.#{$ns}-control-indicator {
-      border-color: $form-check-input-checked-bg-color;
-
-      &::before {
-        background-image: radial-gradient($form-check-input-checked-bg-color 40%,
-            transparent 40%);
-      }
-    }
-
-    input:checked:disabled~.#{$ns}-control-indicator::before {
-      opacity: 0.5;
-    }
-
-    input:focus~.#{$ns}-control-indicator {
-      -moz-outline-radius: $control-indicator-size;
-    }
-  }
-}
-
 .bp4-menu-item::before,
 .bp4-menu-item>.bp4-icon {
   color: #4b5d6b;
@@ -492,8 +299,8 @@ label.bp4-label {
       color: #495057;
       text-align: center;
       white-space: nowrap;
-      background-color: #e9ecef;
-      border: 1px solid #ced4da;
+      background-color: var(--color-ui-input-group-prepend-background);
+      border: 1px solid var(--color-ui-input-group-prepend-border);
       border-radius: 0 3px 3px 0;
 
       .bp4-icon {

@@ -1,24 +1,36 @@
 // @ts-nocheck
+import { Suspense } from 'react';
 import styled from 'styled-components';
-import { DrawerBody } from '@/components';
+import * as R from 'ramda';
+import { Spinner } from '@blueprintjs/core';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { CategorizeTransactionForm } from './CategorizeTransactionForm';
+import { withBanking } from '@/containers/CashFlow/withBanking';
 
-export default function CategorizeTransactionContent({
-  uncategorizedTransactionId,
+function CategorizeTransactionContentRoot({
+  transactionsToCategorizeIdsSelected,
 }) {
   return (
     <CategorizeTransactionBoot
-      uncategorizedTransactionId={uncategorizedTransactionId}
+      uncategorizedTransactionsIds={transactionsToCategorizeIdsSelected}
     >
       <CategorizeTransactionDrawerBody>
-        <CategorizeTransactionForm />
+        <Suspense fallback={<Spinner size={40} />}>
+          <CategorizeTransactionForm />
+        </Suspense>
       </CategorizeTransactionDrawerBody>
     </CategorizeTransactionBoot>
   );
 }
 
-export const CategorizeTransactionDrawerBody = styled(DrawerBody)`
-  padding: 20px;
-  background-color: #fff;
+export const CategorizeTransactionContent = R.compose(
+  withBanking(({ transactionsToCategorizeIdsSelected }) => ({
+    transactionsToCategorizeIdsSelected,
+  })),
+)(CategorizeTransactionContentRoot);
+
+const CategorizeTransactionDrawerBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 `;

@@ -130,6 +130,7 @@ function BillsDataTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
+        initialPageSize={billsTableState.pageSize}
         pagesCount={pagination.pagesCount}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}

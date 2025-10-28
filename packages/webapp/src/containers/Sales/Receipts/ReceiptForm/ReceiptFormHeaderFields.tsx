@@ -1,12 +1,12 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FormGroup, InputGroup, Position, Classes } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { useFormikContext } from 'formik';
+import { Position, Classes } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { Theme, useTheme } from '@emotion/react';
 
-import { CLASSES } from '@/constants/classes';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { Features } from '@/constants';
 import {
@@ -18,14 +18,11 @@ import {
   CustomerDrawerLink,
   FormattedMessage as T,
   FeatureCan,
+  FInputGroup,
+  Stack,
+  FDateInput,
 } from '@/components';
 import { ProjectsSelect } from '@/containers/Projects/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  inputIntent,
-} from '@/utils';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { accountsFieldShouldUpdate, customersFieldShouldUpdate } from './utils';
 import {
@@ -35,14 +32,33 @@ import {
 import { ReceiptFormReceiptNumberField } from './ReceiptFormReceiptNumberField';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
+const getEstimateFieldsStyle = (theme: Theme) => css`
+  .${theme.bpPrefix}-form-group {
+    margin-bottom: 0;
+
+    &.${theme.bpPrefix}-inline {
+      max-width: 450px;
+    }
+    .${theme.bpPrefix}-label {
+      min-width: 150px;
+      font-weight: 500;
+    }
+    .${theme.bpPrefix}-form-content {
+      width: 100%;
+    }
+  }
+`;
+
 /**
  * Receipt form header fields.
  */
 export default function ReceiptFormHeader() {
+  const theme = useTheme();
+  const receiptFieldsClassName = getEstimateFieldsStyle(theme);
   const { accounts, projects } = useReceiptFormContext();
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+    <Stack spacing={18} flex={1} className={receiptFieldsClassName}>
       {/* ----------- Customer name ----------- */}
       <ReceiptFormCustomerSelect />
 
@@ -76,47 +92,37 @@ export default function ReceiptFormHeader() {
       </FFormGroup>
 
       {/* ----------- Receipt date ----------- */}
-      <FastField name={'receipt_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'receipt_date'} />}
-            inline={true}
-            className={classNames(CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="receipt_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('receipt_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'receipt_date'}
+        label={<T id={'receipt_date'} />}
+        inline
+        fastField
+      >
+        <FDateInput
+          name={'receipt_date'}
+          formatDate={(date) => date.toLocaleDateString()}
+          parseDate={(str) => new Date(str)}
+          popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+            fill: true,
+          }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Receipt number ----------- */}
       <ReceiptFormReceiptNumberField />
 
       {/* ----------- Reference ----------- */}
-      <FastField name={'reference_no'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference'} />}
-            inline={true}
-            className={classNames('form-group--reference', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference_no" />}
-          >
-            <InputGroup minimal={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        label={<T id={'reference'} />}
+        inline={true}
+        name={'reference_no'}
+      >
+        <FInputGroup minimal={true} name={'reference_no'} />
+      </FFormGroup>
 
       {/*------------ Project name -----------*/}
       <FeatureCan feature={Features.Projects}>
@@ -134,7 +140,7 @@ export default function ReceiptFormHeader() {
           />
         </FFormGroup>
       </FeatureCan>
-    </div>
+    </Stack>
   );
 }
 

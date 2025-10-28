@@ -1,5 +1,4 @@
 import { Knex } from 'knex';
-import { IDynamicListFilterDTO } from '@/interfaces/DynamicFilter';
 
 export interface IAccountDTO {
   name: string;
@@ -15,6 +14,7 @@ export interface IAccountDTO {
 export interface IAccountCreateDTO extends IAccountDTO {
   currencyCode?: string;
   plaidAccountId?: string;
+  plaidItemId?: string;
 }
 
 export interface IAccountEditDTO extends IAccountDTO {}
@@ -37,6 +37,8 @@ export interface IAccount {
   accountNormal: string;
   accountParentType: string;
   bankBalance: string;
+  plaidItemId: number | null;
+  lastFeedsUpdatedAt: Date;
 }
 
 export enum AccountNormal {
@@ -66,7 +68,9 @@ export interface IAccountTransaction {
   referenceId: number;
 
   referenceNumber?: string;
+
   transactionNumber?: string;
+  transactionType?: string;
 
   note?: string;
 
@@ -92,7 +96,7 @@ export enum IAccountsStructureType {
   Flat = 'flat',
 }
 
-export interface IAccountsFilter extends IDynamicListFilterDTO {
+export interface IAccountsFilter {
   stringifiedFilterRoles?: string;
   onlyInactive: boolean;
   structure?: IAccountsStructureType;
@@ -113,26 +117,22 @@ export interface IAccountsTypesService {
 }
 
 export interface IAccountEventCreatingPayload {
-  tenantId: number;
   accountDTO: any;
   trx: Knex.Transaction;
 }
 export interface IAccountEventCreatedPayload {
-  tenantId: number;
   account: IAccount;
   accountId: number;
   trx: Knex.Transaction;
 }
 
 export interface IAccountEventEditedPayload {
-  tenantId: number;
   account: IAccount;
   oldAccount: IAccount;
   trx: Knex.Transaction;
 }
 
 export interface IAccountEventDeletedPayload {
-  tenantId: number;
   accountId: number;
   oldAccount: IAccount;
   trx: Knex.Transaction;
@@ -163,4 +163,8 @@ export enum TaxRateAction {
   EDIT = 'Edit',
   DELETE = 'Delete',
   VIEW = 'View',
+}
+
+export interface CreateAccountParams {
+  ignoreUniqueName: boolean;
 }

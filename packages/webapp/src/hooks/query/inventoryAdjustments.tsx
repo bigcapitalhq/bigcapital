@@ -33,7 +33,7 @@ export function useCreateInventoryAdjustment(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post('inventory_adjustments/quick', values),
+    (values) => apiRequest.post('inventory-adjustments/quick', values),
     {
       onSuccess: () => {
         // Common invalidate queries.
@@ -51,7 +51,7 @@ export function useDeleteInventoryAdjustment(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`inventory_adjustments/${id}`), {
+  return useMutation((id) => apiRequest.delete(`inventory-adjustments/${id}`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -62,7 +62,7 @@ export function useDeleteInventoryAdjustment(props) {
 
 const inventoryAdjustmentsTransformer = (response) => {
   return {
-    transactions: response.data.inventoy_adjustments,
+    inventoryAdjustments: response.data.data,
     pagination: transformPagination(response.data.pagination),
   };
 };
@@ -72,8 +72,8 @@ const inventoryAdjustmentsTransformer = (response) => {
  */
 export function useInventoryAdjustments(query, props) {
   return useRequestQuery(
-    ['INVENTORY_ADJUSTMENTS', query],
-    { url: 'inventory_adjustments', params: query },
+    ['inventory-adjustments', query],
+    { url: 'inventory-adjustments', params: query },
     {
       select: inventoryAdjustmentsTransformer,
       defaultData: {
@@ -98,7 +98,7 @@ export function usePublishInventoryAdjustment(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.post(`inventory_adjustments/${id}/publish`),
+    (id) => apiRequest.post(`inventory-adjustments/${id}/publish`),
     {
       onSuccess: (res, id) => {
         // Invalidate specific inventory adjustment.
@@ -118,9 +118,9 @@ export function usePublishInventoryAdjustment(props) {
 export function useInventoryAdjustment(id, props, requestProps) {
   return useRequestQuery(
     [t.INVENTORY_ADJUSTMENT, id],
-    { method: 'get', url: `inventory_adjustments/${id}`, ...requestProps },
+    { method: 'get', url: `inventory-adjustments/${id}`, ...requestProps },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

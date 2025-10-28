@@ -1,9 +1,10 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DashboardInsider } from '@/components';
 import { useCashflowAccounts, useAccount } from '@/hooks/query';
 import { useAppQueryString } from '@/hooks';
+import { useGetBankAccountSummaryMeta } from '@/hooks/query/bank-rules';
 
 const AccountTransactionsContext = React.createContext();
 
@@ -20,34 +21,50 @@ function AccountTransactionsProvider({ query, ...props }) {
   const setFilterTab = (value: string) => {
     setLocationQuery({ filter: value });
   };
-  // Fetch cashflow accounts.
+  // Retrieves cashflow accounts.
   const {
     data: cashflowAccounts,
     isFetching: isCashFlowAccountsFetching,
     isLoading: isCashFlowAccountsLoading,
   } = useCashflowAccounts(query, { keepPreviousData: true });
 
-  // Retrieve specific account details.
-  
+  // Retrieves specific account details.
   const {
     data: currentAccount,
     isFetching: isCurrentAccountFetching,
     isLoading: isCurrentAccountLoading,
   } = useAccount(accountId, { keepPreviousData: true });
 
+  // Retrieves the bank account meta summary.
+  const {
+    data: bankAccountMetaSummary,
+    isLoading: isBankAccountMetaSummaryLoading,
+    isFetching: isBankAccountMetaSummaryFetching,
+  } = useGetBankAccountSummaryMeta(accountId);
+
+  const [scrollableRef, setScrollableRef] = useState();
+
   // Provider payload.
   const provider = {
     accountId,
     cashflowAccounts,
     currentAccount,
+    bankAccountMetaSummary,
 
     isCashFlowAccountsFetching,
     isCashFlowAccountsLoading,
+
     isCurrentAccountFetching,
     isCurrentAccountLoading,
 
+    isBankAccountMetaSummaryLoading,
+    isBankAccountMetaSummaryFetching,
+
     filterTab,
     setFilterTab,
+
+    scrollableRef,
+    setScrollableRef,
   };
 
   return (

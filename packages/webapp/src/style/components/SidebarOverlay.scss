@@ -1,5 +1,5 @@
 .sidebar-overlay {
-  background: #fff;
+  background: var(--color-sidebar-overlay-background);
   height: 100%;
   width: 225px;
   outline: 0;
@@ -11,7 +11,6 @@
   }
 
   .ScrollbarsCustom-Track {
-
     &.ScrollbarsCustom-TrackY,
     &.ScrollbarsCustom-TrackX {
       background: rgba(0, 0, 0, 0);
@@ -19,7 +18,6 @@
   }
 
   .ScrollbarsCustom-Thumb {
-
     &.ScrollbarsCustom-ThumbX,
     &.ScrollbarsCustom-ThumbY {
       background: rgba(0, 0, 0, 0);
@@ -34,7 +32,6 @@
 
   &:hover {
     .ScrollbarsCustom-Thumb {
-
       &.ScrollbarsCustom-ThumbX,
       &.ScrollbarsCustom-ThumbY {
         background: rgba(0, 0, 0, 0.5);
@@ -48,7 +45,7 @@
 
   &__item {
     font-size: 15px;
-    color: #00102b;
+    color: var(--color-sidebar-overlay-item-text);
 
     a {
       color: inherit;
@@ -58,7 +55,8 @@
 
       &:hover,
       &:focus {
-        background: #f3f3f3;
+        color: var(--color-sidebar-overlay-item-text-hover);
+        background-color: var(--color-sidebar-overlay-hover-background);
       }
     }
   }
@@ -66,7 +64,7 @@
   &__divider {
     height: 1px;
     margin: 6px 0;
-    background: #e2e5ec;
+    background: var(--color-sidebar-overlay-divider-background);
   }
 
   &__label {
@@ -74,8 +72,8 @@
     font-size: 12px;
     padding: 14px 20px 10px;
     letter-spacing: 1px;
-    color: #707a85;
-    border-bottom: 1px solid #e2e5ec;
+    color: var(--color-sidebar-overlay-label-text);
+    border-bottom: 1px solid var(--color-sidebar-overlay-label-border);
     margin-bottom: 6px;
 
     html[lang^="ar"] & {
@@ -127,6 +125,6 @@
 }
 
 .sidebar-overlay-backdrop {
-  background-color: rgba(0, 10, 30, 0.15);
+  background-color: var(--color-sidebar-overlay-backdrop);
   z-index: 14;
 }

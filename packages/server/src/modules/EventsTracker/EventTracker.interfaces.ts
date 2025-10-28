@@ -1,0 +1,3 @@
+interface ReportsEvents {
+  tenantId: number;
+}

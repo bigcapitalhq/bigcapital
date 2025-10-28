@@ -1,4 +1,11 @@
-import { Button, ButtonProps, Intent } from '@blueprintjs/core';
+import {
+  Button,
+  ButtonProps,
+  Intent,
+  Position,
+  Text,
+  Tooltip,
+} from '@blueprintjs/core';
 import clsx from 'classnames';
 import { Box, Group, Stack } from '../Layout';
 import styles from './PricingPlan.module.scss';
@@ -64,7 +71,7 @@ export interface PricingPriceProps {
  */
 PricingPlan.Price = ({ price, subPrice }: PricingPriceProps) => {
   return (
-    <Stack spacing={6} className={styles.priceRoot}>
+    <Stack spacing={4} className={styles.priceRoot}>
       <h4 className={styles.price}>{price}</h4>
       <span className={styles.pricePer}>{subPrice}</span>
     </Stack>
@@ -101,7 +108,7 @@ export interface PricingFeaturesProps {
  */
 PricingPlan.Features = ({ children }: PricingFeaturesProps) => {
   return (
-    <Stack spacing={10} className={styles.features}>
+    <Stack spacing={14} className={styles.features}>
       {children}
     </Stack>
   );
@@ -109,15 +116,41 @@ PricingPlan.Features = ({ children }: PricingFeaturesProps) => {
 
 export interface PricingFeatureLineProps {
   children: React.ReactNode;
+  hintContent?: string;
+  hintLabel?: string;
 }
 
 /**
  * Displays a single feature line within a list of features.
  * @param children - The content of the feature line.
  */
-PricingPlan.FeatureLine = ({ children }: PricingFeatureLineProps) => {
-  return (
-    <Group noWrap spacing={12}>
+PricingPlan.FeatureLine = ({
+  children,
+  hintContent,
+  hintLabel,
+}: PricingFeatureLineProps) => {
+  return hintContent ? (
+    <Tooltip
+      content={
+        <Stack spacing={5}>
+          {hintLabel && (
+            <Text className={styles.featurePopoverLabel}>{hintLabel}</Text>
+          )}
+          <Text className={styles.featurePopoverContent}>{hintContent}</Text>
+        </Stack>
+      }
+      position={Position.TOP_LEFT}
+      popoverClassName={styles.featurePopover}
+      modifiers={{ offset: { enabled: true, offset: '0,10' } }}
+      minimal
+    >
+      <Group noWrap spacing={8} style={{ cursor: 'help' }}>
+        <CheckCircled height={12} width={12} />
+        <Box className={styles.featureItem}>{children}</Box>
+      </Group>
+    </Tooltip>
+  ) : (
+    <Group noWrap spacing={8}>
       <CheckCircled height={12} width={12} />
       <Box className={styles.featureItem}>{children}</Box>
     </Group>

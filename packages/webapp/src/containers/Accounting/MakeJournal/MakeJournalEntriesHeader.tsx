@@ -1,18 +1,20 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
-import { useFormikContext } from 'formik';
-import { CLASSES } from '@/constants/classes';
-import { safeSumBy } from '@/utils';
-import { PageFormBigNumber, FormattedMessage as T } from '@/components';
+import {
+  Group,
+  PageForm,
+  PageFormBigNumber,
+  FormattedMessage as T,
+} from '@/components';
 import MakeJournalEntriesHeaderFields from './MakeJournalEntriesHeaderFields';
+import { useManualJournalTotalFormatted } from './utils';
 
 export default function MakeJournalEntriesHeader() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <PageForm.Header>
       <MakeJournalEntriesHeaderFields />
       <MakeJournalHeaderBigNumber />
-    </div>
+    </PageForm.Header>
   );
 }
 
@@ -21,19 +23,9 @@ export default function MakeJournalEntriesHeader() {
  * @returns {React.ReactNode}
  */
 function MakeJournalHeaderBigNumber() {
-  const {
-    values: { entries, currency_code },
-  } = useFormikContext();
-  const totalCredit = safeSumBy(entries, 'credit');
-  const totalDebit = safeSumBy(entries, 'debit');
-
-  const total = Math.max(totalCredit, totalDebit);
+  const totalFormatted = useManualJournalTotalFormatted();
 
   return (
-    <PageFormBigNumber
-      label={<T id={'amount'} />}
-      amount={total}
-      currencyCode={currency_code}
-    />
+    <PageFormBigNumber label={<T id={'amount'} />} amount={totalFormatted} />
   );
 }

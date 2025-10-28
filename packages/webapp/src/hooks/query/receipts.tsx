@@ -1,8 +1,14 @@
 // @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
+import {
+  useQueryClient,
+  useMutation,
+  UseQueryResult,
+  UseQueryOptions,
+  useQuery,
+} from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
 
@@ -48,7 +54,7 @@ export function useCreateReceipt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('sales/receipts', values), {
+  return useMutation((values) => apiRequest.post('sale-receipts', values), {
     onSuccess: () => {
       // Invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -65,7 +71,7 @@ export function useEditReceipt(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/receipts/${id}`, values),
+    ([id, values]) => apiRequest.post(`sale-receipts/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific receipt.
@@ -86,7 +92,7 @@ export function useDeleteReceipt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`sales/receipts/${id}`), {
+  return useMutation((id) => apiRequest.delete(`sale-receipts/${id}`), {
     onSuccess: (res, id) => {
       // Invalidate specific receipt.
       queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
@@ -105,7 +111,7 @@ export function useCloseReceipt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/receipts/${id}/close`), {
+  return useMutation((id) => apiRequest.post(`sale-receipts/${id}/close`), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
 
@@ -128,7 +134,7 @@ const transformReceipts = (res) => ({
 export function useReceipts(query, props) {
   return useRequestQuery(
     ['SALE_RECEIPTS', query],
-    { method: 'get', url: 'sales/receipts', params: query },
+    { method: 'get', url: 'sale-receipts', params: query },
     {
       select: transformReceipts,
       defaultData: {
@@ -151,9 +157,9 @@ export function useReceipts(query, props) {
 export function useReceipt(id, props) {
   return useRequestQuery(
     ['SALE_RECEIPT', id],
-    { method: 'get', url: `sales/receipts/${id}` },
+    { method: 'get', url: `sale-receipts/${id}` },
     {
-      select: (res) => res.data.sale_receipt,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -165,7 +171,7 @@ export function useReceipt(id, props) {
  * @param {number} receiptId -
  */
 export function usePdfReceipt(receiptId: number) {
-  return useRequestPdf({ url: `sales/receipts/${receiptId}` });
+  return useRequestPdf({ url: `sale-receipts/${receiptId}` });
 }
 
 export function useRefreshReceipts() {
@@ -183,7 +189,7 @@ export function useCreateNotifyReceiptBySMS(props) {
   const apiRequest = useApiRequest();
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`sales/receipts/${id}/notify-by-sms`, values),
+      apiRequest.post(`sale-receipts/${id}/notify-by-sms`, values),
     {
       onSuccess: (res, [id, values]) => {
         queryClient.invalidateQueries([t.NOTIFY_SALE_RECEIPT_BY_SMS, id]);
@@ -201,11 +207,11 @@ export function useReceiptSMSDetail(receiptId, props, requestProps) {
     [t.SALE_RECEIPT_SMS_DETAIL, receiptId],
     {
       method: 'get',
-      url: `sales/receipts/${receiptId}/sms-details`,
+      url: `sale-receipts/${receiptId}/sms-details`,
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -220,7 +226,7 @@ export function useSendSaleReceiptMail(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/receipts/${id}/mail`, values),
+    ([id, values]) => apiRequest.post(`sale-receipts/${id}/mail`, values),
     {
       onSuccess: () => {
         // Invalidate queries.
@@ -231,16 +237,122 @@ export function useSendSaleReceiptMail(props) {
   );
 }
 
-export function useSaleReceiptDefaultOptions(invoiceId, props) {
-  return useRequestQuery(
-    [t.SALE_RECEIPT_MAIL_OPTIONS, invoiceId],
-    {
-      method: 'get',
-      url: `sales/receipts/${invoiceId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+export interface GetSaleReceiptMailStateResponse {
+  attachReceipt: boolean;
+
+  closedAtDate: string;
+  closedAtDateFormatted: string;
+
+  companyName: string;
+  customerName: string;
+
+  formatArgs: Record<string, any>;
+
+  from: string[];
+  fromOptions: Array<{ mail: string; label: string; primary: boolean; }>;
+  message: string;
+
+  receiptDate: string;
+  receiptDateFormatted: string;
+
+  subject: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
+  to: string[];
+  toOptions: Array<{ mail: string; label: string; primary: boolean; }>;
+
+  // # Discount
+  discountAmount: number;
+  discountAmountFormatted: string;
+  discountLabel: string;
+  discountPercentage: number | null;
+  discountPercentageFormatted: string;
+
+  // # Adjustment
+  adjustment: number,
+  adjustmentFormatted: string,
+
+  // # Total
+  total: number;
+  totalFormatted: string;
+
+  companyLogoUri?: string | null;
+  primaryColor?: string | null;
+
+  entries: Array<{
+    name: string;
+    quantity: number;
+    quantityFormatted: string;
+    rate: number;
+    rateFormatted: string;
+    total: number;
+    totalFormatted: string
+  }>,
+  receiptNumber: string;
+}
+
+export function useSaleReceiptMailState(
+  receiptId: number,
+  props?: UseQueryOptions<GetSaleReceiptMailStateResponse, Error>,
+): UseQueryResult<GetSaleReceiptMailStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleReceiptMailStateResponse, Error>(
+    [t.SALE_RECEIPT_MAIL_OPTIONS, receiptId],
+    () =>
+      apiRequest
+        .get(`sale-receipts/${receiptId}/mail`)
+        .then((res) => transformToCamelCase(res.data)),
   );
 }
+
+export interface IGetReceiptStateResponse {
+  defaultTemplateId: number;
+}
+
+export function useGetReceiptState(
+  options?: UseQueryOptions<IGetReceiptStateResponse, Error>,
+): UseQueryResult<IGetReceiptStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<IGetReceiptStateResponse, Error>(
+    ['SALE_RECEIPT_STATE'],
+    () =>
+      apiRequest
+        .get(`/sale-receipts/state`)
+        .then((res) => transformToCamelCase(res.data)),
+    { ...options },
+  );
+}
+
+interface GetReceiptHtmlResponse {
+  htmlContent: string;
+}
+
+/**
+ * Retrieves the sale receipt html content.
+ * @param {number} receiptId
+ * @param {UseQueryOptions<string, Error>} options
+ * @returns {UseQueryResult<GetReceiptHtmlResponse, Error>}
+ */
+export const useGetSaleReceiptHtml = (
+  receiptId: number,
+  options?: UseQueryOptions<string, Error>,
+): UseQueryResult<GetReceiptHtmlResponse, Error> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetReceiptHtmlResponse, Error>(
+    ['SALE_RECEIPT_HTML', receiptId],
+    () =>
+      apiRequest
+        .get(`sale-receipts/${receiptId}`, {
+          headers: {
+            Accept: 'application/json+html',
+          },
+        })
+        .then((res) => transformToCamelCase(res.data)),
+    { ...options },
+  );
+};

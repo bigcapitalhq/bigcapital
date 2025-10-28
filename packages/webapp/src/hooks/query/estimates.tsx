@@ -1,8 +1,14 @@
 // @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseQueryOptions,
+  UseQueryResult,
+} from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import t from './types';
 import { useRequestPdf } from '../useRequestPdf';
 
@@ -21,7 +27,7 @@ export function useCreateEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('sales/estimates', values), {
+  return useMutation((values) => apiRequest.post('sale-estimates', values), {
     onSuccess: () => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -41,7 +47,7 @@ export function useEditEstimate(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/estimates/${id}`, values),
+    ([id, values]) => apiRequest.post(`sale-estimates/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
@@ -61,9 +67,9 @@ export function useEditEstimate(props) {
 export function useEstimate(id, props) {
   return useRequestQuery(
     [t.SALE_ESTIMATE, id],
-    { method: 'get', url: `sales/estimates/${id}` },
+    { method: 'get', url: `sale-estimates/${id}` },
     {
-      select: (res) => res.data.estimate,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -82,7 +88,7 @@ const transformEstimates = (res) => ({
 export function useEstimates(query, props) {
   return useRequestQuery(
     [t.SALE_ESTIMATES, query],
-    { method: 'get', url: 'sales/estimates', params: query },
+    { method: 'get', url: 'sale-estimates', params: query },
     {
       select: transformEstimates,
       defaultData: {
@@ -106,7 +112,7 @@ export function useDeleteEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`sales/estimates/${id}`), {
+  return useMutation((id) => apiRequest.delete(`sale-estimates/${id}`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -125,7 +131,7 @@ export function useDeliverEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/estimates/${id}/deliver`), {
+  return useMutation((id) => apiRequest.post(`sale-estimates/${id}/deliver`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -144,7 +150,7 @@ export function useApproveEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/estimates/${id}/approve`), {
+  return useMutation((id) => apiRequest.put(`sale-estimates/${id}/approve`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -163,7 +169,7 @@ export function useRejectEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/estimates/${id}/reject`), {
+  return useMutation((id) => apiRequest.put(`sale-estimates/${id}/reject`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -181,7 +187,7 @@ export function useRejectEstimate(props) {
 
 export function usePdfEstimate(estimateId) {
   return useRequestPdf({
-    url: `sales/estimates/${estimateId}`,
+    url: `sale-estimates/${estimateId}`,
   });
 }
 
@@ -204,7 +210,7 @@ export function useCreateNotifyEstimateBySMS(props) {
 
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`sales/estimates/${id}/notify-by-sms`, values),
+      apiRequest.post(`sale-estimates/${id}/notify-by-sms`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate
@@ -230,23 +236,23 @@ export function useEstimateSMSDetail(estimateId, props, requestProps) {
     [t.SALE_ESTIMATE_SMS_DETAIL, estimateId],
     {
       method: 'get',
-      url: `sales/estimates/${estimateId}/sms-details`,
+      url: `sale-estimates/${estimateId}/sms-details`,
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
   );
 }
 
-export function useSendSaleEstimateMail(props) {
+export function useSendSaleEstimateMail(props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/estimates/${id}/mail`, values),
+    ([id, values]) => apiRequest.post(`sale-estimates/${id}/mail`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
@@ -257,16 +263,111 @@ export function useSendSaleEstimateMail(props) {
   );
 }
 
-export function useSaleEstimateDefaultOptions(estimateId, props) {
-  return useRequestQuery(
-    [t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId],
-    {
-      method: 'get',
-      url: `sales/estimates/${estimateId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+export interface SaleEstimateMailStateResponse {
+  attachEstimate: boolean;
+  companyLogoUri: string;
+  companyName: string;
+  customerName: string;
+  entries: Array<any>;
+
+  estimateDate: string;
+  estimateDateFormatted: string;
+
+  expirationDate: string;
+  expirationDateFormatted: string;
+
+  primaryColor: string;
+
+  total: number;
+  totalFormatted: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
+  discountAmount: number;
+  discountAmountFormatted: string;
+  discountLabel: string;
+  discountPercentage: number | null;
+  discountPercentageFormatted: string;
+
+  adjustment: number;
+  adjustmentFormatted: string;
+
+  estimateNumber: string;
+
+  formatArgs: {
+    customerName: string;
+    estimateAmount: string;
+  };
+  from: Array<string>;
+  fromOptions: Array<any>;
+  message: string;
+  subject: string;
+  to: Array<string>;
+  toOptions: Array<any>;
+}
+
+/**
+ * Retrieves the sale estimate mail state.
+ * @param {number} estimateId
+ * @param {UseQueryOptions<SaleEstimateMailStateResponse, Error>} props
+ * @returns {UseQueryResult<SaleEstimateMailStateResponse, Error>}
+ */
+export function useSaleEstimateMailState(
+  estimateId: number,
+  props?: UseQueryOptions<SaleEstimateMailStateResponse, Error>,
+): UseQueryResult<SaleEstimateMailStateResponse, Error> {
+  const apiRequest = useApiRequest();
+  return useQuery([t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId], () =>
+    apiRequest
+      .get(`sale-estimates/${estimateId}/mail`)
+      .then((res) => transformToCamelCase(res.data)),
   );
 }
+
+export interface ISaleEstimatesStateResponse {
+  defaultTemplateId: number;
+}
+
+export function useGetSaleEstimatesState(
+  options?: UseQueryOptions<ISaleEstimatesStateResponse, Error>,
+): UseQueryResult<ISaleEstimatesStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<ISaleEstimatesStateResponse, Error>(
+    ['SALE_ESTIMATE_STATE'],
+    () =>
+      apiRequest
+        .get('/sale-estimates/state')
+        .then((res) => transformToCamelCase(res.data)),
+    { ...options },
+  );
+}
+
+interface GetEstimateHtmlResponse {
+  htmlContent: string;
+}
+/**
+ * Retrieves the sale estimate html content.
+ * @param {number} invoiceId
+ * @param {UseQueryOptions<GetEstimateHtmlResponse>} options
+ * @returns {UseQueryResult<GetEstimateHtmlResponse>}
+ */
+export const useGetSaleEstimateHtml = (
+  estimateId: number,
+  options?: UseQueryOptions<GetEstimateHtmlResponse>,
+): UseQueryResult<GetEstimateHtmlResponse> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetEstimateHtmlResponse>(
+    ['SALE_ESTIMATE_HTML', estimateId],
+    () =>
+      apiRequest
+        .get(`sale-estimates/${estimateId}`, {
+          headers: {
+            Accept: 'application/json+html',
+          },
+        })
+        .then((res) => transformToCamelCase(res.data)),
+  );
+};

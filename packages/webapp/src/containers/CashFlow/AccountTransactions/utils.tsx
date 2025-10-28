@@ -66,7 +66,7 @@ export const handleCashFlowTransactionType = (reference, openDrawer) => {
         expenseId: reference.reference_id,
       });
     case 'PaymentReceive':
-      return openDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS, {
+      return openDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS, {
         paymentReceiveId: reference.reference_id,
       });
     case 'BillPayment':

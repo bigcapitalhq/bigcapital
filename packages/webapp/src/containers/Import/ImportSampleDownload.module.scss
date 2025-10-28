@@ -1,23 +1,32 @@
+.root {
+  --color-sample-download-background: #fff;
+  --color-sample-download-border: #d3d8de;
+  --color-sample-download-title-text: #5f6b7c;
+  --color-sample-download-desc-text: #8f99a8;
 
-
-.root{
-  background: #fff;
-  border: 1px solid #D3D8DE;
+  :global(.bp4-dark) & {
+    --color-sample-download-background: var(--color-dark-gray3);
+    --color-sample-download-border: var(--color-dark-gray5);
+    --color-sample-download-title-text: var(--color-light-gray1);
+    --color-sample-download-desc-text: var(--color-light-gray1);
+  }
+  background: var(--color-sample-download-background);
+  border: 1px solid var(--color-sample-download-border);
   border-radius: 5px;
-  padding: 16px; 
+  padding: 16px;
 }
-.description{
+.description {
   margin: 0;
   margin-top: 6px;
-  color: #8F99A8;
+  color: var(--color-sample-download-desc-text);
 }
-.title{
-  color: #5F6B7C;
+.title {
+  color: var(--color-sample-download-title-text);
   font-weight: 600;
   font-size: 14px;
 }
 
-.buttonWrap{
+.buttonWrap {
   flex: 25% 0;
   text-align: right;
 }

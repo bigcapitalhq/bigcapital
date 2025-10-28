@@ -12,7 +12,7 @@ export function useJournalSheet(query, props) {
     [t.FINANCIAL_REPORT, t.JOURNAL, query],
     {
       method: 'get',
-      url: '/financial_statements/journal',
+      url: '/reports/journal',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -27,7 +27,7 @@ export function useJournalSheet(query, props) {
 
 export const useJournalSheetXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/journal',
+    url: '/reports/journal',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -41,7 +41,7 @@ export const useJournalSheetXlsxExport = (query, args) => {
 
 export const useJournalSheetCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/journal',
+    url: '/reports/journal',
     config: {
       headers: {
         accept: 'application/csv',
@@ -58,7 +58,7 @@ export const useJournalSheetCsvExport = (query, args) => {
  */
 export const useJournalSheetPdf = (query = {}) => {
   return useRequestPdf({
-    url: `/financial_statements/journal`,
+    url: `/reports/journal`,
     params: query,
   });
 };

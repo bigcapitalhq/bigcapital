@@ -1,3 +1,4 @@
+// @ts-nocheck
 const validGrouping = (integerPart, sep) =>
   integerPart.split(sep).reduce((acc, group, idx) => {
     if (idx > 0) {

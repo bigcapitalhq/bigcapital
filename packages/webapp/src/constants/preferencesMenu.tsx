@@ -9,8 +9,21 @@ export default [
     href: '/preferences/general',
   },
   {
+    text: 'Branding',
+    disabled: false,
+    href: '/preferences/branding',
+  },
+  {
+    text: 'Billing',
+    href: '/preferences/billing',
+  },
+  {
     text: <T id={'users'} />,
     href: '/preferences/users',
+  },
+  {
+    text: 'Payment Methods',
+    href: '/preferences/payment-methods'
   },
   {
     text: <T id={'preferences.estimates'} />,
@@ -51,8 +64,13 @@ export default [
     href: '/preferences/items',
   },
   {
-    text: <T id={'sms_integration.label'} />,
+    text: 'Integrations',
     disabled: false,
-    href: '/preferences/sms-message',
+    href: '/preferences/integrations'
   },
+  // {
+  //   text: <T id={'sms_integration.label'} />,
+  //   disabled: false,
+  //   href: '/preferences/sms-message',
+  // },
 ];

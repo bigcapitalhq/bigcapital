@@ -1,56 +1,50 @@
 // @ts-nocheck
 import * as R from 'ramda';
-import { Button, Classes, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import styled from 'styled-components';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import { DRAWERS } from '@/constants/drawers';
 import { Group } from '@/components';
+import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
 
 function CategorizeTransactionFormFooterRoot({
-  // #withDrawerActions
-  closeDrawer,
+  // #withBankingActions
+  closeMatchingTransactionAside,
 }) {
   const { isSubmitting } = useFormikContext();
 
   const handleClose = () => {
-    closeDrawer(DRAWERS.CATEGORIZE_TRANSACTION);
+    closeMatchingTransactionAside();
   };
 
   return (
     <Root>
-      <div className={Classes.DRAWER_FOOTER}>
-        <Group spacing={10}>
-          <Button
-            intent={Intent.PRIMARY}
-            loading={isSubmitting}
-            style={{ minWidth: '75px' }}
-            type="submit"
-          >
-            Save
-          </Button>
+      <Group spacing={10}>
+        <Button
+          intent={Intent.PRIMARY}
+          style={{ minWidth: '85px' }}
+          loading={isSubmitting}
+          type="submit"
+        >
+          Save
+        </Button>
 
-          <Button
-            disabled={isSubmitting}
-            onClick={handleClose}
-            style={{ minWidth: '75px' }}
-          >
-            Close
-          </Button>
-        </Group>
-      </div>
+        <Button
+          disabled={isSubmitting}
+          onClick={handleClose}
+          style={{ minWidth: '75px' }}
+        >
+          Close
+        </Button>
+      </Group>
     </Root>
   );
 }
 
-export const CategorizeTransactionFormFooter = R.compose(withDrawerActions)(
+export const CategorizeTransactionFormFooter = R.compose(withBankingActions)(
   CategorizeTransactionFormFooterRoot,
 );
 
 const Root = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #fff;
+  border-top: 1px solid var(--color-aside-divider);
+  padding: 14px 20px;
 `;

@@ -1,0 +1,14 @@
+{
+  "paper.receipt": "Receipt",
+  "paper.billed_to": "Billed to",
+  "paper.receipt_date": "Receipt date",
+  "paper.receipt_number": "Receipt number",
+  "paper.expiration_date": "Expiration date",
+  "paper.conditions_title": "Conditions & terms",
+  "paper.notes": "Notes",
+  "paper.statement": "Statement",
+  "paper.receipt_amount": "Receipt amount",
+  "paper.total": "Total",
+  "paper.balance_due": "Balance Due",
+  "paper.payment_amount": "Payment Amount"
+}

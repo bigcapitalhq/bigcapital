@@ -22,10 +22,12 @@ import {
   AdvancedFilterPopover,
 } from '@/components';
 
-import { useRefreshVendors } from '@/hooks/query/vendors';
 import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
+
+import { useRefreshVendors } from '@/hooks/query/vendors';
 import { useVendorsListContext } from './VendorsListProvider';
 import { useHistory } from 'react-router-dom';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withVendors from './withVendors';
 import withVendorsActions from './withVendorsActions';
@@ -61,11 +63,13 @@ function VendorActionsBar({
   // Vendors list context.
   const { vendorsViews, fields } = useVendorsListContext();
 
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
+
   // Handles new vendor button click.
   const onClickNewVendor = () => {
     history.push('/vendors/new');
   };
-
   // Vendors refresh action.
   const { refresh } = useRefreshVendors();
 
@@ -73,30 +77,29 @@ function VendorActionsBar({
   const handleTabChange = (viewSlug) => {
     setVendorsTableState({ viewSlug });
   };
-
   // Handle inactive switch changing.
   const handleInactiveSwitchChange = (event) => {
     const checked = event.target.checked;
     setVendorsTableState({ inactiveMode: checked });
   };
-
   // Handle click a refresh sale estimates
   const handleRefreshBtnClick = () => {
     refresh();
   };
-
   const handleTableRowSizeChange = (size) => {
     addSetting('vendors', 'tableSize', size);
   };
-
   // Handle import button success.
   const handleImportBtnSuccess = () => {
     history.push('/vendors/import');
   };
-
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'vendor' });
+  };
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    downloadExportPdf({ resource: 'Vendor' });
   };
 
   return (
@@ -140,6 +143,13 @@ function VendorActionsBar({
             intent={Intent.DANGER}
           />
         </If>
+        <NavbarDivider />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="print-16" iconSize={16} />}
+          text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
+        />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}

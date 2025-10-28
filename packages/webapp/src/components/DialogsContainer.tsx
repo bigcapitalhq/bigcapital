@@ -4,7 +4,6 @@ import UserFormDialog from '@/containers/Dialogs/UserFormDialog';
 import ItemCategoryDialog from '@/containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from '@/containers/Dialogs/CurrencyFormDialog';
 import InventoryAdjustmentDialog from '@/containers/Dialogs/InventoryAdjustmentFormDialog';
-import PaymentViaVoucherDialog from '@/containers/Dialogs/PaymentViaVoucherDialog';
 import KeyboardShortcutsDialog from '@/containers/Dialogs/keyboardShortcutsDialog';
 import ContactDuplicateDialog from '@/containers/Dialogs/ContactDuplicateDialog';
 import QuickPaymentReceiveFormDialog from '@/containers/Dialogs/QuickPaymentReceiveFormDialog';
@@ -12,7 +11,6 @@ import QuickPaymentMadeFormDialog from '@/containers/Dialogs/QuickPaymentMadeFor
 import AllocateLandedCostDialog from '@/containers/Dialogs/AllocateLandedCostDialog';
 import InvoicePdfPreviewDialog from '@/containers/Dialogs/InvoicePdfPreviewDialog';
 import EstimatePdfPreviewDialog from '@/containers/Dialogs/EstimatePdfPreviewDialog';
-import ReceiptPdfPreviewDialog from '@/containers/Dialogs/ReceiptPdfPreviewDialog';
 import MoneyInDialog from '@/containers/CashFlow/MoneyInDialog';
 import MoneyOutDialog from '@/containers/CashFlow/MoneyOutDialog';
 import BadDebtDialog from '@/containers/Dialogs/BadDebtDialog';
@@ -46,12 +44,11 @@ import ProjectBillableEntriesFormDialog from '@/containers/Projects/containers/P
 import TaxRateFormDialog from '@/containers/TaxRates/dialogs/TaxRateFormDialog/TaxRateFormDialog';
 import { DialogsName } from '@/constants/dialogs';
 import InvoiceExchangeRateChangeDialog from '@/containers/Sales/Invoices/InvoiceForm/Dialogs/InvoiceExchangeRateChangeDialog';
-import InvoiceMailDialog from '@/containers/Sales/Invoices/InvoiceMailDialog/InvoiceMailDialog';
-import EstimateMailDialog from '@/containers/Sales/Estimates/EstimateMailDialog/EstimateMailDialog';
-import ReceiptMailDialog from '@/containers/Sales/Receipts/ReceiptMailDialog/ReceiptMailDialog';
-import PaymentMailDialog from '@/containers/Sales/PaymentReceives/PaymentMailDialog/PaymentMailDialog';
-import { ConnectBankDialog } from '@/containers/CashFlow/ConnectBankDialog';
 import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
+import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
+import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
+import { SharePaymentLinkDialog } from '@/containers/PaymentLink/dialogs/SharePaymentLinkDialog/SharePaymentLinkDialog';
+import { SelectPaymentMethodsDialog } from '@/containers/PaymentLink/dialogs/SelectPaymentMethodsDialog/SelectPaymentMethodsDialog';
 
 /**
  * Dialogs container.
@@ -67,7 +64,6 @@ export default function DialogsContainer() {
       <InventoryAdjustmentDialog
         dialogName={DialogsName.InventoryAdjustmentForm}
       />
-      <PaymentViaVoucherDialog dialogName={DialogsName.PaymentViaVoucherForm} />
       <KeyboardShortcutsDialog dialogName={DialogsName.KeyboardShortcutForm} />
       <ContactDuplicateDialog dialogName={DialogsName.ContactDuplicateForm} />
       <QuickPaymentReceiveFormDialog
@@ -81,7 +77,6 @@ export default function DialogsContainer() {
       />
       <InvoicePdfPreviewDialog dialogName={DialogsName.InvoicePdfForm} />
       <EstimatePdfPreviewDialog dialogName={DialogsName.EstimatePdfForm} />
-      <ReceiptPdfPreviewDialog dialogName={DialogsName.ReceiptPdfForm} />
       <MoneyInDialog dialogName={DialogsName.MoneyInForm} />
       <MoneyOutDialog dialogName={DialogsName.MoneyOutForm} />
 
@@ -97,7 +92,6 @@ export default function DialogsContainer() {
       <NotifyPaymentReceiveViaSMSDialog
         dialogName={DialogsName.NotifyPaymentViaForm}
       />
-
       <BadDebtDialog dialogName={DialogsName.BadDebtForm} />
       <SMSMessageDialog dialogName={DialogsName.SMSMessageForm} />
       <RefundCreditNoteDialog dialogName={DialogsName.RefundCreditNote} />
@@ -144,13 +138,15 @@ export default function DialogsContainer() {
       <InvoiceExchangeRateChangeDialog
         dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
       />
-      <InvoiceMailDialog dialogName={DialogsName.InvoiceMail} />
-      <EstimateMailDialog dialogName={DialogsName.EstimateMail} />
-      <ReceiptMailDialog dialogName={DialogsName.ReceiptMail} />
-      <PaymentMailDialog dialogName={DialogsName.PaymentMail} />
-      <ConnectBankDialog dialogName={DialogsName.ConnectBankCreditCard} />
-
       <ExportDialog dialogName={DialogsName.Export} />
+      <RuleFormDialog dialogName={DialogsName.BankRuleForm} />
+      <DisconnectBankAccountDialog
+        dialogName={DialogsName.DisconnectBankAccountConfirmation}
+      />
+      <SharePaymentLinkDialog dialogName={DialogsName.SharePaymentLink} />
+      <SelectPaymentMethodsDialog
+        dialogName={DialogsName.SelectPaymentMethod}
+      />
     </div>
   );
 }

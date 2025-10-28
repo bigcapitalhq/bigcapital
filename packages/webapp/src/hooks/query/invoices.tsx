@@ -1,7 +1,15 @@
 // @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+} from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import useApiRequest from '../useRequest';
 import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
@@ -53,7 +61,7 @@ export function useCreateInvoice(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('sales/invoices', values), {
+  return useMutation((values) => apiRequest.post('sale-invoices', values), {
     onSuccess: (res, values) => {
       // Invalidate invoice customer.
       queryClient.invalidateQueries([t.CUSTOMER, values.customer_id]);
@@ -77,7 +85,7 @@ export function useEditInvoice(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}`, values),
+    ([id, values]) => apiRequest.post(`sale-invoices/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific sale invoice.
@@ -101,7 +109,7 @@ export function useDeleteInvoice(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`sales/invoices/${id}`), {
+  return useMutation((id) => apiRequest.delete(`sale-invoices/${id}`), {
     onSuccess: (res, id) => {
       // Invalidate specific invoice.
       queryClient.invalidateQueries([t.SALE_INVOICE, id]);
@@ -129,7 +137,7 @@ const transformInvoices = (res) => ({
 export function useInvoices(query, props) {
   return useRequestQuery(
     [t.SALE_INVOICES, query],
-    { method: 'get', url: 'sales/invoices', params: query },
+    { method: 'get', url: 'sale-invoices', params: query },
     {
       select: transformInvoices,
       defaultData: {
@@ -154,7 +162,7 @@ export function useDeliverInvoice(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (invoiceId) => apiRequest.post(`sales/invoices/${invoiceId}/deliver`),
+    (invoiceId) => apiRequest.post(`sale-invoices/${invoiceId}/deliver`),
     {
       onSuccess: (res, invoiceId) => {
         // Invalidate specific invoice.
@@ -175,9 +183,9 @@ export function useDeliverInvoice(props) {
 export function useInvoice(invoiceId, props, requestProps) {
   return useRequestQuery(
     [t.SALE_INVOICE, invoiceId],
-    { method: 'get', url: `sales/invoices/${invoiceId}`, ...requestProps },
+    { method: 'get', url: `sale-invoices/${invoiceId}`, ...requestProps },
     {
-      select: (res) => res.data.sale_invoice,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -189,9 +197,37 @@ export function useInvoice(invoiceId, props, requestProps) {
  */
 export function usePdfInvoice(invoiceId) {
   return useRequestPdf({
-    url: `sales/invoices/${invoiceId}`,
+    url: `sale-invoices/${invoiceId}`,
   });
 }
+
+interface GetInvoiceHtmlResponse {
+  htmlContent: string;
+}
+/**
+ * Retrieves the invoice html content.
+ * @param {number} invoiceId
+ * @param {UseQueryOptions<GetInvoiceHtmlResponse>} options
+ * @returns {UseQueryResult<GetInvoiceHtmlResponse>} 
+ */
+export const useInvoiceHtml = (
+  invoiceId: number,
+  options?: UseQueryOptions<GetInvoiceHtmlResponse>,
+): UseQueryResult<GetInvoiceHtmlResponse> => {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetInvoiceHtmlResponse>(
+    ['SALE_INVOICE_HTML', invoiceId],
+    () =>
+      apiRequest
+        .get(`sale-invoices/${invoiceId}`, {
+          headers: {
+            Accept: 'application/json+html',
+          },
+        })
+        .then((res) => transformToCamelCase(res.data)),
+  );
+};
 
 /**
  * Retrieve due invoices of the given customer id.
@@ -202,11 +238,11 @@ export function useDueInvoices(customerId, props) {
     [t.SALE_INVOICES, t.SALE_INVOICES_DUE, customerId],
     {
       method: 'get',
-      url: `sales/invoices/payable`,
+      url: `sale-invoices/receivable`,
       params: { customer_id: customerId },
     },
     {
-      select: (res) => res.data.sales_invoices,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -228,7 +264,7 @@ export function useCreateBadDebt(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}/writeoff`, values),
+    ([id, values]) => apiRequest.post(`sale-invoices/${id}/writeoff`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate
@@ -247,7 +283,7 @@ export function useCancelBadDebt(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.post(`sales/invoices/${id}/writeoff/cancel`),
+    (id) => apiRequest.post(`sale-invoices/${id}/writeoff/cancel`),
     {
       onSuccess: (res, id) => {
         // Invalidate
@@ -267,7 +303,7 @@ export function useCreateNotifyInvoiceBySMS(props) {
 
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`sales/invoices/${id}/notify-by-sms`, values),
+      apiRequest.post(`sale-invoices/${id}/notify-by-sms`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate
@@ -286,11 +322,11 @@ export function useInvoiceSMSDetail(invoiceId, query, props) {
     [t.SALE_INVOICE_SMS_DETAIL, invoiceId, query],
     {
       method: 'get',
-      url: `sales/invoices/${invoiceId}/sms-details`,
+      url: `sale-invoices/${invoiceId}/sms-details`,
       params: query,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -302,42 +338,216 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
     [t.SALE_INVOICE_PAYMENT_TRANSACTIONS, invoiceId],
     {
       method: 'get',
-      url: `sales/invoices/${invoiceId}/payment-transactions`,
+      url: `sale-invoices/${invoiceId}/payments`,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
   );
 }
 
-export function useSendSaleInvoiceMail(props) {
+// # Send sale invoice mail.
+// ------------------------------
+export interface SendSaleInvoiceMailValues {
+  id: number;
+  values: {
+    subject: string;
+    message: string;
+    to: Array<string>;
+    cc?: Array<string>;
+    bcc?: Array<string>;
+    attachInvoice?: boolean;
+  };
+}
+export interface SendSaleInvoiceMailResponse { }
+/**
+ * Sends the sale invoice mail.
+ * @param {UseMutationOptions<SendSaleInvoiceMailValues, Error, SendSaleInvoiceMailResponse>}
+ * @returns {UseMutationResult<SendSaleInvoiceMailResponse, Error, SendSaleInvoiceMailValues>}
+ */
+export function useSendSaleInvoiceMail(
+  options?: UseMutationOptions<
+    SendSaleInvoiceMailResponse,
+    Error,
+    SendSaleInvoiceMailValues
+  >,
+): UseMutationResult<
+  SendSaleInvoiceMailResponse,
+  Error,
+  SendSaleInvoiceMailValues
+> {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}/mail`, values),
+  return useMutation<
+    SendSaleInvoiceMailResponse,
+    Error,
+    SendSaleInvoiceMailValues
+  >(
+    (value) => apiRequest.post(`sale-invoices/${value.id}/mail`, value.values),
     {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
+      onSuccess: (res) => {
         commonInvalidateQueries(queryClient);
       },
-      ...props,
+      ...options,
     },
   );
 }
 
-export function useSaleInvoiceDefaultOptions(invoiceId, props) {
-  return useRequestQuery(
+// # Get sale invoice default options.
+// --------------------------------------
+export interface GetSaleInvoiceDefaultOptionsResponse {
+  companyName: string;
+  companyLogoUri: string;
+
+  customerName: string;
+
+  dueDate: string;
+  dueDateFormatted: string;
+
+  dueAmount: number;
+  dueAmountFormatted: string;
+
+  entries: Array<{
+    quantity: number;
+    quantityFormatted: string;
+    rate: number;
+    rateFormatted: string;
+    total: number;
+    totalFormatted: string;
+  }>;
+  formatArgs: Record<string, string>;
+
+  from: string[];
+  to: string[];
+
+  invoiceDate: string;
+  invoiceDateFormatted: string;
+
+  invoiceNo: string;
+
+  message: string;
+  subject: string;
+
+  subtotal: number;
+  subtotalFormatted: string;
+
+  discountAmount: number;
+  discountAmountFormatted: string;
+  discountLabel: string;
+  discountPercentage: number;
+  discountPercentageFormatted: string;
+
+  adjustment: number;
+  adjustmentFormatted: string;
+
+  total: number;
+  totalFormatted: string;
+
+  attachInvoice: boolean;
+  primaryColor: string;
+}
+
+export function useSaleInvoiceMailState(
+  invoiceId: number,
+  options?: UseQueryOptions<GetSaleInvoiceDefaultOptionsResponse>,
+): UseQueryResult<GetSaleInvoiceDefaultOptionsResponse> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleInvoiceDefaultOptionsResponse>(
     [t.SALE_INVOICE_DEFAULT_OPTIONS, invoiceId],
-    {
-      method: 'get',
-      url: `sales/invoices/${invoiceId}/mail`,
-    },
-    {
-      select: (res) => res.data.data,
-      ...props,
-    },
+    () =>
+      apiRequest
+        .get(`/sale-invoices/${invoiceId}/mail`)
+        .then((res) => transformToCamelCase(res.data)),
+    options,
+  );
+}
+
+// # Get sale invoice state.
+// -------------------------------------
+export interface GetSaleInvoiceStateResponse {
+  defaultTemplateId: number;
+}
+
+export function useGetSaleInvoiceState(
+  options?: UseQueryOptions<GetSaleInvoiceStateResponse, Error>,
+): UseQueryResult<GetSaleInvoiceStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleInvoiceStateResponse, Error>(
+    ['SALE_INVOICE_STATE'],
+    () =>
+      apiRequest
+        .get(`/sale-invoices/state`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
+  );
+}
+
+// # Get sale invoice branding template.
+// --------------------------------------
+export interface GetSaleInvoiceBrandingTemplateResponse {
+  id: number;
+  default: number;
+  predefined: number;
+  resource: string;
+  resourceFormatted: string;
+  templateName: string;
+  updatedAt: string;
+  createdAt: string;
+  createdAtFormatted: string;
+  attributes: {
+    billedToLabel?: string;
+    companyLogoKey?: string | null;
+    companyLogoUri?: string;
+    dateIssueLabel?: string;
+    discountLabel?: string;
+    dueAmountLabel?: string;
+    dueDateLabel?: string;
+    invoiceNumberLabel?: string;
+    itemDescriptionLabel?: string;
+    itemNameLabel?: string;
+    itemRateLabel?: string;
+    itemTotalLabel?: string;
+    paymentMadeLabel?: string;
+    primaryColor?: string;
+    secondaryColor?: string;
+    showCompanyAddress?: boolean;
+    showCompanyLogo?: boolean;
+    showCustomerAddress?: boolean;
+    showDateIssue?: boolean;
+    showDiscount?: boolean;
+    showDueAmount?: boolean;
+    showDueDate?: boolean;
+    showInvoiceNumber?: boolean;
+    showPaymentMade?: boolean;
+    showStatement?: boolean;
+    showSubtotal?: boolean;
+    showTaxes?: boolean;
+    showTermsConditions?: boolean;
+    showTotal?: boolean;
+    statementLabel?: string;
+    subtotalLabel?: string;
+    termsConditionsLabel?: string;
+    totalLabel?: string;
+  };
+}
+
+export function useGetSaleInvoiceBrandingTemplate(
+  invoiceId: number,
+  options?: UseQueryOptions<GetSaleInvoiceBrandingTemplateResponse, Error>,
+): UseQueryResult<GetSaleInvoiceBrandingTemplateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSaleInvoiceBrandingTemplateResponse, Error>(
+    ['SALE_INVOICE_BRANDING_TEMPLATE', invoiceId],
+    () =>
+      apiRequest
+        .get(`/sale-invoices/${invoiceId}/template`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
   );
 }

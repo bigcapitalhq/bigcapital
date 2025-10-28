@@ -2,9 +2,10 @@
   position: fixed;
   filter: blur(0);
   opacity: 1;
-  background-color: #fff;
+  background-color: var(--color-universal-search-background);
   border-radius: 3px;
-  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
+    0 4px 8px rgba(16, 22, 26, 0.2),
     0 18px 46px 6px rgba(16, 22, 26, 0.2);
   left: calc(50% - 250px);
   top: 20vh;
@@ -16,7 +17,6 @@
     filter: blur(20px);
     opacity: 0.2;
   }
-
   &.bp4-overlay-appear-active,
   &.bp4-overlay-enter-active {
     filter: blur(0);
@@ -26,12 +26,10 @@
     transition-property: filter, opacity;
     transition-timing-function: cubic-bezier(0.4, 1, 0.75, 0.9);
   }
-
   &.bp4-overlay-exit {
     filter: blur(0);
     opacity: 1;
   }
-
   &.bp4-overlay-exit-active {
     filter: blur(20px);
     opacity: 0.2;
@@ -61,7 +59,6 @@
       line-height: 50px;
       font-size: 20px;
     }
-
     .bp4-input-group.bp4-large .bp4-input:not(:first-child) {
       padding-left: 50px !important;
     }
@@ -72,7 +69,7 @@
     .bp4-input-group {
       .bp4-icon {
         margin: 16px;
-        color: #5c707f;
+        color: var(--color-universal-search-icon);
 
         svg {
           stroke-width: 2;
@@ -82,7 +79,7 @@
     }
 
     .bp4-menu {
-      border-top: 1px solid #d3dce2;
+      border-top: 1px solid var(--color-universal-search-menu-border);
       max-height: calc(60vh - 20px);
       overflow: auto;
 
@@ -128,7 +125,7 @@
 
   &__footer {
     padding: 12px 12px;
-    border-top: 1px solid #d3dce2;
+    border-top: 1px solid var(--color-universal-search-footer-divider);
   }
 
   &__actions {
@@ -141,9 +138,9 @@
     }
 
     .bp4-tag {
-      background: #708392;
+      background: var(--color-universal-search-tag-background);
+      color: var(--color-universal-search-tag-text);
     }
-
     &--arrows {
       .bp4-tag {
         padding: 0;
@@ -152,7 +149,7 @@
         margin-left: 4px;
 
         svg {
-          fill: #fff;
+          fill: var(--color-universal-search-tag-text);
           height: 100%;
           display: block;
           width: 100%;
@@ -200,8 +197,4 @@
       }
     }
   }
-}
-
-.universal-search-overlay .bp4-overlay-backdrop {
-  background: rgba(0, 10, 30, 0.3);
 }

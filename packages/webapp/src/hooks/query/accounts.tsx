@@ -6,7 +6,7 @@ import t from './types';
 
 // Transform the account.
 const transformAccount = (response) => {
-  return response.data.account;
+  return response.data;
 };
 
 const commonInvalidateQueries = (query) => {
@@ -58,9 +58,9 @@ export function useAccount(id, props) {
 export function useAccountsTypes(props) {
   return useRequestQuery(
     [t.ACCOUNTS_TYPES],
-    { method: 'get', url: 'account_types' },
+    { method: 'get', url: 'accounts/types' },
     {
-      select: (res) => res.data.account_types,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

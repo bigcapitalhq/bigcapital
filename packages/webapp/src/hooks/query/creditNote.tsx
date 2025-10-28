@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
+import { useQueryClient, useMutation, useQuery } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import useApiRequest from '../useRequest';
 import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
@@ -59,7 +59,7 @@ export function useCreateCreditNote(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post('sales/credit_notes', values),
+    (values) => apiRequest.post('credit-notes', values),
     {
       onSuccess: (res, values) => {
         // Common invalidate queries.
@@ -78,7 +78,7 @@ export function useEditCreditNote(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sales/credit_notes/${id}`, values),
+    ([id, values]) => apiRequest.post(`credit-notes/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
@@ -99,7 +99,7 @@ export function useDeleteCreditNote(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`sales/credit_notes/${id}`), {
+  return useMutation((id) => apiRequest.delete(`credit-notes/${id}`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -123,7 +123,7 @@ const transformCreditNotes = (res) => ({
 export function useCreditNotes(query, props) {
   return useRequestQuery(
     [t.CREDIT_NOTES, query],
-    { method: 'get', url: 'sales/credit_notes', params: query },
+    { method: 'get', url: 'credit-notes', params: query },
     {
       select: transformCreditNotes,
       defaultData: {
@@ -148,9 +148,9 @@ export function useCreditNotes(query, props) {
 export function useCreditNote(id, props, requestProps) {
   return useRequestQuery(
     [t.CREDIT_NOTE, id],
-    { method: 'get', url: `sales/credit_notes/${id}`, ...requestProps },
+    { method: 'get', url: `credit-notes/${id}`, ...requestProps },
     {
-      select: (res) => res.data.credit_note,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -176,7 +176,7 @@ export function useCreateRefundCreditNote(props) {
 
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`sales/credit_notes/${id}/refund`, values),
+      apiRequest.post(`credit-notes/${id}/refunds`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
@@ -198,7 +198,7 @@ export function useDeleteRefundCreditNote(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.delete(`sales/credit_notes/refunds/${id}`),
+    (id) => apiRequest.delete(`credit-notes/refunds/${id}`),
     {
       onSuccess: (res, id) => {
         // Common invalidate queries.
@@ -220,9 +220,9 @@ export function useDeleteRefundCreditNote(props) {
 export function useRefundCreditNote(id, props, requestProps) {
   return useRequestQuery(
     [t.REFUND_CREDIT_NOTE, id],
-    { method: 'get', url: `sales/credit_notes/${id}/refund`, ...requestProps },
+    { method: 'get', url: `credit-notes/${id}/refunds`, ...requestProps },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -236,7 +236,7 @@ export function useOpenCreditNote(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`sales/credit_notes/${id}/open`), {
+  return useMutation((id) => apiRequest.post(`credit-notes/${id}/open`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -258,11 +258,11 @@ export function useReconcileCreditNote(id, props, requestProps) {
     [t.RECONCILE_CREDIT_NOTE, id],
     {
       method: 'get',
-      url: `sales/credit_notes/${id}/apply-to-invoices`,
+      url: `credit-notes/${id}/applied-invoices`,
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -278,7 +278,7 @@ export function useCreateReconcileCreditNote(props) {
 
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`sales/credit_notes/${id}/apply-to-invoices`, values),
+      apiRequest.post(`credit-notes/${id}/apply-invoices`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
@@ -300,11 +300,11 @@ export function useReconcileCreditNotes(id, props, requestProps) {
     [t.RECONCILE_CREDIT_NOTES, id],
     {
       method: 'get',
-      url: `sales/credit_notes/${id}/applied-invoices`,
+      url: `credit-notes/${id}/applied-invoices`,
       ...requestProps,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -319,7 +319,7 @@ export function useDeleteReconcileCredit(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.delete(`sales/credit_notes/applied-to-invoices/${id}`),
+    (id) => apiRequest.delete(`credit-notes/applied-invoices/${id}`),
     {
       onSuccess: (res, id) => {
         // Common invalidate queries.
@@ -341,9 +341,9 @@ export function useDeleteReconcileCredit(props) {
 export function useRefundCreditTransaction(id, props, requestProps) {
   return useRequestQuery(
     [t.REFUND_CREDIT_NOTE_TRANSACTION, id],
-    { method: 'get', url: `sales/credit_notes/refunds/${id}`, ...requestProps },
+    { method: 'get', url: `credit-notes/refunds/${id}`, ...requestProps },
     {
-      select: (res) => res.data.refund_credit,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -354,5 +354,23 @@ export function useRefundCreditTransaction(id, props, requestProps) {
  * Retrieve the credit note pdf document data,
  */
 export function usePdfCreditNote(creditNoteId) {
-  return useRequestPdf({ url: `sales/credit_notes/${creditNoteId}` });
+  return useRequestPdf({ url: `credit-notes/${creditNoteId}` });
+}
+
+export interface CreditNoteStateResponse {
+  defaultTemplateId: number;
+}
+export function useGetCreditNoteState(
+  options?: UseQueryOptions<CreditNoteStateResponse, Error>,
+): UseQueryResult<CreditNoteStateResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<CreditNoteStateResponse, Error>(
+    ['CREDIT_NOTE_STATE'],
+    () =>
+      apiRequest
+        .get('/credit-notes/state')
+        .then((res) => transformToCamelCase(res.data)),
+    { ...options },
+  );
 }

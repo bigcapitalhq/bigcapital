@@ -102,6 +102,6 @@ const LockAllAlert = styled(Alert)`
   background: transparent;
 
   ${AlertDesc} {
-    color: #1f3255;
+    // color: #1f3255;
   }
 `;

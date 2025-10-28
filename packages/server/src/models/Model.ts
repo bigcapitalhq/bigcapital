@@ -1,48 +1,90 @@
-import { Model, mixin } from 'objection';
-import { snakeCase, transform } from 'lodash';
-import { mapKeysDeep } from 'utils';
-import PaginationQueryBuilder from 'models/Pagination';
-import DateSession from 'models/DateSession';
+import { QueryBuilder, Model } from 'objection';
+import { ModelHasRelationsError } from '@/common/exceptions/ModelHasRelations.exception';
 
-export default class ModelBase extends mixin(Model, [DateSession]) {
-  get timestamps() {
-    return [];
+interface PaginationResult<M extends Model> {
+  results: M[];
+  pagination: {
+    total: number;
+    page: number;
+    pageSize: number;
+  };
+}
+
+export type PaginationQueryBuilderType<M extends Model> = QueryBuilder<
+  M,
+  PaginationResult<M>
+>;
+
+export class PaginationQueryBuilder<
+  M extends Model,
+  R = M[],
+> extends QueryBuilder<M, R> {
+  pagination(page: number, pageSize: number): PaginationQueryBuilderType<M> {
+    const query = super.page(page, pageSize);
+
+    return query.runAfter(({ results, total }) => {
+      return {
+        results,
+        pagination: {
+          total,
+          page: page + 1,
+          pageSize,
+        },
+      };
+    }) as unknown as PaginationQueryBuilderType<M>;
   }
 
-  static get knexBinded() {
-    return this.knexBindInstance;
-  }
+  async deleteIfNoRelations({
+    type,
+    message,
+  }: {
+    type?: string;
+    message?: string;
+  } = {}) {
+    const relationMappings = this.modelClass().relationMappings;
+    const relationNames = Object.keys(relationMappings || {});
 
-  static set knexBinded(knex) {
-    this.knexBindInstance = knex;
-  }
+    if (relationNames.length === 0) {
+      // No relations defined
+      return this.delete();
+    }
+    const recordQuery = this.clone();
 
-  static get collection() {
-    return Array;
-  }
-
-  static query(...args) {
-    return super.query(...args).runAfter((result) => {
-      if (Array.isArray(result)) {
-        return this.collection.from(result);
-      }
-      return result;
+    relationNames.forEach((relationName: string) => {
+      recordQuery.withGraphFetched(relationName);
     });
-  }
+    const record = await recordQuery;
 
-  static get QueryBuilder() {
-    return PaginationQueryBuilder;
+    const hasRelations = relationNames.some((name) => {
+      const val = record[name];
+      return Array.isArray(val) ? val.length > 0 : val != null;
+    });
+    if (!hasRelations) {
+      return this.clone().delete();
+    } else {
+      throw new ModelHasRelationsError(type, message);
+    }
   }
+}
 
-  static relationBindKnex(model) {
-    return this.knexBinded ? model.bindKnex(this.knexBinded) : model;
-  }
-
-  static changeAmount(whereAttributes, attribute, amount, trx) {
+export class BaseQueryBuilder<
+  M extends Model,
+  R = M[],
+> extends PaginationQueryBuilder<M, R> {
+  changeAmount(whereAttributes, attribute, amount) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
 
-    return this.query(trx)
-      .where(whereAttributes)
-      [changeMethod](attribute, Math.abs(amount));
+    return this.where(whereAttributes)[changeMethod](
+      attribute,
+      Math.abs(amount),
+    );
   }
+}
+
+export class BaseModel extends Model {
+  public readonly id: number;
+  public readonly tableName: string;
+
+  QueryBuilderType!: BaseQueryBuilder<this>;
+  static QueryBuilder = BaseQueryBuilder;
 }

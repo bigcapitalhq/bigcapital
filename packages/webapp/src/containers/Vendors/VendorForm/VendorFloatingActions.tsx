@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 
-import { Icon, FormattedMessage as T } from '@/components';
+import { Group, Icon, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useVendorFormContext } from './VendorFormProvider';
 import { safeInvoke } from '@/utils';
@@ -51,7 +51,10 @@ export default function VendorFloatingActions({ onCancel }) {
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       <ButtonGroup>
         {/* ----------- Save and New ----------- */}
         <SaveButton
@@ -96,7 +99,7 @@ export default function VendorFloatingActions({ onCancel }) {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </Group>
   );
 }
 

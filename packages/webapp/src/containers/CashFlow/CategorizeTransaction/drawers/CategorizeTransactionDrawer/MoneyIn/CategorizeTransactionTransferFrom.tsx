@@ -6,8 +6,10 @@ import {
   FFormGroup,
   FInputGroup,
   FTextArea,
+  Icon,
 } from '@/components';
 import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
+import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 
 export default function CategorizeTransactionTransferFrom() {
   const { accounts } = useCategorizeTransactionBoot();
@@ -20,7 +22,7 @@ export default function CategorizeTransactionTransferFrom() {
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           formatDate={(date) => date.toLocaleDateString()}
           parseDate={(str) => new Date(str)}
-          inputProps={{ fill: true }}
+          inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
         />
       </FFormGroup>
 
@@ -47,7 +49,7 @@ export default function CategorizeTransactionTransferFrom() {
         inline
       >
         <AccountsSelect
-          name={'to_account_id'}
+          name={'creditAccountId'}
           items={accounts}
           filterByRootTypes={['asset']}
           fastField
@@ -68,6 +70,8 @@ export default function CategorizeTransactionTransferFrom() {
           fill={true}
         />
       </FFormGroup>
+
+      <CategorizeTransactionBranchField />
     </>
   );
 }

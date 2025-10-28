@@ -23,7 +23,7 @@ export function useCreateLandedCost(props) {
 
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`purchases/landed-cost/bills/${id}/allocate`, values),
+      apiRequest.post(`landed-cost/bills/${id}/allocate`, values),
     {
       onSuccess: (res, id) => {
         // Common invalidate queries.
@@ -43,7 +43,7 @@ export function useDeleteLandedCost(props) {
 
   return useMutation(
     (landedCostId) =>
-      apiRequest.delete(`purchases/landed-cost/${landedCostId}`),
+      apiRequest.delete(`landed-cost/${landedCostId}`),
     {
       onSuccess: (res, id) => {
         // Common invalidate queries.
@@ -62,7 +62,7 @@ export function useLandedCostTransaction(query, props) {
     [t.LANDED_COST, query],
     {
       method: 'get',
-      url: 'purchases/landed-cost/transactions',
+      url: 'landed-cost/transactions',
       params: { transaction_type: query },
     },
     {
@@ -81,10 +81,10 @@ export function useLandedCostTransaction(query, props) {
 export function useBillLocatedLandedCost(id, props) {
   return useRequestQuery(
     [t.LANDED_COST_TRANSACTION, id],
-    { method: 'get', url: `purchases/landed-cost/bills/${id}/transactions` },
+    { method: 'get', url: `landed-cost/bills/${id}/transactions` },
     {
-      select: (res) => res.data.transactions,
-      defaultData: {},
+      select: (res) => res.data?.data,
+      defaultData: [],
       ...props,
     },
   );

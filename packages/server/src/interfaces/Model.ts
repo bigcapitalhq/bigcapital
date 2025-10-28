@@ -39,6 +39,8 @@ export interface IModelMetaFieldCommon {
   order?: number;
   unique?: number;
   dataTransferObjectKey?: string;
+  filterCustomQuery?: Function;
+  sortCustomQuery?: Function;
 }
 
 export interface IModelMetaFieldText {
@@ -122,6 +124,10 @@ export type IModelMetaCollectionField = IModelMetaCollectionFieldCommon &
 export type IModelMetaRelationField = IModelMetaRelationFieldCommon &
   IModelMetaRelationEnumerationField;
 
+interface IModelPrintMeta {
+  pageTitle: string;
+}
+
 export interface IModelMeta {
   defaultFilterField: string;
   defaultSort: IModelMetaDefaultSort;
@@ -134,8 +140,11 @@ export interface IModelMeta {
   importAggregateOn?: string;
   importAggregateBy?: string;
 
-  fields: { [key: string]: IModelMetaField };
-  columns: { [key: string]: IModelMetaColumn };
+  print?: IModelPrintMeta;
+
+  fields: Record<string, IModelMetaField>;
+  fields2: Record<string, IModelMetaField2>;
+  columns: Record<string, IModelMetaColumn>;
 }
 
 // ----
@@ -145,6 +154,7 @@ export interface IModelMetaFieldCommon2 {
   importHint?: string;
   order?: number;
   unique?: number;
+  features?: Array<any>;
 }
 
 export interface IModelMetaRelationField2 {
@@ -154,6 +164,7 @@ export interface IModelMetaRelationField2 {
 }
 
 export type IModelMetaField2 = IModelMetaFieldCommon2 &
+  IModelMetaFieldWithFields &
   (
     | IModelMetaFieldText
     | IModelMetaFieldNumber

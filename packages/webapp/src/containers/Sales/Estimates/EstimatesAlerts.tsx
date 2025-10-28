@@ -18,20 +18,8 @@ const EstimateRejectAlert = React.lazy(
  * Estimates alert.
  */
 export default [
-  {
-    name: 'estimate-delete',
-    component: EstimateDeleteAlert,
-  },
-  {
-    name: 'estimate-deliver',
-    component: EstimateDeliveredAlert,
-  },
-  {
-    name: 'estimate-Approve',
-    component: EstimateApproveAlert,
-  },
-  {
-    name: 'estimate-reject',
-    component: EstimateRejectAlert,
-  },
+  { name: 'estimate-delete', component: EstimateDeleteAlert },
+  { name: 'estimate-deliver', component: EstimateDeliveredAlert },
+  { name: 'estimate-Approve', component: EstimateApproveAlert },
+  { name: 'estimate-reject', component: EstimateRejectAlert },
 ];

@@ -1,31 +1,84 @@
 // @ts-nocheck
+import { useEffect, lazy } from 'react';
 import styled from 'styled-components';
+import * as R from 'ramda';
 
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
-import AccountTransactionsUncategorizedTable from './AccountTransactionsUncategorizedTable';
-import { AccountUncategorizedTransactionsBoot } from './AllTransactionsUncategorizedBoot';
+import { AccountTransactionsUncategorizeFilter } from './AccountTransactionsUncategorizeFilter';
+import {
+  WithBankingActionsProps,
+  withBankingActions,
+} from '../withBankingActions';
+import { useAppQueryString } from '@/hooks';
 
 const Box = styled.div`
   margin: 30px 15px;
 `;
 
-const CashflowTransactionsTableCard = styled.div`
-  border: 2px solid #f0f0f0;
-  border-radius: 10px;
-  padding: 30px 18px;
-  background: #fff;
-  flex: 0 1;
-`;
+interface AllTransactionsUncategorizedProps extends WithBankingActionsProps {}
 
-export default function AllTransactionsUncategorized() {
+function AllTransactionsUncategorizedRoot({
+  // #withBankingActions
+  closeMatchingTransactionAside,
+}: AllTransactionsUncategorizedProps) {
+  // Close the match aside once leaving the page.
+  useEffect(
+    () => () => {
+      closeMatchingTransactionAside();
+    },
+    [closeMatchingTransactionAside],
+  );
+
   return (
-    <AccountUncategorizedTransactionsBoot>
-      <Box>
-        <CashflowTransactionsTableCard>
-          <AccountTransactionsUncategorizedTable />
-        </CashflowTransactionsTableCard>
-      </Box>
-    </AccountUncategorizedTransactionsBoot>
+    <Box>
+      <AccountTransactionsUncategorizeFilter />
+      <AccountTransactionsSwitcher />
+    </Box>
   );
 }
+
+const AccountExcludedTransactins = lazy(() =>
+  import('./UncategorizedTransactions/AccountExcludedTransactions').then(
+    (module) => ({ default: module.AccountExcludedTransactions }),
+  ),
+);
+const AccountRecognizedTransactions = lazy(() =>
+  import('./UncategorizedTransactions/AccountRecgonizedTranasctions').then(
+    (module) => ({ default: module.AccountRecognizedTransactions }),
+  ),
+);
+const AccountUncategorizedTransactions = lazy(() =>
+  import(
+    './UncategorizedTransactions/AccountUncategorizedTransactionsAll'
+  ).then((module) => ({ default: module.AccountUncategorizedTransactionsAll })),
+);
+
+const PendingTransactions = lazy(() =>
+  import('./PendingTransactions/PendingTransactions').then((module) => ({
+    default: module.PendingTransactions,
+  })),
+);
+
+/**
+ * Switches between the account transactions tables.
+ * @returns {React.ReactNode}
+ */
+function AccountTransactionsSwitcher() {
+  const [locationQuery] = useAppQueryString();
+  const uncategorizedTab = locationQuery?.uncategorizedFilter;
+
+  switch (uncategorizedTab) {
+    case 'excluded':
+      return <AccountExcludedTransactins />;
+    case 'recognized':
+      return <AccountRecognizedTransactions />;
+    case 'all':
+    default:
+      return <AccountUncategorizedTransactions />;
+    case 'pending':
+      return <PendingTransactions />;
+  }
+}
+
+export default R.compose(withBankingActions)(AllTransactionsUncategorizedRoot);

@@ -23,6 +23,10 @@ export default function VendorCreditDetailTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={entries}
+      initialHiddenColumns={
+        // If any entry has no discount, hide the discount column.
+        entries?.some((e) => e.discount_formatted) ? [] : ['discount']
+      }
       styleName={TableStyle.Constrant}
     />
   );

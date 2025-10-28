@@ -12,7 +12,7 @@ export function useSalesTaxLiabilitySummary(query, props) {
     [t.FINANCIAL_REPORT, t.SALES_TAX_LIABILITY_SUMMARY, query],
     {
       method: 'get',
-      url: '/financial_statements/sales-tax-liability-summary',
+      url: '/reports/sales-tax-liability-summary',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -27,7 +27,7 @@ export function useSalesTaxLiabilitySummary(query, props) {
 
 export const useSalesTaxLiabilitySummaryXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/sales-tax-liability-summary',
+    url: '/reports/sales-tax-liability-summary',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -41,7 +41,7 @@ export const useSalesTaxLiabilitySummaryXlsxExport = (query, args) => {
 
 export const useSalesTaxLiabilitySummaryCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/sales-tax-liability-summary',
+    url: '/reports/sales-tax-liability-summary',
     config: {
       headers: {
         accept: 'application/csv',
@@ -58,7 +58,7 @@ export const useSalesTaxLiabilitySummaryCsvExport = (query, args) => {
  */
 export function useSalesTaxLiabilitySummaryPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/sales-tax-liability-summary`,
+    url: `/reports/sales-tax-liability-summary`,
     params: query,
   });
 }

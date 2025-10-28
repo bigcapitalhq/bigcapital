@@ -3,7 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { pick, defaultTo, omit } from 'lodash';
+import { defaultTo, omit } from 'lodash';
 
 import { AppToaster } from '@/components';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
@@ -12,7 +12,11 @@ import QuickPaymentReceiveFormContent from './QuickPaymentReceiveFormContent';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { defaultInitialValues, transformErrors } from './utils';
+import {
+  defaultInitialValues,
+  transformErrors,
+  transformInvoiceToForm,
+} from './utils';
 import { compose, transactionNumber } from '@/utils';
 
 /**
@@ -26,14 +30,10 @@ function QuickPaymentReceiveForm({
   paymentReceiveAutoIncrement,
   paymentReceiveNumberPrefix,
   paymentReceiveNextNumber,
-  preferredDepositAccount
+  preferredDepositAccount,
 }) {
-  
-  const {
-    dialogName,
-    invoice,
-    createPaymentReceiveMutate,
-  } = useQuickPaymentReceiveContext();
+  const { dialogName, invoice, createPaymentReceiveMutate } =
+    useQuickPaymentReceiveContext();
 
   // Payment receive number.
   const nextPaymentNumber = transactionNumber(
@@ -48,31 +48,29 @@ function QuickPaymentReceiveForm({
       payment_receive_no: nextPaymentNumber,
     }),
     deposit_account_id: defaultTo(preferredDepositAccount, ''),
-    ...invoice,
+    ...transformInvoiceToForm(invoice),
   };
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
-    const entries = [values]
-      .filter((entry) => entry.id && entry.payment_amount)
-      .map((entry) => ({
-        invoice_id: entry.id,
-        ...pick(entry, ['payment_amount']),
-      }));
-
+    const entries = [
+      {
+        invoice_id: values.invoice_id,
+        payment_amount: values.amount,
+      },
+    ];
     const form = {
-      ...omit(values, ['payment_receive_no']),
+      ...omit(values, ['payment_receive_no', 'invoice_id']),
       ...(!paymentReceiveAutoIncrement && {
         payment_receive_no: values.payment_receive_no,
       }),
-      customer_id: values.customer.id,
       entries,
     };
 
     // Handle request response success.
     const onSaved = (response) => {
       AppToaster.show({
-        message: intl.get('the_payment_receive_transaction_has_been_created'),
+        message: intl.get('the_payment_received_transaction_has_been_created'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);

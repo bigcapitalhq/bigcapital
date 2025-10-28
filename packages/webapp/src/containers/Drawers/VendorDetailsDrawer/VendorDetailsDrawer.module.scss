@@ -1,15 +1,15 @@
 .root {
+  --x-color-content-primary-border: #e2e2e2;
 
-
+  :global(.bp4-dark) & {
+    --x-color-content-primary-border: rgba(255, 255, 255, 0.25);
+  }
   &_content {
-
     &_primary {
       padding-bottom: 15px;
-      border-bottom: 1px solid #e2e2e2;
+      border-bottom: 1px solid var(--x-color-content-primary-border);
     }
   }
-
-
   :global .card {
     margin: 15px;
     padding: 18px;

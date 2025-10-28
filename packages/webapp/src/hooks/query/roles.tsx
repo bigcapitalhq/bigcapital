@@ -69,7 +69,7 @@ export function usePermissionsSchema(query, props) {
     [t.ROLES_PERMISSIONS_SCHEMA, query],
     { method: 'get', url: 'roles/permissions/schema', params: query },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: {
         roles: [],
       },
@@ -87,7 +87,7 @@ export function useRolePermission(role_id, props, requestProps) {
     [t.ROLE, role_id],
     { method: 'get', url: `roles/${role_id}`, ...requestProps },
     {
-      select: (res) => res.data.role,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -102,7 +102,7 @@ export function useRoles(props, query) {
     [t.ROLES, query],
     { method: 'get', url: `roles`, params: query },
     {
-      select: (res) => res.data.roles,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

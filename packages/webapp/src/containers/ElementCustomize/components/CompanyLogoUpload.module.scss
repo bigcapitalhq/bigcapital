@@ -1,0 +1,51 @@
+.root {
+  --x-border-color: #E1E1E1;
+  --x-color-placeholder-text: #738091;
+  
+  .bp4-dark & {    
+    --x-border-color: rgba(225, 225, 225, 0.15);
+    --x-color-placeholder-text: rgba(225, 225, 225, 0.65);
+  }
+  min-height: 120px;
+  height: 120px;
+  padding: 10px;
+  display: flex;
+  border-style: solid;
+  border-color: var(--x-border-color);
+  border-width: 1px;;
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  &:hover .removeButton{
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.removeButton{
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  border-radius: 24px;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.contentPrePreview {
+  color: var(--x-color-placeholder-text);
+  font-size: 13px;
+  height: 100%;
+  justify-content: center;
+}
+
+.dropzoneContent{
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+.previewImage{
+  max-width: 100%;
+  max-height: 100%;
+}

@@ -16,6 +16,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useAddAutofillRef } from '@/hooks/state/autofill';
 import { DRAWERS } from '@/constants/drawers';
 
 /**
@@ -36,17 +37,20 @@ function QuickVendorFormDrawer({
   closeDrawer,
   vendorId,
   addQuickActionEvent,
+  autofillRef,
 }) {
   const { payload } = useDrawerContext();
+  const addAutofillRef = useAddAutofillRef();
 
   // Handle the form submit request success.
-  const handleSubmitSuccess = (values, form, submitPayload, response) => {
+  const handleSubmitSuccess = (values, form, submitPayload, res) => {
     if (!submitPayload.noRedirect) {
       closeDrawer(DRAWERS.QUICK_WRITE_VENDOR);
     }
-    if (payload.quickActionEvent) {
-      addQuickActionEvent(payload.quickActionEvent, {
-        vendorId: response.data.id,
+    if (autofillRef) {
+      addAutofillRef(autofillRef, {
+        displayName: values.display_name,
+        vendorId: res.id,
       });
     }
   };
@@ -60,7 +64,7 @@ function QuickVendorFormDrawer({
       <DrawerVendorFormLoading>
         <VendorFormCard>
           <VendorFormFormik
-            initialValues={{ display_name: displayName }}
+            initialValues={{ first_name: displayName }}
             onSubmitSuccess={handleSubmitSuccess}
             onCancel={handleCancelForm}
           />

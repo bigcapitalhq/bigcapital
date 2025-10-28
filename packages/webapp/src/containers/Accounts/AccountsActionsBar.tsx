@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { isEmpty } from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
 import {
   Button,
   NavbarGroup,
@@ -9,7 +9,11 @@ import {
   Intent,
   Switch,
   Alignment,
+  ProgressBar,
+  ToastProps,
+  Text,
 } from '@blueprintjs/core';
+import clsx from 'classnames';
 
 import {
   AdvancedFilterPopover,
@@ -26,8 +30,10 @@ import {
 import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 
+import { useHistory } from 'react-router-dom';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useAccountsChartContext } from './AccountsChartProvider';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withAccounts from './withAccounts';
 import withAccountsTableActions from './withAccountsTableActions';
@@ -37,7 +43,6 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
-import { useHistory } from 'react-router-dom';
 
 /**
  * Accounts actions bar.
@@ -57,22 +62,18 @@ function AccountsActionsBar({
   // #withAccountsTableActions
   setAccountsTableState,
 
-  // #ownProps
-  onFilterChanged,
-
   // #withSettings
   accountsTableSize,
 
   // #withSettingsActions
   addSetting,
 }) {
-  const { resourceViews, fields } = useAccountsChartContext();
-
   const history = useHistory();
 
-  const onClickNewAccount = () => {
-    openDialog(DialogsName.AccountForm, {});
-  };
+  const { resourceViews, fields } = useAccountsChartContext();
+
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Accounts refresh action.
   const { refresh } = useRefreshAccounts();
@@ -81,35 +82,29 @@ function AccountsActionsBar({
   const handleBulkDelete = () => {
     openAlert('accounts-bulk-delete', { accountsIds: accountsSelectedRows });
   };
-
   // Handle bulk accounts activate.
   const handelBulkActivate = () => {
     openAlert('accounts-bulk-activate', { accountsIds: accountsSelectedRows });
   };
-
   // Handle bulk accounts inactivate.
   const handelBulkInactive = () => {
     openAlert('accounts-bulk-inactivate', {
       accountsIds: accountsSelectedRows,
     });
   };
-
   // Handle tab changing.
   const handleTabChange = (view) => {
     setAccountsTableState({ viewSlug: view ? view.slug : null });
   };
-
   // Handle inactive switch changing.
   const handleInactiveSwitchChange = (event) => {
     const checked = event.target.checked;
     setAccountsTableState({ inactiveMode: checked });
   };
-
   // Handle click a refresh accounts
   const handleRefreshBtnClick = () => {
     refresh();
   };
-
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('accounts', 'tableSize', size);
@@ -121,6 +116,14 @@ function AccountsActionsBar({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'account' });
+  };
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    downloadExportPdf({ resource: 'Account' });
+  };
+  // Handle click new account.
+  const onClickNewAccount = () => {
+    openDialog(DialogsName.AccountForm, {});
   };
 
   return (
@@ -185,6 +188,7 @@ function AccountsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

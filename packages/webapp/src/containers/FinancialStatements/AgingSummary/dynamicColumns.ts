@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
 import * as R from 'ramda';
 import { getColumnWidth } from '@/utils';
 import { Align } from '@/constants';
@@ -25,6 +24,7 @@ const currentAccessor = R.curry((data, column) => {
     className: column.id,
     width: getColumnWidth(data, accessor, { minWidth: 120 }),
     align: Align.Right,
+    money: true,
   };
 });
 
@@ -38,6 +38,7 @@ const totalAccessor = R.curry((data, column) => {
     className: column.key,
     width: getColumnWidth(data, accessor, { minWidth: 120 }),
     align: Align.Right,
+    money: true,
   };
 });
 
@@ -51,6 +52,7 @@ const agingPeriodAccessor = R.curry((data, column) => {
     className: column.key,
     width: getColumnWidth(data, accessor, { minWidth: 120 }),
     align: Align.Right,
+    money: true,
   };
 });
 

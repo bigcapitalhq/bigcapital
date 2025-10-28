@@ -10,7 +10,8 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { Group, FormattedMessage as T } from '@/components';
+import { PageForm } from '@/components/PageForm';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
@@ -76,7 +77,10 @@ export default function BillFloatingActions() {
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <PageForm.FooterActions
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       {/* ----------- Save And Open ----------- */}
       <If condition={!bill || !bill?.is_open}>
         <ButtonGroup>
@@ -189,6 +193,6 @@ export default function BillFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </PageForm.FooterActions>
   );
 }

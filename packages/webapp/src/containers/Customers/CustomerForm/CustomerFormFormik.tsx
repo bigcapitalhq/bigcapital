@@ -52,7 +52,7 @@ function CustomerFormFormik({
       ...defaultInitialValues,
       currency_code: base_currency,
       ...transformToForm(contactDuplicate || customer, defaultInitialValues),
-      ...initialCustomerValues,
+      ...transformToForm(initialCustomerValues, defaultInitialValues),
     }),
     [customer, contactDuplicate, base_currency, initialCustomerValues],
   );
@@ -62,7 +62,7 @@ function CustomerFormFormik({
     const { setSubmitting, resetForm } = formArgs;
     const formValues = { ...values };
 
-    const onSuccess = () => {
+    const onSuccess = (res) => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -73,8 +73,7 @@ function CustomerFormFormik({
       });
       setSubmitting(false);
       resetForm();
-
-      saveInvoke(onSubmitSuccess, values, formArgs, submitPayload);
+      saveInvoke(onSubmitSuccess, values, formArgs, submitPayload, res.data);
     };
 
     const onError = () => {
@@ -125,10 +124,15 @@ function CustomerFormFormik({
 }
 
 export const CustomerFormHeaderPrimary = styled.div`
+  --x-border: #e4e4e4;
+
+  .bp4-dark & {
+    --x-border: var(--color-dark-gray3);
+  }
   padding: 10px 0 0;
   margin: 0 0 20px;
   overflow: hidden;
-  border-bottom: 1px solid #e4e4e4;
+  border-bottom: 1px solid var(--x-border);
   max-width: 1000px;
 `;
 

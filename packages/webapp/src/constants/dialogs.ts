@@ -75,4 +75,10 @@ export enum DialogsName {
   GeneralLedgerPdfPreview = 'GeneralLedgerPdfPreview',
   SalesTaxLiabilitySummaryPdfPreview = 'SalesTaxLiabilitySummaryPdfPreview',
   Export = 'Export',
+  BankRuleForm = 'BankRuleForm',
+  DisconnectBankAccountConfirmation = 'DisconnectBankAccountConfirmation',
+  SharePaymentLink = 'SharePaymentLink',
+  SelectPaymentMethod = 'SelectPaymentMethodsDialog',
+
+  StripeSetup = 'StripeSetup'
 }

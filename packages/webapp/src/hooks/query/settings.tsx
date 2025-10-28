@@ -13,7 +13,7 @@ export function useSaveSettings(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((settings) => apiRequest.post('settings', settings), {
+  return useMutation((settings) => apiRequest.put('settings', settings), {
     onSuccess: () => {
       queryClient.invalidateQueries(t.SETTING);
     },
@@ -28,7 +28,7 @@ function useSettingsQuery(key, query, props) {
     key,
     { method: 'get', url: 'settings', params: query },
     {
-      select: (res) => res.data.settings,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -170,7 +170,7 @@ export function useSettingSMSNotifications(props) {
     [t.SETTING_SMS_NOTIFICATIONS],
     { method: 'get', url: `settings/sms-notifications` },
     {
-      select: (res) => res.data.notifications,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -188,7 +188,7 @@ export function useSettingSMSNotification(key, props) {
       url: `settings/sms-notification/${key}`,
     },
     {
-      select: (res) => res.data.notification,
+      select: (res) => res.data,
       defaultData: {
         smsNotification: [],
       },

@@ -7,6 +7,11 @@ import useApiRequest from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
 import { useSetOrganizations, useSetSubscriptions } from '../state';
 
+const OrganizationRoute = {
+  Current: '/organization/current',
+  Build: '/organization/build',
+};
+
 /**
  * Retrieve organizations of the authenticated user.
  */
@@ -36,9 +41,9 @@ export function useCurrentOrganization(props) {
 
   return useRequestQuery(
     [t.ORGANIZATION_CURRENT],
-    { method: 'get', url: `organization` },
+    { method: 'get', url: OrganizationRoute.Current },
     {
-      select: (res) => res.data.organization,
+      select: (res) => res.data,
       defaultData: {},
       onSuccess: (data) => {
         const organization = omit(data, ['subscriptions']);
@@ -64,7 +69,7 @@ export function useOrganizationSetup() {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (values) => apiRequest.post(`organization/build`, values),
+    (values) => apiRequest.post(OrganizationRoute.Build, values),
     {
       onSuccess: (res) => {
         queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
@@ -77,12 +82,12 @@ export function useOrganizationSetup() {
 /**
  * Saves the settings.
  */
-export function useUpdateOrganization(props) {
+export function useUpdateOrganization(props = {}) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (information) => apiRequest.put('organization', information),
+    (information: any) => apiRequest.put('organization', information),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
@@ -96,7 +101,7 @@ export function useUpdateOrganization(props) {
 export function useOrgBaseCurrencyMutateAbilities(props) {
   return useRequestQuery(
     [t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES],
-    { method: 'get', url: `organization/base_currency_mutate` },
+    { method: 'get', url: `organization/base-currency-mutate` },
     {
       select: (res) => res.data.abilities,
       defaultData: [],

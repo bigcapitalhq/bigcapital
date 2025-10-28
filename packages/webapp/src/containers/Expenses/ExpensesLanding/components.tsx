@@ -17,13 +17,7 @@ import clsx from 'classnames';
 
 import { CLASSES } from '@/constants/classes';
 import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  Icon,
-  If,
-  Can,
-} from '@/components';
+import { FormattedMessage as T, Icon, If, Can } from '@/components';
 import { safeCallback } from '@/utils';
 
 /**
@@ -137,8 +131,7 @@ export function useExpensesTableColumns() {
       {
         id: 'payment_date',
         Header: intl.get('payment_date'),
-        accessor: 'payment_date',
-        Cell: FormatDateCell,
+        accessor: 'formatted_date',
         width: 140,
         className: 'payment_date',
         clickable: true,
@@ -147,26 +140,25 @@ export function useExpensesTableColumns() {
         id: 'amount',
         Header: intl.get('full_amount'),
         accessor: 'formatted_amount',
-        className: 'amount',
         align: 'right',
         width: 150,
         clickable: true,
+        money: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {
         id: 'payment_account',
         Header: intl.get('payment_account'),
         accessor: 'payment_account.name',
-        className: 'payment_account',
         width: 150,
         clickable: true,
+        className: clsx(CLASSES.TEXT_MUTED),
       },
       {
         id: 'expense_account',
         Header: intl.get('expense_account'),
         accessor: ExpenseAccountAccessor,
         width: 160,
-        className: 'expense_account',
         disableSortBy: true,
         clickable: true,
       },

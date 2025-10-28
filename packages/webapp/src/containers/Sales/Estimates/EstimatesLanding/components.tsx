@@ -164,8 +164,7 @@ export function useEstiamtesTableColumns() {
       {
         id: 'estimate_date',
         Header: intl.get('estimate_date'),
-        accessor: 'estimate_date',
-        Cell: FormatDateCell,
+        accessor: 'formatted_estimate_date',
         width: 140,
         className: 'estimate_date',
         clickable: true,
@@ -208,6 +207,7 @@ export function useEstiamtesTableColumns() {
         align: 'right',
         clickable: true,
         className: clsx(CLASSES.FONT_BOLD),
+        money: true
       },
       {
         id: 'status',

@@ -123,6 +123,51 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "ccantrell72",
+      "name": "Chris Cantrell",
+      "avatar_url": "https://avatars.githubusercontent.com/u/104120598?v=4",
+      "profile": "http://www.pivoten.com",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "oleynikd",
+      "name": "Denis",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3976868?v=4",
+      "profile": "https://github.com/oleynikd",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "mittalsam98",
+      "name": "Sachin Mittal",
+      "avatar_url": "https://avatars.githubusercontent.com/u/42431274?v=4",
+      "profile": "https://myself.vercel.app/",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "Champetaman",
+      "name": "Camilo Oviedo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/64604272?v=4",
+      "profile": "https://www.camilooviedo.com/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "nklmantey",
+      "name": "Mantey",
+      "avatar_url": "https://avatars.githubusercontent.com/u/90279429?v=4",
+      "profile": "https://nklmantey.com/",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,

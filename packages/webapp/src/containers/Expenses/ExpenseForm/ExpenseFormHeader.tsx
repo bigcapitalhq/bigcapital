@@ -1,35 +1,22 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
-import classNames from 'classnames';
-import { sumBy } from 'lodash';
-import { useFormikContext } from 'formik';
+import React from 'react';
 import { FormattedMessage as T } from '@/components';
-import { CLASSES } from '@/constants/classes';
-
 
 import ExpenseFormHeaderFields from './ExpenseFormHeaderFields';
-import { PageFormBigNumber } from '@/components';
+import { PageForm, PageFormBigNumber } from '@/components';
+import { useExpenseTotalFormatted } from './utils';
 
 // Expense form header.
 export default function ExpenseFormHeader() {
-  const {
-    values: { currency_code, categories },
-  } = useFormikContext();
-
-  // Calculates the expense entries amount.
-  const totalExpenseAmount = useMemo(
-    () => sumBy(categories, 'amount'),
-    [categories],
-  );
+  const totalFormatted = useExpenseTotalFormatted();
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <PageForm.Header>
       <ExpenseFormHeaderFields />
       <PageFormBigNumber
         label={<T id={'expense_amount'} />}
-        amount={totalExpenseAmount}
-        currencyCode={currency_code}
+        amount={totalFormatted}
       />
-    </div>
+    </PageForm.Header>
   );
 }

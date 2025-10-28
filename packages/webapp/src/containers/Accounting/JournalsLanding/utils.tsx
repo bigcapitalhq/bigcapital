@@ -16,8 +16,7 @@ export const useManualJournalsColumns = () => {
       {
         id: 'date',
         Header: intl.get('date'),
-        accessor: 'date',
-        Cell: FormatDateCell,
+        accessor: 'formatted_date',
         width: 115,
         className: 'date',
         clickable: true,
@@ -28,6 +27,7 @@ export const useManualJournalsColumns = () => {
         accessor: 'formatted_amount',
         width: 115,
         clickable: true,
+        money: true,
         align: 'right',
         className: clsx(CLASSES.FONT_BOLD),
       },
@@ -66,8 +66,7 @@ export const useManualJournalsColumns = () => {
       {
         id: 'created_at',
         Header: intl.get('created_at'),
-        accessor: 'created_at',
-        Cell: FormatDateCell,
+        accessor: 'formatted_created_at',
         width: 125,
         clickable: true,
       },

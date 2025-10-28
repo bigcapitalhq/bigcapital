@@ -30,7 +30,7 @@ export default function EstimateDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountEstimateDetail label={intl.get('amount')}>
-            <span class="big-number">{estimate.formatted_amount}</span>
+            <span class="big-number">{estimate.total_formatted}</span>
           </AmountEstimateDetail>
 
           <EstimateStatusDetail>
@@ -81,7 +81,7 @@ export default function EstimateDetailHeader() {
             />
             <DetailItem
               label={<T id={'estimate.details.created_at'} />}
-              children={<FormatDate value={estimate.created_at} />}
+              children={estimate.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

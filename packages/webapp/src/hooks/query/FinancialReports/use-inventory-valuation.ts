@@ -12,7 +12,7 @@ export function useInventoryValuation(query, props) {
     [t.FINANCIAL_REPORT, t.INVENTORY_VALUATION, query],
     {
       method: 'get',
-      url: '/financial_statements/inventory-valuation',
+      url: '/reports/inventory-valuation',
       params: query,
     },
     {
@@ -31,7 +31,7 @@ export function useInventoryValuationTable(query, props) {
     [t.FINANCIAL_REPORT, t.INVENTORY_VALUATION, query],
     {
       method: 'get',
-      url: '/financial_statements/inventory-valuation',
+      url: '/reports/inventory-valuation',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -46,7 +46,7 @@ export function useInventoryValuationTable(query, props) {
 
 export const useInventoryValuationXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/inventory-valuation',
+    url: '/reports/inventory-valuation',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -60,7 +60,7 @@ export const useInventoryValuationXlsxExport = (query, args) => {
 
 export const useInventoryValuationCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/inventory-valuation',
+    url: '/reports/inventory-valuation',
     config: {
       headers: {
         accept: 'application/csv',
@@ -77,7 +77,7 @@ export const useInventoryValuationCsvExport = (query, args) => {
  */
 export function useInventoryValuationPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/inventory-valuation`,
+    url: `/reports/inventory-valuation`,
     params: query,
   });
 }

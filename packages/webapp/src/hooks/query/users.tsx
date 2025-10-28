@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant, useRequestQuery } from '../useQueryRequest';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { useSetFeatureDashboardMeta } from '../state/feature';
 import t from './types';
@@ -105,7 +105,7 @@ export function useUsers(props) {
       url: 'users',
     },
     {
-      select: (res) => res.data.users,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -123,7 +123,7 @@ export function useUser(id, props) {
       url: `users/${id}`,
     },
     {
-      select: (response) => response.data.user,
+      select: (response) => response.data,
       defaultData: {},
       ...props,
     },
@@ -137,13 +137,13 @@ export function useAuthenticatedAccount(props) {
     ['AuthenticatedAccount'],
     {
       method: 'get',
-      url: `account`,
+      url: `auth/account`,
     },
     {
-      select: (response) => response.data.data,
+      select: (response) => response.data,
       defaultData: {},
       onSuccess: (data) => {
-        setEmailConfirmed(data.is_verified);
+        setEmailConfirmed(data.verified, data.email);
       },
       ...props,
     },
@@ -160,7 +160,7 @@ export const useDashboardMeta = (props) => {
     [t.DASHBOARD_META],
     { method: 'get', url: 'dashboard/boot' },
     {
-      select: (res) => res.data.meta,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

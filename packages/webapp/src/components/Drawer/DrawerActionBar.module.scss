@@ -1,0 +1,23 @@
+
+
+.root {
+  --x-color-background: var(--color-white);
+  --x-color-border: hsla(0, 0%, 100%, 0.2);
+  
+  :global(.bp4-dark) & {
+    --x-color-background: transparent;
+    --x-color-border: rgba(255, 255, 255, 0.2);
+  }
+  &:global(.bp4-navbar){
+    background-color: var(--x-color-background);
+    box-shadow: 0 1px 0 var(--x-color-border);
+  }
+  &:global(.bp4-navbar),
+  :global(.bp4-navbar-group){
+    height: 45px;
+  }
+  :global(.bp4-navbar-divider){
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+}

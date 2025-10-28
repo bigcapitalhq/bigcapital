@@ -1,34 +1,25 @@
 module.exports = {
-  env: {
-    browser: true,
-    es6: true,
-  },
-  extends: ['airbnb-base', 'airbnb-typescript'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module',
     project: 'tsconfig.json',
-    tsconfigRootDir: './',
+    tsconfigRootDir: __dirname,
+    sourceType: 'module',
   },
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
+  plugins: ['@typescript-eslint/eslint-plugin'],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+  ],
+  root: true,
+  env: {
+    node: true,
+    jest: true,
   },
-  plugins: ['import'],
+  ignorePatterns: ['.eslintrc.js'],
   rules: {
-    'import/no-unresolved': 'error',
-    'import/prefer-default-export': 'off',
-  },
-  settings: {
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
-    },
-    'import/resolver': {
-      typescript: {
-        alwaysTryTypes: true,
-        project: 'tsconfig.json',
-      },
-    },
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };

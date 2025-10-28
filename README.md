@@ -12,6 +12,9 @@
     <a href="https://github.com/bigcapitalhq/bigcapital/commits/develop">
       <img src="https://img.shields.io/github/commit-activity/m/bigcapitalhq/bigcapital/develop" />
     </a>
+    <a href="https://hub.docker.com/u/bigcapitalhq">
+      <img src="https://img.shields.io/docker/pulls/bigcapitalhq/webapp" />
+    </a>
     <a href="https://discord.com/invite/c8nPBJafeb">
       <img src="https://img.shields.io/discord/1066514716752625725?label=Discord" alt="" />
     </a>
@@ -75,6 +78,7 @@ You can integrate Bigcapital API with your system to organize your transactions 
 # Resources
 
 - [Documentation](https://docs.bigcapital.app/) - Learn how to use.
+- [API Reference](https://docs.bigcapital.app/api-reference) - API reference docs
 - [Contribution](https://github.com/bigcapitalhq/bigcapital/blob/develop/CONTRIBUTING.md) - Welcome to any contributions.
 - [Discord](https://discord.com/invite/c8nPBJafeb) - Ask for help.
 - [Bug Tracker](https://github.com/bigcapitalhq/bigcapital/issues) - Notify us new bugs.
@@ -124,6 +128,13 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/asenawritescode"><img src="https://avatars.githubusercontent.com/u/67445192?v=4?s=100" width="100px;" alt="Asena"/><br /><sub><b>Asena</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/issues?q=author%3Aasenawritescode" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://snyder.tech"><img src="https://avatars.githubusercontent.com/u/707567?v=4?s=100" width="100px;" alt="Ben Snyder"/><br /><sub><b>Ben Snyder</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/commits?author=benpsnyder" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://vederis.id"><img src="https://avatars.githubusercontent.com/u/13505006?v=4?s=100" width="100px;" alt="Vederis Leunardus"/><br /><sub><b>Vederis Leunardus</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/commits?author=cloudsbird" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.pivoten.com"><img src="https://avatars.githubusercontent.com/u/104120598?v=4?s=100" width="100px;" alt="Chris Cantrell"/><br /><sub><b>Chris Cantrell</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/issues?q=author%3Accantrell72" title="Bug reports">🐛</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/oleynikd"><img src="https://avatars.githubusercontent.com/u/3976868?v=4?s=100" width="100px;" alt="Denis"/><br /><sub><b>Denis</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/issues?q=author%3Aoleynikd" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://myself.vercel.app/"><img src="https://avatars.githubusercontent.com/u/42431274?v=4?s=100" width="100px;" alt="Sachin Mittal"/><br /><sub><b>Sachin Mittal</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/issues?q=author%3Amittalsam98" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.camilooviedo.com/"><img src="https://avatars.githubusercontent.com/u/64604272?v=4?s=100" width="100px;" alt="Camilo Oviedo"/><br /><sub><b>Camilo Oviedo</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/commits?author=Champetaman" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://nklmantey.com/"><img src="https://avatars.githubusercontent.com/u/90279429?v=4?s=100" width="100px;" alt="Mantey"/><br /><sub><b>Mantey</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/issues?q=author%3Anklmantey" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>

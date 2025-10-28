@@ -8,7 +8,6 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-  FormatNumber,
 } from '@/components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
@@ -23,18 +22,36 @@ export default function ReceiptDetailTableFooter() {
       <ReceiptTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'receipt.details.subtotal'} />}
-          value={receipt.formatted_subtotal}
+          value={receipt.subtotal_formatted}
         />
+        {receipt.discount_amount > 0 && (
+          <TotalLine
+            title={
+              receipt.discount_percentage_formatted
+                ? `Discount [${invoice.discount_percentage_formatted}]`
+                : 'Discount'
+            }
+            value={receipt.discount_amount_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
+        {receipt.adjustment_formatted && (
+          <TotalLine
+            title={'Adjustment'}
+            value={receipt.adjustment_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
         <TotalLine
           title={<T id={'receipt.details.total'} />}
-          value={receipt.formatted_amount}
+          value={receipt.total_formatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
         <TotalLine
           title={<T id={'receipt.details.payment_amount'} />}
-          value={receipt.formatted_amount}
-          borderStyle={TotalLineBorderStyle.DoubleDark}
+          value={receipt.paid_formatted}
+          borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine
           title={<T id={'receipt.details.due_amount'} />}

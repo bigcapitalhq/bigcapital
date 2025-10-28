@@ -101,7 +101,7 @@ function InvoicesDataTable({
 
   // Handle send mail invoice.
   const handleSendMailInvoice = ({ id }) => {
-    openDialog(DialogsName.InvoiceMail, { invoiceId: id });
+    openDrawer(DRAWERS.INVOICE_SEND_MAIL, { invoiceId: id });
   };
 
   // Handle cell click.
@@ -144,6 +144,7 @@ function InvoicesDataTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
+        initialPageSize={invoicesTableState.pageSize}
         manualPagination={true}
         pagesCount={pagination.pagesCount}
         autoResetSortBy={false}

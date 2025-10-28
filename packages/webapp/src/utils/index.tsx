@@ -13,7 +13,6 @@ import jsCookie from 'js-cookie';
 import { deepMapKeys } from './map-key-deep';
 export * from './deep';
 
-
 export const getCookie = (name, defaultValue) =>
   _.defaultTo(jsCookie.get(name), defaultValue);
 
@@ -351,6 +350,14 @@ export const transformToForm = (obj, emptyInitialValues) => {
     (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
   );
 };
+
+export function excludePrivateProps(
+  obj: Record<string, any>,
+): Record<string, any> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key, value]) => !key.startsWith('_')),
+  );
+}
 
 export function inputIntent({ error, touched }) {
   return error && touched ? Intent.DANGER : '';

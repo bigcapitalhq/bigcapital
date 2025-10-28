@@ -3,30 +3,27 @@
 version: '3.3'
 
 services:
-  nginx:
-    container_name: bigcapital-nginx-gateway
-    build:
-      context: ./docker/nginx
-      args:
-        - SERVER_PROXY_PORT=3000
-        - WEB_SSL=false
-        - SELF_SIGNED=false
-    volumes:
-      - ./data/logs/nginx/:/var/log/nginx
-      - ./docker/certbot/certs/:/var/certs
+  proxy:
+    image: envoyproxy/envoy:v1.30-latest
+    depends_on:
+      - server
+      - webapp
     ports:
       - '${PUBLIC_PROXY_PORT:-80}:80'
       - '${PUBLIC_PROXY_SSL_PORT:-443}:443'
     tty: true
-    depends_on:
-      - server
-      - webapp
+    volumes:
+      - ./docker/envoy/envoy.yaml:/etc/envoy/envoy.yaml
     restart: on-failure
+    networks:
+      - bigcapital_network
 
   webapp:
     container_name: bigcapital-webapp
     image: bigcapitalhq/webapp:latest
     restart: on-failure
+    networks:
+      - bigcapital_network
 
   server:
     container_name: bigcapital-server
@@ -42,6 +39,8 @@ services:
       - mongo
       - redis
     restart: on-failure
+    networks:
+      - bigcapital_network
     environment:
       # Mail
       - MAIL_HOST=${MAIL_HOST}
@@ -82,9 +81,16 @@ services:
       - SIGNUP_ALLOWED_DOMAINS=${SIGNUP_ALLOWED_DOMAINS}
       - SIGNUP_ALLOWED_EMAILS=${SIGNUP_ALLOWED_EMAILS}
 
+      # Sign-up email confirmation
+      - SIGNUP_EMAIL_CONFIRMATION=${SIGNUP_EMAIL_CONFIRMATION}
+
       # Gotenberg (Pdf generator)
       - GOTENBERG_URL=${GOTENBERG_URL}
       - GOTENBERG_DOCS_URL=${GOTENBERG_DOCS_URL}
+
+      # Exchange Rate
+      - EXCHANGE_RATE_SERVICE=${EXCHANGE_RATE_SERVICE}
+      - OPEN_EXCHANGE_RATE_APP_ID-${OPEN_EXCHANGE_RATE_APP_ID}
 
       # Bank Sync
       - BANKING_CONNECT=${BANKING_CONNECT}
@@ -92,8 +98,7 @@ services:
       # Plaid
       - PLAID_ENV=${PLAID_ENV}
       - PLAID_CLIENT_ID=${PLAID_CLIENT_ID}
-      - PLAID_SECRET_DEVELOPMENT=${PLAID_SECRET_DEVELOPMENT}
-      - PLAID_SECRET_SANDBOX=${b8cf42b441e110451e2f69ad7e1e9f}
+      - PLAID_SECRET=${PLAID_SECRET}
       - PLAID_LINK_WEBHOOK=${PLAID_LINK_WEBHOOK}
 
       # Lemon Squeez
@@ -108,7 +113,15 @@ services:
       - NEW_RELIC_AI_MONITORING_ENABLED=${NEW_RELIC_AI_MONITORING_ENABLED}
       - NEW_RELIC_CUSTOM_INSIGHTS_EVENTS_MAX_SAMPLES_STORED=${NEW_RELIC_CUSTOM_INSIGHTS_EVENTS_MAX_SAMPLES_STORED}
       - NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED=${NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED}
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME}
 
+      # S3
+      - S3_REGION=${S3_REGION}
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+      - S3_ENDPOINT=${S3_ENDPOINT}
+      - S3_BUCKET=${S3_BUCKET}
 
   database_migration:
     container_name: bigcapital-database-migration
@@ -126,6 +139,8 @@ services:
       - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
     depends_on:
       - mysql
+    networks:
+      - bigcapital_network
 
   mysql:
     container_name: bigcapital-mysql
@@ -141,6 +156,8 @@ services:
       - mysql:/var/lib/mysql
     expose:
       - '3306'
+    networks:
+      - bigcapital_network
 
   mongo:
     container_name: bigcapital-mongo
@@ -150,6 +167,8 @@ services:
       - '27017'
     volumes:
       - mongo:/var/lib/mongodb
+    networks:
+      - bigcapital_network
 
   redis:
     container_name: bigcapital-redis
@@ -160,11 +179,15 @@ services:
       - '6379'
     volumes:
       - redis:/data
+    networks:
+      - bigcapital_network
 
   gotenberg:
     image: gotenberg/gotenberg:7
     expose:
       - '9000'
+    networks:
+      - bigcapital_network
 
 # Volumes
 volumes:
@@ -179,3 +202,8 @@ volumes:
   redis:
     name: bigcapital_prod_redis
     driver: local
+
+# Networks
+networks:
+  bigcapital_network:
+    driver: bridge

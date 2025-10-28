@@ -12,7 +12,7 @@ export function useCustomersTransactionsReport(query, props) {
     [t.FINANCIAL_REPORT, t.CUSTOMERS_TRANSACTIONS, query],
     {
       method: 'get',
-      url: '/financial_statements/transactions-by-customers',
+      url: '/reports/transactions-by-customers',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -33,7 +33,7 @@ export function useCustomersTransactionsReport(query, props) {
 }
 
 export const useCustomersTransactionsXlsxExport = (query, args) => {
-  const url = '/financial_statements/transactions-by-customers';
+  const url = '/reports/transactions-by-customers';
   const config = {
     headers: {
       accept: 'application/xlsx',
@@ -52,7 +52,7 @@ export const useCustomersTransactionsXlsxExport = (query, args) => {
 
 export const useCustomersTransactionsCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/transactions-by-customers',
+    url: '/reports/transactions-by-customers',
     config: {
       headers: {
         accept: 'application/csv',
@@ -69,7 +69,7 @@ export const useCustomersTransactionsCsvExport = (query, args) => {
  */
 export const useCustomersTransactionsPdfExport = (query = {}) => {
   return useRequestPdf({
-    url: '/financial_statements/transactions-by-customers',
+    url: '/reports/transactions-by-customers',
     params: query,
   });
 };

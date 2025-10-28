@@ -55,7 +55,7 @@ export function useEditVendor(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`vendors/${id}`, values),
+    ([id, values]) => apiRequest.put(`vendors/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific vendor.
@@ -112,7 +112,7 @@ export function useVendor(id, props) {
     [t.VENDOR, id],
     { method: 'get', url: `vendors/${id}` },
     {
-      select: (res) => res.data.vendor,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

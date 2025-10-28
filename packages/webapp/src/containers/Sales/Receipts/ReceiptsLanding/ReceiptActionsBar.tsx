@@ -7,6 +7,11 @@ import {
   NavbarGroup,
   Intent,
   Alignment,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  Menu,
+  MenuItem,
 } from '@blueprintjs/core';
 
 import { useHistory } from 'react-router-dom';
@@ -29,14 +34,17 @@ import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from '@/hooks/query/receipts';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 
-import { compose } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { compose } from '@/utils';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Receipts actions bar.
@@ -54,6 +62,9 @@ function ReceiptActionsBar({
   // #withDialogActions
   openDialog,
 
+  // #withDrawerActions
+  openDrawer,
+
   // #withSettingsActions
   addSetting,
 }) {
@@ -61,6 +72,9 @@ function ReceiptActionsBar({
 
   // Sale receipts list context.
   const { receiptsViews, fields } = useReceiptsListContext();
+
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handle new receipt button click.
   const onClickNewReceipt = () => {
@@ -94,6 +108,14 @@ function ReceiptActionsBar({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'sale_receipt' });
+  };
+  // Handle print button click.
+  const handlePrintButtonClick = () => {
+    downloadExportPdf({ resource: 'SaleReceipt' });
+  };
+  // Handle customize button click.
+  const handleCustomizeBtnClick = () => {
+    openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleReceipt' });
   };
 
   return (
@@ -143,8 +165,8 @@ function ReceiptActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
+          onClick={handlePrintButtonClick}
         />
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-import-16'} />}
@@ -165,6 +187,25 @@ function ReceiptActionsBar({
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem
+                onClick={handleCustomizeBtnClick}
+                text={'Customize Template'}
+              />
+            </Menu>
+          }
+        >
+          <Button icon={<Icon icon="cog-16" iconSize={16} />} minimal={true} />
+        </Popover>
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
@@ -185,4 +226,5 @@ export default compose(
     receiptsTableSize: receiptSettings?.tableSize,
   })),
   withDialogActions,
+  withDrawerActions,
 )(ReceiptActionsBar);

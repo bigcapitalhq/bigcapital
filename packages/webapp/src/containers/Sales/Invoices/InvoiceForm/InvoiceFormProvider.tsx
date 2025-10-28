@@ -16,11 +16,22 @@ import {
   useEditInvoice,
   useSettingsInvoices,
   useEstimate,
+  useGetSaleInvoiceState,
+  GetSaleInvoiceStateResponse,
 } from '@/hooks/query';
 import { useProjects } from '@/containers/Projects/hooks';
 import { useTaxRates } from '@/hooks/query/taxRates';
+import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { useGetPaymentServices } from '@/hooks/query/payment-services';
 
-const InvoiceFormContext = createContext();
+interface InvoiceFormContextValue {
+  saleInvoiceState: GetSaleInvoiceStateResponse | null;
+  isInvoiceStateLoading: boolean;
+}
+
+const InvoiceFormContext = createContext<InvoiceFormContextValue>(
+  {} as InvoiceFormContextValue,
+);
 
 /**
  * Accounts chart data provider.
@@ -54,6 +65,14 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     estimateId,
     { enabled: !!estimateId },
   );
+
+  // Fetches branding templates of invoice.
+  const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
+    useGetPdfTemplates({ resource: 'SaleInvoice' });
+
+  // Fetches the payment services.
+  const { data: paymentServices, isLoading: isPaymentServicesLoading } =
+    useGetPaymentServices();
 
   const newInvoice = !isEmpty(estimate)
     ? transformToEditForm({
@@ -90,6 +109,9 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
+  const { data: saleInvoiceState, isLoading: isInvoiceStateLoading } =
+    useGetSaleInvoiceState();
+
   // Handle fetching settings.
   const { isLoading: isSettingsLoading } = useSettingsInvoices();
 
@@ -105,7 +127,18 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
+    isWarehouesLoading ||
+    isBranchesLoading ||
+    isProjectsLoading ||
+    isBrandingTemplatesLoading;
+
+  const isBootLoading =
+    isInvoiceLoading ||
+    isItemsLoading ||
+    isCustomersLoading ||
+    isEstimateLoading ||
+    isSettingsLoading ||
+    isInvoiceStateLoading;
 
   const provider = {
     invoice,
@@ -119,6 +152,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     warehouses,
     projects,
     taxRates,
+    brandingTemplates,
 
     isInvoiceLoading,
     isItemsLoading,
@@ -130,29 +164,28 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isBranchesSuccess,
     isWarehousesSuccess,
     isTaxRatesLoading,
+    isBrandingTemplatesLoading,
 
     createInvoiceMutate,
     editInvoiceMutate,
     setSubmitPayload,
     isNewMode,
+
+    // Payment Services
+    paymentServices,
+    isPaymentServicesLoading,
+
+    // Invoice state
+    saleInvoiceState,
+    isInvoiceStateLoading,
+
+    isBootLoading,
   };
 
-  return (
-    <DashboardInsider
-      loading={
-        isInvoiceLoading ||
-        isItemsLoading ||
-        isCustomersLoading ||
-        isEstimateLoading ||
-        isSettingsLoading
-      }
-      name={'invoice-form'}
-    >
-      <InvoiceFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <InvoiceFormContext.Provider value={provider} {...props} />;
 }
 
-const useInvoiceFormContext = () => React.useContext(InvoiceFormContext);
+const useInvoiceFormContext = () =>
+  React.useContext<InvoiceFormContextValue>(InvoiceFormContext);
 
 export { InvoiceFormProvider, useInvoiceFormContext };

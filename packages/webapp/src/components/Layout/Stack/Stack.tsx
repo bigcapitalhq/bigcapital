@@ -1,8 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Box } from '../Box';
+import { x, SystemProps } from '@xstyled/emotion';
 
-export interface StackProps extends React.ComponentPropsWithoutRef<'div'> {
+export interface StackProps
+  extends SystemProps,
+    Omit<React.ComponentPropsWithoutRef<'div'>, 'color'> {
   /** Key of theme.spacing or number to set gap in px */
   spacing?: number;
 
@@ -13,24 +14,20 @@ export interface StackProps extends React.ComponentPropsWithoutRef<'div'> {
   justify?: React.CSSProperties['justifyContent'];
 }
 
-const defaultProps: Partial<StackProps> = {
-  spacing: 20,
-  align: 'stretch',
-  justify: 'top',
-};
-
-export function Stack(props: StackProps) {
-  const stackProps = {
-    ...defaultProps,
-    ...props,
-  };
-  return <StackStyled {...stackProps} />;
+export function Stack({
+  spacing = 20,
+  align = 'stretch',
+  justify = 'top',
+  ...restProps
+}: StackProps) {
+  return (
+    <x.div
+      display={'flex'}
+      flexDirection="column"
+      justifyContent="justify"
+      gap={`${spacing}px`}
+      alignItems={align}
+      {...restProps}
+    />
+  );
 }
-
-const StackStyled = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: ${(props: StackProps) => props.align};
-  justify-content: justify;
-  gap: ${(props: StackProps) => props.spacing}px;
-`;

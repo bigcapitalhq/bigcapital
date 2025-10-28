@@ -90,7 +90,7 @@ export const getDashboardRoutes = () => [
       () => import('@/containers/ItemsCategories/ItemCategoriesList'),
     ),
     breadcrumb: intl.get('categories'),
-    pageTitle: intl.get('category_list'),
+    pageTitle: intl.get('categories_list'),
     defaultSearchResource: RESOURCES_TYPES.ITEM,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
@@ -912,59 +912,59 @@ export const getDashboardRoutes = () => [
   },
   // Payment receives
   {
-    path: `/payment-receives/import`,
+    path: `/payments-received/import`,
     component: lazy(
-      () => import('@/containers/Sales/PaymentReceives/PaymentReceivesImport'),
+      () => import('@/containers/Sales/PaymentsReceived/PaymentsReceivedImport'),
     ),
     name: 'payment-receive-import',
-    breadcrumb: 'Payments Receive Import',
-    pageTitle: 'Payments Receive Import',
+    breadcrumb: 'Payments Received Import',
+    pageTitle: 'Payments Received Import',
     backLink: true,
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-receives/:id/edit`,
+    path: `/payments-received/:id/edit`,
     component: lazy(
       () =>
         import(
-          '@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
+          '@/containers/Sales/PaymentsReceived/PaymentReceiveForm/PaymentReceiveFormPage'
         ),
     ),
     name: 'payment-receive-edit',
     breadcrumb: intl.get('edit'),
-    pageTitle: intl.get('edit_payment_receive'),
+    pageTitle: intl.get('edit_payment_received'),
     backLink: true,
     sidebarExpand: false,
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-receives/new`,
+    path: `/payment-received/new`,
     component: lazy(
       () =>
         import(
-          '@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
+          '@/containers/Sales/PaymentsReceived/PaymentReceiveForm/PaymentReceiveFormPage'
         ),
     ),
     name: 'payment-receive-new',
-    breadcrumb: intl.get('new_payment_receive'),
-    pageTitle: intl.get('new_payment_receive'),
+    breadcrumb: intl.get('new_payment_received'),
+    pageTitle: intl.get('new_payment_received'),
     backLink: true,
     sidebarExpand: false,
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-receives`,
+    path: `/payments-received`,
     component: lazy(
       () =>
         import(
-          '@/containers/Sales/PaymentReceives/PaymentsLanding/PaymentReceivesList'
+          '@/containers/Sales/PaymentsReceived/PaymentsLanding/PaymentsReceivedList'
         ),
     ),
-    breadcrumb: intl.get('payment_receives_list'),
-    pageTitle: intl.get('payment_receives_list'),
+    breadcrumb: intl.get('payments_received_list'),
+    pageTitle: intl.get('payments_received_list'),
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
@@ -1095,9 +1095,9 @@ export const getDashboardRoutes = () => [
 
   // Payment modes.
   {
-    path: `/payment-mades/import`,
+    path: `/payments-made/import`,
     component: lazy(
-      () => import('@/containers/Purchases/PaymentMades/PaymentMadesImport'),
+      () => import('@/containers/Purchases/PaymentsMade/PaymentsMadeImport'),
     ),
     name: 'payment-made-edit',
     breadcrumb: intl.get('edit'),
@@ -1107,11 +1107,11 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades/:id/edit`,
+    path: `/payments-made/:id/edit`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+          '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
         ),
     ),
     name: 'payment-made-edit',
@@ -1123,11 +1123,11 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades/new`,
+    path: `/payments-made/new`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+          '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
         ),
     ),
     name: 'payment-made-new',
@@ -1139,15 +1139,15 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades`,
+    path: `/payments-made`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'
+          '@/containers/Purchases/PaymentsMade/PaymentsLanding/PaymentMadeList'
         ),
     ),
-    breadcrumb: intl.get('payment_made_list'),
-    pageTitle: intl.get('payment_made_list'),
+    breadcrumb: intl.get('payments_made_list'),
+    pageTitle: intl.get('payments_made_list'),
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
@@ -1162,7 +1162,7 @@ export const getDashboardRoutes = () => [
     ),
     sidebarExpand: false,
     backLink: true,
-    pageTitle: intl.get('cash_flow.label_account_transcations'),
+    pageTitle: intl.get('banking.label_account_transcations'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
@@ -1186,7 +1186,7 @@ export const getDashboardRoutes = () => [
       () =>
         import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
     ),
-    pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
+    pageTitle: intl.get('siebar.banking.bank_accounts'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
@@ -1214,11 +1214,29 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('sidebar.projects'),
   },
   {
+    path: '/tax-rates/import',
+    component: lazy(
+      () => import('@/containers/TaxRates/containers/TaxRatesImport'),
+    ),
+    pageTitle: 'Tax Rates',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: '/tax-rates',
     component: lazy(
       () => import('@/containers/TaxRates/pages/TaxRatesLanding'),
     ),
     pageTitle: 'Tax Rates',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  // Bank Rules
+  {
+    path: '/bank-rules',
+    component: lazy(
+      () => import('@/containers/Banking/Rules/RulesList/RulesLandingPage'),
+    ),
+    pageTitle: 'Bank Rules',
+    breadcrumb: 'Bank Rules',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   // Homepage

@@ -4,7 +4,7 @@
   flex-direction: row;
   flex: 1 0 0;
   min-width: auto;
-  background-color: #fbfbfb;
+  background-color: var(--color-preferences-content-background);
 }
 .dashboard {
   &__preferences-content {

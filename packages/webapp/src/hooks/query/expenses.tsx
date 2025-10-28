@@ -76,7 +76,7 @@ export function useExpense(id, props) {
       url: `expenses/${id}`,
     },
     {
-      select: (res) => res.data.expense,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -110,7 +110,7 @@ export function useEditExpense(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`expenses/${id}`, values),
+    ([id, values]) => apiRequest.put(`expenses/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific expense.

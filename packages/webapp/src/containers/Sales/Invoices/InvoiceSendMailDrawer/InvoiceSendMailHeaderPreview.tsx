@@ -1,0 +1,93 @@
+import React, { useMemo } from 'react';
+import { x } from '@xstyled/emotion';
+import { Box, Group, Stack } from '@/components';
+import { useSendInvoiceMailForm, useSendInvoiceMailSubject } from './_hooks';
+import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
+
+export function InvoiceSendMailHeaderPreview() {
+  const mailSubject = useSendInvoiceMailSubject();
+  const { invoiceMailState } = useInvoiceSendMailBoot();
+  const toAddresses = useMailHeaderToAddresses();
+  const fromAddresses = useMailHeaderFromAddresses();
+  const isDarkmode = useIsDarkMode();
+
+  return (
+    <Stack
+      bg={isDarkmode ? 'var(--color-dark-gray2)' : 'white'}
+      borderBottom={'1px solid var(--color-element-customize-divider)'}
+      padding={'22px 30px'}
+      spacing={8}
+      position={'sticky'}
+      top={0}
+      zIndex={1}
+    >
+      <Box>
+        <x.h2 fontWeight={600} fontSize={16}>
+          {mailSubject}
+        </x.h2>
+      </Box>
+
+      <Group display="flex" gap={2}>
+        <Group display="flex" alignItems="center" gap={15}>
+          <x.abbr
+            role="presentation"
+            w={'40px'}
+            h={'40px'}
+            bg={'#daa3e4'}
+            fill={'#daa3e4'}
+            color={'#3f1946'}
+            lineHeight={'40px'}
+            textAlign={'center'}
+            borderRadius={'40px'}
+            fontSize={'14px'}
+          >
+            A
+          </x.abbr>
+
+          <Stack spacing={2}>
+            <Group spacing={2}>
+              <Box fontWeight={600}>{invoiceMailState?.companyName} </Box>
+              <Box color={isDarkmode ? 'rgba(255, 255, 255, 0.6)' : '#738091'}>{fromAddresses}</Box>
+            </Group>
+
+            <Box fontSize={'sm'} color={isDarkmode ? 'rgba(255, 255, 255, 0.6)' : '#738091'}>
+              Send to: {invoiceMailState?.customerName} {toAddresses};
+            </Box>
+          </Stack>
+        </Group>
+      </Group>
+    </Stack>
+  );
+}
+
+export function InvoiceSendMailPreviewWithHeader({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Box>
+      <InvoiceSendMailHeaderPreview />
+      <Box>{children}</Box>
+    </Box>
+  );
+}
+
+export const useMailHeaderToAddresses = () => {
+  const {
+    values: { to },
+  } = useSendInvoiceMailForm();
+
+  return useMemo(() => to?.map((email) => '<' + email + '>').join(' '), [to]);
+};
+
+export const useMailHeaderFromAddresses = () => {
+  const { invoiceMailState } = useInvoiceSendMailBoot();
+  const from = invoiceMailState?.from;
+
+  return useMemo(
+    () => from?.map((email) => '<' + email + '>').join(', '),
+    [from],
+  );
+};

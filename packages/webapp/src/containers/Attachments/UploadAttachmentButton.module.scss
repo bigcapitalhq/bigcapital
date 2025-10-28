@@ -1,0 +1,24 @@
+
+.popover :global .bp4-popover-content{
+  min-width: 600px;
+}
+
+.attachmentButton:not([class*=bp4-intent-]) {
+  --x-background-color: #fff;
+  --x-border-color: rgb(206, 212, 218);
+
+  :global(.bp4-dark) & {
+    --x-border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &,
+  &:hover{
+    background-color: #fff;
+  }
+  border: 1px solid var(--x-border-color);
+}
+
+.attachmentField :global .bp4-label{
+  font-weight: 500;
+  font-size: 12px;
+}

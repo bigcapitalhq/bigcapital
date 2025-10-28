@@ -1,22 +1,35 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
-import { useFormikContext } from 'formik';
-import { CLASSES } from '@/constants/classes';
 
 import EstimateFormHeaderFields from './EstimateFormHeaderFields';
-
-import { getEntriesTotal } from '@/containers/Entries/utils';
-import { PageFormBigNumber } from '@/components';
+import { Group, PageFormBigNumber } from '@/components';
+import { useEstimateTotalFormatted } from './utils';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 // Estimate form top header.
 function EstimateFormHeader() {
+  const isDarkMode = useIsDarkMode();
+
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <Group
+      position="apart"
+      align={'flex-start'}
+      p="25px 32px"
+      bg="var(--x-estimate-form-header-background)"
+      borderBottom="1px solid var(--x-estimate-form-header-border)"
+      style={{
+        '--x-estimate-form-header-background': isDarkMode
+          ? 'var(--color-dark-gray1)'
+          : 'var(--color-white)',
+        '--x-estimate-form-header-border': isDarkMode
+          ? 'rgba(255, 255, 255, 0.1)'
+          : '#d2dce2',
+      }}
+    >
       <EstimateFormHeaderFields />
       <EstimateFormBigTotal />
-    </div>
+    </Group>
   );
 }
 
@@ -25,19 +38,10 @@ function EstimateFormHeader() {
  * @returns {React.ReactNode}
  */
 function EstimateFormBigTotal() {
-  const {
-    values: { entries, currency_code },
-  } = useFormikContext();
-
-  // Calculate the total due amount of bill entries.
-  const totalDueAmount = useMemo(() => getEntriesTotal(entries), [entries]);
+  const totalFormatted = useEstimateTotalFormatted();
 
   return (
-    <PageFormBigNumber
-      label={intl.get('amount')}
-      amount={totalDueAmount}
-      currencyCode={currency_code}
-    />
+    <PageFormBigNumber label={intl.get('amount')} amount={totalFormatted} />
   );
 }
 

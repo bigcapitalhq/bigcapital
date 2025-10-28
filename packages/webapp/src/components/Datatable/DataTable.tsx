@@ -60,7 +60,10 @@ export function DataTable(props) {
 
     // Pagination props.
     initialPageIndex = 0,
-    initialPageSize = 10,
+    initialPageSize = 20,
+
+    // Hidden columns.
+    initialHiddenColumns = [],
 
     updateDebounceTime = 200,
     selectionColumnWidth = 42,
@@ -115,6 +118,7 @@ export function DataTable(props) {
         columnResizing: {
           columnWidths: initialColumnsWidths || {},
         },
+        hiddenColumns: initialHiddenColumns,
       },
       manualPagination,
       pageCount: controlledPageCount,

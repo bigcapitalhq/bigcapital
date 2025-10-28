@@ -1,8 +1,0 @@
-{
-  "presets": ["@babel/preset-env"],
-  "retainLines": true,
-  "plugins": [
-    "@babel/plugin-transform-runtime",
-    "@babel/plugin-syntax-dynamic-import"
-  ]
-}

@@ -15,6 +15,7 @@ import {
   FeatureCan,
 } from '@/components';
 import { useRefreshCashflowAccounts } from '@/hooks/query';
+import { useOpenPlaidConnect } from '@/hooks/utils/useOpenPlaidConnect';
 import { CashflowAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -38,6 +39,9 @@ function CashFlowAccountsActionsBar({
   setCashflowAccountsTableState,
 }) {
   const { refresh } = useRefreshCashflowAccounts();
+
+  // Opens the Plaid popup.
+  const { openPlaidAsync, isPlaidLoading } = useOpenPlaidConnect();
 
   // Handle refresh button click.
   const handleRefreshBtnClick = () => {
@@ -64,7 +68,7 @@ function CashFlowAccountsActionsBar({
   };
   // Handle connect button click.
   const handleConnectToBank = () => {
-    openDialog(DialogsName.ConnectBankCreditCard);
+    openPlaidAsync();
   };
 
   return (
@@ -74,13 +78,13 @@ function CashFlowAccountsActionsBar({
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus-24'} iconSize={20} />}
-            text={<T id={'cash_flow.label.add_cash_account'} />}
+            text={<T id={'banking.label.add_cash_account'} />}
             onClick={handleAddBankAccount}
           />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus-24'} iconSize={20} />}
-            text={<T id={'cash_flow.label.add_bank_account'} />}
+            text={<T id={'banking.label.add_bank_account'} />}
             onClick={handleAddCashAccount}
           />
           <NavbarDivider />
@@ -116,6 +120,7 @@ function CashFlowAccountsActionsBar({
             className={Classes.MINIMAL}
             text={'Connect to Bank / Credit Card'}
             onClick={handleConnectToBank}
+            disabled={isPlaidLoading}
           />
           <NavbarDivider />
         </FeatureCan>

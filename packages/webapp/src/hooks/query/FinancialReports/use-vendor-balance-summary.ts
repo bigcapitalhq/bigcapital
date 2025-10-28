@@ -12,13 +12,12 @@ export function useVendorsBalanceSummaryReport(query, props) {
     [t.FINANCIAL_REPORT, t.VENDORS_BALANCE_SUMMARY, query],
     {
       method: 'get',
-      url: '/financial_statements/vendor-balance-summary',
+      url: '/reports/vendor-balance-summary',
       params: query,
       headers: {
         Accept: 'application/json+table',
       },
     },
-
     {
       select: (res) => ({
         query: res.data.query,
@@ -34,7 +33,7 @@ export function useVendorsBalanceSummaryReport(query, props) {
 }
 
 export const useVendorBalanceSummaryXlsxExport = (args) => {
-  const url = '/financial_statements/vendor-balance-summary';
+  const url = '/reports/vendor-balance-summary';
   const config = {
     headers: {
       accept: 'application/xlsx',
@@ -52,7 +51,7 @@ export const useVendorBalanceSummaryXlsxExport = (args) => {
 
 export const useVendorBalanceSummaryCsvExport = (args) => {
   return useDownloadFile({
-    url: '/financial_statements/vendor-balance-summary',
+    url: '/reports/vendor-balance-summary',
     config: {
       headers: {
         accept: 'application/csv',
@@ -65,7 +64,7 @@ export const useVendorBalanceSummaryCsvExport = (args) => {
 
 export const useVendorBalanceSummaryPdfExport = (query = {}) => {
   return useRequestPdf({
-    url: 'financial_statements/vendor-balance-summary',
+    url: 'reports/vendor-balance-summary',
     params: query,
   });
 };

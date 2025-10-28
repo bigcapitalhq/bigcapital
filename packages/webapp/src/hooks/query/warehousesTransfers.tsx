@@ -26,7 +26,7 @@ export function useCreateWarehouseTransfer(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post('warehouses/transfers', values),
+    (values) => apiRequest.post('warehouse-transfers', values),
     {
       onSuccess: (res, values) => {
         // Common invalidate queries.
@@ -45,7 +45,7 @@ export function useEditWarehouseTransfer(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`warehouses/transfers/${id}`, values),
+    ([id, values]) => apiRequest.post(`warehouse-transfers/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific sale invoice.
@@ -66,7 +66,7 @@ export function useDeleteWarehouseTransfer(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`warehouses/transfers/${id}`), {
+  return useMutation((id) => apiRequest.delete(`warehouse-transfers/${id}`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -87,7 +87,7 @@ const transformWarehousesTransfer = (res) => ({
 export function useWarehousesTransfers(query, props) {
   return useRequestQuery(
     [t.WAREHOUSE_TRANSFERS, query],
-    { method: 'get', url: 'warehouses/transfers', params: query },
+    { method: 'get', url: 'warehouse-transfers', params: query },
     {
       select: transformWarehousesTransfer,
       defaultData: {
@@ -111,7 +111,7 @@ export function useWarehousesTransfers(query, props) {
 export function useWarehouseTransfer(id, props, requestProps) {
   return useRequestQuery(
     [t.WAREHOUSE_TRANSFER, id],
-    { method: 'get', url: `warehouses/transfers/${id}`, ...requestProps },
+    { method: 'get', url: `warehouse-transfers/${id}`, ...requestProps },
     {
       select: (res) => res.data.data,
       defaultData: {},
@@ -130,7 +130,7 @@ export function useInitiateWarehouseTransfer(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.put(`warehouses/transfers/${id}/initiate`),
+    (id) => apiRequest.put(`warehouse-transfers/${id}/initiate`),
     {
       onSuccess: (res, id) => {
         queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
@@ -153,7 +153,7 @@ export function useTransferredWarehouseTransfer(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.put(`warehouses/transfers/${id}/transferred`),
+    (id) => apiRequest.put(`warehouse-transfers/${id}/transferred`),
     {
       onSuccess: (res, id) => {
         queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);

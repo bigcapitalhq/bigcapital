@@ -12,7 +12,7 @@ export function useAPAgingSummaryReport(query, props) {
     [t.FINANCIAL_REPORT, t.AP_AGING_SUMMARY, query],
     {
       method: 'get',
-      url: '/financial_statements/payable_aging_summary',
+      url: '/reports/payable-aging-summary',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -27,7 +27,7 @@ export function useAPAgingSummaryReport(query, props) {
 
 export const useAPAgingSheetXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/payable_aging_summary',
+    url: '/reports/payable-aging-summary',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -41,7 +41,7 @@ export const useAPAgingSheetXlsxExport = (query, args) => {
 
 export const useAPAgingSheetCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/payable_aging_summary',
+    url: '/reports/payable-aging-summary',
     config: {
       headers: {
         accept: 'application/csv',
@@ -58,7 +58,7 @@ export const useAPAgingSheetCsvExport = (query, args) => {
  */
 export function useAPAgingSummaryPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/payable_aging_summary`,
+    url: `/reports/payable-aging-summary`,
     params: query,
   });
 }

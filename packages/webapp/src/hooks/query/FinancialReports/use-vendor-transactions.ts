@@ -12,7 +12,7 @@ export function useVendorsTransactionsReport(query, props) {
     [t.FINANCIAL_REPORT, t.VENDORS_TRANSACTIONS, query],
     {
       method: 'get',
-      url: '/financial_statements/transactions-by-vendors',
+      url: '/reports/transactions-by-vendors',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -26,7 +26,7 @@ export function useVendorsTransactionsReport(query, props) {
 }
 
 export const useVendorsTransactionsXlsxExport = (query, args) => {
-  const url = '/financial_statements/transactions-by-vendors';
+  const url = '/reports/transactions-by-vendors';
   const config = {
     headers: {
       accept: 'application/xlsx',
@@ -45,7 +45,7 @@ export const useVendorsTransactionsXlsxExport = (query, args) => {
 
 export const useVendorsTransactionsCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/transactions-by-vendors',
+    url: '/reports/transactions-by-vendors',
     config: {
       headers: {
         accept: 'application/csv',

@@ -9,6 +9,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
+import withEstimates from './withEstimates';
 
 import { TABLES } from '@/constants/tables';
 import {
@@ -42,6 +43,9 @@ function EstimatesDataTable({
 
   // #withSettings
   estimatesTableSize,
+
+  // #withEstimates
+  estimatesTableState
 }) {
   const history = useHistory();
 
@@ -103,7 +107,7 @@ function EstimatesDataTable({
 
   // Handle mail send estimate.
   const handleMailSendEstimate = ({ id }) => {
-    openDialog(DialogsName.EstimateMail, { estimateId: id });
+    openDrawer(DRAWERS.ESTIMATE_SEND_MAIL, { estimateId: id });
   }
 
   // Local storage memorizing columns widths.
@@ -141,6 +145,7 @@ function EstimatesDataTable({
         selectionColumn={true}
         sticky={true}
         pagination={true}
+        initialPageSize={estimatesTableState.pageSize}
         manualPagination={true}
         pagesCount={pagination.pagesCount}
         TableLoadingRenderer={TableSkeletonRows}
@@ -174,4 +179,5 @@ export default compose(
   withSettings(({ estimatesSettings }) => ({
     estimatesTableSize: estimatesSettings?.tableSize,
   })),
+  withEstimates(({ estimatesTableState }) => ({ estimatesTableState }))
 )(EstimatesDataTable);

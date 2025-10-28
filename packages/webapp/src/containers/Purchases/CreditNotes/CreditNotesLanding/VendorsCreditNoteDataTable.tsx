@@ -17,6 +17,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
+import withVendorsCreditNotes from './withVendorsCreditNotes';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
@@ -31,6 +32,9 @@ import { DRAWERS } from '@/constants/drawers';
 function VendorsCreditNoteDataTable({
   // #withVendorsCreditNotesActions
   setVendorsCreditNoteTableState,
+
+  // #withVendorCredits
+  vendorsCreditNoteTableState,
 
   // #withAlertsActions
   openAlert,
@@ -129,6 +133,7 @@ function VendorsCreditNoteDataTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
+        initialPageSize={vendorsCreditNoteTableState.pageSize}
         pagesCount={pagination.pagesCount}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
@@ -158,5 +163,8 @@ export default compose(
   withDialogActions,
   withSettings(({ vendorsCreditNoteSetting }) => ({
     creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
+  })),
+  withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
+    vendorsCreditNoteTableState,
   })),
 )(VendorsCreditNoteDataTable);

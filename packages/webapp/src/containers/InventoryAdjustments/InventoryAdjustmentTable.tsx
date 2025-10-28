@@ -92,6 +92,7 @@ function InventoryAdjustmentDataTable({
       manualSortBy={true}
       selectionColumn={true}
       pagination={true}
+      initialPageSize={inventoryAdjustmentTableState.pageSize}
       pagesCount={pagination.pagesCount}
       autoResetSortBy={false}
       autoResetPage={false}

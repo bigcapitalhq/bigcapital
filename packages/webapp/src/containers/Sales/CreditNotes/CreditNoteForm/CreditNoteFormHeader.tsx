@@ -1,23 +1,37 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
-import { useFormikContext } from 'formik';
-import { CLASSES } from '@/constants/classes';
 import CreditNoteFormHeaderFields from './CreditNoteFormHeaderFields';
-
-import { getEntriesTotal } from '@/containers/Entries/utils';
-import { PageFormBigNumber } from '@/components';
+import { Group, PageFormBigNumber } from '@/components';
+import { useCreditNoteTotalFormatted } from './utils';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 /**
  * Credit note header.
  */
 function CreditNoteFormHeader() {
+  const isDarkMode = useIsDarkMode();
+
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <Group
+      position="apart"
+      align={'flex-start'}
+      display="flex"
+      p="25px 32px"
+      bg="var(--x-credit-note-form-header-background)"
+      borderBottom="1px solid var(--x-credit-note-form-header-border)"
+      style={{
+        '--x-credit-note-form-header-background': isDarkMode
+          ? 'var(--color-dark-gray1)'
+          : 'var(--color-white)',
+        '--x-credit-note-form-header-border': isDarkMode
+          ? 'rgba(255, 255, 255, 0.1)'
+          : '#d2dce2',
+      }}
+    >
       <CreditNoteFormHeaderFields />
       <CreditNoteFormBigNumber />
-    </div>
+    </Group>
   );
 }
 
@@ -26,18 +40,12 @@ function CreditNoteFormHeader() {
  * @returns {React.ReactNode}
  */
 function CreditNoteFormBigNumber() {
-  const {
-    values: { entries, currency_code },
-  } = useFormikContext();
-
-  // Calculate the total amount.
-  const totalAmount = React.useMemo(() => getEntriesTotal(entries), [entries]);
+  const totalFormatted = useCreditNoteTotalFormatted();
 
   return (
     <PageFormBigNumber
       label={intl.get('credit_note.label_amount_to_credit')}
-      amount={totalAmount}
-      currencyCode={currency_code}
+      amount={totalFormatted}
     />
   );
 }

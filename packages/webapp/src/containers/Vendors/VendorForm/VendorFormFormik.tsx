@@ -34,6 +34,7 @@ function VendorFormFormik({
   organization: { base_currency },
 
   // #ownProps
+  initialValues,
   onSubmitSuccess,
   onSubmitError,
   onCancel,
@@ -54,14 +55,15 @@ function VendorFormFormik({
   /**
    * Initial values in create and edit mode.
    */
-  const initialValues = useMemo(
+  const initialFormValues = useMemo(
     () => ({
       ...defaultInitialValues,
+      ...transformToForm(initialValues, defaultInitialValues),
       currency_code: base_currency,
       ...transformToForm(vendor, defaultInitialValues),
       ...transformToForm(contactDuplicate, defaultInitialValues),
     }),
-    [vendor, contactDuplicate, base_currency],
+    [vendor, contactDuplicate, base_currency, initialValues],
   );
 
   // Handles the form submit.
@@ -84,7 +86,7 @@ function VendorFormFormik({
       setSubmitting(false);
       resetForm();
 
-      safeInvoke(onSubmitSuccess, values, form, submitPayload, response);
+      safeInvoke(onSubmitSuccess, values, form, submitPayload, response.data);
     };
 
     const onError = () => {
@@ -112,7 +114,7 @@ function VendorFormFormik({
         validationSchema={
           isNewMode ? CreateVendorFormSchema : EditVendorFormSchema
         }
-        initialValues={initialValues}
+        initialValues={initialFormValues}
         onSubmit={handleFormSubmit}
       >
         <Form>
@@ -136,10 +138,15 @@ function VendorFormFormik({
 }
 
 export const VendorFormHeaderPrimary = styled.div`
+  --x-color-border: #e4e4e4;
+
+  .bp4-dark & {
+    --x-color-border: var(--color-dark-gray3);
+  }
   padding: 10px 0 0;
   margin: 0 0 20px;
   overflow: hidden;
-  border-bottom: 1px solid #e4e4e4;
+  border-bottom: 1px solid var(--x-color-border);
   max-width: 1000px;
 `;
 

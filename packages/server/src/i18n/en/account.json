@@ -1,0 +1,17 @@
+{
+  "field.name": "Account name",
+  "field.description": "Description",
+  "field.slug": "Account slug",
+  "field.code": "Account code",
+  "field.root_type": "Root type",
+  "field.normal": "Account normal",
+  "field.normal.credit": "Credit",
+  "field.normal.debit": "Debit",
+  "field.type": "Type",
+  "field.active": "Active",
+  "field.currency": "Currency",
+  "field.balance": "Balance",
+  "field.bank_balance": "Bank Balance",
+  "field.parent_account": "Parent Account",
+  "field.created_at": "Created at"
+}

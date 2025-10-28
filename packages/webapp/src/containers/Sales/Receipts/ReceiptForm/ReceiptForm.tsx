@@ -1,12 +1,11 @@
 // @ts-nocheck
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { sumBy, isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
+import { css } from '@emotion/css';
 
-import { CLASSES } from '@/constants/classes';
 import {
   EditReceiptFormSchema,
   CreateReceiptFormSchema,
@@ -17,7 +16,7 @@ import { useReceiptFormContext } from './ReceiptFormProvider';
 import ReceiptFromHeader from './ReceiptFormHeader';
 import ReceiptItemsEntriesEditor from './ReceiptItemsEntriesEditor';
 import ReceiptFormFloatingActions from './ReceiptFormFloatingActions';
-import ReceiptFormFooter from './ReceiptFormFooter';
+import { ReceiptFormFooter } from './ReceiptFormFooter';
 import ReceiptFormDialogs from './ReceiptFormDialogs';
 import ReceiptFormTopBar from './ReceiptFormTopbar';
 
@@ -38,11 +37,12 @@ import {
   ReceiptSyncAutoExRateToForm,
   ReceiptSyncIncrementSettingsToForm,
 } from './components';
+import { PageForm } from '@/components/PageForm';
 
 /**
  * Receipt form.
  */
-function ReceiptForm({
+function ReceiptFormRoot({
   // #withSettings
   receiptNextNumber,
   receiptNumberPrefix,
@@ -63,6 +63,7 @@ function ReceiptForm({
     createReceiptMutate,
     submitPayload,
     isNewMode,
+    saleReceiptState,
   } = useReceiptFormContext();
 
   // The next receipt number.
@@ -84,6 +85,7 @@ function ReceiptForm({
           currency_code: base_currency,
           receipt_message: receiptMessage,
           terms_conditions: receiptTermsConditions,
+          pdf_template_id: saleReceiptState?.defaultTemplateId,
         }),
   };
   // Handle the form submit.
@@ -148,40 +150,46 @@ function ReceiptForm({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_RECEIPT,
-      )}
+    <Formik
+      validationSchema={
+        isNewMode ? CreateReceiptFormSchema : EditReceiptFormSchema
+      }
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
     >
-      <Formik
-        validationSchema={
-          isNewMode ? CreateReceiptFormSchema : EditReceiptFormSchema
-        }
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
+      <Form
+        className={css({
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        })}
       >
-        <Form>
-          <ReceiptFormTopBar />
-          <ReceiptFromHeader />
-          <ReceiptItemsEntriesEditor />
-          <ReceiptFormFooter />
-          <ReceiptFormFloatingActions />
+        <PageForm flex={1}>
+          <PageForm.Body>
+            <ReceiptFormTopBar />
+            <ReceiptFromHeader />
+            <ReceiptItemsEntriesEditor />
+            <ReceiptFormFooter />
+          </PageForm.Body>
 
-          {/*---------- Dialogs ---------*/}
-          <ReceiptFormDialogs />
+          <PageForm.Footer>
+            <ReceiptFormFloatingActions />
+          </PageForm.Footer>
+        </PageForm>
 
-          {/*---------- Effects ---------*/}
-          <ReceiptSyncIncrementSettingsToForm />
-          <ReceiptSyncAutoExRateToForm />
-        </Form>
-      </Formik>
-    </div>
+        {/*---------- Dialogs ---------*/}
+        <ReceiptFormDialogs />
+
+        {/*---------- Effects ---------*/}
+        <ReceiptSyncIncrementSettingsToForm />
+        <ReceiptSyncAutoExRateToForm />
+      </Form>
+    </Formik>
   );
 }
 
-export default compose(
+export const ReceiptForm = compose(
   withDashboardActions,
   withSettings(({ receiptSettings }) => ({
     receiptNextNumber: receiptSettings?.nextNumber,
@@ -192,4 +200,4 @@ export default compose(
     preferredDepositAccount: receiptSettings?.preferredDepositAccount,
   })),
   withCurrentOrganization(),
-)(ReceiptForm);
+)(ReceiptFormRoot);

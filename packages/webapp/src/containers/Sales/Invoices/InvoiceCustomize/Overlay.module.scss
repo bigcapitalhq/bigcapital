@@ -1,0 +1,23 @@
+
+
+.root {
+  position: relative;
+  
+  &.visible {
+    opacity: 0.4;
+
+    &::before {
+      background: transparent;
+      z-index: 2;
+    }
+  }
+  &::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1000;
+  }
+}

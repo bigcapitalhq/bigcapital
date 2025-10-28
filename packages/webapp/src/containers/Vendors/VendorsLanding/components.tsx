@@ -12,6 +12,7 @@ import {
   Intent,
   Classes,
 } from '@blueprintjs/core';
+import clsx from 'classnames';
 
 import { Can, Icon, Money, If, AvatarCell } from '@/components';
 import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
@@ -163,7 +164,7 @@ export function useVendorsTableColumns() {
         id: 'company_name',
         Header: intl.get('company_name'),
         accessor: 'company_name',
-        className: 'company_name',
+        className: clsx(Classes.TEXT_MUTED),
         width: 150,
         clickable: true,
       },
@@ -171,7 +172,7 @@ export function useVendorsTableColumns() {
         id: 'work_phone',
         Header: intl.get('phone_number'),
         accessor: PhoneNumberAccessor,
-        className: 'work_phone',
+        className: clsx(Classes.TEXT_MUTED),
         width: 100,
         clickable: true,
       },
@@ -180,6 +181,7 @@ export function useVendorsTableColumns() {
         Header: intl.get('note'),
         accessor: NoteAccessor,
         disableSortBy: true,
+        className: clsx(Classes.TEXT_MUTED),
         width: 85,
         clickable: true,
       },
@@ -190,6 +192,7 @@ export function useVendorsTableColumns() {
         align: 'right',
         width: 100,
         clickable: true,
+        money: true,
       },
     ],
     [],

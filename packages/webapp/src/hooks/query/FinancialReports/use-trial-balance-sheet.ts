@@ -12,7 +12,7 @@ export function useTrialBalanceSheet(query, props) {
     [t.FINANCIAL_REPORT, t.TRIAL_BALANCE_SHEET, query],
     {
       method: 'get',
-      url: '/financial_statements/trial_balance_sheet',
+      url: '/reports/trial-balance-sheet',
       params: query,
       headers: {
         Accept: 'application/json+table',
@@ -27,7 +27,7 @@ export function useTrialBalanceSheet(query, props) {
 
 export const useTrialBalanceSheetXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/trial_balance_sheet',
+    url: '/reports/trial-balance-sheet',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -41,7 +41,7 @@ export const useTrialBalanceSheetXlsxExport = (query, args) => {
 
 export const useTrialBalanceSheetCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/trial_balance_sheet',
+    url: '/reports/trial-balance-sheet',
     config: {
       headers: {
         accept: 'application/csv',
@@ -58,7 +58,7 @@ export const useTrialBalanceSheetCsvExport = (query, args) => {
  */
 export function useTrialBalanceSheetPdf(query = {}) {
   return useRequestPdf({
-    url: `/financial_statements/trial_balance_sheet`,
+    url: `/reports/trial-balance-sheet`,
     params: query,
   });
 }

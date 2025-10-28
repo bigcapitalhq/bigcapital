@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import { useFormikContext } from 'formik';
 import { ExchangeRateInputGroup } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
-import { useEstimateIsForeignCustomer, useEstimateTotals } from './utils';
+import { useEstimateIsForeignCustomer, useEstimateSubtotal } from './utils';
 import { transactionNumber } from '@/utils';
 import { useUpdateEffect } from '@/hooks';
 import withSettings from '@/containers/Settings/withSettings';
@@ -102,13 +102,13 @@ export const EstimateSyncAutoExRateToForm = R.compose(withDialogActions)(
     // #withDialogActions
     openDialog,
   }) => {
-    const { total } = useEstimateTotals();
+    const subtotal = useEstimateSubtotal();
     const timeout = useRef();
 
     useSyncExRateToForm({
       onSynced: () => {
         // If the total bigger then zero show alert to the user after adjusting entries.
-        if (total > 0) {
+        if (subtotal > 0) {
           clearTimeout(timeout.current);
           timeout.current = setTimeout(() => {
             openDialog(DialogsName.InvoiceExchangeRateChangeNotice);

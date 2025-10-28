@@ -25,7 +25,7 @@ function SetupInitializingForm({
   const [isJobDone, setIsJobDone] = React.useState(false);
 
   const {
-    data: { running, queued, failed, completed },
+    data: { isRunning, isWaiting, isFailed, isCompleted },
     isFetching: isJobFetching,
   } = useJob(organization?.build_job_id, {
     refetchInterval: 2000,
@@ -33,11 +33,11 @@ function SetupInitializingForm({
   });
 
   React.useEffect(() => {
-    if (completed) {
+    if (isCompleted) {
       refetch();
       setIsJobDone(true);
     }
-  }, [refetch, completed, setOrganizationSetupCompleted]);
+  }, [refetch, isCompleted, setOrganizationSetupCompleted]);
 
   React.useEffect(() => {
     if (isSuccess && isJobDone) {
@@ -48,11 +48,11 @@ function SetupInitializingForm({
 
   return (
     <div class="setup-initializing-form">
-      {failed ? (
+      {isFailed ? (
         <SetupInitializingFailed />
-      ) : running || queued || isJobFetching ? (
+      ) : isRunning || isWaiting || isJobFetching ? (
         <SetupInitializingRunning />
-      ) : completed ? (
+      ) : isCompleted ? (
         <SetupInitializingCompleted />
       ) : (
         <SetupInitializingFailed />

@@ -7,10 +7,10 @@ export default function ReceiptsImport() {
   const history = useHistory();
 
   const handleCancelBtnClick = () => {
-    history.push('/accounts');
+    history.push('/receipts');
   };
   const handleImportSuccess = () => {
-    history.push('/accounts');
+    history.push('/receipts');
   };
 
   return (

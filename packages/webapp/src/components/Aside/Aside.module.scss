@@ -1,0 +1,25 @@
+.root{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.title{
+  align-items: center;
+  background: var(--color-aside-background);
+  border-bottom: 1px solid var(--color-aside-divider);
+  display: flex;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 5px 5px 5px 15px;
+  z-index: 0;
+  font-weight: 600;
+}
+
+.content{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  background-color: var(--color-aside-title-background);
+  overflow-y: auto;
+}

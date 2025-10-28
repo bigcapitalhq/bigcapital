@@ -7,6 +7,8 @@ import {
   Classes,
   NavbarDivider,
   Intent,
+  Tooltip,
+  Position,
 } from '@blueprintjs/core';
 
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
@@ -32,6 +34,7 @@ import { compose } from '@/utils';
 import { BadDebtMenuItem } from './utils';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
+import { ArrowBottomLeft } from '@/icons/ArrowBottomLeft';
 
 /**
  * Invoice details action bar.
@@ -44,6 +47,7 @@ function InvoiceDetailActionsBar({
   openAlert,
 
   // #withDrawerActions
+  openDrawer,
   closeDrawer,
 }) {
   const history = useHistory();
@@ -99,8 +103,16 @@ function InvoiceDetailActionsBar({
     openAlert('cancel-bad-debt', { invoiceId });
   };
 
+  // handle send mail button click.
   const handleMailInvoice = () => {
-    openDialog(DialogsName.InvoiceMail, { invoiceId });
+    openDrawer(DRAWERS.INVOICE_SEND_MAIL, { invoiceId });
+  };
+
+  const handleShareButtonClick = () => {
+    openDialog(DialogsName.SharePaymentLink, {
+      transactionId: invoiceId,
+      transactionType: 'SaleInvoice',
+    });
   };
 
   return (
@@ -119,12 +131,12 @@ function InvoiceDetailActionsBar({
           <If condition={invoice.is_delivered && !invoice.is_fully_paid}>
             <Button
               className={Classes.MINIMAL}
-              icon={<Icon icon="arrow-downward" iconSize={18} />}
+              icon={<ArrowBottomLeft size={16} />}
               text={<T id={'add_payment'} />}
               onClick={handleQuickPaymentInvoice}
             />
+            <NavbarDivider />
           </If>
-          <NavbarDivider />
         </Can>
         <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
           <Button
@@ -150,6 +162,15 @@ function InvoiceDetailActionsBar({
             onClick={handleDeleteInvoice}
           />
         </Can>
+        <NavbarDivider />
+        <Tooltip content="Share" position={Position.BOTTOM} minimal>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon={'share'} iconSize={16} />}
+            onClick={handleShareButtonClick}
+          />
+        </Tooltip>
+
         <Can I={SaleInvoiceAction.Writeoff} a={AbilitySubject.Invoice}>
           <NavbarDivider />
           <BadDebtMenuItem

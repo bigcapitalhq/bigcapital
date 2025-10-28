@@ -19,7 +19,7 @@ export function useCreateItemCategory(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('item_categories', values), {
+  return useMutation((values) => apiRequest.post('item-categories', values), {
     onSuccess: () => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -36,7 +36,7 @@ export function useEditItemCategory(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`item_categories/${id}`, values),
+    ([id, values]) => apiRequest.put(`item-categories/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific item category.
@@ -57,7 +57,7 @@ export function useDeleteItemCategory(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`item_categories/${id}`), {
+  return useMutation((id) => apiRequest.delete(`item-categories/${id}`), {
     onSuccess: (res, id) => {
       // Invalidate specific item category.
       queryClient.invalidateQueries([t.ITEM_CATEGORY, id]);
@@ -69,10 +69,9 @@ export function useDeleteItemCategory(props) {
   });
 }
 
-
 const transformCategories = (res) => ({
-  itemsCategories: res.data.item_categories,
-  pagination: res.data.pagination,  
+  itemsCategories: res.data.data,
+  pagination: res.data.pagination,
 });
 
 /**
@@ -81,12 +80,12 @@ const transformCategories = (res) => ({
 export function useItemsCategories(query, props) {
   return useRequestQuery(
     [t.ITEMS_CATEGORIES, query],
-    { method: 'get', url: `item_categories`, params: query },
+    { method: 'get', url: `item-categories`, params: query },
     {
       select: transformCategories,
       defaultData: {
         itemsCategories: [],
-        pagination: {}
+        pagination: {},
       },
       ...props,
     },
@@ -100,9 +99,9 @@ export function useItemsCategories(query, props) {
 export function useItemCategory(id, props) {
   return useRequestQuery(
     [t.ITEM_CATEGORY, id],
-    { method: 'get', url: `item_categories/${id}` },
+    { method: 'get', url: `item-categories/${id}` },
     {
-      select: (res) => res.data.category,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

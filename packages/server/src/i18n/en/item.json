@@ -1,0 +1,22 @@
+{
+  "field.type": "Item Type",
+  "field.type.inventory": "Inventory",
+  "field.type.service": "Service",
+  "field.type.non-inventory": "Non Inventory",
+  "field.name": "Item Name",
+  "field.code": "Item Code",
+  "field.sellable": "Sellable",
+  "field.purchasable": "Purchasable",
+  "field.cost_price": "Cost Price",
+  "field.sell_price": "Sell Price",
+  "field.cost_account": "Cost Account",
+  "field.sell_account": "Sell Account",
+  "field.sell_description": "Sell Description",
+  "field.inventory_account": "Inventory Account",
+  "field.purchase_description": "Purchase Description",
+  "field.quantity_on_hand": "Quantity on Hand",
+  "field.note": "Note",
+  "field.category": "Category",
+  "field.active": "Active",
+  "field.created_at": "Created At"
+}

@@ -13,7 +13,7 @@ function InvoicePdfPreviewDialogContent({
   // #withDialog
   closeDialog,
 }) {
-  const { isLoading, pdfUrl } = usePdfInvoice(invoiceId);
+  const { isLoading, pdfUrl, filename } = usePdfInvoice(invoiceId);
 
   return (
     <DialogContent>
@@ -29,7 +29,7 @@ function InvoicePdfPreviewDialogContent({
 
         <AnchorButton
           href={pdfUrl}
-          download={'invoice.pdf'}
+          download={filename}
           minimal={true}
           outlined={true}
         >

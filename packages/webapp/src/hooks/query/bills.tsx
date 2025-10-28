@@ -52,7 +52,7 @@ export function useCreateBill(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('purchases/bills', values), {
+  return useMutation((values) => apiRequest.post('bills', values), {
     onSuccess: (res, values) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -69,7 +69,7 @@ export function useEditBill(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`purchases/bills/${id}`, values),
+    ([id, values]) => apiRequest.post(`bills/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.
@@ -90,7 +90,7 @@ export function useOpenBill(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`purchases/bills/${id}/open`), {
+  return useMutation((id) => apiRequest.post(`bills/${id}/open`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -109,7 +109,7 @@ export function useDeleteBill(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`purchases/bills/${id}`), {
+  return useMutation((id) => apiRequest.delete(`bills/${id}`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
@@ -135,7 +135,7 @@ export function useBills(query, props) {
     [t.BILLS, query],
     {
       method: 'get',
-      url: 'purchases/bills',
+      url: 'bills',
       params: query,
     },
     {
@@ -161,9 +161,9 @@ export function useBills(query, props) {
 export function useBill(id, props) {
   return useRequestQuery(
     [t.BILL, id],
-    { method: 'get', url: `/purchases/bills/${id}` },
+    { method: 'get', url: `/bills/${id}` },
     {
-      select: (res) => res.data.bill,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -179,7 +179,7 @@ export function useDueBills(vendorId, props) {
     [t.BILLS, t.BILLS_DUE, vendorId],
     {
       method: 'get',
-      url: 'purchases/bills/due',
+      url: 'bills/due',
       params: { vendor_id: vendorId },
     },
     {
@@ -205,10 +205,10 @@ export function useBillPaymentTransactions(id, props) {
     [t.BILLS_PAYMENT_TRANSACTIONS, id],
     {
       method: 'get',
-      url: `purchases/bills/${id}/payment-transactions`,
+      url: `bills/${id}/payment-transactions`,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

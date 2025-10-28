@@ -79,6 +79,4 @@ function DashboardTopbarUser({
     </Popover>
   );
 }
-export default compose(
-  withDialogActions,
-)(DashboardTopbarUser);
+export default compose(withDialogActions)(DashboardTopbarUser);

@@ -61,9 +61,10 @@ export const useCustomersTransactionsColumns = () => {
         textOverview: true,
         width: getColumnWidth(tableRows, 'cells[5].value', {
           minWidth: 100,
-          magicSpacing: 10,
+          magicSpacing: 12,
         }),
         align: Align.Right,
+        money: true,
       },
       {
         Header: intl.get('debit'),
@@ -72,9 +73,10 @@ export const useCustomersTransactionsColumns = () => {
         textOverview: true,
         width: getColumnWidth(tableRows, 'cells[6].value', {
           minWidth: 100,
-          magicSpacing: 10,
+          magicSpacing: 12,
         }),
         align: Align.Right,
+        money: true,
       },
       {
         Header: intl.get('running_balance'),
@@ -83,9 +85,10 @@ export const useCustomersTransactionsColumns = () => {
         textOverview: true,
         width: getColumnWidth(tableRows, 'cells[7].value', {
           minWidth: 120,
-          magicSpacing: 10,
+          magicSpacing: 12,
         }),
         align: Align.Right,
+        money: true,
       },
     ],
     [tableRows],

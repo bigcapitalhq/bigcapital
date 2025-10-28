@@ -5,7 +5,6 @@ import clsx from 'classnames';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { CLASSES } from '@/constants/classes';
 import {
-  FormatDateCell,
   FormattedMessage as T,
   Choose,
   If,
@@ -81,19 +80,19 @@ export function StatusAccessor(creditNote) {
     <div>
       <Choose>
         <Choose.When condition={creditNote.is_open}>
-          <Tag intent={Intent.WARNING} minimal={true} round={true}>
+          <Tag intent={Intent.WARNING} round>
             <T id={'open'} />
           </Tag>
         </Choose.When>
 
         <Choose.When condition={creditNote.is_closed}>
-          <Tag intent={Intent.SUCCESS} minimal={true} round={true}>
+          <Tag intent={Intent.SUCCESS} round>
             <T id={'closed'} />
           </Tag>
         </Choose.When>
 
         <Choose.When condition={creditNote.is_draft}>
-          <Tag intent={Intent.NONE} minimal={true} round={true}>
+          <Tag intent={Intent.NONE} round>
             <T id={'draft'} />
           </Tag>
         </Choose.When>
@@ -112,7 +111,6 @@ export function useCreditNoteTableColumns() {
         id: 'credit_date',
         Header: intl.get('credit_note.column.credit_date'),
         accessor: 'formatted_credit_note_date',
-        Cell: FormatDateCell,
         width: 110,
         className: 'credit_date',
         clickable: true,

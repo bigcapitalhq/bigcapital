@@ -69,6 +69,14 @@ function AccountDeleteTransactionAlert({
                 'Cannot delete transaction converted from uncategorized transaction but you uncategorize it.',
               intent: Intent.DANGER,
             });
+          } else if (
+            errors.find((e) => e.type === 'CANNOT_DELETE_TRANSACTION_MATCHED')
+          ) {
+            AppToaster.show({
+              message:
+                'Cannot delete a transaction matched to the bank transaction',
+              intent: Intent.DANGER,
+            });
           }
         },
       )

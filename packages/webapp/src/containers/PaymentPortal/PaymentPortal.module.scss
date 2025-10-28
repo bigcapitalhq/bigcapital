@@ -1,0 +1,114 @@
+
+:root {
+  --payment-page-background-color: #fff;
+  --payment-page-primary-button: #0052cc;
+}
+
+.rootBodyPage {
+  background: var(--payment-page-background-color);
+}
+
+.root {
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  width: 600px;
+  color: #222;
+  background-color: #fff;
+}
+
+.companyLogoWrap {
+  height: 50px;
+  width :50px;
+  border-radius: 50px;
+  background-color: #dfdfdf;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 1px solid #e8e8e8;
+}
+
+.bigTitle{
+  margin: 0;
+  font-weight: 500;
+  color: #222;
+  font-size: 26px;
+  line-height: 1.35;
+}
+
+.invoiceDueDate{
+  font-size: 14px;
+}
+
+.invoiceNumber {
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.body {
+  padding: 30px 26px;
+}
+
+.footer{
+  padding: 20px 26px;
+  background-color: #FAFAFA;
+  border-top: 1px solid #DCE0E5;
+  border-radius: 0 0 8px 8px;
+  color: #333;
+  font-size: 12px;
+}
+
+.address{
+  color: #5f6b7c;
+}
+
+.customerName{
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+}
+
+.totalItem {
+  padding: 6px 0;
+
+  &.borderBottomGray {
+    border-bottom: 1px solid #DADADA;
+  }
+  &.borderBottomDark{
+    border-bottom: 1px solid #000;
+  }
+}
+
+.downloadInvoiceButton:global(.bp4-button.bp4-minimal){
+  box-shadow: 0 0 0 1px #DCE0E5;
+}
+
+.viewInvoiceButton:global(.bp4-button:not([class*=bp4-intent-]):not(.bp4-minimal)){
+  background-color: #EDEFF2;
+}
+
+.buyNote{
+  margin-top: 16px;
+  font-size: 12px;
+}
+
+
+// Footer
+// -------------------
+.totals {
+  color: #000;
+}
+
+.footerButtons{
+  margin-top: 20px;
+}
+
+.footerButton{
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+}
+
+.footerText{
+  color: #666;
+}

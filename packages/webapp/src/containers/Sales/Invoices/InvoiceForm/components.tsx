@@ -4,14 +4,21 @@ import intl from 'react-intl-universal';
 import * as R from 'ramda';
 import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { ExchangeRateInputGroup } from '@/components';
+import { ExchangeRateInputGroup, FormatNumber } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
-import { useInvoiceIsForeignCustomer, useInvoiceTotal } from './utils';
-import withSettings from '@/containers/Settings/withSettings';
+import {
+  useInvoiceCurrencyCode,
+  useInvoiceDueAmount,
+  useInvoiceIsForeignCustomer,
+  useInvoicePaidAmount,
+  useInvoiceSubtotal,
+  useInvoiceTotal,
+} from './utils';
 import { useUpdateEffect } from '@/hooks';
 import { transactionNumber } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   useSyncExRateToForm,
   withExchangeRateFetchingLoading,

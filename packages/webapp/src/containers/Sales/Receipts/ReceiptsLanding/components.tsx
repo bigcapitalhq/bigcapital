@@ -96,13 +96,13 @@ export function StatusAccessor(receipt) {
   return (
     <Choose>
       <Choose.When condition={receipt.is_closed}>
-        <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
+        <Tag intent={Intent.SUCCESS} round>
           <T id={'closed'} />
         </Tag>
       </Choose.When>
 
       <Choose.Otherwise>
-        <Tag minimal={true} intent={Intent.WARNING} round={true}>
+        <Tag intent={Intent.WARNING} round>
           <T id={'draft'} />
         </Tag>
       </Choose.Otherwise>
@@ -119,8 +119,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'receipt_date',
         Header: intl.get('receipt_date'),
-        accessor: 'receipt_date',
-        Cell: FormatDateCell,
+        accessor: 'formatted_receipt_date',
         width: 140,
         className: 'receipt_date',
         clickable: true,
@@ -161,6 +160,7 @@ export function useReceiptsTableColumns() {
         align: 'right',
         clickable: true,
         textOverview: true,
+        money: true,
         className: clsx(CLASSES.FONT_BOLD),
       },
       {

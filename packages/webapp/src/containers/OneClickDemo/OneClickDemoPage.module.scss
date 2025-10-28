@@ -1,0 +1,32 @@
+
+
+.root {
+  text-align: center;
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.inner{
+  margin: auto;
+  max-width: 450px;
+}
+
+.progressBar{
+  height: 5px;
+
+  :global .bp4-progress-meter{
+    background-color: rgba(159, 171, 188, 0.8)
+  }
+}
+
+.oneClickBtn {
+  width: 400px;
+  margin-top: 3rem;
+}
+
+.waitingText{
+  font-size: 15px;
+  line-height: 1.54;
+  color: #5F6B7C;
+}

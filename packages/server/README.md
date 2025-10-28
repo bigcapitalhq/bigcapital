@@ -1,1 +1,1 @@
-# @bigcapital/server
+## @bigcapitalhq/server

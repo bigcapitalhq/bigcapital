@@ -67,7 +67,7 @@ export function useEditCustomer(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`customers/${id}`, values),
+    ([id, values]) => apiRequest.put(`customers/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific customer.
@@ -124,7 +124,7 @@ export function useCustomer(id, props) {
     [t.CUSTOMER, id],
     { method: 'get', url: `customers/${id}` },
     {
-      select: (res) => res.data.customer,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

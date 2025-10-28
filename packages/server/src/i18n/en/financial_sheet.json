@@ -1,0 +1,9 @@
+{
+  "previoud_period_date": "{date} (PP)",
+  "fianncial_sheet.previous_period_change": "Change (PP)",
+  "previous_period_percentage": "% Change (PP)",
+  "previous_year_date": "{date} (PY)",
+  "previous_year_change": "Change (PY)",
+  "previous_year_percentage": "% Change (PY)",
+  "total_row": "Total {value}"
+}

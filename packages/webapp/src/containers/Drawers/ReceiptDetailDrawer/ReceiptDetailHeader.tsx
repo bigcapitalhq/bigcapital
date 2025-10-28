@@ -5,14 +5,12 @@ import styled from 'styled-components';
 import { defaultTo } from 'lodash';
 
 import {
-  ButtonLink,
   CustomerDrawerLink,
   CommercialDocHeader,
   CommercialDocTopHeader,
   ExchangeRateDetailItem,
   Row,
   Col,
-  FormatDate,
   DetailsMenu,
   DetailItem,
 } from '@/components';
@@ -31,7 +29,7 @@ export default function ReceiptDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountReceiptItem label={intl.get('amount')}>
-            <h3 class="big-number">{receipt.formatted_amount}</h3>
+            <h3 class="big-number">{receipt.total_formatted}</h3>
           </AmountReceiptItem>
 
           <StatusReceiptItem>
@@ -54,11 +52,11 @@ export default function ReceiptDetailHeader() {
             </DetailItem>
             <DetailItem
               label={intl.get('receipt_date')}
-              children={<FormatDate value={receipt.receipt_date} />}
+              children={receipt.formatted_receipt_date}
             />
             <DetailItem
               label={intl.get('closed_date')}
-              children={<FormatDate value={receipt.closed_at_date} />}
+              children={receipt.formatted_closed_at_date}
             />
             <ExchangeRateDetailItem
               exchangeRate={receipt?.exchange_rate}
@@ -66,6 +64,7 @@ export default function ReceiptDetailHeader() {
             />
           </DetailsMenu>
         </Col>
+
         <Col xs={6}>
           <DetailsMenu
             direction={'horizantal'}
@@ -82,7 +81,7 @@ export default function ReceiptDetailHeader() {
             />
             <DetailItem
               label={intl.get('receipt.details.created_at')}
-              children={<FormatDate value={receipt.created_at} />}
+              children={receipt.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

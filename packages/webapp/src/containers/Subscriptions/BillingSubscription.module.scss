@@ -1,0 +1,59 @@
+
+.root {
+  width: 450px;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow:  0 -6px 0 0px #ccd6dd;
+  border: 1px solid #d2dde1;
+  min-height: 420px;
+  display: flex;  
+  flex-direction: column;
+}
+
+.title{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #3D4C58;
+}
+
+.description {
+  line-height: 1.5;
+  color: #394B59;
+  margin-top: 14px;
+}
+
+.period {
+  div + div {
+    &::before{
+      content: " • ";
+      text-align: center;
+      margin-right: 3px;
+      color: #999;
+      margin-left: 6px;
+    }
+  }
+  &:global(.bp4-intent-success){
+    color: #3e703e;
+  }
+  &:global(.bp4-intent-danger){
+    color: #A82A2A;
+  }
+}
+.periodStatus{
+  text-transform: uppercase;
+  font-weight: 500;
+  
+}
+.priceAmount {
+  font-size: 24px;
+  font-weight: 500;
+}
+.subscribeButton{
+  border-radius: 32px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.actions{
+  margin-top: 16px;
+}

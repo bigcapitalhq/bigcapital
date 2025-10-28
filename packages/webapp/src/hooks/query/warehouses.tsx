@@ -41,7 +41,7 @@ export function useEditWarehouse(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`warehouses/${id}`, values),
+    ([id, values]) => apiRequest.put(`warehouses/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific sale invoice.
@@ -82,7 +82,7 @@ export function useWarehouses(query, props) {
     [t.WAREHOUSES, query],
     { method: 'get', url: 'warehouses', params: query },
     {
-      select: (res) => res.data.warehouses,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -98,7 +98,7 @@ export function useWarehouse(id, props, requestProps) {
     [t.WAREHOUSE, id],
     { method: 'get', url: `warehouses/${id}`, ...requestProps },
     {
-      select: (res) => res.data.warehouse,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },
@@ -128,7 +128,7 @@ export function useMarkWarehouseAsPrimary(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`warehouses/${id}/mark-primary`), {
+  return useMutation((id) => apiRequest.put(`warehouses/${id}/mark-primary`), {
     onSuccess: (res, id) => {
       // Invalidate specific inventory adjustment.
       queryClient.invalidateQueries([t.WAREHOUSE, id]);

@@ -41,19 +41,23 @@ export default function BillDetailHeader() {
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem label={intl.get('bill_date')}>
-              <FormatDate value={bill.bill_date} />
+              {bill.formatted_bill_date}
             </DetailItem>
+
             <DetailItem label={intl.get('due_date')}>
-              <FormatDate value={bill.due_date} />
+              {bill.formatted_due_date}
             </DetailItem>
+
             <DetailItem label={intl.get('vendor_name')}>
               <VendorDrawerLink vendorId={bill.vendor_id}>
                 {bill.vendor?.display_name}
               </VendorDrawerLink>
             </DetailItem>
+
             <DetailItem label={intl.get('bill.details.bill_number')}>
               {defaultTo(bill.bill_number, '-')}
             </DetailItem>
+
             <ExchangeRateDetailItem
               exchangeRate={bill?.exchange_rate}
               toCurrency={bill?.currency_code}
@@ -75,7 +79,7 @@ export default function BillDetailHeader() {
             />
             <DetailItem
               label={intl.get('bill.details.created_at')}
-              children={<FormatDate value={bill.created_at} />}
+              children={bill.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

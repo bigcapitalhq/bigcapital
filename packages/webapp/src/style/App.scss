@@ -5,6 +5,12 @@
 @import '@blueprintjs/datetime/src/blueprint-datetime.scss';
 @import '@blueprintjs/popover2/src/blueprint-popover2.scss';
 
+@mixin dark-mode {
+  .bp4-dark & {
+    @content;
+  }
+}
+
 // Objects
 @import 'objects/form';
 @import 'objects/switch';
@@ -38,10 +44,16 @@
 @import 'pages/fonts';
 @import "section";
 
-.App {
-  min-width: 960px;
+body {
+  background-color: var(--color-app-body);
+  overflow: hidden;
 }
-
+// App
+.App {
+  min-width: 1100px;
+  min-height: 100vh;
+  background-color: var(--color-app-background);
+}
 // =======
 
 body.hide-scrollbar .Pane2 {
@@ -254,7 +266,7 @@ html[lang^='ar'] {
 }
 
 .bp4-drawer {
-  border-left: 1px solid #00115e;
+  border-left: 1px solid var(--color-drawer-border-left);
 }
 
 .drawer-portal {
@@ -292,4 +304,8 @@ span.table-tooltip-overview-target {
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: 600;
+}
+
+:root {
+  --top-offset: 60px;
 }

@@ -4,8 +4,9 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
-import { isEmpty, omit } from 'lodash';
+import { sumBy, round, isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
+import { css } from '@emotion/css';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from '@/constants/classes';
@@ -25,6 +26,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
+import { PageForm } from '@/components/PageForm';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import {
   transformErrors,
@@ -32,6 +34,7 @@ import {
   defaultManualJournal,
 } from './utils';
 import { JournalSyncIncrementSettingsToForm } from './components';
+import { transformAttachmentsToRequest } from '@/containers/Attachments/utils';
 
 /**
  * Journal entries form.
@@ -61,7 +64,6 @@ function MakeJournalEntriesForm({
     journalNumberPrefix,
     journalNextNumber,
   );
-
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -88,15 +90,17 @@ function MakeJournalEntriesForm({
     const entries = values.entries.filter(
       (entry) => entry.debit || entry.credit,
     );
+    // Updated getTotal function using lodash
     const getTotal = (type = 'credit') => {
-      return entries.reduce((total, item) => {
-        return item[type] ? item[type] + total : total;
-      }, 0);
+      return round(
+        sumBy(entries, (entry) => parseFloat(entry[type] || 0)),
+        2,
+      );
     };
     const totalCredit = getTotal('credit');
     const totalDebit = getTotal('debit');
 
-    // Validate the total credit should be eqials total debit.
+    // Validate the total credit should be equals total debit.
     if (totalCredit !== totalDebit) {
       AppToaster.show({
         message: intl.get('should_total_of_credit_and_debit_be_equal'),
@@ -112,6 +116,7 @@ function MakeJournalEntriesForm({
       setSubmitting(false);
       return;
     }
+    const attachments = transformAttachmentsToRequest(values);
     const form = {
       ...omit(values, ['journal_number_manually']),
       ...(values.journal_number_manually && {
@@ -119,6 +124,7 @@ function MakeJournalEntriesForm({
       }),
       entries: R.compose(orderingLinesIndexes)(entries),
       publish: submitPayload.publish,
+      attachments,
     };
     // Handle the request error.
     const handleError = ({
@@ -171,18 +177,32 @@ function MakeJournalEntriesForm({
         validationSchema={isNewMode ? CreateJournalSchema : EditJournalSchema}
         onSubmit={handleSubmit}
       >
-        <Form>
-          <MakeJournalFormTopBar />
-          <MakeJournalEntriesHeader />
-          <MakeJournalEntriesField />
-          <MakeJournalFormFooter />
-          <MakeJournalFormFloatingActions />
+        <Form
+          className={css({
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+          })}
+        >
+          <PageForm flex={1}>
+            <PageForm.Body>
+              <MakeJournalFormTopBar />
+              <MakeJournalEntriesHeader />
+              <MakeJournalEntriesField />
+              <MakeJournalFormFooter />
+            </PageForm.Body>
 
-          {/* --------- Dialogs --------- */}
-          <MakeJournalFormDialogs />
+            <PageForm.Footer>
+              <MakeJournalFormFloatingActions />
+            </PageForm.Footer>
 
-          {/* --------- Effects --------- */}
-          <JournalSyncIncrementSettingsToForm />
+            {/* --------- Dialogs --------- */}
+            <MakeJournalFormDialogs />
+
+            {/* --------- Effects --------- */}
+            <JournalSyncIncrementSettingsToForm />
+          </PageForm>
         </Form>
       </Formik>
     </div>

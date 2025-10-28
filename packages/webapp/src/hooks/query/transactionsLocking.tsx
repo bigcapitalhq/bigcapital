@@ -94,7 +94,7 @@ export function useTransactionsLocking(query, props) {
     [t.TRANSACTIONS_LOCKING, query],
     { method: 'get', url: 'transactions-locking', params: query },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -106,7 +106,7 @@ export function useEditTransactionsLocking(query, props) {
     [t.TRANSACTION_LOCKING, query],
     { method: 'get', url: `transactions-locking/${query}` },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

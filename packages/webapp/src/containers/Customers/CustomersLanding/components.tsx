@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
+import clsx from 'classnames';
 import {
   Menu,
   MenuItem,
@@ -14,6 +15,7 @@ import {
 import { Can, Icon, Money, If, AvatarCell } from '@/components';
 import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
+import { CLASSES } from '@/constants';
 
 /**
  * Actions menu.
@@ -140,7 +142,7 @@ export function useCustomersTableColumns() {
         id: 'company_name',
         Header: intl.get('company_name'),
         accessor: 'company_name',
-        className: 'company_name',
+        className: clsx('company_name', CLASSES.TEXT_MUTED),
         width: 150,
         clickable: true,
       },
@@ -148,9 +150,9 @@ export function useCustomersTableColumns() {
         id: 'work_phone',
         Header: intl.get('phone_number'),
         accessor: PhoneNumberAccessor,
-        className: 'phone_number',
         width: 100,
         clickable: true,
+        className: clsx('phone_number', CLASSES.TEXT_MUTED)
       },
       {
         id: 'note',
@@ -159,6 +161,7 @@ export function useCustomersTableColumns() {
         disableSortBy: true,
         width: 85,
         clickable: true,
+        className: clsx(CLASSES.TEXT_MUTED)
       },
       {
         id: 'balance',
@@ -167,6 +170,7 @@ export function useCustomersTableColumns() {
         align: 'right',
         width: 100,
         clickable: true,
+        money: true,
       },
     ],
     [],

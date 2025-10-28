@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { defaultTo } from 'lodash';
 
 import {
-  FormatDate,
   T,
   Row,
   Col,
@@ -29,20 +28,21 @@ export default function VendorCreditDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountItem label={intl.get('amount')}>
-            <span class="big-number">{vendorCredit.formatted_amount}</span>
+            <span class="big-number">{vendorCredit.total_formatted}</span>
           </AmountItem>
           <StatusItem>
             <VendorCreditDetailsStatus vendorCredit={vendorCredit} />
           </StatusItem>
         </DetailsMenu>
       </CommercialDocTopHeader>
+
       <Row>
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem
               label={intl.get('vendor_credit.drawer.label_vendor_credit_date')}
             >
-              <FormatDate value={vendorCredit.formatted_vendor_credit_date} />
+              {vendorCredit.formatted_vendor_credit_date}
             </DetailItem>
             <DetailItem
               label={intl.get('vendor_credit.drawer.label_vendor_credit_no')}
@@ -78,7 +78,7 @@ export default function VendorCreditDetailHeader() {
             />
             <DetailItem
               label={<T id={'vendor_credit.drawer.label_created_at'} />}
-              children={<FormatDate value={vendorCredit.created_at} />}
+              children={vendorCredit.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

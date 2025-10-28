@@ -1,6 +1,7 @@
 // @ts-nocheck
-import React, { Suspense } from 'react';
+import * as R from 'ramda';
 import { Spinner } from '@blueprintjs/core';
+import { Suspense, lazy } from 'react';
 
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
@@ -12,18 +13,37 @@ import {
   useAccountTransactionsContext,
 } from './AccountTransactionsProvider';
 import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
-import { AccountTransactionsProgressBar } from './components';
 import { AccountTransactionsFilterTabs } from './AccountTransactionsFilterTabs';
+import { AppContentShell } from '@/components/AppShell';
+import { AccountTransactionsAside } from './AccountTransactionsAside';
+import { AccountTransactionsLoadingBar } from './components';
+import { withBanking } from '../withBanking';
 
 /**
  * Account transactions list.
  */
-function AccountTransactionsList() {
+function AccountTransactionsListRoot({
+  // #withBanking
+  openMatchingTransactionAside,
+}) {
   return (
     <AccountTransactionsProvider>
+      <AppContentShell hideAside={!openMatchingTransactionAside}>
+        <AccountTransactionsMain />
+        <AccountTransactionsAside />
+      </AppContentShell>
+    </AccountTransactionsProvider>
+  );
+}
+
+function AccountTransactionsMain() {
+  const { setScrollableRef } = useAccountTransactionsContext();
+
+  return (
+    <AppContentShell.Main ref={(e) => setScrollableRef(e)}>
       <AccountTransactionsActionsBar />
+      <AccountTransactionsLoadingBar />
       <AccountTransactionsDetailsBar />
-      <AccountTransactionsProgressBar />
 
       <DashboardPageContent>
         <AccountTransactionsFilterTabs />
@@ -32,17 +52,21 @@ function AccountTransactionsList() {
           <AccountTransactionsContent />
         </Suspense>
       </DashboardPageContent>
-    </AccountTransactionsProvider>
+    </AppContentShell.Main>
   );
 }
 
-export default AccountTransactionsList;
+export default R.compose(
+  withBanking(
+    ({ selectedUncategorizedTransactionId, openMatchingTransactionAside }) => ({
+      selectedUncategorizedTransactionId,
+      openMatchingTransactionAside,
+    }),
+  ),
+)(AccountTransactionsListRoot);
 
-const AccountsTransactionsAll = React.lazy(
-  () => import('./AccountsTransactionsAll'),
-);
-
-const AccountsTransactionsUncategorized = React.lazy(
+const AccountsTransactionsAll = lazy(() => import('./AccountsTransactionsAll'));
+const AccountsTransactionsUncategorized = lazy(
   () => import('./AllTransactionsUncategorized'),
 );
 

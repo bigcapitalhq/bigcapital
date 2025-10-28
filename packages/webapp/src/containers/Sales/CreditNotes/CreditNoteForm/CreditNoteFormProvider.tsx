@@ -17,9 +17,19 @@ import {
   useBranches,
   useSettingsCreditNotes,
   useInvoice,
+  useGetCreditNoteState,
+  CreditNoteStateResponse,
 } from '@/hooks/query';
+import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
-const CreditNoteFormContext = React.createContext();
+interface CreditNoteFormProviderValue {
+  creditNoteState: CreditNoteStateResponse;
+  isCreditNoteStateLoading: boolean;
+}
+
+const CreditNoteFormContext = React.createContext<CreditNoteFormProviderValue>(
+  {} as CreditNoteFormProviderValue,
+);
 
 /**
  * Credit note data provider.
@@ -73,6 +83,14 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
+  // Fetches branding templates of invoice.
+  const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
+    useGetPdfTemplates({ resource: 'CreditNote' });
+
+  // Fetches the credit note state.
+  const { data: creditNoteState, isLoading: isCreditNoteStateLoading } =
+    useGetCreditNoteState();
+
   // Handle fetching settings.
   useSettingsCreditNotes();
 
@@ -95,6 +113,13 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
       })
     : [];
 
+  const isBootLoading =
+    isItemsLoading ||
+    isCustomersLoading ||
+    isCreditNoteLoading ||
+    isInvoiceLoading ||
+    isBrandingTemplatesLoading;
+
   // Provider payload.
   const provider = {
     items,
@@ -115,21 +140,22 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     createCreditNoteMutate,
     editCreditNoteMutate,
     setSubmitPayload,
+
+    // Branding templates.
+    brandingTemplates,
+    isBrandingTemplatesLoading,
+
+    // Credit note state
+    creditNoteState,
+    isCreditNoteStateLoading,
+
+    isBootLoading,
   };
 
-  const isLoading =
-    isItemsLoading ||
-    isCustomersLoading ||
-    isCreditNoteLoading ||
-    isInvoiceLoading;
-
-  return (
-    <DashboardInsider loading={isLoading} name={'credit-note-form'}>
-      <CreditNoteFormContext.Provider value={provider} {...props} />
-    </DashboardInsider>
-  );
+  return <CreditNoteFormContext.Provider value={provider} {...props} />;
 }
 
-const useCreditNoteFormContext = () => React.useContext(CreditNoteFormContext);
+const useCreditNoteFormContext = () =>
+  React.useContext<CreditNoteFormProviderValue>(CreditNoteFormContext);
 
 export { CreditNoteFormProvider, useCreditNoteFormContext };

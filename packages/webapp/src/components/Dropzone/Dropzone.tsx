@@ -13,18 +13,18 @@ import {
 import { DropzoneProvider } from './DropzoneProvider';
 import { DropzoneAccept, DropzoneIdle, DropzoneReject } from './DropzoneStatus';
 import { Box } from '../Layout';
-import styles from './Dropzone.module.css';
 import { CloudLoadingIndicator } from '../Indicator';
+import styles from './Dropzone.module.css';
 
 export type DropzoneStylesNames = 'root' | 'inner';
 export type DropzoneVariant = 'filled' | 'light';
 export type DropzoneCssVariables = {
   root:
-    | '--dropzone-radius'
-    | '--dropzone-accept-color'
-    | '--dropzone-accept-bg'
-    | '--dropzone-reject-color'
-    | '--dropzone-reject-bg';
+  | '--dropzone-radius'
+  | '--dropzone-accept-color'
+  | '--dropzone-accept-bg'
+  | '--dropzone-reject-color'
+  | '--dropzone-reject-bg';
 };
 
 export interface DropzoneProps {
@@ -235,7 +235,14 @@ export const Dropzone = (_props: DropzoneProps) => {
     >
       <Box
         {...getRootProps({
-          className: clsx(styles.root, classNames?.root),
+          className: clsx(
+            styles.root,
+            {
+              [styles.dropzoneAccept]: isDragAccept,
+              [styles.dropzoneReject]: isDragReject
+            },
+            classNames?.root
+          ),
         })}
         // {...getStyles('root', { focusable: true })}
         {...others}
@@ -253,7 +260,7 @@ export const Dropzone = (_props: DropzoneProps) => {
         <input {...getInputProps(inputProps)} name={name} />
         <div
           data-enable-pointer-events={enablePointerEvents || undefined}
-          className={classNames?.content}
+          className={clsx(styles.content, classNames?.content)}
         >
           {children}
         </div>
@@ -266,8 +273,6 @@ Dropzone.displayName = '@mantine/dropzone/Dropzone';
 Dropzone.Accept = DropzoneAccept;
 Dropzone.Idle = DropzoneIdle;
 Dropzone.Reject = DropzoneReject;
-
-
 
 
 type PossibleRef<T> = Ref<T> | undefined;

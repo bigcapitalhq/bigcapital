@@ -52,17 +52,31 @@ const SalesByItemsSheet = styled(FinancialSheet)`
 `;
 
 const SalesByItemsDataTable = styled(ReportDataTable)`
+  --x-table-total-border-bottom-color: #000;
+  --x-table-total-border-top-color: #bbb;
+  --x-table-total-border-bottom-color: var(
+    --color-datatable-constrant-cell-border
+  );
+  --x-table-total-border-top-color: var(
+    --color-datatable-constrant-cell-border
+  );
+
   .table {
     .tbody {
       .tr .td {
-        border-bottom: 0;
+        border-bottom-width: 0;
         padding-top: 0.4rem;
         padding-bottom: 0.4rem;
       }
       .tr.row_type--TOTAL .td {
-        border-top: 1px solid #bbb;
+        border-top-width: 1px;
         font-weight: 500;
-        border-bottom: 3px double #000;
+        border-top-width: 1px;
+        border-top-style: solid;
+        border-top-color: var(--x-table-total-border-top-color);
+        border-bottom-style: double;
+        border-bottom-width: 3px;
+        border-bottom-color: var(--x-table-total-border-bottom-color);
       }
     }
   }

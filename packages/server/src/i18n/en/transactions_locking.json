@@ -1,0 +1,9 @@
+{
+  "module.sales.label": "Sales",
+  "module.purchases.label": "Purchases",
+  "module.financial.label": "Financial",
+  "module.all_transactions": "All transactions",
+  "module.sales.desc": "Sale invoices, Receipts, credit notes, customers payment receive and customers opening balances.",
+  "module.purchases.desc": "Purchase invoices, vendors payments, vendor credit notes and vendors opening balances.",
+  "module.financial.desc": "Manual journal, expenses and inventory adjustments."
+}

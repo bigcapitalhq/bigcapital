@@ -1,0 +1,21 @@
+{
+  "assets": "Assets",
+  "current_asset": "Current Asset",
+  "cash_and_cash_equivalents": "Cash and cash equivalents",
+  "accounts_receivable": "Accounts Receivable",
+  "inventory": "Inventory",
+  "other_current_assets": "Other current assets",
+  "fixed_asset": "Fixed Asset",
+  "non_current_assets": "Non-Current Assets",
+  "liabilities_and_equity": "Liabilities and Equity",
+  "liabilities": "Liabilities",
+  "current_liabilties": "Current Liabilties",
+  "long_term_liabilities": "Long-Term Liabilities",
+  "non_current_liabilities": "Non-Current Liabilities",
+  "equity": "Equity",
+  "net_income": "Net Income",
+  "account_name": "Account name",
+  "total": "Total",
+  "percentage_of_column": "% of Column",
+  "percentage_of_row": "% of Row"
+}

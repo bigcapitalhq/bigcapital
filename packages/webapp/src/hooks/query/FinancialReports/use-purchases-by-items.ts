@@ -12,7 +12,7 @@ export function usePurchasesByItems(query, props) {
     [t.FINANCIAL_REPORT, t.PURCHASES_BY_ITEMS, query],
     {
       method: 'get',
-      url: '/financial_statements/purchases-by-items',
+      url: '/reports/purchases-by-items',
       params: query,
     },
     {
@@ -27,7 +27,7 @@ export function usePurchasesByItemsTable(query, props) {
     [t.FINANCIAL_REPORT, t.PURCHASES_BY_ITEMS, query],
     {
       method: 'get',
-      url: '/financial_statements/purchases-by-items',
+      url: '/reports/purchases-by-items',
       params: query,
       headers: {
         accept: 'application/json+table',
@@ -42,7 +42,7 @@ export function usePurchasesByItemsTable(query, props) {
 
 export const usePurchasesByItemsCsvExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/purchases-by-items',
+    url: '/reports/purchases-by-items',
     config: {
       headers: {
         accept: 'application/csv',
@@ -56,7 +56,7 @@ export const usePurchasesByItemsCsvExport = (query, args) => {
 
 export const usePurchasesByItemsXlsxExport = (query, args) => {
   return useDownloadFile({
-    url: '/financial_statements/purchases-by-items',
+    url: '/reports/purchases-by-items',
     config: {
       headers: {
         accept: 'application/xlsx',
@@ -73,7 +73,7 @@ export const usePurchasesByItemsXlsxExport = (query, args) => {
  */
 export const usePurchasesByItemsPdfExport = (query = {}) => {
   return useRequestPdf({
-    url: '/financial_statements/purchases-by-items',
+    url: '/reports/purchases-by-items',
     params: query,
   });
 };

@@ -38,7 +38,7 @@ export function useEditBranch(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`branches/${id}`, values),
+    ([id, values]) => apiRequest.put(`branches/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific branch.
@@ -79,7 +79,7 @@ export function useBranches(query, props) {
     [t.BRANCHES, query],
     { method: 'get', url: 'branches', params: query },
     {
-      select: (res) => res.data.branches,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },
@@ -95,7 +95,7 @@ export function useBranch(id, props, requestProps) {
     [t.BRANCH, id],
     { method: 'get', url: `branches/${id}`, ...requestProps },
     {
-      select: (res) => res.data.branch,
+      select: (res) => res.data,
       defaultData: {},
       ...props,
     },

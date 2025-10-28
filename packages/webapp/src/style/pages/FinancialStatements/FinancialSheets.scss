@@ -5,7 +5,7 @@
     font-weight: 600;
     margin-bottom: 1.4rem;
     font-size: 18px;
-    color: rgb(31, 50, 85);
+    color: var(--color-report-section-title-text);
     margin-top: 10px;
   }
 
@@ -19,9 +19,9 @@
     min-height: 140px;
     margin-bottom: 16px;
     margin-left: 16px;
-    border: 1px solid #d1dee2;
-    border-top: 3px solid #d1dee2;
-    background: #fff;
+    border: 1px solid var(--color-report-item-border);
+    border-top: 3px solid var(--color-report-item-top-border);
+    background: var(--color-report-item-background);
     padding: 18px;
 
     .title {
@@ -29,7 +29,7 @@
     }
 
     .desc {
-      color: rgb(31, 50, 85);
+      color: var(--color-report-item-text);
       line-height: 1.55;
       margin-top: 8px;
       margin-bottom: 0;

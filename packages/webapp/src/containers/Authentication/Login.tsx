@@ -29,22 +29,19 @@ export default function Login() {
 
   const handleSubmit = (values, { setSubmitting }) => {
     loginMutate({
-      crediential: values.crediential,
+      email: values.crediential,
       password: values.password,
-    }).catch(
-      ({
-        response: {
-          data: { errors },
-        },
-      }) => {
-        const toastBuilders = transformLoginErrorsToToasts(errors);
+    }).catch(({ response }) => {
+      const {
+        data: { errors },
+      } = response;
+      const toastBuilders = transformLoginErrorsToToasts(errors);
 
-        toastBuilders.forEach((builder) => {
-          Toaster.show(builder);
-        });
-        setSubmitting(false);
-      },
-    );
+      toastBuilders.forEach((builder) => {
+        Toaster.show(builder);
+      });
+      setSubmitting(false);
+    });
   };
 
   return (
@@ -70,12 +67,15 @@ function LoginFooterLinks() {
     <AuthFooterLinks>
       {!signupDisabled && (
         <AuthFooterLink>
-          <T id={'dont_have_an_account'} /> <Link to={'/auth/register'}><T id={'sign_up'} /></Link>
+          <T id={'dont_have_an_account'} />{' '}
+          <Link to={'/auth/register'}>
+            <T id={'sign_up'} />
+          </Link>
         </AuthFooterLink>
       )}
       <AuthFooterLink>
         <Link to={'/auth/send_reset_password'}>
-          <T id={'forget_my_password'} />
+          <T id={'forgot_my_password'} />
         </Link>
       </AuthFooterLink>
     </AuthFooterLinks>
