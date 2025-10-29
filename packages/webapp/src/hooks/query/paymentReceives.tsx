@@ -171,20 +171,10 @@ export function usePaymentReceive(id, props) {
  * @param {number} id - Payment receive id.
  */
 export function usePaymentReceiveEditPage(id, props) {
-  return useRequestQuery(
+  const apiRequest = useApiRequest();
+  return useQuery(
     [t.PAYMENT_RECEIVE_EDIT_PAGE, id],
-    { method: 'get', url: `payments-received/${id}/edit-page` },
-    {
-      select: (res) => ({
-        paymentReceive: res.data,
-        entries: res.data.entries,
-      }),
-      defaultData: {
-        paymentReceive: {},
-        entries: [],
-      },
-      ...props,
-    },
+    () => apiRequest.get(`payments-received/${id}/edit-page`).then(res => res.data),
   );
 }
 

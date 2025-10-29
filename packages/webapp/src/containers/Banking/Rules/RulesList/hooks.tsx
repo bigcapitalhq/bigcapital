@@ -15,7 +15,7 @@ const applyToTypeAccessor = (rule) => {
 };
 
 const conditionsAccessor = (rule) => (
-  <span style={{ fontSize: 12, color: '#5F6B7C' }}>
+  <span style={{ fontSize: 12 }}>
     {rule.conditions_formatted}
   </span>
 );

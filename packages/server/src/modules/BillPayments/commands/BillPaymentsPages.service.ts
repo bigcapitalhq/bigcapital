@@ -19,7 +19,7 @@ export class BillPaymentsPages {
 
     @Inject(BillPayment.name)
     private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
-  ) {}
+  ) { }
 
   /**
    * Retrieve bill payment with associated metadata.
@@ -46,7 +46,8 @@ export class BillPaymentsPages {
       paymentAmount: entry.paymentAmount,
     }));
 
-    const resPayableBills = await Bill.query()
+    const resPayableBills = await this.billModel()
+      .query()
       .modify('opened')
       .modify('dueBills')
       .where('vendor_id', billPayment.vendorId)
