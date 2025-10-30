@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
@@ -95,6 +95,8 @@ import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
 import { SocketModule } from '../Socket/Socket.module';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { AppThrottleModule } from './AppThrottle.module';
 
 @Module({
   imports: [
@@ -126,6 +128,7 @@ import { SocketModule } from '../Socket/Socket.module';
       ],
     }),
     PassportModule,
+    AppThrottleModule,
     BullModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -231,6 +234,10 @@ import { SocketModule } from '../Socket/Socket.module';
   ],
   controllers: [AppController],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: SerializeInterceptor,

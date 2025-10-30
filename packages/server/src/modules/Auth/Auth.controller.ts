@@ -8,6 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import {
   ApiTags,
   ApiOperation,
@@ -28,6 +29,7 @@ import { SystemUser } from '../System/models/SystemUser';
 @ApiTags('Auth')
 @ApiExcludeController()
 @PublicRoute()
+@Throttle({ auth: {} })
 export class AuthController {
   constructor(
     private readonly authApp: AuthenticationApplication,
