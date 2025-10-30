@@ -1,9 +1,11 @@
 import { ClsService } from 'nestjs-cls';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SystemUser } from '@/modules/System/models/SystemUser';
 import { ModelObject } from 'objection';
 import { JwtPayload } from '../Auth.interfaces';
+import { InvalidEmailPasswordException } from '../exceptions/InvalidEmailPassword.exception';
+import { UserNotFoundException } from '../exceptions/UserNotFound.exception';
 
 @Injectable()
 export class AuthSigninService {
@@ -12,7 +14,7 @@ export class AuthSigninService {
     private readonly systemUserModel: typeof SystemUser,
     private readonly jwtService: JwtService,
     private readonly clsService: ClsService,
-  ) {}
+  ) { }
 
   /**
    * Validates the given email and password.
@@ -32,14 +34,10 @@ export class AuthSigninService {
         .findOne({ email })
         .throwIfNotFound();
     } catch (err) {
-      throw new UnauthorizedException(
-        `There isn't any user with email: ${email}`,
-      );
+      throw new InvalidEmailPasswordException(email);
     }
     if (!(await user.checkPassword(password))) {
-      throw new UnauthorizedException(
-        `Wrong password for user with email: ${email}`,
-      );
+      throw new InvalidEmailPasswordException(email);
     }
     return user;
   }
@@ -61,9 +59,7 @@ export class AuthSigninService {
       this.clsService.set('tenantId', user.tenantId);
       this.clsService.set('userId', user.id);
     } catch (error) {
-      throw new UnauthorizedException(
-        `There isn't any user with email: ${payload.sub}`,
-      );
+      throw new UserNotFoundException(String(payload.sub));
     }
     return payload;
   }

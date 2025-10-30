@@ -17,12 +17,11 @@ import { TenantUser } from '../Tenancy/TenancyModels/models/TenantUser.model';
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
   constructor(
-    private reflector: Reflector,
     private readonly clsService: ClsService,
 
     @Inject(TenantUser.name)
     private readonly tenantUserModel: TenantModelProxy<typeof TenantUser>,
-  ) {}
+  ) { }
 
   /**
    * Checks if the user has the required abilities to access the route
@@ -31,7 +30,7 @@ export class AuthorizationGuard implements CanActivate {
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
-    const { tenantId, user } = request as any;
+    const { user } = request as any;
 
     if (ABILITIES_CACHE.has(user.id)) {
       (request as any).ability = ABILITIES_CACHE.get(user.id);
@@ -40,7 +39,6 @@ export class AuthorizationGuard implements CanActivate {
       (request as any).ability = ability;
       ABILITIES_CACHE.set(user.id, ability);
     }
-
     return true;
   }
 

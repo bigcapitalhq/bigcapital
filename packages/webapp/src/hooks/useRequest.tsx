@@ -120,3 +120,35 @@ export default function useApiRequest() {
     [http],
   );
 }
+
+export function useAuthApiRequest() {
+  const http = React.useMemo(() => {
+    // Axios instance.
+    return axios.create();
+  }, []);
+
+  return React.useMemo(
+    () => ({
+      http,
+      get(resource, params) {
+        return http.get(`/api/${resource}`, params);
+      },
+      post(resource, params, config) {
+        return http.post(`/api/${resource}`, params, config);
+      },
+      update(resource, slug, params) {
+        return http.put(`/api/${resource}/${slug}`, params);
+      },
+      put(resource, params) {
+        return http.put(`/api/${resource}`, params);
+      },
+      patch(resource, params, config) {
+        return http.patch(`/api/${resource}`, params, config);
+      },
+      delete(resource, params) {
+        return http.delete(`/api/${resource}`, params);
+      },
+    }),
+    [http],
+  );
+}

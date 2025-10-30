@@ -13,12 +13,17 @@ export function AuthenticationLoadingOverlay() {
 }
 
 const AuthOverlayRoot = styled.div`
+  --x-color-background: rgba(252, 253, 255, 0.5);
+
+  .bp4-dark & {
+    --x-color-background: rgba(37, 42, 49, 0.60);
+  }
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background: rgba(252, 253, 255, 0.5);
+  background: var(--x-color-background);
   display: flex;
   justify-content: center;
 `;

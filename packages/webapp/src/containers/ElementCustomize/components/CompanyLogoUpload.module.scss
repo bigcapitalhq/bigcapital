@@ -2,7 +2,7 @@
   --x-border-color: #E1E1E1;
   --x-color-placeholder-text: #738091;
   
-  .bp4-dark & {    
+  :global(.bp4-dark) & {    
     --x-border-color: rgba(225, 225, 225, 0.15);
     --x-color-placeholder-text: rgba(225, 225, 225, 0.65);
   }
