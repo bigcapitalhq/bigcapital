@@ -39,6 +39,7 @@
     "@casl/ability": "^5.4.3",
     "@lemonsqueezy/lemonsqueezy.js": "^2.2.0",
     "@liaoliaots/nestjs-redis": "^10.0.0",
+    "@nest-lab/throttler-storage-redis": "^1.1.0",
     "@nestjs/bull": "^10.2.1",
     "@nestjs/bullmq": "^10.2.2",
     "@nestjs/cache-manager": "^2.2.2",
