@@ -24,7 +24,7 @@ export class AuthSendResetPasswordService {
 
     @Inject(SystemUser.name)
     private readonly systemUserModel: typeof SystemUser,
-  ) {}
+  ) { }
 
   /**
    * Sends the given email reset password email.
@@ -33,8 +33,9 @@ export class AuthSendResetPasswordService {
   async sendResetPassword(email: string): Promise<void> {
     const user = await this.systemUserModel
       .query()
-      .findOne({ email })
-      .throwIfNotFound();
+      .findOne({ email });
+
+    if (!user) return;
 
     const token: string = uniqid();
 
@@ -48,10 +49,8 @@ export class AuthSendResetPasswordService {
     this.deletePasswordResetToken(email);
 
     // Creates a new password reset row with unique token.
-    const passwordReset = await this.resetPasswordModel.query().insert({
-      email,
-      token,
-    });
+    await this.resetPasswordModel.query().insert({ email, token });
+
     // Triggers sent reset password event.
     await this.eventPublisher.emitAsync(events.auth.sendResetPassword, {
       user,

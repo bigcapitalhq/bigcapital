@@ -53,7 +53,6 @@ export function CompanyLogoUpload({
   const [initialLocalPreview, setInitialLocalPreview] = useState<string | null>(
     initialPreview || null,
   );
-
   const openRef = useRef<() => void>(null);
 
   const handleRemove = () => {

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useMutation } from 'react-query';
 import { batch } from 'react-redux';
-import useApiRequest from '../useRequest';
+import useApiRequest, { useAuthApiRequest } from '../useRequest';
 import { setCookie } from '../../utils';
 import { useRequestQuery } from '../useQueryRequest';
 import t from './types';
@@ -40,7 +40,7 @@ export function setAuthLoginCookies(data) {
  * Authentication login.
  */
 export const useAuthLogin = (props) => {
-  const apiRequest = useApiRequest();
+  const apiRequest = useAuthApiRequest();
 
   const setAuthToken = useSetAuthToken();
   const setOrganizationId = useSetOrganizationId();
@@ -49,7 +49,6 @@ export const useAuthLogin = (props) => {
   const setLocale = useSetLocale();
 
   return useMutation((values) => apiRequest.post(AuthRoute.Signin, values), {
-    select: (res) => res.data,
     onSuccess: (res) => {
       // Set authentication cookies.
       setAuthLoginCookies(res.data);
@@ -75,7 +74,7 @@ export const useAuthLogin = (props) => {
  * Authentication register.
  */
 export const useAuthRegister = (props) => {
-  const apiRequest = useApiRequest();
+  const apiRequest = useAuthApiRequest();
 
   return useMutation(
     (values) => apiRequest.post(AuthRoute.Signup, values),
@@ -87,7 +86,7 @@ export const useAuthRegister = (props) => {
  * Authentication send reset password.
  */
 export const useAuthSendResetPassword = (props) => {
-  const apiRequest = useApiRequest();
+  const apiRequest = useAuthApiRequest();
 
   return useMutation(
     (values) => apiRequest.post(AuthRoute.SendResetPassword, values),
@@ -99,7 +98,7 @@ export const useAuthSendResetPassword = (props) => {
  * Authentication reset password.
  */
 export const useAuthResetPassword = (props) => {
-  const apiRequest = useApiRequest();
+  const apiRequest = useAuthApiRequest();
 
   return useMutation(
     ([token, values]) => apiRequest.post(`auth/reset/${token}`, values),
@@ -129,7 +128,7 @@ export const useAuthMetadata = (props = {}) => {
  * Resend the mail of signup verification.
  */
 export const useAuthSignUpVerifyResendMail = (props) => {
-  const apiRequest = useApiRequest();
+  const apiRequest = useAuthApiRequest();
 
   return useMutation(
     () => apiRequest.post(AuthRoute.SignupVerifyResend),
@@ -146,7 +145,7 @@ interface AuthSignUpVerifyValues {
  * Signup verification.
  */
 export const useAuthSignUpVerify = (props) => {
-  const apiRequest = useApiRequest();
+  const apiRequest = useAuthApiRequest();
 
   return useMutation(
     (values: AuthSignUpVerifyValues) =>
