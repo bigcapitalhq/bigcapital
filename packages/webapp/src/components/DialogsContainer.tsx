@@ -49,6 +49,8 @@ import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFo
 import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
 import { SharePaymentLinkDialog } from '@/containers/PaymentLink/dialogs/SharePaymentLinkDialog/SharePaymentLinkDialog';
 import { SelectPaymentMethodsDialog } from '@/containers/PaymentLink/dialogs/SelectPaymentMethodsDialog/SelectPaymentMethodsDialog';
+import ApiKeysGenerateDialog from '@/containers/Dialogs/ApiKeysGenerateDialog';
+import ApiKeyDisplayDialog from '@/containers/Dialogs/ApiKeyDisplayDialog';
 
 /**
  * Dialogs container.
@@ -146,6 +148,12 @@ export default function DialogsContainer() {
       <SharePaymentLinkDialog dialogName={DialogsName.SharePaymentLink} />
       <SelectPaymentMethodsDialog
         dialogName={DialogsName.SelectPaymentMethod}
+      />
+      <ApiKeysGenerateDialog
+        dialogName={DialogsName.ApiKeysGenerate}
+      />
+      <ApiKeyDisplayDialog
+        dialogName={DialogsName.ApiKeyDisplay}
       />
     </div>
   );

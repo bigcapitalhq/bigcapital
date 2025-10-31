@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Get, Put } from '@nestjs/common';
+import { Controller, Post, Param, Get, Put, Body } from '@nestjs/common';
 import { GenerateApiKey } from './commands/GenerateApiKey.service';
 import { GetApiKeysService } from './queries/GetApiKeys.service';
 import {
@@ -8,6 +8,7 @@ import {
   ApiParam,
   ApiExtraModels,
   getSchemaPath,
+  ApiBody,
 } from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
@@ -16,6 +17,10 @@ import {
   ApiKeyListResponseDto,
   ApiKeyListItemDto,
 } from './dtos/ApiKey.dto';
+
+class GenerateApiKeyDto {
+  name?: string;
+}
 
 @Controller('api-keys')
 @ApiTags('Api keys')
@@ -33,13 +38,14 @@ export class AuthApiKeysController {
 
   @Post('generate')
   @ApiOperation({ summary: 'Generate a new API key' })
+  @ApiBody({ type: GenerateApiKeyDto })
   @ApiResponse({
     status: 201,
     description: 'The generated API key',
     type: ApiKeyResponseDto,
   })
-  async generate() {
-    return this.generateApiKeyService.generate();
+  async generate(@Body() body: GenerateApiKeyDto) {
+    return this.generateApiKeyService.generate(body.name);
   }
 
   @Put(':id/revoke')

@@ -80,5 +80,7 @@ export enum DialogsName {
   SharePaymentLink = 'SharePaymentLink',
   SelectPaymentMethod = 'SelectPaymentMethodsDialog',
 
-  StripeSetup = 'StripeSetup'
+  StripeSetup = 'StripeSetup',
+  ApiKeysGenerate = 'api-keys-generate',
+  ApiKeyDisplay = 'api-key-display'
 }
