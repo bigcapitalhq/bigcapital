@@ -121,11 +121,12 @@ export function useDeletePaymentMade(props) {
  */
 export function usePaymentMadeEditPage(
   id: number,
-  props: UseQueryOptions<any, Error>,
+  props?: UseQueryOptions<any, Error>,
 ) {
   const apiRequest = useApiRequest();
   return useQuery([t.PAYMENT_MADE_EDIT_PAGE, id], () =>
     apiRequest.get(`bill-payments/${id}/edit-page`).then((res) => res.data),
+    props
   );
 }
 

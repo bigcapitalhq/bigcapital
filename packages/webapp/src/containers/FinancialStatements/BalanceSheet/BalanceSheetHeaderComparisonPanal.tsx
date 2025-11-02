@@ -1,9 +1,15 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import { FastField, Field } from 'formik';
-import { FormGroup, Checkbox } from '@blueprintjs/core';
-import { Flex, FlexItem, FieldHint, FormattedMessage as T } from '@/components';
+import { useFormikContext } from 'formik';
+import {
+  Flex,
+  FlexItem,
+  FieldHint,
+  FormattedMessage as T,
+  FFormGroup,
+  FCheckbox,
+} from '@/components';
 import {
   handlePreviousYearCheckBoxChange,
   handlePreviousYearChangeCheckboxChange,
@@ -17,130 +23,112 @@ import {
  * Balance sheet header - Comparison panal - Comparisons fields.
  */
 function BalanceSheetHeaderComparisonPanalFields() {
+  const form = useFormikContext();
+
   return (
     <>
       {/**----------- Previous Year -----------*/}
-      <Field name={'previousYear'} type={'checkbox'}>
-        {({ form, field }) => (
-          <FormGroup labelInfo={<FieldHint />}>
-            <Checkbox
-              inline={true}
-              label={<T id={'balance_sheet.previous_year'} />}
-              {...field}
-              onChange={handlePreviousYearCheckBoxChange(form)}
-            />
-          </FormGroup>
-        )}
-      </Field>
+      <FFormGroup name={'previousYear'} labelInfo={<FieldHint />}>
+        <FCheckbox
+          inline={true}
+          label={<T id={'balance_sheet.previous_year'} />}
+          name={'previousYear'}
+          onChange={handlePreviousYearCheckBoxChange(form)}
+        />
+      </FFormGroup>
 
       <FlexSubFields align={'left'}>
         <FlexItem col={6}>
-          <Field name={'previousYearAmountChange'} type={'checkbox'}>
-            {({ form, field }) => (
-              <FormGroup labelInfo={<FieldHint />}>
-                <Checkbox
-                  inline={true}
-                  small={true}
-                  label={<T id={'balance_sheet.total_change'} />}
-                  {...field}
-                  onChange={handlePreviousYearChangeCheckboxChange(form)}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup
+            name={'previousYearAmountChange'}
+            labelInfo={<FieldHint />}
+          >
+            <FCheckbox
+              inline={true}
+              small={true}
+              label={<T id={'balance_sheet.total_change'} />}
+              name={'previousYearAmountChange'}
+              onChange={handlePreviousYearChangeCheckboxChange(form)}
+            />
+          </FFormGroup>
         </FlexItem>
 
         <FlexItem col={6}>
-          <FastField name={'previousYearPercentageChange'} type={'checkbox'}>
-            {({ form, field }) => (
-              <FormGroup labelInfo={<FieldHint />}>
-                <Checkbox
-                  inline={true}
-                  label={<T id={'balance_sheet.change'} />}
-                  {...field}
-                  onChange={handlePreviousYearPercentageCheckboxChange(form)}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'previousYearPercentageChange'}
+            labelInfo={<FieldHint />}
+          >
+            <FCheckbox
+              inline={true}
+              label={<T id={'balance_sheet.change'} />}
+              name={'previousYearPercentageChange'}
+              onChange={handlePreviousYearPercentageCheckboxChange(form)}
+            />
+          </FFormGroup>
         </FlexItem>
       </FlexSubFields>
 
       {/*------------ Previous Period -----------*/}
-      <FastField name={'previousPeriod'} type={'checkbox'}>
-        {({ form, field }) => (
-          <FormGroup labelInfo={<FieldHint />}>
-            <Checkbox
-              inline={true}
-              small={true}
-              label={<T id={'balance_sheet.previous_period'} />}
-              {...field}
-              onChange={handlePreviousPeriodCheckBoxChange(form)}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'previousPeriod'} labelInfo={<FieldHint />}>
+        <FCheckbox
+          inline={true}
+          small={true}
+          label={<T id={'balance_sheet.previous_period'} />}
+          name={'previousPeriod'}
+          onChange={handlePreviousPeriodCheckBoxChange(form)}
+        />
+      </FFormGroup>
 
       <FlexSubFields>
         <FlexItem col={6}>
-          <FastField name={'previousPeriodAmountChange'} type={'checkbox'}>
-            {({ form, field }) => (
-              <FormGroup labelInfo={<FieldHint />}>
-                <Checkbox
-                  inline={true}
-                  small={true}
-                  label={<T id={'balance_sheet.total_change'} />}
-                  {...field}
-                  onChange={handlePreviousPeriodChangeCheckboxChange(form)}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'previousPeriodAmountChange'}
+            labelInfo={<FieldHint />}
+          >
+            <FCheckbox
+              inline={true}
+              small={true}
+              label={<T id={'balance_sheet.total_change'} />}
+              name={'previousPeriodAmountChange'}
+              onChange={handlePreviousPeriodChangeCheckboxChange(form)}
+            />
+          </FFormGroup>
         </FlexItem>
 
         <FlexItem col={6}>
-          <FastField name={'previousPeriodPercentageChange'} type={'checkbox'}>
-            {({ form, field }) => (
-              <FormGroup labelInfo={<FieldHint />}>
-                <Checkbox
-                  inline={true}
-                  label={<T id={'balance_sheet.change'} />}
-                  {...field}
-                  onChange={handlePreivousPeriodPercentageCheckboxChange(form)}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'previousPeriodPercentageChange'}
+            labelInfo={<FieldHint />}
+          >
+            <FCheckbox
+              inline={true}
+              label={<T id={'balance_sheet.change'} />}
+              name={'previousPeriodPercentageChange'}
+              onChange={handlePreivousPeriodPercentageCheckboxChange(form)}
+            />
+          </FFormGroup>
         </FlexItem>
       </FlexSubFields>
 
       {/**----------- % of Column -----------*/}
-      <FastField name={'percentageOfColumn'} type={'checkbox'}>
-        {({ field }) => (
-          <FormGroup labelInfo={<FieldHint />}>
-            <Checkbox
-              inline={true}
-              small={true}
-              label={<T id={'balance_sheet.percentage_of_column'} />}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'percentageOfColumn'} labelInfo={<FieldHint />}>
+        <FCheckbox
+          inline={true}
+          small={true}
+          label={<T id={'balance_sheet.percentage_of_column'} />}
+          name={'percentageOfColumn'}
+        />
+      </FFormGroup>
 
       {/**----------- % of Row -----------*/}
-      <FastField name={'percentageOfRow'} type={'checkbox'}>
-        {({ field }) => (
-          <FormGroup labelInfo={<FieldHint />}>
-            <Checkbox
-              inline={true}
-              small={true}
-              label={<T id={'balance_sheet.percentage_of_row'} />}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'percentageOfRow'} labelInfo={<FieldHint />}>
+        <FCheckbox
+          inline={true}
+          small={true}
+          label={<T id={'balance_sheet.percentage_of_row'} />}
+          name={'percentageOfRow'}
+        />
+      </FFormGroup>
     </>
   );
 }

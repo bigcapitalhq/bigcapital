@@ -175,6 +175,7 @@ export function usePaymentReceiveEditPage(id, props) {
   return useQuery(
     [t.PAYMENT_RECEIVE_EDIT_PAGE, id],
     () => apiRequest.get(`payments-received/${id}/edit-page`).then(res => res.data),
+    props
   );
 }
 

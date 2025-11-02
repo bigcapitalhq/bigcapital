@@ -25,3 +25,9 @@
     display: none;
   }
 }
+
+.bp4-dark .cloud-spinner {
+  &.is-loading:before {
+    background: rgba(17, 20, 24, 0.8);
+  }
+}
