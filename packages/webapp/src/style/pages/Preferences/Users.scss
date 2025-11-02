@@ -1,6 +1,13 @@
 // Users/Roles List.
 // ---------------------------------
 .preferences-page__inside-content--users {
+  --color-avatar-background: #b7bfc6;
+  --color-avatar-text: #fff;
+
+  .bp4-dark & {
+    --color-avatar-background: rgba(255, 255, 255, 0.2);
+    --color-avatar-text: #fff;
+  }
   .bigcapital-datatable {
     .td {
       .avatar {
@@ -8,7 +15,7 @@
         height: 28px;
         width: 28px;
         text-align: center;
-        background: #b7bfc6;
+        background: var(--color-avatar-background);
         border-radius: 50%;
         line-height: 28px;
         color: #fff;
