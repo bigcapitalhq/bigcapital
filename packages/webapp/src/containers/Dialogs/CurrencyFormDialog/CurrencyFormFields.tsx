@@ -1,24 +1,24 @@
 // @ts-nocheck
 import React from 'react';
-import { Classes, FormGroup, InputGroup } from '@blueprintjs/core';
-import { FastField } from 'formik';
+import { Classes } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 
 import { CLASSES } from '@/constants/classes';
 import { useCurrencyFormContext } from './CurrencyFormProvider';
-import { ErrorMessage, FieldRequiredHint, ListSelect } from '@/components';
+import { FieldRequiredHint, FFormGroup, FInputGroup, FSelect } from '@/components';
 
 import { useAutofocus } from '@/hooks';
-import { inputIntent, currenciesOptions } from '@/utils';
+import { currenciesOptions } from '@/utils';
 
 /**
  * Currency form fields.
  */
 export default function CurrencyFormFields() {
   const currencyNameFieldRef = useAutofocus();
-
   const { isEditMode } = useCurrencyFormContext();
+  const { setFieldValue } = useFormikContext();
 
   // Filter currency code
   const filterCurrencyCode = (query, currency, _index, exactMatch) => {
@@ -33,66 +33,47 @@ export default function CurrencyFormFields() {
 
   return (
     <div className={Classes.DIALOG_BODY}>
-      <FastField name={'currency_code'}>
-        {({
-          form: { setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={<T id={'currency_code'} />}
-            className={classNames(CLASSES.FILL, 'form-group--type')}
-          >
-            <ListSelect
-              items={currenciesOptions}
-              selectedItemProp={'currency_code'}
-              selectedItem={value}
-              textProp={'formatted_name'}
-              defaultText={<T id={'select_currency_code'} />}
-              onItemSelect={(currency) => {
-                setFieldValue('currency_code', currency.currency_code);
-                setFieldValue('currency_name', currency.name);
-                setFieldValue('currency_sign', currency.symbol);
-              }}
-              itemPredicate={filterCurrencyCode}
-              disabled={isEditMode}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'currency_code'}
+        label={<T id={'currency_code'} />}
+      >
+        <FSelect
+          name={'currency_code'}
+          items={currenciesOptions}
+          valueAccessor={'currency_code'}
+          textAccessor={'formatted_name'}
+          placeholder={<T id={'select_currency_code'} />}
+          onItemSelect={(currency) => {
+            setFieldValue('currency_code', currency.currency_code);
+            setFieldValue('currency_name', currency.name);
+            setFieldValue('currency_sign', currency.symbol);
+          }}
+          itemPredicate={filterCurrencyCode}
+          disabled={isEditMode}
+          popoverProps={{ minimal: true }}
+        />
+      </FFormGroup>
+
       {/* ----------- Currency name ----------- */}
-      <FastField name={'currency_name'}>
-        {({ field, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'currency_name'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={'form-group--currency-name'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="currency_name" />}
-            // inline={true}
-          >
-            <InputGroup
-              inputRef={(ref) => (currencyNameFieldRef.current = ref)}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'currency_name'}
+        label={<T id={'currency_name'} />}
+        labelInfo={<FieldRequiredHint />}
+      >
+        <FInputGroup
+          name={'currency_name'}
+          inputRef={(ref) => (currencyNameFieldRef.current = ref)}
+        />
+      </FFormGroup>
+
       {/* ----------- Currency Code ----------- */}
-      <FastField name={'currency_sign'}>
-        {({ field, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'currency_sign'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={'form-group--currency-sign'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="currency_sign" />}
-          >
-            <InputGroup {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'currency_sign'}
+        label={<T id={'currency_sign'} />}
+        labelInfo={<FieldRequiredHint />}
+      >
+        <FInputGroup name={'currency_sign'} />
+      </FFormGroup>
     </div>
   );
 }

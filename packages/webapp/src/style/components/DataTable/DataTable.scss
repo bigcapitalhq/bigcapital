@@ -216,28 +216,6 @@
       .tr.is-context-menu-active .td {
         background: #f3fafc;
       }
-
-      .td.actions .#{$ns}-button {
-        background: #e6effb;
-        border: 0;
-        box-shadow: none;
-        padding: 5px 15px;
-        border-radius: 8px;
-
-        &:hover,
-        &:focus {
-          background-color: #cfdcee;
-        }
-
-        svg {
-          color: #425361;
-        }
-
-        .bp4-icon-more-h-16 {
-          margin-top: 2px;
-        }
-      }
-
       .tr.no-results {
         .td {
           flex-direction: column;

@@ -455,9 +455,9 @@ body.bp4-dark  {
   --color-datatable-constrant-head-border: var(--color-dark-gray5);
 
   // Card
-  --color-card-background: var(--color-dark-gray4);
+  --color-card-background: var(--color-dark-gray2);
   --color-card-border: #d2dce2;
-  --color-card-border: rgba(255, 255, 255, 0.2);
+  --color-card-border: rgba(255, 255, 255, 0.1);
 
   // Bank accounts.
   --color-bank-account-card-background: var(--color-card-background);
@@ -492,8 +492,7 @@ body.bp4-dark  {
   --color-bank-transaction-matching-aside-footer: var(--color-dark-gray1);
 
   --color-sidebar-preferences-background: var(--color-dark-gray1);
-  --color-sidebar-preferences-border: #c6d0d9;
-  --color-sidebar-preferences-border: rgba(255, 255, 255, 0.25);
+  --color-sidebar-preferences-border: rgba(255, 255, 255, 0.15);
 
   // Preferences - Sidebar. 
   --color-sidebar-preferences-item-background: transparent;
@@ -502,10 +501,7 @@ body.bp4-dark  {
   --color-sidebar-preferences-item-hover-background: var(--color-dark-gray4);
   --color-sidebar-preferences-item-hover-text: #fff;
 
-  --color-preferences-sidebar-head-border: #bbcbd0;
-  --color-preferences-sidebar-head-text: #3b3b4c;
-
-  --color-preferences-sidebar-head-border: rgba(255, 255, 255, 0.25);
+  --color-preferences-sidebar-head-border: rgba(255, 255, 255, 0.1);
   --color-preferences-sidebar-head-text: rgba(255, 255, 255, 0.85);
 
   // Preferences - Topbar.
