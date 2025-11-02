@@ -10,20 +10,17 @@ import {
   Tooltip,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, Icon } from '@/components';
+import { FormattedMessage as T, Icon, Alert } from '@/components';
 import { useClipboard } from '@/hooks/utils/useClipboard';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 import { AppToaster } from '@/components';
 
 /**
- * API Key Display dialog content.
+ * API Key Display view component (used within the generate dialog).
  */
-function ApiKeyDisplayDialogContent({
+function ApiKeyDisplayView({
   dialogName,
   apiKey,
-  // #withDialogActions
-  closeDialog,
+  onClose,
 }) {
   const clipboard = useClipboard();
 
@@ -37,16 +34,12 @@ function ApiKeyDisplayDialogContent({
     }
   };
 
-  const handleClose = () => {
-    closeDialog(dialogName);
-  };
-
   return (
     <>
       <div className={Classes.DIALOG_BODY}>
-        <p>
+        <Alert intent="primary">
           <strong>{intl.get('api_key.important')}:</strong> {intl.get('api_key.display_warning')}
-        </p>
+        </Alert>
         <FormGroup label={intl.get('api_key.label')}>
           <InputGroup
             value={apiKey || ''}
@@ -66,11 +59,8 @@ function ApiKeyDisplayDialogContent({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button intent={Intent.PRIMARY} onClick={handleCopy}>
-            <T id={'copy'} />
-          </Button>
-          <Button onClick={handleClose}>
-            <T id={'close'} />
+          <Button intent={Intent.PRIMARY} onClick={onClose} style={{ width: '85px' }}>
+            <T id={'done'} />
           </Button>
         </div>
       </div>
@@ -78,4 +68,5 @@ function ApiKeyDisplayDialogContent({
   );
 }
 
-export default compose(withDialogActions)(ApiKeyDisplayDialogContent);
+export default ApiKeyDisplayView;
+

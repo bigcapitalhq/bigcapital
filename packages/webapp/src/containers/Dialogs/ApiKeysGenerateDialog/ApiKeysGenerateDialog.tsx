@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
@@ -15,7 +15,9 @@ function ApiKeysGenerateDialog({ dialogName, payload, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={<T id={'api_keys.dialog.generate_title'} />}
+      title={
+        <T id={'api_key.dialog.generate_title'} />
+      }
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
@@ -23,7 +25,9 @@ function ApiKeysGenerateDialog({ dialogName, payload, isOpen }) {
       style={{ width: '500px' }}
     >
       <DialogSuspense>
-        <ApiKeysGenerateDialogContent dialogName={dialogName} />
+        <ApiKeysGenerateDialogContent
+          dialogName={dialogName}
+        />
       </DialogSuspense>
     </Dialog>
   );

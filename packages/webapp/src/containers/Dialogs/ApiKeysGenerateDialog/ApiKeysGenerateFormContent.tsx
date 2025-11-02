@@ -11,6 +11,7 @@ import {
   FormGroup,
   InputGroup,
 } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 import { inputIntent } from '@/utils';
 import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -36,9 +37,9 @@ function ApiKeysGenerateFormContent({
         {/* ----------- Name ----------- */}
         <FFormGroup
           name={'name'}
-          label={<T id={'name'} />}
+          label={<T id={'api_key.name'} />}
         >
-          <FInputGroup name={'name'} placeholder="Enter API key name (optional)" />
+          <FInputGroup name={'name'} placeholder={intl.get('api_key.name_placeholder')} />
         </FFormGroup>
       </div>
 
@@ -53,9 +54,9 @@ function ApiKeysGenerateFormContent({
             type="submit"
             disabled={isSubmitting}
             loading={isSubmitting}
-            style={{ minWidth: '85px' }}
+            style={{ minWidth: '100px' }}
           >
-            <T id={'generate'} />
+            <T id={'api_key.generate'} />
           </Button>
         </div>
       </div>

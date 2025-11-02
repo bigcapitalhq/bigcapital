@@ -30,6 +30,12 @@ export class ApiKeyListItemDto {
   name?: string;
 
   @ApiProperty({
+    example: 'bc_1234...',
+    description: 'First 8 characters of the API key token',
+  })
+  token: string;
+
+  @ApiProperty({
     example: '2024-01-01T00:00:00.000Z',
     description: 'Creation date',
   })

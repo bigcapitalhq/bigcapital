@@ -15,7 +15,7 @@ function ApiKeyDisplayDialog({ dialogName, payload: { apiKey } = {}, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={<T id={'api_keys.dialog.display_title'} />}
+      title={<T id={'api_key.dialog.display_title'} />}
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}

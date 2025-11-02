@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
@@ -7,9 +7,9 @@ import { AppToaster } from '@/components';
 import { useGenerateApiKey } from '@/hooks/query';
 import ApiKeysGenerateFormContent from './ApiKeysGenerateFormContent';
 import ApiKeysGenerateFormSchema from './ApiKeysGenerateForm.schema';
+import ApiKeyDisplayView from './ApiKeyDisplayView';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-import { useDialogActions } from '@/hooks/state';
 
 const defaultInitialValues = {
   name: '',
@@ -23,8 +23,8 @@ function ApiKeysGenerateDialogContent({
   closeDialog,
   dialogName,
 }) {
+  const [generatedApiKey, setGeneratedApiKey] = useState(null);
   const generateApiKeyMutate = useGenerateApiKey();
-  const { openDialog } = useDialogActions();
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
@@ -48,10 +48,7 @@ function ApiKeysGenerateDialogContent({
         // The API returns { key, id }, which might be wrapped in response.data
         const apiKey = response?.data?.key || response?.key;
         if (apiKey) {
-          closeDialog(dialogName);
-          openDialog('api-key-display', {
-            apiKey,
-          });
+          setGeneratedApiKey(apiKey);
         } else {
           setSubmitting(false);
         }
@@ -60,6 +57,21 @@ function ApiKeysGenerateDialogContent({
     });
   };
 
+  // If API key has been generated, show the display view
+  if (generatedApiKey) {
+    return (
+      <ApiKeyDisplayView
+        dialogName={dialogName}
+        apiKey={generatedApiKey}
+        onClose={() => {
+          setGeneratedApiKey(null);
+          closeDialog(dialogName);
+        }}
+      />
+    );
+  }
+
+  // Otherwise, show the generate form
   return (
     <Formik
       validationSchema={ApiKeysGenerateFormSchema}

@@ -1,15 +1,14 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
-import { Button, Intent } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T } from '@/components';
-import { useDialogActions } from '@/hooks/state';
+import classNames from 'classnames';
+import styled from 'styled-components';
+
+import { Card } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import ApiKeysDataTable from './ApiKeysDataTable';
 import { compose } from '@/utils';
-import { Card } from '@/components';
-import { CLASSES } from '@/constants/classes';
-import classNames from 'classnames';
 
 /**
  * API Keys preferences page.
@@ -18,15 +17,9 @@ function ApiKeysPreferences({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  const { openDialog } = useDialogActions();
-
   useEffect(() => {
-    changePreferencesPageTitle(intl.get('api_keys'));
+    changePreferencesPageTitle(intl.get('api_key.title'));
   }, [changePreferencesPageTitle]);
-
-  const handleGenerateApiKey = () => {
-    openDialog('api-keys-generate');
-  };
 
   return (
     <div
@@ -35,32 +28,15 @@ function ApiKeysPreferences({
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_USERS,
       )}
     >
-      <Card>
-        <div style={{ padding: '20px' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '20px',
-            }}
-          >
-            <h2 style={{ margin: 0 }}>
-              <T id={'api_keys'} />
-            </h2>
-            <Button
-              intent={Intent.PRIMARY}
-              icon={<Icon icon="plus" />}
-              onClick={handleGenerateApiKey}
-            >
-              <T id={'generate_api_key'} />
-            </Button>
-          </div>
-          <ApiKeysDataTable />
-        </div>
-      </Card>
+      <ApiKeysPreferencesCard>
+        <ApiKeysDataTable />
+      </ApiKeysPreferencesCard>
     </div>
   );
 }
+
+const ApiKeysPreferencesCard = styled(Card)`
+  padding: 0;
+`;
 
 export default compose(withDashboardActions)(ApiKeysPreferences);

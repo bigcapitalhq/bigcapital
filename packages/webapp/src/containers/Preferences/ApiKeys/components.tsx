@@ -25,11 +25,23 @@ export function ActionsMenu({
     <Menu>
       <MenuItem
         icon={<Icon icon="trash-16" iconSize={16} />}
-        text={intl.get('revoke')}
+        text={intl.get('api_key.revoke')}
         onClick={safeCallback(onRevoke, original)}
         intent={Intent.DANGER}
       />
     </Menu>
+  );
+}
+
+/**
+ * Token accessor.
+ * Displays the token value in a Tag component.
+ */
+function TokenAccessor(apiKey) {
+  return (
+    <Tag minimal={true}>
+      {apiKey.token || ''}
+    </Tag>
   );
 }
 
@@ -39,8 +51,8 @@ export function ActionsMenu({
  */
 function PermissionsAccessor(apiKey) {
   return (
-    <Tag minimal={true}>
-      <T id={'full_access'} />
+    <Tag>
+      <T id={'api_key.full_access'} />
     </Tag>
   );
 }
@@ -50,7 +62,7 @@ function PermissionsAccessor(apiKey) {
  * Since lastUsed isn't currently tracked, we show "Never".
  */
 function LastUsedAccessor(apiKey) {
-  return <span>Never</span>;
+  return <span>{intl.get('api_key.never')}</span>;
 }
 
 /**
@@ -75,28 +87,35 @@ export function useApiKeysTableColumns() {
     () => [
       {
         id: 'name',
-        Header: intl.get('name'),
-        accessor: (row) => row.name || 'Unnamed',
+        Header: intl.get('api_key.name'),
+        accessor: (row) => row.name || intl.get('api_key.unnamed'),
         width: 200,
         className: 'name',
       },
       {
+        id: 'token',
+        Header: intl.get('api_key.token'),
+        accessor: TokenAccessor,
+        width: 100,
+        className: 'token',
+      },
+      {
         id: 'permissions',
-        Header: intl.get('permissions'),
+        Header: intl.get('api_key.permissions'),
         accessor: PermissionsAccessor,
         width: 150,
         className: 'permissions',
       },
       {
         id: 'last_used',
-        Header: intl.get('last_used'),
+        Header: intl.get('api_key.last_used'),
         accessor: LastUsedAccessor,
         width: 150,
         className: 'last_used',
       },
       {
         id: 'created_at',
-        Header: intl.get('generated_at'),
+        Header: intl.get('api_key.generated_at'),
         accessor: 'createdAt',
         Cell: FormatDateCell,
         width: 150,

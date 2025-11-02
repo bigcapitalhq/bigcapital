@@ -9,6 +9,7 @@ import {
   ApiExtraModels,
   getSchemaPath,
   ApiBody,
+  ApiProperty,
 } from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
@@ -17,8 +18,18 @@ import {
   ApiKeyListResponseDto,
   ApiKeyListItemDto,
 } from './dtos/ApiKey.dto';
+import { IsString, MaxLength } from 'class-validator';
+import { IsOptional } from '@/common/decorators/Validators';
 
 class GenerateApiKeyDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  @ApiProperty({
+    description: 'Optional name for the API key',
+    required: false,
+    example: 'My API Key',
+  })
   name?: string;
 }
 
@@ -34,7 +45,7 @@ export class AuthApiKeysController {
   constructor(
     private readonly getApiKeysService: GetApiKeysService,
     private readonly generateApiKeyService: GenerateApiKey,
-  ) {}
+  ) { }
 
   @Post('generate')
   @ApiOperation({ summary: 'Generate a new API key' })

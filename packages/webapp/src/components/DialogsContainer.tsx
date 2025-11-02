@@ -50,7 +50,6 @@ import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransa
 import { SharePaymentLinkDialog } from '@/containers/PaymentLink/dialogs/SharePaymentLinkDialog/SharePaymentLinkDialog';
 import { SelectPaymentMethodsDialog } from '@/containers/PaymentLink/dialogs/SelectPaymentMethodsDialog/SelectPaymentMethodsDialog';
 import ApiKeysGenerateDialog from '@/containers/Dialogs/ApiKeysGenerateDialog';
-import ApiKeyDisplayDialog from '@/containers/Dialogs/ApiKeyDisplayDialog';
 
 /**
  * Dialogs container.
@@ -151,9 +150,6 @@ export default function DialogsContainer() {
       />
       <ApiKeysGenerateDialog
         dialogName={DialogsName.ApiKeysGenerate}
-      />
-      <ApiKeyDisplayDialog
-        dialogName={DialogsName.ApiKeyDisplay}
       />
     </div>
   );

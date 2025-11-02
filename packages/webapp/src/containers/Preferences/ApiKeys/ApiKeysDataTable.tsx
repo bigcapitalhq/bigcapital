@@ -31,7 +31,7 @@ function ApiKeysDataTable({
       revokeApiKey(apiKey.id)
         .then(() => {
           AppToaster.show({
-            message: intl.get('api_keys.revoke_success'),
+            message: intl.get('api_key.revoke_success'),
             intent: Intent.SUCCESS,
           });
         })
