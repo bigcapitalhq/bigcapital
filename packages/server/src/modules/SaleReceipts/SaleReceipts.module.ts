@@ -39,6 +39,7 @@ import { SaleReceiptsExportable } from './commands/SaleReceiptsExportable';
 import { SaleReceiptsImportable } from './commands/SaleReceiptsImportable';
 import { GetSaleReceiptMailStateService } from './queries/GetSaleReceiptMailState.service';
 import { GetSaleReceiptMailTemplateService } from './queries/GetSaleReceiptMailTemplate.service';
+import { SaleReceiptAutoIncrementSubscriber } from './subscribers/SaleReceiptAutoIncrementSubscriber';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -82,7 +83,8 @@ import { GetSaleReceiptMailTemplateService } from './queries/GetSaleReceiptMailT
     SaleReceiptsExportable,
     SaleReceiptsImportable,
     GetSaleReceiptMailStateService,
-    GetSaleReceiptMailTemplateService
+    GetSaleReceiptMailTemplateService,
+    SaleReceiptAutoIncrementSubscriber,
   ],
 })
 export class SaleReceiptsModule { }
