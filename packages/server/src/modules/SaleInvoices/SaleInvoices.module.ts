@@ -52,6 +52,7 @@ import { InvoiceChangeStatusOnMailSentSubscriber } from './subscribers/InvoiceCh
 import { InvoiceCostGLEntriesSubscriber } from './subscribers/InvoiceCostGLEntriesSubscriber';
 import { InvoicePaymentGLRewriteSubscriber } from './subscribers/InvoicePaymentGLRewriteSubscriber';
 import { SaleInvoiceWriteInventoryTransactionsSubscriber } from './subscribers/InvoiceWriteInventoryTransactions';
+import { SaleInvoiceAutoIncrementSubscriber } from './subscribers/SaleInvoiceAutoIncrementSubscriber';
 import { SaleInvoiceCostGLEntries } from './SaleInvoiceCostGLEntries';
 import { InvoicePaymentsGLEntriesRewrite } from './InvoicePaymentsGLRewrite';
 import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.module';
@@ -120,6 +121,7 @@ import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
     InvoiceCostGLEntriesSubscriber,
     InvoicePaymentGLRewriteSubscriber,
     SaleInvoiceWriteInventoryTransactionsSubscriber,
+    SaleInvoiceAutoIncrementSubscriber,
     InvoicePaymentsGLEntriesRewrite,
     SaleInvoicesCost,
     SaleInvoicesExportable,
@@ -133,4 +135,4 @@ import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
     SaleInvoicesImportable,
   ],
 })
-export class SaleInvoicesModule {}
+export class SaleInvoicesModule { }
