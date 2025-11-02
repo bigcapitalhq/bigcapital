@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Get, Put } from '@nestjs/common';
+import { Controller, Post, Param, Get, Put, Body } from '@nestjs/common';
 import { GenerateApiKey } from './commands/GenerateApiKey.service';
 import { GetApiKeysService } from './queries/GetApiKeys.service';
 import {
@@ -8,6 +8,8 @@ import {
   ApiParam,
   ApiExtraModels,
   getSchemaPath,
+  ApiBody,
+  ApiProperty,
 } from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
@@ -16,6 +18,20 @@ import {
   ApiKeyListResponseDto,
   ApiKeyListItemDto,
 } from './dtos/ApiKey.dto';
+import { IsString, MaxLength } from 'class-validator';
+import { IsOptional } from '@/common/decorators/Validators';
+
+class GenerateApiKeyDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  @ApiProperty({
+    description: 'Optional name for the API key',
+    required: false,
+    example: 'My API Key',
+  })
+  name?: string;
+}
 
 @Controller('api-keys')
 @ApiTags('Api keys')
@@ -29,17 +45,18 @@ export class AuthApiKeysController {
   constructor(
     private readonly getApiKeysService: GetApiKeysService,
     private readonly generateApiKeyService: GenerateApiKey,
-  ) {}
+  ) { }
 
   @Post('generate')
   @ApiOperation({ summary: 'Generate a new API key' })
+  @ApiBody({ type: GenerateApiKeyDto })
   @ApiResponse({
     status: 201,
     description: 'The generated API key',
     type: ApiKeyResponseDto,
   })
-  async generate() {
-    return this.generateApiKeyService.generate();
+  async generate(@Body() body: GenerateApiKeyDto) {
+    return this.generateApiKeyService.generate(body.name);
   }
 
   @Put(':id/revoke')

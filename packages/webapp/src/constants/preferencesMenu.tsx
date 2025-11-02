@@ -68,6 +68,11 @@ export default [
     disabled: false,
     href: '/preferences/integrations'
   },
+  {
+    text: 'API Keys',
+    disabled: false,
+    href: '/preferences/api-keys',
+  },
   // {
   //   text: <T id={'sms_integration.label'} />,
   //   disabled: false,
