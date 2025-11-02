@@ -10,10 +10,11 @@ import { GetAccount } from './GetAccount.service';
 import { ActivateAccount } from './ActivateAccount.service';
 import { GetAccountTypesService } from './GetAccountTypes.service';
 import { GetAccountTransactionsService } from './GetAccountTransactions.service';
-import { IAccountsFilter, IAccountsTransactionsFilter } from './Accounts.types';
+import { IAccountsTransactionsFilter } from './Accounts.types';
 import { GetAccountsService } from './GetAccounts.service';
 import { IFilterMeta } from '@/interfaces/Model';
 import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionResponse.dto';
+import { GetAccountsQueryDto } from './dtos/GetAccountsQuery.dto';
 
 @Injectable()
 export class AccountsApplication {
@@ -36,7 +37,7 @@ export class AccountsApplication {
     private readonly getAccountService: GetAccount,
     private readonly getAccountTransactionsService: GetAccountTransactionsService,
     private readonly getAccountsService: GetAccountsService,
-  ) {}
+  ) { }
 
   /**
    * Creates a new account.
@@ -108,11 +109,11 @@ export class AccountsApplication {
 
   /**
    * Retrieves the accounts list.
-   * @param {IAccountsFilter} filterDTO - Filter DTO.
+   * @param {GetAccountsQueryDto} filterDTO - Filter DTO.
    * @returns {Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }>}
    */
   public getAccounts = (
-    filterDTO: Partial<IAccountsFilter>,
+    filterDTO: GetAccountsQueryDto,
   ): Promise<{ accounts: Account[]; filterMeta: IFilterMeta }> => {
     return this.getAccountsService.getAccountsList(filterDTO);
   };
