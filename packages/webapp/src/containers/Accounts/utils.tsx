@@ -131,6 +131,6 @@ export const rowClassNames = (row) => ({
 export const transformAccountsStateToQuery = (tableState) => {
   return {
     ...transformTableStateToQuery(tableState),
-    inactive_mode: tableState.inactiveMode,
+    onlyInactive: tableState.inactiveMode,
   };
 };

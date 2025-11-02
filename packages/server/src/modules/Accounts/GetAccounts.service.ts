@@ -8,6 +8,7 @@ import { Account } from './models/Account.model';
 import { AccountRepository } from './repositories/Account.repository';
 import { IFilterMeta } from '@/interfaces/Model';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { GetAccountsQueryDto } from './dtos/GetAccountsQuery.dto';
 
 @Injectable()
 export class GetAccountsService {
@@ -18,7 +19,7 @@ export class GetAccountsService {
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
-  ) {}
+  ) { }
 
   /**
    * Retrieve accounts datatable list.
@@ -26,12 +27,12 @@ export class GetAccountsService {
    * @returns {Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }>}
    */
   public async getAccountsList(
-    filterDto: Partial<IAccountsFilter>,
+    filterDto: Partial<GetAccountsQueryDto>,
   ): Promise<{ accounts: Account[]; filterMeta: IFilterMeta }> {
     const parsedFilterDto = {
       sortOrder: 'desc',
       columnSortBy: 'created_at',
-      inactiveMode: false,
+      onlyInactive: false,
       structure: IAccountsStructureType.Tree,
       ...filterDto,
     };
@@ -48,7 +49,7 @@ export class GetAccountsService {
       .query()
       .onBuild((builder) => {
         dynamicList.buildQuery()(builder);
-        builder.modify('inactiveMode', filter.inactiveMode);
+        builder.modify('inactiveMode', filterDto.onlyInactive);
       });
     const accountsGraph = await this.accountRepository.getDependencyGraph();
 
@@ -58,7 +59,6 @@ export class GetAccountsService {
       new AccountTransformer(),
       { accountsGraph, structure: parsedFilterDto.structure },
     );
-
     return {
       accounts: transformedAccounts,
       filterMeta: dynamicList.getResponseMeta(),
