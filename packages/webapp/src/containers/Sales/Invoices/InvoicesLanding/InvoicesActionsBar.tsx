@@ -34,11 +34,13 @@ import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { isEmpty } from 'lodash';
 
 /**
  * Invoices table actions bar.
@@ -49,6 +51,7 @@ function InvoiceActionsBar({
 
   // #withInvoices
   invoicesFilterRoles,
+  invoicesSelectedRows = [],
 
   // #withSettings
   invoicesTableSize,
@@ -61,6 +64,9 @@ function InvoiceActionsBar({
 
   // #withDrawerActions
   openDrawer,
+
+  // #withAlertActions
+  openAlert,
 }) {
   const history = useHistory();
 
@@ -112,6 +118,11 @@ function InvoiceActionsBar({
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleInvoice' });
   };
 
+  // Handle bulk invoices delete.
+  const handleBulkDelete = () => {
+    openAlert('invoices-bulk-delete', { invoicesIds: invoicesSelectedRows });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -145,12 +156,13 @@ function InvoiceActionsBar({
 
         <NavbarDivider />
 
-        <If condition={false}>
+        <If condition={!isEmpty(invoicesSelectedRows)}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
+            onClick={handleBulkDelete}
           />
         </If>
         <Button
@@ -211,8 +223,10 @@ function InvoiceActionsBar({
 export default compose(
   withInvoiceActions,
   withSettingsActions,
+  withAlertActions,
   withInvoices(({ invoicesTableState }) => ({
     invoicesFilterRoles: invoicesTableState.filterRoles,
+    invoicesSelectedRows: invoicesTableState?.selectedRows || [],
   })),
   withSettings(({ invoiceSettings }) => ({
     invoicesTableSize: invoiceSettings?.tableSize,

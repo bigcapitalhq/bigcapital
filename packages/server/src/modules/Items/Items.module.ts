@@ -18,6 +18,8 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { InventoryAdjustmentsModule } from '../InventoryAdjutments/InventoryAdjustments.module';
 import { ItemsExportable } from './ItemsExportable.service';
 import { ItemsImportable } from './ItemsImportable.service';
+import { BulkDeleteItemsService } from './BulkDeleteItems.service';
+import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.service';
 
 @Module({
   imports: [
@@ -41,8 +43,10 @@ import { ItemsImportable } from './ItemsImportable.service';
     TransformerInjectable,
     ItemsEntriesService,
     ItemsExportable,
-    ItemsImportable
+    ItemsImportable,
+    BulkDeleteItemsService,
+    ValidateBulkDeleteItemsService,
   ],
   exports: [ItemsEntriesService, ItemsExportable, ItemsImportable],
 })
-export class ItemsModule {}
+export class ItemsModule { }

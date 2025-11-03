@@ -14,4 +14,9 @@ export const resetVendorCreditTableState = () => {
   };
 };
 
-export const setSelectedRowsItems = () => {};
+export const setVendorCreditsSelectedRows = (selectedRows) => {
+  return {
+    type: 'VENDOR_CREDITS/SET_SELECTED_ROWS',
+    payload: selectedRows,
+  };
+};

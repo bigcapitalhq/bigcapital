@@ -23,6 +23,11 @@ const ReconcileVendorCreditDeleteAlert = React.lazy(
     ),
 );
 
+const VendorCreditBulkDeleteAlert = React.lazy(
+  () =>
+    import('@/containers/Alerts/VendorCeditNotes/VendorCreditBulkDeleteAlert'),
+);
+
 /**
  * Vendor Credit notes alerts.
  */
@@ -42,5 +47,9 @@ export default [
   {
     name: 'reconcile-vendor-delete',
     component: ReconcileVendorCreditDeleteAlert,
+  },
+  {
+    name: 'vendor-credits-bulk-delete',
+    component: VendorCreditBulkDeleteAlert,
   },
 ];

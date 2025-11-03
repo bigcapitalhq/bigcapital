@@ -89,6 +89,25 @@ export function useDeleteJournal(props) {
 }
 
 /**
+ * Deletes multiple manual journals in bulk.
+ */
+export function useBulkDeleteManualJournals(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) => apiRequest.post('manual-journals/bulk-delete', { ids }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
  * Publishes the given manual journal.
  */
 export function usePublishJournal(props) {

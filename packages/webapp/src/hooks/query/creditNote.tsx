@@ -111,6 +111,25 @@ export function useDeleteCreditNote(props) {
   });
 }
 
+/**
+ * Deletes multiple credit notes in bulk.
+ */
+export function useBulkDeleteCreditNotes(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) => apiRequest.post('credit-notes/bulk-delete', { ids }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
 const transformCreditNotes = (res) => ({
   creditNotes: res.data.credit_notes,
   pagination: transformPagination(res.data.pagination),

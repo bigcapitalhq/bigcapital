@@ -74,6 +74,25 @@ export function useDeleteItem(props) {
 }
 
 /**
+ * Deletes multiple items in bulk.
+ */
+export function useBulkDeleteItems(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) => apiRequest.post('items/bulk-delete', { ids }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
  * Activate the given item.
  */
 export function useActivateItem(props) {

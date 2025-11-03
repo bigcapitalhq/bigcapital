@@ -3,8 +3,10 @@ import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
+import { queryCache } from 'react-query';
 import { AppToaster } from '@/components';
 
+import { useBulkDeleteExpenses } from '@/hooks/query/expenses';
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 
@@ -15,44 +17,43 @@ import { compose } from '@/utils';
  */
 function ExpenseBulkDeleteAlert({
   closeAlert,
-
-  // #withAlertStoreConnect
   name,
-  payload: { expenseId, selectedCount },
+  payload: { expensesIds },
   isOpen,
 }) {
-  // Handle confirm journals bulk delete.
-  const handleConfirmBulkDelete = () => {
-    // requestDeleteBulkExpenses(bulkDelete)
-    //   .then(() => {
-    //     AppToaster.show({
-    //       message: formatMessage(
-    //         { id: 'the_expenses_have_been_deleted_successfully' },
-    //         { count: selectedRowsCount },
-    //       ),
-    //       intent: Intent.SUCCESS,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //   });
+  const { mutateAsync: bulkDeleteExpenses, isLoading } = useBulkDeleteExpenses();
+
+  const handleCancel = () => {
+    closeAlert(name);
   };
 
-  // Handle cancel bulk delete alert.
-  const handleCancelBulkDelete = () => {
-    closeAlert(name);
+  const handleConfirmBulkDelete = () => {
+    bulkDeleteExpenses(expensesIds)
+      .then(() => {
+        AppToaster.show({
+          message: intl.get('the_expenses_have_been_deleted_successfully'),
+          intent: Intent.SUCCESS,
+        });
+        queryCache.invalidateQueries('expenses-table');
+        closeAlert(name);
+      })
+      .catch((errors) => {
+        // Handle errors
+      });
   };
 
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
       confirmButtonText={
-        <T id={'delete_count'} values={{ count: selectedCount }} />
+        <T id={'delete_count'} values={{ count: expensesIds?.length || 0 }} />
       }
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
-      onCancel={handleCancelBulkDelete}
+      onCancel={handleCancel}
       onConfirm={handleConfirmBulkDelete}
+      loading={isLoading}
     >
       <p>
         <T id={'once_delete_these_expenses_you_will_not_able_restore_them'} />

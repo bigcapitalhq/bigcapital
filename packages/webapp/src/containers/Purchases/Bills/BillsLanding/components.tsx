@@ -106,7 +106,7 @@ export function StatusAccessor(bill) {
     <div className={'status-accessor'}>
       <Choose>
         <Choose.When condition={bill.is_fully_paid && bill.is_open}>
-          <Tag round intent={Intent.SUCCESS}>
+          <Tag round minimal intent={Intent.SUCCESS}>
             <T id={'paid'} />
           </Tag>
         </Choose.When>
@@ -114,18 +114,18 @@ export function StatusAccessor(bill) {
         <Choose.When condition={bill.is_open}>
           <Choose>
             <Choose.When condition={bill.is_overdue}>
-              <Tag round intent={Intent.DANGER}>
+              <Tag round minimal intent={Intent.DANGER}>
                 {intl.get('overdue_by', { overdue: bill.overdue_days })}
               </Tag>
             </Choose.When>
             <Choose.Otherwise>
-              <Tag round intent={Intent.WARNING}>
+              <Tag round minimal intent={Intent.WARNING}>
                 {intl.get('due_in', { due: bill.remaining_days })}
               </Tag>
             </Choose.Otherwise>
           </Choose>
           <If condition={bill.is_partially_paid}>
-            <Tag round intent={Intent.PRIMARY}>
+            <Tag round minimal intent={Intent.PRIMARY}>
               {intl.get('day_partially_paid', {
                 due: formattedAmount(bill.due_amount, bill.currency_code),
               })}
@@ -134,7 +134,7 @@ export function StatusAccessor(bill) {
         </Choose.When>
 
         <Choose.Otherwise>
-          <Tag round>
+          <Tag round minimal>
             <T id={'draft'} />
           </Tag>
         </Choose.Otherwise>

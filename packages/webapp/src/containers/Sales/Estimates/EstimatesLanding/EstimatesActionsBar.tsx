@@ -33,6 +33,7 @@ import withEstimatesActions from './withEstimatesActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
@@ -43,6 +44,7 @@ import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { isEmpty } from 'lodash';
 import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
@@ -57,6 +59,7 @@ function EstimateActionsBar({
 
   // #withEstimates
   estimatesFilterRoles,
+  estimatesSelectedRows = [],
 
   // #withSettings
   estimatesTableSize,
@@ -69,6 +72,9 @@ function EstimateActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withAlertActions
+  openAlert,
 }) {
   const history = useHistory();
 
@@ -116,6 +122,11 @@ function EstimateActionsBar({
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleEstimate' });
   };
 
+  // Handle bulk estimates delete.
+  const handleBulkDelete = () => {
+    openAlert('estimates-bulk-delete', { estimatesIds: estimatesSelectedRows });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -150,13 +161,13 @@ function EstimateActionsBar({
           />
         </AdvancedFilterPopover>
 
-        <If condition={false}>
+        <If condition={!isEmpty(estimatesSelectedRows)}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
-            // onClick={handleBulkDelete}
+            onClick={handleBulkDelete}
           />
         </If>
         <Button
@@ -218,8 +229,10 @@ function EstimateActionsBar({
 export default compose(
   withEstimatesActions,
   withSettingsActions,
-  withEstimates(({ estimatesTableState }) => ({
+  withAlertActions,
+  withEstimates(({ estimatesTableState, estimatesSelectedRows }) => ({
     estimatesFilterRoles: estimatesTableState.filterRoles,
+    estimatesSelectedRows: estimatesSelectedRows || [],
   })),
   withSettings(({ estimatesSettings }) => ({
     estimatesTableSize: estimatesSettings?.tableSize,

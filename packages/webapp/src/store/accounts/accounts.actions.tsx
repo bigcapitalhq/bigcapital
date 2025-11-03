@@ -16,3 +16,13 @@ export const resetAccountsTableState = () => {
     type: t.ACCOUNTS_TABLE_STATE_RESET,
   };
 };
+
+/**
+ * Sets the selected rows for accounts table.
+ */
+export const setAccountsSelectedRows = (selectedRows) => {
+  return {
+    type: 'ACCOUNTS/SET_SELECTED_ROWS',
+    payload: selectedRows,
+  };
+};

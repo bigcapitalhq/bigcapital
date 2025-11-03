@@ -125,6 +125,25 @@ export function useDeleteInvoice(props) {
   });
 }
 
+/**
+ * Deletes multiple sale invoices in bulk.
+ */
+export function useBulkDeleteInvoices(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) => apiRequest.post('sale-invoices/bulk-delete', { ids }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
 const transformInvoices = (res) => ({
   invoices: res.data.sales_invoices,
   pagination: transformPagination(res.data.pagination),

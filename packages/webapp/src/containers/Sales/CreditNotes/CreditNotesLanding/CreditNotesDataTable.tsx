@@ -33,6 +33,7 @@ import { DRAWERS } from '@/constants/drawers';
 function CreditNotesDataTable({
   // #withCreditNotesActions
   setCreditNotesTableState,
+  setCreditNotesSelectedRows,
 
   // #withAlertsActions
   openAlert,
@@ -77,6 +78,15 @@ function CreditNotesDataTable({
       });
     },
     [setCreditNotesTableState],
+  );
+
+  // Handle selected rows change.
+  const handleSelectedRowsChange = React.useCallback(
+    (selectedFlatRows) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setCreditNotesSelectedRows(selectedIds);
+    },
+    [setCreditNotesSelectedRows],
   );
 
   // Display create note empty status instead of the table.
@@ -128,6 +138,8 @@ function CreditNotesDataTable({
         headerLoading={isCreditNotesLoading}
         progressBarLoading={isCreditNotesFetching}
         onFetchData={handleDataTableFetchData}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        autoResetSelectedRows={false}
         manualSortBy={true}
         selectionColumn={true}
         noInitialFetch={true}

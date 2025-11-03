@@ -61,13 +61,13 @@ function ExpenseForm({
     () => ({
       ...(!isEmpty(expense)
         ? {
-            ...transformToEditForm(expense, defaultExpense),
-          }
+          ...transformToEditForm(expense, defaultExpense),
+        }
         : {
-            ...defaultExpense,
-            currency_code: base_currency,
-            payment_account_id: defaultTo(preferredPaymentAccount, ''),
-          }),
+          ...defaultExpense,
+          currency_code: base_currency,
+          payment_account_id: defaultTo(preferredPaymentAccount, ''),
+        }),
     }),
     [expense, base_currency, preferredPaymentAccount],
   );
@@ -82,6 +82,7 @@ function ExpenseForm({
         message: intl.get('amount_cannot_be_zero_or_empty'),
         intent: Intent.DANGER,
       });
+      setSubmitting(false);
       return;
     }
 

@@ -22,6 +22,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withAccountsTableActions from './withAccountsTableActions';
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 
@@ -40,6 +41,9 @@ function AccountsDataTable({
 
   // #withSettings
   accountsTableSize,
+
+  // #withAccountsTableActions
+  setAccountsSelectedRows,
 }) {
   const { isAccountsLoading, isAccountsFetching, accounts } =
     useAccountsChartContext();
@@ -91,6 +95,12 @@ function AccountsDataTable({
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.ACCOUNTS);
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = (selectedFlatRows) => {
+    const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+    setAccountsSelectedRows(selectedIds);
+  };
+
   return (
     <DataTable
       noInitialFetch={true}
@@ -118,6 +128,7 @@ function AccountsDataTable({
       vListrowHeight={accountsTableSize == 'small' ? 40 : 42}
       vListOverscanRowCount={0}
       onCellClick={handleCellClick}
+      onSelectedRowsChange={handleSelectedRowsChange}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       size={accountsTableSize}
@@ -137,6 +148,7 @@ export default compose(
   withAlertsActions,
   withDrawerActions,
   withDialogActions,
+  withAccountsTableActions,
   withSettings(({ accountsSettings }) => ({
     accountsTableSize: accountsSettings.tableSize,
   })),

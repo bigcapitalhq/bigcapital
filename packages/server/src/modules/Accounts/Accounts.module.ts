@@ -19,6 +19,8 @@ import { GetAccountsService } from './GetAccounts.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { AccountsExportable } from './AccountsExportable.service';
 import { AccountsImportable } from './AccountsImportable.service';
+import { BulkDeleteAccountsService } from './BulkDeleteAccounts.service';
+import { ValidateBulkDeleteAccountsService } from './ValidateBulkDeleteAccounts.service';
 
 const models = [RegisterTenancyModel(BankAccount)];
 
@@ -40,7 +42,9 @@ const models = [RegisterTenancyModel(BankAccount)];
     GetAccountTransactionsService,
     GetAccountsService,
     AccountsExportable,
-    AccountsImportable
+    AccountsImportable,
+    BulkDeleteAccountsService,
+    ValidateBulkDeleteAccountsService,
   ],
   exports: [
     AccountRepository,

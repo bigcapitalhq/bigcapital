@@ -1,11 +1,11 @@
 // @ts-nocheck
-import React, { useState } from 'react';
-import {AppToaster, FormattedMessage as T } from '@/components';
+import React from 'react';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { size } from 'lodash';
 
-import withItemsActions from '@/containers/Items/withItemsActions';
+import { useBulkDeleteItems } from '@/hooks/query/items';
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 
@@ -21,14 +21,10 @@ function ItemBulkDeleteAlert({
   isOpen,
   payload: { itemsIds },
 
-  // #withItemsActions
-  requestDeleteBulkItems,
-
   // #withAlertActions
   closeAlert,
 }) {
-  
-  const [isLoading, setLoading] = useState(false);
+  const { mutateAsync: bulkDeleteItems, isLoading } = useBulkDeleteItems();
 
   // handle cancel item bulk delete alert.
   const handleCancelBulkDelete = () => {
@@ -36,19 +32,15 @@ function ItemBulkDeleteAlert({
   };
   // Handle confirm items bulk delete.
   const handleConfirmBulkDelete = () => {
-    setLoading(true);
-    requestDeleteBulkItems(itemsIds)
+    bulkDeleteItems(itemsIds)
       .then(() => {
         AppToaster.show({
           message: intl.get('the_items_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-      })
-      .catch((errors) => {})
-      .finally(() => {
-        setLoading(false);
         closeAlert(name);
-      });
+      })
+      .catch((errors) => { });
   };
   return (
     <Alert
@@ -73,5 +65,4 @@ function ItemBulkDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemsActions,
 )(ItemBulkDeleteAlert);

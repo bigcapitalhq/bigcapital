@@ -13,6 +13,7 @@ export default (mapState) => {
     const mapped = {
       invoicesTableState: getInvoicesTableState(state, props),
       invoicesTableStateChanged: isInvoicesTableStateChanged(state, props),
+      invoicesSelectedRows: state.invoices?.selectedRows || [],
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

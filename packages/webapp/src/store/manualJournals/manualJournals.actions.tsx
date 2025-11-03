@@ -7,3 +7,10 @@ export const setManualJournalsTableState = (queries) => {
     payload: { queries },
   };
 };
+
+export const setManualJournalsSelectedRows = (selectedRows) => {
+  return {
+    type: 'MANUAL_JOURNALS/SET_SELECTED_ROWS',
+    payload: selectedRows,
+  };
+};

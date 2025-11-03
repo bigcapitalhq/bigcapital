@@ -12,6 +12,10 @@ const BillLocatedLandedCostDeleteAlert = React.lazy(
   () => import('@/containers/Alerts/Bills/BillLocatedLandedCostDeleteAlert'),
 );
 
+const BillBulkDeleteAlert = React.lazy(
+  () => import('@/containers/Alerts/Bills/BillBulkDeleteAlert'),
+);
+
 export default [
   { name: 'bill-delete', component: BillDeleteAlert },
   { name: 'bill-open', component: BillOpenAlert },
@@ -19,4 +23,5 @@ export default [
     name: 'bill-located-cost-delete',
     component: BillLocatedLandedCostDeleteAlert,
   },
+  { name: 'bills-bulk-delete', component: BillBulkDeleteAlert },
 ];

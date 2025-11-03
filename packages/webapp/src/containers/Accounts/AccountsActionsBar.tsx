@@ -182,6 +182,7 @@ function AccountsActionsBar({
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
           />
+          <NavbarDivider />
         </If>
 
         <Button

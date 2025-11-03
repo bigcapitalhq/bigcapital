@@ -5,7 +5,6 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { FormattedMessage as T, AppToaster } from '@/components';
 
-import withAccountsActions from '@/containers/Accounts/withAccountsActions';
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 
@@ -19,6 +18,7 @@ function AccountBulkActivateAlert({
   // #withAlertActions
   closeAlert,
 
+  // TODO: Implement bulk activate accounts hook and use it here
   requestBulkActivateAccounts,
 }) {
   const [isLoading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ function AccountBulkActivateAlert({
         });
         queryCache.invalidateQueries('accounts-table');
       })
-      .catch((errors) => {})
+      .catch((errors) => { })
       .finally(() => {
         setLoading(false);
         closeAlert(name);
@@ -67,5 +67,4 @@ function AccountBulkActivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
 )(AccountBulkActivateAlert);

@@ -18,6 +18,10 @@ const ReconcileCreditDeleteAlert = React.lazy(
     import('@/containers/Alerts/CreditNotes/ReconcileCreditNoteDeleteAlert'),
 );
 
+const CreditNoteBulkDeleteAlert = React.lazy(
+  () => import('@/containers/Alerts/CreditNotes/CreditNoteBulkDeleteAlert'),
+);
+
 /**
  * Credit notes alerts.
  */
@@ -37,5 +41,9 @@ export default [
   {
     name: 'reconcile-credit-delete',
     component: ReconcileCreditDeleteAlert,
+  },
+  {
+    name: 'credit-notes-bulk-delete',
+    component: CreditNoteBulkDeleteAlert,
   },
 ];

@@ -103,6 +103,25 @@ export function useDeleteExpense(props) {
 }
 
 /**
+ * Deletes multiple expenses in bulk.
+ */
+export function useBulkDeleteExpenses(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) => apiRequest.post('expenses/bulk-delete', { ids }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
  * Edits the given expense.
  */
 export function useEditExpense(props) {

@@ -121,6 +121,25 @@ export function useDeleteBill(props) {
   });
 }
 
+/**
+ * Deletes multiple bills in bulk.
+ */
+export function useBulkDeleteBills(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) => apiRequest.post('bills/bulk-delete', { ids }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
 const transformBillsResponse = (response) => ({
   bills: response.data.bills,
   pagination: transformPagination(response.data.pagination),

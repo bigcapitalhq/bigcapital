@@ -10,9 +10,21 @@ const AccountInactivateAlert = React.lazy(
 const AccountActivateAlert = React.lazy(
   () => import('@/containers/Alerts/Accounts/AccountActivateAlert'),
 );
+const AccountBulkDeleteAlert = React.lazy(
+  () => import('@/containers/Alerts/Accounts/AccountBulkDeleteAlert'),
+);
+const AccountBulkActivateAlert = React.lazy(
+  () => import('@/containers/Alerts/Accounts/AccountBulkActivateAlert'),
+);
+const AccountBulkInactivateAlert = React.lazy(
+  () => import('@/containers/Alerts/Accounts/AccountBulkInactivateAlert'),
+);
 
 export default [
   { name: 'account-delete', component: AccountDeleteAlert },
   { name: 'account-inactivate', component: AccountInactivateAlert },
   { name: 'account-activate', component: AccountActivateAlert },
+  { name: 'accounts-bulk-delete', component: AccountBulkDeleteAlert },
+  { name: 'accounts-bulk-activate', component: AccountBulkActivateAlert },
+  { name: 'accounts-bulk-inactivate', component: AccountBulkInactivateAlert },
 ];

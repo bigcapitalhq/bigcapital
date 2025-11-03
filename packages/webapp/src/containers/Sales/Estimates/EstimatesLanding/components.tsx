@@ -22,27 +22,31 @@ import { safeCallback } from '@/utils';
 export const statusAccessor = (row) => (
   <Choose>
     <Choose.When condition={row.is_approved}>
-      <Tag intent={Intent.SUCCESS} round>
+      <Tag intent={Intent.SUCCESS} round minimal>
         <T id={'approved'} />
       </Tag>
     </Choose.When>
+
     <Choose.When condition={row.is_rejected}>
-      <Tag intent={Intent.DANGER} round>
+      <Tag intent={Intent.DANGER} round minimal>
         <T id={'rejected'} />
       </Tag>
     </Choose.When>
+
     <Choose.When condition={row.is_expired}>
-      <Tag intent={Intent.WARNING} round>
+      <Tag intent={Intent.WARNING} round minimal>
         <T id={'estimate.status.expired'} />
       </Tag>
     </Choose.When>
+
     <Choose.When condition={row.is_delivered}>
-      <Tag intent={Intent.SUCCESS} round>
+      <Tag intent={Intent.SUCCESS} round minimal>
         <T id={'delivered'} />
       </Tag>
     </Choose.When>
+
     <Choose.Otherwise>
-      <Tag round>
+      <Tag round minimal>
         <T id={'draft'} />
       </Tag>
     </Choose.Otherwise>
