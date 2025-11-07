@@ -7,6 +7,7 @@ import {
   Get,
   Query,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { AccountsApplication } from './AccountsApplication.service';
 import { CreateAccountDTO } from './CreateAccount.dto';
@@ -46,7 +47,7 @@ export class AccountsController {
     return this.accountsApplication.createAccount(accountDTO);
   }
 
-  @Post(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Edit the given account.' })
   @ApiResponse({
     status: 200,

@@ -1,7 +1,7 @@
+import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
-  IsOptional,
   IsInt,
   MinLength,
   MaxLength,
@@ -65,7 +65,7 @@ export class CreateAccountDTO {
   description?: string;
 
   @IsOptional()
-  @IsInt()
+  @ToNumber()
   @ApiProperty({
     description: 'ID of the parent account',
     example: 1,
