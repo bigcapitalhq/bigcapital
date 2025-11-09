@@ -102,13 +102,13 @@ export const StatusAccessor = (row) => {
   return (
     <Choose>
       <Choose.When condition={!!row.is_published}>
-        <Tag minimal={true} round={true}>
+        <Tag round>
           <T id={'published'} />
         </Tag>
       </Choose.When>
 
       <Choose.Otherwise>
-        <Tag minimal={true} intent={Intent.WARNING} round={true}>
+        <Tag intent={Intent.WARNING} round>
           <T id={'draft'} />
         </Tag>
       </Choose.Otherwise>

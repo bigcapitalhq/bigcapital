@@ -7,6 +7,7 @@ import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
 import { useSendEstimateFormatArgsOptions } from './hooks';
 import { useSendMailItems } from '../SendMailViewDrawer/hooks';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 
 export function EstimateSendMailFields() {
@@ -41,6 +42,7 @@ function EstimateSendMailFooter() {
   const { isSubmitting } = useFormikContext();
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
+  const isDarkmode = useIsDarkMode();
 
   const handleClose = () => {
     closeDrawer(name);
@@ -50,7 +52,9 @@ function EstimateSendMailFooter() {
     <Group
       py={'12px'}
       px={'16px'}
-      borderTop="1px solid #d8d8d9"
+      borderTopWidth={'1px'}
+      borderTopColor={isDarkmode ? 'rgba(255, 255, 255, 0.2)' : '#d8d8d9'}
+      borderTopStyle={'solid'}
       position={'apart'}
     >
       <Group spacing={10} ml={'auto'}>

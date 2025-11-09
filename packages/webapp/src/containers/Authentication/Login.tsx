@@ -32,13 +32,11 @@ export default function Login() {
       email: values.crediential,
       password: values.password,
     }).catch(({ response }) => {
-      const {
-        data: { errors },
-      } = response;
-      const toastBuilders = transformLoginErrorsToToasts(errors);
+      const { data: error } = response;
+      const toastMessages = transformLoginErrorsToToasts(error);
 
-      toastBuilders.forEach((builder) => {
-        Toaster.show(builder);
+      toastMessages.forEach((toastMessage) => {
+        Toaster.show(toastMessage);
       });
       setSubmitting(false);
     });

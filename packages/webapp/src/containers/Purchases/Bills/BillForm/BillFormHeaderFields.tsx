@@ -5,8 +5,9 @@ import classNames from 'classnames';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { FormGroup, InputGroup, Classes, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
+import { css } from '@emotion/css';
 
-import { FeatureCan, FormattedMessage as T } from '@/components';
+import { FeatureCan, Stack, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import {
   FFormGroup,
@@ -32,6 +33,24 @@ import {
   inputIntent,
 } from '@/utils';
 import { Features } from '@/constants';
+import { useTheme } from '@emotion/react';
+
+const getBillFieldsStyle = (theme: Theme) => css`
+  .${theme.bpPrefix}-form-group {
+    margin-bottom: 0;
+
+    &.${theme.bpPrefix}-inline {
+      max-width: 450px;
+    }
+    .${theme.bpPrefix}-label {
+      min-width: 150px;
+      font-weight: 500;
+    }
+    .${theme.bpPrefix}-form-content {
+      width: 100%;
+    }
+  }
+`;
 
 /**
  * Fill form header.
@@ -40,8 +59,11 @@ function BillFormHeader() {
   // Bill form context.
   const { vendors, projects } = useBillFormContext();
 
+  const theme = useTheme();
+  const billFieldsClassName = getBillFieldsStyle(theme);
+
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+    <Stack spacing={18} flex={1} className={billFieldsClassName}>
       {/* ------- Vendor name ------ */}
       <BillFormVendorField />
 
@@ -150,7 +172,7 @@ function BillFormHeader() {
           />
         </FFormGroup>
       </FeatureCan>
-    </div>
+    </Stack>
   );
 }
 

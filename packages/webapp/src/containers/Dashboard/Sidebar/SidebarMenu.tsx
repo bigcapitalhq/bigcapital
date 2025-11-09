@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { Menu } from '@blueprintjs/core';
+import { Intent, Menu } from '@blueprintjs/core';
 
 import { MenuItem, MenuItemLabel } from '@/components';
 import { ISidebarMenuItemType } from '@/containers/Dashboard/Sidebar/interfaces';
@@ -20,10 +20,9 @@ function SidebarMenuItem({ item, index }) {
       text={item.text}
       disabled={item.disabled}
       dropdownType={item.dropdownType || 'collapse'}
-      caretIconSize={16}
       onClick={item.onClick}
       active={isActive}
-      hasSubmenu={item.hasChildren}
+      intent={Intent.NONE}
     />
   );
 }
@@ -43,9 +42,9 @@ function SidebarMenuItemComposer({ item, index }) {
   return SidebarMenuItem.ItemTypes.indexOf(item.type) !== -1 ? (
     <SidebarMenuItem item={item} index={index} />
   ) : // Group item type.
-  item.type === ISidebarMenuItemType.Group ? (
-    <MenuItemLabel text={item.text} />
-  ) : null;
+    item.type === ISidebarMenuItemType.Group ? (
+      <MenuItemLabel text={item.text} />
+    ) : null;
 }
 
 /**

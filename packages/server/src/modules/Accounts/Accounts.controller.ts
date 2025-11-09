@@ -7,15 +7,16 @@ import {
   Get,
   Query,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { AccountsApplication } from './AccountsApplication.service';
 import { CreateAccountDTO } from './CreateAccount.dto';
 import { EditAccountDTO } from './EditAccount.dto';
-import { IAccountsFilter } from './Accounts.types';
 import {
   ApiExtraModels,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -24,6 +25,7 @@ import { AccountResponseDto } from './dtos/AccountResponse.dto';
 import { AccountTypeResponseDto } from './dtos/AccountTypeResponse.dto';
 import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionResponse.dto';
 import { GetAccountTransactionsQueryDto } from './dtos/GetAccountTransactionsQuery.dto';
+import { GetAccountsQueryDto } from './dtos/GetAccountsQuery.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('accounts')
@@ -33,7 +35,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiExtraModels(GetAccountTransactionResponseDto)
 @ApiCommonHeaders()
 export class AccountsController {
-  constructor(private readonly accountsApplication: AccountsApplication) {}
+  constructor(private readonly accountsApplication: AccountsApplication) { }
 
   @Post()
   @ApiOperation({ summary: 'Create an account' })
@@ -45,7 +47,7 @@ export class AccountsController {
     return this.accountsApplication.createAccount(accountDTO);
   }
 
-  @Post(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Edit the given account.' })
   @ApiResponse({
     status: 200,
@@ -178,7 +180,19 @@ export class AccountsController {
       items: { $ref: getSchemaPath(AccountResponseDto) },
     },
   })
-  async getAccounts(@Query() filter: Partial<IAccountsFilter>) {
+  @ApiQuery({
+    name: 'onlyInactive',
+    required: false,
+    type: Boolean,
+    description: 'Filter to show only inactive accounts',
+  })
+  @ApiQuery({
+    name: 'structure',
+    required: false,
+    type: String,
+    description: 'Structure type for the accounts list',
+  })
+  async getAccounts(@Query() filter: GetAccountsQueryDto) {
     return this.accountsApplication.getAccounts(filter);
   }
 }

@@ -2,10 +2,14 @@
 
 .root {
   position: relative;
+  
+  &.visible {
+    opacity: 0.4;
 
-  &.visible::before{
-    background: rgba(255, 255, 255, 0.75);
-    z-index: 2;
+    &::before {
+      background: transparent;
+      z-index: 2;
+    }
   }
   &::before{
     content: "";

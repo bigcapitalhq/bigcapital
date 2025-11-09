@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { SocketModule } from '../Socket/Socket.module';
 import { CancelLemonSubscription } from './commands/CancelLemonSubscription.service';
 import { ChangeLemonSubscription } from './commands/ChangeLemonSubscription.service';
 import { ResumeLemonSubscription } from './commands/ResumeLemonSubscription.service';
@@ -25,6 +26,7 @@ import { PlanSubscriptionRepository } from './repositories/PlanSubscription.repo
 const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
 
 @Module({
+  imports: [SocketModule],
   providers: [
     ...models,
     TenancyContext,
@@ -48,4 +50,4 @@ const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
   controllers: [SubscriptionsController, SubscriptionsLemonWebhook],
   exports: [...models],
 })
-export class SubscriptionModule {}
+export class SubscriptionModule { }

@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as path from 'path';
 import { promises as fs } from 'fs';
-import { PageProperties, PdfFormat } from '@/libs/Chromiumly/_types';
-import { UrlConverter } from '@/libs/Chromiumly/UrlConvert';
-import { Chromiumly } from '@/libs/Chromiumly/Chromiumly';
+import { PageProperties, PdfFormat } from '@/libs/chromiumly/_types';
+import { UrlConverter } from '@/libs/chromiumly/UrlConvert';
+import { Chromiumly } from '@/libs/chromiumly/Chromiumly';
 import {
-  PDF_FILE_EXPIRE_IN,
   getPdfFilePath,
   getPdfFilesStorageDir,
 } from './utils';
@@ -20,7 +19,7 @@ export class ChromiumlyHtmlConvert {
   constructor(
     @Inject(Document.name)
     private documentModel: TenantModelProxy<typeof Document>,
-  ) {}
+  ) { }
 
   /**
    * Write HTML content to temporary file.

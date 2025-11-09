@@ -1,4 +1,4 @@
-import { FCheckbox, Group } from '@/components';
+import { Group } from '@/components';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { Checkbox, Text } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';

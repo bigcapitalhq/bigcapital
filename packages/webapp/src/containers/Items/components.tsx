@@ -72,7 +72,7 @@ export const SellPriceCell = ({ cell: { value } }) => {
 
 export const ItemTypeAccessor = (row) => {
   return row.type_formatted ? (
-    <Tag minimal={true} round={true} intent={Intent.NONE}>
+    <Tag round intent={Intent.NONE}>
       {row.type_formatted}
     </Tag>
   ) : null;

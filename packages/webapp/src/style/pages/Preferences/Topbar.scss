@@ -3,7 +3,6 @@
 // Preferences topbar.
 // -----------------------------
 .preferences-topbar {
-  border-bottom: 1px solid #d2dde2;
   min-height: 60px;
   flex: 60px 0 0;
   padding: 0 0 0 22px;
@@ -11,14 +10,15 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
+  background-color: var(--color-preferences-topbar-background);
+  border-bottom: 1px solid var(--color-preferences-topbar-border);
 
   &__title {
     h2 {
       font-size: 22px;
       font-weight: 400;
       margin: 0;
-      color: #48485b;
+      color: var(--color-preferences-topbar-title);
     }
   }
 
@@ -55,6 +55,9 @@
     margin-right: 15px;
     border-right: 1px solid #e5e5e5;
 
+    .bp4-dark &{
+      border-right-color: rgba(255, 255, 255, 0.2);
+    }
     .bp4-button + .bp4-button {
       margin-left: 10px;
     }

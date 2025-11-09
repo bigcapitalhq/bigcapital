@@ -13,9 +13,13 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, useFormikContext, ErrorMessage } from 'formik';
+import { css } from '@emotion/css';
+import { Theme, useTheme } from '@emotion/react';
+
 import {
   FInputGroup,
   FMoneyInputGroup,
+  Stack,
   FormattedMessage as T,
   VendorsSelect,
 } from '@/components';
@@ -47,6 +51,23 @@ import {
 } from '@/utils';
 import { accountsFieldShouldUpdate, vendorsFieldShouldUpdate } from './utils';
 
+const getFieldsStyle = (theme: Theme) => css`
+  .${theme.bpPrefix}-form-group {
+    margin-bottom: 0;
+
+    &.${theme.bpPrefix}-inline {
+      max-width: 450px;
+    }
+    .${theme.bpPrefix}-label {
+      min-width: 150px;
+      font-weight: 500;
+    }
+    .${theme.bpPrefix}-form-content {
+      width: 100%;
+    }
+  }
+`;
+
 /**
  * Payment made form header fields.
  */
@@ -56,6 +77,9 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
     values: { entries, currency_code },
     setFieldValue,
   } = useFormikContext();
+
+  const theme = useTheme();
+  const fieldsClassName = getFieldsStyle(theme);
 
   // Payment made form context.
   const { accounts } = usePaymentMadeFormContext();
@@ -82,7 +106,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
+    <Stack spacing={18} flex={1} className={fieldsClassName}>
       {/* ------------ Vendor name ------------ */}
       <PaymentFormVendorSelect />
 
@@ -202,7 +226,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       >
         <FInputGroup name={'reference'} minimal={true} fastField />
       </FFormGroup>
-    </div>
+    </Stack>
   );
 }
 

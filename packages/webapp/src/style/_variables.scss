@@ -1,14 +1,623 @@
-@import "@blueprintjs/colors/lib/scss/colors";
+@import '@blueprintjs/colors/lib/scss/colors';
 @import '@blueprintjs/core/src/common/variables';
 
 $ns: bp4;
 
-$pt-popover-box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02),
-  0 2px 4px rgba(16, 22, 26, 0.1), 0 8px 24px rgba(16, 22, 26, 0.1);
+:root {
+  --color-primary: #8abbff;
+  --color-danger: red;
+
+  --color-dark-gray5: #404854;
+  --color-dark-gray4: #383e47;
+  --color-dark-gray3: #2f343c;
+  --color-dark-gray2: #252a31;
+  --color-dark-gray1: #1c2127;
+
+  --color-light-gray1: #d3d8de;
+  --color-light-gray2: #dce0e5;
+  --color-light-gray3: #e5e8eb;
+  --color-light-gray4: #edeff2;
+  --color-light-gray5: #f6f7f9;
+
+  --color-white: #fff;
+  --color-black: #000;
+
+  --color-muted-text: #abb3bf;
+
+  // Background
+  --color-ui-background-primary: var(--color-base-sand-0);
+  --color-ui-background-secondary: var(--color-base-sand-10);
+  --color-ui-background-tertiary: var(--color-base-sand-20);
+
+  // Alerts
+  --color-alert-default-background: transparent;
+  --color-alert-default-description-text: rgb(104, 112, 118);
+  --color-alert-default-title-text: rgb(17, 24, 28);
+
+  // Danger alert.
+  --color-alert-danger-background: rgb(255, 248, 248);
+  --color-alert-danger-border: rgb(249, 198, 198);
+  --color-alert-danger-description-text: #d95759;
+  --color-alert-danger-title-text: rgb(205, 43, 49);
+
+  // Primary alert.
+  --color-alert-primary-background: #fff;
+  --color-alert-primary-border: #98a8ee;
+  --color-alert-primary-title-text: #1a3bd4;
+  --color-alert-primary-description-text: #455883;
+
+  // Input
+  --color-ui-input-border: #ced4da;
+  --color-ui-input-background: #fff;
+  
+  --color-ui-input-group-prepend-background: #e9ecef;
+  --color-ui-input-group-prepend-color: #495057; 
+  --color-ui-input-group-prepend-border: #ced4da;
+
+  --color-ui-html-select-background: #fff;
+  --color-ui-html-select-border: #ced4da;
+
+  --color-ui-menu-select-item-hover-background: #edeff2;
+  --color-ui-menu-select-item-active-background: var(--color-primary);
+
+  --color-app-body: #fff;
+  --color-app-background: #fff;
+
+  // Splash screen.
+  --color-splash-screen-background: #fff;
+
+  // Main Dashboard.
+  --color-dashboard-insider-background: #fbfbfb;
+  --color-dashboard-topbar-background: #fff;
+  --color-dashboard-fallback-loading-background: #fbfbfb;
+  --color-dashboard-topbar-border-color: #c7d5db;
+  --color-dashboard-datatable-background: #fff;
+  --color-dashboard-datatable-border: #d2dce2;
+
+  // Dashboard error boundary.
+  --color-dashboard-error-boundary-title-text: #2c3a5d;
+  --color-dashboard-error-boundary-description-text: #1f3255;
+  --color-dashboard-error-boundary-logo: #a1afca;
+
+  // Dashboard - Navbar.
+  --color-dashboard-navbar-background: transparent;
+  --color-dashboard-navbar-item-text: #32304a;
+  --color-dashboard-navbar-item-hover-text: #32304a;
+  --color-dashboard-navbar-item-hover-background: rgba(167, 182, 194, 0.12);
+  --color-dashboard-navbar-item-active-text: #32304a;
+  --color-dashboard-navbar-item-active-background: #a7b6c21f;
+  --color-dashboard-navbar-item-icon: #32304a;
+  --color-dashboard-topbar-title-text: #48485c;
+
+  // Dashboard - Actionsbar.
+  --color-dashboard-actionsbar-border: #e1e2e8;
+  --color-dashboard-actionsbar-divider: rgb(199, 214, 219);
+
+  // Datatable
+  --color-datatable-head-background: #f2f3fb;
+  --color-datatable-head-text: #415060;
+  --color-datatable-head-border: #d2dce2;
+  --color-datatable-cell-hover-background: #f5f6f7;
+  --color-datatable-cell-border: #d8d8d8;
+  --color-datatable-cell-focus-border: rgba(0, 82, 204, 0.7);
+  --color-datatable-cell-focus-border: rgba(0, 82, 204, 0.7);
+  --color-datatable-no-results-text: #777;
+  --color-datatable-no-results-text: #777;
+  --color-datatable-caret: #b5b5b5;
+  --color-datatable-caret-hover: #7d8593;
+  --color-datatable-checkbox-border: #C5CBD3;
+
+  // Datatable - Empty status
+  --color-datatable-empty-status-title: #2c3a5d;
+  --color-datatable-empty-status-description: #1f3255;
+
+  --color-dashboard-card-background: #fff;
+  --color-dashboard-card-border: #d2dce2;
+
+  // Sidebar
+  --color-sidebar-toggle: #6b8193;
+  --color-sidebar-background: #01115e;
+  --color-sidebar-text: #fff;
+  --color-sidebar-scrollbars-background: rgba(255, 255, 255, 0.25);
+  
+
+  // Sidebar - Items  
+  --color-sidebar-menu-item-text: rgb(255, 255, 255);
+  --color-sidebar-menu-item-hover-background: rgba(255, 255, 255, 0.2);
+  --color-sidebar-menu-item-text-hover: rgb(255, 255, 255);
+  --color-sidebar-menu-item-active-background: rgba(255, 255, 255, 0.2);
+  --color-sidebar-menu-item-active-text: rgb(255, 255, 255);
+  --color-sidebar-menu-item-focus-background: #01143e;
+  --color-sidebar-menu-label-color: rgba(255, 255, 255, 0.5);
+
+  // Sidebar overlay
+  --color-sidebar-overlay-background: #fff;
+  --color-sidebar-overlay-hover-background: #f3f3f3;
+  --color-sidebar-overlay-item-text: #00102b;
+  --color-sidebar-overlay-item-hover-text: #00102b;
+  --color-sidebar-overlay-divider-background: #e2e5ec;
+  --color-sidebar-overlay-label-text: #707a85;
+  --color-sidebar-overlay-label-border: var(
+    --color-sidebar-overlay-divider-background
+  );
+  --color-sidebar-overlay-backdrop: rgba(0, 10, 30, 0.15);
+
+  --color-financial-report-background: #fff;
+
+  --color-datatable-text: #000;
+
+  --color-datatable-constrant-text: #000;
+  --color-datatable-constrant-cell-border: #000000;
+
+  --color-datatable-constrant-head-text: #000;
+  --color-datatable-constrant-head-border: #000000;
+
+  // Card
+  --color-card-background: #fff;
+  --color-card-border: #d2dce2;
+
+  // Bank accounts.
+  --color-bank-account-card-background: #fff;
+  --color-bank-account-card-text: rgb(23, 43, 77);
+  --color-bank-account-card-border: #c8cad0;
+  --color-bank-account-card-hover-border: #0153cc;
+
+  --color-bank-account-card-tag-background: rgb(223, 225, 230);
+
+  --color-bank-account-code-text: rgb(23, 43, 77);
+
+  // Bank transactions - details bar.
+  --color-bank-transactions-details-bar-background: #fff;
+  --color-bank-transactions-details-bar-text: #333;
+  --color-bank-transactions-details-bar-divider: #e1e2e8;
+
+  // Bank transactions - content background
+  --color-bank-transactions-content-background: #fff;
+  --color-bank-transactions-content-border: #f0f0f0;
+
+  // Bank account transactions.
+  --color-bank-transactions-datatable-card-background: #fff;
+  --color-bank-transactions-datatable-card-border: #f0f0f0;
+
+  --color-bank-transaction-matching-aside: red;
+  --color-bank-transaction-matching-divider: #e1e2e8;
+  --color-bank-transaction-matching-aside-header: #fff;
+  --color-bank-transaction-matching-aside-footer: #ecf0f3;
+
+  --color-sidebar-preferences-background: #eaeef6;
+  --color-sidebar-preferences-border: #c6d0d9;
+
+  // Preferences - Sidebar. 
+  --color-sidebar-preferences-item-background: transparent;
+  --color-sidebar-preferences-item-text: #333;
+
+  --color-sidebar-preferences-item-hover-background: rgba(255, 255, 255, 0.6);
+  --color-sidebar-preferences-item-hover-text: #333;
+
+  --color-preferences-sidebar-head-border: #bbcbd0;
+  --color-preferences-sidebar-head-text: #3b3b4c;
+
+
+  // Preferences - Topbar.
+  --color-preferences-topbar-background: #fff;
+  --color-preferences-topbar-border: #d2dde2;
+  --color-preferences-topbar-title: #48485b;
+
+  --color-preferences-content-background: #fbfbfb;
+
+  // Financial sheet.
+  --color-financial-sheet-card-border: #d1dee2;
+  --color-financial-sheet-title-text: rgb(31, 50, 85);
+  --color-financial-sheet-type-text: rgb(31, 50, 85);
+  --color-financial-sheet-date-text: rgb(31, 50, 85);
+  --color-financial-sheet-footer-text: rgb(31, 50, 85);
+  --color-financial-sheet-minimal-title-text: #333;
+
+  // Transaction locking.
+  --color-transaction-locking-item-background: #fff;
+  --color-transaction-locking-item-border: #d1dee2;
+  --color-transaction-locking-item-icon-border: #d1dee2;
+  --color-transaction-locking-item-enabled-border: #d1dee2;
+
+  // Reports items.
+  --color-report-section-title-text: rgb(31, 50, 85);
+  --color-report-item-background: #fff;
+  --color-report-item-border: #d1dee2;
+  --color-report-item-top-border: #d1dee2;
+  --color-report-item-text: rgb(31, 50, 85);
+
+  // Financial report drawer.
+  --color-financial-report-drawer-tab-text: #333;
+
+  --color-element-customize-header-background: #fff;
+  --color-element-customize-header-title-text: #333;
+
+  --color-element-customize-background: #fff;
+  --color-element-customize-preview-background: #f5f5f5;
+
+  --color-element-customize-header-tabs-background: #fff;
+  --color-ekement-customize-header-tabs-text: #5f6b7c;
+
+  --color-element-customize-divider: #e1e2e8;
+
+  // Universal search
+  --color-universal-search-background: #fff;
+  --color-universal-search-footer-divider: #d3dce2;
+  --color-universal-search-icon: #5c707f;
+  --color-universal-search-tag-background: #708392;
+  --color-universal-search-tag-text: #fff;
+  --color-universal-search-menu-border: #d3dce2;
+
+  // Content tabs
+  --color-content-tab-background: #fff;
+  --color-content-tab-border: #e1e2e8;
+  --color-content-tab-hover-border: #1552c8;
+  --color-content-tab-active-border: #1552c8;
+  --color-content-tab-text: #2f343c;
+  --color-content-tab-active-text: #1552c8;
+
+  // Aside
+  --color-aside-background: #fff;
+  --color-aside-title-background: #fff;
+  --color-aside-divider: #E1E2E9;
+
+  // App shell
+  --color-app-shell-divider: rgba(17, 20, 24, 0.15);
+
+  // Select
+  --color-select-button-background: #fff;
+  --color-select-button-border: #fff; 
+
+  // Stepper
+  --color-stepper-step-title-text: #738091;
+  --color-stepper-step-title-active-text: var(--color-primary);
+  --color-stepper-step-description-text: #738091;
+  --color-stepper-step-description-active-text: var(--color-primary);
+  --color-stepper-step-background: #9e9e9e;
+  --color-stepper-step-active-background: rgb(0, 82, 204);
+  --color-stepper-separator: #c5cbd3;
+  --color-stepper-step-text: #fff;  
+
+  // Drawer
+  --color-drawer-border-left: var(--color-primary);
+  --color-drawer-header-background: #fff;
+  --color-drawer-header-border: transparent;
+  --color-drawer-header-text: #354152;
+  --color-drawer-insider-background: #fbfbfb;
+  --color-drawer-tabs-background: #fff;
+
+  // Skeleton
+  --color-skeleton-background-start: rgba(206, 217, 224, 0.3);
+  --color-skeleton-background-end: rgba(92, 112, 128, 0.3);
+  --color-skeleton-border-start: rgba(206, 217, 224, 0.3);
+  --color-skeleton-border-end: rgba(92, 112, 128, 0.3);
+  --color-skeleton-border-radius: 2px;
+}
+
+$pt-popover-box-shadow:
+  0 0 0 1px rgba(16, 22, 26, 0.02),
+  0 2px 4px rgba(16, 22, 26, 0.1),
+  0 8px 24px rgba(16, 22, 26, 0.1);
+  
+body.bp4-dark  {
+  --color-primary: #8abbff;
+  --color-danger: rgb(213, 103, 103);
+
+  --color-dark-gray5: #404854;
+  --color-dark-gray4: #383e47;
+  --color-dark-gray3: #2f343c;
+  --color-dark-gray2: #252a31;
+  --color-dark-gray1: #1c2127;
+
+  --color-light-gray1: #d3d8de;
+  --color-light-gray2: #dce0e5;
+  --color-light-gray3: #e5e8eb;
+  --color-light-gray4: #edeff2;
+  --color-light-gray5: #f6f7f9;
+
+  --color-white: #fff;
+  --color-black: #000;
+
+  --color-muted-text: #abb3bf;
+
+  // Background
+  --color-ui-background-primary: var(--color-base-sand-0);
+  --color-ui-background-secondary: var(--color-base-sand-10);
+  --color-ui-background-tertiary: var(--color-base-sand-20);
+
+  // Alerts
+  --color-alert-default-background: transparent;
+  --color-alert-default-description-text: var(--color-light-gray4);
+  --color-alert-default-title-text: var(--color-light-gray2);
+
+  // Danger alert.
+  --color-alert-danger-background: transparent;
+  --color-alert-danger-border: #2d72d2;
+  --color-alert-danger-description-text: var(--color-light-gray1);
+  --color-alert-danger-title-text: #8abbff;
+
+  // Primary alert.
+  --color-alert-primary-background: transparent;
+  --color-alert-primary-border: #2d72d2;
+  --color-alert-primary-title-text: #8abbff;
+  --color-alert-primary-description-text: var(--color-light-gray1);
+
+  // Input
+  --color-ui-input-border: rgba(255, 255, 255, 0.15);
+  --color-ui-input-background: rgba(17, 20, 24, 0.3);
+  
+  --color-ui-input-group-prepend-background: var(--color-dark-gray3);
+  --color-ui-input-group-prepend-color: rgba(255, 255, 255, 0.6); 
+  --color-ui-input-group-prepend-border: rgba(255, 255, 255, 0.15);
+
+  --color-ui-html-select-background: #fff;
+  --color-ui-html-select-border: #ced4da;
+
+  --color-ui-menu-select-item-hover-background: #edeff2;
+  --color-ui-menu-select-item-hover-background: rgba(143, 153, 168, .15);
+  --color-ui-menu-select-item-active-background: var(--color-primary);
+
+  // App
+  --color-app-body: var(--color-dark-gray1);
+  --color-app-background: var(--color-dark-gray1);
+
+  // Splash screen.
+  --color-splash-screen-background: #fff;
+  --color-splash-screen-background: var(--color-dark-gray1);
+
+  // Main Dashboard.
+  --color-dashboard-insider-background: var(--color-dark-gray1);
+  --color-dashboard-topbar-background: var(--color-dark-gray1);
+  --color-dashboard-fallback-loading-background: var(--color-dark-gray1);
+  --color-dashboard-topbar-border-color: transparent;
+  --color-dashboard-datatable-background: var(--color-dark-gray1);
+  --color-dashboard-datatable-border: var(--color-dark-gray3);
+
+  // Dashboard error boundary.
+  --color-dashboard-error-boundary-title-text: #2c3a5d;
+  --color-dashboard-error-boundary-description-text: #1f3255;
+  --color-dashboard-error-boundary-title-text: rgba(255, 255, 255, 0.75);
+  --color-dashboard-error-boundary-description-text: rgba(255, 255, 255, 0.6);
+  --color-dashboard-error-boundary-logo: #a1afca;
+  --color-dashboard-error-boundary-logo: rgba(255, 255, 255, 0.45);
+
+  // Dashboard - Navbar.
+  --color-dashboard-navbar-background: var(--color-dark-gray1);
+  --color-dashboard-navbar-item-text: var(--color-light-gray3);
+  --color-dashboard-navbar-item-hover-text: var(--color-light-gray5);
+  --color-dashboard-navbar-item-hover-background: var(--color-dark-gray3);
+  --color-dashboard-navbar-item-active-text: var(--color-light-gray5);
+  --color-dashboard-navbar-item-active-background: var(--color-dark-gray3);
+  --color-dashboard-navbar-item-icon: #32304a;
+  --color-dashboard-topbar-title-text: var(--color-white);
+
+  // Dashboard - Actionsbar.
+  --color-dashboard-actionsbar-border: var(--color-dark-gray4);
+  --color-dashboard-actionsbar-divider: rgba(255, 255, 255, 0.2);
+
+  // Datatable
+  --color-datatable-head-background: var(--color-dark-gray3);
+  --color-datatable-head-text: var(--color-white);
+  --color-datatable-head-border: var(--color-dark-gray4);
+  --color-datatable-cell-hover-background: var(--color-dark-gray3);
+  --color-datatable-cell-border: var(--color-dark-gray4);
+  --color-datatable-cell-focus-border: rgba(0, 82, 204, 0.7);
+  --color-datatable-cell-focus-border: var(--color-primary);
+  --color-datatable-no-results-text: #777;
+  --color-datatable-no-results-text: rgba(255, 255, 255, 0.5);
+  --color-datatable-caret: rgba(255, 255, 255, 0.25);
+  --color-datatable-caret-hover: rgba(255, 255, 255, 0.25);
+  --color-datatable-checkbox-border: rgba(255, 255, 255, 0.3);
+
+  // Datatable - Empty status
+  --color-datatable-empty-status-title: var(--color-light-gray4);
+  --color-datatable-empty-status-description: var(--color-light-gray5);
+
+  --color-dashboard-card-background: var(--color-dark-gray1);
+  --color-dashboard-card-border: var(--color-dark-gray3);
+
+  // Sidebar
+  --color-sidebar-toggle: rgba(255, 255, 255, 0.5);
+  --color-sidebar-background: var(--color-dark-gray3);
+  --color-sidebar-text: var(--color-white);
+  --color-sidebar-scrollbars-background: rgba(255, 255, 255, 0.25);
+
+  // Sidebar - Items  
+  --color-sidebar-menu-item-text: #ffff;
+  --color-sidebar-menu-item-hover-background: var(--color-dark-gray4);
+  --color-sidebar-menu-item-text-hover: #fff;
+  --color-sidebar-menu-item-active-background: var(--color-dark-gray4);
+  --color-sidebar-menu-item-active-text: #fff;
+  --color-sidebar-menu-item-focus-background: var(--color-dark-gray5);
+  --color-sidebar-menu-label-color: rgba(255, 255, 255, 0.4);
+
+  // Sidebar overlay
+  --color-sidebar-overlay-background: var(--color-dark-gray5);
+  --color-sidebar-overlay-hover-background: var(--color-dark-gray3);
+  --color-sidebar-overlay-item-text: var(--color-white);
+  --color-sidebar-overlay-item-hover-text: var(--color-white);
+  --color-sidebar-overlay-divider-background: rgba(255, 255, 255, 0.15);
+  --color-sidebar-overlay-label-text: rgba(255, 255, 255, 0.5);
+  --color-sidebar-overlay-label-border: var(
+    --color-sidebar-overlay-divider-background
+  );
+  --color-sidebar-overlay-backdrop: rgba(17, 20, 24, 0.25);
+
+  --color-financial-report-background: var(--color-dark-gray2);
+
+  // Datatable
+  --color-datatable-text: var(--color-white);
+
+  --color-datatable-constrant-text: var(--color-light-gray2);
+  --color-datatable-constrant-cell-border: var(--color-dark-gray5);
+
+  --color-datatable-constrant-head-text: var(--color-light-gray2);
+  --color-datatable-constrant-head-border: var(--color-dark-gray5);
+
+  // Card
+  --color-card-background: var(--color-dark-gray2);
+  --color-card-border: #d2dce2;
+  --color-card-border: rgba(255, 255, 255, 0.1);
+
+  // Bank accounts.
+  --color-bank-account-card-background: var(--color-card-background);
+  --color-bank-account-card-text: var(--color-light-gray5);
+  --color-bank-account-card-border: #c8cad0;
+  --color-bank-account-card-border: rgba(255, 255, 255, 0.2);
+  --color-bank-account-card-hover-border: #0153cc;
+
+  --color-bank-account-card-tag-background: rgb(223, 225, 230);
+  --color-bank-account-card-tag-background: rgba(255, 255, 255, 0.2);
+
+  --color-bank-account-code-text: rgb(23, 43, 77);
+  --color-bank-account-code-text: var(--color-muted-text);
+
+  // Bank transactions - details bar.
+  --color-bank-transactions-details-bar-background: var(--color-dark-gray1);
+  --color-bank-transactions-details-bar-text: var(--color-light-gray2);
+  --color-bank-transactions-details-bar-divider: var(--color-dark-gray5);
+
+  // Bank transactions - content background
+  --color-bank-transactions-content-background: var(--color-dark-gray1);
+  --color-bank-transactions-content-border: var(--color-dark-gray2);
+
+  // Bank account transactions.
+  --color-bank-transactions-datatable-card-background: var(--color-dark-gray1);
+  --color-bank-transactions-datatable-card-border: #f0f0f0;
+
+  --color-bank-transaction-matching-aside: red;
+  --color-bank-transaction-matching-divider: var(--color-dark-gray4);
+  --color-bank-transaction-matching-aside-header: var(--white);
+  --color-bank-transaction-matching-aside-header: var(--color-dark-gray1);
+  --color-bank-transaction-matching-aside-footer: var(--color-dark-gray1);
+
+  --color-sidebar-preferences-background: var(--color-dark-gray1);
+  --color-sidebar-preferences-border: rgba(255, 255, 255, 0.15);
+
+  // Preferences - Sidebar. 
+  --color-sidebar-preferences-item-background: transparent;
+  --color-sidebar-preferences-item-text: #fff;
+
+  --color-sidebar-preferences-item-hover-background: var(--color-dark-gray4);
+  --color-sidebar-preferences-item-hover-text: #fff;
+
+  --color-preferences-sidebar-head-border: rgba(255, 255, 255, 0.1);
+  --color-preferences-sidebar-head-text: rgba(255, 255, 255, 0.85);
+
+  // Preferences - Topbar.
+  --color-preferences-topbar-background: var(--color-dark-gray1);
+  --color-preferences-topbar-border: var(--color-dark-gray3);
+  --color-preferences-topbar-title: rgba(255, 255, 255, 0.85);
+
+  --color-preferences-content-background: var(--color-dark-gray2);
+
+  // Financial sheet.
+  --color-financial-sheet-card-border: var(--color-dark-gray5);
+  --color-financial-sheet-title-text: var(--color-light-gray1);
+  --color-financial-sheet-type-text: var(--color-light-gray1);
+  --color-financial-sheet-date-text: var(--color-light-gray1);
+  --color-financial-sheet-footer-text: var(--color-light-gray1);
+  --color-financial-sheet-minimal-title-text: var(--color-white);
+
+  // Transaction locking.
+  --color-transaction-locking-item-background: var(--color-dark-gray2);
+  --color-transaction-locking-item-border: var(--color-dark-gray3);
+  --color-transaction-locking-item-icon-border: var(--color-dark-gray5);
+  --color-transaction-locking-item-enabled-border: var(--color-dark-gray5);
+
+  // Reports items.
+  --color-report-section-title-text: var(--color-light-gray1);
+  --color-report-item-background: var(--color-dark-gray3);
+  --color-report-item-border: var(--color-dark-gray5);
+  --color-report-item-top-border: var(--color-dark-gray5);
+  --color-report-item-text: var(--color-light-gray2);
+
+  // Financial report drawer.
+  --color-financial-report-drawer-tab-text: var(--color-light-gray3);
+
+  --color-element-customize-header-background: var(--color-dark-gray2);
+  --color-element-customize-header-title-text: var(--color-light-gray4);
+
+  --color-element-customize-background: var(--color-dark-gray2);
+  --color-element-customize-preview-background: var(--color-dark-gray5);
+
+  --color-element-customize-header-tabs-background: var(--color-dark-gray2);
+  --color-ekement-customize-header-tabs-text: #5f6b7c;
+  --color-ekement-customize-header-tabs-text: var(--color-muted-text);
+
+  --color-element-customize-divider: var(--color-dark-gray5);
+
+  // Universal search
+  --color-universal-search-background: var(--color-dark-gray3);
+  --color-universal-search-footer-divider: var(--color-dark-gray4);
+  --color-universal-search-icon: rgba(255, 255, 255, 0.25);
+  --color-universal-search-tag-background: rgba(255, 255, 255, 0.15);
+  --color-universal-search-tag-text: var(--color-white);
+  --color-universal-search-menu-border: rgba(255, 255, 255, 0.15);
+
+  // Content tabs
+  --color-content-tab-background: var(--color-dark-gray4);
+  --color-content-tab-border: #e1e2e8;
+  --color-content-tab-border: rgba(255, 255, 255, 0.15);
+  --color-content-tab-hover-border: rgba(255, 255, 255, 0.3);
+  --color-content-tab-active-border: var(--color-primary);
+  --color-content-tab-text: #2f343c;
+  --color-content-tab-text: var(--color-light-gray1);
+  --color-content-tab-active-text: #1552c8;
+  --color-content-tab-active-text: var(--color-light-gray1);
+
+  // Aside
+  --color-aside-background: #fff;
+  --color-aside-background: var(--color-dark-gray1);
+
+  --color-aside-title-background: #fff;
+  --color-aside-title-background: var(--color-dark-gray1);
+
+  --color-aside-divider: #E1E2E9;
+  --color-aside-divider: var(--color-dark-gray5);
+
+  // App shell
+  --color-app-shell-divider: var(--color-dark-gray5);
+
+  // Select
+  --color-select-button-background: #fff;
+  --color-select-button-border: #fff; 
+
+  // Stepper
+  --color-stepper-step-title-text: var(--color-light-gray1);
+  --color-stepper-step-title-active-text: var(--color-primary);
+  --color-stepper-step-description-text: var(--color-light-gray1);
+  --color-stepper-step-description-active-text: var(--color-primary);
+  --color-stepper-step-background: var(--color-dark-gray4);
+  --color-stepper-step-active-background: var(--color-dark-gray5);
+  --color-stepper-separator: var(--color-dark-gray4);
+  --color-stepper-step-text: #fff;  
+
+  // Drawer
+  --color-drawer-border-left: transparent;
+  --color-drawer-header-background: transparent;
+  --color-drawer-header-border: rgba(255, 255, 255, 0.2);
+  --color-drawer-header-text: #fff;
+  --color-drawer-insider-background: transparent;
+  --color-drawer-tabs-background: transparent;
+
+  // Skeleton
+  --color-skeleton-background-start: rgba(255, 255, 255, 0.1);
+  --color-skeleton-background-end: rgba(255, 255, 255, 0.2);
+  --color-skeleton-border-start: rgba(255, 255, 255, 0.1);
+  --color-skeleton-border-end: rgba(255, 255, 255, 0.2);
+  --color-skeleton-border-radius: 2px;
+}
+
+$pt-popover-box-shadow:
+  0 0 0 1px rgba(16, 22, 26, 0.02),
+  0 2px 4px rgba(16, 22, 26, 0.1),
+  0 8px 24px rgba(16, 22, 26, 0.1);
 
 $blue1: #0069ff;
 $blue2: #0052ff;
 $blue3: rgb(0, 82, 204);
+
 $pt-link-color: $blue3;
 $pt-intent-primary: $blue1;
 $menu-item-color-hover: $light-gray4;
@@ -17,9 +626,19 @@ $menu-item-color-active: $light-gray3;
 $breadcrumbs-collapsed-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#6B8193' enable-background='new 0 0 16 16' xml:space='preserve'><g><circle cx='2' cy='8.03' r='2'/><circle cx='14' cy='8.03' r='2'/><circle cx='8' cy='8.03' r='2'/></g></svg>");
 
 $sidebar-zindex: 16;
-$pt-font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont,
-  Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue,
-  Icons16, sans-serif;
+$pt-font-family:
+  'Noto Sans',
+  -apple-system,
+  BlinkMacSystemFont,
+  Segoe UI,
+  Roboto,
+  Oxygen,
+  Ubuntu,
+  Cantarell,
+  Open Sans,
+  Helvetica Neue,
+  Icons16,
+  sans-serif;
 
 $button-box-shadow: 0 0 0 !default;
 $button-box-shadow-active: 0 0 0 !default;
@@ -30,13 +649,15 @@ $button-background-color-disabled: #e9ecef !default;
 $button-background-color: #e6effb !default;
 $button-background-color-hover: #cfdcee !default;
 
-$sidebar-background: #01115e;
-$sidebar-text-color: #fff;
+$app-bg: var(--color-dark-gray1);
+
+$sidebar-background: var(--color-sidebar-background);
+$sidebar-text-color: var(--sidebar-text-color);
 $sidebar-width: 100%;
-$sidebar-menu-item-color: rgb(255, 255, 255);
-$sidebar-menu-item-color-active: rgb(255, 255, 255);
+$sidebar-menu-item-color: var(--color-sidebar-menu-item-color);
+$sidebar-menu-item-color-active: var(--color-sidebar-menu-item-active-color);
 $sidebar-popover-submenu-bg: rgb(1, 20, 62);
-$sidebar-menu-label-color: rgba(255, 255, 255, 0.5);
+$sidebar-menu-label-color: var(--color-sidebar-menu-label-color);
 $sidebar-submenu-item-color: rgba(255, 255, 255, 0.85);
 $sidebar-submenu-item-hover-color: rgb(255, 255, 255);
 $sidebar-logo-opacity: 0.5;
@@ -56,3 +677,8 @@ $control-checked-background-color: #0069ff !default;
 $control-checked-background-color-hover: #0069ff !default;
 $control-checked-background-color-active: #0069ff !default;
 $control-box-shadow: inset 0 0 0 1px #666 !default;
+
+// Drawer
+$drawer-background-color: $white !default;
+$dark-drawer-background-color: $dark-gray2 !default;
+

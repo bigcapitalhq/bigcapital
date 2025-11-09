@@ -64,7 +64,12 @@ function SubTitle({ children }) {
 }
 
 const SubTitleHead = styled.div`
-  color: #666;
+  --x-color-text: #666;
+
+  .bp4-dark & {
+    --x-color-text: rgba(255, 255, 255, 0.6);
+  }
+  color: var(--x-color-text);
   font-size: 12px;
   font-weight: 400;
   line-height: 1;

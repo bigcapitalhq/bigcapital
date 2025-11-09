@@ -21,30 +21,47 @@ export function DataTableEditable({
 }
 
 const DatatableEditableRoot = styled.div`
+  --x-table-background: #fff;
+  --x-table-border: #d2dce2;
+  --x-table-head-border: #d2dce2;
+  --x-table-head-background: #f2f3fb;
+  --x-table-head-text: #415060;
+  --x-color-table-body-input-text: #222;
+  --x-color-table-cell-border: #d8d8d8;
+
+  .bp4-dark & {
+    --x-table-background: var(--color-dark-gray1);
+    --x-table-border: rgba(255, 255, 255, 0.1);
+    --x-table-head-background: var(--color-dark-gray2);
+    --x-table-head-border: rgba(255, 255, 255, 0.1);
+    --x-table-head-text: rgba(--color-light-gray1);
+    --x-color-table-body-input-text: var(--color-light-gray2);
+    --x-color-table-cell-border: rgba(255, 255, 255, 0.1);
+  }
+
   .bp4-form-group {
     margin-bottom: 0;
   }
   .table {
-    border: 1px solid #d2dce2;
+    border: 1px solid var(--x-table-border);
+    background-color: var(--x-table-background);
     border-radius: 5px;
-    background-color: #fff;
 
     .th,
     .td {
-      border-left: 1px solid #e2e2e2;
+      border-left: 1px solid var(--x-table-border);
 
       &:first-of-type {
         border-left: 0;
       }
     }
-
     .thead {
       .tr .th {
         padding: 9px 14px;
-        background-color: #f2f3fb;
+        background-color: var(--x-table-head-background);
         font-size: 13px;
-        color: #415060;
-        border-bottom: 1px solid #d2dce2;
+        color: var(--x-table-head-text);
+        border-bottom: 1px solid var(--x-table-head-border);
 
         &,
         .inner-resizer {
@@ -55,7 +72,7 @@ const DatatableEditableRoot = styled.div`
     .tbody {
       .tr .td {
         border-bottom: 0;
-        border-bottom: 1px solid #d8d8d8;
+        border-bottom: 1px solid var(--x-color-table-cell-border);
         min-height: 38px;
         padding: 4px 14px;
 
@@ -74,8 +91,9 @@ const DatatableEditableRoot = styled.div`
         }
         .bp4-form-group:not(.bp4-intent-danger) .bp4-input,
         .form-group--select-list .bp4-button {
-          border-color: #ffffff;
-          color: #222;
+          border-color: transparent;
+          box-shadow: 0 0 0;
+          color: var(--x-color-table-body-input-text);
           border-radius: 3px;
           text-align: inherit;
         }

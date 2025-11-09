@@ -28,8 +28,8 @@ export class EditBillService {
     private transformerDTO: BillDTOTransformer,
 
     @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
-    @Inject(Vendor.name) private contactModel: TenantModelProxy<typeof Vendor>,
-  ) {}
+    @Inject(Vendor.name) private vendorModel: TenantModelProxy<typeof Vendor>,
+  ) { }
 
   /**
    * Edits details of the given bill id with associated entries.
@@ -58,10 +58,9 @@ export class EditBillService {
     this.validators.validateBillExistance(oldBill);
 
     // Retrieve vendor details or throw not found service error.
-    const vendor = await this.contactModel()
+    const vendor = await this.vendorModel()
       .query()
       .findById(billDTO.vendorId)
-      .modify('vendor')
       .throwIfNotFound();
 
     // Validate bill number uniqiness on the storage.

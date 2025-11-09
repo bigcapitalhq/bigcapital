@@ -1,10 +1,18 @@
 .root {
+  --x-border-color: #E1E1E1;
+  --x-color-placeholder-text: #738091;
+  
+  :global(.bp4-dark) & {    
+    --x-border-color: rgba(225, 225, 225, 0.15);
+    --x-color-placeholder-text: rgba(225, 225, 225, 0.65);
+  }
   min-height: 120px;
   height: 120px;
   padding: 10px;
-  border: 1px solid;
   display: flex;
-  border: 1px solid #E1E1E1;
+  border-style: solid;
+  border-color: var(--x-border-color);
+  border-width: 1px;;
   position: relative;
   display: flex;
   justify-content: center;
@@ -25,7 +33,7 @@
 }
 
 .contentPrePreview {
-  color: #738091;
+  color: var(--x-color-placeholder-text);
   font-size: 13px;
   height: 100%;
   justify-content: center;

@@ -4,7 +4,7 @@
   flex-direction: row;
   flex: 1 0 0;
   min-width: auto;
-  background-color: #fbfbfb;
+  background-color: var(--color-preferences-content-background);
 }
 .dashboard {
   &__preferences-content {
@@ -14,6 +14,11 @@
   }
 }
 .preferences-page {
+  --x-color-tab-list-border: #e5e5e5;
+ 
+  .bp4-dark & {
+    --x-color-tab-list-border: rgba(255, 255, 255, 0.1);
+  }
   &__inside-content {
     display: flex;
     flex-direction: column;
@@ -36,7 +41,7 @@
     overflow: auto;
 
     .#{$ns}-tab-list {
-      border-bottom: 1px solid #e5e5e5;
+      border-bottom: 1px solid var(--x-color-tab-list-border);
       padding-left: 15px;
       padding-right: 15px;
       align-items: baseline;

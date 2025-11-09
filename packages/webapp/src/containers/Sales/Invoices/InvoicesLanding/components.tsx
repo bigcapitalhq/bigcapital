@@ -6,7 +6,6 @@ import {
   Menu,
   MenuItem,
   MenuDivider,
-  ProgressBar,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
@@ -20,7 +19,7 @@ import {
   Icon,
   Can,
 } from '@/components';
-import { formattedAmount, safeCallback, calculateStatus } from '@/utils';
+import { formattedAmount, safeCallback } from '@/utils';
 import {
   SaleInvoiceAction,
   PaymentReceiveAction,
@@ -31,44 +30,36 @@ export function InvoiceStatus({ invoice }) {
   return (
     <Choose>
       <Choose.When condition={invoice.is_fully_paid && invoice.is_delivered}>
-        <span className={'fully-paid-icon'}>
-          <Icon icon="small-tick" iconSize={18} />
-        </span>
-        <span class="fully-paid-text">
+        <Tag intent={Intent.SUCCESS} round>
           <T id={'paid'} />
-        </span>
+        </Tag>
       </Choose.When>
 
       <Choose.When condition={invoice.is_delivered}>
         <Choose>
           <Choose.When condition={invoice.is_overdue}>
-            <span className={'overdue-status'}>
+            <Tag intent={Intent.DANGER} round>
               {intl.get('overdue_by', { overdue: invoice.overdue_days })}
-            </span>
+            </Tag>
           </Choose.When>
           <Choose.Otherwise>
-            <span className={'due-status'}>
+            <Tag intent={Intent.WARNING} round>
               {intl.get('due_in', { due: invoice.remaining_days })}
-            </span>
+            </Tag>
           </Choose.Otherwise>
         </Choose>
 
         <If condition={invoice.is_partially_paid}>
-          <span class="partial-paid">
+          <Tag intent={Intent.PRIMARY} round>
             {intl.get('day_partially_paid', {
               due: formattedAmount(invoice.due_amount, invoice.currency_code),
             })}
-          </span>
-          <ProgressBar
-            animate={false}
-            stripes={false}
-            intent={Intent.PRIMARY}
-            value={calculateStatus(invoice.balance_amount, invoice.balance)}
-          />
+          </Tag>
         </If>
       </Choose.When>
+
       <Choose.Otherwise>
-        <Tag minimal={true} round={true}>
+        <Tag round>
           <T id={'draft'} />
         </Tag>
       </Choose.Otherwise>

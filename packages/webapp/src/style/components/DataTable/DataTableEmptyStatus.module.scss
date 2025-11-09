@@ -7,7 +7,7 @@
 
   &_title {
     font-size: 20px;
-    color: #2c3a5d;
+    color: var(--color-datatable-empty-status-title);
     font-weight: 600;
     margin-left: auto;
     margin-bottom: 10px;
@@ -21,7 +21,7 @@
   }
   &_desc {
     font-size: 16px;
-    color: #1f3255;
+    color: var(--color-datatable-empty-status-description);
     opacity: 0.8;
     line-height: 1.6;
   }

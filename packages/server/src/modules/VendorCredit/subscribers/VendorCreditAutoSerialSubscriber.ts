@@ -1,27 +1,21 @@
-// import { Service, Inject } from 'typedi';
-// import events from '@/subscribers/events';
-// import BaseVendorCredit from '../commands/VendorCreditDTOTransform.service';
-// import { IVendorCreditCreatedPayload } from '@/interfaces';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import { VendorCreditAutoIncrementService } from '../commands/VendorCreditAutoIncrement.service';
+import { IVendorCreditCreatedPayload } from '../types/VendorCredit.types';
 
-// @Service()
-// export default class VendorCreditAutoSerialSubscriber {
-//   @Inject()
-//   vendorCreditService: BaseVendorCredit;
+@Injectable()
+export class VendorCreditAutoSerialSubscriber {
+  constructor(
+    private readonly vendorCreditIncrementService: VendorCreditAutoIncrementService,
+  ) { }
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   public attach(bus) {
-//     bus.subscribe(events.vendorCredit.onCreated, this.autoIncrementOnceCreated);
-//   }
-
-//   /**
-//    * Auto serial increment once the vendor credit created.
-//    * @param {IVendorCreditCreatedPayload} payload
-//    */
-//   private autoIncrementOnceCreated = ({
-//     tenantId,
-//   }: IVendorCreditCreatedPayload) => {
-//     this.vendorCreditService.incrementSerialNumber(tenantId);
-//   };
-// }
+  /**
+   * Auto serial increment once vendor credit created.
+   * @param {IVendorCreditCreatedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onCreated)
+  async autoSerialIncrementOnceCreated({ }: IVendorCreditCreatedPayload) {
+    await this.vendorCreditIncrementService.incrementSerialNumber();
+  }
+}

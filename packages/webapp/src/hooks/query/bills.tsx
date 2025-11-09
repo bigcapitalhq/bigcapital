@@ -69,7 +69,7 @@ export function useEditBill(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`bills/${id}`, values),
+    ([id, values]) => apiRequest.put(`bills/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.

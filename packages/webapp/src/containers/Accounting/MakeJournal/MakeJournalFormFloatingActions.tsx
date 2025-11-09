@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { Group, Icon, If, FormattedMessage as T } from '@/components';
+import { PageForm } from '@/components/PageForm';
 import { CLASSES } from '@/constants/classes';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 
@@ -76,7 +77,7 @@ export default function MakeJournalFloatingAction() {
   };
 
   return (
-    <Group
+    <PageForm.FooterActions
       spacing={10}
       className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
     >
@@ -191,6 +192,6 @@ export default function MakeJournalFloatingAction() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </Group>
+    </PageForm.FooterActions>
   );
 }

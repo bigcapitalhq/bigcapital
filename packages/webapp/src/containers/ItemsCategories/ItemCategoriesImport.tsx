@@ -19,7 +19,7 @@ export default function ItemCategoriesImport() {
         onImportSuccess={handleImportSuccess}
         onCancelClick={handleCancelBtnClick}
         exampleTitle="Item Categories Example"
-        />
+      />
     </DashboardInsider>
   );
 }

@@ -3,8 +3,8 @@
 // Preferences sidebar.
 // -----------------------------
 .preferences-sidebar {
-  background: #eaeef6;
-  border-right: 1px solid #c6d0d9;
+  background: var(--color-sidebar-preferences-background);
+  border-right: 1px solid var(--color-sidebar-preferences-border);
   min-width: 220px;
   max-width: 220px;
   height: 100%;
@@ -46,11 +46,11 @@
     align-items: center;
     height: 60px;
     padding: 0 22px;
-    border-bottom: 1px solid #bbcbd0;
+    border-bottom: 1px solid var(--color-preferences-sidebar-head-border);
 
     h2 {
       font-size: 22px;
-      color: #3b3b4c;
+      color: var(--color-preferences-sidebar-head-text);
       font-weight: 400;
       margin: 0;
     }
@@ -60,16 +60,23 @@
     padding: 0;
     background: transparent;
 
+    &.#{$ns}-menu {
+      &,
+      .bp4-dark & {
+        background: transparent;
+      }
+    }
+
     .#{$ns}-menu-item {
       padding: 8px 18px;
       font-size: 15px;
       font-weight: 400;
-      color: #333;
+      color: var(--color-sidebar-preferences-item-text);
 
       &:hover,
       &.#{$ns}-active {
-        background-color: rgba(255, 255, 255, 0.6);
-        color: #333;
+        background-color: var(--color-sidebar-preferences-item-hover-background);
+        color: var(--color-sidebar-preferences-item-hover-text);
       }
     }
   }

@@ -32,7 +32,7 @@ export class AuthSignupService {
 
     @Inject(SystemUser.name)
     private readonly systemUserModel: typeof SystemUser,
-  ) {}
+  ) { }
 
   /**
    * Registers a new tenant with user from user input.
@@ -121,7 +121,6 @@ export class AuthSignupService {
       const isAllowedDomain = signupRestrictions.allowedDomains.some(
         (domain) => emailDomain === domain,
       );
-
       if (!isAllowedEmail && !isAllowedDomain) {
         throw new ServiceError(
           ERRORS.SIGNUP_RESTRICTED_NOT_ALLOWED,

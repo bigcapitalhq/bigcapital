@@ -24,11 +24,13 @@ import {
 import { DRAWERS } from '@/constants/drawers';
 import { MoreIcon } from '@/icons/More';
 import { STRIPE_PRICING_LINK } from './constants';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 export function StripePaymentMethod() {
   const { openDialog } = useDialogActions();
   const { openDrawer } = useDrawerActions();
   const { openAlert } = useAlertActions();
+  const isDarkMode = useIsDarkMode();
 
   const { paymentMethodsState } = usePaymentMethodsBoot();
   const stripeState = paymentMethodsState?.stripe;
@@ -63,8 +65,9 @@ export function StripePaymentMethod() {
     <Card style={{ margin: 0 }}>
       <Group position="apart">
         <Group>
-          <StripeLogo />
-
+          <StripeLogo
+            color={isDarkMode ? 'rgba(255, 255, 255, 0.85)' : '#0A2540'}
+          />
           <Group spacing={10}>
             {isStripeEnabled && (
               <Tag minimal intent={Intent.SUCCESS}>

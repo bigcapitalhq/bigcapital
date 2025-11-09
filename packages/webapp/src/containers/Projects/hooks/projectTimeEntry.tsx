@@ -43,7 +43,7 @@ export function useEditProjectTimeEntry(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`projects/times/${id}`, values),
+    ([id, values]) => apiRequest.put(`projects/times/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific project time entry.

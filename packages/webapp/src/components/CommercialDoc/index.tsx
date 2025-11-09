@@ -3,6 +3,10 @@ import { Card } from '../Card';
 import { DataTable } from '../Datatable';
 
 export const CommercialDocBox = styled(Card)`
+  --x-background-color: var(--x-white);
+  --x-background-color: var(--color-dark-gray2);
+  
+  background-color: var(--x-background-color);
   padding: 22px 20px;
 `;
 
@@ -16,7 +20,7 @@ export const CommercialDocTopHeader = styled.div`
 
 export const CommercialDocEntriesTable = styled(DataTable)`
   .tbody .tr:last-child .td {
-    border-bottom: 1px solid #d2dce2;
+    border-bottom-width: 1px;
   }
 `;
 

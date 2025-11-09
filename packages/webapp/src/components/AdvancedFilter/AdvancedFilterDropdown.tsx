@@ -1,16 +1,16 @@
 // @ts-nocheck
 import React from 'react';
 import { Formik, FastField, FieldArray } from 'formik';
-import {
-  Button,
-  FormGroup,
-  Classes,
-  InputGroup,
-  MenuItem,
-} from '@blueprintjs/core';
+import { Button, Classes, InputGroup, MenuItem } from '@blueprintjs/core';
 import { get, first, defaultTo, isEqual, isEmpty } from 'lodash';
 import intl from 'react-intl-universal';
-import { Choose, Icon, FormattedMessage as T, ListSelect } from '@/components';
+import {
+  Choose,
+  Icon,
+  FormattedMessage as T,
+  FSelect,
+  FFormGroup,
+} from '@/components';
 import { useUpdateEffect } from '@/hooks';
 import {
   AdvancedFilterDropdownProvider,
@@ -58,38 +58,31 @@ function FilterConditionField() {
   const conditionFieldPath = getConditionFieldPath('condition');
 
   return (
-    <FastField name={conditionFieldPath}>
-      {({ form, field }) => (
-        <FormGroup className={'form-group--condition'}>
-          <Choose>
-            <Choose.When condition={conditionIndex === 0}>
-              <InputGroup disabled value={intl.get('filter.when')} />
-            </Choose.When>
+    <FFormGroup className={'form-group--condition'} name={conditionFieldPath}>
+      <Choose>
+        <Choose.When condition={conditionIndex === 0}>
+          <InputGroup disabled value={intl.get('filter.when')} />
+        </Choose.When>
 
-            <Choose.Otherwise>
-              <ListSelect
-                selectedItem={field.value}
-                textProp={'label'}
-                selectedItemProp={'value'}
-                labelProp={'text'}
-                items={conditionalsOptions}
-                className={Classes.FILL}
-                filterable={false}
-                onItemSelect={(option) => {
-                  form.setFieldValue(conditionFieldPath, option.value);
-                }}
-                popoverProps={{
-                  inline: true,
-                  minimal: true,
-                  captureDismiss: true,
-                }}
-                itemRenderer={ConditionItemRenderer}
-              />
-            </Choose.Otherwise>
-          </Choose>
-        </FormGroup>
-      )}
-    </FastField>
+        <Choose.Otherwise>
+          <FSelect
+            name={conditionFieldPath}
+            textAccessor={'label'}
+            valueAccessor={'value'}
+            labelAccessor={'text'}
+            items={conditionalsOptions}
+            filterable={false}
+            popoverProps={{
+              inline: true,
+              minimal: true,
+              captureDismiss: true,
+            }}
+            itemRenderer={ConditionItemRenderer}
+            className={Classes.FILL}
+          />
+        </Choose.Otherwise>
+      </Choose>
+    </FFormGroup>
   );
 }
 
@@ -103,20 +96,18 @@ function FilterCompatatorFilter() {
   const fieldType = get(fieldMeta, 'fieldType');
 
   return (
-    <FastField name={comparatorFieldPath}>
-      {({ form, field }) => (
-        <FormGroup className={'form-group--comparator'}>
-          <AdvancedFilterCompatatorField
-            dataType={fieldType}
-            className={Classes.FILL}
-            selectedItem={field.value}
-            onItemSelect={(option) => {
-              form.setFieldValue(comparatorFieldPath, option.value);
-            }}
-          />
-        </FormGroup>
-      )}
-    </FastField>
+    <FFormGroup
+      name={comparatorFieldPath}
+      className={'form-group--comparator'}
+      fastField
+    >
+      <AdvancedFilterCompatatorField
+        name={comparatorFieldPath}
+        dataType={fieldType}
+        className={Classes.FILL}
+        fastField
+      />
+    </FFormGroup>
   );
 }
 
@@ -169,11 +160,11 @@ function FilterFieldsField() {
   return (
     <FastField name={fieldPath}>
       {({ field, form }) => (
-        <FormGroup className={'form-group--fieldKey'}>
-          <ListSelect
+        <FFormGroup className={'form-group--fieldKey'} name={fieldPath}>
+          <FSelect
             selectedItem={field.value}
-            textProp={'label'}
-            selectedItemProp={'value'}
+            textAccessor={'label'}
+            valueAccessor={'value'}
             items={transformFieldsToOptions(fields)}
             className={Classes.FILL}
             onItemSelect={(option) => {
@@ -188,7 +179,7 @@ function FilterFieldsField() {
               captureDismiss: true,
             }}
           />
-        </FormGroup>
+        </FFormGroup>
       )}
     </FastField>
   );
@@ -219,7 +210,7 @@ function FilterValueField() {
       shouldUpdate={shouldFilterValueFieldUpdate}
     >
       {({ form: { setFieldValue }, field }) => (
-        <FormGroup className={'form-group--value'}>
+        <FFormGroup className={'form-group--value'} name={valueFieldPath}>
           <AdvancedFilterValueField
             isFocus={conditionIndex === 0}
             value={field.value}
@@ -231,7 +222,7 @@ function FilterValueField() {
               setFieldValue(valueFieldPath, value);
             }}
           />
-        </FormGroup>
+        </FFormGroup>
       )}
     </FastField>
   );

@@ -91,7 +91,7 @@ export function useEditAccount(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`accounts/${id}`, values),
+    ([id, values]) => apiRequest.put(`accounts/${id}`, values),
     {
       onSuccess: () => {
         // Common invalidate queries.

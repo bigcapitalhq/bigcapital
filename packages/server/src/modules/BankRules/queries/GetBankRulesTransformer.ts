@@ -28,7 +28,12 @@ export class GetBankRulesTransformer extends Transformer {
    * @returns {string}
    */
   protected assignCategoryFormatted(bankRule: any) {
-    return getCashflowTransactionFormattedType(bankRule.assignCategory);
+    const translationKey = getCashflowTransactionFormattedType(
+      bankRule.assignCategory,
+    );
+    return translationKey
+      ? this.context.i18n.t(translationKey)
+      : bankRule.assignCategory;
   }
 
   /**

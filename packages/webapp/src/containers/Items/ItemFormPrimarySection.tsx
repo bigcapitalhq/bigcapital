@@ -7,23 +7,25 @@ import {
   Classes,
   Radio,
   Position,
+  MenuItem,
 } from '@blueprintjs/core';
 import { ErrorMessage, FastField } from 'formik';
 import { CLASSES } from '@/constants/classes';
 import {
-  CategoriesSelectList,
   Hint,
   Col,
   Row,
   FieldRequiredHint,
   FormattedMessage as T,
   FormattedHTMLMessage,
+  FFormGroup,
+  FSelect,
 } from '@/components';
 import classNames from 'classnames';
 
 import { useItemFormContext } from './ItemFormProvider';
 import { handleStringChange, inputIntent } from '@/utils';
-import { categoriesFieldShouldUpdate } from './utils';
+// import { categoriesFieldShouldUpdate } from './utils';
 
 /**
  * Item form primary section.
@@ -132,29 +134,20 @@ export default function ItemFormPrimarySection() {
           </FastField>
 
           {/*----------- Item category ----------*/}
-          <FastField
+          <FFormGroup
             name={'category_id'}
-            categories={itemsCategories}
-            shouldUpdate={categoriesFieldShouldUpdate}
+            label={<T id={'category'} />}
+            inline={true}
           >
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'category'} />}
-                inline={true}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="category_id" />}
-                className={classNames('form-group--category', Classes.FILL)}
-              >
-                <CategoriesSelectList
-                  categories={itemsCategories}
-                  selecetedCategoryId={value}
-                  onCategorySelected={(category) => {
-                    form.setFieldValue('category_id', category.id);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+            <FSelect
+              name={'category_id'}
+              items={itemsCategories}
+              valueAccessor={'id'}
+              textAccessor={'name'}
+              placeholder={<T id={'select_category'} />}
+              popoverProps={{ minimal: true, captureDismiss: true }}
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={3}>

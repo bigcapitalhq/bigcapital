@@ -6,6 +6,7 @@ import { useDrawerActions } from '@/hooks/state';
 import { useInvoiceMailItems, useSendInvoiceFormatArgsOptions } from './_hooks';
 import { SendMailViewToAddressField } from '../../Estimates/SendMailViewDrawer/SendMailViewToAddressField';
 import { SendMailViewMessageField } from '../../Estimates/SendMailViewDrawer/SendMailViewMessageField';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 export function InvoiceSendMailFields() {
   const items = useInvoiceMailItems();
@@ -39,6 +40,7 @@ function InvoiceSendMailFooter() {
   const { isSubmitting } = useFormikContext();
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
+  const isDarkMode = useIsDarkMode();
 
   const handleClose = () => {
     closeDrawer(name);
@@ -48,7 +50,9 @@ function InvoiceSendMailFooter() {
     <Group
       py={'12px'}
       px={'16px'}
-      borderTop="1px solid #d8d8d9"
+      borderTopWidth={1}
+      borderTopStyle="solid"
+      borderTopColor={isDarkMode ? 'rgba(255, 255, 255, 0.2)' : "#d8d8d9"}
       position={'apart'}
     >
       <Group spacing={10} ml={'auto'}>

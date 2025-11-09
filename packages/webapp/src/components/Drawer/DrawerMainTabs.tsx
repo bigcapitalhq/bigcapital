@@ -18,24 +18,36 @@ export function DrawerMainTabs({ children, ...restProps }) {
 
 const DrawerMainTabsRoot = styled.div`
   .bp4-tabs {
+    --x-tab-list-background: #fff;
+    --x-tab-list-border: #e1e2e8;
+    --x-tab-item-text: #7f8596;
+
+    --x-tab-list-background: transparent;
+    --x-tab-list-border: rgba(255, 255, 255, 0.2);
+    --x-tab-item-text: var(--color-light-gray1);
+
+    --x-tab-item-height: 36px;
+
     .bp4-tab-list {
       position: relative;
-      background-color: #fff;
+      background-color: var(--x-tab-list-background);
       padding: 0 15px;
-      border-bottom: 2px solid #e1e2e8;
+      border-bottom: 2px solid var(--x-tab-list-border);
 
       > *:not(:last-child) {
         margin-right: 25px;
       }
-
+      .bp4-tab {
+        color: var(--x-tab-item-text);
+        line-height: var(--x-tab-item-height);
+      }
       &.bp4-large > .bp4-tab {
         font-size: 15px;
-        color: #7f8596;
         margin: 0 1rem;
 
         &[aria-selected='true'],
         &:not([aria-disabled='true']):hover {
-          color: #0052cc;
+          color: var(--color-primary);
         }
       }
       .bp4-tab-indicator-wrapper .bp4-tab-indicator {

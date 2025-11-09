@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
-
-import { CLASSES } from '@/constants/classes';
+import { x } from '@xstyled/emotion';
 import { Row, Col, Paper } from '@/components';
 import { ExpenseFormFooterLeft } from './ExpenseFormFooterLeft';
 import { ExpenseFormFooterRight } from './ExpenseFormFooterRight';
@@ -10,7 +8,7 @@ import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmen
 
 export default function ExpenseFormFooter() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
+    <x.div mt={'20px'} px={'32px'} pb={'20px'} flex={1}>
       <Paper p={'20px'}>
         <Row>
           <Col md={8}>
@@ -23,6 +21,6 @@ export default function ExpenseFormFooter() {
           </Col>
         </Row>
       </Paper>
-    </div>
+    </x.div>
   );
 }

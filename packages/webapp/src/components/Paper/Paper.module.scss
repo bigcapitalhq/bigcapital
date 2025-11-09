@@ -1,0 +1,14 @@
+
+
+.root{
+  --x-color-background: #fff;
+  --x-color-border: #d2dce2;
+
+  :global(.bp4-dark) & {
+    --x-color-background: var(--color-dark-gray1);
+    --x-color-border: rgba(255, 255, 255, 0.1);
+  }
+  background-color: var(--x-color-background);
+  border: 1px solid var(--x-color-border);
+  padding: 10px;
+}

@@ -57,25 +57,28 @@ const CashflowStatementDataTable = styled(DataTable)`
     .tbody {
       .tr:not(.no-results) {
         .td {
-          border-bottom: 0;
+          border-bottom-width: 0;
           padding-top: 0.32rem;
           padding-bottom: 0.32rem;
-          color: #252a31;
         }
         &.row_type--ACCOUNTS {
-          border-top: 1px solid #bbb;
+          .td {
+            border-top-width: 1px;
+            border-top-style: solid;
+          }
         }
         &.row-id--CASH_END_PERIOD {
-          border-bottom: 3px double #333;
+          .td {
+            border-bottom-width: 3px;
+            border-bottom-style: double;
+          }
         }
         &.row_type--TOTAL {
           font-weight: 500;
 
-          .td {
-            color: #000;
-          }
           &:not(:first-child) .td {
-            border-top: 1px solid #bbb;
+            border-top-width: 1px;
+            border-top-style: solid;
           }
         }
       }

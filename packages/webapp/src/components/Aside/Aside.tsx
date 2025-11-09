@@ -1,5 +1,6 @@
 import { Button, Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 import { Box, BoxProps, Group } from '../Layout';
 import { Icon } from '../Icon';
 import styles from './Aside.module.scss';
@@ -21,6 +22,7 @@ export function Aside({
   classNames,
   className
 }: AsideProps) {
+  const isDarkMode = useIsDarkMode();
   const handleClose = () => {
     onClose && onClose();
   };
@@ -28,12 +30,11 @@ export function Aside({
     <Box className={clsx(styles.root, className, classNames?.root)}>
       <Group position="apart" className={clsx(styles.title, classNames?.title)}>
         {title}
-
         {hideCloseButton !== true && (
           <Button
             aria-label="Close"
             className={Classes.DIALOG_CLOSE_BUTTON}
-            icon={<Icon icon={'smallCross'} color={'#000'} />}
+            icon={<Icon icon={'smallCross'} color={isDarkMode ? '#fff' : '#000'} />}
             minimal={true}
             onClick={handleClose}
           />
@@ -45,13 +46,13 @@ export function Aside({
   );
 }
 
-interface AsideContentProps extends BoxProps {}
+interface AsideContentProps extends BoxProps { }
 
 function AsideContent({ ...props }: AsideContentProps) {
   return <Box {...props} className={clsx(styles.content, props?.className)} />;
 }
 
-interface AsideFooterProps extends BoxProps {}
+interface AsideFooterProps extends BoxProps { }
 
 function AsideFooter({ ...props }: AsideFooterProps) {
   return <Box {...props} />;

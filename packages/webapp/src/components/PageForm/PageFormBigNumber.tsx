@@ -1,23 +1,19 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'classnames';
 import { CLASSES } from '@/constants/classes';
-
-import '@/style/components/BigAmount.scss';
+import styles from '@/style/components/BigAmount.module.scss';
 
 interface PageFormBigNumberProps {
   label: string;
   amount: string | number;
 }
-export function PageFormBigNumber({
-  label,
-  amount,
-}: PageFormBigNumberProps) {
+export function PageFormBigNumber({ label, amount }: PageFormBigNumberProps) {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
-      <div class="big-amount">
-        <span class="big-amount__label">{label}</span>
-        <h1 class="big-amount__number">{amount}</h1>
+    <div className={clsx(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
+      <div className={clsx(styles.root)}>
+        <span className={clsx(styles.label)}>{label}</span>
+        <h1 className={clsx(styles.number)}>{amount}</h1>
       </div>
     </div>
   );

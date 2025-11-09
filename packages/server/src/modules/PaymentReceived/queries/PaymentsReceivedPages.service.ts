@@ -18,7 +18,7 @@ export class PaymentsReceivedPagesService {
 
     @Inject(PaymentReceived.name)
     private readonly paymentReceived: TenantModelProxy<typeof PaymentReceived>,
-  ) {}
+  ) { }
 
   /**
    * Retrive page invoices entries from the given sale invoices models.
@@ -58,11 +58,10 @@ export class PaymentsReceivedPagesService {
 
   /**
    * Retrieve the payment receive details of the given id.
-   * @param {number} tenantId - Tenant id.
-   * @param {Integer} paymentReceiveId - Payment receive id.
+   * @param {number} paymentReceiveId - Payment receive id.
    */
   public async getPaymentReceiveEditPage(paymentReceiveId: number): Promise<{
-    paymentReceive: Omit<PaymentReceived, 'entries'>;
+    data: Omit<PaymentReceived, 'entries'>;
     entries: IPaymentReceivePageEntry[];
   }> {
     // Retrieve payment receive.
@@ -100,7 +99,7 @@ export class PaymentsReceivedPagesService {
     const entries = [...paymentEntries, ...restReceivableEntries];
 
     return {
-      paymentReceive: omit(paymentReceive, ['entries']),
+      data: omit(paymentReceive, ['entries']),
       entries,
     };
   }

@@ -1,32 +1,35 @@
 
 .root {
-  
+  --color-import-dropzone-title-text: #5F6B7C;
+  --color-import-dropzone-subtitle-text: #8F99A8;
+  --color-import-dropzone-hint-text: #8F99A8;
+
+  --color-import-dropzone-title-text: var(--color-light-gray2);
+  --color-import-dropzone-subtitle-text: var(--color-light-gray1);
+  --color-import-dropzone-hint-text: rgba(255, 255, 255, 0.4);
 }
 
 .title{
-  color: #5F6B7C;
+  color: var(--color-import-dropzone-title-text);
   font-weight: 600;
 }
-
 .iconWrap{
   color: #8F99A8;
 }
 .subtitle {
-  color: #8F99A8;
+  color: var(--color-import-dropzone-subtitle-text);
 }
 .dropzoneContent{
   text-align: center;
   margin: auto;  
 }
-
 .buttons-wrap {
   margin-top: 12px;
 }
-
 .dropzoneHint{
   display: flex;
   font-size: 12px;
   margin-top: 6px;
-  color: #8F99A8;
+  color: var(--color-import-dropzone-hint-text);
   justify-content: space-between;
 }

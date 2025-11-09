@@ -14,6 +14,7 @@ import jwt from './jwt';
 import mail from './mail';
 import loops from './loops';
 import bankfeed from './bankfeed';
+import throttle from './throttle';
 
 export const config = [
   systemDatabase,
@@ -32,4 +33,5 @@ export const config = [
   mail,
   loops,
   bankfeed,
+  throttle,
 ];

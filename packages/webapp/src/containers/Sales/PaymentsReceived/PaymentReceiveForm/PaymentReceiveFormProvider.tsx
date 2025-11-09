@@ -42,15 +42,15 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
 
   // Fetches payment recevie details.
   const {
-    data: {
-      paymentReceive: paymentReceiveEditPage,
-      entries: paymentEntriesEditPage,
-    },
+    data: paymentReceivedEditData,
     isLoading: isPaymentLoading,
     isFetching: isPaymentFetching,
   } = usePaymentReceiveEditPage(paymentReceiveId, {
     enabled: !!paymentReceiveId,
   });
+  const paymentReceiveEditPage = paymentReceivedEditData?.data;
+  const paymentEntriesEditPage = paymentReceivedEditData?.entries
+
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 

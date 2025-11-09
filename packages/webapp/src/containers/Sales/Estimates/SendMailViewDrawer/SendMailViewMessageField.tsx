@@ -7,6 +7,7 @@ import { FormGroupProps, TextAreaProps } from '@blueprintjs-formik/core';
 import { css } from '@emotion/css';
 import { FFormGroup, FSelect, FTextArea, Group, Stack } from '@/components';
 import { InvoiceSendMailFormValues } from '../../Invoices/InvoiceSendMailDrawer/_types';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 interface SendMailViewMessageFieldProps {
   argsOptions?: Array<SelectOptionProps>;
@@ -22,6 +23,7 @@ export function SendMailViewMessageField({
 }: SendMailViewMessageFieldProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setFieldValue } = useFormikContext<InvoiceSendMailFormValues>();
+  const isDarkmode = useIsDarkMode();
 
   const handleTextareaChange = useCallback(
     (item: SelectOptionProps) => {
@@ -58,7 +60,7 @@ export function SendMailViewMessageField({
     <FFormGroup label={'Message'} name={'message'} {...formGroupProps}>
       <Stack spacing={0}>
         <Group
-          border={'1px solid #ced4da'}
+          border={`1px solid ${isDarkmode ? 'rgba(255, 255, 255, 0.2)' : '#ced4da'}`}
           borderBottom={0}
           borderRadius={'3px 3px 0 0'}
         >

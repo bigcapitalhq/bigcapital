@@ -8,7 +8,7 @@ import { DeleteSaleReceipt } from './commands/DeleteSaleReceipt.service';
 import { CloseSaleReceipt } from './commands/CloseSaleReceipt.service';
 import { SaleReceiptsPdfService } from './queries/SaleReceiptsPdf.service';
 import { GetSaleReceiptState } from './queries/GetSaleReceiptState.service';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { SaleReceiptDTOTransformer } from './commands/SaleReceiptDTOTransformer.service';
 import { SaleReceiptValidators } from './commands/SaleReceiptValidators.service';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
@@ -39,6 +39,7 @@ import { SaleReceiptsExportable } from './commands/SaleReceiptsExportable';
 import { SaleReceiptsImportable } from './commands/SaleReceiptsImportable';
 import { GetSaleReceiptMailStateService } from './queries/GetSaleReceiptMailState.service';
 import { GetSaleReceiptMailTemplateService } from './queries/GetSaleReceiptMailTemplate.service';
+import { SaleReceiptAutoIncrementSubscriber } from './subscribers/SaleReceiptAutoIncrementSubscriber';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -82,7 +83,8 @@ import { GetSaleReceiptMailTemplateService } from './queries/GetSaleReceiptMailT
     SaleReceiptsExportable,
     SaleReceiptsImportable,
     GetSaleReceiptMailStateService,
-    GetSaleReceiptMailTemplateService
+    GetSaleReceiptMailTemplateService,
+    SaleReceiptAutoIncrementSubscriber,
   ],
 })
-export class SaleReceiptsModule {}
+export class SaleReceiptsModule { }

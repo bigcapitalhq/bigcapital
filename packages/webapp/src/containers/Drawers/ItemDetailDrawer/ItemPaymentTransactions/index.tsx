@@ -30,7 +30,6 @@ export function ItemTransactionsHeader() {
   const handleItemChange = (item) => {
     setValue(item);
   };
-
   return (
     <ItemTransactionsHeaderRoot>
       <ItemManuTransaction onChange={handleItemChange} />

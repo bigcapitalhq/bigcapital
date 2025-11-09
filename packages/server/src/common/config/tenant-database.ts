@@ -8,6 +8,6 @@ export default registerAs('tenantDatabase', () => ({
   user: process.env.TENANT_DB_USER || process.env.DB_USER,
   password: process.env.TENANT_DB_PASSWORD || process.env.DB_PASSWORD,
   dbNamePrefix: process.env.TENANT_DB_NAME_PERFIX || 'bigcapital_tenant_',
-  migrationsDir: path.join(__dirname, '../../database/migrations'),
-  seedsDir: path.join(__dirname, '../../database/seeds/core'),
+  migrationsDir: path.join(__dirname, '../../database/tenant/migrations'),
+  seedsDir: path.join(__dirname, '../../database/tenant/seeds/core'),
 }));

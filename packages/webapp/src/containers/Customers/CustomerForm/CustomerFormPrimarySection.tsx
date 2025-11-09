@@ -10,6 +10,8 @@ import {
   SalutationList,
   DisplayNameList,
   FormattedMessage as T,
+  FInputGroup,
+  FFormGroup,
 } from '@/components';
 import CustomerTypeRadioField from './CustomerTypeRadioField';
 import { CLASSES } from '@/constants/classes';
@@ -28,100 +30,51 @@ export default function CustomerFormPrimarySection({}) {
       <CustomerTypeRadioField />
 
       {/**----------- Contact name -----------*/}
-      <FormGroup
-        className={classNames('form-group--contact_name')}
+      <FFormGroup
+        name={'salutation'}
         label={<T id={'contact_name'} />}
         inline={true}
       >
         <ControlGroup>
-          <FastField name={'salutation'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <SalutationList
-                onItemSelect={(salutation) => {
-                  form.setFieldValue('salutation', salutation.label);
-                }}
-                selectedItem={value}
-                popoverProps={{ minimal: true }}
-                className={classNames(
-                  CLASSES.FORM_GROUP_LIST_SELECT,
-                  CLASSES.FILL,
-                  'input-group--salutation-list',
-                  'select-list--fill-button',
-                )}
-              />
-            )}
-          </FastField>
-
-          <FastField name={'first_name'}>
-            {({ field, meta: { error, touched } }) => (
-              <InputGroup
-                placeholder={intl.get('first_name')}
-                intent={inputIntent({ error, touched })}
-                className={classNames('input-group--first-name')}
-                inputRef={(ref) => (firstNameFieldRef.current = ref)}
-                {...field}
-              />
-            )}
-          </FastField>
-
-          <FastField name={'last_name'}>
-            {({ field, meta: { error, touched } }) => (
-              <InputGroup
-                placeholder={intl.get('last_name')}
-                intent={inputIntent({ error, touched })}
-                className={classNames('input-group--last-name')}
-                {...field}
-              />
-            )}
-          </FastField>
+          <SalutationList
+            name={'salutation'}
+            popoverProps={{ minimal: true }}
+          />
+          <FInputGroup
+            name={'first_name'}
+            placeholder={intl.get('first_name')}
+            inputRef={(ref) => (firstNameFieldRef.current = ref)}
+          />
+          <FInputGroup name={'last_name'} placeholder={intl.get('last_name')} />
         </ControlGroup>
-      </FormGroup>
+      </FFormGroup>
 
       {/*----------- Company Name -----------*/}
-      <FastField name={'company_name'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            className={classNames('form-group--company_name')}
-            label={<T id={'company_name'} />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'company_name'} />}
-            inline={true}
-          >
-            <InputGroup {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'company_name'}
+        label={<T id={'company_name'} />}
+        inline={true}
+      >
+        <InputGroup name={'company_name'} />
+      </FFormGroup>
 
       {/*----------- Display Name -----------*/}
-      <Field name={'display_name'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            helperText={<ErrorMessage name={'display_name'} />}
-            intent={inputIntent({ error, touched })}
-            label={
-              <>
-                <T id={'display_name'} />
-                <FieldRequiredHint />
-                <Hint />
-              </>
-            }
-            className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, CLASSES.FILL)}
-            inline={true}
-          >
-            <DisplayNameList
-              firstName={form.values.first_name}
-              lastName={form.values.last_name}
-              company={form.values.company_name}
-              salutation={form.values.salutation}
-              onItemSelect={(displayName) => {
-                form.setFieldValue('display_name', displayName.label);
-              }}
-              selectedItem={value}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </Field>
+      <FFormGroup
+        name={'display_name'}
+        label={
+          <>
+            <T id={'display_name'} />
+            <FieldRequiredHint />
+            <Hint />
+          </>
+        }
+        inline={true}
+      >
+        <DisplayNameList
+          name={'display_name'}
+          popoverProps={{ minimal: true }}
+        />
+      </FFormGroup>
     </div>
   );
 }

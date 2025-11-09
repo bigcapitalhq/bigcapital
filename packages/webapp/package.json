@@ -3,9 +3,9 @@
   "version": "0.10.2",
   "private": true,
   "dependencies": {
-    "@bigcapital/utils": "*",
-    "@bigcapital/pdf-templates": "*",
     "@bigcapital/email-components": "*",
+    "@bigcapital/pdf-templates": "*",
+    "@bigcapital/utils": "*",
     "@blueprintjs-formik/core": "^0.3.7",
     "@blueprintjs-formik/datetime": "^0.3.7",
     "@blueprintjs-formik/select": "^0.3.5",
@@ -21,6 +21,7 @@
     "@craco/craco": "^5.9.0",
     "@emotion/css": "^11.13.4",
     "@emotion/react": "^11.13.3",
+    "@react-oauth/google": "^0.12.2",
     "@reduxjs/toolkit": "^1.2.5",
     "@stripe/connect-js": "^3.3.12",
     "@stripe/react-connect-js": "^3.3.13",
@@ -38,8 +39,8 @@
     "@types/node": "^14.14.9",
     "@types/ramda": "^0.28.14",
     "@types/react": "18.3.4",
-    "@types/react-dom": "18.3.0",
     "@types/react-body-classname": "^1.1.7",
+    "@types/react-dom": "18.3.0",
     "@types/react-helmet": "^6.1.11",
     "@types/react-redux": "^7.1.24",
     "@types/react-router-dom": "^5.3.3",
@@ -131,6 +132,7 @@
   "scripts": {
     "dev": "cross-env PORT=4000 craco start",
     "build": "craco build",
+    "typecheck": "tsc --noEmit",
     "test": "node scripts/test.js",
     "storybook": "start-storybook -p 6006"
   },

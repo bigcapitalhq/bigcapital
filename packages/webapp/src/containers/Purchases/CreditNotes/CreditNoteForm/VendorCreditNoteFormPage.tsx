@@ -2,8 +2,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import '@/style/pages/VendorsCreditNote/PageForm.scss';
-
 import VendorCreditNoteForm from './VendorCreditNoteForm';
 import { VendorCreditNoteFormProvider } from './VendorCreditNoteFormProvider';
 

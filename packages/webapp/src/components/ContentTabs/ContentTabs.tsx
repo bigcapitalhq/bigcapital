@@ -12,8 +12,9 @@ interface ContentTabItemRootProps {
 }
 const ContentTabItemRoot = styled.button<ContentTabItemRootProps>`
   flex: 1 0;
-  background: #fff;
-  border: 1px solid #e1e2e8;
+  background: var(--color-card-background);
+  border: 1px solid var(--color-content-tab-border);
+  color: var(--color-content-tab-text);
   border-radius: 5px;
   padding: 11px;
   text-align: left;
@@ -28,32 +29,30 @@ const ContentTabItemRoot = styled.button<ContentTabItemRootProps>`
   ${(props) =>
     props.active &&
     `
-      border-color: #1552c8;
+      border-color: var(--color-content-tab-active-border);
+      color: var(--color-content-tab-active-text);
       box-shadow: 0 0 0 0.25px #1552c8;
 
       ${ContentTabTitle} {
-        color: #1552c8;
         font-weight: 500;
       }
       ${ContentTabDesc} {
-        color: #1552c8;        
       }
     `}
   &:hover,
   &:active {
-    border-color: #1552c8;
+    border-color: var(--color-content-tab-hover-border);
   }
 `;
 const ContentTabTitle = styled('h3')`
   font-size: 14px;
   font-weight: 400;
-  color: #2f343c;
 `;
 const ContentTabDesc = styled('p')`
   margin: 0;
-  color: #5f6b7c;
   margin-top: 4px;
   font-size: 12px;
+  opacity: 0.7;
 `;
 
 interface ContentTabsItemProps {

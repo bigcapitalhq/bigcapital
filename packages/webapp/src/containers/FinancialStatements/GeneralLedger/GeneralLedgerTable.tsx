@@ -69,6 +69,18 @@ export default function GeneralLedgerTable({ companyName }) {
 }
 
 const GeneralLedgerDataTable = styled(ReportDataTable)`
+  --color-table-text-color: #252a31;
+  --color-table-total-text-color: #000;
+  --color-table-border-color: #ececec;
+  --color-table-total-border-color: #ddd;
+
+  .bp4-dark & {
+    --color-table-text-color: var(--color-light-gray1);
+    --color-table-total-text-color: var(--color-light-gray4);
+    --color-table-border-color: var(--color-dark-gray4);
+    --color-table-total-border-color: var(--color-dark-gray4);
+  }
+
   .tbody {
     .tr .td {
       padding-top: 0.2rem;
@@ -80,10 +92,10 @@ const GeneralLedgerDataTable = styled(ReportDataTable)`
       }
     }
     .tr:not(.no-results) .td:not(:first-of-type) {
-      border-left: 1px solid #ececec;
+      border-left: 1px solid var(--color-table-border-color);
     }
     .tr:last-child .td {
-      border-bottom: 1px solid #ececec;
+      border-bottom: 1px solid var(--color-table-border-color);
     }
     .tr.row_type {
       &--ACCOUNT {
@@ -100,7 +112,7 @@ const GeneralLedgerDataTable = styled(ReportDataTable)`
       &--OPENING_BALANCE,
       &--CLOSING_BALANCE {
         .td {
-          color: #000;
+          color: var(--color-table-total-text-color);
         }
         .date {
           font-weight: 500;
@@ -118,7 +130,7 @@ const GeneralLedgerDataTable = styled(ReportDataTable)`
           font-weight: 500;
         }
         .td {
-          border-top: 1px solid #ddd;
+          border-top: 1px solid var(--color-table-total-border-color);
         }
       }
     }

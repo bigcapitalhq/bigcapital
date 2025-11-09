@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button, Classes, Intent, Text } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { FFormGroup, Group, Stack } from '@/components';
@@ -5,6 +6,7 @@ import { FColorInput } from '@/components/Forms/FColorInput';
 import { CompanyLogoUpload } from '@/containers/ElementCustomize/components/CompanyLogoUpload';
 import { PreferencesBrandingFormValues } from './_types';
 import styles from './PreferencesBranding.module.scss';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 export function PreferencesBrandingFormContent() {
   return (
@@ -31,9 +33,15 @@ export function PreferencesBrandingFormContent() {
 
 export function PreferencesBrandingFormFooter() {
   const { isSubmitting } = useFormikContext();
+  const isDarkMode = useIsDarkMode();
 
   return (
-    <Group style={{ padding: '12px 0', borderTop: '1px solid #e1e1e1' }}>
+    <Group
+      style={{
+        padding: '12px 0',
+        borderTop: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.25)' : '#e1e1e1'}`,
+      }}
+    >
       <Button intent={Intent.PRIMARY} type={'submit'} loading={isSubmitting}>
         Submit
       </Button>

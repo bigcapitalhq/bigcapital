@@ -65,14 +65,20 @@ export function JournalTable({ companyName }) {
 }
 
 const JournalDataTable = styled(ReportDataTable)`
+  --color-table-text-color: var(--color-light-gray1);
+  --color-table-total-text-color: var(--color-light-gray4);
+  --color-table-border-color: var(--color-dark-gray4);
+  --color-table-total-border-color: #dbdbdb;
+  --color-table-total-border-color: var(--color-table-border-color);
+
   .table {
     .tbody {
       .tr:not(.no-results) .td {
         padding: 0.3rem 0.4rem;
-        color: #000;
+        color: var(--color-table-text-color);
         border-bottom-color: transparent;
+        border-left: 1px solid var(--color-table-border-color);
         min-height: 28px;
-        border-left: 1px solid #ececec;
 
         &:first-of-type {
           border-left: 0;
@@ -80,11 +86,12 @@ const JournalDataTable = styled(ReportDataTable)`
       }
       .tr:not(.no-results):last-child {
         .td {
-          border-bottom: 1px solid #dbdbdb;
+          border-bottom: 1px solid var(--color-table-total-border-color);
         }
       }
       .tr.row_type--TOTAL{
         font-weight: 600;
+        color: var(--color-table-total-text-color);
       }
       .tr:not(.no-results) {
         height: 28px;

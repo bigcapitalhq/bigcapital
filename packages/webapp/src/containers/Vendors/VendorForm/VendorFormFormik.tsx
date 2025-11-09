@@ -138,10 +138,15 @@ function VendorFormFormik({
 }
 
 export const VendorFormHeaderPrimary = styled.div`
+  --x-color-border: #e4e4e4;
+
+  .bp4-dark & {
+    --x-color-border: var(--color-dark-gray3);
+  }
   padding: 10px 0 0;
   margin: 0 0 20px;
   overflow: hidden;
-  border-bottom: 1px solid #e4e4e4;
+  border-bottom: 1px solid var(--x-color-border);
   max-width: 1000px;
 `;
 

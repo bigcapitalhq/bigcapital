@@ -42,7 +42,7 @@ export const handleDeleteErrors = (errors) => {
 
 export const AccountCodeAccessor = (row) =>
   !isBlank(row.code) ? (
-    <Tag minimal={true} round={true} intent={Intent.NONE}>
+    <Tag minimal round intent={Intent.NONE}>
       {row.code}
     </Tag>
   ) : null;
@@ -131,6 +131,6 @@ export const rowClassNames = (row) => ({
 export const transformAccountsStateToQuery = (tableState) => {
   return {
     ...transformTableStateToQuery(tableState),
-    inactive_mode: tableState.inactiveMode,
+    onlyInactive: tableState.inactiveMode,
   };
 };

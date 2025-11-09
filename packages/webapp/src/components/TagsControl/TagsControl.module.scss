@@ -1,4 +1,9 @@
+
+
 .root{
+  --color-minimum-border: #e1e2e8;
+  --color-minimum-border: rgba(255, 255, 255, 0.2);
+
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -9,7 +14,7 @@
 
   &:global(.bp4-minimal:not([class*='bp4-intent-'])) {
     background: #fff;
-    border: 1px solid #e1e2e8;
+    border: 1px solid var(--color-minimum-border);
 
     &:global(.bp4-interactive:hover) {
       background-color: rgba(143, 153, 168, 0.05);

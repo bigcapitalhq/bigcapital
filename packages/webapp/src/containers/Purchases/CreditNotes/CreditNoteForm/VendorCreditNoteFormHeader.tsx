@@ -1,9 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
 import VendorCreditNoteFormHeaderFields from './VendorCreditNoteFormHeaderFields';
+import { PageForm } from '@/components/PageForm';
 import { PageFormBigNumber } from '@/components';
 import { useVendorCreditTotalFormatted } from './utils';
 
@@ -14,13 +13,13 @@ function VendorCreditNoteFormHeader() {
   const totalFormatted = useVendorCreditTotalFormatted();
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <PageForm.Header>
       <VendorCreditNoteFormHeaderFields />
       <PageFormBigNumber
         label={intl.get('vendor_credits.label.amount_to_credit')}
         amount={totalFormatted}
       />
-    </div>
+    </PageForm.Header>
   );
 }
 

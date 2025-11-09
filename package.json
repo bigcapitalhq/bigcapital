@@ -4,16 +4,25 @@
   "scripts": {
     "dev": "lerna run dev",
     "build": "lerna run build",
+    "typecheck": "lerna run typecheck",
     "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\"",
     "build:webapp": "lerna run build --scope \"@bigcapital/webapp\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\"",
     "dev:server": "lerna run dev --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\" --scope \"@bigcapital/email-components\"",
     "build:server": "lerna run build --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\" --scope \"@bigcapital/pdf-templates\" --scope \"@bigcapital/email-components\"",
     "serve:server": "lerna run serve --scope \"@bigcapital/server\" --scope \"@bigcapital/utils\"",
-    "server2:start": "lerna run start:dev --scope \"@bigcapital/server2\"",
+    "server:start": "lerna run start:dev --scope \"@bigcapital/server\"",
     "test:watch": "lerna run test:watch",
     "test:e2e": "lerna run test:e2e",
     "start:debug": "lerna run start:debug",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "system:migrate:make": "lerna run cli:system:migrate:make --scope \"@bigcapital/server\"",
+    "tenants:migrate:make": "lerna run cli:tenants:migrate:make --scope \"@bigcapital/server\"",
+    "system:migrate:rollback": "lerna run cli:system:migrate:rollback --scope \"@bigcapital/server\"",
+    "tenants:migrate:rollback": "lerna run cli:tenants:migrate:rollback --scope \"@bigcapital/server\"",
+    "system:migrate:latest": "lerna run cli:system:migrate:latest --scope \"@bigcapital/server\"",
+    "tenants:migrate:latest": "lerna run cli:tenants:migrate:latest --scope \"@bigcapital/server\"",
+    "system:seed:latest": "lerna run cli:system:seed:latest --scope \"@bigcapital/server\"",
+    "tenants:seed:latest": "lerna run cli:tenants:seed:latest --scope \"@bigcapital/server\""
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",

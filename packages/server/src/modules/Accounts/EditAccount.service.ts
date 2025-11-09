@@ -17,7 +17,7 @@ export class EditAccount {
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
-  ) {}
+  ) { }
 
   /**
    * Authorize the account editing.
@@ -85,8 +85,7 @@ export class EditAccount {
       // Update the account on the storage.
       const account = await this.accountModel()
         .query(trx)
-        .findById(accountId)
-        .updateAndFetch({ ...accountDTO });
+        .updateAndFetchById(accountId, { ...accountDTO });
 
       // Triggers `onAccountEdited` event.
       // await this.eventEmitter.emitAsync(events.accounts.onEdited, {

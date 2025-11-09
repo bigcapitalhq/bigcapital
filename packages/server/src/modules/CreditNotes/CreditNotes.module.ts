@@ -9,7 +9,7 @@ import { CreditNoteApplication } from './CreditNoteApplication.service';
 import { CreditNotesController } from './CreditNotes.controller';
 import { GetCreditNoteState } from './queries/GetCreditNoteState.service';
 import { GetCreditNotePdf } from './queries/GetCreditNotePdf.serivce';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
@@ -29,6 +29,7 @@ import { CreditNotesImportable } from './commands/CreditNotesImportable';
 import { CreditNoteInventoryTransactionsSubscriber } from './subscribers/CreditNoteInventoryTransactionsSubscriber';
 import { RefundSyncCreditNoteBalanceSubscriber } from './subscribers/RefundSyncCreditNoteBalanceSubscriber';
 import { DeleteCustomerLinkedCreditSubscriber } from './subscribers/DeleteCustomerLinkedCreditSubscriber';
+import { CreditNoteAutoSerialSubscriber } from './subscribers/CreditNoteAutoSerialSubscriber';
 import { CreditNoteInventoryTransactions } from './commands/CreditNotesInventoryTransactions';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { CreditNoteRefundsModule } from '../CreditNoteRefunds/CreditNoteRefunds.module';
@@ -71,6 +72,7 @@ import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/Credit
     CreditNoteInventoryTransactionsSubscriber,
     RefundSyncCreditNoteBalanceSubscriber,
     DeleteCustomerLinkedCreditSubscriber,
+    CreditNoteAutoSerialSubscriber,
   ],
   exports: [
     CreateCreditNoteService,
@@ -89,4 +91,4 @@ import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/Credit
   ],
   controllers: [CreditNotesController],
 })
-export class CreditNotesModule {}
+export class CreditNotesModule { }

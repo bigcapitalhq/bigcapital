@@ -1,15 +1,18 @@
 // @ts-nocheck
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 import ContentLoader from 'react-content-loader';
 
 export default function PreferencesPageLoader(props) {
+  const isDarkmode = useIsDarkMode();
+
   return (
     <ContentLoader
       speed={2}
       width={400}
       height={250}
       viewBox="0 0 400 250"
-      backgroundColor="#f3f3f3"
-      foregroundColor="#e6e6e6"
+      backgroundColor={isDarkmode ? 'rgba(255, 255, 255, 0.15)' : '#f3f3f3'}
+      foregroundColor={isDarkmode ? 'rgba(255, 255, 255, 0.3)' : '#e6e6e6'}
       {...props}
     >
       <rect x="0" y="82" rx="2" ry="2" width="200" height="20" />

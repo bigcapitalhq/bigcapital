@@ -12,6 +12,7 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { Group, Icon, FormattedMessage as T } from '@/components';
+import { PageForm } from '@/components/PageForm';
 import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
@@ -58,7 +59,7 @@ export default function PaymentMadeFloatingActions() {
   };
 
   return (
-    <Group
+    <PageForm.FooterActions
       spacing={10}
       className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
     >
@@ -110,6 +111,6 @@ export default function PaymentMadeFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </Group>
+    </PageForm.FooterActions>
   );
 }

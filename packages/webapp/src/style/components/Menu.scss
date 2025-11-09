@@ -1,5 +1,7 @@
 .bp4-menu-item {
-
+    &:hover{
+        background-color: var(--color-ui-menu-select-item-hover-background);
+    }
     .menu-item-space {
         width: 6px;
         display: inline-block;

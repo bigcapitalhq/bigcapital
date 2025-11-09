@@ -1,5 +1,5 @@
 import { events } from '@/common/events/events';
-import { SaleInvoiceActivateBranches } from '../../Integrations/Sales/SaleInvoiceBranchesActivate';
+import { SaleInvoiceActivateBranches } from '../../integrations/Sales/SaleInvoiceBranchesActivate';
 import { OnEvent } from '@nestjs/event-emitter';
 import { IBranchesActivatedPayload } from '../../Branches.types';
 import { Injectable } from '@nestjs/common';
@@ -8,7 +8,7 @@ import { Injectable } from '@nestjs/common';
 export class SaleInvoicesActivateBranchesSubscriber {
   constructor(
     private readonly invoicesActivateBranches: SaleInvoiceActivateBranches,
-  ) {}
+  ) { }
 
   /**
    * Updates accounts transactions with the primary branch once

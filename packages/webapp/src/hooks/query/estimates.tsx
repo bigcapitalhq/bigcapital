@@ -47,7 +47,7 @@ export function useEditEstimate(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`sale-estimates/${id}`, values),
+    ([id, values]) => apiRequest.put(`sale-estimates/${id}`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Common invalidate queries.

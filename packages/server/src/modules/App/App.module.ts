@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
@@ -18,7 +18,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ClsModule, ClsService } from 'nestjs-cls';
 import { AppController } from './App.controller';
 import { AppService } from './App.service';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { config } from '../../common/config';
 import { SystemDatabaseModule } from '../System/SystemDB/SystemDB.module';
 import { SystemModelsModule } from '../System/SystemModels/SystemModels.module';
@@ -94,6 +94,9 @@ import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
+import { SocketModule } from '../Socket/Socket.module';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { AppThrottleModule } from './AppThrottle.module';
 
 @Module({
   imports: [
@@ -125,6 +128,7 @@ import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module
       ],
     }),
     PassportModule,
+    AppThrottleModule,
     BullModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -226,9 +230,14 @@ import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module
     MiscellaneousModule,
     UsersModule,
     ContactsModule,
+    SocketModule,
   ],
   controllers: [AppController],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: SerializeInterceptor,

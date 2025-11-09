@@ -1,6 +1,7 @@
 import { ToNumber } from '@/common/decorators/Validators';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
+import { parseBoolean } from '@/utils/parse-boolean';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   ArrayMinSize,
@@ -31,6 +32,7 @@ export class BillEntryDto extends ItemEntryDto {
   })
   @IsOptional()
   @IsBoolean()
+  @Transform(({ value }) => parseBoolean(value, false))
   landedCost?: boolean;
 }
 
@@ -211,5 +213,5 @@ export class CommandBillDto {
   adjustment?: number;
 }
 
-export class CreateBillDto extends CommandBillDto {}
-export class EditBillDto extends CommandBillDto {}
+export class CreateBillDto extends CommandBillDto { }
+export class EditBillDto extends CommandBillDto { }

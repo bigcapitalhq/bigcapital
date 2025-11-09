@@ -41,8 +41,8 @@ export function Stepper({
       active === index
         ? StepperStepState.Progress
         : active > index
-        ? StepperStepState.Completed
-        : StepperStepState.Inactive;
+          ? StepperStepState.Completed
+          : StepperStepState.Inactive;
 
     const shouldAllowSelect = () => {
       if (typeof onStepClick !== 'function') {
@@ -105,7 +105,7 @@ const StepsContent = styled(Box)`
 const StepSeparator = styled.div`
   flex: 1;
   display: block;
-  border-color: #c5cbd3;
+  border-color: var(--color-stepper-separator);
   border-top-style: solid;
   border-top-width: 1px;
 `;

@@ -20,11 +20,9 @@ export const ItemManuTransaction = ({ onChange }) => {
   if (itemTransactionMenu.length === 0) {
     return null;
   }
-
   const handleClickItem = (item) => {
     onChange && onChange(item);
   };
-
   const content = itemTransactionMenu.map(({ name, label }) => (
     <MenuItem onClick={() => handleClickItem(name)} text={label} />
   ));
@@ -52,15 +50,27 @@ export const ItemManuTransaction = ({ onChange }) => {
   );
 };
 
+ItemManuTransaction.displayName = 'ItemManuTransaction';
+
 const ItemSwitchButton = styled(Button)`
+  --button-text-color: #727983;
+
+  .bp4-dark & {
+    --button-text-color: rgba(255, 255, 255, 0.65);
+  }
   .bp4-button-text {
     display: flex;
-    color: #727983;
+    color: var(--button-text-color);
   }
 `;
 
 const ItemSwitchText = styled.span`
+  --button-text-color: #33304a;
+
+  .bp4-dark & {
+    --button-text-color: rgba(255, 255, 255, 0.85);
+  }
   font-weight: 600;
-  color: #33304a;
+  color: var(--button-text-color);
   padding-left: 3px;
 `;

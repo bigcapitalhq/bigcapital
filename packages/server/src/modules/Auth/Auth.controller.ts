@@ -8,6 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import {
   ApiTags,
   ApiOperation,
@@ -19,7 +20,7 @@ import { PublicRoute } from './guards/jwt.guard';
 import { AuthenticationApplication } from './AuthApplication.sevice';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
 import { AuthSigninDto } from './dtos/AuthSignin.dto';
-import { LocalAuthGuard } from './guards/local.guard';
+import { LocalAuthGuard } from './guards/Local.guard';
 import { AuthSigninService } from './commands/AuthSignin.service';
 import { TenantModel } from '../System/models/TenantModel';
 import { SystemUser } from '../System/models/SystemUser';
@@ -28,6 +29,7 @@ import { SystemUser } from '../System/models/SystemUser';
 @ApiTags('Auth')
 @ApiExcludeController()
 @PublicRoute()
+@Throttle({ auth: {} })
 export class AuthController {
   constructor(
     private readonly authApp: AuthenticationApplication,
@@ -35,7 +37,7 @@ export class AuthController {
 
     @Inject(TenantModel.name)
     private readonly tenantModel: typeof TenantModel,
-  ) {}
+  ) { }
 
   @Post('/signin')
   @UseGuards(LocalAuthGuard)

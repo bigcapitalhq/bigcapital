@@ -135,8 +135,8 @@ function InvoiceDetailActionsBar({
               text={<T id={'add_payment'} />}
               onClick={handleQuickPaymentInvoice}
             />
+            <NavbarDivider />
           </If>
-          <NavbarDivider />
         </Can>
         <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
           <Button

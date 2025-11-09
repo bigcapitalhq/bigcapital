@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { createContext } from 'react';
+import { css } from '@emotion/css';
 import { DashboardInsider } from '@/components/Dashboard';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
@@ -98,6 +99,10 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
         isProjectsLoading
       }
       name={'expense-form'}
+      className={css`
+        min-height: calc(100vh - var(--top-offset));
+        max-height: calc(100vh - var(--top-offset));
+      `}
     >
       <ExpenseFormPageContext.Provider value={provider} {...props} />
     </DashboardInsider>

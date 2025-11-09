@@ -1,6 +1,7 @@
 import { Button, Classes } from '@blueprintjs/core';
 import { Group, Icon } from '@/components';
 import styles from './ElementCustomizeHeader.module.scss';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 interface ElementCustomizeHeaderProps {
   label?: string;
@@ -15,6 +16,8 @@ export function ElementCustomizeHeader({
   onClose,
   children,
 }: ElementCustomizeHeaderProps) {
+  const isDarkmode = useIsDarkMode();
+
   const handleClose = () => {
     onClose && onClose();
   };
@@ -25,7 +28,7 @@ export function ElementCustomizeHeader({
         <Button
           aria-label="Close"
           className={Classes.DIALOG_CLOSE_BUTTON}
-          icon={<Icon icon={'smallCross'} color={'#000'} />}
+          icon={<Icon icon={'smallCross'} color={isDarkmode ? '#fff' : '#000'} />}
           minimal={true}
           onClick={handleClose}
           style={{ marginLeft: 'auto' }}

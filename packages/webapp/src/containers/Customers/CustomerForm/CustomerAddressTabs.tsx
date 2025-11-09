@@ -1,10 +1,12 @@
 // @ts-nocheck
 import React from 'react';
-import { FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
 import { Row, Col } from '@/components';
-import { FormattedMessage as T } from '@/components';
-import { FastField, ErrorMessage } from 'formik';
-import { inputIntent } from '@/utils';
+import {
+  FormattedMessage as T,
+  FFormGroup,
+  FInputGroup,
+  FTextArea,
+} from '@/components';
 
 const CustomerBillingAddress = ({}) => {
   return (
@@ -15,105 +17,65 @@ const CustomerBillingAddress = ({}) => {
             <T id={'billing_address'} />
           </h4>
           {/*------------ Billing Address country -----------*/}
-          <FastField name={'billing_address_country'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                className={'form-group--journal-number'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="billing_address_country" />}
-                label={<T id={'country'} />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'billing_address_country'}
+            inline={true}
+            label={<T id={'country'} />}
+          >
+            <FInputGroup name={'billing_address_country'} />
+          </FFormGroup>
 
           {/*------------ Billing Address 1  -----------*/}
-          <FastField name={'billing_address_1'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'address_line_1'} />}
-                className={'form-group--address_line_1'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="billing_address_1" />}
-              >
-                <TextArea {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'billing_address_1'}
+            label={<T id={'address_line_1'} />}
+            inline={true}
+          >
+            <FTextArea name={'billing_address_1'} />
+          </FFormGroup>
 
           {/*------------ Billing Address 2  -----------*/}
-          <FastField name={'billing_address_2'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'address_line_2'} />}
-                className={'form-group--journal-number'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="billing_address_2" />}
-              >
-                <TextArea {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'billing_address_2'}
+            label={<T id={'address_line_2'} />}
+            inline={true}
+          >
+            <FTextArea name={'billing_address_2'} />
+          </FFormGroup>
           {/*------------ Billing Address city  -----------*/}
-          <FastField name={'billing_address_city'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'city_town'} />}
-                className={'form-group--journal-number'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="billing_address_city" />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'billing_address_city'}
+            label={<T id={'city_town'} />}
+            inline={true}
+          >
+            <FInputGroup name={'billing_address_city'} />
+          </FFormGroup>
 
           {/*------------ Billing Address state  -----------*/}
-          <FastField name={'billing_address_state'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'state'} />}
-                className={'form-group--journal-number'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="billing_address_state" />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'billing_address_state'}
+            label={<T id={'state'} />}
+            inline={true}
+          >
+            <FInputGroup name={'billing_address_state'} />
+          </FFormGroup>
           {/*------------ Billing Address postcode  -----------*/}
-          <FastField name={'billing_address_postcode'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'zip_code'} />}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="billing_address_postcode" />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'billing_address_postcode'}
+            label={<T id={'zip_code'} />}
+            inline={true}
+          >
+            <FInputGroup name={'billing_address_postcode'} />
+          </FFormGroup>
 
           {/*------------ Billing Address phone  -----------*/}
-          <FastField name={'billing_address_phone'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'phone'} />}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="billing_address_phone" />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'billing_address_phone'}
+            label={<T id={'phone'} />}
+            inline={true}
+          >
+            <FInputGroup name={'billing_address_phone'} />
+          </FFormGroup>
         </Col>
 
         <Col xs={6}>
@@ -121,107 +83,67 @@ const CustomerBillingAddress = ({}) => {
             <T id={'shipping_address'} />
           </h4>
           {/*------------ Shipping Address country -----------*/}
-          <FastField name={'shipping_address_country'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'country'} />}
-                className={'form-group--journal-number'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="shipping_address_country" />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'shipping_address_country'}
+            label={<T id={'country'} />}
+            inline={true}
+          >
+            <FInputGroup name={'shipping_address_country'} />
+          </FFormGroup>
 
           {/*------------ Shipping Address 1  -----------*/}
-          <FastField name={'shipping_address_1'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'address_line_1'} />}
-                className={'form-group--journal-number'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="shipping_address_1" />}
-              >
-                <TextArea {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'shipping_address_1'}
+            label={<T id={'address_line_1'} />}
+            inline={true}
+          >
+            <FTextArea name={'shipping_address_1'} />
+          </FFormGroup>
 
           {/*------------ Shipping Address 2  -----------*/}
-          <FastField name={'shipping_address_2'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'address_line_2'} />}
-                className={'form-group--journal-number'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="shipping_address_2" />}
-              >
-                <TextArea {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'shipping_address_2'}
+            label={<T id={'address_line_2'} />}
+            inline={true}
+          >
+            <FTextArea name={'shipping_address_2'} />
+          </FFormGroup>
 
           {/*------------ Shipping Address city  -----------*/}
-          <FastField name={'shipping_address_city'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'city_town'} />}
-                className={'form-group--journal-number'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="shipping_address_city" />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'shipping_address_city'}
+            label={<T id={'city_town'} />}
+            inline={true}
+          >
+            <FInputGroup name={'shipping_address_city'} />
+          </FFormGroup>
 
           {/*------------ Shipping Address state  -----------*/}
-          <FastField name={'shipping_address_state'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'state'} />}
-                className={'form-group--journal-number'}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="shipping_address_state" />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'shipping_address_state'}
+            label={<T id={'state'} />}
+            inline={true}
+          >
+            <FInputGroup name={'shipping_address_state'} />
+          </FFormGroup>
 
           {/*------------ Shipping Address postcode  -----------*/}
-          <FastField name={'shipping_address_postcode'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'zip_code'} />}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="shipping_address_postcode" />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'shipping_address_postcode'}
+            label={<T id={'zip_code'} />}
+            inline={true}
+          >
+            <FInputGroup name={'shipping_address_postcode'} />
+          </FFormGroup>
 
           {/*------------ Shipping Address phone  -----------*/}
-          <FastField name={'shipping_address_phone'}>
-            {({ field, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'phone'} />}
-                intent={inputIntent({ error, touched })}
-                inline={true}
-                helperText={<ErrorMessage name="shipping_address_phone" />}
-              >
-                <InputGroup {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'shipping_address_phone'}
+            label={<T id={'phone'} />}
+            inline={true}
+          >
+            <FInputGroup name={'shipping_address_phone'} />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

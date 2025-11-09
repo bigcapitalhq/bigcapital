@@ -14,7 +14,7 @@
   width: var(--aside-width);
   min-width: var(--aside-min-width);
   height: 100dvh;
-  border-left: 1px solid rgba(17, 20, 24, 0.15);
+  border-left: 1px solid var(--color-app-shell-divider);
   height: inherit;
   overflow: auto;
   display: flex;

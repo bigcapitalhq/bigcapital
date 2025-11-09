@@ -6,6 +6,7 @@ import {
 } from '@nestjs/swagger';
 import { GetAuthenticatedAccount } from './queries/GetAuthedAccount.service';
 import { Controller, Get, Post } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
 import { IgnoreTenantInitializedRoute } from '../Tenancy/EnsureTenantIsInitialized.guard';
 import { AuthenticationApplication } from './AuthApplication.sevice';
@@ -18,11 +19,12 @@ import { IgnoreUserVerifiedRoute } from './guards/EnsureUserVerified.guard';
 @IgnoreTenantSeededRoute()
 @IgnoreTenantInitializedRoute()
 @IgnoreUserVerifiedRoute()
+@Throttle({ auth: {} })
 export class AuthedController {
   constructor(
     private readonly getAuthedAccountService: GetAuthenticatedAccount,
     private readonly authApp: AuthenticationApplication,
-  ) {}
+  ) { }
 
   @Post('/signup/verify/resend')
   @ApiOperation({ summary: 'Resend the signup confirmation message' })

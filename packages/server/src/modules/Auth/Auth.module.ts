@@ -16,7 +16,7 @@ import { LocalStrategy } from './strategies/Local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { AuthMailSubscriber } from './Subscribers/AuthMail.subscriber';
+import { AuthMailSubscriber } from './subscribers/AuthMail.subscriber';
 import { BullModule } from '@nestjs/bullmq';
 import {
   SendResetPasswordMailQueue,
@@ -98,4 +98,4 @@ const models = [
     AuthMailSubscriber,
   ],
 })
-export class AuthModule {}
+export class AuthModule { }

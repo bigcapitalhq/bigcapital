@@ -6,6 +6,7 @@ import intl from 'react-intl-universal';
 import * as R from 'ramda';
 import { sumBy, round, isEmpty, omit } from 'lodash';
 import classNames from 'classnames';
+import { css } from '@emotion/css';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from '@/constants/classes';
@@ -25,6 +26,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
+import { PageForm } from '@/components/PageForm';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import {
   transformErrors,
@@ -175,18 +177,32 @@ function MakeJournalEntriesForm({
         validationSchema={isNewMode ? CreateJournalSchema : EditJournalSchema}
         onSubmit={handleSubmit}
       >
-        <Form>
-          <MakeJournalFormTopBar />
-          <MakeJournalEntriesHeader />
-          <MakeJournalEntriesField />
-          <MakeJournalFormFooter />
-          <MakeJournalFormFloatingActions />
+        <Form
+          className={css({
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+          })}
+        >
+          <PageForm flex={1}>
+            <PageForm.Body>
+              <MakeJournalFormTopBar />
+              <MakeJournalEntriesHeader />
+              <MakeJournalEntriesField />
+              <MakeJournalFormFooter />
+            </PageForm.Body>
 
-          {/* --------- Dialogs --------- */}
-          <MakeJournalFormDialogs />
+            <PageForm.Footer>
+              <MakeJournalFormFloatingActions />
+            </PageForm.Footer>
 
-          {/* --------- Effects --------- */}
-          <JournalSyncIncrementSettingsToForm />
+            {/* --------- Dialogs --------- */}
+            <MakeJournalFormDialogs />
+
+            {/* --------- Effects --------- */}
+            <JournalSyncIncrementSettingsToForm />
+          </PageForm>
         </Form>
       </Formik>
     </div>

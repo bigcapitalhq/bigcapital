@@ -1,9 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
-import { PageFormBigNumber } from '@/components';
+import { PageForm, PageFormBigNumber } from '@/components';
 
 import BillFormHeaderFields from './BillFormHeaderFields';
 import { useBillTotalFormatted } from './utils';
@@ -13,10 +11,10 @@ import { useBillTotalFormatted } from './utils';
  */
 function BillFormHeader() {
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
+    <PageForm.Header>
       <BillFormHeaderFields />
       <BillFormBigTotal />
-    </div>
+    </PageForm.Header>
   );
 }
 

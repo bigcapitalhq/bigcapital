@@ -1,7 +1,3 @@
-import { mixin } from 'objection';
-// import TenantModel from 'models/TenantModel';
-// import ModelSetting from './ModelSetting';
-// import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
 
 export class Document extends BaseModel {

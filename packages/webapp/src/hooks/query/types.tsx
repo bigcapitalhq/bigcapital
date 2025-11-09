@@ -241,6 +241,10 @@ export const EXCHANGE_RATE = {
   EXCHANGE_RATE: 'EXCHANGE_RATE',
 };
 
+export const API_KEYS = {
+  API_KEYS: 'API_KEYS',
+};
+
 export default {
   ...Authentication,
   ...ACCOUNTS,
@@ -276,4 +280,5 @@ export default {
   ...ORGANIZATION,
   ...TAX_RATES,
   ...EXCHANGE_RATE,
+  ...API_KEYS,
 };

@@ -123,6 +123,11 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/api-keys`,
+    component: lazy(() => import('@/containers/Preferences/ApiKeys/ApiKeys')),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/`,
     component: lazy(() => import('../containers/Preferences/DefaultRoute')),
     exact: true,

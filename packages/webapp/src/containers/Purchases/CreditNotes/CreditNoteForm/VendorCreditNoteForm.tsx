@@ -7,6 +7,8 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { CLASSES } from '@/constants/classes';
+import { css } from '@emotion/css';
+import { PageForm } from '@/components/PageForm';
 import {
   CreateCreditNoteFormSchema,
   EditCreditNoteFormSchema,
@@ -21,7 +23,7 @@ import VendorCreditNoteFormTopBar from './VendorCreditNoteFormTopBar';
 
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
-import { AppToaster } from '@/components';
+import { AppToaster, Box } from '@/components';
 import { compose, safeSumBy, transactionNumber } from '@/utils';
 import {
   defaultVendorsCreditNote,
@@ -139,30 +141,42 @@ function VendorCreditNoteForm({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_VENDOR_CREDIT_NOTE,
-      )}
+    <Formik
+      validationSchema={
+        isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
+      }
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
     >
-      <Formik
-        validationSchema={
-          isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
-        }
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
+      <Form
+        className={css({
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        })}
       >
-        <Form>
-          <VendorCreditNoteFormTopBar />
-          <VendorCreditNoteFormHeader />
-          <VendorCreditNoteItemsEntriesEditor />
-          <VendorCreditNoteFormFooter />
-          <VendorCreditNoteFloatingActions />
+        <PageForm flex={1}>
+          <PageForm.Body>
+            <VendorCreditNoteFormTopBar />
+            <VendorCreditNoteFormHeader />
+
+            <Box p="18px 32px 0">
+              <VendorCreditNoteItemsEntriesEditor />
+            </Box>
+
+            <VendorCreditNoteFormFooter />
+          </PageForm.Body>
+
+          <PageForm.Footer>
+            <VendorCreditNoteFloatingActions />
+          </PageForm.Footer>
+
+          {/* ---------- Dialogs ---------- */}
           <VendorCreditNoteFormDialogs />
-        </Form>
-      </Formik>
-    </div>
+        </PageForm>
+      </Form>
+    </Formik>
   );
 }
 

@@ -4,11 +4,12 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form, FormikHelpers } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { sumBy, defaultTo } from 'lodash';
+import { defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
+import { css } from '@emotion/css';
 
 import { CLASSES } from '@/constants/classes';
-import { AppToaster } from '@/components';
+import { AppToaster, Box } from '@/components';
 import PaymentMadeHeader from './PaymentMadeFormHeader';
 import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 import PaymentMadeFooter from './PaymentMadeFooter';
@@ -23,6 +24,7 @@ import { compose, orderingLinesIndexes } from '@/utils';
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { PageForm } from '@/components/PageForm';
 
 import {
   EditPaymentMadeFormSchema,
@@ -144,32 +146,43 @@ function PaymentMadeForm({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_PAYMENT_MADE,
-      )}
+    <Formik
+      initialValues={initialValues}
+      validationSchema={
+        isNewMode ? CreatePaymentMadeFormSchema : EditPaymentMadeFormSchema
+      }
+      onSubmit={handleSubmitForm}
     >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={
-          isNewMode ? CreatePaymentMadeFormSchema : EditPaymentMadeFormSchema
-        }
-        onSubmit={handleSubmitForm}
+      <Form
+        className={css({
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        })}
       >
-        <Form>
-          <PaymentMadeInnerProvider>
-            <PaymentMadeFormTopBar />
-            <PaymentMadeHeader />
-            <PaymentMadeFormBody />
-            <PaymentMadeFooter />
+        <PageForm flex={1}>
+          <PageForm.Body>
+            <PaymentMadeInnerProvider>
+              <PaymentMadeFormTopBar />
+              <PaymentMadeHeader />
+
+              <Box p="18px 32px 0">
+                <PaymentMadeFormBody />
+              </Box>
+              <PaymentMadeFooter />
+            </PaymentMadeInnerProvider>
+          </PageForm.Body>
+
+          <PageForm.Footer>
             <PaymentMadeFloatingActions />
-            <PaymentMadeDialogs />
-          </PaymentMadeInnerProvider>
-        </Form>
-      </Formik>
-    </div>
+          </PageForm.Footer>
+
+          {/* --------- Dialogs --------- */}
+          <PaymentMadeDialogs />
+        </PageForm>
+      </Form>
+    </Formik>
   );
 }
 

@@ -13,10 +13,10 @@ import {
   Position,
 } from '@blueprintjs/core';
 import {
-  DashboardActionsBar,
   Icon,
   Can,
   FormattedMessage as T,
+  DrawerActionsBar,
 } from '@/components';
 
 import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
@@ -72,7 +72,7 @@ function AccountDrawerActionBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
           <Button
@@ -137,7 +137,7 @@ function AccountDrawerActionBar({
           </>
         )}
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 export default compose(

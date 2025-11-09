@@ -83,7 +83,7 @@ export function TransactionLockingSkeletonList() {
  * Transactions locking skeleton item.
  * @returns {React.JSX}
  */
-export const TransactionLockingItemSkeleton = ({}) => {
+export const TransactionLockingItemSkeleton = ({ }) => {
   return (
     <TransactionLockingWrapp>
       <TransLockingInner>
@@ -329,16 +329,16 @@ const TransactionLockingWrapp = styled.div`
   display: flex;
   align-items: center;
   border-radius: 6px;
-  border: 1px solid #c4d2d7;
+  border: 1px solid var(--color-transaction-locking-item-border);
   padding: 16px 18px;
   margin-bottom: 25px;
-  background: #fff;
+  background: var(--color-transaction-locking-item-background);
   box-shadow: 0 4px 20px -5px rgb(0 8 36 / 5%);
 
   ${(props) =>
     props.isEnabled &&
     `
-    border-color: #fc8483; 
+    border-color: var(--color-transaction-locking-item-enabled-border);
 
     ${TransLockingIcon} {
       color: #ef6d6d;
@@ -364,7 +364,7 @@ const TransLockingItemDesc = styled.p`
 `;
 
 const TransLockingIcon = styled.div`
-  border: 1px solid #d2dde2;
+  border: 1px solid var(--color-transaction-locking-item-icon-border);
   height: 45px;
   width: 45px;
   text-align: center;

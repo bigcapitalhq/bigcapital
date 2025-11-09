@@ -37,7 +37,7 @@ import { AcceptType } from '@/constants/accept-type';
 import { SaleInvoiceResponseDto } from './dtos/SaleInvoiceResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleInvoiceStateResponseDto } from './dtos/SaleInvoiceState.dto';
-import { GenerateSaleInvoiceSharableLinkResponseDto } from './dtos/generateSaleInvoiceSharableLinkResponse.dto';
+import { GenerateSaleInvoiceSharableLinkResponseDto } from './dtos/GenerateSaleInvoiceSharableLinkResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('sale-invoices')
@@ -48,7 +48,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiExtraModels(GenerateSaleInvoiceSharableLinkResponseDto)
 @ApiCommonHeaders()
 export class SaleInvoicesController {
-  constructor(private saleInvoiceApplication: SaleInvoiceApplication) {}
+  constructor(private saleInvoiceApplication: SaleInvoiceApplication) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new sale invoice.' })

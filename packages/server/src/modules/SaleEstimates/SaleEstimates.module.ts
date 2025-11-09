@@ -39,6 +39,7 @@ import { SaleEstimatesExportable } from './SaleEstimatesExportable';
 import { SaleEstimatesImportable } from './SaleEstimatesImportable';
 import { GetSaleEstimateMailStateService } from './queries/GetSaleEstimateMailState.service';
 import { GetSaleEstimateMailTemplateService } from './queries/GetSaleEstimateMailTemplate.service';
+import { SaleEstimateAutoIncrementSubscriber } from './subscribers/SaleEstimateAutoIncrementSubscriber';
 
 @Module({
   imports: [
@@ -82,13 +83,14 @@ import { GetSaleEstimateMailTemplateService } from './queries/GetSaleEstimateMai
     SaleEstimatesExportable,
     SaleEstimatesImportable,
     GetSaleEstimateMailStateService,
-    GetSaleEstimateMailTemplateService
+    GetSaleEstimateMailTemplateService,
+    SaleEstimateAutoIncrementSubscriber,
   ],
   exports: [
     SaleEstimatesExportable,
     SaleEstimatesImportable,
     GetSaleEstimateMailStateService,
-    GetSaleEstimateMailTemplateService
-  ]
+    GetSaleEstimateMailTemplateService,
+  ],
 })
-export class SaleEstimatesModule {}
+export class SaleEstimatesModule { }

@@ -22,7 +22,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiTags('Import')
 @ApiCommonHeaders()
 export class ImportController {
-  constructor(private readonly importResourceApp: ImportResourceApplication) {}
+  constructor(private readonly importResourceApp: ImportResourceApplication) { }
 
   /**
    * Imports xlsx/csv to the given resource type.

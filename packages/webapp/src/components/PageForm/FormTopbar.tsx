@@ -13,10 +13,22 @@ export function FormTopbar({ className, children }) {
 }
 
 const FormTopBarRoot = styled(Navbar)`
-  box-shadow: 0 0 0;
-  border-bottom: 1px solid #c7d5db;
+  --color-form-topbar-background: #fff;
+  --color-form-topbar-border: #c7d5db;
+
+  .bp4-dark & {
+    --color-form-topbar-background: var(--color-dark-gray1);
+    --color-form-topbar-border: rgba(255, 255, 255, 0.15);
+  }
   height: 35px;
   padding: 0 20px;
+
+  &,
+  .bp4-dark & {
+    border-bottom: 1px solid var(--color-form-topbar-border);
+    background-color: var(--color-form-topbar-background);
+    box-shadow: 0 0 0;
+  }
 
   .bp4-navbar-group {
     height: 35px;

@@ -1,15 +1,13 @@
 @import 'src/style/_base.scss';
 
 .sidebar {
-  background: $sidebar-background;
-  width: $sidebar-width;
-  color: $sidebar-text-color;
+  background: var(--color-sidebar-background);
+  width: 100%;
   height: 100%;
   z-index: $sidebar-zindex;
   position: relative;
 
   .ScrollbarsCustom-Track {
-
     &.ScrollbarsCustom-TrackY,
     &.ScrollbarsCustom-TrackX {
       background: rgba(0, 0, 0, 0);
@@ -17,7 +15,6 @@
   }
 
   .ScrollbarsCustom-Thumb {
-
     &.ScrollbarsCustom-ThumbX,
     &.ScrollbarsCustom-ThumbY {
       background: rgba(0, 0, 0, 0);
@@ -32,10 +29,9 @@
 
   &:hover {
     .ScrollbarsCustom-Thumb {
-
       &.ScrollbarsCustom-ThumbX,
       &.ScrollbarsCustom-ThumbY {
-        background: rgba(255, 255, 255, 0.25);
+        background: var(--color-sidebar-scrollbars-background);
       }
     }
   }
@@ -54,7 +50,6 @@
         opacity: $sidebar-logo-opacity;
       }
     }
-
     &-organization {
       .title {
         background: transparent;
@@ -130,6 +125,14 @@
     flex-direction: column;
   }
 
+  &__head-organization {
+    .bp4-button:not([class*=bp4-intent-]):not(.bp4-minimal) {
+      background-color: transparent;
+      border-color: transparent;
+      box-shadow: 0 0 0
+    }
+  }
+
   &-menu {
     background: transparent;
     padding: 0;
@@ -138,23 +141,24 @@
     padding-bottom: 2rem;
 
     .#{$ns}-menu-item {
-      color: $sidebar-menu-item-color;
+      color: var(--color-sidebar-menu-item-text);
       border-radius: 0;
       padding: 8px 20px;
       font-size: 15px;
       font-weight: 400;
 
-      &:hover,
-      &.bp4-active {
-        background: $sidebar-submenu-item-bg-color;
-        color: $sidebar-menu-item-color-active;
+      &:hover {
+        background: var(--color-sidebar-menu-item-hover-background);
+        color: var(--color-sidebar-menu-item-text-hover);
       }
-
       &:focus,
       &:active {
-        background: #01143e;
+        background: var(--color-sidebar-menu-item-focus-background);
       }
-
+      &.bp4-active.bp4-intent-primary {
+        background: var(--color-sidebar-menu-item-active-background);
+        color: var(--color-sidebar-menu-item-active-text);
+      }
       >.#{$ns}-icon {
         color: #767b9b;
         margin-right: 16px;
@@ -169,7 +173,7 @@
 
       &-labeler {
         display: block;
-        color: $sidebar-menu-label-color;
+        color: var(--color-sidebar-menu-label-color);
         font-size: 11px;
         padding: 8px 20px;
         margin-top: 4px;
@@ -274,7 +278,6 @@
       .ScrollbarsCustom-Scroller {
         overflow: hidden !important;
       }
-
       &:hover {
         min-width: 190px;
 

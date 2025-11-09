@@ -3,7 +3,7 @@ import {
   IManualJournalCreatingPayload,
   IManualJournalEditingPayload,
 } from '@/modules/ManualJournals/types/ManualJournals.types';
-import { ManualJournalBranchesValidator } from '../../Integrations/ManualJournals/ManualJournalsBranchesValidator';
+import { ManualJournalBranchesValidator } from '../../integrations/ManualJournals/ManualJournalsBranchesValidator';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
@@ -15,7 +15,7 @@ export class ManualJournalBranchValidateSubscriber {
   constructor(
     private readonly validateManualJournalBranch: ManualJournalBranchesValidator,
     private readonly featuresManager: FeaturesManager,
-  ) {}
+  ) { }
 
   /**
    * Validate branch existance on estimate creating.

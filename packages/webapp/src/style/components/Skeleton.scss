@@ -2,21 +2,21 @@
 
 @keyframes skeleton-glow {
   0% {
-    background: rgba(206,217,224,.3);
-    border-color: rgba(206,217,224,.3);
+    background: var(--color-skeleton-background-start);
+    border-color: var(--color-skeleton-border-start);
   }
   to {
-    background: rgba(92,112,128,.3);
-    border-color: rgba(92,112,128,.3);
+    background: var(--color-skeleton-background-end);
+    border-color: var(--color-skeleton-border-end);
   }
 }
 
 .skeleton{
   animation: skeleton-glow 1s linear infinite alternate;
-  background: rgba(206,217,224,.3);
+  background: var(--color-skeleton-background-start);
   background-clip: padding-box;
-  border-color: rgba(206,217,224,.3);
-  border-radius: 2px;
+  border-color: var(--color-skeleton-border-start);
+  border-radius: var(--color-skeleton-border-radius);
 
   box-shadow: none;
   color: transparent;

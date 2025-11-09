@@ -46,12 +46,14 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
 
   // Handle fetch specific payment made details.
   const {
-    data: { paymentMade: paymentMadeEditPage, entries: paymentEntriesEditPage },
+    data: paymentMadeEditData,
     isFetching: isPaymentFetching,
     isLoading: isPaymentLoading,
   } = usePaymentMadeEditPage(paymentMadeId, {
     enabled: !!paymentMadeId,
   });
+  const paymentMadeEditPage = paymentMadeEditData?.bill_payment;
+  const paymentEntriesEditPage = paymentMadeEditData?.entries;
 
   // Fetches the branches list.
   const {

@@ -92,5 +92,5 @@ const PaymentFeatureIcon = styled('span')`
   position: absolute;
   left: 12px;
   top: 2px;
-  color: #0052cc;
+  color: var(--color-primary);
 `;

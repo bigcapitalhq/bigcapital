@@ -7,18 +7,29 @@ import { FormattedMessage as T } from '@/components';
 
 import { CLASSES } from '@/constants/classes';
 import PaymentReceiveHeaderFields from './PaymentReceiveHeaderFields';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 /**
  * Payment receive form header.
  */
 function PaymentReceiveFormHeader() {
+  const isDarkMode = useIsDarkMode();
+
   return (
     <Group
       position="apart"
       align={'flex-start'}
-      bg="white"
       p="25px 32px"
-      borderBottom="1px solid #d2dce2"
+      bg="var(--x-header-background)"
+      borderBottom="1px solid var(--x-header-border)"
+      style={{
+        '--x-header-background': isDarkMode
+          ? 'var(--color-dark-gray1)'
+          : 'var(--color-white)',
+        '--x-header-border': isDarkMode
+          ? 'rgba(255, 255, 255, 0.1)'
+          : '#d2dce2',
+      }}
     >
       <PaymentReceiveHeaderFields />
       <PaymentReceiveFormBigTotal />

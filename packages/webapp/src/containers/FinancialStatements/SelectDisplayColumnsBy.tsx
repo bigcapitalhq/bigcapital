@@ -1,8 +1,12 @@
 // @ts-nocheck
 import React from 'react';
-import { FormGroup } from '@blueprintjs/core';
-import { FastField } from 'formik';
-import { Row, Col, ListSelect, FormattedMessage as T } from '@/components';
+import {
+  Row,
+  Col,
+  FSelect,
+  FormattedMessage as T,
+  FFormGroup,
+} from '@/components';
 import { displayColumnsByOptions } from './constants';
 
 /**
@@ -14,29 +18,22 @@ export default function SelectsListColumnsBy(props) {
   return (
     <Row>
       <Col xs={4}>
-        <FastField name={'displayColumnsType'}>
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'display_report_columns'} />}
-              className="form-group-display-columns-by form-group--select-list bp4-fill"
-              inline={false}
-              {...formGroupProps}
-            >
-              <ListSelect
-                items={displayColumnsByOptions}
-                filterable={false}
-                selectedItem={value}
-                selectedItemProp={'key'}
-                textProp={'name'}
-                onItemSelect={(item) => {
-                  form.setFieldValue('displayColumnsType', item.key);
-                }}
-                popoverProps={{ minimal: true }}
-                {...selectListProps}
-              />
-            </FormGroup>
-          )}
-        </FastField>
+        <FFormGroup
+          name={'displayColumnsType'}
+          label={<T id={'display_report_columns'} />}
+          inline={false}
+          {...formGroupProps}
+        >
+          <FSelect
+            name={'displayColumnsType'}
+            items={displayColumnsByOptions}
+            valueAccessor={'key'}
+            textAccessor={'name'}
+            filterable={false}
+            popoverProps={{ minimal: true }}
+            {...selectListProps}
+          />
+        </FFormGroup>
       </Col>
     </Row>
   );

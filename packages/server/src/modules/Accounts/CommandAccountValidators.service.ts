@@ -17,7 +17,7 @@ export class CommandAccountValidators {
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
     private readonly accountRepository: AccountRepository,
-  ) {}
+  ) { }
 
   /**
    * Throws error if the account was prefined.
@@ -115,7 +115,7 @@ export class CommandAccountValidators {
     accountName: string,
     notAccountId?: number,
   ) {
-    const foundAccount = await this.accountModel
+    const foundAccount = await this.accountModel()
       .query()
       .findOne('name', accountName)
       .onBuild((query) => {

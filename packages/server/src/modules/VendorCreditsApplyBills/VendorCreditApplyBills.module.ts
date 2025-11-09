@@ -10,7 +10,7 @@ import { VendorCreditApplyBillsController } from './VendorCreditApplyBills.contr
 import { BillsModule } from '../Bills/Bills.module';
 import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
 import { VendorCreditDTOTransformService } from '../VendorCredit/commands/VendorCreditDTOTransform.service';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
@@ -35,4 +35,4 @@ import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
   ],
   controllers: [VendorCreditApplyBillsController],
 })
-export class VendorCreditApplyBillsModule {}
+export class VendorCreditApplyBillsModule { }

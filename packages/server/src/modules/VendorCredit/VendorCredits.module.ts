@@ -7,7 +7,7 @@ import { VendorCreditAutoIncrementService } from './commands/VendorCreditAutoInc
 import { GetRefundVendorCreditService } from '../VendorCreditsRefund/queries/GetRefundVendorCredit.service';
 import { GetVendorCreditService } from './queries/GetVendorCredit.service';
 import { VendorCreditsController } from './VendorCredits.controller';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
@@ -21,6 +21,7 @@ import { VendorCreditGLEntries } from './commands/VendorCreditGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { VendorCreditInventoryTransactionsSubscriber } from './subscribers/VendorCreditInventoryTransactionsSusbcriber';
+import { VendorCreditAutoSerialSubscriber } from './subscribers/VendorCreditAutoSerialSubscriber';
 import { VendorCreditInventoryTransactions } from './commands/VendorCreditInventoryTransactions';
 import { GetVendorCreditsService } from './queries/GetVendorCredits.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
@@ -57,6 +58,7 @@ import { VendorCreditsImportable } from './commands/VendorCreditsImportable';
     VendorCreditGlEntriesSubscriber,
     VendorCreditInventoryTransactions,
     VendorCreditInventoryTransactionsSubscriber,
+    VendorCreditAutoSerialSubscriber,
     VendorCreditsExportable,
     VendorCreditsImportable,
   ],
@@ -75,4 +77,4 @@ import { VendorCreditsImportable } from './commands/VendorCreditsImportable';
   ],
   controllers: [VendorCreditsController],
 })
-export class VendorCreditsModule {}
+export class VendorCreditsModule { }

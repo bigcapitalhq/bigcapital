@@ -3,6 +3,7 @@ import { x } from '@xstyled/emotion';
 import { Group, Icon } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 interface SendMailViewHeaderProps {
   label?: string;
@@ -16,6 +17,7 @@ export function SendMailViewHeader({
 }: SendMailViewHeaderProps) {
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
+  const isDarkmode = useIsDarkMode();
 
   const handleClose = () => {
     closeDrawer(name);
@@ -24,14 +26,19 @@ export function SendMailViewHeader({
     <Group
       p={'10px'}
       pl={'30px'}
-      bg="white"
+      bg={isDarkmode ? "var(--color-dark-gray2)" : "white"}
       alignItems={'center'}
-      boxShadow={'0 1px 0 rgba(17, 20, 24, .15)'}
+      boxShadow={`0 1px 0 ${isDarkmode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(17, 20, 24, .15)'}`}
       zIndex={1}
       style={{ position: 'relative' }}
     >
       {label && (
-        <x.h1 margin={0} fontSize={20} fontWeight={500} color={'#666'}>
+        <x.h1
+          margin={0}
+          fontSize={20}
+          fontWeight={500}
+          color={isDarkmode ? 'rgba(255, 255, 255, 0.75)' : '#666'}
+        >
           {label}
         </x.h1>
       )}
@@ -39,7 +46,7 @@ export function SendMailViewHeader({
         <Button
           aria-label="Close"
           className={Classes.DIALOG_CLOSE_BUTTON}
-          icon={<Icon icon={'smallCross'} color={'#000'} />}
+          icon={<Icon icon={'smallCross'} color={isDarkmode ? 'rgba(255, 255, 255, 0.85)' : '#000'} />}
           minimal={true}
           onClick={handleClose}
           style={{ marginLeft: 'auto' }}

@@ -9,7 +9,7 @@ export function ImportDropzone() {
   const { hideAlerts } = useAlertsManager();
 
   return (
-    <Stack spacing={0}>
+    <Stack spacing={0} className={styles.root}>
       <Field id={'file'} name={'file'} type="file">
         {({ form }) => (
           <ImportDropzoneField

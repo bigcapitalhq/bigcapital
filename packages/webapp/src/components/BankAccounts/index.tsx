@@ -104,13 +104,14 @@ const BankAccountWrap = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 3px;
-  background: #fff;
+  background: var(--color-bank-account-card-background);
   margin: 8px;
-  border: 1px solid #c8cad0;
+  border: 1px solid var(--color-bank-account-card-border);
   transition: all 0.1s ease-in-out;
+  color: var(--color-bank-account-card-text);
 
   &:hover {
-    border-color: #0153cc;
+    border-color: var(--color-bank-account-card-hover-border);
   }
 `;
 
@@ -124,7 +125,7 @@ const BankAccountTitle = styled.div`
   font-size: 15px;
   font-style: inherit;
   letter-spacing: -0.003em;
-  color: rgb(23, 43, 77);
+  // color: rgb(23, 43, 77);
   white-space: nowrap;
   font-weight: 600;
   line-height: 1;
@@ -137,7 +138,7 @@ const BankAccountTitle = styled.div`
 const BnakAccountCode = styled.div`
   font-size: 11px;
   margin-top: 4px;
-  color: rgb(23, 43, 77);
+  color: var(--color-bank-account-code-text);
   display: inline-block;
 `;
 
@@ -145,7 +146,7 @@ const BankAccountBalanceWrap = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: auto;
-  border-top: 1px solid #dfdfdf;
+  border-top: 1px solid var(--color-bank-account-card-border);
   padding: 10px 12px;
 `;
 
@@ -153,7 +154,7 @@ const BankAccountBalanceAmount = styled.div`
   font-size: 16px;
   font-weight: 600;
   line-height: 1;
-  color: #57657e;
+  // color: #57657e;
 `;
 
 const BankAccountBalanceLabel = styled.div`
@@ -167,7 +168,7 @@ const BankAccountBalanceLabel = styled.div`
 const MetaLineWrap = styled.div`
   font-size: 11px;
   display: flex;
-  color: #2f3c58;
+  // color: #2f3c58;
 
   &:not(:first-of-type) {
     margin-top: 6px;
@@ -178,7 +179,7 @@ const MetaLineTitle = styled.div``;
 const MetaLineValue = styled.div`
   box-sizing: border-box;
   font-style: inherit;
-  background: rgb(223, 225, 230);
+  background: var(--color-bank-account-card-tag-background);
   line-height: initial;
   align-content: center;
   padding: 0px 2px;
@@ -187,9 +188,9 @@ const MetaLineValue = styled.div`
   text-transform: none;
   width: 30px;
   min-width: 30px;
+  // color: rgb(23, 43, 77);
   height: 16px;
   text-align: center;
-  color: rgb(23, 43, 77);
   font-size: 11px;
   margin-left: auto;
 `;

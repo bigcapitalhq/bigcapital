@@ -7,4 +7,6 @@ export default registerAs('systemDatabase', () => ({
   user: process.env.SYSTEM_DB_USER || process.env.DB_USER,
   password: process.env.SYSTEM_DB_PASSWORD || process.env.DB_PASSWORD,
   databaseName: process.env.SYSTEM_DB_NAME || process.env.DB_NAME,
+  migrationDir: process.env.SYSTEM_DB_MIGRATION_DIR || './src/database/system/migrations',
+  seedsDir: process.env.SYSTEM_DB_SEEDS_DIR || './src/database/system/seeds',
 }));

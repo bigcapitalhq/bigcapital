@@ -1,6 +1,9 @@
 
 
 .bp4-button {
+  --color-button-color: #555;
+  --color-button-color: var(--color-light-gray3);
+
   min-width: 32px;
   min-height: 32px;
   padding-left: 12px;
@@ -12,7 +15,7 @@
 }
 
 .bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
-  color: #555555;
+  color: var(--color-button-color);
   box-shadow: 0 0 0 transparent;
 
   &.bp4-small {

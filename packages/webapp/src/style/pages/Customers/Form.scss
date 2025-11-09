@@ -4,6 +4,12 @@
   $self: '.page-form';
   padding: 20px;
 
+  --x-color-tabs-border: #f0f0f0;
+
+  .bp4-dark & {
+    --x-color-tabs-border: var(--color-dark-gray3);
+  }
+
   #{$self}__header {
     padding: 0;
   }
@@ -136,7 +142,7 @@
         bottom: 0;
         width: 100%;
         height: 2px;
-        background: #f0f0f0;
+        background: var(--x-color-tabs-border);
       }
 
       > *:not(:last-child) {

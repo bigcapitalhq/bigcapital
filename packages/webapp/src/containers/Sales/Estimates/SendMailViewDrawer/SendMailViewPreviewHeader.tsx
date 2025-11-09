@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { x } from '@xstyled/emotion';
 import { Box, Group, Stack } from '@/components';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 interface SendViewPreviewHeaderProps {
   companyName?: string;
@@ -22,11 +23,14 @@ export function SendViewPreviewHeader({
     [from],
   );
   const formattedToAddresses = useMemo(() => formatAddresses(to || []), [to]);
+  const isDarkmode = useIsDarkMode();
 
   return (
     <Stack
-      bg={'white'}
-      borderBottom={'1px solid #dcdcdd'}
+      bg={isDarkmode ? 'var(--color-dark-gray2)' : 'white'}
+      borderBottomWidth={'1px'}
+      borderBottomStyle={'solid'}
+      borderBottomColor={isDarkmode ? 'rgba(255, 255, 255, 0.2)' : '#dcdcdd'}
       padding={'22px 30px'}
       spacing={8}
       position={'sticky'}

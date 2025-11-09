@@ -1,4 +1,4 @@
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistance } from '../../integrations/ValidateBranchExistance';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
@@ -8,7 +8,7 @@ import { IRefundVendorCreditCreatingPayload } from '@/modules/VendorCreditsRefun
 export class VendorCreditRefundBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) {}
+  ) { }
 
   /**
    * Validate branch existance on refund credit note creating.

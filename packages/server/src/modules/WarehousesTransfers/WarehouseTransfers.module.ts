@@ -13,7 +13,7 @@ import { WarehouseTransferInventoryTransactionsSubscriber } from './susbcribers/
 import { InitiateWarehouseTransfer } from './commands/InitiateWarehouseTransfer';
 import { TransferredWarehouseTransfer } from './commands/TransferredWarehouseTransfer';
 import { CommandWarehouseTransfer } from './commands/CommandWarehouseTransfer';
-import { ItemsModule } from '../Items/items.module';
+import { ItemsModule } from '../Items/Items.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { WarehouseTransfer } from './models/WarehouseTransfer';
@@ -52,4 +52,4 @@ const models = [
   exports: [...models],
   controllers: [WarehouseTransfersController],
 })
-export class WarehousesTransfersModule {}
+export class WarehousesTransfersModule { }

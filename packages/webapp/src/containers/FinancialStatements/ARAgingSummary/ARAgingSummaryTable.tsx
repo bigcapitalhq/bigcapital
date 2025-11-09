@@ -47,17 +47,25 @@ export default function ReceivableAgingSummaryTable({
 }
 
 const ARAgingSummaryDataTable = styled(ReportDataTable)`
+  --color-table-text-color: #252a31;
+  --color-table-total-text-color: #000;
+  --color-table-total-border-top: #bbb;
+
+  .bp4-dark & {
+    --color-table-text-color: var(--color-light-gray1);
+    --color-table-total-text-color: var(--color-light-gray4);
+    --color-table-total-border-top: var(--color-dark-gray5);
+  }
   .table {
     .tbody .tr {
       .td {
-        border-bottom: 0;
+        border-bottom-width: 0;
         padding-top: 0.32rem;
         padding-bottom: 0.32rem;
       }
-
       &:not(.no-results) {
         .td {
-          border-bottom: 0;
+          border-bottom-width: 0;
           padding-top: 0.4rem;
           padding-bottom: 0.4rem;
         }
@@ -68,8 +76,9 @@ const ARAgingSummaryDataTable = styled(ReportDataTable)`
           font-weight: 500;
 
           .td {
-            border-top: 1px solid #bbb;
-            border-bottom: 3px double #333;
+            border-top: 1px solid var(--color-table-total-border-top);
+            border-bottom-width: 3px;
+            border-bottom-style: double;
           }
         }
       }

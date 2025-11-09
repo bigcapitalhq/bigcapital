@@ -64,32 +64,38 @@ export const TotalLinesRoot = styled.div`
 `;
 
 export const TotalLinePrimitive = styled.div`
+  --x-color-divider: #d2dde2;
+  --x-color-divider-dark: #000;
+
+  --x-color-divider: rgba(255, 255, 255, 0.1);
+  --x-color-divider-dark: rgba(255, 255, 255, 0.2);
+
   display: table-row;
 
   .amount,
   .title {
     display: table-cell;
     padding: 8px;
-    border-bottom: 1px solid #d2dde2;
+    border-bottom: 1px solid var(--x-color-divider);
 
     ${(props) =>
-      props.borderStyle === TotalLineBorderStyle.DoubleDark &&
-      `
-      border-bottom: 3px double #000;
+    props.borderStyle === TotalLineBorderStyle.DoubleDark &&
+    `
+      border-bottom: 3px double var(--x-color-divider-dark);
     `}
     ${(props) =>
-      props.borderStyle === TotalLineBorderStyle.SingleDark &&
-      `
-      border-bottom: 1px double #000;
+    props.borderStyle === TotalLineBorderStyle.SingleDark &&
+    `
+      border-bottom: 1px double var(--x-color-divider-dark);
     `}
     ${(props) =>
-      props.borderStyle === TotalLineBorderStyle.None &&
-      `
+    props.borderStyle === TotalLineBorderStyle.None &&
+    `
       border-bottom-color: transparent;
     `}
     ${(props) =>
-      props.textStyle === TotalLineTextStyle.Bold &&
-      `
+    props.textStyle === TotalLineTextStyle.Bold &&
+    `
       font-weight: 600;
     `}
   }

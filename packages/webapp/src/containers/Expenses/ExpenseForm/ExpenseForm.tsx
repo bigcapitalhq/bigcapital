@@ -1,12 +1,11 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { Intent } from '@blueprintjs/core';
 import { defaultTo, sumBy, isEmpty } from 'lodash';
 import { Formik, Form } from 'formik';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from '@/constants/classes';
+import { css } from '@emotion/css';
 
 import ExpenseFormBody from './ExpenseFormBody';
 import ExpenseFormHeader from './ExpenseFormHeader';
@@ -20,7 +19,8 @@ import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import { AppToaster } from '@/components';
+import { AppToaster, Box } from '@/components';
+import { PageForm } from '@/components/PageForm';
 import {
   CreateExpenseFormSchema,
   EditExpenseFormSchema,
@@ -129,29 +129,38 @@ function ExpenseForm({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_EXPENSE,
-      )}
+    <Formik
+      validationSchema={
+        isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema
+      }
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
     >
-      <Formik
-        validationSchema={
-          isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema
-        }
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
+      <Form
+        className={css({
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        })}
       >
-        <Form>
-          <ExpenseFormTopBar />
-          <ExpenseFormHeader />
-          <ExpenseFormBody />
-          <ExpenseFormFooter />
-          <ExpenseFloatingFooter />
-        </Form>
-      </Formik>
-    </div>
+        <PageForm flex={1}>
+          <PageForm.Body>
+            <ExpenseFormTopBar />
+            <ExpenseFormHeader />
+
+            <Box p="18px 32px 0">
+              <ExpenseFormBody />
+            </Box>
+            <ExpenseFormFooter />
+          </PageForm.Body>
+
+          <PageForm.Footer>
+            <ExpenseFloatingFooter />
+          </PageForm.Footer>
+        </PageForm>
+      </Form>
+    </Formik>
   );
 }
 

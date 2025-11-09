@@ -1,17 +1,19 @@
 @import '../_base.scss';
 
 .bp4-drawer {
+  
+
   .bp4-drawer-header {
     margin-bottom: 2px;
-    background-color: #FFF;
+    background-color: var(--color-drawer-header-background);
+    box-shadow: 0 1px 0 var(--color-drawer-header-border);
 
     .bp4-heading {
       font-weight: 500;
     }
-
     .bp4-heading,
     .bp4-icon {
-      color: #354152;
+      color: var(--color-drawer-header-text);
     }
   }
 }
@@ -20,48 +22,47 @@
   &__insider{
     display: flex;
     flex-direction: column;
+    background-color: var(--color-drawer-insider-background);
     flex: 1 0 0;
-    background-color: #fbfbfb;
   }
-
-  &__main-tabs{
-    .bp4-tabs {
-      .bp4-tab-list {
-        position: relative;
-        background-color: #fff;
+  // &__main-tabs{
+  //   .bp4-tabs {
+  //     .bp4-tab-list {
+  //       position: relative;
+  //       background-color: var(--color-drawer-tabs-background);
   
-        &:before {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          height: 2px;
-          background: #e1e2e8;
-        }
+  //       &:before {
+  //         content: '';
+  //         position: absolute;
+  //         bottom: 0;
+  //         width: 100%;
+  //         height: 2px;
+  //         background: #e1e2e8;
+  //       }
   
-        > *:not(:last-child) {
-          margin-right: 25px;
-        }
+  //       > *:not(:last-child) {
+  //         margin-right: 25px;
+  //       }
   
-        &.bp4-large > .bp4-tab {
-          font-size: 15px;
-          color: #555;
-          margin: 0 0.8rem;
+  //       &.bp4-large > .bp4-tab {
+  //         font-size: 15px;
+  //         color: #555;
+  //         margin: 0 0.8rem;
   
-          &[aria-selected='true'],
-          &:not([aria-disabled='true']):hover {
-            color: $pt-link-color;
-          }
-        }
-      }
+  //         &[aria-selected='true'],
+  //         &:not([aria-disabled='true']):hover {
+  //           color: $pt-link-color;
+  //         }
+  //       }
+  //     }
   
-      .bp4-tab-panel {
-        margin-top: 0;
+  //     .bp4-tab-panel {
+  //       margin-top: 0;
   
-        .card {
-          margin: 15px;
-        }
-      }
-    }  
-  }
+  //       .card {
+  //         margin: 15px;
+  //       }
+  //     }
+  //   }  
+  // }
 }

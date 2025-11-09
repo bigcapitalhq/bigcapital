@@ -7,6 +7,7 @@ import { useDrawerActions } from "@/hooks/state";
 import { useDrawerContext } from "@/components/Drawer/DrawerProvider";
 import { useSendReceiptFormatArgsOptions } from "./_hooks";
 import { useSendMailItems } from "../../Estimates/SendMailViewDrawer/hooks";
+import { useIsDarkMode } from "@/hooks/useDarkMode";
 
 export function ReceiptSendMailFormFields() {
   const argsOptions = useSendReceiptFormatArgsOptions();
@@ -40,6 +41,7 @@ function ReceiptSendMailFooter() {
   const { isSubmitting } = useFormikContext();
   const { name } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
+  const isDarkmode = useIsDarkMode();
 
   const handleClose = () => {
     closeDrawer(name);
@@ -49,7 +51,9 @@ function ReceiptSendMailFooter() {
     <Group
       py={'12px'}
       px={'16px'}
-      borderTop="1px solid #d8d8d9"
+      borderTopWidth={'1px'}
+      borderTopColor={isDarkmode ? 'rgba(255, 255, 255, 0.2)' : '#d8d8d9'}
+      borderTopStyle={'solid'}
       position={'apart'}
     >
       <Group spacing={10} ml={'auto'}>

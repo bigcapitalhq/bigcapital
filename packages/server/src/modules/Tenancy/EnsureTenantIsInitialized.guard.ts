@@ -18,7 +18,7 @@ export class EnsureTenantIsInitializedGuard implements CanActivate {
   constructor(
     private readonly tenancyContext: TenancyContext,
     private reflector: Reflector,
-  ) {}
+  ) { }
 
   /**
    * Validate the tenant of the current request is initialized..
@@ -41,6 +41,12 @@ export class EnsureTenantIsInitializedGuard implements CanActivate {
     }
     const tenant = await this.tenancyContext.getTenant();
 
+    if (!tenant) {
+      throw new UnauthorizedException({
+        message: 'Tenant not found.',
+        errors: [{ type: 'TENANT.NOT.FOUND' }],
+      });
+    }
     if (!tenant?.initializedAt) {
       throw new UnauthorizedException({
         statusCode: 400,

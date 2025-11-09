@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistance } from '../../integrations/ValidateBranchExistance';
 import {
   ISaleInvoiceCreatingPaylaod,
   ISaleInvoiceEditingPayload,
@@ -11,7 +11,7 @@ import {
 export class InvoiceBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) {}
+  ) { }
 
   /**
    * Validate branch existance on invoice creating.

@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 
 export const FinancialSheetRoot = styled.div`
-  border: 2px solid #f0f0f0;
+  border: 2px solid var(--color-financial-sheet-card-border);
   border-radius: 10px;
   min-width: 640px;
   width: auto;
@@ -12,7 +12,6 @@ export const FinancialSheetRoot = styled.div`
   min-height: 400px;
   display: flex;
   flex-direction: column;
-  background: #fff;
 
   ${(props) =>
     props.fullWidth &&
@@ -29,7 +28,7 @@ export const FinancialSheetRoot = styled.div`
 
   ${FinancialSheetTitle} {
     font-size: 18px;
-    color: #333;
+    color: var(--color-financial-sheet-minimal-title-text);
   }
   ${FinancialSheetTitle} + ${FinancialSheetDate} {
     margin-top: 8px;
@@ -44,7 +43,7 @@ export const FinancialSheetTitle = styled.h1`
   margin: 0;
   font-weight: 400;
   font-size: 20px;
-  color: #464646;
+  color: var(--color-financial-sheet-title-text);
   text-align: center;
 `;
 
@@ -53,18 +52,18 @@ export const FinancialSheetType = styled.h6`
   margin: 0;
   font-size: 16px;
   font-weight: 400;
-  color: #666;
+  color: var(--color-financial-sheet-type-text);
   margin-top: 6px;
 `;
 
 export const FinancialSheetDate = styled.div`
   text-align: center;
-  color: #666;
+  color: var(--color-financial-sheet-date-text);
   margin-top: 6px;
 `;
 
 export const FinancialSheetFooter = styled.div`
-  color: #888;
+  color: var(--color-financial-sheet-footer-text);
   text-align: center;
   margin-top: auto;
   padding-top: 18px;

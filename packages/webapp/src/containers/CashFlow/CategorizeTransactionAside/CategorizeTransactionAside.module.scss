@@ -5,17 +5,13 @@
   padding-bottom: 60px;
 }
 
-.transaction {
-  
-}
-
 .matchBar{
   padding: 12px 14px;
-  background: #fff;
-  border-bottom: 1px solid #E1E2E9; 
+  background: var(--color-bank-transaction-matching-aside-header);
+  border-bottom: 1px solid var(--color-bank-transaction-matching-divider); 
   
   &:not(:first-of-type) {
-    border-top: 1px solid #E1E2E9; 
+    border-top: 1px solid var(--color-bank-transaction-matching-divider); 
   }
 }
 
@@ -25,16 +21,16 @@
 }
 
 .footer {
-  background-color: #fff;
+  background-color: var(--color-bank-transaction-matching-aside-footer);
 }
 
 .footerActions {
   padding: 14px 16px;
-  border-top: 1px solid #d8d9d9;
+  border-top: 1px solid var(--color-bank-transaction-matching-divider);
 }
 
 .footerTotal {
   padding: 8px 16px;
-  border-top: 1px solid #d8d9d9;
+  border-top: 1px solid var(--color-bank-transaction-matching-divider);
   line-height: 24px;
 }

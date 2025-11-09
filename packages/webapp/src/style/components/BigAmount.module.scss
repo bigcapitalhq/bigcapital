@@ -1,0 +1,29 @@
+
+.root{
+  --x-color-amount-text: #343463;
+  --x-color-label-text: #5d6f90;
+
+  :global(.bp4-dark) & {
+    --x-color-label-text: rgba(255, 255, 255, 0.7);
+    --x-color-amount-text: rgba(255, 255, 255, 0.9);
+  }
+  text-align: right;
+}
+
+.label{
+  color: var(--x-color-label-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.number{
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+  margin-top: 6px;
+  color: var(--x-color-amount-text);
+  line-height: 1;
+  font-size: 34px;
+}

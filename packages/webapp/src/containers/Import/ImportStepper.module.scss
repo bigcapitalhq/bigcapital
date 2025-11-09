@@ -1,7 +1,12 @@
 .content {
+  --border-color: #DCE0E5;
+  
+  :global(.bp4-dark) & {
+    --border-color: var(--color-dark-gray5);    
+  }
   margin-top: 0;
   margin-bottom: 0;
-  border-top: 1px solid #DCE0E5;
+  border-top: 1px solid var(--border-color);
 }
 
 .root {
