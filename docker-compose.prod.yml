@@ -93,7 +93,7 @@ services:
       - OPEN_EXCHANGE_RATE_APP_ID-${OPEN_EXCHANGE_RATE_APP_ID}
 
       # Bank Sync
-      - BANKING_CONNECT=${BANKING_CONNECT}
+      - BANK_FEED_ENABLED=${BANK_FEED_ENABLED}
 
       # Plaid
       - PLAID_ENV=${PLAID_ENV}
