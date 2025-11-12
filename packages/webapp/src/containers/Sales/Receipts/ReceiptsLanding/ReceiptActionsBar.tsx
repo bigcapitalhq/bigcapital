@@ -45,6 +45,7 @@ import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { isEmpty } from 'lodash';
 
 /**
  * Receipts actions bar.
@@ -55,6 +56,7 @@ function ReceiptActionsBar({
 
   // #withReceipts
   receiptsFilterConditions,
+  receiptSelectedRows,
 
   // #withSettings
   receiptsTableSize,
@@ -117,6 +119,24 @@ function ReceiptActionsBar({
   const handleCustomizeBtnClick = () => {
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleReceipt' });
   };
+
+  if (!isEmpty(receiptSelectedRows)) {
+    const handleBulkDelete = () => {
+      openAlert('receipts-bulk-delete', { receiptsIds: receiptSelectedRows });
+    };
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -219,8 +239,9 @@ function ReceiptActionsBar({
 export default compose(
   withReceiptsActions,
   withSettingsActions,
-  withReceipts(({ receiptTableState }) => ({
+  withReceipts(({ receiptTableState, receiptSelectedRows }) => ({
     receiptsFilterConditions: receiptTableState.filterRoles,
+    receiptSelectedRows,
   })),
   withSettings(({ receiptSettings }) => ({
     receiptsTableSize: receiptSettings?.tableSize,

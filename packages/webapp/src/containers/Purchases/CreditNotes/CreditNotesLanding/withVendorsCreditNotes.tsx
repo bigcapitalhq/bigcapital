@@ -6,7 +6,7 @@ import {
 } from '@/store/VendorCredit/vendorCredit.selector';
 
 export default (mapState) => {
-  const getVendorsCreditNoteTableState = getVendorCreditTableStateFactory();
+  const getVendorsCreditNoteTableState = getVendorCreditTableStateFactoryth();
   const isVendorsCreditNoteTableChanged =
     isVendorCreditTableStateChangedFactory();
 
@@ -17,6 +17,7 @@ export default (mapState) => {
         state,
         props,
       ),
+      vendorsCreditNoteSelectedRows: getVendorsCreditNoteSelectedRows(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

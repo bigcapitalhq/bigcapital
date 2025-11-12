@@ -3,6 +3,7 @@ import { isEqual } from 'lodash';
 import { createDeepEqualSelector } from '@/utils';
 import { paginationLocationQuery } from '@/store/selectors';
 import { defaultTableQuery } from './estimates.reducer';
+import { createSelector } from 'reselect';
 
 const estimatesTableState = (state) => state.salesEstimates.tableState;
 
@@ -23,3 +24,8 @@ export const isEstimatesTableStateChangedFactory = () =>
   createDeepEqualSelector(estimatesTableState, (tableState) => {
     return !isEqual(tableState, defaultTableQuery);
   });
+
+export const getEstimatesSelectedRowsFactory = () => createSelector(
+  (state) => state.salesEstimates.selectedRows,
+  (selectedRows) => selectedRows,
+);

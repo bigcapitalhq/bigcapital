@@ -30,3 +30,9 @@ export const isVendorCreditTableStateChangedFactory = () =>
   createDeepEqualSelector(vendorCreditsTableStateSelector, (tableState) => {
     return !isEqual(tableState, defaultTableQuery);
   });
+
+export const getVendorsCreditNoteSelectedRowsFactory = () =>
+  createSelector(
+    (state) => state.vendorCredit.selectedRows,
+    (selectedRows) => selectedRows,
+  );

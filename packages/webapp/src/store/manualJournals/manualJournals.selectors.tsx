@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { isEqual } from 'lodash';
-
+import { createSelector } from 'reselect';
 import { paginationLocationQuery } from '@/store/selectors';
 import { createDeepEqualSelector } from '@/utils';
 import { defaultTableQuery } from './manualJournals.reducers';
@@ -24,3 +24,9 @@ export const manualJournalTableStateChangedFactory = () =>
   createDeepEqualSelector(manualJournalsTableState, (tableState) => {
     return !isEqual(tableState, defaultTableQuery);
   });
+
+export const getManualJournalsSelectedRowsFactory = () =>
+  createSelector(
+    (state) => state.manualJournals.selectedRows,
+    (selectedRows) => selectedRows,
+  );

@@ -126,6 +126,34 @@ function AccountsActionsBar({
     openDialog(DialogsName.AccountForm, {});
   };
 
+  if (!isEmpty(accountsSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="play-16" iconSize={16} />}
+            text={<T id={'activate'} />}
+            onClick={handelBulkActivate}
+          />
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pause-16" iconSize={16} />}
+            text={<T id={'inactivate'} />}
+            onClick={handelBulkInactive}
+          />
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -161,29 +189,6 @@ function AccountsActionsBar({
         </AdvancedFilterPopover>
 
         <NavbarDivider />
-
-        <If condition={!isEmpty(accountsSelectedRows)}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="play-16" iconSize={16} />}
-            text={<T id={'activate'} />}
-            onClick={handelBulkActivate}
-          />
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="pause-16" iconSize={16} />}
-            text={<T id={'inactivate'} />}
-            onClick={handelBulkInactive}
-          />
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="trash-16" iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            onClick={handleBulkDelete}
-          />
-          <NavbarDivider />
-        </If>
 
         <Button
           className={Classes.MINIMAL}

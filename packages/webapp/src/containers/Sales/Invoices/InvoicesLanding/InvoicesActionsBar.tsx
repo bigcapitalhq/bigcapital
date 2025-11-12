@@ -123,6 +123,22 @@ function InvoiceActionsBar({
     openAlert('invoices-bulk-delete', { invoicesIds: invoicesSelectedRows });
   };
 
+  if (!isEmpty(invoicesSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -155,16 +171,6 @@ function InvoiceActionsBar({
         </AdvancedFilterPopover>
 
         <NavbarDivider />
-
-        <If condition={!isEmpty(invoicesSelectedRows)}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon={'trash-16'} iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            onClick={handleBulkDelete}
-          />
-        </If>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
@@ -224,9 +230,9 @@ export default compose(
   withInvoiceActions,
   withSettingsActions,
   withAlertActions,
-  withInvoices(({ invoicesTableState }) => ({
+  withInvoices(({ invoicesTableState, invoicesSelectedRows }) => ({
     invoicesFilterRoles: invoicesTableState.filterRoles,
-    invoicesSelectedRows: invoicesTableState?.selectedRows || [],
+    invoicesSelectedRows,
   })),
   withSettings(({ invoiceSettings }) => ({
     invoicesTableSize: invoiceSettings?.tableSize,

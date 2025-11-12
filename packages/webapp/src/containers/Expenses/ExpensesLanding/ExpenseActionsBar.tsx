@@ -36,6 +36,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
+import { isEmpty } from 'lodash';
 
 /**
  * Expenses actions bar.
@@ -46,6 +47,7 @@ function ExpensesActionsBar({
 
   // #withExpenses
   expensesFilterConditions,
+  expensesSelectedRows,
 
   // #withSettings
   expensesTableSize,
@@ -73,7 +75,7 @@ function ExpensesActionsBar({
     history.push('/expenses/new');
   };
   // Handle delete button click.
-  const handleBulkDelete = () => {};
+  const handleBulkDelete = () => { };
 
   // Handles the tab chaning.
   const handleTabChange = (view) => {
@@ -101,6 +103,21 @@ function ExpensesActionsBar({
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'Expense' });
   };
+
+  if (!isEmpty(expensesSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -185,8 +202,9 @@ export default compose(
   withDialogActions,
   withExpensesActions,
   withSettingsActions,
-  withExpenses(({ expensesTableState }) => ({
+  withExpenses(({ expensesTableState, expensesSelectedRows }) => ({
     expensesFilterConditions: expensesTableState.filterRoles,
+    expensesSelectedRows,
   })),
   withSettings(({ expenseSettings }) => ({
     expensesTableSize: expenseSettings?.tableSize,

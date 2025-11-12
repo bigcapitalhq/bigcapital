@@ -127,6 +127,24 @@ function EstimateActionsBar({
     openAlert('estimates-bulk-delete', { estimatesIds: estimatesSelectedRows });
   };
 
+  console.log(estimatesSelectedRows, 'estimatesSelectedRows');
+
+  if (!isEmpty(estimatesSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -160,16 +178,7 @@ function EstimateActionsBar({
             conditionsCount={estimatesFilterRoles.length}
           />
         </AdvancedFilterPopover>
-
-        <If condition={!isEmpty(estimatesSelectedRows)}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon={'trash-16'} iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            onClick={handleBulkDelete}
-          />
-        </If>
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}

@@ -8,6 +8,7 @@ import {
   Intent,
   Alignment,
 } from '@blueprintjs/core';
+import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import {
   Icon,
@@ -43,6 +44,7 @@ function ManualJournalActionsBar({
 
   // #withManualJournals
   manualJournalsFilterConditions,
+  manualJournalsSelectedRows,
 
   // #withSettings
   manualJournalsTableSize,
@@ -70,7 +72,7 @@ function ManualJournalActionsBar({
     history.push('/make-journal-entry');
   };
   // Handle delete button click.
-  const handleBulkDelete = () => {};
+  const handleBulkDelete = () => { };
 
   // Handle tab change.
   const handleTabChange = (view) => {
@@ -99,6 +101,22 @@ function ManualJournalActionsBar({
   const handlePdfPrintBtnSubmit = () => {
     downloadExportPdf({ resource: 'ManualJournal' });
   };
+
+  if (!isEmpty(manualJournalsSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -184,8 +202,9 @@ export default compose(
   withDialogActions,
   withManualJournalsActions,
   withSettingsActions,
-  withManualJournals(({ manualJournalsTableState }) => ({
+  withManualJournals(({ manualJournalsTableState, manualJournalsSelectedRows }) => ({
     manualJournalsFilterConditions: manualJournalsTableState.filterRoles,
+    manualJournalsSelectedRows,
   })),
   withSettings(({ manualJournalsSettings }) => ({
     manualJournalsTableSize: manualJournalsSettings?.tableSize,

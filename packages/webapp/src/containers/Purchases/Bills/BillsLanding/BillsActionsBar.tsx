@@ -36,6 +36,7 @@ import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { isEmpty } from 'lodash';
 
 /**
  * Bills actions bar.
@@ -46,6 +47,7 @@ function BillActionsBar({
 
   // #withBills
   billsConditionsRoles,
+  billsSelectedRows,
 
   // #withSettings
   billsTableSize,
@@ -97,6 +99,26 @@ function BillActionsBar({
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'Bill' });
   };
+  // Handle bulk delete.
+  const handleBulkDelete = () => {
+    openAlert('bills-bulk-delete', { billsIds: billsSelectedRows });
+  };
+
+  if (!isEmpty(billsSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -180,8 +202,9 @@ function BillActionsBar({
 export default compose(
   withBillsActions,
   withSettingsActions,
-  withBills(({ billsTableState }) => ({
+  withBills(({ billsTableState, billsSelectedRows }) => ({
     billsConditionsRoles: billsTableState.filterRoles,
+    billsSelectedRows,
   })),
   withSettings(({ billsettings }) => ({
     billsTableSize: billsettings?.tableSize,

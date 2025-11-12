@@ -38,6 +38,7 @@ import withDialogActions from '../Dialog/withDialogActions';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
+import { isEmpty } from 'lodash';
 
 /**
  * Items actions bar.
@@ -118,6 +119,22 @@ function ItemsActionsBar({
     downloadExportPdf({ resource: 'Item' });
   };
 
+  if (!isEmpty(itemsSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -150,18 +167,8 @@ function ItemsActionsBar({
         >
           <DashboardFilterButton conditionsCount={itemsFilterRoles.length} />
         </AdvancedFilterPopover>
-
         <NavbarDivider />
 
-        <If condition={itemsSelectedRows.length}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="trash-16" iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            onClick={handleBulkDelete}
-          />
-        </If>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
