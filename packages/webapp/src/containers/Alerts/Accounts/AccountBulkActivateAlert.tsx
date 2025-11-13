@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
+import { QueryCache } from 'react-query';
 import { FormattedMessage as T, AppToaster } from '@/components';
 
 import withAccountsActions from '@/containers/Accounts/withAccountsActions';
@@ -38,7 +38,7 @@ function AccountBulkActivateAlert({
           message: intl.get('the_accounts_has_been_successfully_activated'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
+        QueryCache.invalidateQueries('accounts-table');
       })
       .catch((errors) => {})
       .finally(() => {

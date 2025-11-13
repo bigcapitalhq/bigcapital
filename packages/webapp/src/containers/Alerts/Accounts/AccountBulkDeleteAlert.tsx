@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
+import { QueryCache } from 'react-query';
 import { AppToaster } from '@/components';
 
 import { handleDeleteErrors } from '@/containers/Accounts/utils';
@@ -48,7 +48,7 @@ function AccountBulkDeleteAlert({
           message: intl.get('the_accounts_has_been_successfully_deleted'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
+        QueryCache.invalidateQueries('accounts-table');
       })
       .catch((errors) => {
         handleDeleteErrors(errors);
