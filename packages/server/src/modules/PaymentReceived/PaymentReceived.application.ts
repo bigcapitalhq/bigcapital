@@ -18,6 +18,8 @@ import {
 } from './dtos/PaymentReceived.dto';
 import { PaymentsReceivedPagesService } from './queries/PaymentsReceivedPages.service';
 import { GetPaymentReceivedMailState } from './queries/GetPaymentReceivedMailState.service';
+import { BulkDeletePaymentReceivedService } from './BulkDeletePaymentReceived.service';
+import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePaymentReceived.service';
 
 @Injectable()
 export class PaymentReceivesApplication {
@@ -33,7 +35,9 @@ export class PaymentReceivesApplication {
     private getPaymentReceivePdfService: GetPaymentReceivedPdfService,
     private getPaymentReceivedStateService: GetPaymentReceivedStateService,
     private paymentsReceivedPagesService: PaymentsReceivedPagesService,
-  ) {}
+    private bulkDeletePaymentReceivedService: BulkDeletePaymentReceivedService,
+    private validateBulkDeletePaymentReceivedService: ValidateBulkDeletePaymentReceivedService,
+  ) { }
 
   /**
    * Creates a new payment receive.
@@ -71,6 +75,25 @@ export class PaymentReceivesApplication {
     return this.deletePaymentReceivedService.deletePaymentReceive(
       paymentReceiveId,
     );
+  }
+
+  /**
+   * Deletes multiple payment receives.
+   * @param {number[]} paymentReceiveIds
+   */
+  public bulkDeletePaymentReceives(paymentReceiveIds: number[]) {
+    return this.bulkDeletePaymentReceivedService.bulkDeletePaymentReceived(
+      paymentReceiveIds,
+    );
+  }
+
+  /**
+   * Validates which payment receives can be deleted.
+   * @param {number[]} paymentReceiveIds
+   */
+  public validateBulkDeletePaymentReceives(paymentReceiveIds: number[]) {
+    return this.validateBulkDeletePaymentReceivedService
+      .validateBulkDeletePaymentReceived(paymentReceiveIds);
   }
 
   /**

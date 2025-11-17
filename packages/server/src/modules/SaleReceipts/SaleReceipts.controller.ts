@@ -32,6 +32,10 @@ import { SaleReceiptResponseDto } from './dtos/SaleReceiptResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleReceiptStateResponseDto } from './dtos/SaleReceiptState.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 
 @Controller('sale-receipts')
 @ApiTags('Sale Receipts')
@@ -39,8 +43,42 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(SaleReceiptStateResponseDto)
 @ApiCommonHeaders()
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 export class SaleReceiptsController {
-  constructor(private saleReceiptApplication: SaleReceiptApplication) {}
+  constructor(private saleReceiptApplication: SaleReceiptApplication) { }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which sale receipts can be deleted and returns the results.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable sale receipts.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  validateBulkDeleteSaleReceipts(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.saleReceiptApplication.validateBulkDeleteSaleReceipts(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple sale receipts.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale receipts deleted successfully',
+  })
+  bulkDeleteSaleReceipts(@Body() bulkDeleteDto: BulkDeleteDto): Promise<void> {
+    return this.saleReceiptApplication.bulkDeleteSaleReceipts(
+      bulkDeleteDto.ids,
+    );
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create a new sale receipt.' })

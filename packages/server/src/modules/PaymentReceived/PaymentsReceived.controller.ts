@@ -32,15 +32,20 @@ import { PaymentReceivedResponseDto } from './dtos/PaymentReceivedResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { PaymentReceivedStateResponseDto } from './dtos/PaymentReceivedStateResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 
 @Controller('payments-received')
 @ApiTags('Payments Received')
 @ApiExtraModels(PaymentReceivedResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(PaymentReceivedStateResponseDto)
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()
 export class PaymentReceivesController {
-  constructor(private paymentReceivesApplication: PaymentReceivesApplication) {}
+  constructor(private paymentReceivesApplication: PaymentReceivesApplication) { }
 
   @Post(':id/mail')
   @HttpCode(200)
@@ -141,6 +146,39 @@ export class PaymentReceivesController {
     @Query() filterDTO: Partial<IPaymentsReceivedFilter>,
   ) {
     return this.paymentReceivesApplication.getPaymentsReceived(filterDTO);
+  }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which payments received can be deleted and returns the results.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable payments received.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  public validateBulkDeletePaymentsReceived(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.paymentReceivesApplication.validateBulkDeletePaymentReceives(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple payments received.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Payments received deleted successfully.',
+  })
+  public bulkDeletePaymentsReceived(@Body() bulkDeleteDto: BulkDeleteDto) {
+    return this.paymentReceivesApplication.bulkDeletePaymentReceives(
+      bulkDeleteDto.ids,
+    );
   }
 
   @Get('state')

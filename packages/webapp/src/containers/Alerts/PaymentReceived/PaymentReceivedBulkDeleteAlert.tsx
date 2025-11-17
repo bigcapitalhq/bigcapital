@@ -26,7 +26,6 @@ function PaymentReceivedBulkDeleteAlert({
   const handleCancel = () => {
     closeAlert(name);
   };
-
   const handleConfirmBulkDelete = () => {
     bulkDeletePaymentReceives(paymentsReceivedIds)
       .then(() => {

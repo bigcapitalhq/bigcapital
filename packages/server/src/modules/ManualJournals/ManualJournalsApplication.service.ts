@@ -10,6 +10,8 @@ import {
   EditManualJournalDto,
 } from './dtos/ManualJournal.dto';
 import { GetManualJournals } from './queries/GetManualJournals.service';
+import { BulkDeleteManualJournalsService } from './BulkDeleteManualJournals.service';
+import { ValidateBulkDeleteManualJournalsService } from './ValidateBulkDeleteManualJournals.service';
 // import { GetManualJournals } from './queries/GetManualJournals';
 
 @Injectable()
@@ -21,6 +23,8 @@ export class ManualJournalsApplication {
     private publishManualJournalService: PublishManualJournal,
     private getManualJournalService: GetManualJournal,
     private getManualJournalsService: GetManualJournals,
+    private bulkDeleteManualJournalsService: BulkDeleteManualJournalsService,
+    private validateBulkDeleteManualJournalsService: ValidateBulkDeleteManualJournalsService,
   ) {}
 
   /**
@@ -55,6 +59,26 @@ export class ManualJournalsApplication {
    */
   public deleteManualJournal = (manualJournalId: number) => {
     return this.deleteManualJournalService.deleteManualJournal(manualJournalId);
+  };
+
+  /**
+   * Bulk deletes manual journals.
+   * @param {number[]} manualJournalIds
+   */
+  public bulkDeleteManualJournals = (manualJournalIds: number[]) => {
+    return this.bulkDeleteManualJournalsService.bulkDeleteManualJournals(
+      manualJournalIds,
+    );
+  };
+
+  /**
+   * Validates which manual journals can be deleted.
+   * @param {number[]} manualJournalIds
+   */
+  public validateBulkDeleteManualJournals = (manualJournalIds: number[]) => {
+    return this.validateBulkDeleteManualJournalsService.validateBulkDeleteManualJournals(
+      manualJournalIds,
+    );
   };
 
   /**

@@ -30,6 +30,7 @@ import withManualJournalsActions from './withManualJournalsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { compose } from '@/utils';
@@ -44,7 +45,7 @@ function ManualJournalActionsBar({
 
   // #withManualJournals
   manualJournalsFilterConditions,
-  manualJournalsSelectedRows,
+  manualJournalsSelectedRows = [],
 
   // #withSettings
   manualJournalsTableSize,
@@ -54,6 +55,9 @@ function ManualJournalActionsBar({
 
   // #withDialogActions
   openDialog,
+
+  // #withAlertActions
+  openAlert,
 }) {
   // History context.
   const history = useHistory();
@@ -72,7 +76,11 @@ function ManualJournalActionsBar({
     history.push('/make-journal-entry');
   };
   // Handle delete button click.
-  const handleBulkDelete = () => { };
+  const handleBulkDelete = () => {
+    openAlert('journals-bulk-delete', {
+      journalsIds: manualJournalsSelectedRows,
+    });
+  };
 
   // Handle tab change.
   const handleTabChange = (view) => {
@@ -200,6 +208,7 @@ function ManualJournalActionsBar({
 
 export default compose(
   withDialogActions,
+  withAlertActions,
   withManualJournalsActions,
   withSettingsActions,
   withManualJournals(({ manualJournalsTableState, manualJournalsSelectedRows }) => ({

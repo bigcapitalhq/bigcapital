@@ -23,6 +23,8 @@ import {
   EditSaleInvoiceDto,
 } from './dtos/SaleInvoice.dto';
 import { GenerateShareLink } from './commands/GenerateInvoicePaymentLink.service';
+import { BulkDeleteSaleInvoicesService } from './BulkDeleteSaleInvoices.service';
+import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleInvoices.service';
 
 @Injectable()
 export class SaleInvoiceApplication {
@@ -41,6 +43,8 @@ export class SaleInvoiceApplication {
     private sendSaleInvoiceMailService: SendSaleInvoiceMail,
     private getSaleInvoiceMailStateService: GetSaleInvoiceMailState,
     private generateShareLinkService: GenerateShareLink,
+    private bulkDeleteSaleInvoicesService: BulkDeleteSaleInvoicesService,
+    private validateBulkDeleteSaleInvoicesService: ValidateBulkDeleteSaleInvoicesService,
   ) {}
 
   /**
@@ -76,6 +80,27 @@ export class SaleInvoiceApplication {
    */
   public deleteSaleInvoice(saleInvoiceId: number) {
     return this.deleteSaleInvoiceService.deleteSaleInvoice(saleInvoiceId);
+  }
+
+  /**
+   * Deletes multiple sale invoices.
+   * @param {number[]} saleInvoiceIds
+   * @return {Promise<void>}
+   */
+  public bulkDeleteSaleInvoices(saleInvoiceIds: number[]) {
+    return this.bulkDeleteSaleInvoicesService.bulkDeleteSaleInvoices(
+      saleInvoiceIds,
+    );
+  }
+
+  /**
+   * Validates which sale invoices can be deleted.
+   * @param {number[]} saleInvoiceIds
+   */
+  public validateBulkDeleteSaleInvoices(saleInvoiceIds: number[]) {
+    return this.validateBulkDeleteSaleInvoicesService.validateBulkDeleteSaleInvoices(
+      saleInvoiceIds,
+    );
   }
 
   /**

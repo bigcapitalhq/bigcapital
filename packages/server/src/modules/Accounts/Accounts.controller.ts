@@ -41,6 +41,39 @@ import {
 export class AccountsController {
   constructor(private readonly accountsApplication: AccountsApplication) { }
 
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which accounts can be deleted and returns counts of deletable and non-deletable accounts.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed. Returns counts and IDs of deletable and non-deletable accounts.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  async validateBulkDeleteAccounts(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.accountsApplication.validateBulkDeleteAccounts(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple accounts in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The accounts have been successfully deleted.',
+  })
+  async bulkDeleteAccounts(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<void> {
+    return this.accountsApplication.bulkDeleteAccounts(bulkDeleteDto.ids);
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create an account' })
   @ApiResponse({
@@ -86,37 +119,6 @@ export class AccountsController {
   })
   async deleteAccount(@Param('id', ParseIntPipe) id: number) {
     return this.accountsApplication.deleteAccount(id);
-  }
-
-  @Post('validate-bulk-delete')
-  @ApiOperation({
-    summary:
-      'Validates which accounts can be deleted and returns counts of deletable and non-deletable accounts.',
-  })
-  @ApiResponse({
-    status: 200,
-    description:
-      'Validation completed. Returns counts and IDs of deletable and non-deletable accounts.',
-    schema: {
-      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
-    },
-  })
-  async validateBulkDeleteAccounts(
-    @Body() bulkDeleteDto: BulkDeleteDto,
-  ): Promise<ValidateBulkDeleteResponseDto> {
-    return this.accountsApplication.validateBulkDeleteAccounts(
-      bulkDeleteDto.ids,
-    );
-  }
-
-  @Post('bulk-delete')
-  @ApiOperation({ summary: 'Deletes multiple accounts in bulk.' })
-  @ApiResponse({
-    status: 200,
-    description: 'The accounts have been successfully deleted.',
-  })
-  async bulkDeleteAccounts(@Body() bulkDeleteDto: BulkDeleteDto): Promise<void> {
-    return this.accountsApplication.bulkDeleteAccounts(bulkDeleteDto.ids);
   }
 
   @Post(':id/activate')

@@ -32,6 +32,7 @@ import { DialogsName } from '@/constants/dialogs';
 function PaymentsReceivedDataTable({
   // #withPaymentsReceivedActions
   setPaymentReceivesTableState,
+  setPaymentReceivesSelectedRows,
 
   // #withPaymentsReceived
   paymentReceivesTableState,
@@ -106,6 +107,12 @@ function PaymentsReceivedDataTable({
     [setPaymentReceivesTableState],
   );
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = (selectedRows) => {
+    const selectedIds = selectedRows?.map((row) => row.original.id) || [];
+    setPaymentReceivesSelectedRows(selectedIds);
+  };
+
   // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <PaymentReceivesEmptyStatus />;
@@ -127,6 +134,7 @@ function PaymentsReceivedDataTable({
         autoResetSortBy={false}
         autoResetPage={false}
         pagination={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
         initialPageSize={paymentReceivesTableState.pageSize}
         pagesCount={pagination.pagesCount}
         TableLoadingRenderer={TableSkeletonRows}

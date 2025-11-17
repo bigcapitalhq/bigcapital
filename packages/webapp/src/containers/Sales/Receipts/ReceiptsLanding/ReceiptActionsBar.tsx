@@ -53,6 +53,7 @@ import { isEmpty } from 'lodash';
 function ReceiptActionsBar({
   // #withReceiptsActions
   setReceiptsTableState,
+  setReceiptsSelectedRows,
 
   // #withReceipts
   receiptsFilterConditions,
@@ -132,6 +133,7 @@ function ReceiptActionsBar({
             icon={<Icon icon="trash-16" iconSize={16} />}
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
+            onClick={handleBulkDelete}
           />
         </NavbarGroup>
       </DashboardActionsBar>

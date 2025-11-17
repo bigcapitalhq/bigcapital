@@ -29,6 +29,8 @@ import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { BillsExportable } from './commands/BillsExportable';
 import { BillsImportable } from './commands/BillsImportable';
 import { GetBillPaymentTransactionsService } from './queries/GetBillPayments';
+import { BulkDeleteBillsService } from './BulkDeleteBills.service';
+import { ValidateBulkDeleteBillsService } from './ValidateBulkDeleteBills.service';
 
 @Module({
   imports: [
@@ -63,8 +65,10 @@ import { GetBillPaymentTransactionsService } from './queries/GetBillPayments';
     BillsExportable,
     BillsImportable,
     GetBillPaymentTransactionsService,
+    BulkDeleteBillsService,
+    ValidateBulkDeleteBillsService,
   ],
   controllers: [BillsController],
   exports: [BillsExportable, BillsImportable],
 })
-export class BillsModule {}
+export class BillsModule { }

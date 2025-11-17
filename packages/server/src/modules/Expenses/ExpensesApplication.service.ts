@@ -7,6 +7,8 @@ import { GetExpenseService } from './queries/GetExpense.service';
 import { IExpensesFilter } from './interfaces/Expenses.interface';
 import { GetExpensesService } from './queries/GetExpenses.service';
 import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
+import { BulkDeleteExpensesService } from './BulkDeleteExpenses.service';
+import { ValidateBulkDeleteExpensesService } from './ValidateBulkDeleteExpenses.service';
 
 @Injectable()
 export class ExpensesApplication {
@@ -17,6 +19,8 @@ export class ExpensesApplication {
     private readonly publishExpenseService: PublishExpense,
     private readonly getExpenseService: GetExpenseService,
     private readonly getExpensesService: GetExpensesService,
+    private readonly bulkDeleteExpensesService: BulkDeleteExpensesService,
+    private readonly validateBulkDeleteExpensesService: ValidateBulkDeleteExpensesService,
   ) {}
 
   /**
@@ -45,6 +49,24 @@ export class ExpensesApplication {
    */
   public deleteExpense(expenseId: number) {
     return this.deleteExpenseService.deleteExpense(expenseId);
+  }
+
+  /**
+   * Deletes expenses in bulk.
+   * @param {number[]} expenseIds - Expense ids.
+   */
+  public bulkDeleteExpenses(expenseIds: number[]) {
+    return this.bulkDeleteExpensesService.bulkDeleteExpenses(expenseIds);
+  }
+
+  /**
+   * Validates which expenses can be deleted.
+   * @param {number[]} expenseIds - Expense ids.
+   */
+  public validateBulkDeleteExpenses(expenseIds: number[]) {
+    return this.validateBulkDeleteExpensesService.validateBulkDeleteExpenses(
+      expenseIds,
+    );
   }
 
   /**

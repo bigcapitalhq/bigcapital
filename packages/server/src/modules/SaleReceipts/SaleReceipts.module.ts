@@ -40,6 +40,8 @@ import { SaleReceiptsImportable } from './commands/SaleReceiptsImportable';
 import { GetSaleReceiptMailStateService } from './queries/GetSaleReceiptMailState.service';
 import { GetSaleReceiptMailTemplateService } from './queries/GetSaleReceiptMailTemplate.service';
 import { SaleReceiptAutoIncrementSubscriber } from './subscribers/SaleReceiptAutoIncrementSubscriber';
+import { BulkDeleteSaleReceiptsService } from './BulkDeleteSaleReceipts.service';
+import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleReceipts.service';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -85,6 +87,8 @@ import { SaleReceiptAutoIncrementSubscriber } from './subscribers/SaleReceiptAut
     GetSaleReceiptMailStateService,
     GetSaleReceiptMailTemplateService,
     SaleReceiptAutoIncrementSubscriber,
+    BulkDeleteSaleReceiptsService,
+    ValidateBulkDeleteSaleReceiptsService,
   ],
 })
 export class SaleReceiptsModule { }

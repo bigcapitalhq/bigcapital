@@ -4,8 +4,8 @@ import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
-import { AppToaster } from '@/components';
 
+import { AppToaster } from '@/components';
 import { useBulkDeleteInvoices } from '@/hooks/query/invoices';
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';

@@ -3,12 +3,15 @@ import { connect } from 'react-redux';
 import {
   getVendorCreditTableStateFactory,
   isVendorCreditTableStateChangedFactory,
+  getVendorsCreditNoteSelectedRowsFactory,
 } from '@/store/VendorCredit/vendorCredit.selector';
 
 export default (mapState) => {
-  const getVendorsCreditNoteTableState = getVendorCreditTableStateFactoryth();
+  const getVendorsCreditNoteTableState = getVendorCreditTableStateFactory();
   const isVendorsCreditNoteTableChanged =
     isVendorCreditTableStateChangedFactory();
+  const getVendorsCreditNoteSelectedRows =
+    getVendorsCreditNoteSelectedRowsFactory();
 
   const mapStateToProps = (state, props) => {
     const mapped = {

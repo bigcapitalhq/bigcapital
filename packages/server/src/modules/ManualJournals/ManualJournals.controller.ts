@@ -25,13 +25,53 @@ import {
 import { IManualJournalsFilter } from './types/ManualJournals.types';
 import { ManualJournalResponseDto } from './dtos/ManualJournalResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 
 @Controller('manual-journals')
 @ApiTags('Manual Journals')
 @ApiExtraModels(ManualJournalResponseDto)
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()
 export class ManualJournalsController {
-  constructor(private manualJournalsApplication: ManualJournalsApplication) {}
+  constructor(private manualJournalsApplication: ManualJournalsApplication) { }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validate which manual journals can be deleted and return the results.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable manual journals.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  public validateBulkDeleteManualJournals(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.manualJournalsApplication.validateBulkDeleteManualJournals(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple manual journals.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Manual journals deleted successfully',
+  })
+  public bulkDeleteManualJournals(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<void> {
+    return this.manualJournalsApplication.bulkDeleteManualJournals(
+      bulkDeleteDto.ids,
+    );
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create a new manual journal.' })
