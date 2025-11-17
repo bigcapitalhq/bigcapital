@@ -29,6 +29,7 @@ import withBillsActions from './withBillsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { useBillsListContext } from './BillsListProvider';
 import { useRefreshBills } from '@/hooks/query/bills';
@@ -57,6 +58,9 @@ function BillActionsBar({
 
   // #withDialogActions
   openDialog,
+
+  // #withAlertActions
+  openAlert,
 }) {
   const history = useHistory();
 
@@ -210,4 +214,5 @@ export default compose(
     billsTableSize: billsettings?.tableSize,
   })),
   withDialogActions,
+  withAlertActions,
 )(BillActionsBar);

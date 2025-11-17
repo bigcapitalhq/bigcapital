@@ -6,6 +6,7 @@ import {
   NavbarDivider,
   NavbarGroup,
   Alignment,
+  Intent,
   Menu,
   MenuItem,
   Popover,
@@ -13,6 +14,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
+import { isEmpty } from 'lodash';
 import {
   Icon,
   Can,
@@ -34,6 +36,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
@@ -45,6 +48,7 @@ import { DRAWERS } from '@/constants/drawers';
 function CreditNotesActionsBar({
   // #withCreditNotes
   creditNoteFilterRoles,
+  creditNotesSelectedRows,
 
   // #withCreditNotesActions
   setCreditNotesTableState,
@@ -59,7 +63,10 @@ function CreditNotesActionsBar({
   openDialog,
 
   // #withDrawerActions
-  openDrawer
+  openDrawer,
+
+  // #withAlertActions
+  openAlert,
 }) {
   const history = useHistory();
 
@@ -102,6 +109,26 @@ function CreditNotesActionsBar({
   // Handle the customize button click.
   const handleCustomizeBtnClick = () => {
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'CreditNote' });
+  }
+
+  // Show bulk delete button when rows are selected.
+  if (!isEmpty(creditNotesSelectedRows)) {
+    const handleBulkDelete = () => {
+      openAlert('credit-notes-bulk-delete', { creditNotesIds: creditNotesSelectedRows });
+    };
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
   }
 
   return (
@@ -195,12 +222,14 @@ function CreditNotesActionsBar({
 export default compose(
   withCreditNotesActions,
   withSettingsActions,
-  withCreditNotes(({ creditNoteTableState }) => ({
+  withCreditNotes(({ creditNoteTableState, creditNotesSelectedRows }) => ({
     creditNoteFilterRoles: creditNoteTableState.filterRoles,
+    creditNotesSelectedRows,
   })),
   withSettings(({ creditNoteSettings }) => ({
     creditNoteTableSize: creditNoteSettings?.tableSize,
   })),
   withDialogActions,
-  withDrawerActions
+  withDrawerActions,
+  withAlertActions,
 )(CreditNotesActionsBar);

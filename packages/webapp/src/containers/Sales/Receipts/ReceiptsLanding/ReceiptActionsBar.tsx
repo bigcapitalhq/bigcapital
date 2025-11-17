@@ -35,6 +35,7 @@ import withReceiptsActions from './withReceiptsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from '@/hooks/query/receipts';
@@ -70,6 +71,9 @@ function ReceiptActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withAlertActions
+  openAlert,
 }) {
   const history = useHistory();
 
@@ -250,4 +254,5 @@ export default compose(
   })),
   withDialogActions,
   withDrawerActions,
+  withAlertActions,
 )(ReceiptActionsBar);
