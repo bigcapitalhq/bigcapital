@@ -39,7 +39,7 @@ export class SaleEstimatesApplication {
     private readonly getSaleEstimateMailStateService: GetSaleEstimateMailStateService,
     private readonly bulkDeleteSaleEstimatesService: BulkDeleteSaleEstimatesService,
     private readonly validateBulkDeleteSaleEstimatesService: ValidateBulkDeleteSaleEstimatesService,
-  ) {}
+  ) { }
 
   /**
    * Create a sale estimate.
@@ -77,9 +77,13 @@ export class SaleEstimatesApplication {
    * @param {number[]} saleEstimateIds
    * @return {Promise<void>}
    */
-  public bulkDeleteSaleEstimates(saleEstimateIds: number[]) {
+  public bulkDeleteSaleEstimates(
+    saleEstimateIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
     return this.bulkDeleteSaleEstimatesService.bulkDeleteSaleEstimates(
       saleEstimateIds,
+      options,
     );
   }
 

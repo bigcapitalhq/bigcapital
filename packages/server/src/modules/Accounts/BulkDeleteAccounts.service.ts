@@ -15,17 +15,25 @@ export class BulkDeleteAccountsService {
    */
   async bulkDeleteAccounts(
     accountIds: number | Array<number>,
+    options?: { skipUndeletable?: boolean },
     trx?: Knex.Transaction,
   ): Promise<void> {
+    const { skipUndeletable = false } = options ?? {};
     const accountsIds = uniq(castArray(accountIds));
 
     const results = await PromisePool.withConcurrency(1)
       .for(accountsIds)
       .process(async (accountId: number) => {
-        await this.deleteAccountService.deleteAccount(accountId);
+        try {
+          await this.deleteAccountService.deleteAccount(accountId);
+        } catch (error) {
+          if (!skipUndeletable) {
+            throw error;
+          }
+        }
       });
 
-    if (results.errors && results.errors.length > 0) {
+    if (!skipUndeletable && results.errors && results.errors.length > 0) {
       throw results.errors[0].raw;
     }
   }

@@ -61,8 +61,11 @@ export class BillsApplication {
    * Deletes multiple bills.
    * @param {number[]} billIds
    */
-  public bulkDeleteBills(billIds: number[]) {
-    return this.bulkDeleteBillsService.bulkDeleteBills(billIds);
+  public bulkDeleteBills(
+    billIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteBillsService.bulkDeleteBills(billIds, options);
   }
 
   /**

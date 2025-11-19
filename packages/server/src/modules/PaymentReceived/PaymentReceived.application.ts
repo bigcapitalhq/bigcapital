@@ -81,9 +81,13 @@ export class PaymentReceivesApplication {
    * Deletes multiple payment receives.
    * @param {number[]} paymentReceiveIds
    */
-  public bulkDeletePaymentReceives(paymentReceiveIds: number[]) {
+  public bulkDeletePaymentReceives(
+    paymentReceiveIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
     return this.bulkDeletePaymentReceivedService.bulkDeletePaymentReceived(
       paymentReceiveIds,
+      options,
     );
   }
 

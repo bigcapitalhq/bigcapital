@@ -3,12 +3,21 @@ import { CreateVendorCreditService } from './commands/CreateVendorCredit.service
 import { DeleteVendorCreditService } from './commands/DeleteVendorCredit.service';
 import { EditVendorCreditService } from './commands/EditVendorCredit.service';
 import { GetVendorCreditService } from './queries/GetVendorCredit.service';
-import { IVendorCreditEditDTO, IVendorCreditsQueryDTO } from './types/VendorCredit.types';
+import {
+  IVendorCreditEditDTO,
+  IVendorCreditsQueryDTO,
+} from './types/VendorCredit.types';
 import { IVendorCreditCreateDTO } from './types/VendorCredit.types';
 import { Injectable } from '@nestjs/common';
 import { OpenVendorCreditService } from './commands/OpenVendorCredit.service';
 import { GetVendorCreditsService } from './queries/GetVendorCredits.service';
-import { CreateVendorCreditDto, EditVendorCreditDto } from './dtos/VendorCredit.dto';
+import {
+  CreateVendorCreditDto,
+  EditVendorCreditDto,
+} from './dtos/VendorCredit.dto';
+import { BulkDeleteVendorCreditsService } from './BulkDeleteVendorCredits.service';
+import { ValidateBulkDeleteVendorCreditsService } from './ValidateBulkDeleteVendorCredits.service';
+import { ValidateBulkDeleteResponseDto } from '@/common/dtos/BulkDelete.dto';
 
 @Injectable()
 export class VendorCreditsApplicationService {
@@ -25,7 +34,9 @@ export class VendorCreditsApplicationService {
     private readonly getVendorCreditService: GetVendorCreditService,
     private readonly openVendorCreditService: OpenVendorCreditService,
     private readonly getVendorCreditsService: GetVendorCreditsService,
-  ) {}
+    private readonly bulkDeleteVendorCreditsService: BulkDeleteVendorCreditsService,
+    private readonly validateBulkDeleteVendorCreditsService: ValidateBulkDeleteVendorCreditsService,
+  ) { }
 
   /**
    * Creates a new vendor credit.
@@ -89,5 +100,23 @@ export class VendorCreditsApplicationService {
    */
   getVendorCredits(query: IVendorCreditsQueryDTO) {
     return this.getVendorCreditsService.getVendorCredits(query);
+  }
+
+  bulkDeleteVendorCredits(
+    vendorCreditIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteVendorCreditsService.bulkDeleteVendorCredits(
+      vendorCreditIds,
+      options,
+    );
+  }
+
+  validateBulkDeleteVendorCredits(
+    vendorCreditIds: number[],
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.validateBulkDeleteVendorCreditsService.validateBulkDeleteVendorCredits(
+      vendorCreditIds,
+    );
   }
 }

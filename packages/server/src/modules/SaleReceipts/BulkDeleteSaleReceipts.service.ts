@@ -12,17 +12,25 @@ export class BulkDeleteSaleReceiptsService {
 
   async bulkDeleteSaleReceipts(
     saleReceiptIds: number | number[],
+    options?: { skipUndeletable?: boolean },
     trx?: Knex.Transaction,
   ): Promise<void> {
+    const { skipUndeletable = false } = options ?? {};
     const receiptIds = uniq(castArray(saleReceiptIds));
 
     const results = await PromisePool.withConcurrency(1)
       .for(receiptIds)
       .process(async (saleReceiptId: number) => {
-        await this.deleteSaleReceiptService.deleteSaleReceipt(saleReceiptId);
+        try {
+          await this.deleteSaleReceiptService.deleteSaleReceipt(saleReceiptId);
+        } catch (error) {
+          if (!skipUndeletable) {
+            throw error;
+          }
+        }
       });
 
-    if (results.errors && results.errors.length > 0) {
+    if (!skipUndeletable && results.errors && results.errors.length > 0) {
       throw results.errors[0].raw;
     }
   }

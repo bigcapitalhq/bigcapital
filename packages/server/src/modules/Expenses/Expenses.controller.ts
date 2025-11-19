@@ -7,12 +7,15 @@ import {
   Post,
   Put,
   Query,
+  DefaultValuePipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { ExpensesApplication } from './ExpensesApplication.service';
 import { IExpensesFilter } from './Expenses.types';
 import {
   ApiExtraModels,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -59,12 +62,25 @@ export class ExpensesController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple expenses.' })
+  @ApiQuery({
+    name: 'skip_undeletable',
+    required: false,
+    type: Boolean,
+    description:
+      'When true, undeletable expenses will be skipped and only deletable ones will be removed.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Expenses deleted successfully',
   })
-  public bulkDeleteExpenses(@Body() bulkDeleteDto: BulkDeleteDto) {
-    return this.expensesApplication.bulkDeleteExpenses(bulkDeleteDto.ids);
+  public bulkDeleteExpenses(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
+    skipUndeletable: boolean,
+  ) {
+    return this.expensesApplication.bulkDeleteExpenses(bulkDeleteDto.ids, {
+      skipUndeletable,
+    });
   }
 
   /**

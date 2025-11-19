@@ -93,9 +93,13 @@ export class SaleReceiptApplication {
    * Deletes multiple sale receipts.
    * @param {number[]} saleReceiptIds
    */
-  public async bulkDeleteSaleReceipts(saleReceiptIds: number[]) {
+  public async bulkDeleteSaleReceipts(
+    saleReceiptIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
     return this.bulkDeleteSaleReceiptsService.bulkDeleteSaleReceipts(
       saleReceiptIds,
+      options,
     );
   }
 

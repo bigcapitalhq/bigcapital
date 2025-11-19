@@ -42,7 +42,7 @@ export class AccountsApplication {
     private readonly getAccountsService: GetAccountsService,
     private readonly bulkDeleteAccountsService: BulkDeleteAccountsService,
     private readonly validateBulkDeleteAccountsService: ValidateBulkDeleteAccountsService,
-  ) {}
+  ) { }
 
   /**
    * Creates a new account.
@@ -148,7 +148,13 @@ export class AccountsApplication {
   /**
    * Deletes multiple accounts in bulk.
    */
-  public bulkDeleteAccounts = (accountIds: number[]): Promise<void> => {
-    return this.bulkDeleteAccountsService.bulkDeleteAccounts(accountIds);
+  public bulkDeleteAccounts = (
+    accountIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ): Promise<void> => {
+    return this.bulkDeleteAccountsService.bulkDeleteAccounts(
+      accountIds,
+      options,
+    );
   };
 }

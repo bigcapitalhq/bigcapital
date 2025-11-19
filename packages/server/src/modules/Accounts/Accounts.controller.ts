@@ -7,6 +7,8 @@ import {
   Get,
   Query,
   ParseIntPipe,
+  DefaultValuePipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { AccountsApplication } from './AccountsApplication.service';
 import { CreateAccountDTO } from './CreateAccount.dto';
@@ -64,14 +66,25 @@ export class AccountsController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple accounts in bulk.' })
+  @ApiQuery({
+    name: 'skip_undeletable',
+    required: false,
+    type: Boolean,
+    description:
+      'When true, undeletable accounts will be skipped and only deletable ones will be removed.',
+  })
   @ApiResponse({
     status: 200,
     description: 'The accounts have been successfully deleted.',
   })
   async bulkDeleteAccounts(
     @Body() bulkDeleteDto: BulkDeleteDto,
+    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
+    skipUndeletable: boolean,
   ): Promise<void> {
-    return this.accountsApplication.bulkDeleteAccounts(bulkDeleteDto.ids);
+    return this.accountsApplication.bulkDeleteAccounts(bulkDeleteDto.ids, {
+      skipUndeletable,
+    });
   }
 
   @Post()

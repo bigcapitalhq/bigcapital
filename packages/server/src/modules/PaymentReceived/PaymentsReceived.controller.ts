@@ -1,6 +1,7 @@
 import {
   ApiExtraModels,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -13,10 +14,12 @@ import {
   Headers,
   HttpCode,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Post,
   Put,
   Query,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
 import {
@@ -171,13 +174,25 @@ export class PaymentReceivesController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple payments received.' })
+  @ApiQuery({
+    name: 'skip_undeletable',
+    required: false,
+    type: Boolean,
+    description:
+      'When true, undeletable payments will be skipped and only deletable ones will be removed.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Payments received deleted successfully.',
   })
-  public bulkDeletePaymentsReceived(@Body() bulkDeleteDto: BulkDeleteDto) {
+  public bulkDeletePaymentsReceived(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
+    skipUndeletable: boolean,
+  ) {
     return this.paymentReceivesApplication.bulkDeletePaymentReceives(
       bulkDeleteDto.ids,
+      { skipUndeletable },
     );
   }
 

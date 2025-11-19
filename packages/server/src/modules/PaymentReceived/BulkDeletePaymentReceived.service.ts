@@ -8,23 +8,31 @@ import { DeletePaymentReceivedService } from './commands/DeletePaymentReceived.s
 export class BulkDeletePaymentReceivedService {
   constructor(
     private readonly deletePaymentReceivedService: DeletePaymentReceivedService,
-  ) {}
+  ) { }
 
   async bulkDeletePaymentReceived(
     paymentReceiveIds: number | Array<number>,
+    options?: { skipUndeletable?: boolean },
     trx?: Knex.Transaction,
   ): Promise<void> {
+    const { skipUndeletable = false } = options ?? {};
     const paymentsIds = uniq(castArray(paymentReceiveIds));
 
     const results = await PromisePool.withConcurrency(1)
       .for(paymentsIds)
       .process(async (paymentReceiveId: number) => {
-        await this.deletePaymentReceivedService.deletePaymentReceive(
-          paymentReceiveId,
-        );
+        try {
+          await this.deletePaymentReceivedService.deletePaymentReceive(
+            paymentReceiveId,
+          );
+        } catch (error) {
+          if (!skipUndeletable) {
+            throw error;
+          }
+        }
       });
 
-    if (results.errors && results.errors.length > 0) {
+    if (!skipUndeletable && results.errors && results.errors.length > 0) {
       throw results.errors[0].raw;
     }
   }

@@ -21,7 +21,7 @@ export class ExpensesApplication {
     private readonly getExpensesService: GetExpensesService,
     private readonly bulkDeleteExpensesService: BulkDeleteExpensesService,
     private readonly validateBulkDeleteExpensesService: ValidateBulkDeleteExpensesService,
-  ) {}
+  ) { }
 
   /**
    * Create a new expense transaction.
@@ -55,8 +55,14 @@ export class ExpensesApplication {
    * Deletes expenses in bulk.
    * @param {number[]} expenseIds - Expense ids.
    */
-  public bulkDeleteExpenses(expenseIds: number[]) {
-    return this.bulkDeleteExpensesService.bulkDeleteExpenses(expenseIds);
+  public bulkDeleteExpenses(
+    expenseIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteExpensesService.bulkDeleteExpenses(
+      expenseIds,
+      options,
+    );
   }
 
   /**

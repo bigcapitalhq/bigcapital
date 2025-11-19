@@ -107,9 +107,13 @@ export class CreditNoteApplication {
    * @param {number[]} creditNoteIds
    * @returns {Promise<void>}
    */
-  bulkDeleteCreditNotes(creditNoteIds: number[]) {
+  bulkDeleteCreditNotes(
+    creditNoteIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
     return this.bulkDeleteCreditNotesService.bulkDeleteCreditNotes(
       creditNoteIds,
+      options,
     );
   }
 

@@ -28,6 +28,8 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { VendorCreditsExportable } from './commands/VendorCreditsExportable';
 import { VendorCreditsImportable } from './commands/VendorCreditsImportable';
+import { BulkDeleteVendorCreditsService } from './BulkDeleteVendorCredits.service';
+import { ValidateBulkDeleteVendorCreditsService } from './ValidateBulkDeleteVendorCredits.service';
 
 @Module({
   imports: [
@@ -61,6 +63,8 @@ import { VendorCreditsImportable } from './commands/VendorCreditsImportable';
     VendorCreditAutoSerialSubscriber,
     VendorCreditsExportable,
     VendorCreditsImportable,
+    BulkDeleteVendorCreditsService,
+    ValidateBulkDeleteVendorCreditsService,
   ],
   exports: [
     CreateVendorCreditService,
@@ -74,6 +78,8 @@ import { VendorCreditsImportable } from './commands/VendorCreditsImportable';
     OpenVendorCreditService,
     VendorCreditsExportable,
     VendorCreditsImportable,
+    BulkDeleteVendorCreditsService,
+    ValidateBulkDeleteVendorCreditsService,
   ],
   controllers: [VendorCreditsController],
 })

@@ -25,7 +25,7 @@ export class ManualJournalsApplication {
     private getManualJournalsService: GetManualJournals,
     private bulkDeleteManualJournalsService: BulkDeleteManualJournalsService,
     private validateBulkDeleteManualJournalsService: ValidateBulkDeleteManualJournalsService,
-  ) {}
+  ) { }
 
   /**
    * Make journal entries.
@@ -65,9 +65,13 @@ export class ManualJournalsApplication {
    * Bulk deletes manual journals.
    * @param {number[]} manualJournalIds
    */
-  public bulkDeleteManualJournals = (manualJournalIds: number[]) => {
+  public bulkDeleteManualJournals = (
+    manualJournalIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) => {
     return this.bulkDeleteManualJournalsService.bulkDeleteManualJournals(
       manualJournalIds,
+      options,
     );
   };
 

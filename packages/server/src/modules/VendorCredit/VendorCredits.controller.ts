@@ -7,23 +7,82 @@ import {
   Post,
   Put,
   Query,
+  DefaultValuePipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { VendorCreditsApplicationService } from './VendorCreditsApplication.service';
 import { IVendorCreditsQueryDTO } from './types/VendorCredit.types';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   CreateVendorCreditDto,
   EditVendorCreditDto,
 } from './dtos/VendorCredit.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 
 @Controller('vendor-credits')
 @ApiTags('Vendor Credits')
 @ApiCommonHeaders()
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 export class VendorCreditsController {
   constructor(
     private readonly vendorCreditsApplication: VendorCreditsApplicationService,
-  ) {}
+  ) { }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which vendor credits can be deleted and returns the results.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable vendor credits.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  async validateBulkDeleteVendorCredits(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.vendorCreditsApplication.validateBulkDeleteVendorCredits(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple vendor credits.' })
+  @ApiQuery({
+    name: 'skip_undeletable',
+    required: false,
+    type: Boolean,
+    description:
+      'When true, undeletable vendor credits will be skipped and only deletable ones will be removed.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Vendor credits deleted successfully',
+  })
+  async bulkDeleteVendorCredits(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
+    skipUndeletable: boolean,
+  ): Promise<void> {
+    return this.vendorCreditsApplication.bulkDeleteVendorCredits(
+      bulkDeleteDto.ids,
+      { skipUndeletable },
+    );
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create a new vendor credit.' })

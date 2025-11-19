@@ -8,23 +8,31 @@ import { DeleteManualJournalService } from './commands/DeleteManualJournal.servi
 export class BulkDeleteManualJournalsService {
   constructor(
     private readonly deleteManualJournalService: DeleteManualJournalService,
-  ) {}
+  ) { }
 
   async bulkDeleteManualJournals(
     manualJournalIds: number | Array<number>,
+    options?: { skipUndeletable?: boolean },
     trx?: Knex.Transaction,
   ): Promise<void> {
+    const { skipUndeletable = false } = options ?? {};
     const journalsIds = uniq(castArray(manualJournalIds));
 
     const results = await PromisePool.withConcurrency(1)
       .for(journalsIds)
       .process(async (manualJournalId: number) => {
-        await this.deleteManualJournalService.deleteManualJournal(
-          manualJournalId,
-        );
+        try {
+          await this.deleteManualJournalService.deleteManualJournal(
+            manualJournalId,
+          );
+        } catch (error) {
+          if (!skipUndeletable) {
+            throw error;
+          }
+        }
       });
 
-    if (results.errors && results.errors.length > 0) {
+    if (!skipUndeletable && results.errors && results.errors.length > 0) {
       throw results.errors[0].raw;
     }
   }

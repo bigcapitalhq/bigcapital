@@ -8,12 +8,15 @@ import {
   Post,
   Put,
   Query,
+  DefaultValuePipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { ManualJournalsApplication } from './ManualJournalsApplication.service';
 import {
   ApiExtraModels,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -61,15 +64,25 @@ export class ManualJournalsController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple manual journals.' })
+  @ApiQuery({
+    name: 'skip_undeletable',
+    required: false,
+    type: Boolean,
+    description:
+      'When true, undeletable journals will be skipped and only deletable ones will be removed.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Manual journals deleted successfully',
   })
   public bulkDeleteManualJournals(
     @Body() bulkDeleteDto: BulkDeleteDto,
+    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
+    skipUndeletable: boolean,
   ): Promise<void> {
     return this.manualJournalsApplication.bulkDeleteManualJournals(
       bulkDeleteDto.ids,
+      { skipUndeletable },
     );
   }
 

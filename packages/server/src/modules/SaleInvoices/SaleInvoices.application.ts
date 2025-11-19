@@ -45,7 +45,7 @@ export class SaleInvoiceApplication {
     private generateShareLinkService: GenerateShareLink,
     private bulkDeleteSaleInvoicesService: BulkDeleteSaleInvoicesService,
     private validateBulkDeleteSaleInvoicesService: ValidateBulkDeleteSaleInvoicesService,
-  ) {}
+  ) { }
 
   /**
    * Creates a new sale invoice with associated GL entries.
@@ -87,9 +87,13 @@ export class SaleInvoiceApplication {
    * @param {number[]} saleInvoiceIds
    * @return {Promise<void>}
    */
-  public bulkDeleteSaleInvoices(saleInvoiceIds: number[]) {
+  public bulkDeleteSaleInvoices(
+    saleInvoiceIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
     return this.bulkDeleteSaleInvoicesService.bulkDeleteSaleInvoices(
       saleInvoiceIds,
+      options,
     );
   }
 
