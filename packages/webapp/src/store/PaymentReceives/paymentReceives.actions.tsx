@@ -20,3 +20,4 @@ export const setPaymentReceivesSelectedRows = (selectedRows) => {
     payload: selectedRows,
   };
 };
+

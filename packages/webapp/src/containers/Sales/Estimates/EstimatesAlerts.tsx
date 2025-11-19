@@ -14,10 +14,6 @@ const EstimateRejectAlert = React.lazy(
   () => import('@/containers/Alerts/Estimates/EstimateRejectAlert'),
 );
 
-const EstimateBulkDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/Estimates/EstimateBulkDeleteAlert'),
-);
-
 /**
  * Estimates alert.
  */
@@ -26,5 +22,4 @@ export default [
   { name: 'estimate-deliver', component: EstimateDeliveredAlert },
   { name: 'estimate-Approve', component: EstimateApproveAlert },
   { name: 'estimate-reject', component: EstimateRejectAlert },
-  { name: 'estimates-bulk-delete', component: EstimateBulkDeleteAlert },
 ];

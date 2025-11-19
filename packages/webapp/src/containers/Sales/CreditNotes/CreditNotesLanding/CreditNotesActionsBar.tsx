@@ -36,11 +36,11 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { useBulkDeleteCreditNotesDialog } from './hooks/use-bulk-delete-credit-notes-dialog';
 
 /**
  * Credit note table actions bar.
@@ -64,9 +64,6 @@ function CreditNotesActionsBar({
 
   // #withDrawerActions
   openDrawer,
-
-  // #withAlertActions
-  openAlert,
 }) {
   const history = useHistory();
 
@@ -111,10 +108,15 @@ function CreditNotesActionsBar({
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'CreditNote' });
   }
 
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteCreditNotes,
+  } = useBulkDeleteCreditNotesDialog();
+
   // Show bulk delete button when rows are selected.
   if (!isEmpty(creditNotesSelectedRows)) {
     const handleBulkDelete = () => {
-      openAlert('credit-notes-bulk-delete', { creditNotesIds: creditNotesSelectedRows });
+      openBulkDeleteDialog(creditNotesSelectedRows);
     };
     return (
       <DashboardActionsBar>
@@ -125,6 +127,7 @@ function CreditNotesActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteCreditNotes}
           />
         </NavbarGroup>
       </DashboardActionsBar>
@@ -231,5 +234,4 @@ export default compose(
   })),
   withDialogActions,
   withDrawerActions,
-  withAlertActions,
 )(CreditNotesActionsBar);

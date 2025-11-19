@@ -20,3 +20,9 @@ export const setInvoicesSelectedRows = (selectedRows) => {
     payload: selectedRows,
   };
 };
+
+export const resetInvoicesSelectedRows = () => {
+  return {
+    type: 'INVOICES/RESET_SELECTED_ROWS',
+  };
+};

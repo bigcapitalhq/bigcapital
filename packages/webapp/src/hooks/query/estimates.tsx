@@ -132,12 +132,41 @@ export function useBulkDeleteEstimates(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (ids: number[]) => apiRequest.post('sale-estimates/bulk-delete', { ids }),
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post(
+        'sale-estimates/bulk-delete',
+        { ids },
+        {
+          params: skipUndeletable
+            ? { skip_undeletable: true }
+            : undefined,
+        },
+      ),
     {
       onSuccess: () => {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteEstimates(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('sale-estimates/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
       ...props,
     },
   );

@@ -96,12 +96,41 @@ export function useBulkDeleteManualJournals(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (ids: number[]) => apiRequest.post('manual-journals/bulk-delete', { ids }),
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post(
+        'manual-journals/bulk-delete',
+        { ids },
+        {
+          params: skipUndeletable
+            ? { skip_undeletable: true }
+            : undefined,
+        },
+      ),
     {
       onSuccess: () => {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteManualJournals(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('manual-journals/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
       ...props,
     },
   );

@@ -77,9 +77,13 @@ export const useSidebarSubmenu = () => {
  * Dialogs actions.
  */
 export const useDialogActions = () => {
+  const dispatch = useDispatch();
+
   return {
-    openDialog: useDispatchAction(openDialog),
-    closeDialog: useDispatchAction(closeDialog),
+    openDialog: (name: string, payload?: {}) =>
+      dispatch(openDialog(name, payload)),
+    closeDialog: (name: string, payload?: {}) =>
+      dispatch(closeDialog(name, payload)),
   };
 };
 

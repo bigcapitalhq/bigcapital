@@ -33,11 +33,13 @@ import withEstimatesActions from './withEstimatesActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
-import { useRefreshEstimates } from '@/hooks/query/estimates';
+import {
+  useRefreshEstimates,
+} from '@/hooks/query/estimates';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useBulkDeleteEstimatesDialog } from './hooks/use-bulk-delete-estimates-dialog';
 
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
@@ -72,9 +74,6 @@ function EstimateActionsBar({
 
   // #withSettingsActions
   addSetting,
-
-  // #withAlertActions
-  openAlert,
 }) {
   const history = useHistory();
 
@@ -122,12 +121,15 @@ function EstimateActionsBar({
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleEstimate' });
   };
 
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteEstimates,
+  } = useBulkDeleteEstimatesDialog();
+
   // Handle bulk estimates delete.
   const handleBulkDelete = () => {
-    openAlert('estimates-bulk-delete', { estimatesIds: estimatesSelectedRows });
+    openBulkDeleteDialog(estimatesSelectedRows);
   };
-
-  console.log(estimatesSelectedRows, 'estimatesSelectedRows');
 
   if (!isEmpty(estimatesSelectedRows)) {
     return (
@@ -139,6 +141,7 @@ function EstimateActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteEstimates}
           />
         </NavbarGroup>
       </DashboardActionsBar>
@@ -238,7 +241,6 @@ function EstimateActionsBar({
 export default compose(
   withEstimatesActions,
   withSettingsActions,
-  withAlertActions,
   withEstimates(({ estimatesTableState, estimatesSelectedRows }) => ({
     estimatesFilterRoles: estimatesTableState.filterRoles,
     estimatesSelectedRows: estimatesSelectedRows || [],

@@ -133,7 +133,22 @@ export function useBulkDeleteInvoices(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (ids: number[]) => apiRequest.post('sale-invoices/bulk-delete', { ids }),
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post(
+        'sale-invoices/bulk-delete',
+        { ids },
+        {
+          params: skipUndeletable
+            ? { skip_undeletable: true }
+            : undefined,
+        },
+      ),
     {
       onSuccess: () => {
         // Common invalidate queries.
@@ -141,6 +156,35 @@ export function useBulkDeleteInvoices(props) {
       },
       ...props,
     },
+  );
+}
+
+export interface ValidateBulkDeleteInvoicesResponse {
+  deletableCount: number;
+  nonDeletableCount: number;
+  deletableIds: number[];
+  nonDeletableIds: number[];
+}
+
+export function useValidateBulkDeleteInvoices(
+  props?: UseMutationOptions<
+    ValidateBulkDeleteInvoicesResponse,
+    Error,
+    number[]
+  >,
+) {
+  const apiRequest = useApiRequest();
+
+  return useMutation<
+    ValidateBulkDeleteInvoicesResponse,
+    Error,
+    number[]
+  >(
+    (ids) =>
+      apiRequest
+        .post('sale-invoices/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    props,
   );
 }
 

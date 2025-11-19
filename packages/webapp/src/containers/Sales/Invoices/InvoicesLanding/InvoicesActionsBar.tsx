@@ -29,12 +29,12 @@ import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 import { useRefreshInvoices } from '@/hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useBulkDeleteInvoicesDialog } from '../hooks/use-bulk-delete-accounts-dialog';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
@@ -65,10 +65,12 @@ function InvoiceActionsBar({
   // #withDrawerActions
   openDrawer,
 
-  // #withAlertActions
-  openAlert,
 }) {
   const history = useHistory();
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteInvoices,
+  } = useBulkDeleteInvoicesDialog();
 
   // Sale invoices list context.
   const { invoicesViews, invoicesFields } = useInvoicesListContext();
@@ -120,7 +122,7 @@ function InvoiceActionsBar({
 
   // Handle bulk invoices delete.
   const handleBulkDelete = () => {
-    openAlert('invoices-bulk-delete', { invoicesIds: invoicesSelectedRows });
+    openBulkDeleteDialog(invoicesSelectedRows);
   };
 
   if (!isEmpty(invoicesSelectedRows)) {
@@ -133,6 +135,7 @@ function InvoiceActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteInvoices}
           />
         </NavbarGroup>
       </DashboardActionsBar>
@@ -229,7 +232,6 @@ function InvoiceActionsBar({
 export default compose(
   withInvoiceActions,
   withSettingsActions,
-  withAlertActions,
   withInvoices(({ invoicesTableState, invoicesSelectedRows }) => ({
     invoicesFilterRoles: invoicesTableState.filterRoles,
     invoicesSelectedRows,

@@ -27,7 +27,6 @@ import {
   DashboardActionsBar,
 } from '@/components';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withPaymentsReceived from './withPaymentsReceived';
 import withPaymentsReceivedActions from './withPaymentsReceivedActions';
 import withSettings from '@/containers/Settings/withSettings';
@@ -46,6 +45,7 @@ import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { useBulkDeletePaymentReceivesDialog } from './hooks/use-bulk-delete-payment-receives-dialog';
 
 /**
  * Payment receives actions bar.
@@ -69,9 +69,6 @@ function PaymentsReceivedActionsBar({
 
   // #withDrawerActions
   openDrawer,
-
-  // #withAlertsActions
-  openAlert,
 }) {
   // History context.
   const history = useHistory();
@@ -119,9 +116,14 @@ function PaymentsReceivedActionsBar({
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'PaymentReceive' });
   };
 
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeletePaymentReceives,
+  } = useBulkDeletePaymentReceivesDialog();
+
   if (!isEmpty(paymentReceivesSelectedRows)) {
     const handleBulkDelete = () => {
-      openAlert('payments-received-bulk-delete', { paymentsReceivedIds: paymentReceivesSelectedRows });
+      openBulkDeleteDialog(paymentReceivesSelectedRows);
     };
     return (
       <DashboardActionsBar>
@@ -132,6 +134,7 @@ function PaymentsReceivedActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeletePaymentReceives}
           />
         </NavbarGroup>
       </DashboardActionsBar>
@@ -237,5 +240,4 @@ export default compose(
   })),
   withDialogActions,
   withDrawerActions,
-  withAlertsActions,
 )(PaymentsReceivedActionsBar);

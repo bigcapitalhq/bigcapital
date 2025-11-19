@@ -30,11 +30,11 @@ import withManualJournalsActions from './withManualJournalsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { useBulkDeleteManualJournalsDialog } from './hooks/use-bulk-delete-manual-journals-dialog';
 
 /**
  * Manual journal actions bar.
@@ -55,9 +55,6 @@ function ManualJournalActionsBar({
 
   // #withDialogActions
   openDialog,
-
-  // #withAlertActions
-  openAlert,
 }) {
   // History context.
   const history = useHistory();
@@ -75,11 +72,13 @@ function ManualJournalActionsBar({
   const onClickNewManualJournal = () => {
     history.push('/make-journal-entry');
   };
-  // Handle delete button click.
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteManualJournals,
+  } = useBulkDeleteManualJournalsDialog();
+
   const handleBulkDelete = () => {
-    openAlert('journals-bulk-delete', {
-      journalsIds: manualJournalsSelectedRows,
-    });
+    openBulkDeleteDialog(manualJournalsSelectedRows);
   };
 
   // Handle tab change.
@@ -120,6 +119,7 @@ function ManualJournalActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteManualJournals}
           />
         </NavbarGroup>
       </DashboardActionsBar>
@@ -208,7 +208,6 @@ function ManualJournalActionsBar({
 
 export default compose(
   withDialogActions,
-  withAlertActions,
   withManualJournalsActions,
   withSettingsActions,
   withManualJournals(({ manualJournalsTableState, manualJournalsSelectedRows }) => ({

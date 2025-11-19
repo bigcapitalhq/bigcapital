@@ -32,6 +32,10 @@ const reducerInstance = createReducer(initialState, {
     state.selectedRows = action.payload;
   },
 
+  [`INVOICES/RESET_SELECTED_ROWS`]: (state) => {
+    state.selectedRows = [];
+  },
+
   [t.RESET]: () => {
     purgeStoredState(CONFIG);
   },

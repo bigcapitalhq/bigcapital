@@ -140,6 +140,20 @@ export function useBulkDeleteBills(props) {
   );
 }
 
+export function useValidateBulkDeleteBills(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('bills/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
+}
+
 const transformBillsResponse = (response) => ({
   bills: response.data.bills,
   pagination: transformPagination(response.data.pagination),

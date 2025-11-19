@@ -35,12 +35,14 @@ import withReceiptsActions from './withReceiptsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
-import { useRefreshReceipts } from '@/hooks/query/receipts';
+import {
+  useRefreshReceipts,
+} from '@/hooks/query/receipts';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
+import { useBulkDeleteReceiptsDialog } from './hooks/use-bulk-delete-receipts-dialog';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
@@ -71,9 +73,6 @@ function ReceiptActionsBar({
 
   // #withSettingsActions
   addSetting,
-
-  // #withAlertActions
-  openAlert,
 }) {
   const history = useHistory();
 
@@ -125,9 +124,14 @@ function ReceiptActionsBar({
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleReceipt' });
   };
 
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteReceipts,
+  } = useBulkDeleteReceiptsDialog();
+
   if (!isEmpty(receiptSelectedRows)) {
     const handleBulkDelete = () => {
-      openAlert('receipts-bulk-delete', { receiptsIds: receiptSelectedRows });
+      openBulkDeleteDialog(receiptSelectedRows);
     };
     return (
       <DashboardActionsBar>
@@ -138,6 +142,7 @@ function ReceiptActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteReceipts}
           />
         </NavbarGroup>
       </DashboardActionsBar>
@@ -254,5 +259,4 @@ export default compose(
   })),
   withDialogActions,
   withDrawerActions,
-  withAlertActions,
 )(ReceiptActionsBar);

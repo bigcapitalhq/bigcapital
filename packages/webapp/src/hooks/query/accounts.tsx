@@ -158,7 +158,22 @@ export function useBulkDeleteAccounts(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (ids: number[]) => apiRequest.post('accounts/bulk-delete', { ids }),
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post(
+        'accounts/bulk-delete',
+        { ids },
+        {
+          params: skipUndeletable
+            ? { skip_undeletable: true }
+            : undefined,
+        },
+      ),
     {
       onSuccess: () => {
         // Common invalidate queries.

@@ -119,12 +119,41 @@ export function useBulkDeleteCreditNotes(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (ids: number[]) => apiRequest.post('credit-notes/bulk-delete', { ids }),
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post(
+        'credit-notes/bulk-delete',
+        { ids },
+        {
+          params: skipUndeletable
+            ? { skip_undeletable: true }
+            : undefined,
+        },
+      ),
     {
       onSuccess: () => {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteCreditNotes(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('credit-notes/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
       ...props,
     },
   );

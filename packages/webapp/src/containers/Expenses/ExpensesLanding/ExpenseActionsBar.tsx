@@ -34,10 +34,10 @@ import withExpensesActions from './withExpensesActions';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { compose } from '@/utils';
 import { isEmpty } from 'lodash';
+import { useBulkDeleteExpensesDialog } from './hooks/use-bulk-delete-expenses-dialog';
 
 /**
  * Expenses actions bar.
@@ -58,9 +58,6 @@ function ExpensesActionsBar({
 
   // #withDialogActions
   openDialog,
-
-  // #withAlertActions
-  openAlert,
 }) {
   // History context.
   const history = useHistory();
@@ -78,11 +75,14 @@ function ExpensesActionsBar({
   const onClickNewExpense = () => {
     history.push('/expenses/new');
   };
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteExpenses,
+  } = useBulkDeleteExpensesDialog();
+
   // Handle delete button click.
   const handleBulkDelete = () => {
-    openAlert('expenses-bulk-delete', {
-      expensesIds: expensesSelectedRows,
-    });
+    openBulkDeleteDialog(expensesSelectedRows);
   };
 
   // Handles the tab chaning.
@@ -122,6 +122,7 @@ function ExpensesActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteExpenses}
           />
         </NavbarGroup>
       </DashboardActionsBar>
@@ -209,7 +210,6 @@ function ExpensesActionsBar({
 
 export default compose(
   withDialogActions,
-  withAlertActions,
   withExpensesActions,
   withSettingsActions,
   withExpenses(({ expensesTableState, expensesSelectedRows }) => ({

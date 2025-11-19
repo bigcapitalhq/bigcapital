@@ -110,12 +110,41 @@ export function useBulkDeleteExpenses(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (ids: number[]) => apiRequest.post('expenses/bulk-delete', { ids }),
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post(
+        'expenses/bulk-delete',
+        { ids },
+        {
+          params: skipUndeletable
+            ? { skip_undeletable: true }
+            : undefined,
+        },
+      ),
     {
       onSuccess: () => {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteExpenses(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('expenses/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
       ...props,
     },
   );

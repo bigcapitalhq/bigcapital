@@ -89,7 +89,7 @@ const reducerInstance = createReducer(initialState, {
       isOpen: false,
     };
   },
-  [t.CLOSE_ALL_DIALOGS]: (state, action) => {},
+  [t.CLOSE_ALL_DIALOGS]: (state, action) => { },
 
   [t.SET_TOPBAR_EDIT_VIEW]: (state, action) => {
     state.topbarEditViewId = action.id;

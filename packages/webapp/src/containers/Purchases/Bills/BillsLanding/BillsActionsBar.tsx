@@ -29,11 +29,13 @@ import withBillsActions from './withBillsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { useBillsListContext } from './BillsListProvider';
-import { useRefreshBills } from '@/hooks/query/bills';
+import {
+  useRefreshBills,
+} from '@/hooks/query/bills';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useBulkDeleteBillsDialog } from './hooks/use-bulk-delete-bills-dialog';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
@@ -58,9 +60,6 @@ function BillActionsBar({
 
   // #withDialogActions
   openDialog,
-
-  // #withAlertActions
-  openAlert,
 }) {
   const history = useHistory();
 
@@ -103,9 +102,14 @@ function BillActionsBar({
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'Bill' });
   };
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteBills,
+  } = useBulkDeleteBillsDialog();
+
   // Handle bulk delete.
   const handleBulkDelete = () => {
-    openAlert('bills-bulk-delete', { billsIds: billsSelectedRows });
+    openBulkDeleteDialog(billsSelectedRows);
   };
 
   if (!isEmpty(billsSelectedRows)) {
@@ -118,6 +122,7 @@ function BillActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteBills}
           />
         </NavbarGroup>
       </DashboardActionsBar>
@@ -214,5 +219,4 @@ export default compose(
     billsTableSize: billsettings?.tableSize,
   })),
   withDialogActions,
-  withAlertActions,
 )(BillActionsBar);

@@ -121,12 +121,41 @@ export function useBulkDeleteVendorCredits(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (ids: number[]) => apiRequest.post('vendor-credits/bulk-delete', { ids }),
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post(
+        'vendor-credits/bulk-delete',
+        { ids },
+        {
+          params: skipUndeletable
+            ? { skip_undeletable: true }
+            : undefined,
+        },
+      ),
     {
       onSuccess: () => {
         // Common invalidate queries.
         commonInvalidateQueries(queryClient);
       },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteVendorCredits(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('vendor-credits/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
       ...props,
     },
   );

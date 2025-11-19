@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { isEmpty } from 'lodash';
 import {
   Button,
   Classes,
@@ -32,7 +33,6 @@ import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withVendorsCreditNotes from './withVendorsCreditNotes';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withVendorActions from './withVendorActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
@@ -40,6 +40,8 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
+import withVendorsCreditNotes from './withVendorsCreditNotes';
+import { useBulkDeleteVendorCreditsDialog } from './hooks/use-bulk-delete-vendor-credits-dialog';
 
 /**
  * Vendors Credit note  table actions bar.
@@ -49,6 +51,7 @@ function VendorsCreditNoteActionsBar({
 
   // #withVendorsCreditNotes
   vendorCreditFilterRoles,
+  vendorsCreditNoteSelectedRows,
 
   // #withVendorsCreditNotesActions
   setVendorsCreditNoteTableState,
@@ -106,6 +109,32 @@ function VendorsCreditNoteActionsBar({
   const handleCustomizeBtnClick = () => {
     openDrawer(DRAWERS.CREDIT_NOTE_DETAILS);
   };
+
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteVendorCredits,
+  } = useBulkDeleteVendorCreditsDialog();
+
+  if (!isEmpty(vendorsCreditNoteSelectedRows)) {
+    const handleBulkDelete = () => {
+      openBulkDeleteDialog(vendorsCreditNoteSelectedRows);
+    };
+
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteVendorCredits}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -199,9 +228,12 @@ export default compose(
   withVendorsCreditNotesActions,
   withVendorActions,
   withSettingsActions,
-  withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
-    vendorCreditFilterRoles: vendorsCreditNoteTableState.filterRoles,
-  })),
+  withVendorsCreditNotes(
+    ({ vendorsCreditNoteTableState, vendorsCreditNoteSelectedRows }) => ({
+      vendorCreditFilterRoles: vendorsCreditNoteTableState.filterRoles,
+      vendorsCreditNoteSelectedRows,
+    }),
+  ),
   withSettings(({ vendorsCreditNoteSetting }) => ({
     creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
   })),

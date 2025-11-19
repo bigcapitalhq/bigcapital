@@ -34,6 +34,7 @@ import { useHistory } from 'react-router-dom';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useAccountsChartContext } from './AccountsChartProvider';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useBulkDeleteAccountsDialog } from './hooks/use-bulk-delete-accounts-dialog';
 
 import withAccounts from './withAccounts';
 import withAccountsTableActions from './withAccountsTableActions';
@@ -78,9 +79,15 @@ function AccountsActionsBar({
   // Accounts refresh action.
   const { refresh } = useRefreshAccounts();
 
+  // Bulk delete accounts dialog.
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteAccounts,
+  } = useBulkDeleteAccountsDialog();
+
   // Handle bulk accounts delete.
   const handleBulkDelete = () => {
-    openAlert('accounts-bulk-delete', { accountsIds: accountsSelectedRows });
+    openBulkDeleteDialog(accountsSelectedRows);
   };
   // Handle bulk accounts activate.
   const handelBulkActivate = () => {
@@ -148,6 +155,7 @@ function AccountsActionsBar({
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
             onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteAccounts}
           />
         </NavbarGroup>
       </DashboardActionsBar>
