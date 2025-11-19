@@ -126,15 +126,10 @@ export function useBulkDeleteCreditNotes(props) {
       ids: number[];
       skipUndeletable?: boolean;
     }) =>
-      apiRequest.post(
-        'credit-notes/bulk-delete',
-        { ids },
-        {
-          params: skipUndeletable
-            ? { skip_undeletable: true }
-            : undefined,
-        },
-      ),
+      apiRequest.post('credit-notes/bulk-delete', {
+        ids,
+        skipUndeletable,
+      }),
     {
       onSuccess: () => {
         // Common invalidate queries.

@@ -31,6 +31,7 @@ export class ValidateBulkDeleteManualJournalsService {
         try {
           await this.deleteManualJournalService.deleteManualJournal(
             manualJournalId,
+            trx,
           );
           deletableIds.push(manualJournalId);
         } catch (error) {

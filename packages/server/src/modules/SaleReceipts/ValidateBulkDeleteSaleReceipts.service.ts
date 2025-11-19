@@ -29,7 +29,10 @@ export class ValidateBulkDeleteSaleReceiptsService {
 
       for (const saleReceiptId of saleReceiptIds) {
         try {
-          await this.deleteSaleReceiptService.deleteSaleReceipt(saleReceiptId);
+          await this.deleteSaleReceiptService.deleteSaleReceipt(
+            saleReceiptId,
+            trx,
+          );
           deletableIds.push(saleReceiptId);
         } catch (error) {
           nonDeletableIds.push(saleReceiptId);

@@ -46,8 +46,8 @@ function ReceiptBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('sale-receipts-table');
-        closeDialog(dialogName);
         setReceiptsSelectedRows([]);
+        closeDialog(dialogName);
       })
       .catch(() => {
         AppToaster.show({

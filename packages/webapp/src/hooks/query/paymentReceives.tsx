@@ -165,15 +165,10 @@ export function useBulkDeletePaymentReceives(props) {
       ids: number[];
       skipUndeletable?: boolean;
     }) =>
-      apiRequest.post(
-        'payments-received/bulk-delete',
-        { ids },
-        {
-          params: skipUndeletable
-            ? { skip_undeletable: true }
-            : undefined,
-        },
-      ),
+      apiRequest.post('payments-received/bulk-delete', {
+        ids,
+        skipUndeletable,
+      }),
     {
       onSuccess: () => {
         // Common invalidate queries.

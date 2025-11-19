@@ -46,8 +46,8 @@ function AccountBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('accounts-table');
-        closeDialog(dialogName);
         setAccountsSelectedRows([]);
+        closeDialog(dialogName);
       })
       .catch((errors) => {
         handleDeleteErrors(errors);

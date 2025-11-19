@@ -46,8 +46,8 @@ function CreditNoteBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('credit-notes-table');
-        closeDialog(dialogName);
         setCreditNotesSelectedRows([]);
+        closeDialog(dialogName);
       })
       .catch(() => {
         AppToaster.show({

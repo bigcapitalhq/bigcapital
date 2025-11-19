@@ -27,7 +27,10 @@ export class ValidateBulkDeleteItemCategoriesService {
 
       for (const itemCategoryId of itemCategoryIds) {
         try {
-          await this.deleteItemCategoryService.deleteItemCategory(itemCategoryId);
+          await this.deleteItemCategoryService.deleteItemCategory(
+            itemCategoryId,
+            trx,
+          );
           deletableIds.push(itemCategoryId);
         } catch (error) {
           nonDeletableIds.push(itemCategoryId);

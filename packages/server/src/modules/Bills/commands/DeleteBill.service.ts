@@ -29,9 +29,10 @@ export class DeleteBill {
   /**
    * Deletes the bill with associated entries.
    * @param {number} billId
+   * @param {Knex.Transaction} trx - Database transaction instance.
    * @return {void}
    */
-  public async deleteBill(billId: number) {
+  public async deleteBill(billId: number, trx?: Knex.Transaction) {
     // Retrieve the given bill or throw not found error.
     const oldBill = await this.billModel()
       .query()
@@ -75,6 +76,6 @@ export class DeleteBill {
         oldBill,
         trx,
       } as IBIllEventDeletedPayload);
-    });
+    }, trx);
   }
 }

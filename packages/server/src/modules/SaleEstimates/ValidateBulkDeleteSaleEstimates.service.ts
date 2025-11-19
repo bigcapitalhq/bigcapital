@@ -11,7 +11,9 @@ export class ValidateBulkDeleteSaleEstimatesService {
     private readonly tenantKnex: () => Knex,
   ) { }
 
-  public async validateBulkDeleteSaleEstimates(saleEstimateIds: number[]): Promise<{
+  public async validateBulkDeleteSaleEstimates(
+    saleEstimateIds: number[],
+  ): Promise<{
     deletableCount: number;
     nonDeletableCount: number;
     deletableIds: number[];
@@ -27,7 +29,10 @@ export class ValidateBulkDeleteSaleEstimatesService {
 
       for (const saleEstimateId of saleEstimateIds) {
         try {
-          await this.deleteSaleEstimateService.deleteEstimate(saleEstimateId);
+          await this.deleteSaleEstimateService.deleteEstimate(
+            saleEstimateId,
+            trx,
+          );
           deletableIds.push(saleEstimateId);
         } catch (error) {
           nonDeletableIds.push(saleEstimateId);
@@ -48,4 +53,3 @@ export class ValidateBulkDeleteSaleEstimatesService {
     }
   }
 }
-

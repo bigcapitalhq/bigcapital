@@ -32,9 +32,13 @@ export class DeleteItemCategoryService {
   /**
    * Deletes the given item category.
    * @param {number} itemCategoryId - Item category id.
+   * @param {Knex.Transaction} trx - Database transaction instance.
    * @return {Promise<void>}
    */
-  public async deleteItemCategory(itemCategoryId: number) {
+  public async deleteItemCategory(
+    itemCategoryId: number,
+    trx?: Knex.Transaction,
+  ) {
     // Retrieve item category or throw not found error.
     const oldItemCategory = await this.itemCategoryModel()
       .query()
@@ -56,7 +60,7 @@ export class DeleteItemCategoryService {
         itemCategoryId,
         oldItemCategory,
       } as IItemCategoryDeletedPayload);
-    });
+    }, trx);
   }
 
   /**

@@ -48,8 +48,8 @@ function PaymentReceivedBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('payments-received-table');
-        closeDialog(dialogName);
         setPaymentReceivesSelectedRows([]);
+        closeDialog(dialogName);
       })
       .catch(() => {
         AppToaster.show({

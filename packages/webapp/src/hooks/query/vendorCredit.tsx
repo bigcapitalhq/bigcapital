@@ -128,15 +128,10 @@ export function useBulkDeleteVendorCredits(props) {
       ids: number[];
       skipUndeletable?: boolean;
     }) =>
-      apiRequest.post(
-        'vendor-credits/bulk-delete',
-        { ids },
-        {
-          params: skipUndeletable
-            ? { skip_undeletable: true }
-            : undefined,
-        },
-      ),
+      apiRequest.post('vendor-credits/bulk-delete', {
+        ids,
+        skipUndeletable,
+      }),
     {
       onSuccess: () => {
         // Common invalidate queries.

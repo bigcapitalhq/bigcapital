@@ -140,15 +140,10 @@ export function useBulkDeleteInvoices(props) {
       ids: number[];
       skipUndeletable?: boolean;
     }) =>
-      apiRequest.post(
-        'sale-invoices/bulk-delete',
-        { ids },
-        {
-          params: skipUndeletable
-            ? { skip_undeletable: true }
-            : undefined,
-        },
-      ),
+      apiRequest.post('sale-invoices/bulk-delete', {
+        ids,
+        skipUndeletable,
+      }),
     {
       onSuccess: () => {
         // Common invalidate queries.

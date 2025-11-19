@@ -7,15 +7,12 @@ import {
   Post,
   Put,
   Query,
-  DefaultValuePipe,
-  ParseBoolPipe,
 } from '@nestjs/common';
 import { VendorCreditsApplicationService } from './VendorCreditsApplication.service';
 import { IVendorCreditsQueryDTO } from './types/VendorCredit.types';
 import {
   ApiExtraModels,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -62,25 +59,16 @@ export class VendorCreditsController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple vendor credits.' })
-  @ApiQuery({
-    name: 'skip_undeletable',
-    required: false,
-    type: Boolean,
-    description:
-      'When true, undeletable vendor credits will be skipped and only deletable ones will be removed.',
-  })
   @ApiResponse({
     status: 200,
     description: 'Vendor credits deleted successfully',
   })
   async bulkDeleteVendorCredits(
     @Body() bulkDeleteDto: BulkDeleteDto,
-    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
-    skipUndeletable: boolean,
   ): Promise<void> {
     return this.vendorCreditsApplication.bulkDeleteVendorCredits(
       bulkDeleteDto.ids,
-      { skipUndeletable },
+      { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
     );
   }
 

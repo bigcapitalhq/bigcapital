@@ -46,8 +46,8 @@ function ExpenseBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('expenses-table');
-        closeDialog(dialogName);
         setExpensesSelectedRows([]);
+        closeDialog(dialogName);
       })
       .catch(() => {
         AppToaster.show({

@@ -6,8 +6,6 @@ import {
   Headers,
   HttpCode,
   Param,
-  ParseBoolPipe,
-  DefaultValuePipe,
   ParseIntPipe,
   Post,
   Put,
@@ -19,7 +17,6 @@ import {
   ApiExtraModels,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -73,25 +70,16 @@ export class SaleReceiptsController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple sale receipts.' })
-  @ApiQuery({
-    name: 'skip_undeletable',
-    required: false,
-    type: Boolean,
-    description:
-      'When true, undeletable receipts will be skipped and only deletable ones will be removed.',
-  })
   @ApiResponse({
     status: 200,
     description: 'Sale receipts deleted successfully',
   })
   bulkDeleteSaleReceipts(
     @Body() bulkDeleteDto: BulkDeleteDto,
-    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
-    skipUndeletable: boolean,
   ): Promise<void> {
     return this.saleReceiptApplication.bulkDeleteSaleReceipts(
       bulkDeleteDto.ids,
-      { skipUndeletable },
+      { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
     );
   }
 

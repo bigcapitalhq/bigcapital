@@ -51,8 +51,8 @@ function InvoiceBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('invoices-table');
-        closeDialog(dialogName);
         resetInvoicesSelectedRows();
+        closeDialog(dialogName);
       })
       .catch((errors) => {
         AppToaster.show({

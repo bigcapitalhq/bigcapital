@@ -27,7 +27,7 @@ export class ValidateBulkDeleteExpensesService {
 
       for (const expenseId of expenseIds) {
         try {
-          await this.deleteExpenseService.deleteExpense(expenseId);
+          await this.deleteExpenseService.deleteExpense(expenseId, trx);
           deletableIds.push(expenseId);
         } catch (error) {
           nonDeletableIds.push(expenseId);

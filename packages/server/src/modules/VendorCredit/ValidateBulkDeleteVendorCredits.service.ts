@@ -31,6 +31,7 @@ export class ValidateBulkDeleteVendorCreditsService {
         try {
           await this.deleteVendorCreditService.deleteVendorCredit(
             vendorCreditId,
+            trx,
           );
           deletableIds.push(vendorCreditId);
         } catch (error) {

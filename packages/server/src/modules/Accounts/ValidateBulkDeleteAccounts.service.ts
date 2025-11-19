@@ -35,7 +35,7 @@ export class ValidateBulkDeleteAccountsService {
 
       for (const accountId of accountIds) {
         try {
-          await this.deleteAccountService.deleteAccount(accountId);
+          await this.deleteAccountService.deleteAccount(accountId, trx);
           deletableIds.push(accountId);
         } catch (error) {
           if (error instanceof ModelHasRelationsError) {

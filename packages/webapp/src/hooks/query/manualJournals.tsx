@@ -103,15 +103,10 @@ export function useBulkDeleteManualJournals(props) {
       ids: number[];
       skipUndeletable?: boolean;
     }) =>
-      apiRequest.post(
-        'manual-journals/bulk-delete',
-        { ids },
-        {
-          params: skipUndeletable
-            ? { skip_undeletable: true }
-            : undefined,
-        },
-      ),
+      apiRequest.post('manual-journals/bulk-delete', {
+        ids,
+        skipUndeletable,
+      }),
     {
       onSuccess: () => {
         // Common invalidate queries.

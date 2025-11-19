@@ -27,7 +27,7 @@ export class ValidateBulkDeleteBillsService {
 
       for (const billId of billIds) {
         try {
-          await this.deleteBillService.deleteBill(billId);
+          await this.deleteBillService.deleteBill(billId, trx);
           deletableIds.push(billId);
         } catch (error) {
           nonDeletableIds.push(billId);

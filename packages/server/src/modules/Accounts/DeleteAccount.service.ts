@@ -50,8 +50,12 @@ export class DeleteAccount {
   /**
    * Deletes the account from the storage.
    * @param {number} accountId
+   * @param {Knex.Transaction} trx - Database transaction instance.
    */
-  public deleteAccount = async (accountId: number): Promise<void> => {
+  public deleteAccount = async (
+    accountId: number,
+    trx?: Knex.Transaction,
+  ): Promise<void> => {
     // Retrieve account or not found service error.
     const oldAccount = await this.accountModel().query().findById(accountId);
 
@@ -82,6 +86,6 @@ export class DeleteAccount {
         oldAccount,
         trx,
       } as IAccountEventDeletedPayload);
-    });
+    }, trx);
   };
 }

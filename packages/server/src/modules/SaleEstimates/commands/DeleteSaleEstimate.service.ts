@@ -24,18 +24,22 @@ export class DeleteSaleEstimate {
 
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
-  ) {}
+  ) { }
 
   /**
    * Deletes the given estimate id with associated entries.
    * @async
-   * @param {number} estimateId
+   * @param {number} estimateId - Sale estimate id.
+   * @param {Knex.Transaction} trx - Database transaction instance.
    * @return {Promise<void>}
    */
-  public async deleteEstimate(estimateId: number): Promise<void> {
+  public async deleteEstimate(
+    estimateId: number,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
     // Retrieve sale estimate or throw not found service error.
     const oldSaleEstimate = await this.saleEstimateModel()
-      .query()
+      .query(trx)
       .findById(estimateId)
       .throwIfNotFound();
 
@@ -70,6 +74,6 @@ export class DeleteSaleEstimate {
         oldSaleEstimate,
         trx,
       } as ISaleEstimateDeletedPayload);
-    });
+    }, trx);
   }
 }

@@ -46,8 +46,8 @@ function ManualJournalBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('manual-journals-table');
-        closeDialog(dialogName);
         setManualJournalsSelectedRows([]);
+        closeDialog(dialogName);
       })
       .catch(() => {
         AppToaster.show({

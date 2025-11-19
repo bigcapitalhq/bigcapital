@@ -93,7 +93,7 @@ export class DeleteVendorCreditService {
         oldVendorCredit,
         trx,
       } as IVendorCreditDeletedPayload);
-    });
+    }, trx);
   };
 
   /**

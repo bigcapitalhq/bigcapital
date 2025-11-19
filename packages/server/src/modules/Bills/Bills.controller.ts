@@ -2,7 +2,6 @@ import {
   ApiExtraModels,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -16,8 +15,6 @@ import {
   Delete,
   Get,
   Query,
-  DefaultValuePipe,
-  ParseBoolPipe,
 } from '@nestjs/common';
 import { BillsApplication } from './Bills.application';
 import { IBillsFilter } from './Bills.types';
@@ -59,24 +56,15 @@ export class BillsController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple bills.' })
-  @ApiQuery({
-    name: 'skip_undeletable',
-    required: false,
-    type: Boolean,
-    description:
-      'When true, undeletable bills will be skipped and only deletable ones will be removed.',
-  })
   @ApiResponse({
     status: 200,
     description: 'Bills deleted successfully',
   })
   bulkDeleteBills(
     @Body() bulkDeleteDto: BulkDeleteDto,
-    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
-    skipUndeletable: boolean,
   ): Promise<void> {
     return this.billsApplication.bulkDeleteBills(bulkDeleteDto.ids, {
-      skipUndeletable,
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
     });
   }
 

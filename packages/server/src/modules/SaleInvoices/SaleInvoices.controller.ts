@@ -2,13 +2,11 @@ import { Response } from 'express';
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Headers,
   HttpCode,
   Param,
-  ParseBoolPipe,
   ParseIntPipe,
   Post,
   Put,
@@ -80,25 +78,16 @@ export class SaleInvoicesController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple sale invoices.' })
-  @ApiQuery({
-    name: 'skip_undeletable',
-    required: false,
-    type: Boolean,
-    description:
-      'When true, undeletable invoices will be skipped and only deletable ones will be removed.',
-  })
   @ApiResponse({
     status: 200,
     description: 'Sale invoices deleted successfully',
   })
   bulkDeleteSaleInvoices(
     @Body() bulkDeleteDto: BulkDeleteDto,
-    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
-    skipUndeletable: boolean,
   ): Promise<void> {
     return this.saleInvoiceApplication.bulkDeleteSaleInvoices(
       bulkDeleteDto.ids,
-      { skipUndeletable },
+      { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
     );
   }
 

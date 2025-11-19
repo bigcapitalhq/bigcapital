@@ -3,7 +3,6 @@ import {
   ApiOperation,
   ApiResponse,
   ApiParam,
-  ApiQuery,
   ApiExtraModels,
   getSchemaPath,
 } from '@nestjs/swagger';
@@ -12,9 +11,7 @@ import {
   Controller,
   Delete,
   Get,
-  DefaultValuePipe,
   Param,
-  ParseBoolPipe,
   Post,
   Put,
   Query,
@@ -143,25 +140,16 @@ export class CreditNotesController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple credit notes.' })
-  @ApiQuery({
-    name: 'skip_undeletable',
-    required: false,
-    type: Boolean,
-    description:
-      'When true, undeletable credit notes will be skipped and only deletable ones will be removed.',
-  })
   @ApiResponse({
     status: 200,
     description: 'Credit notes deleted successfully',
   })
   bulkDeleteCreditNotes(
     @Body() bulkDeleteDto: BulkDeleteDto,
-    @Query('skip_undeletable', new DefaultValuePipe(false), ParseBoolPipe)
-    skipUndeletable: boolean,
   ): Promise<void> {
     return this.creditNoteApplication.bulkDeleteCreditNotes(
       bulkDeleteDto.ids,
-      { skipUndeletable },
+      { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
     );
   }
 

@@ -46,8 +46,8 @@ function EstimateBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('estimates-table');
-        closeDialog(dialogName);
         setEstimatesSelectedRows([]);
+        closeDialog(dialogName);
       })
       .catch(() => {
         AppToaster.show({

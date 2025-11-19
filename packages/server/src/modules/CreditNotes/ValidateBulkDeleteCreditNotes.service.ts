@@ -9,7 +9,7 @@ export class ValidateBulkDeleteCreditNotesService {
     private readonly deleteCreditNoteService: DeleteCreditNoteService,
     @Inject(TENANCY_DB_CONNECTION)
     private readonly tenantKnex: () => Knex,
-  ) {}
+  ) { }
 
   public async validateBulkDeleteCreditNotes(creditNoteIds: number[]): Promise<{
     deletableCount: number;
@@ -27,7 +27,10 @@ export class ValidateBulkDeleteCreditNotesService {
 
       for (const creditNoteId of creditNoteIds) {
         try {
-          await this.deleteCreditNoteService.deleteCreditNote(creditNoteId);
+          await this.deleteCreditNoteService.deleteCreditNote(
+            creditNoteId,
+            trx,
+          );
           deletableIds.push(creditNoteId);
         } catch (error) {
           nonDeletableIds.push(creditNoteId);

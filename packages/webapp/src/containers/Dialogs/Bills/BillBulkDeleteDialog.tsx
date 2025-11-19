@@ -45,8 +45,8 @@ function BillBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('bills-table');
-        closeDialog(dialogName);
         setBillsSelectedRows([]);
+        closeDialog(dialogName);
       })
       .catch(() => {
         AppToaster.show({

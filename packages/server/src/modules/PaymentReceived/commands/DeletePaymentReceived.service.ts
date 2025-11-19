@@ -30,7 +30,7 @@ export class DeletePaymentReceivedService {
     private paymentReceiveEntryModel: TenantModelProxy<
       typeof PaymentReceivedEntry
     >,
-  ) {}
+  ) { }
 
   /**
    * Deletes the given payment receive with associated entries
@@ -43,9 +43,12 @@ export class DeletePaymentReceivedService {
    * - Revert the payment amount of the associated invoices.
    * @async
    * @param {Integer} paymentReceiveId - Payment receive id.
-   * @param {IPaymentReceived} paymentReceive - Payment receive object.
+   * @param {Knex.Transaction} trx - Database transaction instance.
    */
-  public async deletePaymentReceive(paymentReceiveId: number) {
+  public async deletePaymentReceive(
+    paymentReceiveId: number,
+    trx?: Knex.Transaction,
+  ) {
     // Retreive payment receive or throw not found service error.
     const oldPaymentReceive = await this.paymentReceiveModel()
       .query()
@@ -79,6 +82,6 @@ export class DeletePaymentReceivedService {
         oldPaymentReceive,
         trx,
       } as IPaymentReceivedDeletedPayload);
-    });
+    }, trx);
   }
 }

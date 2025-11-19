@@ -48,8 +48,8 @@ function VendorCreditBulkDeleteDialog({
           intent: Intent.SUCCESS,
         });
         queryCache.invalidateQueries('vendor-credits-table');
-        closeDialog(dialogName);
         setVendorsCreditNoteSelectedRows([]);
+        closeDialog(dialogName);
       })
       .catch(() => {
         AppToaster.show({
