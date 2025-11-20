@@ -31,6 +31,7 @@ import { DRAWERS } from '@/constants/drawers';
 function ItemsDataTable({
   // #withItemsActions
   setItemsTableState,
+  setItemsSelectedRows,
 
   // #withDialogAction
   openDialog,
@@ -79,6 +80,15 @@ function ItemsDataTable({
       });
     },
     [setItemsTableState],
+  );
+
+  // Handle selected rows change.
+  const handleSelectedRowsChange = React.useCallback(
+    (selectedFlatRows) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setItemsSelectedRows(selectedIds);
+    },
+    [setItemsSelectedRows],
   );
 
   // Handle delete action Item.
@@ -136,6 +146,8 @@ function ItemsDataTable({
         progressBarLoading={isItemsFetching}
         noInitialFetch={true}
         selectionColumn={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        autoResetSelectedRows={false}
         spinnerProps={{ size: 30 }}
         expandable={false}
         sticky={true}
@@ -179,5 +191,5 @@ export default compose(
   withSettings(({ itemsSettings }) => ({
     itemsTableSize: itemsSettings.tableSize,
   })),
-  withItems(({ itemsTableState }) => ({  itemsTableState }))
+  withItems(({ itemsTableState }) => ({ itemsTableState }))
 )(ItemsDataTable);

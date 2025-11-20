@@ -13,3 +13,10 @@ export const resetReceiptsTableState = () => {
     type: t.RECEIPTS_TABLE_STATE_RESET,
   };
 }
+
+export const setReceiptsSelectedRows = (selectedRows) => {
+  return {
+    type: t.RECEIPTS_SELECTED_ROWS_SET,
+    payload: selectedRows,
+  };
+};

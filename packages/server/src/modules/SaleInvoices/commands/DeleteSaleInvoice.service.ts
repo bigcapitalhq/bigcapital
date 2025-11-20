@@ -47,7 +47,7 @@ export class DeleteSaleInvoice {
 
     @Inject(ItemEntry.name)
     private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
-  ) {}
+  ) { }
 
   /**
    * Validate the sale invoice has no payment entries.
@@ -86,9 +86,12 @@ export class DeleteSaleInvoice {
    * Deletes the given sale invoice with associated entries
    * and journal transactions.
    * @param {Number} saleInvoiceId - The given sale invoice id.
-   * @param {ISystemUser} authorizedUser -
+   * @param {Knex.Transaction} trx - Database transaction instance.
    */
-  public async deleteSaleInvoice(saleInvoiceId: number): Promise<void> {
+  public async deleteSaleInvoice(
+    saleInvoiceId: number,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
     // Retrieve the given sale invoice with associated entries
     // or throw not found error.
     const oldSaleInvoice = await this.saleInvoiceModel()
@@ -138,6 +141,6 @@ export class DeleteSaleInvoice {
         saleInvoiceId,
         trx,
       } as ISaleInvoiceDeletedPayload);
-    });
+    }, trx);
   }
 }

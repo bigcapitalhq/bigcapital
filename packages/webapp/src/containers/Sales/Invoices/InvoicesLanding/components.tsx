@@ -1,12 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Intent,
-  Tag,
-  Menu,
-  MenuItem,
-  MenuDivider,
-} from '@blueprintjs/core';
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { CLASSES } from '@/constants/classes';
@@ -30,36 +24,33 @@ export function InvoiceStatus({ invoice }) {
   return (
     <Choose>
       <Choose.When condition={invoice.is_fully_paid && invoice.is_delivered}>
-        <Tag intent={Intent.SUCCESS} round>
+        <Tag intent={Intent.SUCCESS} round minimal>
           <T id={'paid'} />
         </Tag>
       </Choose.When>
 
-      <Choose.When condition={invoice.is_delivered}>
-        <Choose>
-          <Choose.When condition={invoice.is_overdue}>
-            <Tag intent={Intent.DANGER} round>
-              {intl.get('overdue_by', { overdue: invoice.overdue_days })}
-            </Tag>
-          </Choose.When>
-          <Choose.Otherwise>
-            <Tag intent={Intent.WARNING} round>
-              {intl.get('due_in', { due: invoice.remaining_days })}
-            </Tag>
-          </Choose.Otherwise>
-        </Choose>
+      <Choose.When condition={invoice.is_delivered && invoice.is_overdue}>
+        <Tag intent={Intent.DANGER} round minimal>
+          {intl.get('overdue_by', { overdue: invoice.overdue_days })}
+        </Tag>
+      </Choose.When>
 
-        <If condition={invoice.is_partially_paid}>
-          <Tag intent={Intent.PRIMARY} round>
-            {intl.get('day_partially_paid', {
-              due: formattedAmount(invoice.due_amount, invoice.currency_code),
-            })}
-          </Tag>
-        </If>
+      <Choose.When condition={invoice.is_delivered && !invoice.is_overdue}>
+        <Tag intent={Intent.WARNING} round minimal>
+          {intl.get('due_in', { due: invoice.remaining_days })}
+        </Tag>
+      </Choose.When>
+
+      <Choose.When condition={invoice.is_partially_paid}>
+        <Tag intent={Intent.PRIMARY} round minimal>
+          {intl.get('day_partially_paid', {
+            due: formattedAmount(invoice.due_amount, invoice.currency_code),
+          })}
+        </Tag>
       </Choose.When>
 
       <Choose.Otherwise>
-        <Tag round>
+        <Tag round minimal>
           <T id={'draft'} />
         </Tag>
       </Choose.Otherwise>

@@ -103,6 +103,49 @@ export function useDeleteExpense(props) {
 }
 
 /**
+ * Deletes multiple expenses in bulk.
+ */
+export function useBulkDeleteExpenses(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('expenses/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteExpenses(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('expenses/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
+}
+
+/**
  * Edits the given expense.
  */
 export function useEditExpense(props) {

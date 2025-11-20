@@ -31,12 +31,13 @@ export class DeleteCustomer {
    * @param {number} customerId - Customer ID.
    * @return {Promise<void>}
    */
-  public async deleteCustomer(customerId: number): Promise<void> {
+  public async deleteCustomer(
+    customerId: number,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
     // Retrieve the customer or throw not found service error.
-    const oldCustomer = await this.customerModel()
-      .query()
-      .findById(customerId)
-      .throwIfNotFound();
+    const query = this.customerModel().query(trx);
+    const oldCustomer = await query.findById(customerId).throwIfNotFound();
 
     // Triggers `onCustomerDeleting` event.
     await this.eventPublisher.emitAsync(events.customers.onDeleting, {
@@ -45,10 +46,10 @@ export class DeleteCustomer {
     } as ICustomerDeletingPayload);
 
     // Deletes the customer and associated entities under UOW transaction.
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+    return this.uow.withTransaction(async (transaction: Knex.Transaction) => {
       // Delete the customer from the storage.
       await this.customerModel()
-        .query(trx)
+        .query(transaction)
         .findById(customerId)
         .deleteIfNoRelations({
           type: ERRORS.CUSTOMER_HAS_TRANSACTIONS,
@@ -58,8 +59,8 @@ export class DeleteCustomer {
       await this.eventPublisher.emitAsync(events.customers.onDeleted, {
         customerId,
         oldCustomer,
-        trx,
+        trx: transaction,
       } as ICustomerEventDeletedPayload);
-    });
+    }, trx);
   }
 }

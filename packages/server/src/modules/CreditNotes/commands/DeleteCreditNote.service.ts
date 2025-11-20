@@ -49,9 +49,13 @@ export class DeleteCreditNoteService {
   /**
    * Deletes the given credit note transactions.
    * @param {number} creditNoteId
+   * @param {Knex.Transaction} trx - Database transaction instance.
    * @returns {Promise<void>}
    */
-  public async deleteCreditNote(creditNoteId: number): Promise<void> {
+  public async deleteCreditNote(
+    creditNoteId: number,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
     // Retrieve the credit note or throw not found service error.
     const oldCreditNote = await this.creditNoteModel()
       .query()
@@ -88,7 +92,7 @@ export class DeleteCreditNoteService {
         creditNoteId,
         trx,
       } as ICreditNoteDeletedPayload);
-    });
+    }, trx);
   }
 
   /**

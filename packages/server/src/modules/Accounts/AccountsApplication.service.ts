@@ -15,6 +15,9 @@ import { GetAccountsService } from './GetAccounts.service';
 import { IFilterMeta } from '@/interfaces/Model';
 import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionResponse.dto';
 import { GetAccountsQueryDto } from './dtos/GetAccountsQuery.dto';
+import { BulkDeleteAccountsService } from './BulkDeleteAccounts.service';
+import { ValidateBulkDeleteAccountsService } from './ValidateBulkDeleteAccounts.service';
+import { ValidateBulkDeleteResponseDto } from '@/common/dtos/BulkDelete.dto';
 
 @Injectable()
 export class AccountsApplication {
@@ -37,6 +40,8 @@ export class AccountsApplication {
     private readonly getAccountService: GetAccount,
     private readonly getAccountTransactionsService: GetAccountTransactionsService,
     private readonly getAccountsService: GetAccountsService,
+    private readonly bulkDeleteAccountsService: BulkDeleteAccountsService,
+    private readonly validateBulkDeleteAccountsService: ValidateBulkDeleteAccountsService,
   ) { }
 
   /**
@@ -127,5 +132,29 @@ export class AccountsApplication {
     filter: IAccountsTransactionsFilter,
   ): Promise<Array<GetAccountTransactionResponseDto>> => {
     return this.getAccountTransactionsService.getAccountsTransactions(filter);
+  };
+
+  /**
+   * Validates which accounts can be deleted in bulk.
+   */
+  public validateBulkDeleteAccounts = (
+    accountIds: number[],
+  ): Promise<ValidateBulkDeleteResponseDto> => {
+    return this.validateBulkDeleteAccountsService.validateBulkDeleteAccounts(
+      accountIds,
+    );
+  };
+
+  /**
+   * Deletes multiple accounts in bulk.
+   */
+  public bulkDeleteAccounts = (
+    accountIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ): Promise<void> => {
+    return this.bulkDeleteAccountsService.bulkDeleteAccounts(
+      accountIds,
+      options,
+    );
   };
 }

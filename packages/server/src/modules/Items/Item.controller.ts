@@ -29,6 +29,10 @@ import { ItemEstimatesResponseDto } from './dtos/ItemEstimatesResponse.dto';
 import { ItemBillsResponseDto } from './dtos/ItemBillsResponse.dto';
 import { ItemReceiptsResponseDto } from './dtos/ItemReceiptsResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteItemsDto,
+  ValidateBulkDeleteItemsResponseDto,
+} from './dtos/BulkDeleteItems.dto';
 
 @Controller('/items')
 @ApiTags('Items')
@@ -39,6 +43,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiExtraModels(ItemBillsResponseDto)
 @ApiExtraModels(ItemEstimatesResponseDto)
 @ApiExtraModels(ItemReceiptsResponseDto)
+@ApiExtraModels(ValidateBulkDeleteItemsResponseDto)
 @ApiCommonHeaders()
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
@@ -339,5 +344,38 @@ export class ItemsController extends TenantController {
   async getItemReceiptTransactions(@Param('id') id: string): Promise<any> {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItemReceiptsTransactions(itemId);
+  }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which items can be deleted and returns counts of deletable and non-deletable items.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed. Returns counts and IDs of deletable and non-deletable items.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteItemsResponseDto),
+    },
+  })
+  async validateBulkDeleteItems(
+    @Body() bulkDeleteDto: BulkDeleteItemsDto,
+  ): Promise<ValidateBulkDeleteItemsResponseDto> {
+    return this.itemsApplication.validateBulkDeleteItems(bulkDeleteDto.ids);
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple items in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The items have been successfully deleted.',
+  })
+  async bulkDeleteItems(
+    @Body() bulkDeleteDto: BulkDeleteItemsDto,
+  ): Promise<void> {
+    return this.itemsApplication.bulkDeleteItems(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
   }
 }

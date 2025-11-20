@@ -13,6 +13,8 @@ import { GetItemsService } from './GetItems.service';
 import { IItemsFilter } from './types/Items.types';
 import { EditItemDto, CreateItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
+import { BulkDeleteItemsService } from './BulkDeleteItems.service';
+import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.service';
 
 @Injectable()
 export class ItemsApplicationService {
@@ -25,7 +27,9 @@ export class ItemsApplicationService {
     private readonly getItemService: GetItemService,
     private readonly getItemsService: GetItemsService,
     private readonly itemTransactionsService: ItemTransactionsService,
-  ) {}
+    private readonly bulkDeleteItemsService: BulkDeleteItemsService,
+    private readonly validateBulkDeleteItemsService: ValidateBulkDeleteItemsService,
+  ) { }
 
   /**
    * Creates a new item.
@@ -133,5 +137,31 @@ export class ItemsApplicationService {
    */
   async getItemReceiptsTransactions(itemId: number): Promise<any> {
     return this.itemTransactionsService.getItemReceiptTransactions(itemId);
+  }
+
+  /**
+   * Validates which items can be deleted in bulk.
+   * @param {number[]} itemIds - Array of item IDs to validate
+   * @returns {Promise<{deletableCount: number, nonDeletableCount: number, deletableIds: number[], nonDeletableIds: number[]}>}
+   */
+  async validateBulkDeleteItems(itemIds: number[]): Promise<{
+    deletableCount: number;
+    nonDeletableCount: number;
+    deletableIds: number[];
+    nonDeletableIds: number[];
+  }> {
+    return this.validateBulkDeleteItemsService.validateBulkDeleteItems(itemIds);
+  }
+
+  /**
+   * Deletes multiple items in bulk.
+   * @param {number[]} itemIds - Array of item IDs to delete
+   * @returns {Promise<void>}
+   */
+  async bulkDeleteItems(
+    itemIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ): Promise<void> {
+    return this.bulkDeleteItemsService.bulkDeleteItems(itemIds, options);
   }
 }

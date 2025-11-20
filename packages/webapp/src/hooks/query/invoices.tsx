@@ -125,6 +125,64 @@ export function useDeleteInvoice(props) {
   });
 }
 
+/**
+ * Deletes multiple sale invoices in bulk.
+ */
+export function useBulkDeleteInvoices(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('sale-invoices/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export interface ValidateBulkDeleteInvoicesResponse {
+  deletableCount: number;
+  nonDeletableCount: number;
+  deletableIds: number[];
+  nonDeletableIds: number[];
+}
+
+export function useValidateBulkDeleteInvoices(
+  props?: UseMutationOptions<
+    ValidateBulkDeleteInvoicesResponse,
+    Error,
+    number[]
+  >,
+) {
+  const apiRequest = useApiRequest();
+
+  return useMutation<
+    ValidateBulkDeleteInvoicesResponse,
+    Error,
+    number[]
+  >(
+    (ids) =>
+      apiRequest
+        .post('sale-invoices/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    props,
+  );
+}
+
 const transformInvoices = (res) => ({
   invoices: res.data.sales_invoices,
   pagination: transformPagination(res.data.pagination),

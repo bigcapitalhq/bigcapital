@@ -50,6 +50,19 @@ import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransa
 import { SharePaymentLinkDialog } from '@/containers/PaymentLink/dialogs/SharePaymentLinkDialog/SharePaymentLinkDialog';
 import { SelectPaymentMethodsDialog } from '@/containers/PaymentLink/dialogs/SelectPaymentMethodsDialog/SelectPaymentMethodsDialog';
 import ApiKeysGenerateDialog from '@/containers/Dialogs/ApiKeysGenerateDialog';
+import InvoiceBulkDeleteDialog from '@/containers/Dialogs/Invoices/InvoiceBulkDeleteDialog';
+import EstimateBulkDeleteDialog from '@/containers/Dialogs/Estimates/EstimateBulkDeleteDialog';
+import ReceiptBulkDeleteDialog from '@/containers/Dialogs/Receipts/ReceiptBulkDeleteDialog';
+import CreditNoteBulkDeleteDialog from '@/containers/Dialogs/CreditNotes/CreditNoteBulkDeleteDialog';
+import PaymentReceivedBulkDeleteDialog from '@/containers/Dialogs/PaymentsReceived/PaymentReceivedBulkDeleteDialog';
+import BillBulkDeleteDialog from '@/containers/Dialogs/Bills/BillBulkDeleteDialog';
+import VendorCreditBulkDeleteDialog from '@/containers/Dialogs/VendorCredits/VendorCreditBulkDeleteDialog';
+import ManualJournalBulkDeleteDialog from '@/containers/Dialogs/ManualJournals/ManualJournalBulkDeleteDialog';
+import ExpenseBulkDeleteDialog from '@/containers/Dialogs/Expenses/ExpenseBulkDeleteDialog';
+import AccountBulkDeleteDialog from '@/containers/Dialogs/Accounts/AccountBulkDeleteDialog';
+import ItemBulkDeleteDialog from '@/containers/Dialogs/Items/ItemBulkDeleteDialog';
+import CustomerBulkDeleteDialog from '@/containers/Dialogs/Customers/CustomerBulkDeleteDialog';
+import VendorBulkDeleteDialog from '@/containers/Dialogs/Vendors/VendorBulkDeleteDialog';
 
 /**
  * Dialogs container.
@@ -139,6 +152,27 @@ export default function DialogsContainer() {
       <InvoiceExchangeRateChangeDialog
         dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
       />
+      <InvoiceBulkDeleteDialog dialogName={DialogsName.InvoiceBulkDelete} />
+      <EstimateBulkDeleteDialog dialogName={DialogsName.EstimateBulkDelete} />
+      <ReceiptBulkDeleteDialog dialogName={DialogsName.ReceiptBulkDelete} />
+      <CreditNoteBulkDeleteDialog
+        dialogName={DialogsName.CreditNoteBulkDelete}
+      />
+      <PaymentReceivedBulkDeleteDialog
+        dialogName={DialogsName.PaymentReceivedBulkDelete}
+      />
+      <BillBulkDeleteDialog dialogName={DialogsName.BillBulkDelete} />
+      <VendorCreditBulkDeleteDialog
+        dialogName={DialogsName.VendorCreditBulkDelete}
+      />
+      <ManualJournalBulkDeleteDialog
+        dialogName={DialogsName.ManualJournalBulkDelete}
+      />
+      <ExpenseBulkDeleteDialog dialogName={DialogsName.ExpenseBulkDelete} />
+      <AccountBulkDeleteDialog dialogName={DialogsName.AccountBulkDelete} />
+      <ItemBulkDeleteDialog dialogName={DialogsName.ItemBulkDelete} />
+      <CustomerBulkDeleteDialog dialogName={DialogsName.CustomerBulkDelete} />
+      <VendorBulkDeleteDialog dialogName={DialogsName.VendorBulkDelete} />
       <ExportDialog dialogName={DialogsName.Export} />
       <RuleFormDialog dialogName={DialogsName.BankRuleForm} />
       <DisconnectBankAccountDialog

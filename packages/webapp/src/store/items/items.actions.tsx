@@ -15,4 +15,9 @@ export const resetItemsTableState = () => {
   };
 }
 
-export const setSelectedRowsItems = () => {};
+export const setItemsSelectedRows = (selectedRows) => {
+  return {
+    type: 'ITEMS/SET_SELECTED_ROWS',
+    payload: selectedRows,
+  };
+};

@@ -22,14 +22,51 @@ import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
 import { BillResponseDto } from './dtos/BillResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 
 @Controller('bills')
 @ApiTags('Bills')
 @ApiExtraModels(BillResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiCommonHeaders()
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 export class BillsController {
-  constructor(private billsApplication: BillsApplication) {}
+  constructor(private billsApplication: BillsApplication) { }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary: 'Validate which bills can be deleted and return the results.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable bills.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  validateBulkDeleteBills(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.billsApplication.validateBulkDeleteBills(bulkDeleteDto.ids);
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple bills.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Bills deleted successfully',
+  })
+  bulkDeleteBills(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<void> {
+    return this.billsApplication.bulkDeleteBills(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create a new bill.' })

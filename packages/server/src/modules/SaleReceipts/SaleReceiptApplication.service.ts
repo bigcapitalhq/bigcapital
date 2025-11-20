@@ -22,6 +22,8 @@ import {
   EditSaleReceiptDto,
 } from './dtos/SaleReceipt.dto';
 import { GetSaleReceiptMailStateService } from './queries/GetSaleReceiptMailState.service';
+import { BulkDeleteSaleReceiptsService } from './BulkDeleteSaleReceipts.service';
+import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleReceipts.service';
 
 @Injectable()
 export class SaleReceiptApplication {
@@ -36,7 +38,9 @@ export class SaleReceiptApplication {
     private getSaleReceiptStateService: GetSaleReceiptState,
     private saleReceiptNotifyByMailService: SaleReceiptMailNotification,
     private getSaleReceiptMailStateService: GetSaleReceiptMailStateService,
-  ) {}
+    private bulkDeleteSaleReceiptsService: BulkDeleteSaleReceiptsService,
+    private validateBulkDeleteSaleReceiptsService: ValidateBulkDeleteSaleReceiptsService,
+  ) { }
 
   /**
    * Creates a new sale receipt with associated entries.
@@ -83,6 +87,30 @@ export class SaleReceiptApplication {
    */
   public async deleteSaleReceipt(saleReceiptId: number) {
     return this.deleteSaleReceiptService.deleteSaleReceipt(saleReceiptId);
+  }
+
+  /**
+   * Deletes multiple sale receipts.
+   * @param {number[]} saleReceiptIds
+   */
+  public async bulkDeleteSaleReceipts(
+    saleReceiptIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteSaleReceiptsService.bulkDeleteSaleReceipts(
+      saleReceiptIds,
+      options,
+    );
+  }
+
+  /**
+   * Validates which sale receipts can be deleted.
+   * @param {number[]} saleReceiptIds
+   */
+  public async validateBulkDeleteSaleReceipts(saleReceiptIds: number[]) {
+    return this.validateBulkDeleteSaleReceiptsService.validateBulkDeleteSaleReceipts(
+      saleReceiptIds,
+    );
   }
 
   /**

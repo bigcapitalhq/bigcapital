@@ -31,6 +31,7 @@ import { DialogsName } from '@/constants/dialogs';
 function EstimatesDataTable({
   // #withEstimatesActions
   setEstimatesTableState,
+  setEstimatesSelectedRows,
 
   // #withAlertsActions
   openAlert,
@@ -126,6 +127,15 @@ function EstimatesDataTable({
     [setEstimatesTableState],
   );
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = useCallback(
+    (selectedFlatRows) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setEstimatesSelectedRows(selectedIds);
+    },
+    [setEstimatesSelectedRows],
+  );
+
   // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <EstimatesEmptyStatus />;
@@ -140,6 +150,8 @@ function EstimatesDataTable({
         headerLoading={isEstimatesLoading}
         progressBarLoading={isEstimatesFetching}
         onFetchData={handleFetchData}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        autoResetSelectedRows={false}
         noInitialFetch={true}
         manualSortBy={true}
         selectionColumn={true}

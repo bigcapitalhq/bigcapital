@@ -9,6 +9,8 @@ import { GetCreditNotesService } from './queries/GetCreditNotes.service';
 import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 import { GetCreditNoteState } from './queries/GetCreditNoteState.service';
 import { GetCreditNoteService } from './queries/GetCreditNote.service';
+import { BulkDeleteCreditNotesService } from './BulkDeleteCreditNotes.service';
+import { ValidateBulkDeleteCreditNotesService } from './ValidateBulkDeleteCreditNotes.service';
 
 @Injectable()
 export class CreditNoteApplication {
@@ -20,8 +22,10 @@ export class CreditNoteApplication {
     private readonly getCreditNotePdfService: GetCreditNotePdf,
     private readonly getCreditNotesService: GetCreditNotesService,
     private readonly getCreditNoteStateService: GetCreditNoteState,
-    private readonly getCreditNoteService: GetCreditNoteService
-  ) {}
+    private readonly getCreditNoteService: GetCreditNoteService,
+    private readonly bulkDeleteCreditNotesService: BulkDeleteCreditNotesService,
+    private readonly validateBulkDeleteCreditNotesService: ValidateBulkDeleteCreditNotesService,
+  ) { }
 
   /**
    * Creates a new credit note.
@@ -96,5 +100,31 @@ export class CreditNoteApplication {
    */
   getCreditNote(creditNoteId: number) {
     return this.getCreditNoteService.getCreditNote(creditNoteId);
+  }
+
+  /**
+   * Deletes multiple credit notes.
+   * @param {number[]} creditNoteIds
+   * @returns {Promise<void>}
+   */
+  bulkDeleteCreditNotes(
+    creditNoteIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteCreditNotesService.bulkDeleteCreditNotes(
+      creditNoteIds,
+      options,
+    );
+  }
+
+  /**
+   * Validates which credit notes can be deleted.
+   * @param {number[]} creditNoteIds
+   * @returns {Promise<{deletableCount: number, nonDeletableCount: number, deletableIds: number[], nonDeletableIds: number[]}>}
+   */
+  validateBulkDeleteCreditNotes(creditNoteIds: number[]) {
+    return this.validateBulkDeleteCreditNotesService.validateBulkDeleteCreditNotes(
+      creditNoteIds,
+    );
   }
 }

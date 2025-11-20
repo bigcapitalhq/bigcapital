@@ -34,6 +34,7 @@ import { DialogsName } from '@/constants/dialogs';
 function InvoicesDataTable({
   // #withInvoicesActions
   setInvoicesTableState,
+  setInvoicesSelectedRows,
 
   // #withInvoices
   invoicesTableState,
@@ -125,6 +126,15 @@ function InvoicesDataTable({
     [setInvoicesTableState],
   );
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = useCallback(
+    (selectedFlatRows) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setInvoicesSelectedRows(selectedIds);
+    },
+    [setInvoicesSelectedRows],
+  );
+
   // Display invoice empty status instead of the table.
   if (isEmptyStatus) {
     return <InvoicesEmptyStatus />;
@@ -141,6 +151,7 @@ function InvoicesDataTable({
         onFetchData={handleDataTableFetchData}
         manualSortBy={true}
         selectionColumn={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
         noInitialFetch={true}
         sticky={true}
         pagination={true}
@@ -149,6 +160,7 @@ function InvoicesDataTable({
         pagesCount={pagination.pagesCount}
         autoResetSortBy={false}
         autoResetPage={false}
+        autoResetSelectedRows={false}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}

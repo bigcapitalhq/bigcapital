@@ -39,6 +39,8 @@ import { PaymentsReceivedImportable } from './commands/PaymentsReceivedImportabl
 import { PaymentsReceivedPagesService } from './queries/PaymentsReceivedPages.service';
 import { GetPaymentReceivedMailTemplate } from './queries/GetPaymentReceivedMailTemplate.service';
 import { GetPaymentReceivedMailState } from './queries/GetPaymentReceivedMailState.service';
+import { BulkDeletePaymentReceivedService } from './BulkDeletePaymentReceived.service';
+import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePaymentReceived.service';
 
 @Module({
   controllers: [PaymentReceivesController],
@@ -68,7 +70,9 @@ import { GetPaymentReceivedMailState } from './queries/GetPaymentReceivedMailSta
     PaymentsReceivedImportable,
     PaymentsReceivedPagesService,
     GetPaymentReceivedMailTemplate,
-    GetPaymentReceivedMailState
+    GetPaymentReceivedMailState,
+    BulkDeletePaymentReceivedService,
+    ValidateBulkDeletePaymentReceivedService,
   ],
   exports: [
     PaymentReceivesApplication,
@@ -76,7 +80,7 @@ import { GetPaymentReceivedMailState } from './queries/GetPaymentReceivedMailSta
     PaymentReceivedGLEntries,
     PaymentsReceivedExportable,
     PaymentsReceivedImportable,
-    PaymentReceivedValidators
+    PaymentReceivedValidators,
   ],
   imports: [
     ChromiumlyTenancyModule,

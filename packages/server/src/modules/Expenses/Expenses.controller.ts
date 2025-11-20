@@ -21,13 +21,55 @@ import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ExpenseResponseDto } from './dtos/ExpenseResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 
 @Controller('expenses')
 @ApiTags('Expenses')
-@ApiExtraModels(PaginatedResponseDto, ExpenseResponseDto)
+@ApiExtraModels(
+  PaginatedResponseDto,
+  ExpenseResponseDto,
+  ValidateBulkDeleteResponseDto,
+)
 @ApiCommonHeaders()
 export class ExpensesController {
-  constructor(private readonly expensesApplication: ExpensesApplication) {}
+  constructor(private readonly expensesApplication: ExpensesApplication) { }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary: 'Validate which expenses can be deleted and return the results.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable expenses.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  public validateBulkDeleteExpenses(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.expensesApplication.validateBulkDeleteExpenses(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple expenses.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Expenses deleted successfully',
+  })
+  public bulkDeleteExpenses(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ) {
+    return this.expensesApplication.bulkDeleteExpenses(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
+  }
 
   /**
    * Create a new expense transaction.

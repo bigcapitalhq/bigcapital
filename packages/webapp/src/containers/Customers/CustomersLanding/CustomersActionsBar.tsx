@@ -12,7 +12,6 @@ import {
 import { useHistory } from 'react-router-dom';
 
 import {
-  If,
   Icon,
   Can,
   FormattedMessage as T,
@@ -29,7 +28,6 @@ import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-
 
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -37,6 +35,8 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { isEmpty } from 'lodash';
+import { useBulkDeleteCustomersDialog } from './hooks/use-bulk-delete-customers-dialog';
 
 /**
  * Customers actions bar.
@@ -50,9 +50,6 @@ function CustomerActionsBar({
   setCustomersTableState,
   accountsInactiveMode,
 
-  // #withAlertActions
-  openAlert,
-
   // #withSettings
   customersTableSize,
 
@@ -62,6 +59,9 @@ function CustomerActionsBar({
   // #withDialogActions
   openDialog,
 }) {
+  const { openBulkDeleteDialog, isValidatingBulkDeleteCustomers } =
+    useBulkDeleteCustomersDialog();
+
   // History context.
   const history = useHistory();
 
@@ -80,7 +80,7 @@ function CustomerActionsBar({
 
   // Handle Customers bulk delete button click.,
   const handleBulkDelete = () => {
-    openAlert('customers-bulk-delete', { customersIds: customersSelectedRows });
+    openBulkDeleteDialog(customersSelectedRows);
   };
 
   const handleTabChange = (view) => {
@@ -118,6 +118,23 @@ function CustomerActionsBar({
     downloadExportPdf({ resource: 'Customer' });
   };
 
+  if (!isEmpty(customersSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteCustomers}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -129,7 +146,7 @@ function CustomerActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={CustomerAction.Create} a={AbilitySubject.Item}>
+        <Can I={CustomerAction.Create} a={AbilitySubject.Customer}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}
@@ -153,16 +170,6 @@ function CustomerActionsBar({
           />
         </AdvancedFilterPopover>
 
-        <If condition={customersSelectedRows.length}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="trash-16" iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            onClick={handleBulkDelete}
-          />
-        </If>
-        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
@@ -217,6 +224,5 @@ export default compose(
   withSettings(({ customersSettings }) => ({
     customersTableSize: customersSettings?.tableSize,
   })),
-  withAlertActions,
   withDialogActions,
 )(CustomerActionsBar);

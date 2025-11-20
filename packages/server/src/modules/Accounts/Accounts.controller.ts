@@ -27,15 +27,55 @@ import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionRe
 import { GetAccountTransactionsQueryDto } from './dtos/GetAccountTransactionsQuery.dto';
 import { GetAccountsQueryDto } from './dtos/GetAccountsQuery.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 
 @Controller('accounts')
 @ApiTags('Accounts')
 @ApiExtraModels(AccountResponseDto)
 @ApiExtraModels(AccountTypeResponseDto)
 @ApiExtraModels(GetAccountTransactionResponseDto)
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()
 export class AccountsController {
   constructor(private readonly accountsApplication: AccountsApplication) { }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which accounts can be deleted and returns counts of deletable and non-deletable accounts.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed. Returns counts and IDs of deletable and non-deletable accounts.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  async validateBulkDeleteAccounts(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.accountsApplication.validateBulkDeleteAccounts(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple accounts in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The accounts have been successfully deleted.',
+  })
+  async bulkDeleteAccounts(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<void> {
+    return this.accountsApplication.bulkDeleteAccounts(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create an account' })

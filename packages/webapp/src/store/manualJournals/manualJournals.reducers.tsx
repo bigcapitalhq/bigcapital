@@ -14,6 +14,7 @@ export const defaultTableQuery = {
 
 const initialState = {
   tableState: defaultTableQuery,
+  selectedRows: [],
 };
 
 const STORAGE_KEY = 'bigcapital:manualJournals';
@@ -26,6 +27,10 @@ const CONFIG = {
 
 const reducerInstance = createReducer(initialState, {
   ...createTableStateReducers('MANUAL_JOURNALS', defaultTableQuery),
+
+  [`MANUAL_JOURNALS/SET_SELECTED_ROWS`]: (state, action) => {
+    state.selectedRows = action.payload;
+  },
 
   [t.RESET]: () => {
     purgeStoredState(CONFIG);

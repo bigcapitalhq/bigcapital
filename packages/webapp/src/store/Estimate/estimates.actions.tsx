@@ -13,3 +13,10 @@ export const resetEstimatesTableState = () => {
     type: t.ESTIMATES_TABLE_STATE_RESET,
   };
 }
+
+export const setEstimatesSelectedRows = (selectedRows) => {
+  return {
+    type: 'ESTIMATES/SET_SELECTED_ROWS',
+    payload: selectedRows,
+  };
+};

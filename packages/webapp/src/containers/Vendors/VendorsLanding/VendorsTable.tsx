@@ -31,6 +31,7 @@ import { DRAWERS } from '@/constants/drawers';
 function VendorsTable({
   // #withVendorsActions
   setVendorsTableState,
+  setVendorsSelectedRows,
 
   // #withVendors
   vendorsTableState,
@@ -118,6 +119,14 @@ function VendorsTable({
     [setVendorsTableState],
   );
 
+  const handleSelectedRowsChange = React.useCallback(
+    (selectedFlatRows) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setVendorsSelectedRows(selectedIds);
+    },
+    [setVendorsSelectedRows],
+  );
+
   // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <VendorsEmptyStatus />;
@@ -142,6 +151,8 @@ function VendorsTable({
         pagesCount={pagination.pagesCount}
         autoResetSortBy={false}
         autoResetPage={false}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        autoResetSelectedRows={false}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}

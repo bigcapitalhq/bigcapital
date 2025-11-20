@@ -34,6 +34,7 @@ import { useHistory } from 'react-router-dom';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useAccountsChartContext } from './AccountsChartProvider';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useBulkDeleteAccountsDialog } from './hooks/use-bulk-delete-accounts-dialog';
 
 import withAccounts from './withAccounts';
 import withAccountsTableActions from './withAccountsTableActions';
@@ -78,9 +79,15 @@ function AccountsActionsBar({
   // Accounts refresh action.
   const { refresh } = useRefreshAccounts();
 
+  // Bulk delete accounts dialog.
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteAccounts,
+  } = useBulkDeleteAccountsDialog();
+
   // Handle bulk accounts delete.
   const handleBulkDelete = () => {
-    openAlert('accounts-bulk-delete', { accountsIds: accountsSelectedRows });
+    openBulkDeleteDialog(accountsSelectedRows);
   };
   // Handle bulk accounts activate.
   const handelBulkActivate = () => {
@@ -126,6 +133,35 @@ function AccountsActionsBar({
     openDialog(DialogsName.AccountForm, {});
   };
 
+  if (!isEmpty(accountsSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="play-16" iconSize={16} />}
+            text={<T id={'activate'} />}
+            onClick={handelBulkActivate}
+          />
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pause-16" iconSize={16} />}
+            text={<T id={'inactivate'} />}
+            onClick={handelBulkInactive}
+          />
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteAccounts}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -161,28 +197,6 @@ function AccountsActionsBar({
         </AdvancedFilterPopover>
 
         <NavbarDivider />
-
-        <If condition={!isEmpty(accountsSelectedRows)}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="play-16" iconSize={16} />}
-            text={<T id={'activate'} />}
-            onClick={handelBulkActivate}
-          />
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="pause-16" iconSize={16} />}
-            text={<T id={'inactivate'} />}
-            onClick={handelBulkInactive}
-          />
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="trash-16" iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            onClick={handleBulkDelete}
-          />
-        </If>
 
         <Button
           className={Classes.MINIMAL}

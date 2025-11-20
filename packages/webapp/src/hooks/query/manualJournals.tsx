@@ -89,6 +89,49 @@ export function useDeleteJournal(props) {
 }
 
 /**
+ * Deletes multiple manual journals in bulk.
+ */
+export function useBulkDeleteManualJournals(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('manual-journals/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteManualJournals(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('manual-journals/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
+}
+
+/**
  * Publishes the given manual journal.
  */
 export function usePublishJournal(props) {

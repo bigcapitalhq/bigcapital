@@ -32,6 +32,7 @@ import { DRAWERS } from '@/constants/drawers';
 function BillsDataTable({
   // #withBillsActions
   setBillsTableState,
+  setBillsSelectedRows,
 
   // #withBills
   billsTableState,
@@ -108,6 +109,12 @@ function BillsDataTable({
     openDrawer(DRAWERS.BILL_DETAILS, { billId: cell.row.original.id });
   };
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = (selectedFlatRows) => {
+    const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+    setBillsSelectedRows(selectedIds);
+  };
+
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.BILLS);
@@ -138,6 +145,7 @@ function BillsDataTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        onSelectedRowsChange={handleSelectedRowsChange}
         size={billsTableSize}
         payload={{
           onDelete: handleDeleteBill,

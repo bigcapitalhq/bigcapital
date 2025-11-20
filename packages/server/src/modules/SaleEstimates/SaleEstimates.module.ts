@@ -40,6 +40,8 @@ import { SaleEstimatesImportable } from './SaleEstimatesImportable';
 import { GetSaleEstimateMailStateService } from './queries/GetSaleEstimateMailState.service';
 import { GetSaleEstimateMailTemplateService } from './queries/GetSaleEstimateMailTemplate.service';
 import { SaleEstimateAutoIncrementSubscriber } from './subscribers/SaleEstimateAutoIncrementSubscriber';
+import { BulkDeleteSaleEstimatesService } from './BulkDeleteSaleEstimates.service';
+import { ValidateBulkDeleteSaleEstimatesService } from './ValidateBulkDeleteSaleEstimates.service';
 
 @Module({
   imports: [
@@ -85,6 +87,8 @@ import { SaleEstimateAutoIncrementSubscriber } from './subscribers/SaleEstimateA
     GetSaleEstimateMailStateService,
     GetSaleEstimateMailTemplateService,
     SaleEstimateAutoIncrementSubscriber,
+    BulkDeleteSaleEstimatesService,
+    ValidateBulkDeleteSaleEstimatesService,
   ],
   exports: [
     SaleEstimatesExportable,

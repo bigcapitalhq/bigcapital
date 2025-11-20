@@ -24,6 +24,10 @@ import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';
 import { CustomerResponseDto } from './dtos/CustomerResponse.dto';
 import { GetCustomersQueryDto } from './dtos/GetCustomersQuery.dto';
+import {
+  BulkDeleteCustomersDto,
+  ValidateBulkDeleteCustomersResponseDto,
+} from './dtos/BulkDeleteCustomers.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('customers')
@@ -31,7 +35,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiExtraModels(CustomerResponseDto)
 @ApiCommonHeaders()
 export class CustomersController {
-  constructor(private customersApplication: CustomersApplication) {}
+  constructor(private customersApplication: CustomersApplication) { }
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieves the customer details.' })
@@ -108,5 +112,38 @@ export class CustomersController {
       customerId,
       openingBalanceDTO,
     );
+  }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which customers can be deleted and returns counts of deletable and non-deletable customers.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed. Returns counts and IDs of deletable and non-deletable customers.',
+    schema: { $ref: getSchemaPath(ValidateBulkDeleteCustomersResponseDto) },
+  })
+  validateBulkDeleteCustomers(
+    @Body() bulkDeleteDto: BulkDeleteCustomersDto,
+  ): Promise<ValidateBulkDeleteCustomersResponseDto> {
+    return this.customersApplication.validateBulkDeleteCustomers(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple customers in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The customers have been successfully deleted.',
+  })
+  async bulkDeleteCustomers(
+    @Body() bulkDeleteDto: BulkDeleteCustomersDto,
+  ): Promise<void> {
+    return this.customersApplication.bulkDeleteCustomers(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
   }
 }

@@ -29,10 +29,12 @@ export class DeleteManualJournalService {
   /**
    * Deletes the given manual journal
    * @param {number} manualJournalId
+   * @param {Knex.Transaction} trx - Database transaction instance.
    * @return {Promise<void>}
    */
   public deleteManualJournal = async (
     manualJournalId: number,
+    trx?: Knex.Transaction,
   ): Promise<{
     oldManualJournal: ManualJournal;
   }> => {
@@ -70,6 +72,6 @@ export class DeleteManualJournalService {
       } as IManualJournalEventDeletedPayload);
 
       return { oldManualJournal };
-    });
+    }, trx);
   };
 }

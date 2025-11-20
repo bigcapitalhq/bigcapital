@@ -32,6 +32,7 @@ import { DRAWERS } from '@/constants/drawers';
 function CustomersTable({
   // #withCustomersActions
   setCustomersTableState,
+  setCustomersSelectedRows,
 
   // #withCustomers
   customersTableState,
@@ -76,6 +77,14 @@ function CustomersTable({
       });
     },
     [setCustomersTableState],
+  );
+
+  const handleSelectedRowsChange = React.useCallback(
+    (selectedFlatRows) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setCustomersSelectedRows(selectedIds);
+    },
+    [setCustomersSelectedRows],
   );
 
   // Handles the customer delete action.
@@ -140,6 +149,8 @@ function CustomersTable({
         manualSortBy={true}
         manualPagination={true}
         pagesCount={pagination.pagesCount}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        autoResetSelectedRows={false}
         autoResetSortBy={false}
         autoResetPage={false}
         TableLoadingRenderer={TableSkeletonRows}

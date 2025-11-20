@@ -29,12 +29,10 @@ export class DeleteVendorService {
    * @param  {number} vendorId
    * @return {Promise<void>}
    */
-  public async deleteVendor(vendorId: number) {
+  public async deleteVendor(vendorId: number, trx?: Knex.Transaction) {
     // Retrieves the old vendor or throw not found service error.
-    const oldVendor = await this.vendorModel()
-      .query()
-      .findById(vendorId)
-      .throwIfNotFound();
+    const query = this.vendorModel().query(trx);
+    const oldVendor = await query.findById(vendorId).throwIfNotFound();
 
     // Triggers `onVendorDeleting` event.
     await this.eventPublisher.emitAsync(events.vendors.onDeleting, {
@@ -43,10 +41,10 @@ export class DeleteVendorService {
     } as IVendorEventDeletingPayload);
 
     // Deletes vendor contact under unit-of-work.
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+    return this.uow.withTransaction(async (transaction: Knex.Transaction) => {
       // Deletes the vendor contact from the storage.
       await this.vendorModel()
-        .query(trx)
+        .query(transaction)
         .findById(vendorId)
         .deleteIfNoRelations({
           type: ERRORS.VENDOR_HAS_TRANSACTIONS,
@@ -56,8 +54,8 @@ export class DeleteVendorService {
       await this.eventPublisher.emitAsync(events.vendors.onDeleted, {
         vendorId,
         oldVendor,
-        trx,
+        trx: transaction,
       } as IVendorEventDeletedPayload);
-    });
+    }, trx);
   }
 }

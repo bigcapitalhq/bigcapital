@@ -9,6 +9,8 @@ import { Injectable } from '@nestjs/common';
 import { GetBillsService } from './queries/GetBills.service';
 import { CreateBillDto, EditBillDto } from './dtos/Bill.dto';
 import { GetBillPaymentTransactionsService } from './queries/GetBillPayments';
+import { BulkDeleteBillsService } from './BulkDeleteBills.service';
+import { ValidateBulkDeleteBillsService } from './ValidateBulkDeleteBills.service';
 // import { GetBillPayments } from './queries/GetBillPayments';
 // import { GetBills } from './queries/GetBills';
 
@@ -23,7 +25,9 @@ export class BillsApplication {
     private openBillService: OpenBillService,
     private getBillsService: GetBillsService,
     private getBillPaymentTransactionsService: GetBillPaymentTransactionsService,
-  ) {}
+    private bulkDeleteBillsService: BulkDeleteBillsService,
+    private validateBulkDeleteBillsService: ValidateBulkDeleteBillsService,
+  ) { }
 
   /**
    * Creates a new bill with associated GL entries.
@@ -51,6 +55,25 @@ export class BillsApplication {
    */
   public deleteBill(billId: number) {
     return this.deleteBillService.deleteBill(billId);
+  }
+
+  /**
+   * Deletes multiple bills.
+   * @param {number[]} billIds
+   */
+  public bulkDeleteBills(
+    billIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteBillsService.bulkDeleteBills(billIds, options);
+  }
+
+  /**
+   * Validates which bills can be deleted.
+   * @param {number[]} billIds
+   */
+  public validateBulkDeleteBills(billIds: number[]) {
+    return this.validateBulkDeleteBillsService.validateBulkDeleteBills(billIds);
   }
 
   /**

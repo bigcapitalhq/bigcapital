@@ -151,6 +151,50 @@ export function useInactivateAccount(props) {
 }
 
 /**
+ * Deletes multiple accounts in bulk.
+ */
+export function useBulkDeleteAccounts(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('accounts/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Validates which accounts can be deleted in bulk.
+ */
+export function useValidateBulkDeleteAccounts(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest.post('accounts/validate-bulk-delete', { ids }),
+    {
+      ...props,
+    },
+  );
+}
+
+/**
  * Retrieve account transactions.
  */
 export function useAccountTransactions(id, props) {

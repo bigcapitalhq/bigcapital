@@ -151,6 +151,49 @@ export function useDeletePaymentReceive(props) {
 }
 
 /**
+ * Deletes multiple payments received in bulk.
+ */
+export function useBulkDeletePaymentReceives(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('payments-received/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeletePaymentReceives(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('payments-received/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
+}
+
+/**
  * Retrieve specific payment receive.
  * @param {number} id - Payment receive.
  */

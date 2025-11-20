@@ -36,9 +36,12 @@ export class DeleteExpense {
   /**
    * Deletes the given expense.
    * @param {number} expenseId
-   * @param {ISystemUser} authorizedUser
+   * @param {Knex.Transaction} trx - Database transaction instance.
    */
-  public async deleteExpense(expenseId: number): Promise<void> {
+  public async deleteExpense(
+    expenseId: number,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
     // Retrieves the expense transaction with associated entries or
     // throw not found error.
     const oldExpense = await this.expenseModel()
@@ -74,6 +77,6 @@ export class DeleteExpense {
         oldExpense,
         trx,
       } as IExpenseEventDeletePayload);
-    });
+    }, trx);
   }
 }

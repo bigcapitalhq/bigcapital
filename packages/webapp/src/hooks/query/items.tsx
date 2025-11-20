@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useMutation, useQueryClient } from 'react-query';
-import { transformPagination, transformResponse } from '@/utils';
+import { transformPagination, transformResponse, transformToCamelCase } from '@/utils';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
@@ -71,6 +71,50 @@ export function useDeleteItem(props) {
     },
     ...props,
   });
+}
+
+/**
+ * Deletes multiple items in bulk.
+ */
+export function useBulkDeleteItems(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('items/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Validates which items can be deleted in bulk.
+ */
+export function useValidateBulkDeleteItems(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest.post('items/validate-bulk-delete', { ids }).then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
 }
 
 /**

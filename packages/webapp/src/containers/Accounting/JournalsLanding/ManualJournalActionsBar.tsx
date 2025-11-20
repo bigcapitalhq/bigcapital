@@ -8,6 +8,7 @@ import {
   Intent,
   Alignment,
 } from '@blueprintjs/core';
+import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import {
   Icon,
@@ -33,6 +34,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { useBulkDeleteManualJournalsDialog } from './hooks/use-bulk-delete-manual-journals-dialog';
 
 /**
  * Manual journal actions bar.
@@ -43,6 +45,7 @@ function ManualJournalActionsBar({
 
   // #withManualJournals
   manualJournalsFilterConditions,
+  manualJournalsSelectedRows = [],
 
   // #withSettings
   manualJournalsTableSize,
@@ -69,8 +72,14 @@ function ManualJournalActionsBar({
   const onClickNewManualJournal = () => {
     history.push('/make-journal-entry');
   };
-  // Handle delete button click.
-  const handleBulkDelete = () => {};
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteManualJournals,
+  } = useBulkDeleteManualJournalsDialog();
+
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(manualJournalsSelectedRows);
+  };
 
   // Handle tab change.
   const handleTabChange = (view) => {
@@ -99,6 +108,23 @@ function ManualJournalActionsBar({
   const handlePdfPrintBtnSubmit = () => {
     downloadExportPdf({ resource: 'ManualJournal' });
   };
+
+  if (!isEmpty(manualJournalsSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteManualJournals}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -184,8 +210,9 @@ export default compose(
   withDialogActions,
   withManualJournalsActions,
   withSettingsActions,
-  withManualJournals(({ manualJournalsTableState }) => ({
+  withManualJournals(({ manualJournalsTableState, manualJournalsSelectedRows }) => ({
     manualJournalsFilterConditions: manualJournalsTableState.filterRoles,
+    manualJournalsSelectedRows,
   })),
   withSettings(({ manualJournalsSettings }) => ({
     manualJournalsTableSize: manualJournalsSettings?.tableSize,

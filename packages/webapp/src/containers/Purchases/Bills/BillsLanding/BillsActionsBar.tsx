@@ -31,11 +31,15 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useBillsListContext } from './BillsListProvider';
-import { useRefreshBills } from '@/hooks/query/bills';
+import {
+  useRefreshBills,
+} from '@/hooks/query/bills';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useBulkDeleteBillsDialog } from './hooks/use-bulk-delete-bills-dialog';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { isEmpty } from 'lodash';
 
 /**
  * Bills actions bar.
@@ -46,6 +50,7 @@ function BillActionsBar({
 
   // #withBills
   billsConditionsRoles,
+  billsSelectedRows,
 
   // #withSettings
   billsTableSize,
@@ -97,6 +102,32 @@ function BillActionsBar({
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'Bill' });
   };
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteBills,
+  } = useBulkDeleteBillsDialog();
+
+  // Handle bulk delete.
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(billsSelectedRows);
+  };
+
+  if (!isEmpty(billsSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteBills}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -180,8 +211,9 @@ function BillActionsBar({
 export default compose(
   withBillsActions,
   withSettingsActions,
-  withBills(({ billsTableState }) => ({
+  withBills(({ billsTableState, billsSelectedRows }) => ({
     billsConditionsRoles: billsTableState.filterRoles,
+    billsSelectedRows,
   })),
   withSettings(({ billsettings }) => ({
     billsTableSize: billsettings?.tableSize,

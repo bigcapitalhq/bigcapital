@@ -36,6 +36,10 @@ import { SaleEstimateResponseDto } from './dtos/SaleEstimateResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleEstiamteStateResponseDto } from './dtos/SaleEstimateStateResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 
 @Controller('sale-estimates')
 @ApiTags('Sale Estimates')
@@ -43,13 +47,50 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(SaleEstiamteStateResponseDto)
 @ApiCommonHeaders()
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 export class SaleEstimatesController {
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which sale estimates can be deleted and returns the results.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable sale estimates.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  public validateBulkDeleteSaleEstimates(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.saleEstimatesApplication.validateBulkDeleteSaleEstimates(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple sale estimates.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sale estimates deleted successfully',
+  })
+  public bulkDeleteSaleEstimates(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<void> {
+    return this.saleEstimatesApplication.bulkDeleteSaleEstimates(
+      bulkDeleteDto.ids,
+      { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
+    );
+  }
+
   /**
    * @param {SaleEstimatesApplication} saleEstimatesApplication - Sale estimates application.
    */
   constructor(
     private readonly saleEstimatesApplication: SaleEstimatesApplication,
-  ) {}
+  ) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new sale estimate.' })

@@ -105,6 +105,49 @@ export function useDeleteReceipt(props) {
 }
 
 /**
+ * Deletes multiple receipts in bulk.
+ */
+export function useBulkDeleteReceipts(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('sale-receipts/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteReceipts(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('sale-receipts/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
+}
+
+/**
  * Deletes the given sale invoice.
  */
 export function useCloseReceipt(props) {

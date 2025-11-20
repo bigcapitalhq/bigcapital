@@ -32,6 +32,7 @@ import { DialogsName } from '@/constants/dialogs';
 function ReceiptsDataTable({
   // #withReceiptsActions
   setReceiptsTableState,
+  setReceiptsSelectedRows,
 
   // #withReceipts
   receiptTableState,
@@ -107,14 +108,19 @@ function ReceiptsDataTable({
     },
     [setReceiptsTableState],
   );
-
-  if (isEmptyStatus) {
-    return <ReceiptsEmptyStatus />;
-  }
   // Handle cell click.
   const handleCellClick = (cell, event) => {
     openDrawer(DRAWERS.RECEIPT_DETAILS, { receiptId: cell.row.original.id });
   };
+  // Handle selected rows change.
+  const handleSelectedRowsChange = (selectedRows) => {
+    const selectedIds = selectedRows?.map((row) => row.original.id) || [];
+    setReceiptsSelectedRows(selectedIds);
+  };
+
+  if (isEmptyStatus) {
+    return <ReceiptsEmptyStatus />;
+  }
 
   return (
     <DashboardContentTable>
@@ -142,6 +148,7 @@ function ReceiptsDataTable({
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
         size={receiptsTableSize}
+        onSelectedRowsChange={handleSelectedRowsChange}
         payload={{
           onEdit: handleEditReceipt,
           onDelete: handleDeleteReceipt,
@@ -160,9 +167,7 @@ export default compose(
   withReceiptsActions,
   withDrawerActions,
   withDialogActions,
-  withReceipts(({ receiptTableState }) => ({
-    receiptTableState,
-  })),
+  withReceipts(({ receiptTableState }) => ({ receiptTableState })),
   withSettings(({ receiptSettings }) => ({
     receiptsTableSize: receiptSettings?.tableSize,
   })),

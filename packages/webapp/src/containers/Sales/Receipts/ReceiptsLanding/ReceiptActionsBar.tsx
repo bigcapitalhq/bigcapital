@@ -37,14 +37,18 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
-import { useRefreshReceipts } from '@/hooks/query/receipts';
+import {
+  useRefreshReceipts,
+} from '@/hooks/query/receipts';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
+import { useBulkDeleteReceiptsDialog } from './hooks/use-bulk-delete-receipts-dialog';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { isEmpty } from 'lodash';
 
 /**
  * Receipts actions bar.
@@ -52,9 +56,11 @@ import { DRAWERS } from '@/constants/drawers';
 function ReceiptActionsBar({
   // #withReceiptsActions
   setReceiptsTableState,
+  setReceiptsSelectedRows,
 
   // #withReceipts
   receiptsFilterConditions,
+  receiptSelectedRows,
 
   // #withSettings
   receiptsTableSize,
@@ -117,6 +123,31 @@ function ReceiptActionsBar({
   const handleCustomizeBtnClick = () => {
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleReceipt' });
   };
+
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteReceipts,
+  } = useBulkDeleteReceiptsDialog();
+
+  if (!isEmpty(receiptSelectedRows)) {
+    const handleBulkDelete = () => {
+      openBulkDeleteDialog(receiptSelectedRows);
+    };
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteReceipts}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -219,8 +250,9 @@ function ReceiptActionsBar({
 export default compose(
   withReceiptsActions,
   withSettingsActions,
-  withReceipts(({ receiptTableState }) => ({
+  withReceipts(({ receiptTableState, receiptSelectedRows }) => ({
     receiptsFilterConditions: receiptTableState.filterRoles,
+    receiptSelectedRows,
   })),
   withSettings(({ receiptSettings }) => ({
     receiptsTableSize: receiptSettings?.tableSize,

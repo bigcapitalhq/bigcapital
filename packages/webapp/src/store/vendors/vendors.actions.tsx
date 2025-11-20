@@ -13,3 +13,16 @@ export const resetVendorsTableState = () => {
     type: t.VENDORS_TABLE_STATE_RESET,
   }
 }
+
+export const setVendorsSelectedRows = (selectedRows) => {
+  return {
+    type: 'VENDORS/SET_SELECTED_ROWS',
+    payload: selectedRows,
+  };
+};
+
+export const resetVendorsSelectedRows = () => {
+  return {
+    type: 'VENDORS/RESET_SELECTED_ROWS',
+  };
+};

@@ -19,6 +19,8 @@ import {
   EditSaleEstimateDto,
 } from './dtos/SaleEstimate.dto';
 import { GetSaleEstimateMailStateService } from './queries/GetSaleEstimateMailState.service';
+import { BulkDeleteSaleEstimatesService } from './BulkDeleteSaleEstimates.service';
+import { ValidateBulkDeleteSaleEstimatesService } from './ValidateBulkDeleteSaleEstimates.service';
 
 @Injectable()
 export class SaleEstimatesApplication {
@@ -35,7 +37,9 @@ export class SaleEstimatesApplication {
     private readonly getSaleEstimateStateService: GetSaleEstimateState,
     private readonly saleEstimatesPdfService: GetSaleEstimatePdf,
     private readonly getSaleEstimateMailStateService: GetSaleEstimateMailStateService,
-  ) {}
+    private readonly bulkDeleteSaleEstimatesService: BulkDeleteSaleEstimatesService,
+    private readonly validateBulkDeleteSaleEstimatesService: ValidateBulkDeleteSaleEstimatesService,
+  ) { }
 
   /**
    * Create a sale estimate.
@@ -66,6 +70,31 @@ export class SaleEstimatesApplication {
    */
   public deleteSaleEstimate(estimateId: number) {
     return this.deleteSaleEstimateService.deleteEstimate(estimateId);
+  }
+
+  /**
+   * Deletes multiple sale estimates.
+   * @param {number[]} saleEstimateIds
+   * @return {Promise<void>}
+   */
+  public bulkDeleteSaleEstimates(
+    saleEstimateIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteSaleEstimatesService.bulkDeleteSaleEstimates(
+      saleEstimateIds,
+      options,
+    );
+  }
+
+  /**
+   * Validates which sale estimates can be deleted.
+   * @param {number[]} saleEstimateIds
+   */
+  public validateBulkDeleteSaleEstimates(saleEstimateIds: number[]) {
+    return this.validateBulkDeleteSaleEstimatesService.validateBulkDeleteSaleEstimates(
+      saleEstimateIds,
+    );
   }
 
   /**

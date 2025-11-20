@@ -36,6 +36,8 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
+import { isEmpty } from 'lodash';
+import { useBulkDeleteExpensesDialog } from './hooks/use-bulk-delete-expenses-dialog';
 
 /**
  * Expenses actions bar.
@@ -46,6 +48,7 @@ function ExpensesActionsBar({
 
   // #withExpenses
   expensesFilterConditions,
+  expensesSelectedRows = [],
 
   // #withSettings
   expensesTableSize,
@@ -72,8 +75,15 @@ function ExpensesActionsBar({
   const onClickNewExpense = () => {
     history.push('/expenses/new');
   };
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteExpenses,
+  } = useBulkDeleteExpensesDialog();
+
   // Handle delete button click.
-  const handleBulkDelete = () => {};
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(expensesSelectedRows);
+  };
 
   // Handles the tab chaning.
   const handleTabChange = (view) => {
@@ -101,6 +111,23 @@ function ExpensesActionsBar({
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'Expense' });
   };
+
+  if (!isEmpty(expensesSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteExpenses}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -185,8 +212,9 @@ export default compose(
   withDialogActions,
   withExpensesActions,
   withSettingsActions,
-  withExpenses(({ expensesTableState }) => ({
+  withExpenses(({ expensesTableState, expensesSelectedRows }) => ({
     expensesFilterConditions: expensesTableState.filterRoles,
+    expensesSelectedRows,
   })),
   withSettings(({ expenseSettings }) => ({
     expensesTableSize: expenseSettings?.tableSize,

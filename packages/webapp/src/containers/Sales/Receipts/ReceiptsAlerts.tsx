@@ -7,7 +7,6 @@ const ReceiptDeleteAlert = React.lazy(
 const ReceiptCloseAlert = React.lazy(
   () => import('@/containers/Alerts/Receipts/ReceiptCloseAlert'),
 );
-
 /**
  * Receipts alerts.
  */

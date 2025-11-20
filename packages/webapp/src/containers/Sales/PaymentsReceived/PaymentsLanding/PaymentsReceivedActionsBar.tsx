@@ -13,7 +13,7 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-
+import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import {
   Icon,
@@ -45,6 +45,7 @@ import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { useBulkDeletePaymentReceivesDialog } from './hooks/use-bulk-delete-payment-receives-dialog';
 
 /**
  * Payment receives actions bar.
@@ -55,6 +56,7 @@ function PaymentsReceivedActionsBar({
 
   // #withPaymentsReceived
   paymentFilterConditions,
+  paymentReceivesSelectedRows,
 
   // #withSettings
   paymentReceivesTableSize,
@@ -89,12 +91,10 @@ function PaymentsReceivedActionsBar({
   const handleTabChange = (viewId) => {
     setPaymentReceivesTableState({ customViewId: viewId.id || null });
   };
-
   // Handle click a refresh payment receives
   const handleRefreshBtnClick = () => {
     refresh();
   };
-
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('paymentReceives', 'tableSize', size);
@@ -116,6 +116,30 @@ function PaymentsReceivedActionsBar({
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'PaymentReceive' });
   };
 
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeletePaymentReceives,
+  } = useBulkDeletePaymentReceivesDialog();
+
+  if (!isEmpty(paymentReceivesSelectedRows)) {
+    const handleBulkDelete = () => {
+      openBulkDeleteDialog(paymentReceivesSelectedRows);
+    };
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeletePaymentReceives}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -147,16 +171,6 @@ function PaymentsReceivedActionsBar({
             conditionsCount={paymentFilterConditions.length}
           />
         </AdvancedFilterPopover>
-
-        <If condition={false}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon={'trash-16'} iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            // onClick={handleBulkDelete}
-          />
-        </If>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
@@ -216,9 +230,10 @@ function PaymentsReceivedActionsBar({
 export default compose(
   withPaymentsReceivedActions,
   withSettingsActions,
-  withPaymentsReceived(({ paymentReceivesTableState }) => ({
+  withPaymentsReceived(({ paymentReceivesTableState, paymentReceivesSelectedRows }) => ({
     paymentReceivesTableState,
     paymentFilterConditions: paymentReceivesTableState.filterRoles,
+    paymentReceivesSelectedRows,
   })),
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceivesTableSize: paymentReceiveSettings?.tableSize,

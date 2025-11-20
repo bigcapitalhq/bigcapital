@@ -101,7 +101,7 @@ export function ActionsCell(props) {
  */
 export function PublishAccessor(row) {
   return row.is_published ? (
-    <Tag round>
+    <Tag intent={Intent.SUCCESS} round minimal>
       <T id={'published'} />
     </Tag>
   ) : (

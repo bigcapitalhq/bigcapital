@@ -19,6 +19,8 @@ import { ManualJournalsExportable } from './commands/ManualJournalExportable';
 import { ManualJournalImportable } from './commands/ManualJournalsImport';
 import { GetManualJournals } from './queries/GetManualJournals.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { BulkDeleteManualJournalsService } from './BulkDeleteManualJournals.service';
+import { ValidateBulkDeleteManualJournalsService } from './ValidateBulkDeleteManualJournals.service';
 
 @Module({
   imports: [BranchesModule, LedgerModule, DynamicListModule],
@@ -41,6 +43,8 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     ManualJournalWriteGLSubscriber,
     ManualJournalsExportable,
     ManualJournalImportable,
+    BulkDeleteManualJournalsService,
+    ValidateBulkDeleteManualJournalsService,
   ],
   exports: [ManualJournalsExportable, ManualJournalImportable],
 })

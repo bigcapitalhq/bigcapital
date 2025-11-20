@@ -12,6 +12,8 @@ import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';
 import { GetCustomers } from './queries/GetCustomers.service';
 import { GetCustomersQueryDto } from './dtos/GetCustomersQuery.dto';
+import { BulkDeleteCustomersService } from './BulkDeleteCustomers.service';
+import { ValidateBulkDeleteCustomersService } from './ValidateBulkDeleteCustomers.service';
 
 @Injectable()
 export class CustomersApplication {
@@ -22,6 +24,8 @@ export class CustomersApplication {
     private deleteCustomerService: DeleteCustomer,
     private editOpeningBalanceService: EditOpeningBalanceCustomer,
     private getCustomersService: GetCustomers,
+    private readonly bulkDeleteCustomersService: BulkDeleteCustomersService,
+    private readonly validateBulkDeleteCustomersService: ValidateBulkDeleteCustomersService,
   ) {}
 
   /**
@@ -82,5 +86,21 @@ export class CustomersApplication {
    */
   public getCustomers = (filterDTO: GetCustomersQueryDto) => {
     return this.getCustomersService.getCustomersList(filterDTO);
+  };
+
+  public bulkDeleteCustomers = (
+    customerIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) => {
+    return this.bulkDeleteCustomersService.bulkDeleteCustomers(
+      customerIds,
+      options,
+    );
+  };
+
+  public validateBulkDeleteCustomers = (customerIds: number[]) => {
+    return this.validateBulkDeleteCustomersService.validateBulkDeleteCustomers(
+      customerIds,
+    );
   };
 }

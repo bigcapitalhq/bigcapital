@@ -29,9 +29,13 @@ export class DeleteSaleReceipt {
   /**
    * Deletes the sale receipt with associated entries.
    * @param {Integer} saleReceiptId - Sale receipt identifier.
+   * @param {Knex.Transaction} trx - Database transaction instance.
    * @return {void}
    */
-  public async deleteSaleReceipt(saleReceiptId: number) {
+  public async deleteSaleReceipt(
+    saleReceiptId: number,
+    trx?: Knex.Transaction,
+  ) {
     const oldSaleReceipt = await this.saleReceiptModel()
       .query()
       .findById(saleReceiptId)
@@ -65,6 +69,6 @@ export class DeleteSaleReceipt {
         oldSaleReceipt,
         trx,
       } as ISaleReceiptEventDeletedPayload);
-    });
+    }, trx);
   }
 }

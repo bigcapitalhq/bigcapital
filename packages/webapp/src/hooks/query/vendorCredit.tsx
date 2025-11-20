@@ -113,6 +113,49 @@ export function useDeleteVendorCredit(props) {
   );
 }
 
+/**
+ * Deletes multiple vendor credits in bulk.
+ */
+export function useBulkDeleteVendorCredits(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('vendor-credits/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteVendorCredits(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('vendor-credits/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
+}
+
 const transformVendorCreditsResponse = (response) => ({
   vendorCredits: response.data.vendor_credits,
   pagination: transformPagination(response.data.pagination),

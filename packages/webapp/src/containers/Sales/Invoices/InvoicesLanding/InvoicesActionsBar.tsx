@@ -29,6 +29,7 @@ import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 import { useRefreshInvoices } from '@/hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useBulkDeleteInvoicesDialog } from '../hooks/use-bulk-delete-accounts-dialog';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
@@ -39,6 +40,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { isEmpty } from 'lodash';
 
 /**
  * Invoices table actions bar.
@@ -49,6 +51,7 @@ function InvoiceActionsBar({
 
   // #withInvoices
   invoicesFilterRoles,
+  invoicesSelectedRows = [],
 
   // #withSettings
   invoicesTableSize,
@@ -61,8 +64,13 @@ function InvoiceActionsBar({
 
   // #withDrawerActions
   openDrawer,
+
 }) {
   const history = useHistory();
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteInvoices,
+  } = useBulkDeleteInvoicesDialog();
 
   // Sale invoices list context.
   const { invoicesViews, invoicesFields } = useInvoicesListContext();
@@ -112,6 +120,28 @@ function InvoiceActionsBar({
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleInvoice' });
   };
 
+  // Handle bulk invoices delete.
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(invoicesSelectedRows);
+  };
+
+  if (!isEmpty(invoicesSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteInvoices}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -144,15 +174,6 @@ function InvoiceActionsBar({
         </AdvancedFilterPopover>
 
         <NavbarDivider />
-
-        <If condition={false}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon={'trash-16'} iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-          />
-        </If>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
@@ -211,8 +232,9 @@ function InvoiceActionsBar({
 export default compose(
   withInvoiceActions,
   withSettingsActions,
-  withInvoices(({ invoicesTableState }) => ({
+  withInvoices(({ invoicesTableState, invoicesSelectedRows }) => ({
     invoicesFilterRoles: invoicesTableState.filterRoles,
+    invoicesSelectedRows,
   })),
   withSettings(({ invoiceSettings }) => ({
     invoicesTableSize: invoiceSettings?.tableSize,

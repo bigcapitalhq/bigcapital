@@ -13,6 +13,7 @@ export default (mapState) => {
     const mapped = {
       creditNoteTableState: getCreditNoteTableState(state, props),
       creditNoteTableStateChanged: isCreditNoteTableChanged(state, props),
+      creditNotesSelectedRows: state.creditNotes?.selectedRows || [],
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

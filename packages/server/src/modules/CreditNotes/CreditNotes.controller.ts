@@ -22,17 +22,22 @@ import { CreateCreditNoteDto, EditCreditNoteDto } from './dtos/CreditNote.dto';
 import { CreditNoteResponseDto } from './dtos/CreditNoteResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 
 @Controller('credit-notes')
 @ApiTags('Credit Notes')
 @ApiExtraModels(CreditNoteResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()
 export class CreditNotesController {
   /**
    * @param {CreditNoteApplication} creditNoteApplication - The credit note application service.
    */
-  constructor(private creditNoteApplication: CreditNoteApplication) {}
+  constructor(private creditNoteApplication: CreditNoteApplication) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new credit note' })
@@ -110,6 +115,42 @@ export class CreditNotesController {
   @ApiResponse({ status: 404, description: 'Credit note not found' })
   openCreditNote(@Param('id') creditNoteId: number) {
     return this.creditNoteApplication.openCreditNote(creditNoteId);
+  }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which credit notes can be deleted and returns the results.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable credit notes.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  validateBulkDeleteCreditNotes(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.creditNoteApplication.validateBulkDeleteCreditNotes(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple credit notes.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Credit notes deleted successfully',
+  })
+  bulkDeleteCreditNotes(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<void> {
+    return this.creditNoteApplication.bulkDeleteCreditNotes(
+      bulkDeleteDto.ids,
+      { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
+    );
   }
 
   @Delete(':id')

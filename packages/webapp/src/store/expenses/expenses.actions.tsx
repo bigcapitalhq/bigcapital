@@ -18,3 +18,9 @@ export const resetExpensesTableState = () => {
   };
 };
 
+export const setExpensesSelectedRows = (selectedRows) => {
+  return {
+    type: 'EXPENSES/SET_SELECTED_ROWS',
+    payload: selectedRows,
+  };
+};

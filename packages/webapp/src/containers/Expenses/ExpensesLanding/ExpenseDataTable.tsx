@@ -31,6 +31,7 @@ import { DRAWERS } from '@/constants/drawers';
 function ExpensesDataTable({
   // #withExpensesActions
   setExpensesTableState,
+  setExpensesSelectedRows,
 
   // #withDrawerActions
   openDrawer,
@@ -42,7 +43,7 @@ function ExpensesDataTable({
   expensesTableSize,
 
   // #withExpenses
-  expensesTableState
+  expensesTableState,
 }) {
   // Expenses list context.
   const {
@@ -102,6 +103,12 @@ function ExpensesDataTable({
     openDrawer(DRAWERS.EXPENSE_DETAILS, { expenseId: cell.row.original.id });
   };
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = (selectedFlatRows) => {
+    const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+    setExpensesSelectedRows(selectedIds);
+  };
+
   // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <ExpensesEmptyStatus />;
@@ -132,6 +139,7 @@ function ExpensesDataTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        onSelectedRowsChange={handleSelectedRowsChange}
         size={expensesTableSize}
         payload={{
           onPublish: handlePublishExpense,
@@ -152,5 +160,5 @@ export default compose(
   withSettings(({ expenseSettings }) => ({
     expensesTableSize: expenseSettings?.tableSize,
   })),
-  withExpenses(({ expensesTableState }) => ({ expensesTableState }))
+  withExpenses(({ expensesTableState }) => ({ expensesTableState })),
 )(ExpensesDataTable);

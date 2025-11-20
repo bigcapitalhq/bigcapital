@@ -32,6 +32,7 @@ import { DRAWERS } from '@/constants/drawers';
 function VendorsCreditNoteDataTable({
   // #withVendorsCreditNotesActions
   setVendorsCreditNoteTableState,
+  setVendorsCreditNoteSelectedRows,
 
   // #withVendorCredits
   vendorsCreditNoteTableState,
@@ -119,6 +120,11 @@ function VendorsCreditNoteDataTable({
     openDialog('reconcile-vendor-credit', { vendorCreditId: id });
   };
 
+  const handleSelectedRowsChange = (selectedFlatRows) => {
+    const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+    setVendorsCreditNoteSelectedRows(selectedIds);
+  };
+
   return (
     <DashboardContentTable>
       <DataTable
@@ -141,6 +147,7 @@ function VendorsCreditNoteDataTable({
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
+        onSelectedRowsChange={handleSelectedRowsChange}
         size={creditNoteTableSize}
         payload={{
           onViewDetails: handleViewDetailVendorCredit,

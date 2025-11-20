@@ -34,6 +34,8 @@ import { CreditNoteInventoryTransactions } from './commands/CreditNotesInventory
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { CreditNoteRefundsModule } from '../CreditNoteRefunds/CreditNoteRefunds.module';
 import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/CreditNotesApplyInvoice.module';
+import { BulkDeleteCreditNotesService } from './BulkDeleteCreditNotes.service';
+import { ValidateBulkDeleteCreditNotesService } from './ValidateBulkDeleteCreditNotes.service';
 
 @Module({
   imports: [
@@ -73,6 +75,8 @@ import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/Credit
     RefundSyncCreditNoteBalanceSubscriber,
     DeleteCustomerLinkedCreditSubscriber,
     CreditNoteAutoSerialSubscriber,
+    BulkDeleteCreditNotesService,
+    ValidateBulkDeleteCreditNotesService,
   ],
   exports: [
     CreateCreditNoteService,

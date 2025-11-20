@@ -31,13 +31,14 @@ import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-
 
 import withItems from './withItems';
 import withItemsActions from './withItemsActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '../Dialog/withDialogActions';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
+import { isEmpty } from 'lodash';
+import { useBulkDeleteItemsDialog } from './hooks/use-bulk-delete-items-dialog';
 
 /**
  * Items actions bar.
@@ -51,9 +52,6 @@ function ItemsActionsBar({
   setItemsTableState,
   itemsInactiveMode,
 
-  // #withAlertActions
-  openAlert,
-
   // #withSettings
   itemsTableSize,
 
@@ -63,6 +61,9 @@ function ItemsActionsBar({
   // #withDialogActions
   openDialog,
 }) {
+  const { openBulkDeleteDialog, isValidatingBulkDeleteItems } =
+    useBulkDeleteItemsDialog();
+
   // Items list context.
   const { itemsViews, fields } = useItemsListContext();
 
@@ -87,7 +88,7 @@ function ItemsActionsBar({
 
   // Handle cancel/confirm items bulk.
   const handleBulkDelete = () => {
-    openAlert('items-bulk-delete', { itemsIds: itemsSelectedRows });
+    openBulkDeleteDialog(itemsSelectedRows);
   };
 
   // Handle inactive switch changing.
@@ -117,6 +118,23 @@ function ItemsActionsBar({
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'Item' });
   };
+
+  if (!isEmpty(itemsSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteItems}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -150,18 +168,8 @@ function ItemsActionsBar({
         >
           <DashboardFilterButton conditionsCount={itemsFilterRoles.length} />
         </AdvancedFilterPopover>
-
         <NavbarDivider />
 
-        <If condition={itemsSelectedRows.length}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="trash-16" iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            onClick={handleBulkDelete}
-          />
-        </If>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
@@ -217,6 +225,5 @@ export default compose(
     itemsTableSize: itemsSettings.tableSize,
   })),
   withItemsActions,
-  withAlertActions,
   withDialogActions,
 )(ItemsActionsBar);

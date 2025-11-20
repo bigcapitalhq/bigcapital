@@ -35,14 +35,18 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
-import { useRefreshEstimates } from '@/hooks/query/estimates';
+import {
+  useRefreshEstimates,
+} from '@/hooks/query/estimates';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useBulkDeleteEstimatesDialog } from './hooks/use-bulk-delete-estimates-dialog';
 
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { isEmpty } from 'lodash';
 import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
@@ -57,6 +61,7 @@ function EstimateActionsBar({
 
   // #withEstimates
   estimatesFilterRoles,
+  estimatesSelectedRows = [],
 
   // #withSettings
   estimatesTableSize,
@@ -116,6 +121,33 @@ function EstimateActionsBar({
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleEstimate' });
   };
 
+  const {
+    openBulkDeleteDialog,
+    isValidatingBulkDeleteEstimates,
+  } = useBulkDeleteEstimatesDialog();
+
+  // Handle bulk estimates delete.
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(estimatesSelectedRows);
+  };
+
+  if (!isEmpty(estimatesSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteEstimates}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -149,16 +181,7 @@ function EstimateActionsBar({
             conditionsCount={estimatesFilterRoles.length}
           />
         </AdvancedFilterPopover>
-
-        <If condition={false}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon={'trash-16'} iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            // onClick={handleBulkDelete}
-          />
-        </If>
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
@@ -218,8 +241,9 @@ function EstimateActionsBar({
 export default compose(
   withEstimatesActions,
   withSettingsActions,
-  withEstimates(({ estimatesTableState }) => ({
+  withEstimates(({ estimatesTableState, estimatesSelectedRows }) => ({
     estimatesFilterRoles: estimatesTableState.filterRoles,
+    estimatesSelectedRows: estimatesSelectedRows || [],
   })),
   withSettings(({ estimatesSettings }) => ({
     estimatesTableSize: estimatesSettings?.tableSize,

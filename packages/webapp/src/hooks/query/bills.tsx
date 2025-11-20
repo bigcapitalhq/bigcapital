@@ -121,6 +121,39 @@ export function useDeleteBill(props) {
   });
 }
 
+/**
+ * Deletes multiple bills in bulk.
+ */
+export function useBulkDeleteBills(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) => apiRequest.post('bills/bulk-delete', { ids }),
+    {
+      onSuccess: () => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useValidateBulkDeleteBills(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest
+        .post('bills/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
+}
+
 const transformBillsResponse = (response) => ({
   bills: response.data.bills,
   pagination: transformPagination(response.data.pagination),

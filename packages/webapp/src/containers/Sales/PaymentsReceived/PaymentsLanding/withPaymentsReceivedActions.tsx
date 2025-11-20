@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
   setPaymentReceivesTableState,
   resetPaymentReceivesTableState,
+  setPaymentReceivesSelectedRows,
 } from '@/store/PaymentReceives/paymentReceives.actions';
 
 const mapDispatchToProps = (dispatch) => ({
@@ -11,6 +12,9 @@ const mapDispatchToProps = (dispatch) => ({
 
   resetPaymentReceivesTableState: () =>
     dispatch(resetPaymentReceivesTableState()),
+
+  setPaymentReceivesSelectedRows: (selectedRows: number[]) =>
+    dispatch(setPaymentReceivesSelectedRows(selectedRows)),
 });
 
 export default connect(null, mapDispatchToProps);
