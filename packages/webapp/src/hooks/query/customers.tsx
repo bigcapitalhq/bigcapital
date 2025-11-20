@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import useApiRequest from '../useRequest';
 import t from './types';
 
@@ -98,6 +98,49 @@ export function useDeleteCustomer(props) {
     },
     ...props,
   });
+}
+
+/**
+ * Deletes multiple customers in bulk.
+ */
+export function useBulkDeleteCustomers(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('customers/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }).then((res) => transformToCamelCase(res.data)),
+    {
+      onSuccess: () => {
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Validates which customers can be deleted in bulk.
+ */
+export function useValidateBulkDeleteCustomers(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest.post('customers/validate-bulk-delete', { ids }).then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
 }
 
 /**

@@ -105,7 +105,7 @@ export function useBulkDeleteManualJournals(props) {
     }) =>
       apiRequest.post('manual-journals/bulk-delete', {
         ids,
-        skipUndeletable,
+        skip_undeletable: skipUndeletable,
       }),
     {
       onSuccess: () => {

@@ -3,7 +3,6 @@ import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-import { queryCache } from 'react-query';
 
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteReceipts } from '@/hooks/query/receipts';
@@ -45,7 +44,6 @@ function ReceiptBulkDeleteDialog({
           message: intl.get('the_receipts_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('sale-receipts-table');
         setReceiptsSelectedRows([]);
         closeDialog(dialogName);
       })

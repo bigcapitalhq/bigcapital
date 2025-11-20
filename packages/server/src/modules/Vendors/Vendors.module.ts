@@ -16,6 +16,8 @@ import { GetVendorsService } from './queries/GetVendors.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { VendorsExportable } from './VendorsExportable';
 import { VendorsImportable } from './VendorsImportable';
+import { BulkDeleteVendorsService } from './BulkDeleteVendors.service';
+import { ValidateBulkDeleteVendorsService } from './ValidateBulkDeleteVendors.service';
 
 @Module({
   imports: [TenancyDatabaseModule, DynamicListModule],
@@ -31,6 +33,8 @@ import { VendorsImportable } from './VendorsImportable';
     VendorValidators,
     DeleteVendorService,
     VendorsApplication,
+    BulkDeleteVendorsService,
+    ValidateBulkDeleteVendorsService,
     TransformerInjectable,
     TenancyContext,
     VendorsExportable,

@@ -13,10 +13,6 @@ const ItemActivateAlert = React.lazy(
   () => import('@/containers/Alerts/Items/ItemActivateAlert'),
 );
 
-const ItemBulkDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/Items/ItemBulkDeleteAlert'),
-);
-
 const cancelUnlockingPartialAlert = React.lazy(
   () =>
     import(
@@ -39,9 +35,5 @@ export default [
   {
     name: 'item-activate',
     component: ItemActivateAlert,
-  },
-  {
-    name: 'items-bulk-delete',
-    component: ItemBulkDeleteAlert,
   },
 ];

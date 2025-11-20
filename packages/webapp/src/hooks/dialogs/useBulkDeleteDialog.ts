@@ -16,6 +16,7 @@ export const useBulkDeleteDialog = (
       if (!ids?.length) {
         return;
       }
+
       const { deletableCount = 0, nonDeletableCount = 0 } =
         await validateBulkDelete(ids);
 

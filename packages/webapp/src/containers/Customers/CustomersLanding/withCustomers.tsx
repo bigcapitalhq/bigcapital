@@ -12,6 +12,7 @@ export default (mapState) => {
 
   const mapStateToProps = (state, props) => {
     const mapped = {
+      customersSelectedRows: state.customers.selectedRows,
       customersTableState: getCustomersTableState(state, props),
       customersTableStateChanged: customersTableStateChanged(state, props),
     };

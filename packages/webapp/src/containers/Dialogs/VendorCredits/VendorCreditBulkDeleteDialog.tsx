@@ -3,7 +3,6 @@ import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-import { queryCache } from 'react-query';
 
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteVendorCredits } from '@/hooks/query/vendorCredit';
@@ -47,7 +46,6 @@ function VendorCreditBulkDeleteDialog({
           ),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('vendor-credits-table');
         setVendorsCreditNoteSelectedRows([]);
         closeDialog(dialogName);
       })

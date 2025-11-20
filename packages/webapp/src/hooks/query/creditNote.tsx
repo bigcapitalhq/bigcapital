@@ -128,7 +128,7 @@ export function useBulkDeleteCreditNotes(props) {
     }) =>
       apiRequest.post('credit-notes/bulk-delete', {
         ids,
-        skipUndeletable,
+        skip_undeletable: skipUndeletable,
       }),
     {
       onSuccess: () => {

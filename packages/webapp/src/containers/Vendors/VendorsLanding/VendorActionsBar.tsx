@@ -11,7 +11,6 @@ import {
 } from '@blueprintjs/core';
 
 import {
-  If,
   Can,
   Icon,
   FormattedMessage as T,
@@ -28,6 +27,8 @@ import { useRefreshVendors } from '@/hooks/query/vendors';
 import { useVendorsListContext } from './VendorsListProvider';
 import { useHistory } from 'react-router-dom';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useBulkDeleteVendorsDialog } from './hooks/use-bulk-delete-vendors-dialog';
+import { isEmpty } from 'lodash';
 
 import withVendors from './withVendors';
 import withVendorsActions from './withVendorsActions';
@@ -43,6 +44,7 @@ import { DialogsName } from '@/constants/dialogs';
  */
 function VendorActionsBar({
   // #withVendors
+  vendorsSelectedRows = [],
   vendorsFilterConditions,
 
   // #withVendorActions
@@ -59,6 +61,9 @@ function VendorActionsBar({
   openDialog,
 }) {
   const history = useHistory();
+  const { openBulkDeleteDialog, isValidatingBulkDeleteVendors } =
+    useBulkDeleteVendorsDialog();
+
 
   // Vendors list context.
   const { vendorsViews, fields } = useVendorsListContext();
@@ -102,6 +107,27 @@ function VendorActionsBar({
     downloadExportPdf({ resource: 'Vendor' });
   };
 
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(vendorsSelectedRows);
+  };
+
+  if (!isEmpty(vendorsSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteVendors}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -111,7 +137,7 @@ function VendorActionsBar({
           onChange={handleTabChange}
         />
         <NavbarDivider />
-        <Can I={VendorActionsBar.Create} a={AbilitySubject.Vendor}>
+        <Can I={VendorAction.Create} a={AbilitySubject.Vendor}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'plus'} />}
@@ -135,15 +161,6 @@ function VendorActionsBar({
           />
         </AdvancedFilterPopover>
 
-        <If condition={false}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="trash-16" iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-          />
-        </If>
-        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
@@ -191,7 +208,8 @@ function VendorActionsBar({
 export default compose(
   withVendorsActions,
   withSettingsActions,
-  withVendors(({ vendorsTableState }) => ({
+  withVendors(({ vendorsTableState, vendorsSelectedRows }) => ({
+    vendorsSelectedRows,
     vendorsInactiveMode: vendorsTableState.inactiveMode,
     vendorsFilterConditions: vendorsTableState.filterRoles,
   })),

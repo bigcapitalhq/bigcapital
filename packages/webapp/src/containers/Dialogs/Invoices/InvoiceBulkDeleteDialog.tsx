@@ -3,7 +3,6 @@ import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 
 import withDialogRedux from '@/components/DialogReduxConnect';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -50,7 +49,6 @@ function InvoiceBulkDeleteDialog({
           message: intl.get('the_invoices_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('invoices-table');
         resetInvoicesSelectedRows();
         closeDialog(dialogName);
       })

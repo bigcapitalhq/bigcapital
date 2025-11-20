@@ -16,7 +16,7 @@ export class BulkDeleteDto {
 
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value }) => parseBoolean(value, false))
+  @Transform(({ value, obj }) => parseBoolean(value ?? obj?.skip_undeletable, false))
   @ApiPropertyOptional({
     description: 'When true, undeletable items will be skipped and only deletable ones will be removed.',
     type: Boolean,

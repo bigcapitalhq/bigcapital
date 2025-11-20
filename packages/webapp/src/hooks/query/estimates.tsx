@@ -141,7 +141,7 @@ export function useBulkDeleteEstimates(props) {
     }) =>
       apiRequest.post('sale-estimates/bulk-delete', {
         ids,
-        skipUndeletable,
+        skip_undeletable: skipUndeletable,
       }),
     {
       onSuccess: () => {

@@ -374,6 +374,8 @@ export class ItemsController extends TenantController {
   async bulkDeleteItems(
     @Body() bulkDeleteDto: BulkDeleteItemsDto,
   ): Promise<void> {
-    return this.itemsApplication.bulkDeleteItems(bulkDeleteDto.ids);
+    return this.itemsApplication.bulkDeleteItems(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
   }
 }

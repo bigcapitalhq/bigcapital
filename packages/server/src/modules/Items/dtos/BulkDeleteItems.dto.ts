@@ -1,5 +1,13 @@
-import { IsArray, IsInt, ArrayNotEmpty } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsArray,
+  IsInt,
+  ArrayNotEmpty,
+  IsOptional,
+  IsBoolean,
+} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { parseBoolean } from '@/utils/parse-boolean';
 
 export class BulkDeleteItemsDto {
   @IsArray()
@@ -11,6 +19,17 @@ export class BulkDeleteItemsDto {
     example: [1, 2, 3],
   })
   ids: number[];
+
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value, obj }) => parseBoolean(value ?? obj?.skip_undeletable, false))
+  @ApiPropertyOptional({
+    description:
+      'When true, undeletable items will be skipped and only deletable ones removed.',
+    type: Boolean,
+    default: false,
+  })
+  skipUndeletable?: boolean;
 }
 
 export class ValidateBulkDeleteItemsResponseDto {

@@ -6,7 +6,7 @@ import { DeleteItemService } from './DeleteItem.service';
 
 @Injectable()
 export class BulkDeleteItemsService {
-  constructor(private readonly deleteItemService: DeleteItemService) { }
+  constructor(private readonly deleteItemService: DeleteItemService) {}
 
   /**
    * Deletes multiple items.
@@ -15,23 +15,26 @@ export class BulkDeleteItemsService {
    */
   async bulkDeleteItems(
     itemIds: number | Array<number>,
+    options?: { skipUndeletable?: boolean },
     trx?: Knex.Transaction,
   ): Promise<void> {
+    const { skipUndeletable = false } = options ?? {};
     const itemsIds = uniq(castArray(itemIds));
 
-    // Use PromisePool to delete items sequentially (concurrency: 1)
-    // to avoid potential database locks and maintain transaction integrity
     const results = await PromisePool.withConcurrency(1)
       .for(itemsIds)
       .process(async (itemId: number) => {
-        await this.deleteItemService.deleteItem(itemId, trx);
+        try {
+          await this.deleteItemService.deleteItem(itemId, trx);
+        } catch (error) {
+          if (!skipUndeletable) {
+            throw error;
+          }
+        }
       });
 
-    // Check if there were any errors
-    if (results.errors && results.errors.length > 0) {
-      // If needed, you can throw an error here or handle errors individually
-      // For now, we'll let individual errors bubble up
-      throw results.errors[0].raw;
+    if (!skipUndeletable && results.errors && results.errors.length > 0) {
+      throw results.errors[0].raw ?? results.errors[0];
     }
   }
 }

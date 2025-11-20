@@ -121,7 +121,7 @@ export function useBulkDeleteReceipts(props) {
     }) =>
       apiRequest.post('sale-receipts/bulk-delete', {
         ids,
-        skipUndeletable,
+        skip_undeletable: skipUndeletable,
       }),
     {
       onSuccess: () => {

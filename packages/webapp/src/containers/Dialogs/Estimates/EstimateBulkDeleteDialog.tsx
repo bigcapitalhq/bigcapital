@@ -3,7 +3,6 @@ import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-import { queryCache } from 'react-query';
 
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteEstimates } from '@/hooks/query/estimates';
@@ -45,7 +44,6 @@ function EstimateBulkDeleteDialog({
           message: intl.get('the_estimates_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('estimates-table');
         setEstimatesSelectedRows([]);
         closeDialog(dialogName);
       })

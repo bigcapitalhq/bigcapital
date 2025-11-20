@@ -130,7 +130,7 @@ export function useBulkDeleteVendorCredits(props) {
     }) =>
       apiRequest.post('vendor-credits/bulk-delete', {
         ids,
-        skipUndeletable,
+        skip_undeletable: skipUndeletable,
       }),
     {
       onSuccess: () => {

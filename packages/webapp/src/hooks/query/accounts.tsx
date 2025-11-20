@@ -167,7 +167,7 @@ export function useBulkDeleteAccounts(props) {
     }) =>
       apiRequest.post('accounts/bulk-delete', {
         ids,
-        skipUndeletable,
+        skip_undeletable: skipUndeletable,
       }),
     {
       onSuccess: () => {

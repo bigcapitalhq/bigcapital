@@ -16,6 +16,8 @@ import { CustomersExportable } from './CustomersExportable';
 import { CustomersImportable } from './CustomersImportable';
 import { GetCustomers } from './queries/GetCustomers.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { BulkDeleteCustomersService } from './BulkDeleteCustomers.service';
+import { ValidateBulkDeleteCustomersService } from './ValidateBulkDeleteCustomers.service';
 
 @Module({
   imports: [TenancyDatabaseModule, DynamicListModule],
@@ -37,6 +39,8 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
     CustomersExportable,
     CustomersImportable,
     GetCustomers,
+    BulkDeleteCustomersService,
+    ValidateBulkDeleteCustomersService,
   ],
 })
 export class CustomersModule {}

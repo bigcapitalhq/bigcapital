@@ -3,7 +3,6 @@ import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-import { queryCache } from 'react-query';
 
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteExpenses } from '@/hooks/query/expenses';
@@ -45,7 +44,6 @@ function ExpenseBulkDeleteDialog({
           message: intl.get('the_expenses_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('expenses-table');
         setExpensesSelectedRows([]);
         closeDialog(dialogName);
       })

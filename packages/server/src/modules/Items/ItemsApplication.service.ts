@@ -158,7 +158,10 @@ export class ItemsApplicationService {
    * @param {number[]} itemIds - Array of item IDs to delete
    * @returns {Promise<void>}
    */
-  async bulkDeleteItems(itemIds: number[]): Promise<void> {
-    return this.bulkDeleteItemsService.bulkDeleteItems(itemIds);
+  async bulkDeleteItems(
+    itemIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ): Promise<void> {
+    return this.bulkDeleteItemsService.bulkDeleteItems(itemIds, options);
   }
 }

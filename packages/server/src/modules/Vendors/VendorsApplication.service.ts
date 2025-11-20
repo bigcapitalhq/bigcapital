@@ -13,6 +13,8 @@ import { GetVendorsService } from './queries/GetVendors.service';
 import { CreateVendorDto } from './dtos/CreateVendor.dto';
 import { EditVendorDto } from './dtos/EditVendor.dto';
 import { GetVendorsQueryDto } from './dtos/GetVendorsQuery.dto';
+import { BulkDeleteVendorsService } from './BulkDeleteVendors.service';
+import { ValidateBulkDeleteVendorsService } from './ValidateBulkDeleteVendors.service';
 
 @Injectable()
 export class VendorsApplication {
@@ -23,6 +25,8 @@ export class VendorsApplication {
     private editOpeningBalanceService: EditOpeningBalanceVendorService,
     private getVendorService: GetVendorService,
     private getVendorsService: GetVendorsService,
+    private readonly bulkDeleteVendorsService: BulkDeleteVendorsService,
+    private readonly validateBulkDeleteVendorsService: ValidateBulkDeleteVendorsService,
   ) {}
 
   /**
@@ -85,5 +89,21 @@ export class VendorsApplication {
    */
   public getVendors(filterDTO: GetVendorsQueryDto) {
     return this.getVendorsService.getVendorsList(filterDTO);
+  }
+
+  public bulkDeleteVendors(
+    vendorIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteVendorsService.bulkDeleteVendors(
+      vendorIds,
+      options,
+    );
+  }
+
+  public validateBulkDeleteVendors(vendorIds: number[]) {
+    return this.validateBulkDeleteVendorsService.validateBulkDeleteVendors(
+      vendorIds,
+    );
   }
 }

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useMutation, useQueryClient } from 'react-query';
 import t from './types';
-import { transformPagination } from '@/utils';
+import { transformPagination, transformToCamelCase } from '@/utils';
 import useApiRequest from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
 
@@ -86,6 +86,49 @@ export function useDeleteVendor(props) {
     },
     ...props,
   });
+}
+
+/**
+ * Deletes multiple vendors in bulk.
+ */
+export function useBulkDeleteVendors(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      apiRequest.post('vendors/bulk-delete', {
+        ids,
+        skip_undeletable: skipUndeletable,
+      }),
+    {
+      onSuccess: () => {
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Validates which vendors can be deleted in bulk.
+ */
+export function useValidateBulkDeleteVendors(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) =>
+      apiRequest.post('vendors/validate-bulk-delete', { ids }).then((res) => transformToCamelCase(res.data)),
+    {
+      ...props,
+    },
+  );
 }
 
 /**

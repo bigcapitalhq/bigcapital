@@ -3,7 +3,6 @@ import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-import { queryCache } from 'react-query';
 
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteManualJournals } from '@/hooks/query/manualJournals';
@@ -45,7 +44,6 @@ function ManualJournalBulkDeleteDialog({
           message: intl.get('the_journals_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('manual-journals-table');
         setManualJournalsSelectedRows([]);
         closeDialog(dialogName);
       })

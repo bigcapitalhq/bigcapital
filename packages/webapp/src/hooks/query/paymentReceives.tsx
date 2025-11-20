@@ -167,7 +167,7 @@ export function useBulkDeletePaymentReceives(props) {
     }) =>
       apiRequest.post('payments-received/bulk-delete', {
         ids,
-        skipUndeletable,
+        skip_undeletable: skipUndeletable,
       }),
     {
       onSuccess: () => {

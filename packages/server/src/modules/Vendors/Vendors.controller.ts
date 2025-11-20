@@ -13,11 +13,20 @@ import {
   IVendorOpeningBalanceEditDTO,
   IVendorsFilter,
 } from './types/Vendors.types';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { CreateVendorDto } from './dtos/CreateVendor.dto';
 import { EditVendorDto } from './dtos/EditVendor.dto';
 import { GetVendorsQueryDto } from './dtos/GetVendorsQuery.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import {
+  BulkDeleteVendorsDto,
+  ValidateBulkDeleteVendorsResponseDto,
+} from './dtos/BulkDeleteVendors.dto';
 
 @Controller('vendors')
 @ApiTags('Vendors')
@@ -65,5 +74,38 @@ export class VendorsController {
       vendorId,
       openingBalanceDTO,
     );
+  }
+
+  @Post('validate-bulk-delete')
+  @ApiOperation({
+    summary:
+      'Validates which vendors can be deleted and returns counts of deletable and non-deletable vendors.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed. Returns counts and IDs of deletable and non-deletable vendors.',
+    schema: { $ref: getSchemaPath(ValidateBulkDeleteVendorsResponseDto) },
+  })
+  validateBulkDeleteVendors(
+    @Body() bulkDeleteDto: BulkDeleteVendorsDto,
+  ): Promise<ValidateBulkDeleteVendorsResponseDto> {
+    return this.vendorsApplication.validateBulkDeleteVendors(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @ApiOperation({ summary: 'Deletes multiple vendors in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The vendors have been successfully deleted.',
+  })
+  async bulkDeleteVendors(
+    @Body() bulkDeleteDto: BulkDeleteVendorsDto,
+  ): Promise<void> {
+    return this.vendorsApplication.bulkDeleteVendors(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
   }
 }

@@ -15,6 +15,7 @@ export const defaultTableQueryState = {
 
 const initialState = {
   tableState: defaultTableQueryState,
+  selectedRows: [],
 };
 
 const STORAGE_KEY = 'bigcapital:vendors';
@@ -28,8 +29,17 @@ const CONFIG = {
 const reducerInstance = createReducer(initialState, {
   ...createTableStateReducers('VENDORS', defaultTableQueryState),
 
+  ['VENDORS/SET_SELECTED_ROWS']: (state, action) => {
+    state.selectedRows = action.payload;
+  },
+
+  ['VENDORS/RESET_SELECTED_ROWS']: (state) => {
+    state.selectedRows = [];
+  },
+
   [t.RESET]: () => {
     purgeStoredState(CONFIG);
+    return initialState;
   },
 });
 

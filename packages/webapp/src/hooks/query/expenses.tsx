@@ -119,7 +119,7 @@ export function useBulkDeleteExpenses(props) {
     }) =>
       apiRequest.post('expenses/bulk-delete', {
         ids,
-        skipUndeletable,
+        skip_undeletable: skipUndeletable,
       }),
     {
       onSuccess: () => {

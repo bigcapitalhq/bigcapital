@@ -60,6 +60,9 @@ import VendorCreditBulkDeleteDialog from '@/containers/Dialogs/VendorCredits/Ven
 import ManualJournalBulkDeleteDialog from '@/containers/Dialogs/ManualJournals/ManualJournalBulkDeleteDialog';
 import ExpenseBulkDeleteDialog from '@/containers/Dialogs/Expenses/ExpenseBulkDeleteDialog';
 import AccountBulkDeleteDialog from '@/containers/Dialogs/Accounts/AccountBulkDeleteDialog';
+import ItemBulkDeleteDialog from '@/containers/Dialogs/Items/ItemBulkDeleteDialog';
+import CustomerBulkDeleteDialog from '@/containers/Dialogs/Customers/CustomerBulkDeleteDialog';
+import VendorBulkDeleteDialog from '@/containers/Dialogs/Vendors/VendorBulkDeleteDialog';
 
 /**
  * Dialogs container.
@@ -167,6 +170,9 @@ export default function DialogsContainer() {
       />
       <ExpenseBulkDeleteDialog dialogName={DialogsName.ExpenseBulkDelete} />
       <AccountBulkDeleteDialog dialogName={DialogsName.AccountBulkDelete} />
+      <ItemBulkDeleteDialog dialogName={DialogsName.ItemBulkDelete} />
+      <CustomerBulkDeleteDialog dialogName={DialogsName.CustomerBulkDelete} />
+      <VendorBulkDeleteDialog dialogName={DialogsName.VendorBulkDelete} />
       <ExportDialog dialogName={DialogsName.Export} />
       <RuleFormDialog dialogName={DialogsName.BankRuleForm} />
       <DisconnectBankAccountDialog
