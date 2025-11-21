@@ -54,7 +54,7 @@ pnpm install
 - Run all required docker containers in the development, we already configured all containers under `docker-compose.yml`.
 
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 Wait some seconds, and hit `docker-compose ps` and you should see the same result below.
@@ -75,7 +75,7 @@ pnpm run build:server
 - Run the database migration for system database.
 
 ```
-node packages/server/build/commands.js system:migrate:latest
+pnpm run system:migrate:latest
 ```
 
 And you should get something like that.
@@ -84,10 +84,10 @@ And you should get something like that.
 Batch 1 run: 6 migrations
 ```
 
-- Next, start the webapp application.
+- Next, start the server.
 
 ```
-pnpm run dev:server
+pnpm run server:start
 ```
 
 **[`^top^`](#)**
@@ -95,12 +95,6 @@ pnpm run dev:server
 ----
 
 ## Contribute to Frontend
-
-- Clone the `bigcapital` repository and cd into `bigcapital` directory.
-
-```
-git clone https://github.com/bigcapital/bigcapital.git && cd bigcaptial
-```
 
 - Install all npm dependencies of the monorepo, you don't have to change directory to the `frontend` package. just hit that command and will install all packages across all application.
 
