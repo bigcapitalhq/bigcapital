@@ -1,13 +1,43 @@
-// @ts-nocheck
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 import { FMultiSelect } from '../Forms';
 import { accountPredicate } from './_components';
-import { MenuItemNestedText } from '../Menu';
 import { usePreprocessingAccounts } from './_hooks';
+import { DialogsName } from '@/constants/dialogs';
+import { useDialogActions } from '@/hooks/state/dashboard';
+import { SelectOptionProps } from '@blueprintjs-formik/select';
+
+interface Account {
+  id: number;
+  name: string;
+  code: string;
+  account_level: number;
+  account_type?: string;
+  account_parent_type?: string;
+  account_root_type?: string;
+  account_normal?: string;
+}
+
+interface AccountSelect extends Account, SelectOptionProps { }
+
+type MultiSelectProps = React.ComponentProps<typeof FMultiSelect>;
+
+interface AccountsMultiSelectProps extends Omit<MultiSelectProps, 'items'> {
+  items: AccountSelect[];
+  allowCreate?: boolean;
+  filterByRootTypes?: string[];
+  filterByParentTypes?: string[];
+  filterByTypes?: string[];
+  filterByNormal?: string[];
+}
 
 // Create new account renderer.
-const createNewItemRenderer = (query, active, handleClick) => {
+const createNewItemRenderer = (
+  query: string,
+  active: boolean,
+  handleClick: (event: React.MouseEvent<HTMLElement>) => void,
+): React.ReactElement => {
   return (
     <MenuItem
       icon="add"
@@ -18,32 +48,12 @@ const createNewItemRenderer = (query, active, handleClick) => {
   );
 };
 
-/**
- * Default account item renderer of the list.
- * @returns {JSX.Element}
- */
-const accountRenderer = (
-  item,
-  { handleClick, modifiers, query },
-  { isSelected },
-) => {
-  if (!modifiers.matchesPredicate) {
-    return null;
-  }
-  return (
-    <MenuItem
-      active={modifiers.active}
-      disabled={modifiers.disabled}
-      text={<MenuItemNestedText level={item.account_level} text={item.name} />}
-      key={item.id}
-      onClick={handleClick}
-      icon={isSelected ? 'tick' : 'blank'}
-    />
-  );
-};
-
 // Create new item from the given query string.
-const createNewItemFromQuery = (name) => ({ name });
+const createNewItemFromQuery = (query: string): SelectOptionProps => ({
+  label: query,
+  value: query,
+  id: 0,
+});
 
 /**
  * Accounts multi-select field binded with Formik form.
@@ -59,27 +69,32 @@ export function AccountsMultiSelect({
   filterByNormal,
 
   ...rest
-}) {
+}: AccountsMultiSelectProps): React.ReactElement {
+  const { openDialog } = useDialogActions();
+
   // Filters accounts based on filter props.
   const filteredAccounts = usePreprocessingAccounts(items, {
-    filterByParentTypes,
-    filterByTypes,
-    filterByNormal,
-    filterByRootTypes,
+    filterByParentTypes: filterByParentTypes || [],
+    filterByTypes: filterByTypes || [],
+    filterByNormal: filterByNormal || [],
+    filterByRootTypes: filterByRootTypes || [],
   });
   // Maybe inject new item props to select component.
-  const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
+  const maybeCreateNewItemRenderer = allowCreate
+    ? createNewItemRenderer
+    : undefined;
   const maybeCreateNewItemFromQuery = allowCreate
     ? createNewItemFromQuery
-    : null;
+    : undefined;
 
   // Handles the create item click.
-  const handleCreateItemClick = () => {
+  const handleCreateItemClick = (): void => {
     openDialog(DialogsName.AccountForm);
   };
 
   return (
-    <FMultiSelect
+    <FMultiSelect<AccountSelect>
+      {...rest}
       items={filteredAccounts}
       valueAccessor={'id'}
       textAccessor={'name'}
@@ -87,11 +102,9 @@ export function AccountsMultiSelect({
       tagAccessor={'name'}
       popoverProps={{ minimal: true }}
       itemPredicate={accountPredicate}
-      itemRenderer={accountRenderer}
       createNewItemRenderer={maybeCreateNewItemRenderer}
       createNewItemFromQuery={maybeCreateNewItemFromQuery}
       onCreateItemSelect={handleCreateItemClick}
-      {...rest}
     />
   );
 }
