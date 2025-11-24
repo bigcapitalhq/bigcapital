@@ -1,25 +1,25 @@
-import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import BodyClassName from 'react-body-classname';
-import { PaymentPortal } from './PaymentPortal';
-import { PaymentPortalBoot, usePaymentPortalBoot } from './PaymentPortalBoot';
-import { PaymentInvoicePreviewDrawer } from './drawers/PaymentInvoicePreviewDrawer/PaymentInvoicePreviewDrawer';
-import { DRAWERS } from '@/constants/drawers';
 import styles from './PaymentPortal.module.scss';
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { hsl, lighten, parseToHsl } from 'polished';
+import { Box } from '@/components';
+import { usePaymentPortalBoot } from './PaymentPortalBoot';
 
-export default function PaymentPortalPage() {
-  const { linkId } = useParams<{ linkId: string }>();
-
+export default function PaymentPortalPage({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <BodyClassName className={styles.rootBodyPage}>
-      <PaymentPortalBoot linkId={linkId}>
+      <>
         <PaymentPortalHelmet />
         <PaymentPortalCssVariables />
-        <PaymentPortal />
-        <PaymentInvoicePreviewDrawer name={DRAWERS.PAYMENT_INVOICE_PREVIEW} />
-      </PaymentPortalBoot>
+        <Box className={styles.root} my={'40px'} mx={'auto'}>
+          {children}
+        </Box>
+      </>
     </BodyClassName>
   );
 }

@@ -32,8 +32,11 @@ const RegisterVerify = lazy(
 const OneClickDemoPage = lazy(
   () => import('@/containers/OneClickDemo/OneClickDemoPage'),
 );
-const PaymentPortalPage = lazy(
-  () => import('@/containers/PaymentPortal/PaymentPortalPage'),
+const PaymentInvoicePage = lazy(
+  () => import('@/containers/PaymentPortal/PaymentInvoicePage'),
+);
+const PaymentSuccessPage = lazy(
+  () => import('@/containers/PaymentPortal/PaymentSuccessPage'),
 );
 
 /**
@@ -61,8 +64,12 @@ function AppInsider({ history }) {
               />
               <Route path={'/auth'} children={<AuthenticationPage />} />
               <Route
+                path={'/payment/:linkId/success/:stripeSessionId'}
+                children={<PaymentSuccessPage />}
+              />
+              <Route
                 path={'/payment/:linkId'}
-                children={<PaymentPortalPage />}
+                children={<PaymentInvoicePage />}
               />
               <Route path={'/'} children={<DashboardPrivatePages />} />
             </Switch>
