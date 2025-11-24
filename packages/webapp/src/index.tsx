@@ -1,4 +1,5 @@
 // @ts-nocheck
+import 'regenerator-runtime/runtime';
 import './wdyr';
 import React from 'react';
 import ReactDOM from 'react-dom';
