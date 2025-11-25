@@ -318,7 +318,7 @@ export class SaleEstimatesController {
     @Res({ passthrough: true }) res: Response,
   ) {
     if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
-      const pdfContent =
+      const [pdfContent] =
         await this.saleEstimatesApplication.getSaleEstimatePdf(estimateId);
 
       res.set({

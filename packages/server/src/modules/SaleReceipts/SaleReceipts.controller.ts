@@ -74,9 +74,7 @@ export class SaleReceiptsController {
     status: 200,
     description: 'Sale receipts deleted successfully',
   })
-  bulkDeleteSaleReceipts(
-    @Body() bulkDeleteDto: BulkDeleteDto,
-  ): Promise<void> {
+  bulkDeleteSaleReceipts(@Body() bulkDeleteDto: BulkDeleteDto): Promise<void> {
     return this.saleReceiptApplication.bulkDeleteSaleReceipts(
       bulkDeleteDto.ids,
       { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
@@ -165,7 +163,7 @@ export class SaleReceiptsController {
     @Res({ passthrough: true }) res: Response,
   ) {
     if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
-      const pdfContent =
+      const [pdfContent] =
         await this.saleReceiptApplication.getSaleReceiptPdf(id);
 
       res.set({

@@ -26,7 +26,7 @@ export class GetSaleEstimatePdf {
 
     @Inject(SaleEstimate.name)
     private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
-  ) {}
+  ) { }
 
   /**
    * Retrieve sale estimate html content.
@@ -50,9 +50,9 @@ export class GetSaleEstimatePdf {
 
     // Retrieves the sale estimate html.
     const htmlContent = await this.saleEstimateHtml(saleEstimateId);
-
-    const content =
+    const buffer =
       await this.chromiumlyTenancy.convertHtmlContent(htmlContent);
+
     const eventPayload = { saleEstimateId };
 
     // Triggers the `onSaleEstimatePdfViewed` event.
@@ -60,7 +60,7 @@ export class GetSaleEstimatePdf {
       events.saleEstimate.onPdfViewed,
       eventPayload,
     );
-    return [content, filename];
+    return [buffer, filename];
   }
 
   /**

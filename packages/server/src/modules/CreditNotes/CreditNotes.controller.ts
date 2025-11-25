@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import {
   ApiTags,
   ApiOperation,
@@ -11,10 +12,12 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import { CreditNoteApplication } from './CreditNoteApplication.service';
 import { ICreditNotesQueryDTO } from './types/CreditNotes.types';
@@ -26,6 +29,7 @@ import {
   BulkDeleteDto,
   ValidateBulkDeleteResponseDto,
 } from '@/common/dtos/BulkDelete.dto';
+import { AcceptType } from '@/constants/accept-type';
 
 @Controller('credit-notes')
 @ApiTags('Credit Notes')
@@ -65,8 +69,26 @@ export class CreditNotesController {
     },
   })
   @ApiResponse({ status: 404, description: 'Credit note not found' })
-  getCreditNote(@Param('id') creditNoteId: number) {
-    return this.creditNoteApplication.getCreditNote(creditNoteId);
+  async getCreditNote(
+    @Param('id') creditNoteId: number,
+    @Headers('accept') acceptHeader: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+      const [pdfContent, filename] =
+        await this.creditNoteApplication.getCreditNotePdf(creditNoteId);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      });
+      res.status(200).send(pdfContent);
+    } else {
+      const creditNote =
+        await this.creditNoteApplication.getCreditNote(creditNoteId);
+      return creditNote;
+    }
   }
 
   @Get()
@@ -144,13 +166,10 @@ export class CreditNotesController {
     status: 200,
     description: 'Credit notes deleted successfully',
   })
-  bulkDeleteCreditNotes(
-    @Body() bulkDeleteDto: BulkDeleteDto,
-  ): Promise<void> {
-    return this.creditNoteApplication.bulkDeleteCreditNotes(
-      bulkDeleteDto.ids,
-      { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
-    );
+  bulkDeleteCreditNotes(@Body() bulkDeleteDto: BulkDeleteDto): Promise<void> {
+    return this.creditNoteApplication.bulkDeleteCreditNotes(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
   }
 
   @Delete(':id')

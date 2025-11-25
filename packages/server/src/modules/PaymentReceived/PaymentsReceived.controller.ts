@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -17,6 +18,7 @@ import {
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
 import {
@@ -225,11 +227,18 @@ export class PaymentReceivesController {
   public async getPaymentReceive(
     @Param('id', ParseIntPipe) paymentReceiveId: number,
     @Headers('accept') acceptHeader: string,
+    @Res({ passthrough: true }) res: Response,
   ) {
     if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
-      return this.paymentReceivesApplication.getPaymentReceivePdf(
+      const [pdfContent, filename] = await this.paymentReceivesApplication.getPaymentReceivePdf(
         paymentReceiveId,
       );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      });
+      res.send(pdfContent);
     } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
       const htmlContent =
         await this.paymentReceivesApplication.getPaymentReceivedHtml(
