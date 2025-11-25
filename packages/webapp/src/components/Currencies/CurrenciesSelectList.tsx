@@ -6,10 +6,14 @@ import { Select } from '@blueprintjs/select';
 export function CurrenciesSelectList({ selectProps, onItemSelect, className }) {
   const currencies = [
     {
+      id: 'USD',
+      code: 'USD',
       name: 'USD US dollars',
-      key: 'USD',
+    },
+    {
+      id: 'CAD',
+      code: 'CAD',
       name: 'CAD Canadian dollars',
-      key: 'CAD',
     },
   ];
 

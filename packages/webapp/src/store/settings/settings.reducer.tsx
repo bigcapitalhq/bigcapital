@@ -63,9 +63,6 @@ const initialState = {
       tableSize: 'small',
     },
     projectTasks: {
-      tableSize: 'small',
-    },
-    projectTasks: {
       tableSize: 'medium',
     },
   },

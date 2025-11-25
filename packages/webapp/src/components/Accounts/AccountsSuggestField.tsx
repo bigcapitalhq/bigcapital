@@ -1,17 +1,19 @@
 // @ts-nocheck
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { MenuItem } from '@blueprintjs/core';
-import { Suggest } from '@blueprintjs/select';
 
 import { CLASSES } from '@/constants/classes';
 import { DialogsName } from '@/constants/dialogs';
 
-import { MenuItemNestedText, FormattedMessage as T } from '@/components';
+import {
+  FSuggest,
+  MenuItemNestedText,
+  FormattedMessage as T,
+} from '@/components';
 import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
-
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 // Create new account renderer.
@@ -28,17 +30,7 @@ const createNewItemRenderer = (query, active, handleClick) => {
 
 // Create new item from the given query string.
 const createNewItemFromQuery = (name) => {
-  return {
-    name,
-  };
-};
-
-// Handle input value renderer.
-const handleInputValueRenderer = (inputValue) => {
-  if (inputValue) {
-    return inputValue.name.toString();
-  }
-  return '';
+  return { name };
 };
 
 // Filters accounts items.
@@ -62,11 +54,7 @@ function AccountsSuggestFieldRoot({
 
   // #ownProps
   accounts,
-  initialAccountId,
-  selectedAccountId,
   defaultSelectText = intl.formatMessage({ id: 'select_account' }),
-  popoverFill = false,
-  onAccountSelected,
 
   filterByParentTypes = [],
   filterByTypes = [],
@@ -81,67 +69,30 @@ function AccountsSuggestFieldRoot({
     () => nestedArrayToflatten(accounts),
     [accounts],
   );
-
-  // Filters accounts based on filter props.
-  const filteredAccounts = useMemo(() => {
-    let filteredAccounts = filterAccountsByQuery(flattenAccounts, {
-      filterByRootTypes,
+  const filteredAccounts = useMemo(
+    () =>
+      filterAccountsByQuery(flattenAccounts, {
+        filterByParentTypes,
+        filterByTypes,
+        filterByNormal,
+        filterByRootTypes,
+      }),
+    [
+      flattenAccounts,
       filterByParentTypes,
       filterByTypes,
       filterByNormal,
-    });
-    return filteredAccounts;
-  }, [
-    flattenAccounts,
-    filterByRootTypes,
-    filterByParentTypes,
-    filterByTypes,
-    filterByNormal,
-  ]);
-
-  // Find initial account object to set it as default account in initial render.
-  const initialAccount = useMemo(
-    () => filteredAccounts.find((a) => a.id === initialAccountId),
-    [initialAccountId, filteredAccounts],
+      filterByRootTypes,
+    ],
   );
-
-  const [selectedAccount, setSelectedAccount] = useState(
-    initialAccount || null,
-  );
-
-  useEffect(() => {
-    if (typeof selectedAccountId !== 'undefined') {
-      const account = selectedAccountId
-        ? filteredAccounts.find((a) => a.id === selectedAccountId)
-        : null;
-      setSelectedAccount(account);
-    }
-  }, [selectedAccountId, filteredAccounts, setSelectedAccount]);
-
-  // Account item of select accounts field.
-  const accountItem = useCallback((item, { handleClick, modifiers, query }) => {
-    return (
-      <MenuItem
-        text={<MenuItemNestedText level={item.level} text={item.name} />}
-        label={item.code}
-        key={item.id}
-        onClick={handleClick}
-      />
-    );
-  }, []);
-
-  const handleAccountSelect = useCallback(
-    (account) => {
-      if (account.id) {
-        setSelectedAccount({ ...account });
-        onAccountSelected && onAccountSelected(account);
-      } else {
+  const handleCreateItemSelect = useCallback(
+    (item) => {
+      if (!item.id) {
         openDialog(DialogsName.AccountForm);
       }
     },
-    [setSelectedAccount, onAccountSelected, openDialog],
+    [openDialog],
   );
-
   // Maybe inject new item props to select component.
   const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
   const maybeCreateNewItemFromQuery = allowCreate
@@ -149,21 +100,15 @@ function AccountsSuggestFieldRoot({
     : null;
 
   return (
-    <Suggest
+    <FSuggest
       items={filteredAccounts}
-      noResults={<MenuItem disabled={true} text={<T id={'no_accounts'} />} />}
-      itemRenderer={accountItem}
-      itemPredicate={filterAccountsPredicater}
-      onItemSelect={handleAccountSelect}
-      selectedItem={selectedAccount}
+      onCreateItemSelect={handleCreateItemSelect}
+      valueAccessor="id"
+      textAccessor="name"
+      labelAccessor="code"
       inputProps={{ placeholder: defaultSelectText }}
-      resetOnClose={true}
-      fill={true}
+      resetOnClose
       popoverProps={{ minimal: true, boundary: 'window' }}
-      inputValueRenderer={handleInputValueRenderer}
-      className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, {
-        [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
-      })}
       createNewItemRenderer={maybeCreateNewItemRenderer}
       createNewItemFromQuery={maybeCreateNewItemFromQuery}
       {...suggestProps}

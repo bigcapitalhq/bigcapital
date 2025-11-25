@@ -5,17 +5,9 @@ import intl from 'react-intl-universal';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { useAutofocus } from '@/hooks';
 import { isEqual } from 'lodash';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  TextArea,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { Classes, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { CLASSES, Features, ACCOUNT_TYPE } from '@/constants';
-import { DateInput } from '@blueprintjs/datetime';
 import {
   Row,
   Col,
@@ -30,17 +22,15 @@ import {
   ExchangeRateMutedField,
   BranchSelect,
   BranchSelectButton,
+  FFormGroup,
+  FInputGroup,
+  FTextArea,
+  FDateInput,
+  FMoneyInputGroup,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  compose,
-} from '@/utils';
+import { momentFormatter, compose } from '@/utils';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
-
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import withSettings from '@/containers/Settings/withSettings';
 
@@ -68,95 +58,57 @@ function QuickPaymentReceiveFormFields({
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FormGroup
-              label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
+            <FFormGroup name={'branch_id'} label={<T id={'branch'} />}>
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
                 input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
-            </FormGroup>
+            </FFormGroup>
           </Col>
         </Row>
         <BranchRowDivider />
       </FeatureCan>
+
       <Row>
         <Col xs={5}>
           {/* ------------- Customer name ------------- */}
-          <FastField name={'customer_id'}>
-            {({ from, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'customer_name'} />}
-                className={classNames('form-group--select-list', CLASSES.FILL)}
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'customer_id'} />}
-              >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  minimal={true}
-                  disabled={true}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'customer_id'}
+            label={<T id={'customer_name'} />}
+            labelInfo={<FieldRequiredHint />}
+          >
+            <FInputGroup name={'customer_id'} minimal={true} disabled={true} />
+          </FFormGroup>
         </Col>
+
         <Col xs={5}>
           {/* ------------ Payment receive no. ------------ */}
-          <FastField name={'payment_receive_no'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'payment_no'} />}
-                labelInfo={<FieldRequiredHint />}
-                className={('form-group--payment_receive_no', CLASSES.FILL)}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="payment_receive_no" />}
-              >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  minimal={true}
-                  {...field}
-                  disabled={paymentReceiveAutoIncrement}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'payment_receive_no'}
+            label={<T id={'payment_no'} />}
+          >
+            <FInputGroup
+              name={'payment_receive_no'}
+              minimal={true}
+              disabled={paymentReceiveAutoIncrement}
+            />
+          </FFormGroup>
         </Col>
       </Row>
       {/*------------ Amount Received -----------*/}
-      <FastField name={'amount'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={<T id={'amount_received'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--payment_amount', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="amount" />}
-          >
-            <ControlGroup>
-              <InputPrependText text={values.currency_code} />
 
-              <MoneyInputGroup
-                value={value}
-                minimal={true}
-                onChange={(amount) => {
-                  setFieldValue('amount', amount);
-                }}
-                intent={inputIntent({ error, touched })}
-                inputRef={(ref) => (paymentReceiveFieldRef.current = ref)}
-              />
-            </ControlGroup>
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'amount'} label={<T id={'amount_received'} />}>
+        <ControlGroup>
+          <InputPrependText text={values.currency_code} />
+          <FMoneyInputGroup
+            name={'amount'}
+            minimal={true}
+            inputRef={(ref) => (paymentReceiveFieldRef.current = ref)}
+          />
+        </ControlGroup>
+      </FFormGroup>
 
       <If condition={!isEqual(base_currency, values.currency_code)}>
         {/*------------ exchange rate -----------*/}
@@ -173,94 +125,53 @@ function QuickPaymentReceiveFormFields({
       <Row>
         <Col xs={5}>
           {/* ------------- Payment date ------------- */}
-          <FastField name={'payment_date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'payment_date'} />}
-                labelInfo={<FieldRequiredHint />}
-                className={classNames('form-group--select-list', CLASSES.FILL)}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="payment_date" />}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('payment_date', formattedDate);
-                  })}
-                  popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                  inputProps={{
-                    leftIcon: <Icon icon={'date-range'} />,
-                  }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup name={'payment_date'} label={<T id={'payment_date'} />}>
+            <FDateInput
+              {...momentFormatter('YYYY/MM/DD')}
+              name={'payment_date'}
+              popoverProps={{ position: Position.BOTTOM, minimal: true }}
+              inputProps={{
+                leftIcon: <Icon icon={'date-range'} />,
+              }}
+            />
+          </FFormGroup>
         </Col>
+
         <Col xs={5}>
           {/* ------------ Deposit account ------------ */}
-          <FastField name={'deposit_account_id'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'deposit_to'} />}
-                className={classNames(
-                  'form-group--deposit_account_id',
-                  'form-group--select-list',
-                  CLASSES.FILL,
-                )}
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'deposit_account_id'} />}
-              >
-                <AccountsSuggestField
-                  selectedAccountId={value}
-                  accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('deposit_account_id', id)
-                  }
-                  inputProps={{
-                    placeholder: intl.get('select_account'),
-                  }}
-                  filterByTypes={[
-                    ACCOUNT_TYPE.CASH,
-                    ACCOUNT_TYPE.BANK,
-                    ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-                  ]}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'deposit_account_id'}
+            label={<T id={'deposit_to'} />}
+          >
+            <AccountsSuggestField
+              name={'deposit_account_id'}
+              accounts={accounts}
+              inputProps={{
+                placeholder: intl.get('select_account'),
+              }}
+              filterByTypes={[
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
+              ]}
+            />
+          </FFormGroup>
         </Col>
       </Row>
+
       {/* ------------ Reference No. ------------ */}
-      <FastField name={'reference_no'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference'} />}
-            className={classNames('form-group--reference', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference" />}
-          >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup label={<T id={'reference'} />} name={'reference_no'}>
+        <FInputGroup name={'reference_no'} minimal={true} />
+      </FFormGroup>
 
       {/* --------- Statement --------- */}
-      <FastField name={'statement'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'statement'} />}
-            className={'form-group--statement'}
-          >
-            <TextArea growVertically={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'statement'}
+        label={<T id={'statement'} />}
+        className={'form-group--statement'}
+      >
+        <FTextArea name={'statement'} growVertically={true} />
+      </FFormGroup>
     </div>
   );
 }
@@ -276,4 +187,8 @@ export const BranchRowDivider = styled.div`
   height: 1px;
   background: #ebf1f6;
   margin-bottom: 15px;
+
+  .bp4-dark & {
+    background: rgba(255, 255, 255, 0.1);
+  }
 `;

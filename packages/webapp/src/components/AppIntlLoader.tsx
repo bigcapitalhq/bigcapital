@@ -36,15 +36,19 @@ function getCurrentLocal() {
 /**
  * Loads the localization data of the given locale.
  */
-function loadLocales(currentLocale) {
-  return import(`../lang/${currentLocale}/index.json`);
+async function loadLocales(currentLocale) {
+  return await import(`../lang/${currentLocale}/index.json`).then(
+    (module) => module.default,
+  );
 }
 
 /**
  * Loads the localization data of yup validation library.
  */
-function loadYupLocales(currentLocale) {
-  return import(`../lang/${currentLocale}/locale`);
+async function loadYupLocales(currentLocale) {
+  return await import(`../lang/${currentLocale}/locale.tsx`).then(
+    (module) => module.locale,
+  );
 }
 
 /**
@@ -109,11 +113,11 @@ function useAppYupLoadLocales(currentLocale) {
 
   React.useEffect(() => {
     loadYupLocales(currentLocale)
-      .then(({ locale }) => {
-        setLocale(locale);
+      .then((results) => {
+        setLocale(results);
         setIsLoading(false);
       })
-      .then(() => {});
+      .then(() => { });
   }, [currentLocale, stopLoading]);
 
   // Watches the valiue to start/stop splash screen.

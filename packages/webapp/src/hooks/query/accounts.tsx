@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import t from './types';
+import { transformToCamelCase } from '@/utils';
 
 // Transform the account.
 const transformAccount = (response) => {
@@ -187,7 +188,9 @@ export function useValidateBulkDeleteAccounts(props) {
 
   return useMutation(
     (ids: number[]) =>
-      apiRequest.post('accounts/validate-bulk-delete', { ids }),
+      apiRequest
+        .post('accounts/validate-bulk-delete', { ids })
+        .then((res) => transformToCamelCase(res.data)),
     {
       ...props,
     },
