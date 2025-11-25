@@ -1,7 +1,7 @@
 {
   "installCommand": "pnpm install",
   "buildCommand": "CI='' pnpm run build:webapp",
-  "outputDirectory": "packages/webapp/build",
+  "outputDirectory": "packages/webapp/dist",
   "rewrites": [{
       "source": "/api/:slug*",
       "destination": "https://dev.bigcapital.ly/api/:slug*"

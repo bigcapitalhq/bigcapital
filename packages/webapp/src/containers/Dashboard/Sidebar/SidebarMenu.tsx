@@ -56,7 +56,7 @@ export function SidebarMenu({ menu }) {
     <div>
       <Menu className="sidebar-menu">
         {menu.map((item, index) => (
-          <SidebarMenuItemComposer index={index} item={item} />
+          <SidebarMenuItemComposer key={index} index={index} item={item} />
         ))}
       </Menu>
     </div>

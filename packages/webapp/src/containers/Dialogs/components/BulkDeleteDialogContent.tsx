@@ -34,12 +34,9 @@ function BulkDeleteDialogContent({
         </Tag>
         <x.div>
           <T
-            id={'bulk_delete_delete_row_prefix'}
+            id={'bulk_delete_will_be_deleted'}
             values={{ resourceSingular: resourceSingularLabel }}
           />{' '}
-          <x.span fontWeight="semibold" color="danger">
-            <T id={'bulk_delete_delete_row_status'} />
-          </x.span>
         </x.div>
       </x.div>
 
@@ -49,12 +46,9 @@ function BulkDeleteDialogContent({
         </Tag>
         <x.div>
           <T
-            id={'bulk_delete_archive_row_prefix'}
+            id={'bulk_delete_cannot_be_deleted'}
             values={{ resourceSingular: resourceSingularLabel }}
           />{' '}
-          <x.span fontWeight="semibold" color="info">
-            <T id={'bulk_delete_archive_row_status'} />
-          </x.span>
         </x.div>
       </x.div>
 

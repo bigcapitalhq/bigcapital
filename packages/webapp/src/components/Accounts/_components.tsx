@@ -1,7 +1,14 @@
 // @ts-nocheck
 
+import { AccountSelect } from "./AccountsMultiSelect";
+
 // Filters accounts items.
-export const accountPredicate = (query, account, _index, exactMatch) => {
+export const accountPredicate = (
+  query: string,
+  account: AccountSelect,
+  _index?: number,
+  exactMatch?: boolean,
+) => {
   const normalizedTitle = account.name.toLowerCase();
   const normalizedQuery = query.toLowerCase();
 
