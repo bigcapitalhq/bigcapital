@@ -28,7 +28,6 @@ export class ItemEntryDto {
   })
   itemId: number;
 
-  @IsOptional()
   @IsNotEmpty()
   @ToNumber()
   @IsNumber()
@@ -38,7 +37,6 @@ export class ItemEntryDto {
   })
   rate: number;
 
-  @IsOptional()
   @IsNotEmpty()
   @ToNumber()
   @IsNumber()
