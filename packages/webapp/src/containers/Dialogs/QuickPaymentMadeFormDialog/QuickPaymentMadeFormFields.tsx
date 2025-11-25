@@ -58,10 +58,7 @@ function QuickPaymentMadeFormFields({
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup
-              label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
+            <FFormGroup label={<T id={'branch'} />} name={'branch_id'}>
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
@@ -91,15 +88,9 @@ function QuickPaymentMadeFormFields({
       </Row>
 
       {/*------------ Amount Received -----------*/}
-      <FFormGroup
-        name={'amount'}
-        label={<T id={'amount_received'} />}
-        labelInfo={<FieldRequiredHint />}
-        className={classNames('form-group--payment_amount', CLASSES.FILL)}
-      >
+      <FFormGroup name={'amount'} label={<T id={'amount_received'} />}>
         <ControlGroup>
           <InputPrependText text={values.currency_code} />
-
           <FMoneyInputGroup
             name={'amount'}
             minimal={true}
@@ -130,8 +121,8 @@ function QuickPaymentMadeFormFields({
             className={classNames('form-group--select-list', CLASSES.FILL)}
           >
             <FDateInput
-              {...momentFormatter('YYYY/MM/DD')}
               name={'payment_date'}
+              {...momentFormatter('YYYY/MM/DD')}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,
@@ -139,6 +130,7 @@ function QuickPaymentMadeFormFields({
             />
           </FFormGroup>
         </Col>
+
         <Col xs={5}>
           {/* ------------ payment account ------------ */}
           <FFormGroup
@@ -146,10 +138,8 @@ function QuickPaymentMadeFormFields({
             label={<T id={'payment_account'} />}
           >
             <AccountsSuggestField
+              name={'payment_account_id'}
               accounts={accounts}
-              onAccountSelected={({ id }) =>
-                form.setFieldValue('payment_account_id', id)
-              }
               inputProps={{
                 placeholder: intl.get('select_account'),
               }}
@@ -164,21 +154,13 @@ function QuickPaymentMadeFormFields({
       </Row>
 
       {/* ------------ Reference No. ------------ */}
-      <FFormGroup
-        name={'reference'}
-        label={<T id={'reference'} />}
-        className={classNames('form-group--reference', CLASSES.FILL)}
-      >
+      <FFormGroup name={'reference'} label={<T id={'reference'} />}>
         <FInputGroup name={'reference'} minimal={true} />
       </FFormGroup>
 
       {/* --------- Statement --------- */}
-      <FFormGroup
-        name={'statement'}
-        label={<T id={'statement'} />}
-        className={'form-group--statement'}
-      >
-        <FTextArea name={'statement'} growVertically={true} />
+      <FFormGroup name={'statement'} label={<T id={'statement'} />}>
+        <FTextArea name={'statement'} growVertically={true} fill={true} />
       </FFormGroup>
     </div>
   );
@@ -190,4 +172,8 @@ export const BranchRowDivider = styled.div`
   height: 1px;
   background: #ebf1f6;
   margin-bottom: 15px;
+
+  .bp4-dark &{
+    background: rgba(255, 255, 255, 0.1);
+  }
 `;

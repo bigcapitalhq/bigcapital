@@ -26,17 +26,11 @@ import {
   FInputGroup,
   FTextArea,
   FDateInput,
+  FMoneyInputGroup,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  compose,
-} from '@/utils';
+import { momentFormatter, compose } from '@/utils';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
-
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import withSettings from '@/containers/Settings/withSettings';
 
@@ -64,10 +58,7 @@ function QuickPaymentReceiveFormFields({
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup
-              label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
+            <FFormGroup name={'branch_id'} label={<T id={'branch'} />}>
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
@@ -108,20 +99,16 @@ function QuickPaymentReceiveFormFields({
       </Row>
       {/*------------ Amount Received -----------*/}
 
-      {/* <FFormGroup name={'amount'} label={<T id={'amount_received'} />}>
+      <FFormGroup name={'amount'} label={<T id={'amount_received'} />}>
         <ControlGroup>
           <InputPrependText text={values.currency_code} />
-          <MoneyInputGroup
-            value={value}
+          <FMoneyInputGroup
+            name={'amount'}
             minimal={true}
-            onChange={(amount) => {
-              setFieldValue('amount', amount);
-            }}
-            intent={inputIntent({ error, touched })}
             inputRef={(ref) => (paymentReceiveFieldRef.current = ref)}
           />
         </ControlGroup>
-      </FFormGroup> */}
+      </FFormGroup>
 
       <If condition={!isEqual(base_currency, values.currency_code)}>
         {/*------------ exchange rate -----------*/}
@@ -152,7 +139,7 @@ function QuickPaymentReceiveFormFields({
 
         <Col xs={5}>
           {/* ------------ Deposit account ------------ */}
-          {/* <FFormGroup
+          <FFormGroup
             name={'deposit_account_id'}
             label={<T id={'deposit_to'} />}
           >
@@ -168,7 +155,7 @@ function QuickPaymentReceiveFormFields({
                 ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
               ]}
             />
-          </FFormGroup> */}
+          </FFormGroup>
         </Col>
       </Row>
 
@@ -200,4 +187,8 @@ export const BranchRowDivider = styled.div`
   height: 1px;
   background: #ebf1f6;
   margin-bottom: 15px;
+
+  .bp4-dark & {
+    background: rgba(255, 255, 255, 0.1);
+  }
 `;

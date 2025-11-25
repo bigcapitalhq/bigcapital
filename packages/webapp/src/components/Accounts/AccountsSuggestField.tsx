@@ -14,7 +14,6 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
-
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 // Create new account renderer.
@@ -31,9 +30,7 @@ const createNewItemRenderer = (query, active, handleClick) => {
 
 // Create new item from the given query string.
 const createNewItemFromQuery = (name) => {
-  return {
-    name,
-  };
+  return { name };
 };
 
 // Filters accounts items.
@@ -71,6 +68,22 @@ function AccountsSuggestFieldRoot({
   const flattenAccounts = useMemo(
     () => nestedArrayToflatten(accounts),
     [accounts],
+  );
+  const filteredAccounts = useMemo(
+    () =>
+      filterAccountsByQuery(flattenAccounts, {
+        filterByParentTypes,
+        filterByTypes,
+        filterByNormal,
+        filterByRootTypes,
+      }),
+    [
+      flattenAccounts,
+      filterByParentTypes,
+      filterByTypes,
+      filterByNormal,
+      filterByRootTypes,
+    ],
   );
   const handleCreateItemSelect = useCallback(
     (item) => {

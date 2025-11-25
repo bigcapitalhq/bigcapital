@@ -19,7 +19,7 @@ interface Account {
   account_normal?: string;
 }
 
-interface AccountSelect extends Account, SelectOptionProps { }
+export interface AccountSelect extends Partial<Account>, SelectOptionProps { }
 
 type MultiSelectProps = React.ComponentProps<typeof FMultiSelect>;
 
@@ -49,10 +49,13 @@ const createNewItemRenderer = (
 };
 
 // Create new item from the given query string.
-const createNewItemFromQuery = (query: string): SelectOptionProps => ({
+const createNewItemFromQuery = (query: string): AccountSelect => ({
   label: query,
   value: query,
+  text: query,
   id: 0,
+  name: query,
+  code: query,
 });
 
 /**

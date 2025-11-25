@@ -1,4 +1,3 @@
-// @ts-nocheck
 import react from '@vitejs/plugin-react';
 import legacy from '@vitejs/plugin-legacy';
 import path from 'node:path';
@@ -62,7 +61,7 @@ export default defineConfig(({ mode }) => {
     },
     optimizeDeps: {
       esbuildOptions: {
-        plugins: [fixReactVirtualized],
+        plugins: [fixReactVirtualized as any],
       },
     },
   };
