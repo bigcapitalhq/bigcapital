@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { PdfTemplateApplication } from './PdfTemplate.application';
 import { ICreateInvoicePdfTemplateDTO, IEditPdfTemplateDTO } from './types';
@@ -77,7 +78,7 @@ export class PdfTemplatesController {
     status: 200,
     description: 'The PDF templates have been successfully retrieved.',
   })
-  async getPdfTemplates(@Body('resource') resource: string) {
+  async getPdfTemplates(@Query('resource') resource?: string) {
     return this.pdfTemplateApplication.getPdfTemplates({ resource });
   }
 
