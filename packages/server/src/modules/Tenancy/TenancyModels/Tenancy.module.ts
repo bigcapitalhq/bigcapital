@@ -26,6 +26,7 @@ import { BillLandedCostEntry } from '@/modules/BillLandedCosts/models/BillLanded
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
+import { PaymentIntegration } from '@/modules/StripePayment/models/PaymentIntegration.model';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
 import { CreditNoteAppliedInvoice } from '@/modules/CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
 import { CreditNote } from '@/modules/CreditNotes/models/CreditNote';
@@ -75,6 +76,7 @@ const models = [
   VendorCredit,
   VendorCreditAppliedBill,
   RefundVendorCredit,
+  PaymentIntegration,
   PaymentReceived,
   PaymentReceivedEntry,
   TenantUser,
