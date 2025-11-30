@@ -15,10 +15,12 @@ export function FormTopbar({ className, children }) {
 const FormTopBarRoot = styled(Navbar)`
   --color-form-topbar-background: #fff;
   --color-form-topbar-border: #c7d5db;
+  --color-divider-color: #d2dce2;
 
   .bp4-dark & {
     --color-form-topbar-background: var(--color-dark-gray1);
     --color-form-topbar-border: rgba(255, 255, 255, 0.15);
+    --color-divider-color: rgba(255, 255, 255, 0.25);
   }
   height: 35px;
   padding: 0 20px;
@@ -34,7 +36,7 @@ const FormTopBarRoot = styled(Navbar)`
     height: 35px;
   }
   .bp4-navbar-divider {
-    border-left-color: #d2dce2;
+    border-left-color: var(--color-divider-color);
   }
   .bp4-skeleton {
     max-height: 10px;

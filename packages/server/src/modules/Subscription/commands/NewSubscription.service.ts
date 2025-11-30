@@ -15,7 +15,7 @@ export class NewSubscriptionService {
 
     @Inject(Plan.name)
     private readonly planModel: typeof Plan,
-  ) {}
+  ) { }
 
   /**
    * Give the tenant a new subscription.

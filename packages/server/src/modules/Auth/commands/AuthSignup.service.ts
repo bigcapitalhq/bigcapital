@@ -16,6 +16,7 @@ import {
 import { defaultTo } from 'ramda';
 import { ERRORS } from '../Auth.constants';
 import { hashPassword } from '../Auth.utils';
+import { ClsService } from 'nestjs-cls';
 
 @Injectable()
 export class AuthSignupService {
@@ -29,6 +30,7 @@ export class AuthSignupService {
     private readonly configService: ConfigService,
     private readonly eventEmitter: EventEmitter2,
     private readonly tenantsManager: TenantsManagerService,
+    private readonly clsService: ClsService,
 
     @Inject(SystemUser.name)
     private readonly systemUserModel: typeof SystemUser,
@@ -70,6 +72,11 @@ export class AuthSignupService {
       tenantId: tenant.id,
       inviteAcceptedAt,
     });
+    // Set the user in the cls service.
+    this.clsService.set('tenantId', user.tenantId);
+    this.clsService.set('userId', user.id);
+    this.clsService.set('organizationId', tenant.organizationId);
+
     // Triggers signed up event.
     await this.eventEmitter.emitAsync(events.auth.signUp, {
       signupDTO,

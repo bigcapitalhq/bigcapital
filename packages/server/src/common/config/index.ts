@@ -15,9 +15,11 @@ import mail from './mail';
 import loops from './loops';
 import bankfeed from './bankfeed';
 import throttle from './throttle';
+import cloud from './cloud';
 
 export const config = [
   systemDatabase,
+  cloud,
   tenantDatabase,
   signup,
   gotenberg,

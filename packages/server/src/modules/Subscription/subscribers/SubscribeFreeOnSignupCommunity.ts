@@ -9,7 +9,7 @@ export class SubscribeFreeOnSignupCommunity {
   constructor(
     private readonly subscriptionApp: SubscriptionApplication,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   /**
    * Creates a new free subscription once the user signup if the app is self-hosted.
@@ -18,8 +18,8 @@ export class SubscribeFreeOnSignupCommunity {
    */
   @OnEvent(events.auth.signUp)
   async subscribeFreeOnSigupCommunity({ signupDTO, tenant, user }) {
-    if (this.configService.get('hostedOnBigcapitalCloud')) return null;
+    if (this.configService.get('cloud.hostedOnCloud')) return null;
 
-    // await this.subscriptionApp.createNewSubscription('free');
+    await this.subscriptionApp.createNewSubscription('free');
   }
 }
