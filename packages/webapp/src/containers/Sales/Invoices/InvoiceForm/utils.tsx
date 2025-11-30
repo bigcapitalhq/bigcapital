@@ -243,7 +243,7 @@ const transformPaymentMethodsToRequest = (
   paymentMethods: Record<string, { enable: boolean }>,
 ): Array<{ payment_integration_id: string; enable: boolean }> => {
   return Object.entries(paymentMethods).map(([paymentMethodId, method]) => ({
-    payment_integration_id: paymentMethodId,
+    payment_integration_id: +paymentMethodId,
     enable: method.enable,
   }));
 };
