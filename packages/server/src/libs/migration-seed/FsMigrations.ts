@@ -11,6 +11,7 @@ class FsMigrations {
   private sortDirsSeparately: boolean;
   private migrationsPaths: string[];
   private loadExtensions: string[];
+  private seedsDirectory: string;
 
   /**
    * Constructor method.
@@ -30,6 +31,8 @@ class FsMigrations {
     }
     this.migrationsPaths = migrationDirectories;
     this.loadExtensions = loadExtensions || DEFAULT_LOAD_EXTENSIONS;
+    // Store the seeds directory (first path is the seeds directory)
+    this.seedsDirectory = migrationDirectories[0] || '';
   }
 
   /**
@@ -93,7 +96,10 @@ class FsMigrations {
    * @returns {string}
    */
   public getMigration(migration: MigrateItem): string {
-    return importWebpackSeedModule(migration.file.replace('.ts', ''));
+    return importWebpackSeedModule(
+      migration.file.replace('.ts', ''),
+      this.seedsDirectory,
+    );
   }
 }
 
