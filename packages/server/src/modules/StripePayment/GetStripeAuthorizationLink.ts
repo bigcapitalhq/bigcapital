@@ -7,7 +7,7 @@ export class GetStripeAuthorizationLinkService {
 
   public getStripeAuthLink() {
     const clientId = this.config.get('stripePayment.clientId');
-    const redirectUrl = this.config.get('stripePayment.redirectTo');
+    const redirectUrl = this.config.get('stripePayment.redirectUrl');
 
     const authorizationUri = `https://connect.stripe.com/oauth/v2/authorize?response_type=code&client_id=${clientId}&scope=read_write&redirect_uri=${redirectUrl}`;
 
