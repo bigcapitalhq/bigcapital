@@ -5,8 +5,8 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  RawBodyRequest,
   Req,
-  Res,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -42,13 +42,10 @@ export class StripePaymentWebhooksController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Listen to Stripe webhooks' })
   async handleWebhook(
-    @Req() req: Request,
-    @Res() res: Response,
+    @Req() req: RawBodyRequest<Request>,
     @Headers('stripe-signature') signature: string,
   ) {
-    console.log(signature, 'signature');
     try {
-      // @ts-ignore - rawBody is set by middleware
       const rawBody = req.rawBody || req.body;
       const webhooksSecret = this.configService.get(
         'stripePayment.webhooksSecret',
@@ -82,7 +79,6 @@ export class StripePaymentWebhooksController {
           HttpStatus.BAD_REQUEST,
         );
       }
-      console.log(event.type, 'event.type');
       // Handle the event based on its type
       switch (event.type) {
         case 'checkout.session.completed':
@@ -94,7 +90,6 @@ export class StripePaymentWebhooksController {
             } as StripeCheckoutSessionCompletedEventPayload,
           );
           break;
-
         case 'account.updated':
           // Triggers `onStripeAccountUpdated` event.
           await this.eventEmitter.emitAsync(
@@ -109,8 +104,7 @@ export class StripePaymentWebhooksController {
         default:
           console.log(`Unhandled event type ${event.type}`);
       }
-
-      return res.status(200).json({ received: true });
+      return { received: true };
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

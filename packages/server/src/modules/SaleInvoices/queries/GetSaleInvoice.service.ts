@@ -1,5 +1,6 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Inject, Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { SaleInvoiceTransformer } from './SaleInvoice.transformer';
@@ -17,7 +18,7 @@ export class GetSaleInvoice {
 
     @Inject(SaleInvoice.name)
     private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
-  ) {}
+  ) { }
 
   /**
    * Retrieve sale invoice with associated entries.
@@ -27,9 +28,10 @@ export class GetSaleInvoice {
    */
   public async getSaleInvoice(
     saleInvoiceId: number,
+    trx?: Knex.Transaction,
   ): Promise<SaleInvoiceResponseDto> {
     const saleInvoice = await this.saleInvoiceModel()
-      .query()
+      .query(trx)
       .findById(saleInvoiceId)
       .withGraphFetched('entries.item')
       .withGraphFetched('entries.tax')
