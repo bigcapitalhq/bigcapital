@@ -6,6 +6,7 @@ import { ExchangeStripeOAuthTokenService } from './ExchangeStripeOauthToken';
 import { SeedStripeAccountsOnOAuthGrantedSubscriber } from './subscribers/SeedStripeAccounts';
 import { StripeWebhooksSubscriber } from './subscribers/StripeWebhooksSubscriber';
 import { StripeIntegrationController } from './StripePayment.controller';
+import { StripePaymentWebhooksController } from './StripePaymentWebhooks.controller';
 import { StripePaymentService } from './StripePaymentService';
 import { GetStripeAuthorizationLinkService } from './GetStripeAuthorizationLink';
 import { AccountsModule } from '../Accounts/Accounts.module';
@@ -33,6 +34,6 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
     TenancyContext,
   ],
   exports: [StripePaymentService, GetStripeAuthorizationLinkService],
-  controllers: [StripeIntegrationController],
+  controllers: [StripeIntegrationController, StripePaymentWebhooksController],
 })
-export class StripePaymentModule {}
+export class StripePaymentModule { }
