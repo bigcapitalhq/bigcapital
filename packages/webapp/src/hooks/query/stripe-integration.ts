@@ -37,7 +37,7 @@ export const useCreateStripeAccountLink = (
   return useMutation(
     (values: StripeAccountLinkValues) => {
       return apiRequest
-        .post('/stripe_integration/account_link', {
+        .post('/stripe/account_link', {
           stripe_account_id: values?.stripeAccountId,
         })
         .then((res) => transformToCamelCase(res.data));
@@ -72,7 +72,7 @@ export const useCreateStripeAccountSession = (
   return useMutation(
     (values: AccountSessionValues) => {
       return apiRequest
-        .post('/stripe_integration/account_session', {
+        .post('/stripe/account_session', {
           account: values?.connectedAccountId,
         })
         .then((res) => res.data);
@@ -100,7 +100,7 @@ export const useCreateStripeAccount = (
   return useMutation(
     (values: CreateStripeAccountValues) => {
       return apiRequest
-        .post('/stripe_integration/account')
+        .post('/stripe/account')
         .then((res) => res.data);
     },
     { ...options },
@@ -131,7 +131,7 @@ export const useGetStripeAccountLink = (
     'getStripeAccountLink',
     () => {
       return apiRequest
-        .get('/stripe_integration/link')
+        .get('/stripe/link')
         .then((res) => transformToCamelCase(res.data));
     },
     { ...options },
@@ -163,7 +163,7 @@ export const useSetStripeAccountCallback = (
   return useMutation(
     (values: StripeAccountCallbackMutationValues) => {
       return apiRequest
-        .post(`/stripe_integration/callback`, values)
+        .post(`/stripe/callback`, values)
         .then(
           (res) =>
             transformToCamelCase(

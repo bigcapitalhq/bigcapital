@@ -1,21 +1,25 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { ClsService } from 'nestjs-cls';
 import { CreatePaymentReceiveStripePayment } from '../CreatePaymentReceivedStripePayment';
 import {
   StripeCheckoutSessionCompletedEventPayload,
   StripeWebhookEventPayload,
 } from '../StripePayment.types';
-// import { initalizeTenantServices } from '@/api/middleware/TenantDependencyInjection';
-// import { initializeTenantSettings } from '@/api/middleware/SettingsMiddleware';
-import { OnEvent } from '@nestjs/event-emitter';
-import { Inject, Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
 import { PaymentIntegration } from '../models/PaymentIntegration.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenantModel } from '@/modules/System/models/TenantModel';
+import { SystemUser } from '@/modules/System/models/SystemUser';
 
 @Injectable()
 export class StripeWebhooksSubscriber {
   constructor(
     private readonly createPaymentReceiveStripePayment: CreatePaymentReceiveStripePayment,
+    private readonly clsService: ClsService,
+
+    @Inject(SystemUser.name)
+    private readonly systemUserModel: typeof SystemUser,
 
     @Inject(PaymentIntegration.name)
     private readonly paymentIntegrationModel: TenantModelProxy<
@@ -23,8 +27,8 @@ export class StripeWebhooksSubscriber {
     >,
 
     @Inject(TenantModel.name)
-    private readonly tenantModel: typeof TenantModel
-  ) {}
+    private readonly tenantModel: typeof TenantModel,
+  ) { }
 
   /**
    * Handles the checkout session completed webhook event.
@@ -38,10 +42,22 @@ export class StripeWebhooksSubscriber {
     const tenantId = parseInt(metadata.tenantId, 10);
     const saleInvoiceId = parseInt(metadata.saleInvoiceId, 10);
 
+    const tenant = await this.tenantModel
+      .query()
+      .findOne({ id: tenantId })
+      .throwIfNotFound();
 
+    const user = await this.systemUserModel
+      .query()
+      .findOne({
+        tenantId: tenant.id,
+      })
+      .modify('active')
+      .throwIfNotFound();
 
-    // await initalizeTenantServices(tenantId);
-    // await initializeTenantSettings(tenantId);
+    this.clsService.set('organizationId', tenant.organizationId);
+    this.clsService.set('userId', user.id);
+    this.clsService.set('tenantId', tenant.id);
 
     // Get the amount from the event
     const amount = event.data.object.amount_total;

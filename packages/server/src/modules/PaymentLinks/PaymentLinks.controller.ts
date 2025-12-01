@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import { Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { PaymentLinksApplication } from './PaymentLinksApplication';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
@@ -40,7 +40,7 @@ export class PaymentLinksController {
     return { data };
   }
 
-  @Get('/:paymentLinkId/stripe_checkout_session')
+  @Post('/:paymentLinkId/stripe_checkout_session')
   @ApiOperation({
     summary: 'Create Stripe checkout session',
     description:

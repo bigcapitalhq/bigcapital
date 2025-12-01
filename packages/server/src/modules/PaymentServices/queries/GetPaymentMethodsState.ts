@@ -15,7 +15,7 @@ export class GetPaymentMethodsStateService {
     private readonly paymentIntegrationModel: TenantModelProxy<
       typeof PaymentIntegration
     >,
-  ) {}
+  ) { }
 
   /**
    * Retrieves the payment state provising state.

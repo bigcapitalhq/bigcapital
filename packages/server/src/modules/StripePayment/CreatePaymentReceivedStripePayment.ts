@@ -12,7 +12,7 @@ export class CreatePaymentReceiveStripePayment {
     private readonly createPaymentReceivedService: CreatePaymentReceivedService,
     private readonly uow: UnitOfWork,
     private readonly accountRepository: AccountRepository,
-  ) {}
+  ) { }
 
   /**
    * Creates a payment received transaction associated to the given invoice.
@@ -28,7 +28,7 @@ export class CreatePaymentReceiveStripePayment {
 
       // Retrieves the given invoice to create payment transaction associated to it.
       const invoice =
-        await this.getSaleInvoiceService.getSaleInvoice(saleInvoiceId);
+        await this.getSaleInvoiceService.getSaleInvoice(saleInvoiceId, trx);
 
       const paymentReceivedDTO = {
         customerId: invoice.customerId,
@@ -38,6 +38,7 @@ export class CreatePaymentReceiveStripePayment {
         referenceNo: '',
         statement: '',
         depositAccountId: stripeClearingAccount.id,
+        branchId: invoice.branchId,
         entries: [{ invoiceId: saleInvoiceId, paymentAmount: paidAmount }],
       };
       // Create a payment received transaction associated to the given invoice.
