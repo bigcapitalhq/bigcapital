@@ -168,6 +168,16 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "Daniel15",
+      "name": "Daniel Lo Nigro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/91933?v=4",
+      "profile": "https://d.sb/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
