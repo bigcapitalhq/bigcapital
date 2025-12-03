@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import { x } from '@xstyled/emotion';
 
 import SetupWizardContent from './SetupWizardContent';
 
@@ -27,9 +28,9 @@ function SetupRightSection({
   isSubscriptionActive,
 }) {
   return (
-    <section className={'setup-page__right-section'}>
+    <x.section w="100%" overflow="auto">
       <SetupWizardContent stepId={setupStepId} stepIndex={setupStepIndex} />
-    </section>
+    </x.section>
   );
 }
 

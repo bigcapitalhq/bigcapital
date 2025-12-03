@@ -1,17 +1,22 @@
 // @ts-nocheck
 import React from 'react';
+import { x } from '@xstyled/emotion';
+import { css } from '@emotion/css';
 
 import SetupSubscription from './SetupSubscription/SetupSubscription';
 import SetupOrganizationPage from './SetupOrganizationPage';
 import SetupInitializingForm from './SetupInitializingForm';
 import SetupCongratsPage from './SetupCongratsPage';
 import { Stepper } from '@/components/Stepper';
-import styles from './SetupWizardContent.module.scss';
 
 interface SetupWizardContentProps {
   stepIndex: number;
   stepId: string;
 }
+
+const itemsClassName = css`
+  padding: 40px 40px 20px;
+`;
 
 /**
  * Setup wizard content.
@@ -21,12 +26,11 @@ export default function SetupWizardContent({
   stepId,
 }: SetupWizardContentProps) {
   return (
-    <div class="setup-page__content">
+    <x.div w="100%" overflow="auto">
       <Stepper
         active={stepIndex}
         classNames={{
-          content: styles.content,
-          items: styles.items,
+          items: itemsClassName,
         }}
       >
         <Stepper.Step label={'Subscription'}>
@@ -45,6 +49,6 @@ export default function SetupWizardContent({
           <SetupCongratsPage id="congrats" />
         </Stepper.Step>
       </Stepper>
-    </div>
+    </x.div>
   );
 }

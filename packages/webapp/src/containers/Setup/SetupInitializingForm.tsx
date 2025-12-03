@@ -2,6 +2,9 @@
 import React from 'react';
 import { ProgressBar, Intent } from '@blueprintjs/core';
 import * as R from 'ramda';
+import { x } from '@xstyled/emotion';
+import { css } from '@emotion/css';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 import { useJob, useCurrentOrganization } from '@/hooks/query';
 import { FormattedMessage as T } from '@/components';
@@ -9,8 +12,6 @@ import { FormattedMessage as T } from '@/components';
 import withOrganizationActions from '@/containers/Organization/withOrganizationActions';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import withOrganization from '../Organization/withOrganization';
-
-import '@/style/pages/Setup/Initializing.scss';
 
 /**
  * Setup initializing step form.
@@ -47,7 +48,7 @@ function SetupInitializingForm({
   }, [setOrganizationSetupCompleted, isJobDone, isSuccess]);
 
   return (
-    <div class="setup-initializing-form">
+    <x.div w="95%" mx="auto" pt="16%">
       {isFailed ? (
         <SetupInitializingFailed />
       ) : isRunning || isWaiting || isJobFetching ? (
@@ -57,7 +58,7 @@ function SetupInitializingForm({
       ) : (
         <SetupInitializingFailed />
       )}
-    </div>
+    </x.div>
   );
 }
 
@@ -73,17 +74,29 @@ export default R.compose(
  * State initializing failed state.
  */
 function SetupInitializingFailed() {
+  const isDarkMode = useIsDarkMode();
+
   return (
-    <div class="setup-initializing__content">
-      <div className={'setup-initializing-form__title'}>
-        <h1>
+    <x.div>
+      <x.div textAlign="center" mt={35}>
+        <x.h1
+          fontSize={'22px'}
+          fontWeight={500}
+          color={isDarkMode ? 'rgba(255, 255, 255, 0.75)' : '#454c59'}
+          mt={0}
+          mb={'14px'}
+        >
           <T id={'setup.initializing.something_went_wrong'} />
-        </h1>
-        <p class="paragraph">
+        </x.h1>
+        <x.p
+          w="70%"
+          mx="auto"
+          color={isDarkMode ? 'rgba(255, 255, 255, 0.7)' : '#2e4266'}
+        >
           <T id={'setup.initializing.please_refresh_the_page'} />
-        </p>
-      </div>
-    </div>
+        </x.p>
+      </x.div>
+    </x.div>
   );
 }
 
@@ -91,19 +104,49 @@ function SetupInitializingFailed() {
  * Setup initializing running state.
  */
 function SetupInitializingRunning() {
-  return (
-    <div class="setup-initializing__content">
-      <ProgressBar intent={Intent.PRIMARY} value={null} />
+  const isDarkMode = useIsDarkMode();
 
-      <div className={'setup-initializing-form__title'}>
-        <h1>
+  const progressBarStyles = css`
+    .bp4-progress-bar {
+      border-radius: 40px;
+      display: block;
+      height: 6px;
+      overflow: hidden;
+      position: relative;
+      width: 80%;
+      margin: 0 auto;
+
+      .bp4-progress-meter {
+        background-color: #809cb3;
+      }
+    }
+  `;
+
+  return (
+    <x.div>
+      <x.div className={progressBarStyles}>
+        <ProgressBar intent={Intent.NONE} value={null} />
+      </x.div>
+
+      <x.div textAlign="center" mt={35}>
+        <x.h1
+          fontSize={'22px'}
+          fontWeight={500}
+          color={isDarkMode ? 'rgba(255, 255, 255, 0.85)' : '#454c59'}
+          mt={0}
+          mb={'14px'}
+        >
           <T id={'setup.initializing.title'} />
-        </h1>
-        <p className={'paragraph'}>
+        </x.h1>
+        <x.p
+          w="70%"
+          mx="auto"
+          color={isDarkMode ? 'rgba(255, 255, 255, 0.7)' : '#2e4266'}
+        >
           <T id={'setup.initializing.description'} />
-        </p>
-      </div>
-    </div>
+        </x.p>
+      </x.div>
+    </x.div>
   );
 }
 
@@ -111,18 +154,30 @@ function SetupInitializingRunning() {
  * Setup initializing completed state.
  */
 function SetupInitializingCompleted() {
+  const isDarkMode = useIsDarkMode();
+
   return (
-    <div class="setup-initializing__content">
-      <div className={'setup-initializing-form__title'}>
-        <h1>
+    <x.div>
+      <x.div textAlign="center" mt={35}>
+        <x.h1
+          fontSize={'22px'}
+          fontWeight={600}
+          color={isDarkMode ? 'rgba(255, 255, 255, 0.85)' : '#454c59'}
+          mt={0}
+          mb={'14px'}
+        >
           <T id={'setup.initializing.waiting_to_redirect'} />
-        </h1>
-        <p class="paragraph">
+        </x.h1>
+        <x.p
+          w="70%"
+          mx="auto"
+          color={isDarkMode ? 'rgba(255, 255, 255, 0.7)' : '#2e4266'}
+        >
           <T
             id={'setup.initializing.refresh_the_page_if_redirect_not_worked'}
           />
-        </p>
-      </div>
-    </div>
+        </x.p>
+      </x.div>
+    </x.div>
   );
 }
