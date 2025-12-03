@@ -28,10 +28,11 @@ export function StepperStep({
           isCompleted={state === StepperStepState.Completed}
           isActive={state === StepperStepState.Progress}
         >
-          {state === StepperStepState.Completed && (
+          {state === StepperStepState.Completed ? (
             <Icon icon={'done'} iconSize={24} />
+          ) : (
+            <StepIconText>{step}</StepIconText>
           )}
-          <StepIconText>{step}</StepIconText>
         </StepIcon>
       </StepIconWrap>
 

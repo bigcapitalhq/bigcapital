@@ -5,15 +5,18 @@ import { Button, Intent, FormGroup, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
 import { getAllCountries } from '@bigcapital/utils';
+import { x } from '@xstyled/emotion';
 import {
   FFormGroup,
   FInputGroup,
   FSelect,
+  FTimezoneSelect,
   FormattedMessage as T,
 } from '@/components';
 
 import { Col, Row } from '@/components';
 import { inputIntent } from '@/utils';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
@@ -28,19 +31,24 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
   const FiscalYear = getFiscalYear();
   const Languages = getLanguages();
   const currencies = getAllCurrenciesOptions();
+  const isDarkMode = useIsDarkMode();
 
   return (
     <Form>
-      <h3>
+      <x.h3
+        color={isDarkMode ? 'rgba(255, 255, 255, 0.5)' : '#868f9f'}
+        mb="2rem"
+        fontWeight={600}
+      >
         <T id={'organization_details'} />
-      </h3>
+      </x.h3>
       {/* ---------- Organization name ----------  */}
       <FFormGroup
         name={'name'}
         label={<T id={'legal_organization_name'} />}
-        fastField={true}
+        fastField
       >
-        <FInputGroup name={'name'} fastField={true} />
+        <FInputGroup name={'name'} large fastField />
       </FFormGroup>
 
       {/* ---------- Location ---------- */}
@@ -56,7 +64,8 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
           textAccessor={'name'}
           placeholder={<T id={'select_business_location'} />}
           popoverProps={{ minimal: true }}
-          fastField={true}
+          buttonProps={{ large: true }}
+          fastField
         />
       </FFormGroup>
 
@@ -75,18 +84,15 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               valueAccessor={'key'}
               textAccessor={'name'}
               placeholder={<T id={'select_base_currency'} />}
-              fastField={true}
+              buttonProps={{ large: true }}
+              fastField
             />
           </FFormGroup>
         </Col>
 
         {/* ---------- Language ---------- */}
         <Col xs={6}>
-          <FFormGroup
-            name={'language'}
-            label={<T id={'language'} />}
-            fastField={true}
-          >
+          <FFormGroup name={'language'} label={<T id={'language'} />} fastField>
             <FSelect
               name={'language'}
               items={Languages}
@@ -94,7 +100,8 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
               textAccessor={'name'}
               placeholder={<T id={'select_language'} />}
               popoverProps={{ minimal: true }}
-              fastField={true}
+              buttonProps={{ large: true }}
+              fastField
             />
           </FFormGroup>
         </Col>
@@ -104,7 +111,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       <FFormGroup
         name={'fiscalYear'}
         label={<T id={'fiscal_year'} />}
-        fastField={true}
+        fastField
       >
         <FSelect
           name={'fiscalYear'}
@@ -113,50 +120,48 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
           textAccessor={'name'}
           placeholder={<T id={'select_fiscal_year'} />}
           popoverProps={{ minimal: true }}
-          fastField={true}
+          buttonProps={{ large: true }}
+          fastField
         />
       </FFormGroup>
 
       {/* ----------  Time zone ----------  */}
-      <FastField name={'timezone'}>
-        {({
-          form: { setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={<T id={'time_zone'} />}
-            className={classNames(
-              'form-group--time-zone',
-              'form-group--select-list',
-              Classes.FILL,
-            )}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'timezone'} />}
-          >
-            <TimezonePicker
-              value={value}
-              onChange={(item) => {
-                setFieldValue('timezone', item);
-              }}
-              valueDisplayFormat="composite"
-              showLocalTimezone={true}
-              placeholder={<T id={'select_time_zone'} />}
-              popoverProps={{ minimal: true }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'timezone'} label={<T id={'time_zone'} />}>
+        <FTimezoneSelect
+          name={'timezone'}
+          valueDisplayFormat="composite"
+          showLocalTimezone={true}
+          placeholder={<T id={'select_time_zone'} />}
+          popoverProps={{ minimal: true }}
+          buttonProps={{
+            alignText: 'left',
+            fill: true,
+            large: true,
+          }}
+        />
+      </FFormGroup>
 
-      <p className={'register-org-note'}>
+      <x.p
+        fontSize={14}
+        lineHeight="2.7rem"
+        mb={6}
+        borderBottom={`1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#f5f5f5'}`}
+        className={Classes.TEXT_MUTED}
+      >
         <T id={'setup.organization.note_you_can_change_your_preferences'} />
-      </p>
+      </x.p>
 
-      <div className={'register-org-button'}>
-        <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
+      <x.div>
+        <Button
+          intent={Intent.PRIMARY}
+          loading={isSubmitting}
+          fill
+          large
+          type="submit"
+        >
           <T id={'save_continue'} />
         </Button>
-      </div>
+      </x.div>
     </Form>
   );
 }

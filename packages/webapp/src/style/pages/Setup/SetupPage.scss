@@ -13,30 +13,13 @@
     grid-template-columns: 26% 74%;
   }
 
-  &__right-section {
-    width: 100%;
-    overflow: auto;
-
-    h1 {
-      font-size: 22px;
-    }
-    h1,
-    h3 {
-      font-weight: 500;
-      color: #6b7382;
-    }
-  }
-
-  &__content {
-    width: 100%;
-    padding-bottom: 80px;
-  }
-
   &__left-section {
     background-color: #2f3d6f;
-    z-index: 1;
     width: 100%;
 
+    .bp4-dark & {
+      background-color: #2f343c;
+    }
     .content {
       display: flex;
       flex-direction: column;
@@ -173,9 +156,7 @@
       &::before {
         background-color: #75859c;
       }
-
       ~li {
-
         &:before,
         &:after {
           background: #e0e0e0;
