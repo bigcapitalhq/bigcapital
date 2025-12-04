@@ -1,24 +1,42 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { SendSaleReceiptMailQueue } from '../constants';
+import { Inject, Scope } from '@nestjs/common';
+import { JOB_REF } from '@nestjs/bull';
+import { SendSaleReceiptMailQueue, SendSaleReceiptMailJob } from '../constants';
 import { SaleReceiptMailNotification } from '../commands/SaleReceiptMailNotification';
 import { SaleReceiptSendMailPayload } from '../types/SaleReceipts.types';
-import { ClsService } from 'nestjs-cls';
+import { ClsService, UseCls } from 'nestjs-cls';
 
-@Processor(SendSaleReceiptMailQueue)
+@Processor({
+  name: SendSaleReceiptMailQueue,
+  scope: Scope.REQUEST,
+})
 export class SendSaleReceiptMailProcess {
   constructor(
     private readonly saleReceiptMailNotification: SaleReceiptMailNotification,
     private readonly clsService: ClsService,
-  ) {}
 
-  @Process(SendSaleReceiptMailQueue)
-  async handleSendMailJob(job: Job<SaleReceiptSendMailPayload>) {
-    const { messageOpts, saleReceiptId, organizationId, userId } = job.data;
+    @Inject(JOB_REF)
+    private readonly jobRef: Job<SaleReceiptSendMailPayload>,
+  ) { }
+
+  @Process(SendSaleReceiptMailJob)
+  @UseCls()
+  async handleSendMailJob() {
+    const { messageOpts, saleReceiptId, organizationId, userId } =
+      this.jobRef.data;
 
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);
 
-    await this.saleReceiptMailNotification.sendMail(saleReceiptId, messageOpts);
+    try {
+      await this.saleReceiptMailNotification.sendMail(
+        saleReceiptId,
+        messageOpts,
+      );
+    } catch (error) {
+      console.error('Failed to process receipt mail job:', error);
+      throw error;
+    }
   }
 }

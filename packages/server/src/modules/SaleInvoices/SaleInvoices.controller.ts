@@ -99,7 +99,8 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.createSaleInvoice(saleInvoiceDTO);
   }
 
-  @Put(':id/mail')
+  @Post(':id/mail')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Send the sale invoice mail.' })
   @ApiResponse({
     status: 200,

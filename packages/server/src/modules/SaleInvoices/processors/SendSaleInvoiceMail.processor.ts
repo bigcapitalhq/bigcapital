@@ -18,9 +18,10 @@ export class SendSaleInvoiceMailProcessor {
     @Inject(JOB_REF)
     private readonly jobRef: Job<SendSaleInvoiceMailJobPayload>,
     private readonly clsService: ClsService,
-  ) {}
+  ) { }
 
   @Process(SendSaleInvoiceMailJob)
+  @UseCls()
   async handleSendInvoice() {
     const { messageOptions, saleInvoiceId, organizationId, userId } =
       this.jobRef.data;
@@ -31,7 +32,8 @@ export class SendSaleInvoiceMailProcessor {
     try {
       await this.sendSaleInvoiceMail.sendMail(saleInvoiceId, messageOptions);
     } catch (error) {
-      console.log(error);
+      console.error('Failed to process invoice mail job:', error);
+      throw error;
     }
   }
 }

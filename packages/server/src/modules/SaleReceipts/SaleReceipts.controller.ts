@@ -25,7 +25,10 @@ import {
   CreateSaleReceiptDto,
   EditSaleReceiptDto,
 } from './dtos/SaleReceipt.dto';
-import { ISalesReceiptsFilter } from './types/SaleReceipts.types';
+import {
+  ISalesReceiptsFilter,
+  SaleReceiptMailOptsDTO,
+} from './types/SaleReceipts.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { SaleReceiptResponseDto } from './dtos/SaleReceiptResponse.dto';
@@ -87,7 +90,7 @@ export class SaleReceiptsController {
     return this.saleReceiptApplication.createSaleReceipt(saleReceiptDTO);
   }
 
-  @Put(':id/mail')
+  @Post(':id/mail')
   @HttpCode(200)
   @ApiOperation({ summary: 'Send the sale receipt mail.' })
   @ApiParam({
@@ -96,8 +99,11 @@ export class SaleReceiptsController {
     type: Number,
     description: 'The sale receipt id',
   })
-  sendSaleReceiptMail(@Param('id', ParseIntPipe) id: number) {
-    return this.saleReceiptApplication.getSaleReceiptMail(id);
+  sendSaleReceiptMail(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() messageOpts: SaleReceiptMailOptsDTO,
+  ) {
+    return this.saleReceiptApplication.sendSaleReceiptMail(id, messageOpts);
   }
 
   @Get('state')

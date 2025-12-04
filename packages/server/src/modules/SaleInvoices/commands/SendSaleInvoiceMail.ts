@@ -33,7 +33,7 @@ export class SendSaleInvoiceMail {
     private readonly tenancyContect: TenancyContext,
 
     @InjectQueue(SendSaleInvoiceQueue) private readonly sendInvoiceQueue: Queue,
-  ) {}
+  ) { }
 
   /**
    * Sends the invoice mail of the given sale invoice.
@@ -132,7 +132,13 @@ export class SendSaleInvoiceMail {
       events.saleInvoice.onMailSend,
       eventPayload,
     );
-    await this.mailTransporter.send(mail);
+
+    try {
+      await this.mailTransporter.send(mail);
+    } catch (error) {
+      console.error('Failed to send invoice mail:', error);
+      throw error;
+    }
 
     // Triggers the event `onSaleInvoiceSend`.
     await this.eventEmitter.emitAsync(

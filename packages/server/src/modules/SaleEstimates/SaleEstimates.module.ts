@@ -42,6 +42,7 @@ import { GetSaleEstimateMailTemplateService } from './queries/GetSaleEstimateMai
 import { SaleEstimateAutoIncrementSubscriber } from './subscribers/SaleEstimateAutoIncrementSubscriber';
 import { BulkDeleteSaleEstimatesService } from './BulkDeleteSaleEstimates.service';
 import { ValidateBulkDeleteSaleEstimatesService } from './ValidateBulkDeleteSaleEstimates.service';
+import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.process';
 
 @Module({
   imports: [
@@ -89,6 +90,7 @@ import { ValidateBulkDeleteSaleEstimatesService } from './ValidateBulkDeleteSale
     SaleEstimateAutoIncrementSubscriber,
     BulkDeleteSaleEstimatesService,
     ValidateBulkDeleteSaleEstimatesService,
+    SendSaleEstimateMailProcess,
   ],
   exports: [
     SaleEstimatesExportable,

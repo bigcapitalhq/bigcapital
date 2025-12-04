@@ -24,6 +24,7 @@ import { Mail } from '@/modules/Mail/Mail';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GetSaleEstimateMailTemplateService } from '../queries/GetSaleEstimateMailTemplate.service';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class SendSaleEstimateMail {
@@ -42,13 +43,14 @@ export class SendSaleEstimateMail {
     private readonly getEstimateMailTemplate: GetSaleEstimateMailTemplateService,
     private readonly eventPublisher: EventEmitter2,
     private readonly mailTransporter: MailTransporter,
+    private readonly tenancyContext: TenancyContext,
 
     @Inject(SaleEstimate.name)
     private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
 
     @InjectQueue(SendSaleEstimateMailQueue)
     private readonly sendEstimateMailQueue: Queue,
-  ) {}
+  ) { }
 
   /**
    * Triggers the reminder mail of the given sale estimate.
@@ -60,10 +62,19 @@ export class SendSaleEstimateMail {
     saleEstimateId: number,
     messageOptions: SaleEstimateMailOptionsDTO,
   ): Promise<void> {
+    const tenant = await this.tenancyContext.getTenant();
+    const user = await this.tenancyContext.getSystemUser();
+
+    const organizationId = tenant.organizationId;
+    const userId = user.id;
+
     const payload = {
       saleEstimateId,
       messageOptions,
+      userId,
+      organizationId,
     };
+
     await this.sendEstimateMailQueue.add(SendSaleEstimateMailJob, payload);
 
     // Triggers `onSaleEstimatePreMailSend` event.
