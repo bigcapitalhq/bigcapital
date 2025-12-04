@@ -21,9 +21,10 @@ export class SendInviteUserMailProcessor {
     @Inject(JOB_REF)
     private readonly jobRef: Job<SendInviteUserMailJobPayload>,
     private readonly clsService: ClsService,
-  ) {}
+  ) { }
 
   @Process(SendInviteUserMailJob)
+  @UseCls()
   async handleSendInviteMail() {
     const { fromUser, invite, organizationId, userId } = this.jobRef.data;
 
@@ -33,7 +34,8 @@ export class SendInviteUserMailProcessor {
     try {
       await this.sendInviteUsersMailService.sendInviteMail(fromUser, invite);
     } catch (error) {
-      console.log(error);
+      console.error('Failed to process invite user mail job:', error);
+      throw error;
     }
   }
 }

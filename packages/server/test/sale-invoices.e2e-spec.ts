@@ -229,7 +229,7 @@ describe('Sale Invoices (e2e)', () => {
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
-      .put(`/sale-invoices/${response.body.id}/mail`)
+      .post(`/sale-invoices/${response.body.id}/mail`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({

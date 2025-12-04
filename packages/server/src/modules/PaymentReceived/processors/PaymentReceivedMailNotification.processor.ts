@@ -1,12 +1,11 @@
 import { JOB_REF, Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
+import { Inject, Scope } from '@nestjs/common';
+import { ClsService, UseCls } from 'nestjs-cls';
 import {
   SEND_PAYMENT_RECEIVED_MAIL_JOB,
   SEND_PAYMENT_RECEIVED_MAIL_QUEUE,
 } from '../constants';
-import { Inject, Scope } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import { ClsService } from 'nestjs-cls';
 import { SendPaymentReceiveMailNotification } from '../commands/PaymentReceivedMailNotification';
 import { SendPaymentReceivedMailPayload } from '../types/PaymentReceived.types';
 
@@ -21,9 +20,10 @@ export class SendPaymentReceivedMailProcessor {
 
     @Inject(JOB_REF)
     private readonly jobRef: Job<SendPaymentReceivedMailPayload>,
-  ) {}
+  ) { }
 
   @Process(SEND_PAYMENT_RECEIVED_MAIL_JOB)
+  @UseCls()
   async handleSendMail() {
     const { messageOptions, paymentReceivedId, organizationId, userId } =
       this.jobRef.data;
@@ -37,7 +37,8 @@ export class SendPaymentReceivedMailProcessor {
         messageOptions,
       );
     } catch (error) {
-      console.log(error);
+      console.error('Failed to process payment received mail job:', error);
+      throw error;
     }
   }
 }
