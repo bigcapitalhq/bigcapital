@@ -37,7 +37,7 @@ import { ISaleReceiptEventClosingPayload } from '@/modules/SaleReceipts/types/Sa
 export class SalesTransactionLockingGuardSubscriber {
   constructor(
     public readonly salesLockingGuard: SalesTransactionLockingGuard,
-  ) {}
+  ) { }
 
   /**
    * ---------------------------------------------
@@ -48,7 +48,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on invoice creating.
    * @param {ISaleInvoiceCreatingPaylaod} payload
    */
-  @OnEvent(events.saleInvoice.onCreating)
+  @OnEvent(events.saleInvoice.onCreating, { suppressErrors: false })
   public async transactionLockingGuardOnInvoiceCreating({
     saleInvoiceDTO,
   }: ISaleInvoiceCreatingPaylaod) {
@@ -64,7 +64,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on invoice editing.
    * @param {ISaleInvoiceEditingPayload} payload
    */
-  @OnEvent(events.saleInvoice.onEditing)
+  @OnEvent(events.saleInvoice.onEditing, { suppressErrors: false })
   public async transactionLockingGuardOnInvoiceEditing({
     oldSaleInvoice,
     saleInvoiceDTO,
@@ -86,7 +86,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on invoice deleting.
    * @param {ISaleInvoiceDeletePayload} payload
    */
-  @OnEvent(events.saleInvoice.onDelete)
+  @OnEvent(events.saleInvoice.onDelete, { suppressErrors: false })
   public async transactionLockingGuardOnInvoiceDeleting({
     oldSaleInvoice,
   }: ISaleInvoiceDeletePayload) {
@@ -102,7 +102,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on invoice writingoff.
    * @param {ISaleInvoiceWriteoffCreatePayload} payload
    */
-  @OnEvent(events.saleInvoice.onWriteoff)
+  @OnEvent(events.saleInvoice.onWriteoff, { suppressErrors: false })
   public async transactionLockinGuardOnInvoiceWritingoff({
     saleInvoice,
   }: ISaleInvoiceWriteoffCreatePayload) {
@@ -115,7 +115,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaciton locking guard on canceling written-off invoice.
    * @param {ISaleInvoiceWrittenOffCancelPayload} payload
    */
-  @OnEvent(events.saleInvoice.onWrittenoffCancel)
+  @OnEvent(events.saleInvoice.onWrittenoffCancel, { suppressErrors: false })
   public async transactionLockinGuardOnInvoiceWritingoffCanceling({
     saleInvoice,
   }: ISaleInvoiceWrittenOffCancelPayload) {
@@ -134,7 +134,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction  locking guard on receipt creating.
    * @param {ISaleReceiptCreatingPayload}
    */
-  @OnEvent(events.saleReceipt.onCreating)
+  @OnEvent(events.saleReceipt.onCreating, { suppressErrors: false })
   public async transactionLockingGuardOnReceiptCreating({
     saleReceiptDTO,
   }: ISaleReceiptCreatingPayload) {
@@ -150,7 +150,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on receipt creating.
    * @param {ISaleReceiptDeletingPayload}
    */
-  @OnEvent(events.saleReceipt.onDeleting)
+  @OnEvent(events.saleReceipt.onDeleting, { suppressErrors: false })
   public async transactionLockingGuardOnReceiptDeleting({
     oldSaleReceipt,
   }: ISaleReceiptDeletingPayload) {
@@ -165,7 +165,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on sale receipt editing.
    * @param {ISaleReceiptEditingPayload} payload
    */
-  @OnEvent(events.saleReceipt.onEditing)
+  @OnEvent(events.saleReceipt.onEditing, { suppressErrors: false })
   public async transactionLockingGuardOnReceiptEditing({
     oldSaleReceipt,
     saleReceiptDTO,
@@ -184,7 +184,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on sale receipt closing.
    * @param {ISaleReceiptEventClosingPayload} payload
    */
-  @OnEvent(events.saleReceipt.onClosing)
+  @OnEvent(events.saleReceipt.onClosing, { suppressErrors: false })
   public async transactionLockingGuardOnReceiptClosing({
     oldSaleReceipt,
   }: ISaleReceiptEventClosingPayload) {
@@ -203,7 +203,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on credit note deleting.
    * @param {ICreditNoteDeletingPayload} payload -
    */
-  @OnEvent(events.creditNote.onDeleting)
+  @OnEvent(events.creditNote.onDeleting, { suppressErrors: false })
   public async transactionLockingGuardOnCreditDeleting({
     oldCreditNote,
   }: ICreditNoteDeletingPayload) {
@@ -219,7 +219,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on credit note creating.
    * @param {ICreditNoteCreatingPayload} payload
    */
-  @OnEvent(events.creditNote.onCreating)
+  @OnEvent(events.creditNote.onCreating, { suppressErrors: false })
   public async transactionLockingGuardOnCreditCreating({
     creditNoteDTO,
   }: ICreditNoteCreatingPayload) {
@@ -235,7 +235,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on credit note editing.
    * @param {ICreditNoteEditingPayload} payload -
    */
-  @OnEvent(events.creditNote.onEditing)
+  @OnEvent(events.creditNote.onEditing, { suppressErrors: false })
   public async transactionLockingGuardOnCreditEditing({
     creditNoteEditDTO,
     oldCreditNote,
@@ -257,7 +257,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on payment deleting.
    * @param {IRefundCreditNoteDeletingPayload} paylaod -
    */
-  @OnEvent(events.creditNote.onRefundDeleting)
+  @OnEvent(events.creditNote.onRefundDeleting, { suppressErrors: false })
   public async transactionLockingGuardOnCreditRefundDeleteing({
     oldRefundCredit,
   }: IRefundCreditNoteDeletingPayload) {
@@ -268,7 +268,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on refund credit note creating.
    * @param {IRefundCreditNoteCreatingPayload} payload -
    */
-  @OnEvent(events.creditNote.onRefundCreating)
+  @OnEvent(events.creditNote.onRefundCreating, { suppressErrors: false })
   public async transactionLockingGuardOnCreditRefundCreating({
     newCreditNoteDTO,
   }: IRefundCreditNoteCreatingPayload) {
@@ -284,7 +284,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on estimate creating.
    * @param {ISaleEstimateCreatingPayload} payload -
    */
-  @OnEvent(events.saleEstimate.onCreating)
+  @OnEvent(events.saleEstimate.onCreating, { suppressErrors: false })
   public async transactionLockingGuardOnEstimateCreating({
     estimateDTO,
   }: ISaleEstimateCreatingPayload) {
@@ -300,7 +300,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on estimate deleting.
    * @param {ISaleEstimateDeletingPayload} payload
    */
-  @OnEvent(events.saleEstimate.onDeleting)
+  @OnEvent(events.saleEstimate.onDeleting, { suppressErrors: false })
   public async transactionLockingGuardOnEstimateDeleting({
     oldSaleEstimate,
   }: ISaleEstimateDeletingPayload) {
@@ -316,7 +316,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  @OnEvent(events.saleEstimate.onEditing)
+  @OnEvent(events.saleEstimate.onEditing, { suppressErrors: false })
   public async transactionLockingGuardOnEstimateEditing({
     oldSaleEstimate,
     estimateDTO,
@@ -344,7 +344,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on payment receive editing.
    * @param {IPaymentReceivedEditingPayload}
    */
-  @OnEvent(events.paymentReceive.onEditing)
+  @OnEvent(events.paymentReceive.onEditing, { suppressErrors: false })
   public async transactionLockingGuardOnPaymentEditing({
     oldPaymentReceive,
     paymentReceiveDTO,
@@ -363,7 +363,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on payment creating.
    * @param {IPaymentReceivedCreatingPayload}
    */
-  @OnEvent(events.paymentReceive.onCreating)
+  @OnEvent(events.paymentReceive.onCreating, { suppressErrors: false })
   public async transactionLockingGuardOnPaymentCreating({
     paymentReceiveDTO,
   }: IPaymentReceivedCreatingPayload) {
@@ -376,7 +376,7 @@ export class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on payment deleting.
    * @param {IPaymentReceivedDeletingPayload} payload -
    */
-  @OnEvent(events.paymentReceive.onDeleting)
+  @OnEvent(events.paymentReceive.onDeleting, { suppressErrors: false })
   public async transactionLockingGuardPaymentDeleting({
     oldPaymentReceive,
   }: IPaymentReceivedDeletingPayload) {

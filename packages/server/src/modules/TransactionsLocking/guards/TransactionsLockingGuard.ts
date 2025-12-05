@@ -10,7 +10,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 export class TransactionsLockingGuard {
   constructor(
     private readonly transactionsLockingRepo: TransactionsLockingRepository,
-  ) {}
+  ) { }
 
   /**
    * Detarmines whether the transaction date between the locking date period.
@@ -31,7 +31,7 @@ export class TransactionsLockingGuard {
     const inUnlockDate =
       unlockFromDate && unlockToDate
         ? moment(transactionDate).isSameOrAfter(unlockFromDate) &&
-          moment(transactionDate).isSameOrBefore(unlockFromDate)
+        moment(transactionDate).isSameOrBefore(unlockFromDate)
         : false;
 
     // Retruns true in case the transaction date between locking date
@@ -57,7 +57,7 @@ export class TransactionsLockingGuard {
     );
 
     if (isLocked) {
-      this.throwTransactionsLockError(lockingGroup);
+      await this.throwTransactionsLockError(lockingGroup);
     }
   };
 
@@ -90,11 +90,12 @@ export class TransactionsLockingGuard {
       await this.transactionsLockingRepo.getTransactionsLockingType();
 
     if (lockingType === TransactionsLockingGroup.All) {
-      return this.validateTransactionsLocking(
+      await this.validateTransactionsLocking(
         transactionDate,
         TransactionsLockingGroup.All,
       );
+      return;
     }
-    return this.validateTransactionsLocking(transactionDate, moduleType);
+    await this.validateTransactionsLocking(transactionDate, moduleType);
   };
 }

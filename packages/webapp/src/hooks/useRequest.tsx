@@ -64,12 +64,11 @@ export default function useApiRequest() {
           setGlobalErrors({ too_many_requests: true });
         }
         if (status === 400) {
-          if (
-            data.errors.find(
-              (error) => error.type === 'TRANSACTIONS_DATE_LOCKED',
-            )
-          ) {
-            setGlobalErrors({ transactionsLocked: { ...lockedError.data } });
+          const lockedError = data.errors.find(
+            (error) => error.type === 'TRANSACTIONS_DATE_LOCKED',
+          );
+          if (lockedError) {
+            setGlobalErrors({ transactionsLocked: { ...lockedError.payload } });
           }
           if (
             data.errors.find(

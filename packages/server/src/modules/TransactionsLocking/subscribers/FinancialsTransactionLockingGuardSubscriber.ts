@@ -22,7 +22,7 @@ import { events } from '@/common/events/events';
 export class FinancialTransactionLockingGuardSubscriber {
   constructor(
     public readonly financialTransactionsLocking: FinancialTransactionLocking,
-  ) {}
+  ) { }
 
   /**
    * ---------------------------------------------
@@ -33,7 +33,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transaction locking guard on manual journal creating.
    * @param {IManualJournalCreatingPayload} payload
    */
-  @OnEvent(events.manualJournals.onCreating)
+  @OnEvent(events.manualJournals.onCreating, { suppressErrors: false })
   public async transactionsLockingGuardOnManualJournalCreating({
     manualJournalDTO,
   }: IManualJournalCreatingPayload) {
@@ -49,7 +49,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on manual journal deleting.
    * @param {IManualJournalEditingPayload} payload
    */
-  @OnEvent(events.manualJournals.onDeleting)
+  @OnEvent(events.manualJournals.onDeleting, { suppressErrors: false })
   public async transactionsLockingGuardOnManualJournalDeleting({
     oldManualJournal,
   }: IManualJournalEditingPayload) {
@@ -65,7 +65,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on manual journal editing.
    * @param {IManualJournalDeletingPayload} payload
    */
-  @OnEvent(events.manualJournals.onEditing)
+  @OnEvent(events.manualJournals.onEditing, { suppressErrors: false })
   public async transactionsLockingGuardOnManualJournalEditing({
     oldManualJournal,
     manualJournalDTO,
@@ -87,7 +87,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on manual journal publishing.
    * @param {IManualJournalPublishingPayload}
    */
-  @OnEvent(events.manualJournals.onPublishing)
+  @OnEvent(events.manualJournals.onPublishing, { suppressErrors: false })
   public async transactionsLockingGuardOnManualJournalPublishing({
     oldManualJournal,
   }: IManualJournalPublishingPayload) {
@@ -106,7 +106,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on expense creating.
    * @param {IExpenseCreatingPayload} payload
    */
-  @OnEvent(events.expenses.onCreating)
+  @OnEvent(events.expenses.onCreating, { suppressErrors: false })
   public async transactionsLockingGuardOnExpenseCreating({
     expenseDTO,
   }: IExpenseCreatingPayload) {
@@ -122,7 +122,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on expense deleting.
    * @param {IExpenseDeletingPayload} payload
    */
-  @OnEvent(events.expenses.onDeleting)
+  @OnEvent(events.expenses.onDeleting, { suppressErrors: false })
   public async transactionsLockingGuardOnExpenseDeleting({
     oldExpense,
   }: IExpenseDeletingPayload) {
@@ -138,7 +138,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on expense editing.
    * @param {IExpenseEventEditingPayload}
    */
-  @OnEvent(events.expenses.onEditing)
+  @OnEvent(events.expenses.onEditing, { suppressErrors: false })
   public async transactionsLockingGuardOnExpenseEditing({
     oldExpense,
     expenseDTO,
@@ -160,7 +160,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on expense publishing.
    * @param {IExpensePublishingPayload} payload -
    */
-  @OnEvent(events.expenses.onPublishing)
+  @OnEvent(events.expenses.onPublishing, { suppressErrors: false })
   public async transactionsLockingGuardOnExpensePublishing({
     oldExpense,
   }: IExpensePublishingPayload) {
@@ -179,7 +179,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on cashflow transaction creating.
    * @param {ICommandCashflowCreatingPayload}
    */
-  @OnEvent(events.cashflow.onTransactionCreating)
+  @OnEvent(events.cashflow.onTransactionCreating, { suppressErrors: false })
   public async transactionsLockingGuardOnCashflowTransactionCreating({
     newTransactionDTO,
   }: ICommandCashflowCreatingPayload) {
@@ -194,7 +194,7 @@ export class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on cashflow transaction deleting.
    * @param {ICommandCashflowDeletingPayload}
    */
-  @OnEvent(events.cashflow.onTransactionDeleting)
+  @OnEvent(events.cashflow.onTransactionDeleting, { suppressErrors: false })
   public async transactionsLockingGuardOnCashflowTransactionDeleting({
     oldCashflowTransaction,
   }: ICommandCashflowDeletingPayload) {

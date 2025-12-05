@@ -26,7 +26,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 export class PurchasesTransactionLockingGuardSubscriber {
   constructor(
     public readonly purchasesTransactionsLocking: PurchasesTransactionLockingGuard,
-  ) {}
+  ) { }
 
   /**
    * ---------------------------------------------
@@ -37,7 +37,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on payment editing.
    * @param {IBillPaymentEditingPayload}
    */
-  @OnEvent(events.billPayment.onEditing)
+  @OnEvent(events.billPayment.onEditing, { suppressErrors: false })
   public async transactionLockingGuardOnPaymentEditing({
     oldBillPayment,
     billPaymentDTO,
@@ -56,7 +56,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on payment creating.
    * @param {IBillPaymentCreatingPayload}
    */
-  @OnEvent(events.billPayment.onCreating)
+  @OnEvent(events.billPayment.onCreating, { suppressErrors: false })
   public async transactionLockingGuardOnPaymentCreating({
     billPaymentDTO,
   }: IBillPaymentCreatingPayload) {
@@ -69,7 +69,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on payment deleting.
    * @param {IBillPaymentDeletingPayload} payload -
    */
-  @OnEvent(events.billPayment.onDeleting)
+  @OnEvent(events.billPayment.onDeleting, { suppressErrors: false })
   public async transactionLockingGuardOnPaymentDeleting({
     oldBillPayment,
   }: IBillPaymentDeletingPayload) {
@@ -88,7 +88,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on bill creating.
    * @param {IBillCreatingPayload} payload
    */
-  @OnEvent(events.bill.onCreating)
+  @OnEvent(events.bill.onCreating, { suppressErrors: false })
   public async transactionLockingGuardOnBillCreating({
     billDTO,
   }: IBillCreatingPayload) {
@@ -104,7 +104,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on bill editing.
    * @param {IBillEditingPayload} payload
    */
-  @OnEvent(events.bill.onEditing)
+  @OnEvent(events.bill.onEditing, { suppressErrors: false })
   public async transactionLockingGuardOnBillEditing({
     oldBill,
     billDTO,
@@ -126,7 +126,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on bill deleting.
    * @param {IBillEventDeletingPayload} payload
    */
-  @OnEvent(events.bill.onDeleting)
+  @OnEvent(events.bill.onDeleting, { suppressErrors: false })
   public async transactionLockingGuardOnBillDeleting({
     oldBill,
   }: IBillEventDeletingPayload) {
@@ -148,7 +148,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on vendor credit creating.
    * @param {IVendorCreditCreatingPayload} payload
    */
-  @OnEvent(events.vendorCredit.onCreating)
+  @OnEvent(events.vendorCredit.onCreating, { suppressErrors: false })
   public async transactionLockingGuardOnVendorCreditCreating({
     vendorCreditCreateDTO,
   }: IVendorCreditCreatingPayload) {
@@ -164,7 +164,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on vendor credit deleting.
    * @param {IVendorCreditDeletingPayload} payload
    */
-  @OnEvent(events.vendorCredit.onDeleting)
+  @OnEvent(events.vendorCredit.onDeleting, { suppressErrors: false })
   public async transactionLockingGuardOnVendorCreditDeleting({
     oldVendorCredit,
   }: IVendorCreditDeletingPayload) {
@@ -180,7 +180,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on vendor credit editing.
    * @param {IVendorCreditEditingPayload} payload
    */
-  @OnEvent(events.vendorCredit.onEditing)
+  @OnEvent(events.vendorCredit.onEditing, { suppressErrors: false })
   public async transactionLockingGuardOnVendorCreditEditing({
     oldVendorCredit,
     vendorCreditDTO,
@@ -202,7 +202,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on refund vendor credit creating.
    * @param {IRefundVendorCreditCreatingPayload} payload -
    */
-  @OnEvent(events.vendorCredit.onRefundCreating)
+  @OnEvent(events.vendorCredit.onRefundCreating, { suppressErrors: false })
   public async transactionLockingGuardOnRefundVendorCredit({
     refundVendorCreditDTO,
   }: IRefundVendorCreditCreatingPayload) {
@@ -215,7 +215,7 @@ export class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on refund vendor credit deleting.
    * @param {IRefundVendorCreditDeletingPayload} payload
    */
-  @OnEvent(events.vendorCredit.onRefundDeleting)
+  @OnEvent(events.vendorCredit.onRefundDeleting, { suppressErrors: false })
   public async transactionLockingGuardOnRefundCreditDeleting({
     oldRefundCredit,
   }: IRefundVendorCreditDeletingPayload) {

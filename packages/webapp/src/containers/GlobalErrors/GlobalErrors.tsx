@@ -69,7 +69,7 @@ function GlobalErrors({
   if (globalErrors.transactionsLocked) {
     AppToaster.show({
       message: intl.get('global_error.transactions_locked', {
-        lockedToDate: globalErrors.transactionsLocked.formatted_locked_to_date,
+        lockedToDate: globalErrors.transactionsLocked.formattedLockedToDate,
       }),
       intent: Intent.DANGER,
       onDismiss: () => {
