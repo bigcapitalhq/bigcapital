@@ -9,6 +9,7 @@ import UsersActions from '@/containers/Preferences/Users/UsersActions';
 import CurrenciesActions from '@/containers/Preferences/Currencies/CurrenciesActions';
 import WarehousesActions from '@/containers/Preferences/Warehouses/WarehousesActions';
 import BranchesActions from '@/containers/Preferences/Branches/BranchesActions';
+import ApiKeysActions from '@/containers/Preferences/ApiKeys/ApiKeysActions';
 import withDashboard from '@/containers/Dashboard/withDashboard';
 
 import { compose } from '@/utils';
@@ -47,6 +48,11 @@ function PreferencesTopbar({ preferencesPageTitle }) {
               exact
               path={'/preferences/branches'}
               component={BranchesActions}
+            />
+            <Route
+              exact
+              path={'/preferences/api-keys'}
+              component={ApiKeysActions}
             />
           </Switch>
         </Route>
