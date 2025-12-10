@@ -7,53 +7,46 @@ import {
 } from '@nestjs/common';
 import { type Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { mapKeysDeep } from '@/utils/deepdash';
 
-export function camelToSnake<T = any>(value: T) {
+export function camelToSnake<T = any>(value: T): T {
   if (value === null || value === undefined) {
     return value;
   }
-  if (Array.isArray(value)) {
-    return value.map(camelToSnake);
-  }
-  if (typeof value === 'object' && !(value instanceof Date)) {
-    return Object.fromEntries(
-      Object.entries(value).map(([key, value]) => [
-        key
-          .split(/(?=[A-Z])/)
-          .join('_')
-          .toLowerCase(),
-        camelToSnake(value),
-      ]),
-    );
-  }
-  return value;
+  return mapKeysDeep(
+    value,
+    (_value: string, key: any, parent: any, context: any) => {
+      if (Array.isArray(parent)) {
+        // tell mapKeysDeep to skip mapping inside this branch
+        context.skipChildren = true;
+        return key;
+      }
+      return key
+        .split(/(?=[A-Z])/)
+        .join('_')
+        .toLowerCase();
+    },
+  ) as T;
 }
 
-export function snakeToCamel<T = any>(value: T) {
+export function snakeToCamel<T = any>(value: T): T {
   if (value === null || value === undefined) {
     return value;
   }
-
-  if (Array.isArray(value)) {
-    return value.map(snakeToCamel);
-  }
-
-  const impl = (str: string) => {
-    const converted = str.replace(/([-_]\w)/g, (group) =>
-      group[1].toUpperCase(),
-    );
-    return converted[0].toLowerCase() + converted.slice(1);
-  };
-
-  if (typeof value === 'object' && !(value instanceof Date)) {
-    return Object.fromEntries(
-      Object.entries(value).map(([key, value]) => [
-        impl(key),
-        snakeToCamel(value),
-      ]),
-    );
-  }
-  return value;
+  return mapKeysDeep(
+    value,
+    (_value: string, key: any, parent: any, context: any) => {
+      if (Array.isArray(parent)) {
+        // tell mapKeysDeep to skip mapping inside this branch
+        context.skipChildren = true;
+        return key;
+      }
+      const converted = key.replace(/([-_]\w)/g, (group) =>
+        group[1].toUpperCase(),
+      );
+      return converted[0].toLowerCase() + converted.slice(1);
+    },
+  ) as T;
 }
 
 export const DEFAULT_STRATEGY = {
@@ -63,7 +56,7 @@ export const DEFAULT_STRATEGY = {
 
 @Injectable()
 export class SerializeInterceptor implements NestInterceptor<any, any> {
-  constructor(@Optional() readonly strategy = DEFAULT_STRATEGY) {}
+  constructor(@Optional() readonly strategy = DEFAULT_STRATEGY) { }
 
   intercept(
     context: ExecutionContext,

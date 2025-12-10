@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEnum,
@@ -7,6 +7,7 @@ import {
   IsPositive,
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { parseBoolean } from '@/utils/parse-boolean';
 
 export class NumberFormatQueryDto {
   @ApiPropertyOptional({
@@ -24,6 +25,7 @@ export class NumberFormatQueryDto {
     example: false,
   })
   @IsBoolean()
+  @Transform(({ value }) => parseBoolean(value, false))
   @IsOptional()
   readonly divideOn1000: boolean;
 
@@ -32,6 +34,7 @@ export class NumberFormatQueryDto {
     example: true,
   })
   @IsBoolean()
+  @Transform(({ value }) => parseBoolean(value, false))
   @IsOptional()
   readonly showZero: boolean;
 

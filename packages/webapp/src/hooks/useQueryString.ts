@@ -1,16 +1,10 @@
 // @ts-nocheck
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import {
-  ParseOptions,
-  ParsedQuery,
-  StringifyOptions,
-  parse,
-  stringify,
-} from 'query-string';
+import * as qs from 'qs';
 import { useHistory } from 'react-router';
 
 export interface QueryStringResult {
-  [0]: ParsedQuery;
+  [0]: Record<string, any>;
   [1]: Dispatch<SetStateAction<Record<string, any>>>;
 }
 
@@ -19,6 +13,61 @@ type NavigateCallback = (
   pathname: string,
   stringifedParams: string,
 ) => void;
+
+type ParseOptions = {
+  parseNumbers?: boolean;
+  parseBooleans?: boolean;
+  [key: string]: any;
+};
+
+type StringifyOptions = qs.IStringifyOptions;
+
+/**
+ * Checks if a string represents a number (including negatives, decimals, scientific notation)
+ */
+const isNumber = (val: string): boolean => {
+  return !isNaN(parseFloat(val)) && isFinite(Number(val)) && val !== '';
+};
+
+/**
+ * Checks if a string represents a boolean
+ */
+const isBoolean = (val: string): boolean => {
+  return val === 'false' || val === 'true';
+};
+
+/**
+ * Custom decoder for qs to parse numbers and booleans
+ * Based on query-types library approach: https://github.com/xpepermint/query-types
+ */
+const createDecoder = (parseNumbers: boolean, parseBooleans: boolean) => {
+  return (str: string, defaultDecoder?: any, charset?: string, type?: 'key' | 'value') => {
+    // Only decode values, not keys
+    if (type === 'key') {
+      return defaultDecoder ? defaultDecoder(str, defaultDecoder, charset) : str;
+    }
+
+    // First decode using default decoder
+    const decoded = defaultDecoder ? defaultDecoder(str, defaultDecoder, charset) : decodeURIComponent(str);
+
+    // Handle empty strings and undefined
+    if (typeof decoded === 'undefined' || decoded === '') {
+      return null;
+    }
+
+    // Parse booleans first (before numbers, as 'true'/'false' are strings)
+    if (parseBooleans && isBoolean(decoded)) {
+      return decoded === 'true';
+    }
+
+    // Parse numbers if enabled (handles integers, decimals, negatives, scientific notation)
+    if (parseNumbers && isNumber(decoded)) {
+      return Number(decoded);
+    }
+
+    return decoded;
+  };
+};
 
 /**
  * Query string.
@@ -35,14 +84,28 @@ export function useQueryString(
   stringifyOptions?: StringifyOptions,
 ): QueryStringResult {
   const isFirst = useRef(true);
-  const [state, setState] = useState(parse(location.search, parseOptions));
+
+  // Extract parseNumbers and parseBooleans from parseOptions
+  const { parseNumbers = false, parseBooleans = false, ...qsParseOptions } = parseOptions || {};
+
+  // Create decoder if needed
+  const parseConfig = {
+    ...qsParseOptions,
+    ...(parseNumbers || parseBooleans ? {
+      decoder: createDecoder(parseNumbers, parseBooleans),
+    } : {}),
+  };
+
+  const [state, setState] = useState(
+    qs.parse(location.search.substring(1), parseConfig)
+  );
 
   useEffect((): void => {
     if (isFirst.current) {
       isFirst.current = false;
     } else {
       const pathname = location.pathname;
-      const stringifedParams = stringify(state, stringifyOptions);
+      const stringifedParams = qs.stringify(state, stringifyOptions);
       const pathnameWithParams = pathname + '?' + stringifedParams;
 
       navigate(pathnameWithParams, pathname, stringifedParams);
@@ -52,7 +115,7 @@ export function useQueryString(
   const setQuery: typeof setState = (values): void => {
     const nextState = typeof values === 'function' ? values(state) : values;
     setState(
-      (state): ParsedQuery => ({
+      (state): Record<string, any> => ({
         ...state,
         ...nextState,
       }),
@@ -78,7 +141,6 @@ export const useAppQueryString = (
     window.location,
     (pathnameWithParams, pathname, stringifiedParams) => {
       history.push({ pathname, search: stringifiedParams });
-
       navigate && navigate(pathnameWithParams, pathname, stringifiedParams);
     },
     {

@@ -8,6 +8,7 @@ import { ServiceErrorFilter } from './common/filters/service-error.filter';
 import { ModelHasRelationsFilter } from './common/filters/model-has-relations.filter';
 import { ValidationPipe } from './common/pipes/ClassValidation.pipe';
 import { ToJsonInterceptor } from './common/interceptors/to-json.interceptor';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 global.__public_dirname = path.join(__dirname, '..', 'public');
 global.__static_dirname = path.join(__dirname, '../static');
@@ -15,7 +16,10 @@ global.__views_dirname = path.join(global.__static_dirname, '/views');
 global.__images_dirname = path.join(global.__static_dirname, '/images');
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { rawBody: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    rawBody: true,
+  });
+  app.set('query parser', 'extended');
   app.setGlobalPrefix('/api');
 
   // create and mount the middleware manually here

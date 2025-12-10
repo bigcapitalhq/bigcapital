@@ -78,7 +78,7 @@
     "plaid-threads": "^11.4.3",
     "polished": "^4.3.1",
     "prop-types": "15.8.1",
-    "query-string": "^7.1.1",
+    "qs": "^6.14.0",
     "ramda": "^0.27.1",
     "react": "^18.2.0",
     "react-body-classname": "^1.3.1",

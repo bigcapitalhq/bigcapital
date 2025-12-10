@@ -18,6 +18,7 @@ export const getInventoryItemDetailsDefaultQuery = () => ({
   itemsIds: [],
   warehousesIds: [],
   branchesIds: [],
+  numberFormat: {},
 });
 
 /**

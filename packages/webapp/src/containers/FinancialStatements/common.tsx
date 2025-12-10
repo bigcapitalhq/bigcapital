@@ -42,7 +42,6 @@ export const transformAccountsFilter = (form) => {
  */
 export const transformFilterFormToQuery = (form) => {
   return R.compose(
-    R.curry(flatten)({ safe: true }),
     transfromToSnakeCase,
     transformAccountsFilter,
     transformDisplayColumnsType,

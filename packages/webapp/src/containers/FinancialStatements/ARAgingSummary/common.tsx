@@ -21,6 +21,7 @@ export const getDefaultARAgingSummaryQuery = () => {
     filterByOption: 'without-zero-balance',
     customersIds: [],
     branchesIds: [],
+    numberFormat: {},
   };
 };
 

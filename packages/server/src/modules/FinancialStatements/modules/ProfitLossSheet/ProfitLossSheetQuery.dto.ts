@@ -7,11 +7,13 @@ import {
   IsEnum,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { ToNumber } from '@/common/decorators/Validators';
 import { parseBoolean } from '@/utils/parse-boolean';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 
 export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @IsString()
@@ -30,8 +32,10 @@ export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
   toDate: moment.MomentInput;
 
   @ApiProperty({ description: 'Number format configuration' })
-  @Type(() => Object)
-  numberFormat: INumberFormatQuery;
+  @ValidateNested()
+  @Type(() => NumberFormatQueryDto)
+  @IsOptional()
+  numberFormat: NumberFormatQueryDto;
 
   @IsBoolean()
   @Transform(({ value }) => parseBoolean(value, false))

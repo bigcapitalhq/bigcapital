@@ -32,7 +32,7 @@ export class InventoryItemDetailsQueryDto {
   @ApiPropertyOptional({
     description: 'Number format for the inventory item details',
   })
-  numberFormat: INumberFormatQuery;
+  numberFormat: NumberFormatQueryDto;
 
   @Transform(({ value }) => parseBoolean(value, false))
   @IsBoolean()
