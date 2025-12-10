@@ -22,6 +22,7 @@ export const getDefaultAPAgingSummaryQuery = () => {
     filterByOption: 'without-zero-balance',
     vendorsIds: [],
     branchesIds: [],
+    numberFormat: {},
   };
 };
 

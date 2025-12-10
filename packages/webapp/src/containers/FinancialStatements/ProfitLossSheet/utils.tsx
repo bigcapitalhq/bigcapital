@@ -35,6 +35,7 @@ export const getDefaultProfitLossQuery = () => ({
   percentageExpense: false,
 
   branchesIds: [],
+  numberFormat: {},
 });
 
 /**
@@ -50,7 +51,6 @@ const parseProfitLossQuery = (locationQuery) => {
 
   return {
     ...transformed,
-
     // Ensures the branches ids is always array.
     branchesIds: castArray(transformed.branchesIds),
   };
