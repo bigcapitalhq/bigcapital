@@ -9,7 +9,7 @@ export class TransactionsByVendorsPdf {
   constructor(
     private readonly transactionsByVendorTable: TransactionsByVendorTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) {}
+  ) { }
 
   /**
    * Converts the given balance sheet table to pdf.
@@ -21,6 +21,7 @@ export class TransactionsByVendorsPdf {
 
     return this.tableSheetPdf.convertToPdf(
       table.table,
+      table.meta.organizationName,
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCustomCss,

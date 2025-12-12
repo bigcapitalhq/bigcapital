@@ -9,7 +9,7 @@ export class JournalSheetPdfInjectable {
   constructor(
     private readonly journalSheetTable: JournalSheetTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) {}
+  ) { }
 
   /**
    * Converts the given journal sheet table to pdf.
@@ -22,6 +22,7 @@ export class JournalSheetPdfInjectable {
 
     return this.tableSheetPdf.convertToPdf(
       table.table,
+      table.meta.organizationName,
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCustomCss,

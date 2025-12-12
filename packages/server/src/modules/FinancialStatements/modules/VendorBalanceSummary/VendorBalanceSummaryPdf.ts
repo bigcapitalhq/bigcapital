@@ -9,7 +9,7 @@ export class VendorBalanceSummaryPdf {
   constructor(
     private readonly vendorBalanceSummaryTable: VendorBalanceSummaryTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) {}
+  ) { }
 
   /**
    * Retrieves the sales by items sheet in pdf format.
@@ -23,6 +23,7 @@ export class VendorBalanceSummaryPdf {
 
     return this.tableSheetPdf.convertToPdf(
       table.table,
+      table.meta.organizationName,
       table.meta.sheetName,
       table.meta.formattedAsDate,
       HtmlTableCustomCss,

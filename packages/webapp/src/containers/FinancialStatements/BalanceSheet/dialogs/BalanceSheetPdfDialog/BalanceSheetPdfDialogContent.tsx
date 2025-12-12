@@ -10,7 +10,7 @@ import { useBalanceSheetContext } from '../../BalanceSheetProvider';
 
 export default function BalanceSheetPdfDialogContent() {
   const { httpQuery } = useBalanceSheetContext();
-  const { isLoading, pdfUrl } = useBalanceSheetPdf({ ...httpQuery });
+  const { isLoading, isLoaded, pdfUrl } = useBalanceSheetPdf({ ...httpQuery });
 
   return (
     <DialogContent>
@@ -18,8 +18,10 @@ export default function BalanceSheetPdfDialogContent() {
         <AnchorButton
           href={pdfUrl}
           target={'__blank'}
-          minimal={true}
-          outlined={true}
+          disabled={!isLoaded}
+          small
+          minimal
+          outlined
         >
           <T id={'pdf_preview.preview.button'} />
         </AnchorButton>
@@ -27,8 +29,11 @@ export default function BalanceSheetPdfDialogContent() {
         <AnchorButton
           href={pdfUrl}
           download={'invoice.pdf'}
-          minimal={true}
-          outlined={true}
+
+          disabled={!isLoaded}
+          small
+          minimal
+          outlined
         >
           <T id={'pdf_preview.download.button'} />
         </AnchorButton>
