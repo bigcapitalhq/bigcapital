@@ -234,22 +234,12 @@ html[lang^='ar'] {
 
   .dialog__header-actions {
     position: absolute;
-    right: 50px;
+    right: 44px;
     top: 0;
     z-index: 9999999;
-    margin: 6px;
-
-    .bp4-button {
-      border-color: rgba(0, 0, 0, 0.25);
-      color: rgb(25, 32, 37);
-      min-height: 30px;
-      padding-left: 14px;
-      padding-right: 14px;
-
-      &+.bp4-button {
-        margin-left: 8px;
-      }
-    }
+    margin: 9px 6px 6px;
+    display: flex;
+    gap: 10px;
   }
 
   .bp4-dialog {

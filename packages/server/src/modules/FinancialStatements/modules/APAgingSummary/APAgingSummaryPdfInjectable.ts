@@ -21,6 +21,7 @@ export class APAgingSummaryPdfInjectable {
 
     return this.tableSheetPdf.convertToPdf(
       table.table,
+      table.meta.organizationName,
       table.meta.sheetName,
       table.meta.formattedAsDate,
       HtmlTableCss,

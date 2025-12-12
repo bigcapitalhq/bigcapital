@@ -22,6 +22,7 @@ export class CashflowTablePdfInjectable {
 
     return this.tableSheetPdf.convertToPdf(
       table.table,
+      table.meta.organizationName,
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCustomCss,

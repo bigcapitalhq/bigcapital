@@ -8,7 +8,7 @@ export class SalesTaxLiabiltiySummaryPdf {
   constructor(
     private readonly salesTaxLiabiltiySummaryTable: SalesTaxLiabilitySummaryTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) {}
+  ) { }
 
   /**
    * Converts the given sales tax liability summary table to pdf.
@@ -21,6 +21,7 @@ export class SalesTaxLiabiltiySummaryPdf {
     );
     return this.tableSheetPdf.convertToPdf(
       table.table,
+      table.meta.organizationName,
       table.meta.sheetName,
       table.meta.formattedDateRange,
     );

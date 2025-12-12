@@ -9,7 +9,7 @@ export class SalesByItemsPdfInjectable {
   constructor(
     private readonly salesByItemsTable: SalesByItemsTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) {}
+  ) { }
 
   /**
    * Retrieves the sales by items sheet in pdf format.
@@ -23,6 +23,7 @@ export class SalesByItemsPdfInjectable {
 
     return this.tableSheetPdf.convertToPdf(
       table.table,
+      table.meta.organizationName,
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCustomCss,
