@@ -104,6 +104,12 @@ export class BillPaymentResponseDto {
   @ApiProperty({ description: 'The formatted amount', example: '100.00 USD' })
   formattedAmount: string;
 
+  @ApiProperty({ description: 'The formatted total', example: '100.00 USD' })
+  formattedTotal: string;
+
+  @ApiProperty({ description: 'The formatted subtotal', example: '100.00 USD' })
+  formattedSubtotal: string;
+
   @ApiProperty({
     description: 'The date when the payment was created',
     example: '2024-01-01T12:00:00Z',

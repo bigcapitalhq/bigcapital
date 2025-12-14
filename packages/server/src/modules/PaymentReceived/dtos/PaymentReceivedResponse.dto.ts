@@ -74,6 +74,9 @@ export class PaymentReceivedResponseDto {
   @ApiProperty({ description: 'The formatted amount', example: '100.00' })
   formattedAmount: string;
 
+  @ApiProperty({ description: 'The formatted total', example: '100.00 USD' })
+  formattedTotal: string;
+
   @ApiProperty({ description: 'The currency code', example: 'USD' })
   currencyCode: string;
 

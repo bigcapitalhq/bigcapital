@@ -13,6 +13,8 @@ export class BillPaymentTransformer extends Transformer {
       'formattedPaymentDate',
       'formattedCreatedAt',
       'formattedAmount',
+      'formattedTotal',
+      'formattedSubtotal',
       'entries',
       'attachments',
     ];
@@ -42,6 +44,29 @@ export class BillPaymentTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedAmount = (billPayment: BillPayment): string => {
+    return this.formatNumber(billPayment.amount, {
+      currencyCode: billPayment.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted total.
+   * @param {IBillPayment} billPayment
+   * @returns {string}
+   */
+  protected formattedTotal = (billPayment: BillPayment): string => {
+    return this.formatNumber(billPayment.amount, {
+      currencyCode: billPayment.currencyCode,
+      money: true,
+    });
+  };
+
+  /**
+   * Retrieves the formatted subtotal.
+   * @param {IBillPayment} billPayment
+   * @returns {string}
+   */
+  protected formattedSubtotal = (billPayment: BillPayment): string => {
     return this.formatNumber(billPayment.amount, {
       currencyCode: billPayment.currencyCode,
     });

@@ -90,7 +90,7 @@ export class CreditNoteTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedSubtotal = (credit): string => {
-    return this.formatNumber(credit.amount, { money: false });
+    return this.formatNumber(credit.amount);
   };
 
   /**
@@ -130,7 +130,7 @@ export class CreditNoteTransformer extends Transformer {
    * @returns {string}
    */
   protected adjustmentFormatted = (credit): string => {
-    return this.formatMoney(credit.adjustment, {
+    return this.formatNumber(credit.adjustment, {
       currencyCode: credit.currencyCode,
       excerptZero: true,
     });
@@ -156,6 +156,7 @@ export class CreditNoteTransformer extends Transformer {
   protected totalFormatted = (credit): string => {
     return this.formatNumber(credit.total, {
       currencyCode: credit.currencyCode,
+      money: true,
     });
   };
 
@@ -167,6 +168,7 @@ export class CreditNoteTransformer extends Transformer {
   protected totalLocalFormatted = (credit): string => {
     return this.formatNumber(credit.totalLocal, {
       currencyCode: credit.currencyCode,
+      money: true,
     });
   };
 

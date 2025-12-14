@@ -70,6 +70,7 @@ export class SaleInvoiceTransformer extends Transformer {
   protected dueAmountFormatted = (invoice: SaleInvoice): string => {
     return this.formatNumber(invoice.dueAmount, {
       currencyCode: invoice.currencyCode,
+      money: true
     });
   };
 
@@ -113,7 +114,6 @@ export class SaleInvoiceTransformer extends Transformer {
   protected subtotalFormatted = (invoice: SaleInvoice): string => {
     return this.formatNumber(invoice.subtotal, {
       currencyCode: this.context.organization.baseCurrency,
-      money: false,
     });
   };
 
@@ -170,6 +170,7 @@ export class SaleInvoiceTransformer extends Transformer {
   protected totalFormatted = (invoice: SaleInvoice): string => {
     return this.formatNumber(invoice.total, {
       currencyCode: invoice.currencyCode,
+      money: true
     });
   };
 
@@ -212,7 +213,7 @@ export class SaleInvoiceTransformer extends Transformer {
    * @returns {string}
    */
   protected adjustmentFormatted = (invoice: SaleInvoice): string => {
-    return this.formatMoney(invoice.adjustment, {
+    return this.formatNumber(invoice.adjustment, {
       currencyCode: invoice.currencyCode,
     })
   }

@@ -17,7 +17,7 @@ export class SaleEstimateTransfromer extends Transformer {
       'formattedDeliveredAtDate',
       'formattedApprovedAtDate',
       'formattedRejectedAtDate',
-      
+
       'discountAmountFormatted',
       'discountPercentageFormatted',
       'adjustmentFormatted',
@@ -135,7 +135,7 @@ export class SaleEstimateTransfromer extends Transformer {
    * @returns {string}
    */
   protected adjustmentFormatted = (estimate: SaleEstimate): string => {
-    return this.formatMoney(estimate.adjustment, {
+    return this.formatNumber(estimate.adjustment, {
       currencyCode: estimate.currencyCode,
       excerptZero: true,
     });

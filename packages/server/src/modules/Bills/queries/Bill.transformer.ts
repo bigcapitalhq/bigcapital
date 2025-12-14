@@ -94,6 +94,7 @@ export class BillTransformer extends Transformer {
   protected formattedDueAmount = (bill: Bill): string => {
     return this.formatNumber(bill.dueAmount, {
       currencyCode: bill.currencyCode,
+      money: true,
     });
   };
 
@@ -169,6 +170,7 @@ export class BillTransformer extends Transformer {
   protected totalFormatted = (bill: Bill): string => {
     return this.formatNumber(bill.total, {
       currencyCode: bill.currencyCode,
+      money: true,
     });
   };
 

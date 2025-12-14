@@ -11,6 +11,7 @@ export class PaymentReceiveTransfromer extends Transformer {
   public includeAttributes = (): string[] => {
     return [
       'subtotalFormatted',
+      'formatttedTotal',
       'formattedPaymentDate',
       'formattedCreatedAt',
       'formattedAmount',
@@ -45,7 +46,18 @@ export class PaymentReceiveTransfromer extends Transformer {
   protected subtotalFormatted = (payment: PaymentReceived): string => {
     return this.formatNumber(payment.amount, {
       currencyCode: payment.currencyCode,
-      money: false,
+    });
+  };
+
+  /**
+   * Retrieves the formatted total.
+   * @param {PaymentReceived} payment
+   * @returns {string}
+   */
+  protected formatttedTotal = (payment: PaymentReceived): string => {
+    return this.formatNumber(payment.amount, {
+      currencyCode: payment.currencyCode,
+      money: true,
     });
   };
 
@@ -66,7 +78,7 @@ export class PaymentReceiveTransfromer extends Transformer {
    * @returns {string}
    */
   protected formattedExchangeRate = (payment: PaymentReceived): string => {
-    return this.formatNumber(payment.exchangeRate, { money: false });
+    return this.formatNumber(payment.exchangeRate);
   };
 
   /**
