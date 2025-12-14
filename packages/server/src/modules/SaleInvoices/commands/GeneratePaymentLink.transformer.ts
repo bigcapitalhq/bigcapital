@@ -1,7 +1,10 @@
 import { Transformer } from '@/modules/Transformer/Transformer';
 import { PUBLIC_PAYMENT_LINK } from '../constants';
 
-export class GeneratePaymentLinkTransformer extends Transformer {
+interface GeneratePaymentLinkTransformerOptions {
+  baseUrl: string;
+}
+export class GeneratePaymentLinkTransformer extends Transformer<GeneratePaymentLinkTransformerOptions> {
   /**
    * Exclude these attributes from payment link object.
    * @returns {Array}
@@ -23,6 +26,9 @@ export class GeneratePaymentLinkTransformer extends Transformer {
    * @returns {string}
    */
   public link(link) {
-    return PUBLIC_PAYMENT_LINK?.replace('{PAYMENT_LINK_ID}', link.linkId);
+    return PUBLIC_PAYMENT_LINK?.replace(
+      '{BASE_URL}',
+      this.options.baseUrl,
+    ).replace('{PAYMENT_LINK_ID}', link.linkId);
   }
 }

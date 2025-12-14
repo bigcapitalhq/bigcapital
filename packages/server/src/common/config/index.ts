@@ -1,3 +1,4 @@
+import app from './app';
 import systemDatabase from './system-database';
 import tenantDatabase from './tenant-database';
 import signup from './signup';
@@ -18,6 +19,7 @@ import throttle from './throttle';
 import cloud from './cloud';
 
 export const config = [
+  app,
   systemDatabase,
   cloud,
   tenantDatabase,
