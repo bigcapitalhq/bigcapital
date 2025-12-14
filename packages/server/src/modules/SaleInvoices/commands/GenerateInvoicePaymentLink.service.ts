@@ -10,6 +10,7 @@ import { PaymentLink } from '@/modules/PaymentLinks/models/PaymentLink';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class GenerateShareLink {
@@ -18,13 +19,14 @@ export class GenerateShareLink {
     private eventPublisher: EventEmitter2,
     private transformer: TransformerInjectable,
     private tenancyContext: TenancyContext,
+    private configService: ConfigService,
 
     @Inject(SaleInvoice.name)
     private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
 
     @Inject(PaymentLink.name)
     private paymentLinkModel: typeof PaymentLink,
-  ) {}
+  ) { }
 
   /**
    * Generates private or public payment link for the given sale invoice.
@@ -75,6 +77,9 @@ export class GenerateShareLink {
       return this.transformer.transform(
         paymentLink,
         new GeneratePaymentLinkTransformer(),
+        {
+          baseUrl: this.configService.get('app.baseUrl'),
+        }
       );
     });
   }
