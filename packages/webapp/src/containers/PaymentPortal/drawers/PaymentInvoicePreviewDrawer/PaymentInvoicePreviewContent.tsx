@@ -23,6 +23,8 @@ export function PaymentInvoicePreviewContent() {
             termsConditions={sharableLinkMeta?.termsConditions}
             statement={sharableLinkMeta?.invoiceMessage}
             companyName={sharableLinkMeta?.companyName}
+            primaryColor={sharableLinkMeta?.brandingTemplate?.primaryColor}
+            secondaryColor={sharableLinkMeta?.brandingTemplate?.secondaryColor}
             lines={sharableLinkMeta?.entries?.map((entry) => ({
               item: entry.itemName,
               description: entry.description,

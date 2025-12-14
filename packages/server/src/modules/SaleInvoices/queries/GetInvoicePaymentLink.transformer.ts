@@ -209,7 +209,7 @@ class GetInvoicePaymentLinkTaxEntryTransformer extends SaleInvoiceTaxEntryTransf
 
 class GetInvoicePaymentLinkBrandingTemplate extends GetPdfTemplateTransformer {
   public includeAttributes = (): string[] => {
-    return ['companyLogoUri', 'primaryColor'];
+    return ['companyLogoUri', 'primaryColor', 'secondaryColor'];
   };
 
   public excludeAttributes = (): string[] => {
@@ -218,5 +218,9 @@ class GetInvoicePaymentLinkBrandingTemplate extends GetPdfTemplateTransformer {
 
   primaryColor = (template) => {
     return template.attributes?.primaryColor;
+  };
+
+  secondaryColor = (template) => {
+    return template.attributes?.secondaryColor;
   };
 }
