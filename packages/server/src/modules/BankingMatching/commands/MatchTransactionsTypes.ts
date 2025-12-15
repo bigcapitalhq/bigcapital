@@ -3,7 +3,6 @@ import { GetMatchedTransactionsByBills } from '../queries/GetMatchedTransactions
 import { GetMatchedTransactionsByManualJournals } from '../queries/GetMatchedTransactionsByManualJournals.service';
 import { MatchTransactionsTypesRegistry } from './MatchTransactionsTypesRegistry';
 import { GetMatchedTransactionsByInvoices } from '../queries/GetMatchedTransactionsByInvoices.service';
-import { GetMatchedTransactionCashflowTransformer } from '../queries/GetMatchedTransactionCashflowTransformer';
 import { GetMatchedTransactionsByCashflow } from '../queries/GetMatchedTransactionsByCashflow';
 import { Injectable } from '@nestjs/common';
 
@@ -12,32 +11,33 @@ export class MatchTransactionsTypes {
   private static registry: MatchTransactionsTypesRegistry;
 
   /**
-   * Consttuctor method.
+   * Constructor method.
    */
-  constructor() {
+  constructor(
+    private readonly matchedTransactionsByInvoices: GetMatchedTransactionsByInvoices,
+    private readonly matchedTransactionsByBills: GetMatchedTransactionsByBills,
+    private readonly matchedTransactionsByExpenses: GetMatchedTransactionsByExpenses,
+    private readonly matchedTransactionsByManualJournals: GetMatchedTransactionsByManualJournals,
+    private readonly matchedTransactionsByCashflow: GetMatchedTransactionsByCashflow,
+  ) {
     this.boot();
   }
 
   get registered() {
     return [
-      { type: 'SaleInvoice', service: GetMatchedTransactionsByInvoices },
-      { type: 'Bill', service: GetMatchedTransactionsByBills },
-      { type: 'Expense', service: GetMatchedTransactionsByExpenses },
+      { type: 'SaleInvoice', service: this.matchedTransactionsByInvoices },
+      { type: 'Bill', service: this.matchedTransactionsByBills },
+      { type: 'Expense', service: this.matchedTransactionsByExpenses },
       {
         type: 'ManualJournal',
-        service: GetMatchedTransactionsByManualJournals,
+        service: this.matchedTransactionsByManualJournals,
       },
       {
         type: 'CashflowTransaction',
-        service: GetMatchedTransactionsByCashflow,
+        service: this.matchedTransactionsByCashflow,
       },
     ];
   }
-
-  /**
-   * Importable instances.
-   */
-  private types = [];
 
   /**
    *
@@ -54,8 +54,7 @@ export class MatchTransactionsTypes {
       const instance = MatchTransactionsTypesRegistry.getInstance();
 
       this.registered.forEach((registered) => {
-        // const serviceInstanace = Container.get(registered.service);
-        // instance.register(registered.type, serviceInstanace);
+        instance.register(registered.type, registered.service);
       });
       MatchTransactionsTypes.registry = instance;
     }
