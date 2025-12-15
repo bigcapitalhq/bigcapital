@@ -6,7 +6,7 @@ import { PaymentLink } from './models/PaymentLink';
 import { StripeInvoiceCheckoutSessionPOJO } from '../StripePayment/StripePayment.types';
 import { ModelObject } from 'objection';
 import { ConfigService } from '@nestjs/config';
-import { GeneratePaymentLinkTransformer } from '../SaleInvoices/commands/GeneratePaymentLink.transformer';
+import { GenerateShareLink } from '../SaleInvoices/commands/GenerateInvoicePaymentLink.service';
 
 @Injectable()
 export class CreateInvoiceCheckoutSession {
@@ -19,6 +19,8 @@ export class CreateInvoiceCheckoutSession {
 
     @Inject(PaymentLink.name)
     private readonly paymentLinkModel: typeof PaymentLink,
+
+    private readonly generatePaymentLinkService: GenerateShareLink,
   ) {}
 
   /**
@@ -68,14 +70,17 @@ export class CreateInvoiceCheckoutSession {
    * @param {string} stripeAccountId - The Stripe account ID associated with the payment method.
    * @returns {Promise<any>} - The created Stripe checkout session.
    */
-  private createCheckoutSession(
+  private async createCheckoutSession(
     invoice: ModelObject<SaleInvoice>,
     stripeAccountId: string,
     paymentLink: PaymentLink,
   ) {
-    const paymentLinkUrl = new GeneratePaymentLinkTransformer().link(
-      paymentLink,
-    );
+    const paymentLinkUrl = (
+      await this.generatePaymentLinkService.generatePaymentLinkFromModel(
+        paymentLink,
+      )
+    ).link;
+
     return this.stripePaymentService.stripe.checkout.sessions.create(
       {
         payment_method_types: ['card'],
