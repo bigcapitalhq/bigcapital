@@ -156,7 +156,7 @@ export const AccountMeta = {
       minLength: 3,
       maxLength: 6,
       unique: true,
-      importHint: 'Unique number to identify the account.',
+      importHint: 'account.field.code_hint',
     },
     accountType: {
       name: 'account.field.type',

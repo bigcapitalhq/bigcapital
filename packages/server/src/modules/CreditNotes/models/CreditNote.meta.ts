@@ -164,73 +164,73 @@ export const CreditNoteMeta = {
   },
   fields2: {
     customerId: {
-      name: 'Customer',
+      name: 'credit_note.field.customer',
       fieldType: 'relation',
       relationModel: 'Contact',
       relationImportMatch: 'displayName',
       required: true,
     },
     exchangeRate: {
-      name: 'Exchange Rate',
+      name: 'credit_note.field.exchange_rate',
       fieldType: 'number',
     },
     creditNoteDate: {
-      name: 'Credit Note Date',
+      name: 'credit_note.field.credit_note_date',
       fieldType: 'date',
       required: true,
     },
     referenceNo: {
-      name: 'Reference No.',
+      name: 'credit_note.field.reference_no',
       fieldType: 'text',
     },
     note: {
-      name: 'Note',
+      name: 'credit_note.field.note',
       fieldType: 'text',
     },
     termsConditions: {
-      name: 'Terms & Conditions',
+      name: 'credit_note.field.terms_conditions',
       fieldType: 'text',
     },
     creditNoteNumber: {
-      name: 'Credit Note Number',
+      name: 'credit_note.field.credit_note_number',
       fieldType: 'text',
     },
     open: {
-      name: 'Open',
+      name: 'credit_note.field.open',
       fieldType: 'boolean',
     },
     entries: {
-      name: 'Entries',
+      name: 'credit_note.field.entries',
       fieldType: 'collection',
       collectionOf: 'object',
       collectionMinLength: 1,
       fields: {
         itemId: {
-          name: 'Item',
+          name: 'credit_note.field.item',
           fieldType: 'relation',
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: 'Matches the item name or code.',
+          importHint: 'invoice.field.item_hint',
         },
         rate: {
-          name: 'Rate',
+          name: 'credit_note.field.rate',
           fieldType: 'number',
           required: true,
         },
         quantity: {
-          name: 'Quantity',
+          name: 'credit_note.field.quantity',
           fieldType: 'number',
           required: true,
         },
         description: {
-          name: 'Description',
+          name: 'credit_note.field.description',
           fieldType: 'text',
         },
       },
     },
     branchId: {
-      name: 'Branch',
+      name: 'invoice.field.branch',
       fieldType: 'relation',
       relationModel: 'Branch',
       relationImportMatch: ['name', 'code'],
@@ -238,7 +238,7 @@ export const CreditNoteMeta = {
       required: true,
     },
     warehouseId: {
-      name: 'Warehouse',
+      name: 'invoice.field.warehouse',
       fieldType: 'relation',
       relationModel: 'Warehouse',
       relationImportMatch: ['name', 'code'],

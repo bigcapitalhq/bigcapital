@@ -17,6 +17,7 @@
   "field.quantity_on_hand": "Quantity on Hand",
   "field.note": "Note",
   "field.category": "Category",
+  "field.category_hint": "Matches the category name.",
   "field.active": "Active",
   "field.created_at": "Created At"
 }

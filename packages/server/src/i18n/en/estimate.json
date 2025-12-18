@@ -1,0 +1,21 @@
+{
+  "field.customer": "Customer",
+  "field.estimate_date": "Estimate Date",
+  "field.expiration_date": "Expiration Date",
+  "field.estimate_number": "Estimate No.",
+  "field.reference_no": "Reference No.",
+  "field.exchange_rate": "Exchange Rate",
+  "field.currency": "Currency",
+  "field.note": "Note",
+  "field.terms_conditions": "Terms & Conditions",
+  "field.delivered": "Delivered",
+  "field.entries": "Entries",
+  "field.amount": "Amount",
+  "field.status": "Status",
+  "field.status.draft": "Draft",
+  "field.status.delivered": "Delivered",
+  "field.status.rejected": "Rejected",
+  "field.status.approved": "Approved",
+  "field.created_at": "Created At"
+}
+

@@ -1,0 +1,15 @@
+{
+  "field.vendor": "Vendor",
+  "field.payment_date": "Payment Date",
+  "field.payment_number": "Payment No.",
+  "field.payment_account": "Payment Account",
+  "field.exchange_rate": "Exchange Rate",
+  "field.note": "Note",
+  "field.reference": "Reference",
+  "field.entries": "Entries",
+  "field.entries.bill": "Bill",
+  "field.entries.payment_amount": "Payment Amount",
+  "field.payment_number_hint": "The payment number should be unique.",
+  "field.bill_hint": "Matches the bill number."
+}
+

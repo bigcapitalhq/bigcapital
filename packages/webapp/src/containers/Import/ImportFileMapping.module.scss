@@ -7,6 +7,10 @@
   color: #738091;
   font-weight: 700;
   padding: 0 11px;
+
+  :global(.bp4-dark) &{
+    color: var(--color-light-gray1);
+  }
 }
 
 .table {
@@ -24,6 +28,11 @@
       padding-bottom: 8px;
       color: #738091;
       font-weight: 500;
+
+      :global(.bp4-dark) &{
+        color: var(--color-light-gray1);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
     }
   }
   

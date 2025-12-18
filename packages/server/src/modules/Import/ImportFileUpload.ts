@@ -24,7 +24,7 @@ export class ImportFileUploadService {
 
     @Inject(ImportModel.name)
     private readonly importModel: typeof ImportModel,
-  ) {}
+  ) { }
 
   /**
    * Imports the specified file for the given resource.

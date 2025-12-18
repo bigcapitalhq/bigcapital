@@ -1,0 +1,16 @@
+{
+  "field.customer": "Customer",
+  "field.exchange_rate": "Exchange Rate",
+  "field.credit_note_date": "Credit Note Date",
+  "field.reference_no": "Reference No.",
+  "field.note": "Note",
+  "field.terms_conditions": "Terms & Conditions",
+  "field.credit_note_number": "Credit Note Number",
+  "field.open": "Open",
+  "field.entries": "Entries",
+  "field.item": "Item",
+  "field.rate": "Rate",
+  "field.quantity": "Quantity",
+  "field.description": "Description"
+}
+

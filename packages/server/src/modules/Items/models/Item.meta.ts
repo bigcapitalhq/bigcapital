@@ -267,28 +267,28 @@ export const ItemMeta = {
       fieldType: 'relation',
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
-      importHint: 'Matches the account name or code.',
+      importHint: 'account.field.account_hint',
     },
     sellAccountId: {
       name: 'item.field.sell_account',
       fieldType: 'relation',
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
-      importHint: 'Matches the account name or code.',
+      importHint: 'account.field.account_hint',
     },
     inventoryAccountId: {
       name: 'item.field.inventory_account',
       fieldType: 'relation',
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
-      importHint: 'Matches the account name or code.',
+      importHint: 'account.field.account_hint',
     },
     sellDescription: {
-      name: 'Sell Description',
+      name: 'item.field.sell_description',
       fieldType: 'text',
     },
     purchaseDescription: {
-      name: 'Purchase Description',
+      name: 'item.field.purchase_description',
       fieldType: 'text',
     },
     note: {
@@ -300,7 +300,7 @@ export const ItemMeta = {
       fieldType: 'relation',
       relationModel: 'ItemCategory',
       relationImportMatch: ['name'],
-      importHint: 'Matches the category name.',
+      importHint: 'item.field.category_hint',
     },
     active: {
       name: 'item.field.active',

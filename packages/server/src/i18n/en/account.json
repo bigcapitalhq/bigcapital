@@ -3,6 +3,7 @@
   "field.description": "Description",
   "field.slug": "Account slug",
   "field.code": "Account code",
+  "field.code_hint": "Unique number to identify the account.",
   "field.root_type": "Root type",
   "field.normal": "Account normal",
   "field.normal.credit": "Credit",
@@ -13,5 +14,6 @@
   "field.balance": "Balance",
   "field.bank_balance": "Bank Balance",
   "field.parent_account": "Parent Account",
-  "field.created_at": "Created at"
+  "field.created_at": "Created at",
+  "field.account_hint": "Matches the account name or code."
 }
