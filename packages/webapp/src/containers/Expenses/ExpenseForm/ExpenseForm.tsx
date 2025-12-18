@@ -48,7 +48,7 @@ function ExpenseForm({
     createExpenseMutate,
     expense,
     expenseId,
-    submitPayload,
+    submitPayloadRef,
   } = useExpenseFormContext();
 
   const isNewMode = !expenseId;
@@ -86,9 +86,12 @@ function ExpenseForm({
       return;
     }
 
+    // Get submit payload from ref for synchronous access
+    const currentSubmitPayload = submitPayloadRef?.current || {};
+
     const form = {
       ...transformFormValuesToRequest(values),
-      publish: submitPayload.publish,
+      publish: currentSubmitPayload.publish,
     };
     // Handle request success.
     const handleSuccess = (response) => {
@@ -103,10 +106,10 @@ function ExpenseForm({
       });
       setSubmitting(false);
 
-      if (submitPayload.redirect) {
+      if (currentSubmitPayload.redirect) {
         history.push('/expenses');
       }
-      if (submitPayload.resetForm) {
+      if (currentSubmitPayload.resetForm) {
         resetForm();
       }
     };

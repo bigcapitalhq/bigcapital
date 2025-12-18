@@ -6,7 +6,7 @@ import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 
 @Injectable()
 export class ImportableRegistry {
-  constructor(private readonly moduleRef: ModuleRef) {}
+  constructor(private readonly moduleRef: ModuleRef) { }
   /**
    * Retrieves the importable service instance of the given resource name.
    * @param {string} name
@@ -15,6 +15,12 @@ export class ImportableRegistry {
   public async getImportable(name: string) {
     const _name = this.sanitizeResourceName(name);
     const importable = getImportableService(_name);
+
+    if (!importable) {
+      throw new Error(
+        `No importable service found for resource "${_name}". Make sure the resource has an @ImportableService decorator registered.`,
+      );
+    }
     const contextId = ContextIdFactory.create();
 
     const importableInstance = await this.moduleRef.resolve(importable, contextId, {

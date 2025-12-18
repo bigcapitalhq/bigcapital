@@ -18,7 +18,7 @@ import { CurrencyParsingDTOs } from './_constants';
 export class ImportFileDataTransformer {
   constructor(
     private readonly resource: ResourceService,
-  ) {}
+  ) { }
 
   /**
    * Parses the given sheet data before passing to the service layer.

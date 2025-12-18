@@ -107,4 +107,4 @@ const modelProviders = models.map((model) => RegisterTenancyModel(model));
   imports: [...modelProviders],
   exports: [...modelProviders],
 })
-export class TenancyModelsModule {}
+export class TenancyModelsModule { }
