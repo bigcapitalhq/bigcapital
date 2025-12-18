@@ -1,0 +1,17 @@
+{
+  "field.customer": "Customer",
+  "field.payment_date": "Payment Date",
+  "field.amount": "Amount",
+  "field.reference_no": "Reference No.",
+  "field.deposit_account": "Deposit Account",
+  "field.payment_receive_no": "Payment No.",
+  "field.statement": "Statement",
+  "field.entries": "Entries",
+  "field.exchange_rate": "Exchange Rate",
+  "field.invoice": "Invoice",
+  "field.entries.payment_amount": "Payment Amount",
+  "field.created_at": "Created At",
+  "field.payment_no_hint": "The payment number should be unique.",
+  "field.invoice_hint": "Matches the invoice number."
+}
+

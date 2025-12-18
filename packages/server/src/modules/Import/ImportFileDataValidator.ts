@@ -19,7 +19,8 @@ export class ImportFileDataValidator {
 
   /**
    * Validates the given mapped DTOs and returns errors with their index.
-   * @param {Record<string, any>} mappedDTOs
+   * @param {ResourceMetaFieldsMap} importableFields - Already localized fields from ResourceService
+   * @param {Record<string, any>} data
    * @returns {Promise<void | ImportInsertError[]>}
    */
   public async validateData(

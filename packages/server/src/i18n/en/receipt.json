@@ -10,5 +10,21 @@
   "paper.receipt_amount": "Receipt amount",
   "paper.total": "Total",
   "paper.balance_due": "Balance Due",
-  "paper.payment_amount": "Payment Amount"
+  "paper.payment_amount": "Payment Amount",
+
+  "field.receipt_date": "Receipt Date",
+  "field.customer": "Customer",
+  "field.deposit_account": "Deposit Account",
+  "field.exchange_rate": "Exchange Rate",
+  "field.receipt_number": "Receipt Number",
+  "field.reference_no": "Reference No.",
+  "field.closed": "Closed",
+  "field.entries": "Entries",
+  "field.statement": "Statement",
+  "field.receipt_message": "Receipt Message",
+  "field.amount": "Amount",
+  "field.status": "Status",
+  "field.status.draft": "Draft",
+  "field.status.closed": "Closed",
+  "field.created_at": "Created At"
 }

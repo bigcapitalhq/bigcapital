@@ -5,10 +5,10 @@ import { ExpensesSampleData } from './constants';
 import { CreateExpense } from './commands/CreateExpense.service';
 import { CreateExpenseDto } from './dtos/Expense.dto';
 import { ImportableService } from '../Import/decorators/Import.decorator';
-import { ManualJournal } from '../ManualJournals/models/ManualJournal';
+import { Expense } from './models/Expense.model';
 
 @Injectable()
-@ImportableService({ name: ManualJournal.name })
+@ImportableService({ name: Expense.name })
 export class ExpensesImportable extends Importable {
   constructor(private readonly createExpenseService: CreateExpense) {
     super();

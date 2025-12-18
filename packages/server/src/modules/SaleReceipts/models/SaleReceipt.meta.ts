@@ -186,42 +186,42 @@ export const SaleReceiptMeta = {
   },
   fields2: {
     receiptDate: {
-      name: 'Receipt Date',
+      name: 'receipt.field.receipt_date',
       fieldType: 'date',
       required: true,
     },
     customerId: {
-      name: 'Customer',
+      name: 'receipt.field.customer',
       fieldType: 'relation',
       relationModel: 'Contact',
       relationImportMatch: 'displayName',
       required: true,
     },
     depositAccountId: {
-      name: 'Deposit Account',
+      name: 'receipt.field.deposit_account',
       fieldType: 'relation',
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
     },
     exchangeRate: {
-      name: 'Exchange Rate',
+      name: 'receipt.field.exchange_rate',
       fieldType: 'number',
     },
     receiptNumber: {
-      name: 'Receipt Number',
+      name: 'receipt.field.receipt_number',
       fieldType: 'text',
     },
     referenceNo: {
-      name: 'Reference No.',
+      name: 'receipt.field.reference_no',
       fieldType: 'text',
     },
     closed: {
-      name: 'Closed',
+      name: 'receipt.field.closed',
       fieldType: 'boolean',
     },
     entries: {
-      name: 'Entries',
+      name: 'receipt.field.entries',
       fieldType: 'collection',
       collectionOf: 'object',
       collectionMinLength: 1,
@@ -233,7 +233,7 @@ export const SaleReceiptMeta = {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: 'Matches the item name or code.',
+          importHint: 'invoice.field.item_hint',
         },
         rate: {
           name: 'invoice.field.rate',
@@ -252,15 +252,15 @@ export const SaleReceiptMeta = {
       },
     },
     statement: {
-      name: 'Statement',
+      name: 'receipt.field.statement',
       fieldType: 'text',
     },
     receiptMessage: {
-      name: 'Receipt Message',
+      name: 'receipt.field.receipt_message',
       fieldType: 'text',
     },
     branchId: {
-      name: 'Branch',
+      name: 'invoice.field.branch',
       fieldType: 'relation',
       relationModel: 'Branch',
       relationImportMatch: ['name', 'code'],
@@ -268,7 +268,7 @@ export const SaleReceiptMeta = {
       required: true,
     },
     warehouseId: {
-      name: 'Warehouse',
+      name: 'invoice.field.warehouse',
       fieldType: 'relation',
       relationModel: 'Warehouse',
       relationImportMatch: ['name', 'code'],

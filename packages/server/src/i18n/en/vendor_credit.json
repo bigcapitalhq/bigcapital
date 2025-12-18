@@ -2,5 +2,18 @@
   "view.draft": "Draft",
   "view.published": "Published",
   "view.open": "Open",
-  "view.closed": "Closed"
+  "view.closed": "Closed",
+
+  "field.vendor": "Vendor",
+  "field.vendor_credit_number": "Vendor Credit No.",
+  "field.vendor_credit_date": "Vendor Credit Date",
+  "field.reference_no": "Reference No.",
+  "field.exchange_rate": "Exchange Rate",
+  "field.note": "Note",
+  "field.open": "Open",
+  "field.entries": "Entries",
+  "field.item": "Item",
+  "field.rate": "Rate",
+  "field.quantity": "Quantity",
+  "field.description": "Description"
 }

@@ -191,52 +191,52 @@ export const SaleEstimateMeta = {
   },
   fields2: {
     customerId: {
-      name: 'Customer',
+      name: 'estimate.field.customer',
       fieldType: 'relation',
       relationModel: 'Contact',
       relationImportMatch: ['displayName'],
       required: true,
     },
     estimateDate: {
-      name: 'Estimate Date',
+      name: 'estimate.field.estimate_date',
       fieldType: 'date',
       required: true,
     },
     expirationDate: {
-      name: 'Expiration Date',
+      name: 'estimate.field.expiration_date',
       fieldType: 'date',
       required: true,
     },
     estimateNumber: {
-      name: 'Estimate No.',
+      name: 'estimate.field.estimate_number',
       fieldType: 'text',
     },
     reference: {
-      name: 'Reference No.',
+      name: 'estimate.field.reference_no',
       fieldType: 'text',
     },
     exchangeRate: {
-      name: 'Exchange Rate',
+      name: 'estimate.field.exchange_rate',
       fieldType: 'number',
     },
     currencyCode: {
-      name: 'Currency',
+      name: 'estimate.field.currency',
       fieldType: 'text',
     },
     note: {
-      name: 'Note',
+      name: 'estimate.field.note',
       fieldType: 'text',
     },
     termsConditions: {
-      name: 'Terms & Conditions',
+      name: 'estimate.field.terms_conditions',
       fieldType: 'text',
     },
     delivered: {
-      name: 'Delivered',
+      name: 'estimate.field.delivered',
       type: 'boolean',
     },
     entries: {
-      name: 'Entries',
+      name: 'estimate.field.entries',
       fieldType: 'collection',
       collectionOf: 'object',
       collectionMinLength: 1,
@@ -248,7 +248,7 @@ export const SaleEstimateMeta = {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: 'Matches the item name or code.',
+          importHint: 'invoice.field.item_hint',
         },
         rate: {
           name: 'invoice.field.rate',
@@ -261,13 +261,13 @@ export const SaleEstimateMeta = {
           required: true,
         },
         description: {
-          name: 'Line Description',
+          name: 'invoice.field.description',
           fieldType: 'text',
         },
       },
     },
     branchId: {
-      name: 'Branch',
+      name: 'invoice.field.branch',
       fieldType: 'relation',
       relationModel: 'Branch',
       relationImportMatch: ['name', 'code'],
@@ -275,7 +275,7 @@ export const SaleEstimateMeta = {
       required: true,
     },
     warehouseId: {
-      name: 'Warehouse',
+      name: 'invoice.field.warehouse',
       fieldType: 'relation',
       relationModel: 'Warehouse',
       relationImportMatch: ['name', 'code'],

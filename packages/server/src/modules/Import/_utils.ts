@@ -253,28 +253,28 @@ export const getResourceColumns = (resourceColumns: {
 }) => {
   const mapColumn =
     (group: string) =>
-    ([fieldKey, { name, importHint, required, order, ...field }]: [
-      string,
-      IModelMetaField2,
-    ]) => {
-      const extra: Record<string, any> = {};
-      const key = fieldKey;
+      ([fieldKey, { name, importHint, required, order, ...field }]: [
+        string,
+        IModelMetaField2,
+      ]) => {
+        const extra: Record<string, any> = {};
+        const key = fieldKey;
 
-      if (group) {
-        extra.group = group;
-      }
-      if (field.fieldType === 'collection') {
-        extra.fields = mapColumns(field.fields, key);
-      }
-      return {
-        key,
-        name,
-        required,
-        hint: importHint,
-        order,
-        ...extra,
+        if (group) {
+          extra.group = group;
+        }
+        if (field.fieldType === 'collection') {
+          extra.fields = mapColumns(field.fields, key);
+        }
+        return {
+          key,
+          name,
+          required,
+          hint: importHint,
+          order,
+          ...extra,
+        };
       };
-    };
   const sortColumn = (a, b) =>
     a.order && b.order ? a.order - b.order : a.order ? -1 : b.order ? 1 : 0;
 
@@ -284,52 +284,54 @@ export const getResourceColumns = (resourceColumns: {
   return R.compose(transformInputToGroupedFields, mapColumns)(resourceColumns);
 };
 
+export type ModelResolver = (modelName: string) => any;
+
 // Prases the given object value based on the field key type.
 export const valueParser =
-  (fields: ResourceMetaFieldsMap, tenantModels: any, trx?: Knex.Transaction) =>
-  async (value: any, key: string, group = '') => {
-    let _value = value;
+  (fields: ResourceMetaFieldsMap, modelResolver: ModelResolver, trx?: Knex.Transaction) =>
+    async (value: any, key: string, group = '') => {
+      let _value = value;
 
-    const fieldKey = key.includes('.') ? key.split('.')[0] : key;
-    const field = group ? fields[group]?.fields[fieldKey] : fields[fieldKey];
+      const fieldKey = key.includes('.') ? key.split('.')[0] : key;
+      const field = group ? fields[group]?.fields[fieldKey] : fields[fieldKey];
 
-    // Parses the boolean value.
-    if (field.fieldType === 'boolean') {
-      _value = parseBoolean(value);
+      // Parses the boolean value.
+      if (field.fieldType === 'boolean') {
+        _value = parseBoolean(value);
 
-      // Parses the enumeration value.
-    } else if (field.fieldType === 'enumeration') {
-      const option = get(field, 'options', []).find(
-        (option) => option.label?.toLowerCase() === value?.toLowerCase(),
-      );
-      _value = get(option, 'key');
-      // Parses the numeric value.
-    } else if (field.fieldType === 'number') {
-      _value = multiNumberParse(value);
-      // Parses the relation value.
-    } else if (field.fieldType === 'relation') {
-      const RelationModel = tenantModels[field.relationModel];
+        // Parses the enumeration value.
+      } else if (field.fieldType === 'enumeration') {
+        const option = get(field, 'options', []).find(
+          (option) => option.label?.toLowerCase() === value?.toLowerCase(),
+        );
+        _value = get(option, 'key');
+        // Parses the numeric value.
+      } else if (field.fieldType === 'number') {
+        _value = multiNumberParse(value);
+        // Parses the relation value.
+      } else if (field.fieldType === 'relation') {
+        const RelationModel = modelResolver(field.relationModel);
 
-      if (!RelationModel) {
-        throw new Error(`The relation model of ${key} field is not exist.`);
-      }
-      const relationQuery = RelationModel.query(trx);
-      const relationKeys = castArray(field?.relationImportMatch);
+        if (!RelationModel) {
+          throw new Error(`The relation model of ${key} field is not exist.`);
+        }
+        const relationQuery = RelationModel.query(trx);
+        const relationKeys = castArray(field?.relationImportMatch);
 
-      relationQuery.where(function () {
-        relationKeys.forEach((relationKey: string) => {
-          this.orWhereRaw('LOWER(??) = LOWER(?)', [relationKey, value]);
+        relationQuery.where(function () {
+          relationKeys.forEach((relationKey: string) => {
+            this.orWhereRaw('LOWER(??) = LOWER(?)', [relationKey, value]);
+          });
         });
-      });
-      const result = await relationQuery.first();
-      _value = get(result, 'id');
-    } else if (field.fieldType === 'collection') {
-      const ObjectFieldKey = key.includes('.') ? key.split('.')[1] : key;
-      const _valueParser = valueParser(fields, tenantModels);
-      _value = await _valueParser(value, ObjectFieldKey, fieldKey);
-    }
-    return _value;
-  };
+        const result = await relationQuery.first();
+        _value = get(result, 'id');
+      } else if (field.fieldType === 'collection') {
+        const ObjectFieldKey = key.includes('.') ? key.split('.')[1] : key;
+        const _valueParser = valueParser(fields, modelResolver);
+        _value = await _valueParser(value, ObjectFieldKey, fieldKey);
+      }
+      return _value;
+    };
 
 /**
  * Parses the field key and detarmines the key path.
@@ -402,12 +404,17 @@ export function aggregate(
   groupOn: string,
 ): Array<Record<string, any>> {
   return input.reduce((acc, curr) => {
+    // Skip aggregation if the current item doesn't have the comparator attribute
+    if (curr[comparatorAttr] === undefined || curr[comparatorAttr] === null) {
+      acc.push({ ...curr });
+      return acc;
+    }
     const existingEntry = acc.find(
       (entry) => entry[comparatorAttr] === curr[comparatorAttr],
     );
 
     if (existingEntry) {
-      existingEntry[groupOn].push(...curr.entries);
+      existingEntry[groupOn].push(...curr[groupOn]);
     } else {
       acc.push({ ...curr });
     }

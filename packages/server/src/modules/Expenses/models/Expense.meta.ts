@@ -135,7 +135,7 @@ export const ExpenseMeta = {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
-      importHint: 'Matches the account name or code.',
+      importHint: 'account.field.account_hint',
     },
     referenceNo: {
       name: 'expense.field.reference_no',
@@ -169,7 +169,7 @@ export const ExpenseMeta = {
           relationModel: 'Account',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: 'Matches the account name or code.',
+          importHint: 'account.field.account_hint',
         },
         amount: {
           name: 'expense.field.amount',
@@ -187,7 +187,7 @@ export const ExpenseMeta = {
       fieldType: 'boolean',
     },
     branchId: {
-      name: 'Branch',
+      name: 'invoice.field.branch',
       fieldType: 'relation',
       relationModel: 'Branch',
       relationImportMatch: ['name', 'code'],

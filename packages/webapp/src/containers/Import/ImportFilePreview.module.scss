@@ -7,6 +7,9 @@
     border-top: 1px solid #d9d9da;
     padding: 6px 0;
 
+    :global(.bp4-dark) &{
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
     &:last-child{ 
       padding-bottom: 0;
     }
@@ -31,6 +34,10 @@ table.skippedTable {
 
     tr:hover td{
       background: #F6F7F9;
+
+      :global(.bp4-dark) &{
+        background: var(--color-dark-gray2);
+      }
     }
   }
 }

@@ -165,12 +165,12 @@ export const PaymentReceivedMeta = {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
-      importHint: 'Matches the account name or code.',
+      importHint: 'account.field.account_hint',
     },
     paymentReceiveNo: {
       name: 'payment_receive.field.payment_receive_no',
       fieldType: 'text',
-      importHint: 'The payment number should be unique.',
+      importHint: 'payment_receive.field.payment_no_hint',
     },
     statement: {
       name: 'payment_receive.field.statement',
@@ -189,7 +189,7 @@ export const PaymentReceivedMeta = {
           relationModel: 'SaleInvoice',
           relationImportMatch: 'invoiceNo',
           required: true,
-          importHint: 'Matches the invoice number.',
+          importHint: 'payment_receive.field.invoice_hint',
         },
         paymentAmount: {
           name: 'payment_receive.field.entries.payment_amount',
@@ -199,7 +199,7 @@ export const PaymentReceivedMeta = {
       },
     },
     branchId: {
-      name: 'Branch',
+      name: 'invoice.field.branch',
       fieldType: 'relation',
       relationModel: 'Branch',
       relationImportMatch: ['name', 'code'],

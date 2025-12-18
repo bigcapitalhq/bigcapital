@@ -26,6 +26,7 @@
   "field.due_amount": "Due amount",
   "field.delivered": "Delivered",
   "field.item_name": "Item Name",
+  "field.item_hint": "Matches the item name or code.",
   "field.rate": "Rate",
   "field.quantity": "Quantity",
   "field.description": "Description",
@@ -38,5 +39,7 @@
   "field.status.draft": "Draft",
   "field.created_at": "Created at",
   "field.currency": "Currency",
-  "field.entries": "Entries"
+  "field.entries": "Entries",
+  "field.branch": "Branch",
+  "field.warehouse": "Warehouse"
 }

@@ -18,7 +18,7 @@ import { CurrencyParsingDTOs } from './_constants';
 export class ImportFileDataTransformer {
   constructor(
     private readonly resource: ResourceService,
-  ) {}
+  ) { }
 
   /**
    * Parses the given sheet data before passing to the service layer.
@@ -55,9 +55,8 @@ export class ImportFileDataTransformer {
 
   /**
    * Aggregates parsed data based on resource metadata configuration.
-   * @param {number} tenantId
-   * @param {string} resourceName
-   * @param {Record<string, any>} parsedData
+   * @param {string} resourceName - The resource name.
+   * @param {Record<string, any>} parsedData - The parsed data to aggregate.
    * @returns {Record<string, any>[]}
    */
   public aggregateParsedValues(
@@ -110,8 +109,11 @@ export class ImportFileDataTransformer {
     valueDTOs: Record<string, any>[],
     trx?: Knex.Transaction
   ): Promise<Record<string, any>[]> {
-    // const tenantModels = this.tenancy.models(tenantId);
-    const _valueParser = valueParser(fields, {}, trx);
+    // Create a model resolver function that uses ResourceService
+    const modelResolver = (modelName: string) => {
+      return this.resource.getResourceModel(modelName)();
+    };
+    const _valueParser = valueParser(fields, modelResolver, trx);
     const _keyParser = parseKey(fields);
 
     const parseAsync = async (valueDTO) => {

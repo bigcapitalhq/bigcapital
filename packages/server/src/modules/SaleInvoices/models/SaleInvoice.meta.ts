@@ -259,7 +259,7 @@ export const SaleInvoiceMeta = {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: 'Matches the item name or code.',
+          importHint: 'invoice.field.item_hint',
         },
         rate: {
           name: 'invoice.field.rate',
@@ -283,7 +283,7 @@ export const SaleInvoiceMeta = {
       printable: false,
     },
     branchId: {
-      name: 'Branch',
+      name: 'invoice.field.branch',
       fieldType: 'relation',
       relationModel: 'Branch',
       relationImportMatch: ['name', 'code'],
@@ -291,7 +291,7 @@ export const SaleInvoiceMeta = {
       required: true,
     },
     warehouseId: {
-      name: 'Warehouse',
+      name: 'invoice.field.warehouse',
       fieldType: 'relation',
       relationModel: 'Warehouse',
       relationImportMatch: ['name', 'code'],

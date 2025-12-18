@@ -167,7 +167,7 @@ export const BillPaymentMeta = {
       name: 'bill_payment.field.payment_number',
       fieldType: 'text',
       unique: true,
-      importHint: 'The payment number should be unique.',
+      importHint: 'bill_payment.field.payment_number_hint',
     },
     paymentAccountId: {
       name: 'bill_payment.field.payment_account',
@@ -175,7 +175,7 @@ export const BillPaymentMeta = {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
-      importHint: 'Matches the account name or code.',
+      importHint: 'account.field.account_hint',
     },
     exchangeRate: {
       name: 'bill_payment.field.exchange_rate',
@@ -203,7 +203,7 @@ export const BillPaymentMeta = {
           relationModel: 'Bill',
           relationImportMatch: 'billNumber',
           required: true,
-          importHint: 'Matches the bill number.',
+          importHint: 'bill_payment.field.bill_hint',
         },
         paymentAmount: {
           name: 'bill_payment.field.entries.payment_amount',
@@ -213,7 +213,7 @@ export const BillPaymentMeta = {
       },
     },
     branchId: {
-      name: 'Branch',
+      name: 'invoice.field.branch',
       fieldType: 'relation',
       relationModel: 'Branch',
       relationImportMatch: ['name', 'code'],

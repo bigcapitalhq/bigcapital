@@ -1,5 +1,6 @@
 import { ModuleRef } from '@nestjs/core';
-import { pickBy } from 'lodash';
+import { pickBy, mapValues } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
 import { WarehousesSettings } from '../Warehouses/WarehousesSettings';
 import { Injectable } from '@nestjs/common';
 import { BranchesSettingsService } from '../Branches/BranchesSettings';
@@ -20,7 +21,8 @@ export class ResourceService {
     private readonly branchesSettings: BranchesSettingsService,
     private readonly warehousesSettings: WarehousesSettings,
     private readonly moduleRef: ModuleRef,
-  ) {}
+    private readonly i18nService: I18nService,
+  ) { }
 
   /**
    * Retrieve resource model object.
@@ -96,7 +98,45 @@ export class ResourceService {
   };
 
   /**
-   * Retrieve the resource fields.
+   * Localizes a single field by translating its name and importHint.
+   * @param {IModelMetaField2} field - The field to localize.
+   * @returns {IModelMetaField2} - The localized field.
+   */
+  private localizeField(field: IModelMetaField2): IModelMetaField2 {
+    const localizedField = {
+      ...field,
+      name: this.i18nService.t(field.name, { defaultValue: field.name }),
+    } as IModelMetaField2;
+
+    if (field.importHint) {
+      localizedField.importHint = this.i18nService.t(field.importHint, {
+        defaultValue: field.importHint,
+      });
+    }
+
+    // Recursively localize nested fields (for collection types)
+    if (field.fields) {
+      localizedField.fields = this.localizeFields(
+        field.fields as unknown as Record<string, IModelMetaField2>,
+      ) as unknown as typeof field.fields;
+    }
+
+    return localizedField;
+  }
+
+  /**
+   * Localizes all fields in a fields map.
+   * @param {Record<string, IModelMetaField2>} fields - The fields to localize.
+   * @returns {Record<string, IModelMetaField2>} - The localized fields.
+   */
+  private localizeFields(
+    fields: Record<string, IModelMetaField2>,
+  ): Record<string, IModelMetaField2> {
+    return mapValues(fields, (field) => this.localizeField(field));
+  }
+
+  /**
+   * Retrieve the resource fields with localized names and hints.
    * @param {string} modelName
    * @returns {IModelMetaField2}
    */
@@ -104,8 +144,11 @@ export class ResourceService {
     [key: string]: IModelMetaField2;
   } {
     const meta = this.getResourceMeta(modelName);
+    const filteredFields = this.filterSupportFeatures(meta.fields2);
 
-    return this.filterSupportFeatures(meta.fields2);
+    return this.localizeFields(
+      filteredFields as Record<string, IModelMetaField2>,
+    );
   }
 
   /**

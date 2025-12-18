@@ -177,70 +177,70 @@ export const VendorCreditMeta = {
   },
   fields2: {
     vendorId: {
-      name: 'Vendor',
+      name: 'vendor_credit.field.vendor',
       fieldType: 'relation',
       relationModel: 'Contact',
       relationImportMatch: 'displayName',
       required: true,
     },
     exchangeRate: {
-      name: 'Echange Rate',
+      name: 'vendor_credit.field.exchange_rate',
       fieldType: 'text',
     },
     vendorCreditNumber: {
-      name: 'Vendor Credit No.',
+      name: 'vendor_credit.field.vendor_credit_number',
       fieldType: 'text',
     },
     referenceNo: {
-      name: 'Refernece No.',
+      name: 'vendor_credit.field.reference_no',
       fieldType: 'text',
     },
     vendorCreditDate: {
-      name: 'Vendor Credit Date',
+      name: 'vendor_credit.field.vendor_credit_date',
       fieldType: 'date',
       required: true,
     },
     note: {
-      name: 'Note',
+      name: 'vendor_credit.field.note',
       fieldType: 'text',
     },
     open: {
-      name: 'Open',
+      name: 'vendor_credit.field.open',
       fieldType: 'boolean',
     },
     entries: {
-      name: 'Entries',
+      name: 'vendor_credit.field.entries',
       fieldType: 'collection',
       collectionOf: 'object',
       collectionMinLength: 1,
       required: true,
       fields: {
         itemId: {
-          name: 'Item Name',
+          name: 'vendor_credit.field.item',
           fieldType: 'relation',
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: 'Matches the item name or code.',
+          importHint: 'invoice.field.item_hint',
         },
         rate: {
-          name: 'Rate',
+          name: 'vendor_credit.field.rate',
           fieldType: 'number',
           required: true,
         },
         quantity: {
-          name: 'Quantity',
+          name: 'vendor_credit.field.quantity',
           fieldType: 'number',
           required: true,
         },
         description: {
-          name: 'Description',
+          name: 'vendor_credit.field.description',
           fieldType: 'text',
         },
       },
     },
     branchId: {
-      name: 'Branch',
+      name: 'invoice.field.branch',
       fieldType: 'relation',
       relationModel: 'Branch',
       relationImportMatch: ['name', 'code'],
@@ -248,7 +248,7 @@ export const VendorCreditMeta = {
       required: true
     },
     warehouseId: {
-      name: 'Warehouse',
+      name: 'invoice.field.warehouse',
       fieldType: 'relation',
       relationModel: 'Warehouse',
       relationImportMatch: ['name', 'code'],

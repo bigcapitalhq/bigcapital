@@ -102,6 +102,7 @@ function AccountsSuggestFieldRoot({
   return (
     <FSuggest
       items={filteredAccounts}
+      itemPredicate={filterAccountsPredicater}
       onCreateItemSelect={handleCreateItemSelect}
       valueAccessor="id"
       textAccessor="name"

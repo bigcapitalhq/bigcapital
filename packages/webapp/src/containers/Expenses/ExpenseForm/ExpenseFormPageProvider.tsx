@@ -59,8 +59,13 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   const { mutateAsync: createExpenseMutate } = useCreateExpense();
   const { mutateAsync: editExpenseMutate } = useEditExpense();
 
-  // Submit form payload.
-  const [submitPayload, setSubmitPayload] = React.useState({});
+  // Submit form payload - using ref for synchronous access.
+  const submitPayloadRef = React.useRef({});
+
+  // Setter to update the ref.
+  const setSubmitPayload = React.useCallback((payload) => {
+    submitPayloadRef.current = payload;
+  }, []);
 
   // Detarmines whether the form in new mode.
   const isNewMode = !expenseId;
@@ -69,7 +74,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   const provider = {
     isNewMode,
     expenseId,
-    submitPayload,
+    submitPayloadRef, // Expose ref for synchronous access
 
     currencies,
     customers,
