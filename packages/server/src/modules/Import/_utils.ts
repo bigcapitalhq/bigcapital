@@ -284,9 +284,11 @@ export const getResourceColumns = (resourceColumns: {
   return R.compose(transformInputToGroupedFields, mapColumns)(resourceColumns);
 };
 
+export type ModelResolver = (modelName: string) => any;
+
 // Prases the given object value based on the field key type.
 export const valueParser =
-  (fields: ResourceMetaFieldsMap, tenantModels: any, trx?: Knex.Transaction) =>
+  (fields: ResourceMetaFieldsMap, modelResolver: ModelResolver, trx?: Knex.Transaction) =>
     async (value: any, key: string, group = '') => {
       let _value = value;
 
@@ -308,7 +310,7 @@ export const valueParser =
         _value = multiNumberParse(value);
         // Parses the relation value.
       } else if (field.fieldType === 'relation') {
-        const RelationModel = tenantModels[field.relationModel];
+        const RelationModel = modelResolver(field.relationModel);
 
         if (!RelationModel) {
           throw new Error(`The relation model of ${key} field is not exist.`);
@@ -325,7 +327,7 @@ export const valueParser =
         _value = get(result, 'id');
       } else if (field.fieldType === 'collection') {
         const ObjectFieldKey = key.includes('.') ? key.split('.')[1] : key;
-        const _valueParser = valueParser(fields, tenantModels);
+        const _valueParser = valueParser(fields, modelResolver);
         _value = await _valueParser(value, ObjectFieldKey, fieldKey);
       }
       return _value;
@@ -402,12 +404,17 @@ export function aggregate(
   groupOn: string,
 ): Array<Record<string, any>> {
   return input.reduce((acc, curr) => {
+    // Skip aggregation if the current item doesn't have the comparator attribute
+    if (curr[comparatorAttr] === undefined || curr[comparatorAttr] === null) {
+      acc.push({ ...curr });
+      return acc;
+    }
     const existingEntry = acc.find(
       (entry) => entry[comparatorAttr] === curr[comparatorAttr],
     );
 
     if (existingEntry) {
-      existingEntry[groupOn].push(...curr.entries);
+      existingEntry[groupOn].push(...curr[groupOn]);
     } else {
       acc.push({ ...curr });
     }
