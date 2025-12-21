@@ -96,7 +96,7 @@ export function AccountsMultiSelect({
   };
 
   return (
-    <FMultiSelect<AccountSelect>
+    <FMultiSelect
       {...rest}
       items={filteredAccounts}
       valueAccessor={'id'}

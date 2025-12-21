@@ -21,7 +21,7 @@ import {
   Row,
   If,
   FieldRequiredHint,
-  AccountsSuggestField,
+  FAccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
   FormattedMessage as T,
@@ -83,12 +83,11 @@ function RefundVendorCreditFormFields({
           {/* ------------- Refund date ------------- */}
           <FastField name={'refund_date'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
+              <FFormGroup
+                name={'refund_date'}
                 label={<T id={'refund_vendor_credit.dialog.refund_date'} />}
                 labelInfo={<FieldRequiredHint />}
-                className={classNames('form-group--select-list', CLASSES.FILL)}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="refund_date" />}
+                fill
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
@@ -101,46 +100,32 @@ function RefundVendorCreditFormFields({
                     leftIcon: <Icon icon={'date-range'} />,
                   }}
                 />
-              </FormGroup>
+              </FFormGroup>
             )}
           </FastField>
         </Col>
 
         <Col xs={5}>
           {/* ------------ Form account ------------ */}
-          <FastField name={'deposit_account_id'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={
-                  <T id={'refund_vendor_credit.dialog.deposit_to_account'} />
-                }
-                className={classNames(
-                  'form-group--deposit_account_id',
-                  'form-group--select-list',
-                  CLASSES.FILL,
-                )}
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'deposit_account_id'} />}
-              >
-                <AccountsSuggestField
-                  selectedAccountId={value}
-                  accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('deposit_account_id', id)
-                  }
-                  inputProps={{
-                    placeholder: intl.get('select_account'),
-                  }}
-                  filterByTypes={[
-                    ACCOUNT_TYPE.BANK,
-                    ACCOUNT_TYPE.CASH,
-                    ACCOUNT_TYPE.FIXED_ASSET,
-                  ]}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'deposit_account_id'}
+            label={<T id={'refund_vendor_credit.dialog.deposit_to_account'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+          >
+            <FAccountsSuggestField
+              name={'deposit_account_id'}
+              items={accounts}
+              inputProps={{
+                placeholder: intl.get('select_account'),
+              }}
+              filterByTypes={[
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.FIXED_ASSET,
+              ]}
+            />
+          </FFormGroup>
         </Col>
       </Row>
 

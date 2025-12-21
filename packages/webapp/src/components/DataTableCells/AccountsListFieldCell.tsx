@@ -58,9 +58,9 @@ export default function AccountCellRenderer({
       {...formGroupProps}
     >
       <AccountsSuggestField
-        accounts={accounts}
-        onAccountSelected={handleAccountSelected}
-        selectedAccountId={initialValue}
+        items={accounts}
+        onItemSelect={handleAccountSelected}
+        selectedValue={initialValue}
         filterByRootTypes={filterAccountsByRootTypes}
         filterByTypes={filterAccountsByTypes}
         inputProps={{

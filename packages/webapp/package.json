@@ -8,7 +8,7 @@
     "@bigcapital/utils": "*",
     "@blueprintjs-formik/core": "^0.3.7",
     "@blueprintjs-formik/datetime": "^0.4.0",
-    "@blueprintjs-formik/select": "^0.3.5",
+    "@blueprintjs-formik/select": "^0.4.5",
     "@blueprintjs/colors": "4.1.19",
     "@blueprintjs/core": "^4.20.2",
     "@blueprintjs/datetime": "^4.4.37",

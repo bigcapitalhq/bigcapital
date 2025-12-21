@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { Button } from '@blueprintjs/core';
-import { Select } from '@blueprintjs-formik/select';
+import { FormikSelect } from '@blueprintjs-formik/select';
 import styled from 'styled-components';
 import clsx from 'classnames';
 
@@ -14,7 +14,7 @@ export function FSelect({ ...props }) {
       className={clsx({ 'is-selected': !!text }, props.className)}
     />
   );
-  return <Select input={input} fill={true} {...props} />;
+  return <FormikSelect input={input} fill={true} {...props} />;
 }
 
 export const SelectButton = styled(Button)`

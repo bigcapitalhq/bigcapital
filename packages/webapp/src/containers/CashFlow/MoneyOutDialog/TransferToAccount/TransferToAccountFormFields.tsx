@@ -5,7 +5,7 @@ import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
   FormattedMessage as T,
-  AccountsSuggestField,
+  FAccountsSuggestField,
   InputPrependText,
   FieldRequiredHint,
   Col,
@@ -121,34 +121,23 @@ export default function TransferToAccountFormFields() {
       <Row>
         <Col xs={5}>
           {/*------------ transfer from account -----------*/}
-          <FastField name={'credit_account_id'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={
-                  <T id={'cash_flow_transaction.label_transfer_to_account'} />
-                }
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="credit_account_id" />}
-                className={'form-group--credit_account_id'}
-              >
-                <AccountsSuggestField
-                  accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
-                  filterByTypes={[
-                    ACCOUNT_TYPE.CASH,
-                    ACCOUNT_TYPE.BANK,
-                    ACCOUNT_TYPE.CREDIT_CARD,
-                  ]}
-                  inputProps={{
-                    intent: inputIntent({ error, touched }),
-                  }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'credit_account_id'}
+            label={
+              <T id={'cash_flow_transaction.label_transfer_to_account'} />
+            }
+            labelInfo={<FieldRequiredHint />}
+          >
+            <FAccountsSuggestField
+              name={'credit_account_id'}
+              items={accounts}
+              filterByTypes={[
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.CREDIT_CARD,
+              ]}
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={5}>

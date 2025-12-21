@@ -14,7 +14,7 @@ import {
   Col,
   Row,
   FormattedMessage as T,
-  AccountsSuggestField,
+  FAccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
   Icon,
@@ -137,9 +137,9 @@ function QuickPaymentMadeFormFields({
             name={'payment_account_id'}
             label={<T id={'payment_account'} />}
           >
-            <AccountsSuggestField
+            <FAccountsSuggestField
               name={'payment_account_id'}
-              accounts={accounts}
+              items={accounts}
               inputProps={{
                 placeholder: intl.get('select_account'),
               }}

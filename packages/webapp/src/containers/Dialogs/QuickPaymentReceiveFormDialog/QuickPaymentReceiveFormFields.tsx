@@ -13,7 +13,7 @@ import {
   Col,
   FieldRequiredHint,
   FormattedMessage as T,
-  AccountsSuggestField,
+  FAccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
   Icon,
@@ -143,9 +143,9 @@ function QuickPaymentReceiveFormFields({
             name={'deposit_account_id'}
             label={<T id={'deposit_to'} />}
           >
-            <AccountsSuggestField
+            <FAccountsSuggestField
               name={'deposit_account_id'}
-              accounts={accounts}
+              items={accounts}
               inputProps={{
                 placeholder: intl.get('select_account'),
               }}

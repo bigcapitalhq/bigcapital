@@ -11,7 +11,7 @@ import {
   TextArea,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { FFormGroup, FormattedMessage as T } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from '@/hooks';
 import {
@@ -23,7 +23,7 @@ import {
   BranchSelect,
   WarehouseSelect,
   BranchSelectButton,
-  AccountsSuggestField,
+  FAccountsSuggestField,
 } from '@/components';
 import {
   inputIntent,
@@ -109,13 +109,11 @@ export default function InventoryAdjustmentFormDialogFields() {
           {/*------------ Date -----------*/}
           <FastField name={'date'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
+              <FFormGroup
+                name={'date'}
                 label={<T id={'date'} />}
                 labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="date" />}
-                minimal={true}
-                className={classNames(CLASSES.FILL, 'form-group--date')}
+                fill
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
@@ -130,7 +128,7 @@ export default function InventoryAdjustmentFormDialogFields() {
                   intent={inputIntent({ error, touched })}
                   inputRef={(ref) => (dateFieldRef.current = ref)}
                 />
-              </FormGroup>
+              </FFormGroup>
             )}
           </FastField>
         </Col>
@@ -143,12 +141,11 @@ export default function InventoryAdjustmentFormDialogFields() {
               field: { value },
               meta: { error, touched },
             }) => (
-              <FormGroup
+              <FFormGroup
+                name={'type'}
                 label={<T id={'adjustment_type'} />}
                 labelInfo={<FieldRequiredHint />}
-                helperText={<ErrorMessage name="type" />}
-                intent={inputIntent({ error, touched })}
-                className={classNames(CLASSES.FILL, 'form-group--type')}
+                fill
               >
                 <ListSelect
                   items={adjustmentTypes}
@@ -168,7 +165,7 @@ export default function InventoryAdjustmentFormDialogFields() {
                   popoverProps={{ minimal: true }}
                   intent={inputIntent({ error, touched })}
                 />
-              </FormGroup>
+              </FFormGroup>
             )}
           </Field>
         </Col>
@@ -177,28 +174,20 @@ export default function InventoryAdjustmentFormDialogFields() {
       <InventoryAdjustmentQuantityFields />
 
       {/*------------ Adjustment account -----------*/}
-      <FastField name={'adjustment_account_id'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'adjustment_account'} />}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="adjustment_account_id" />}
-            className={'form-group--adjustment-account'}
-          >
-            <AccountsSuggestField
-              accounts={accounts}
-              onAccountSelected={({ id }) =>
-                form.setFieldValue('adjustment_account_id', id)
-              }
-              inputProps={{
-                placeholder: intl.get('select_adjustment_account'),
-                intent: inputIntent({ error, touched }),
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'adjustment_account_id'}
+        label={<T id={'adjustment_account'} />}
+        labelInfo={<FieldRequiredHint />}
+        className={'form-group--adjustment-account'}
+      >
+        <FAccountsSuggestField
+          name={'adjustment_account_id'}
+          items={accounts}
+          inputProps={{
+            placeholder: intl.get('select_adjustment_account'),
+          }}
+        />
+      </FFormGroup>
 
       {/*------------ Reference -----------*/}
       <FastField name={'reference_no'}>
