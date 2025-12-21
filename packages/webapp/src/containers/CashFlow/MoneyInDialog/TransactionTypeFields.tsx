@@ -1,19 +1,15 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
-import { FastField, Field, ErrorMessage } from 'formik';
-import { FormGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
   FormattedMessage as T,
-  AccountsSuggestField,
+  FAccountsSuggestField,
   FieldRequiredHint,
-  ListSelect,
   Col,
   Row,
   FFormGroup,
   FSelect,
 } from '@/components';
-import { inputIntent } from '@/utils';
 import { CLASSES, getAddMoneyInOptions } from '@/constants';
 
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
@@ -50,32 +46,20 @@ export default function TransactionTypeFields() {
 
         <Col xs={5}>
           {/*------------ Current account -----------*/}
-          <FastField name={'cashflow_account_id'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'cash_flow_transaction.label_current_account'} />}
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="cashflow_account_id" />}
-                minimal={true}
-                className={classNames(
-                  CLASSES.FILL,
-                  'form-group--cashflow_account_id',
-                )}
-              >
-                <AccountsSuggestField
-                  accounts={cashflowAccounts}
-                  onAccountSelected={({ id }) => {
-                    form.setFieldValue('cashflow_account_id', id);
-                    setAccountId(id);
-                  }}
-                  inputProps={{
-                    intent: inputIntent({ error, touched }),
-                  }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'cashflow_account_id'}
+            label={<T id={'cash_flow_transaction.label_current_account'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+          >
+            <FAccountsSuggestField
+              name={'cashflow_account_id'}
+              items={cashflowAccounts}
+              onItemSelect={({ id }) => {
+                setAccountId(id);
+              }}
+            />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

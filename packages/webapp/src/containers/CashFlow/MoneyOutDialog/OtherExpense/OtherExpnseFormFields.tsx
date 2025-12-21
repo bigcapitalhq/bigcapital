@@ -5,7 +5,7 @@ import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
   FormattedMessage as T,
-  AccountsSuggestField,
+  FAccountsSuggestField,
   InputPrependText,
   FieldRequiredHint,
   Col,
@@ -67,13 +67,11 @@ export default function OtherExpnseFormFields() {
           {/*------------ Date -----------*/}
           <FastField name={'date'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
+              <FFormGroup
+                name={'date'}
                 label={<T id={'date'} />}
                 labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="date" />}
-                minimal={true}
-                className={classNames(CLASSES.FILL, 'form-group--date')}
+                fill
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
@@ -87,7 +85,7 @@ export default function OtherExpnseFormFields() {
                   }}
                   intent={inputIntent({ error, touched })}
                 />
-              </FormGroup>
+              </FFormGroup>
             )}
           </FastField>
         </Col>
@@ -120,31 +118,17 @@ export default function OtherExpnseFormFields() {
       <Row>
         <Col xs={5}>
           {/*------------ other expense account -----------*/}
-          <FastField name={'credit_account_id'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'cash_flow_transaction.label_expense_account'} />}
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="credit_account_id" />}
-                className={'form-group--credit_account_id'}
-              >
-                <AccountsSuggestField
-                  accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
-                  filterByTypes={[
-                    ACCOUNT_TYPE.EXPENSE,
-                    ACCOUNT_TYPE.OTHER_EXPENSE,
-                  ]}
-                  inputProps={{
-                    intent: inputIntent({ error, touched }),
-                  }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'credit_account_id'}
+            label={<T id={'cash_flow_transaction.label_expense_account'} />}
+            labelInfo={<FieldRequiredHint />}
+          >
+            <FAccountsSuggestField
+              name={'credit_account_id'}
+              items={accounts}
+              filterByTypes={[ACCOUNT_TYPE.EXPENSE, ACCOUNT_TYPE.OTHER_EXPENSE]}
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={5}>

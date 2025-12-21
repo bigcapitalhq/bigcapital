@@ -21,7 +21,7 @@ import {
   Row,
   If,
   FieldRequiredHint,
-  AccountsSuggestField,
+  FAccountsSuggestField,
   InputPrependText,
   MoneyInputGroup,
   FormattedMessage as T,
@@ -29,6 +29,8 @@ import {
   BranchSelect,
   BranchSelectButton,
   FeatureCan,
+  FInputGroup,
+  FMoneyInputGroup,
 } from '@/components';
 import {
   inputIntent,
@@ -85,13 +87,11 @@ function RefundCreditNoteFormFields({
           {/* ------------- Refund date ------------- */}
           <FastField name={'date'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
+              <FFormGroup
+                name={'date'}
                 label={<T id={'refund_credit_note.dialog.refund_date'} />}
                 labelInfo={<FieldRequiredHint />}
-                className={classNames('form-group--select-list', CLASSES.FILL)}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="date" />}
-                // inline={true}
+                fill
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
@@ -104,77 +104,53 @@ function RefundCreditNoteFormFields({
                     leftIcon: <Icon icon={'date-range'} />,
                   }}
                 />
-              </FormGroup>
+              </FFormGroup>
             )}
           </FastField>
         </Col>
         <Col xs={5}>
           {/* ------------ Form account ------------ */}
-          <FastField name={'from_account_id'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'refund_credit_note.dialog.from_account'} />}
-                className={classNames(
-                  'form-group--from_account_id',
-                  'form-group--select-list',
-                  CLASSES.FILL,
-                )}
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'from_account_id'} />}
-              >
-                <AccountsSuggestField
-                  selectedAccountId={value}
-                  accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('from_account_id', id)
-                  }
-                  inputProps={{
-                    placeholder: intl.get('select_account'),
-                  }}
-                  filterByTypes={[
-                    ACCOUNT_TYPE.BANK,
-                    ACCOUNT_TYPE.CASH,
-                    ACCOUNT_TYPE.FIXED_ASSET,
-                  ]}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'from_account_id'}
+            label={<T id={'refund_credit_note.dialog.from_account'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+          >
+            <FAccountsSuggestField
+              name={'from_account_id'}
+              items={accounts}
+              inputProps={{
+                placeholder: intl.get('select_account'),
+              }}
+              filterByTypes={[
+                ACCOUNT_TYPE.BANK,
+                ACCOUNT_TYPE.CASH,
+                ACCOUNT_TYPE.FIXED_ASSET,
+              ]}
+            />
+          </FFormGroup>
         </Col>
       </Row>
-      {/* ------------- Amount ------------- */}
-      <FastField name={'amount'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={<T id={'refund_credit_note.dialog.amount'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--amount', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="amount" />}
-          >
-            <ControlGroup>
-              <InputPrependText text={values.currency_code} />
-              <MoneyInputGroup
-                value={value}
-                minimal={true}
-                onChange={(amount) => {
-                  setFieldValue('amount', amount);
-                }}
-                intent={inputIntent({ error, touched })}
-                inputRef={(ref) => (amountFieldRef.current = ref)}
-              />
-            </ControlGroup>
-          </FormGroup>
-        )}
-      </FastField>
 
+      {/* ------------- Amount ------------- */}
+      <FFormGroup
+        name={'amount'}
+        label={<T id={'refund_credit_note.dialog.amount'} />}
+        labelInfo={<FieldRequiredHint />}
+        fill
+      >
+        <ControlGroup>
+          <InputPrependText text={values.currency_code} />
+          <FMoneyInputGroup
+            name={'amount'}
+            minimal={true}
+            inputRef={(ref) => (amountFieldRef.current = ref)}
+          />
+        </ControlGroup>
+      </FFormGroup>
+
+      {/*------------ exchange rate -----------*/}
       <If condition={!isEqual(base_currency, values.currency_code)}>
-        {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}
           fromCurrency={base_currency}
@@ -186,22 +162,9 @@ function RefundCreditNoteFormFields({
       </If>
 
       {/* ------------ Reference No. ------------ */}
-      <FastField name={'reference_no'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference_no'} />}
-            className={classNames('form-group--reference', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference" />}
-          >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'reference_no'} label={<T id={'reference_no'} />} fill>
+        <FInputGroup name={'reference_no'} minimal fill />
+      </FFormGroup>
 
       {/* --------- Statement --------- */}
       <FastField name={'description'}>
