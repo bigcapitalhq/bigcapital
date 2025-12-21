@@ -25,7 +25,6 @@ import {
   FTextArea,
   FMoneyInputGroup,
 } from '@/components';
-import { DateInput } from '@blueprintjs/datetime';
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
 
 import {
@@ -73,29 +72,22 @@ export default function OtherIncomeFormFields() {
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
-          <FastField name={'date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FFormGroup
-                name={'date'}
-                label={<T id={'date'} />}
-                labelInfo={<FieldRequiredHint />}
-                fill
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('date', formattedDate);
-                  })}
-                  value={tansformDateValue(value)}
-                  popoverProps={{
-                    position: Position.BOTTOM,
-                    minimal: true,
-                  }}
-                  intent={inputIntent({ error, touched })}
-                />
-              </FFormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'date'}
+            label={<T id={'date'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+          >
+            <FDateInput
+              name={'date'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+              inputProps={{
+                fill: true,
+                leftIcon: <Icon icon={'date-range'} />,
+              }}
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={5}>
@@ -134,10 +126,7 @@ export default function OtherIncomeFormFields() {
             <FAccountsSuggestField
               name={'credit_account_id'}
               items={accounts}
-              filterByTypes={[
-                ACCOUNT_TYPE.INCOME,
-                ACCOUNT_TYPE.OTHER_INCOME,
-              ]}
+              filterByTypes={[ACCOUNT_TYPE.INCOME, ACCOUNT_TYPE.OTHER_INCOME]}
             />
           </FFormGroup>
         </Col>

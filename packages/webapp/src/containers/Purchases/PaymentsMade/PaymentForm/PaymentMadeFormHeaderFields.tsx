@@ -17,6 +17,7 @@ import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
 
 import {
+  FDateInput,
   FInputGroup,
   FMoneyInputGroup,
   Stack,
@@ -117,30 +118,22 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       />
 
       {/* ------------ Payment date ------------ */}
-      <FastField name={'payment_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'payment_date'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--select-list', Classes.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="payment_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('payment_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'payment_date'}
+        label={<T id={'payment_date'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline
+        fill
+        fastField
+      >
+        <FDateInput
+          name={'payment_date'}
+          {...momentFormatter('YYYY/MM/DD')}
+          popoverProps={{ position: Position.BOTTOM, minimal: true }}
+          inputProps={{ leftIcon: <Icon icon={'date-range'} />, fill: true }}
+          fastField
+        />
+      </FFormGroup>
 
       {/* ------------ Full amount ------------ */}
       <FFormGroup
@@ -173,23 +166,14 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       </FFormGroup>
 
       {/* ------------ Payment number ------------ */}
-      <FastField name={'payment_number'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'payment_no'} />}
-            inline={true}
-            className={('form-group--payment_number', Classes.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="payment_number" />}
-          >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'payment_number'}
+        label={<T id={'payment_no'} />}
+        inline={true}
+        fastField
+      >
+        <FInputGroup name={'payment_number'} minimal={true} fastField />
+      </FFormGroup>
 
       {/* ------------ Payment account ------------ */}
       <FFormGroup

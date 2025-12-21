@@ -127,34 +127,26 @@ function BillFormHeader() {
       </FastField>
 
       {/* ------- Bill number ------- */}
-      <FastField name={'bill_number'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'bill_number'} />}
-            inline={true}
-            className={('form-group--bill_number', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="bill_number" />}
-          >
-            <InputGroup minimal={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'bill_number'}
+        label={<T id={'bill_number'} />}
+        inline
+        fill
+        fastField
+      >
+        <FInputGroup name={'bill_number'} minimal={true} fastField />
+      </FFormGroup>
 
       {/* ------- Reference ------- */}
-      <FastField name={'reference_no'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference'} />}
-            inline={true}
-            className={classNames('form-group--reference', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference" />}
-          >
-            <InputGroup minimal={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'reference_no'}
+        label={<T id={'reference'} />}
+        inline={true}
+        fill
+        fastField
+      >
+        <FInputGroup name={'reference_no'} minimal={true} fastField />
+      </FFormGroup>
 
       {/*------------ Project name -----------*/}
       <FeatureCan feature={Features.Projects}>

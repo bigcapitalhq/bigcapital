@@ -2,7 +2,6 @@
 import React, { useEffect, useRef } from 'react';
 import {
   FormGroup,
-  InputGroup,
   RadioGroup,
   Classes,
   Radio,
@@ -20,6 +19,7 @@ import {
   FormattedHTMLMessage,
   FFormGroup,
   FSelect,
+  FInputGroup,
 } from '@/components';
 import classNames from 'classnames';
 
@@ -94,44 +94,30 @@ export default function ItemFormPrimarySection() {
       <Row>
         <Col xs={7}>
           {/*----------- Item name ----------*/}
-          <FastField name={'name'}>
-            {({ field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'item_name'} />}
-                labelInfo={<FieldRequiredHint />}
-                className={'form-group--item-name'}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'name'} />}
-                inline={true}
-              >
-                <InputGroup
-                  medium={true}
-                  {...field}
-                  intent={inputIntent({ error, touched })}
-                  inputRef={(ref) => (nameFieldRef.current = ref)}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'name'}
+            label={<T id={'item_name'} />}
+            labelInfo={<FieldRequiredHint />}
+            inline={true}
+            fastField
+          >
+            <FInputGroup
+              name={'name'}
+              medium={true}
+              inputRef={(ref) => (nameFieldRef.current = ref)}
+              fastField
+            />
+          </FFormGroup>
 
           {/*----------- SKU ----------*/}
-          <FastField name={'code'}>
-            {({ field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'item_code'} />}
-                className={'form-group--item_code'}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'code'} />}
-                inline={true}
-              >
-                <InputGroup
-                  medium={true}
-                  intent={inputIntent({ error, touched })}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'code'}
+            label={<T id={'item_code'} />}
+            inline={true}
+            fastField
+          >
+            <FInputGroup name={'code'} medium={true} fastField />
+          </FFormGroup>
 
           {/*----------- Item category ----------*/}
           <FFormGroup

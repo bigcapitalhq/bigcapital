@@ -3,7 +3,6 @@ import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DateInput } from '@blueprintjs/datetime';
 import {
   FormattedMessage as T,
   FAccountsSuggestField,
@@ -14,11 +13,11 @@ import {
   BranchSelect,
   BranchSelectButton,
   FeatureCan,
-
   FFormGroup,
   FMoneyInputGroup,
   FTextArea,
   FInputGroup,
+  FDateInput,
 } from '@/components';
 import { ACCOUNT_TYPE, CLASSES, Features } from '@/constants';
 import {
@@ -69,29 +68,25 @@ export default function OwnerContributionFormFields() {
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
-          <FastField name={'date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FFormGroup
-                name={'date'}
-                label={<T id={'date'} />}
-                labelInfo={<FieldRequiredHint />}
-                fill
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('date', formattedDate);
-                  })}
-                  value={tansformDateValue(value)}
-                  popoverProps={{
-                    position: Position.BOTTOM,
-                    minimal: true,
-                  }}
-                  intent={inputIntent({ error, touched })}
-                />
-              </FFormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'date'}
+            label={<T id={'date'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+          >
+            <FDateInput
+              name={'date'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{
+                position: Position.BOTTOM_LEFT,
+                minimal: true,
+              }}
+              inputProps={{
+                fill: true,
+                leftIcon: <Icon icon={'date-range'} />,
+              }}
+            />
+          </FFormGroup>
         </Col>
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}

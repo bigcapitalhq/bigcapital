@@ -3,10 +3,9 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 import { FastField, ErrorMessage } from 'formik';
-import { HTMLSelect, FormGroup, Intent, Position } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
+import { HTMLSelect, FormGroup, Position } from '@blueprintjs/core';
 
-import { Row, Col, Hint } from '@/components';
+import { Row, Col, Hint, FDateInput, FFormGroup } from '@/components';
 import { momentFormatter, parseDateRangeQuery } from '@/utils';
 import { dateRangeOptions } from './constants';
 
@@ -60,66 +59,43 @@ export default function FinancialStatementDateRange() {
 
       <Row>
         <Col xs={4}>
-          <FastField name={'fromDate'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
-              <FormGroup
-                label={intl.get('from_date')}
-                labelInfo={<Hint />}
-                fill={true}
-                intent={error && Intent.DANGER}
-                helperText={<ErrorMessage name={'fromDate'} />}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY-MM-DD')}
-                  value={value}
-                  onChange={(selectedDate) => {
-                    setFieldValue('fromDate', selectedDate);
-                  }}
-                  popoverProps={{ minimal: true, position: Position.BOTTOM }}
-                  canClearSelection={false}
-                  minimal={true}
-                  fill={true}
-                  maxDate={FINANCIAL_REPORT_MAX_DATE}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'fromDate'}
+            label={intl.get('from_date')}
+            labelInfo={<Hint />}
+            fill
+            fastField
+          >
+            <FDateInput
+              name={'fromDate'}
+              {...momentFormatter('YYYY-MM-DD')}
+              popoverProps={{ minimal: true, position: Position.BOTTOM_LEFT }}
+              maxDate={FINANCIAL_REPORT_MAX_DATE}
+              canClearSelection={false}
+              minimal
+              fill
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={4}>
-          <FastField name={'toDate'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error },
-            }) => (
-              <FormGroup
-                label={intl.get('to_date')}
-                labelInfo={<Hint />}
-                fill={true}
-                intent={error && Intent.DANGER}
-                helperText={<ErrorMessage name={'toDate'} />}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY-MM-DD')}
-                  value={value}
-                  onChange={(selectedDate) => {
-                    setFieldValue('toDate', selectedDate);
-                  }}
-                  popoverProps={{ minimal: true, position: Position.BOTTOM }}
-                  canClearSelection={false}
-                  fill={true}
-                  minimal={true}
-                  intent={error && Intent.DANGER}
-                  maxDate={FINANCIAL_REPORT_MAX_DATE}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'toDate'}
+            label={intl.get('to_date')}
+            labelInfo={<Hint />}
+            fill
+            fastField
+          >
+            <FDateInput
+              name={'toDate'}
+              {...momentFormatter('YYYY-MM-DD')}
+              popoverProps={{ minimal: true, position: Position.BOTTOM }}
+              canClearSelection={false}
+              fill
+              minimal
+              maxDate={FINANCIAL_REPORT_MAX_DATE}
+            />
+          </FFormGroup>
         </Col>
       </Row>
     </>

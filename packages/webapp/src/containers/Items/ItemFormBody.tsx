@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useFormikContext, FastField, ErrorMessage } from 'formik';
-import {
-  FormGroup,
-  Classes,
-  TextArea,
-  Checkbox,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { FormGroup, Classes, Checkbox, ControlGroup } from '@blueprintjs/core';
 import {
   AccountsSelect,
   MoneyInputGroup,
@@ -16,6 +10,7 @@ import {
   Hint,
   InputPrependText,
   FFormGroup,
+  FTextArea,
 } from '@/components';
 import { FormattedMessage as T } from '@/components';
 
@@ -130,28 +125,22 @@ function ItemFormBody({ organization: { base_currency } }) {
             />
           </FFormGroup>
 
-          <FastField
+          <FFormGroup
             name={'sell_description'}
+            label={<T id={'description'} />}
+            inline={true}
             sellable={values.sellable}
             shouldUpdate={sellDescriptionFieldShouldUpdate}
+            fastField
           >
-            {({ form: { values }, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'description'} />}
-                className={'form-group--sell-description'}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'description'} />}
-                inline={true}
-              >
-                <TextArea
-                  growVertically={true}
-                  height={280}
-                  {...field}
-                  disabled={!values.sellable}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+            <FTextArea
+              name={'sell_description'}
+              growVertically={true}
+              height={280}
+              disabled={!values.sellable}
+              fastField
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={6}>
@@ -246,28 +235,22 @@ function ItemFormBody({ organization: { base_currency } }) {
             />
           </FFormGroup>
 
-          <FastField
+          <FFormGroup
             name={'purchase_description'}
+            label={<T id={'description'} />}
+            className={'form-group--purchase-description'}
+            helperText={<ErrorMessage name={'description'} />}
+            inline={true}
             purchasable={values.purchasable}
             shouldUpdate={purchaseDescFieldShouldUpdate}
           >
-            {({ form: { values }, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'description'} />}
-                className={'form-group--purchase-description'}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'description'} />}
-                inline={true}
-              >
-                <TextArea
-                  growVertically={true}
-                  height={280}
-                  {...field}
-                  disabled={!values.purchasable}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+            <FTextArea
+              name={'purchase_description'}
+              growVertically={true}
+              height={280}
+              disabled={!values.purchasable}
+            />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

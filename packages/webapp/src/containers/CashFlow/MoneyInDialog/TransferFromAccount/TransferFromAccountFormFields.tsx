@@ -1,7 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
-import { DateInput } from '@blueprintjs/datetime';
 import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
@@ -17,16 +15,13 @@ import {
   FMoneyInputGroup,
   FFormGroup,
   FTextArea,
+  FDateInput,
+  FInputGroup,
 } from '@/components';
 import { MoneyInOutTransactionNoField } from '../../_components';
 import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter } from '@/utils';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
 import {
@@ -66,29 +61,21 @@ export default function TransferFromAccountFormFields() {
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
-          <FastField name={'date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FFormGroup
-                name={'date'}
-                label={<T id={'date'} />}
-                labelInfo={<FieldRequiredHint />}
-                fill
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('date', formattedDate);
-                  })}
-                  value={tansformDateValue(value)}
-                  popoverProps={{
-                    position: Position.BOTTOM,
-                    minimal: true,
-                  }}
-                  intent={inputIntent({ error, touched })}
-                />
-              </FFormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'date'}
+            label={<T id={'date'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+          >
+            <FDateInput
+              name={'date'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{
+                position: Position.BOTTOM_LEFT,
+                minimal: true,
+              }}
+            />
+          </FFormGroup>
         </Col>
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
