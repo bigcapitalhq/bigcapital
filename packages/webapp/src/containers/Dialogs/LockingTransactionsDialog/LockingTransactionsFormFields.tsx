@@ -1,11 +1,16 @@
 // @ts-nocheck
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
-import { Classes, FormGroup, TextArea, Position } from '@blueprintjs/core';
+import { Classes, FormGroup, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
-import { FieldRequiredHint, FormattedMessage as T } from '@/components';
+import {
+  FieldRequiredHint,
+  FormattedMessage as T,
+  FFormGroup,
+  FTextArea,
+} from '@/components';
 import { useAutofocus } from '@/hooks';
 import {
   inputIntent,
@@ -50,25 +55,20 @@ export default function LockingTransactionsFormFields() {
       </FastField>
 
       {/*------------ Locking  Reason -----------*/}
-      <FastField name={'reason'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'locking_transactions.dialog.reason'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={'form-group--reason'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'reason'} />}
-          >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              inputRef={(ref) => (reasonFieldRef.current = ref)}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'reason'}
+        label={<T id={'locking_transactions.dialog.reason'} />}
+        labelInfo={<FieldRequiredHint />}
+        fastField
+      >
+        <FTextArea
+          name={'reason'}
+          growVertically={true}
+          large={true}
+          inputRef={(ref) => (reasonFieldRef.current = ref)}
+          fastField
+        />
+      </FFormGroup>
     </div>
   );
 }

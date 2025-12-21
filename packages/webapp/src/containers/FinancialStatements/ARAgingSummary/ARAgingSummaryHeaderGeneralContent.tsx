@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, Field } from 'formik';
-import { DateInput } from '@blueprintjs/datetime';
-import { Intent, FormGroup, InputGroup, Position } from '@blueprintjs/core';
+import { Position } from '@blueprintjs/core';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import {
   FormattedMessage as T,
@@ -12,6 +10,7 @@ import {
   FInputGroup,
   FFormGroup,
   CustomersMultiSelect,
+  FDateInput,
 } from '@/components';
 import { momentFormatter } from '@/utils';
 import { useARAgingSummaryGeneralContext } from './ARAgingSummaryGeneralProvider';
@@ -28,48 +27,35 @@ export default function ARAgingSummaryHeaderGeneralContent() {
     <div>
       <Row>
         <Col xs={5}>
-          <FastField name={'asDate'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'as_date'} />}
-                labelInfo={<FieldHint />}
-                fill={true}
-                intent={error && Intent.DANGER}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  value={value}
-                  onChange={(selectedDate) => {
-                    form.setFieldValue('asDate', selectedDate);
-                  }}
-                  popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                  minimal={true}
-                  fill={true}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'asDate'}
+            label={<T id={'as_date'} />}
+            labelInfo={<FieldHint />}
+            fill
+            fastField
+          >
+            <FDateInput
+              name={'asDate'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+              minimal
+              fill
+              fastField
+            />
+          </FFormGroup>
         </Col>
       </Row>
 
       <Row>
         <Col xs={5}>
-          <FastField name={'agingDaysBefore'}>
-            {({ field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'aging_before_days'} />}
-                labelInfo={<FieldHint />}
-                className={'form-group--aging-before-days'}
-                intent={error && Intent.DANGER}
-              >
-                <InputGroup
-                  medium={true}
-                  intent={error && Intent.DANGER}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'agingDaysBefore'}
+            label={<T id={'aging_before_days'} />}
+            labelInfo={<FieldHint />}
+            fastField
+          >
+            <FInputGroup name={'agingDaysBefore'} medium={true} fastField />
+          </FFormGroup>
         </Col>
       </Row>
 

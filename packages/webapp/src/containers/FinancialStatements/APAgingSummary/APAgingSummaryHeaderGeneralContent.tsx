@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField } from 'formik';
-import { Intent, FormGroup, InputGroup, Position } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
+import { Position } from '@blueprintjs/core';
 import {
   FormattedMessage as T,
   Row,
@@ -10,16 +8,13 @@ import {
   FieldHint,
   FFormGroup,
   VendorsMultiSelect,
+  FDateInput,
+  FInputGroup,
 } from '@/components';
 import { useAPAgingSummaryGeneralContext } from './APAgingSummaryGeneralProvider';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import { filterVendorsOptions } from './constants';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter } from '@/utils';
 
 /**
  * AP Aging Summary - Drawer Header - General panel - Content.
@@ -31,59 +26,46 @@ export default function APAgingSummaryHeaderGeneralContent() {
     <div>
       <Row>
         <Col xs={5}>
-          <FastField name={'asDate'}>
-            {({ form, field: { value }, meta: { error } }) => (
-              <FormGroup
-                label={<T id={'as_date'} />}
-                labelInfo={<FieldHint />}
-                fill={true}
-                intent={inputIntent({ error })}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
-                  onChange={handleDateChange((selectedDate) => {
-                    form.setFieldValue('asDate', selectedDate);
-                  })}
-                  popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                  minimal={true}
-                  fill={true}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'asDate'}
+            label={<T id={'as_date'} />}
+            labelInfo={<FieldHint />}
+            fill
+            fastField
+          >
+            <FDateInput
+              name={'asDate'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+              minimal
+              fill
+              fastField
+            />
+          </FFormGroup>
         </Col>
       </Row>
 
       <Row>
         <Col xs={5}>
-          <FastField name={'agingDaysBefore'}>
-            {({ field, meta: { error } }) => (
-              <FormGroup
-                label={<T id={'aging_before_days'} />}
-                labelInfo={<FieldHint />}
-                intent={inputIntent({ error })}
-              >
-                <InputGroup intent={error && Intent.DANGER} {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'agingDaysBefore'}
+            label={<T id={'aging_before_days'} />}
+            labelInfo={<FieldHint />}
+          >
+            <FInputGroup name={'agingDaysBefore'} />
+          </FFormGroup>
         </Col>
       </Row>
 
       <Row>
         <Col xs={5}>
-          <FastField name={'agingPeriods'}>
-            {({ field, meta: { error } }) => (
-              <FormGroup
-                label={<T id={'aging_periods'} />}
-                labelInfo={<FieldHint />}
-                intent={inputIntent({ error })}
-              >
-                <InputGroup intent={error && Intent.DANGER} {...field} />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'agingPeriods'}
+            label={<T id={'aging_periods'} />}
+            labelInfo={<FieldHint />}
+          >
+            <FInputGroup name={'agingPeriods'} />
+          </FFormGroup>
         </Col>
       </Row>
 

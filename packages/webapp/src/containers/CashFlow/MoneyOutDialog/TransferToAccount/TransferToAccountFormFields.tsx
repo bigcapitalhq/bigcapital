@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
+import { ErrorMessage } from 'formik';
 import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
@@ -17,14 +17,12 @@ import {
   FTextArea,
   FMoneyInputGroup,
   FInputGroup,
+  FDateInput,
 } from '@/components';
-import { DateInput } from '@blueprintjs/datetime';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
-  handleDateChange,
 } from '@/utils';
 import { Features } from '@/constants';
 import { CLASSES } from '@/constants/classes';
@@ -66,31 +64,23 @@ export default function TransferToAccountFormFields() {
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
-          <FastField name={'date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'date'} />}
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="date" />}
-                minimal={true}
-                className={classNames(CLASSES.FILL, 'form-group--date')}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('date', formattedDate);
-                  })}
-                  value={tansformDateValue(value)}
-                  popoverProps={{
-                    position: Position.BOTTOM,
-                    minimal: true,
-                  }}
-                  intent={inputIntent({ error, touched })}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'date'}
+            label={<T id={'date'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+            fastField
+          >
+            <FDateInput
+              name={'date'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{
+                position: Position.BOTTOM_LEFT,
+                minimal: true,
+              }}
+              fastField
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={5}>

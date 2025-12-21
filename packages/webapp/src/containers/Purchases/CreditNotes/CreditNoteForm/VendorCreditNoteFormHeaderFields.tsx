@@ -23,6 +23,7 @@ import {
   VendorDrawerLink,
   VendorsSelect,
   Stack,
+  FDateInput,
 } from '@/components';
 import {
   vendorsFieldShouldUpdate,
@@ -108,86 +109,63 @@ function VendorCreditNoteFormHeaderFields({
         name={'exchange_rate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
+
       {/* ------- Vendor Credit date ------- */}
-      <FastField name={'vendor_credit_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'credit_note.label_credit_note_date'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames(
-              'form-group--vendor_credit_date',
-              CLASSES.FILL,
-            )}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="vendor_credit_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('vendor_credit_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'vendor_credit_date'}
+        label={<T id={'credit_note.label_credit_note_date'} />}
+        inline
+        labelInfo={<FieldRequiredHint />}
+        fill
+        fastField
+      >
+        <FDateInput
+          name={'vendor_credit_date'}
+          {...momentFormatter('YYYY/MM/DD')}
+          popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+          inputProps={{ leftIcon: <Icon icon={'date-range'} />, fill: true }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Vendor Credit No # ----------- */}
-      <FastField name={'vendor_credit_number'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'credit_note.label_credit_note'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={('form-group--vendor_credit_number', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="vendor_credit_number" />}
-          >
-            <ControlGroup fill={true}>
-              <InputGroup
-                minimal={true}
-                value={field.value}
-                asyncControl={true}
-                onBlur={handleVendorCreditNoBlur(form, field)}
-              />
-              <InputPrependButton
-                buttonProps={{
-                  onClick: handleVendorCreditNumberChange,
-                  icon: <Icon icon={'settings-18'} />,
-                }}
-                tooltip={true}
-                tooltipProps={{
-                  content: (
-                    <T
-                      id={'setting_your_auto_generated_vendor_credit_number'}
-                    />
-                  ),
-                  position: Position.BOTTOM_LEFT,
-                }}
-              />
-            </ControlGroup>
-          </FormGroup>
-        )}
-      </FastField>
+
+      <FFormGroup
+        name={'vendor_credit_number'}
+        label={<T id={'credit_note.label_credit_note'} />}
+        inline={true}
+        labelInfo={<FieldRequiredHint />}
+        fastField
+      >
+        <ControlGroup fill={true}>
+          <FInputGroup
+            name={'vendor_credit_number'}
+            minimal={true}
+            asyncControl={true}
+            onBlur={handleVendorCreditNoBlur}
+            fastField
+          />
+          <InputPrependButton
+            buttonProps={{
+              onClick: handleVendorCreditNumberChange,
+              icon: <Icon icon={'settings-18'} />,
+            }}
+            tooltip={true}
+            tooltipProps={{
+              content: (
+                <T id={'setting_your_auto_generated_vendor_credit_number'} />
+              ),
+              position: Position.BOTTOM_LEFT,
+            }}
+          />
+        </ControlGroup>
+      </FFormGroup>
+
       {/* ----------- Reference ----------- */}
-      <FastField name={'reference_no'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference_no'} />}
-            inline={true}
-            className={classNames('form-group--reference', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference_no" />}
-          >
-            <InputGroup minimal={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup label={<T id={'reference_no'} />} inline={true} fastField>
+        <FInputGroup name={'reference_no'} minimal={true} fastField />
+      </FFormGroup>
     </Stack>
   );
 }

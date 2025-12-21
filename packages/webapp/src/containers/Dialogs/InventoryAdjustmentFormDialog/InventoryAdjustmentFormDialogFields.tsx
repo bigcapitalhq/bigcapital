@@ -4,15 +4,14 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { FastField, ErrorMessage, Field } from 'formik';
+import { Classes, FormGroup, Position } from '@blueprintjs/core';
 import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  TextArea,
-  Position,
-} from '@blueprintjs/core';
-import { FFormGroup, FormattedMessage as T } from '@/components';
-import { DateInput } from '@blueprintjs/datetime';
+  FFormGroup,
+  FormattedMessage as T,
+  FDateInput,
+  FInputGroup,
+  FTextArea,
+} from '@/components';
 import { useAutofocus } from '@/hooks';
 import {
   ListSelect,
@@ -25,13 +24,7 @@ import {
   BranchSelectButton,
   FAccountsSuggestField,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  toSafeNumber,
-} from '@/utils';
+import { inputIntent, momentFormatter, toSafeNumber } from '@/utils';
 import { Features, CLASSES } from '@/constants';
 
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
@@ -107,30 +100,24 @@ export default function InventoryAdjustmentFormDialogFields() {
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
-          <FastField name={'date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FFormGroup
-                name={'date'}
-                label={<T id={'date'} />}
-                labelInfo={<FieldRequiredHint />}
-                fill
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('date', formattedDate);
-                  })}
-                  value={tansformDateValue(value)}
-                  popoverProps={{
-                    position: Position.BOTTOM,
-                    minimal: true,
-                  }}
-                  intent={inputIntent({ error, touched })}
-                  inputRef={(ref) => (dateFieldRef.current = ref)}
-                />
-              </FFormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'date'}
+            label={<T id={'date'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+            fastField
+          >
+            <FDateInput
+              name={'date'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{
+                position: Position.BOTTOM,
+                minimal: true,
+              }}
+              inputRef={(ref) => (dateFieldRef.current = ref)}
+              fastField
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={5}>
@@ -190,38 +177,23 @@ export default function InventoryAdjustmentFormDialogFields() {
       </FFormGroup>
 
       {/*------------ Reference -----------*/}
-      <FastField name={'reference_no'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference_no'} />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference_no" />}
-            className={'form-group--reference-no'}
-          >
-            <InputGroup intent={inputIntent({ error, touched })} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'reference_no'}
+        label={<T id={'reference_no'} />}
+        fastField
+      >
+        <FInputGroup name={'reference_no'} fastField />
+      </FFormGroup>
 
       {/*------------ Adjustment reasons -----------*/}
-      <FastField name={'reason'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'adjustment_reasons'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={'form-group--adjustment-reasons'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'reason'} />}
-          >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'reason'}
+        label={<T id={'adjustment_reasons'} />}
+        labelInfo={<FieldRequiredHint />}
+        fastField
+      >
+        <FTextArea name={'reason'} growVertically large fastField />
+      </FFormGroup>
     </div>
   );
 }
