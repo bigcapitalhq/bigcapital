@@ -83,4 +83,4 @@ const models = [
     CreateBankTransactionService
   ],
 })
-export class BankingTransactionsModule {}
+export class BankingTransactionsModule { }

@@ -21,7 +21,7 @@ export default function ImportUncategorizedTransactions() {
   return (
     <DashboardInsider name={'import-uncategorized-bank-transactions'}>
       <ImportView
-        resource={'uncategorized_cashflow_transaction'}
+        resource={'uncategorized_bank_transaction'}
         params={{ accountId: params.id }}
         onImportSuccess={handleImportSuccess}
         onCancelClick={handleCnacelBtnClick}

@@ -60,7 +60,7 @@ function AccountTransactionsDataTable({
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_CASHFLOW_TRANSACTION);
+    useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_BANK_TRANSACTION);
 
   // Handle cell click.
   const handleCellClick = (cell) => {
