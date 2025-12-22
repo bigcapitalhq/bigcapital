@@ -15,7 +15,7 @@ RUN apk add python3 build-base chromium
 ENV PYTHON=/usr/bin/python3
 
 # Install pnpm packages dependencies
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9
 RUN pnpm install
 
 # Build webapp package
