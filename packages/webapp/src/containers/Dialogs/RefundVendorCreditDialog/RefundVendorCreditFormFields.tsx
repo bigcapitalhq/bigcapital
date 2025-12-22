@@ -2,18 +2,10 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  TextArea,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import { Classes, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
-import { DateInput } from '@blueprintjs/datetime';
 import { isEqual } from 'lodash';
 import {
   Icon,
@@ -23,20 +15,18 @@ import {
   FieldRequiredHint,
   FAccountsSuggestField,
   InputPrependText,
-  MoneyInputGroup,
+  FMoneyInputGroup,
   FormattedMessage as T,
   ExchangeRateMutedField,
   BranchSelect,
   BranchSelectButton,
   FeatureCan,
+  FFormGroup,
+  FDateInput,
+  FInputGroup,
+  FTextArea,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  compose,
-} from '@/utils';
+import { momentFormatter, compose } from '@/utils';
 import { useAutofocus } from '@/hooks';
 import { Features, ACCOUNT_TYPE } from '@/constants';
 import { useSetPrimaryBranchToForm } from './utils';
@@ -63,46 +53,39 @@ function RefundVendorCreditFormFields({
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FormGroup
-              label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
+            <FFormGroup name={'branch_id'} label={<T id={'branch'} />} fill>
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
                 input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
-            </FormGroup>
+            </FFormGroup>
           </Col>
         </Row>
         <BranchRowDivider />
       </FeatureCan>
+
       <Row>
         <Col xs={5}>
           {/* ------------- Refund date ------------- */}
-          <FastField name={'refund_date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FFormGroup
-                name={'refund_date'}
-                label={<T id={'refund_vendor_credit.dialog.refund_date'} />}
-                labelInfo={<FieldRequiredHint />}
-                fill
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('refund_date', formattedDate);
-                  })}
-                  popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                  inputProps={{
-                    leftIcon: <Icon icon={'date-range'} />,
-                  }}
-                />
-              </FFormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'refund_date'}
+            label={<T id={'refund_vendor_credit.dialog.refund_date'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+            fastField
+          >
+            <FDateInput
+              name={'refund_date'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{ position: Position.BOTTOM, minimal: true }}
+              inputProps={{
+                leftIcon: <Icon icon={'date-range'} />,
+              }}
+              fastField
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={5}>
@@ -130,34 +113,23 @@ function RefundVendorCreditFormFields({
       </Row>
 
       {/* ------------- Amount ------------- */}
-      <FastField name={'amount'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={<T id={'refund_vendor_credit.dialog.amount'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames('form-group--amount', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="amount" />}
-          >
-            <ControlGroup>
-              <InputPrependText text={values.currency_code} />
-              <MoneyInputGroup
-                value={value}
-                minimal={true}
-                onChange={(amount) => {
-                  setFieldValue('amount', amount);
-                }}
-                intent={inputIntent({ error, touched })}
-                inputRef={(ref) => (amountFieldRef.current = ref)}
-              />
-            </ControlGroup>
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'amount'}
+        label={<T id={'refund_vendor_credit.dialog.amount'} />}
+        labelInfo={<FieldRequiredHint />}
+        fill
+        fastField
+      >
+        <ControlGroup>
+          <InputPrependText text={values.currency_code} />
+          <FMoneyInputGroup
+            name={'amount'}
+            minimal={true}
+            inputRef={(ref) => (amountFieldRef.current = ref)}
+            fastField
+          />
+        </ControlGroup>
+      </FFormGroup>
 
       <If condition={!isEqual(base_currency, values.currency_code)}>
         {/*------------ exchange rate -----------*/}
@@ -172,34 +144,19 @@ function RefundVendorCreditFormFields({
       </If>
 
       {/* ------------ Reference No. ------------ */}
-      <FastField name={'reference_no'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'reference_no'} />}
-            className={classNames('form-group--reference', CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="reference" />}
-          >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'reference_no'}
+        label={<T id={'reference_no'} />}
+        fill
+        fastField
+      >
+        <FInputGroup name={'reference_no'} minimal={true} fastField />
+      </FFormGroup>
 
       {/* --------- Statement --------- */}
-      <FastField name={'description'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'refund_vendor_credit.dialog.description'} />}
-            className={'form-group--description'}
-          >
-            <TextArea growVertically={true} {...field} />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'description'} fill fastField>
+        <FTextArea name={'description'} growVertically={true} fastField />
+      </FFormGroup>
     </div>
   );
 }

@@ -1,10 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { ErrorMessage, FastField } from 'formik';
-import { FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
-
-import { inputIntent } from '@/utils';
-import { FormattedMessage as T, FieldRequiredHint, Card } from '@/components';
+import { FormattedMessage as T, FieldRequiredHint, Card, FFormGroup, FInputGroup, FTextArea } from '@/components';
 import { useAutofocus } from '@/hooks';
 
 /**
@@ -17,48 +13,42 @@ export function RoleFormHeader() {
   return (
     <Card>
       {/* ---------- Name ----------  */}
-      <FastField name={'role_name'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={
-              <strong>
-                <T id={'roles.label.role_name'} />
-              </strong>
-            }
-            labelInfo={<FieldRequiredHint />}
-            className={'form-group--name'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="role_name" />}
-            inline={true}
-          >
-            <InputGroup
-              medium={true}
-              inputRef={(ref) => (roleNameFieldRef.current = ref)}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'role_name'}
+        label={
+          <strong>
+            <T id={'roles.label.role_name'} />
+          </strong>
+        }
+        labelInfo={<FieldRequiredHint />}
+        inline
+        fastField
+      >
+        <FInputGroup
+          name={'role_name'}
+          medium={true}
+          inputRef={(ref) => (roleNameFieldRef.current = ref)}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ---------- Description ----------  */}
-      <FastField name={'role_description'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'description'} />}
-            className={'form-group--description'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'role_description'} />}
-            inline={true}
-          >
-            <TextArea
-              growVertically={true}
-              height={280}
-              {...field}
-              placeholder="Max. 500 characters"
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'role_description'}
+        label={<T id={'description'} />}
+        inline
+        fastField
+      >
+        <FTextArea
+          name={'role_description'}
+          growVertically={true}
+          height={280}
+          placeholder="Max. 500 characters"
+          fill
+          fastField
+        />
+      </FFormGroup>
     </Card>
   );
 }

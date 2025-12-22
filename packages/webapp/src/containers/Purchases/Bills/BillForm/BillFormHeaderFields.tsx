@@ -2,9 +2,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { FormGroup, InputGroup, Classes, Position } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
+import { useFormikContext } from 'formik';
+import { Classes, Position } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 
 import { FeatureCan, Stack, FormattedMessage as T } from '@/components';
@@ -15,6 +14,8 @@ import {
   Icon,
   VendorDrawerLink,
   VendorsSelect,
+  FDateInput,
+  FInputGroup,
 } from '@/components';
 
 import { useBillFormContext } from './BillFormProvider';
@@ -28,9 +29,6 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   momentFormatter,
   compose,
-  tansformDateValue,
-  handleDateChange,
-  inputIntent,
 } from '@/utils';
 import { Features } from '@/constants';
 import { useTheme } from '@emotion/react';
@@ -74,57 +72,43 @@ function BillFormHeader() {
       />
 
       {/* ------- Bill date ------- */}
-      <FastField name={'bill_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'bill_date'} />}
-            inline={true}
-            labelInfo={<FieldRequiredHint />}
-            className={classNames(CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="bill_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('bill_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'bill_date'}
+        label={<T id={'bill_date'} />}
+        inline
+        labelInfo={<FieldRequiredHint />}
+        className={classNames(CLASSES.FILL)}
+        fastField
+      >
+        <FDateInput
+          name={'bill_date'}
+          {...momentFormatter('YYYY/MM/DD')}
+          popoverProps={{ position: Position.BOTTOM, minimal: true }}
+          inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ------- Due date ------- */}
-      <FastField name={'due_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'due_date'} />}
-            inline={true}
-            className={classNames(
-              'form-group--due-date',
-              'form-group--select-list',
-              CLASSES.FILL,
-            )}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="due_date" />}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('due_date', formattedDate);
-              })}
-              popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              inputProps={{
-                leftIcon: <Icon icon={'date-range'} />,
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'due_date'}
+        label={<T id={'due_date'} />}
+        inline
+        fill
+        fastField
+      >
+        <FDateInput
+          name={'due_date'}
+          {...momentFormatter('YYYY/MM/DD')}
+          popoverProps={{ position: Position.BOTTOM, minimal: true }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+          }}
+          fill
+          fastField
+        />
+      </FFormGroup>
 
       {/* ------- Bill number ------- */}
       <FFormGroup

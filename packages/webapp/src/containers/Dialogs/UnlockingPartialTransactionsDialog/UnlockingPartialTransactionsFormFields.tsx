@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
-import { Classes, FormGroup, TextArea, Position } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
+import { Classes, Position } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -10,13 +8,11 @@ import {
   Col,
   Row,
   FormattedMessage as T,
+  FFormGroup,
+  FDateInput,
+  FTextArea,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter } from '@/utils';
 import { useAutofocus } from '@/hooks';
 
 /**
@@ -30,87 +26,65 @@ export default function UnlockingPartialTransactionsFormFields() {
       <Row>
         <Col xs={6}>
           {/*------------  Unlocking from date  -----------*/}
-          <FastField name={'unlock_from_date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={
-                  <T id={'unlocking_partial_transactions.dialog.from_date'} />
-                }
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="unlock_from_date" />}
-                minimal={true}
-                className={classNames(CLASSES.FILL, 'form-group--date')}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('unlock_from_date', formattedDate);
-                  })}
-                  value={tansformDateValue(value)}
-                  popoverProps={{
-                    position: Position.BOTTOM,
-                    minimal: true,
-                  }}
-                  intent={inputIntent({ error, touched })}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'unlock_from_date'}
+            label={<T id={'unlocking_partial_transactions.dialog.from_date'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+            minimal
+            fastField
+          >
+            <FDateInput
+              name={'unlock_from_date'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{
+                position: Position.BOTTOM,
+                minimal: true,
+              }}
+              fastField
+            />
+          </FFormGroup>
         </Col>
 
         <Col xs={6}>
-          {/*------------  Unlocking from date  -----------*/}
-          <FastField name={'unlock_to_date'}>
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={
-                  <T id={'unlocking_partial_transactions.dialog.to_date'} />
-                }
-                labelInfo={<FieldRequiredHint />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="unlock_to_date" />}
-                minimal={true}
-                className={classNames(CLASSES.FILL, 'form-group--date')}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  onChange={handleDateChange((formattedDate) => {
-                    form.setFieldValue('unlock_to_date', formattedDate);
-                  })}
-                  value={tansformDateValue(value)}
-                  popoverProps={{
-                    position: Position.BOTTOM,
-                    minimal: true,
-                  }}
-                  intent={inputIntent({ error, touched })}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          {/*------------  Unlocking to date  -----------*/}
+          <FFormGroup
+            name={'unlock_to_date'}
+            label={<T id={'unlocking_partial_transactions.dialog.to_date'} />}
+            labelInfo={<FieldRequiredHint />}
+            minimal={true}
+            fill
+            fastField
+          >
+            <FDateInput
+              name={'unlock_to_date'}
+              {...momentFormatter('YYYY/MM/DD')}
+              popoverProps={{
+                position: Position.BOTTOM,
+                minimal: true,
+              }}
+              fastField
+            />
+          </FFormGroup>
         </Col>
       </Row>
 
       {/*------------ unLocking  reason -----------*/}
-      <FastField name={'reason'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'unlocking_partial_transactions.dialog.reason'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={'form-group--reason'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'reason'} />}
-          >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              inputRef={(ref) => (reasonFieldRef.current = ref)}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'reason'}
+        label={<T id={'unlocking_partial_transactions.dialog.reason'} />}
+        labelInfo={<FieldRequiredHint />}
+        fastField
+      >
+        <FTextArea
+          name={'reason'}
+          growVertically={true}
+          large={true}
+          inputRef={(ref) => (reasonFieldRef.current = ref)}
+          fill
+          fastField
+        />
+      </FFormGroup>
     </div>
   );
 }

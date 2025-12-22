@@ -5,6 +5,7 @@ import { FormGroup, Classes, Checkbox, ControlGroup } from '@blueprintjs/core';
 import {
   AccountsSelect,
   MoneyInputGroup,
+  FMoneyInputGroup,
   Col,
   Row,
   Hint,
@@ -59,33 +60,24 @@ function ItemFormBody({ organization: { base_currency } }) {
           </FastField>
 
           {/*------------- Selling price ------------- */}
-          <FastField
+          <FFormGroup
             name={'sell_price'}
-            sellable={values.sellable}
-            shouldUpdate={sellPriceFieldShouldUpdate}
+            label={<T id={'selling_price'} />}
+            inline
+            fastField
           >
-            {({ form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'selling_price'} />}
-                className={'form-group--sell_price'}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name={'sell_price'} />}
-                inline={true}
-              >
-                <ControlGroup>
-                  <InputPrependText text={base_currency} />
-                  <MoneyInputGroup
-                    value={value}
-                    inputGroupProps={{ fill: true }}
-                    disabled={!form.values.sellable}
-                    onChange={(unformattedValue) => {
-                      form.setFieldValue('sell_price', unformattedValue);
-                    }}
-                  />
-                </ControlGroup>
-              </FormGroup>
-            )}
-          </FastField>
+            <ControlGroup>
+              <InputPrependText text={base_currency} />
+              <FMoneyInputGroup
+                name={'sell_price'}
+                shouldUpdate={sellPriceFieldShouldUpdate}
+                sellable={values.sellable}
+                inputGroupProps={{ fill: true }}
+                disabled={!values.sellable}
+                fastField
+              />
+            </ControlGroup>
+          </FFormGroup>
 
           {/*------------- Selling account ------------- */}
           <FFormGroup
@@ -138,6 +130,7 @@ function ItemFormBody({ organization: { base_currency } }) {
               growVertically={true}
               height={280}
               disabled={!values.sellable}
+              fill
               fastField
             />
           </FFormGroup>
@@ -162,33 +155,25 @@ function ItemFormBody({ organization: { base_currency } }) {
           </FastField>
 
           {/*------------- Cost price ------------- */}
-          <FastField
+          <FFormGroup
             name={'cost_price'}
-            purchasable={values.purchasable}
-            shouldUpdate={costPriceFieldShouldUpdate}
+            label={<T id={'cost_price'} />}
+            inline
+            fastField
           >
-            {({ field, form, field: { value }, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'cost_price'} />}
-                className={'form-group--item-cost-price'}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="cost_price" />}
-                inline={true}
-              >
-                <ControlGroup>
-                  <InputPrependText text={base_currency} />
-                  <MoneyInputGroup
-                    value={value}
-                    inputGroupProps={{ medium: true }}
-                    disabled={!form.values.purchasable}
-                    onChange={(unformattedValue) => {
-                      form.setFieldValue('cost_price', unformattedValue);
-                    }}
-                  />
-                </ControlGroup>
-              </FormGroup>
-            )}
-          </FastField>
+            <ControlGroup>
+              <InputPrependText text={base_currency} />
+
+              <FMoneyInputGroup
+                name={'cost_price'}
+                shouldUpdate={costPriceFieldShouldUpdate}
+                purchasable={values.purchasable}
+                inputGroupProps={{ medium: true }}
+                disabled={!values.purchasable}
+                fastField
+              />
+            </ControlGroup>
+          </FFormGroup>
 
           {/*------------- Cost account ------------- */}
           <FFormGroup
@@ -249,6 +234,7 @@ function ItemFormBody({ organization: { base_currency } }) {
               growVertically={true}
               height={280}
               disabled={!values.purchasable}
+              fill
             />
           </FFormGroup>
         </Col>

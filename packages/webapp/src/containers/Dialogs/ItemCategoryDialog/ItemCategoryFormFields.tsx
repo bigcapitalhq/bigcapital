@@ -1,11 +1,15 @@
 // @ts-nocheck
 import React from 'react';
-import { Classes, FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
-import { FormattedMessage as T, FieldRequiredHint } from '@/components';
-import { ErrorMessage, FastField } from 'formik';
+import { Classes } from '@blueprintjs/core';
+import {
+  FormattedMessage as T,
+  FieldRequiredHint,
+  FFormGroup,
+  FInputGroup,
+  FTextArea,
+} from '@/components';
 
 import { useAutofocus } from '@/hooks';
-import { inputIntent } from '@/utils';
 
 /**
  * Item category form fields.
@@ -16,45 +20,35 @@ export default function ItemCategoryFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/* ----------- Category name ----------- */}
-      <FastField name={'name'}>
-        {({ field, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'category_name'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={'form-group--category-name'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="name" />}
-            inline={true}
-          >
-            <InputGroup
-              medium={true}
-              inputRef={(ref) => (categoryNameFieldRef.current = ref)}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'name'}
+        label={<T id={'category_name'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline
+        fastField
+      >
+        <FInputGroup
+          name={'name'}
+          medium={true}
+          inputRef={(ref) => (categoryNameFieldRef.current = ref)}
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Description ----------- */}
-      <FastField name={'description'}>
-        {({ field, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'description'} />}
-            className={'form-group--description'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="description" />}
-            inline={true}
-          >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'description'}
+        label={<T id={'description'} />}
+        inline
+        fastField
+      >
+        <FTextArea
+          name={'description'}
+          growVertically={true}
+          large={true}
+          fastField
+        />
+      </FFormGroup>
     </div>
   );
 }
