@@ -1,10 +1,16 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, useFormikContext } from 'formik';
-import { FormGroup, InputGroup, Radio } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import { Radio } from '@blueprintjs/core';
 
-import { FormattedMessage as T, Row, Col, ErrorMessage } from '@/components';
-import { inputIntent } from '@/utils';
+import {
+  FormattedMessage as T,
+  Row,
+  Col,
+  FFormGroup,
+  FInputGroup,
+  FRadioGroup,
+} from '@/components';
 
 /**
  * Reference number form content.
@@ -13,33 +19,21 @@ export default function ReferenceNumberFormContent() {
   return (
     <>
       {/* ------------- Auto increment mode ------------- */}
-      <FastField name={'incrementMode'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <Radio
-            label={<T id={'auto_increment.field.auto'} />}
-            value="auto-increment"
-            onChange={() => {
-              form.setFieldValue('incrementMode', 'auto');
-            }}
-            checked={field.value === 'auto'}
-          />
-        )}
-      </FastField>
+      <FRadioGroup name={'incrementMode'} fastField>
+        <Radio
+          label={<T id={'auto_increment.field.auto'} />}
+          value="auto"
+        />
+      </FRadioGroup>
       <ReferenceNumberAutoIncrement />
 
       {/* ------------- Manual increment mode ------------- */}
-      <FastField name={'incrementMode'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <Radio
-            label={<T id={'auto_increment.field.manually'} />}
-            value="manual"
-            onChange={() => {
-              form.setFieldValue('incrementMode', 'manual');
-            }}
-            checked={field.value === 'manual'}
-          />
-        )}
-      </FastField>
+      <FRadioGroup name={'incrementMode'} fastField>
+        <Radio
+          label={<T id={'auto_increment.field.manually'} />}
+          value="manual"
+        />
+      </FRadioGroup>
 
       {/* ------------- Transaction manual increment mode ------------- */}
       <ReferenceNumberManualOnce />
@@ -49,40 +43,32 @@ export default function ReferenceNumberFormContent() {
 
 function ReferenceNumberAutoIncrement() {
   const { values } = useFormikContext();
-  if (!values.incrementMode === 'auto') return null;
+  if (values.incrementMode !== 'auto') return null;
 
   return (
     <Row>
       {/* ------------- Prefix ------------- */}
       <Col xs={4}>
-        <FastField name={'numberPrefix'}>
-          {({ form, field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'prefix'} />}
-              className={'form-group--'}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name={'numberPrefix'} />}
-            >
-              <InputGroup intent={inputIntent({ error, touched })} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
+        <FFormGroup
+          name={'numberPrefix'}
+          label={<T id={'prefix'} />}
+          className={'form-group--'}
+          fastField
+        >
+          <FInputGroup name={'numberPrefix'} fastField />
+        </FFormGroup>
       </Col>
 
       {/* ------------- Next number ------------- */}
       <Col xs={6}>
-        <FastField name={'nextNumber'}>
-          {({ form, field, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'next_number'} />}
-              className={'form-group--next-number'}
-              intent={inputIntent({ error, touched })}
-              helperText={<ErrorMessage name={'nextNumber'} />}
-            >
-              <InputGroup intent={inputIntent({ error, touched })} {...field} />
-            </FormGroup>
-          )}
-        </FastField>
+        <FFormGroup
+          name={'nextNumber'}
+          label={<T id={'next_number'} />}
+          className={'form-group--next-number'}
+          fastField
+        >
+          <FInputGroup name={'nextNumber'} fastField />
+        </FFormGroup>
       </Col>
     </Row>
   );
@@ -95,17 +81,13 @@ function ReferenceNumberManualOnce() {
   if (!values.onceManualNumber) return null;
 
   return (
-    <FastField name={'incrementMode'}>
-      {({ form, field, meta: { error, touched } }) => (
+    <FFormGroup name={'incrementMode'} fastField>
+      <FRadioGroup name={'incrementMode'} fastField>
         <Radio
           label={<T id={'auto_increment.field.manual_this_transaction'} />}
-          value="manual"
-          onChange={() => {
-            form.setFieldValue('incrementMode', 'manual-transaction');
-          }}
-          checked={field.value === 'manual-transaction'}
+          value="manual-transaction"
         />
-      )}
-    </FastField>
+      </FRadioGroup>
+    </FFormGroup>
   );
 }

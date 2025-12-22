@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
-import { Classes, FormGroup, Position } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
+import { Classes, Position } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -10,14 +8,10 @@ import {
   FormattedMessage as T,
   FFormGroup,
   FTextArea,
+  FDateInput,
 } from '@/components';
 import { useAutofocus } from '@/hooks';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter } from '@/utils';
 
 /**
  *  locking Transactions form fields.
@@ -28,31 +22,24 @@ export default function LockingTransactionsFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------  Locking Date -----------*/}
-      <FastField name={'lock_to_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'locking_transactions.dialog.locking_date'} />}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="lock_to_date" />}
-            minimal={true}
-            className={classNames(CLASSES.FILL, 'form-group--date')}
-          >
-            <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('lock_to_date', formattedDate);
-              })}
-              value={tansformDateValue(value)}
-              popoverProps={{
-                position: Position.BOTTOM,
-                minimal: true,
-              }}
-              intent={inputIntent({ error, touched })}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'lock_to_date'}
+        label={<T id={'locking_transactions.dialog.locking_date'} />}
+        labelInfo={<FieldRequiredHint />}
+        minimal={true}
+        className={classNames(CLASSES.FILL, 'form-group--date')}
+        fastField
+      >
+        <FDateInput
+          name={'lock_to_date'}
+          {...momentFormatter('YYYY/MM/DD')}
+          popoverProps={{
+            position: Position.BOTTOM,
+            minimal: true,
+          }}
+          fastField
+        />
+      </FFormGroup>
 
       {/*------------ Locking  Reason -----------*/}
       <FFormGroup
@@ -66,6 +53,7 @@ export default function LockingTransactionsFormFields() {
           growVertically={true}
           large={true}
           inputRef={(ref) => (reasonFieldRef.current = ref)}
+          fill
           fastField
         />
       </FFormGroup>

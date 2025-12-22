@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
-import { Field, getIn } from 'formik';
+import { Field, FastField, getIn } from 'formik';
 import { CurrencyInput } from './MoneyInputGroup';
 
 const fieldToMoneyInputGroup = ({
@@ -32,6 +32,7 @@ function FieldToMoneyInputGroup({ ...props }) {
   return <CurrencyInput {...fieldToMoneyInputGroup(props)} />;
 }
 
-export function FMoneyInputGroup({ ...props }) {
-  return <Field {...props} component={FieldToMoneyInputGroup} />;
+export function FMoneyInputGroup({ fastField, ...props }) {
+  const FieldComponent = fastField ? FastField : Field;
+  return <FieldComponent {...props} component={FieldToMoneyInputGroup} />;
 }
