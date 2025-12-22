@@ -34,7 +34,7 @@ export class MatchBankTransactions {
     private readonly uncategorizedBankTransactionModel: TenantModelProxy<
       typeof UncategorizedBankTransaction
     >,
-  ) {}
+  ) { }
 
   /**
    * Validates the match bank transactions DTO.
@@ -100,7 +100,10 @@ export class MatchBankTransactions {
     );
     // Validates the total given matching transcations whether is not equal
     // uncategorized transaction amount.
-    if (totalUncategorizedTransactions !== totalMatchedTranasctions) {
+    // Use tolerance-based comparison to handle floating-point precision issues
+    const tolerance = 0.01; // Allow 0.01 difference for floating-point precision
+    const difference = Math.abs(totalUncategorizedTransactions - totalMatchedTranasctions);
+    if (difference > tolerance) {
       throw new ServiceError(ERRORS.TOTAL_MATCHING_TRANSACTIONS_INVALID);
     }
   }
