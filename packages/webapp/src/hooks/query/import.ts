@@ -208,7 +208,7 @@ const invalidateResourcesOnImport = (
       queryClient.invalidateQueries(T.MANUAL_JOURNALS);
       break;
 
-    case 'UncategorizedCashflowTransaction':
+    case 'UncategorizedBankTransaction':
       queryClient.invalidateQueries(T.CASH_FLOW_TRANSACTIONS);
       queryClient.invalidateQueries(T.CASH_FLOW_TRANSACTIONS);
       queryClient.invalidateQueries(T.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import * as yup from 'yup';
-import uniqid from 'uniqid';
+import * as uniqid from 'uniqid';
 import { Importable } from '../../Import/Importable';
 import { CreateUncategorizedTransactionService } from './CreateUncategorizedTransaction.service';
 import { ImportableContext } from '../../Import/interfaces';
@@ -9,8 +9,10 @@ import { BankTransactionsSampleData } from '../../BankingTransactions/constants'
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { CreateUncategorizedTransactionDTO } from '../types/BankingCategorize.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-
+import { ImportableService } from '../../Import/decorators/Import.decorator';
+import { UncategorizedBankTransaction } from '../../BankingTransactions/models/UncategorizedBankTransaction';
 @Injectable()
+@ImportableService({ name: UncategorizedBankTransaction.name })
 export class UncategorizedTransactionsImportable extends Importable {
   constructor(
     private readonly createUncategorizedTransaction: CreateUncategorizedTransactionService,

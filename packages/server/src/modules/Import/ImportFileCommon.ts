@@ -22,7 +22,7 @@ export class ImportFileCommon {
     private readonly importFileValidator: ImportFileDataValidator,
     private readonly resource: ResourceService,
     private readonly importableRegistry: ImportableRegistry,
-  ) {}
+  ) { }
 
   /**
    * Imports the given parsed data to the resource storage through registered importable service.

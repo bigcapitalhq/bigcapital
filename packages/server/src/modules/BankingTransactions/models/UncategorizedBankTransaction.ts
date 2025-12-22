@@ -2,7 +2,10 @@
 import * as moment from 'moment';
 import { Model } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import { UncategorizedBankTransactionMeta } from './UncategorizedBankTransaction.meta';
+import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 
+@InjectModelMeta(UncategorizedBankTransactionMeta)
 export class UncategorizedBankTransaction extends TenantBaseModel {
   readonly amount!: number;
   readonly date!: Date | string;

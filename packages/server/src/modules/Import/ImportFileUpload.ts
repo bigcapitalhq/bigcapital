@@ -84,7 +84,7 @@ export class ImportFileUploadService {
     } catch (error) {
       throw error;
     }
-    const _params = this.importFileCommon.transformParams(resource, params);
+    const _params = await this.importFileCommon.transformParams(resource, params);
     const paramsStringified = JSON.stringify(_params);
 
     const tenant = await this.tenancyContext.getTenant();
