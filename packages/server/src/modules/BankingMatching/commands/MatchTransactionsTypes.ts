@@ -12,24 +12,30 @@ export class MatchTransactionsTypes {
   private static registry: MatchTransactionsTypesRegistry;
 
   /**
-   * Consttuctor method.
+   * Constructor method.
    */
-  constructor() {
+  constructor(
+    private readonly getMatchedInvoicesService: GetMatchedTransactionsByInvoices,
+    private readonly getMatchedBillsService: GetMatchedTransactionsByBills,
+    private readonly getMatchedExpensesService: GetMatchedTransactionsByExpenses,
+    private readonly getMatchedManualJournalsService: GetMatchedTransactionsByManualJournals,
+    private readonly getMatchedCashflowService: GetMatchedTransactionsByCashflow,
+  ) {
     this.boot();
   }
 
   get registered() {
     return [
-      { type: 'SaleInvoice', service: GetMatchedTransactionsByInvoices },
-      { type: 'Bill', service: GetMatchedTransactionsByBills },
-      { type: 'Expense', service: GetMatchedTransactionsByExpenses },
+      { type: 'SaleInvoice', service: this.getMatchedInvoicesService },
+      { type: 'Bill', service: this.getMatchedBillsService },
+      { type: 'Expense', service: this.getMatchedExpensesService },
       {
         type: 'ManualJournal',
-        service: GetMatchedTransactionsByManualJournals,
+        service: this.getMatchedManualJournalsService,
       },
       {
         type: 'CashflowTransaction',
-        service: GetMatchedTransactionsByCashflow,
+        service: this.getMatchedCashflowService,
       },
     ];
   }
@@ -50,14 +56,13 @@ export class MatchTransactionsTypes {
    * Boots all the registered importables.
    */
   public boot() {
-    if (!MatchTransactionsTypes.registry) {
-      const instance = MatchTransactionsTypesRegistry.getInstance();
+    const instance = MatchTransactionsTypesRegistry.getInstance();
 
-      this.registered.forEach((registered) => {
-        // const serviceInstanace = Container.get(registered.service);
-        // instance.register(registered.type, serviceInstanace);
-      });
-      MatchTransactionsTypes.registry = instance;
-    }
+    // Always register services to ensure they're available
+    this.registered.forEach((registered) => {
+      instance.register(registered.type, registered.service);
+    });
+
+    MatchTransactionsTypes.registry = instance;
   }
 }

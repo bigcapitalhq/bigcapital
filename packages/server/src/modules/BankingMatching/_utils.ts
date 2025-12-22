@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import * as R from 'ramda';
-import { isEmpty, sumBy } from 'lodash';
+import { isEmpty, round, sumBy } from 'lodash';
 import { ERRORS, MatchedTransactionPOJO } from './types';
 import { ServiceError } from '../Items/ServiceError';
 
@@ -22,18 +22,24 @@ export const sortClosestMatchTransactions = (
 };
 
 export const sumMatchTranasctions = (transactions: Array<any>) => {
-  return transactions.reduce(
-    (total, item) =>
-      total +
-      (item.transactionNormal === 'debit' ? 1 : -1) * parseFloat(item.amount),
+  const total = transactions.reduce(
+    (sum, item) => {
+      const amount = parseFloat(item.amount) || 0;
+      const multiplier = item.transactionNormal === 'debit' ? 1 : -1;
+      return sum + multiplier * amount;
+    },
     0
   );
+  // Round to 2 decimal places to avoid floating-point precision issues
+  return round(total, 2);
 };
 
 export const sumUncategorizedTransactions = (
   uncategorizedTransactions: Array<any>
 ) => {
-  return sumBy(uncategorizedTransactions, 'amount');
+  const total = sumBy(uncategorizedTransactions, 'amount');
+  // Round to 2 decimal places to avoid floating-point precision issues
+  return round(total, 2);
 };
 
 export const validateUncategorizedTransactionsNotMatched = (
