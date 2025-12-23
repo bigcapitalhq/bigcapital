@@ -5,6 +5,7 @@ import { CommercialDocEntriesTable } from '@/components';
 
 import { useCashflowTransactionColumns } from './utils';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
+import { TableStyle } from '@/constants';
 
 /**
  * Cashflow transaction drawer table.
@@ -15,5 +16,11 @@ export default function CashflowTransactionDrawerTable() {
     cashflowTransaction: { transactions },
   } = useCashflowTransactionDrawerContext();
 
-  return <CommercialDocEntriesTable columns={columns} data={transactions} />;
+  return (
+    <CommercialDocEntriesTable
+      columns={columns}
+      data={transactions}
+      styleName={TableStyle.Constrant}
+    />
+  );
 }

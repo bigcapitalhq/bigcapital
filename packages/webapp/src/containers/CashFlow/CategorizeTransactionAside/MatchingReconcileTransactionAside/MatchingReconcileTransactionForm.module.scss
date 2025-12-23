@@ -31,13 +31,25 @@
 .asideContent{
   background: #F6F7F9;
   height: 335px;
+
+  :global(.bp4-dark) & {
+    background: var(--color-dark-gray2);
+  }
 }
 
 .asideRoot {
   flex: 1 1 0;
   box-shadow: 0 0 0 1px rgba(17,20,24,.1),0 1px 1px rgba(17,20,24,.2),0 2px 6px rgba(17,20,24,.2);
+
+  :global(.bp4-dark) & {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1),0 1px 1px rgba(255, 255, 255, 0.2),0 2px 6px rgba(255, 255, 255, 0.2);
+  }
 }
 
 .asideFooter {
   background: #F6F7F9; 
+
+  :global(.bp4-dark) & {
+    background: var(--color-dark-gray2);
+  }
 }
