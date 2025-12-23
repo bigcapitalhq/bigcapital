@@ -13,37 +13,6 @@
     }
   }
 
-  .table {
-    .thead .th {
-      background: transparent;
-      color: #222222;
-      border-bottom: 1px solid #000000;
-      border-top: 1px solid #000000;
-      padding: 0.5rem;
-    }
-
-    .tbody .tr .td {
-      background: transparent;
-      padding: 0.5rem 0.5rem;
-      border-bottom: 0;
-    }
-
-    .tbody .tr:last-child .td {
-      border-bottom: 1px solid #d2dce2;
-    }
-
-    .thead,
-    .tbody {
-      .tr .td,
-      .tr .th {
-        &.credit,
-        &.debit {
-          text-align: right;
-        }
-      }
-    }
-  }
-
   &__content {
     &-header {
       margin-bottom: 35px;
@@ -86,9 +55,17 @@
 
       &--subtotal {
         border-bottom: 1px solid #000;
+
+        .bp4-dark & {
+          border-bottom-color: var(--color-dark-gray5);
+        }
       }
       &--total {
         border-bottom: 3px double #000;
+
+        .bp4-dark & {
+          border-bottom-color: var(--color-dark-gray5);
+        }
       }
       &--subtotal,
       &--total {

@@ -24,11 +24,19 @@ export const TD = styled.td`
 export const TRDarkSingleLine = styled(TR)`
   ${TD} {
     border-bottom: 1px solid #000;
+
+    .bp4-dark & {
+      border-bottom-color: var(--color-dark-gray5);
+    }
   }
 `;
 
 export const TRDarkDoubleLines = styled(TR)`
   ${TD} {
     border-bottom: 3px double #000;
+
+    .bp4-dark & {
+      border-bottom-color: var(--color-dark-gray5);
+    }
   }
 `;
