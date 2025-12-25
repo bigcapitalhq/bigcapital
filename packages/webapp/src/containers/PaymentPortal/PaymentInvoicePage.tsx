@@ -2,17 +2,18 @@ import { Text, Classes, Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { css } from '@emotion/css';
 import { AppToaster, Box, Group, Stack } from '@/components';
-import { usePaymentPortalBoot } from './PaymentPortalBoot';
+import { PaymentPortalBoot, usePaymentPortalBoot } from './PaymentPortalBoot';
 import { useDrawerActions } from '@/hooks/state';
-import {
-  useCreateStripeCheckoutSession,
-  useGeneratePaymentLinkInvoicePdf,
-} from '@/hooks/query/payment-link';
+import { useCreateStripeCheckoutSession } from '@/hooks/query/payment-link';
 import { DRAWERS } from '@/constants/drawers';
-import { downloadFile } from '@/hooks/useDownloadFile';
 import styles from './PaymentPortal.module.scss';
+import { DownloadInvoiceButton } from './DownloadInvoiceButton';
+import { PaymentPortalInvoiceHeader } from './PaymentPortalInvoiceHeader';
+import PaymentPortalPage from './PaymentPortalPage';
+import { PaymentInvoicePreviewDrawer } from './drawers/PaymentInvoicePreviewDrawer/PaymentInvoicePreviewDrawer';
+import { useParams } from 'react-router-dom';
 
-export function PaymentPortal() {
+function PaymentInvoicePage() {
   const { openDrawer } = useDrawerActions();
   const { sharableLinkMeta, linkId } = usePaymentPortalBoot();
   const {
@@ -20,32 +21,9 @@ export function PaymentPortal() {
     isLoading: isStripeCheckoutLoading,
   } = useCreateStripeCheckoutSession();
 
-  const {
-    mutateAsync: generatePaymentLinkInvoice,
-    isLoading: isInvoiceGenerating,
-  } = useGeneratePaymentLinkInvoicePdf();
-
   // Handles invoice preview button click.
   const handleInvoicePreviewBtnClick = () => {
     openDrawer(DRAWERS.PAYMENT_INVOICE_PREVIEW);
-  };
-
-  // Handles invoice download button click.
-  const handleInvoiceDownloadBtnClick = () => {
-    generatePaymentLinkInvoice({ paymentLinkId: linkId })
-      .then((data) => {
-        downloadFile(
-          data,
-          `Invoice ${sharableLinkMeta?.invoiceNo}`,
-          'application/pdf',
-        );
-      })
-      .catch(() => {
-        AppToaster.show({
-          intent: Intent.DANGER,
-          message: 'Something went wrong.',
-        });
-      });
   };
 
   // handles the pay button click.
@@ -63,51 +41,10 @@ export function PaymentPortal() {
   };
 
   return (
-    <Box className={styles.root} my={'40px'} mx={'auto'}>
+    <PaymentPortalPage>
       <Stack spacing={0} className={styles.body}>
         <Stack>
-          <Group spacing={10}>
-            {sharableLinkMeta?.brandingTemplate?.companyLogoUri && (
-              <Box
-                className={styles.companyLogoWrap}
-                style={{
-                  backgroundImage: `url(${sharableLinkMeta?.brandingTemplate?.companyLogoUri})`,
-                }}
-              ></Box>
-            )}
-            <Text>{sharableLinkMeta?.organization?.name}</Text>
-          </Group>
-
-          <Stack spacing={6}>
-            <h1 className={styles.bigTitle}>
-              {sharableLinkMeta?.organization?.name} Sent an Invoice for{' '}
-              {sharableLinkMeta?.totalFormatted}
-            </h1>
-            <Group spacing={10}>
-              <Text className={clsx(Classes.TEXT_MUTED, styles.invoiceDueDate)}>
-                Invoice due {sharableLinkMeta?.dueDateFormatted}{' '}
-              </Text>
-            </Group>
-          </Stack>
-
-          <Stack className={styles.address} spacing={2}>
-            <Box className={styles.customerName}>
-              {sharableLinkMeta?.customerName}
-            </Box>
-
-            {sharableLinkMeta?.formattedCustomerAddress && (
-              <Box
-                dangerouslySetInnerHTML={{
-                  __html: sharableLinkMeta?.formattedCustomerAddress,
-                }}
-              />
-            )}
-          </Stack>
-
-          <h2 className={styles.invoiceNumber}>
-            Invoice {sharableLinkMeta?.invoiceNo}
-          </h2>
-
+          <PaymentPortalInvoiceHeader />
           <Stack spacing={0} className={styles.totals}>
             <Group
               position={'apart'}
@@ -151,14 +88,7 @@ export function PaymentPortal() {
         </Stack>
 
         <Stack spacing={8} className={styles.footerButtons}>
-          <Button
-            minimal
-            className={clsx(styles.footerButton, styles.downloadInvoiceButton)}
-            onClick={handleInvoiceDownloadBtnClick}
-            loading={isInvoiceGenerating}
-          >
-            Download Invoice
-          </Button>
+          <DownloadInvoiceButton />
 
           <Button
             onClick={handleInvoicePreviewBtnClick}
@@ -215,6 +145,17 @@ export function PaymentPortal() {
           All rights reserved.
         </Stack>
       </Stack>
-    </Box>
+      <PaymentInvoicePreviewDrawer name={DRAWERS.PAYMENT_INVOICE_PREVIEW} />
+    </PaymentPortalPage>
+  );
+}
+
+export default function PaymentInvoicePageWrapper() {
+  const { linkId } = useParams<{ linkId: string }>();
+
+  return (
+    <PaymentPortalBoot linkId={linkId}>
+      <PaymentInvoicePage />
+    </PaymentPortalBoot>
   );
 }

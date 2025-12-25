@@ -9,6 +9,7 @@ import { StripePaymentModule } from '../StripePayment/StripePayment.module';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
 import { GetInvoicePaymentLinkMetadata } from './GetInvoicePaymentLinkMetadata';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { GenerateShareLink } from '../SaleInvoices/commands/GenerateInvoicePaymentLink.service';
 
 const models = [InjectSystemModel(PaymentLink)];
 
@@ -21,6 +22,7 @@ const models = [InjectSystemModel(PaymentLink)];
     ...models,
     TenancyContext,
     CreateInvoiceCheckoutSession,
+    GenerateShareLink,
     GetPaymentLinkInvoicePdf,
     PaymentLinksApplication,
     GetInvoicePaymentLinkMetadata,

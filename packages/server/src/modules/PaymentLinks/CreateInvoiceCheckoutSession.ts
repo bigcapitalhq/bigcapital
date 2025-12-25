@@ -6,8 +6,7 @@ import { PaymentLink } from './models/PaymentLink';
 import { StripeInvoiceCheckoutSessionPOJO } from '../StripePayment/StripePayment.types';
 import { ModelObject } from 'objection';
 import { ConfigService } from '@nestjs/config';
-
-const origin = 'http://localhost';
+import { GenerateShareLink } from '../SaleInvoices/commands/GenerateInvoicePaymentLink.service';
 
 @Injectable()
 export class CreateInvoiceCheckoutSession {
@@ -20,6 +19,8 @@ export class CreateInvoiceCheckoutSession {
 
     @Inject(PaymentLink.name)
     private readonly paymentLinkModel: typeof PaymentLink,
+
+    private readonly generatePaymentLinkService: GenerateShareLink,
   ) {}
 
   /**
@@ -49,13 +50,13 @@ export class CreateInvoiceCheckoutSession {
       (method) => method.paymentIntegration?.service === 'Stripe',
     );
     const stripeAccountId = stripePaymentMethod?.paymentIntegration?.accountId;
-    const paymentIntegrationId = stripePaymentMethod?.paymentIntegration?.id;
 
     // Creates checkout session for the given invoice.
-    const session = await this.createCheckoutSession(invoice, stripeAccountId, {
-      tenantId: paymentLink.tenantId,
-      paymentLinkId: paymentLink.id,
-    });
+    const session = await this.createCheckoutSession(
+      invoice,
+      stripeAccountId,
+      paymentLink,
+    );
     return {
       sessionId: session.id,
       publishableKey: this.configService.get('stripePayment.publishableKey'),
@@ -69,11 +70,17 @@ export class CreateInvoiceCheckoutSession {
    * @param {string} stripeAccountId - The Stripe account ID associated with the payment method.
    * @returns {Promise<any>} - The created Stripe checkout session.
    */
-  private createCheckoutSession(
+  private async createCheckoutSession(
     invoice: ModelObject<SaleInvoice>,
-    stripeAccountId?: string,
-    metadata?: Record<string, any>,
+    stripeAccountId: string,
+    paymentLink: PaymentLink,
   ) {
+    const paymentLinkUrl = (
+      await this.generatePaymentLinkService.generatePaymentLinkFromModel(
+        paymentLink,
+      )
+    ).link;
+
     return this.stripePaymentService.stripe.checkout.sessions.create(
       {
         payment_method_types: ['card'],
@@ -90,12 +97,14 @@ export class CreateInvoiceCheckoutSession {
           },
         ],
         mode: 'payment',
-        success_url: `${origin}/success`,
-        cancel_url: `${origin}/cancel`,
+        // https://docs.stripe.com/payments/checkout/custom-success-page?payment-ui=stripe-hosted#modify-the-success-url
+        success_url: `${paymentLinkUrl}/success/{CHECKOUT_SESSION_ID}`,
+        cancel_url: paymentLinkUrl,
         metadata: {
+          paymentLinkId: paymentLink.id,
           saleInvoiceId: invoice.id,
           resource: 'SaleInvoice',
-          ...metadata,
+          tenantId: paymentLink.tenantId,
         },
       },
       { stripeAccount: stripeAccountId },
