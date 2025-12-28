@@ -93,7 +93,7 @@ export class InventoryComputeCostService {
    */
   async scheduleComputeItemCost(itemId: number, startingDate: Date | string) {
     const debounceKey = `inventory-cost-compute-debounce:${itemId}`;
-    const debounceTime = 1000 * 60; // 1 minute
+    const debounceTime = 1000 * 10; // 10 seconds
 
     // Generate a unique job ID or use a custom identifier
     const jobId = `task-${Date.now()}-${Math.random().toString(36).substring(2)}`;
