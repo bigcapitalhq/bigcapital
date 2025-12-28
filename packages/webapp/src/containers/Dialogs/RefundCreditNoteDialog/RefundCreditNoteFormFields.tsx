@@ -73,7 +73,6 @@ function RefundCreditNoteFormFields({
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FormGroup>

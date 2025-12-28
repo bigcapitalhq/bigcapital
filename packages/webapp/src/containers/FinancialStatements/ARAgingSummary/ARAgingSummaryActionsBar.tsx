@@ -106,11 +106,6 @@ function ARAgingSummaryActionsBar({
           />
         </Popover>
 
-        <Button
-          className={Classes.MINIMAL}
-          text={<T id={'filter'} />}
-          icon={<Icon icon="filter-16" iconSize={16} />}
-        />
         <NavbarDivider />
 
         <Button

@@ -55,17 +55,29 @@ const InventoryValuationSheet = styled(FinancialSheet)`
 `;
 
 const InventoryValuationDataTable = styled(ReportDataTable)`
+  --color-table-text-color: #252a31;
+  --color-table-total-text-color: #000;
+  --color-table-total-border: #bbb;
+
+  .bp4-dark & {
+    --color-table-text-color: var(--color-light-gray1);
+    --color-table-total-text-color: var(--color-light-gray4);
+    --color-table-total-border: var(--color-dark-gray5);
+  }
+
   .table {
     .tbody {
       .tr .td {
         border-bottom: 0;
         padding-top: 0.4rem;
         padding-bottom: 0.4rem;
+        color: var(--color-table-text-color);
       }
       .tr.row_type--TOTAL .td {
-        border-top: 1px solid #bbb;
+        border-top: 1px solid var(--color-table-total-border);
+        border-bottom: 3px double var(--color-table-total-border);
         font-weight: 500;
-        border-bottom: 3px double #000;
+        color: var(--color-table-total-text-color);
       }
     }
   }

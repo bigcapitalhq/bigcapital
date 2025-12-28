@@ -20,12 +20,3 @@ export function BranchSelect({ branches, ...rest }) {
     />
   );
 }
-
-/**
- *
- * @param {*} param0
- * @returns
- */
-export function BranchSelectButton({ label, ...rest }) {
-  return <Button text={label} {...rest} />;
-}

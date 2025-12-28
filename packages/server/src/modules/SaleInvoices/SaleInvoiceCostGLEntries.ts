@@ -19,7 +19,7 @@ export class SaleInvoiceCostGLEntries {
     private readonly inventoryCostLotTracker: TenantModelProxy<
       typeof InventoryCostLotTracker
     >,
-  ) {}
+  ) { }
 
   /**
    * Writes journal entries from sales invoices.

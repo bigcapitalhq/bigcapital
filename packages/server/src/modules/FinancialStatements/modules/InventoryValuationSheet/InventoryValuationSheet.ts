@@ -211,7 +211,7 @@ export class InventoryValuationSheet extends FinancialSheet {
    * Detarmines whether the items post filter is active.
    */
   private isItemsPostFilter = (): boolean => {
-    return isEmpty(this.query.itemsIds);
+    return !isEmpty(this.query.itemsIds);
   };
 
   /**

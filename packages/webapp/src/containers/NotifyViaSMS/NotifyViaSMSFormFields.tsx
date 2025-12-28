@@ -6,7 +6,8 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 
 import {
-  ListSelect,
+  FFormGroup,
+  FSelect,
   FieldRequiredHint,
   FormattedMessage as T,
 } from '@/components';
@@ -16,29 +17,23 @@ import { inputIntent } from '@/utils';
 export default function NotifyViaSMSFormFields({ notificationTypes }) {
   return (
     <NotifyViaSMSFormFieldsRoot>
-      <FastField name={'notification_key'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'notify_via_sms.dialog.notification_type'} />}
-            className={classNames(CLASSES.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_name'} />}
-          >
-            <ListSelect
-              items={notificationTypes}
-              selectedItemProp={'key'}
-              selectedItem={value}
-              textProp={'label'}
-              popoverProps={{ minimal: true }}
-              filterable={false}
-              onItemSelect={(notification) => {
-                form.setFieldValue('notification_key', notification.key);
-              }}
-              disabled={notificationTypes.length < 2}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup
+        name={'notification_key'}
+        label={<T id={'notify_via_sms.dialog.notification_type'} />}
+        className={classNames(CLASSES.FILL)}
+        fastField
+      >
+        <FSelect
+          name={'notification_key'}
+          items={notificationTypes}
+          valueAccessor={'key'}
+          textAccessor={'label'}
+          popoverProps={{ minimal: true }}
+          filterable={false}
+          disabled={notificationTypes.length < 2}
+          fastField
+        />
+      </FFormGroup>
 
       {/* ----------- Send Notification to ----------- */}
       <FastField name={'customer_name'}>

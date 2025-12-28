@@ -52,6 +52,7 @@ function TrialBalanceSheetHeader({
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
     branchesIds: [],
+    filterByOption: 'with-transactions',
   };
 
   // Initial values.

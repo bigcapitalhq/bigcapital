@@ -171,6 +171,15 @@ export const financialReportMenus = [
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
       },
+      {
+        title: <T id={'inventory_valuation'} />,
+        desc: (
+          <T id={'summerize_your_transactions_for_each_inventory_item'} />
+        ),
+        link: '/financial-reports/inventory-valuation',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
+      },
     ],
   },
   {

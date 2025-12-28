@@ -10,7 +10,7 @@ import { events } from '@/common/events/events';
 
 @Injectable()
 export class InvoiceGLEntriesSubscriber {
-  constructor(public readonly saleInvoiceGLEntries: SaleInvoiceGLEntries) {}
+  constructor(public readonly saleInvoiceGLEntries: SaleInvoiceGLEntries) { }
 
   /**
    * Records journal entries of the non-inventory invoice.

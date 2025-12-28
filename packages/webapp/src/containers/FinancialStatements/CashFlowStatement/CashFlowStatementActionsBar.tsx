@@ -107,18 +107,6 @@ function CashFlowStatementActionsBar({
           />
         </Popover>
 
-        <Popover
-          // content={}
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={<T id={'filter'} />}
-            icon={<Icon icon="filter-16" iconSize={16} />}
-          />
-        </Popover>
-
         <NavbarDivider />
 
         <Button

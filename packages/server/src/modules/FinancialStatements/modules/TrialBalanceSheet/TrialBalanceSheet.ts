@@ -172,7 +172,10 @@ export class TrialBalanceSheet extends FinancialSheet {
   private filterNoneTransactions = (
     accountNode: ITrialBalanceAccount
   ): boolean => {
-    return false === this.repository.totalAccountsLedger.isEmpty();
+    const accountLedger = this.repository.totalAccountsLedger.whereAccountId(
+      accountNode.id,
+    );
+    return !accountLedger.isEmpty();
   };
 
   /**
