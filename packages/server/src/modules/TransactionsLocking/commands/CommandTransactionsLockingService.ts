@@ -26,7 +26,7 @@ export class TransactionsLockingService {
   constructor(
     private readonly transactionsLockingRepo: TransactionsLockingRepository,
     private readonly eventPublisher: EventEmitter2,
-  ) {}
+  ) { }
 
   /**
    * Enable/disable all transacations locking.

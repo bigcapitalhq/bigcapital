@@ -21,7 +21,6 @@ import {
   FeatureCan,
   BranchSelect,
   WarehouseSelect,
-  BranchSelectButton,
   FAccountsSuggestField,
 } from '@/components';
 import { momentFormatter, toSafeNumber } from '@/utils';
@@ -78,12 +77,11 @@ export default function InventoryAdjustmentFormDialogFields() {
           <Col xs={5}>
             <FormGroup
               label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
+              fill
             >
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FormGroup>
@@ -93,7 +91,7 @@ export default function InventoryAdjustmentFormDialogFields() {
           <Col xs={5}>
             <FormGroup
               label={<T id={'warehouse'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
+              fill
             >
               <WarehouseSelect
                 name={'warehouse_id'}

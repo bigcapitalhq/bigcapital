@@ -10,7 +10,7 @@ import {
   InputGroup,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FormattedMessage as T, If, FFormGroup, FSelect } from '@/components';
+import { FormattedMessage as T, If, FFormGroup, FSelect, FRadioGroup, FInputGroup } from '@/components';
 import { handleStringChange } from '@/utils';
 import { FieldRequiredHint } from '@/components';
 import { CLASSES } from '@/constants/classes';
@@ -31,7 +31,7 @@ export default function AllocateLandedCostFormFields() {
   const { costTransactionEntries, landedCostTransactions } =
     useAllocateLandedConstDialogContext();
 
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue, form } = useFormikContext();
 
   // Handle transaction type select change.
   const handleTransactionTypeChange = (type) => {
@@ -137,62 +137,51 @@ export default function AllocateLandedCostFormFields() {
       </If>
 
       {/*------------ Amount -----------*/}
-      <FastField name={'amount'}>
-        {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'amount'} />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="amount" />}
-            className={'form-group--amount'}
-            inline={true}
-          >
-            <InputGroup
-              {...field}
-              onBlur={(e) => {
-                const amount = e.target.value;
-                const { allocation_method, items } = form.values;
+      <FFormGroup
+        name={'amount'}
+        label={<T id={'amount'} />}
+        inline={true}
+        fastField
+      >
+        <FInputGroup
+          name={'amount'}
+          onBlur={(e) => {
+            const amount = e.target.value;
+            const { allocation_method, items } = values;
 
-                form.setFieldValue(
-                  'items',
-                  allocateCostToEntries(amount, allocation_method, items),
-                );
-              }}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+            setFieldValue(
+              'items',
+              allocateCostToEntries(amount, allocation_method, items),
+            );
+          }}
+        />
+      </FFormGroup>
 
       {/*------------ Allocation method -----------*/}
-      <Field name={'allocation_method'}>
-        {({ form, field: { value }, meta: { touched, error } }) => (
-          <FormGroup
-            medium={true}
-            label={<T id={'allocation_method'} />}
-            labelInfo={<FieldRequiredHint />}
-            className={'form-group--allocation_method'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="allocation_method" />}
-            inline={true}
-          >
-            <RadioGroup
-              onChange={handleStringChange((_value) => {
-                const { amount, items } = form.values;
+      <FFormGroup
+        name={'allocation_method'}
+        label={<T id={'allocation_method'} />}
+        medium
+        inline
+        fastField
+      >
+        <FRadioGroup
+          name={'allocation_method'}
+          onChange={handleStringChange((_value) => {
+            const { amount, items } = values;
 
-                form.setFieldValue('allocation_method', _value);
-                form.setFieldValue(
-                  'items',
-                  allocateCostToEntries(amount, _value, items),
-                );
-              })}
-              selectedValue={value}
-              inline={true}
-            >
-              <Radio label={<T id={'quantity'} />} value="quantity" />
-              <Radio label={<T id={'valuation'} />} value="value" />
-            </RadioGroup>
-          </FormGroup>
-        )}
-      </Field>
+            setFieldValue('allocation_method', _value);
+            setFieldValue(
+              'items',
+              allocateCostToEntries(amount, _value, items),
+            );
+          })}
+          inline={true}
+        >
+          <Radio label={<T id={'quantity'} />} value="quantity" />
+          <Radio label={<T id={'valuation'} />} value="value" />
+        </FRadioGroup>
+      </FFormGroup>
 
       {/*------------ Allocate Landed cost Table -----------*/}
       <AllocateLandedCostFormBody />
