@@ -364,13 +364,18 @@ const TransLockingItemDesc = styled.p`
 `;
 
 const TransLockingIcon = styled.div`
+  --x-text-color: #93a1ba;
+
+  .bp4-dark & {
+    --x-text-color: rgba(255, 255, 255, 0.6);
+  }
   border: 1px solid var(--color-transaction-locking-item-icon-border);
   height: 45px;
   width: 45px;
   text-align: center;
   line-height: 45px;
   border-radius: 8px;
-  color: #93a1ba;
+  color: var(--x-text-color);
 
   .bp4-icon {
     position: relative;
@@ -395,15 +400,24 @@ export const TransLockingContent = styled.div`
 
 export const TransLockingReason = styled.div`
   font-size: 13px;
+  --x-text-color: #777;
 
+  .bp4-dark & {
+    --x-text-color: rgba(255, 255, 255, 0.6);
+  }
   strong {
-    color: #777;
+    color: var(--x-text-color);
   }
 `;
 
 const TransUnlockWrap = styled.div`
+  -x-border-color: #ddd;
+
+  .bp4-dark & {
+    --x-border-color: rgba(255, 255, 255, 0.1);
+  }
   padding-top: 10px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--x-border-color);
   margin-top: 10px;
 
   ${TransLockingReason} {
