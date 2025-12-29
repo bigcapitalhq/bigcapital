@@ -92,11 +92,6 @@ function UnrealizedGainOrLossActionsBar({
           />
         </Popover>
 
-        <Button
-          className={classNames(Classes.MINIMAL, 'button--filter')}
-          text={<T id={'filter'} />}
-          icon={<Icon icon="filter-16" iconSize={16} />}
-        />
         <NavbarDivider />
 
         <Button

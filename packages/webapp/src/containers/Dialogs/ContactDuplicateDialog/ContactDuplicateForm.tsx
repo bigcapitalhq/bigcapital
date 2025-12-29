@@ -2,10 +2,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { inputIntent } from '@/utils';
-import { ListSelect, FieldRequiredHint } from '@/components';
-import { Button, FormGroup, Intent, Classes } from '@blueprintjs/core';
+import { Formik, Form } from 'formik';
+import { FFormGroup, FSelect, FieldRequiredHint } from '@/components';
+import { Button, Intent, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { useContactDuplicateFromContext } from './ContactDuplicateProvider';
@@ -60,29 +59,22 @@ function ContactDuplicateForm({
             </p>
 
             {/*------------ Contact Type -----------*/}
-            <Field name={'contact_type'}>
-              {({ form, meta: { error, touched } }) => (
-                <FormGroup
-                  label={<T id={'contact_type'} />}
-                  labelInfo={<FieldRequiredHint />}
-                  intent={inputIntent({ error, touched })}
-                  className={'form-group--select-list'}
-                  helperText={<ErrorMessage name="contact_type" />}
-                >
-                  <ListSelect
-                    items={Contacts}
-                    onItemSelect={({ path }) =>
-                      form.setFieldValue('contact_type', path)
-                    }
-                    defaultText={<T id={'select_contact'} />}
-                    textProp={'name'}
-                    selectedItemProp={'name'}
-                    filterable={false}
-                    popoverProps={{ minimal: true }}
-                  />
-                </FormGroup>
-              )}
-            </Field>
+            <FFormGroup
+              name={'contact_type'}
+              label={<T id={'contact_type'} />}
+              labelInfo={<FieldRequiredHint />}
+              className={'form-group--select-list'}
+            >
+              <FSelect
+                name={'contact_type'}
+                items={Contacts}
+                placeholder={<T id={'select_contact'} />}
+                textAccessor={'name'}
+                valueAccessor={'path'}
+                filterable={false}
+                popoverProps={{ minimal: true }}
+              />
+            </FFormGroup>
           </div>
 
           <div className={Classes.DIALOG_FOOTER}>

@@ -18,7 +18,7 @@ export class InventoryValuationSheetService {
     private readonly inventoryValuationMeta: InventoryValuationMetaInjectable,
     private readonly eventPublisher: EventEmitter2,
     private readonly inventoryValuationSheetRepository: InventoryValuationSheetRepository,
-  ) {}
+  ) { }
 
   /**
    * Inventory valuation sheet.

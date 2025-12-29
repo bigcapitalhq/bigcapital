@@ -1,19 +1,16 @@
 // @ts-nocheck
 import React from 'react';
 import {
-  FormGroup,
-  InputGroup,
   Intent,
   Classes,
   Button,
 } from '@blueprintjs/core';
-import { FastField, Form, useFormikContext, ErrorMessage } from 'formik';
+import { Form, useFormikContext } from 'formik';
 import classNames from 'classnames';
 
-import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
+import { FFormGroup, FInputGroup, FSelect, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { inputIntent } from '@/utils';
-import { ListSelect, FieldRequiredHint } from '@/components';
+import { FieldRequiredHint } from '@/components';
 import { useUserFormContext } from './UserFormProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
@@ -68,31 +65,21 @@ function UserFormContent({
         </FFormGroup>
 
         {/* ----------- Role name ----------- */}
-        <FastField name={'role_id'}>
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={<T id={'roles.label.role_name'} />}
-              labelInfo={<FieldRequiredHint />}
-              helperText={<ErrorMessage name="role_id" />}
-              className={classNames(CLASSES.FILL, 'form-group--role_name')}
-              intent={inputIntent({ error, touched })}
-            >
-              <ListSelect
-                items={roles}
-                onItemSelect={({ id }) => {
-                  form.setFieldValue('role_id', id);
-                }}
-                selectedItem={value}
-                selectedItemProp={'id'}
-                textProp={'name'}
-                // labelProp={'id '}
-                popoverProps={{ minimal: true }}
-                intent={inputIntent({ error, touched })}
-                disabled={isAuth}
-              />
-            </FormGroup>
-          )}
-        </FastField>
+        <FFormGroup
+          name={'role_id'}
+          label={<T id={'roles.label.role_name'} />}
+          labelInfo={<FieldRequiredHint />}
+          className={classNames(CLASSES.FILL, 'form-group--role_name')}
+        >
+          <FSelect
+            name={'role_id'}
+            items={roles}
+            valueAccessor={'id'}
+            textAccessor={'name'}
+            popoverProps={{ minimal: true }}
+            disabled={isAuth}
+          />
+        </FFormGroup>
       </div>
 
       <div className={CLASSES.DIALOG_FOOTER}>

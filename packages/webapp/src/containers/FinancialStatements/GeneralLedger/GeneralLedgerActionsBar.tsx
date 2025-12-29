@@ -77,19 +77,6 @@ function GeneralLedgerActionsBar({
         />
         <NavbarDivider />
 
-        <Popover
-          interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            className={classNames(Classes.MINIMAL, 'button--filter')}
-            text={<T id={'filter'} />}
-            icon={<Icon icon="filter-16" iconSize={16} />}
-          />
-        </Popover>
-
-        <NavbarDivider />
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}

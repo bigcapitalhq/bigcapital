@@ -3,7 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FastField, ErrorMessage, Field } from 'formik';
+import { useFormikContext } from 'formik';
 import { Classes, FormGroup, Position } from '@blueprintjs/core';
 import {
   FFormGroup,
@@ -11,20 +11,19 @@ import {
   FDateInput,
   FInputGroup,
   FTextArea,
+  FSelect,
 } from '@/components';
 import { useAutofocus } from '@/hooks';
 import {
-  ListSelect,
   FieldRequiredHint,
   Col,
   Row,
   FeatureCan,
   BranchSelect,
   WarehouseSelect,
-  BranchSelectButton,
   FAccountsSuggestField,
 } from '@/components';
-import { inputIntent, momentFormatter, toSafeNumber } from '@/utils';
+import { momentFormatter, toSafeNumber } from '@/utils';
 import { Features, CLASSES } from '@/constants';
 
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
@@ -52,12 +51,24 @@ export default function InventoryAdjustmentFormDialogFields() {
 
   // Inventory adjustment dialog context.
   const { accounts, branches, warehouses } = useInventoryAdjContext();
+  const { values, setFieldValue } = useFormikContext();
 
   // Sets the primary warehouse to form.
   useSetPrimaryWarehouseToForm();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
+
+  // Handle adjustment type change.
+  const handleAdjustmentTypeChange = (type) => {
+    const result = diffQuantity(
+      toSafeNumber(values.quantity),
+      toSafeNumber(values.quantity_on_hand),
+      type.value,
+    );
+    setFieldValue('type', type.value);
+    setFieldValue('new_quantity', result);
+  };
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -66,12 +77,11 @@ export default function InventoryAdjustmentFormDialogFields() {
           <Col xs={5}>
             <FormGroup
               label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
+              fill
             >
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FormGroup>
@@ -81,7 +91,7 @@ export default function InventoryAdjustmentFormDialogFields() {
           <Col xs={5}>
             <FormGroup
               label={<T id={'warehouse'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
+              fill
             >
               <WarehouseSelect
                 name={'warehouse_id'}
@@ -122,39 +132,24 @@ export default function InventoryAdjustmentFormDialogFields() {
 
         <Col xs={5}>
           {/*------------ Adjustment type -----------*/}
-          <Field name={'type'}>
-            {({
-              form: { values, setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
-              <FFormGroup
-                name={'type'}
-                label={<T id={'adjustment_type'} />}
-                labelInfo={<FieldRequiredHint />}
-                fill
-              >
-                <ListSelect
-                  items={adjustmentTypes}
-                  onItemSelect={(type) => {
-                    const result = diffQuantity(
-                      toSafeNumber(values.quantity),
-                      toSafeNumber(values.quantity_on_hand),
-                      type.value,
-                    );
-                    setFieldValue('type', type.value);
-                    setFieldValue('new_quantity', result);
-                  }}
-                  filterable={false}
-                  selectedItem={value}
-                  selectedItemProp={'value'}
-                  textProp={'name'}
-                  popoverProps={{ minimal: true }}
-                  intent={inputIntent({ error, touched })}
-                />
-              </FFormGroup>
-            )}
-          </Field>
+          <FFormGroup
+            name={'type'}
+            label={<T id={'adjustment_type'} />}
+            labelInfo={<FieldRequiredHint />}
+            fill
+            fastField
+          >
+            <FSelect
+              name={'type'}
+              items={adjustmentTypes}
+              onItemChange={handleAdjustmentTypeChange}
+              filterable={false}
+              valueAccessor={'value'}
+              textAccessor={'name'}
+              popoverProps={{ minimal: true }}
+              fastField
+            />
+          </FFormGroup>
         </Col>
       </Row>
 

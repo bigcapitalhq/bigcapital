@@ -2,7 +2,8 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Scope } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { ClsService } from 'nestjs-cls';
+import { ClsService, UseCls } from 'nestjs-cls';
+import * as moment from 'moment';
 import { TenantJobPayload } from '@/interfaces/Tenant';
 import { InventoryComputeCostService } from '../commands/InventoryComputeCost.service';
 import { events } from '@/common/events/events';
@@ -14,7 +15,7 @@ import { Process } from '@nestjs/bull';
 
 interface ComputeItemCostJobPayload extends TenantJobPayload {
   itemId: number;
-  startingDate: Date;
+  startingDate: Date | string;
 }
 @Processor({
   name: ComputeItemCostQueue,
@@ -39,28 +40,34 @@ export class ComputeItemCostProcessor extends WorkerHost {
    * @param {Job<ComputeItemCostJobPayload>} job - The job to process
    */
   @Process(ComputeItemCostQueueJob)
+  @UseCls()
   async process(job: Job<ComputeItemCostJobPayload>) {
     const { itemId, startingDate, organizationId, userId } = job.data;
 
-    console.log(`Compute item cost for item ${itemId} started`);
+    // Parse startingDate using moment to handle both Date and string formats
+    const startingDateObj = moment(startingDate).toDate();
 
+    console.log(`[info] Compute item cost for item ${itemId} started`, {
+      payload: job.data,
+      jobId: job.id
+    });
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);
 
     try {
       await this.inventoryComputeCostService.computeItemCost(
-        startingDate,
+        startingDateObj,
         itemId,
       );
       // Emit job completed event
       await this.eventEmitter.emitAsync(
         events.inventory.onComputeItemCostJobCompleted,
-        { startingDate, itemId, organizationId, userId },
+        { startingDate: startingDateObj, itemId, organizationId, userId },
       );
-
-      console.log(`Compute item cost for item ${itemId} completed`);
+      console.log(`[info] Compute item cost for item ${itemId} completed successfully`);
     } catch (error) {
-      console.error('Error computing item cost:', error);
+      console.error(`[error] Error computing item cost for item ${itemId}:`, error);
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
       throw error;
     }
   }
