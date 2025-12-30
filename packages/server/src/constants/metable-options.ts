@@ -1,4 +1,27 @@
-// import { getTransactionsLockingSettingsSchema } from '@/api/controllers/TransactionsLocking/utils';
+import { chain, mapKeys } from 'lodash';
+
+const getTransactionsLockingSettingsSchema = (modules: string[]) => {
+  const moduleSchema = {
+    active: { type: 'boolean' },
+    lock_to_date: { type: 'date' },
+    unlock_from_date: { type: 'date' },
+    unlock_to_date: { type: 'date' },
+    lock_reason: { type: 'string' },
+    unlock_reason: { type: 'string' },
+  };
+  return chain(modules)
+    .map((module: string) => {
+      return mapKeys(moduleSchema, (value, key: string) => `${module}.${key}`);
+    })
+    .flattenDeep()
+    .reduce((result, value) => {
+      return {
+        ...result,
+        ...value,
+      };
+    }, {})
+    .value();
+};
 
 export const SettingsOptions = {
   organization: {
@@ -223,12 +246,12 @@ export const SettingsOptions = {
     'locking-type': {
       type: 'string',
     },
-    // ...getTransactionsLockingSettingsSchema([
-    //   'all',
-    //   'sales',
-    //   'purchases',
-    //   'financial',
-    // ]),
+    ...getTransactionsLockingSettingsSchema([
+      'all',
+      'sales',
+      'purchases',
+      'financial',
+    ]),
   },
   features: {
     'multi-warehouses': {
