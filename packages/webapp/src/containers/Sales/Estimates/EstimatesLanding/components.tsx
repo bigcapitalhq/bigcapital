@@ -158,8 +158,8 @@ export function ActionsMenu({
   );
 }
 
-function AmountAccessor({ amount, currency_code }) {
-  return <Money amount={amount} currency={currency_code} />;
+function AmountAccessor({ total, currency_code }) {
+  return <Money amount={total} currency={currency_code} />;
 }
 
 export function useEstiamtesTableColumns() {

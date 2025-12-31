@@ -19,6 +19,7 @@ import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
   assignEntriesTaxAmount,
+  assignEntriesTaxRate,
   aggregateItemEntriesTaxRates,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
@@ -45,9 +46,10 @@ export const defaultBillEntry = {
   description: '',
   amount: '',
   landed_cost: false,
-  tax_rate_id: '',
+  tax_rate_ids: [],
   tax_rate: '',
   tax_amount: '',
+  tax_breakdown: [],
 };
 
 // Default bill.
@@ -85,10 +87,14 @@ export const ERRORS = {
 /**
  * Transformes the bill to initial values of edit form.
  */
-export const transformToEditForm = (bill) => {
+export const transformToEditForm = (bill, taxRates = []) => {
+  const isInclusiveTax = bill.is_inclusive_tax;
+
   const initialEntries = [
     ...bill.entries.map((entry) => ({
       ...transformToForm(entry, defaultBillEntry),
+      // Transform taxes array to tax_rate_ids array
+      tax_rate_ids: entry.taxes?.map((tax) => tax.tax_rate_id) || [],
       landed_cost_disabled: isLandedCostDisabled(entry.item),
     })),
     ...repeatValue(
@@ -96,8 +102,12 @@ export const transformToEditForm = (bill) => {
       Math.max(MIN_LINES_NUMBER - bill.entries.length, 0),
     ),
   ];
+
+  // Compose entries with tax calculation when tax rates are available
   const entries = R.compose(
     ensureEntriesHaveEmptyLine(defaultBillEntry),
+    assignEntriesTaxAmount(isInclusiveTax),
+    assignEntriesTaxRate(taxRates),
     updateItemsEntriesTotal,
   )(initialEntries);
 
@@ -105,7 +115,7 @@ export const transformToEditForm = (bill) => {
 
   return {
     ...transformToForm(bill, defaultBill),
-    inclusive_exclusive_tax: bill.is_inclusive_tax
+    inclusive_exclusive_tax: isInclusiveTax
       ? TaxType.Inclusive
       : TaxType.Exclusive,
     entries,
@@ -277,14 +287,20 @@ export const useBillIsForeignCustomer = () => {
 
 /**
  * Re-calculates the entries tax amount when editing.
- * @returns {string}
+ * Supports multiple taxes with compound tax calculation.
+ * @param {string} inclusiveExclusiveTax - 'inclusive' or 'exclusive'
+ * @param {Array} entries - The entries to recalculate
+ * @param {Array} taxRates - Available tax rates for lookup
+ * @returns {Array} - Entries with recalculated tax amounts
  */
 export const composeEntriesOnEditInclusiveTax = (
   inclusiveExclusiveTax: string,
   entries,
+  taxRates = [],
 ) => {
   return R.compose(
     assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
+    assignEntriesTaxRate(taxRates),
   )(entries);
 };
 

@@ -51,6 +51,15 @@ const withInvoiceMailReceiptPreviewProps = <
       [invoiceMailState?.entries],
     );
 
+    const taxes = useMemo(
+      () =>
+        invoiceMailState?.taxes?.map((tax: any) => ({
+          label: `${tax.name} [${tax.taxRate}%]`,
+          amount: tax.taxRateAmountFormatted,
+        })),
+      [invoiceMailState?.taxes],
+    );
+
     const mailReceiptPreviewProps = {
       companyName: invoiceMailState?.companyName,
       companyLogoUri: invoiceMailState?.companyLogoUri,
@@ -62,6 +71,7 @@ const withInvoiceMailReceiptPreviewProps = <
       invoiceNumber: invoiceMailState?.invoiceNo,
       discount: invoiceMailState?.discountAmountFormatted,
       adjustment: invoiceMailState?.adjustmentFormatted,
+      taxes,
       items,
       message,
     };

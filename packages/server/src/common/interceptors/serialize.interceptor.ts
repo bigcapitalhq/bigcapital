@@ -15,12 +15,8 @@ export function camelToSnake<T = any>(value: T): T {
   }
   return mapKeysDeep(
     value,
-    (_value: string, key: any, parent: any, context: any) => {
-      if (Array.isArray(parent)) {
-        // tell mapKeysDeep to skip mapping inside this branch
-        context.skipChildren = true;
-        return key;
-      }
+    (_value: string, key: any, _parent: any, _context: any) => {
+      // Always convert keys, including inside arrays
       return key
         .split(/(?=[A-Z])/)
         .join('_')
@@ -35,12 +31,8 @@ export function snakeToCamel<T = any>(value: T): T {
   }
   return mapKeysDeep(
     value,
-    (_value: string, key: any, parent: any, context: any) => {
-      if (Array.isArray(parent)) {
-        // tell mapKeysDeep to skip mapping inside this branch
-        context.skipChildren = true;
-        return key;
-      }
+    (_value: string, key: any, _parent: any, _context: any) => {
+      // Always convert keys, including inside arrays
       const converted = key.replace(/([-_]\w)/g, (group) =>
         group[1].toUpperCase(),
       );

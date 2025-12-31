@@ -107,9 +107,10 @@ export class SaleReceiptsPdfService {
       await this.saleReceiptBrandingTemplate.getSaleReceiptBrandingTemplate(
         templateId,
       );
-    return {
+    const finalAttributes = {
       ...brandingTemplate.attributes,
       ...transformReceiptToBrandingTemplateAttributes(saleReceipt),
     };
+    return finalAttributes;
   }
 }

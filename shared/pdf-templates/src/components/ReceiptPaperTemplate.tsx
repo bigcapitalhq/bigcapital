@@ -50,6 +50,10 @@ export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
   showAdjustment?: boolean;
   adjustmentLabel?: string;
 
+  // # Taxes
+  taxes?: Array<{ label: string; amount: string }>;
+  showTaxes?: boolean;
+
   // Total
   total?: string;
   showTotal?: boolean;
@@ -131,6 +135,10 @@ export function ReceiptPaperTemplate({
   adjustment = '',
   adjustmentLabel = 'Adjustment',
   showAdjustment = true,
+
+  // # Taxes
+  taxes = [],
+  showTaxes = true,
 
   // # Subtotal
   subtotal = '1000/00',
@@ -267,6 +275,13 @@ export function ReceiptPaperTemplate({
                 amount={adjustment}
               />
             )}
+            {showTaxes && taxes?.map((tax, index) => (
+              <PaperTemplate.TotalLine
+                key={index}
+                label={tax.label}
+                amount={tax.amount}
+              />
+            ))}
             {showTotal && (
               <PaperTemplate.TotalLine
                 label={totalLabel}

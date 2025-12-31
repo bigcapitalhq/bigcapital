@@ -24,6 +24,7 @@ export class GetSaleReceiptMailStateService {
       .findById(saleReceiptId)
       .withGraphFetched('entries.item')
       .withGraphFetched('customer')
+      .withGraphFetched('taxes.taxRate')
       .throwIfNotFound();
 
     const mailOptions = await this.receiptMail.getMailOptions(saleReceiptId);

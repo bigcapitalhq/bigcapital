@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { AppToaster } from '@/components';
 
 import withAccountsActions from '@/containers/Accounts/withAccountsTableActions';
@@ -22,7 +22,7 @@ function AccountBulkInactivateAlert({
 
   closeAlert,
 }) {
-  
+  const queryClient = useQueryClient();
   const [isLoading, setLoading] = useState(false);
   const selectedRowsCount = 0;
 
@@ -39,7 +39,7 @@ function AccountBulkInactivateAlert({
           message: intl.get('the_accounts_have_been_successfully_inactivated'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
+        queryClient.invalidateQueries('accounts-table');
       })
       .catch((errors) => {})
       .finally(() => {

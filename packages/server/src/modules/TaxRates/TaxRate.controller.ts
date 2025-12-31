@@ -75,8 +75,9 @@ export class TaxRatesController {
       $ref: getSchemaPath(TaxRateResponseDto),
     },
   })
-  public getTaxRate(@Param('id') taxRateId: number) {
-    return this.taxRatesApplication.getTaxRate(taxRateId);
+  public async getTaxRate(@Param('id') taxRateId: number) {
+    const taxRate = await this.taxRatesApplication.getTaxRate(taxRateId);
+    return { data: taxRate };
   }
 
   @Get()
@@ -91,8 +92,9 @@ export class TaxRatesController {
       },
     },
   })
-  public getTaxRates() {
-    return this.taxRatesApplication.getTaxRates();
+  public async getTaxRates() {
+    const taxRates = await this.taxRatesApplication.getTaxRates();
+    return { data: taxRates };
   }
 
   @Put(':id/activate')

@@ -2,6 +2,7 @@ import { ToNumber } from '@/common/decorators/Validators';
 import { DiscountType } from '@/common/types/Discount';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsEnum,
   IsIn,
   IsInt,
@@ -81,14 +82,28 @@ export class ItemEntryDto {
   })
   taxCode?: string;
 
+  /**
+   * @deprecated Use taxRateIds instead for multiple taxes support.
+   */
   @IsOptional()
   @IsNotEmpty()
   @IsInt()
   @ApiProperty({
-    description: 'The tax rate id of the item entry',
+    description: 'The tax rate id of the item entry (deprecated, use taxRateIds)',
     example: 1,
+    deprecated: true,
   })
   taxRateId?: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  @ApiProperty({
+    description: 'Array of tax rate IDs to apply to this item entry',
+    example: [1, 2],
+    type: [Number],
+  })
+  taxRateIds?: number[];
 
   @IsOptional()
   @IsNotEmpty()

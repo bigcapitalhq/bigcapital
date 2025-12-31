@@ -18,6 +18,11 @@ import {
 } from './PaperTemplate';
 import { theme } from '../constants';
 
+interface EstimateTaxLine {
+  label: string;
+  amount: string;
+}
+
 export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   // # Company
   showCompanyLogo?: boolean;
@@ -68,6 +73,10 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   subtotal?: string;
   showSubtotal?: boolean;
   subtotalLabel?: string;
+
+  // # Taxes
+  showTaxes?: boolean;
+  taxes?: Array<EstimateTaxLine>;
 
   // # Statements
   showCustomerNote?: boolean;
@@ -131,6 +140,10 @@ export function EstimatePaperTemplate({
   subtotal = '1000/00',
   subtotalLabel = 'Subtotal',
   showSubtotal = true,
+
+  // # Taxes
+  showTaxes = true,
+  taxes = [],
 
   // # Adjustment
   adjustment = '',
@@ -277,6 +290,17 @@ export function EstimatePaperTemplate({
                 label={adjustmentLabel}
                 amount={adjustment}
               />
+            )}
+            {showTaxes && (
+              <>
+                {taxes.map((tax, index) => (
+                  <PaperTemplate.TotalLine
+                    key={index}
+                    label={tax.label}
+                    amount={tax.amount}
+                  />
+                ))}
+              </>
             )}
             {showTotal && (
               <PaperTemplate.TotalLine

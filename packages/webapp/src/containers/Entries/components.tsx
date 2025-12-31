@@ -18,6 +18,7 @@ import {
 } from '@/components/DataTableCells';
 import { useFeatureCan } from '@/hooks/state';
 import { TaxRatesSuggestInputCell } from '@/components/TaxRates/TaxRatesSuggestInputCell';
+import { TaxRatesMultiSelectCell } from '@/components/TaxRates/TaxRatesMultiSelectCell';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
 
 /**
@@ -135,11 +136,11 @@ export function useEditableItemsEntriesColumns() {
       ...(enableTaxRates
         ? [
             {
-              Header: 'Tax rate',
-              accessor: 'tax_rate_id',
-              Cell: TaxRatesSuggestInputCell,
+              Header: 'Tax rates',
+              accessor: 'tax_rate_ids',
+              Cell: TaxRatesMultiSelectCell,
               disableSortBy: true,
-              width: 110,
+              width: 150,
             },
           ]
         : []),

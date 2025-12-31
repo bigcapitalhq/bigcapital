@@ -120,7 +120,7 @@ export const SaleReceiptMeta = {
     },
     amount: {
       name: 'receipt.field.amount',
-      accessor: 'formattedAmount',
+      accessor: 'totalFormatted',
       type: 'number',
     },
     statement: {

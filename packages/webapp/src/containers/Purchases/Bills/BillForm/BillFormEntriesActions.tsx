@@ -6,6 +6,7 @@ import { InclusiveTaxOptions } from '@/constants/InclusiveTaxOptions';
 
 import { composeEntriesOnEditInclusiveTax } from './utils';
 import { EntriesActionsBar } from '@/containers/Entries/EntriesActionBar';
+import { useBillFormContext } from './BillFormProvider';
 
 export function BillFormEntriesActions() {
   return (
@@ -21,11 +22,13 @@ export function BillFormEntriesActions() {
  */
 export function BillExclusiveInclusiveSelect(props) {
   const { values, setFieldValue } = useFormikContext();
+  const { taxRates } = useBillFormContext();
 
   const handleItemSelect = (item) => {
     const newEntries = composeEntriesOnEditInclusiveTax(
       item.key,
       values.entries,
+      taxRates,
     );
     setFieldValue('inclusive_exclusive_tax', item.key);
     setFieldValue('entries', newEntries);

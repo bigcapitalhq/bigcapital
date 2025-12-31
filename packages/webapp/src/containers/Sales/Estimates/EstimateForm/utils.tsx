@@ -16,9 +16,14 @@ import { useEstimateFormContext } from './EstimateFormProvider';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
+  aggregateItemEntriesTaxRates,
+  assignEntriesTaxAmount,
+  assignEntriesTaxRate,
+  getEntriesTotal,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
-import { getEntriesTotal } from '@/containers/Entries/utils';
+import { TaxType } from '@/interfaces/TaxRates';
+import { chain } from 'lodash';
 import {
   transformAttachmentsToForm,
   transformAttachmentsToRequest,
@@ -35,6 +40,10 @@ export const defaultEstimateEntry = {
   quantity: '',
   description: '',
   amount: '',
+  tax_rate_ids: [],
+  tax_rate: '',
+  tax_amount: '',
+  tax_breakdown: [],
 };
 
 const defaultEstimateEntryReq = {
@@ -44,6 +53,7 @@ const defaultEstimateEntryReq = {
   discount: '',
   quantity: '',
   description: '',
+  tax_rate_ids: [],
 };
 
 export const defaultEstimate = {
@@ -61,6 +71,7 @@ export const defaultEstimate = {
   warehouse_id: '',
   exchange_rate: 1,
   currency_code: '',
+  inclusive_exclusive_tax: TaxType.Inclusive,
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
   attachments: [],
   pdf_template_id: '',
@@ -74,18 +85,26 @@ const ERRORS = {
   SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
 };
 
-export const transformToEditForm = (estimate) => {
+export const transformToEditForm = (estimate, taxRates = []) => {
+  const isInclusiveTax = estimate.is_inclusive_tax;
+
   const initialEntries = [
-    ...estimate.entries.map((estimate) => ({
-      ...transformToForm(estimate, defaultEstimateEntry),
+    ...estimate.entries.map((entry) => ({
+      ...transformToForm(entry, defaultEstimateEntry),
+      // Transform taxes array to tax_rate_ids array
+      tax_rate_ids: entry.taxes?.map((tax) => tax.tax_rate_id) || [],
     })),
     ...repeatValue(
       defaultEstimateEntry,
       Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0),
     ),
   ];
+
+  // Compose entries with tax calculation when tax rates are available
   const entries = R.compose(
     ensureEntriesHaveEmptyLine(defaultEstimateEntry),
+    assignEntriesTaxAmount(isInclusiveTax),
+    assignEntriesTaxRate(taxRates),
     updateItemsEntriesTotal,
   )(initialEntries);
 
@@ -93,6 +112,9 @@ export const transformToEditForm = (estimate) => {
 
   return {
     ...transformToForm(estimate, defaultEstimate),
+    inclusive_exclusive_tax: isInclusiveTax
+      ? TaxType.Inclusive
+      : TaxType.Exclusive,
     entries,
     attachments,
   };
@@ -114,6 +136,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.items !== oldProps.items ||
+    newProps.taxRates !== oldProps.taxRates ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -167,12 +190,13 @@ export const transfromsFormValuesToRequest = (values) => {
   const attachments = transformAttachmentsToRequest(values);
 
   return {
-    ...omit(values, ['estimate_number_manually', 'estimate_number']),
+    ...omit(values, ['estimate_number_manually', 'estimate_number', 'inclusive_exclusive_tax']),
     // The `estimate_number_manually` will be presented just if the auto-increment
     // is disable, always both attributes hold the same value in manual mode.
     ...(values.estimate_number_manually && {
       estimate_number: values.estimate_number,
     }),
+    is_inclusive_tax: values.inclusive_exclusive_tax === TaxType.Inclusive,
     entries: entries.map((entry) => ({
       ...transformToForm(entry, defaultEstimateEntryReq),
     })),
@@ -291,6 +315,67 @@ export const useEstimateAdjustmentFormatted = () => {
 };
 
 /**
+ * Retrieves the estimate total tax amount.
+ * @returns {number}
+ */
+export const useEstimateTotalTaxAmount = () => {
+  const { values } = useFormikContext();
+
+  return React.useMemo(() => {
+    return chain(values.entries)
+      .filter((entry) => entry.tax_amount)
+      .sumBy('tax_amount')
+      .value();
+  }, [values.entries]);
+};
+
+/**
+ * Detarmines whether the tax is exclusive.
+ * @returns {boolean}
+ */
+export const useIsEstimateTaxExclusive = () => {
+  const { values } = useFormikContext();
+
+  return values.inclusive_exclusive_tax === TaxType.Exclusive;
+};
+
+/**
+ * Retreives the estimate aggregated tax rates.
+ * @returns {Array}
+ */
+export const useEstimateAggregatedTaxRates = () => {
+  const { values } = useFormikContext();
+  const { taxRates } = useEstimateFormContext();
+
+  const aggregateTaxRates = React.useMemo(
+    () => aggregateItemEntriesTaxRates(values.currency_code, taxRates),
+    [values.currency_code, taxRates],
+  );
+  // Calculate the total tax amount of estimate entries.
+  return React.useMemo(() => {
+    return aggregateTaxRates(values.entries);
+  }, [aggregateTaxRates, values.entries]);
+};
+
+/**
+ * Re-calcualte the entries tax amount when editing.
+ * @param {string} inclusiveExclusiveTax - 'inclusive' or 'exclusive'
+ * @param {Array} entries - The entries to recalculate
+ * @param {Array} taxRates - Available tax rates for lookup
+ * @returns {Array} - Entries with recalculated tax amounts
+ */
+export const composeEntriesOnEditInclusiveTax = (
+  inclusiveExclusiveTax: string,
+  entries,
+  taxRates = [],
+) => {
+  return R.compose(
+    assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
+    assignEntriesTaxRate(taxRates),
+  )(entries);
+};
+
+/**
  * Retrieves the estimate total.
  * @returns {number}
  */
@@ -298,8 +383,11 @@ export const useEstimateTotal = () => {
   const subtotal = useEstimateSubtotal();
   const discount = useEstimateDiscount();
   const adjustment = useEstimateAdjustment();
+  const totalTaxAmount = useEstimateTotalTaxAmount();
+  const isExclusiveTax = useIsEstimateTaxExclusive();
 
   return R.compose(
+    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
     R.subtract(R.__, discount),
     R.add(R.__, adjustment),
   )(subtotal);

@@ -30,6 +30,7 @@ export class CommandTaxRateDto {
    */
   @IsNumber()
   @IsNotEmpty()
+  @Transform(({ value }) => parseFloat(value))
   @ApiProperty({
     description: 'The rate of the tax rate.',
     example: 10,

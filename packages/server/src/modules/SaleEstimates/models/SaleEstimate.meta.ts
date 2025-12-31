@@ -114,8 +114,9 @@ export const SaleEstimateMeta = {
     },
     amount: {
       name: 'Amount',
-      accessor: 'formattedAmount',
+      accessor: 'totalFormatted',
       type: 'text',
+      exportable: true,
     },
     exchangeRate: {
       name: 'Exchange Rate',

@@ -4,6 +4,7 @@ import { FastField } from 'formik';
 import { useBillFormContext } from './BillFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
 import { ITEM_TYPE } from '@/containers/Entries/utils';
+import { TaxType } from '@/interfaces/TaxRates';
 
 /**
  * Bill form body.
@@ -34,6 +35,7 @@ export default function BillFormBody({ defaultBill }) {
           itemType={ITEM_TYPE.PURCHASABLE}
           taxRates={taxRates}
           landedCost={true}
+          isInclusiveTax={values.inclusive_exclusive_tax === TaxType.Inclusive}
         />
       )}
     </FastField>

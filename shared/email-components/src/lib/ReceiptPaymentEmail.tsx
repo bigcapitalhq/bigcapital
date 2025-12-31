@@ -42,6 +42,10 @@ export interface ReceiptEmailTemplateProps {
   subtotal?: string;
   subtotalLabel?: string;
 
+  // # Taxes
+  taxes?: Array<{ label: string; amount: string }>;
+  showTaxes?: boolean;
+
   // # Message
   message?: string;
 }
@@ -73,6 +77,10 @@ export const ReceiptEmailTemplate: React.FC<
   // # Subtotal
   subtotal = '$1,000.00',
   subtotalLabel = 'Subtotal',
+
+  // # Taxes
+  taxes = [],
+  showTaxes = true,
 
   // # Receipt #
   receiptNumberLabel = 'Receipt # {receiptNumber}',
@@ -155,6 +163,18 @@ export const ReceiptEmailTemplate: React.FC<
               </Column>
             </Row>
           )}
+
+          {showTaxes && taxes?.map((tax, index) => (
+            <Row key={index} style={itemLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={listItemLabelStyle}>{tax.label}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={listItemAmountStyle}>{tax.amount}</Text>
+              </Column>
+            </Row>
+          ))}
 
           <Row style={totalLineRowStyle}>
             <Column width={'50%'}>

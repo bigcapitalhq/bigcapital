@@ -31,6 +31,7 @@ import { BillsImportable } from './commands/BillsImportable';
 import { GetBillPaymentTransactionsService } from './queries/GetBillPayments';
 import { BulkDeleteBillsService } from './BulkDeleteBills.service';
 import { ValidateBulkDeleteBillsService } from './ValidateBulkDeleteBills.service';
+import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ValidateBulkDeleteBillsService } from './ValidateBulkDeleteBills.servic
     AccountsModule,
     DynamicListModule,
     InventoryCostModule,
+    TaxRatesModule,
   ],
   providers: [
     TenancyContext,

@@ -41,27 +41,31 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
     taxRate: ModelObject<TaxRateModel>,
   ): SalesTaxLiabilitySummaryRate => {
     const payableTax = this.repository.taxesPayableByTaxRateId[taxRate.id];
-    const salesTax = this.repository.accountTransactionsByTaxRateId[taxRate.id];
+    const entryTaxData = this.repository.taxableAmountsByTaxRateId[taxRate.id];
 
+    // Tax amount from tax payable GL entries (credit - debit = liability)
     const payableTaxAmount = payableTax
       ? payableTax.credit - payableTax.debit
       : 0;
-    const salesTaxAmount = salesTax ? salesTax.credit - salesTax.debit : 0;
 
-    // Calculates the tax percentage.
-    const taxPercentage = R.compose(
-      R.unless(R.equals(0), R.divide(R.__, salesTaxAmount)),
-    )(payableTaxAmount);
+    // Use the tax rate from the tax_rates table directly.
+    const taxPercentage = taxRate.rate;
 
-    // Calculates the payable tax amount.
+    // Get taxable amount from items_entries_taxes (most accurate source)
+    const taxableAmount = entryTaxData?.taxableAmount || 0;
+
+    // Collected tax = debit side of tax payable (taxes remitted to government)
     const collectedTaxAmount = payableTax ? payableTax.debit : 0;
 
     return {
       id: taxRate.id,
       taxName: `${taxRate.name} (${taxRate.rate}%)`,
-      taxableAmount: this.getAmountMeta(salesTaxAmount),
+      taxableAmount: this.getAmountMeta(taxableAmount),
       taxAmount: this.getAmountMeta(payableTaxAmount),
-      taxPercentage: this.getPercentageTotalAmountMeta(taxPercentage),
+      taxPercentage: {
+        amount: taxPercentage,
+        formattedAmount: `%${taxPercentage}`,
+      },
       collectedTaxAmount: this.getAmountMeta(collectedTaxAmount),
     };
   };
@@ -77,8 +81,9 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
     return nodes.filter((node) => {
       const salesTrxs = this.repository.accountTransactionsByTaxRateId[node.id];
       const payableTrxs = this.repository.taxesPayableByTaxRateId[node.id];
+      const entryTaxData = this.repository.taxableAmountsByTaxRateId[node.id];
 
-      return !isEmpty(salesTrxs) || !isEmpty(payableTrxs);
+      return !isEmpty(salesTrxs) || !isEmpty(payableTrxs) || !isEmpty(entryTaxData);
     });
   };
 

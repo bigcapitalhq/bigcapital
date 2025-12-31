@@ -21,6 +21,9 @@ export interface InvoiceMailReceiptProps extends StackProps {
   subtotal: string;
   subtotalLabel?: string;
 
+  // # Taxes
+  taxes?: Array<{ label: string; amount: string }>;
+
   // # Discount amount
   discount?: string;
   discountLabel?: string;
@@ -68,6 +71,9 @@ export function InvoiceMailReceipt({
   // # Subtotal
   subtotal,
   subtotalLabel = 'Subtotal',
+
+  // # Taxes
+  taxes = [],
 
   // # Discount amount
   discount,
@@ -204,6 +210,21 @@ export function InvoiceMailReceipt({
             {subtotal}
           </x.span>
         </Group>
+
+        {/*---- Taxes ----*/}
+        {taxes?.map((tax, index) => (
+          <Group
+            key={index}
+            h="40px"
+            position="apart"
+            borderBottomStyle="solid"
+            borderBottomWidth="1px"
+            borderColor="#D9D9D9"
+          >
+            <x.span>{tax.label}</x.span>
+            <x.span fontSize={15}>{tax.amount}</x.span>
+          </Group>
+        ))}
 
         {/*---- Discount ----*/}
         {!isEmpty(discount) && (

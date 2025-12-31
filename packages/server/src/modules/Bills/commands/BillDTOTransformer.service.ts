@@ -80,16 +80,34 @@ export class BillDTOTransformer {
       isInclusiveTax: billDTO.isInclusiveTax,
       ...omit(entry, ['amount']),
     }));
-    const asyncEntries = await composeAsync(
-      // Associate tax rate from tax id to entries.
-      this.taxDTOTransformer.assocTaxRateFromTaxIdToEntries,
-      // Associate tax rate id from tax code to entries.
-      this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries,
-      // Sets the default cost account to the bill entries.
-      this.setBillEntriesDefaultAccounts(),
-    )(initialEntries);
+
+    // Process entries sequentially to avoid async compose issues
+    const step1 = await this.setBillEntriesDefaultAccounts()(initialEntries);
+    const step2 = await this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries(step1);
+    const asyncEntries = await this.taxDTOTransformer.assocTaxRatesFromTaxIdsToEntries(
+      step2,
+      billDTO.isInclusiveTax,
+    );
 
     const entries = R.compose(
+      // Transform taxRateIds to nested taxes relations for graph insert.
+      R.map((entry: any) => {
+        if (entry.taxRateIds && entry.taxRateIds.length > 0) {
+          const taxes = entry.calculatedTaxes?.map((tax: any, index: number) => ({
+            taxRateId: tax.taxRateId,
+            taxRate: tax.taxRate,
+            taxAmount: tax.taxAmount || 0,
+            taxableAmount: tax.taxableAmount || 0,
+            order: index,
+          })) || [];
+
+          return {
+            ...R.omit(['taxRateIds', 'calculatedTaxes', 'totalTaxAmount'], entry),
+            taxes,
+          };
+        }
+        return R.omit(['taxRateIds', 'calculatedTaxes', 'totalTaxAmount'], entry);
+      }),
       // Remove tax code from entries.
       R.map(R.omit(['taxCode'])),
       // Associate the default index to each item entry line.

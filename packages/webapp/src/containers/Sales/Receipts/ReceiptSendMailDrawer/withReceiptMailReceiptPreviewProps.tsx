@@ -39,6 +39,8 @@ export const withReceiptMailReceiptPreviewProps = <
       receiptNumber: receiptMailState?.receiptNumber,
       discount: receiptMailState?.discountAmountFormatted,
       adjustment: receiptMailState?.adjustmentFormatted,
+      taxes: receiptMailState?.taxes,
+      showTaxes: receiptMailState?.showTaxes,
       items,
       message,
     };

@@ -23,10 +23,12 @@ export class GetSaleReceipt {
       .query()
       .findById(saleReceiptId)
       .withGraphFetched('entries.item')
+      .withGraphFetched('entries.taxes')
       .withGraphFetched('customer')
       .withGraphFetched('depositAccount')
       .withGraphFetched('branch')
       .withGraphFetched('attachments')
+      .withGraphFetched('taxes.taxRate')
       .throwIfNotFound();
 
     return this.transformer.transform(

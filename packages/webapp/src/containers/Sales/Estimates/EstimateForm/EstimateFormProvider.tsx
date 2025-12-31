@@ -14,6 +14,7 @@ import {
   useGetSaleEstimatesState,
   ISaleEstimatesStateResponse,
 } from '@/hooks/query';
+import { useTaxRates } from '@/hooks/query/taxRates';
 import { useProjects } from '@/containers/Projects/hooks';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 import { Features } from '@/constants';
@@ -42,6 +43,9 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     isFetching: isEstimateFetching,
     isLoading: isEstimateLoading,
   } = useEstimate(estimateId, { enabled: !!estimateId });
+
+  // Fetch tax rates.
+  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
 
   // Handle fetch Items data table or list
   const {
@@ -108,7 +112,8 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     isItemsLoading ||
     isEstimateLoading ||
     isBrandingTemplatesLoading ||
-    isSaleEstimateStateLoading;
+    isSaleEstimateStateLoading ||
+    isTaxRatesLoading;
 
   // Provider payload.
   const provider = {
@@ -119,6 +124,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     branches,
     warehouses,
     projects,
+    taxRates,
     isNewMode,
 
     isItemsFetching,
@@ -130,6 +136,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
+    isTaxRatesLoading,
     submitPayload,
     setSubmitPayload,
 

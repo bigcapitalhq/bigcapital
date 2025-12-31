@@ -12,6 +12,7 @@ export class SaleInvoiceTaxEntryTransformer extends Transformer {
       'name',
       'taxRateCode',
       'taxRate',
+      'taxRateFormatted',
       'taxRateId',
       'taxRateAmount',
       'taxRateAmountFormatted',
@@ -32,16 +33,27 @@ export class SaleInvoiceTaxEntryTransformer extends Transformer {
    * @returns {string}
    */
   protected taxRateCode = (taxEntry) => {
-    return taxEntry.taxRate.code;
+    return taxEntry.taxRate?.code || '';
   };
 
   /**
-   * Retrieve tax rate id.
+   * Retrieve tax rate value.
    * @param taxEntry
    * @returns {number}
    */
   protected taxRate = (taxEntry) => {
-    return taxEntry.taxAmount || taxEntry.taxRate.rate;
+    // Use stored rate on transaction, or fall back to taxRate relation's rate
+    return taxEntry.rate || taxEntry.taxRate?.rate || 0;
+  };
+
+  /**
+   * Retrieve formatted tax rate value with percentage sign.
+   * @param taxEntry
+   * @returns {string}
+   */
+  protected taxRateFormatted = (taxEntry) => {
+    const rate = this.taxRate(taxEntry);
+    return `${rate}%`;
   };
 
   /**
@@ -50,7 +62,7 @@ export class SaleInvoiceTaxEntryTransformer extends Transformer {
    * @returns {string}
    */
   protected name = (taxEntry) => {
-    return taxEntry.taxRate.name;
+    return taxEntry.taxRate?.name || '';
   };
 
   /**

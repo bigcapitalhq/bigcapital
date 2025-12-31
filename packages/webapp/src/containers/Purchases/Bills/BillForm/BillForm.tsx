@@ -40,7 +40,7 @@ function BillForm({
   const history = useHistory();
 
   // Bill form context.
-  const { bill, isNewMode, submitPayload, createBillMutate, editBillMutate } =
+  const { bill, isNewMode, submitPayload, createBillMutate, editBillMutate, taxRates } =
     useBillFormContext();
 
   // Initial values in create and edit mode.
@@ -48,14 +48,14 @@ function BillForm({
     () => ({
       ...(!isEmpty(bill)
         ? {
-            ...transformToEditForm(bill),
+            ...transformToEditForm(bill, taxRates),
           }
         : {
             ...defaultBill,
             currency_code: base_currency,
           }),
     }),
-    [bill, base_currency],
+    [bill, base_currency, taxRates],
   );
 
   // Handles form submit.

@@ -38,6 +38,10 @@ export interface EstimatePaymentEmailProps {
   discount?: string;
   discountLabel?: string;
 
+  // # Taxes
+  taxes?: Array<{ label: string; amount: string }>;
+  showTaxes?: boolean;
+
   // # Estimate No.
   estimateNumber?: string;
   estimateNumberLabel?: string;
@@ -80,6 +84,10 @@ export const EstimatePaymentEmail: React.FC<
   // # Discount
   discount,
   discountLabel = 'Discount',
+
+  // # Taxes
+  taxes = [],
+  showTaxes = true,
 
   // # Subtotal
   subtotal,
@@ -186,6 +194,18 @@ export const EstimatePaymentEmail: React.FC<
               </Column>
             </Row>
           )}
+
+          {showTaxes && taxes.map((tax, index) => (
+            <Row key={index} style={totalLineRowStyle}>
+              <Column width={'50%'}>
+                <Text style={listItemLabelStyle}>{tax.label}</Text>
+              </Column>
+
+              <Column width={'50%'}>
+                <Text style={listItemAmountStyle}>{tax.amount}</Text>
+              </Column>
+            </Row>
+          ))}
 
           <Row style={totalLineRowStyle}>
             <Column width={'50%'}>

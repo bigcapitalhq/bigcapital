@@ -27,9 +27,10 @@ export class GetSaleEstimate {
     const estimate = await this.saleEstimateModel()
       .query()
       .findById(estimateId)
-      .withGraphFetched('entries.item')
+      .withGraphFetched('entries.[item, taxes]')
       .withGraphFetched('customer')
       .withGraphFetched('branch')
+      .withGraphFetched('taxes.taxRate')
       .withGraphFetched('attachments');
 
     // Validates the estimate existance.

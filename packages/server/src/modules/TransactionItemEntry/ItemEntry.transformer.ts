@@ -11,7 +11,13 @@ export class ItemEntryTransformer extends Transformer<{}, ItemEntryTransformerCo
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['quantityFormatted', 'rateFormatted', 'totalFormatted'];
+    return [
+      'quantityFormatted',
+      'rateFormatted',
+      'totalFormatted',
+      'taxRateIds',
+      'taxes',
+    ];
   };
 
   /**
@@ -45,5 +51,36 @@ export class ItemEntryTransformer extends Transformer<{}, ItemEntryTransformerCo
       currencyCode: this.context.currencyCode,
       money: false,
     });
+  };
+
+  /**
+   * Retrieves the tax rate IDs from the taxes relation.
+   * This is used by the frontend to populate the tax selector when editing.
+   * @param {ItemEntry} entry
+   * @returns {number[]}
+   */
+  protected taxRateIds = (entry: ItemEntry): number[] => {
+    if (entry.taxes && entry.taxes.length > 0) {
+      return entry.taxes.map((tax) => tax.taxRateId);
+    }
+    return [];
+  };
+
+  /**
+   * Retrieves the taxes associated with this entry.
+   * @param {ItemEntry} entry
+   * @returns {Array}
+   */
+  protected taxes = (entry: ItemEntry) => {
+    if (entry.taxes && entry.taxes.length > 0) {
+      return entry.taxes.map((tax) => ({
+        taxRateId: tax.taxRateId,
+        taxRate: tax.taxRate,
+        taxAmount: tax.taxAmount,
+        taxableAmount: tax.taxableAmount,
+        order: tax.order,
+      }));
+    }
+    return [];
   };
 }

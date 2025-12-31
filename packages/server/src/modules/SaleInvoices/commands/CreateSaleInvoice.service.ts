@@ -80,15 +80,16 @@ export class CreateSaleInvoice {
     await this.itemsEntriesService.validateItemsIdsExistance(
       saleInvoiceDTO.entries,
     );
+
     // Validate items should be sellable items.
     await this.itemsEntriesService.validateNonSellableEntriesItems(
       saleInvoiceDTO.entries,
     );
+
     // Transform DTO object to model object.
     const saleInvoiceObj = await this.transformCreateDTOToModel(
       customer,
       saleInvoiceDTO,
-      // authorizedUser,
     );
     // Validate sale invoice number uniquiness.
     if (saleInvoiceObj.invoiceNo) {

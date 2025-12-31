@@ -155,7 +155,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'amount',
         Header: intl.get('amount'),
-        accessor: (r) => <Money amount={r.amount} currency={r.currency_code} />,
+        accessor: (r) => <Money amount={r.total} currency={r.currency_code} />,
         width: 140,
         align: 'right',
         clickable: true,

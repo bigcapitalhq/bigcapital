@@ -72,18 +72,34 @@ export class WriteTaxTransactionsItemEntries {
   }
 
   /**
-   * Aggregates by tax code id and sums the amount.
+   * Aggregates by tax rate id and sums the tax amounts from entry taxes.
    * @param {IItemEntry[]} itemEntries
-   * @returns {IItemEntry[]}
+   * @returns {Array} Aggregated tax entries
    */
   private aggregateItemEntriesByTaxCode = (
     itemEntries: ModelObject<ItemEntry>[],
-  ): ModelObject<ItemEntry>[] => {
-    return chain(itemEntries.filter((item) => item.taxRateId))
-      .groupBy((item) => item.taxRateId)
-      .values()
-      .map((group) => ({ ...group[0], amount: sumBy(group, 'amount') }))
-      .value();
+  ): any[] => {
+    const taxMap = new Map<number, any>();
+
+    for (const entry of itemEntries) {
+      if (!entry.taxes || entry.taxes.length === 0) continue;
+
+      for (const tax of entry.taxes) {
+        const taxRateId = tax.taxRateId;
+        if (!taxMap.has(taxRateId)) {
+          taxMap.set(taxRateId, {
+            taxRateId,
+            taxRate: tax.taxRate,
+            referenceType: entry.referenceType,
+            referenceId: entry.referenceId,
+            amount: 0,
+          });
+        }
+        taxMap.get(taxRateId).amount += tax.taxAmount || 0;
+      }
+    }
+
+    return Array.from(taxMap.values());
   };
 
   /**

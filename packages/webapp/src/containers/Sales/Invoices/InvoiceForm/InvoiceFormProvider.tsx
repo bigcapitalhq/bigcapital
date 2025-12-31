@@ -77,7 +77,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const newInvoice = !isEmpty(estimate)
     ? transformToEditForm({
         ...pick(estimate, ['customer_id', 'currency_code', 'entries']),
-      })
+      }, taxRates)
     : [];
 
   // Handle fetching the items table based on the given query.
@@ -138,7 +138,8 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isCustomersLoading ||
     isEstimateLoading ||
     isSettingsLoading ||
-    isInvoiceStateLoading;
+    isInvoiceStateLoading ||
+    isTaxRatesLoading;
 
   const provider = {
     invoice,

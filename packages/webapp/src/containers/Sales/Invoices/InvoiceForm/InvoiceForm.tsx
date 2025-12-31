@@ -65,6 +65,7 @@ function InvoiceFormRoot({
     editInvoiceMutate,
     submitPayload,
     saleInvoiceState,
+    taxRates,
   } = useInvoiceFormContext();
 
   // Invoice number.
@@ -75,7 +76,7 @@ function InvoiceFormRoot({
   // Form initial values.
   const initialValues = {
     ...(!isEmpty(invoice)
-      ? { ...transformToEditForm(invoice) }
+      ? { ...transformToEditForm(invoice, taxRates) }
       : {
           ...defaultInvoice,
           // If the auto-increment mode is enabled, take the next invoice

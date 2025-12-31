@@ -19,6 +19,7 @@ import {
   CreateSaleReceiptDto,
   EditSaleReceiptDto,
 } from '../dtos/SaleReceipt.dto';
+import { ItemEntriesTaxTransactions } from '@/modules/TaxRates/ItemEntriesTaxTransactions.service';
 
 @Injectable()
 export class SaleReceiptDTOTransformer {
@@ -30,6 +31,7 @@ export class SaleReceiptDTOTransformer {
    * @param {SaleReceiptIncrement} receiptIncrement - Sale receipt increment.
    * @param {BrandingTemplateDTOTransformer} brandingTemplatesTransformer - Branding template DTO transformer.
    * @param {typeof ItemEntry} itemEntryModel - Item entry model.
+   * @param {ItemEntriesTaxTransactions} taxDTOTransformer - Tax DTO transformer.
    */
   constructor(
     private readonly itemsEntriesService: ItemsEntriesService,
@@ -38,6 +40,7 @@ export class SaleReceiptDTOTransformer {
     private readonly validators: SaleReceiptValidators,
     private readonly receiptIncrement: SaleReceiptIncrement,
     private readonly brandingTemplatesTransformer: BrandingTemplateDTOTransformer,
+    private readonly taxDTOTransformer: ItemEntriesTaxTransactions,
 
     @Inject(ItemEntry.name)
     private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
@@ -70,15 +73,41 @@ export class SaleReceiptDTOTransformer {
     this.validators.validateReceiptNoRequire(receiptNumber);
 
     const initialEntries = saleReceiptDTO.entries.map((entry) => ({
-      reference_type: 'SaleReceipt',
-      ...entry,
+      referenceType: 'SaleReceipt',
+      isInclusiveTax: saleReceiptDTO.isInclusiveTax,
+      ...omit(entry, ['amount']),
     }));
-    const asyncEntries = await composeAsync(
-      // Sets default cost and sell account to receipt items entries.
-      this.itemsEntriesService.setItemsEntriesDefaultAccounts,
-    )(initialEntries);
+
+    // Process entries sequentially to avoid async compose issues
+    const step1 = await this.itemsEntriesService.setItemsEntriesDefaultAccounts(initialEntries);
+    const step2 = await this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries(step1);
+    const asyncEntries = await this.taxDTOTransformer.assocTaxRatesFromTaxIdsToEntries(
+      step2,
+      saleReceiptDTO.isInclusiveTax,
+    );
 
     const entries = R.compose(
+      // Transform taxRateIds to nested taxes relations for graph insert.
+      R.map((entry: any) => {
+        if (entry.taxRateIds && entry.taxRateIds.length > 0) {
+          const taxes =
+            entry.calculatedTaxes?.map((tax: any, index: number) => ({
+              taxRateId: tax.taxRateId,
+              taxRate: tax.taxRate,
+              taxAmount: tax.taxAmount || 0,
+              taxableAmount: tax.taxableAmount || 0,
+              order: index,
+            })) || [];
+
+          return {
+            ...R.omit(['taxRateIds', 'calculatedTaxes', 'totalTaxAmount'], entry),
+            taxes,
+          };
+        }
+        return R.omit(['taxRateIds', 'calculatedTaxes', 'totalTaxAmount'], entry);
+      }),
+      // Remove tax code from entries.
+      R.map(R.omit(['taxCode'])),
       // Associate the default index for each item entry.
       assocItemEntriesDefaultIndex,
     )(asyncEntries);
@@ -109,6 +138,9 @@ export class SaleReceiptDTOTransformer {
       ),
     )(initialDTO);
 
-    return asyncDto;
+    return R.compose(
+      // Associates tax amount withheld to the model.
+      this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
+    )(asyncDto) as SaleReceipt;
   }
 }

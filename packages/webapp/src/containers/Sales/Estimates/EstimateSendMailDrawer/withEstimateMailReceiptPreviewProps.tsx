@@ -38,6 +38,8 @@ export const withEstimateMailReceiptPreviewProps = <
       subtotal: estimateMailState?.subtotalFormatted,
       discount: estimateMailState?.discountAmountFormatted,
       adjustment: estimateMailState?.adjustmentFormatted,
+      taxes: estimateMailState?.taxes,
+      showTaxes: estimateMailState?.showTaxes,
       items,
       message,
     };

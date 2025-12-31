@@ -23,12 +23,13 @@ export default function ReceiptDetailTableFooter() {
         <TotalLine
           title={<T id={'receipt.details.subtotal'} />}
           value={receipt.subtotal_formatted}
+          borderStyle={TotalLineBorderStyle.SingleDark}
         />
         {receipt.discount_amount > 0 && (
           <TotalLine
             title={
               receipt.discount_percentage_formatted
-                ? `Discount [${invoice.discount_percentage_formatted}]`
+                ? `Discount [${receipt.discount_percentage_formatted}]`
                 : 'Discount'
             }
             value={receipt.discount_amount_formatted}
@@ -42,6 +43,14 @@ export default function ReceiptDetailTableFooter() {
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
+        {receipt?.taxes?.map((taxRate) => (
+          <TotalLine
+            key={taxRate.id}
+            title={`${taxRate.name} [${taxRate.tax_rate}%]`}
+            value={taxRate.tax_rate_amount_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        ))}
         <TotalLine
           title={<T id={'receipt.details.total'} />}
           value={receipt.total_formatted}

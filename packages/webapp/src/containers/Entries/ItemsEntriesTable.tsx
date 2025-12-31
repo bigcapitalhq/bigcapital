@@ -26,6 +26,7 @@ interface ItemsEntriesTableProps {
   taxRates?: any[];
   minLinesNumber?: number;
   enableTaxRates?: boolean;
+  isInclusiveTax?: boolean;
 }
 
 /**
@@ -136,6 +137,7 @@ ItemsEntriesTable.defaultProps = {
   linesNumber: 1,
   minLinesNumber: 1,
   enableTaxRates: true,
+  isInclusiveTax: false,
 };
 
 export default ItemsEntriesTable;

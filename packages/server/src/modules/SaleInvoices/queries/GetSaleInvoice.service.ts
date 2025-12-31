@@ -34,7 +34,7 @@ export class GetSaleInvoice {
       .query(trx)
       .findById(saleInvoiceId)
       .withGraphFetched('entries.item')
-      .withGraphFetched('entries.tax')
+      .withGraphFetched('entries.taxes')
       .withGraphFetched('customer')
       .withGraphFetched('branch')
       .withGraphFetched('taxes.taxRate')

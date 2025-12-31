@@ -14,6 +14,8 @@ import { ItemEntriesTaxTransactions } from './ItemEntriesTaxTransactions.service
 import { GetTaxRatesService } from './queries/GetTaxRates.service';
 import { WriteBillTaxTransactionsSubscriber } from './subscribers/WriteBillTaxTransactionsSubscriber';
 import { WriteInvoiceTaxTransactionsSubscriber } from './subscribers/WriteInvoiceTaxTransactionsSubscriber';
+import { WriteEstimateTaxTransactionsSubscriber } from './subscribers/WriteEstimateTaxTransactionsSubscriber';
+import { WriteReceiptTaxTransactionsSubscriber } from './subscribers/WriteReceiptTaxTransactionsSubscriber';
 import { BillTaxRateValidateSubscriber } from './subscribers/BillTaxRateValidateSubscriber';
 import { SaleInvoiceTaxRateValidateSubscriber } from './subscribers/SaleInvoiceTaxRateValidateSubscriber';
 import { SyncItemTaxRateOnEditTaxSubscriber } from './subscribers/SyncItemTaxRateOnEditTaxSubscriber';
@@ -21,10 +23,16 @@ import { WriteTaxTransactionsItemEntries } from './WriteTaxTransactionsItemEntri
 import { SyncItemTaxRateOnEditTaxRate } from './SyncItemTaxRateOnEditTaxRate';
 import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { TaxRateTransaction } from './models/TaxRateTransaction.model';
+import { ItemEntryTax } from './models/ItemEntryTax.model';
 import { TaxRatesExportable } from './TaxRatesExportable';
 import { TaxRatesImportable } from './TaxRatesImportable';
+import { TaxCalculatorService } from './TaxCalculator.service';
+import { AggregateEntriesTaxesService } from './services/AggregateEntriesTaxes.service';
 
-const models = [RegisterTenancyModel(TaxRateTransaction)];
+const models = [
+  RegisterTenancyModel(TaxRateTransaction),
+  RegisterTenancyModel(ItemEntryTax),
+];
 
 @Module({
   imports: [...models],
@@ -44,14 +52,23 @@ const models = [RegisterTenancyModel(TaxRateTransaction)];
     ItemEntriesTaxTransactions,
     WriteBillTaxTransactionsSubscriber,
     WriteInvoiceTaxTransactionsSubscriber,
+    WriteEstimateTaxTransactionsSubscriber,
+    WriteReceiptTaxTransactionsSubscriber,
     BillTaxRateValidateSubscriber,
     SaleInvoiceTaxRateValidateSubscriber,
     SyncItemTaxRateOnEditTaxSubscriber,
     WriteTaxTransactionsItemEntries,
     SyncItemTaxRateOnEditTaxRate,
     TaxRatesExportable,
-    TaxRatesImportable
+    TaxRatesImportable,
+    TaxCalculatorService,
+    AggregateEntriesTaxesService,
   ],
-  exports: [ItemEntriesTaxTransactions, ...models],
+  exports: [
+    ItemEntriesTaxTransactions,
+    TaxCalculatorService,
+    AggregateEntriesTaxesService,
+    ...models,
+  ],
 })
 export class TaxRatesModule {}

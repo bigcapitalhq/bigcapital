@@ -2,6 +2,7 @@ import { DiscountType } from '@/common/types/Discount';
 import { BaseModel } from '@/models/Model';
 import { BillLandedCostEntry } from '@/modules/BillLandedCosts/models/BillLandedCostEntry';
 import { Item } from '@/modules/Items/models/Item';
+import { ItemEntryTax } from '@/modules/TaxRates/models/ItemEntryTax.model';
 import {
   getExlusiveTaxAmount,
   getInclusiveTaxAmount,
@@ -33,12 +34,14 @@ export class ItemEntry extends BaseModel {
 
   public adjustment: number;
 
+  /** @deprecated Use taxes relation instead */
   public taxRateId: number;
 
   public warehouseId: number;
 
   item: Item;
   allocatedCostEntries: BillLandedCostEntry[];
+  taxes!: ItemEntryTax[];
 
   /**
    * Table name.
@@ -66,6 +69,9 @@ export class ItemEntry extends BaseModel {
       'amount',
 
       'taxAmount',
+
+      // Total tax amount from multiple taxes
+      'totalTaxAmount',
 
       // Subtotal (qty * rate) + (tax inclusive)
       'subtotalInclusingTax',
@@ -102,12 +108,21 @@ export class ItemEntry extends BaseModel {
   }
 
   /**
-   * Item entry amount.
+   * Item entry amount (before discount).
    * Amount of item entry that may include or exclude tax.
    * @returns {number}
    */
   get amount() {
     return this.quantity * this.rate;
+  }
+
+  /**
+   * Item entry amount after discount.
+   * This is the taxable amount.
+   * @returns {number}
+   */
+  get amountAfterDiscount() {
+    return this.amount - this.discountAmount;
   }
 
   /**
@@ -153,13 +168,29 @@ export class ItemEntry extends BaseModel {
   }
 
   /**
-   * Tax amount withheld.
+   * Tax amount withheld (legacy single tax).
+   * @deprecated Use totalTaxAmount for multiple taxes support.
    * @returns {number}
    */
   get taxAmount() {
+    // Taxes are calculated on amount AFTER discount
     return this.isInclusiveTax
-      ? getInclusiveTaxAmount(this.amount, this.taxRate)
-      : getExlusiveTaxAmount(this.amount, this.taxRate);
+      ? getInclusiveTaxAmount(this.amountAfterDiscount, this.taxRate)
+      : getExlusiveTaxAmount(this.amountAfterDiscount, this.taxRate);
+  }
+
+  /**
+   * Total tax amount from multiple taxes.
+   * Falls back to legacy taxAmount if no taxes relation is loaded.
+   * @returns {number}
+   */
+  get totalTaxAmount(): number {
+    // If taxes relation is loaded, sum all tax amounts
+    if (this.taxes && this.taxes.length > 0) {
+      return this.taxes.reduce((sum, tax) => sum + (tax.taxAmount || 0), 0);
+    }
+    // Fallback to legacy single tax
+    return this.taxAmount;
   }
 
   /**
@@ -190,6 +221,7 @@ export class ItemEntry extends BaseModel {
     const { SaleReceipt } = require('../../SaleReceipts/models/SaleReceipt');
     const { SaleEstimate } = require('../../SaleEstimates/models/SaleEstimate');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
+    const { ItemEntryTax } = require('../../TaxRates/models/ItemEntryTax.model');
     // const { Expense } = require('../../Expenses/models/Expense.model');
     // const ProjectTask = require('models/Task');
 
@@ -287,7 +319,8 @@ export class ItemEntry extends BaseModel {
       // },
 
       /**
-       * Tax rate reference.
+       * Tax rate reference (legacy single tax).
+       * @deprecated Use taxes relation instead.
        */
       tax: {
         relation: Model.HasOneRelation,
@@ -295,6 +328,21 @@ export class ItemEntry extends BaseModel {
         join: {
           from: 'items_entries.taxRateId',
           to: 'tax_rates.id',
+        },
+      },
+
+      /**
+       * Multiple taxes associated with this entry.
+       */
+      taxes: {
+        relation: Model.HasManyRelation,
+        modelClass: ItemEntryTax,
+        join: {
+          from: 'items_entries.id',
+          to: 'items_entries_taxes.itemEntryId',
+        },
+        modify: (query) => {
+          query.orderBy('order', 'ASC');
         },
       },
     };

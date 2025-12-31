@@ -126,19 +126,21 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
           ? item.purchase_tax_rate_id
           : item.sell_tax_rate_id;
 
+      // Convert single taxRateId to array format
+      const taxRateIds = taxRateId ? [taxRateId] : [];
+
       // The new row.
       const newRow = {
         rate: price,
         description,
         quantity: 1,
-        tax_rate_id: taxRateId,
+        tax_rate_ids: taxRateIds,
         ...(landedCost
           ? {
               landed_cost: false,
               landed_cost_disabled: landedCostDisabled,
             }
           : {}),
-        taxRateId,
       };
       setItemRow(null);
       saveInvoke(notifyNewRow, newRow, rowIndex);
@@ -184,23 +186,96 @@ export const useComposeRowsOnNewRow = () => {
 };
 
 /**
- * Associate tax rate to entries.
+ * Associate tax rates to entries using tax_rate_ids array.
  */
 export const assignEntriesTaxRate = R.curry((taxRates, entries) => {
   const taxRatesById = keyBy(taxRates, 'id');
 
   return entries.map((entry) => {
-    const taxRate = taxRatesById[entry.tax_rate_id];
+    const taxRateIds = entry.tax_rate_ids || [];
+
+    // Get all tax rate objects for the selected IDs
+    const selectedTaxRates = taxRateIds
+      .map((id) => taxRatesById[id])
+      .filter(Boolean);
+
+    // Calculate combined tax rate (sum of all rates) for display purposes
+    const combinedTaxRate = selectedTaxRates.reduce(
+      (sum, tr) => sum + (tr?.rate || 0),
+      0,
+    );
 
     return {
       ...entry,
-      tax_rate: taxRate?.rate || 0,
+      tax_rate: combinedTaxRate,
+      tax_rates_details: selectedTaxRates,
     };
   });
 });
 
 /**
+ * Calculate taxes for multiple tax rates with compound support.
+ * @param {number} amount - Base amount
+ * @param {Array} taxRatesDetails - Array of tax rate objects
+ * @param {boolean} isInclusiveTax - Whether taxes are inclusive
+ * @returns {Object} - { totalTaxAmount, taxBreakdown }
+ */
+const calculateMultipleTaxes = (amount, taxRatesDetails, isInclusiveTax) => {
+  if (!taxRatesDetails || taxRatesDetails.length === 0 || !amount) {
+    return { totalTaxAmount: 0, taxBreakdown: [] };
+  }
+
+  // Sort taxes: non-compound first, then compound
+  const sortedTaxes = [...taxRatesDetails].sort((a, b) => {
+    if (a.is_compound === b.is_compound) return 0;
+    return a.is_compound ? 1 : -1;
+  });
+
+  const taxBreakdown = [];
+  let runningTotal = amount;
+  let totalNonCompoundTax = 0;
+
+  for (const tax of sortedTaxes) {
+    let taxAmount;
+
+    if (isInclusiveTax) {
+      // For inclusive tax, compound taxes are calculated on amount + non-compound taxes
+      const taxableAmount = tax.is_compound
+        ? amount + totalNonCompoundTax
+        : amount;
+      taxAmount = getInclusiveTaxAmount(taxableAmount, tax.rate);
+    } else {
+      // For exclusive tax, compound taxes are calculated on amount + previous taxes
+      const taxableAmount = tax.is_compound ? runningTotal : amount;
+      taxAmount = getExlusiveTaxAmount(taxableAmount, tax.rate);
+    }
+
+    taxBreakdown.push({
+      taxRateId: tax.id,
+      taxRate: tax.rate,
+      taxAmount,
+      name: tax.name,
+      code: tax.code,
+      isCompound: tax.is_compound,
+    });
+
+    if (!tax.is_compound) {
+      totalNonCompoundTax += taxAmount;
+    }
+
+    if (!isInclusiveTax) {
+      runningTotal += taxAmount;
+    }
+  }
+
+  const totalTaxAmount = taxBreakdown.reduce((sum, t) => sum + t.taxAmount, 0);
+
+  return { totalTaxAmount, taxBreakdown };
+};
+
+/**
  * Assign tax amount to entries.
+ * Supports multiple taxes with compound tax calculation.
  * @param {boolean} isInclusiveTax
  * @param entries
  * @returns
@@ -208,13 +283,18 @@ export const assignEntriesTaxRate = R.curry((taxRates, entries) => {
 export const assignEntriesTaxAmount = R.curry(
   (isInclusiveTax: boolean, entries) => {
     return entries.map((entry) => {
-      const taxAmount = isInclusiveTax
-        ? getInclusiveTaxAmount(entry.amount, entry.tax_rate)
-        : getExlusiveTaxAmount(entry.amount, entry.tax_rate);
+      const taxRatesDetails = entry.tax_rates_details || [];
+
+      const { totalTaxAmount, taxBreakdown } = calculateMultipleTaxes(
+        entry.amount,
+        taxRatesDetails,
+        isInclusiveTax,
+      );
 
       return {
         ...entry,
-        tax_amount: taxAmount,
+        tax_amount: totalTaxAmount,
+        tax_breakdown: taxBreakdown,
       };
     });
   },
@@ -286,31 +366,35 @@ export const useComposeRowsOnRemoveTableRow = () => {
 
 /**
  * Retrieves the aggregate tax rates from the given item entries.
- * @param {string} currencyCode - 
- * @param {any} taxRates - 
- * @param {any} entries - 
+ * Uses pre-calculated tax_breakdown from entries.
+ * @param {string} currencyCode -
+ * @param {any} taxRates -
+ * @param {any} entries -
  */
 export const aggregateItemEntriesTaxRates = R.curry(
   (currencyCode, taxRates, entries) => {
-    const taxRatesById = keyBy(taxRates, 'id');
+    const aggregatedTaxes = {};
 
-    // Calculate the total tax amount of invoice entries.
-    const filteredEntries = entries.filter((e) => e.tax_rate_id);
-    const groupedTaxRates = groupBy(filteredEntries, 'tax_rate_id');
+    entries.forEach((entry) => {
+      const taxBreakdown = entry.tax_breakdown || [];
 
-    return Object.keys(groupedTaxRates).map((taxRateId) => {
-      const taxRate = taxRatesById[taxRateId];
-      const taxRates = groupedTaxRates[taxRateId];
-      const totalTaxAmount = sumBy(taxRates, 'tax_amount');
-      const taxAmountFormatted = formattedAmount(totalTaxAmount, currencyCode);
-
-      return {
-        taxRateId,
-        taxRate: taxRate.rate,
-        label: `${taxRate.name} [${taxRate.rate}%]`,
-        taxAmount: totalTaxAmount,
-        taxAmountFormatted,
-      };
+      taxBreakdown.forEach((taxItem) => {
+        if (!aggregatedTaxes[taxItem.taxRateId]) {
+          aggregatedTaxes[taxItem.taxRateId] = {
+            taxRateId: taxItem.taxRateId,
+            taxRate: taxItem.taxRate,
+            name: taxItem.name,
+            label: `${taxItem.name} [${taxItem.taxRate}%]`,
+            taxAmount: 0,
+          };
+        }
+        aggregatedTaxes[taxItem.taxRateId].taxAmount += taxItem.taxAmount;
+      });
     });
+
+    return Object.values(aggregatedTaxes).map((tax: any) => ({
+      ...tax,
+      taxAmountFormatted: formattedAmount(tax.taxAmount, currencyCode),
+    }));
   },
 );

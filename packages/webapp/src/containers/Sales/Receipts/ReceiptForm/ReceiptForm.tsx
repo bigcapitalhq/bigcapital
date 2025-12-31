@@ -64,6 +64,7 @@ function ReceiptFormRoot({
     submitPayload,
     isNewMode,
     saleReceiptState,
+    taxRates,
   } = useReceiptFormContext();
 
   // The next receipt number.
@@ -74,7 +75,7 @@ function ReceiptFormRoot({
   // Initial values in create and edit mode.
   const initialValues = {
     ...(!isEmpty(receipt)
-      ? { ...transformToEditForm(receipt) }
+      ? { ...transformToEditForm(receipt, taxRates) }
       : {
           ...defaultReceipt,
           ...(receiptAutoIncrement && {
@@ -127,7 +128,7 @@ function ReceiptFormRoot({
         history.push('/receipts');
       }
       if (submitPayload.resetForm) {
-        resetFormState();
+        resetFormState({ resetForm, initialValues, values });
       }
     };
 

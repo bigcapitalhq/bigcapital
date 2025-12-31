@@ -34,6 +34,9 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
       'adjustment',
       'adjustmentLabel',
 
+      'taxes',
+      'showTaxes',
+
       'viewEstimateButtonLabel',
       'viewEstimateButtonUrl',
 
@@ -175,6 +178,25 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
       this.options.estimate.entries,
       new GetEstimateMailTemplateEntryAttributesTransformer(),
     );
+  }
+
+  /**
+   * Estimate taxes.
+   * @returns {Array<{ label: string; amount: string }>}
+   */
+  public taxes(): Array<{ label: string; amount: string }> {
+    return this.options.estimate?.taxes?.map((tax) => ({
+      label: `${tax.name} [${tax.taxRate}%]`,
+      amount: tax.taxRateAmountFormatted,
+    })) || [];
+  }
+
+  /**
+   * Show taxes flag.
+   * @returns {boolean}
+   */
+  public showTaxes(): boolean {
+    return this.options.estimate?.taxes?.length > 0;
   }
 }
 

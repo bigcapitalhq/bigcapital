@@ -10,6 +10,15 @@ const getSchema = () =>
     rate: Yup.number()
       .min(0, 'Enter a rate percentage of at least 0%')
       .max(100, 'Enter a rate percentage of at most 100%')
+      .test(
+        'max-decimals',
+        'Enter a rate with at most 4 decimal places',
+        (value) => {
+          if (value === undefined || value === null) return true;
+          const decimalPart = String(value).split('.')[1];
+          return !decimalPart || decimalPart.length <= 4;
+        }
+      )
       .required()
       .label('Rate'),
     is_compound: Yup.boolean().optional().label('Is Compound'),

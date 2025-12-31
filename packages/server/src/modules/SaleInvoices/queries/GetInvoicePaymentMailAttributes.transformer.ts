@@ -29,6 +29,8 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
       'subtotal',
       'subtotalLabel',
 
+      'taxes',
+
       'discount',
       'discountLabel',
 
@@ -138,6 +140,14 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
       this.options.invoice?.entries,
       new GetInvoiceMailTemplateItemAttrsTransformer(),
     );
+  }
+
+  public taxes(): Array<any> {
+    if (!this.options.invoice?.taxes) return [];
+    return this.options.invoice.taxes.map((tax: any) => ({
+      label: `${tax.name} [${tax.taxRate}%]`,
+      amount: tax.taxRateAmountFormatted,
+    }));
   }
 }
 

@@ -43,11 +43,13 @@ import { SaleEstimateAutoIncrementSubscriber } from './subscribers/SaleEstimateA
 import { BulkDeleteSaleEstimatesService } from './BulkDeleteSaleEstimates.service';
 import { ValidateBulkDeleteSaleEstimatesService } from './ValidateBulkDeleteSaleEstimates.service';
 import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.process';
+import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 
 @Module({
   imports: [
     TenancyDatabaseModule,
     DynamicListModule,
+    TaxRatesModule,
     MailNotificationModule,
     MailModule,
     ChromiumlyTenancyModule,

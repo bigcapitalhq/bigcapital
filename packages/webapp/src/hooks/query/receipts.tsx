@@ -334,6 +334,10 @@ export interface GetSaleReceiptMailStateResponse {
     totalFormatted: string
   }>,
   receiptNumber: string;
+
+  // # Taxes
+  taxes: Array<{ label: string; amount: string }>;
+  showTaxes: boolean;
 }
 
 export function useSaleReceiptMailState(

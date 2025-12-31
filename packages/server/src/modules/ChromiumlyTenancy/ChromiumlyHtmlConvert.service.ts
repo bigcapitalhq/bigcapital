@@ -56,10 +56,17 @@ export class ChromiumlyHtmlConvert {
     properties?: PageProperties,
     pdfFormat?: PdfFormat,
   ): Promise<Buffer> {
+    if (!Chromiumly.GOTENBERG_DOCS_ENDPOINT) {
+      throw new Error(
+        'PDF generation is not configured. Please set GOTENBERG_URL and GOTENBERG_DOCS_URL environment variables.',
+      );
+    }
+
     const [filename, cleanupTempFile] = await this.writeTempHtmlFile(html);
     const fileDir = getPdfFilesStorageDir(filename);
 
-    const url = path.join(Chromiumly.GOTENBERG_DOCS_ENDPOINT, fileDir);
+    // Use URL constructor to properly join base URL with path
+    const url = new URL(fileDir, Chromiumly.GOTENBERG_DOCS_ENDPOINT).href;
     const urlConverter = new UrlConverter();
 
     const buffer = await urlConverter.convert({

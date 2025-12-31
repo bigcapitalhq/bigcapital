@@ -31,7 +31,10 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
 
       'adjustment',
       'adjustmentLabel',
-      
+
+      'taxes',
+      'showTaxes',
+
       'items',
     ];
   };
@@ -171,6 +174,37 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
       this.options.receipt.entries,
       new GetSaleReceiptMailTemplateEntryAttributesTransformer(),
     );
+  }
+
+  /**
+   * Receipt taxes formatted for email template.
+   * @returns {Array<{ label: string; amount: string }>}
+   */
+  public taxes(): Array<{ label: string; amount: string }> {
+    const { getInclusiveTaxAmount, getExlusiveTaxAmount } = require('../../TaxRates/utils');
+    const receipt = this.options.receipt;
+
+    return receipt.taxes?.map((tax) => {
+      const taxRate = tax.rate || tax.taxRate?.rate || 0;
+      const taxAmount = receipt.isInclusiveTax
+        ? getInclusiveTaxAmount(receipt.subtotal, taxRate)
+        : getExlusiveTaxAmount(receipt.subtotal, taxRate);
+
+      return {
+        label: `${tax.taxRate?.name || ''} [${taxRate}%]`,
+        amount: this.formatNumber(taxAmount, {
+          currencyCode: receipt.currencyCode,
+        }),
+      };
+    }) || [];
+  }
+
+  /**
+   * Whether to show taxes.
+   * @returns {boolean}
+   */
+  public showTaxes(): boolean {
+    return this.options.receipt?.taxes?.length > 0;
   }
 }
 

@@ -42,11 +42,13 @@ import { GetSaleReceiptMailTemplateService } from './queries/GetSaleReceiptMailT
 import { SaleReceiptAutoIncrementSubscriber } from './subscribers/SaleReceiptAutoIncrementSubscriber';
 import { BulkDeleteSaleReceiptsService } from './BulkDeleteSaleReceipts.service';
 import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleReceipts.service';
+import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 
 @Module({
   controllers: [SaleReceiptsController],
   imports: [
     ItemsModule,
+    TaxRatesModule,
     ChromiumlyTenancyModule,
     TemplateInjectableModule,
     BranchesModule,

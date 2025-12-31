@@ -43,6 +43,14 @@ export default function EstimateDetailTableFooter() {
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
+        {estimate?.taxes?.map((taxRate) => (
+          <TotalLine
+            key={taxRate.id}
+            title={`${taxRate.name} [${taxRate.tax_rate}%]`}
+            value={taxRate.tax_rate_amount_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        ))}
         <TotalLine
           title={<T id={'estimate.details.total'} />}
           value={estimate.total_formatted}

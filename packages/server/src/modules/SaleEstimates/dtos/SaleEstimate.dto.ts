@@ -176,6 +176,14 @@ export class CommandSaleEstimateDto {
     example: 1,
   })
   adjustment?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  @ApiProperty({
+    description: 'Whether the estimate is inclusive of tax',
+    example: false,
+  })
+  isInclusiveTax?: boolean = false;
 }
 
 export class CreateSaleEstimateDto extends CommandSaleEstimateDto { }

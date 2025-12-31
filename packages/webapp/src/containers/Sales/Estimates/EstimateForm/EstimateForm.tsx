@@ -1,4 +1,5 @@
 // @ts-nocheck
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { css } from '@emotion/css';
 import { Formik, Form } from 'formik';
@@ -25,8 +26,9 @@ import {
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import { AppToaster } from '@/components';
+import { AppToaster, Box } from '@/components';
 import { compose, transactionNumber, orderingLinesIndexes } from '@/utils';
+import { EstimateFormActions } from './EstimateFormActions';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import {
   transformToEditForm,
@@ -59,6 +61,7 @@ function EstimateForm({
     createEstimateMutate,
     editEstimateMutate,
     saleEstimateState,
+    taxRates,
   } = useEstimateFormContext();
 
   const estimateNumber = transactionNumber(
@@ -66,23 +69,26 @@ function EstimateForm({
     estimateNextNumber,
   );
   // Initial values in create and edit mode.
-  const initialValues = {
-    ...(!isEmpty(estimate)
-      ? { ...transformToEditForm(estimate) }
-      : {
-        ...defaultEstimate,
-        // If the auto-increment mode is enabled, take the next estimate
-        // number from the settings.
-        ...(estimateAutoIncrementMode && {
-          estimate_number: estimateNumber,
-        }),
-        entries: orderingLinesIndexes(defaultEstimate.entries),
-        currency_code: base_currency,
-        terms_conditions: defaultTo(estimateTermsConditions, ''),
-        note: defaultTo(estimateCustomerNotes, ''),
-        pdf_template_id: saleEstimateState?.defaultTemplateId,
-      }),
-  };
+  const initialValues = useMemo(
+    () => ({
+      ...(!isEmpty(estimate)
+        ? { ...transformToEditForm(estimate, taxRates) }
+        : {
+            ...defaultEstimate,
+            // If the auto-increment mode is enabled, take the next estimate
+            // number from the settings.
+            ...(estimateAutoIncrementMode && {
+              estimate_number: estimateNumber,
+            }),
+            entries: orderingLinesIndexes(defaultEstimate.entries),
+            currency_code: base_currency,
+            terms_conditions: defaultTo(estimateTermsConditions, ''),
+            note: defaultTo(estimateCustomerNotes, ''),
+            pdf_template_id: saleEstimateState?.defaultTemplateId,
+          }),
+    }),
+    [estimate, base_currency, taxRates, estimateAutoIncrementMode, estimateNumber, estimateTermsConditions, estimateCustomerNotes, saleEstimateState],
+  );
 
   // Handles form submit.
   const handleFormSubmit = (
@@ -167,7 +173,11 @@ function EstimateForm({
           <PageForm.Body>
             <EstimtaeFormTopBar />
             <EstimateFormHeader />
-            <EstimateItemsEntriesField />
+
+            <Box p="18px 32px 0">
+              <EstimateFormActions />
+              <EstimateItemsEntriesField />
+            </Box>
             <EstimateFormFooter />
           </PageForm.Body>
 

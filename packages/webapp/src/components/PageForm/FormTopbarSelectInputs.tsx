@@ -25,3 +25,6 @@ export function FormBranchSelectButton({ text }) {
     />
   );
 }
+
+// Alias for backwards compatibility
+export const BranchSelectButton = FormBranchSelectButton;

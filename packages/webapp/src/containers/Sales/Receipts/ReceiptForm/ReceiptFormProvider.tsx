@@ -16,6 +16,7 @@ import {
   useGetReceiptState,
   IGetReceiptStateResponse,
 } from '@/hooks/query';
+import { useTaxRates } from '@/hooks/query/taxRates';
 import { useProjects } from '@/containers/Projects/hooks';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 
@@ -101,6 +102,9 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isLoading: isProjectsLoading,
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
+  // Fetch tax rates.
+  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
+
   // Fetches branding templates of receipt.
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
     useGetPdfTemplates({ resource: 'SaleReceipt' });
@@ -127,7 +131,8 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isItemsLoading ||
     isSettingLoading ||
     isBrandingTemplatesLoading ||
-    isSaleReceiptStateLoading;
+    isSaleReceiptStateLoading ||
+    isTaxRatesLoading;
 
   const provider = {
     receiptId,
@@ -138,6 +143,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     branches,
     warehouses,
     projects,
+    taxRates,
     submitPayload,
 
     isNewMode,

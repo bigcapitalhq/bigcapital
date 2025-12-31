@@ -7,6 +7,8 @@ import { Customer } from '@/modules/Customers/models/Customer';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { Branch } from '@/modules/Branches/models/Branch.model';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
+import { TaxRateTransaction } from '@/modules/TaxRates/models/TaxRateTransaction.model';
+import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { DiscountType } from '@/common/types/Discount';
 import { MetadataModelMixin } from '@/modules/DynamicListing/models/MetadataModel';
 import { ResourceableModelMixin } from '@/modules/Resource/models/ResourcableModel';
@@ -47,6 +49,9 @@ export class SaleReceipt extends ExtendedModel {
   public discount!: number;
   public adjustment!: number;
 
+  public isInclusiveTax!: boolean;
+  public taxAmountWithheld!: number;
+
   public branchId!: number;
   public warehouseId!: number;
 
@@ -60,6 +65,8 @@ export class SaleReceipt extends ExtendedModel {
   public transactions!: AccountTransaction[];
   public branch!: Branch;
   public warehouse!: Warehouse;
+  public taxes!: TaxRateTransaction[];
+  public attachments!: Document[];
 
   /**
    * Table name
@@ -84,6 +91,7 @@ export class SaleReceipt extends ExtendedModel {
 
       'subtotal',
       'subtotalLocal',
+      'subtotalExcludingTax',
 
       'total',
       'totalLocal',
@@ -94,6 +102,8 @@ export class SaleReceipt extends ExtendedModel {
       'discountAmount',
       'discountAmountLocal',
       'discountPercentage',
+
+      'taxAmountWithheldLocal',
 
       'paid',
       'paidLocal',
@@ -154,13 +164,35 @@ export class SaleReceipt extends ExtendedModel {
   }
 
   /**
-   * Receipt total.
+   * Subtotal excluding tax.
+   * @returns {number}
+   */
+  get subtotalExcludingTax(): number {
+    return this.isInclusiveTax
+      ? this.subtotal - this.taxAmountWithheld
+      : this.subtotal;
+  }
+
+  /**
+   * Tax amount withheld in local currency.
+   * @returns {number}
+   */
+  get taxAmountWithheldLocal(): number {
+    return (this.taxAmountWithheld || 0) * this.exchangeRate;
+  }
+
+  /**
+   * Receipt total. (Tax included)
    * @returns {number}
    */
   get total(): number {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
-    return this.subtotal - this.discountAmount + adjustmentAmount;
+    return R.compose(
+      R.add(adjustmentAmount),
+      R.subtract(R.__, this.discountAmount),
+      R.when(R.always(!this.isInclusiveTax), R.add(this.taxAmountWithheld || 0)),
+    )(this.subtotal);
   }
 
   /**
@@ -269,6 +301,9 @@ export class SaleReceipt extends ExtendedModel {
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
+    const {
+      TaxRateTransaction,
+    } = require('../../TaxRates/models/TaxRateTransaction.model');
 
     return {
       /**
@@ -369,6 +404,21 @@ export class SaleReceipt extends ExtendedModel {
         },
         filter(query) {
           query.where('model_ref', 'SaleReceipt');
+        },
+      },
+
+      /**
+       * Sale receipt may has associated tax rate transactions.
+       */
+      taxes: {
+        relation: Model.HasManyRelation,
+        modelClass: TaxRateTransaction,
+        join: {
+          from: 'sales_receipts.id',
+          to: 'tax_rate_transactions.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleReceipt');
         },
       },
     };

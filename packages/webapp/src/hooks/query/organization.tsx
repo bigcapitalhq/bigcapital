@@ -8,8 +8,8 @@ import { useRequestQuery } from '../useQueryRequest';
 import { useSetOrganizations, useSetSubscriptions } from '../state';
 
 const OrganizationRoute = {
-  Current: '/organization/current',
-  Build: '/organization/build',
+  Current: 'organization/current',
+  Build: 'organization/build',
 };
 
 /**

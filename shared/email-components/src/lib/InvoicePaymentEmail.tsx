@@ -44,6 +44,9 @@ export interface InvoicePaymentEmailProps {
   discount?: string;
   discountLabel?: string;
 
+  // # Taxes
+  taxes?: Array<{ label: string; amount: string }>;
+
   // # Subtotal
   subtotal: string;
   subtotalLabel?: string;
@@ -101,6 +104,9 @@ export const InvoicePaymentEmail: React.FC<
   // # Discount
   discount,
   discountLabel = 'Discount',
+
+  // # Taxes
+  taxes = [],
 
   // # Adjustment
   adjustment,
@@ -176,6 +182,18 @@ export const InvoicePaymentEmail: React.FC<
                 <Text style={totalLineItemAmountStyle}>{subtotal}</Text>
               </Column>
             </Row>
+
+            {taxes.map((tax, index) => (
+              <Row key={index} style={lineRowStyle}>
+                <Column width={'50%'}>
+                  <Text style={listItemLabelStyle}>{tax.label}</Text>
+                </Column>
+
+                <Column width={'50%'}>
+                  <Text style={listItemAmountStyle}>{tax.amount}</Text>
+                </Column>
+              </Row>
+            ))}
 
             {!isEmpty(discount) && (
               <Row style={lineRowStyle}>

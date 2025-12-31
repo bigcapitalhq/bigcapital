@@ -38,6 +38,9 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
 
       'primaryColor',
       'customerName',
+
+      'taxes',
+      'showTaxes',
     ];
   };
 
@@ -140,6 +143,38 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
         currencyCode: invoice.currencyCode,
       },
     );
+  };
+
+  /**
+   * Retrieves the taxes with label and amount format for mail preview.
+   * @param estimate
+   * @returns {Array<{ label: string; amount: string }>}
+   */
+  protected taxes = (estimate) => {
+    const { getInclusiveTaxAmount, getExlusiveTaxAmount } = require('../../TaxRates/utils');
+
+    return estimate.taxes?.map((tax) => {
+      const taxRate = tax.rate || tax.taxRate?.rate || 0;
+      const taxAmount = estimate.isInclusiveTax
+        ? getInclusiveTaxAmount(estimate.subtotal, taxRate)
+        : getExlusiveTaxAmount(estimate.subtotal, taxRate);
+
+      return {
+        label: `${tax.taxRate?.name || ''} [${taxRate}%]`,
+        amount: this.formatNumber(taxAmount, {
+          currencyCode: estimate.currencyCode,
+        }),
+      };
+    }) || [];
+  };
+
+  /**
+   * Retrieves whether taxes should be shown.
+   * @param estimate
+   * @returns {boolean}
+   */
+  protected showTaxes = (estimate) => {
+    return estimate.taxes?.length > 0;
   };
 
   /**

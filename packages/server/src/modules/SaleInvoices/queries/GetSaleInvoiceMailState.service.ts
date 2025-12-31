@@ -30,6 +30,8 @@ export class GetSaleInvoiceMailState {
       .findById(saleInvoiceId)
       .withGraphFetched('customer')
       .withGraphFetched('entries.item')
+      .withGraphFetched('entries.taxes')
+      .withGraphFetched('taxes.taxRate')
       .withGraphFetched('pdfTemplate')
       .throwIfNotFound();
 

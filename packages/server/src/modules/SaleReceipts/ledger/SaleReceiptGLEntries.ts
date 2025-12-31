@@ -28,7 +28,8 @@ export class SaleReceiptGLEntries {
     const saleReceipt = await this.saleReceiptModel()
       .query(trx)
       .findById(saleReceiptId)
-      .withGraphFetched('entries.item');
+      .withGraphFetched('entries.item')
+      .withGraphFetched('entries.taxes');
 
     // Find or create the discount expense account.
     const discountAccount =
@@ -36,11 +37,15 @@ export class SaleReceiptGLEntries {
     // Find or create the other charges account.
     const otherChargesAccount =
       await this.accountRepository.findOrCreateOtherChargesAccount({}, trx);
+    // Find or create tax payable account.
+    const taxPayableAccount =
+      await this.accountRepository.findOrCreateTaxPayable({}, trx);
 
     // Retrieves the income ledger.
     const incomeLedger = new SaleReceiptGL(saleReceipt)
       .setDiscountAccountId(discountAccount.id)
       .setOtherChargesAccountId(otherChargesAccount.id)
+      .setTaxPayableAccountId(taxPayableAccount.id)
       .getIncomeLedger();
 
     // Commits the ledger entries to the storage.

@@ -15,8 +15,16 @@ export const transformEstimateToPdfTemplate = (
       quantity: entry.quantityFormatted,
       total: entry.totalFormatted,
     })),
-    total: estimate.formattedSubtotal,
+    total: estimate.totalFormatted,
     subtotal: estimate.formattedSubtotal,
+    taxes: estimate.taxes?.map((tax) => ({
+      label: `${tax.name} [${tax.taxRate}%]`,
+      amount: tax.taxRateAmountFormatted,
+    })) || [],
+    discount: estimate.discountAmountFormatted,
+    discountLabel: estimate.discountPercentageFormatted
+      ? `Discount [${estimate.discountPercentageFormatted}]`
+      : 'Discount',
     customerNote: estimate.note,
     termsConditions: estimate.termsConditions,
     customerAddress: contactAddressTextFormat(estimate.customer),

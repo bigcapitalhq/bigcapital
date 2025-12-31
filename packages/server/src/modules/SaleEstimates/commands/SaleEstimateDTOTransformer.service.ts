@@ -1,7 +1,6 @@
 import * as R from 'ramda';
 import { Inject, Injectable } from '@nestjs/common';
 import { omit, sumBy } from 'lodash';
-import * as composeAsync from 'async/compose';
 import { SaleEstimateValidators } from './SaleEstimateValidators.service';
 import { formatDateFields } from '@/utils/format-date-fields';
 import * as moment from 'moment';
@@ -16,6 +15,7 @@ import { Customer } from '@/modules/Customers/models/Customer';
 import { ISaleEstimateDTO } from '../types/SaleEstimates.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CommandSaleEstimateDto } from '../dtos/SaleEstimate.dto';
+import { ItemEntriesTaxTransactions } from '@/modules/TaxRates/ItemEntriesTaxTransactions.service';
 
 @Injectable()
 export class SaleEstimateDTOTransformer {
@@ -28,6 +28,7 @@ export class SaleEstimateDTOTransformer {
     private readonly warehouseDTOTransform: WarehouseTransactionDTOTransform,
     private readonly estimateIncrement: SaleEstimateIncrement,
     private readonly brandingTemplatesTransformer: BrandingTemplateDTOTransformer,
+    private readonly taxDTOTransformer: ItemEntriesTaxTransactions,
   ) {}
 
   /**
@@ -57,13 +58,48 @@ export class SaleEstimateDTOTransformer {
     // Validate the sale estimate number require.
     this.validators.validateEstimateNoRequire(estimateNumber);
 
-    const entries = R.compose(
-      // Associate the reference type to item entries.
-      R.map((entry) => R.assoc('reference_type', 'SaleEstimate', entry)),
+    const initialEntries = estimateDTO.entries.map((entry) => ({
+      referenceType: 'SaleEstimate',
+      isInclusiveTax: estimateDTO.isInclusiveTax,
+      ...omit(entry, ['amount']),
+    }));
 
+    // Process taxes for entries - sequential to avoid composeAsync hanging
+    const step1Entries =
+      await this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries(
+        initialEntries,
+      );
+    const asyncEntries =
+      await this.taxDTOTransformer.assocTaxRatesFromTaxIdsToEntries(
+        step1Entries,
+        estimateDTO.isInclusiveTax,
+      );
+
+    const entries = R.compose(
+      // Transform taxRateIds to nested taxes relations for graph insert.
+      R.map((entry: any) => {
+        if (entry.taxRateIds && entry.taxRateIds.length > 0) {
+          const taxes =
+            entry.calculatedTaxes?.map((tax: any, index: number) => ({
+              taxRateId: tax.taxRateId,
+              taxRate: tax.taxRate,
+              taxAmount: tax.taxAmount || 0,
+              taxableAmount: tax.taxableAmount || 0,
+              order: index,
+            })) || [];
+
+          return {
+            ...R.omit(['taxRateIds', 'calculatedTaxes', 'totalTaxAmount'], entry),
+            taxes,
+          };
+        }
+        return R.omit(['taxRateIds', 'calculatedTaxes', 'totalTaxAmount'], entry);
+      }),
+      // Remove tax code from entries.
+      R.map(R.omit(['taxCode'])),
       // Associate default index to item entries.
       assocItemEntriesDefaultIndex,
-    )(estimateDTO.entries);
+    )(asyncEntries);
 
     const initialDTO = {
       amount,
@@ -81,17 +117,23 @@ export class SaleEstimateDTOTransformer {
           deliveredAt: moment().toMySqlDateTime(),
         }),
     };
-    const asyncDto = await composeAsync(
-      this.branchDTOTransform.transformDTO<SaleEstimate>,
-      this.warehouseDTOTransform.transformDTO<SaleEstimate>,
 
-      // Assigns the default branding template id to the invoice DTO.
-      this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
+    // Process DTO transformations sequentially to avoid composeAsync hanging
+    const dtoStep1 =
+      await this.brandingTemplatesTransformer.assocDefaultBrandingTemplate(
         'SaleEstimate',
-      ),
-    )(initialDTO);
+      )(initialDTO);
+    const dtoStep2 = await this.warehouseDTOTransform.transformDTO<SaleEstimate>(
+      dtoStep1 as unknown as SaleEstimate,
+    );
+    const asyncDto = await this.branchDTOTransform.transformDTO<SaleEstimate>(
+      dtoStep2 as unknown as SaleEstimate,
+    );
 
-    return asyncDto;
+    return R.compose(
+      // Associates tax amount withheld to the model.
+      this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
+    )(asyncDto) as SaleEstimate;
   }
 
   /**

@@ -33,6 +33,10 @@ export interface ReceiptSendMailReceiptProps extends SendMailReceiptProps {
   adjustment?: string;
   adjustmentLabel?: string;
 
+  // # Taxes
+  taxes?: Array<{ label: string; amount: string }>;
+  showTaxes?: boolean;
+
   // # Total.
   total: string;
   totalLabel?: string;
@@ -58,6 +62,10 @@ export function ReceiptSendMailReceipt({
   // # Adjustment
   adjustment,
   adjustmentLabel = 'Adjustment',
+
+  // # Taxes
+  taxes = [],
+  showTaxes = true,
 
   // # Message
   message,
@@ -150,6 +158,20 @@ export function ReceiptSendMailReceipt({
             <x.span fontSize={15}>{adjustment}</x.span>
           </Group>
         )}
+
+        {showTaxes && taxes?.map((tax, index) => (
+          <Group
+            key={index}
+            h={'40px'}
+            position={'apart'}
+            borderBottomStyle="solid"
+            borderBottomWidth={'1px'}
+            borderBottomColor={'#D9D9D9'}
+          >
+            <x.span>{tax.label}</x.span>
+            <x.span fontSize={15}>{tax.amount}</x.span>
+          </Group>
+        ))}
 
         <Group
           h={'40px'}

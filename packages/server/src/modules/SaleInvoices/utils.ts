@@ -41,7 +41,7 @@ export const transformInvoiceToPdfTemplate = (
       total: entry.totalFormatted,
     })),
     taxes: invoice.taxes.map((tax) => ({
-      label: tax.name,
+      label: `${tax.name} [${tax.taxRate}%]`,
       amount: tax.taxRateAmountFormatted,
     })),
     discount: invoice.discountAmountFormatted,

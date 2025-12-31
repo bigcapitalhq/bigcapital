@@ -8,6 +8,12 @@ import { contactAddressTextFormat } from '@/utils/address-text-format';
 export const transformReceiptToBrandingTemplateAttributes = (
   saleReceipt: ISaleReceipt
 ): Partial<ISaleReceiptBrandingTemplateAttributes> => {
+  const taxes = saleReceipt.taxes?.map((tax) => ({
+    label: `${tax.name || ''} [${tax.taxRateFormatted}]`,
+    amount: tax.taxRateAmountFormatted,
+  }));
+  const showTaxes = saleReceipt.taxes?.length > 0;
+
   return {
     total: saleReceipt.totalFormatted,
     subtotal: saleReceipt.subtotalFormatted,
@@ -26,6 +32,8 @@ export const transformReceiptToBrandingTemplateAttributes = (
       ? `Discount [${saleReceipt.discountPercentageFormatted}]`
       : 'Discount',
     customerAddress: contactAddressTextFormat(saleReceipt.customer),
+    taxes,
+    showTaxes,
   };
 };
 

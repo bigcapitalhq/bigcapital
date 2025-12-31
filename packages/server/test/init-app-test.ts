@@ -5,10 +5,10 @@ import { AppModule } from '../src/modules/App/App.module';
 
 let app: INestApplication;
 
-const email = 'ahmed@sa1234dsad.com';
-const password = '123123123';
+const email = 'felixetienne.gauthier@proton.me';
+const password = 'FelixE280396';
 
-let orgainzationId = 'hpgpqfqom8zic574';
+let orgainzationId = 'ei77hd1mjsx0kxg';
 let authenticationToken = '';
 let AuthorizationHeader = '';
 

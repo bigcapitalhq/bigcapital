@@ -336,6 +336,9 @@ export interface SaleEstimateMailStateResponse {
   adjustment: number;
   adjustmentFormatted: string;
 
+  taxes: Array<{ label: string; amount: string }>;
+  showTaxes: boolean;
+
   estimateNumber: string;
 
   formatArgs: {

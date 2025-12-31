@@ -198,6 +198,15 @@ export const defaultEstimatePdfBrandingAttributes = {
   subtotalLabel: 'Subtotal',
   showSubtotal: true,
 
+  // Discount
+  discount: '',
+  discountLabel: 'Discount',
+  showDiscount: true,
+
+  // Taxes
+  taxes: [],
+  showTaxes: true,
+
   showCustomerNote: true,
   customerNote:
     'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.',
@@ -261,6 +270,15 @@ export interface EstimatePdfBrandingAttributes {
   subtotal: string;
   subtotalLabel: string;
   showSubtotal: boolean;
+
+  // Discount
+  discount: string;
+  discountLabel: string;
+  showDiscount: boolean;
+
+  // Taxes
+  taxes: Array<{ label: string; amount: string }>;
+  showTaxes: boolean;
 
   showCustomerNote: boolean;
   customerNote: string;

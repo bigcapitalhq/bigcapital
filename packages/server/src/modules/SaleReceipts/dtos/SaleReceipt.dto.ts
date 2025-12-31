@@ -175,6 +175,14 @@ export class CommandSaleReceiptDto {
     example: 1,
   })
   adjustment?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  @ApiProperty({
+    description: 'Whether the sale receipt is inclusive of tax',
+    example: false,
+  })
+  isInclusiveTax?: boolean = false;
 }
 
 export class CreateSaleReceiptDto extends CommandSaleReceiptDto {}

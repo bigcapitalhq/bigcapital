@@ -29,6 +29,7 @@ export class GetSaleEstimateMailStateService {
       .withGraphFetched('customer')
       .withGraphFetched('entries.item')
       .withGraphFetched('pdfTemplate')
+      .withGraphFetched('taxes.taxRate')
       .throwIfNotFound();
 
     const mailOptions = await this.estimateMail.getMailOptions(

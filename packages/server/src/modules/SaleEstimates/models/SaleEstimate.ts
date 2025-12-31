@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import * as R from 'ramda';
 import { Model } from 'objection';
 import { defaultTo } from 'lodash';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
@@ -9,6 +10,7 @@ import { SaleEstimateMeta } from './SaleEstimate.meta';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { TaxRateTransaction } from '@/modules/TaxRates/models/TaxRateTransaction.model';
 import { DiscountType } from '@/common/types/Discount';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { SaleEstimateDefaultViews } from '../constants';
@@ -52,9 +54,13 @@ export class SaleEstimate extends TenantBaseModel {
 
   adjustment: number;
 
+  isInclusiveTax: boolean;
+  taxAmountWithheld: number;
+
   public entries!: ItemEntry[];
   public attachments!: Document[];
   public customer!: Customer;
+  public taxes!: TaxRateTransaction[];
 
   /**
    * Table name
@@ -82,11 +88,15 @@ export class SaleEstimate extends TenantBaseModel {
       'isApproved',
       'isRejected',
       'discountAmount',
+      'discountAmountLocal',
       'discountPercentage',
       'total',
       'totalLocal',
       'subtotal',
       'subtotalLocal',
+      'subtotalExcludingTax',
+      'taxAmountWithheldLocal',
+      'adjustmentLocal',
     ];
   }
 
@@ -117,6 +127,14 @@ export class SaleEstimate extends TenantBaseModel {
   }
 
   /**
+   * Discount amount in local currency.
+   * @returns {number | null}
+   */
+  get discountAmountLocal(): number | null {
+    return this.discountAmount ? this.discountAmount * this.exchangeRate : null;
+  }
+
+  /**
    * Discount percentage.
    * @returns {number | null}
    */
@@ -125,13 +143,43 @@ export class SaleEstimate extends TenantBaseModel {
   }
 
   /**
-   * Estimate total.
+   * Subtotal excluding tax.
+   * @returns {number}
+   */
+  get subtotalExcludingTax(): number {
+    return this.isInclusiveTax
+      ? this.subtotal - this.taxAmountWithheld
+      : this.subtotal;
+  }
+
+  /**
+   * Tax amount withheld in local currency.
+   * @returns {number}
+   */
+  get taxAmountWithheldLocal(): number {
+    return (this.taxAmountWithheld || 0) * this.exchangeRate;
+  }
+
+  /**
+   * Adjustment amount in local currency.
+   * @returns {number | null}
+   */
+  get adjustmentLocal(): number | null {
+    return this.adjustment ? this.adjustment * this.exchangeRate : null;
+  }
+
+  /**
+   * Estimate total. (Tax included)
    * @returns {number}
    */
   get total() {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
-    return this.subtotal - this.discountAmount - adjustmentAmount;
+    return R.compose(
+      R.add(adjustmentAmount),
+      R.subtract(R.__, this.discountAmount),
+      R.when(R.always(!this.isInclusiveTax), R.add(this.taxAmountWithheld || 0)),
+    )(this.subtotal);
   }
 
   /**
@@ -292,6 +340,9 @@ export class SaleEstimate extends TenantBaseModel {
     const {
       PdfTemplateModel,
     } = require('../../PdfTemplate/models/PdfTemplate');
+    const {
+      TaxRateTransaction,
+    } = require('../../TaxRates/models/TaxRateTransaction.model');
 
     return {
       customer: {
@@ -370,6 +421,21 @@ export class SaleEstimate extends TenantBaseModel {
         join: {
           from: 'sales_estimates.pdfTemplateId',
           to: 'pdf_templates.id',
+        },
+      },
+
+      /**
+       * Sale estimate may has associated tax rate transactions.
+       */
+      taxes: {
+        relation: Model.HasManyRelation,
+        modelClass: TaxRateTransaction,
+        join: {
+          from: 'sales_estimates.id',
+          to: 'tax_rate_transactions.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleEstimate');
         },
       },
     };

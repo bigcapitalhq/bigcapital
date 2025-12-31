@@ -43,6 +43,7 @@ export class GetSaleInvoiceMailStateTransformer extends SaleInvoiceTransformer {
       'invoiceNo',
 
       'entries',
+      'taxes',
 
       'companyName',
       'companyLogoUri',

@@ -3,8 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { SaleReceiptApplication } from '../SaleReceiptApplication.service';
 import { ISalesReceiptsFilter } from '../types/SaleReceipts.types';
 import { EXPORT_SIZE_LIMIT } from '@/modules/Export/constants';
+import { ExportableService } from '@/modules/Export/decorators/ExportableModel.decorator';
+import { SaleReceipt } from '../models/SaleReceipt';
 
 @Injectable()
+@ExportableService({ name: SaleReceipt.name })
 export class SaleReceiptsExportable extends Exportable {
   constructor(private readonly saleReceiptsApp: SaleReceiptApplication) {
     super();

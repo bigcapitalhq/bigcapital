@@ -88,32 +88,35 @@ export default function useApiRequest() {
     return instance;
   }, [token, organizationId, setGlobalErrors, setLogout]);
 
+  // Helper to normalize resource path (remove leading slash to avoid double slashes)
+  const apiUrl = (resource) => `/api/${resource.replace(/^\//, '')}`;
+
   return React.useMemo(
     () => ({
       http,
 
       get(resource, params) {
-        return http.get(`/api/${resource}`, params);
+        return http.get(apiUrl(resource), params);
       },
 
       post(resource, params, config) {
-        return http.post(`/api/${resource}`, params, config);
+        return http.post(apiUrl(resource), params, config);
       },
 
       update(resource, slug, params) {
-        return http.put(`/api/${resource}/${slug}`, params);
+        return http.put(`${apiUrl(resource)}/${slug}`, params);
       },
 
       put(resource, params) {
-        return http.put(`/api/${resource}`, params);
+        return http.put(apiUrl(resource), params);
       },
 
       patch(resource, params, config) {
-        return http.patch(`/api/${resource}`, params, config);
+        return http.patch(apiUrl(resource), params, config);
       },
 
       delete(resource, params) {
-        return http.delete(`/api/${resource}`, params);
+        return http.delete(apiUrl(resource), params);
       },
     }),
     [http],
@@ -126,26 +129,29 @@ export function useAuthApiRequest() {
     return axios.create();
   }, []);
 
+  // Helper to normalize resource path (remove leading slash to avoid double slashes)
+  const apiUrl = (resource) => `/api/${resource.replace(/^\//, '')}`;
+
   return React.useMemo(
     () => ({
       http,
       get(resource, params) {
-        return http.get(`/api/${resource}`, params);
+        return http.get(apiUrl(resource), params);
       },
       post(resource, params, config) {
-        return http.post(`/api/${resource}`, params, config);
+        return http.post(apiUrl(resource), params, config);
       },
       update(resource, slug, params) {
-        return http.put(`/api/${resource}/${slug}`, params);
+        return http.put(`${apiUrl(resource)}/${slug}`, params);
       },
       put(resource, params) {
-        return http.put(`/api/${resource}`, params);
+        return http.put(apiUrl(resource), params);
       },
       patch(resource, params, config) {
-        return http.patch(`/api/${resource}`, params, config);
+        return http.patch(apiUrl(resource), params, config);
       },
       delete(resource, params) {
-        return http.delete(`/api/${resource}`, params);
+        return http.delete(apiUrl(resource), params);
       },
     }),
     [http],

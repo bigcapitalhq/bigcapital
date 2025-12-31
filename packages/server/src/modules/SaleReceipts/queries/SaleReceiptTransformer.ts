@@ -2,6 +2,7 @@ import { Transformer } from '@/modules/Transformer/Transformer';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { ItemEntryTransformer } from '@/modules/TransactionItemEntry/ItemEntry.transformer';
 import { AttachmentTransformer } from '@/modules/Attachments/Attachment.transformer';
+import { SaleInvoiceTaxEntryTransformer } from '@/modules/SaleInvoices/queries/SaleInvoiceTaxEntry.transformer';
 
 export class SaleReceiptTransformer extends Transformer {
   /**
@@ -23,7 +24,10 @@ export class SaleReceiptTransformer extends Transformer {
       'discountAmountFormatted',
       'discountPercentageFormatted',
       'adjustmentFormatted',
-      
+
+      'taxAmountWithheldFormatted',
+      'taxes',
+
       'entries',
       'attachments',
     ];
@@ -139,22 +143,47 @@ export class SaleReceiptTransformer extends Transformer {
   };
 
   /**
-   * Retrieves the entries of the credit note.
-   * @param {ISaleReceipt} credit
+   * Retrieves the entries of the sale receipt.
+   * @param {SaleReceipt} receipt
    * @returns {}
    */
-  // protected entries = (receipt: SaleReceipt) => {
-  //   return this.item(receipt.entries, new ItemEntryTransformer(), {
-  //     currencyCode: receipt.currencyCode,
-  //   });
-  // };
+  protected entries = (receipt: SaleReceipt) => {
+    return this.item(receipt.entries, new ItemEntryTransformer(), {
+      currencyCode: receipt.currencyCode,
+    });
+  };
 
   /**
    * Retrieves the sale receipt attachments.
    * @param {SaleReceipt} receipt
    * @returns
    */
-  // protected attachments = (receipt: SaleReceipt) => {
-  //   return this.item(receipt.attachments, new AttachmentTransformer());
-  // };
+  protected attachments = (receipt: SaleReceipt) => {
+    return this.item(receipt.attachments, new AttachmentTransformer());
+  };
+
+  /**
+   * Retrieves formatted tax amount withheld.
+   * @param receipt
+   * @returns {string}
+   */
+  protected taxAmountWithheldFormatted = (receipt: SaleReceipt): string => {
+    return this.formatNumber(receipt.taxAmountWithheld, {
+      currencyCode: receipt.currencyCode,
+      excerptZero: true,
+    });
+  };
+
+  /**
+   * Retrieves the sale receipt taxes.
+   * @param {SaleReceipt} receipt
+   * @returns
+   */
+  protected taxes = (receipt: SaleReceipt) => {
+    return this.item(receipt.taxes, new SaleInvoiceTaxEntryTransformer(), {
+      subtotal: receipt.subtotal,
+      isInclusiveTax: receipt.isInclusiveTax,
+      currencyCode: receipt.currencyCode,
+    });
+  };
 }

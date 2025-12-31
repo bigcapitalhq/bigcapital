@@ -20,6 +20,7 @@ import { useCurrentOrganization } from '@/hooks/state';
 import {
   aggregateItemEntriesTaxRates,
   assignEntriesTaxAmount,
+  assignEntriesTaxRate,
   getEntriesTotal,
 } from '@/containers/Entries/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
@@ -45,9 +46,10 @@ export const defaultInvoiceEntry = {
   quantity: '',
   description: '',
   amount: '',
-  tax_rate_id: '',
+  tax_rate_ids: [],
   tax_rate: '',
   tax_amount: '',
+  tax_breakdown: [],
 };
 
 // Default invoice object.
@@ -85,30 +87,39 @@ export const defaultReqInvoiceEntry = {
   discount: '',
   quantity: '',
   description: '',
-  tax_rate_id: '',
+  tax_rate_ids: [],
 };
 
 /**
  * Transform invoice to initial values in edit mode.
+ * @param invoice - The invoice data from the API
+ * @param taxRates - Optional tax rates for calculating tax breakdown
  */
-export function transformToEditForm(invoice) {
+export function transformToEditForm(invoice, taxRates = []) {
+  const isInclusiveTax = invoice.is_inclusive_tax;
+
   const initialEntries = [
-    ...invoice.entries.map((invoice) => ({
-      ...transformToForm(invoice, defaultInvoiceEntry),
+    ...invoice.entries.map((entry) => ({
+      ...transformToForm(entry, defaultInvoiceEntry),
     })),
     ...repeatValue(
       defaultInvoiceEntry,
       Math.max(MIN_LINES_NUMBER - invoice.entries.length, 0),
     ),
   ];
+
+  // Compose entries with tax calculation when tax rates are available
   const entries = compose(
     ensureEntriesHaveEmptyLine(defaultInvoiceEntry),
+    // Calculate tax breakdown for the summary
+    assignEntriesTaxAmount(isInclusiveTax),
+    assignEntriesTaxRate(taxRates),
     updateItemsEntriesTotal,
   )(initialEntries);
 
   return {
     ...transformToForm(invoice, defaultInvoice),
-    inclusive_exclusive_tax: invoice.is_inclusive_tax
+    inclusive_exclusive_tax: isInclusiveTax
       ? TaxType.Inclusive
       : TaxType.Exclusive,
     entries,
@@ -399,14 +410,20 @@ export const resetFormState = ({ initialValues, values, resetForm }) => {
 
 /**
  * Re-calcualte the entries tax amount when editing.
- * @returns {string}
+ * Supports multiple taxes with compound tax calculation.
+ * @param {string} inclusiveExclusiveTax - 'inclusive' or 'exclusive'
+ * @param {Array} entries - The entries to recalculate
+ * @param {Array} taxRates - Available tax rates for lookup
+ * @returns {Array} - Entries with recalculated tax amounts
  */
 export const composeEntriesOnEditInclusiveTax = (
   inclusiveExclusiveTax: string,
   entries,
+  taxRates = [],
 ) => {
   return R.compose(
     assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
+    assignEntriesTaxRate(taxRates),
   )(entries);
 };
 
