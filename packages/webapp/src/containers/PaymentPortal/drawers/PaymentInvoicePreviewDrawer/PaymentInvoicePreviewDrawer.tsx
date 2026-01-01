@@ -3,7 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Position } from '@blueprintjs/core';
 import { Drawer, DrawerSuspense } from '@/components';
-import withDrawers from '@/containers/Drawer/withDrawers';
+import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { PaymentInvoicePreviewContent } from './PaymentInvoicePreviewContent';
 
 /**

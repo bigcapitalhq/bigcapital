@@ -7,8 +7,8 @@ import { DataTable, TableSkeletonRows } from '@/components';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
 import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 
-import withAlertActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 

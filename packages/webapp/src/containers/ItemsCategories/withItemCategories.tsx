@@ -4,7 +4,7 @@ import {
   getItemsCategoriesTableStateFactory,
 } from '@/store/itemCategories/ItemsCategories.selectors';
 
-export default (mapState) => {
+export const withItemCategories = (mapState) => {
   const getItemsCategoriesTableState = getItemsCategoriesTableStateFactory();
 
   const mapStateToProps = (state, props) => {

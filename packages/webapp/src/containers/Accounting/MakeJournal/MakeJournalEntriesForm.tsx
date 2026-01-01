@@ -22,8 +22,8 @@ import MakeJournalFormFooter from './MakeJournalFormFooter';
 import MakeJournalFormDialogs from './MakeJournalFormDialogs';
 import MakeJournalFormTopBar from './MakeJournalFormTopBar';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';

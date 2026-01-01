@@ -13,4 +13,4 @@ const mapActionsToProps = (dispatch) => ({
     dispatch(setAccountsSelectedRows(selectedRows)),
 });
 
-export default connect(null, mapActionsToProps);
+export const withAccountsTableActions = connect(null, mapActionsToProps);

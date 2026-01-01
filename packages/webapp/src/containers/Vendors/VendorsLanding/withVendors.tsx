@@ -5,7 +5,7 @@ import {
   vendorsTableStateChangedFactory,
 } from '@/store/vendors/vendors.selectors';
 
-export default (mapState) => {
+export const withVendors = (mapState) => {
   const getVendorsTableState = getVendorsTableStateFactory();
   const vendorsTableStateChanged = vendorsTableStateChangedFactory();
 

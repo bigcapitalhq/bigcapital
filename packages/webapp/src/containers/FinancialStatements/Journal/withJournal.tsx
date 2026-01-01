@@ -4,7 +4,7 @@ import {
   getJournalFilterDrawer,
 } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withJournal = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       journalSheetDrawerFilter: getJournalFilterDrawer(state, props),

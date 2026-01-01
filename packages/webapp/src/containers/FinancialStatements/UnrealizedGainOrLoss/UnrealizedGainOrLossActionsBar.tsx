@@ -15,8 +15,8 @@ import classNames from 'classnames';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import { useUnrealizedGainOrLossContext } from './UnrealizedGainOrLossProvider';
-import withUnrealizedGainOrLoss from './withUnrealizedGainOrLoss';
-import withUnrealizedGainOrLossActions from './withUnrealizedGainOrLossActions';
+import { withUnrealizedGainOrLoss } from './withUnrealizedGainOrLoss';
+import { withUnrealizedGainOrLossActions } from './withUnrealizedGainOrLossActions';
 
 import { compose, saveInvoke } from '@/utils';
 

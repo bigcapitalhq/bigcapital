@@ -2,7 +2,7 @@
 import React from 'react';
 import * as R from 'ramda';
 import { Drawer, DrawerHeaderContent, DrawerSuspense } from '@/components';
-import withDrawers from '@/containers/Drawer/withDrawers';
+import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { DRAWERS } from '@/constants/drawers';
 
 const TaxRateDetailsDrawerContent = React.lazy(

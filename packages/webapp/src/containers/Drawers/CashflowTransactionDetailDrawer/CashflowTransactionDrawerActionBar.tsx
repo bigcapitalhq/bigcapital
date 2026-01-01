@@ -14,7 +14,7 @@ import {
   Icon,
   If,
 } from '@/components';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import { compose } from '@/utils';
@@ -67,4 +67,4 @@ function CashflowTransactionDrawerActionBar({
   );
 }
 
-export default compose(withAlertsActions)(CashflowTransactionDrawerActionBar);
+export default compose(withAlertActions)(CashflowTransactionDrawerActionBar);

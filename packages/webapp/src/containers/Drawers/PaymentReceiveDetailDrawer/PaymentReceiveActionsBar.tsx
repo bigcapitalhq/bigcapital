@@ -11,9 +11,9 @@ import {
 
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { PaymentReceiveMoreMenuItems } from './utils';
 import {
   Can,
@@ -33,7 +33,7 @@ import { DRAWERS } from '@/constants/drawers';
  * Payment receive actions bar.
  */
 function PaymentsReceivedActionsBar({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -131,5 +131,5 @@ function PaymentsReceivedActionsBar({
 export default compose(
   withDialogActions,
   withDrawerActions,
-  withAlertsActions,
+  withAlertActions,
 )(PaymentsReceivedActionsBar);

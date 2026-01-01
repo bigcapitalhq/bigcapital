@@ -8,7 +8,7 @@ import { DashboardContentTable, DashboardPageContent } from '@/components';
 import { InventoryAdjustmentsProvider } from './InventoryAdjustmentsProvider';
 import InventoryAdjustmentTable from './InventoryAdjustmentTable';
 
-import withInventoryAdjustments from './withInventoryAdjustments';
+import { withInventoryAdjustments } from './withInventoryAdjustments';
 
 import { compose, transformTableStateToQuery } from '@/utils';
 

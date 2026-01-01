@@ -11,4 +11,4 @@ const mapDipatchToProps = (dispatch) => ({
   resetWarehouseTransferTableState: () => dispatch(resetWarehouseTransferTableState()),
 });
 
-export default connect(null, mapDipatchToProps);
+export const withWarehouseTransfersActions = connect(null, mapDipatchToProps);

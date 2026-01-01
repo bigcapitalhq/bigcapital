@@ -7,8 +7,8 @@ import { Intent } from '@blueprintjs/core';
 import { flatten, unflatten } from 'flat';
 
 import { AppToaster } from '@/components';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import AccountantForm from './AccountantForm';
 import { AccountantSchema } from './Accountant.schema';

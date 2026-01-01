@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { DataTable, AppToaster, TableSkeletonRows } from '@/components';
 
 import { useRolesTableColumns, ActionsMenu } from './components';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useRolesContext } from './RolesListProvider';
 
 import { compose } from '@/utils';
@@ -17,7 +17,7 @@ import { compose } from '@/utils';
  * Roles data table.
  */
 function RolesDataTable({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   // History context.
@@ -75,4 +75,4 @@ const RolesTable = styled(DataTable)`
   }
 `;
 
-export default compose(withAlertsActions)(RolesDataTable);
+export default compose(withAlertActions)(RolesDataTable);

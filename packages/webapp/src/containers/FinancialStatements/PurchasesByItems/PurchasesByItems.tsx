@@ -12,7 +12,7 @@ import { PurchasesByItemsBody } from './PurchasesByItemsBody';
 import { usePurchasesByItemsQuery } from './utils';
 import { compose } from '@/utils';
 
-import withPurchasesByItemsActions from './withPurchasesByItemsActions';
+import { withPurchasesByItemsActions } from './withPurchasesByItemsActions';
 import { PurchasesByItemsDialogs } from './PurchasesByItemsDialogs';
 
 /**

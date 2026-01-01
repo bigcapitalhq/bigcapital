@@ -7,8 +7,8 @@ import { useDeleteLandedCost } from '@/hooks/query';
 
 import { AppToaster } from '@/components';
 
-import withAlertActions from '@/containers/Alert/withAlertActions';
-import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 
 import { compose } from '@/utils';
 

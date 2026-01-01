@@ -13,8 +13,8 @@ import {
   FFormGroup,
 } from '@/components';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 /**
  * Journal number field of make journal form.

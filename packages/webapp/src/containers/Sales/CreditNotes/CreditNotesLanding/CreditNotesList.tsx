@@ -7,8 +7,8 @@ import { DashboardPageContent } from '@/components';
 import CreditNotesActionsBar from './CreditNotesActionsBar';
 import CreditNotesDataTable from './CreditNotesDataTable';
 
-import withCreditNotes from './withCreditNotes';
-import withCreditNotesActions from './withCreditNotesActions';
+import { withCreditNotes } from './withCreditNotes';
+import { withCreditNotesActions } from './withCreditNotesActions';
 
 import { CreditNotesListProvider } from './CreditNotesListProvider';
 import { transformTableStateToQuery, compose } from '@/utils';

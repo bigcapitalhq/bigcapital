@@ -13,4 +13,4 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch({ type: t.CLOSE_DRAWER, name, payload }),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withDrawerActions = connect(null, mapDispatchToProps);

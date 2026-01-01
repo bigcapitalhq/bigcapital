@@ -19,4 +19,4 @@ export const mapDispatchToProps: MapDispatchToProps<
     dispatch(changePlansPeriod({ period })),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withSubscriptionPlansActions = connect(null, mapDispatchToProps);

@@ -37,12 +37,12 @@ import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useAppShellContext } from '@/components/AppShell/AppContentShell/AppContentShellProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withBankingActions } from '../withBankingActions';
 import { withBanking } from '../withBanking';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import {
   useUpdateBankAccount,
   useExcludeUncategorizedTransactions,

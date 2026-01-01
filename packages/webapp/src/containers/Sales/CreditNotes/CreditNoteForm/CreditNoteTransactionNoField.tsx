@@ -11,8 +11,8 @@ import {
   FFormGroup,
   FInputGroup,
 } from '@/components';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 /**
  * Credit note transaction number field.

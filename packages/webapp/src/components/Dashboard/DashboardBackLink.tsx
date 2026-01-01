@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { If, Icon } from '@/components';
 import { FormattedMessage as T } from '@/components';
-import withDashboard from '@/containers/Dashboard/withDashboard';
+import { withDashboard } from '@/containers/Dashboard/withDashboard';
 import { compose } from '@/utils';
 
 function DashboardBackLink({ dashboardBackLink, breadcrumbs }) {

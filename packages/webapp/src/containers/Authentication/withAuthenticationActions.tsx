@@ -11,4 +11,4 @@ const mapDispatchToProps = (dispatch) => ({
   // requestInviteMetaByToken: (token) => dispatch(inviteMetaByToken({ token })),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withAuthenticationActions = connect(null, mapDispatchToProps);

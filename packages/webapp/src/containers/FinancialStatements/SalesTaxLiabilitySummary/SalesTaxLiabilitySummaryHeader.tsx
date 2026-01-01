@@ -14,8 +14,8 @@ import {
   getDefaultSalesTaxLiablitySummaryQuery,
   getSalesTaxLiabilitySummaryQueryValidation,
 } from './utils';
-import withSalesTaxLiabilitySummary from './withSalesTaxLiabilitySummary';
-import withSalesTaxLiabilitySummaryActions from './withSalesTaxLiabilitySummaryActions';
+import { withSalesTaxLiabilitySummary } from './withSalesTaxLiabilitySummary';
+import { withSalesTaxLiabilitySummaryActions } from './withSalesTaxLiabilitySummaryActions';
 import { SalesTaxLiabilitySummaryHeaderGeneral } from './SalesTaxLiabilitySummaryHeaderGeneralPanel';
 
 /**

@@ -14,7 +14,7 @@ import {
   GeneralLedgerSheetLoadingBar,
 } from './components';
 
-import withGeneralLedgerActions from './withGeneralLedgerActions';
+import { withGeneralLedgerActions } from './withGeneralLedgerActions';
 import { compose } from '@/utils';
 import { GeneralLedgerPdfDialog } from './dialogs/GeneralLedgerPdfDialog';
 import { DialogsName } from '@/constants/dialogs';

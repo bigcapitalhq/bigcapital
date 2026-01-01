@@ -11,7 +11,7 @@ import { AppIntlProvider } from './AppIntlProvider';
 import { useSplashLoading } from '@/hooks/state';
 
 import { useWatchImmediate } from '../hooks';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 const SUPPORTED_LOCALES = [
   { name: 'English', value: 'en' },

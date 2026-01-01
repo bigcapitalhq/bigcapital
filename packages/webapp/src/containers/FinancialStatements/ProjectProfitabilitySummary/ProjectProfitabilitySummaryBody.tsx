@@ -6,7 +6,7 @@ import { FinancialReportBody } from '../FinancialReportPage';
 import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useProjectProfitabilitySummaryContext } from './ProjectProfitabilitySummaryProvider';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { compose } from '@/utils';
 

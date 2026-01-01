@@ -11,9 +11,9 @@ import {
 
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import {
   SaleEstimateAction,
   AbilitySubject,
@@ -38,7 +38,7 @@ function EstimateDetailActionsBar({
   // #withDialogActions
   openDialog,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -146,6 +146,6 @@ function EstimateDetailActionsBar({
 
 export default compose(
   withDialogActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
 )(EstimateDetailActionsBar);

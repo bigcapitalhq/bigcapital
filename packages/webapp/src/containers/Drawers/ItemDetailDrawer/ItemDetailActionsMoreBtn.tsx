@@ -15,7 +15,7 @@ import {
   InventoryAdjustmentAction,
 } from '@/constants/abilityOption';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 /**
  * Invoice details more actions menu.

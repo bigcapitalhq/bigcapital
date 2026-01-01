@@ -11,7 +11,7 @@ import PreferencesContentRoute from '@/components/Preferences/PreferencesContent
 import DashboardErrorBoundary from '@/components/Dashboard/DashboardErrorBoundary';
 import PreferencesSidebar from '@/components/Preferences/PreferencesSidebar';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 import '@/style/pages/Preferences/Page.scss';
 

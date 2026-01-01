@@ -29,11 +29,11 @@ import { useItemsListContext } from './ItemsListProvider';
 import { useRefreshItems } from '@/hooks/query/items';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
-import withItems from './withItems';
-import withItemsActions from './withItemsActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withDialogActions from '../Dialog/withDialogActions';
+import { withItems } from './withItems';
+import { withItemsActions } from './withItemsActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '../Dialog/withDialogActions';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';

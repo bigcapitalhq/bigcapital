@@ -7,7 +7,7 @@ import * as R from 'ramda';
 import { DataTable, CurrencyTag, TableSkeletonRows } from '@/components';
 import { TableStyle } from '@/constants';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { useGLEntriesTableColumns } from './utils';
 
 /**

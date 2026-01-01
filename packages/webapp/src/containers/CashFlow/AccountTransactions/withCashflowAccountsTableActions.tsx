@@ -13,4 +13,4 @@ const mapActionsToProps = (dispatch) => ({
     dispatch(resetCashflowAccountsTableState()),
 });
 
-export default connect(null, mapActionsToProps);
+export const withCashflowAccountsTableActions = connect(null, mapActionsToProps);

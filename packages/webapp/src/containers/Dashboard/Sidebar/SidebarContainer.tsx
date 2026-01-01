@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
 import classNames from 'classnames';
 
-import withDashboard from '@/containers/Dashboard/withDashboard';
+import { withDashboard } from '@/containers/Dashboard/withDashboard';
 
 import { useObserveSidebarExpendedBodyclass } from './hooks';
 import { compose } from '@/utils';

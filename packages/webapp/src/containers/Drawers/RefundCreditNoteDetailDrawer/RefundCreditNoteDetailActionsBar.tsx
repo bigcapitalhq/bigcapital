@@ -4,7 +4,7 @@ import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
 
 import { useRefundCreditNoteDrawerContext } from './RefundCreditNoteDrawerProvider';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import {
   Icon,
   DrawerActionsBar,
@@ -19,7 +19,7 @@ import { compose } from '@/utils';
  * Refund credit note actions bar.
  */
 function RefundCreditNoteDetailActionsBar({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   const { refundTransactionId } = useRefundCreditNoteDrawerContext();
@@ -46,4 +46,4 @@ function RefundCreditNoteDetailActionsBar({
   );
 }
 
-export default compose(withAlertsActions)(RefundCreditNoteDetailActionsBar);
+export default compose(withAlertActions)(RefundCreditNoteDetailActionsBar);

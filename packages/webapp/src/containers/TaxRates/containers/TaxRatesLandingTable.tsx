@@ -9,11 +9,11 @@ import {
   AppToaster,
 } from '@/components';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { useTaxRatesTableColumns } from './_utils';
 import { useTaxRatesLandingContext } from './TaxRatesLandingProvider';
@@ -32,7 +32,7 @@ import {
  * Invoices datatable.
  */
 function TaxRatesDataTable({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -139,7 +139,7 @@ function TaxRatesDataTable({
 
 export default compose(
   withDashboardActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withDialogActions,
   withSettings(({ invoiceSettings }) => ({

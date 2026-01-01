@@ -15,9 +15,9 @@ import { CreateMoneyOutSchema } from './MoneyOutForm.schema';
 
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { compose, transactionNumber } from '@/utils';
 

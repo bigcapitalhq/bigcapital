@@ -13,13 +13,13 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 
 import CreditNoteEmptyStatus from './CreditNotesEmptyStatus';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withCreditNotesActions from './withCreditNotesActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withCreditNotes from './withCreditNotes';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withCreditNotesActions } from './withCreditNotesActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withCreditNotes } from './withCreditNotes';
 
 import { useCreditNoteTableColumns, ActionsMenu } from './components';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
@@ -35,7 +35,7 @@ function CreditNotesDataTable({
   setCreditNotesTableState,
   setCreditNotesSelectedRows,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -171,7 +171,7 @@ export default compose(
   withDashboardActions,
   withCreditNotesActions,
   withDrawerActions,
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
   withSettings(({ creditNoteSettings }) => ({
     creditNoteTableSize: creditNoteSettings?.tableSize,

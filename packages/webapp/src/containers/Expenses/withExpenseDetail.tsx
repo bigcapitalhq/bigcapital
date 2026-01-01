@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getExpenseByIdFactory } from '@/store/expenses/expenses.selectors';
 
-export default () => {
+export const withExpenseDetail = () => {
   const getExpenseById = getExpenseByIdFactory();
 
   const mapStateToProps = (state, props) => ({

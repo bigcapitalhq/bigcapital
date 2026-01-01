@@ -11,9 +11,9 @@ import { TABLES } from '@/constants/tables';
 import { useProjectTimesheetColumns } from './hooks';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useProjectTimesheetContext } from './ProjectTimesheetsProvider';
-import withSettings from '@/containers/Settings/withSettings';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
@@ -28,7 +28,7 @@ function ProjectTimesheetsTableRoot({
 
   // #withDialog
   openDialog,
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   const { projectTimeEntries } = useProjectTimesheetContext();
@@ -70,7 +70,7 @@ function ProjectTimesheetsTableRoot({
   );
 }
 export const ProjectTimesheetsTable = compose(
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
   withSettings(({ timesheetsSettings }) => ({
     timesheetsTableSize: timesheetsSettings?.tableSize,

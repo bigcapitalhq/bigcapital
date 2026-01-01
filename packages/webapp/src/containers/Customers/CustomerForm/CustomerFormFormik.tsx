@@ -18,7 +18,7 @@ import CustomerFormAfterPrimarySection from './CustomerFormAfterPrimarySection';
 import CustomersTabs from './CustomersTabs';
 import CustomerFloatingActions from './CustomerFloatingActions';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import '@/style/pages/Customers/Form.scss';
 

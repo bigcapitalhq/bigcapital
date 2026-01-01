@@ -4,7 +4,7 @@ import {
   getARAgingSummaryFilterDrawer,
 } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withARAgingSummary = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       ARAgingSummaryFilterDrawer: getARAgingSummaryFilterDrawer(state, props),

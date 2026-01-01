@@ -14,9 +14,9 @@ import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import withPurchasesByItems from './withPurchasesByItems';
-import withPurchasesByItemsActions from './withPurchasesByItemsActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withPurchasesByItems } from './withPurchasesByItems';
+import { withPurchasesByItemsActions } from './withPurchasesByItemsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, saveInvoke } from '@/utils';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import { PurchasesByItemsExportMenu } from './components';

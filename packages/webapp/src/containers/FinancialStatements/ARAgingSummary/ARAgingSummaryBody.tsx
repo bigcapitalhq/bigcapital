@@ -7,7 +7,7 @@ import { FinancialReportBody } from '../FinancialReportPage';
 import { FinancialSheetSkeleton } from '@/components';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * A/R Aging summary body.

@@ -6,4 +6,4 @@ export const mapDispatchToProps = (dispatch) => ({
   requestSubmitBilling: (form) => dispatch(submitBilling({ form })),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withBillingActions = connect(null, mapDispatchToProps);

@@ -8,8 +8,8 @@ import { useCurrenciesContext } from './CurrenciesProvider';
 
 import { ActionMenuList, useCurrenciesTableColumns } from './components';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import styled from 'styled-components';
 
 /**

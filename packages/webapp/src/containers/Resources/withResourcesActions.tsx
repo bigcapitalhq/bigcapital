@@ -12,4 +12,4 @@ export const mapDispatchToProps = (dispatch) => ({
   requestResourceData: (resourceSlug) => dispatch(fetchResourceData({ resourceSlug })),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withResourcesActions = connect(null, mapDispatchToProps);

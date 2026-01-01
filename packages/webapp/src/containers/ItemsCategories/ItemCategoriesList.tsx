@@ -9,7 +9,7 @@ import { ItemsCategoriesProvider } from './ItemsCategoriesProvider';
 
 import ItemCategoriesTable from './ItemCategoriesTable';
 import ItemsCategoryActionsBar from './ItemsCategoryActionsBar';
-import withItemsCategories from './withItemCategories';
+import { withItemsCategories } from './withItemCategories';
 
 /**
  * Item categories list.

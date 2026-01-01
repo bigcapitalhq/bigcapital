@@ -8,7 +8,7 @@ import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 
 /**

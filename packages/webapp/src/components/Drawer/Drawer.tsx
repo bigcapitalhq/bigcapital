@@ -5,7 +5,7 @@ import { Position, Drawer } from '@blueprintjs/core';
 import '@/style/components/Drawer.scss';
 
 import { DrawerProvider } from './DrawerProvider';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { compose } from '@/utils';
 
 /**

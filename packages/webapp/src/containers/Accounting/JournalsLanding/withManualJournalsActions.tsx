@@ -12,4 +12,4 @@ const mapActionsToProps = (dispatch) => ({
     dispatch(setManualJournalsSelectedRows(selectedRows)),
 });
 
-export default connect(null, mapActionsToProps);
+export const withManualJournalsActions = connect(null, mapActionsToProps);

@@ -12,4 +12,4 @@ const mapDispatchToProps = (dispatch) => ({
   setEstimatesSelectedRows: (selectedRows) => dispatch(setEstimatesSelectedRows(selectedRows)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withEstimatesActions = connect(null, mapDispatchToProps);

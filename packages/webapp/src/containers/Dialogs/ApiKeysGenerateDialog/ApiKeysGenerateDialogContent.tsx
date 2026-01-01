@@ -8,7 +8,7 @@ import { useGenerateApiKey } from '@/hooks/query';
 import ApiKeysGenerateFormContent from './ApiKeysGenerateFormContent';
 import ApiKeysGenerateFormSchema from './ApiKeysGenerateForm.schema';
 import ApiKeyDisplayView from './ApiKeyDisplayView';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 const defaultInitialValues = {

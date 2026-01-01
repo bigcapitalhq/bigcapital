@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getPaymentMadeByIdFactory } from '@/store/PaymentMades/paymentMade.selector';
 
-export default () => {
+export const withPaymentMadeDetail = () => {
   const getPaymentMadeById = getPaymentMadeByIdFactory();
 
   const mapStateToProps = (state, props) => ({

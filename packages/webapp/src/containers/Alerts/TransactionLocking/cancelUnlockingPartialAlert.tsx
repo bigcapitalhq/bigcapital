@@ -6,8 +6,8 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 
 import { useCancelUnlockingPartialTransactions } from '@/hooks/query';
 
-import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { compose } from '@/utils';
 

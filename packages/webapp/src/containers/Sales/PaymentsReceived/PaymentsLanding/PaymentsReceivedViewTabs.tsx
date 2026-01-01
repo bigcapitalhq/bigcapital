@@ -5,8 +5,8 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { FormattedMessage as T, DashboardViewsTabs } from '@/components';
 import { pick } from 'lodash';
 
-import withPaymentsReceived from './withPaymentsReceived';
-import withPaymentsReceivedActions from './withPaymentsReceivedActions';
+import { withPaymentsReceived } from './withPaymentsReceived';
+import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 
 import { compose } from '@/utils';

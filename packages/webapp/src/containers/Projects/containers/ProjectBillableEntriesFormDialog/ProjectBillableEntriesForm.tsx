@@ -6,7 +6,7 @@ import { Formik } from 'formik';
 import { AppToaster } from '@/components';
 import { ProjectBillableEntriesFormSchema } from './ProjectBillableEntriesForm.schema';
 import ProjectBillableEntriesFormContent from './ProjectBillableEntriesFormContent';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 

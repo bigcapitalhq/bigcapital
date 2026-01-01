@@ -16,9 +16,9 @@ import PaymentReceiveFormDialogs from './PaymentReceiveFormDialogs';
 import PaymentReceiveFormTopBar from './PaymentReceiveFormTopBar';
 import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import {
   EditPaymentReceiveFormSchema,

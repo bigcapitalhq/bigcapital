@@ -12,7 +12,7 @@ import { transformErrors } from './utils';
 import BranchFormContent from './BranchFormContent';
 import { useBranchFormContext } from './BranchFormProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues = {

@@ -12,13 +12,13 @@ import {
   TableSkeletonRows,
 } from '@/components';
 
-import withInvoices from './withInvoices';
-import withInvoiceActions from './withInvoiceActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withInvoices } from './withInvoices';
+import { withInvoiceActions } from './withInvoiceActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useInvoicesTableColumns, ActionsMenu } from './components';
@@ -39,7 +39,7 @@ function InvoicesDataTable({
   // #withInvoices
   invoicesTableState,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -186,7 +186,7 @@ function InvoicesDataTable({
 export default compose(
   withDashboardActions,
   withInvoiceActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withDialogActions,
   withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),

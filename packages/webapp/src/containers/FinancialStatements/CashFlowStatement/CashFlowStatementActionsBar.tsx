@@ -15,12 +15,12 @@ import classNames from 'classnames';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
-import withCashFlowStatement from './withCashFlowStatement';
-import withCashFlowStatementActions from './withCashFlowStatementActions';
+import { withCashFlowStatement } from './withCashFlowStatement';
+import { withCashFlowStatementActions } from './withCashFlowStatementActions';
 
 import { compose, saveInvoke } from '@/utils';
 import { CashflowSheetExportMenu } from './components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 /**

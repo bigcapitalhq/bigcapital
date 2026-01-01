@@ -17,11 +17,11 @@ import {
 } from '@/components';
 import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
 
-import withProjects from './withProjects';
-import withProjectsActions from './withProjectsActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withProjects } from './withProjects';
+import { withProjectsActions } from './withProjectsActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';

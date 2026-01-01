@@ -7,4 +7,4 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleJournalSheeetFilterDrawer(toggle)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withJournalActions = connect(null, mapDispatchToProps);

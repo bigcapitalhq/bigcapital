@@ -7,8 +7,8 @@ import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
 import { useInvoicesListContext } from './InvoicesListProvider';
 
-import withInvoices from './withInvoices';
-import withInvoiceActions from './withInvoiceActions';
+import { withInvoices } from './withInvoices';
+import { withInvoiceActions } from './withInvoiceActions';
 
 /**
  * Invoices views tabs.

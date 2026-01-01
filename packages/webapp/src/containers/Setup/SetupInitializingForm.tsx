@@ -9,9 +9,9 @@ import { useIsDarkMode } from '@/hooks/useDarkMode';
 import { useJob, useCurrentOrganization } from '@/hooks/query';
 import { FormattedMessage as T } from '@/components';
 
-import withOrganizationActions from '@/containers/Organization/withOrganizationActions';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-import withOrganization from '../Organization/withOrganization';
+import { withOrganizationActions } from '@/containers/Organization/withOrganizationActions';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { withOrganization } from '../Organization/withOrganization';
 
 /**
  * Setup initializing step form.

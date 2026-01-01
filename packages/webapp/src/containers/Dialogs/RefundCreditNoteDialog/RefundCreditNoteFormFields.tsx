@@ -47,7 +47,7 @@ import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Refund credit note form fields.

@@ -10,4 +10,4 @@ export const mapDispatchToProps = (dispatch) => ({
   requestDeleteMedia: (ids) => dispatch(deleteMedia({ ids })),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withMediaActions = connect(null, mapDispatchToProps);

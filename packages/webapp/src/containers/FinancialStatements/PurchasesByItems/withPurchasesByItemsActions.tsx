@@ -7,4 +7,4 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(togglePurchasesByItemsFilterDrawer(toggle)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withPurchasesByItemsActions = connect(null, mapDispatchToProps);

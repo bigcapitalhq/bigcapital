@@ -12,7 +12,7 @@ import { CreateUnlockingTransactionsFormSchema } from './UnlockingTransactionsFo
 import { useUnlockingTransactionsContext } from './UnlockingTransactionsFormProvider';
 import UnlockingTransactionsFormContent from './UnlockingTransactionsFormContent';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 const defaultInitialValues = {

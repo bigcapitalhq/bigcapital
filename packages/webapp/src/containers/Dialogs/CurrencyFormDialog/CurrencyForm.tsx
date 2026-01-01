@@ -11,7 +11,7 @@ import {
   CreateCurrencyFormSchema,
   EditCurrencyFormSchema,
 } from './CurrencyForm.schema';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose, transformToForm } from '@/utils';
 

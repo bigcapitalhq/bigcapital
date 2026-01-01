@@ -21,10 +21,10 @@ import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
 import DashboardBreadcrumbs from '@/components/Dashboard/DashboardBreadcrumbs';
 import DashboardBackLink from '@/components/Dashboard/DashboardBackLink';
 
-import withUniversalSearchActions from '@/containers/UniversalSearch/withUniversalSearchActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withDashboard from '@/containers/Dashboard/withDashboard';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withDashboard } from '@/containers/Dashboard/withDashboard';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import QuickNewDropdown from '@/containers/QuickNewDropdown/QuickNewDropdown';
 import {

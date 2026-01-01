@@ -13,9 +13,9 @@ import {
 
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import {
   If,
@@ -43,7 +43,7 @@ function InvoiceDetailActionsBar({
   // #withDialogActions
   openDialog,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -191,5 +191,5 @@ function InvoiceDetailActionsBar({
 export default compose(
   withDialogActions,
   withDrawerActions,
-  withAlertsActions,
+  withAlertActions,
 )(InvoiceDetailActionsBar);

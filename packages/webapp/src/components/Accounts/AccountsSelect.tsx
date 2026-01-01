@@ -6,7 +6,7 @@ import { MenuItem } from '@blueprintjs/core';
 import { MenuItemNestedText, FSelect } from '@/components';
 import { accountPredicate } from './_components';
 import { DialogsName } from '@/constants/dialogs';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePreprocessingAccounts } from './_hooks';
 
 // Create new account renderer.

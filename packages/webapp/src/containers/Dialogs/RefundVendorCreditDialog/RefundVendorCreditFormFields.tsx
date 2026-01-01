@@ -30,7 +30,7 @@ import { useAutofocus } from '@/hooks';
 import { Features, ACCOUNT_TYPE } from '@/constants';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Refund Vendor credit form fields.

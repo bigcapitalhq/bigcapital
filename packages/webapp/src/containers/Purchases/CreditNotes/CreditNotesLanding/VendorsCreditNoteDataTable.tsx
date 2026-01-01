@@ -12,13 +12,13 @@ import {
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
-import withVendorsCreditNotes from './withVendorsCreditNotes';
-import withSettings from '@/containers/Settings/withSettings';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
+import { withVendorsCreditNotes } from './withVendorsCreditNotes';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
@@ -37,7 +37,7 @@ function VendorsCreditNoteDataTable({
   // #withVendorCredits
   vendorsCreditNoteTableState,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -165,7 +165,7 @@ function VendorsCreditNoteDataTable({
 export default compose(
   withDashboardActions,
   withVendorsCreditNotesActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withDialogActions,
   withSettings(({ vendorsCreditNoteSetting }) => ({

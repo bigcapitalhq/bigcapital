@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import * as R from 'ramda';
 
 import { ButtonLink } from '@/components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 function ProjectBillableEntriesLinkComponent({
   // #ownProps

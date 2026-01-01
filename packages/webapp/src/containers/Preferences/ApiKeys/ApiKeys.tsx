@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import ApiKeysDataTable from './ApiKeysDataTable';
 import { compose } from '@/utils';
 

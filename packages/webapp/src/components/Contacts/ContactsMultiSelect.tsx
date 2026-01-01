@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import * as R from 'ramda';
 import { FMultiSelect } from '../Forms';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 
 /**

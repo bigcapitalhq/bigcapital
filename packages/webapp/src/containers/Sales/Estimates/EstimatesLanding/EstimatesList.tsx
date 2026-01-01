@@ -7,8 +7,8 @@ import '@/style/pages/SaleEstimate/List.scss';
 import EstimatesActionsBar from './EstimatesActionsBar';
 import EstimatesDataTable from './EstimatesDataTable';
 
-import withEstimates from './withEstimates';
-import withEstimatesActions from './withEstimatesActions';
+import { withEstimates } from './withEstimates';
+import { withEstimatesActions } from './withEstimatesActions';
 
 import { EstimatesListProvider } from './EstimatesListProvider';
 import { compose, transformTableStateToQuery } from '@/utils';

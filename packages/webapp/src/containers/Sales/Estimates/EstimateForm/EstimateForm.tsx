@@ -22,8 +22,8 @@ import {
   EstimateSyncAutoExRateToForm,
 } from './components';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
 import { compose, transactionNumber, orderingLinesIndexes } from '@/utils';

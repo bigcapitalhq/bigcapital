@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Position, Checkbox, InputGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
@@ -7,23 +7,29 @@ import intl from 'react-intl-universal';
 import { isUndefined } from 'lodash';
 
 import { useAutofocus } from '@/hooks';
-import { T, Choose, ListSelect } from '@/components';
+import { T, Choose } from '@/components';
+import { Select } from '@/components/Forms';
 import { momentFormatter } from '@/utils';
 
 function AdvancedFilterEnumerationField({ options, value, ...rest }) {
+  const selectedItem = useMemo(
+    () => options.find((opt) => opt.key === value) || null,
+    [options, value],
+  );
+
   return (
-    <ListSelect
+    <Select
       items={options}
-      selectedItem={value}
+      selectedItem={selectedItem}
       popoverProps={{
         fill: true,
         inline: true,
         minimal: true,
         captureDismiss: true,
       }}
-      defaultText={<T id={'filter.select_option'} />}
-      textProp={'label'}
-      selectedItemProp={'key'}
+      placeholder={<T id={'filter.select_option'} />}
+      textAccessor={'label'}
+      valueAccessor={'key'}
       {...rest}
     />
   );

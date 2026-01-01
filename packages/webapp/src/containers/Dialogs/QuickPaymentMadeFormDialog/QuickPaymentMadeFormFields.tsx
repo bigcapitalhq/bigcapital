@@ -33,7 +33,7 @@ import { inputIntent, momentFormatter } from '@/utils';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { compose } from '@/utils';
 
 /**

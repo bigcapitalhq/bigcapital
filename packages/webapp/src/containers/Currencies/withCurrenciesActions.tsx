@@ -15,4 +15,4 @@ export const mapDispatchToProps = (dispatch) => ({
   requestDeleteCurrency: (currency_code) => dispatch(deleteCurrency({ currency_code })),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withCurrenciesActions = connect(null, mapDispatchToProps);

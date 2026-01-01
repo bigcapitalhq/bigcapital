@@ -9,7 +9,7 @@ import { ElementCustomizeTabs } from './ElementCustomizeTabs';
 import { useElementCustomizeTabsController } from './ElementCustomizeTabsController';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useElementCustomizeContext } from './ElementCustomizeProvider';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import styles from './ElementCustomize.module.scss';
 
 export function ElementCustomizeFields() {

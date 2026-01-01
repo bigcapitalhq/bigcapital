@@ -7,4 +7,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setInventoryAdjustmentsTableState(queries)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withInventoryAdjustmentActions = connect(null, mapDispatchToProps);

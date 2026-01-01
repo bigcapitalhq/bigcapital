@@ -7,7 +7,7 @@ import { FinancialStatement, DashboardPageContent } from '@/components';
 import CustomersTransactionsHeader from './CustomersTransactionsHeader';
 import CustomersTransactionsActionsBar from './CustomersTransactionsActionsBar';
 
-import withCustomersTransactionsActions from './withCustomersTransactionsActions';
+import { withCustomersTransactionsActions } from './withCustomersTransactionsActions';
 import { CustomersTransactionsLoadingBar } from './components';
 import { CustomersTransactionsBody } from './CustomersTransactionsBody';
 import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';

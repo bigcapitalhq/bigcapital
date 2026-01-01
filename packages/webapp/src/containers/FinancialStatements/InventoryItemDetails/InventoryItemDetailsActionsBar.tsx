@@ -16,12 +16,12 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { InventoryItemDetailsExportMenu } from './components';
 
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
-import withInventoryItemDetails from './withInventoryItemDetails';
-import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
+import { withInventoryItemDetails } from './withInventoryItemDetails';
+import { withInventoryItemDetailsActions } from './withInventoryItemDetailsActions';
 
 import { compose, saveInvoke } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 /**
  * Inventory item details actions bar.

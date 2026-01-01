@@ -13,12 +13,12 @@ import {
 
 import PaymentReceivesEmptyStatus from './PaymentsReceivedEmptyStatus';
 
-import withPaymentsReceived from './withPaymentsReceived';
-import withPaymentsReceivedActions from './withPaymentsReceivedActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withPaymentsReceived } from './withPaymentsReceived';
+import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
@@ -37,7 +37,7 @@ function PaymentsReceivedDataTable({
   // #withPaymentsReceived
   paymentReceivesTableState,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -157,7 +157,7 @@ function PaymentsReceivedDataTable({
 
 export default compose(
   withPaymentsReceivedActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withDialogActions,
   withPaymentsReceived(({ paymentReceivesTableState }) => ({

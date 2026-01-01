@@ -9,8 +9,8 @@ import { FormattedMessage as T } from '@/components';
 import FinancialStatementHeader from '../FinancialStatementHeader';
 import VendorsTransactionsHeaderGeneralPanel from './VendorsTransactionsHeaderGeneralPanel';
 
-import withVendorsTransaction from './withVendorsTransaction';
-import withVendorsTransactionsActions from './withVendorsTransactionsActions';
+import { withVendorsTransaction } from './withVendorsTransaction';
+import { withVendorsTransactionsActions } from './withVendorsTransactionsActions';
 
 import { compose, transformToForm } from '@/utils';
 import {

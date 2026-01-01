@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getVendorsTransactionsFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withVendorsTransaction = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       vendorsTransactionsDrawerFilter: getVendorsTransactionsFilterDrawer(

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useRefundVendorCreditNoteDrawerContext } from './RefundVendorCreditDrawerProvider';
 import {
   Icon,
@@ -18,7 +18,7 @@ import { compose } from '@/utils';
  * Refund vendor credit actions bar.
  */
 function RefundVendorCreditDetailActionsBar({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   const { refundTransactionId } = useRefundVendorCreditNoteDrawerContext();
@@ -45,4 +45,4 @@ function RefundVendorCreditDetailActionsBar({
   );
 }
 
-export default compose(withAlertsActions)(RefundVendorCreditDetailActionsBar);
+export default compose(withAlertActions)(RefundVendorCreditDetailActionsBar);

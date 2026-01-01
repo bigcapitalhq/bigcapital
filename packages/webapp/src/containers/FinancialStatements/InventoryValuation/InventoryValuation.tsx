@@ -12,8 +12,8 @@ import { InventoryValuationLoadingBar } from './components';
 import { useInventoryValuationQuery } from './utils';
 import { compose } from '@/utils';
 
-import withInventoryValuationActions from './withInventoryValuationActions';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withInventoryValuationActions } from './withInventoryValuationActions';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { InventoryValuationDialogs } from './InventoryValuationDialogs';
 
 /**

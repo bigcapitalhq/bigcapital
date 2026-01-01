@@ -5,7 +5,7 @@ import { Button, Classes, Intent } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import { FormatNumber } from '@/components';
 import { usePaymentMadeFormContext } from '../../PaymentMadeFormProvider';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePaymentMadeExcessAmount } from '../../utils';
 
 interface ExcessPaymentValues {}

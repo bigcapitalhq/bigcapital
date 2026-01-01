@@ -8,8 +8,8 @@ import { UniversalSearch } from '@/components';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { compose } from '@/utils';
-import withUniversalSearchActions from './withUniversalSearchActions';
-import withUniversalSearch from './withUniversalSearch';
+import { withUniversalSearchActions } from './withUniversalSearchActions';
+import { withUniversalSearch } from './withUniversalSearch';
 
 import { useGetUniversalSearchTypeOptions } from './utils';
 import DashboardUniversalSearchItemActions from './DashboardUniversalSearchItemActions';

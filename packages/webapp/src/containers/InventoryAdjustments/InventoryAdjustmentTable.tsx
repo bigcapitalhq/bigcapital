@@ -8,10 +8,10 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
 import { useInventoryAdjustmentsContext } from './InventoryAdjustmentsProvider';
 
-import withInventoryAdjustments from './withInventoryAdjustments';
-import withInventoryAdjustmentActions from './withInventoryAdjustmentActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withInventoryAdjustments } from './withInventoryAdjustments';
+import { withInventoryAdjustmentActions } from './withInventoryAdjustmentActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -26,7 +26,7 @@ function InventoryAdjustmentDataTable({
   // #withInventoryAdjustments
   inventoryAdjustmentTableState,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -112,7 +112,7 @@ function InventoryAdjustmentDataTable({
 }
 
 export default compose(
-  withAlertsActions,
+  withAlertActions,
   withInventoryAdjustmentActions,
   withDrawerActions,
   withInventoryAdjustments(({ inventoryAdjustmentTableState }) => ({

@@ -4,8 +4,8 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
 
-import withProjects from './withProjects';
-import withProjectsActions from './withProjectsActions';
+import { withProjects } from './withProjects';
+import { withProjectsActions } from './withProjectsActions';
 import { useProjectsListContext } from './ProjectsListProvider';
 
 import { compose, transfromViewsToTabs } from '@/utils';

@@ -5,9 +5,9 @@ import { pick } from 'lodash';
 
 import { DashboardViewsTabs } from '@/components';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
-import withManualJournals from './withManualJournals';
-import withManualJournalsActions from './withManualJournalsActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withManualJournals } from './withManualJournals';
+import { withManualJournalsActions } from './withManualJournalsActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 import { compose } from '@/utils';
 

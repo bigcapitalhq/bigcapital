@@ -12,4 +12,4 @@ export const mapDispatchToProps = (dispatch) => ({
   addSetting: (group, key, value) => dispatch(addSettings(group, key, value)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withSettingsActions = connect(null, mapDispatchToProps);

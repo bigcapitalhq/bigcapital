@@ -6,8 +6,8 @@ import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 
-import withProjectProfitabilitySummary from './withProjectProfitabilitySummary';
-import withProjectProfitabilitySummaryActions from './withProjectProfitabilitySummaryActions';
+import { withProjectProfitabilitySummary } from './withProjectProfitabilitySummary';
+import { withProjectProfitabilitySummaryActions } from './withProjectProfitabilitySummaryActions';
 
 import ProjectProfitabilitySummaryHeaderGeneralPanal from './ProjectProfitabilitySummaryHeaderGeneralPanal';
 import FinancialStatementHeader from '../FinancialStatementHeader';

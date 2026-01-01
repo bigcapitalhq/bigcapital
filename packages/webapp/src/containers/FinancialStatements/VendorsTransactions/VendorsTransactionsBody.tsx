@@ -7,7 +7,7 @@ import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import VendorsTransactionsTable from './VendorsTransactionsTable';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Vendors transactions body.

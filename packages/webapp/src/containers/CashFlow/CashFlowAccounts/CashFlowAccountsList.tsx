@@ -12,8 +12,8 @@ import CashFlowAccountsActionsBar from './CashFlowAccountsActionsBar';
 import { CashflowAccountsPlaidLink } from './CashflowAccountsPlaidLink';
 import { CashflowAccountsLoadingBar } from './CashFlowAccountsLoadingBar';
 
-import withCashflowAccounts from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
-import withCashflowAccountsTableActions from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
+import { withCashflowAccounts } from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
+import { withCashflowAccountsTableActions } from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
 
 /**
  * Cashflow accounts list.

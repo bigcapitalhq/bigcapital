@@ -18,9 +18,9 @@ import InvoiceFormFooter from './InvoiceFormFooter';
 import InvoiceFormDialogs from './InvoiceFormDialogs';
 import InvoiceFormTopBar from './InvoiceFormTopBar';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster, Box } from '@/components';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';

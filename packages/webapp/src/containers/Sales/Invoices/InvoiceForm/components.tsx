@@ -17,8 +17,8 @@ import {
 import { useUpdateEffect } from '@/hooks';
 import { transactionNumber } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   useSyncExRateToForm,
   withExchangeRateFetchingLoading,

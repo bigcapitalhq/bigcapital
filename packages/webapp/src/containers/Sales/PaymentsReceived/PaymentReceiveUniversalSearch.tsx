@@ -8,7 +8,7 @@ import {
   AbilitySubject,
   PaymentReceiveAction,
 } from '@/constants/abilityOption';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { highlightText } from '@/utils';
 import { Icon } from '@/components';
 import { DRAWERS } from '@/constants/drawers';

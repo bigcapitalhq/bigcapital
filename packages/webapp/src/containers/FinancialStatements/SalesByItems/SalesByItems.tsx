@@ -9,7 +9,7 @@ import { FinancialStatement, DashboardPageContent } from '@/components';
 import SalesByItemsActionsBar from './SalesByItemsActionsBar';
 import SalesByItemsHeader from './SalesByItemsHeader';
 
-import withSalesByItemsActions from './withSalesByItemsActions';
+import { withSalesByItemsActions } from './withSalesByItemsActions';
 
 import { useSalesByItemsQuery } from './utils';
 import { compose } from '@/utils';

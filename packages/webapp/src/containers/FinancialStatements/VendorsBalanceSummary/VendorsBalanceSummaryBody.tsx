@@ -7,7 +7,7 @@ import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Vendor balance summary body.

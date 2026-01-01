@@ -9,7 +9,7 @@ import {
   isOrganizationBuildRunningFactory
 } from '@/store/organizations/organizations.selectors';
 
-export default (mapState) => {
+export const withOrganization = (mapState) => {
   const getOrganizationById = getOrganizationByIdFactory();
   const isOrganizationReady = isOrganizationReadyFactory();
   const isOrganizationBuilt = isOrganizationBuiltFactory();

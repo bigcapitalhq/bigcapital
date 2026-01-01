@@ -11,7 +11,7 @@ import { Card } from '@/components';
 
 import '@/style/pages/Preferences/SMSIntegration.scss';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 import { compose } from '@/utils';
 

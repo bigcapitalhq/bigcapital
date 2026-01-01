@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getEstimateByIdFactory } from '@/store/Estimate/estimates.selectors';
 
-export default () => {
+export const withEstimateDetail = () => {
   const getEstimateById = getEstimateByIdFactory();
 
   const mapStateToProps = (state, props) => ({

@@ -7,4 +7,4 @@ const mapActionsToProps = (dispatch) => ({
     dispatch(toggleVendorsTransactionsFilterDrawer(toggle)),
 });
 
-export default connect(null, mapActionsToProps);
+export const withVendorsTransactionsActions = connect(null, mapActionsToProps);

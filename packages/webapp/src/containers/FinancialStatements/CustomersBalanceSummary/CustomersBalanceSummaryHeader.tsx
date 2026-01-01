@@ -8,8 +8,8 @@ import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 
 import FinancialStatementHeader from '../FinancialStatementHeader';
-import withCustomersBalanceSummary from './withCustomersBalanceSummary';
-import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
+import { withCustomersBalanceSummary } from './withCustomersBalanceSummary';
+import { withCustomersBalanceSummaryActions } from './withCustomersBalanceSummaryActions';
 import CustomersBalanceSummaryGeneralPanel from './CustomersBalanceSummaryGeneralPanel';
 
 import { compose, transformToForm } from '@/utils';

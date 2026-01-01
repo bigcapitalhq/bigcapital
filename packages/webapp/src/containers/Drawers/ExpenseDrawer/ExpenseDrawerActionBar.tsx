@@ -17,8 +17,8 @@ import {
 import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -76,6 +76,6 @@ function ExpenseDrawerActionBar({
 }
 
 export default compose(
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
 )(ExpenseDrawerActionBar);

@@ -13,7 +13,7 @@ import ProjectProfitabilitySummaryActionsBar from './ProjectProfitabilitySummary
 import { ProjectProfitabilitySummaryBody } from './ProjectProfitabilitySummaryBody';
 import { ProjectProfitabilitySummaryProvider } from './ProjectProfitabilitySummaryProvider';
 import { useProjectProfitabilitySummaryQuery } from './utils';
-import withProjectProfitabilitySummaryActions from './withProjectProfitabilitySummaryActions';
+import { withProjectProfitabilitySummaryActions } from './withProjectProfitabilitySummaryActions';
 import { compose } from '@/utils';
 
 /**

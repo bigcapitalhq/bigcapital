@@ -12,7 +12,7 @@ import { CustomerBalanceSummaryBody } from './CustomerBalanceSummaryBody';
 import { CustomersBalanceSummaryProvider } from './CustomersBalanceSummaryProvider';
 import { useCustomerBalanceSummaryQuery } from './utils';
 import { CustomersBalanceLoadingBar } from './components';
-import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
+import { withCustomersBalanceSummaryActions } from './withCustomersBalanceSummaryActions';
 import { CustomerBalanceSummaryPdfDialog } from './CustomerBalancePdfDialog';
 import { DialogsName } from '@/constants/dialogs';
 

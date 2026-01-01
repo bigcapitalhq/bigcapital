@@ -4,7 +4,7 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { Icon, FormattedMessage as T } from '@/components';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 function ApiKeysActions({ openDialog, closeDialog }) {

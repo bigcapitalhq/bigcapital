@@ -22,8 +22,8 @@ import {
 import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
@@ -142,5 +142,5 @@ function AccountDrawerActionBar({
 }
 export default compose(
   withDialogActions,
-  withAlertsActions,
+  withAlertActions,
 )(AccountDrawerActionBar);

@@ -12,8 +12,8 @@ import { transformErrors } from './utils';
 
 import BadDebtFormContent from './BadDebtFormContent';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { useBadDebtContext } from './BadDebtFormProvider';
 

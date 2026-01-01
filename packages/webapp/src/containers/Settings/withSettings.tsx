@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
 
-export default (mapState) => {
+export const withSettings = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       allSettings: state.settings.data,

@@ -7,4 +7,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleSalesTaxLiabilitySummaryFilterDrawer(toggle)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withSalesTaxLiabilitySummaryActions = connect(null, mapDispatchToProps);

@@ -8,10 +8,10 @@ import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 import { PreferencesCreditNotesFormSchema } from './PreferencesCreditNotesForm.schema';
 import { PreferencesCreditNotesForm } from './PreferencesCreditNotesForm';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
-import withSettings from '@/containers/Settings/withSettings';
+import { withSettings } from '@/containers/Settings/withSettings';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
 import { useSaveSettings } from '@/hooks/query';
 

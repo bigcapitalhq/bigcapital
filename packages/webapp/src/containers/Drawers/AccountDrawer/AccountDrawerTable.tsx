@@ -13,7 +13,7 @@ import { useAccountReadEntriesColumns } from './utils';
 import { useAppIntlContext } from '@/components/AppIntlProvider';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 

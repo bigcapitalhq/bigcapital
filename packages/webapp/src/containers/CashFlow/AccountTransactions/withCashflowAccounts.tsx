@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getCashflowAccountsTableStateFactory } from '@/store/CashflowAccounts/CashflowAccounts.selectors';
 
-export default (mapState) => {
+export const withCashflowAccounts = (mapState) => {
   const getCashflowAccountsTableState = getCashflowAccountsTableStateFactory();
 
   const mapStateToProps = (state, props) => {

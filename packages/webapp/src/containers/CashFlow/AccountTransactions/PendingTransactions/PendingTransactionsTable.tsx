@@ -6,7 +6,7 @@ import {
   TableSkeletonHeader,
   TableVirtualizedListRows,
 } from '@/components';
-import withSettings from '@/containers/Settings/withSettings';
+import { withSettings } from '@/containers/Settings/withSettings';
 import { withBankingActions } from '../../withBankingActions';
 
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';

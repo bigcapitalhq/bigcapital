@@ -6,7 +6,7 @@ import {
 } from '@/store/customers/customers.selectors';
 
 
-export default (mapState) => {
+export const withCustomers = (mapState) => {
   const getCustomersTableState = getCustomersTableStateFactory();
   const customersTableStateChanged = customersTableStateChangedFactory();
 

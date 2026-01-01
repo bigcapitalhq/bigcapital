@@ -13,13 +13,13 @@ import classNames from 'classnames';
 
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 
-import withJournalActions from './withJournalActions';
-import withJournal from './withJournal';
+import { withJournalActions } from './withJournalActions';
+import { withJournal } from './withJournal';
 
 import { compose } from '@/utils';
 import { useJournalSheetContext } from './JournalProvider';
 import { JournalSheetExportMenu } from './components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 /**

@@ -12,8 +12,8 @@ import { useInvoicePaymentTransactions } from '@/hooks/query';
 
 import { TableStyle } from '@/constants';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -22,7 +22,7 @@ import { DRAWERS } from '@/constants/drawers';
  * Invoice payment transactions datatable.
  */
 function InvoicePaymentTransactionsTable({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -78,6 +78,6 @@ function InvoicePaymentTransactionsTable({
 }
 
 export default compose(
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
 )(InvoicePaymentTransactionsTable);

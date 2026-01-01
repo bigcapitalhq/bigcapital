@@ -8,8 +8,8 @@ import RealizedGainOrLossActionsBar from './RealizedGainOrLossActionsBar';
 import { RealizedGainOrLossLoadingBar } from './components';
 import { RealizedGainOrLossProvider } from './RealizedGainOrLossProvider';
 
-import withCurrentOrganization from '../../Organization/withCurrentOrganization';
-import withRealizedGainOrLossActions from './withRealizedGainOrLossActions';
+import { withCurrentOrganization } from '../../Organization/withCurrentOrganization';
+import { withRealizedGainOrLossActions } from './withRealizedGainOrLossActions';
 
 import { compose } from '@/utils';
 

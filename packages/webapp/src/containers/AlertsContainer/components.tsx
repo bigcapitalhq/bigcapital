@@ -6,8 +6,8 @@ import * as R from 'ramda';
 import { Intent, Classes, ProgressBar } from '@blueprintjs/core';
 import { debounce } from 'lodash';
 
-import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { AppToaster } from '@/components';
 

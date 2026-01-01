@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getCurrenciesList } from '@/store/currencies/currencies.selector';
 
-export default (mapState) => {
+export const withCurrencies = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       currencies: state.currencies.data,
