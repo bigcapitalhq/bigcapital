@@ -27,7 +27,6 @@ import {
   FormattedMessage as T,
   ExchangeRateMutedField,
   BranchSelect,
-  BranchSelectButton,
   FeatureCan,
   FInputGroup,
   FMoneyInputGroup,

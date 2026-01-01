@@ -205,7 +205,7 @@ export function useAccountTransactions(id, props) {
     [t.ACCOUNT_TRANSACTION, id],
     { method: 'get', url: `accounts/transactions?account_id=${id}` },
     {
-      select: (res) => res.data.transactions,
+      select: (res) => res.data,
       defaultData: [],
       ...props,
     },

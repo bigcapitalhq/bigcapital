@@ -70,9 +70,14 @@ function AccountDrawerDataTable() {
 export default compose(withDrawerActions)(AccountDrawerTable);
 
 const TableFooter = styled.div`
+  --x-border-color: #d2dde2;
+
+  .bp4-dark & {
+    --x-border-color: var(--color-dark-gray5);
+  }
   padding: 6px 14px;
   display: block;
-  border-top: 1px solid #d2dde2;
-  border-bottom: 1px solid #d2dde2;
+  border-top: 1px solid var(--x-border-color);
+  border-bottom: 1px solid var(--x-border-color);
   font-size: 12px;
 `;
