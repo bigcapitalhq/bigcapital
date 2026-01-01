@@ -12,6 +12,7 @@ import {
   Row,
   FeatureCan,
   BranchSelect,
+  BranchSelectButton,
   FFormGroup,
   FTextArea,
   FMoneyInputGroup,
@@ -51,6 +52,7 @@ export default function TransferToAccountFormFields() {
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
+                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FFormGroup>

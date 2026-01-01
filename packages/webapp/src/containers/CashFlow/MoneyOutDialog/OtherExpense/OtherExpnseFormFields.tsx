@@ -11,6 +11,7 @@ import {
   Row,
   FeatureCan,
   BranchSelect,
+  BranchSelectButton,
   FTextArea,
   FFormGroup,
   FInputGroup,
@@ -46,6 +47,7 @@ export default function OtherExpnseFormFields() {
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
+                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FFormGroup>
