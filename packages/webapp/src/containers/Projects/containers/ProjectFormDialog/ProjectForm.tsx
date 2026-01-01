@@ -8,7 +8,7 @@ import { AppToaster } from '@/components';
 import ProjectFormContent from './ProjectFormContent';
 import { CreateProjectFormSchema } from './ProjectForm.schema';
 import { useProjectFormContext } from './ProjectFormProvider';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose, transformToForm } from '@/utils';
 

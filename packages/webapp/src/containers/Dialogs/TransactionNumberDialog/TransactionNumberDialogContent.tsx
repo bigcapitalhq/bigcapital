@@ -6,9 +6,9 @@ import { useSaveSettings } from '@/hooks/query';
 import { TransactionNumberDialogProvider } from './TransactionNumberDialogProvider';
 import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import {
   transformFormToSettings,
   transformSettingsToForm,

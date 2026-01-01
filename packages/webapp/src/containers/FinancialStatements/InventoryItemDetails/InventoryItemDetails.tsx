@@ -7,7 +7,7 @@ import { FinancialStatement, DashboardPageContent } from '@/components';
 import InventoryItemDetailsActionsBar from './InventoryItemDetailsActionsBar';
 import InventoryItemDetailsHeader from './InventoryItemDetailsHeader';
 
-import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
+import { withInventoryItemDetailsActions } from './withInventoryItemDetailsActions';
 import { InventoryItemDetailsProvider } from './InventoryItemDetailsProvider';
 import {
   InventoryItemDetailsLoadingBar,

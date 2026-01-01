@@ -4,7 +4,7 @@ import {
   APAgingSummaryFilterDrawerSelector,
 } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withAPAgingSummary = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       APAgingSummaryFilterDrawer: APAgingSummaryFilterDrawerSelector(

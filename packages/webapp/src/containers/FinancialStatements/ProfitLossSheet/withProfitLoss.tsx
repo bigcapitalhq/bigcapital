@@ -4,7 +4,7 @@ import {
   getProfitLossFilterDrawer,
 } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withProfitLoss = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       profitLossDrawerFilter: getProfitLossFilterDrawer(state, props),

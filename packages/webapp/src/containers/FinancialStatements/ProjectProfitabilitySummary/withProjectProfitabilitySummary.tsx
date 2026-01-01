@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getProjectProfitabilitySummaryFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withProjectProfitabilitySummary = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       projectProfitabilitySummaryDrawerFilter:

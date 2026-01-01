@@ -7,4 +7,4 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(setItemsCategoriesTableState(state)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withItemCategoriesActions = connect(null, mapDispatchToProps);

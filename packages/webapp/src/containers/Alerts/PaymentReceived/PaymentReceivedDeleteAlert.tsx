@@ -10,9 +10,9 @@ import { Intent, Alert } from '@blueprintjs/core';
 
 import { useDeletePaymentReceive } from '@/hooks/query';
 
-import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
-import withAlertActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { handleDeleteErrors } from './_utils';
 import { compose } from '@/utils';

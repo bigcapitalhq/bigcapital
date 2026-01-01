@@ -4,7 +4,7 @@ import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
 
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import {
   Icon,
@@ -23,7 +23,7 @@ import { compose } from '@/utils';
  * Inventory adjustment detail actions bar.
  */
 function InventoryAdjustmentDetailActionsBar({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   const { inventoryId } = useInventoryAdjustmentDrawerContext();
@@ -53,4 +53,4 @@ function InventoryAdjustmentDetailActionsBar({
   );
 }
 
-export default compose(withAlertsActions)(InventoryAdjustmentDetailActionsBar);
+export default compose(withAlertActions)(InventoryAdjustmentDetailActionsBar);

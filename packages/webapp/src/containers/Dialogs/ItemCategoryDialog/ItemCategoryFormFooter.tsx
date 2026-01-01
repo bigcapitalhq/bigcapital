@@ -4,7 +4,7 @@ import { Classes, Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { useFormikContext } from 'formik';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useItemCategoryContext } from './ItemCategoryProvider';
 
 import { compose } from '@/utils';

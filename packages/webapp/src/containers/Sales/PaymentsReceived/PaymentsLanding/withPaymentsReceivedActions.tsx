@@ -17,4 +17,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setPaymentReceivesSelectedRows(selectedRows)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withPaymentsReceivedActions = connect(null, mapDispatchToProps);

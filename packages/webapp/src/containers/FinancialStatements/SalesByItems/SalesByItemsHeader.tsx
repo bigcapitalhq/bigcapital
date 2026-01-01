@@ -9,8 +9,8 @@ import { FormattedMessage as T } from '@/components';
 import FinancialStatementHeader from '../FinancialStatementHeader';
 import SalesByItemsHeaderGeneralPanel from './SalesByItemsHeaderGeneralPanel';
 
-import withSalesByItems from './withSalesByItems';
-import withSalesByItemsActions from './withSalesByItemsActions';
+import { withSalesByItems } from './withSalesByItems';
+import { withSalesByItemsActions } from './withSalesByItemsActions';
 
 import { compose, transformToForm } from '@/utils';
 import {

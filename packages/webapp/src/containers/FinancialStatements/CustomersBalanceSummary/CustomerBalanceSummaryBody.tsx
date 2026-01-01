@@ -6,7 +6,7 @@ import { FinancialReportBody } from '../FinancialReportPage';
 import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import CustomersBalanceSummaryTable from './CustomersBalanceSummaryTable';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Customer balance summary body.

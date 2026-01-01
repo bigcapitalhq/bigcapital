@@ -14,9 +14,9 @@ import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import withInventoryValuation from './withInventoryValuation';
-import withInventoryValuationActions from './withInventoryValuationActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withInventoryValuation } from './withInventoryValuation';
+import { withInventoryValuationActions } from './withInventoryValuationActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 
 import { compose, saveInvoke } from '@/utils';

@@ -4,8 +4,8 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
 
-import withEstimatesActions from './withEstimatesActions';
-import withEstimates from './withEstimates';
+import { withEstimatesActions } from './withEstimatesActions';
+import { withEstimates } from './withEstimates';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { compose, transfromViewsToTabs } from '@/utils';

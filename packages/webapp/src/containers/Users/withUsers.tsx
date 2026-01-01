@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getExpensesCurrentPageFactory } from '@/store/users/users.selectors';
 
-export default (mapState) => {
+export const withUsers = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       usersList: getExpensesCurrentPageFactory(state, props),

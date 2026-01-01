@@ -14,11 +14,11 @@ import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
 
 import { ActionsMenu } from './components';
 
-import withManualJournals from './withManualJournals';
-import withManualJournalsActions from './withManualJournalsActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withManualJournals } from './withManualJournals';
+import { withManualJournalsActions } from './withManualJournalsActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
@@ -35,7 +35,7 @@ function ManualJournalsDataTable({
   setManualJournalsTableState,
   setManualJournalsSelectedRows,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -157,7 +157,7 @@ export default compose(
   withManualJournals(({ manualJournalsTableState }) => ({
     manualJournalsTableState,
   })),
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withSettings(({ manualJournalsSettings }) => ({
     manualJournalsTableSize: manualJournalsSettings?.tableSize,

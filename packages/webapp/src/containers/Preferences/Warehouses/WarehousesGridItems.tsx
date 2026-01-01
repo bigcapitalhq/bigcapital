@@ -8,15 +8,15 @@ import { AppToaster } from '@/components';
 import { WarehouseContextMenu, WarehousesGridItemBox } from './components';
 import { useMarkWarehouseAsPrimary } from '@/hooks/query';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 /**
  *  warehouse grid item.
  */
 function WarehouseGridItem({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDialogActions
@@ -70,7 +70,7 @@ function WarehouseGridItem({
 }
 
 const WarehousesGridItem = compose(
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
 )(WarehouseGridItem);
 

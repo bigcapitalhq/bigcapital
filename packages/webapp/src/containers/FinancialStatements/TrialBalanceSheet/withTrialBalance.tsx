@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getTrialBalanceSheetFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withTrialBalance = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       trialBalanceDrawerFilter: getTrialBalanceSheetFilterDrawer(state),

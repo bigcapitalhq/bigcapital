@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { Button, NavbarGroup, Intent } from '@blueprintjs/core';
 import { DrawerActionsBar, Icon } from '@/components';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import {
   getButtonLabelFromResource,
   getCustomizeDrawerNameFromResource,

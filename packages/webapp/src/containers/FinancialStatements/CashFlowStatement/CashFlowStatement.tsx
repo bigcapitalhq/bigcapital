@@ -9,7 +9,7 @@ import { CashFlowStatementProvider } from './CashFlowStatementProvider';
 import CashFlowStatementHeader from './CashFlowStatementHeader';
 import CashFlowStatementActionsBar from './CashFlowStatementActionsBar';
 
-import withCashFlowStatementActions from './withCashFlowStatementActions';
+import { withCashFlowStatementActions } from './withCashFlowStatementActions';
 import {
   CashFlowStatementLoadingBar,
   CashFlowStatementAlerts,

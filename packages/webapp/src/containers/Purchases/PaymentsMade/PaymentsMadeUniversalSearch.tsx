@@ -8,7 +8,7 @@ import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { highlightText } from '@/utils';
 import { AbilitySubject, PaymentMadeAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Universal search bill item select action.

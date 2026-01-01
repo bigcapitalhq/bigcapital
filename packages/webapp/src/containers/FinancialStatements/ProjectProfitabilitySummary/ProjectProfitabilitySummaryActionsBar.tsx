@@ -16,8 +16,8 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import { compose, saveInvoke } from '@/utils';
 import { useProjectProfitabilitySummaryContext } from './ProjectProfitabilitySummaryProvider';
-import withProjectProfitabilitySummary from './withProjectProfitabilitySummary';
-import withProjectProfitabilitySummaryActions from './withProjectProfitabilitySummaryActions';
+import { withProjectProfitabilitySummary } from './withProjectProfitabilitySummary';
+import { withProjectProfitabilitySummaryActions } from './withProjectProfitabilitySummaryActions';
 
 /**
  * Project profitability summary actions bar.

@@ -2,7 +2,7 @@
 import * as R from 'ramda';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import withUniversalSearchActions from './withUniversalSearchActions';
+import { withUniversalSearchActions } from './withUniversalSearchActions';
 
 /**
  * Universal search hotkey.

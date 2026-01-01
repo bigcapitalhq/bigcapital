@@ -10,7 +10,7 @@ import { VendorsTransactionsLoadingBar } from './components';
 import VendorsTransactionsHeader from './VendorsTransactionsHeader';
 import VendorsTransactionsActionsBar from './VendorsTransactionsActionsBar';
 
-import withVendorsTransactionsActions from './withVendorsTransactionsActions';
+import { withVendorsTransactionsActions } from './withVendorsTransactionsActions';
 
 import { compose } from '@/utils';
 import { useVendorsTransactionsQuery } from './_utils';

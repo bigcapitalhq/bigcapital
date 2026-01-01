@@ -6,9 +6,9 @@ import { DashboardViewsTabs } from '@/components';
 import { useCustomersListContext } from './CustomersListProvider';
 import { compose, transfromViewsToTabs } from '@/utils';
 
-import withCustomers from './withCustomers';
-import withCustomersActions from './withCustomersActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withCustomers } from './withCustomers';
+import { withCustomersActions } from './withCustomersActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 
 /**

@@ -3,7 +3,7 @@ import React from 'react';
 import { DataTable, Card } from '@/components';
 
 import { TableStyle } from '@/constants';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
 import {
@@ -17,7 +17,7 @@ import { compose } from '@/utils';
  * Refund credit note transactions table.
  */
 function RefundCreditNoteTransactionsTable({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   const { refundCreditNote } = useCreditNoteDetailDrawerContext();
@@ -45,4 +45,4 @@ function RefundCreditNoteTransactionsTable({
   );
 }
 
-export default compose(withAlertsActions)(RefundCreditNoteTransactionsTable);
+export default compose(withAlertActions)(RefundCreditNoteTransactionsTable);

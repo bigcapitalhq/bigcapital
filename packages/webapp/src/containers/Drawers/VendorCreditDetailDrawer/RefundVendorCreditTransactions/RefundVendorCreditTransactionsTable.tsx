@@ -4,7 +4,7 @@ import { DataTable, Card } from '@/components';
 
 import { TableStyle } from '@/constants';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
 import {
   useRefundCreditTransactionsTableColumns,
@@ -17,7 +17,7 @@ import { compose } from '@/utils';
  * Refund vendor transactions table.
  */
 function RefundVendorCreditTransactionsTable({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   const { refundVendorCredit } = useVendorCreditDetailDrawerContext();
@@ -44,4 +44,4 @@ function RefundVendorCreditTransactionsTable({
   );
 }
 
-export default compose(withAlertsActions)(RefundVendorCreditTransactionsTable);
+export default compose(withAlertActions)(RefundVendorCreditTransactionsTable);

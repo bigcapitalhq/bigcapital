@@ -6,9 +6,9 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { size } from 'lodash';
 import { AppToaster } from '@/components';
 
-import withItemCategoriesActions from '@/containers/ItemsCategories/withItemCategoriesActions';
-import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withItemCategoriesActions } from '@/containers/ItemsCategories/withItemCategoriesActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { compose } from '@/utils';
 

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import intl from 'react-intl-universal';
 
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { DRAWERS } from '@/constants/drawers';

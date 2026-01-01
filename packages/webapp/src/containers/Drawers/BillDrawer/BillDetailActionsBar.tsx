@@ -12,9 +12,9 @@ import {
 
 import { useBillDrawerContext } from './BillDrawerProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import {
   Can,
@@ -37,7 +37,7 @@ function BillDetailActionsBar({
   // #withDialogActions
   openDialog,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -125,5 +125,5 @@ function BillDetailActionsBar({
 export default compose(
   withDialogActions,
   withDrawerActions,
-  withAlertsActions,
+  withAlertActions,
 )(BillDetailActionsBar);

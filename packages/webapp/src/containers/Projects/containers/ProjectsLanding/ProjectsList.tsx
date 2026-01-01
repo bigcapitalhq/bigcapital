@@ -6,8 +6,8 @@ import ProjectsActionsBar from './ProjectsActionsBar';
 import ProjectsViewTabs from './ProjectsViewTabs';
 import ProjectsDataTable from './ProjectsDataTable';
 
-import withProjects from './withProjects';
-import withProjectsActions from './withProjectsActions';
+import { withProjects } from './withProjects';
+import { withProjectsActions } from './withProjectsActions';
 
 import { ProjectsListProvider } from './ProjectsListProvider';
 import { compose, transformTableStateToQuery } from '@/utils';

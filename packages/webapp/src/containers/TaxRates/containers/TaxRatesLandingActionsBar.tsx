@@ -9,7 +9,7 @@ import {
 } from '@/components';
 import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';

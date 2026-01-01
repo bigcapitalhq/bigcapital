@@ -23,11 +23,11 @@ import {
 } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 
-import withPaymentMade from './withPaymentMade';
-import withPaymentMadeActions from './withPaymentMadeActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withPaymentMade } from './withPaymentMade';
+import { withPaymentMadeActions } from './withPaymentMadeActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';

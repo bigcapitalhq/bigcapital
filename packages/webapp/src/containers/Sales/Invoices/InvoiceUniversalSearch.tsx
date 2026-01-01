@@ -8,7 +8,7 @@ import { highlightText } from '@/utils';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, SaleInvoiceAction } from '@/constants/abilityOption';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 
 /**

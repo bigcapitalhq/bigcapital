@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getInventoryValuationFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withInventoryValuation = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       inventoryValuationDrawerFilter: getInventoryValuationFilterDrawer(state),

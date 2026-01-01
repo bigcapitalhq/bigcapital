@@ -3,9 +3,9 @@ import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useHistory } from 'react-router-dom';
 import { getDashboardRoutes } from '@/routes/dashboard';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withUniversalSearchActions from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
 
 import { compose } from '@/utils';
 

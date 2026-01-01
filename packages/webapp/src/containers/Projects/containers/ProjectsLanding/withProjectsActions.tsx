@@ -11,4 +11,4 @@ const mapDispatchToProps = (dispatch) => ({
   resetProjectsTableState: () => dispatch(resetProjectsTableState()),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withProjectsActions = connect(null, mapDispatchToProps);

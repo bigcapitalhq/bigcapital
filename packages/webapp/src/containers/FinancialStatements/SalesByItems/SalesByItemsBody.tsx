@@ -7,7 +7,7 @@ import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 
 import SalesByItemsTable from './SalesByItemsTable';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 /**
  *

@@ -7,4 +7,4 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleTrialBalanceSheetFilterDrawer(toggle)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withTrialBalanceActions = connect(null, mapDispatchToProps);

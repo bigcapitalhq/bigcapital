@@ -7,7 +7,7 @@ import { AppToaster } from '@/components';
 import { CreateProjectExpenseFormSchema } from './ProjectExpenseForm.schema';
 import ProjectExpenseFormContent from './ProjectExpenseFormContent';
 import { useProjectExpenseFormContext } from './ProjectExpenseFormProvider';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 

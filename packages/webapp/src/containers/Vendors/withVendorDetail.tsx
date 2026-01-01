@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getVendorByIdFactory } from '@/store/vendors/vendors.selectors';
 
-export default () => {
+export const withVendorDetail = () => {
   const getVendorById = getVendorByIdFactory();
   const mapStateToProps = (state, props) => ({
     vendor: getVendorById(state, props),

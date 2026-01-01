@@ -9,7 +9,7 @@ import { useResourceExport } from '@/hooks/query/FinancialReports/use-export';
 import { ExportFormInitialValues } from './type';
 import { AppToaster } from '@/components';
 import { Intent } from '@blueprintjs/core';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 // Default initial form values.

@@ -11,7 +11,7 @@ import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import PreferencesSubContent from '@/components/Preferences/PreferencesSubContent';
 
-import withUserPreferences from '@/containers/Preferences/Users/withUserPreferences';
+import { withUserPreferences } from '@/containers/Preferences/Users/withUserPreferences';
 
 /**
  * Preferences page - Users page.

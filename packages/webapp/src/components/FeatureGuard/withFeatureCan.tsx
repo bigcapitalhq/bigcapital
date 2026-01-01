@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getDashboardFeaturesSelector } from '@/store/dashboard/dashboard.selectors';
 
-export default (mapState) => {
+export const withFeatureCan = (mapState) => {
   const featuresSelector = getDashboardFeaturesSelector();
 
   const mapStateToProps = (state, props) => {

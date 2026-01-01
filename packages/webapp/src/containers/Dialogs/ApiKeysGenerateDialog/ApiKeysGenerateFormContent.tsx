@@ -14,7 +14,7 @@ import {
 import intl from 'react-intl-universal';
 import { inputIntent } from '@/utils';
 import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 /**

@@ -11,10 +11,10 @@ import {
 import { handleDeleteErrors } from '@/containers/Items/utils';
 import { useDeleteItem } from '@/hooks/query';
 
-import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
-import withAlertActions from '@/containers/Alert/withAlertActions';
-import withItemsActions from '@/containers/Items/withItemsActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withItemsActions } from '@/containers/Items/withItemsActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';

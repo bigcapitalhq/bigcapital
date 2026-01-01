@@ -8,8 +8,8 @@ import { AccountsChartProvider } from './AccountsChartProvider';
 import AccountsActionsBar from './AccountsActionsBar';
 import AccountsDataTable from './AccountsDataTable';
 
-import withAccounts from '@/containers/Accounts/withAccounts';
-import withAccountsTableActions from './withAccountsTableActions';
+import { withAccounts } from '@/containers/Accounts/withAccounts';
+import { withAccountsTableActions } from './withAccountsTableActions';
 
 import { transformAccountsStateToQuery } from './utils';
 import { compose } from '@/utils';

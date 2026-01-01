@@ -15,8 +15,8 @@ import {
   FormattedMessage as T,
 } from '@/components';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
@@ -75,6 +75,6 @@ function ManualJournalDrawerActionBar({
 }
 
 export default compose(
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
 )(ManualJournalDrawerActionBar);

@@ -6,4 +6,4 @@ const mapStateToProps = (state, props) => ({
   currency: getCurrencyByCode(state, props),
 });
 
-export default connect(mapStateToProps);
+export const withCurrencyDetail = connect(mapStateToProps);

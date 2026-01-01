@@ -16,9 +16,9 @@ import ViewForm from '@/containers/Views/ViewForm';
 
 import { compose } from '@/utils';
 
-import withResourcesActions from '@/containers/Resources/withResourcesActions';
-import withViewsActions from '@/containers/Views/withViewsActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withResourcesActions } from '@/containers/Resources/withResourcesActions';
+import { withViewsActions } from '@/containers/Views/withViewsActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 // @flow
 function ViewFormPage({

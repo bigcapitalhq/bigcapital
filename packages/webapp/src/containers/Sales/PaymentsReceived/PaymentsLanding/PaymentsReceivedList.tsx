@@ -8,8 +8,8 @@ import { PaymentsReceivedListProvider } from './PaymentsReceivedListProvider';
 import PaymentReceivesTable from './PaymentsReceivedTable';
 import PaymentsReceivedActionsBar from './PaymentsReceivedActionsBar';
 
-import withPaymentsReceived from './withPaymentsReceived';
-import withPaymentsReceivedActions from './withPaymentsReceivedActions';
+import { withPaymentsReceived } from './withPaymentsReceived';
+import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 
 import { compose, transformTableStateToQuery } from '@/utils';
 

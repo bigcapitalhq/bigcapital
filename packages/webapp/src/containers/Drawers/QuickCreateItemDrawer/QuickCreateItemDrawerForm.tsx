@@ -11,8 +11,8 @@ import {
   useItemFormContext,
 } from '../../Items/ItemFormProvider';
 
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { DRAWERS } from '@/constants/drawers';

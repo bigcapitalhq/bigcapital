@@ -6,7 +6,7 @@ import { useCurrencyFormContext } from './CurrencyFormProvider';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 /**

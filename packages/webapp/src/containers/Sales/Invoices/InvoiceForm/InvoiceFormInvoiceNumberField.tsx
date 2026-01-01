@@ -12,8 +12,8 @@ import {
   FInputGroup,
 } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 /**
  * Invoice number field of invoice form.

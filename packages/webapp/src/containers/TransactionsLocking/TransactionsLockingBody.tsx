@@ -7,8 +7,8 @@ import {
   TransactionLockingSkeletonList,
 } from './components';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
 
@@ -20,14 +20,14 @@ function TransactionsLockingBodyJsx({
   // #withDialogActions
   openDialog,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   const { isTransactionLockingLoading, transactionLockingType } =
     useTransactionsLockingContext();
 
   // Handle locking transactions.
-  const handleLockingTransactions = (module, {}, isEnabled) => {
+  const handleLockingTransactions = (module, { }, isEnabled) => {
     openDialog('locking-transactions', {
       isEnabled: isEnabled,
       module: module,
@@ -69,6 +69,6 @@ function TransactionsLockingBodyJsx({
 }
 
 export const TransactionsLockingBody = R.compose(
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
 )(TransactionsLockingBodyJsx);

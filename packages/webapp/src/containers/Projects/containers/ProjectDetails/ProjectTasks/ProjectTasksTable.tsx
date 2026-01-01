@@ -11,9 +11,9 @@ import { ActionsMenu } from './components';
 import { useProjectTaskColumns } from './hooks';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useProjectTaskContext } from './ProjectTaskProvider';
-import withSettings from '@/containers/Settings/withSettings';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 
@@ -23,7 +23,7 @@ function ProjectTaskTableRoot({
 
   // #withDialog
   openDialog,
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   const { projectTasks } = useProjectTaskContext();
@@ -70,7 +70,7 @@ function ProjectTaskTableRoot({
 }
 
 export const ProjectTasksTable = compose(
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
   withSettings(({ projectTasksSettings }) => ({
     projectTasksTableSize: projectTasksSettings?.tableSize,

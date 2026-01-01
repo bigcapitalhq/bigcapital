@@ -27,7 +27,7 @@ import {
   transformFormValuesToRequest,
   handleErrors,
 } from './utils';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { BillFormEntriesActions } from './BillFormEntriesActions';
 
 /**

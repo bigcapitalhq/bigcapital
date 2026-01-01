@@ -9,8 +9,8 @@ import { ItemPreferencesSchema } from './ItemPreferences.schema';
 import ItemPreferencesForm from './ItemPreferencesForm';
 
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 import {
   compose,
   optionsMapToArray,

@@ -10,8 +10,8 @@ import { ItemsListProvider } from './ItemsListProvider';
 import ItemsActionsBar from './ItemsActionsBar';
 import ItemsDataTable from './ItemsDataTable';
 
-import withItems from './withItems';
-import withItemsActions from './withItemsActions';
+import { withItems } from './withItems';
+import { withItemsActions } from './withItemsActions';
 
 /**
  * Items list.

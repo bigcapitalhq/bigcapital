@@ -5,7 +5,7 @@ import * as R from 'ramda';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { AppToaster, FFormGroup, FInputGroup } from '@/components';
 import { useDisconnectBankAccount } from '@/hooks/query/bank-rules';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 interface DisconnectFormValues {

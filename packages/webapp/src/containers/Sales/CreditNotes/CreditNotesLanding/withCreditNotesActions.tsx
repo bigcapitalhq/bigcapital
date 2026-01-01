@@ -13,4 +13,4 @@ const mapDipatchToProps = (dispatch) => ({
   setCreditNotesSelectedRows: (selectedRows) => dispatch(setCreditNotesSelectedRows(selectedRows)),
 });
 
-export default connect(null, mapDipatchToProps);
+export const withCreditNotesActions = connect(null, mapDipatchToProps);

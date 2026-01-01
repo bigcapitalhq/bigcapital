@@ -12,10 +12,10 @@ import ProjectsEmptyStatus from './ProjectsEmptyStatus';
 import { useProjectsListContext } from './ProjectsListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useProjectsListColumns, ActionsMenu } from './components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withProjectsActions from './withProjectsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withProjectsActions } from './withProjectsActions';
 
 import { compose } from '@/utils';
 
@@ -27,7 +27,7 @@ function ProjectsDataTable({
   // #withDial
   openDialog,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withSettings
@@ -121,7 +121,7 @@ function ProjectsDataTable({
 
 export default compose(
   withDialogActions,
-  withAlertsActions,
+  withAlertActions,
   withProjectsActions,
   withSettings(({ projectSettings }) => ({
     projectsTableSize: projectSettings?.tableSize,

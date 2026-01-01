@@ -63,4 +63,4 @@ const mapActionsToProps = (dispatch) => ({
   splashStopLoading: () => splashStopLoading(),
 });
 
-export default connect(null, mapActionsToProps);
+export const withDashboardActions = connect(null, mapActionsToProps);

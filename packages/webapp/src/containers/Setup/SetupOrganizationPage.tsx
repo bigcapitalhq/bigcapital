@@ -7,7 +7,7 @@ import { x } from '@xstyled/emotion';
 import SetupOrganizationForm from './SetupOrganizationForm';
 
 import { useOrganizationSetup } from '@/hooks/query';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
 import { setCookie, compose, transfromToSnakeCase } from '@/utils';

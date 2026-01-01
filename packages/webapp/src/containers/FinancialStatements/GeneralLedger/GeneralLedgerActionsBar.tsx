@@ -16,9 +16,9 @@ import { GeneralLedgerSheetExportMenu } from './components';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { compose } from '@/utils';
 
-import withGeneralLedger from './withGeneralLedger';
-import withGeneralLedgerActions from './withGeneralLedgerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withGeneralLedger } from './withGeneralLedger';
+import { withGeneralLedgerActions } from './withGeneralLedgerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 /**

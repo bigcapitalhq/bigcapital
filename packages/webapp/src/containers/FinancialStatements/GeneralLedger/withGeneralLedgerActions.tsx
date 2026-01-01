@@ -9,4 +9,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleGeneralLedgerFilterDrawer(toggle)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withGeneralLedgerActions = connect(null, mapDispatchToProps);

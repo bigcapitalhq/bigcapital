@@ -15,9 +15,9 @@ import ExpenseFormTopBar from './ExpenseFormTopBar';
 
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster, Box } from '@/components';
 import { PageForm } from '@/components/PageForm';

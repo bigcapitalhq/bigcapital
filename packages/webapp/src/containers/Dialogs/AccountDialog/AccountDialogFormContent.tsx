@@ -15,7 +15,7 @@ import {
   FCheckbox,
   FTextArea,
 } from '@/components';
-import withAccounts from '@/containers/Accounts/withAccounts';
+import { withAccounts } from '@/containers/Accounts/withAccounts';
 
 import { FOREIGN_CURRENCY_ACCOUNTS } from '@/constants/accountTypes';
 

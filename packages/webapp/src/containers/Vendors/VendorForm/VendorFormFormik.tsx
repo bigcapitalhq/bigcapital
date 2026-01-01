@@ -18,7 +18,7 @@ import VendorFormPrimarySection from './VendorFormPrimarySection';
 import VendorFormAfterPrimarySection from './VendorFormAfterPrimarySection';
 import VendorFloatingActions from './VendorFloatingActions';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { useVendorFormContext } from './VendorFormProvider';
 import { compose, transformToForm, safeInvoke } from '@/utils';

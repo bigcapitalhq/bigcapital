@@ -14,13 +14,13 @@ import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import withSalesByItems from './withSalesByItems';
-import withSalesByItemsActions from './withSalesByItemsActions';
+import { withSalesByItems } from './withSalesByItems';
+import { withSalesByItemsActions } from './withSalesByItemsActions';
 
 import { compose, saveInvoke } from '@/utils';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import { SalesByItemsSheetExportMenu } from './components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 function SalesByItemsActionsBar({

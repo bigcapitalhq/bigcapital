@@ -10,8 +10,8 @@ import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider
 import { CreateQuickPaymentReceiveFormSchema } from './QuickPaymentReceive.schema';
 import QuickPaymentReceiveFormContent from './QuickPaymentReceiveFormContent';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   defaultInitialValues,
   transformErrors,

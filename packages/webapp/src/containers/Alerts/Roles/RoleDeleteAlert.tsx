@@ -11,8 +11,8 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { useDeleteRole } from '@/hooks/query';
 import { handleDeleteErrors } from '@/containers/Preferences/Users/Roles/utils';
 
-import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { compose } from '@/utils';
 

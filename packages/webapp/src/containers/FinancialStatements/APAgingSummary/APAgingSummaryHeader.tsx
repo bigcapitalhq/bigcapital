@@ -9,8 +9,8 @@ import FinancialStatementHeader from '@/containers/FinancialStatements/Financial
 import APAgingSummaryHeaderGeneral from './APAgingSummaryHeaderGeneral';
 import APAgingSummaryHeaderDimensions from './APAgingSummaryHeaderDimensions';
 
-import withAPAgingSummary from './withAPAgingSummary';
-import withAPAgingSummaryActions from './withAPAgingSummaryActions';
+import { withAPAgingSummary } from './withAPAgingSummary';
+import { withAPAgingSummaryActions } from './withAPAgingSummaryActions';
 
 import { transformToForm, compose } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';

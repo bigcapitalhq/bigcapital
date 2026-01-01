@@ -6,4 +6,4 @@ export const mapDispatchToProps = (dispatch) => ({
   globalErrorsSet: (errors) => dispatch(setGlobalErrors(errors)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withGlobalErrorsActions = connect(null, mapDispatchToProps);

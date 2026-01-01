@@ -6,8 +6,8 @@ import { useSaveSettings, useSettingsManualJournals } from '@/hooks/query';
 
 import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 import { saveInvoke, compose } from '@/utils';
 import {
   transformFormToSettings,

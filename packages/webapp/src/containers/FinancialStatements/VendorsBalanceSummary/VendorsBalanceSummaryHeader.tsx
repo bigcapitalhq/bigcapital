@@ -11,8 +11,8 @@ import { compose, transformToForm } from '@/utils';
 
 import FinancialStatementHeader from '../FinancialStatementHeader';
 import VendorsBalanceSummaryHeaderGeneral from './VendorsBalanceSummaryHeaderGeneral';
-import withVendorsBalanceSummary from './withVendorsBalanceSummary';
-import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
+import { withVendorsBalanceSummary } from './withVendorsBalanceSummary';
+import { withVendorsBalanceSummaryActions } from './withVendorsBalanceSummaryActions';
 import { getVendorsBalanceQuerySchema } from './utils';
 
 /**

@@ -12,7 +12,7 @@ import CustomerFormFormik, {
   CustomerFormHeaderPrimary,
 } from '@/containers/Customers/CustomerForm/CustomerFormFormik';
 
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { useAddAutofillRef } from '@/hooks/state/autofill';
 

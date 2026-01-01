@@ -6,7 +6,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 

@@ -16,8 +16,8 @@ import { CLASSES } from '@/constants/classes';
 import { FieldRequiredHint, Icon, InputPrependButton } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { useObserveTransferNoSettings } from './utils';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 /**
  * Warehouse transfer form header fields.

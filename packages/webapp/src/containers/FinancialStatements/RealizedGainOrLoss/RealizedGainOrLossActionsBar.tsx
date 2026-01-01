@@ -14,8 +14,8 @@ import classNames from 'classnames';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import withRealizedGainOrLoss from './withRealizedGainOrLoss';
-import withRealizedGainOrLossActions from './withRealizedGainOrLossActions';
+import { withRealizedGainOrLoss } from './withRealizedGainOrLoss';
+import { withRealizedGainOrLossActions } from './withRealizedGainOrLossActions';
 
 import { compose, saveInvoke } from '@/utils';
 

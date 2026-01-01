@@ -7,4 +7,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleCashFlowStatementFilterDrawer(toggle)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withCashFlowStatementActions = connect(null, mapDispatchToProps);

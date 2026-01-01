@@ -29,11 +29,11 @@ import { useRefreshExpenses } from '@/hooks/query/expenses';
 import { useExpensesListContext } from './ExpensesListProvider';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
-import withExpenses from './withExpenses';
-import withExpensesActions from './withExpensesActions';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withExpenses } from './withExpenses';
+import { withExpensesActions } from './withExpensesActions';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
 import { isEmpty } from 'lodash';

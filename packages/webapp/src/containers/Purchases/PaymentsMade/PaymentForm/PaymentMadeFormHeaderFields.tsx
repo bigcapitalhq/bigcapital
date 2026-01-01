@@ -36,7 +36,7 @@ import {
   Icon,
   VendorDrawerLink,
 } from '@/components';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { PaymentMadeExchangeRateInputField } from './components';

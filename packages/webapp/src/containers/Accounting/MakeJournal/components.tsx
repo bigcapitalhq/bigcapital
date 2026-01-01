@@ -25,7 +25,7 @@ import { CellType, Features, Align } from '@/constants';
 
 import { useCurrentOrganization, useFeatureCan } from '@/hooks/state';
 import { useJournalIsForeign } from './utils';
-import withSettings from '@/containers/Settings/withSettings';
+import { withSettings } from '@/containers/Settings/withSettings';
 import { transactionNumber } from '@/utils';
 import { useUpdateEffect } from '@/hooks';
 

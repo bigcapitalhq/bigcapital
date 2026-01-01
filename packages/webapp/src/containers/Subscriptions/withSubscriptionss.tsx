@@ -5,7 +5,7 @@ import {
   isSubscriptionsActiveFactory,
 } from '@/store/subscription/subscription.selectors';
 
-export default (mapState) => {
+export const withSubscriptionss = (mapState) => {
   const isSubscriptionsInactive = isSubscriptionsInactiveFactory();
   const isSubscriptionsActive = isSubscriptionsActiveFactory();
 

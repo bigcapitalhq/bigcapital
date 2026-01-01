@@ -5,7 +5,7 @@ import {
   getPaymentReceiveEntriesFactory,
 } from '@/store/PaymentReceives/paymentReceives.selector';
 
-export default () => {
+export const withPaymentReceiveDetail = () => {
   const getPaymentReceiveById = getPaymentReceiveByIdFactory();
   const getPaymentReceiveEntries = getPaymentReceiveEntriesFactory();
 

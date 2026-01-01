@@ -12,8 +12,8 @@ import {
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import {
   Icon,
@@ -30,7 +30,7 @@ import { DRAWERS } from '@/constants/drawers';
  * Item action-bar of readonly details drawer.
  */
 function ItemDetailActionsBar({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -81,5 +81,5 @@ function ItemDetailActionsBar({
 
 export default compose(
   withDrawerActions,
-  withAlertsActions,
+  withAlertActions,
 )(ItemDetailActionsBar);

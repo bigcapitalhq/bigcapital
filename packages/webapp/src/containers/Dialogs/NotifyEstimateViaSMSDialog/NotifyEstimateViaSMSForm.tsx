@@ -9,7 +9,7 @@ import NotifyViaSMSForm from '@/containers/NotifyViaSMS/NotifyViaSMSForm';
 import { useEstimateViaSMSContext } from './NotifyEstimateViaSMSFormProvider';
 import { transformErrors } from '@/containers/NotifyViaSMS/utils';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 const notificationType = {

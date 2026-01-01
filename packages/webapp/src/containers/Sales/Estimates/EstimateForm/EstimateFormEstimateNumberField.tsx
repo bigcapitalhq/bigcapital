@@ -10,8 +10,8 @@ import {
   Icon,
   InputPrependButton,
 } from '@/components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 /**
  * Estimate number field of estimate form.

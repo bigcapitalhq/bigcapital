@@ -27,11 +27,11 @@ import {
   DashboardActionsBar,
 } from '@/components';
 
-import withPaymentsReceived from './withPaymentsReceived';
-import withPaymentsReceivedActions from './withPaymentsReceivedActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withPaymentsReceived } from './withPaymentsReceived';
+import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   PaymentReceiveAction,
   AbilitySubject,
@@ -43,7 +43,7 @@ import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { useBulkDeletePaymentReceivesDialog } from './hooks/use-bulk-delete-payment-receives-dialog';
 

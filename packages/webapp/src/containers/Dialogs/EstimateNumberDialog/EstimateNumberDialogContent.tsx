@@ -6,8 +6,8 @@ import { DialogContent } from '@/components';
 import { useSaveSettings, useSettingsEstimates } from '@/hooks/query';
 
 import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { compose, saveInvoke } from '@/utils';
 import {

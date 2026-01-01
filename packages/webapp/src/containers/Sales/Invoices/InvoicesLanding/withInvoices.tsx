@@ -6,7 +6,7 @@ import {
   getInvoicesSelectedRowsFactory,
 } from '@/store/Invoice/invoices.selector';
 
-export default (mapState) => {
+export const withInvoices = (mapState) => {
   const getInvoicesTableState = getInvoicesTableStateFactory();
   const isInvoicesTableStateChanged = isInvoicesTableStateChangedFactory();
   const getSelectedRows = getInvoicesSelectedRowsFactory();

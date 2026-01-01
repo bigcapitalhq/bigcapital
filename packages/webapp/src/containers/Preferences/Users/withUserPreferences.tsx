@@ -11,4 +11,4 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch({ type: t.CLOSE_DIALOG, name, payload }),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withUserPreferences = connect(null, mapDispatchToProps);

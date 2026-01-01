@@ -11,7 +11,7 @@ import { CreateCustomerOpeningBalanceFormSchema } from './CustomerOpeningBalance
 import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormProvider';
 
 import CustomerOpeningBalanceFormContent from './CustomerOpeningBalanceFormContent';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 

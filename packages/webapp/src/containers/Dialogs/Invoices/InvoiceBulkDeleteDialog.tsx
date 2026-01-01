@@ -5,8 +5,8 @@ import intl from 'react-intl-universal';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 
 import withDialogRedux from '@/components/DialogReduxConnect';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withInvoiceActions from '@/containers/Sales/Invoices/InvoicesLanding/withInvoiceActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withInvoiceActions } from '@/containers/Sales/Invoices/InvoicesLanding/withInvoiceActions';
 import { useBulkDeleteInvoices } from '@/hooks/query/invoices';
 import { AppToaster } from '@/components';
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';

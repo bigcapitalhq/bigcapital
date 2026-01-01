@@ -9,8 +9,8 @@ import { FormattedMessage as T } from '@/components';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 
-import withBalanceSheet from './withBalanceSheet';
-import withBalanceSheetActions from './withBalanceSheetActions';
+import { withBalanceSheet } from './withBalanceSheet';
+import { withBalanceSheetActions } from './withBalanceSheetActions';
 
 import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
 import BalanceSheetHeaderComparisonPanal from './BalanceSheetHeaderComparisonPanal';

@@ -5,8 +5,8 @@ import { Redirect } from 'react-router-dom';
 import { BillingPageBoot } from './BillingPageBoot';
 import { BillingPageContent } from './BillingPageContent';
 import { useDashboardMeta } from '@/hooks/query';
-import withAlertActions from '../Alert/withAlertActions';
-import withDashboardActions from '../Dashboard/withDashboardActions';
+import { withAlertActions } from '../Alert/withAlertActions';
+import { withDashboardActions } from '../Dashboard/withDashboardActions';
 
 function BillingPageRoot({
   openAlert,

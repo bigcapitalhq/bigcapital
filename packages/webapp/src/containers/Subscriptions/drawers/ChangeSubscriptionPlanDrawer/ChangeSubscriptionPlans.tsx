@@ -8,7 +8,7 @@ import { useSubscriptionPlans } from '@/hooks/constants/useSubscriptionPlans';
 import { useChangeSubscriptionPlan } from '@/hooks/query/subscription';
 import { withSubscriptionPlanMapper } from '../../component/withSubscriptionPlanMapper';
 import { withPlans } from '../../withPlans';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 
 export function ChangeSubscriptionPlans() {

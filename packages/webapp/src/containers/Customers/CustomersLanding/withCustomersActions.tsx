@@ -15,4 +15,4 @@ export const mapDispatchToProps = (dispatch) => ({
   resetCustomersSelectedRows: () => dispatch(resetCustomersSelectedRows()),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withCustomersActions = connect(null, mapDispatchToProps);

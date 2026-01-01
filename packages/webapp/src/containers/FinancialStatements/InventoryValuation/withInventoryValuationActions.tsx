@@ -7,4 +7,4 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleInventoryValuationFilterDrawer(toggle)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withInventoryValuationActions = connect(null, mapDispatchToProps);

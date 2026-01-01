@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getUnrealizedGainOrLossFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withUnrealizedGainOrLoss = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       unrealizedGainOrLossDrawerFilter:

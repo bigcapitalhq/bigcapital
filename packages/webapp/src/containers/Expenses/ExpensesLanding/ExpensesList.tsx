@@ -8,8 +8,8 @@ import { DashboardPageContent } from '@/components';
 import ExpenseActionsBar from './ExpenseActionsBar';
 import ExpenseDataTable from './ExpenseDataTable';
 
-import withExpenses from './withExpenses';
-import withExpensesActions from './withExpensesActions';
+import { withExpenses } from './withExpenses';
+import { withExpensesActions } from './withExpensesActions';
 
 import { compose, transformTableStateToQuery } from '@/utils';
 import { ExpensesListProvider } from './ExpensesListProvider';

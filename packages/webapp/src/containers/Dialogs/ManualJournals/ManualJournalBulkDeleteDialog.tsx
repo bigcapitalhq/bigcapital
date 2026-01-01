@@ -7,8 +7,8 @@ import intl from 'react-intl-universal';
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteManualJournals } from '@/hooks/query/manualJournals';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withManualJournalsActions from '@/containers/Accounting/JournalsLanding/withManualJournalsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withManualJournalsActions } from '@/containers/Accounting/JournalsLanding/withManualJournalsActions';
 import { compose } from '@/utils';
 
 function ManualJournalBulkDeleteDialog({

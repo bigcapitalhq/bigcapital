@@ -18,8 +18,8 @@ import WarehouseTransferEditorField from './WarehouseTransferEditorField';
 import WarehouseTransferFormFooter from './WarehouseTransferFormFooter';
 import WarehouseTransferFloatingActions from './WarehouseTransferFloatingActions';
 import WarehouseTransferFormDialog from './WarehouseTransferFormDialog';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { AppToaster } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';

@@ -3,7 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 
 import { ButtonLink } from '../Button';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 
 function CustomerDrawerLinkComponent({

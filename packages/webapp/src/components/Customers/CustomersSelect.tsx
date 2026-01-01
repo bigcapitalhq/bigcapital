@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import { useFormikContext } from 'formik';
 import { createNewItemFromQuery, createNewItemRenderer } from './utils';
 import { FSelect } from '../Forms';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useCreateAutofillListener } from '@/hooks/state/autofill';
 import { DRAWERS } from '@/constants/drawers';
 

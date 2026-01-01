@@ -12,8 +12,8 @@ import FinancialStatementHeader from '../FinancialStatementHeader';
 import InventoryItemDetailsHeaderGeneralPanel from './InventoryItemDetailsHeaderGeneralPanel';
 import InventoryItemDetailsHeaderDimensionsPanel from './InventoryItemDetailsHeaderDimensionsPanel';
 
-import withInventoryItemDetails from './withInventoryItemDetails';
-import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
+import { withInventoryItemDetails } from './withInventoryItemDetails';
+import { withInventoryItemDetailsActions } from './withInventoryItemDetailsActions';
 
 import {
   getInventoryItemDetailsDefaultQuery,

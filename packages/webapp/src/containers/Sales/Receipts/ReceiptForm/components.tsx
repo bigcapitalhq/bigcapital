@@ -10,13 +10,13 @@ import { useCurrentOrganization } from '@/hooks/state';
 import { useReceiptIsForeignCustomer, useReceiptTotal } from './utils';
 import { useUpdateEffect } from '@/hooks';
 import { transactionNumber } from '@/utils';
-import withSettings from '@/containers/Settings/withSettings';
+import { withSettings } from '@/containers/Settings/withSettings';
 import {
   useSyncExRateToForm,
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 /**

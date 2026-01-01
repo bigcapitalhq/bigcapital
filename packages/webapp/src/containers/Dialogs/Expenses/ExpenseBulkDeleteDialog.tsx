@@ -7,8 +7,8 @@ import intl from 'react-intl-universal';
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteExpenses } from '@/hooks/query/expenses';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withExpensesActions from '@/containers/Expenses/ExpensesLanding/withExpensesActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withExpensesActions } from '@/containers/Expenses/ExpensesLanding/withExpensesActions';
 import { compose } from '@/utils';
 
 function ExpenseBulkDeleteDialog({

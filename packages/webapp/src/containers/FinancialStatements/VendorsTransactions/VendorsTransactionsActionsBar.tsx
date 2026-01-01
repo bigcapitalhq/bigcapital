@@ -15,12 +15,12 @@ import classNames from 'classnames';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
-import withVendorsTransaction from './withVendorsTransaction';
-import withVendorsTransactionsActions from './withVendorsTransactionsActions';
+import { withVendorsTransaction } from './withVendorsTransaction';
+import { withVendorsTransactionsActions } from './withVendorsTransactionsActions';
 
 import { compose, saveInvoke } from '@/utils';
 import { VendorTransactionsExportMenu } from './components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 /**

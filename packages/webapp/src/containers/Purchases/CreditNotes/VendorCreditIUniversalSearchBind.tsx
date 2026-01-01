@@ -7,7 +7,7 @@ import { TextStatus, Icon, Choose, T } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, VendorCreditAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Vendor credit universal search item select action.

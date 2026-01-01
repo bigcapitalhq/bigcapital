@@ -30,11 +30,11 @@ import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-
 import { useBulkDeleteVendorsDialog } from './hooks/use-bulk-delete-vendors-dialog';
 import { isEmpty } from 'lodash';
 
-import withVendors from './withVendors';
-import withVendorsActions from './withVendorsActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withVendors } from './withVendors';
+import { withVendorsActions } from './withVendorsActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';

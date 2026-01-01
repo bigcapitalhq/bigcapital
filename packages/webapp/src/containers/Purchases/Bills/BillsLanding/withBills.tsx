@@ -6,7 +6,7 @@ import {
   getBillsSelectedRowsFactory,
 } from '@/store/Bills/bills.selectors';
 
-export default (mapState) => {
+export const withBills = (mapState) => {
   const getBillsTableState = getBillsTableStateFactory();
   const billsTableStateChanged = billsTableStateChangedFactory();
   const getBillsSelectedRows = getBillsSelectedRowsFactory();

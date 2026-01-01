@@ -13,7 +13,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 import { useInviteUserFormContext } from './InviteUserFormProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 function InviteUserFormContent({
   // #withDialogActions

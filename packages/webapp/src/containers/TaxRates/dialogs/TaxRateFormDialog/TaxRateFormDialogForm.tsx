@@ -20,8 +20,8 @@ import { useCreateTaxRate, useEditTaxRate } from '@/hooks/query/taxRates';
 import { useTaxRateFormDialogContext } from './TaxRateFormDialogBoot';
 import { TaxRateFormDialogFormFooter } from './TaxRateFormDialogFormFooter';
 import { TaxRateFormDialogFormErrors } from './TaxRateFormDialogFormErrors';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DRAWERS } from '@/constants/drawers';
 import { compose } from '@/utils';
 

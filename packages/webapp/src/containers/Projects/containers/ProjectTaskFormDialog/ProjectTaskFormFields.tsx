@@ -11,7 +11,7 @@ import {
   InputPrependText,
 } from '@/components';
 import { EstimateAmount } from './utils';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { compose } from '@/utils';
 
 /**

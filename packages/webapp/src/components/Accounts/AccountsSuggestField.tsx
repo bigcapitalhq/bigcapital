@@ -4,7 +4,7 @@ import { MenuItem } from '@blueprintjs/core';
 import { ItemRenderer, ItemPredicate } from '@blueprintjs/select';
 import { DialogsName } from '@/constants/dialogs';
 import { FSuggest, Suggest, FormattedMessage as T } from '@/components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePreprocessingAccounts } from './_hooks';
 
 // Account interface

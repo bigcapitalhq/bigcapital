@@ -7,4 +7,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleProjectProfitabilitySummaryFilterDrawer(toggle)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withProjectProfitabilitySummaryActions = connect(null, mapDispatchToProps);

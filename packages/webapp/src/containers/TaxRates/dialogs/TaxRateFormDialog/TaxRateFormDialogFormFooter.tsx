@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import { useFormikContext } from 'formik';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { DialogsName } from '@/constants/dialogs';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 function TaxRateFormDialogFormFooterRoot({ closeDialog }) {
   const { isSubmitting } = useFormikContext();

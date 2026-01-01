@@ -2,10 +2,10 @@
 import {connect} from 'react-redux';
 import {compose} from '@/utils';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withResourceDetail from '@/containers/Resources/withResourceDetails';
-import withViewsActions from '@/containers/Views/withViewsActions';
-import withViewsDetails from '@/containers/Views/withViewDetails';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withResourceDetail } from '@/containers/Resources/withResourceDetails';
+import { withViewsActions } from '@/containers/Views/withViewsActions';
+import { withViewsDetails } from '@/containers/Views/withViewDetails';
 
 const mapStateToProps = (state, ownProps) => {
   return {

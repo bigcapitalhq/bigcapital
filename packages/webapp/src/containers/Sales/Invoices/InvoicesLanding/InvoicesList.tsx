@@ -9,9 +9,9 @@ import { InvoicesListProvider } from './InvoicesListProvider';
 import InvoicesDataTable from './InvoicesDataTable';
 import InvoicesActionsBar from './InvoicesActionsBar';
 
-import withInvoices from './withInvoices';
-import withInvoiceActions from './withInvoiceActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withInvoices } from './withInvoices';
+import { withInvoiceActions } from './withInvoiceActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { transformTableStateToQuery, compose } from '@/utils';
 
@@ -54,5 +54,5 @@ export default compose(
     invoicesTableStateChanged,
   })),
   withInvoiceActions,
-  withAlertsActions,
+  withAlertActions,
 )(InvoicesList);

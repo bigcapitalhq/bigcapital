@@ -13,4 +13,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setReceiptsSelectedRows(selectedRows)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withReceiptsActions = connect(null, mapDispatchToProps);

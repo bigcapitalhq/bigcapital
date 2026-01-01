@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, VendorAction } from '@/constants/abilityOption';
-import withDrawerActions from '../Drawer/withDrawerActions';
+import { withDrawerActions } from '../Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 
 /**

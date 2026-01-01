@@ -5,7 +5,7 @@ import {
   isCreditNotesTableStateChangedFactory,
 } from '@/store/CreditNote/creditNote.selector';
 
-export default (mapState) => {
+export const withCreditNotes = (mapState) => {
   const getCreditNoteTableState = getCreditNotesTableStateFactory();
   const isCreditNoteTableChanged = isCreditNotesTableStateChangedFactory();
 

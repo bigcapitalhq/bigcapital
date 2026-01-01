@@ -36,8 +36,8 @@ import {
   safeSumBy,
 } from '@/utils';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import {
   CreditNoteExchangeRateSync,
   CreditNoteSyncIncrementSettingsToForm,

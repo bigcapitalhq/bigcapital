@@ -8,7 +8,7 @@ import { T, Icon, Choose, If } from '@/components';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, BillAction } from '@/constants/abilityOption';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 
 /**

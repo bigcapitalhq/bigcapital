@@ -23,7 +23,7 @@ import { FMoneyInputGroup, FFormGroup } from '@/components/Forms';
 import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormProvider';
 import { useSetPrimaryBranchToForm } from './utils';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { compose } from '@/utils';
 
 /**

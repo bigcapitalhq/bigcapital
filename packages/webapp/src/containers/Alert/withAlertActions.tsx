@@ -11,4 +11,4 @@ export const mapDispatchToProps = (dispatch) => ({
   closeAlert: (name, payload) => dispatch({ type: t.CLOSE_ALERT, name, payload }),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withAlertActions = connect(null, mapDispatchToProps);

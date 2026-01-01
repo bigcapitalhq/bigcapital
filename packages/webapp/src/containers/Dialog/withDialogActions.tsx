@@ -28,4 +28,4 @@ function withDialogActions<P>(
   return Connected as unknown as ComponentType<Omit<P, keyof WithDialogActionsProps>>;
 }
 
-export default withDialogActions;
+export { withDialogActions };

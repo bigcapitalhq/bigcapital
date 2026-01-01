@@ -2,6 +2,6 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom"
 
-export default (mapState) => {
+export const withRoute = (mapState) => {
   return () => withRouter ;
 };

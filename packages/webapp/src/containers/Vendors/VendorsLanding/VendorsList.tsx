@@ -9,8 +9,8 @@ import { VendorsListProvider } from './VendorsListProvider';
 import VendorActionsBar from './VendorActionsBar';
 import VendorsTable from './VendorsTable';
 
-import withVendors from './withVendors';
-import withVendorsActions from './withVendorsActions';
+import { withVendors } from './withVendors';
+import { withVendorsActions } from './withVendorsActions';
 
 import { compose } from '@/utils';
 

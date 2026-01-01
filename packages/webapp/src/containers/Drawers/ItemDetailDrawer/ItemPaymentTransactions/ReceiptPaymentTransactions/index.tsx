@@ -8,8 +8,8 @@ import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
 import { useItemAssociatedReceiptTransactions } from '@/hooks/query';
 import { useReceiptTransactionsColumns, ActionsMenu } from './components';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -18,7 +18,7 @@ import { DRAWERS } from '@/constants/drawers';
  * Receipt payment transactions.
  */
 function ReceiptPaymentTransactions({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -72,6 +72,6 @@ function ReceiptPaymentTransactions({
 }
 
 export default compose(
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
 )(ReceiptPaymentTransactions);

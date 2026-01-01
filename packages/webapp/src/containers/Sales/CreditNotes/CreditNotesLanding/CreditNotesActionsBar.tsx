@@ -30,12 +30,12 @@ import { useCreditNoteListContext } from './CreditNotesListProvider';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
-import withCreditNotes from './withCreditNotes';
-import withCreditNotesActions from './withCreditNotesActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withCreditNotes } from './withCreditNotes';
+import { withCreditNotesActions } from './withCreditNotesActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';

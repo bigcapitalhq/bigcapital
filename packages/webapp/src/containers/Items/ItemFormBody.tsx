@@ -16,7 +16,7 @@ import {
 import { FormattedMessage as T } from '@/components';
 
 import { useItemFormContext } from './ItemFormProvider';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { ACCOUNT_PARENT_TYPE } from '@/constants/accountTypes';
 import {
   sellDescriptionFieldShouldUpdate,

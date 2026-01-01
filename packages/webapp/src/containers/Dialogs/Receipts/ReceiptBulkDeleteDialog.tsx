@@ -7,8 +7,8 @@ import intl from 'react-intl-universal';
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteReceipts } from '@/hooks/query/receipts';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withReceiptsActions from '@/containers/Sales/Receipts/ReceiptsLanding/withReceiptsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withReceiptsActions } from '@/containers/Sales/Receipts/ReceiptsLanding/withReceiptsActions';
 import { compose } from '@/utils';
 
 function ReceiptBulkDeleteDialog({

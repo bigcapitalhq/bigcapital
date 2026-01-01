@@ -5,7 +5,7 @@ import {
   getDrawerPayloadFactory,
 } from '@/store/dashboard/dashboard.selectors';
 
-export default (mapState) => {
+export const withDrawers = (mapState) => {
   const isDrawerOpen = isDrawerOpenFactory();
   const getDrawerPayload = getDrawerPayloadFactory();
 

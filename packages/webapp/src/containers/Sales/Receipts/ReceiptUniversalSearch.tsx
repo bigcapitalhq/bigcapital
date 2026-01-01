@@ -6,7 +6,7 @@ import { MenuItem } from '@blueprintjs/core';
 import { Icon, Choose, T } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, SaleReceiptAction } from '@/constants/abilityOption';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 
 /**

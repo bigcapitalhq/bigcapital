@@ -10,8 +10,8 @@ import { JournalBody } from './JournalBody';
 import { JournalSheetProvider } from './JournalProvider';
 import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withJournalActions from './withJournalActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withJournalActions } from './withJournalActions';
 
 import { useJournalQuery } from './utils';
 import { compose } from '@/utils';

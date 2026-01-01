@@ -31,8 +31,8 @@ import {
 import { momentFormatter, compose } from '@/utils';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-import withSettings from '@/containers/Settings/withSettings';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 /**
  * Quick payment receive form fields.

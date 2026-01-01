@@ -12,8 +12,8 @@ import {
   InputPrependButton,
 } from '@/components';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 /**
  * Payment receive number field.

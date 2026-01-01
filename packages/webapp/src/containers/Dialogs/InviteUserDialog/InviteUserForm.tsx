@@ -6,7 +6,7 @@ import { Intent } from '@blueprintjs/core';
 import { pick, snakeCase } from 'lodash';
 import { AppToaster } from '@/components';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { InviteUserFormSchema } from './InviteUserDialog.schema';
 import InviteUserFormContent from './InviteUserFormContent';

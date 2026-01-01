@@ -2,10 +2,10 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import withUniversalSearch from './withUniversalSearch';
+import { withUniversalSearch } from './withUniversalSearch';
 
 import { getUniversalSearchItemsActions } from './utils';
-import withUniversalSearchActions from './withUniversalSearchActions';
+import { withUniversalSearchActions } from './withUniversalSearchActions';
 
 /**
  * Universal search selected item action based on each resource type.

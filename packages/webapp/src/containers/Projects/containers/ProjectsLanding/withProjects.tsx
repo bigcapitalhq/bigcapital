@@ -5,7 +5,7 @@ import {
   isProjectsTableStateChangedFactory,
 } from '@/store/Project/projects.selectors';
 
-export default (mapState) => {
+export const withProjects = (mapState) => {
   const getProjectsTableState = getProjectsTableStateFactory();
   const isProjectsTableStateChanged = isProjectsTableStateChangedFactory();
 
