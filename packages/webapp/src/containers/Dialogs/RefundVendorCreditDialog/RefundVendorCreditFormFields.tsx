@@ -19,7 +19,6 @@ import {
   FormattedMessage as T,
   ExchangeRateMutedField,
   BranchSelect,
-  BranchSelectButton,
   FeatureCan,
   FFormGroup,
   FDateInput,
@@ -57,7 +56,6 @@ function RefundVendorCreditFormFields({
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FFormGroup>
@@ -154,8 +152,8 @@ function RefundVendorCreditFormFields({
       </FFormGroup>
 
       {/* --------- Statement --------- */}
-      <FFormGroup name={'description'} fill fastField>
-        <FTextArea name={'description'} growVertically={true} fastField />
+      <FFormGroup name={'description'} label={<T id={'refund_vendor_credit.dialog.description'} />} fill fastField>
+        <FTextArea name={'description'} growVertically fill fastField />
       </FFormGroup>
     </div>
   );
@@ -164,7 +162,12 @@ function RefundVendorCreditFormFields({
 export default compose(withCurrentOrganization())(RefundVendorCreditFormFields);
 
 export const BranchRowDivider = styled.div`
+  --x-divider-color: #ebf1f6;
+
+  .bp4-dark & {
+    --x-divider-color: rgba(255, 255, 255, 0.1);
+  }
   height: 1px;
-  background: #ebf1f6;
+  background: var(--x-divider-color);
   margin-bottom: 13px;
 `;
