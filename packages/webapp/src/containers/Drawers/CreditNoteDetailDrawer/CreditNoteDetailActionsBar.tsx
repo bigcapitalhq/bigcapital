@@ -11,9 +11,9 @@ import {
 
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import {
   DrawerActionsBar,
@@ -35,7 +35,7 @@ function CreditNoteDetailActionsBar({
   // #withDialogActions
   openDialog,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -126,6 +126,6 @@ function CreditNoteDetailActionsBar({
 
 export default compose(
   withDialogActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
 )(CreditNoteDetailActionsBar);

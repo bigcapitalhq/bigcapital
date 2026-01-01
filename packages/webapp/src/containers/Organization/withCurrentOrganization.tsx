@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getCurrentOrganizationFactory } from '@/store/authentication/authentication.selectors';
 
-export default (mapState) => {
+export const withCurrentOrganization = (mapState) => {
   const getCurrentOrganization = getCurrentOrganizationFactory();
 
   const mapStateToProps = (state, props) => {

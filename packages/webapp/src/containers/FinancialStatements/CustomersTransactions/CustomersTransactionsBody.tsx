@@ -2,7 +2,7 @@
 import React from 'react';
 import * as R from 'ramda';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import CustomersTransactionsTable from './CustomersTransactionsTable';
 import { FinancialReportBody } from '../FinancialReportPage';

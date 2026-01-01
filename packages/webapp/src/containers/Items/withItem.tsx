@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getItemById } from '@/store/items/items.reducer';
 
-export default (mapState) => {
+export const withItem = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       item: getItemById(state, props.itemId),

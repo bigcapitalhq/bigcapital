@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux';
 
-export default (mapState) => {
+export const withDashboard = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       pageTitle: state.dashboard.pageTitle,

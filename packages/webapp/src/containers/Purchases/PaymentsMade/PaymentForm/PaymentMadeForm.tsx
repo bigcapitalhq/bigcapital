@@ -21,9 +21,9 @@ import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { compose, orderingLinesIndexes } from '@/utils';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { PageForm } from '@/components/PageForm';
 
 import {

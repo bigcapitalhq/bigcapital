@@ -13,12 +13,12 @@ import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
 
 import WarehouseTransfersEmptyStatus from './WarehouseTransfersEmptyStatus';
-import withWarehouseTransfersActions from './withWarehouseTransfersActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -30,7 +30,7 @@ function WarehouseTransfersDataTable({
   // #withWarehouseTransfersActions
   setWarehouseTransferTableState,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -147,7 +147,7 @@ function WarehouseTransfersDataTable({
 export default compose(
   withDashboardActions,
   withWarehouseTransfersActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withDialogActions,
   withSettings(({ warehouseTransferSettings }) => ({

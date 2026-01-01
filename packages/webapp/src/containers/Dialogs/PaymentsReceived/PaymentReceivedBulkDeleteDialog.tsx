@@ -7,8 +7,8 @@ import intl from 'react-intl-universal';
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeletePaymentReceives } from '@/hooks/query/paymentReceives';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withPaymentsReceivedActions from '@/containers/Sales/PaymentsReceived/PaymentsLanding/withPaymentsReceivedActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withPaymentsReceivedActions } from '@/containers/Sales/PaymentsReceived/PaymentsLanding/withPaymentsReceivedActions';
 import { compose } from '@/utils';
 
 function PaymentReceivedBulkDeleteDialog({

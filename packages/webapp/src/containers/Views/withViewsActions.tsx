@@ -20,4 +20,4 @@ export const mapDispatchToProps = (dispatch) => ({
   requestFetchViewResource: (id) => dispatch(fetchViewResource({ id })),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withViewsActions = connect(null, mapDispatchToProps);

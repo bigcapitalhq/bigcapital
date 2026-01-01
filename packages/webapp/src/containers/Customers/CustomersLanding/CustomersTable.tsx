@@ -13,12 +13,12 @@ import {
 } from '@/components';
 import { ActionsMenu, useCustomersTableColumns } from './components';
 
-import withCustomers from './withCustomers';
-import withCustomersActions from './withCustomersActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withCustomers } from './withCustomers';
+import { withCustomersActions } from './withCustomersActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { useCustomersListContext } from './CustomersListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
@@ -174,7 +174,7 @@ function CustomersTable({
 }
 
 export default compose(
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
   withCustomersActions,
   withDrawerActions,

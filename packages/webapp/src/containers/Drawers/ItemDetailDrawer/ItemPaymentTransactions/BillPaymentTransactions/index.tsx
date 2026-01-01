@@ -8,8 +8,8 @@ import { TableStyle } from '@/constants';
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
 import { useItemAssociatedBillTransactions } from '@/hooks/query';
 import { useBillTransactionsColumns, ActionsMenu } from './components';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -18,7 +18,7 @@ import { DRAWERS } from '@/constants/drawers';
  * Bill payment transactions data table.
  */
 function BillPaymentTransactions({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -70,6 +70,6 @@ function BillPaymentTransactions({
   );
 }
 export default compose(
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
 )(BillPaymentTransactions);

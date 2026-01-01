@@ -7,4 +7,4 @@ const mapActionsToProps = (dispatch) => ({
     dispatch(toggleAPAgingSummaryFilterDrawer(toggle)),
 });
 
-export default connect(null, mapActionsToProps);
+export const withAPAgingSummaryActions = connect(null, mapActionsToProps);

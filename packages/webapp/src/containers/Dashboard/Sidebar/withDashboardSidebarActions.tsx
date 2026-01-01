@@ -14,4 +14,4 @@ const mapActionsToProps = (dispatch) => ({
   closeDashboardSidebarSubmenu: () => dispatch(closeSidebarSubmenu()),
 });
 
-export default connect(null, mapActionsToProps);
+export const withDashboardSidebarActions = connect(null, mapActionsToProps);

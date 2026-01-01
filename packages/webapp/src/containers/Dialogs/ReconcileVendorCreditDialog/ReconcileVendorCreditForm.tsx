@@ -10,7 +10,7 @@ import { AppToaster } from '@/components';
 import { CreateReconcileVendorCreditFormSchema } from './ReconcileVendorCreditForm.schema';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
 import ReconcileVendorCreditFormContent from './ReconcileVendorCreditFormContent';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
 
 // Default form initial values.

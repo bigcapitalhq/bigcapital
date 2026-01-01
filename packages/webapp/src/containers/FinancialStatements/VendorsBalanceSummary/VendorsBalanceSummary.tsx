@@ -11,7 +11,7 @@ import { VendorsBalanceSummaryProvider } from './VendorsBalanceSummaryProvider';
 import { VendorsSummarySheetLoadingBar } from './components';
 import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
 
-import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
+import { withVendorsBalanceSummaryActions } from './withVendorsBalanceSummaryActions';
 
 import { useVendorsBalanceSummaryQuery } from './utils';
 import { VendorBalanceDialogs } from './VendorBalanceDialogs';

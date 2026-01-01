@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getPlanSelector } from '@/store/plans/plans.selectors';
 
-export default (mapState) => {
+export const withPlan = (mapState) => {
   const mapStateToProps = (state, props) => {
     const getPlan = getPlanSelector();
 

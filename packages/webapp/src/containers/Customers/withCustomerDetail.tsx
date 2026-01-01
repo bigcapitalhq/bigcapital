@@ -6,4 +6,4 @@ const mapStateToProps = (state, props) => ({
   customer: getCustomerById(state, props.customerId),
 });
 
-export default connect(mapStateToProps);
+export const withCustomerDetail = connect(mapStateToProps);

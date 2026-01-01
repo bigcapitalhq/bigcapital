@@ -5,7 +5,7 @@ import { Form, useFormikContext } from 'formik';
 import { ExportResources } from './constants';
 import styles from './ExportDialogContent.module.scss';
 import { compose } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 function ExportDialogFormContentRoot({

@@ -9,8 +9,8 @@ import { Formik, Form } from 'formik';
 import FinancialStatementHeader from '../FinancialStatementHeader';
 import CustomersTransactionsHeaderGeneralPanel from './CustomersTransactionsHeaderGeneralPanel';
 
-import withCustomersTransactions from './withCustomersTransactions';
-import withCustomersTransactionsActions from './withCustomersTransactionsActions';
+import { withCustomersTransactions } from './withCustomersTransactions';
+import { withCustomersTransactionsActions } from './withCustomersTransactionsActions';
 
 import { compose, transformToForm } from '@/utils';
 import {

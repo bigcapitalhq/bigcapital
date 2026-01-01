@@ -9,7 +9,7 @@ import { AppToaster } from '@/components';
 import ProjectTimeEntryFormContent from './ProjectTimeEntryFormContent';
 import { CreateProjectTimeEntryFormSchema } from './ProjectTimeEntryForm.schema';
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose, transformToForm } from '@/utils';
 

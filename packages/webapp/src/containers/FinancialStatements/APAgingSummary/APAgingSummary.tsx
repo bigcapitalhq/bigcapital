@@ -12,7 +12,7 @@ import { APAgingSummaryBody } from './APAgingSummaryBody';
 import { APAgingSummaryProvider } from './APAgingSummaryProvider';
 import { APAgingSummarySheetLoadingBar } from './components';
 
-import withAPAgingSummaryActions from './withAPAgingSummaryActions';
+import { withAPAgingSummaryActions } from './withAPAgingSummaryActions';
 
 import { compose } from '@/utils';
 import { APAgingSummaryPdfDialog } from './dialogs/APAgingSummaryPdfDialog';

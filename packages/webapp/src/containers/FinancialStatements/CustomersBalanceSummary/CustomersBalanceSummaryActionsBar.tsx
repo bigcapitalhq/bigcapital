@@ -13,12 +13,12 @@ import classNames from 'classnames';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import withCustomersBalanceSummary from './withCustomersBalanceSummary';
-import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
+import { withCustomersBalanceSummary } from './withCustomersBalanceSummary';
+import { withCustomersBalanceSummaryActions } from './withCustomersBalanceSummaryActions';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { compose, saveInvoke } from '@/utils';
 import { CustomerBalanceSummaryExportMenu } from './components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 /**

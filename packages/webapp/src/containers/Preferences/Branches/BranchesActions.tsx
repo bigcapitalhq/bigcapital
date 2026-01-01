@@ -4,7 +4,7 @@ import { Button, Intent } from '@blueprintjs/core';
 
 import { Features } from '@/constants';
 import { FeatureCan, FormattedMessage as T, Icon } from '@/components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 function BranchesActions({

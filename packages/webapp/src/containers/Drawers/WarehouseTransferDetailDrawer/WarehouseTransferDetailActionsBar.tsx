@@ -12,9 +12,9 @@ import {
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
 import { DrawerActionsBar, Icon, FormattedMessage as T } from '@/components';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { DRAWERS } from '@/constants/drawers';
 import { compose } from '@/utils';
@@ -23,7 +23,7 @@ import { compose } from '@/utils';
  * Warehouse transfer detail actions bar.
  */
 function WarehouseTransferDetailActionsBar({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -68,6 +68,6 @@ function WarehouseTransferDetailActionsBar({
 
 export default compose(
   withDialogActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
 )(WarehouseTransferDetailActionsBar);

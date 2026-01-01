@@ -22,9 +22,9 @@ import {
 import { BankAccountsList, BankAccount, If, Icon, T, Can } from '@/components';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { safeCallback } from '@/utils';
@@ -136,7 +136,7 @@ function CashflowBankAccount({
 }
 
 const CashflowBankAccountEnhanced = compose(
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withDialogActions,
 )(CashflowBankAccount);

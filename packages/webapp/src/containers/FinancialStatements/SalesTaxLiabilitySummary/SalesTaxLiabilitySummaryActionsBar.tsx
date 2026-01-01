@@ -16,11 +16,11 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import { compose, saveInvoke } from '@/utils';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
-import withSalesTaxLiabilitySummary from './withSalesTaxLiabilitySummary';
-import withSalesTaxLiabilitySummaryActions from './withSalesTaxLiabilitySummaryActions';
+import { withSalesTaxLiabilitySummary } from './withSalesTaxLiabilitySummary';
+import { withSalesTaxLiabilitySummaryActions } from './withSalesTaxLiabilitySummaryActions';
 import { SalesTaxLiabilityExportMenu } from './components';
 import { DialogsName } from '@/constants/dialogs';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 /**
  * Sales tax liability summary - actions bar.

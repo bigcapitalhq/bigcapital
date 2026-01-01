@@ -13,12 +13,12 @@ import { TABLES } from '@/constants/tables';
 
 import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
 
-import withReceipts from './withReceipts';
-import withReceiptsActions from './withReceiptsActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withReceipts } from './withReceipts';
+import { withReceiptsActions } from './withReceiptsActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useReceiptsTableColumns, ActionsMenu } from './components';
@@ -37,7 +37,7 @@ function ReceiptsDataTable({
   // #withReceipts
   receiptTableState,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -163,7 +163,7 @@ function ReceiptsDataTable({
 }
 
 export default compose(
-  withAlertsActions,
+  withAlertActions,
   withReceiptsActions,
   withDrawerActions,
   withDialogActions,

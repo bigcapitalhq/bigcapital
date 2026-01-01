@@ -4,8 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 
 import PaymentMadeViewTabs from './PaymentMadeViewTabs';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 
@@ -22,7 +22,7 @@ function PaymentMadesViewPage({
         exact={true}
         path={['/payments-made/:custom_view_id/custom_view', '/payments-made']}
       >
-        
+
         {/* <PaymentMadeDataTable
               onDeletePaymentMade={handleDeletePaymentMade}
               onEditPaymentMade={handleEditPaymentMade}
@@ -34,6 +34,6 @@ function PaymentMadesViewPage({
 }
 
 export default compose(
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
 )(PaymentMadesViewPage);

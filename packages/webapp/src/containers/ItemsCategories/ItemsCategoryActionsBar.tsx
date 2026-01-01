@@ -15,10 +15,10 @@ import {
   DashboardActionsBar,
 } from '@/components';
 
-import withItemCategories from './withItemCategories';
-import withItemCategoriesActions from './withItemCategoriesActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withItemCategories } from './withItemCategories';
+import { withItemCategoriesActions } from './withItemCategoriesActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { compose } from '@/utils';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';

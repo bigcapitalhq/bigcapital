@@ -15,7 +15,7 @@ import * as R from 'ramda';
 
 import { Icon, T, Choose, Can } from '@/components';
 import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
 /**
@@ -54,9 +54,9 @@ export function EstimateDetailsStatus({ estimate }) {
   );
 }
 
-export const EstimateMoreMenuItems = R.compose(withAlertsActions)(
+export const EstimateMoreMenuItems = R.compose(withAlertActions)(
   ({
-    // # withAlertsActions,
+    // # withAlertActions,
     openAlert,
 
     // # rest

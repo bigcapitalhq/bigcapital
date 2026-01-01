@@ -12,7 +12,7 @@ import { CreateSMSMessageFormSchema } from './SMSMessageForm.schema';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import { transformErrors } from './utils';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose, transformToForm } from '@/utils';
 

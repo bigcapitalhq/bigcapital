@@ -11,7 +11,7 @@ import { Money, ExchangeRateInputGroup, MoneyFieldCell } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
 import { useEstimateIsForeignCustomer } from './utils';
 import { transactionNumber } from '@/utils';
-import withSettings from '@/containers/Settings/withSettings';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 /**
  * Invoice date cell.

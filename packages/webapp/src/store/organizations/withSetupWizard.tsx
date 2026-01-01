@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
 
-export default (mapState) => {
+export const withSetupWizard = (mapState) => {
   const mapStateToProps = (state, props) => {
     const {
       isOrganizationSetupCompleted,

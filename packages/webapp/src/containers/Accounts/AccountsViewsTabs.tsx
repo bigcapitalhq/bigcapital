@@ -6,8 +6,8 @@ import intl from 'react-intl-universal';
 import { DashboardViewsTabs } from '@/components';
 import { useAccountsChartContext } from './AccountsChartProvider';
 
-import withAccounts from './withAccounts';
-import withAccountsTableActions from './withAccountsTableActions';
+import { withAccounts } from './withAccounts';
+import { withAccountsTableActions } from './withAccountsTableActions';
 
 import { compose, transfromViewsToTabs } from '@/utils';
 

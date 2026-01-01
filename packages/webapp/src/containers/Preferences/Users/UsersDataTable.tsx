@@ -5,8 +5,8 @@ import { compose } from '@/utils';
 import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { useResendInvitation } from '@/hooks/query';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { ActionsMenu, useUsersListColumns } from './components';
 import { useUsersListContext } from './UsersProvider';

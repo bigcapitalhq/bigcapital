@@ -11,8 +11,8 @@ import { FormattedMessage as T } from '@/components';
 import JournalSheetHeaderGeneral from './JournalSheetHeaderGeneral';
 import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 
-import withJournal from './withJournal';
-import withJournalActions from './withJournalActions';
+import { withJournal } from './withJournal';
+import { withJournalActions } from './withJournalActions';
 
 import { compose } from '@/utils';
 

@@ -15,4 +15,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setVendorCreditsSelectedRows(selectedRows)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withVendorsCreditNotesActions = connect(null, mapDispatchToProps);

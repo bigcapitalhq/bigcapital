@@ -16,11 +16,11 @@ import { CustomersTransactionsExportMenu } from './components';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
-import withCustomersTransactions from './withCustomersTransactions';
-import withCustomersTransactionsActions from './withCustomersTransactionsActions';
+import { withCustomersTransactions } from './withCustomersTransactions';
+import { withCustomersTransactionsActions } from './withCustomersTransactionsActions';
 
 import { compose, saveInvoke } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 /**

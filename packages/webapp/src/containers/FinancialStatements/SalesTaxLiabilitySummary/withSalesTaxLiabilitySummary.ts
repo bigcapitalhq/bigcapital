@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getSalesTaxLiabilitySummaryFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withSalesTaxLiabilitySummary = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       salesTaxLiabilitySummaryFilter:

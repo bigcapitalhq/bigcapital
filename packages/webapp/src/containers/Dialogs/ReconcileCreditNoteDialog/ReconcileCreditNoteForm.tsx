@@ -9,7 +9,7 @@ import { AppToaster } from '@/components';
 import { CreateReconcileCreditNoteFormSchema } from './ReconcileCreditNoteForm.schema';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import ReconcileCreditNoteFormContent from './ReconcileCreditNoteFormContent';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
 import { transformErrors } from './utils';
 

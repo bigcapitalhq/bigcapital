@@ -4,12 +4,12 @@ import { useHistory } from 'react-router-dom';
 
 import EstimatesEmptyStatus from './EstimatesEmptyStatus';
 
-import withEstimatesActions from './withEstimatesActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withEstimates from './withEstimates';
+import { withEstimatesActions } from './withEstimatesActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withEstimates } from './withEstimates';
 
 import { TABLES } from '@/constants/tables';
 import {
@@ -33,7 +33,7 @@ function EstimatesDataTable({
   setEstimatesTableState,
   setEstimatesSelectedRows,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -185,7 +185,7 @@ function EstimatesDataTable({
 
 export default compose(
   withEstimatesActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withDialogActions,
   withSettings(({ estimatesSettings }) => ({

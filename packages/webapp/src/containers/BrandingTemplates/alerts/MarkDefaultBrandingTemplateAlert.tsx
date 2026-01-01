@@ -5,8 +5,8 @@ import { AppToaster } from '@/components';
 import { Alert, Intent } from '@blueprintjs/core';
 import { useAssignPdfTemplateAsDefault } from '@/hooks/query/pdf-templates';
 
-import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { compose } from '@/utils';
 

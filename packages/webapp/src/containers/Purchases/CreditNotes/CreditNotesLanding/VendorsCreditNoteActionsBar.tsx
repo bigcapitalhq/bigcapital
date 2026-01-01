@@ -30,17 +30,17 @@ import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 
-import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withVendorActions from './withVendorActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withVendorActions } from './withVendorActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
-import withVendorsCreditNotes from './withVendorsCreditNotes';
+import { withVendorsCreditNotes } from './withVendorsCreditNotes';
 import { useBulkDeleteVendorCreditsDialog } from './hooks/use-bulk-delete-vendor-credits-dialog';
 
 /**

@@ -12,7 +12,7 @@ import {
   EditItemCategoryFormSchema,
 } from './itemCategoryForm.schema';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import ItemCategoryFormContent from './ItemCategoryFormContent';
 
 const defaultInitialValues = {

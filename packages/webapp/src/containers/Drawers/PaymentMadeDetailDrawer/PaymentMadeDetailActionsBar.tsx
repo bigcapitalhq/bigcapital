@@ -12,9 +12,9 @@ import {
 
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import {
   Can,
@@ -30,7 +30,7 @@ import { DRAWERS } from '@/constants/drawers';
  * Payment made - Details panel - actions bar.
  */
 function PaymentMadeDetailActionsBar({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -81,5 +81,5 @@ function PaymentMadeDetailActionsBar({
 export default compose(
   withDialogActions,
   withDrawerActions,
-  withAlertsActions,
+  withAlertActions,
 )(PaymentMadeDetailActionsBar);

@@ -7,4 +7,4 @@ const mapActionsToProps = (dispatch) => ({
     dispatch(toggleInventoryItemDetailsFilterDrawer(toggle)),
 });
 
-export default connect(null, mapActionsToProps);
+export const withInventoryItemDetailsActions = connect(null, mapActionsToProps);

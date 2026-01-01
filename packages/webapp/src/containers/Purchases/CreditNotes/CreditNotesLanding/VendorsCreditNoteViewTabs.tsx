@@ -4,8 +4,8 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
 
-import withVendorsCreditNotes from './withVendorsCreditNotes';
-import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
+import { withVendorsCreditNotes } from './withVendorsCreditNotes';
+import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
 
 import { compose, transfromViewsToTabs } from '@/utils';
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import * as R from 'ramda';
 import BigcapitalLoading from './BigcapitalLoading';
-import withDashboard from '@/containers/Dashboard/withDashboard';
+import { withDashboard } from '@/containers/Dashboard/withDashboard';
 
 function SplashScreenComponent({ splashScreenLoading }) {
   return splashScreenLoading ? <BigcapitalLoading /> : null;

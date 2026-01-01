@@ -8,10 +8,10 @@ import * as R from 'ramda';
 import { AppToaster } from '@/components';
 import { PreferencesReceiptsFormSchema } from './PreferencesReceiptsForm.schema';
 import { PreferencesReceiptsForm } from './PreferencesReceiptsForm';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
-import withSettings from '@/containers/Settings/withSettings';
+import { withSettings } from '@/containers/Settings/withSettings';
 import { useSaveSettings } from '@/hooks/query';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
 

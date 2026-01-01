@@ -5,7 +5,7 @@ import {
   accountsTableStateChangedFactory,
 } from '@/store/accounts/accounts.selectors';
 
-export default (mapState) => {
+export const withAccounts = (mapState) => {
   const getAccountsTableState = getAccountsTableStateFactory();
   const accountsTableStateChanged = accountsTableStateChangedFactory();
 

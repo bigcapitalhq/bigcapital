@@ -15,9 +15,9 @@ import {
   DashboardActionsBar,
 } from '@/components';
 import { ProjectTransactionsSelect } from './components';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { projectTranslations } from './common';
 import { useProjectDetailContext } from './ProjectDetailProvider';
 import { compose } from '@/utils';

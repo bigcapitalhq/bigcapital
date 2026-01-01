@@ -9,7 +9,7 @@ import { transformTableStateToQuery, compose } from '@/utils';
 import { ManualJournalsListProvider } from './ManualJournalsListProvider';
 import ManualJournalsDataTable from './ManualJournalsDataTable';
 import ManualJournalsActionsBar from './ManualJournalActionsBar';
-import withManualJournals from './withManualJournals';
+import { withManualJournals } from './withManualJournals';
 
 
 /**

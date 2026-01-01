@@ -25,7 +25,7 @@ import {
   BillProjectSelectButton,
 } from './components';
 import { ProjectsSelect } from '@/containers/Projects/components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   momentFormatter,
   compose,

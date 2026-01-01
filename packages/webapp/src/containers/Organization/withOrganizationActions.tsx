@@ -9,4 +9,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setOrganizationSetupCompleted(congrats)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withOrganizationActions = connect(null, mapDispatchToProps);

@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux';
 
-export default (mapState) => {
+export const withDashboardSidebar = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       sidebarSubmenuOpen: state.dashboard.sidebarSubmenu.isOpen,

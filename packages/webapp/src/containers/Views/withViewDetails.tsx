@@ -5,7 +5,7 @@ import {
   getViewMetaFactory,
 } from '@/store/customViews/customViews.selectors';
 
-export default () => {
+export const withViewDetails = () => {
   const getViewItem = getViewItemFactory();
   const getViewMeta = getViewMetaFactory();
 

@@ -19,10 +19,10 @@ import {
 } from '@/components';
 
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import withWarehouseTransfers from './withWarehouseTransfers';
-import withWarehouseTransfersActions from './withWarehouseTransfersActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withWarehouseTransfers } from './withWarehouseTransfers';
+import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
 
 import { compose } from '@/utils';
 

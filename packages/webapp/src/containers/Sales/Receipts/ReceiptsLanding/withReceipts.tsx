@@ -6,7 +6,7 @@ import {
   receiptsTableStateChangedFactory,
 } from '@/store/receipts/receipts.selector';
 
-export default (mapState) => {
+export const withReceipts = (mapState) => {
   const getReceiptsTableState = getReceiptsTableStateFactory();
   const receiptsTableStateChanged = receiptsTableStateChangedFactory();
   const getSelectedRows = getReceiptsSelectedRowsFactory();

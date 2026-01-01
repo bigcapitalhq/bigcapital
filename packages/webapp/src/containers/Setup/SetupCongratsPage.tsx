@@ -8,7 +8,7 @@ import { useIsDarkMode } from '@/hooks/useDarkMode';
 import WorkflowIcon from './WorkflowIcon';
 import { FormattedMessage as T } from '@/components';
 
-import withOrganizationActions from '@/containers/Organization/withOrganizationActions';
+import { withOrganizationActions } from '@/containers/Organization/withOrganizationActions';
 import { compose } from '@/utils';
 
 /**

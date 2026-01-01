@@ -13,7 +13,7 @@ import { TABLES } from '@/constants/tables';
 import { ActionsMenu } from './components';
 import { BankAccountDataTable } from '../components/BankAccountDataTable';
 
-import withSettings from '@/containers/Settings/withSettings';
+import { withSettings } from '@/containers/Settings/withSettings';
 import { withBankingActions } from '../../withBankingActions';
 import { withBanking } from '../../withBanking';
 

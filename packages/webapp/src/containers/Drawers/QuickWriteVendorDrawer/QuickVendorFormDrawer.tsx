@@ -12,8 +12,8 @@ import VendorFormFormik, {
   VendorFormHeaderPrimary,
 } from '@/containers/Vendors/VendorForm/VendorFormFormik';
 
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useAddAutofillRef } from '@/hooks/state/autofill';

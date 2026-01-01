@@ -25,4 +25,4 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(universalSearchResetSelectedItem()),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withUniversalSearchActions = connect(null, mapDispatchToProps);

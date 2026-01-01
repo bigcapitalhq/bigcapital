@@ -9,8 +9,8 @@ import { BillsListProvider } from './BillsListProvider';
 import BillsActionsBar from './BillsActionsBar';
 import BillsTable from './BillsTable';
 
-import withBills from './withBills';
-import withBillsActions from './withBillsActions';
+import { withBills } from './withBills';
+import { withBillsActions } from './withBillsActions';
 
 import { transformTableStateToQuery, compose } from '@/utils';
 

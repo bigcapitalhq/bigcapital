@@ -5,8 +5,8 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { DashboardViewsTabs } from '@/components';
 import { useBillsListContext } from './BillsListProvider';
 
-import withBills from './withBills';
-import withBillActions from './withBillsActions';
+import { withBills } from './withBills';
+import { withBillActions } from './withBillsActions';
 
 import { compose, transfromViewsToTabs } from '@/utils';
 

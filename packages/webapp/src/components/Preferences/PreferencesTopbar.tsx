@@ -10,7 +10,7 @@ import CurrenciesActions from '@/containers/Preferences/Currencies/CurrenciesAct
 import WarehousesActions from '@/containers/Preferences/Warehouses/WarehousesActions';
 import BranchesActions from '@/containers/Preferences/Branches/BranchesActions';
 import ApiKeysActions from '@/containers/Preferences/ApiKeys/ApiKeysActions';
-import withDashboard from '@/containers/Dashboard/withDashboard';
+import { withDashboard } from '@/containers/Dashboard/withDashboard';
 
 import { compose } from '@/utils';
 

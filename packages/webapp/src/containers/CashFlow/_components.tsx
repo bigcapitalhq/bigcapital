@@ -12,8 +12,8 @@ import {
 } from '@/components';
 import { useUpdateEffect } from '@/hooks';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { transactionNumber } from '@/utils';
 
 /**

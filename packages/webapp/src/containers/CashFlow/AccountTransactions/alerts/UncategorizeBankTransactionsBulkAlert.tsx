@@ -3,8 +3,8 @@ import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { AppToaster, FormattedMessage as T } from '@/components';
-import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
-import withAlertActions from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { useUncategorizeTransactionsBulkAction } from '@/hooks/query/bank-transactions';
 import { compose } from '@/utils';

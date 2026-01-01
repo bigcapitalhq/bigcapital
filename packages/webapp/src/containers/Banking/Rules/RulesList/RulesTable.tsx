@@ -7,8 +7,8 @@ import {
   TableSkeletonRows,
 } from '@/components';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { useBankRulesTableColumns } from './hooks';
 import { BankRulesTableActionsMenu } from './_components';
@@ -21,7 +21,7 @@ import { DialogsName } from '@/constants/dialogs';
  * @returns {React.ReactNode}
  */
 function RulesTable({
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDialogAction
@@ -77,6 +77,6 @@ function RulesTable({
 }
 
 export const BankRulesTable = R.compose(
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
 )(RulesTable);

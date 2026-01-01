@@ -5,7 +5,7 @@ import {
   paymentsTableStateChangedFactory,
 } from '@/store/PaymentMades/paymentMades.selector';
 
-export default (mapState) => {
+export const withPaymentMade = (mapState) => {
   const getPaymentMadesTableState = getPaymentMadesTableStateFactory();
   const paymentsTableStateChanged = paymentsTableStateChangedFactory();
 
@@ -18,3 +18,5 @@ export default (mapState) => {
   };
   return connect(mapStateToProps);
 };
+
+export const withPaymentMades = withPaymentMade;

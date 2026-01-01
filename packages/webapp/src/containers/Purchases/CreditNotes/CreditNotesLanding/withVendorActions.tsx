@@ -11,4 +11,4 @@ const mapDipatchToProps = (dispatch) => ({
   resetVendorCreditsTableState: () => dispatch(resetVendorCreditTableState()),
 });
 
-export default connect(null, mapDipatchToProps);
+export const withVendorActions = connect(null, mapDipatchToProps);

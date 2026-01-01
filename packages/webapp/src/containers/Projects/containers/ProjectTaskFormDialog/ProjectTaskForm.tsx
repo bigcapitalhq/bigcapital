@@ -8,7 +8,7 @@ import { CreateProjectTaskFormSchema } from './ProjectTaskForm.schema';
 import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
 import { compose, transformToForm } from '@/utils';
 import ProjectTaskFormContent from './ProjectTaskFormContent';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 const defaultInitialValues = {
   name: '',

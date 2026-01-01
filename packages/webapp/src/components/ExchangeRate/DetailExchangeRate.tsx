@@ -5,7 +5,7 @@ import * as R from 'ramda';
 import { DetailItem } from '@/components';
 import { isEqual } from 'lodash';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 /**
  * Detail exchange rate item.

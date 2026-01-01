@@ -5,4 +5,4 @@ const mapStateToProps = (state, props) => ({
   currentViewId: props.match.params.custom_view_id,
 });
 
-export default connect(mapStateToProps);
+export const withCurrentView = connect(mapStateToProps);

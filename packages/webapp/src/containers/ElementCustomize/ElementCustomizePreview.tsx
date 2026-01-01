@@ -4,7 +4,7 @@ import { Stack } from '@/components';
 import { ElementCustomizeHeader } from './ElementCustomizeHeader';
 import { ElementCustomizePreviewContent } from './ElementCustomizePreviewContent';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 function ElementCustomizePreviewRoot({ closeDrawer }) {
   const { name } = useDrawerContext();

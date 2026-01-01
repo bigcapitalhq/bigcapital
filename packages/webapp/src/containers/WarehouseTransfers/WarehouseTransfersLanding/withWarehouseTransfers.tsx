@@ -5,7 +5,7 @@ import {
   isWarehouseTransferTableStateChangedFactory,
 } from '@/store/WarehouseTransfer/warehouseTransfer.selector';
 
-export default (mapState) => {
+export const withWarehouseTransfers = (mapState) => {
   const getWarehouseTransferTableState = getWarehouseTransfersTableStateFactory();
   const isWarehouseTransferTableChanged = isWarehouseTransferTableStateChangedFactory();
 

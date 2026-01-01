@@ -14,7 +14,6 @@ import {
   FormattedMessage as T,
   ExchangeRateMutedField,
   BranchSelect,
-  BranchSelectButton,
   FeatureCan,
   InputPrependText,
 } from '@/components';
@@ -23,7 +22,7 @@ import { FMoneyInputGroup, FFormGroup } from '@/components/Forms';
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
 import { useSetPrimaryBranchToForm } from './utils';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { compose } from '@/utils';
 
 /**
@@ -103,7 +102,6 @@ function VendorOpeningBalanceFormFields({
           <BranchSelect
             name={'opening_balance_branch_id'}
             branches={branches}
-            input={BranchSelectButton}
             popoverProps={{ minimal: true }}
           />
         </FFormGroup>

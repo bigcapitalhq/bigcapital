@@ -15,12 +15,12 @@ import { TABLES } from '@/constants/tables';
 
 import ExpensesEmptyStatus from './ExpensesEmptyStatus';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withExpensesActions from './withExpensesActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withExpenses from './withExpenses';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withExpensesActions } from './withExpensesActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withExpenses } from './withExpenses';
 
 import { ActionsMenu, useExpensesTableColumns } from './components';
 import { DRAWERS } from '@/constants/drawers';
@@ -36,7 +36,7 @@ function ExpensesDataTable({
   // #withDrawerActions
   openDrawer,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withSettings
@@ -154,7 +154,7 @@ function ExpensesDataTable({
 
 export default compose(
   withDashboardActions,
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withExpensesActions,
   withSettings(({ expenseSettings }) => ({

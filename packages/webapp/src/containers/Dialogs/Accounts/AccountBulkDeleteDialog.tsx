@@ -7,8 +7,8 @@ import intl from 'react-intl-universal';
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteAccounts } from '@/hooks/query/accounts';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAccountsTableActions from '@/containers/Accounts/withAccountsTableActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAccountsTableActions } from '@/containers/Accounts/withAccountsTableActions';
 import { compose } from '@/utils';
 import { handleDeleteErrors } from '@/containers/Accounts/utils';
 

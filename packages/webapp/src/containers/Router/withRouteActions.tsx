@@ -29,4 +29,4 @@ const mapDispatchToProps = (dispatch, props) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)  
+export const withRouteActions = connect(null, mapDispatchToProps)  

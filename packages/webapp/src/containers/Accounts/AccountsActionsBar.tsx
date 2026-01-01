@@ -36,12 +36,12 @@ import { useAccountsChartContext } from './AccountsChartProvider';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useBulkDeleteAccountsDialog } from './hooks/use-bulk-delete-accounts-dialog';
 
-import withAccounts from './withAccounts';
-import withAccountsTableActions from './withAccountsTableActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withAlertActions from '@/containers/Alert/withAlertActions';
-import withSettings from '@/containers/Settings/withSettings';
-import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import { withAccounts } from './withAccounts';
+import { withAccountsTableActions } from './withAccountsTableActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
 

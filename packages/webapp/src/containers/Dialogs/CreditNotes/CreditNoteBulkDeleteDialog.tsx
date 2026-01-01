@@ -7,8 +7,8 @@ import intl from 'react-intl-universal';
 import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteCreditNotes } from '@/hooks/query/creditNote';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withCreditNotesActions from '@/containers/Sales/CreditNotes/CreditNotesLanding/withCreditNotesActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withCreditNotesActions } from '@/containers/Sales/CreditNotes/CreditNotesLanding/withCreditNotesActions';
 import { compose } from '@/utils';
 
 function CreditNoteBulkDeleteDialog({

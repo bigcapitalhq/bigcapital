@@ -6,4 +6,4 @@ const mapDispatchToProps = (dispatch) => ({
   requestFetchSubscriptions: () => dispatch(fetchSubscriptions()),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withSubscriptionsActions = connect(null, mapDispatchToProps);

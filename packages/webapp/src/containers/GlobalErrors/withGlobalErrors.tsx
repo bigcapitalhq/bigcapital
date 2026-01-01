@@ -8,4 +8,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps);
+export const withGlobalErrors = connect(mapStateToProps);

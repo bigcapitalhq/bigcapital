@@ -13,12 +13,12 @@ import {
 
 import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 
-import withPaymentMade from './withPaymentMade';
-import withPaymentMadeActions from './withPaymentMadeActions';
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withPaymentMade } from './withPaymentMade';
+import { withPaymentMadeActions } from './withPaymentMadeActions';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
@@ -136,7 +136,7 @@ function PaymentMadesTable({
 export default compose(
   withPaymentMadeActions,
   withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withCurrentOrganization(),
   withSettings(({ billPaymentSettings }) => ({

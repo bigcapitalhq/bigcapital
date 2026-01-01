@@ -18,8 +18,8 @@ import { useRefreshCashflowAccounts } from '@/hooks/query';
 import { useOpenPlaidConnect } from '@/hooks/utils/useOpenPlaidConnect';
 import { CashflowAction, AbilitySubject } from '@/constants/abilityOption';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withCashflowAccountsTableActions from '../AccountTransactions/withCashflowAccountsTableActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withCashflowAccountsTableActions } from '../AccountTransactions/withCashflowAccountsTableActions';
 
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 

@@ -15,9 +15,9 @@ import {
 import * as R from 'ramda';
 import { AppToaster, Can, DashboardActionsBar, Icon } from '@/components';
 import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useTaxRateDetailsContext } from './TaxRateDetailsContentBoot';
 import { DialogsName } from '@/constants/dialogs';
 import {
@@ -33,7 +33,7 @@ function TaxRateDetailsContentActionsBar({
   // #withDrawerActions
   openDialog,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 }) {
   const { taxRateId, taxRate } = useTaxRateDetailsContext();
@@ -144,5 +144,5 @@ function TaxRateDetailsContentActionsBar({
 export default R.compose(
   withDrawerActions,
   withDialogActions,
-  withAlertsActions,
+  withAlertActions,
 )(TaxRateDetailsContentActionsBar);

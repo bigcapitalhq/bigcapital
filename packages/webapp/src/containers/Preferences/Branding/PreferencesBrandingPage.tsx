@@ -8,7 +8,7 @@ import {
   PreferencesBrandingFormContent,
   PreferencesBrandingFormFooter,
 } from './PreferencesBrandingFormContent';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
 function PreferencesBrandingPageRoot({ changePreferencesPageTitle }) {
   useEffect(() => {

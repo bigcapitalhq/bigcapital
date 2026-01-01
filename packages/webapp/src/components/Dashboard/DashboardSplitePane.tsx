@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import SplitPane from 'react-split-pane';
 import { debounce } from 'lodash';
 
-import withDashboard from '@/containers/Dashboard/withDashboard';
+import { withDashboard } from '@/containers/Dashboard/withDashboard';
 import { compose } from '@/utils';
 
 function DashboardSplitPane({

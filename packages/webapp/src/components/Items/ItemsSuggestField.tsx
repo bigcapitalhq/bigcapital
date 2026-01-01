@@ -9,7 +9,7 @@ import { CLASSES } from '@/constants/classes';
 
 import { FormattedMessage as T } from '@/components';
 
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { DRAWERS } from '@/constants/drawers';
 

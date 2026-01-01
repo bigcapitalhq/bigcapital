@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getInventroyAdjsTableStateFactory } from '@/store/inventoryAdjustments/inventoryAdjustment.selector';
 
-export default (mapState) => {
+export const withInventoryAdjustments = (mapState) => {
   const getInventoryAdjustmentTableState = getInventroyAdjsTableStateFactory();
 
   const mapStateToProps = (state, props) => {

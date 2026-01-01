@@ -14,9 +14,9 @@ import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import withTrialBalance from './withTrialBalance';
-import withTrialBalanceActions from './withTrialBalanceActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withTrialBalance } from './withTrialBalance';
+import { withTrialBalanceActions } from './withTrialBalanceActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, saveInvoke } from '@/utils';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { TrialBalanceSheetExportMenu } from './components';

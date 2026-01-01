@@ -17,9 +17,9 @@ import clsx from 'classnames';
 
 import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
 
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import {
   Can,
@@ -44,7 +44,7 @@ function VendorDetailsActionsBar({
   // #withDialogActions
   openDialog,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -141,6 +141,6 @@ function VendorDetailsActionsBar({
 
 export default compose(
   withDrawerActions,
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
 )(VendorDetailsActionsBar);

@@ -4,7 +4,7 @@ import {
   getGeneralLedgerFilterDrawer
 } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withGeneralLedger = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       generalLedgerFilterDrawer: getGeneralLedgerFilterDrawer(state, props),

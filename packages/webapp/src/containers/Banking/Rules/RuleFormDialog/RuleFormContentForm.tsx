@@ -32,7 +32,7 @@ import {
   transformToForm,
   transfromToSnakeCase,
 } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
 

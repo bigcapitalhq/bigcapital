@@ -5,8 +5,8 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { DashboardViewsTabs } from '@/components';
 
 import { useExpensesListContext } from './ExpensesListProvider';
-import withExpenses from './withExpenses';
-import withExpensesActions from './withExpensesActions';
+import { withExpenses } from './withExpenses';
+import { withExpensesActions } from './withExpensesActions';
 
 import { compose, transfromViewsToTabs } from '@/utils';
 

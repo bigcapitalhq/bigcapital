@@ -7,4 +7,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(toggleRealizedGainOrLossFilterDrawer(toggle)),
 });
 
-export default connect(null, mapDispatchToProps);
+export const withRealizedGainOrLossActions = connect(null, mapDispatchToProps);

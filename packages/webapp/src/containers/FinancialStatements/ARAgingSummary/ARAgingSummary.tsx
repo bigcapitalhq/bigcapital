@@ -10,7 +10,7 @@ import { ARAgingSummaryProvider } from './ARAgingSummaryProvider';
 import { ARAgingSummarySheetLoadingBar } from './components';
 import { ARAgingSummaryBody } from './ARAgingSummaryBody';
 
-import withARAgingSummaryActions from './withARAgingSummaryActions';
+import { withARAgingSummaryActions } from './withARAgingSummaryActions';
 
 import { useARAgingSummaryQuery } from './common';
 import { ARAgingSummaryPdfDialog } from './dialogs/ARAgingSummaryPdfDialog';

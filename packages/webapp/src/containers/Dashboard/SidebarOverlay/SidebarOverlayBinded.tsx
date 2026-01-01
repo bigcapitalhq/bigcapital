@@ -3,8 +3,8 @@ import React from 'react';
 import * as R from 'ramda';
 
 import { SidebarOverlay } from './SidebarOverlay';
-import withDashboardSidebarActions from '@/containers/Dashboard/Sidebar/withDashboardSidebarActions';
-import withDashboardSidebar from '@/containers/Dashboard/Sidebar/withDashboardSidebar';
+import { withDashboardSidebarActions } from '@/containers/Dashboard/Sidebar/withDashboardSidebarActions';
+import { withDashboardSidebar } from '@/containers/Dashboard/Sidebar/withDashboardSidebar';
 
 import { useSubSidebarMenu } from '../Sidebar/hooks';
 

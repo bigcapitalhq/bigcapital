@@ -12,8 +12,8 @@ import {
   FInputGroup,
 } from '@/components';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 /**
  * Receipt number field of receipt form.

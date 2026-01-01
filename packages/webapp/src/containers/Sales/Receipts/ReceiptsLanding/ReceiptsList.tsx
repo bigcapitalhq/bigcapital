@@ -7,8 +7,8 @@ import '@/style/pages/SaleReceipt/List.scss';
 import ReceiptActionsBar from './ReceiptActionsBar';
 import ReceiptsTable from './ReceiptsTable';
 
-import withReceipts from './withReceipts';
-import withReceiptsActions from './withReceiptsActions';
+import { withReceipts } from './withReceipts';
+import { withReceiptsActions } from './withReceiptsActions';
 
 import { ReceiptsListProvider } from './ReceiptsListProvider';
 import { transformTableStateToQuery, compose } from '@/utils';

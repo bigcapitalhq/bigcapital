@@ -14,9 +14,9 @@ import {
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 
-import withSettings from '@/containers/Settings/withSettings';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withSettings } from '@/containers/Settings/withSettings';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { withBankingActions } from '../withBankingActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
@@ -36,7 +36,7 @@ function AccountTransactionsDataTable({
   // #withSettings
   cashflowTansactionsTableSize,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -157,7 +157,7 @@ export default compose(
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
-  withAlertsActions,
+  withAlertActions,
   withDrawerActions,
   withBankingActions,
 )(AccountTransactionsDataTable);

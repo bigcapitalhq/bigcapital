@@ -14,13 +14,13 @@ import classNames from 'classnames';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import withProfitLossActions from './withProfitLossActions';
-import withProfitLoss from './withProfitLoss';
+import { withProfitLossActions } from './withProfitLossActions';
+import { withProfitLoss } from './withProfitLoss';
 
 import { compose, saveInvoke } from '@/utils';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 import { ProfitLossSheetExportMenu } from './components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 /**

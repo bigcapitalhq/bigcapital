@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { AppToaster } from '@/components';
 import { CreateEstimatedExpenseFormSchema } from './EstimatedExpense.schema';
 import EstimatedExpenseFormConent from './EstimatedExpenseFormConent';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 const defaultInitialValues = {

@@ -4,7 +4,7 @@ import * as R from 'ramda';
 
 import { Box } from '@/components';
 import { SubscriptionPlansSection } from './SubscriptionPlansSection';
-import withSubscriptionPlansActions from '../../Subscriptions/withSubscriptionPlansActions';
+import { withSubscriptionPlansActions } from '../../Subscriptions/withSubscriptionPlansActions';
 import styles from './SetupSubscription.module.scss';
 
 /**

@@ -8,7 +8,7 @@ import { AppToaster } from '@/components';
 import ProjectInvoicingFormContent from './ProjectInvoicingFormContent';
 import { CreateProjectInvoicingFormSchema } from './ProjectInvoicingForm.schema';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 

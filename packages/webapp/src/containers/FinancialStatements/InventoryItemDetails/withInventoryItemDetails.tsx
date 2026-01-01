@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { getInventoryItemDetailsFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
-export default (mapState) => {
+export const withInventoryItemDetails = (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
       inventoryItemDetailDrawerFilter: getInventoryItemDetailsFilterDrawer(

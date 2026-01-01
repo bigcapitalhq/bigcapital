@@ -14,4 +14,4 @@ const mapDipatchToProps = (dispatch) => ({
   resetInvoicesSelectedRows: () => dispatch(resetInvoicesSelectedRows()),
 });
 
-export default connect(null, mapDipatchToProps);
+export const withInvoiceActions = connect(null, mapDipatchToProps);

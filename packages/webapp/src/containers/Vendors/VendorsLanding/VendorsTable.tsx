@@ -15,12 +15,12 @@ import { useVendorsListContext } from './VendorsListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { ActionsMenu, useVendorsTableColumns } from './components';
 
-import withVendors from './withVendors';
-import withVendorsActions from './withVendorsActions';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import withSettings from '@/containers/Settings/withSettings';
+import { withVendors } from './withVendors';
+import { withVendorsActions } from './withVendorsActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -36,7 +36,7 @@ function VendorsTable({
   // #withVendors
   vendorsTableState,
 
-  // #withAlertsActions
+  // #withAlertActions
   openAlert,
 
   // #withDrawerActions
@@ -175,7 +175,7 @@ function VendorsTable({
 
 export default compose(
   withVendorsActions,
-  withAlertsActions,
+  withAlertActions,
   withDialogActions,
   withDrawerActions,
 

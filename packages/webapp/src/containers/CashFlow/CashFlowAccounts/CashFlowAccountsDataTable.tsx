@@ -9,7 +9,7 @@ import {
   TableSkeletonHeader,
 } from '@/components';
 
-import withSettings from '@/containers/Settings/withSettings';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';

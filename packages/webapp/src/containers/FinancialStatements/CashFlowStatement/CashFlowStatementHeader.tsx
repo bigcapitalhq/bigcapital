@@ -11,8 +11,8 @@ import FinancialStatementHeader from '../FinancialStatementHeader';
 import CashFlowStatementGeneralPanel from './CashFlowStatementGeneralPanel';
 import CashFlowStatementDimensionsPanel from './CashFlowStatementDimensionsPanel';
 
-import withCashFlowStatement from './withCashFlowStatement';
-import withCashFlowStatementActions from './withCashFlowStatementActions';
+import { withCashFlowStatement } from './withCashFlowStatement';
+import { withCashFlowStatementActions } from './withCashFlowStatementActions';
 
 import { getDefaultCashFlowSheetQuery } from './utils';
 import { compose, transformToForm } from '@/utils';

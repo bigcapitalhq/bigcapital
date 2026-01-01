@@ -8,8 +8,8 @@ import ProfitLossActionsBar from './ProfitLossActionsBar';
 
 import { DashboardPageContent } from '@/components';
 
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-import withProfitLossActions from './withProfitLossActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withProfitLossActions } from './withProfitLossActions';
 
 import { useProfitLossSheetQuery } from './utils';
 import { ProfitLossSheetProvider } from './ProfitLossProvider';

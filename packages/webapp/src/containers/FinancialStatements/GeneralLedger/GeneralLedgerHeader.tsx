@@ -16,8 +16,8 @@ import FinancialStatementHeader from '../FinancialStatementHeader';
 import GeneralLedgerHeaderGeneralPane from './GeneralLedgerHeaderGeneralPane';
 import GeneralLedgerHeaderDimensionsPanel from './GeneralLedgerHeaderDimensionsPanel';
 
-import withGeneralLedger from './withGeneralLedger';
-import withGeneralLedgerActions from './withGeneralLedgerActions';
+import { withGeneralLedger } from './withGeneralLedger';
+import { withGeneralLedgerActions } from './withGeneralLedgerActions';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 

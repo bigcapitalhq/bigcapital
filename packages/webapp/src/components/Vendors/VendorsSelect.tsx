@@ -2,7 +2,7 @@
 import React from 'react';
 import * as R from 'ramda';
 import { useFormikContext } from 'formik';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { createNewItemFromQuery, createNewItemRenderer } from './utils';
 import { FSelect } from '../Forms';
 import { useCreateAutofillListener } from '@/hooks/state/autofill';

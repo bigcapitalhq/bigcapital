@@ -4,8 +4,8 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useVendorsListContext } from './VendorsListProvider';
 import { DashboardViewsTabs } from '@/components';
 
-import withVendorsActions from './withVendorsActions';
-import withVendors from './withVendors';
+import { withVendorsActions } from './withVendorsActions';
+import { withVendors } from './withVendors';
 
 import { transfromViewsToTabs, compose } from '@/utils';
 

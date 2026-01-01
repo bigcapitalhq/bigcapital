@@ -10,8 +10,8 @@ import { FormattedMessage as T } from '@/components';
 import FinancialStatementHeader from '../FinancialStatementHeader';
 import UnrealizedGainOrLossGeneralPanel from './UnrealizedGainOrLossGeneralPanel';
 
-import withUnrealizedGainOrLoss from './withUnrealizedGainOrLoss';
-import withUnrealizedGainOrLossActions from './withUnrealizedGainOrLossActions';
+import { withUnrealizedGainOrLoss } from './withUnrealizedGainOrLoss';
+import { withUnrealizedGainOrLossActions } from './withUnrealizedGainOrLossActions';
 
 import { compose, transformToForm } from '@/utils';
 

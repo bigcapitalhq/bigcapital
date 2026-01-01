@@ -15,9 +15,9 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { BalanceSheetExportMenu } from './components';
 
 import { useBalanceSheetContext } from './BalanceSheetProvider';
-import withBalanceSheet from './withBalanceSheet';
-import withBalanceSheetActions from './withBalanceSheetActions';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withBalanceSheet } from './withBalanceSheet';
+import { withBalanceSheetActions } from './withBalanceSheetActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, saveInvoke } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 

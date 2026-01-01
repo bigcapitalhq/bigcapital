@@ -7,7 +7,7 @@ import { AppToaster } from '@/components';
 
 import AccountDialogFormContent from './AccountDialogFormContent';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   EditAccountFormSchema,
   CreateAccountFormSchema,

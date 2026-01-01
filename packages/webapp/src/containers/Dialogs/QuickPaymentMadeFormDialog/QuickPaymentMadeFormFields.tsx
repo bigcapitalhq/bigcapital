@@ -22,7 +22,6 @@ import {
   FeatureCan,
   ExchangeRateMutedField,
   BranchSelect,
-  BranchSelectButton,
   FFormGroup,
   FInputGroup,
   FDateInput,
@@ -33,7 +32,7 @@ import { inputIntent, momentFormatter } from '@/utils';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { compose } from '@/utils';
 
 /**
@@ -62,7 +61,6 @@ function QuickPaymentMadeFormFields({
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FFormGroup>

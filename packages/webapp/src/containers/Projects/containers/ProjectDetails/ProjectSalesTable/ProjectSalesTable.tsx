@@ -9,7 +9,7 @@ import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { ActionMenu } from './components';
 import { useProjectSalesColumns } from './hooks';
-import withSettings from '@/containers/Settings/withSettings';
+import { withSettings } from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
 

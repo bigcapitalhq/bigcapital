@@ -7,7 +7,7 @@ import {
   getResourceDataFactory,
 } from '@/store/resources/resources.selectors';
 
-export default (mapState) => {
+export const withResourceDetails = (mapState) => {
   const getResourceFields = getResourceFieldsFactory();
   const getResourceData = getResourceDataFactory();
 

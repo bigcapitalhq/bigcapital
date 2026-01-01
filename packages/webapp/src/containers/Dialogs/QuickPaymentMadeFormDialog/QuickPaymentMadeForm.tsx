@@ -9,7 +9,7 @@ import { CreateQuickPaymentMadeFormSchema } from './QuickPaymentMade.schema';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import QuickPaymentMadeFormContent from './QuickPaymentMadeFormContent';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { defaultPaymentMade, transformBillToForm, transformErrors } from './utils';
 import { compose } from '@/utils';
 

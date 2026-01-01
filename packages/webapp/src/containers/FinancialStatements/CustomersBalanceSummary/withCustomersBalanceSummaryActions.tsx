@@ -7,4 +7,4 @@ const mapActionsToProps = (dispatch) => ({
     dispatch(toggleCustomersBalanceSummaryFilterDrawer(toggle)),
 });
 
-export default connect(null, mapActionsToProps);
+export const withCustomersBalanceSummaryActions = connect(null, mapActionsToProps);

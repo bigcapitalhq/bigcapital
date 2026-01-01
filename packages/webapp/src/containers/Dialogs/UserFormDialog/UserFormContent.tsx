@@ -12,7 +12,7 @@ import { FFormGroup, FInputGroup, FSelect, FormattedMessage as T } from '@/compo
 import { CLASSES } from '@/constants/classes';
 import { FieldRequiredHint } from '@/components';
 import { useUserFormContext } from './UserFormProvider';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 import { UserFormCalloutAlerts } from './components';
 
