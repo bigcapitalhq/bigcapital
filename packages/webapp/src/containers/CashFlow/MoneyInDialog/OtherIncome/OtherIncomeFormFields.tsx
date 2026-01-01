@@ -19,7 +19,6 @@ import {
   Row,
   FeatureCan,
   BranchSelect,
-  BranchSelectButton,
   FInputGroup,
   FFormGroup,
   FTextArea,
@@ -60,7 +59,6 @@ export default function OtherIncomeFormFields() {
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FFormGroup>

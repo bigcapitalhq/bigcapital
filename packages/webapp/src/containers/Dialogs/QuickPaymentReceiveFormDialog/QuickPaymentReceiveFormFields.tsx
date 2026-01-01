@@ -21,7 +21,6 @@ import {
   FeatureCan,
   ExchangeRateMutedField,
   BranchSelect,
-  BranchSelectButton,
   FFormGroup,
   FInputGroup,
   FTextArea,
@@ -62,7 +61,6 @@ function QuickPaymentReceiveFormFields({
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FFormGroup>

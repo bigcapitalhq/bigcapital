@@ -14,7 +14,6 @@ import {
   FormattedMessage as T,
   ExchangeRateMutedField,
   BranchSelect,
-  BranchSelectButton,
   FeatureCan,
   InputPrependText,
 } from '@/components';
@@ -103,7 +102,6 @@ function VendorOpeningBalanceFormFields({
           <BranchSelect
             name={'opening_balance_branch_id'}
             branches={branches}
-            input={BranchSelectButton}
             popoverProps={{ minimal: true }}
           />
         </FFormGroup>

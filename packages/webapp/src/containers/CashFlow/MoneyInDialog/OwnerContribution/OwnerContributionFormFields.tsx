@@ -11,7 +11,6 @@ import {
   Col,
   Row,
   BranchSelect,
-  BranchSelectButton,
   FeatureCan,
   FFormGroup,
   FMoneyInputGroup,
@@ -56,7 +55,6 @@ export default function OwnerContributionFormFields() {
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FFormGroup>
