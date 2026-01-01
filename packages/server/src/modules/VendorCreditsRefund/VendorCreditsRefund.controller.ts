@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { VendorCreditsRefundApplication } from './VendorCreditsRefund.application';
 import { RefundVendorCredit } from './models/RefundVendorCredit';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -9,7 +9,22 @@ import { RefundVendorCreditDto } from './dtos/RefundVendorCredit.dto';
 export class VendorCreditsRefundController {
   constructor(
     private readonly vendorCreditsRefundApplication: VendorCreditsRefundApplication,
-  ) {}
+  ) { }
+
+  /**
+   * Retrieve the vendor credit refunds graph.
+   * @param {number} vendorCreditId - Vendor credit id.
+   * @returns {Promise<IRefundVendorCreditPOJO[]>}
+   */
+  @Get(':vendorCreditId/refund')
+  @ApiOperation({ summary: 'Retrieve the vendor credit refunds graph.' })
+  public getVendorCreditRefunds(
+    @Param('vendorCreditId') vendorCreditId: string,
+  ) {
+    return this.vendorCreditsRefundApplication.getVendorCreditRefunds(
+      Number(vendorCreditId),
+    );
+  }
 
   /**
    * Creates a refund vendor credit.
@@ -17,7 +32,7 @@ export class VendorCreditsRefundController {
    * @param {IRefundVendorCreditDTO} refundVendorCreditDTO
    * @returns {Promise<RefundVendorCredit>}
    */
-  @Post(':vendorCreditId/refunds')
+  @Post(':vendorCreditId/refund')
   @ApiOperation({ summary: 'Create a refund for the given vendor credit.' })
   public async createRefundVendorCredit(
     @Param('vendorCreditId') vendorCreditId: string,

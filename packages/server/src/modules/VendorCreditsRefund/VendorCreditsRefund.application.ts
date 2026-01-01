@@ -2,19 +2,35 @@ import { Injectable } from '@nestjs/common';
 import { DeleteRefundVendorCreditService } from './commands/DeleteRefundVendorCredit.service';
 import { RefundVendorCredit } from './models/RefundVendorCredit';
 import { CreateRefundVendorCredit } from './commands/CreateRefundVendorCredit.service';
-import { IRefundVendorCreditDTO } from './types/VendorCreditRefund.types';
 import { RefundVendorCreditDto } from './dtos/RefundVendorCredit.dto';
+import { GetRefundVendorCreditsService } from './queries/GetRefundVendorCredits.service';
+import { IRefundVendorCreditPOJO } from './types/VendorCreditRefund.types';
 
 @Injectable()
 export class VendorCreditsRefundApplication {
   /**
    * @param {CreateRefundVendorCredit} createRefundVendorCreditService
    * @param {DeleteRefundVendorCreditService} deleteRefundVendorCreditService
+   * @param {GetRefundVendorCreditsService} getRefundVendorCreditsService
    */
   constructor(
     private readonly createRefundVendorCreditService: CreateRefundVendorCredit,
     private readonly deleteRefundVendorCreditService: DeleteRefundVendorCreditService,
-  ) {}
+    private readonly getRefundVendorCreditsService: GetRefundVendorCreditsService,
+  ) { }
+
+  /**
+   * Retrieve the vendor credit refunds graph.
+   * @param {number} vendorCreditId - Vendor credit id.
+   * @returns {Promise<IRefundVendorCreditPOJO[]>}
+   */
+  public getVendorCreditRefunds(
+    vendorCreditId: number,
+  ): Promise<IRefundVendorCreditPOJO[]> {
+    return this.getRefundVendorCreditsService.getVendorCreditRefunds(
+      vendorCreditId,
+    );
+  }
 
   /**
    * Creates a refund vendor credit.

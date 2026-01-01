@@ -1,10 +1,12 @@
+import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
-import { Min } from 'class-validator';
+import { IsDateString, Min } from 'class-validator';
 import { IsString } from 'class-validator';
 import { IsDate } from 'class-validator';
-import { IsNotEmpty, IsNumber, IsOptional, IsPositive } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
 
 export class RefundVendorCreditDto {
+  @ToNumber()
   @IsNumber()
   @IsNotEmpty()
   @Min(0)
@@ -32,6 +34,7 @@ export class RefundVendorCreditDto {
   })
   depositAccountId: number;
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
@@ -40,7 +43,7 @@ export class RefundVendorCreditDto {
   })
   description: string;
 
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   @ApiProperty({
     description: 'The date of the refund',
