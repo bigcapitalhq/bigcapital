@@ -80,6 +80,7 @@ function WarehouseTransferFormHeaderFields({
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
           }}
+          fill
           fastField
         />
       </FFormGroup>

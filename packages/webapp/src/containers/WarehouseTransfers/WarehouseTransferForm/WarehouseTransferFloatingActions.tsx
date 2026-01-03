@@ -11,12 +11,11 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { If, Icon, FormattedMessage as T } from '@/components';
+import { If, Icon, FormattedMessage as T, Group } from '@/components';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { CLASSES } from '@/constants/classes';
-
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import { CLASSES } from '@/constants/classes';
 
 /**
  * Warehouse transfer floating actions bar.
@@ -77,98 +76,101 @@ export default function WarehouseTransferFloatingActions() {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      {/* ----------- Save Intitate & transferred ----------- */}
-      <If condition={!warehouseTransfer || !warehouseTransfer?.is_transferred}>
-        <ButtonGroup>
+      <Group spacing={10}>
+        {/* ----------- Save Intitate & transferred ----------- */}
+        <If condition={!warehouseTransfer || !warehouseTransfer?.is_transferred}>
+          <ButtonGroup>
+            <Button
+              disabled={isSubmitting}
+              loading={isSubmitting}
+              intent={Intent.PRIMARY}
+              type="submit"
+              onClick={handleSubmitInitiateBtnClick}
+              style={{ minWidth: '85px' }}
+              text={<T id={'warehouse_transfer.save_initiate_transfer'} />}
+            />
+            <Popover
+              content={
+                <Menu>
+                  <MenuItem
+                    text={
+                      <T id={'warehouse_transfer.save_mark_as_transferred'} />
+                    }
+                    onClick={handleSubmitTransferredBtnClick}
+                  />
+                </Menu>
+              }
+              minimal={true}
+              interactionKind={PopoverInteractionKind.CLICK}
+              position={Position.BOTTOM_LEFT}
+            >
+              <Button
+                disabled={isSubmitting}
+                intent={Intent.PRIMARY}
+                rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              />
+            </Popover>
+          </ButtonGroup>
+
+          {/* ----------- Save As Draft ----------- */}
+          <ButtonGroup>
+            <Button
+              disabled={isSubmitting}
+              className={'ml1'}
+              onClick={handleSubmitDraftBtnClick}
+              text={<T id={'save_as_draft'} />}
+            />
+            <Popover
+              content={
+                <Menu>
+                  <MenuItem
+                    text={<T id={'save_and_new'} />}
+                    onClick={handleSubmitDraftAndNewBtnClick}
+                  />
+                  <MenuItem
+                    text={<T id={'save_continue_editing'} />}
+                    onClick={handleSubmitDraftContinueEditingBtnClick}
+                  />
+                </Menu>
+              }
+              minimal={true}
+              interactionKind={PopoverInteractionKind.CLICK}
+              position={Position.BOTTOM_LEFT}
+            >
+              <Button
+                disabled={isSubmitting}
+                rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+              />
+            </Popover>
+          </ButtonGroup>
+        </If>
+        <If condition={warehouseTransfer && warehouseTransfer?.is_transferred}>
           <Button
             disabled={isSubmitting}
             loading={isSubmitting}
             intent={Intent.PRIMARY}
-            type="submit"
-            onClick={handleSubmitInitiateBtnClick}
-            style={{ minWidth: '85px' }}
-            text={<T id={'warehouse_transfer.save_initiate_transfer'} />}
+            onClick={handleSubmitTransferredBtnClick}
+            style={{ minWidth: '100px' }}
+            text={<T id={'save'} />}
           />
-          <Popover
-            content={
-              <Menu>
-                <MenuItem
-                  text={
-                    <T id={'warehouse_transfer.save_mark_as_transferred'} />
-                  }
-                  onClick={handleSubmitTransferredBtnClick}
-                />
-              </Menu>
-            }
-            minimal={true}
-            interactionKind={PopoverInteractionKind.CLICK}
-            position={Position.BOTTOM_LEFT}
-          >
-            <Button
-              disabled={isSubmitting}
-              intent={Intent.PRIMARY}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-            />
-          </Popover>
-        </ButtonGroup>
+        </If>
 
-        {/* ----------- Save As Draft ----------- */}
-        <ButtonGroup>
-          <Button
-            disabled={isSubmitting}
-            className={'ml1'}
-            onClick={handleSubmitDraftBtnClick}
-            text={<T id={'save_as_draft'} />}
-          />
-          <Popover
-            content={
-              <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitDraftAndNewBtnClick}
-                />
-                <MenuItem
-                  text={<T id={'save_continue_editing'} />}
-                  onClick={handleSubmitDraftContinueEditingBtnClick}
-                />
-              </Menu>
-            }
-            minimal={true}
-            interactionKind={PopoverInteractionKind.CLICK}
-            position={Position.BOTTOM_LEFT}
-          >
-            <Button
-              disabled={isSubmitting}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-            />
-          </Popover>
-        </ButtonGroup>
-      </If>
-      <If condition={warehouseTransfer && warehouseTransfer?.is_transferred}>
+        {/* ----------- Clear & Reset----------- */}
         <Button
+          className={'ml1'}
           disabled={isSubmitting}
-          loading={isSubmitting}
-          intent={Intent.PRIMARY}
-          onClick={handleSubmitTransferredBtnClick}
-          style={{ minWidth: '100px' }}
-          text={<T id={'save'} />}
+          onClick={handleClearBtnClick}
+          text={warehouseTransfer ? <T id={'reset'} /> : <T id={'clear'} />}
         />
-      </If>
-      {/* ----------- Clear & Reset----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleClearBtnClick}
-        text={warehouseTransfer ? <T id={'reset'} /> : <T id={'clear'} />}
-      />
 
-      {/* ----------- Cancel  ----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
+        {/* ----------- Cancel  ----------- */}
+        <Button
+          className={'ml1'}
+          disabled={isSubmitting}
+          onClick={handleCancelBtnClick}
+          text={<T id={'cancel'} />}
+        />
+      </Group>
     </div>
   );
 }

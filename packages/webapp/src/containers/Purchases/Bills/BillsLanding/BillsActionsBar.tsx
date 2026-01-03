@@ -45,7 +45,7 @@ import { isEmpty } from 'lodash';
  * Bills actions bar.
  */
 function BillActionsBar({
-  // #withBillActions
+  // #withBillsActions
   setBillsTableState,
 
   // #withBills

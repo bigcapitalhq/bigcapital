@@ -7,6 +7,7 @@ import { CreateWarehouse } from './commands/CreateWarehouse.service';
 import { EditWarehouse } from './commands/EditWarehouse.service';
 import { DeleteWarehouseService } from './commands/DeleteWarehouse.service';
 import { WarehousesController } from './Warehouses.controller';
+import { WarehouseItemsController } from './WarehouseItems.controller';
 import { GetWarehouse } from './queries/GetWarehouse';
 import { WarehouseMarkPrimary } from './commands/WarehouseMarkPrimary.service';
 import { GetWarehouses } from './queries/GetWarehouses';
@@ -47,7 +48,7 @@ const models = [RegisterTenancyModel(Warehouse)];
 
 @Module({
   imports: [TenancyDatabaseModule, ...models],
-  controllers: [WarehousesController],
+  controllers: [WarehousesController, WarehouseItemsController],
   providers: [
     CreateWarehouse,
     EditWarehouse,
@@ -90,6 +91,6 @@ const models = [RegisterTenancyModel(Warehouse)];
     InventoryTransactionsWarehouses,
     ValidateWarehouseExistance
   ],
-  exports: [WarehousesSettings, WarehouseTransactionDTOTransform, ...models],
+  exports: [WarehousesSettings, WarehouseTransactionDTOTransform, WarehousesApplication, ...models],
 })
 export class WarehousesModule {}
