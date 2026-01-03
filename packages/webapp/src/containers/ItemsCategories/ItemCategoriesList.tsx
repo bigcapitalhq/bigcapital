@@ -9,13 +9,13 @@ import { ItemsCategoriesProvider } from './ItemsCategoriesProvider';
 
 import ItemCategoriesTable from './ItemCategoriesTable';
 import ItemsCategoryActionsBar from './ItemsCategoryActionsBar';
-import { withItemsCategories } from './withItemCategories';
+import { withItemCategories } from './withItemCategories';
 
 /**
  * Item categories list.
  */
 function ItemCategoryList({
-  // #withItemsCategories
+  // #withItemCategories
   itemsCategoriesTableState
 }) {
   return (
@@ -32,7 +32,7 @@ function ItemCategoryList({
 }
 
 export default R.compose(
-  withItemsCategories(({ itemsCategoriesTableState }) => ({
+  withItemCategories(({ itemsCategoriesTableState }) => ({
     itemsCategoriesTableState,
   })),
 )(ItemCategoryList);

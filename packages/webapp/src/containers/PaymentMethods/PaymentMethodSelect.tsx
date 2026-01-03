@@ -63,7 +63,12 @@ export function PaymentMethodSelectField({
 }
 
 const PaymentMethodSelectRoot = styled(Group)`
-  border: 1px solid #d3d8de;
+  --x-color-border: #d3d8de;
+
+  .bp4-dark & {
+    --x-color-border: rgba(255, 255, 255, 0.2);
+  }
+  border: 1px solid var(--x-color-border);
   border-radius: 3px;
   padding: 8px;
   gap: 0;
@@ -72,13 +77,23 @@ const PaymentMethodSelectRoot = styled(Group)`
 `;
 
 const PaymentMethodCheckbox = styled(Checkbox)`
+  --x-color-border: #c5cbd3;
+
+  .bp4-dark & {
+    --x-color-border: rgba(255, 255, 255, 0.2);
+  }
   margin: 0;
 
   &.bp4-control .bp4-control-indicator {
-    box-shadow: 0 0 0 1px #c5cbd3;
+    box-shadow: 0 0 0 1px var(--x-color-border);
   }
 `;
 
 const PaymentMethodText = styled(Text)`
-  color: #404854;
+  --x-color-text: #404854;
+
+  .bp4-dark & {
+    --x-color-text: var(--color-light-gray4);
+  }
+  color: var(--x-color-text);
 `;

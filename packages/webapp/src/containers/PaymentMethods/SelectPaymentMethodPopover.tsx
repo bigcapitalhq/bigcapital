@@ -48,5 +48,5 @@ const PaymentMethodsTitle = styled('h6')`
   font-size: 12px;
   font-weight: 500;
   margin: 0;
-  color: rgb(95, 107, 124);
+  color: var(--color-muted-text);
 `;

@@ -127,7 +127,7 @@ const PaymentOptionsText = styled(Box)`
   font-size: 13px;
   display: inline-flex;
   align-items: center;
-  color: #5f6b7c;
+  color: var(--color-muted-text);
 `;
 
 const PaymentOptionsButton = styled(Button)`

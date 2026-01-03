@@ -160,7 +160,7 @@ export default function InventoryAdjustmentFormDialogFields() {
         name={'adjustment_account_id'}
         label={<T id={'adjustment_account'} />}
         labelInfo={<FieldRequiredHint />}
-        className={'form-group--adjustment-account'}
+        fill
       >
         <FAccountsSuggestField
           name={'adjustment_account_id'}
@@ -168,6 +168,8 @@ export default function InventoryAdjustmentFormDialogFields() {
           inputProps={{
             placeholder: intl.get('select_adjustment_account'),
           }}
+          fill
+          fastField
         />
       </FFormGroup>
 
@@ -185,16 +187,21 @@ export default function InventoryAdjustmentFormDialogFields() {
         name={'reason'}
         label={<T id={'adjustment_reasons'} />}
         labelInfo={<FieldRequiredHint />}
+        fill
         fastField
       >
-        <FTextArea name={'reason'} growVertically large fastField />
+        <FTextArea name={'reason'} growVertically large fastField fill />
       </FFormGroup>
     </div>
   );
 }
 
 export const FeatureRowDivider = styled.div`
+  --x-color-background: #e9e9e9;
+  .bp4-dark & {
+    --x-color-background: rgba(255, 255, 255, 0.1);
+  }
   height: 2px;
-  background: #e9e9e9;
+  background: var(--x-color-background);
   margin-bottom: 15px;
 `;

@@ -85,10 +85,4 @@ export class WarehousesController {
   markWarehousePrimary(@Param('id') warehouseId: string) {
     return this.warehousesApplication.markWarehousePrimary(Number(warehouseId));
   }
-
-  @Get('items/:itemId')
-  @ApiOperation({ summary: 'Get item warehouses' })
-  getItemWarehouses(@Param('itemId') itemId: string) {
-    return this.warehousesApplication.getItemWarehouses(Number(itemId));
-  }
 }

@@ -9,12 +9,19 @@
 
     .avatar.td {
       .avatar {
+        --x-color-background: #adbcc9;
+        --x-color-text: #fff;
+        
+        .bp4-dark & {
+          --x-color-background: rgba(255, 255, 255, 0.2);
+          --x-color-text: #fff;
+        }
         display: inline-block;
-        background: #adbcc9;
+        background: var(--x-color-background);
+        color: var(--x-color-text);
         border-radius: 50%;
         text-align: center;
         font-weight: 400;
-        color: #fff;
 
         &[data-size='medium'] {
           height: 30px;

@@ -13,7 +13,6 @@ import { useIsDarkMode } from '@/hooks/useDarkMode';
 const inputGroupCss = css`
   & .bp4-input {
     max-width: 110px;
-    color: rgb(17, 17, 17);
     padding-left: 8px;
   }
 `;

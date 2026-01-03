@@ -63,7 +63,6 @@ function ContactDuplicateForm({
               name={'contact_type'}
               label={<T id={'contact_type'} />}
               labelInfo={<FieldRequiredHint />}
-              className={'form-group--select-list'}
             >
               <FSelect
                 name={'contact_type'}

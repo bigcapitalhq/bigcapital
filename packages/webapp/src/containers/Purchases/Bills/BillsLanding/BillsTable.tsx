@@ -13,7 +13,7 @@ import {
 import BillsEmptyStatus from './BillsEmptyStatus';
 
 import { withBills } from './withBills';
-import { withBillActions } from './withBillsActions';
+import { withBillsActions } from './withBillsActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -163,7 +163,7 @@ function BillsDataTable({
 
 export default compose(
   withBills(({ billsTableState }) => ({ billsTableState })),
-  withBillActions,
+  withBillsActions,
   withAlertActions,
   withDrawerActions,
   withDialogActions,
