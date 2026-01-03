@@ -38,7 +38,8 @@ export class SaleInvoiceCostGLEntries {
       .modify('filterDateRange', startingDate)
       .orderBy('date', 'ASC')
       .withGraphFetched('invoice')
-      .withGraphFetched('item');
+      .withGraphFetched('item')
+      .withGraphFetched('itemEntry');
 
     const ledger = this.getInventoryCostLotsLedger(inventoryCostLotTrans);
 
@@ -79,6 +80,9 @@ export class SaleInvoiceCostGLEntries {
       transactionType: inventoryCostLot.transactionType,
       transactionId: inventoryCostLot.transactionId,
 
+      transactionNumber: inventoryCostLot.invoice.invoiceNo,
+      referenceNumber: inventoryCostLot.invoice.referenceNo,
+
       date: inventoryCostLot.date,
       indexGroup: 20,
       costable: true,
@@ -105,6 +109,9 @@ export class SaleInvoiceCostGLEntries {
       const costAccountId =
         inventoryCostLot.costAccountId || inventoryCostLot.item.costAccountId;
 
+      // Get description from item entry if available
+      const description = inventoryCostLot.itemEntry?.description || null;
+
       // XXX Debit - Cost account.
       const costEntry = {
         ...commonEntry,
@@ -112,6 +119,7 @@ export class SaleInvoiceCostGLEntries {
         accountId: costAccountId,
         accountNormal: AccountNormal.DEBIT,
         itemId: inventoryCostLot.itemId,
+        note: description,
         index: getIndexIncrement(),
       };
       // XXX Credit - Inventory account.
@@ -121,6 +129,7 @@ export class SaleInvoiceCostGLEntries {
         accountId: inventoryCostLot.item.inventoryAccountId,
         accountNormal: AccountNormal.DEBIT,
         itemId: inventoryCostLot.itemId,
+        note: description,
         index: getIndexIncrement(),
       };
       return [costEntry, inventoryEntry];

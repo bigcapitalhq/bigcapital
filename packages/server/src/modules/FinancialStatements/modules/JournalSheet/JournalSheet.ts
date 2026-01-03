@@ -10,6 +10,7 @@ import {
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { JournalSheetRepository } from './JournalSheetRepository';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
+import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
 
 export class JournalSheet extends FinancialSheet {
   readonly query: IJournalReportQuery;
@@ -97,10 +98,13 @@ export class JournalSheet extends FinancialSheet {
 
       transactionType: groupEntry.transactionType,
       referenceId: groupEntry.transactionId,
-      referenceTypeFormatted: this.i18n.t(groupEntry.transactionType),
-
+      referenceTypeFormatted: this.i18n.t(
+        getTransactionTypeLabel(
+          groupEntry.transactionType,
+          groupEntry.transactionSubType,
+        ),
+      ),
       entries: this.entriesMapper(entriesGroup),
-
       currencyCode: this.baseCurrency,
 
       credit: totalCredit,

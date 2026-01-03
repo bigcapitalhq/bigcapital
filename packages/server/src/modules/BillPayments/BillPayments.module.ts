@@ -14,6 +14,7 @@ import { BranchesSettingsService } from '../Branches/BranchesSettings';
 import { BillPaymentsController } from './BillPayments.controller';
 import { BillPaymentGLEntries } from './commands/BillPaymentGLEntries';
 import { BillPaymentGLEntriesSubscriber } from './subscribers/BillPaymentGLEntriesSubscriber';
+import { BillPaymentBillSyncSubscriber } from './subscribers/BillPaymentBillSyncSubscriber';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { BillPaymentsExportable } from './queries/BillPaymentsExportable';
@@ -39,6 +40,7 @@ import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
     TenancyContext,
     BillPaymentGLEntries,
     BillPaymentGLEntriesSubscriber,
+    BillPaymentBillSyncSubscriber,
     BillPaymentsExportable,
     BillPaymentsImportable,
     GetBillPaymentsService,
@@ -52,4 +54,4 @@ import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
   ],
   controllers: [BillPaymentsController],
 })
-export class BillPaymentsModule {}
+export class BillPaymentsModule { }

@@ -6,6 +6,7 @@ import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { SaleReceipt } from '@/modules/SaleReceipts/models/SaleReceipt';
 import { Item } from '@/modules/Items/models/Item';
 import { BaseModel } from '@/models/Model';
+import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 
 export class InventoryCostLotTracker extends BaseModel {
   date: Date;
@@ -27,6 +28,7 @@ export class InventoryCostLotTracker extends BaseModel {
   warehouseId: number;
 
   item?: Item;
+  itemEntry?: ItemEntry;
   invoice?: SaleInvoice;
   receipt?: SaleReceipt;
 

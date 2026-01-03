@@ -8,7 +8,7 @@ import { PaymentMadesListProvider } from './PaymentMadesListProvider';
 import PaymentMadeActionsBar from './PaymentMadeActionsBar';
 import PaymentMadesTable from './PaymentMadesTable';
 
-import { withPaymentMades } from './withPaymentMade';
+import { withPaymentMade } from './withPaymentMade';
 import { withPaymentMadeActions } from './withPaymentMadeActions';
 
 import { compose, transformTableStateToQuery } from '@/utils';
@@ -17,7 +17,7 @@ import { compose, transformTableStateToQuery } from '@/utils';
  * Payment mades list.
  */
 function PaymentMadeList({
-  // #withPaymentMades
+  // #withPaymentMade
   paymentMadesTableState,
   paymentsTableStateChanged,
 
@@ -47,7 +47,7 @@ function PaymentMadeList({
 }
 
 export default compose(
-  withPaymentMades(({ paymentMadesTableState, paymentsTableStateChanged }) => ({
+  withPaymentMade(({ paymentMadesTableState, paymentsTableStateChanged }) => ({
     paymentMadesTableState,
     paymentsTableStateChanged,
   })),
