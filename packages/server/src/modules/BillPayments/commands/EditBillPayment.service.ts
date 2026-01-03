@@ -29,7 +29,7 @@ export class EditBillPayment {
 
     @Inject(Vendor.name)
     private readonly vendorModel: TenantModelProxy<typeof Vendor>,
-  ) {}
+  ) { }
 
   /**
    * Edits the details of the given bill payment.
@@ -116,12 +116,20 @@ export class EditBillPayment {
       } as IBillPaymentEditingPayload);
 
       // Edits the bill payment transaction graph on the storage.
-      const billPayment = await this.billPaymentModel()
+      await this.billPaymentModel()
         .query(trx)
-        .upsertGraphAndFetch({
+        .upsertGraph({
           id: billPaymentId,
           ...billPaymentObj,
         });
+
+      // Fetch the bill payment with entries to ensure they're loaded for the subscriber.
+      const billPayment = await this.billPaymentModel()
+        .query(trx)
+        .withGraphFetched('entries')
+        .findById(billPaymentId)
+        .throwIfNotFound();
+
       // Triggers `onBillPaymentEdited` event.
       await this.eventPublisher.emitAsync(events.billPayment.onEdited, {
         billPaymentId,

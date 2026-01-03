@@ -40,10 +40,10 @@ import { compose } from '@/utils';
  * Payment made actions bar.
  */
 function PaymentMadeActionsBar({
-  // #withPaymentMadesActions
+  // #withPaymentMadeActions
   setPaymentMadesTableState,
 
-  // #withPaymentMades
+  // #withPaymentMade
   paymentMadesFilterConditions,
 
   // #withSettings
@@ -133,7 +133,7 @@ function PaymentMadeActionsBar({
             icon={<Icon icon={'trash-16'} iconSize={16} />}
             text={<T id={'delete'} />}
             intent={Intent.DANGER}
-            // onClick={handleBulkDelete}
+          // onClick={handleBulkDelete}
           />
         </If>
         <Button

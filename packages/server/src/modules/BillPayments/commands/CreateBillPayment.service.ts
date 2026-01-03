@@ -38,7 +38,7 @@ export class CreateBillPaymentService {
 
     @Inject(BillPayment.name)
     private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
-  ) {}
+  ) { }
 
   /**
    * Creates a new bill payment transcations and store it to the storage
@@ -103,11 +103,19 @@ export class CreateBillPaymentService {
       } as IBillPaymentCreatingPayload);
 
       // Writes the bill payment graph to the storage.
-      const billPayment = await this.billPaymentModel()
+      const insertedBillPayment = await this.billPaymentModel()
         .query(trx)
         .insertGraphAndFetch({
           ...billPaymentObj,
         });
+
+      // Fetch the bill payment with entries to ensure they're loaded for the subscriber.
+      const billPayment = await this.billPaymentModel()
+        .query(trx)
+        .withGraphFetched('entries')
+        .findById(insertedBillPayment.id)
+        .throwIfNotFound();
+
       // Triggers `onBillPaymentCreated` event.
       await this.eventPublisher.emitAsync(events.billPayment.onCreated, {
         billPayment,

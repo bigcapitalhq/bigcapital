@@ -48,14 +48,30 @@ export class PaginationQueryBuilder<
       // No relations defined
       return this.delete();
     }
+
+    // Only check HasManyRelation and ManyToManyRelation relations, as BelongsToOneRelation are just 
+    // foreign key references and shouldn't prevent deletion. Only dependent records should block deletion.
+    const dependentRelationNames = relationNames.filter((name) => {
+      const relation = relationMappings[name];
+      return relation && (
+        relation.relation === Model.HasManyRelation ||
+        relation.relation === Model.ManyToManyRelation
+      );
+    });
+
+    if (dependentRelationNames.length === 0) {
+      // No dependent relations defined, safe to delete
+      return this.delete();
+    }
+
     const recordQuery = this.clone();
 
-    relationNames.forEach((relationName: string) => {
+    dependentRelationNames.forEach((relationName: string) => {
       recordQuery.withGraphFetched(relationName);
     });
     const record = await recordQuery;
 
-    const hasRelations = relationNames.some((name) => {
+    const hasRelations = dependentRelationNames.some((name) => {
       const val = record[name];
       return Array.isArray(val) ? val.length > 0 : val != null;
     });

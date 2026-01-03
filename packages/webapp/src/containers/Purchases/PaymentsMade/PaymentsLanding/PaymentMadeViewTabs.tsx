@@ -15,7 +15,7 @@ import { withPaymentMadeActions } from './withPaymentMadeActions';
  * Payment made views tabs.
  */
 function PaymentMadeViewTabs({
-  // #withPaymentMadesActions
+  // #withPaymentMadeActions
   setPaymentMadesTableState,
 
   // #withPaymentMade
