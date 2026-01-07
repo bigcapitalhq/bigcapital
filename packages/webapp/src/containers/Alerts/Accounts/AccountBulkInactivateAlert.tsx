@@ -6,7 +6,7 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { queryCache } from 'react-query';
 import { AppToaster } from '@/components';
 
-import { withAccountsActions } from '@/containers/Accounts/withAccountsTableActions';
+// import { withAccountsActions } from '@/containers/Accounts/withAccountsTableActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
@@ -22,7 +22,7 @@ function AccountBulkInactivateAlert({
 
   closeAlert,
 }) {
-  
+
   const [isLoading, setLoading] = useState(false);
   const selectedRowsCount = 0;
 
@@ -41,7 +41,7 @@ function AccountBulkInactivateAlert({
         });
         queryCache.invalidateQueries('accounts-table');
       })
-      .catch((errors) => {})
+      .catch((errors) => { })
       .finally(() => {
         setLoading(false);
         closeAlert(name);
@@ -68,5 +68,5 @@ function AccountBulkInactivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withAccountsActions,
+  // withAccountsActions,
 )(AccountBulkInactivateAlert);

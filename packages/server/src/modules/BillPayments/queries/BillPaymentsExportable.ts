@@ -16,8 +16,6 @@ export class BillPaymentsExportable extends Exportable {
 
   /**
    * Retrieves the accounts data to exportable sheet.
-   * @param {number} tenantId
-   * @returns
    */
   public async exportable(query: any) {
     const filterQuery = (builder) => {

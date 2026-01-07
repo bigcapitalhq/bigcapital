@@ -1,159 +1,172 @@
-// import { Inject, Service } from 'typedi';
-// import { Knex } from 'knex';
-// import { AccountNormal, ILedgerEntry } from '@/interfaces';
-// import { IRefundVendorCredit } from '@/interfaces';
-// import JournalPosterService from '@/services/Sales/JournalPosterService';
-// import LedgerRepository from '@/services/Ledger/LedgerRepository';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { RefundVendorCredit } from '../models/RefundVendorCredit';
+import { Ledger } from '@/modules/Ledger/Ledger';
+import { Knex } from 'knex';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { Account } from '@/modules/Accounts/models/Account.model';
+import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
+import { AccountNormal } from '@/interfaces/Account';
+import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 
-// @Service()
-// export default class RefundVendorCreditGLEntries {
-//   @Inject()
-//   private journalService: JournalPosterService;
+@Injectable()
+export class RefundVendorCreditGLEntries {
+  constructor(
+    private readonly ledgerStorage: LedgerStorageService,
+    private readonly accountRepository: AccountRepository,
 
-//   @Inject()
-//   private ledgerRepository: LedgerRepository;
+    @Inject(Account.name)
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
-//   @Inject()
-//   private tenancy: HasTenancyService;
+    @Inject(RefundVendorCredit.name)
+    private readonly refundVendorCreditModel: TenantModelProxy<
+      typeof RefundVendorCredit
+    >,
+  ) { }
 
-//   /**
-//    * Retrieves the refund credit common GL entry.
-//    * @param   {IRefundVendorCredit} refundCredit
-//    */
-//   private getRefundCreditGLCommonEntry = (
-//     refundCredit: IRefundVendorCredit
-//   ) => {
-//     return {
-//       exchangeRate: refundCredit.exchangeRate,
-//       currencyCode: refundCredit.currencyCode,
+  /**
+   * Retrieves the refund vendor credit common GL entry.
+   * @param {RefundVendorCredit} refundVendorCredit
+   * @returns
+   */
+  private getRefundVendorCreditCommonGLEntry = (
+    refundVendorCredit: RefundVendorCredit,
+  ) => {
+    const model = refundVendorCredit as any;
+    return {
+      currencyCode: refundVendorCredit.currencyCode,
+      exchangeRate: refundVendorCredit.exchangeRate,
 
-//       transactionType: 'RefundVendorCredit',
-//       transactionId: refundCredit.id,
+      transactionType: 'RefundVendorCredit',
+      transactionId: refundVendorCredit.id,
+      date: refundVendorCredit.date,
+      userId: refundVendorCredit.vendorCredit?.userId,
 
-//       date: refundCredit.date,
-//       userId: refundCredit.userId,
-//       referenceNumber: refundCredit.referenceNo,
-//       createdAt: refundCredit.createdAt,
-//       indexGroup: 10,
+      referenceNumber: refundVendorCredit.referenceNo,
 
-//       credit: 0,
-//       debit: 0,
+      createdAt: model.createdAt,
+      indexGroup: 10,
 
-//       note: refundCredit.description,
-//       branchId: refundCredit.branchId,
-//     };
-//   };
+      credit: 0,
+      debit: 0,
 
-//   /**
-//    * Retrieves the refund credit payable GL entry.
-//    * @param   {IRefundVendorCredit} refundCredit
-//    * @param   {number} APAccountId
-//    * @returns {ILedgerEntry}
-//    */
-//   private getRefundCreditGLPayableEntry = (
-//     refundCredit: IRefundVendorCredit,
-//     APAccountId: number
-//   ): ILedgerEntry => {
-//     const commonEntry = this.getRefundCreditGLCommonEntry(refundCredit);
+      note: refundVendorCredit.description,
+      branchId: refundVendorCredit.branchId,
+    };
+  };
 
-//     return {
-//       ...commonEntry,
-//       credit: refundCredit.amount,
-//       accountId: APAccountId,
-//       contactId: refundCredit.vendorCredit.vendorId,
-//       index: 1,
-//       accountNormal: AccountNormal.CREDIT,
-//     };
-//   };
+  /**
+   * Retrieves the refund vendor credit payable GL entry.
+   * @param   {RefundVendorCredit} refundVendorCredit
+   * @param   {number} APAccountId
+   * @returns {ILedgerEntry}
+   */
+  private getRefundVendorCreditGLPayableEntry = (
+    refundVendorCredit: RefundVendorCredit,
+    APAccountId: number,
+  ): ILedgerEntry => {
+    const commonEntry = this.getRefundVendorCreditCommonGLEntry(
+      refundVendorCredit,
+    );
 
-//   /**
-//    * Retrieves the refund credit deposit GL entry.
-//    * @param   {IRefundVendorCredit} refundCredit
-//    * @returns {ILedgerEntry}
-//    */
-//   private getRefundCreditGLDepositEntry = (
-//     refundCredit: IRefundVendorCredit
-//   ): ILedgerEntry => {
-//     const commonEntry = this.getRefundCreditGLCommonEntry(refundCredit);
+    return {
+      ...commonEntry,
+      credit: refundVendorCredit.amount,
+      accountId: APAccountId,
+      contactId: refundVendorCredit.vendorCredit.vendorId,
+      index: 1,
+      accountNormal: AccountNormal.CREDIT,
+    };
+  };
 
-//     return {
-//       ...commonEntry,
-//       debit: refundCredit.amount,
-//       accountId: refundCredit.depositAccountId,
-//       index: 2,
-//       accountNormal: AccountNormal.DEBIT,
-//     };
-//   };
+  /**
+   * Retrieves the refund vendor credit deposit GL entry.
+   * @param   {RefundVendorCredit} refundVendorCredit
+   * @returns {ILedgerEntry}
+   */
+  private getRefundVendorCreditGLDepositEntry = (
+    refundVendorCredit: RefundVendorCredit,
+  ): ILedgerEntry => {
+    const commonEntry = this.getRefundVendorCreditCommonGLEntry(
+      refundVendorCredit,
+    );
 
-//   /**
-//    * Retrieve refund vendor credit GL entries.
-//    * @param {IRefundVendorCredit} refundCredit
-//    * @param {number} APAccountId
-//    * @returns {ILedgerEntry[]}
-//    */
-//   public getRefundCreditGLEntries = (
-//     refundCredit: IRefundVendorCredit,
-//     APAccountId: number
-//   ): ILedgerEntry[] => {
-//     const payableEntry = this.getRefundCreditGLPayableEntry(
-//       refundCredit,
-//       APAccountId
-//     );
-//     const depositEntry = this.getRefundCreditGLDepositEntry(refundCredit);
+    return {
+      ...commonEntry,
+      debit: refundVendorCredit.amount,
+      accountId: refundVendorCredit.depositAccountId,
+      index: 2,
+      accountNormal: AccountNormal.DEBIT,
+    };
+  };
 
-//     return [payableEntry, depositEntry];
-//   };
+  /**
+   * Retrieve refund vendor credit GL entries.
+   * @param {RefundVendorCredit} refundVendorCredit
+   * @param {number} APAccountId
+   * @returns {ILedgerEntry[]}
+   */
+  public getRefundVendorCreditGLEntries(
+    refundVendorCredit: RefundVendorCredit,
+    APAccountId: number,
+  ): ILedgerEntry[] {
+    const payableEntry = this.getRefundVendorCreditGLPayableEntry(
+      refundVendorCredit,
+      APAccountId,
+    );
+    const depositEntry = this.getRefundVendorCreditGLDepositEntry(
+      refundVendorCredit,
+    );
 
-//   /**
-//    * Saves refund credit note GL entries.
-//    * @param {number} tenantId
-//    * @param {IRefundVendorCredit} refundCredit -
-//    * @param {Knex.Transaction} trx -
-//    * @return {Promise<void>}
-//    */
-//   public saveRefundCreditGLEntries = async (
-//     tenantId: number,
-//     refundCreditId: number,
-//     trx?: Knex.Transaction
-//   ): Promise<void> => {
-//     const { Account, RefundVendorCredit } = this.tenancy.models(tenantId);
+    return [payableEntry, depositEntry];
+  }
 
-//     // Retireve refund with associated vendor credit entity.
-//     const refundCredit = await RefundVendorCredit.query()
-//       .findById(refundCreditId)
-//       .withGraphFetched('vendorCredit');
+  /**
+   * Creates refund vendor credit GL entries.
+   * @param {number} refundVendorCreditId
+   * @param {Knex.Transaction} trx
+   */
+  public createRefundVendorCreditGLEntries = async (
+    refundVendorCreditId: number,
+    trx?: Knex.Transaction,
+  ) => {
+    // Retrieve the refund with associated vendor credit.
+    const refundVendorCredit = await this.refundVendorCreditModel()
+      .query(trx)
+      .findById(refundVendorCreditId)
+      .withGraphFetched('vendorCredit');
 
-//     const payableAccount = await Account.query().findOne(
-//       'slug',
-//       'accounts-payable'
-//     );
-//     // Generates the GL entries of the given refund credit.
-//     const entries = this.getRefundCreditGLEntries(
-//       refundCredit,
-//       payableAccount.id
-//     );
-//     // Saves the ledegr to the storage.
-//     await this.ledgerRepository.saveLedgerEntries(tenantId, entries, trx);
-//   };
+    // Retrieve the payable account (A/P) account based on the given currency.
+    const APAccount = await this.accountRepository.findOrCreateAccountsPayable(
+      refundVendorCredit.currencyCode,
+      {},
+      trx,
+    );
 
-//   /**
-//    * Reverts refund credit note GL entries.
-//    * @param {number} tenantId
-//    * @param {number} refundCreditId
-//    * @param {Knex.Transaction} trx
-//    * @return {Promise<void>}
-//    */
-//   public revertRefundCreditGLEntries = async (
-//     tenantId: number,
-//     refundCreditId: number,
-//     trx?: Knex.Transaction
-//   ) => {
-//     await this.journalService.revertJournalTransactions(
-//       tenantId,
-//       refundCreditId,
-//       'RefundVendorCredit',
-//       trx
-//     );
-//   };
-// }
+    // Retrieve refund vendor credit GL entries.
+    const refundGLEntries = this.getRefundVendorCreditGLEntries(
+      refundVendorCredit,
+      APAccount.id,
+    );
+    const ledger = new Ledger(refundGLEntries);
+
+    // Saves refund ledger entries.
+    await this.ledgerStorage.commit(ledger, trx);
+  };
+
+  /**
+   * Reverts refund vendor credit GL entries.
+   * @param {number} refundVendorCreditId
+   * @param {Knex.Transaction} trx
+   */
+  public revertRefundVendorCreditGLEntries = async (
+    refundVendorCreditId: number,
+    trx?: Knex.Transaction,
+  ) => {
+    await this.ledgerStorage.deleteByReference(
+      refundVendorCreditId,
+      'RefundVendorCredit',
+      trx,
+    );
+  };
+}
