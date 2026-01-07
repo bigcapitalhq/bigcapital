@@ -6,15 +6,21 @@ import { VendorCreditsRefundApplication } from './VendorCreditsRefund.applicatio
 import { CreateRefundVendorCredit } from './commands/CreateRefundVendorCredit.service';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { BranchesModule } from '../Branches/Branches.module';
+import { RefundVendorCreditGLEntries } from './commands/RefundVendorCreditGLEntries';
+import { RefundVendorCreditGLEntriesSubscriber } from './subscribers/RefundVendorCreditGLEntriesSubscriber';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
 
 @Module({
-  imports: [WarehousesModule, BranchesModule],
+  imports: [WarehousesModule, BranchesModule, LedgerModule, AccountsModule],
   providers: [
     GetRefundVendorCreditsService,
     DeleteRefundVendorCreditService,
     CreateRefundVendorCredit,
-    VendorCreditsRefundApplication
+    VendorCreditsRefundApplication,
+    RefundVendorCreditGLEntries,
+    RefundVendorCreditGLEntriesSubscriber,
   ],
   controllers: [VendorCreditsRefundController],
 })
-export class VendorCreditsRefundModule {}
+export class VendorCreditsRefundModule { }

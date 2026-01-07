@@ -24,6 +24,7 @@ import {
   VendorsSelect,
   Stack,
   FDateInput,
+  FInputGroup,
 } from '@/components';
 import {
   vendorsFieldShouldUpdate,
@@ -74,6 +75,7 @@ function VendorCreditNoteFormHeaderFields({
 }) {
   const theme = useTheme();
   const fieldsClassName = getFieldsStyle(theme);
+  const { values } = useFormikContext();
 
   // Handle vendor credit number changing.
   const handleVendorCreditNumberChange = () => {
@@ -81,10 +83,11 @@ function VendorCreditNoteFormHeaderFields({
   };
 
   // Handle vendor credit no. field blur.
-  const handleVendorCreditNoBlur = (form, field) => (event) => {
+  const handleVendorCreditNoBlur = (event) => {
     const newValue = event.target.value;
+    const oldValue = values.vendor_credit_number;
 
-    if (field.value !== newValue && vendorcreditAutoIncrement) {
+    if (oldValue !== newValue && vendorcreditAutoIncrement) {
       openDialog('vendor-credit-form', {
         initialFormValues: {
           manualTransactionNo: newValue,
@@ -109,7 +112,6 @@ function VendorCreditNoteFormHeaderFields({
         name={'exchange_rate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
-
       {/* ------- Vendor Credit date ------- */}
       <FFormGroup
         name={'vendor_credit_date'}
@@ -130,7 +132,6 @@ function VendorCreditNoteFormHeaderFields({
       </FFormGroup>
 
       {/* ----------- Vendor Credit No # ----------- */}
-
       <FFormGroup
         name={'vendor_credit_number'}
         label={<T id={'credit_note.label_credit_note'} />}
@@ -163,7 +164,7 @@ function VendorCreditNoteFormHeaderFields({
       </FFormGroup>
 
       {/* ----------- Reference ----------- */}
-      <FFormGroup label={<T id={'reference_no'} />} inline={true} fastField>
+      <FFormGroup name={'reference_no'} label={<T id={'reference_no'} />} inline={true} fastField>
         <FInputGroup name={'reference_no'} minimal={true} fastField />
       </FFormGroup>
     </Stack>

@@ -7,9 +7,13 @@ import { CreditNotesRefundsApplication } from './CreditNotesRefundsApplication.s
 import { CreditNoteRefundsController } from './CreditNoteRefunds.controller';
 import { CreditNotesModule } from '../CreditNotes/CreditNotes.module';
 import { GetCreditNoteRefundsService } from './queries/GetCreditNoteRefunds.service';
+import { RefundCreditNoteGLEntries } from './commands/RefundCreditNoteGLEntries';
+import { RefundCreditNoteGLEntriesSubscriber } from '../CreditNotes/subscribers/RefundCreditNoteGLEntriesSubscriber';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
 
 @Module({
-  imports: [forwardRef(() => CreditNotesModule)],
+  imports: [forwardRef(() => CreditNotesModule), LedgerModule, AccountsModule],
   providers: [
     CreateRefundCreditNoteService,
     DeleteRefundCreditNoteService,
@@ -17,8 +21,10 @@ import { GetCreditNoteRefundsService } from './queries/GetCreditNoteRefunds.serv
     RefundSyncCreditNoteBalanceService,
     CreditNotesRefundsApplication,
     GetCreditNoteRefundsService,
+    RefundCreditNoteGLEntries,
+    RefundCreditNoteGLEntriesSubscriber,
   ],
   exports: [RefundSyncCreditNoteBalanceService],
   controllers: [CreditNoteRefundsController],
 })
-export class CreditNoteRefundsModule {}
+export class CreditNoteRefundsModule { }
