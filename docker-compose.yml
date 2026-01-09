@@ -24,25 +24,13 @@ services:
       restart_policy:
         condition: unless-stopped
 
-  mongo:
-    build: ./docker/mongo
-    expose:
-      - '27017'
-    volumes:
-      - mongo:/var/lib/mongodb
-    ports:
-      - '27017:27017'
-    deploy:
-      restart_policy:
-        condition: unless-stopped
-
   redis:
     build:
       context: ./docker/redis
     expose:
-      - "6379"
+      - '6379'
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis:/data
     deploy:
@@ -52,16 +40,12 @@ services:
   gotenberg:
     image: gotenberg/gotenberg:7
     ports:
-      - "9000:3000"
+      - '9000:3000'
 
 # Volumes
 volumes:
   mysql:
     name: bigcapital_dev_mysql
-    driver: local
-
-  mongo:
-    name: bigcapital_dev_mongo
     driver: local
 
   redis:
