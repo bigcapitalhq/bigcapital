@@ -34,7 +34,31 @@ describe('Items (e2e)', () => {
       .put(`/items/${itemId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
+      .send(makeItemRequest())
+      .expect(200);
+  });
+
+  it('/items (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
+  it('/items/:id (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest());
+    const itemId = response.body.id;
+
+    return request(app.getHttpServer())
+      .get(`/items/${itemId}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
   });
 
   it('/items/:id/inactivate (PATCH)', async () => {
@@ -43,7 +67,7 @@ describe('Items (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest());
-    const itemId = response.text;
+    const itemId = response.body.id;
 
     return request(app.getHttpServer())
       .patch(`/items/${itemId}/inactivate`)
@@ -57,8 +81,11 @@ describe('Items (e2e)', () => {
       .post('/items')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send(makeItemRequest());
-    const itemId = response.text;
+      .send({
+        ...makeItemRequest(),
+        active: false,
+      });
+    const itemId = response.body.id;
 
     return request(app.getHttpServer())
       .patch(`/items/${itemId}/activate`)
@@ -73,7 +100,7 @@ describe('Items (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest());
-    const itemId = response.text;
+    const itemId = response.body.id;
 
     return request(app.getHttpServer())
       .delete(`/items/${itemId}`)
@@ -88,8 +115,7 @@ describe('Items (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest());
-
-    const itemId = response.text;
+    const itemId = response.body.id;
 
     return request(app.getHttpServer())
       .get(`/items/${itemId}/invoices`)
@@ -104,8 +130,7 @@ describe('Items (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest());
-
-    const itemId = response.text;
+    const itemId = response.body.id;
 
     return request(app.getHttpServer())
       .get(`/items/${itemId}/bills`)
@@ -120,8 +145,7 @@ describe('Items (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest());
-
-    const itemId = response.text;
+    const itemId = response.body.id;
 
     return request(app.getHttpServer())
       .get(`/items/${itemId}/estimates`)
@@ -136,13 +160,62 @@ describe('Items (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest());
-
-    const itemId = response.text;
+    const itemId = response.body.id;
 
     return request(app.getHttpServer())
       .get(`/items/${itemId}/receipts`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
+  it('/items/validate-bulk-delete (POST)', async () => {
+    const response1 = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(makeItemRequest());
+    const itemId1 = response1.body.id;
+
+    const response2 = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(makeItemRequest());
+    const itemId2 = response2.body.id;
+
+    return request(app.getHttpServer())
+      .post('/items/validate-bulk-delete')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ids: [itemId1, itemId2],
+      })
+      .expect(200);
+  });
+
+  it('/items/bulk-delete (POST)', async () => {
+    const response1 = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(makeItemRequest());
+    const itemId1 = response1.body.id;
+
+    const response2 = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(makeItemRequest());
+    const itemId2 = response2.body.id;
+
+    return request(app.getHttpServer())
+      .post('/items/bulk-delete')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ids: [itemId1, itemId2],
+      })
       .expect(200);
   });
 });
