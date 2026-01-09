@@ -32,11 +32,9 @@ services:
       - '3000'
     links:
       - mysql
-      - mongo
       - redis
     depends_on:
       - mysql
-      - mongo
       - redis
     restart: on-failure
     networks:
@@ -66,15 +64,8 @@ services:
       # Authentication
       - JWT_SECRET=${JWT_SECRET}
 
-      # MongoDB
-      - MONGODB_DATABASE_URL=mongodb://mongo/bigcapital
-
       # Application
       - BASE_URL=${BASE_URL}
-
-      # Agendash
-      - AGENDASH_AUTH_USER=${AGENDASH_AUTH_USER}
-      - AGENDASH_AUTH_PASSWORD=${AGENDASH_AUTH_PASSWORD}
 
       # Sign-up restrictions
       - SIGNUP_DISABLED=${SIGNUP_DISABLED}
@@ -122,7 +113,7 @@ services:
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_BUCKET=${S3_BUCKET}
-      
+
       # Stripe
       - STRIPE_PAYMENT_SECRET_KEY=${STRIPE_PAYMENT_SECRET_KEY}
       - STRIPE_PAYMENT_PUBLISHABLE_KEY=${STRIPE_PAYMENT_PUBLISHABLE_KEY}
@@ -166,17 +157,6 @@ services:
     networks:
       - bigcapital_network
 
-  mongo:
-    container_name: bigcapital-mongo
-    restart: on-failure
-    build: ./docker/mongo
-    expose:
-      - '27017'
-    volumes:
-      - mongo:/var/lib/mongodb
-    networks:
-      - bigcapital_network
-
   redis:
     container_name: bigcapital-redis
     restart: on-failure
@@ -200,10 +180,6 @@ services:
 volumes:
   mysql:
     name: bigcapital_prod_mysql
-    driver: local
-
-  mongo:
-    name: bigcapital_prod_mongo
     driver: local
 
   redis:
