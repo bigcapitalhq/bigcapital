@@ -6,6 +6,8 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { ICashflowAccountsFilter } from '../types/BankAccounts.types';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
+import { BankAccountsQueryDto } from '../dtos/BankAccountsQuery.dto';
+import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 
 @Injectable()
 export class GetBankAccountsService {
@@ -15,14 +17,14 @@ export class GetBankAccountsService {
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
-  ) {}
+  ) { }
 
   /**
    * Retrieve the cash flow accounts.
    * @param {ICashflowAccountsFilter} filterDTO - Filter DTO.
    * @returns {ICashflowAccount[]}
    */
-  public async getCashflowAccounts(filterDTO: ICashflowAccountsFilter) {
+  public async getCashflowAccounts(filterDTO: BankAccountsQueryDto) {
     const _filterDto = {
       sortOrder: 'desc',
       columnSortBy: 'created_at',
@@ -30,12 +32,14 @@ export class GetBankAccountsService {
       ...filterDTO,
     };
     // Parsees accounts list filter DTO.
-    const filter = this.dynamicListService.parseStringifiedFilter(_filterDto);
+    const filter = this.dynamicListService.parseStringifiedFilter<BankAccountsQueryDto>(
+      _filterDto,
+    );
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(
       this.accountModel(),
-      filter,
+      filter as IDynamicListFilter,
     );
     // Retrieve accounts model based on the given query.
     const accounts = await this.accountModel()

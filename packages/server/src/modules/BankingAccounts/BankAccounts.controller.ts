@@ -1,16 +1,28 @@
 import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { BankAccountsApplication } from './BankAccountsApplication.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ICashflowAccountsFilter } from './types/BankAccounts.types';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BankAccountsQueryDto } from './dtos/BankAccountsQuery.dto';
+import { BankAccountResponseDto } from './dtos/BankAccountResponse.dto';
 
 @Controller('banking/accounts')
 @ApiTags('Bank Accounts')
 export class BankAccountsController {
-  constructor(private bankAccountsApplication: BankAccountsApplication) {}
+  constructor(private bankAccountsApplication: BankAccountsApplication) { }
 
   @Get()
   @ApiOperation({ summary: 'Retrieve the bank accounts.' })
-  getBankAccounts(@Query() filterDto: ICashflowAccountsFilter) {
+  @ApiQuery({
+    name: 'query',
+    description: 'Query parameters for the bank accounts list.',
+    type: BankAccountsQueryDto,
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of bank accounts retrieved successfully.',
+    type: [BankAccountResponseDto],
+  })
+  getBankAccounts(@Query() filterDto: BankAccountsQueryDto) {
     return this.bankAccountsApplication.getBankAccounts(filterDto);
   }
 
