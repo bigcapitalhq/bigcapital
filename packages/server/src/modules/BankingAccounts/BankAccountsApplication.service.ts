@@ -6,6 +6,7 @@ import { PauseBankAccountFeeds } from './commands/PauseBankAccountFeeds.service'
 import { GetBankAccountsService } from './queries/GetBankAccounts';
 import { ICashflowAccountsFilter } from './types/BankAccounts.types';
 import { GetBankAccountSummary } from './queries/GetBankAccountSummary';
+import { BankAccountsQueryDto } from './dtos/BankAccountsQuery.dto';
 
 @Injectable()
 export class BankAccountsApplication {
@@ -16,13 +17,13 @@ export class BankAccountsApplication {
     private readonly refreshBankAccountService: RefreshBankAccountService,
     private readonly resumeBankAccountFeedsService: ResumeBankAccountFeedsService,
     private readonly pauseBankAccountFeedsService: PauseBankAccountFeeds,
-  ) {}
+  ) { }
 
   /**
    * Retrieves the bank accounts.
    * @param {ICashflowAccountsFilter} filterDto -
    */
-  getBankAccounts(filterDto: ICashflowAccountsFilter) {
+  getBankAccounts(filterDto: BankAccountsQueryDto) {
     return this.getBankAccountsService.getCashflowAccounts(filterDto);
   }
 

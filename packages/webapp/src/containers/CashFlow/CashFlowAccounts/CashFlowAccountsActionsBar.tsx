@@ -25,6 +25,7 @@ import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 
 import { ACCOUNT_TYPE, Features } from '@/constants';
 import { DialogsName } from '@/constants/dialogs';
+import { CreditCard2Icon } from '@/icons/CreditCard2';
 
 import { compose } from '@/utils';
 
@@ -89,21 +90,6 @@ function CashFlowAccountsActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="print-16" iconSize={16} />}
-          text={<T id={'print'} />}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-import-16" iconSize={16} />}
-          text={<T id={'import'} />}
-        />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
         <NavbarDivider />
         <Can I={CashflowAction.Edit} a={AbilitySubject.Cashflow}>
           <Switch
@@ -118,7 +104,8 @@ function CashFlowAccountsActionsBar({
         <FeatureCan feature={Features.BankSyncing}>
           <Button
             className={Classes.MINIMAL}
-            text={'Connect to Bank / Credit Card'}
+            text={'Connect Bank/Credit Card'}
+            icon={<CreditCard2Icon />}
             onClick={handleConnectToBank}
             disabled={isPlaidLoading}
           />

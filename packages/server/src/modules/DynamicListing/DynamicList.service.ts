@@ -16,7 +16,7 @@ export class DynamicListService {
     private dynamicListSearch: DynamicListSearch,
     private dynamicListSortBy: DynamicListSortBy,
     private dynamicListView: DynamicListCustomView,
-  ) {}
+  ) { }
 
   /**
    * Parses filter DTO.
@@ -31,9 +31,9 @@ export class DynamicListService {
       // Merges the default properties with filter object.
       ...(model.defaultSort
         ? {
-            sortOrder: model.defaultSort.sortOrder,
-            columnSortBy: model.defaultSort.sortOrder,
-          }
+          sortOrder: model.defaultSort.sortOrder,
+          columnSortBy: model.defaultSort.sortOrder,
+        }
         : {}),
       ...filterDTO,
     };
@@ -93,7 +93,7 @@ export class DynamicListService {
    * Parses stringified filter roles.
    * @param {string} stringifiedFilterRoles - Stringified filter roles.
    */
-  public parseStringifiedFilter<T extends IDynamicListFilter>(
+  public parseStringifiedFilter<T extends { stringifiedFilterRoles?: string }>(
     filterRoles: T,
   ): T {
     return {
