@@ -23,12 +23,13 @@ export class TransactionsByCustomerController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     // Retrieves the json table format.
-    if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.transactionsByCustomersApp.table(filter);
 
       // Retrieve the csv format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    } else if (accept.includes(AcceptType.ApplicationCsv)) {
       const csv = await this.transactionsByCustomersApp.csv(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -37,7 +38,7 @@ export class TransactionsByCustomerController {
       res.send(csv);
 
       // Retrieve the xlsx format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    } else if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.transactionsByCustomersApp.xlsx(filter);
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
       res.setHeader(
@@ -47,7 +48,7 @@ export class TransactionsByCustomerController {
       res.send(buffer);
 
       // Retrieve the json format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.transactionsByCustomersApp.pdf(filter);
       res.set({
         'Content-Type': 'application/pdf',

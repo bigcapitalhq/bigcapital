@@ -8,6 +8,7 @@ import {
   Get,
   Put,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import { TenantController } from '../Tenancy/Tenant.controller';
 import { ItemsApplicationService } from './ItemsApplication.service';
@@ -156,9 +157,10 @@ export class ItemsController extends TenantController {
   async editItem(
     @Param('id') id: string,
     @Body() editItemDto: EditItemDto,
-  ): Promise<number> {
+  ): Promise<{ id: number; message: string }> {
     const itemId = parseInt(id, 10);
-    return this.itemsApplication.editItem(itemId, editItemDto);
+    await this.itemsApplication.editItem(itemId, editItemDto);
+    return { id: itemId, message: 'The item has been successfully updated.' };
   }
 
   @Post()
@@ -168,8 +170,12 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully created.',
   })
   // @UsePipes(new ZodValidationPipe(createItemSchema))
-  async createItem(@Body() createItemDto: CreateItemDto): Promise<number> {
-    return this.itemsApplication.createItem(createItemDto);
+  async createItem(
+    @Body() createItemDto: CreateItemDto,
+  ): Promise<{ id: number; message: string }> {
+    const itemId = await this.itemsApplication.createItem(createItemDto);
+
+    return { id: itemId, message: 'The item has been successfully created.' };
   }
 
   @Delete(':id')
@@ -347,6 +353,7 @@ export class ItemsController extends TenantController {
   }
 
   @Post('validate-bulk-delete')
+  @HttpCode(200)
   @ApiOperation({
     summary:
       'Validates which items can be deleted and returns counts of deletable and non-deletable items.',

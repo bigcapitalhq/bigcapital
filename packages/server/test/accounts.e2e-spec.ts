@@ -7,12 +7,12 @@ import {
 } from './init-app-test';
 
 const makeAccountRequest = () => ({
-  name: faker.finance.accountName(),
-  accountType: 'asset',
+  name: `${faker.finance.accountName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+  accountType: 'cash',
   code: faker.string.alphanumeric({ length: 6 }).toUpperCase(),
 });
 
-describe('Accounts (e2e)', () => {
+describe.only('Accounts (e2e)', () => {
   it('/accounts (POST)', () => {
     return request(app.getHttpServer())
       .post('/accounts')
@@ -35,7 +35,9 @@ describe('Accounts (e2e)', () => {
       .post('/accounts')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send(makeAccountRequest());
+      .send(makeAccountRequest())
+      .expect(201);
+
     const accountId = response.body.id;
 
     return request(app.getHttpServer())
@@ -50,17 +52,15 @@ describe('Accounts (e2e)', () => {
       .post('/accounts')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send(makeAccountRequest());
+      .send(makeAccountRequest())
+      .expect(201);
     const accountId = response.body.id;
 
     return request(app.getHttpServer())
       .put(`/accounts/${accountId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send({
-        name: faker.finance.accountName(),
-        accountType: 'asset',
-      })
+      .send(makeAccountRequest())
       .expect(200);
   });
 
@@ -69,7 +69,8 @@ describe('Accounts (e2e)', () => {
       .post('/accounts')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send(makeAccountRequest());
+      .send(makeAccountRequest())
+      .expect(201);
     const accountId = response.body.id;
 
     return request(app.getHttpServer())
@@ -87,7 +88,8 @@ describe('Accounts (e2e)', () => {
       .send({
         ...makeAccountRequest(),
         active: false,
-      });
+      })
+      .expect(201);
     const accountId = response.body.id;
 
     return request(app.getHttpServer())
@@ -105,7 +107,8 @@ describe('Accounts (e2e)', () => {
       .send({
         ...makeAccountRequest(),
         active: true,
-      });
+      })
+      .expect(201);
     const accountId = response.body.id;
 
     return request(app.getHttpServer())
@@ -128,14 +131,16 @@ describe('Accounts (e2e)', () => {
       .post('/accounts')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send(makeAccountRequest());
+      .send(makeAccountRequest())
+      .expect(201);
     const accountId1 = response1.body.id;
 
     const response2 = await request(app.getHttpServer())
       .post('/accounts')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send(makeAccountRequest());
+      .send(makeAccountRequest())
+      .expect(201);
     const accountId2 = response2.body.id;
 
     return request(app.getHttpServer())
@@ -153,14 +158,16 @@ describe('Accounts (e2e)', () => {
       .post('/accounts')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send(makeAccountRequest());
+      .send(makeAccountRequest())
+      .expect(201);
     const accountId1 = response1.body.id;
 
     const response2 = await request(app.getHttpServer())
       .post('/accounts')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send(makeAccountRequest());
+      .send(makeAccountRequest())
+      .expect(201);
     const accountId2 = response2.body.id;
 
     return request(app.getHttpServer())

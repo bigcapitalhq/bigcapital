@@ -21,7 +21,8 @@ export class InventoryItemDetailsController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
-    if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    const accept = acceptHeader || '';
+    if (accept.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.inventoryItemDetailsApp.csv(query);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -29,7 +30,7 @@ export class InventoryItemDetailsController {
 
       res.send(buffer);
       // Retrieves the xlsx format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    } else if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.inventoryItemDetailsApp.xlsx(query);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
@@ -39,10 +40,10 @@ export class InventoryItemDetailsController {
       );
       res.send(buffer);
       // Retrieves the json table format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    } else if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.inventoryItemDetailsApp.table(query);
       // Retrieves the pdf format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const buffer = await this.inventoryItemDetailsApp.pdf(query);
 
       res.set({

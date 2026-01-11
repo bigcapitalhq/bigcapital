@@ -39,11 +39,12 @@ export class GeneralLedgerController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     // Retrieves the table format.
-    if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.generalLedgerApplication.table(query);
       // Retrieves the csv format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    } else if (accept.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.generalLedgerApplication.csv(query);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -51,7 +52,7 @@ export class GeneralLedgerController {
 
       res.send(buffer);
       // Retrieves the xlsx format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    } else if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.generalLedgerApplication.xlsx(query);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
@@ -61,7 +62,7 @@ export class GeneralLedgerController {
       );
       res.send(buffer);
       // Retrieves the pdf format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.generalLedgerApplication.pdf(query);
       res.set({
         'Content-Type': 'application/pdf',

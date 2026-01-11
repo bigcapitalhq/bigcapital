@@ -5,10 +5,10 @@ import { AppModule } from '../src/modules/App/App.module';
 
 let app: INestApplication;
 
-const email = 'ahmed@sa1234dsad.com';
+const email = 'big@big.com';
 const password = '123123123';
 
-let orgainzationId = 'hpgpqfqom8zic574';
+let orgainzationId = '';
 let authenticationToken = '';
 let AuthorizationHeader = '';
 
@@ -22,11 +22,13 @@ beforeAll(async () => {
 
   const signinResponse = await request(app.getHttpServer())
     .post('/auth/signin')
-    .send({ email, password })
-    .expect(201);
+    .send({ email, password });
+
+  console.log(signinResponse.body);
 
   authenticationToken = signinResponse.body.access_token;
   AuthorizationHeader = `Bearer ${authenticationToken}`;
+  orgainzationId = signinResponse.body.organization_id;
 });
 
 afterAll(async () => {

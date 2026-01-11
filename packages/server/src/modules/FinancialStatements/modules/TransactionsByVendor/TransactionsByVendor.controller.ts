@@ -23,8 +23,9 @@ export class TransactionsByVendorController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     // Retrieves the xlsx format.
-    if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.transactionsByVendorsApp.xlsx(filter);
 
       res.setHeader('Content-Type', 'application/vnd.openxmlformats');
@@ -32,7 +33,7 @@ export class TransactionsByVendorController {
 
       res.send(buffer);
       // Retrieves the csv format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    } else if (accept.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.transactionsByVendorsApp.csv(filter);
 
       res.setHeader('Content-Type', 'text/csv');
@@ -40,10 +41,10 @@ export class TransactionsByVendorController {
 
       res.send(buffer);
       // Retrieves the json table format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    } else if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.transactionsByVendorsApp.table(filter);
       // Retrieves the pdf format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.transactionsByVendorsApp.pdf(filter);
       res.set({
         'Content-Type': 'application/pdf',

@@ -12,12 +12,12 @@ const makeItemRequest = () => ({
   type: 'service',
 });
 
-describe('Items (e2e)', () => {
+describe.only('Items (e2e)', () => {
   it('/items (POST)', () => {
     return request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
-      .set('Authorization', `Bearer ${authenticationToken}`)
+      .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest())
       .expect(201);
   });
@@ -28,6 +28,7 @@ describe('Items (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest());
+
     const itemId = response.body.id;
 
     return request(app.getHttpServer())

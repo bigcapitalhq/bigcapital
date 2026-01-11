@@ -3,7 +3,7 @@ import {
   Get,
   Query,
   Param,
-  Post,
+  Patch,
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
@@ -27,7 +27,7 @@ export class ContactsController {
     return this.getAutoCompleteService.autocompleteContacts(query);
   }
 
-  @Post(':id/activate')
+  @Patch(':id/activate')
   @ApiOperation({ summary: 'Activate a contact' })
   @ApiParam({ name: 'id', type: 'number', description: 'Contact ID' })
   async activateContact(@Param('id', ParseIntPipe) contactId: number) {
@@ -35,7 +35,7 @@ export class ContactsController {
     return { id: contactId, activated: true };
   }
 
-  @Post(':id/inactivate')
+  @Patch(':id/inactivate')
   @ApiOperation({ summary: 'Inactivate a contact' })
   @ApiParam({ name: 'id', type: 'number', description: 'Contact ID' })
   async inactivateContact(@Param('id', ParseIntPipe) contactId: number) {

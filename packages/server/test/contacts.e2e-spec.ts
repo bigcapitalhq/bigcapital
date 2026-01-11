@@ -32,17 +32,17 @@ describe('Contacts (e2e)', () => {
       .expect(200);
   });
 
-  it('/contacts/:id/activate (POST)', () => {
+  it('/contacts/:id/activate (PATCH)', () => {
     return request(app.getHttpServer())
-      .post(`/contacts/${customerId}/activate`)
+      .patch(`/contacts/${customerId}/activate`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
-  it('/contacts/:id/inactivate (POST)', () => {
+  it('/contacts/:id/inactivate (PATCH)', () => {
     return request(app.getHttpServer())
-      .post(`/contacts/${vendorId}/inactivate`)
+      .patch(`/contacts/${vendorId}/inactivate`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);

@@ -34,8 +34,9 @@ export class CustomerBalanceSummaryController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     // Retrieves the xlsx format.
-    if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.customerBalanceSummaryApp.xlsx(filter);
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
       res.setHeader(
@@ -44,18 +45,18 @@ export class CustomerBalanceSummaryController {
       );
       res.send(buffer);
       // Retrieves the csv format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    } else if (accept.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.customerBalanceSummaryApp.csv(filter);
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
       res.send(buffer);
       // Retrieves the json table format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    } else if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.customerBalanceSummaryApp.table(filter);
 
       // Retrieves the pdf format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const buffer = await this.customerBalanceSummaryApp.pdf(filter);
 
       res.set({

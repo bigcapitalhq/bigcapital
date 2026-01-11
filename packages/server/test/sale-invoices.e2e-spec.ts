@@ -42,7 +42,7 @@ describe('Sale Invoices (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,

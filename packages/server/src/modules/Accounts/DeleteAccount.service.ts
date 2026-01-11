@@ -18,7 +18,7 @@ export class DeleteAccount {
     private eventEmitter: EventEmitter2,
     private uow: UnitOfWork,
     private validator: CommandAccountValidators,
-  ) {}
+  ) { }
 
   /**
    * Authorize account delete.
@@ -57,7 +57,10 @@ export class DeleteAccount {
     trx?: Knex.Transaction,
   ): Promise<void> => {
     // Retrieve account or not found service error.
-    const oldAccount = await this.accountModel().query().findById(accountId);
+    const oldAccount = await this.accountModel()
+      .query()
+      .findById(accountId)
+      .throwIfNotFound();
 
     // Authorize before delete account.
     await this.authorize(accountId, oldAccount);
