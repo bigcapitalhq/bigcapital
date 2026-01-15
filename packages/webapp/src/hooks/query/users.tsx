@@ -19,7 +19,7 @@ export function useCreateInviteUser(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post('invite/send', values), {
+  return useMutation((values) => apiRequest.patch('invite', values), {
     onSuccess: () => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);

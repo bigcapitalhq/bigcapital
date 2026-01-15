@@ -1,5 +1,5 @@
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { BankingMatchingApplication } from './BankingMatchingApplication';
 import { GetMatchedTransactionsFilter } from './types';
 import { MatchBankTransactionDto } from './dtos/MatchBankTransaction.dto';
@@ -34,7 +34,7 @@ export class BankingMatchingController {
     );
   }
 
-  @Post('/unmatch/:uncategorizedTransactionId')
+  @Patch('/unmatch/:uncategorizedTransactionId')
   @ApiOperation({ summary: 'Unmatch the given uncategorized transaction.' })
   async unmatchMatchedTransaction(
     @Param('uncategorizedTransactionId') uncategorizedTransactionId: number,

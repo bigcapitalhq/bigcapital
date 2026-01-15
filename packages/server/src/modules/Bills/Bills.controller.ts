@@ -11,10 +11,12 @@ import {
   Post,
   Body,
   Put,
+  Patch,
   Param,
   Delete,
   Get,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import { BillsApplication } from './Bills.application';
 import { IBillsFilter } from './Bills.types';
@@ -40,6 +42,7 @@ export class BillsController {
   @ApiOperation({
     summary: 'Validate which bills can be deleted and return the results.',
   })
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description:
@@ -56,6 +59,7 @@ export class BillsController {
 
   @Post('bulk-delete')
   @ApiOperation({ summary: 'Deletes multiple bills.' })
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Bills deleted successfully',
@@ -160,7 +164,7 @@ export class BillsController {
     return this.billsApplication.getBill(billId);
   }
 
-  @Post(':id/open')
+  @Patch(':id/open')
   @ApiOperation({ summary: 'Open the given bill.' })
   @ApiParam({
     name: 'id',

@@ -21,6 +21,7 @@ const createRoleRequest = () => ({
 
 describe('Roles (e2e)', () => {
   it('/roles (POST)', () => {
+    console.log(createRoleRequest())
     return request(app.getHttpServer())
       .post('/roles')
       .set('organization-id', orgainzationId)
@@ -51,7 +52,7 @@ describe('Roles (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createRoleRequest());
-    const roleId = response.body.data.roleId;
+    const roleId = response.body.data.id;
 
     return request(app.getHttpServer())
       .get(`/roles/${roleId}`)
@@ -66,7 +67,7 @@ describe('Roles (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createRoleRequest());
-    const roleId = response.body.data.roleId;
+    const roleId = response.body.data.id;
 
     return request(app.getHttpServer())
       .post(`/roles/${roleId}`)

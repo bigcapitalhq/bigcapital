@@ -3,9 +3,9 @@ import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Users Invite (e2e)', () => {
-  it('/invite (POST)', () => {
+  it('/invite (PATCH)', () => {
     return request(app.getHttpServer())
-      .post('/invite')
+      .patch('/invite')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({

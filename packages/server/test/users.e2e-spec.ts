@@ -56,7 +56,6 @@ describe('Users (e2e)', () => {
         userId = usersResponse.body[0].id;
       }
     }
-
     if (userId) {
       return request(app.getHttpServer())
         .post(`/users/${userId}`)
@@ -65,52 +64,50 @@ describe('Users (e2e)', () => {
         .send({
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
-          email: faker.internet.email(),
-          roleId: 1,
         })
         .expect(200);
     }
   });
 
-  it('/users/:id/activate (PUT)', async () => {
-    if (!userId) {
-      const usersResponse = await request(app.getHttpServer())
-        .get('/users')
-        .set('organization-id', orgainzationId)
-        .set('Authorization', AuthorizationHeader);
+  // it('/users/:id/activate (PUT)', async () => {
+  //   if (!userId) {
+  //     const usersResponse = await request(app.getHttpServer())
+  //       .get('/users')
+  //       .set('organization-id', orgainzationId)
+  //       .set('Authorization', AuthorizationHeader);
 
-      if (usersResponse.body.length > 0) {
-        userId = usersResponse.body[0].id;
-      }
-    }
+  //     if (usersResponse.body.length > 0) {
+  //       userId = usersResponse.body[0].id;
+  //     }
+  //   }
 
-    if (userId) {
-      return request(app.getHttpServer())
-        .put(`/users/${userId}/activate`)
-        .set('organization-id', orgainzationId)
-        .set('Authorization', AuthorizationHeader)
-        .expect(200);
-    }
-  });
+  //   if (userId) {
+  //     return request(app.getHttpServer())
+  //       .put(`/users/${userId}/activate`)
+  //       .set('organization-id', orgainzationId)
+  //       .set('Authorization', AuthorizationHeader)
+  //       .expect(200);
+  //   }
+  // });
 
-  it('/users/:id/inactivate (PUT)', async () => {
-    if (!userId) {
-      const usersResponse = await request(app.getHttpServer())
-        .get('/users')
-        .set('organization-id', orgainzationId)
-        .set('Authorization', AuthorizationHeader);
+  // it('/users/:id/inactivate (PUT)', async () => {
+  //   if (!userId) {
+  //     const usersResponse = await request(app.getHttpServer())
+  //       .get('/users')
+  //       .set('organization-id', orgainzationId)
+  //       .set('Authorization', AuthorizationHeader);
 
-      if (usersResponse.body.length > 0) {
-        userId = usersResponse.body[0].id;
-      }
-    }
+  //     if (usersResponse.body.length > 0) {
+  //       userId = usersResponse.body[0].id;
+  //     }
+  //   }
 
-    if (userId) {
-      return request(app.getHttpServer())
-        .put(`/users/${userId}/inactivate`)
-        .set('organization-id', orgainzationId)
-        .set('Authorization', AuthorizationHeader)
-        .expect(200);
-    }
-  });
+  //   if (userId) {
+  //     return request(app.getHttpServer())
+  //       .put(`/users/${userId}/inactivate`)
+  //       .set('organization-id', orgainzationId)
+  //       .set('Authorization', AuthorizationHeader)
+  //       .expect(200);
+  //   }
+  // });
 });

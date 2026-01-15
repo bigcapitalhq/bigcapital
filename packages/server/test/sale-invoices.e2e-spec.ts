@@ -14,8 +14,8 @@ const requestSaleInvoiceBody = () => ({
   delivered: true,
   discountType: 'percentage',
   discount: 10,
-  branchId: 1,
-  warehouseId: 1,
+  // branchId: 1,
+  // warehouseId: 1,
   entries: [
     {
       index: 1,
@@ -50,7 +50,7 @@ describe('Sale Invoices (e2e)', () => {
         costPrice: 100,
         sellPrice: 100,
       });
-    itemId = parseInt(item.text, 10);
+    itemId = item.body.id;
   });
 
   it('/sale-invoices (POST)', () => {
@@ -119,15 +119,9 @@ describe('Sale Invoices (e2e)', () => {
       .expect(200);
   });
 
-  it('/sale-invoices/:id/state (GET)', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/sale-invoices')
-      .set('organization-id', orgainzationId)
-      .set('Authorization', AuthorizationHeader)
-      .send(requestSaleInvoiceBody());
-
+  it('/sale-invoices/state (GET)', async () => {
     return request(app.getHttpServer())
-      .get(`/sale-invoices/${response.body.id}/state`)
+      .get('/sale-invoices/state')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
@@ -207,7 +201,7 @@ describe('Sale Invoices (e2e)', () => {
       .expect(200);
   });
 
-  it('/sale-invoices/:id/mail-state (GET)', async () => {
+  it('/sale-invoices/:id/mail (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set('organization-id', orgainzationId)
@@ -215,7 +209,7 @@ describe('Sale Invoices (e2e)', () => {
       .send(requestSaleInvoiceBody());
 
     return request(app.getHttpServer())
-      .get(`/sale-invoices/${response.body.id}/mail-state`)
+      .get(`/sale-invoices/${response.body.id}/mail`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);

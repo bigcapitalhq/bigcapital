@@ -47,7 +47,7 @@ describe('Bills (e2e)', () => {
         costPrice: 100,
         sellPrice: 100,
       });
-    itemId = parseInt(item.text, 10);
+    itemId = parseInt(item.body.id, 10);
   });
 
   it('/bills (POST)', () => {
@@ -113,7 +113,7 @@ describe('Bills (e2e)', () => {
       .expect(200);
   });
 
-  it('/bills/:id/open (POST)', async () => {
+  it('/bills/:id/open (PATCH)', async () => {
     const response = await request(app.getHttpServer())
       .post('/bills')
       .set('organization-id', orgainzationId)
@@ -122,7 +122,7 @@ describe('Bills (e2e)', () => {
     const billId = response.body.id;
 
     return request(app.getHttpServer())
-      .post(`/bills/${billId}/open`)
+      .patch(`/bills/${billId}/open`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);

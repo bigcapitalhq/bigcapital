@@ -163,6 +163,41 @@ export class ItemsController extends TenantController {
     return { id: itemId, message: 'The item has been successfully updated.' };
   }
 
+  @Post('validate-bulk-delete')
+  @HttpCode(200)
+  @ApiOperation({
+    summary:
+      'Validates which items can be deleted and returns counts of deletable and non-deletable items.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed. Returns counts and IDs of deletable and non-deletable items.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteItemsResponseDto),
+    },
+  })
+  async validateBulkDeleteItems(
+    @Body() bulkDeleteDto: BulkDeleteItemsDto,
+  ): Promise<ValidateBulkDeleteItemsResponseDto> {
+    return this.itemsApplication.validateBulkDeleteItems(bulkDeleteDto.ids);
+  }
+
+  @Post('bulk-delete')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Deletes multiple items in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The items have been successfully deleted.',
+  })
+  async bulkDeleteItems(
+    @Body() bulkDeleteDto: BulkDeleteItemsDto,
+  ): Promise<void> {
+    return this.itemsApplication.bulkDeleteItems(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new item (product or service).' })
   @ApiResponse({
@@ -352,37 +387,4 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.getItemReceiptsTransactions(itemId);
   }
 
-  @Post('validate-bulk-delete')
-  @HttpCode(200)
-  @ApiOperation({
-    summary:
-      'Validates which items can be deleted and returns counts of deletable and non-deletable items.',
-  })
-  @ApiResponse({
-    status: 200,
-    description:
-      'Validation completed. Returns counts and IDs of deletable and non-deletable items.',
-    schema: {
-      $ref: getSchemaPath(ValidateBulkDeleteItemsResponseDto),
-    },
-  })
-  async validateBulkDeleteItems(
-    @Body() bulkDeleteDto: BulkDeleteItemsDto,
-  ): Promise<ValidateBulkDeleteItemsResponseDto> {
-    return this.itemsApplication.validateBulkDeleteItems(bulkDeleteDto.ids);
-  }
-
-  @Post('bulk-delete')
-  @ApiOperation({ summary: 'Deletes multiple items in bulk.' })
-  @ApiResponse({
-    status: 200,
-    description: 'The items have been successfully deleted.',
-  })
-  async bulkDeleteItems(
-    @Body() bulkDeleteDto: BulkDeleteItemsDto,
-  ): Promise<void> {
-    return this.itemsApplication.bulkDeleteItems(bulkDeleteDto.ids, {
-      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
-    });
-  }
 }

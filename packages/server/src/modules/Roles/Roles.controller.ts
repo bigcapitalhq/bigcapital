@@ -5,11 +5,9 @@ import {
   Delete,
   Param,
   Body,
-  Next,
   HttpStatus,
   ParseIntPipe,
 } from '@nestjs/common';
-import { NextFunction } from 'express';
 import { CreateRoleDto, EditRoleDto } from './dtos/Role.dto';
 import { RolesApplication } from './Roles.application';
 import {
@@ -29,7 +27,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiExtraModels(RoleResponseDto)
 @ApiCommonHeaders()
 export class RolesController {
-  constructor(private readonly rolesApp: RolesApplication) {}
+  constructor(private readonly rolesApp: RolesApplication) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new role' })
@@ -38,14 +36,11 @@ export class RolesController {
     status: HttpStatus.OK,
     description: 'Role created successfully',
   })
-  async createRole(
-    @Next() next: NextFunction,
-    @Body() createRoleDto: CreateRoleDto,
-  ) {
+  async createRole(@Body() createRoleDto: CreateRoleDto) {
     const role = await this.rolesApp.createRole(createRoleDto);
 
     return {
-      data: { roleId: role.id },
+      data: { id: role.id },
       message: 'The role has been created successfully.',
     };
   }
@@ -65,7 +60,7 @@ export class RolesController {
     const role = await this.rolesApp.editRole(roleId, editRoleDto);
 
     return {
-      data: { roleId },
+      data: { id: role.id },
       message: 'The given role has been updated successfully.',
     };
   }
@@ -81,7 +76,7 @@ export class RolesController {
     await this.rolesApp.deleteRole(roleId);
 
     return {
-      data: { roleId },
+      data: { id: roleId },
       message: 'The given role has been deleted successfully.',
     };
   }

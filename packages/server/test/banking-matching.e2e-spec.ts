@@ -22,9 +22,9 @@ describe('Banking Matching (e2e)', () => {
       .expect(200);
   });
 
-  it('/banking/matching/unmatch/:uncategorizedTransactionId (POST)', () => {
+  it('/banking/matching/unmatch/:uncategorizedTransactionId (PATCH)', () => {
     return request(app.getHttpServer())
-      .post('/banking/matching/unmatch/1')
+      .patch('/banking/matching/unmatch/1')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);

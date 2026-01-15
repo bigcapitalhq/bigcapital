@@ -24,7 +24,7 @@ const commonInvalidateQueries = (query: QueryClient) => {
 interface CreateBankRuleValues {
   value: any;
 }
-interface CreateBankRuleResponse {}
+interface CreateBankRuleResponse { }
 
 /**
  * Creates a new bank rule.
@@ -53,7 +53,7 @@ export function useCreateBankRule(
   );
 }
 
-interface DisconnectBankAccountRes {}
+interface DisconnectBankAccountRes { }
 interface DisconnectBankAccountValues {
   bankAccountId: number;
 }
@@ -93,7 +93,7 @@ export function useDisconnectBankAccount(
   );
 }
 
-interface UpdateBankAccountRes {}
+interface UpdateBankAccountRes { }
 interface UpdateBankAccountValues {
   bankAccountId: number;
 }
@@ -118,7 +118,7 @@ export function useUpdateBankAccount(
       apiRequest.post(`/banking/accounts/${bankAccountId}/refresh`),
     {
       ...options,
-      onSuccess: () => {},
+      onSuccess: () => { },
     },
   );
 }
@@ -127,7 +127,7 @@ interface EditBankRuleValues {
   id: number;
   value: any;
 }
-interface EditBankRuleResponse {}
+interface EditBankRuleResponse { }
 
 /**
  * Edits the given bank rule.
@@ -151,7 +151,7 @@ export function useEditBankRule(
   );
 }
 
-interface DeleteBankRuleResponse {}
+interface DeleteBankRuleResponse { }
 type DeleteBankRuleValue = number;
 
 /**
@@ -187,7 +187,7 @@ export function useDeleteBankRule(
   );
 }
 
-interface BankRulesResponse {}
+interface BankRulesResponse { }
 
 /**
  * Retrieves all bank rules.
@@ -206,7 +206,7 @@ export function useBankRules(
   );
 }
 
-interface GetBankRuleRes {}
+interface GetBankRuleRes { }
 
 /**
  * Retrieve the given bank rule.
@@ -283,7 +283,7 @@ const onValidateExcludeUncategorizedTransaction = (queryClient) => {
 
 type ExcludeUncategorizedTransactionValue = number;
 
-interface ExcludeUncategorizedTransactionRes {}
+interface ExcludeUncategorizedTransactionRes { }
 /**
  * Excludes the given uncategorized transaction.
  * @param {UseMutationOptions<ExcludeUncategorizedTransactionRes, Error, ExcludeUncategorizedTransactionValue>}
@@ -321,7 +321,7 @@ export function useExcludeUncategorizedTransaction(
 
 type ExcludeBankTransactionValue = number;
 
-interface ExcludeBankTransactionResponse {}
+interface ExcludeBankTransactionResponse { }
 
 /**
  * Excludes the uncategorized bank transaction.
@@ -359,7 +359,7 @@ export function useUnexcludeUncategorizedTransaction(
 }
 
 type ExcludeBankTransactionsValue = { ids: Array<number | string> };
-interface ExcludeBankTransactionsResponse {}
+interface ExcludeBankTransactionsResponse { }
 
 /**
  * Excludes the uncategorized bank transactions in bulk.
@@ -397,7 +397,7 @@ export function useExcludeUncategorizedTransactions(
 }
 
 type UnexcludeBankTransactionsValue = { ids: Array<number | string> };
-interface UnexcludeBankTransactionsResponse {}
+interface UnexcludeBankTransactionsResponse { }
 
 /**
  * Excludes the uncategorized bank transactions in bulk.
@@ -438,7 +438,7 @@ interface MatchUncategorizedTransactionValues {
   uncategorizedTransactions: Array<number>;
   matchedTransactions: Array<{ reference_type: string; reference_id: number }>;
 }
-interface MatchUncategorizedTransactionRes {}
+interface MatchUncategorizedTransactionRes { }
 
 /**
  * Matchess the given uncateogrized transaction.
@@ -484,7 +484,7 @@ export function useMatchUncategorizedTransaction(
 interface UnmatchUncategorizedTransactionValues {
   id: number;
 }
-interface UnmatchUncategorizedTransactionRes {}
+interface UnmatchUncategorizedTransactionRes { }
 
 /**
  * Unmatch the given matched uncategorized transaction.
@@ -509,7 +509,7 @@ export function useUnmatchMatchedUncategorizedTransaction(
     UnmatchUncategorizedTransactionRes,
     Error,
     UnmatchUncategorizedTransactionValues
-  >(({ id }) => apiRequest.post(`/banking/matching/unmatch/${id}`), {
+  >(({ id }) => apiRequest.patch(`/banking/matching/unmatch/${id}`), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries(
         t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
@@ -527,7 +527,7 @@ export function useUnmatchMatchedUncategorizedTransaction(
   });
 }
 
-interface GetRecognizedBankTransactionRes {}
+interface GetRecognizedBankTransactionRes { }
 
 /**
  * REtrieves the given recognized bank transaction.

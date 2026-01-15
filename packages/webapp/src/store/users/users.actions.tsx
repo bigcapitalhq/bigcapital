@@ -72,7 +72,7 @@ export const deleteUser = ({ id }) => {
 export const submitInvite = ({ form }) => {
   return (dispatch) =>
     new Promise((resolve, reject) => {
-      ApiService.post(`invite/send`, form)
+      ApiService.patch(`invite`, form)
         .then((response) => {
           resolve(response);
         })

@@ -5,7 +5,7 @@ import { AppModule } from '../src/modules/App/App.module';
 
 let app: INestApplication;
 
-const email = 'big@big.com';
+const email = 'bigcapital@bigcapital.com';
 const password = '123123123';
 
 let orgainzationId = '';
@@ -24,8 +24,6 @@ beforeAll(async () => {
     .post('/auth/signin')
     .send({ email, password });
 
-  console.log(signinResponse.body);
-
   authenticationToken = signinResponse.body.access_token;
   AuthorizationHeader = `Bearer ${authenticationToken}`;
   orgainzationId = signinResponse.body.organization_id;
@@ -34,6 +32,6 @@ beforeAll(async () => {
 afterAll(async () => {
   await app.close();
 });
-// jest.retryTimes(3, { logErrorsBeforeRetry: true });
+jest.retryTimes(3, { logErrorsBeforeRetry: true });
 
 export { app, orgainzationId, authenticationToken, AuthorizationHeader };

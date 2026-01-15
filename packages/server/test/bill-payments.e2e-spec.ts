@@ -42,7 +42,7 @@ describe('Bill Payments (e2e)', () => {
         costPrice: 100,
         sellPrice: 100,
       });
-    itemId = parseInt(item.text, 10);
+    itemId = parseInt(item.body.id, 10);
 
     const bill = await request(app.getHttpServer())
       .post('/bills')
@@ -53,8 +53,8 @@ describe('Bill Payments (e2e)', () => {
         billDate: '2023-01-01',
         dueDate: '2023-02-01',
         billNumber: faker.string.alphanumeric(10),
-        branchId: 1,
-        warehouseId: 1,
+        // branchId: 1,
+        // warehouseId: 1,
         entries: [
           {
             index: 1,
@@ -68,13 +68,15 @@ describe('Bill Payments (e2e)', () => {
     billId = bill.body.id;
   });
 
-  it('/bill-payments (POST)', () => {
-    return request(app.getHttpServer())
+  it('/bill-payments (POST)', async () => {
+    const response = await request(app.getHttpServer())
       .post('/bill-payments')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createBillPaymentRequest())
       .expect(201);
+
+    console.log(response.body);
   });
 
   it('/bill-payments (GET)', () => {

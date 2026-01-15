@@ -229,7 +229,7 @@ export class PaymentReceivesController {
     @Headers('accept') acceptHeader: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    if (acceptHeader?.includes(AcceptType.ApplicationPdf)) {
       const [pdfContent, filename] = await this.paymentReceivesApplication.getPaymentReceivePdf(
         paymentReceiveId,
       );
@@ -239,7 +239,7 @@ export class PaymentReceivesController {
         'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.send(pdfContent);
-    } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
+    } else if (acceptHeader?.includes(AcceptType.ApplicationTextHtml)) {
       const htmlContent =
         await this.paymentReceivesApplication.getPaymentReceivedHtml(
           paymentReceiveId,

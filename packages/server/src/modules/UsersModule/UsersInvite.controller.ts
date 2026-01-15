@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersApplication } from './Users.application';
 import { InviteUserDto, SendInviteUserDto } from './dtos/InviteUser.dto';
@@ -38,7 +38,7 @@ export class UsersInviteController {
   /**
    * Send an invitation to a new user.
    */
-  @Post()
+  @Patch()
   @ApiOperation({ summary: 'Send an invitation to a new user.' })
   async sendInvite(@Body() sendInviteDTO: SendInviteUserDto) {
     const result = await this.usersApplication.sendInvite(sendInviteDTO);
