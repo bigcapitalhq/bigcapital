@@ -32,7 +32,7 @@ export class PaymentReceivedValidators {
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
-  ) {}
+  ) { }
 
   /**
    * Validates the payment existance.
@@ -79,11 +79,11 @@ export class PaymentReceivedValidators {
     const invoicesIds = paymentReceiveEntries
       .map((e: { invoiceId: number }) => e.invoiceId)
       .filter((id): id is number => id !== undefined && id !== null);
-    
+
     if (invoicesIds.length === 0) {
       throw new ServiceError(ERRORS.INVOICES_IDS_NOT_FOUND);
     }
-    
+
     const storedInvoices = await this.saleInvoiceModel()
       .query()
       .whereIn('id', invoicesIds)

@@ -47,18 +47,18 @@ export class TransactionsByReference extends FinancialSheet {
       debit: this.getAmountMeta(transaction.debit, { money: false }),
 
       // @ts-ignore
-      // referenceTypeFormatted: transaction.referenceTypeFormatted,
-      referenceTypeFormatted: '',
+      // formattedReferenceType: transaction.referenceTypeFormatted,
+      formattedReferenceType: '',
 
       referenceType: transaction.referenceType,
       referenceId: transaction.referenceId,
 
       contactId: transaction.contactId,
       contactType: transaction.contactType,
-      contactTypeFormatted: transaction.contactType,
+      formattedContactType: transaction.contactType || '',
 
-      accountName: transaction.account.name,
-      accountCode: transaction.account.code,
+      accountName: transaction.account?.name || '',
+      accountCode: transaction.account?.code || '',
       accountId: transaction.accountId,
     };
   };

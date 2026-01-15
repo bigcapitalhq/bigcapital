@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Put,
   Get,
   Delete,
   Param,
@@ -45,7 +46,7 @@ export class RolesController {
     };
   }
 
-  @Post(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Edit an existing role' })
   @ApiParam({ name: 'id', description: 'Role ID' })
   @ApiBody({ type: EditRoleDto })

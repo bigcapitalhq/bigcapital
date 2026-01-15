@@ -163,7 +163,11 @@ describe('Financial Statements (e2e)', () => {
   it('/reports/transactions-by-reference (GET)', () => {
     return request(app.getHttpServer())
       .get('/reports/transactions-by-reference')
-      .query(baseQuery)
+      .query({
+        ...baseQuery,
+        referenceId: '1',
+        referenceType: 'SaleInvoice',
+      })
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);

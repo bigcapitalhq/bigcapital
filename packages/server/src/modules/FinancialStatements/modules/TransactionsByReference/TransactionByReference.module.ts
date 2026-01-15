@@ -4,8 +4,11 @@ import { TransactionsByReferenceRepository } from './TransactionsByReferenceRepo
 import { TransactionsByReferenceService } from './TransactionsByReference.service';
 import { TransactionsByReferenceController } from './TransactionsByReference.controller';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
+import { AccountsModule } from '@/modules/Accounts/Accounts.module';
 
 @Module({
+  imports: [FinancialSheetCommonModule, AccountsModule],
   providers: [
     TransactionsByReferenceRepository,
     TransactionsByReferenceApplication,
@@ -14,4 +17,4 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
   ],
   controllers: [TransactionsByReferenceController],
 })
-export class TransactionsByReferenceModule {}
+export class TransactionsByReferenceModule { }

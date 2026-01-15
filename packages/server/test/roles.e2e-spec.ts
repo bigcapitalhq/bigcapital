@@ -7,13 +7,13 @@ const createRoleRequest = () => ({
   roleDescription: faker.lorem.sentence(),
   permissions: [
     {
-      subject: 'items',
-      ability: 'read',
+      subject: 'Item',
+      ability: 'View',
       value: true,
     },
     {
-      subject: 'items',
-      ability: 'create',
+      subject: 'Item',
+      ability: 'Create',
       value: true,
     },
   ],
@@ -27,7 +27,7 @@ describe('Roles (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createRoleRequest())
-      .expect(200);
+      .expect(201);
   });
 
   it('/roles (GET)', () => {
@@ -61,16 +61,16 @@ describe('Roles (e2e)', () => {
       .expect(200);
   });
 
-  it('/roles/:id (POST)', async () => {
-    const response = await request(app.getHttpServer())
+  it('/roles/:id (PUT)', async () => {
+    const createResponse = await request(app.getHttpServer())
       .post('/roles')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createRoleRequest());
-    const roleId = response.body.data.id;
+    const roleId = createResponse.body.data.id;
 
     return request(app.getHttpServer())
-      .post(`/roles/${roleId}`)
+      .put(`/roles/${roleId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
@@ -78,9 +78,8 @@ describe('Roles (e2e)', () => {
         roleDescription: faker.lorem.sentence(),
         permissions: [
           {
-            permissionId: 1,
-            subject: 'items',
-            ability: 'read',
+            subject: 'Item',
+            ability: 'View',
             value: true,
           },
         ],
@@ -94,7 +93,7 @@ describe('Roles (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createRoleRequest());
-    const roleId = response.body.data.roleId;
+    const roleId = response.body.data.id;
 
     return request(app.getHttpServer())
       .delete(`/roles/${roleId}`)

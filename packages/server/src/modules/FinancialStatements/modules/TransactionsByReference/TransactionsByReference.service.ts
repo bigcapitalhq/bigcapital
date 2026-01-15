@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   ITransactionsByReferencePojo,
   ITransactionsByReferenceQuery,
@@ -13,7 +13,7 @@ export class TransactionsByReferenceService {
   constructor(
     private readonly repository: TransactionsByReferenceRepository,
     private readonly tenancyContext: TenancyContext
-  ) {}
+  ) { }
 
   /**
    * Retrieve accounts transactions by given reference id and type.
@@ -23,6 +23,12 @@ export class TransactionsByReferenceService {
   public async getTransactionsByReference(
     query: ITransactionsByReferenceQuery
   ): Promise<ITransactionsByReferencePojo> {
+    // Validate referenceId is a valid positive number
+    const referenceId = Number(query.referenceId);
+    if (isNaN(referenceId) || referenceId <= 0) {
+      throw new BadRequestException('referenceId must be a valid positive number');
+    }
+
     const filter = {
       ...getTransactionsByReferenceQuery(),
       ...query,
@@ -31,7 +37,7 @@ export class TransactionsByReferenceService {
 
     // Retrieve the accounts transactions of the given reference.
     const transactions = await this.repository.getTransactions(
-      Number(filter.referenceId),
+      referenceId,
       filter.referenceType
     );
     // Transactions by reference report.
