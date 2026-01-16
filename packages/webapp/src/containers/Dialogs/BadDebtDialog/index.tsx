@@ -16,7 +16,7 @@ function BadDebtDialog({ dialogName, payload: { invoiceId = null }, isOpen }) {
       name={dialogName}
       title={<T id={'bad_debt.dialog.bad_debt'} />}
       isOpen={isOpen}
-      canEscapeJeyClose={true}
+      canEscapeKeyClose={true}
       autoFocus={true}
       className={'dialog--bad-debt'}
     >
