@@ -19,7 +19,7 @@ export class DecrementUncategorizedTransactionOnExclude {
     private readonly uncategorizedBankTransaction: TenantModelProxy<
       typeof UncategorizedBankTransaction
     >,
-  ) {}
+  ) { }
 
   /**
    * Validates the cashflow transaction whether matched with bank transaction on deleting.
@@ -50,7 +50,7 @@ export class DecrementUncategorizedTransactionOnExclude {
     trx,
   }: IBankTransactionUnexcludedEventPayload) {
     const transaction = await this.uncategorizedBankTransaction()
-      .query()
+      .query(trx)
       .findById(uncategorizedTransactionId);
     //
     await this.account()
