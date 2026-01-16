@@ -341,7 +341,7 @@ export function useCancelBadDebt(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id) => apiRequest.post(`sale-invoices/${id}/writeoff/cancel`),
+    (id) => apiRequest.post(`sale-invoices/${id}/cancel-writeoff`),
     {
       onSuccess: (res, id) => {
         // Invalidate

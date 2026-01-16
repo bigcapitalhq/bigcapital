@@ -32,13 +32,12 @@ function BadDebtForm({
   // #withCurrentOrganization
   organization: { base_currency },
 }) {
-  const { invoice, dialogName, createBadDebtMutate, cancelBadDebtMutate } =
-    useBadDebtContext();
+  const { invoice, dialogName, createBadDebtMutate } = useBadDebtContext();
 
   // Initial form values
   const initialValues = {
     ...defaultInitialValues,
-    amount: invoice.due_amount,
+    amount: invoice?.due_amount || '',
   };
 
   // Handles the form submit.
@@ -67,7 +66,7 @@ function BadDebtForm({
       }
       setSubmitting(false);
     };
-    createBadDebtMutate([invoice.id, form]).then(onSuccess).catch(onError);
+    createBadDebtMutate([invoice?.id, form]).then(onSuccess).catch(onError);
   };
 
   return (
