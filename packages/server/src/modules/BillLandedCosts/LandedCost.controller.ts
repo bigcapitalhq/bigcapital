@@ -25,7 +25,7 @@ export class BillAllocateLandedCostController {
     private billAllocatedCostTransactions: BillAllocatedLandedCostTransactions,
     private revertAllocatedLandedCost: RevertAllocatedLandedCost,
     private landedCostTransactions: LandedCostTranasctions,
-  ) {}
+  ) { }
 
   @Get('/transactions')
   @ApiOperation({ summary: 'Get landed cost transactions' })

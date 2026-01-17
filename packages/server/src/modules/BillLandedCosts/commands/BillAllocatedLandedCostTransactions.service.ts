@@ -21,7 +21,7 @@ export class BillAllocatedLandedCostTransactions {
     private readonly billLandedCostModel: TenantModelProxy<
       typeof BillLandedCost
     >,
-  ) {}
+  ) { }
 
   /**
    * Retrieve the bill associated landed cost transactions.
@@ -77,6 +77,13 @@ export class BillAllocatedLandedCostTransactions {
       transaction.fromTransactionType,
       transaction,
     );
+    const allocationMethodFormattedKey = transaction.allocationMethodFormatted;
+    const allocationMethodFormatted = allocationMethodFormattedKey
+      ? this.i18nService.t(allocationMethodFormattedKey, {
+        defaultValue: allocationMethodFormattedKey,
+      })
+      : '';
+
     return {
       formattedAmount: formatNumber(transaction.amount, {
         currencyCode: transaction.currencyCode,
@@ -84,12 +91,14 @@ export class BillAllocatedLandedCostTransactions {
       ...omit(transaction, [
         'allocatedFromBillEntry',
         'allocatedFromExpenseEntry',
+        'allocationMethodFormatted',
       ]),
       name,
       description,
       formattedLocalAmount: formatNumber(transaction.localAmount, {
         currencyCode: 'USD',
       }),
+      allocationMethodFormatted,
     };
   };
 

@@ -8,8 +8,10 @@ import {
   RadioGroup,
   Radio,
   InputGroup,
+  Spinner,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import { x } from '@xstyled/emotion';
 import { FormattedMessage as T, If, FFormGroup, FSelect, FRadioGroup, FInputGroup } from '@/components';
 import { handleStringChange } from '@/utils';
 import { FieldRequiredHint } from '@/components';
@@ -28,7 +30,7 @@ import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogP
  */
 export default function AllocateLandedCostFormFields() {
   // Allocated landed cost dialog.
-  const { costTransactionEntries, landedCostTransactions } =
+  const { costTransactionEntries, landedCostTransactions, isLandedCostTransactionsLoading } =
     useAllocateLandedConstDialogContext();
 
   const { values, setFieldValue, form } = useFormikContext();
@@ -97,21 +99,35 @@ export default function AllocateLandedCostFormFields() {
         inline
         fill
       >
-        <FSelect
-          name={'transaction_id'}
-          items={landedCostTransactions}
-          onItemChange={handleTransactionChange}
-          filterable={false}
-          valueAccessor={'id'}
-          textAccessor={'name'}
-          labelAccessor={'formatted_unallocated_cost_amount'}
-          placeholder={intl.get('landed_cost.dialog.label_select_transaction')}
-          popoverProps={{ minimal: true }}
-        />
+        <x.div position="relative" w="100%">
+          <FSelect
+            name={'transaction_id'}
+            items={landedCostTransactions || []}
+            onItemChange={handleTransactionChange}
+            filterable={false}
+            valueAccessor={'id'}
+            textAccessor={'name'}
+            labelAccessor={'formatted_unallocated_cost_amount'}
+            placeholder={intl.get('landed_cost.dialog.label_select_transaction')}
+            popoverProps={{ minimal: true }}
+            disabled={isLandedCostTransactionsLoading}
+          />
+          {isLandedCostTransactionsLoading && (
+            <x.div
+              position="absolute"
+              right="35px"
+              top="50%"
+              transform="translateY(-50%)"
+              pointerEvents="none"
+            >
+              <Spinner size={16} />
+            </x.div>
+          )}
+        </x.div>
       </FFormGroup>
 
       {/*------------ Transaction line  -----------*/}
-      <If condition={costTransactionEntries.length > 0}>
+      <If condition={costTransactionEntries?.length > 0}>
         <FFormGroup
           name={'transaction_entry_id'}
           label={<T id={'transaction_line'} />}
