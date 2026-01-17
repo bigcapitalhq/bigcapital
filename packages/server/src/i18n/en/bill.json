@@ -22,6 +22,9 @@
   "field.status.unpaid": "Unpaid",
   "field.status.opened": "Opened",
   "field.status.draft": "Draft",
-  "field.created_at": "Created At"
+  "field.created_at": "Created At",
+  "allocation_method": "Allocation Method",
+  "allocation_method.quantity": "Quantity",
+  "allocation_method.value": "Valuation"
 }
 

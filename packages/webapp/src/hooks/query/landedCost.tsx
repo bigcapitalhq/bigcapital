@@ -67,9 +67,6 @@ export function useLandedCostTransaction(query, props) {
     },
     {
       select: (res) => res.data,
-      defaultData: {
-        transactions: [],
-      },
       ...props,
     },
   );

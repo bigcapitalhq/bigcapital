@@ -38,7 +38,7 @@ function AllocateLandedCostFloatingActions({
       <DialogFooterActions alignment={'left'}>
         {costTransactionEntry && (
           <UnallocatedAmount>
-           <T id={'landed_cost.dialog.label_unallocated_cost_amount'}/>
+            <T id={'landed_cost.dialog.label_unallocated_cost_amount'} />
             <strong>{formattedUnallocatedCostAmount}</strong>
           </UnallocatedAmount>
         )}
@@ -68,11 +68,16 @@ const AllocateDialogFooter = styled(DialogFooter)`
 `;
 
 const UnallocatedAmount = styled.div`
-  color: #3f5278;
+  --x-color-text: #3f5278;
+
+  .bp4-dark & {
+    --x-color-text: var(--color-light-gray1);
+  }
+  color: var(--x-color-text);
   align-self: center;
 
   strong {
-    color: #353535;
+    color: var(--x-color-text);
     padding-left: 4px;
   }
 `;

@@ -4,7 +4,6 @@ import {
   IsOptional,
   IsArray,
   ValidateNested,
-  IsDecimal,
   IsString,
   IsNumber,
 } from 'class-validator';
@@ -17,8 +16,9 @@ export class AllocateBillLandedCostItemDto {
   @ToNumber()
   entryId: number;
 
-  @IsDecimal()
-  cost: string; // Use string for IsDecimal, or use @IsNumber() if you want a number
+  @IsNumber()
+  @ToNumber()
+  cost: number;
 }
 
 export class AllocateBillLandedCostDto {

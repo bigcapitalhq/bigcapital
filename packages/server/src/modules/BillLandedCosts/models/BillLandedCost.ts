@@ -60,8 +60,8 @@ export class BillLandedCost extends BaseModel {
     const allocationMethod = lowerCase(this.allocationMethod);
 
     const keyLabelsPairs = {
-      value: 'allocation_method.value.label',
-      quantity: 'allocation_method.quantity.label',
+      value: 'bill.allocation_method.value',
+      quantity: 'bill.allocation_method.quantity',
     };
     return keyLabelsPairs[allocationMethod] || '';
   }
