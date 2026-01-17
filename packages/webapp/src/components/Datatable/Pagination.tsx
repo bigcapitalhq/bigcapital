@@ -1,14 +1,115 @@
 // @ts-nocheck
 import React, { useReducer, useEffect } from 'react';
-import classNames from 'classnames';
 import { Button, ButtonGroup, Intent, HTMLSelect } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import PropTypes from 'prop-types';
 import { range } from 'lodash';
-import { Icon } from '@/components';
+import styled from 'styled-components';
+import { x } from '@xstyled/emotion';
+import { Icon, FormattedMessage as T } from '@/components';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
-import '@/style/components/DataTable/Pagination.scss';
+// Styled components
+const StyledButtonGroup = styled(ButtonGroup)`
+  .bp4-button {
+    background: transparent;
+    padding: 5px;
+  }
+`;
+
+const StyledPaginationButton = styled(Button)`
+  --x-button-text-color: #666666;
+  --x-button-hover-background: #E6EFFB;
+  --x-button-active-text-color: #000;
+  --x-button-active-background: #E6EFFB;
+  --x-button-active-disabled-background: #E6EFFB;
+
+  .bp4-dark & {
+    --x-button-text-color: rgba(255, 255, 255, 0.8);
+    --x-button-hover-background: var(--color-dark-gray3);
+    --x-button-active-text-color: var(--color-light-gray2);
+    --x-button-active-background: var(--color-dark-gray3);
+    --x-button-active-disabled-background: var(--color-dark-gray3);
+  }
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 5px;
+
+  &:not([class*="bp4-intent-"]).bp4-minimal {
+    color: var(--x-button-text-color);
+    
+    &:hover {
+      background-color: var(--x-button-hover-background);
+    }
+    .bp4-icon {
+      margin-right: 4px;
+      color: var(--x-button-text-color);
+    }
+  }
+  &.is-active {
+    &.bp4-intent-primary.bp4-minimal:disabled,
+    &.bp4-intent-primary.bp4-minimal.bp4-disabled {
+      background-color: var(--x-button-active-disabled-background);
+
+      .bp4-button-text {
+        color: var(--x-button-active-text-color);
+      }
+    }
+  }
+`;
+
+const StyledPreviousButton = styled(StyledPaginationButton)`
+  padding-left: 10px;
+  padding-right: 10px;
+
+  .bp4-icon {
+    [dir="rtl"] & {
+      transform: scale(-1);
+    }
+  }
+`;
+
+const StyledNextButton = styled(StyledPaginationButton)`
+  padding-left: 10px;
+  padding-right: 10px;
+
+  .bp4-icon {
+    order: 1;
+    margin-right: 0;
+    margin-left: 4px;
+  }
+`;
+
+const StyledHTMLSelect = styled(HTMLSelect)`
+  --x-html-select-text-color: #666;
+  --x-html-select-border-color: #e8e8e8;
+
+  .bp4-dark & {
+    --x-html-select-text-color: rgba(255, 255, 255, 0.8);
+    --x-html-select-border-color: rgba(255, 255, 255, 0.15);
+  }
+  &.bp4-html-select.bp4-minimal  {
+    margin-left: 6px;
+    
+    select {
+      height: 24px;
+      width: auto;
+      padding: 0;
+      padding-right: 14px;
+      padding-left: 8px;
+      border: 1px solid var(--x-html-select-border-color);
+      font-size: 13px;
+      border-radius: 3px;
+      color: var(--x-html-select-text-color);
+    }
+    &::after {
+      border-left-width: 3px;
+      border-right-width: 3px;
+      border-top-width: 4px;
+      margin-right: 6px;
+    }
+  }
+`;
 
 const TYPE = {
   PAGE_CHANGE: 'PAGE_CHANGE',
@@ -91,6 +192,7 @@ export function Pagination({
   onPageChange,
   onPageSizeChange,
 }) {
+  const isDark = useIsDarkMode();
   const [state, dispatch] = useReducer(
     reducer,
     { currentPage, total, size },
@@ -107,10 +209,10 @@ export function Pagination({
   }, [total, size, currentPage]);
 
   return (
-    <div class="pagination">
-      <div class="pagination__buttons-group">
-        <ButtonGroup>
-          <Button
+    <x.div display="flex" p="20px 14px" fontSize="13px">
+      <x.div>
+        <StyledButtonGroup>
+          <StyledPreviousButton
             disabled={state.currentPage <= 1}
             onClick={() => {
               dispatch({ type: 'PAGE_CHANGE', page: state.currentPage - 1 });
@@ -121,14 +223,13 @@ export function Pagination({
               onPageChange({ page, pageSize });
             }}
             minimal={true}
-            className={'pagination__item pagination__item--previous'}
             icon={<Icon icon={'arrow-back-24'} iconSize={12} />}
           >
             <T id="previous" />
-          </Button>
+          </StyledPreviousButton>
 
           {state.pages.map((page) => (
-            <Button
+            <StyledPaginationButton
               key={page}
               intent={state.currentPage === page ? Intent.PRIMARY : Intent.NONE}
               disabled={state.currentPage === page}
@@ -139,18 +240,12 @@ export function Pagination({
                 onPageChange({ page, pageSize });
               }}
               minimal={true}
-              className={classNames(
-                'pagination__item',
-                'pagination__item--page',
-                {
-                  'is-active': state.currentPage === page,
-                },
-              )}
+              className={state.currentPage === page ? 'is-active' : ''}
             >
               {page}
-            </Button>
+            </StyledPaginationButton>
           ))}
-          <Button
+          <StyledNextButton
             disabled={state.currentPage === state.totalPages}
             onClick={() => {
               dispatch({
@@ -163,18 +258,17 @@ export function Pagination({
               onPageChange({ page, pageSize });
             }}
             minimal={true}
-            className={'pagination__item pagination__item--next'}
             icon={<Icon icon={'arrow-forward-24'} iconSize={12} />}
           >
             <T id="next" />
-          </Button>
-        </ButtonGroup>
-      </div>
+          </StyledNextButton>
+        </StyledButtonGroup>
+      </x.div>
 
-      <div class="pagination__controls">
-        <div class="pagination__goto-control">
+      <x.div display="flex" alignItems="center" ml="auto">
+        <x.div display="none">
           Go to
-          <HTMLSelect
+          <StyledHTMLSelect
             minimal={true}
             options={range(1, state.totalPages + 1)}
             value={state.currentPage}
@@ -186,11 +280,11 @@ export function Pagination({
               onPageChange({ page, pageSize });
             }}
           />
-        </div>
+        </x.div>
 
-        <div class="pagination__pagesize-control">
+        <x.div ml="12px" color={isDark ? 'rgba(255, 255, 255, 0.6)' : '#666'}>
           <T id={'page_size'} />
-          <HTMLSelect
+          <StyledHTMLSelect
             minimal={true}
             options={pageSizesOptions}
             value={size}
@@ -202,17 +296,17 @@ export function Pagination({
               onPageSizeChange({ pageSize, page: 1 });
             }}
           />
-        </div>
-      </div>
+        </x.div>
+      </x.div>
 
-      <div class="pagination__info">
+      <x.div color={isDark ? 'rgba(255, 255, 255, 0.6)' : '#666'} ml="12px" display="flex" alignItems="center">
         {intl.get('showing_current_page_to_total', {
           currentPage: state.currentPage,
           totalPages: state.totalPages,
           total: total,
         })}
-      </div>
-    </div>
+      </x.div>
+    </x.div>
   );
 }
 

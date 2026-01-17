@@ -2,6 +2,7 @@
 import React from 'react';
 import { getColumnWidth } from '@/utils';
 import { useExcludedTransactionsBoot } from './ExcludedTransactionsTableBoot';
+import { CLASSES } from '@/constants';
 
 const getReportColWidth = (data, accessor, headerText) => {
   return getColumnWidth(
@@ -13,7 +14,7 @@ const getReportColWidth = (data, accessor, headerText) => {
 };
 
 const descriptionAccessor = (transaction) => {
-  return <span style={{ color: '#5F6B7C' }}>{transaction.description}</span>;
+  return <span className={CLASSES.TEXT_MUTED}>{transaction.description}</span>;
 };
 
 /**
@@ -37,7 +38,7 @@ export function useExcludedTransactionsColumns() {
     () => [
       {
         Header: 'Date',
-        accessor: 'formatted_date', 
+        accessor: 'formatted_date',
         width: 110,
       },
       {
