@@ -45,8 +45,9 @@ export class ProfitLossSheetController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     // Retrieves the csv format.
-    if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    if (accept.includes(AcceptType.ApplicationCsv)) {
       const sheet = await this.profitLossSheetApp.csv(query);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -54,11 +55,11 @@ export class ProfitLossSheetController {
 
       res.send(sheet);
       // Retrieves the json table format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    } else if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.profitLossSheetApp.table(query);
 
       // Retrieves the xlsx format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    } else if (accept.includes(AcceptType.ApplicationXlsx)) {
       const sheet = await this.profitLossSheetApp.xlsx(query);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
@@ -68,7 +69,7 @@ export class ProfitLossSheetController {
       );
       res.send(sheet);
       // Retrieves the json format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.profitLossSheetApp.pdf(query);
 
       res.set({

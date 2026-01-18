@@ -168,7 +168,7 @@ export class SaleReceiptsController {
     @Headers('accept') acceptHeader: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    if (acceptHeader?.includes(AcceptType.ApplicationPdf)) {
       const [pdfContent] =
         await this.saleReceiptApplication.getSaleReceiptPdf(id);
 
@@ -177,7 +177,7 @@ export class SaleReceiptsController {
         'Content-Length': pdfContent.length,
       });
       res.send(pdfContent);
-    } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
+    } else if (acceptHeader?.includes(AcceptType.ApplicationTextHtml)) {
       const htmlContent =
         await this.saleReceiptApplication.getSaleReceiptHtml(id);
 

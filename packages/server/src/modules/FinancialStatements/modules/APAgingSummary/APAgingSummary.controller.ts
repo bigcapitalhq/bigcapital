@@ -16,7 +16,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 export class APAgingSummaryController {
-  constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) {}
+  constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) { }
 
   @Get()
   @ApiOperation({ summary: 'Get payable aging summary' })
@@ -37,12 +37,13 @@ export class APAgingSummaryController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     // Retrieves the json table format.
-    if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.APAgingSummaryApp.table(filter);
 
       // Retrieves the csv format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    } else if (accept.includes(AcceptType.ApplicationCsv)) {
       const csv = await this.APAgingSummaryApp.csv(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -50,7 +51,7 @@ export class APAgingSummaryController {
 
       res.send(csv);
       // Retrieves the xlsx format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    } else if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.APAgingSummaryApp.xlsx(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
@@ -60,7 +61,7 @@ export class APAgingSummaryController {
       );
       res.send(buffer);
       // Retrieves the pdf format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.APAgingSummaryApp.pdf(filter);
 
       res.set({

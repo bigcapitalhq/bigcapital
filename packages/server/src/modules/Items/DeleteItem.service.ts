@@ -25,7 +25,7 @@ export class DeleteItemService {
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
-  ) {}
+  ) { }
 
   /**
    * Delete the given item from the storage.

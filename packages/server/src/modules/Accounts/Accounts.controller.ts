@@ -8,6 +8,7 @@ import {
   Query,
   ParseIntPipe,
   Put,
+  HttpCode,
 } from '@nestjs/common';
 import { AccountsApplication } from './AccountsApplication.service';
 import { CreateAccountDTO } from './CreateAccount.dto';
@@ -43,6 +44,7 @@ export class AccountsController {
   constructor(private readonly accountsApplication: AccountsApplication) { }
 
   @Post('validate-bulk-delete')
+  @HttpCode(200)
   @ApiOperation({
     summary:
       'Validates which accounts can be deleted and returns counts of deletable and non-deletable accounts.',
@@ -64,6 +66,7 @@ export class AccountsController {
   }
 
   @Post('bulk-delete')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Deletes multiple accounts in bulk.' })
   @ApiResponse({
     status: 200,
@@ -125,6 +128,7 @@ export class AccountsController {
   }
 
   @Post(':id/activate')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Activate the given account.' })
   @ApiResponse({
     status: 200,
@@ -142,6 +146,7 @@ export class AccountsController {
   }
 
   @Post(':id/inactivate')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Inactivate the given account.' })
   @ApiResponse({
     status: 200,

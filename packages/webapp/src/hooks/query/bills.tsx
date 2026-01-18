@@ -90,7 +90,7 @@ export function useOpenBill(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`bills/${id}/open`), {
+  return useMutation((id) => apiRequest.patch(`bills/${id}/open`), {
     onSuccess: (res, id) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);

@@ -24,6 +24,7 @@ export class TransactionsByReferenceRepository {
   ): Promise<Array<ModelObject<AccountTransaction>>> {
     return this.accountTransactionModel()
       .query()
+      .skipUndefined()
       .where('reference_id', referenceId)
       .where('reference_type', referenceType)
       .withGraphFetched('account');

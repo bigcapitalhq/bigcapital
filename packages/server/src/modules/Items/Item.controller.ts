@@ -8,6 +8,7 @@ import {
   Get,
   Put,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import { TenantController } from '../Tenancy/Tenant.controller';
 import { ItemsApplicationService } from './ItemsApplication.service';
@@ -156,9 +157,45 @@ export class ItemsController extends TenantController {
   async editItem(
     @Param('id') id: string,
     @Body() editItemDto: EditItemDto,
-  ): Promise<number> {
+  ): Promise<{ id: number; message: string }> {
     const itemId = parseInt(id, 10);
-    return this.itemsApplication.editItem(itemId, editItemDto);
+    await this.itemsApplication.editItem(itemId, editItemDto);
+    return { id: itemId, message: 'The item has been successfully updated.' };
+  }
+
+  @Post('validate-bulk-delete')
+  @HttpCode(200)
+  @ApiOperation({
+    summary:
+      'Validates which items can be deleted and returns counts of deletable and non-deletable items.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed. Returns counts and IDs of deletable and non-deletable items.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteItemsResponseDto),
+    },
+  })
+  async validateBulkDeleteItems(
+    @Body() bulkDeleteDto: BulkDeleteItemsDto,
+  ): Promise<ValidateBulkDeleteItemsResponseDto> {
+    return this.itemsApplication.validateBulkDeleteItems(bulkDeleteDto.ids);
+  }
+
+  @Post('bulk-delete')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Deletes multiple items in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The items have been successfully deleted.',
+  })
+  async bulkDeleteItems(
+    @Body() bulkDeleteDto: BulkDeleteItemsDto,
+  ): Promise<void> {
+    return this.itemsApplication.bulkDeleteItems(bulkDeleteDto.ids, {
+      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
+    });
   }
 
   @Post()
@@ -168,8 +205,12 @@ export class ItemsController extends TenantController {
     description: 'The item has been successfully created.',
   })
   // @UsePipes(new ZodValidationPipe(createItemSchema))
-  async createItem(@Body() createItemDto: CreateItemDto): Promise<number> {
-    return this.itemsApplication.createItem(createItemDto);
+  async createItem(
+    @Body() createItemDto: CreateItemDto,
+  ): Promise<{ id: number; message: string }> {
+    const itemId = await this.itemsApplication.createItem(createItemDto);
+
+    return { id: itemId, message: 'The item has been successfully created.' };
   }
 
   @Delete(':id')
@@ -346,36 +387,4 @@ export class ItemsController extends TenantController {
     return this.itemsApplication.getItemReceiptsTransactions(itemId);
   }
 
-  @Post('validate-bulk-delete')
-  @ApiOperation({
-    summary:
-      'Validates which items can be deleted and returns counts of deletable and non-deletable items.',
-  })
-  @ApiResponse({
-    status: 200,
-    description:
-      'Validation completed. Returns counts and IDs of deletable and non-deletable items.',
-    schema: {
-      $ref: getSchemaPath(ValidateBulkDeleteItemsResponseDto),
-    },
-  })
-  async validateBulkDeleteItems(
-    @Body() bulkDeleteDto: BulkDeleteItemsDto,
-  ): Promise<ValidateBulkDeleteItemsResponseDto> {
-    return this.itemsApplication.validateBulkDeleteItems(bulkDeleteDto.ids);
-  }
-
-  @Post('bulk-delete')
-  @ApiOperation({ summary: 'Deletes multiple items in bulk.' })
-  @ApiResponse({
-    status: 200,
-    description: 'The items have been successfully deleted.',
-  })
-  async bulkDeleteItems(
-    @Body() bulkDeleteDto: BulkDeleteItemsDto,
-  ): Promise<void> {
-    return this.itemsApplication.bulkDeleteItems(bulkDeleteDto.ids, {
-      skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
-    });
-  }
 }

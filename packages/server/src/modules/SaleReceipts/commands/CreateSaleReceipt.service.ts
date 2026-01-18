@@ -38,7 +38,7 @@ export class CreateSaleReceipt {
 
     @Inject(Customer.name)
     private readonly customerModel: TenantModelProxy<typeof Customer>,
-  ) {}
+  ) { }
 
   /**
    * Creates a new sale receipt with associated entries.
@@ -89,7 +89,7 @@ export class CreateSaleReceipt {
 
       // Inserts the sale receipt graph to the storage.
       const saleReceipt = await this.saleReceiptModel()
-        .query()
+        .query(trx)
         .upsertGraph({
           ...saleReceiptObj,
         });

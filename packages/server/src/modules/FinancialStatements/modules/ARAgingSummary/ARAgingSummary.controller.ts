@@ -38,8 +38,9 @@ export class ARAgingSummaryController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     // Retrieves the xlsx format.
-    if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.ARAgingSummaryApp.xlsx(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
@@ -49,11 +50,11 @@ export class ARAgingSummaryController {
       );
       res.send(buffer);
       // Retrieves the table format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    } else if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.ARAgingSummaryApp.table(filter);
 
       // Retrieves the csv format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    } else if (accept.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.ARAgingSummaryApp.csv(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -61,7 +62,7 @@ export class ARAgingSummaryController {
 
       res.send(buffer);
       // Retrieves the pdf format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.ARAgingSummaryApp.pdf(filter);
 
       res.set({

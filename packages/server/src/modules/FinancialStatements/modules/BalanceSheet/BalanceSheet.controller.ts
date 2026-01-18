@@ -43,13 +43,14 @@ export class BalanceSheetStatementController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     // Retrieves the json table format.
-    if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    if (accept.includes(AcceptType.ApplicationJsonTable)) {
       const table = await this.balanceSheetApp.table(query);
 
       return table;
       // Retrieves the csv format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    } else if (accept.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.balanceSheetApp.csv(query);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -57,7 +58,7 @@ export class BalanceSheetStatementController {
 
       res.send(buffer);
       // Retrieves the xlsx format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    } else if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.balanceSheetApp.xlsx(query);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
@@ -67,7 +68,7 @@ export class BalanceSheetStatementController {
       );
       res.send(buffer);
       // Retrieves the pdf format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.balanceSheetApp.pdf(query);
 
       res.set({

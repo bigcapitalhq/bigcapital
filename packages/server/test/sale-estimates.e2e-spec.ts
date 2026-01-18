@@ -49,7 +49,7 @@ describe('Sale Estimates (e2e)', () => {
         costPrice: 100,
         sellPrice: 100,
       });
-    itemId = parseInt(item.text, 10);
+    itemId = item.body.id;
   });
 
   it('/sale-estimates (POST)', async () => {

@@ -28,7 +28,7 @@ export class ItemsEntriesService {
 
     @Inject(ItemEntry.name)
     private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
-  ) {}
+  ) { }
 
   /**
    * Retrieve the inventory items entries of the reference id and type.
@@ -225,6 +225,10 @@ export class ItemsEntriesService {
 
     return entries.map((entry) => {
       const item = items.find((i) => i.id === entry.itemId);
+
+      if (!item) {
+        throw new Error(`Item with id ${entry.itemId} not found`);
+      }
 
       return {
         ...entry,

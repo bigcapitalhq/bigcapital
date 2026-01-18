@@ -33,7 +33,7 @@ describe('Inventory Adjustments (e2e)', () => {
       .send(makeItemRequest())
       .expect(201);
 
-    const itemId = itemResponse.text;
+    const itemId = itemResponse.body.id;
 
     return request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
@@ -51,7 +51,7 @@ describe('Inventory Adjustments (e2e)', () => {
       .send(makeItemRequest())
       .expect(201);
 
-    const itemId = itemResponse.text;
+    const itemId = itemResponse.body.id;
 
     const inventoryAdjustmentResponse = await request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
@@ -77,7 +77,7 @@ describe('Inventory Adjustments (e2e)', () => {
       .send(makeItemRequest())
       .expect(201);
 
-    const itemId = itemResponse.text;
+    const itemId = itemResponse.body.id;
     const inventoryAdjustmentResponse = await request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
       .set('organization-id', orgainzationId)
@@ -102,7 +102,7 @@ describe('Inventory Adjustments (e2e)', () => {
       .send(makeItemRequest())
       .expect(201);
 
-    const itemId = itemResponse.text;
+    const itemId = itemResponse.body.id;
     const inventoryAdjustmentResponse = await request(app.getHttpServer())
       .post('/inventory-adjustments/quick')
       .set('organization-id', orgainzationId)

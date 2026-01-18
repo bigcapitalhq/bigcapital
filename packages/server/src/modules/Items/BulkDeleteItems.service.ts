@@ -6,7 +6,7 @@ import { DeleteItemService } from './DeleteItem.service';
 
 @Injectable()
 export class BulkDeleteItemsService {
-  constructor(private readonly deleteItemService: DeleteItemService) {}
+  constructor(private readonly deleteItemService: DeleteItemService) { }
 
   /**
    * Deletes multiple items.

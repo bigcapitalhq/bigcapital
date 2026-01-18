@@ -40,15 +40,16 @@ export class TrialBalanceSheetController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     const filter = {
       ...query,
       accountIds: castArray(query.accountIds),
     };
     // Retrieves in json table format.
-    if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.trialBalanceSheetApp.table(filter);
       // Retrieves in xlsx format
-    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    } else if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.trialBalanceSheetApp.xlsx(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
@@ -58,7 +59,7 @@ export class TrialBalanceSheetController {
       );
       res.send(buffer);
       // Retrieves in csv format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    } else if (accept.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.trialBalanceSheetApp.csv(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -66,7 +67,7 @@ export class TrialBalanceSheetController {
 
       res.send(buffer);
       // Retrieves in pdf format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.trialBalanceSheetApp.pdf(filter);
 
       res.set({

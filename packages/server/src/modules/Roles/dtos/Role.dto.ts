@@ -38,7 +38,7 @@ export class CommandRolePermissionDto {
   value: boolean;
 }
 
-export class CreateRolePermissionDto extends CommandRolePermissionDto {}
+export class CreateRolePermissionDto extends CommandRolePermissionDto { }
 export class EditRolePermissionDto extends CommandRolePermissionDto {
   @IsNumber()
   @IsNotEmpty()
@@ -83,9 +83,9 @@ export class EditRoleDto extends CommandRoleDto {
   @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })
-  @Type(() => CommandRolePermissionDto)
+  @Type(() => EditRolePermissionDto)
   @ApiProperty({
-    type: [CommandRolePermissionDto],
+    type: [EditRolePermissionDto],
     description: 'The permissions of the role',
   })
   permissions: Array<EditRolePermissionDto>;

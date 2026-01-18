@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
-  ITransactionsByVendorsFilter,
   ITransactionsByVendorsStatement,
 } from './TransactionsByVendor.types';
 import { TransactionsByVendor } from './TransactionsByVendor';
@@ -10,6 +9,7 @@ import { TransactionsByVendorRepository } from './TransactionsByVendorRepository
 import { TransactionsByVendorMeta } from './TransactionsByVendorMeta';
 import { getTransactionsByVendorDefaultQuery } from './utils';
 import { events } from '@/common/events/events';
+import { TransactionsByVendorQueryDto } from './TransactionsByVendorQuery.dto';
 
 @Injectable()
 export class TransactionsByVendorsInjectable {
@@ -18,15 +18,15 @@ export class TransactionsByVendorsInjectable {
     private readonly transactionsByVendorMeta: TransactionsByVendorMeta,
     private readonly eventPublisher: EventEmitter2,
     private readonly i18n: I18nService,
-  ) {}
+  ) { }
 
   /**
    * Retrieve transactions by by the customers.
-   * @param {ITransactionsByVendorsFilter} query - Transactions by vendors filter.
+   * @param {TransactionsByVendorQueryDto} query - Transactions by vendors filter.
    * @return {Promise<ITransactionsByVendorsStatement>}
    */
   public async transactionsByVendors(
-    query: ITransactionsByVendorsFilter,
+    query: TransactionsByVendorQueryDto,
   ): Promise<ITransactionsByVendorsStatement> {
     const filter = { ...getTransactionsByVendorDefaultQuery(), ...query };
 

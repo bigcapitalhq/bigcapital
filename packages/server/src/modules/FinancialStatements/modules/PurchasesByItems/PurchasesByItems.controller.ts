@@ -22,11 +22,12 @@ export class PurchasesByItemReportController {
     @Res({ passthrough: true }) res: Response,
     @Headers('accept') acceptHeader: string,
   ) {
+    const accept = acceptHeader || '';
     // JSON table response format.
-    if (acceptHeader.includes(AcceptType.ApplicationJsonTable)) {
+    if (accept.includes(AcceptType.ApplicationJsonTable)) {
       return this.purchasesByItemsApp.table(filter);
       // CSV response format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationCsv)) {
+    } else if (accept.includes(AcceptType.ApplicationCsv)) {
       const buffer = await this.purchasesByItemsApp.csv(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -34,7 +35,7 @@ export class PurchasesByItemReportController {
 
       res.send(buffer);
       // Xlsx response format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationXlsx)) {
+    } else if (accept.includes(AcceptType.ApplicationXlsx)) {
       const buffer = await this.purchasesByItemsApp.xlsx(filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
@@ -44,7 +45,7 @@ export class PurchasesByItemReportController {
       );
       res.send(buffer);
       // PDF response format.
-    } else if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    } else if (accept.includes(AcceptType.ApplicationPdf)) {
       const pdfContent = await this.purchasesByItemsApp.pdf(filter);
 
       res.set({

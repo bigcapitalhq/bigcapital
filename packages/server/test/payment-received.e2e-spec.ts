@@ -63,7 +63,7 @@ describe('Payment Received (e2e)', () => {
         costPrice: 100,
         sellPrice: 100,
       });
-    itemId = parseInt(item.text, 10);
+    itemId = parseInt(item.body.id, 10);
   });
 
   beforeEach(async () => {

@@ -23,7 +23,7 @@ const makeManualJournalRequest = () => ({
   ],
 });
 
-describe.only('Manual Journals (e2e)', () => {
+describe('Manual Journals (e2e)', () => {
   it('/manual-journals (POST)', () => {
     return request(app.getHttpServer())
       .post('/manual-journals')
@@ -85,7 +85,7 @@ describe.only('Manual Journals (e2e)', () => {
       .expect(200);
   });
 
-  it('/manual-journals/:id/publish (PUT)', async () => {
+  it('/manual-journals/:id/publish (PATCH)', async () => {
     const response = await request(app.getHttpServer())
       .post('/manual-journals')
       .set('organization-id', orgainzationId)
@@ -95,7 +95,7 @@ describe.only('Manual Journals (e2e)', () => {
     const journalId = response.body.id;
 
     return request(app.getHttpServer())
-      .put(`/manual-journals/${journalId}/publish`)
+      .patch(`/manual-journals/${journalId}/publish`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send()
