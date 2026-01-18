@@ -21,7 +21,7 @@
   }
 
   .bp4-dialog-footer{
-    padding-top: 10px;
+    // padding-top: 10px;
   }
 
   .bigcapital-datatable {
@@ -29,6 +29,10 @@
       // max-height: 300px;
       border: 1px solid #d1dee2;
       min-width: auto;
+
+      .bp4-dark & {
+        border-color: var(--color-dark-gray5);
+      }
 
       .tbody,
       .tbody-inner {
@@ -43,6 +47,10 @@
           padding: 0.4rem;
           margin-left: -1px;
           border-left: 1px solid #ececec;
+
+          .bp4-dark & {
+            border-left-color: var(--color-dark-gray5);
+          }
         }
 
         .bp4-form-group{
@@ -50,6 +58,10 @@
 
           &:not(.bp4-intent-danger) .bp4-input{
             border: 1px solid #d0dfe2;
+
+            .bp4-dark & {
+              border-color: var(--color-dark-gray5);
+            }
 
             &:focus{
               box-shadow: 0 0 0 1px #116cd0;

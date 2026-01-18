@@ -424,7 +424,7 @@ export function useUnexcludeUncategorizedTransactions(
     UnexcludeBankTransactionsValue
   >(
     (value: { ids: Array<number | string> }) =>
-      apiRequest.delete(`/banking/exclude/bulk`, { ids: value.ids }),
+      apiRequest.delete(`/banking/exclude/bulk`, { data: { ids: value.ids } }),
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);

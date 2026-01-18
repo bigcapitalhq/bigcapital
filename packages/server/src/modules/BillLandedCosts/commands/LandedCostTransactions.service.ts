@@ -14,7 +14,7 @@ import { LandedCostTransactionsQueryDto } from '../dtos/LandedCostTransactionsQu
 
 @Injectable()
 export class LandedCostTranasctions {
-  constructor(private readonly transactionLandedCost: TransactionLandedCost) {}
+  constructor(private readonly transactionLandedCost: TransactionLandedCost) { }
 
   /**
    * Retrieve the landed costs based on the given query.
@@ -45,8 +45,8 @@ export class LandedCostTranasctions {
     )(transactionType);
 
     return pipe(
-      this.transformLandedCostTransactions,
       R.map(transformLandedCost),
+      this.transformLandedCostTransactions,
     )(transactions);
   };
 
@@ -90,7 +90,7 @@ export class LandedCostTranasctions {
     const entries = R.map<
       ILandedCostTransactionEntry,
       ILandedCostTransactionEntryDOJO
-    >(transformLandedCostEntry)(transaction.entries);
+    >(transformLandedCostEntry)(transaction.entries ?? []);
 
     return {
       ...transaction,

@@ -24,7 +24,7 @@ function AllocateLandedCostDialogProvider({
   dialogName,
   ...props
 }) {
-  const [transactionsType, setTransactionsType] = React.useState(null);
+  const [transactionsType, setTransactionsType] = React.useState('Bill');
   const [transactionId, setTransactionId] = React.useState(null);
   const [transactionEntryId, setTransactionEntryId] = React.useState(null);
 
@@ -34,7 +34,8 @@ function AllocateLandedCostDialogProvider({
   });
   // Retrieve the landed cost transactions based on the given transactions type.
   const {
-    data: { transactions: landedCostTransactions },
+    data: landedCostTransactions,
+    isLoading: isLandedCostTransactionsLoading,
   } = useLandedCostTransaction(transactionsType, {
     enabled: !!transactionsType,
   });
@@ -88,6 +89,7 @@ function AllocateLandedCostDialogProvider({
     costTransactionEntries,
     transactionsType,
     landedCostTransactions,
+    isLandedCostTransactionsLoading,
     setTransactionsType,
     setTransactionId,
     setTransactionEntryId,

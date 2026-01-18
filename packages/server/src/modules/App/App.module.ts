@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
@@ -36,6 +36,10 @@ import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { SerializeInterceptor } from '@/common/interceptors/serialize.interceptor';
+import { ValidationPipe } from '@/common/pipes/ClassValidation.pipe';
+import { ToJsonInterceptor } from '@/common/interceptors/to-json.interceptor';
+import { ServiceErrorFilter } from '@/common/filters/service-error.filter';
+import { ModelHasRelationsFilter } from '@/common/filters/model-has-relations.filter';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
 import { CustomersModule } from '../Customers/Customers.module';
 import { VendorsModule } from '../Vendors/Vendors.module';
@@ -235,8 +239,16 @@ import { AppThrottleModule } from './AppThrottle.module';
   controllers: [AppController],
   providers: [
     {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+    {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ToJsonInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
@@ -249,6 +261,14 @@ import { AppThrottleModule } from './AppThrottle.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ExcludeNullInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: ServiceErrorFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: ModelHasRelationsFilter,
     },
     AppService,
   ],

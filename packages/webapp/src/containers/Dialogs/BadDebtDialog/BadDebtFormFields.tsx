@@ -5,6 +5,7 @@ import {
   FMoneyInputGroup,
   FTextArea,
   FormattedMessage as T,
+  FFormGroup,
 } from '@/components';
 
 import { useAutofocus } from '@/hooks';
@@ -53,7 +54,7 @@ function BadDebtFormFields() {
         fill
       >
         <ControlGroup>
-          <InputPrependText text={invoice.currency_code} />
+          <InputPrependText text={invoice?.currency_code || ''} />
           <FMoneyInputGroup
             name={'amount'}
             minimal={true}
@@ -73,6 +74,7 @@ function BadDebtFormFields() {
           name={'expense_account_id'}
           items={accounts}
           filterByTypes={[ACCOUNT_TYPE.EXPENSE]}
+          fill
         />
       </FFormGroup>
 
