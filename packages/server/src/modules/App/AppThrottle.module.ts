@@ -35,11 +35,10 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
         const password = configService.get<string>('redis.password');
         const db = configService.get<number>('redis.db');
 
-        // Ensure we always have valid numbers with fallback defaults
-        const globalTtl = configService.get<number>('throttle.global.ttl') ?? 60000;
-        const globalLimit = configService.get<number>('throttle.global.limit') ?? 100;
-        const authTtl = configService.get<number>('throttle.auth.ttl') ?? 60000;
-        const authLimit = configService.get<number>('throttle.auth.limit') ?? 10;
+        const globalTtl = configService.get<number>('throttle.global.ttl');
+        const globalLimit = configService.get<number>('throttle.global.limit');
+        const authTtl = configService.get<number>('throttle.auth.ttl');
+        const authLimit = configService.get<number>('throttle.auth.limit');
 
         return {
           throttlers: [

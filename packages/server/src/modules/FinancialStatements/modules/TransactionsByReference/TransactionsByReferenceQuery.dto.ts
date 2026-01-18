@@ -18,5 +18,5 @@ export class TransactionsByReferenceQueryDto {
     example: '1',
     required: true,
   })
-  referenceId: string;
+  referenceId: number;
 }
