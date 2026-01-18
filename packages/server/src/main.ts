@@ -4,10 +4,6 @@ import { ClsMiddleware } from 'nestjs-cls';
 import * as path from 'path';
 import './utils/moment-mysql';
 import { AppModule } from './modules/App/App.module';
-import { ServiceErrorFilter } from './common/filters/service-error.filter';
-import { ModelHasRelationsFilter } from './common/filters/model-has-relations.filter';
-import { ValidationPipe } from './common/pipes/ClassValidation.pipe';
-import { ToJsonInterceptor } from './common/interceptors/to-json.interceptor';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 global.__public_dirname = path.join(__dirname, '..', 'public');
@@ -25,11 +21,6 @@ async function bootstrap() {
   // create and mount the middleware manually here
   app.use(new ClsMiddleware({}).use);
 
-  app.useGlobalInterceptors(new ToJsonInterceptor());
-
-  // use the validation pipe globally
-  app.useGlobalPipes(new ValidationPipe());
-
   const config = new DocumentBuilder()
     .setTitle('Bigcapital')
     .setDescription('Financial accounting software')
@@ -38,9 +29,6 @@ async function bootstrap() {
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory);
-
-  app.useGlobalFilters(new ServiceErrorFilter());
-  app.useGlobalFilters(new ModelHasRelationsFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }
