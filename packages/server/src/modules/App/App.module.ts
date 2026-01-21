@@ -36,8 +36,8 @@ import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { SerializeInterceptor } from '@/common/interceptors/serialize.interceptor';
-import { ValidationPipe } from '@/common/pipes/ClassValidation.pipe';
 import { ToJsonInterceptor } from '@/common/interceptors/to-json.interceptor';
+import { ValidationPipe } from '@/common/pipes/ClassValidation.pipe';
 import { ServiceErrorFilter } from '@/common/filters/service-error.filter';
 import { ModelHasRelationsFilter } from '@/common/filters/model-has-relations.filter';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
@@ -248,11 +248,11 @@ import { AppThrottleModule } from './AppThrottle.module';
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: ToJsonInterceptor,
+      useClass: SerializeInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: SerializeInterceptor,
+      useClass: ToJsonInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
