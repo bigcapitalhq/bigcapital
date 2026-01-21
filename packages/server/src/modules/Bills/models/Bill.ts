@@ -51,6 +51,7 @@ export class Bill extends TenantBaseModel {
   public updatedAt: Date | null;
 
   public entries?: ItemEntry[];
+  public attachments!: Document[];
   public locatedLandedCosts?: BillLandedCost[];
   /**
    * Timestamps columns.
@@ -633,7 +634,7 @@ export class Bill extends TenantBaseModel {
 
     return this.query(trx)
       .where('id', billId)
-      [changeMethod]('payment_amount', Math.abs(amount));
+    [changeMethod]('payment_amount', Math.abs(amount));
   }
 
   /**
