@@ -18,9 +18,14 @@ import { VendorsExportable } from './VendorsExportable';
 import { VendorsImportable } from './VendorsImportable';
 import { BulkDeleteVendorsService } from './BulkDeleteVendors.service';
 import { ValidateBulkDeleteVendorsService } from './ValidateBulkDeleteVendors.service';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
+import { VendorGLEntries } from './VendorGLEntries';
+import { VendorGLEntriesStorage } from './VendorGLEntriesStorage';
+import { VendorsWriteGLOpeningSubscriber } from './subscribers/VendorGLEntriesSubscriber';
 
 @Module({
-  imports: [TenancyDatabaseModule, DynamicListModule],
+  imports: [TenancyDatabaseModule, DynamicListModule, LedgerModule, AccountsModule],
   controllers: [VendorsController],
   providers: [
     ActivateVendorService,
@@ -38,7 +43,10 @@ import { ValidateBulkDeleteVendorsService } from './ValidateBulkDeleteVendors.se
     TransformerInjectable,
     TenancyContext,
     VendorsExportable,
-    VendorsImportable
+    VendorsImportable,
+    VendorGLEntries,
+    VendorGLEntriesStorage,
+    VendorsWriteGLOpeningSubscriber,
   ],
 })
-export class VendorsModule {}
+export class VendorsModule { }

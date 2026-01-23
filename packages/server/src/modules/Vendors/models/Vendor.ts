@@ -36,6 +36,7 @@ export class Vendor extends TenantBaseModel {
   openingBalance: number;
   openingBalanceExchangeRate: number;
   openingBalanceAt: Date | string;
+  openingBalanceBranchId?: number;
 
   salutation: string;
   firstName: string;
