@@ -1,236 +1,188 @@
-// import * as R from 'ramda';
-// import { Knex } from 'knex';
-// import { Inject, Injectable } from '@nestjs/common';
-// import { BaseLandedCostService } from '../BaseLandedCost.service';
-// import { BillLandedCost } from '../models/BillLandedCost';
-// import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-// import { Bill } from '@/modules/Bills/models/Bill';
-// import { BillLandedCostEntry } from '../models/BillLandedCostEntry';
-// import { ILedger, ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
-// import { Ledger } from '@/modules/Ledger/Ledger';
-// import { AccountNormal } from '@/interfaces/Account';
-// import { ILandedCostTransactionEntry } from '../types/BillLandedCosts.types';
+import { Knex } from 'knex';
+import { Inject, Injectable } from '@nestjs/common';
+import * as moment from 'moment';
+import { BaseLandedCostService } from '../BaseLandedCost.service';
+import { BillLandedCost } from '../models/BillLandedCost';
+import { Bill } from '@/modules/Bills/models/Bill';
+import { BillLandedCostEntry } from '../models/BillLandedCostEntry';
+import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
+import { Ledger } from '@/modules/Ledger/Ledger';
+import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
+import { AccountNormal } from '@/modules/Accounts/Accounts.types';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
-// @Injectable()
-// export class LandedCostGLEntries extends BaseLandedCostService {
-//   constructor(
-//     private readonly journalService: JournalPosterService,
-//     private readonly ledgerRepository: LedgerRepository,
+@Injectable()
+export class LandedCostGLEntriesService extends BaseLandedCostService {
+  constructor(
+    private readonly ledgerStorage: LedgerStorageService,
 
-//     @Inject(BillLandedCost.name)
-//     private readonly billLandedCostModel: TenantModelProxy<typeof BillLandedCost>,
-//   ) {
-//     super();
-//   }
+    @Inject(BillLandedCost.name)
+    protected readonly billLandedCostModel: TenantModelProxy<
+      typeof BillLandedCost
+    >,
+  ) {
+    super();
+  }
 
-//   /**
-//    * Retrieves the landed cost GL common entry.
-//    * @param {IBill} bill
-//    * @param {IBillLandedCost} allocatedLandedCost
-//    * @returns
-//    */
-//   private getLandedCostGLCommonEntry = (
-//     bill: Bill,
-//     allocatedLandedCost: BillLandedCost
-//   ) => {
-//     return {
-//       date: bill.billDate,
-//       currencyCode: allocatedLandedCost.currencyCode,
-//       exchangeRate: allocatedLandedCost.exchangeRate,
+  /**
+   * Retrieves the landed cost GL common entry.
+   */
+  private getLandedCostGLCommonEntry(
+    bill: Bill,
+    allocatedLandedCost: BillLandedCost,
+  ) {
+    return {
+      date: moment(bill.billDate).format('YYYY-MM-DD'),
+      currencyCode: allocatedLandedCost.currencyCode,
+      exchangeRate: allocatedLandedCost.exchangeRate,
 
-//       transactionType: 'LandedCost',
-//       transactionId: allocatedLandedCost.id,
-//       transactionNumber: bill.billNumber,
+      transactionType: 'LandedCost',
+      transactionId: allocatedLandedCost.id,
+      transactionNumber: bill.billNumber,
 
-//       referenceNumber: bill.referenceNo,
+      referenceNumber: bill.referenceNo,
 
-//       credit: 0,
-//       debit: 0,
-//     };
-//   };
+      branchId: bill.branchId,
+      projectId: bill.projectId,
 
-//   /**
-//    * Retrieves the landed cost GL inventory entry.
-//    * @param {IBill} bill
-//    * @param {IBillLandedCost} allocatedLandedCost
-//    * @param {IBillLandedCostEntry} allocatedEntry
-//    * @returns {ILedgerEntry}
-//    */
-//   private getLandedCostGLInventoryEntry = (
-//     bill: Bill,
-//     allocatedLandedCost: BillLandedCost,
-//     allocatedEntry: BillLandedCostEntry
-//   ): ILedgerEntry => {
-//     const commonEntry = this.getLandedCostGLCommonEntry(
-//       bill,
-//       allocatedLandedCost
-//     );
-//     return {
-//       ...commonEntry,
-//       debit: allocatedLandedCost.localAmount,
-//       accountId: allocatedEntry.itemEntry.item.inventoryAccountId,
-//       index: 1,
-//       accountNormal: AccountNormal.DEBIT,
-//     };
-//   };
+      credit: 0,
+      debit: 0,
+    };
+  }
 
-//   /**
-//    * Retrieves the landed cost GL cost entry.
-//    * @param {IBill} bill
-//    * @param {IBillLandedCost} allocatedLandedCost
-//    * @param {ILandedCostTransactionEntry} fromTransactionEntry
-//    * @returns {ILedgerEntry}
-//    */
-//   private getLandedCostGLCostEntry = (
-//     bill: Bill,
-//     allocatedLandedCost: BillLandedCost,
-//     fromTransactionEntry: ILandedCostTransactionEntry
-//   ): ILedgerEntry => {
-//     const commonEntry = this.getLandedCostGLCommonEntry(
-//       bill,
-//       allocatedLandedCost
-//     );
-//     return {
-//       ...commonEntry,
-//       credit: allocatedLandedCost.localAmount,
-//       accountId: fromTransactionEntry.costAccountId,
-//       index: 2,
-//       accountNormal: AccountNormal.CREDIT,
-//     };
-//   };
+  /**
+   * Retrieves the landed cost GL inventory entry for an allocated item.
+   */
+  private getLandedCostGLInventoryEntry(
+    bill: Bill,
+    allocatedLandedCost: BillLandedCost,
+    allocatedEntry: BillLandedCostEntry,
+    index: number,
+  ): ILedgerEntry {
+    const commonEntry = this.getLandedCostGLCommonEntry(
+      bill,
+      allocatedLandedCost,
+    );
+    const itemEntry = (
+      allocatedEntry as BillLandedCostEntry & {
+        itemEntry?: {
+          item?: { type?: string; inventoryAccountId?: number };
+          costAccountId?: number;
+          itemId?: number;
+        };
+      }
+    ).itemEntry;
+    const item = itemEntry?.item;
+    const isInventory = item && ['inventory'].indexOf(item.type) !== -1;
+    const accountId = isInventory
+      ? item?.inventoryAccountId
+      : itemEntry?.costAccountId;
 
-//   /**
-//    * Retrieve allocated landed cost entry GL entries.
-//    * @param {IBill} bill
-//    * @param {IBillLandedCost} allocatedLandedCost
-//    * @param {ILandedCostTransactionEntry} fromTransactionEntry
-//    * @param {IBillLandedCostEntry} allocatedEntry
-//    * @returns {ILedgerEntry}
-//    */
-//   private getLandedCostGLAllocateEntry = R.curry(
-//     (
-//       bill: Bill,
-//       allocatedLandedCost: BillLandedCost,
-//       fromTransactionEntry: ILandedCostTransactionEntry,
-//       allocatedEntry: BillLandedCostEntry
-//     ): ILedgerEntry[] => {
-//       const inventoryEntry = this.getLandedCostGLInventoryEntry(
-//         bill,
-//         allocatedLandedCost,
-//         allocatedEntry
-//       );
-//       const costEntry = this.getLandedCostGLCostEntry(
-//         bill,
-//         allocatedLandedCost,
-//         fromTransactionEntry
-//       );
-//       return [inventoryEntry, costEntry];
-//     }
-//   );
+    if (!accountId) {
+      throw new Error(
+        `Cannot determine GL account for landed cost allocate entry (entryId: ${allocatedEntry.entryId})`,
+      );
+    }
 
-//   /**
-//    * Compose the landed cost GL entries.
-//    * @param {BillLandedCost} allocatedLandedCost
-//    * @param {Bill} bill
-//    * @param {ILandedCostTransactionEntry} fromTransactionEntry
-//    * @returns {ILedgerEntry[]}
-//    */
-//   public getLandedCostGLEntries = (
-//     allocatedLandedCost: BillLandedCost,
-//     bill: Bill,
-//     fromTransactionEntry: ILandedCostTransactionEntry
-//   ): ILedgerEntry[] => {
-//     const getEntry = this.getLandedCostGLAllocateEntry(
-//       bill,
-//       allocatedLandedCost,
-//       fromTransactionEntry
-//     );
-//     return allocatedLandedCost.allocateEntries.map(getEntry).flat();
-//   };
+    const localAmount =
+      allocatedEntry.cost * (allocatedLandedCost.exchangeRate || 1);
 
-//   /**
-//    * Retrieves the landed cost GL ledger.
-//    * @param {BillLandedCost} allocatedLandedCost
-//    * @param {Bill} bill
-//    * @param {ILandedCostTransactionEntry} fromTransactionEntry
-//    * @returns {ILedger}
-//    */
-//   public getLandedCostLedger = (
-//     allocatedLandedCost: BillLandedCost,
-//     bill: Bill,
-//     fromTransactionEntry: ILandedCostTransactionEntry
-//   ): ILedger => {
-//     const entries = this.getLandedCostGLEntries(
-//       allocatedLandedCost,
-//       bill,
-//       fromTransactionEntry
-//     );
-//     return new Ledger(entries);
-//   };
+    return {
+      ...commonEntry,
+      debit: localAmount,
+      accountId,
+      index: index + 1,
+      indexGroup: 10,
+      itemId: itemEntry?.itemId,
+      accountNormal: AccountNormal.DEBIT,
+    };
+  }
 
-//   /**
-//    * Writes landed cost GL entries to the storage layer.
-//    * @param {number} tenantId -
-//    */
-//   public writeLandedCostGLEntries = async (
-//     allocatedLandedCost: BillLandedCost,
-//     bill: Bill,
-//     fromTransactionEntry: ILandedCostTransactionEntry,
-//     trx?: Knex.Transaction
-//   ) => {
-//     const ledgerEntries = this.getLandedCostGLEntries(
-//       allocatedLandedCost,
-//       bill,
-//       fromTransactionEntry
-//     );
-//     await this.ledgerRepository.saveLedgerEntries(ledgerEntries, trx);
-//   };
+  /**
+   * Retrieves the landed cost GL cost entry (credit to cost account).
+   */
+  private getLandedCostGLCostEntry(
+    bill: Bill,
+    allocatedLandedCost: BillLandedCost,
+  ): ILedgerEntry {
+    const commonEntry = this.getLandedCostGLCommonEntry(
+      bill,
+      allocatedLandedCost,
+    );
 
-//   /**
-//    * Generates and writes GL entries of the given landed cost.
-//    * @param {number} billLandedCostId
-//    * @param {Knex.Transaction} trx
-//    */
-//   public createLandedCostGLEntries = async (
-//     billLandedCostId: number,
-//     trx?: Knex.Transaction
-//   ) => {
-//     // Retrieve the bill landed cost transacion with associated
-//     // allocated entries and items.
-//     const allocatedLandedCost = await this.billLandedCostModel().query(trx)
-//       .findById(billLandedCostId)
-//       .withGraphFetched('bill')
-//       .withGraphFetched('allocateEntries.itemEntry.item');
+    return {
+      ...commonEntry,
+      credit: allocatedLandedCost.localAmount,
+      accountId: allocatedLandedCost.costAccountId,
+      index: 1,
+      indexGroup: 20,
+      accountNormal: AccountNormal.CREDIT,
+    };
+  }
 
-//     // Retrieve the allocated from transactione entry.
-//     const transactionEntry = await this.getLandedCostEntry(
-//       allocatedLandedCost.fromTransactionType,
-//       allocatedLandedCost.fromTransactionId,
-//       allocatedLandedCost.fromTransactionEntryId
-//     );
-//     // Writes the given landed cost GL entries to the storage layer.
-//     await this.writeLandedCostGLEntries(
-//       allocatedLandedCost,
-//       allocatedLandedCost.bill,
-//       transactionEntry,
-//       trx
-//     );
-//   };
+  /**
+   * Composes the landed cost GL entries.
+   */
+  public getLandedCostGLEntries(
+    allocatedLandedCost: BillLandedCost,
+    bill: Bill,
+  ): ILedgerEntry[] {
+    const inventoryEntries = allocatedLandedCost.allocateEntries.map(
+      (allocatedEntry, index) =>
+        this.getLandedCostGLInventoryEntry(
+          bill,
+          allocatedLandedCost,
+          allocatedEntry,
+          index,
+        ),
+    );
+    const costEntry = this.getLandedCostGLCostEntry(bill, allocatedLandedCost);
 
-//   /**
-//    * Reverts GL entries of the given allocated landed cost transaction.
-//    * @param {number} tenantId
-//    * @param {number} landedCostId
-//    * @param {Knex.Transaction} trx
-//    */
-//   public revertLandedCostGLEntries = async (
-//     landedCostId: number,
-//     trx: Knex.Transaction
-//   ) => {
-//     await this.journalService.revertJournalTransactions(
-//       landedCostId,
-//       'LandedCost',
-//       trx
-//     );
-//   };
-// }
+    return [...inventoryEntries, costEntry];
+  }
+
+  /**
+   * Retrieves the landed cost GL ledger.
+   */
+  public getLandedCostLedger(
+    allocatedLandedCost: BillLandedCost,
+    bill: Bill,
+  ): Ledger {
+    const entries = this.getLandedCostGLEntries(allocatedLandedCost, bill);
+    return new Ledger(entries);
+  }
+
+  /**
+   * Generates and writes GL entries of the given landed cost.
+   */
+  public createLandedCostGLEntries = async (
+    billLandedCostId: number,
+    trx?: Knex.Transaction,
+  ) => {
+    const allocatedLandedCost = await this.billLandedCostModel()
+      .query(trx)
+      .findById(billLandedCostId)
+      .withGraphFetched('bill')
+      .withGraphFetched('allocateEntries.itemEntry.item');
+
+    if (!allocatedLandedCost?.bill) {
+      throw new Error('BillLandedCost or associated Bill not found');
+    }
+
+    const ledger = this.getLandedCostLedger(
+      allocatedLandedCost,
+      allocatedLandedCost.bill,
+    );
+    await this.ledgerStorage.commit(ledger, trx);
+  };
+
+  /**
+   * Reverts GL entries of the given allocated landed cost transaction.
+   */
+  public revertLandedCostGLEntries = async (
+    landedCostId: number,
+    trx?: Knex.Transaction,
+  ) => {
+    await this.ledgerStorage.deleteByReference(landedCostId, 'LandedCost', trx);
+  };
+}

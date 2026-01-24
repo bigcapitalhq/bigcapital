@@ -3,14 +3,15 @@ import {
   IAllocatedLandedCostDeletedPayload,
 } from '../types/BillLandedCosts.types';
 import { OnEvent } from '@nestjs/event-emitter';
-// import { LandedCostGLEntries } from './LandedCostGLEntries.service';
 import { Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
+import { LandedCostGLEntriesService } from './LandedCostGLEntries.service';
 
 @Injectable()
 export class LandedCostGLEntriesSubscriber {
-  constructor() // private readonly billLandedCostGLEntries: LandedCostGLEntries,
-  {}
+  constructor(
+    private readonly landedCostGLEntries: LandedCostGLEntriesService,
+  ) {}
 
   /**
    * Writes GL entries once landed cost transaction created.
@@ -21,10 +22,10 @@ export class LandedCostGLEntriesSubscriber {
     billLandedCost,
     trx,
   }: IAllocatedLandedCostCreatedPayload) {
-    // await this.billLandedCostGLEntries.createLandedCostGLEntries(
-    //   billLandedCost.id,
-    //   trx
-    // );
+    await this.landedCostGLEntries.createLandedCostGLEntries(
+      billLandedCost.id,
+      trx,
+    );
   }
 
   /**
@@ -32,13 +33,13 @@ export class LandedCostGLEntriesSubscriber {
    * @param {IAllocatedLandedCostDeletedPayload} payload -
    */
   @OnEvent(events.billLandedCost.onDeleted)
-  async revertGLEnteriesOnceLandedCostDeleted({
+  async revertGLEntriesOnceLandedCostDeleted({
     oldBillLandedCost,
     trx,
   }: IAllocatedLandedCostDeletedPayload) {
-    // await this.billLandedCostGLEntries.revertLandedCostGLEntries(
-    //   oldBillLandedCost.id,
-    //   trx
-    // );
+    await this.landedCostGLEntries.revertLandedCostGLEntries(
+      oldBillLandedCost.id,
+      trx,
+    );
   }
 }

@@ -23,7 +23,9 @@ export class AllocateLandedCostService extends BaseLandedCostService {
     private readonly billModel: TenantModelProxy<typeof Bill>,
 
     @Inject(BillLandedCost.name)
-    protected readonly billLandedCostModel: TenantModelProxy<typeof BillLandedCost>
+    protected readonly billLandedCostModel: TenantModelProxy<
+      typeof BillLandedCost
+    >,
   ) {
     super();
   }
@@ -54,7 +56,8 @@ export class AllocateLandedCostService extends BaseLandedCostService {
     const amount = this.getAllocateItemsCostTotal(allocateCostDTO);
 
     // Retrieve the purchase invoice or throw not found error.
-    const bill = await this.billModel().query()
+    const bill = await this.billModel()
+      .query()
       .findById(billId)
       .withGraphFetched('entries')
       .throwIfNotFound();
@@ -89,8 +92,9 @@ export class AllocateLandedCostService extends BaseLandedCostService {
     // unit-of-work eniverment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Save the bill landed cost model.
-      const billLandedCost =
-        await BillLandedCost.query(trx).insertGraph(billLandedCostObj);
+      const billLandedCost = await this.billLandedCostModel()
+        .query(trx)
+        .insertGraph(billLandedCostObj);
       // Triggers `onBillLandedCostCreated` event.
       await this.eventPublisher.emitAsync(events.billLandedCost.onCreated, {
         bill,
@@ -103,5 +107,5 @@ export class AllocateLandedCostService extends BaseLandedCostService {
 
       return billLandedCost;
     });
-  };
+  }
 }
