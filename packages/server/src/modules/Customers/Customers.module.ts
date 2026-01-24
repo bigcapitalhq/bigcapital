@@ -18,9 +18,19 @@ import { GetCustomers } from './queries/GetCustomers.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { BulkDeleteCustomersService } from './BulkDeleteCustomers.service';
 import { ValidateBulkDeleteCustomersService } from './ValidateBulkDeleteCustomers.service';
+import { LedgerModule } from '../Ledger/Ledger.module';
+import { AccountsModule } from '../Accounts/Accounts.module';
+import { CustomerGLEntries } from './CustomerGLEntries';
+import { CustomerGLEntriesStorage } from './CustomerGLEntriesStorage';
+import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerGLEntriesSubscriber';
 
 @Module({
-  imports: [TenancyDatabaseModule, DynamicListModule],
+  imports: [
+    TenancyDatabaseModule,
+    DynamicListModule,
+    LedgerModule,
+    AccountsModule,
+  ],
   controllers: [CustomersController],
   providers: [
     ActivateCustomer,
@@ -41,6 +51,9 @@ import { ValidateBulkDeleteCustomersService } from './ValidateBulkDeleteCustomer
     GetCustomers,
     BulkDeleteCustomersService,
     ValidateBulkDeleteCustomersService,
+    CustomerGLEntries,
+    CustomerGLEntriesStorage,
+    CustomerWriteGLOpeningBalanceSubscriber,
   ],
 })
 export class CustomersModule {}

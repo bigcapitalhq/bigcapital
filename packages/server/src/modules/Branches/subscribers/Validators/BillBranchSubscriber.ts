@@ -17,7 +17,7 @@ export class BillBranchValidateSubscriber {
    * Validate branch existance on bill creating.
    * @param {IBillCreatingPayload} payload
    */
-  @OnEvent(events.bill.onCreating)
+  @OnEvent(events.bill.onCreating, { suppressErrors: false })
   async validateBranchExistanceOnBillCreating({
     billDTO,
   }: IBillCreatingPayload) {
@@ -30,7 +30,7 @@ export class BillBranchValidateSubscriber {
    * Validate branch existance once bill editing.
    * @param {IBillEditingPayload} payload
    */
-  @OnEvent(events.bill.onEditing)
+  @OnEvent(events.bill.onEditing, { suppressErrors: false })
   async validateBranchExistanceOnBillEditing({ billDTO }: IBillEditingPayload) {
     await this.validateBranchExistance.validateTransactionBranchWhenActive(
       billDTO.branchId,

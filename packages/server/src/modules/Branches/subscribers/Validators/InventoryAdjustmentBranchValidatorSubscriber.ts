@@ -14,7 +14,7 @@ export class InventoryAdjustmentBranchValidateSubscriber {
    * Validate branch existance on inventory adjustment creating.
    * @param {IInventoryAdjustmentCreatingPayload} payload
    */
-  @OnEvent(events.inventoryAdjustment.onQuickCreating)
+  @OnEvent(events.inventoryAdjustment.onQuickCreating, { suppressErrors: false })
   async validateBranchExistanceOnInventoryCreating({
     quickAdjustmentDTO,
   }: IInventoryAdjustmentCreatingPayload) {

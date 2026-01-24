@@ -17,7 +17,7 @@ export class VendorCreditBranchValidateSubscriber {
    * Validate branch existance on estimate creating.
    * @param {ISaleEstimateCreatedPayload} payload
    */
-  @OnEvent(events.vendorCredit.onCreating)
+  @OnEvent(events.vendorCredit.onCreating, { suppressErrors: false })
   async validateBranchExistanceOnCreditCreating({
     vendorCreditCreateDTO,
   }: IVendorCreditCreatingPayload) {
@@ -30,7 +30,7 @@ export class VendorCreditBranchValidateSubscriber {
    * Validate branch existance once estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  @OnEvent(events.vendorCredit.onEditing)
+  @OnEvent(events.vendorCredit.onEditing, { suppressErrors: false })
   async validateBranchExistanceOnCreditEditing({
     vendorCreditDTO,
   }: IVendorCreditEditingPayload) {

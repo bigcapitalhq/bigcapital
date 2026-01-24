@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import {
-  ICustomerOpeningBalanceEditDTO,
   ICustomerOpeningBalanceEditedPayload,
   ICustomerOpeningBalanceEditingPayload,
 } from '../types/Customers.types';
+import { CustomerOpeningBalanceEditDto } from '../dtos/CustomerOpeningBalanceEdit.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Customer } from '../models/Customer';
@@ -29,11 +29,11 @@ export class EditOpeningBalanceCustomer {
   /**
    * Changes the opening balance of the given customer.
    * @param {number} customerId - Customer ID.
-   * @param {ICustomerOpeningBalanceEditDTO} openingBalanceEditDTO
+   * @param {CustomerOpeningBalanceEditDto} openingBalanceEditDTO
    */
   public async changeOpeningBalance(
     customerId: number,
-    openingBalanceEditDTO: ICustomerOpeningBalanceEditDTO,
+    openingBalanceEditDTO: CustomerOpeningBalanceEditDto,
   ): Promise<Customer> {
     // Retrieves the old customer or throw not found error.
     const oldCustomer = await this.customerModel()

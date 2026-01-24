@@ -16,7 +16,7 @@ export class ExpenseBranchValidateSubscriber {
    * Validate branch existance once expense transaction creating.
    * @param {IExpenseCreatingPayload} payload
    */
-  @OnEvent(events.expenses.onCreating)
+  @OnEvent(events.expenses.onCreating, { suppressErrors: false })
   async validateBranchExistanceOnExpenseCreating({
     expenseDTO,
   }: IExpenseCreatingPayload) {
@@ -29,7 +29,7 @@ export class ExpenseBranchValidateSubscriber {
    * Validate branch existance once expense transaction editing.
    * @param {IExpenseEventEditingPayload} payload
    */
-  @OnEvent(events.expenses.onEditing)
+  @OnEvent(events.expenses.onEditing, { suppressErrors: false })
   async validateBranchExistanceOnExpenseEditing({
     expenseDTO,
   }: IExpenseEventEditingPayload) {

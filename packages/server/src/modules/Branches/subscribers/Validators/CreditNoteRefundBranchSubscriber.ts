@@ -14,7 +14,7 @@ export class CreditNoteRefundBranchValidateSubscriber {
    * Validate branch existance on refund credit note creating.
    * @param {IRefundCreditNoteCreatingPayload} payload
    */
-  @OnEvent(events.creditNote.onRefundCreating)
+  @OnEvent(events.creditNote.onRefundCreating, { suppressErrors: false })
   async validateBranchExistanceOnCreditRefundCreating({
     newCreditNoteDTO,
   }: IRefundCreditNoteCreatingPayload) {

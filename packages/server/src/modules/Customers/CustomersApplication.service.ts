@@ -4,10 +4,7 @@ import { CreateCustomer } from './commands/CreateCustomer.service';
 import { EditCustomer } from './commands/EditCustomer.service';
 import { DeleteCustomer } from './commands/DeleteCustomer.service';
 import { EditOpeningBalanceCustomer } from './commands/EditOpeningBalanceCustomer.service';
-import {
-  ICustomerOpeningBalanceEditDTO,
-  ICustomersFilter,
-} from './types/Customers.types';
+import { CustomerOpeningBalanceEditDto } from './dtos/CustomerOpeningBalanceEdit.dto';
 import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
 import { EditCustomerDto } from './dtos/EditCustomer.dto';
 import { GetCustomers } from './queries/GetCustomers.service';
@@ -18,12 +15,12 @@ import { ValidateBulkDeleteCustomersService } from './ValidateBulkDeleteCustomer
 @Injectable()
 export class CustomersApplication {
   constructor(
-    private getCustomerService: GetCustomerService,
-    private createCustomerService: CreateCustomer,
-    private editCustomerService: EditCustomer,
-    private deleteCustomerService: DeleteCustomer,
-    private editOpeningBalanceService: EditOpeningBalanceCustomer,
-    private getCustomersService: GetCustomers,
+    private readonly getCustomerService: GetCustomerService,
+    private readonly createCustomerService: CreateCustomer,
+    private readonly editCustomerService: EditCustomer,
+    private readonly deleteCustomerService: DeleteCustomer,
+    private readonly editOpeningBalanceService: EditOpeningBalanceCustomer,
+    private readonly getCustomersService: GetCustomers,
     private readonly bulkDeleteCustomersService: BulkDeleteCustomersService,
     private readonly validateBulkDeleteCustomersService: ValidateBulkDeleteCustomersService,
   ) {}
@@ -72,7 +69,7 @@ export class CustomersApplication {
    */
   public editOpeningBalance = (
     customerId: number,
-    openingBalanceEditDTO: ICustomerOpeningBalanceEditDTO,
+    openingBalanceEditDTO: CustomerOpeningBalanceEditDto,
   ) => {
     return this.editOpeningBalanceService.changeOpeningBalance(
       customerId,
@@ -82,7 +79,7 @@ export class CustomersApplication {
 
   /**
    * Retrieve customers paginated list.
-   * @param {ICustomersFilter} filter - Cusotmers filter.
+   * @param {GetCustomersQueryDto} filter - Cusotmers filter.
    */
   public getCustomers = (filterDTO: GetCustomersQueryDto) => {
     return this.getCustomersService.getCustomersList(filterDTO);

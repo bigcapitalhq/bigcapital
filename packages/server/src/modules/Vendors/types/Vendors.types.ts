@@ -7,6 +7,7 @@ import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/Dynam
 import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { CreateVendorDto } from '../dtos/CreateVendor.dto';
 import { EditVendorDto } from '../dtos/EditVendor.dto';
+import { VendorOpeningBalanceEditDto } from '../dtos/VendorOpeningBalanceEdit.dto';
 
 // ----------------------------------
 export interface IVendorNewDTO extends IContactAddressDTO {
@@ -92,23 +93,16 @@ export interface IVendorEventEditedPayload {
   trx?: Knex.Transaction;
 }
 
-export interface IVendorOpeningBalanceEditDTO {
-  openingBalance: number;
-  openingBalanceAt: Date | string;
-  openingBalanceExchangeRate: number;
-  openingBalanceBranchId?: number;
-}
-
 export interface IVendorOpeningBalanceEditingPayload {
   oldVendor: Vendor;
-  openingBalanceEditDTO: IVendorOpeningBalanceEditDTO;
+  openingBalanceEditDTO: VendorOpeningBalanceEditDto;
   trx?: Knex.Transaction;
 }
 
 export interface IVendorOpeningBalanceEditedPayload {
   vendor: Vendor;
   oldVendor: Vendor;
-  openingBalanceEditDTO: IVendorOpeningBalanceEditDTO;
+  openingBalanceEditDTO: VendorOpeningBalanceEditDto;
   trx: Knex.Transaction;
 }
 
