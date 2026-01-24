@@ -17,7 +17,7 @@ export class SaleReceiptBranchValidateSubscriber {
    * Validate branch existance on estimate creating.
    * @param {ISaleReceiptCreatingPayload} payload
    */
-  @OnEvent(events.saleReceipt.onCreating)
+  @OnEvent(events.saleReceipt.onCreating, { suppressErrors: false })
   async validateBranchExistanceOnInvoiceCreating({
     saleReceiptDTO,
   }: ISaleReceiptCreatingPayload) {
@@ -30,7 +30,7 @@ export class SaleReceiptBranchValidateSubscriber {
    * Validate branch existance once estimate editing.
    * @param {ISaleReceiptEditingPayload} payload
    */
-  @OnEvent(events.saleReceipt.onEditing)
+  @OnEvent(events.saleReceipt.onEditing, { suppressErrors: false })
   async validateBranchExistanceOnInvoiceEditing({
     saleReceiptDTO,
   }: ISaleReceiptEditingPayload) {

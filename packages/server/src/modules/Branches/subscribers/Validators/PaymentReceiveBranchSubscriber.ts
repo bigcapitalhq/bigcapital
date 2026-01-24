@@ -17,7 +17,7 @@ export class PaymentReceiveBranchValidateSubscriber {
    * Validate branch existance on estimate creating.
    * @param {IPaymentReceivedCreatingPayload} payload
    */
-  @OnEvent(events.paymentReceive.onCreating)
+  @OnEvent(events.paymentReceive.onCreating, { suppressErrors: false })
   async validateBranchExistanceOnPaymentCreating({
     paymentReceiveDTO,
   }: IPaymentReceivedCreatingPayload) {
@@ -30,7 +30,7 @@ export class PaymentReceiveBranchValidateSubscriber {
    * Validate branch existance once estimate editing.
    * @param {IPaymentReceivedEditingPayload} payload
    */
-  @OnEvent(events.paymentReceive.onEditing)
+  @OnEvent(events.paymentReceive.onEditing, { suppressErrors: false })
   async validateBranchExistanceOnPaymentEditing({
     paymentReceiveDTO,
   }: IPaymentReceivedEditingPayload) {

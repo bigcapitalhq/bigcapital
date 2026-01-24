@@ -9,10 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CustomersApplication } from './CustomersApplication.service';
-import {
-  ICustomerOpeningBalanceEditDTO,
-  ICustomersFilter,
-} from './types/Customers.types';
+import { CustomerOpeningBalanceEditDto } from './dtos/CustomerOpeningBalanceEdit.dto';
 import {
   ApiOperation,
   ApiResponse,
@@ -106,7 +103,7 @@ export class CustomersController {
   })
   editOpeningBalance(
     @Param('id') customerId: number,
-    @Body() openingBalanceDTO: ICustomerOpeningBalanceEditDTO,
+    @Body() openingBalanceDTO: CustomerOpeningBalanceEditDto,
   ) {
     return this.customersApplication.editOpeningBalance(
       customerId,

@@ -17,7 +17,7 @@ export class InvoiceBranchValidateSubscriber {
    * Validate branch existance on invoice creating.
    * @param {ISaleInvoiceCreatingPayload} payload
    */
-  @OnEvent(events.saleInvoice.onCreating)
+  @OnEvent(events.saleInvoice.onCreating, { suppressErrors: false })
   async validateBranchExistanceOnInvoiceCreating({
     saleInvoiceDTO,
   }: ISaleInvoiceCreatingPaylaod) {
@@ -30,7 +30,7 @@ export class InvoiceBranchValidateSubscriber {
    * Validate branch existance once invoice editing.
    * @param {ISaleInvoiceEditingPayload} payload
    */
-  @OnEvent(events.saleInvoice.onEditing)
+  @OnEvent(events.saleInvoice.onEditing, { suppressErrors: false })
   async validateBranchExistanceOnInvoiceEditing({
     saleInvoiceDTO,
   }: ISaleInvoiceEditingPayload) {

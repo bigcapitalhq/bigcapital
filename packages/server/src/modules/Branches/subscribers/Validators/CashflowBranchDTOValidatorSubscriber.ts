@@ -14,7 +14,7 @@ export class CashflowBranchDTOValidatorSubscriber {
    * Validate branch existance once cashflow transaction creating.
    * @param {ICommandCashflowCreatingPayload} payload
    */
-  @OnEvent(events.cashflow.onTransactionCreating)
+  @OnEvent(events.cashflow.onTransactionCreating, { suppressErrors: false })
   async validateBranchExistanceOnCashflowTransactionCreating({
     newTransactionDTO,
   }: ICommandCashflowCreatingPayload) {

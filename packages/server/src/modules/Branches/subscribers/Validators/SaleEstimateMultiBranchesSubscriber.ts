@@ -17,7 +17,7 @@ export class SaleEstimateBranchValidateSubscriber {
    * Validate branch existance on estimate creating.
    * @param {ISaleEstimateCreatedPayload} payload
    */
-  @OnEvent(events.saleEstimate.onCreating)
+  @OnEvent(events.saleEstimate.onCreating, { suppressErrors: false })
   async validateBranchExistanceOnEstimateCreating({
     estimateDTO,
   }: ISaleEstimateCreatingPayload) {
@@ -30,7 +30,7 @@ export class SaleEstimateBranchValidateSubscriber {
    * Validate branch existance once estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  @OnEvent(events.saleEstimate.onEditing)
+  @OnEvent(events.saleEstimate.onEditing, { suppressErrors: false })
   async validateBranchExistanceOnEstimateEditing({
     estimateDTO,
   }: ISaleEstimateEditingPayload) {

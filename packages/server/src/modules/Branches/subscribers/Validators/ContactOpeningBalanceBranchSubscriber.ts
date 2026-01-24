@@ -15,13 +15,13 @@ import {
 export class ContactBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance on customer creating.
    * @param {ICustomerEventCreatingPayload} payload
    */
-  @OnEvent(events.customers.onCreating)
+  @OnEvent(events.customers.onCreating, { suppressErrors: false })
   async validateBranchExistanceOnCustomerCreating({
     customerDTO,
   }: ICustomerEventCreatingPayload) {
@@ -37,7 +37,7 @@ export class ContactBranchValidateSubscriber {
    * Validate branch existance once customer opening balance editing.
    * @param {ICustomerOpeningBalanceEditingPayload} payload
    */
-  @OnEvent(events.customers.onOpeningBalanceChanging)
+  @OnEvent(events.customers.onOpeningBalanceChanging, { suppressErrors: false })
   async validateBranchExistanceOnCustomerOpeningBalanceEditing({
     openingBalanceEditDTO,
   }: ICustomerOpeningBalanceEditingPayload) {
@@ -52,7 +52,7 @@ export class ContactBranchValidateSubscriber {
    * Validates the branch existance on vendor creating.
    * @param {IVendorEventCreatingPayload} payload
    */
-  @OnEvent(events.vendors.onCreating)
+  @OnEvent(events.vendors.onCreating, { suppressErrors: false })
   async validateBranchExistanceonVendorCreating({
     vendorDTO,
   }: IVendorEventCreatingPayload) {
@@ -68,7 +68,7 @@ export class ContactBranchValidateSubscriber {
    * Validate branch existance once the vendor opening balance editing.
    * @param {IVendorOpeningBalanceEditingPayload} payload
    */
-  @OnEvent(events.vendors.onOpeningBalanceChanging)
+  @OnEvent(events.vendors.onOpeningBalanceChanging, { suppressErrors: false })
   async validateBranchExistanceOnVendorOpeningBalanceEditing({
     openingBalanceEditDTO,
   }: IVendorOpeningBalanceEditingPayload) {

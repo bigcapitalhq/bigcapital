@@ -25,7 +25,12 @@ import { CustomerGLEntriesStorage } from './CustomerGLEntriesStorage';
 import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerGLEntriesSubscriber';
 
 @Module({
-  imports: [TenancyDatabaseModule, DynamicListModule, LedgerModule, AccountsModule],
+  imports: [
+    TenancyDatabaseModule,
+    DynamicListModule,
+    LedgerModule,
+    AccountsModule,
+  ],
   controllers: [CustomersController],
   providers: [
     ActivateCustomer,
@@ -51,4 +56,4 @@ import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerG
     CustomerWriteGLOpeningBalanceSubscriber,
   ],
 })
-export class CustomersModule { }
+export class CustomersModule {}

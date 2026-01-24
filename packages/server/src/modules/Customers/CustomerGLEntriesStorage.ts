@@ -5,6 +5,7 @@ import { AccountRepository } from '@/modules/Accounts/repositories/Account.repos
 import { CustomerGLEntries } from './CustomerGLEntries';
 import { Customer } from './models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { Account } from '../Accounts/models/Account.model';
 
 @Injectable()
 export class CustomerGLEntriesStorage {
@@ -12,6 +13,9 @@ export class CustomerGLEntriesStorage {
     private readonly ledgerStorage: LedgerStorageService,
     private readonly accountRepository: AccountRepository,
     private readonly customerGLEntries: CustomerGLEntries,
+
+    @Inject(Account.name)
+    private readonly accountModel: TenantModelProxy<typeof Account>,
 
     @Inject(Customer.name)
     private readonly customerModel: TenantModelProxy<typeof Customer>,
@@ -29,9 +33,10 @@ export class CustomerGLEntriesStorage {
       .findById(customerId);
 
     // Finds the income account.
-    const incomeAccount = await this.accountRepository.findOne({
-      slug: 'other-income',
-    });
+    const incomeAccount = await this.accountModel()
+      .query(trx)
+      .findOne({ slug: 'other-income' });
+
     // Find or create the A/R account.
     const ARAccount =
       await this.accountRepository.findOrCreateAccountReceivable(

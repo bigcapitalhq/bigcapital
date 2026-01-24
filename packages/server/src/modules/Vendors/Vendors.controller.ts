@@ -9,10 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { VendorsApplication } from './VendorsApplication.service';
-import {
-  IVendorOpeningBalanceEditDTO,
-  IVendorsFilter,
-} from './types/Vendors.types';
+import { VendorOpeningBalanceEditDto } from './dtos/VendorOpeningBalanceEdit.dto';
 import {
   ApiOperation,
   ApiResponse,
@@ -68,7 +65,7 @@ export class VendorsController {
   @ApiOperation({ summary: 'Edit the given vendor opening balance.' })
   editOpeningBalance(
     @Param('id') vendorId: number,
-    @Body() openingBalanceDTO: IVendorOpeningBalanceEditDTO,
+    @Body() openingBalanceDTO: VendorOpeningBalanceEditDto,
   ) {
     return this.vendorsApplication.editOpeningBalance(
       vendorId,

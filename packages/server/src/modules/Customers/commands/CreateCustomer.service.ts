@@ -31,7 +31,7 @@ export class CreateCustomer {
 
   /**
    * Creates a new customer.
-   * @param  {ICustomerNewDTO} customerDTO
+   * @param {CreateCustomerDto} customerDTO
    * @return {Promise<ICustomer>}
    */
   public async createCustomer(

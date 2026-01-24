@@ -2,10 +2,10 @@ import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
-  IVendorOpeningBalanceEditDTO,
   IVendorOpeningBalanceEditedPayload,
   IVendorOpeningBalanceEditingPayload,
 } from '../types/Vendors.types';
+import { VendorOpeningBalanceEditDto } from '../dtos/VendorOpeningBalanceEdit.dto';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Vendor } from '../models/Vendor';
 import { events } from '@/common/events/events';
@@ -29,12 +29,12 @@ export class EditOpeningBalanceVendorService {
   /**
    * Changes the opening balance of the given customer.
    * @param {number} vendorId
-   * @param {IVendorOpeningBalanceEditDTO} openingBalanceEditDTO
+   * @param {VendorOpeningBalanceEditDto} openingBalanceEditDTO
    * @returns {Promise<IVendor>}
    */
   public async editOpeningBalance(
     vendorId: number,
-    openingBalanceEditDTO: IVendorOpeningBalanceEditDTO,
+    openingBalanceEditDTO: VendorOpeningBalanceEditDto,
   ) {
     // Retrieves the old vendor or throw not found error.
     const oldVendor = await this.vendorModel()
