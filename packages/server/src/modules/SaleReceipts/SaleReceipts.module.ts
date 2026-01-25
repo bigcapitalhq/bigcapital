@@ -40,6 +40,8 @@ import { SaleReceiptsImportable } from './commands/SaleReceiptsImportable';
 import { GetSaleReceiptMailStateService } from './queries/GetSaleReceiptMailState.service';
 import { GetSaleReceiptMailTemplateService } from './queries/GetSaleReceiptMailTemplate.service';
 import { SaleReceiptAutoIncrementSubscriber } from './subscribers/SaleReceiptAutoIncrementSubscriber';
+import { SaleReceiptCostGLEntriesSubscriber } from './subscribers/SaleReceiptCostGLEntriesSubscriber';
+import { SaleReceiptCostGLEntries } from './SaleReceiptCostGLEntries';
 import { BulkDeleteSaleReceiptsService } from './BulkDeleteSaleReceipts.service';
 import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleReceipts.service';
 
@@ -87,6 +89,8 @@ import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleR
     GetSaleReceiptMailStateService,
     GetSaleReceiptMailTemplateService,
     SaleReceiptAutoIncrementSubscriber,
+    SaleReceiptCostGLEntries,
+    SaleReceiptCostGLEntriesSubscriber,
     BulkDeleteSaleReceiptsService,
     ValidateBulkDeleteSaleReceiptsService,
   ],
