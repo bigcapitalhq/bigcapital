@@ -114,7 +114,6 @@ export class SaleInvoicesCost {
    */
   scheduleWriteJournalEntries(startingDate?: Date) {
     // const agenda = Container.get('agenda');
-
     // return agenda.schedule('in 3 seconds', 'rewrite-invoices-journal-entries', {
     //   startingDate,
     //   tenantId,
@@ -123,12 +122,11 @@ export class SaleInvoicesCost {
 
   /**
    * Writes cost GL entries from the inventory cost lots.
-   * @param {number} tenantId -
-   * @param {Date} startingDate -
+   * @param {Date} startingDate - Starting date.
    * @returns {Promise<void>}
    */
-  public writeCostLotsGLEntries = (startingDate: Date) => {
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+  public writeCostLotsGLEntries = async (startingDate: Date) => {
+    await this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Triggers event `onInventoryCostLotsGLEntriesBeforeWrite`.
       await this.eventPublisher.emitAsync(
         events.inventory.onCostLotsGLEntriesBeforeWrite,
@@ -146,5 +144,10 @@ export class SaleInvoicesCost {
         } as IInventoryCostLotsGLEntriesWriteEvent,
       );
     });
+    // Signal that cost entries have been written so cost_compute_running can be set to false.
+    await this.eventPublisher.emitAsync(
+      events.inventory.onInventoryCostEntriesWritten,
+      {},
+    );
   };
 }

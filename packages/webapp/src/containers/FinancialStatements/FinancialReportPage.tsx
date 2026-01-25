@@ -18,12 +18,21 @@ export default function FinancialReportPage(props) {
 }
 
 export const FinancialComputeAlert = styled.div`
+  --x-background-color: #fdecda;
+  --x-text-color: #342515;
+  --x-button-text-color: #824400;
+
+  .bp4-dark & {
+    --x-background-color: rgba(200, 118, 25, 0.2);
+    --x-text-color: rgba(255, 255, 255, 0.8);
+    --x-button-text-color: rgba(255, 255, 255, 0.8);
+  }
   position: relative;
   padding: 8px 20px;
   border-radius: 2px;
-  color: #342515;
+  background-color: var(--x-background-color);
+  color: var(--x-text-color);
   font-size: 13px;
-  background-color: var(--color-financial-report-background);
 
   button {
     font-size: 12px;
@@ -32,7 +41,7 @@ export const FinancialComputeAlert = styled.div`
 
     &,
     &:hover {
-      color: #824400;
+      color: var(--x-button-text-color);
       text-decoration: underline;
     }
   }
@@ -40,7 +49,7 @@ export const FinancialComputeAlert = styled.div`
     margin-right: 6px;
     position: relative;
     top: -2px;
-    fill: #975f19;
+    fill: var(--x-text-color);
   }
 `;
 

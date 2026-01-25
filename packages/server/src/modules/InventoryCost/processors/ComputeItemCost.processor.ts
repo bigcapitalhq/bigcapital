@@ -68,6 +68,12 @@ export class ComputeItemCostProcessor extends WorkerHost {
     } catch (error) {
       console.error(`[error] Error computing item cost for item ${itemId}:`, error);
       console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+      // Reset cost_compute_running when job fails so it does not stay true indefinitely
+      try {
+        await this.inventoryComputeCostService.markItemsCostComputeRunning(false);
+      } catch (markError) {
+        console.error('[error] Failed to mark cost compute as not running:', markError);
+      }
       throw error;
     }
   }
