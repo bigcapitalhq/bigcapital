@@ -35,7 +35,7 @@ export const transformLedgerEntryToTransaction = (
     itemId: entry.itemId,
     projectId: entry.projectId,
 
-    // costable: entry.costable,
+    costable: entry.costable,
 
     taxRateId: entry.taxRateId,
     taxRate: entry.taxRate,

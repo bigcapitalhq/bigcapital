@@ -33,6 +33,7 @@ export class AccountTransaction extends BaseModel {
   public readonly userId!: number;
   public readonly itemId!: number;
   public readonly projectId!: number;
+  public readonly costable!: boolean;
   public readonly account: Account;
 
   /**
