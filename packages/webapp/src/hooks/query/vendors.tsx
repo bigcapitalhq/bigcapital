@@ -167,7 +167,7 @@ export function useEditVendorOpeningBalance(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) => apiRequest.post(`vendors/${id}/opening_balance`, values),
+    ([id, values]) => apiRequest.put(`vendors/${id}/opening-balance`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific vendor.
