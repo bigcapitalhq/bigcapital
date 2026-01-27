@@ -180,7 +180,7 @@ export function useEditCustomerOpeningBalance(props) {
 
   return useMutation(
     ([id, values]) =>
-      apiRequest.post(`customers/${id}/opening_balance`, values),
+      apiRequest.put(`customers/${id}/opening-balance`, values),
     {
       onSuccess: (res, [id, values]) => {
         // Invalidate specific customer.
