@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
-import { useQuery, queryCache } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
 
@@ -31,6 +31,7 @@ function BillNumberDialogContent({
   // #withBillsActions
   setBillNumberChanged,
 }) {
+  const queryClient = useQueryClient();
   const fetchSettings = useQuery(['settings'], () => requestFetchOptions({}));
 
   const handleSubmitForm = (values, { setSubmitting }) => {
@@ -45,7 +46,7 @@ function BillNumberDialogContent({
         setBillNumberChanged(true);
 
         setTimeout(() => {
-          queryCache.invalidateQueries('settings');
+          queryClient.invalidateQueries('settings');
         }, 250);
       })
       .catch(() => {

@@ -137,8 +137,8 @@ import { AppThrottleModule } from './AppThrottle.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         connection: {
-          host: configService.get('QUEUE_HOST'),
-          port: configService.get('QUEUE_PORT'),
+          host: configService.get('queue.host'),
+          port: configService.get('queue.port'),
         },
       }),
       inject: [ConfigService],
@@ -158,8 +158,8 @@ import { AppThrottleModule } from './AppThrottle.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         config: {
-          host: configService.get('redis.host') || 'localhost',
-          port: configService.get('redis.port') || 6379,
+          host: configService.get('redis.host'),
+          port: configService.get('redis.port'),
         },
       }),
       inject: [ConfigService],

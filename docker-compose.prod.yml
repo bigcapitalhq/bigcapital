@@ -58,6 +58,12 @@ services:
       # System database
       - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
 
+      # Redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QUEUE_HOST=redis
+      - QUEUE_PORT=6379
+
       # Tenants databases
       - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
 
