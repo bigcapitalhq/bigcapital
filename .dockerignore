@@ -1,0 +1,93 @@
+# Dependencies
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+**/dist/
+**/build/
+*.tsbuildinfo
+
+# Development files
+.git/
+.gitignore
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test files
+test/
+**/test/
+**/*.spec.ts
+**/*.test.ts
+**/*.e2e-spec.ts
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+
+# Documentation
+*.md
+!README.md
+docs/
+CHANGELOG.md
+CONTRIBUTING.md
+DISCLAIMER
+LICENSE
+
+# CI/CD
+.github/
+.gitpod.yml
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.pid
+*.seed
+*.pid.lock
+
+# Docker files (don't copy Dockerfiles into themselves)
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Misc
+.cache/
+.temp/
+tmp/
+*.tmp
+.qodo/
+e2e/
+playwright.config.ts
+
+# Source maps (not needed in production)
+*.map
+
+# TypeScript configs (not needed at runtime)
+tsconfig*.json
+!tsconfig.json
+
+# Linting/formatting
+.eslintrc*
+.prettierrc*
+.eslintcache
+
+# Package manager locks (we copy them explicitly)
+# pnpm-lock.yaml
