@@ -12,7 +12,7 @@
     "@blueprintjs/colors": "4.1.19",
     "@blueprintjs/core": "^4.20.2",
     "@blueprintjs/datetime": "^4.4.37",
-    "@blueprintjs/datetime2": "^3.0.10",
+    "@blueprintjs/datetime2": "^0.9.0",
     "@blueprintjs/popover2": "^1.14.11",
     "@blueprintjs/select": "^4.9.24",
     "@blueprintjs/table": "^4.10.12",

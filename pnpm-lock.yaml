@@ -411,7 +411,7 @@ importers:
         version: 0.3.7(@babel/core@7.28.5)(@blueprintjs/core@4.20.2)(@blueprintjs/select@4.9.24)(formik@2.4.6)(react-dom@18.3.1)(react-is@18.3.1)(react@18.3.1)
       '@blueprintjs-formik/datetime':
         specifier: ^0.4.0
-        version: 0.4.0(@babel/core@7.28.5)(@blueprintjs-formik/core@0.3.7)(@blueprintjs/core@4.20.2)(@blueprintjs/datetime2@3.0.10)(@blueprintjs/datetime@4.4.37)(@blueprintjs/select@4.9.24)(formik@2.4.6)(react-dom@18.3.1)(react-is@18.3.1)(react@18.3.1)
+        version: 0.4.0(@babel/core@7.28.5)(@blueprintjs-formik/core@0.3.7)(@blueprintjs/core@4.20.2)(@blueprintjs/datetime2@0.9.37)(@blueprintjs/datetime@4.4.37)(@blueprintjs/select@4.9.24)(formik@2.4.6)(react-dom@18.3.1)(react-is@18.3.1)(react@18.3.1)
       '@blueprintjs-formik/select':
         specifier: ^0.4.5
         version: 0.4.5(@blueprintjs/core@4.20.2)(@blueprintjs/select@4.9.24)(formik@2.4.6)(react-dom@18.3.1)(react@18.3.1)
@@ -425,8 +425,8 @@ importers:
         specifier: ^4.4.37
         version: 4.4.37(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
       '@blueprintjs/datetime2':
-        specifier: ^3.0.10
-        version: 3.0.10(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
+        specifier: ^0.9.0
+        version: 0.9.37(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
       '@blueprintjs/popover2':
         specifier: ^1.14.11
         version: 1.14.11(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
@@ -4636,7 +4636,7 @@ packages:
       - react-is
     dev: false
 
-  /@blueprintjs-formik/datetime@0.4.0(@babel/core@7.28.5)(@blueprintjs-formik/core@0.3.7)(@blueprintjs/core@4.20.2)(@blueprintjs/datetime2@3.0.10)(@blueprintjs/datetime@4.4.37)(@blueprintjs/select@4.9.24)(formik@2.4.6)(react-dom@18.3.1)(react-is@18.3.1)(react@18.3.1):
+  /@blueprintjs-formik/datetime@0.4.0(@babel/core@7.28.5)(@blueprintjs-formik/core@0.3.7)(@blueprintjs/core@4.20.2)(@blueprintjs/datetime2@0.9.37)(@blueprintjs/datetime@4.4.37)(@blueprintjs/select@4.9.24)(formik@2.4.6)(react-dom@18.3.1)(react-is@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-51RW41DSM96seIgOGz2gw2DX1SfH8+Ydi9JBCNmLaFZRqyKZgRX+qpxmltgbS97lk2IOfCEyKSxoGGfz4XlnPg==}
     peerDependencies:
       '@blueprintjs-formik/core': ^0.3.2 || 4 || 5
@@ -4651,7 +4651,7 @@ packages:
       '@blueprintjs-formik/core': 0.3.7(@babel/core@7.28.5)(@blueprintjs/core@4.20.2)(@blueprintjs/select@4.9.24)(formik@2.4.6)(react-dom@18.3.1)(react-is@18.3.1)(react@18.3.1)
       '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
       '@blueprintjs/datetime': 4.4.37(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@blueprintjs/datetime2': 3.0.10(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
+      '@blueprintjs/datetime2': 0.9.37(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
       '@blueprintjs/select': 4.9.24(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
       formik: 2.4.6(react@18.3.1)
       lodash.get: 4.4.2
@@ -4694,12 +4694,6 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@blueprintjs/colors@5.1.12:
-    resolution: {integrity: sha512-7GQWUQ82eLE1te++DC8fRO2B31bsSwia82NLamZfKgjHY9V4zxafMT1DK5gKlmmy0nCjpdcCc+df4aVZMHGLww==}
-    dependencies:
-      tslib: 2.6.2
-    dev: false
-
   /@blueprintjs/core@4.20.2(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-5v4Nr0jozfAjiOkjY4zvt1XSpt4ldnrSaxtwo506S2cxJYfwFeMTmDshXNPFcc8L1fjZMxi0IWI2WABXzZXS6w==}
     hasBin: true
@@ -4727,51 +4721,28 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@blueprintjs/core@6.4.1(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-JSA8seGiZ2dpmugO7Cea4bh0XEkTioDyzM1Z/0piFsziVv4OeV3jrmMXMegtCdHqpwpWYj8reGuPzFKHGemXXw==}
-    hasBin: true
+  /@blueprintjs/datetime2@0.9.37(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-eCoQbQK1IO5uegmYugj/K5helj6oA7s/4ZkA7dweBHBHXQ3KmZLh2Zj+O0ESOq/qqvlvCfiNCfsObk309EIbKQ==}
     peerDependencies:
-      '@types/react': '18'
-      react: '18'
-      react-dom: '18'
+      '@types/react': ^16.14.32 || 17
+      react: ^16.8 || 17
+      react-dom: ^16.8 || 17
     peerDependenciesMeta:
       '@types/react':
         optional: true
     dependencies:
-      '@blueprintjs/colors': 5.1.12
-      '@blueprintjs/icons': 6.3.2(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@popperjs/core': 2.11.8
+      '@blueprintjs/core': 4.20.2(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
+      '@blueprintjs/datetime': 4.4.37(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
+      '@blueprintjs/popover2': 1.14.11(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
+      '@blueprintjs/select': 4.9.24(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
       '@types/react': 18.3.4
       classnames: 2.5.1
-      normalize.css: 8.0.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@18.3.1)(react@18.3.1)
-      react-transition-group: 4.4.5(react-dom@18.3.1)(react@18.3.1)
-      tslib: 2.6.2
-      use-sync-external-store: 1.6.0(react@18.3.1)
-    dev: false
-
-  /@blueprintjs/datetime2@3.0.10(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-pli0hkv93aH2Ou3inZ2KIdNBLj5dYW8XVu21Rr3fSoh5b9aUsThAVDmb51LjlfNiPVi1i+y2omGuDRTKV+zUgw==}
-    peerDependencies:
-      '@types/react': '18'
-      react: '18'
-      react-dom: '18'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@blueprintjs/colors': 5.1.12
-      '@blueprintjs/core': 6.4.1(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@blueprintjs/datetime': 6.0.10(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@blueprintjs/icons': 6.3.2(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@types/react': 18.3.4
       date-fns: 2.30.0
+      date-fns-tz: 1.3.8(date-fns@2.30.0)
+      lodash: 4.17.21
       react: 18.3.1
-      react-day-picker: 8.10.1(date-fns@2.30.0)(react@18.3.1)
       react-dom: 18.3.1(react@18.3.1)
-      tslib: 2.6.2
+      tslib: 2.5.3
     dev: false
 
   /@blueprintjs/datetime@4.4.37(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
@@ -4793,54 +4764,12 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@blueprintjs/datetime@6.0.10(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-8i8P12OwCe0JGTkX20EtHvembEjwfqkf1pQcec3lMdPDDeEpPmV3vzPWxwCS+NSc6vUGl/2aAFs+Ro7qDW1msw==}
-    peerDependencies:
-      '@types/react': '18'
-      react: '18'
-      react-dom: '18'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@blueprintjs/core': 6.4.1(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@blueprintjs/icons': 6.3.2(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@blueprintjs/select': 6.0.10(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@types/react': 18.3.4
-      classnames: 2.5.1
-      date-fns: 2.30.0
-      date-fns-tz: 2.0.1(date-fns@2.30.0)
-      react: 18.3.1
-      react-day-picker: 8.10.1(date-fns@2.30.0)(react@18.3.1)
-      react-dom: 18.3.1(react@18.3.1)
-      react-innertext: 1.1.5(@types/react@18.3.4)(react@18.3.1)
-      tslib: 2.6.2
-    dev: false
-
   /@blueprintjs/icons@4.16.0:
     resolution: {integrity: sha512-cyfgjUZcZCtQrXWUV8FwqYTFEzduV4a0N7yhOU38jY+cBRCLu/sDrD0Osvfk4DGRvNe4YjY7pohVLFSxpg68Uw==}
     dependencies:
       change-case: 4.1.2
       classnames: 2.5.1
       tslib: 2.5.3
-    dev: false
-
-  /@blueprintjs/icons@6.3.2(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-rOdSg7yPmjtqy3e+wD66tXCrzt57M59htVOikwunTaCyQ61+bsF0PyqLfNlhsw1mXqZm8uxSINs1bhnwXhQCiw==}
-    peerDependencies:
-      '@types/react': '18'
-      react: '18'
-      react-dom: '18'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@types/react': 18.3.4
-      change-case: 4.1.2
-      classnames: 2.5.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      tslib: 2.6.2
     dev: false
 
   /@blueprintjs/popover2@1.14.11(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
@@ -4882,26 +4811,6 @@ packages:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       tslib: 2.5.3
-    dev: false
-
-  /@blueprintjs/select@6.0.10(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-RjDuomn4KhluiN7tVofLLX6S+b+un0mLehvmOSETpqk1C8lHXCxReIXxFiWqTB+YiIgkqQ6aRNjQs35cJBbrfg==}
-    peerDependencies:
-      '@types/react': '18'
-      react: '18'
-      react-dom: '18'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@blueprintjs/colors': 5.1.12
-      '@blueprintjs/core': 6.4.1(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@blueprintjs/icons': 6.3.2(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
-      '@types/react': 18.3.4
-      classnames: 2.5.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      tslib: 2.6.2
     dev: false
 
   /@blueprintjs/table@4.10.12(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1):
@@ -15031,10 +14940,10 @@ packages:
       is-data-view: 1.0.1
     dev: true
 
-  /date-fns-tz@2.0.1(date-fns@2.30.0):
-    resolution: {integrity: sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==}
+  /date-fns-tz@1.3.8(date-fns@2.30.0):
+    resolution: {integrity: sha512-qwNXUFtMHTTU6CFSFjoJ80W8Fzzp24LntbjFFBgL/faqds4e5mo9mftoRLgr3Vi1trISsg4awSpYVsOQCRnapQ==}
     peerDependencies:
-      date-fns: 2.x
+      date-fns: '>=2.0.0'
     dependencies:
       date-fns: 2.30.0
     dev: false
@@ -22488,16 +22397,6 @@ packages:
       react: 18.3.1
     dev: false
 
-  /react-day-picker@8.10.1(date-fns@2.30.0)(react@18.3.1):
-    resolution: {integrity: sha512-TMx7fNbhLk15eqcMt+7Z7S2KF7mfTId/XJDjKE8f+IUcFn0l08/kI4FiYTL/0yuOLmEcbR4Fwe3GJf/NiiMnPA==}
-    peerDependencies:
-      date-fns: ^2.28.0 || ^3.0.0
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      date-fns: 2.30.0
-      react: 18.3.1
-    dev: false
-
   /react-docgen-typescript@2.2.2(typescript@5.6.3):
     resolution: {integrity: sha512-tvg2ZtOpOi6QDwsb3GZhOjDkkX0h8Z2gipvTg6OVMUyoYoURhEiRNePT8NZItTVCDh39JJHnLdfCOkzoLbFnTg==}
     peerDependencies:
@@ -25785,14 +25684,6 @@ packages:
       react: 18.3.1
       tslib: 2.8.1
     dev: true
-
-  /use-sync-external-store@1.6.0(react@18.3.1):
-    resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    dependencies:
-      react: 18.3.1
-    dev: false
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
