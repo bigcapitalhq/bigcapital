@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { BullModule } from '@nestjs/bull';
 import { SaleReceiptApplication } from './SaleReceiptApplication.service';
 import { CreateSaleReceipt } from './commands/CreateSaleReceipt.service';
@@ -62,6 +64,10 @@ import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleR
     MailModule,
     MailNotificationModule,
     BullModule.registerQueue({ name: SendSaleReceiptMailQueue }),
+    BullBoardModule.forFeature({
+      name: SendSaleReceiptMailQueue,
+      adapter: BullAdapter,
+    }),
   ],
   providers: [
     TenancyContext,
@@ -95,4 +101,4 @@ import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleR
     ValidateBulkDeleteSaleReceiptsService,
   ],
 })
-export class SaleReceiptsModule { }
+export class SaleReceiptsModule {}

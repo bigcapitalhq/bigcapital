@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { BullModule } from '@nestjs/bull';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
@@ -54,6 +56,10 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
     TemplateInjectableModule,
     PdfTemplatesModule,
     BullModule.registerQueue({ name: SendSaleEstimateMailQueue }),
+    BullBoardModule.forFeature({
+      name: SendSaleEstimateMailQueue,
+      adapter: BullAdapter,
+    }),
   ],
   controllers: [SaleEstimatesController],
   providers: [
@@ -99,4 +105,4 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
     GetSaleEstimateMailTemplateService,
   ],
 })
-export class SaleEstimatesModule { }
+export class SaleEstimatesModule {}

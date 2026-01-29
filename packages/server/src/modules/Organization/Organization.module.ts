@@ -3,6 +3,8 @@ import { GetCurrentOrganizationService } from './queries/GetCurrentOrganization.
 import { BuildOrganizationService } from './commands/BuildOrganization.service';
 import { UpdateOrganizationService } from './commands/UpdateOrganization.service';
 import { OrganizationController } from './Organization.controller';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullModule } from '@nestjs/bullmq';
 import { OrganizationBuildQueue } from './Organization.types';
 import { OrganizationBuildProcessor } from './processors/OrganizationBuild.processor';
@@ -25,10 +27,14 @@ import { GetBuildOrganizationBuildJob } from './commands/GetBuildOrganizationJob
     OrganizationBaseCurrencyLocking,
     SyncSystemUserToTenantService,
     SyncSystemUserToTenantSubscriber,
-    GetBuildOrganizationBuildJob
+    GetBuildOrganizationBuildJob,
   ],
   imports: [
     BullModule.registerQueue({ name: OrganizationBuildQueue }),
+    BullBoardModule.forFeature({
+      name: OrganizationBuildQueue,
+      adapter: BullMQAdapter,
+    }),
     TenantDBManagerModule,
   ],
   controllers: [OrganizationController],

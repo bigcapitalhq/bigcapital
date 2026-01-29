@@ -10,6 +10,8 @@ import { BankingRecognizedTransactionsController } from './BankingRecognizedTran
 import { RecognizedTransactionsApplication } from './RecognizedTransactions.application';
 import { GetRecognizedTransactionsService } from './GetRecongizedTransactions';
 import { GetRecognizedTransactionService } from './queries/GetRecognizedTransaction.service';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullModule } from '@nestjs/bullmq';
 import { RecognizeUncategorizedTransactionsQueue } from './_types';
 import { RegonizeTransactionsPrcessor } from './jobs/RecognizeTransactionsJob';
@@ -24,6 +26,10 @@ const models = [RegisterTenancyModel(RecognizedBankTransaction)];
     forwardRef(() => BankRulesModule),
     BullModule.registerQueue({
       name: RecognizeUncategorizedTransactionsQueue,
+    }),
+    BullBoardModule.forFeature({
+      name: RecognizeUncategorizedTransactionsQueue,
+      adapter: BullMQAdapter,
     }),
     ...models,
   ],

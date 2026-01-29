@@ -19,6 +19,7 @@ import throttle from './throttle';
 import cloud from './cloud';
 import redis from './redis';
 import queue from './queue';
+import bullBoard from './bull-board';
 
 export const config = [
   app,
@@ -42,4 +43,5 @@ export const config = [
   throttle,
   redis,
   queue,
+  bullBoard,
 ];

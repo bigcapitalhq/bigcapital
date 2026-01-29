@@ -12,6 +12,9 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { ExpressAdapter } from '@bull-board/express';
+import { createBullBoardAuthMiddleware } from '@/middleware/bull-board-auth.middleware';
 import { BullModule } from '@nestjs/bullmq';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PassportModule } from '@nestjs/passport';
@@ -141,6 +144,24 @@ import { AppThrottleModule } from './AppThrottle.module';
           port: configService.get('queue.port'),
         },
       }),
+      inject: [ConfigService],
+    }),
+    BullBoardModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        const enabled = configService.get<boolean>('bullBoard.enabled');
+        const username = configService.get<string>('bullBoard.username');
+        const password = configService.get<string>('bullBoard.password');
+        return {
+          route: '/queues',
+          adapter: ExpressAdapter,
+          middleware: createBullBoardAuthMiddleware(
+            enabled,
+            username,
+            password,
+          ),
+        };
+      },
       inject: [ConfigService],
     }),
     ClsModule.forRoot({
