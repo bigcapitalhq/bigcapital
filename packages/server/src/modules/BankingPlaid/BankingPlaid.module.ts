@@ -1,3 +1,5 @@
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { SocketModule } from '../Socket/Socket.module';
@@ -33,6 +35,10 @@ const models = [RegisterTenancyModel(PlaidItem)];
     BankingCategorizeModule,
     BankingTransactionsModule,
     BullModule.registerQueue({ name: UpdateBankingPlaidTransitionsQueueJob }),
+    BullBoardModule.forFeature({
+      name: UpdateBankingPlaidTransitionsQueueJob,
+      adapter: BullMQAdapter,
+    }),
     ...models,
   ],
   providers: [
@@ -51,4 +57,4 @@ const models = [RegisterTenancyModel(PlaidItem)];
   exports: [...models],
   controllers: [BankingPlaidController, BankingPlaidWebhooksController],
 })
-export class BankingPlaidModule { }
+export class BankingPlaidModule {}

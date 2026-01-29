@@ -17,6 +17,8 @@ import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { AuthMailSubscriber } from './subscribers/AuthMail.subscriber';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullModule } from '@nestjs/bullmq';
 import {
   SendResetPasswordMailQueue,
@@ -63,6 +65,14 @@ const models = [
     TenancyModule,
     BullModule.registerQueue({ name: SendResetPasswordMailQueue }),
     BullModule.registerQueue({ name: SendSignupVerificationMailQueue }),
+    BullBoardModule.forFeature({
+      name: SendResetPasswordMailQueue,
+      adapter: BullMQAdapter,
+    }),
+    BullBoardModule.forFeature({
+      name: SendSignupVerificationMailQueue,
+      adapter: BullMQAdapter,
+    }),
   ],
   exports: [...models],
   providers: [
@@ -98,4 +108,4 @@ const models = [
     AuthMailSubscriber,
   ],
 })
-export class AuthModule { }
+export class AuthModule {}

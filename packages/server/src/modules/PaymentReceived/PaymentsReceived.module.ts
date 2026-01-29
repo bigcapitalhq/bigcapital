@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { BullModule } from '@nestjs/bull';
 import { PaymentReceivesController } from './PaymentsReceived.controller';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
@@ -95,6 +97,10 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     DynamicListModule,
     MailModule,
     BullModule.registerQueue({ name: SEND_PAYMENT_RECEIVED_MAIL_QUEUE }),
+    BullBoardModule.forFeature({
+      name: SEND_PAYMENT_RECEIVED_MAIL_QUEUE,
+      adapter: BullAdapter,
+    }),
   ],
 })
 export class PaymentsReceivedModule {}

@@ -16,6 +16,8 @@ import {
   ComputeItemCostQueue,
   WriteInventoryTransactionsGLEntriesQueue,
 } from './types/InventoryCost.types';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullModule } from '@nestjs/bullmq';
 import { InventoryAverageCostMethodService } from './commands/InventoryAverageCostMethod.service';
 import { InventoryItemCostService } from './commands/InventoryCosts.service';
@@ -39,6 +41,14 @@ const models = [
     BullModule.registerQueue({
       name: WriteInventoryTransactionsGLEntriesQueue,
     }),
+    BullBoardModule.forFeature({
+      name: ComputeItemCostQueue,
+      adapter: BullMQAdapter,
+    }),
+    BullBoardModule.forFeature({
+      name: WriteInventoryTransactionsGLEntriesQueue,
+      adapter: BullMQAdapter,
+    }),
     forwardRef(() => SaleInvoicesModule),
     ImportModule,
   ],
@@ -56,7 +66,7 @@ const models = [
     InventoryItemCostService,
     InventoryItemOpeningAvgCostService,
     InventoryCostSubscriber,
-    GetItemsInventoryValuationListService
+    GetItemsInventoryValuationListService,
   ],
   exports: [
     ...models,
@@ -64,6 +74,6 @@ const models = [
     InventoryItemCostService,
     InventoryComputeCostService,
   ],
-  controllers: [InventoryCostController]
+  controllers: [InventoryCostController],
 })
 export class InventoryCostModule {}

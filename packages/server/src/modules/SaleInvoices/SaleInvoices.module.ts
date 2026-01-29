@@ -45,6 +45,8 @@ import { SendSaleInvoiceMailCommon } from './commands/SendInvoiceInvoiceMailComm
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { MailNotificationModule } from '../MailNotification/MailNotification.module';
 import { SendSaleInvoiceMailProcessor } from './processors/SendSaleInvoiceMail.processor';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { BullModule } from '@nestjs/bull';
 import { SendSaleInvoiceQueue } from './constants';
 import { InvoicePaymentIntegrationSubscriber } from './subscribers/InvoicePaymentIntegrationSubscriber';
@@ -81,6 +83,10 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     forwardRef(() => PaymentLinksModule),
     DynamicListModule,
     BullModule.registerQueue({ name: SendSaleInvoiceQueue }),
+    BullBoardModule.forFeature({
+      name: SendSaleInvoiceQueue,
+      adapter: BullAdapter,
+    }),
   ],
   controllers: [SaleInvoicesController],
   providers: [
@@ -139,4 +145,4 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     SaleInvoicesImportable,
   ],
 })
-export class SaleInvoicesModule { }
+export class SaleInvoicesModule {}
