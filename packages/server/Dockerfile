@@ -75,6 +75,9 @@ COPY --from=builder --chown=nodejs:nodejs /app/packages/server/src/i18n ./packag
 COPY --from=builder --chown=nodejs:nodejs /app/packages/server/public ./packages/server/public
 COPY --from=builder --chown=nodejs:nodejs /app/packages/server/static ./packages/server/static
 
+# Copy database migration files (needed for running migrations)
+COPY --from=builder --chown=nodejs:nodejs /app/packages/server/src/database ./packages/server/src/database
+
 # Copy built shared packages (dist folders and package.json for module resolution)
 COPY --from=builder --chown=nodejs:nodejs /app/shared/bigcapital-utils/dist ./shared/bigcapital-utils/dist
 COPY --from=builder --chown=nodejs:nodejs /app/shared/pdf-templates/dist ./shared/pdf-templates/dist
