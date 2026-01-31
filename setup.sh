@@ -2,7 +2,6 @@
 # Initialize the essential variables.
 BRANCH=main
 CURRENT=$PWD
-BIGCAPITAL_INSTALL_DIR=$PWD/bigcapital-$(echo $BRANCH | sed -r 's@(\/|" "|\.)@-@g')
 BIGCAPITAL_CLONE_TEMP_DIR=$(mktemp -d)
 CPU_ARCH=$(uname -m)
 
@@ -19,8 +18,6 @@ then
 else
     COMPOSE_CMD="docker compose"
 fi
-
-REPO=https://github.com/bigcapitalhq/bigcapital
 
 # Prints the Bigcapital logo once running the script.
 function print_logo() {
@@ -142,8 +139,8 @@ function askForAction() {
 }
 
 function install() {
-    echo "Installing Bigcaoital.........."
-    echo "installing is going to take few mintues..."
+    echo "Installing Bigcapital.........."
+    echo "installing is going to take few minutes..."
     download
     setup_env
 }
@@ -203,10 +200,11 @@ function startServices() {
     done
     printf "\r\033[K"
     echo "   API server started successfully ✅"
-    source "${DOCKER_ENV_PATH}"
+    ACCESS_URL=$(grep -E '^BASE_URL=' "$DOCKER_ENV_PATH" 2>/dev/null | cut -d= -f2-)
+    [ -z "$ACCESS_URL" ] && ACCESS_URL="http://localhost"
     echo "   Bigcapital server started successfully ✅"
     echo ""
-    echo "   You can access the application at $WEB_URL"
+    echo "   You can access the application at $ACCESS_URL"
     echo ""
 
 }
@@ -223,20 +221,19 @@ function restartServices() {
 }
 
 function viewLogs(){
-    ARG_SERVICE_NAME=$2
         echo
         echo "Select a Service you want to view the logs for:"
         echo "   1) Webapp"
         echo "   2) API"
         echo "   3) Migration"
-        echo "   4) Nginx Proxy"
+        echo "   4) Envoy Proxy"
         echo "   5) MariaDB"
         echo "   0) Back to Main Menu"
         echo 
         read -p "Service: " DOCKER_SERVICE_NAME
 
         until (( DOCKER_SERVICE_NAME >= 0 && DOCKER_SERVICE_NAME <= 5 )); do
-            echo "Invalid selection. Please enter a number between 1 and 11."
+            echo "Invalid selection. Please enter a number between 0 and 5."
             read -p "Service: " DOCKER_SERVICE_NAME
         done
 
@@ -248,7 +245,7 @@ function viewLogs(){
                 1) viewSpecificLogs "webapp";;
                 2) viewSpecificLogs "server";;
                 3) viewSpecificLogs "database_migration";;
-                4) viewSpecificLogs "nginx";;
+                4) viewSpecificLogs "proxy";;
                 5) viewSpecificLogs "mysql";;
                 0) askForAction;;
                 *) echo "INVALID SERVICE NAME SUPPLIED";;

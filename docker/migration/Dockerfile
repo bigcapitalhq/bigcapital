@@ -35,4 +35,4 @@ WORKDIR /app/packages/server
 RUN git clone https://github.com/vishnubob/wait-for-it.git
 
 # Once we listen the mysql port run the migration task.
-CMD ./wait-for-it/wait-for-it.sh mysql:3306 -- sh -c "pnpm run system:migrate:latest && pnpm run tenants:migrate:latest"
+CMD ./wait-for-it/wait-for-it.sh mysql:3306 -- sh -c "node dist/cli.js system:migrate:latest && node dist/cli.js tenants:migrate:latest"
