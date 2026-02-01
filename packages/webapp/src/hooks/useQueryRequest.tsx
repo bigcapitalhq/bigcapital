@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { castArray, defaultTo } from 'lodash';
 import { useAuthOrganizationId } from './state';
 import useApiRequest from './useRequest';
+import { normalizeApiPath } from '../utils';
 import { useRef } from 'react';
 
 /**
@@ -19,7 +20,11 @@ export function useRequestQuery(query, axios, props) {
 
   const states = useQuery(
     query,
-    () => apiRequest.http({ ...axios, url: `/api/${axios.url}` }),
+    () =>
+      apiRequest.http({
+        ...axios,
+        url: `/api/${normalizeApiPath(axios.url)}`,
+      }),
     props,
   );
   // Momerize the default data.
