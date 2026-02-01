@@ -13,6 +13,9 @@ import jsCookie from 'js-cookie';
 import { deepMapKeys } from './map-key-deep';
 export * from './deep';
 
+/** Strips leading slash from a path segment to avoid double slashes when joining with a base (e.g. `/api/` + path). */
+export const normalizeApiPath = (path) => (path || '').replace(/^\//, '');
+
 export const getCookie = (name, defaultValue) =>
   _.defaultTo(jsCookie.get(name), defaultValue);
 

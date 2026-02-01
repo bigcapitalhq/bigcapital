@@ -7,7 +7,7 @@ import {
   useSetGlobalErrors,
   useAuthToken,
 } from './state';
-import { getCookie } from '../utils';
+import { getCookie, normalizeApiPath } from '../utils';
 
 export default function useApiRequest() {
   const setGlobalErrors = useSetGlobalErrors();
@@ -93,27 +93,27 @@ export default function useApiRequest() {
       http,
 
       get(resource, params) {
-        return http.get(`/api/${resource}`, params);
+        return http.get(`/api/${normalizeApiPath(resource)}`, params);
       },
 
       post(resource, params, config) {
-        return http.post(`/api/${resource}`, params, config);
+        return http.post(`/api/${normalizeApiPath(resource)}`, params, config);
       },
 
       update(resource, slug, params) {
-        return http.put(`/api/${resource}/${slug}`, params);
+        return http.put(`/api/${normalizeApiPath(resource)}/${slug}`, params);
       },
 
       put(resource, params) {
-        return http.put(`/api/${resource}`, params);
+        return http.put(`/api/${normalizeApiPath(resource)}`, params);
       },
 
       patch(resource, params, config) {
-        return http.patch(`/api/${resource}`, params, config);
+        return http.patch(`/api/${normalizeApiPath(resource)}`, params, config);
       },
 
       delete(resource, params) {
-        return http.delete(`/api/${resource}`, params);
+        return http.delete(`/api/${normalizeApiPath(resource)}`, params);
       },
     }),
     [http],
@@ -130,22 +130,22 @@ export function useAuthApiRequest() {
     () => ({
       http,
       get(resource, params) {
-        return http.get(`/api/${resource}`, params);
+        return http.get(`/api/${normalizeApiPath(resource)}`, params);
       },
       post(resource, params, config) {
-        return http.post(`/api/${resource}`, params, config);
+        return http.post(`/api/${normalizeApiPath(resource)}`, params, config);
       },
       update(resource, slug, params) {
-        return http.put(`/api/${resource}/${slug}`, params);
+        return http.put(`/api/${normalizeApiPath(resource)}/${slug}`, params);
       },
       put(resource, params) {
-        return http.put(`/api/${resource}`, params);
+        return http.put(`/api/${normalizeApiPath(resource)}`, params);
       },
       patch(resource, params, config) {
-        return http.patch(`/api/${resource}`, params, config);
+        return http.patch(`/api/${normalizeApiPath(resource)}`, params, config);
       },
       delete(resource, params) {
-        return http.delete(`/api/${resource}`, params);
+        return http.delete(`/api/${normalizeApiPath(resource)}`, params);
       },
     }),
     [http],
