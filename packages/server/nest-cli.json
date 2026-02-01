@@ -7,7 +7,7 @@
     "deleteOutDir": true,
     "assets": [
       { "include": "i18n/**/*", "watchAssets": true },
-      { "include": "database/**/*", "watchAssets": true }
+      { "include": "database/**/*", "exclude": "**/*.ts", "watchAssets": true }
     ]
   },
   "projects": {

@@ -1,11 +1,7 @@
 import { Scope } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { Process } from '@nestjs/bull';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import {
-  SendSignupVerificationMailJob,
-  SendSignupVerificationMailQueue,
-} from '../Auth.constants';
+import { SendSignupVerificationMailQueue } from '../Auth.constants';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
 import { AuthenticationMailMesssages } from '../AuthMailMessages.esrvice';
 
@@ -21,7 +17,6 @@ export class SendSignupVerificationMailProcessor extends WorkerHost {
     super();
   }
 
-  @Process(SendSignupVerificationMailJob)
   async process(job: Job<SendSignupVerificationMailJobPayload>) {
     try {
       await this.authMailMesssages.sendSignupVerificationMail(

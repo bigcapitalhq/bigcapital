@@ -1,8 +1,4 @@
-import { Process } from '@nestjs/bull';
-import {
-  WriteInventoryTransactionsGLEntriesQueue,
-  WriteInventoryTransactionsGLEntriesQueueJob,
-} from '../types/InventoryCost.types';
+import { WriteInventoryTransactionsGLEntriesQueue } from '../types/InventoryCost.types';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Scope } from '@nestjs/common';
 
@@ -15,6 +11,5 @@ export class WriteInventoryTransactionsGLEntriesProcessor extends WorkerHost {
     super();
   }
 
-  @Process(WriteInventoryTransactionsGLEntriesQueueJob)
   async process() {}
 }

@@ -7,7 +7,6 @@ import {
   RecognizeUncategorizedTransactionsJobPayload,
   RecognizeUncategorizedTransactionsQueue,
 } from '../_types';
-import { Process } from '@nestjs/bull';
 
 @Processor({
   name: RecognizeUncategorizedTransactionsQueue,
@@ -28,7 +27,6 @@ export class RegonizeTransactionsPrcessor extends WorkerHost {
   /**
    * Triggers sending invoice mail.
    */
-  @Process(RecognizeUncategorizedTransactionsQueue)
   @UseCls()
   async process(job: Job<RecognizeUncategorizedTransactionsJobPayload>) {
     const { ruleId, transactionsCriteria } = job.data;

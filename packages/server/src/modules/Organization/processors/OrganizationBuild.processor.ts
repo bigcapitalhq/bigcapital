@@ -2,10 +2,8 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Scope } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { ClsService, UseCls } from 'nestjs-cls';
-import { Process } from '@nestjs/bull';
 import {
   OrganizationBuildQueue,
-  OrganizationBuildQueueJob,
   OrganizationBuildQueueJobPayload,
 } from '../Organization.types';
 import { BuildOrganizationService } from '../commands/BuildOrganization.service';
@@ -22,7 +20,6 @@ export class OrganizationBuildProcessor extends WorkerHost {
     super();
   }
 
-  @Process(OrganizationBuildQueueJob)
   @UseCls()
   async process(job: Job<OrganizationBuildQueueJobPayload>) {
     console.log('Processing organization build job:', job.id);
