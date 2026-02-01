@@ -1,11 +1,9 @@
-import { Process } from '@nestjs/bull';
 import { UseCls } from 'nestjs-cls';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Scope } from '@nestjs/common';
 import { Job } from 'bullmq';
 import {
   PlaidFetchTransitonsEventPayload,
-  UpdateBankingPlaidTransitionsJob,
   UpdateBankingPlaidTransitionsQueueJob,
 } from '../types/BankingPlaid.types';
 import { PlaidUpdateTransactions } from '../command/PlaidUpdateTransactions';
@@ -28,7 +26,6 @@ export class PlaidFetchTransactionsProcessor extends WorkerHost {
   /**
    * Triggers the function.
    */
-  @Process(UpdateBankingPlaidTransitionsJob)
   @UseCls()
   async process(job: Job<PlaidFetchTransitonsEventPayload>) {
     const { plaidItemId } = job.data;

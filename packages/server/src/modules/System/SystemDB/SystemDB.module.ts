@@ -22,6 +22,7 @@ const providers = [
       },
       migrations: {
         directory: configService.get('systemDatabase.migrationDir'),
+        loadExtensions: ['.js'],
       },
       seeds: {
         directory: configService.get('systemDatabase.seedsDir'),

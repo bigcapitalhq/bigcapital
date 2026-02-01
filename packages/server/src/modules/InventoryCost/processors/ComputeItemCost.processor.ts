@@ -7,11 +7,7 @@ import * as moment from 'moment';
 import { TenantJobPayload } from '@/interfaces/Tenant';
 import { InventoryComputeCostService } from '../commands/InventoryComputeCost.service';
 import { events } from '@/common/events/events';
-import {
-  ComputeItemCostQueue,
-  ComputeItemCostQueueJob,
-} from '../types/InventoryCost.types';
-import { Process } from '@nestjs/bull';
+import { ComputeItemCostQueue } from '../types/InventoryCost.types';
 
 interface ComputeItemCostJobPayload extends TenantJobPayload {
   itemId: number;
@@ -39,7 +35,6 @@ export class ComputeItemCostProcessor extends WorkerHost {
    * Process the compute item cost job.
    * @param {Job<ComputeItemCostJobPayload>} job - The job to process
    */
-  @Process(ComputeItemCostQueueJob)
   @UseCls()
   async process(job: Job<ComputeItemCostJobPayload>) {
     const { itemId, startingDate, organizationId, userId } = job.data;

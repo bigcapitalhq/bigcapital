@@ -1,10 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Scope } from '@nestjs/common';
-import {
-  SendResetPasswordMailJob,
-  SendResetPasswordMailQueue,
-} from '../Auth.constants';
-import { Process } from '@nestjs/bull';
+import { SendResetPasswordMailQueue } from '../Auth.constants';
 import { Job } from 'bullmq';
 import { AuthenticationMailMesssages } from '../AuthMailMessages.esrvice';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
@@ -23,7 +19,6 @@ export class SendResetPasswordMailProcessor extends WorkerHost {
     super();
   }
 
-  @Process(SendResetPasswordMailJob)
   async process(job: Job<SendResetPasswordMailJobPayload>) {
     try {
       await this.authMailMesssages.sendResetPasswordMail(
