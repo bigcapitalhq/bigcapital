@@ -196,7 +196,6 @@ $ns: bp4;
   --color-preferences-sidebar-head-border: #bbcbd0;
   --color-preferences-sidebar-head-text: #3b3b4c;
 
-
   // Preferences - Topbar.
   --color-preferences-topbar-background: #fff;
   --color-preferences-topbar-border: #d2dde2;
@@ -209,7 +208,7 @@ $ns: bp4;
   --color-financial-sheet-title-text: rgb(31, 50, 85);
   --color-financial-sheet-type-text: rgb(31, 50, 85);
   --color-financial-sheet-date-text: rgb(31, 50, 85);
-  --color-financial-sheet-footer-text: rgb(31, 50, 85);
+  --color-financial-sheet-footer-text: var(--color-muted-text);
   --color-financial-sheet-minimal-title-text: #333;
 
   // Transaction locking.
@@ -514,7 +513,7 @@ body.bp4-dark  {
   --color-financial-sheet-title-text: var(--color-light-gray1);
   --color-financial-sheet-type-text: var(--color-light-gray1);
   --color-financial-sheet-date-text: var(--color-light-gray1);
-  --color-financial-sheet-footer-text: var(--color-light-gray1);
+  --color-financial-sheet-footer-text: var(--color-muted-text);
   --color-financial-sheet-minimal-title-text: var(--color-white);
 
   // Transaction locking.
