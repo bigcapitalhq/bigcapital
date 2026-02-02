@@ -1,8 +1,20 @@
 // @ts-nocheck
+import React from 'react';
 import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
-import { Align } from '@/constants';
+import { Align, CLASSES } from '@/constants';
+
+/**
+ * Description cell – wraps value in a div with muted text class.
+ */
+function DescriptionCell({ cell: { value } }) {
+  return React.createElement(
+    'div',
+    { className: `cell ${CLASSES.TEXT_MUTED}` },
+    value,
+  );
+}
 
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
@@ -75,6 +87,16 @@ const transactionIdColumnAccessor = (column) => {
   };
 };
 
+/**
+ * Description column accessor (muted text in wrapped cell).
+ */
+const descriptionColumnAccessor = (column) => {
+  return {
+    ...column,
+    Cell: DescriptionCell,
+  };
+};
+
 const dynamiColumnMapper = R.curry((data, column) => {
   const _numericColumnAccessor = numericColumnAccessor(data);
 
@@ -88,6 +110,7 @@ const dynamiColumnMapper = R.curry((data, column) => {
       R.pathEq(['key'], 'reference_number'),
       transactionIdColumnAccessor,
     ),
+    R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
     R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
     R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
     R.when(R.pathEq(['key'], 'amount'), _numericColumnAccessor),

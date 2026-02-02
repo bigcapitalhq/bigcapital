@@ -365,13 +365,28 @@
       border-bottom: 1px solid var(--color-datatable-constrant-head-border);
       padding: 0.5rem;
     }
-    
+
     .tbody .tr .td {
       background: transparent;
       padding: 0.5rem 0.5rem;
       border-bottom-width: 0;
       color: var(--color-datatable-constrant-text);
       border-color: var(--color-datatable-constrant-cell-border);
+    }
+  }
+}
+
+// Sticky header: blurred transparent background so body rows don't show through
+.bigcapital-datatable.has-sticky,
+.bigcapital-datatable.has-sticky-header {
+  &.table-constrant .table .thead .th,
+  &.table--constrant .table .thead .th {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    body.bp4-dark & {
+      background: rgba(28, 33, 39, 0.6);
     }
   }
 }

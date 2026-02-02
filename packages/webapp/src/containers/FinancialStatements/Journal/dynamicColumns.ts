@@ -1,8 +1,20 @@
 // @ts-nocheck
-import { Align } from '@/constants';
+import React from 'react';
+import { Align, CLASSES } from '@/constants';
 import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
 import { useJournalSheetContext } from './JournalProvider';
+
+/**
+ * Description cell – wraps value in a div with muted text class.
+ */
+function DescriptionCell({ cell: { value } }) {
+  return React.createElement(
+    'span',
+    { className: `cell ${CLASSES.TEXT_MUTED}` },
+    value,
+  );
+}
 
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
@@ -87,6 +99,16 @@ const accountCodeColumnAccessor = (column) => {
 };
 
 /**
+ * Description column accessor (muted text in wrapped cell).
+ */
+const descriptionColumnAccessor = (column) => {
+  return {
+    ...column,
+    Cell: DescriptionCell,
+  };
+};
+
+/**
  * Dynamic column mapper.
  * @param {} data -
  * @param {} column -
@@ -105,6 +127,7 @@ const dynamicColumnMapper = R.curry((data, column) => {
       R.pathEq(['key'], 'transaction_number'),
       transactionNumberColumnAccessor,
     ),
+    R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
     R.when(R.pathEq(['key'], 'account_code'), accountCodeColumnAccessor),
     R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
     R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
@@ -113,7 +136,7 @@ const dynamicColumnMapper = R.curry((data, column) => {
 });
 
 /**
- * Composes the fetched dynamic columns from the server to the columns to pass it 
+ * Composes the fetched dynamic columns from the server to the columns to pass it
  * to the table component.
  */
 export const dynamicColumns = (columns, data) => {
