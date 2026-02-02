@@ -9,7 +9,7 @@ import { FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { useContactDuplicateFromContext } from './ContactDuplicateProvider';
 
-import Contacts from '@/constants/contactsOptions';
+import { ContactsOptions } from '@/constants/contactsOptions';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
@@ -66,7 +66,7 @@ function ContactDuplicateForm({
             >
               <FSelect
                 name={'contact_type'}
-                items={Contacts}
+                items={ContactsOptions}
                 placeholder={<T id={'select_contact'} />}
                 textAccessor={'name'}
                 valueAccessor={'path'}

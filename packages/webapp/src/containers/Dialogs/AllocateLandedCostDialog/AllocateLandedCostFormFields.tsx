@@ -16,7 +16,7 @@ import { FormattedMessage as T, If, FFormGroup, FSelect, FRadioGroup, FInputGrou
 import { handleStringChange } from '@/utils';
 import { FieldRequiredHint } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import allocateLandedCostType from '@/constants/allocateLandedCostType';
+import { AllocateLandedCostType } from '@/constants/allocateLandedCostType';
 
 import AllocateLandedCostFormBody from './AllocateLandedCostFormBody';
 import {
@@ -81,7 +81,7 @@ export default function AllocateLandedCostFormFields() {
       >
         <FSelect
           name={'transaction_type'}
-          items={allocateLandedCostType}
+          items={AllocateLandedCostType}
           onItemChange={handleTransactionTypeChange}
           filterable={false}
           valueAccessor={'value'}

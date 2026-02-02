@@ -87,7 +87,7 @@ export function WarehousesGridItemBox({
     <WarehouseBoxRoot>
       <WarehouseHeader>
         <WarehouseTitle>
-          {title} {primary && <Icon icon={'star-18dp'} iconSize={16} />}
+          {title} {primary ? <Icon icon={'star-18dp'} iconSize={16} /> : null}
         </WarehouseTitle>
         <WarehouseCode>{code}</WarehouseCode>
         <WarehouseIcon>
@@ -118,12 +118,21 @@ export const WarehousesList = styled.div`
 `;
 
 export const WarehouseBoxRoot = styled.div`
+  --x-box-border-color: #c8cad0;
+  --x-box-background-color: #fff;
+  --x-box-hover-border-color: #0153cc;
+
+  .bp4-dark & {
+    --x-box-border-color: rgba(255, 255, 255, 0.2);
+    --x-box-background-color: var(--color-dark-gray3);
+    --x-box-hover-border-color: #0153cc;
+  }
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   border-radius: 5px;
-  border: 1px solid #c8cad0;
-  background: #fff;
+  border: 1px solid var(--x-box-border-color);
+  background: var(--x-box-background-color);
   margin: 5px 5px 8px;
   width: 200px;
   height: 160px;
@@ -132,7 +141,7 @@ export const WarehouseBoxRoot = styled.div`
   position: relative;
 
   &:hover {
-    border-color: #0153cc;
+    border-color: var(--x-box-hover-border-color);
   }
 `;
 
@@ -143,9 +152,16 @@ export const WarehouseHeader = styled.div`
 `;
 
 export const WarehouseTitle = styled.div`
+  --x-title-color: #000;
+  --x-title-icon-color: #e1b31d;
+
+  .bp4-dark & {
+    --x-title-color: var(--color-light-gray5);
+    --x-title-icon-color: #e1b31d;
+  }
   font-size: 14px;
   font-style: inherit;
-  color: #000;
+  color: var(--x-title-color);
   white-space: nowrap;
   font-weight: 500;
   line-height: 1;
@@ -154,14 +170,19 @@ export const WarehouseTitle = styled.div`
     margin: 0;
     margin-left: 2px;
     vertical-align: top;
-    color: #e1b31d;
+    color: var(--x-title-icon-color);
   }
 `;
 
 const WarehouseCode = styled.div`
+  --x-code-color: #6b7176;
+
+  .bp4-dark & {
+    --x-code-color: var(--color-muted-text);
+  }
   display: block;
   font-size: 11px;
-  color: #6b7176;
+  color: var(--x-code-color);
   margin-top: 4px;
 `;
 
@@ -178,8 +199,13 @@ const WarehouseContent = styled.div`
 `;
 
 const WarehouseItem = styled.div`
+  --x-item-color: #000;
+
+  .bp4-dark & {
+    --x-item-color: var(--color-light-gray1);
+  }
   font-size: 11px;
-  color: #000;
+  color: var(--x-item-color);
   text-overflow: ellipsis;
   overflow: hidden;
 
