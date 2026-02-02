@@ -16,7 +16,7 @@ import {
   VendorAction,
 } from './abilityOption';
 
-export default [
+export const KeyboardShortcutsOptions = [
   {
     shortcut_key: 'Shift + I',
     description: intl.get('jump_to_the_invoices'),

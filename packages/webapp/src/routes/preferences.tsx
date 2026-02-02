@@ -11,7 +11,10 @@ export const getPreferenceRoutes = () => [
   },
   {
     path: `${BASE_URL}/branding`,
-    component: lazy(() => import('../containers/Preferences/Branding/PreferencesBrandingPage')),
+    component: lazy(
+      () =>
+        import('../containers/Preferences/Branding/PreferencesBrandingPage'),
+    ),
     exact: true,
   },
   {
@@ -29,14 +32,20 @@ export const getPreferenceRoutes = () => [
   {
     path: `${BASE_URL}/payment-methods`,
     component: lazy(
-      () => import('../containers/Preferences/PaymentMethods/PreferencesPaymentMethodsPage'),
+      () =>
+        import(
+          '../containers/Preferences/PaymentMethods/PreferencesPaymentMethodsPage'
+        ),
     ),
     exact: true,
   },
   {
     path: `${BASE_URL}/payment-methods/stripe/callback`,
     component: lazy(
-      () => import('../containers/Preferences/PaymentMethods/PreferencesStripeCallback'),
+      () =>
+        import(
+          '../containers/Preferences/PaymentMethods/PreferencesStripeCallback'
+        ),
     ),
     exact: true,
   },
@@ -110,16 +119,6 @@ export const getPreferenceRoutes = () => [
   {
     path: `${BASE_URL}/items`,
     component: lazy(() => import('@/containers/Preferences/Item')),
-    exact: true,
-  },
-  // {
-  //   path: `${BASE_URL}/sms-message`,
-  //   component: SMSIntegration,
-  //   exact: true,
-  // },
-  {
-    path: `${BASE_URL}/billing`,
-    component: lazy(() => import('@/containers/Subscriptions/BillingPage')),
     exact: true,
   },
   {

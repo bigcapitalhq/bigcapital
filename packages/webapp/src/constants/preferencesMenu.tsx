@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
 
-export default [
+export const PreferencesMenu = [
   {
     text: <T id={'general'} />,
     disabled: false,
@@ -13,10 +13,10 @@ export default [
     disabled: false,
     href: '/preferences/branding',
   },
-  {
-    text: 'Billing',
-    href: '/preferences/billing',
-  },
+  // {
+  //   text: 'Billing',
+  //   href: '/preferences/billing',
+  // },
   {
     text: <T id={'users'} />,
     href: '/preferences/users',
@@ -63,11 +63,11 @@ export default [
     disabled: false,
     href: '/preferences/items',
   },
-  {
-    text: 'Integrations',
-    disabled: false,
-    href: '/preferences/integrations'
-  },
+  // {
+  //   text: 'Integrations',
+  //   disabled: false,
+  //   href: '/preferences/integrations'
+  // },
   {
     text: 'API Keys',
     disabled: false,
