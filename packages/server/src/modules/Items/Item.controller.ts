@@ -34,6 +34,7 @@ import {
   BulkDeleteItemsDto,
   ValidateBulkDeleteItemsResponseDto,
 } from './dtos/BulkDeleteItems.dto';
+import { ItemApiErrorResponseDto } from './dtos/ItemErrorResponse.dto';
 
 @Controller('/items')
 @ApiTags('Items')
@@ -45,6 +46,7 @@ import {
 @ApiExtraModels(ItemEstimatesResponseDto)
 @ApiExtraModels(ItemReceiptsResponseDto)
 @ApiExtraModels(ValidateBulkDeleteItemsResponseDto)
+@ApiExtraModels(ItemApiErrorResponseDto)
 @ApiCommonHeaders()
 export class ItemsController extends TenantController {
   constructor(private readonly itemsApplication: ItemsApplicationService) {
@@ -147,6 +149,13 @@ export class ItemsController extends TenantController {
     status: 200,
     description: 'The item has been successfully updated.',
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation error. Possible error types: ITEM_NAME_EXISTS, INVENTORY_ACCOUNT_CANNOT_MODIFIED, TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS, etc.',
+    schema: {
+      $ref: getSchemaPath(ItemApiErrorResponseDto),
+    },
+  })
   @ApiResponse({ status: 404, description: 'The item not found.' })
   @ApiParam({
     name: 'id',
@@ -204,6 +213,13 @@ export class ItemsController extends TenantController {
     status: 200,
     description: 'The item has been successfully created.',
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation error. Possible error types: ITEM_NAME_EXISTS, ITEM_CATEOGRY_NOT_FOUND, COST_ACCOUNT_NOT_COGS, SELL_ACCOUNT_NOT_INCOME, INVENTORY_ACCOUNT_NOT_INVENTORY, INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM, COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM, etc.',
+    schema: {
+      $ref: getSchemaPath(ItemApiErrorResponseDto),
+    },
+  })
   // @UsePipes(new ZodValidationPipe(createItemSchema))
   async createItem(
     @Body() createItemDto: CreateItemDto,
@@ -218,6 +234,13 @@ export class ItemsController extends TenantController {
   @ApiResponse({
     status: 200,
     description: 'The item has been successfully deleted.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Cannot delete item. Possible error types: ITEM_HAS_ASSOCIATED_TRANSACTINS, ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT, etc.',
+    schema: {
+      $ref: getSchemaPath(ItemApiErrorResponseDto),
+    },
   })
   @ApiResponse({ status: 404, description: 'The item not found.' })
   @ApiParam({
