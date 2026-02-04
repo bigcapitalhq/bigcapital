@@ -8,6 +8,11 @@ import { If, AppToaster } from '@/components';
 import { NormalCell, BalanceCell, BankBalanceCell } from './components';
 import { transformTableStateToQuery, isBlank } from '@/utils';
 
+export const DeleteAccountTypeError = {
+  AccountPredefined: 'account_predefined',
+  AccountHasAssociatedTransactions: 'account_has_associated_transactions',
+};
+
 /**
  * Account name accessor.
  */
@@ -26,13 +31,13 @@ export const accountNameAccessor = (account) => {
  * Handle delete errors in bulk and singular.
  */
 export const handleDeleteErrors = (errors) => {
-  if (errors.find((e) => e.type === 'ACCOUNT.PREDEFINED')) {
+  if (errors.find((e) => e.type === DeleteAccountTypeError.AccountPredefined)) {
     AppToaster.show({
       message: intl.get('cannot_delete_predefined_accounts'),
       intent: Intent.DANGER,
     });
   }
-  if (errors.find((e) => e.type === 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS')) {
+  if (errors.find((e) => e.type === DeleteAccountTypeError.AccountHasAssociatedTransactions)) {
     AppToaster.show({
       message: intl.get('cannot_delete_account_has_associated_transactions'),
       intent: Intent.DANGER,
