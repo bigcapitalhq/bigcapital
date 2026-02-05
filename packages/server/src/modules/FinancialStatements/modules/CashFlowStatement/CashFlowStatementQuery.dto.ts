@@ -34,13 +34,13 @@ export class CashFlowStatementQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
     description: 'Display columns by time period',
     required: false,
-    enum: ['day', 'month', 'year'],
+    enum: ['day', 'month', 'year', 'quarter'],
     default: 'year',
   })
   @IsString()
   @IsOptional()
-  @IsEnum(['day', 'month', 'year'])
-  displayColumnsBy: 'day' | 'month' | 'year' = 'year';
+  @IsEnum(['day', 'month', 'year', 'quarter'])
+  displayColumnsBy: 'day' | 'month' | 'year' | 'quarter' = 'year';
 
   @ApiProperty({
     description: 'Type of column display',
