@@ -390,3 +390,17 @@
     }
   }
 }
+
+// Sticky cells in table body: blurred transparent background so content doesn't show through
+.bigcapital-datatable.has-sticky {
+  &.table-constrant .table .tbody .tr:not(:hover) .td[data-sticky-td],
+  &.table--constrant .table .tbody .tr:not(:hover) .td[data-sticky-td] {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    body.bp4-dark & {
+      background: rgba(28, 33, 39, 0.6);
+    }
+  }
+}
