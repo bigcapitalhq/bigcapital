@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
+import { BranchResponseDto } from '@/modules/Branches/dtos/BranchResponse.dto';
 import { DiscountType } from '@/common/types/Discount';
 
 export class BillResponseDto {
@@ -88,6 +90,14 @@ export class BillResponseDto {
     required: false,
   })
   branchId?: number;
+
+  @ApiProperty({
+    description: 'Branch details',
+    type: () => BranchResponseDto,
+    required: false,
+  })
+  @Type(() => BranchResponseDto)
+  branch?: BranchResponseDto;
 
   @ApiProperty({
     description: 'The ID of the project',

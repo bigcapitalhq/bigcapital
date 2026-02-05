@@ -31,6 +31,12 @@ import { ValidateBranchExistance } from './integrations/ValidateBranchExistance'
 import { ManualJournalBranchesValidator } from './integrations/ManualJournals/ManualJournalsBranchesValidator';
 import { CashflowTransactionsActivateBranches } from './integrations/Cashflow/CashflowActivateBranches';
 import { ExpensesActivateBranches } from './integrations/Expense/ExpensesActivateBranches';
+import { BillActivateBranches } from './integrations/Purchases/BillBranchesActivate';
+import { VendorCreditActivateBranches } from './integrations/Purchases/VendorCreditBranchesActivate';
+import { BillPaymentsActivateBranches } from './integrations/Purchases/PaymentMadeBranchesActivate';
+import { BillBranchesActivateSubscriber } from './subscribers/Activate/BillBranchesActivateSubscriber';
+import { VendorCreditBranchesActivateSubscriber } from './subscribers/Activate/VendorCreditBranchesActivateSubscriber';
+import { PaymentMadeActivateBranchesSubscriber } from './subscribers/Activate/PaymentMadeBranchesActivateSubscriber';
 import { FeaturesModule } from '../Features/Features.module';
 
 @Module({
@@ -66,7 +72,13 @@ import { FeaturesModule } from '../Features/Features.module';
     ValidateBranchExistance,
     ManualJournalBranchesValidator,
     CashflowTransactionsActivateBranches,
-    ExpensesActivateBranches
+    ExpensesActivateBranches,
+    BillActivateBranches,
+    VendorCreditActivateBranches,
+    BillPaymentsActivateBranches,
+    BillBranchesActivateSubscriber,
+    VendorCreditBranchesActivateSubscriber,
+    PaymentMadeActivateBranchesSubscriber
   ],
   exports: [
     BranchesSettingsService,

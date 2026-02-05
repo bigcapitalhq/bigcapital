@@ -1,11 +1,12 @@
 import { Knex } from 'knex';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 
 @Injectable()
 export class VendorCreditActivateBranches {
   constructor(
+    @Inject(VendorCredit.name)
     private readonly vendorCreditModel: TenantModelProxy<typeof VendorCredit>,
   ) {}
 

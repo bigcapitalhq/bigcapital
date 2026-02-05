@@ -1,11 +1,14 @@
 import { Knex } from 'knex';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Bill } from '@/modules/Bills/models/Bill';
 
 @Injectable()
 export class BillActivateBranches {
-  constructor(private readonly billModel: TenantModelProxy<typeof Bill>) {}
+  constructor(
+    @Inject(Bill.name)
+    private readonly billModel: TenantModelProxy<typeof Bill>,
+  ) {}
 
   /**
    * Updates all bills transactions with the primary branch.
@@ -17,7 +20,7 @@ export class BillActivateBranches {
     primaryBranchId: number,
     trx?: Knex.Transaction,
   ) => {
-    // Updates the sale invoice with primary branch.
-    await Bill.query(trx).update({ branchId: primaryBranchId });
+    // Updates the bills with primary branch.
+    await this.billModel().query(trx).update({ branchId: primaryBranchId });
   };
 }
