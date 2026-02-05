@@ -1,6 +1,6 @@
 // @ts-nocheck
 import intl from 'react-intl-universal';
-import currencies from 'js-money/lib/currency';
+import currencies from './isoCurrenciesList';
 import { sortBy } from 'lodash';
 
 export const getCurrencies = () => [
