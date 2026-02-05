@@ -30,6 +30,7 @@ export class BillTransformer extends Transformer {
       'taxes',
       'entries',
       'attachments',
+      'branch',
     ];
   };
 
