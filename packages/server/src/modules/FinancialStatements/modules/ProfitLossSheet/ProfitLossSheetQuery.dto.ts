@@ -64,10 +64,10 @@ export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
   displayColumnsType: 'total' | 'date_periods';
 
   @IsString()
-  @IsEnum(['day', 'month', 'year'])
+  @IsEnum(['day', 'month', 'year', 'quarter'])
   @IsOptional()
   @ApiProperty({ description: 'How to display columns' })
-  displayColumnsBy: 'day' | 'month' | 'year' = 'year';
+  displayColumnsBy: 'day' | 'month' | 'year' | 'quarter' = 'year';
 
   @Transform(({ value }) => parseBoolean(value, false))
   @IsBoolean()
