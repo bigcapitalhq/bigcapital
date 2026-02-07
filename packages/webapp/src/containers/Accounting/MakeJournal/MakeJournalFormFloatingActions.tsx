@@ -32,38 +32,38 @@ export default function MakeJournalFloatingAction() {
 
   // Handle submit & publish button click.
   const handleSubmitPublishBtnClick = (event) => {
-    submitForm();
     setSubmitPayload({ redirect: true, publish: true });
+    submitForm();
   };
 
   // Handle submit, publish & new button click.
   const handleSubmitPublishAndNewBtnClick = (event) => {
-    submitForm();
     setSubmitPayload({ redirect: false, publish: true, resetForm: true });
+    submitForm();
   };
 
   // Handle submit, publish & edit button click.
   const handleSubmitPublishContinueEditingBtnClick = (event) => {
-    submitForm();
     setSubmitPayload({ redirect: false, publish: true });
+    submitForm();
   };
 
   // Handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
-    submitForm();
     setSubmitPayload({ redirect: true, publish: false });
+    submitForm();
   };
 
   // Handle submit as draft & new button click.
   const handleSubmitDraftAndNewBtnClick = (event) => {
-    submitForm();
     setSubmitPayload({ redirect: false, publish: false, resetForm: true });
+    submitForm();
   };
 
   // Handle submit as draft & continue editing button click.
   const handleSubmitDraftContinueEditingBtnClick = (event) => {
-    submitForm();
     setSubmitPayload({ redirect: false, publish: false });
+    submitForm();
   };
 
   // Handle cancel button click.
