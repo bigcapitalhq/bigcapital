@@ -7,6 +7,27 @@ $ns: bp4;
   --color-primary: #8abbff;
   --color-danger: red;
 
+  // Green colors
+  --color-green-500: #165a36;
+  --color-green-400: #1c6e42;
+  --color-green-300: #238551;
+  --color-green-200: #32a467;
+  --color-green-100: #72ca9b;
+
+  // Red colors
+  --color-red-500: #8e292c;
+  --color-red-400: #ac2f33;
+  --color-red-300: #cd4246;
+  --color-red-200: #e76a6e;
+  --color-red-100: #fa999c;
+
+  // Orange colors
+  --color-orange-500: #77450d;
+  --color-orange-400: #935610;
+  --color-orange-300: #c87619;
+  --color-orange-200: #ec9a3c;
+  --color-orange-100: #fbb360;
+
   --color-dark-gray5: #404854;
   --color-dark-gray4: #383e47;
   --color-dark-gray3: #2f343c;
@@ -300,6 +321,27 @@ $pt-popover-box-shadow:
 body.bp4-dark  {
   --color-primary: #8abbff;
   --color-danger: rgb(213, 103, 103);
+
+  // Green colors (dark mode - lighter variants)
+  --color-green-500: #72ca9b;
+  --color-green-400: #32a467;
+  --color-green-300: #238551;
+  --color-green-200: #1c6e42;
+  --color-green-100: #165a36;
+
+  // Red colors (dark mode - lighter variants)
+  --color-red-500: #fa999c;
+  --color-red-400: #e76a6e;
+  --color-red-300: #cd4246;
+  --color-red-200: #ac2f33;
+  --color-red-100: #8e292c;
+
+  // Orange colors (dark mode - lighter variants)
+  --color-orange-500: #fbb360;
+  --color-orange-400: #ec9a3c;
+  --color-orange-300: #c87619;
+  --color-orange-200: #935610;
+  --color-orange-100: #77450d;
 
   --color-dark-gray5: #404854;
   --color-dark-gray4: #383e47;

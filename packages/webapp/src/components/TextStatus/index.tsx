@@ -10,12 +10,17 @@ const TextStatusRoot = styled.span`
   ${(props) =>
     props.intent === 'warning' &&
     `
-  color: #ec5b0a;`}
+  color: #c87619;`}
+
+  ${(props) =>
+    props.intent === 'danger' &&
+    `
+  color: #f17377;`}
 
   ${(props) =>
     props.intent === 'success' &&
     `
-  color: #2ba01d;`}
+  color: #238551;`}
 
   ${(props) =>
     props.intent === 'none' &&

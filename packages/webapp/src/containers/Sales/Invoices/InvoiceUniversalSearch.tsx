@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem } from '@blueprintjs/core';
+import { MenuItem, Intent } from '@blueprintjs/core';
 
-import { T, Choose, Icon } from '@/components';
+import { T, Choose, Icon, TextStatus } from '@/components';
 import { highlightText } from '@/utils';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
@@ -39,29 +39,29 @@ function InvoiceStatus({ customer }) {
   return (
     <Choose>
       <Choose.When condition={customer.is_fully_paid && customer.is_delivered}>
-        <span class="status status-success">
+        <TextStatus intent={Intent.SUCCESS}>
           <T id={'paid'} />
-        </span>
+        </TextStatus>
       </Choose.When>
 
       <Choose.When condition={customer.is_delivered}>
         <Choose>
           <Choose.When condition={customer.is_overdue}>
-            <span className={'status status-warning'}>
+            <TextStatus intent={Intent.DANGER}>
               {intl.get('overdue_by', { overdue: customer.overdue_days })}
-            </span>
+            </TextStatus>
           </Choose.When>
           <Choose.Otherwise>
-            <span className={'status status-warning'}>
+            <TextStatus intent={Intent.WARNING}>
               {intl.get('due_in', { due: customer.remaining_days })}
-            </span>
+            </TextStatus>
           </Choose.Otherwise>
         </Choose>
       </Choose.When>
       <Choose.Otherwise>
-        <span class="status status--gray">
+        <TextStatus intent={Intent.NONE}>
           <T id={'draft'} />
-        </span>
+        </TextStatus>
       </Choose.Otherwise>
     </Choose>
   );
@@ -94,7 +94,6 @@ export function InvoiceUniversalSearchItem(
         </>
       }
       onClick={handleClick}
-      className={'universal-search__item--invoice'}
     />
   );
 }
