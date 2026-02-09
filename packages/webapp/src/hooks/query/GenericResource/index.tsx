@@ -32,19 +32,19 @@ export function useResourceData(type, query, props) {
  */
 function getResourceUrlFromType(type) {
   const config = {
-    [RESOURCES_TYPES.INVOICE]: '/sales/invoices',
-    [RESOURCES_TYPES.ESTIMATE]: '/sales/estimates',
+    [RESOURCES_TYPES.INVOICE]: '/sale-invoices',
+    [RESOURCES_TYPES.ESTIMATE]: '/sale-estimates',
     [RESOURCES_TYPES.ITEM]: '/items',
-    [RESOURCES_TYPES.RECEIPT]: '/sales/receipts',
-    [RESOURCES_TYPES.BILL]: '/purchases/bills',
-    [RESOURCES_TYPES.PAYMENT_RECEIVE]: '/sales/payment_receives',
-    [RESOURCES_TYPES.PAYMENT_MADE]: '/purchases/bill_payments',
+    [RESOURCES_TYPES.RECEIPT]: '/sale-receipts',
+    [RESOURCES_TYPES.BILL]: '/bills',
+    [RESOURCES_TYPES.PAYMENT_RECEIVE]: '/payments-received',
+    [RESOURCES_TYPES.PAYMENT_MADE]: '/bill-payments',
     [RESOURCES_TYPES.CUSTOMER]: '/customers',
     [RESOURCES_TYPES.VENDOR]: '/vendors',
     [RESOURCES_TYPES.MANUAL_JOURNAL]: '/manual-journals',
     [RESOURCES_TYPES.ACCOUNT]: '/accounts',
-    [RESOURCES_TYPES.CREDIT_NOTE]: '/sales/credit_notes',
-    [RESOURCES_TYPES.VENDOR_CREDIT]: '/purchases/vendor-credit',
+    [RESOURCES_TYPES.CREDIT_NOTE]: '/credit-notes',
+    [RESOURCES_TYPES.VENDOR_CREDIT]: '/vendor-credits',
   };
   return config[type] || '';
 }
