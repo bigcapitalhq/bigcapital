@@ -71,6 +71,16 @@ export class Item extends TenantBaseModel {
   }
 
   /**
+   * Model search roles.
+   */
+  static get searchRoles() {
+    return [
+      { condition: 'or', fieldKey: 'name', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'code', comparator: 'like' },
+    ];
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {
