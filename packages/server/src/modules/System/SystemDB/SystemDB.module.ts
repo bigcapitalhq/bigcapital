@@ -6,6 +6,7 @@ import {
   SystemKnexConnectionConfigure,
 } from './SystemDB.constants';
 import { knexSnakeCaseMappers } from 'objection';
+import { SystemDatabaseController } from './SystemDB.controller';
 
 const providers = [
   {
@@ -42,6 +43,7 @@ const providers = [
 
 @Global()
 @Module({
+  controllers: [SystemDatabaseController],
   providers: [...providers],
   exports: [...providers],
 })
