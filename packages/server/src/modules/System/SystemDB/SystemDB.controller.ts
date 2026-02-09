@@ -1,12 +1,14 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode } from '@nestjs/common';
+import { PublicRoute } from '@/modules/Auth/guards/jwt.guard';
 
-@Controller('/system_db')
+@Controller('system_db')
+@PublicRoute()
 export class SystemDatabaseController {
   constructor() {}
 
-  @Post()
   @Get()
-  ping(){
-    
+  @HttpCode(200)
+  ping() {
+    return { status: 'ok' };
   }
 }
