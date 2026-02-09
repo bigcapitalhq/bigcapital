@@ -1,9 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem } from '@blueprintjs/core';
-
-import { Icon, Choose, T } from '@/components';
+import { MenuItem, Intent } from '@blueprintjs/core';
+import { Icon, Choose, T, TextStatus } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, SaleReceiptAction } from '@/constants/abilityOption';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -39,15 +38,15 @@ function ReceiptStatus({ receipt }) {
   return (
     <Choose>
       <Choose.When condition={receipt.is_closed}>
-        <span class="closed">
+        <TextStatus intent={Intent.SUCCESS}>
           <T id={'closed'} />
-        </span>
+        </TextStatus>
       </Choose.When>
 
       <Choose.Otherwise>
-        <span class="draft">
+        <TextStatus intent={Intent.NONE}>
           <T id={'draft'} />
-        </span>
+        </TextStatus>
       </Choose.Otherwise>
     </Choose>
   );

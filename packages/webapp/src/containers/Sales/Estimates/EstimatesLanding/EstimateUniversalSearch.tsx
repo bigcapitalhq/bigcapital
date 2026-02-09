@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem } from '@blueprintjs/core';
+import { MenuItem, Intent } from '@blueprintjs/core';
 
-import { Choose, T, Icon } from '@/components';
+import { Choose, T, Icon, TextStatus } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
 
@@ -37,28 +37,28 @@ export const EstimateUniversalSearchSelect = withDrawerActions(
 export const EstimateStatus = ({ estimate }) => (
   <Choose>
     <Choose.When condition={estimate.is_delivered && estimate.is_approved}>
-      <span class="approved">
+      <TextStatus intent={Intent.SUCCESS}>
         <T id={'approved'} />
-      </span>
+      </TextStatus>
     </Choose.When>
     <Choose.When condition={estimate.is_delivered && estimate.is_rejected}>
-      <span class="reject">
+      <TextStatus intent={Intent.DANGER}>
         <T id={'rejected'} />
-      </span>
+      </TextStatus>
     </Choose.When>
     <Choose.When
       condition={
         estimate.is_delivered && !estimate.is_rejected && !estimate.is_approved
       }
     >
-      <span class="delivered">
+      <TextStatus intent={Intent.SUCCESS}>
         <T id={'delivered'} />
-      </span>
+      </TextStatus>
     </Choose.When>
     <Choose.Otherwise>
-      <span class="draft">
+      <TextStatus intent={Intent.NONE}>
         <T id={'draft'} />
-      </span>
+      </TextStatus>
     </Choose.Otherwise>
   </Choose>
 );

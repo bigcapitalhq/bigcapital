@@ -1,10 +1,10 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem } from '@blueprintjs/core';
+import { MenuItem, Intent } from '@blueprintjs/core';
 
 import { formattedAmount } from '@/utils';
-import { T, Icon, Choose, If } from '@/components';
+import { T, Icon, Choose, If, TextStatus } from '@/components';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, BillAction } from '@/constants/abilityOption';
@@ -41,35 +41,35 @@ export function BillStatus({ bill }) {
   return (
     <Choose>
       <Choose.When condition={bill.is_fully_paid && bill.is_open}>
-        <span class="fully-paid-text">
+        <TextStatus intent={Intent.SUCCESS}>
           <T id={'paid'} />
-        </span>
+        </TextStatus>
       </Choose.When>
       <Choose.When condition={bill.is_open}>
         <Choose>
           <Choose.When condition={bill.is_overdue}>
-            <span className={'overdue-status'}>
+            <TextStatus intent={Intent.DANGER}>
               {intl.get('overdue_by', { overdue: bill.overdue_days })}
-            </span>
+            </TextStatus>
           </Choose.When>
           <Choose.Otherwise>
-            <span className={'due-status'}>
+            <TextStatus intent={Intent.WARNING}>
               {intl.get('due_in', { due: bill.remaining_days })}
-            </span>
+            </TextStatus>
           </Choose.Otherwise>
         </Choose>
         <If condition={bill.is_partially_paid}>
-          <span className="partial-paid">
+          <TextStatus intent={Intent.WARNING}>
             {intl.get('day_partially_paid', {
               due: formattedAmount(bill.due_amount, bill.currency_code),
             })}
-          </span>
+          </TextStatus>
         </If>
       </Choose.When>
       <Choose.Otherwise>
-        <span class="draft">
+        <TextStatus intent={Intent.NONE}>
           <T id={'draft'} />
-        </span>
+        </TextStatus>
       </Choose.Otherwise>
     </Choose>
   );

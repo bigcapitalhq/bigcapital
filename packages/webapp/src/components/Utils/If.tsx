@@ -1,12 +1,10 @@
-// @ts-nocheck
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 
-export const If = (props) =>
-  props.condition ? (props.render ? props.render() : props.children) : null;
+interface IfProps {
+  condition: boolean;
+  children?: ReactNode;
+  render?: () => ReactNode;
+}
 
-If.propTypes = {
-  // condition: PropTypes.bool.isRequired,
-  children: PropTypes.node,
-  render: PropTypes.func,
-};
+export const If = (props: IfProps): React.ReactElement | null =>
+  props.condition ? (props.render ? <>{props.render()}</> : <>{props.children}</>) : null;
