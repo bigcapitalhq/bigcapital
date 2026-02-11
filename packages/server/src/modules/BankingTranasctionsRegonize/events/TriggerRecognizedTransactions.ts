@@ -69,10 +69,13 @@ export class TriggerRecognizedTransactionsSubscriber {
     const tenantPayload = await this.tenancyContect.getTenantJobPayload();
     const payload = {
       ruleId: bankRule.id,
+      shouldRevert: true,
       ...tenantPayload,
     } as RecognizeUncategorizedTransactionsJobPayload;
 
     // Re-recognize the transactions based on the new rules.
+    // Setting shouldRevert to true ensures that transactions previously recognized
+    // by this or lower-priority rules are re-evaluated against the updated rule.
     await this.recognizeTransactionsQueue.add(
       RecognizeUncategorizedTransactionsJob,
       payload,

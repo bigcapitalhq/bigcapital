@@ -93,6 +93,10 @@ export class RecognizeTranasctionsService {
           q.whereIn('id', rulesIds);
         }
         q.withGraphFetched('conditions');
+
+        // Order by the 'order' field to ensure higher priority rules (lower order values)
+        // are matched first.
+        q.orderBy('order', 'asc');
       });
 
     const bankRulesByAccountId = transformToMapBy(
