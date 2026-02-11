@@ -10,8 +10,8 @@ const Schema = Yup.object().shape({
   display_name: Yup.string().trim().required().label(intl.get('display_name_')),
 
   email: Yup.string().email().nullable(),
-  work_phone: Yup.number(),
-  personal_phone: Yup.number(),
+  work_phone: Yup.string().nullable(),
+  personal_phone: Yup.string().nullable(),
   website: Yup.string().url().nullable(),
 
   active: Yup.boolean(),
@@ -23,7 +23,7 @@ const Schema = Yup.object().shape({
   billing_address_city: Yup.string().trim(),
   billing_address_state: Yup.string().trim(),
   billing_address_postcode: Yup.string().nullable(),
-  billing_address_phone: Yup.number(),
+  billing_address_phone: Yup.string().nullable(),
 
   shipping_address_country: Yup.string().trim(),
   shipping_address_1: Yup.string().trim(),
@@ -31,7 +31,7 @@ const Schema = Yup.object().shape({
   shipping_address_city: Yup.string().trim(),
   shipping_address_state: Yup.string().trim(),
   shipping_address_postcode: Yup.string().nullable(),
-  shipping_address_phone: Yup.number(),
+  shipping_address_phone: Yup.string().nullable(),
 
   opening_balance: Yup.number().nullable(),
   currency_code: Yup.string(),
