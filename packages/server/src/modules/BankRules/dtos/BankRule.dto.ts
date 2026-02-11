@@ -16,7 +16,7 @@ import { ToNumber } from '@/common/decorators/Validators';
 
 class BankRuleConditionDto {
   @IsNotEmpty()
-  @IsIn(['description', 'amount'])
+  @IsIn(['description', 'amount', 'payee'])
   field: string;
 
   @IsNotEmpty()
