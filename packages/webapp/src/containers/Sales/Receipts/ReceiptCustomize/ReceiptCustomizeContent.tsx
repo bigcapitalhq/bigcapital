@@ -16,6 +16,7 @@ import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { Box } from '@/components';
 
 export function ReceiptCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -44,7 +45,9 @@ function ReceiptCustomizeFormContent() {
   return (
     <ElementCustomizeContent>
       <ElementCustomize.PaperTemplate>
-        <ReceiptPaperTemplateFormConnected />
+        <Box overflow="auto" flex="1 1" px={4} py={6}>
+          <ReceiptPaperTemplateFormConnected />
+        </Box>
       </ElementCustomize.PaperTemplate>
 
       <ElementCustomize.FieldsTab id={'general'} label={'General'}>
