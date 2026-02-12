@@ -74,9 +74,13 @@ const TaxRateHeader = styled(`div`)`
 const TaxRateAmount = styled('div')`
   line-height: 1;
   font-size: 30px;
-  color: #565b71;
   font-weight: 600;
   display: inline-block;
+  color: var(--x-color-amount-text, #565b71);
+
+  .bp4-dark & {
+    color: rgba(255, 255, 255, 0.9);
+  }
 `;
 
 const TaxRateActiveTag = styled(Tag)`
