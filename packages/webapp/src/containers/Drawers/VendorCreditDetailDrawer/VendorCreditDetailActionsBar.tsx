@@ -20,7 +20,7 @@ import {
   If,
   Icon,
   FormattedMessage as T,
-  DashboardActionsBar,
+  DrawerActionsBar,
   Can,
 } from '@/components';
 
@@ -63,7 +63,7 @@ function VendorCreditDetailActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={VendorCreditAction.Edit} a={AbilitySubject.VendorCredit}>
           <Button
@@ -105,7 +105,7 @@ function VendorCreditDetailActionsBar({
           </If>
         </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 
