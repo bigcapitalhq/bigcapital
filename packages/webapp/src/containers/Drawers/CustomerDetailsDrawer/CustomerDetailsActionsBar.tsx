@@ -23,7 +23,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import {
-  DashboardActionsBar,
   Can,
   Icon,
   FormattedMessage as T,

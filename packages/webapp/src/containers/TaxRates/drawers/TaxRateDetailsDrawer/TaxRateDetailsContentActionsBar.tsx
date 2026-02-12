@@ -13,7 +13,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import * as R from 'ramda';
-import { AppToaster, Can, DashboardActionsBar, Icon } from '@/components';
+import { AppToaster, Can, DrawerActionsBar, Icon } from '@/components';
 import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
@@ -83,7 +83,7 @@ function TaxRateDetailsContentActionsBar({
   };
 
   return (
-    <DashboardActionsBar>
+    <DrawerActionsBar>
       <NavbarGroup>
         <Can I={TaxRateAction.Edit} a={AbilitySubject.TaxRate}>
           <Button
@@ -137,7 +137,7 @@ function TaxRateDetailsContentActionsBar({
           </Popover>
         </Can>
       </NavbarGroup>
-    </DashboardActionsBar>
+    </DrawerActionsBar>
   );
 }
 
