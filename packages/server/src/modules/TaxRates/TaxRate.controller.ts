@@ -85,9 +85,14 @@ export class TaxRatesController {
     status: 200,
     description: 'The tax rates have been successfully retrieved.',
     schema: {
-      type: 'array',
-      items: {
-        $ref: getSchemaPath(TaxRateResponseDto),
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            $ref: getSchemaPath(TaxRateResponseDto),
+          },
+        },
       },
     },
   })

@@ -1,3 +1,4 @@
+import { ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
@@ -30,6 +31,7 @@ export class CommandTaxRateDto {
    */
   @IsNumber()
   @IsNotEmpty()
+  @ToNumber()
   @ApiProperty({
     description: 'The rate of the tax rate.',
     example: 10,

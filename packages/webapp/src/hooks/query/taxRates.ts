@@ -37,10 +37,10 @@ export function useTaxRate(taxRateId: string, props) {
     [QUERY_TYPES.TAX_RATES, taxRateId],
     {
       method: 'get',
-      url: `tax-rates/${taxRateId}}`,
+      url: `tax-rates/${taxRateId}`,
     },
     {
-      select: (res) => res.data.data,
+      select: (res) => res.data,
       ...props,
     },
   );
@@ -106,7 +106,7 @@ export function useActivateTaxRate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`tax-rates/${id}/active`), {
+  return useMutation((id) => apiRequest.put(`tax-rates/${id}/activate`), {
     onSuccess: (res, id) => {
       commonInvalidateQueries(queryClient);
       queryClient.invalidateQueries([QUERY_TYPES.TAX_RATES, id]);
@@ -122,7 +122,7 @@ export function useInactivateTaxRate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`tax-rates/${id}/inactive`), {
+  return useMutation((id) => apiRequest.put(`tax-rates/${id}/inactivate`), {
     onSuccess: (res, id) => {
       commonInvalidateQueries(queryClient);
       queryClient.invalidateQueries([QUERY_TYPES.TAX_RATES, id]);
