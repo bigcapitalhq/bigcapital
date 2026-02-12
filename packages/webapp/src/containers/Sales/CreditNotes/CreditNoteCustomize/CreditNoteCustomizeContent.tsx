@@ -16,6 +16,7 @@ import { useDrawerActions } from '@/hooks/state';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { Box } from '@/components';
 
 export function CreditNoteCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -45,7 +46,9 @@ function CreditNoteCustomizeFormContent() {
   return (
     <ElementCustomizeContent>
       <ElementCustomize.PaperTemplate>
-        <CreditNotePaperTemplateFormConnected />
+        <Box overflow="auto" flex="1 1" px={4} py={6}>
+          <CreditNotePaperTemplateFormConnected />
+        </Box>
       </ElementCustomize.PaperTemplate>
 
       <ElementCustomize.FieldsTab id={'general'} label={'General'}>
