@@ -15,11 +15,13 @@ import { events } from '@/common/events/events';
 import { Role } from '@/modules/Roles/models/Role.model';
 import { ModelObject } from 'objection';
 import { SendInviteUserDto } from '../dtos/InviteUser.dto';
+import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()
 export class InviteTenantUserService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
+    private readonly tenancyContext: TenancyContext,
 
     @Inject(TenantUser.name)
     private readonly tenantUserModel: TenantModelProxy<typeof TenantUser>,
@@ -53,10 +55,18 @@ export class InviteTenantUserService {
       active: true,
       invitedAt: new Date(),
     });
+
+    // Retrieves the authorized user (inviting user).
+    const authorizedUser = await this.tenancyContext.getSystemUser();
+    const invitingUser = await this.tenantUserModel()
+      .query()
+      .findOne({ systemUserId: authorizedUser.id });
+
     // Triggers `onUserSendInvite` event.
     await this.eventEmitter.emitAsync(events.inviteUser.sendInvite, {
       inviteToken,
       user,
+      invitingUser,
     } as IUserInvitedEventPayload);
 
     return { invitedUser: user };

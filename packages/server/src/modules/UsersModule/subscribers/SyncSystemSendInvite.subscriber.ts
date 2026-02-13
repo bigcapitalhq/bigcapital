@@ -33,7 +33,7 @@ export class SyncSystemSendInviteSubscriber {
    * @param {IUserInvitedEventPayload} payload -
    */
   @OnEvent(events.inviteUser.sendInvite)
-  async syncSendInviteSystem({ inviteToken, user }: IUserInvitedEventPayload) {
+  async syncSendInviteSystem({ inviteToken, user, invitingUser }: IUserInvitedEventPayload) {
     const authorizedUser = await this.tenancyContext.getSystemUser();
     const tenantId = authorizedUser.tenantId;
 
@@ -63,6 +63,7 @@ export class SyncSystemSendInviteSubscriber {
       {
         invite,
         user,
+        invitingUser,
       } as IUserInviteTenantSyncedEventPayload,
     );
   }
