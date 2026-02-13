@@ -46,8 +46,8 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { MailNotificationModule } from '../MailNotification/MailNotification.module';
 import { SendSaleInvoiceMailProcessor } from './processors/SendSaleInvoiceMail.processor';
 import { BullBoardModule } from '@bull-board/nestjs';
-import { BullAdapter } from '@bull-board/api/bullAdapter';
-import { BullModule } from '@nestjs/bull';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { BullModule } from '@nestjs/bullmq';
 import { SendSaleInvoiceQueue } from './constants';
 import { InvoicePaymentIntegrationSubscriber } from './subscribers/InvoicePaymentIntegrationSubscriber';
 import { InvoiceChangeStatusOnMailSentSubscriber } from './subscribers/InvoiceChangeStatusOnMailSentSubscriber';
@@ -85,7 +85,7 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     BullModule.registerQueue({ name: SendSaleInvoiceQueue }),
     BullBoardModule.forFeature({
       name: SendSaleInvoiceQueue,
-      adapter: BullAdapter,
+      adapter: BullMQAdapter,
     }),
   ],
   controllers: [SaleInvoicesController],

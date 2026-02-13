@@ -1,7 +1,6 @@
-import { Process, Processor } from '@nestjs/bull';
-import { Job } from 'bull';
-import { Inject, Scope } from '@nestjs/common';
-import { JOB_REF } from '@nestjs/bull';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Job } from 'bullmq';
+import { Scope } from '@nestjs/common';
 import {
   SendSaleEstimateMailJob,
   SendSaleEstimateMailQueue,
@@ -13,18 +12,17 @@ import { ClsService, UseCls } from 'nestjs-cls';
   name: SendSaleEstimateMailQueue,
   scope: Scope.REQUEST,
 })
-export class SendSaleEstimateMailProcess {
+export class SendSaleEstimateMailProcess extends WorkerHost {
   constructor(
     private readonly sendEstimateMailService: SendSaleEstimateMail,
     private readonly clsService: ClsService,
-    @Inject(JOB_REF)
-    private readonly jobRef: Job,
-  ) { }
+  ) {
+    super();
+  }
 
-  @Process(SendSaleEstimateMailJob)
   @UseCls()
-  async handleSendMail() {
-    const { saleEstimateId, messageOptions, organizationId, userId } = this.jobRef.data;
+  async process(job: Job) {
+    const { saleEstimateId, messageOptions, organizationId, userId } = job.data;
 
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);

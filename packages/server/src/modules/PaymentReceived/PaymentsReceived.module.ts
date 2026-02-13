@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BullBoardModule } from '@bull-board/nestjs';
-import { BullAdapter } from '@bull-board/api/bullAdapter';
-import { BullModule } from '@nestjs/bull';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { BullModule } from '@nestjs/bullmq';
 import { PaymentReceivesController } from './PaymentsReceived.controller';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
 import { CreatePaymentReceivedService } from './commands/CreatePaymentReceived.serivce';
@@ -99,7 +99,7 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     BullModule.registerQueue({ name: SEND_PAYMENT_RECEIVED_MAIL_QUEUE }),
     BullBoardModule.forFeature({
       name: SEND_PAYMENT_RECEIVED_MAIL_QUEUE,
-      adapter: BullAdapter,
+      adapter: BullMQAdapter,
     }),
   ],
 })

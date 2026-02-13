@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BullBoardModule } from '@bull-board/nestjs';
-import { BullAdapter } from '@bull-board/api/bullAdapter';
-import { BullModule } from '@nestjs/bull';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { BullModule } from '@nestjs/bullmq';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
@@ -58,7 +58,7 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
     BullModule.registerQueue({ name: SendSaleEstimateMailQueue }),
     BullBoardModule.forFeature({
       name: SendSaleEstimateMailQueue,
-      adapter: BullAdapter,
+      adapter: BullMQAdapter,
     }),
   ],
   controllers: [SaleEstimatesController],

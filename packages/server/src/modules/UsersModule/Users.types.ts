@@ -32,10 +32,12 @@ export interface ITenantUserDeletedPayload {
 export interface IUserInvitedEventPayload {
   inviteToken: string;
   user: ModelObject<TenantUser>;
+  invitingUser: ModelObject<TenantUser>;
 }
 export interface IUserInviteTenantSyncedEventPayload {
   invite: ModelObject<UserInvite>;
   user: ModelObject<TenantUser>;
+  invitingUser: ModelObject<TenantUser>;
 }
 
 export interface IUserInviteResendEventPayload {
