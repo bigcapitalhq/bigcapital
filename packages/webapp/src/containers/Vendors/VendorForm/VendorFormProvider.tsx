@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React, { useState, createContext } from 'react';
-import { omit } from 'lodash';
 import { useLocation } from 'react-router-dom';
 import {
   useVendor,
@@ -68,7 +67,7 @@ function VendorFormProvider({ query, vendorId, ...props }) {
     currencies,
     vendor,
     branches,
-    contactDuplicate: { ...omit(contactDuplicate, ['opening_balance_at']) },
+    contactDuplicate,
     submitPayload,
 
     isNewMode,
