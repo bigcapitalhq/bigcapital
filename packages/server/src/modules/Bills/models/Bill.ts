@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import * as R from 'ramda';
 import type { Knex } from 'knex';
 import { Model, raw } from 'objection';
-import { castArray, difference, defaultTo } from 'lodash';
+import { castArray, difference, defaultTo, sumBy } from 'lodash';
 import { BaseModel, PaginationQueryBuilderType } from '@/models/Model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
@@ -181,10 +181,16 @@ export class Bill extends TenantBaseModel {
   get total(): number {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
+    // Compute tax from loaded entries when available (more reliable than stored taxAmountWithheld)
+    // for cases where taxAmountWithheld may be stale or zero for older invoices.
+    const taxAmount = (this.entries?.length > 0)
+      ? sumBy(this.entries, (entry: ItemEntry) => entry.taxAmount || 0)
+      : (this.taxAmountWithheld || 0);
+
     return R.compose(
       R.add(adjustmentAmount),
       R.subtract(R.__, this.discountAmount),
-      R.when(R.always(!this.isInclusiveTax), R.add(this.taxAmountWithheld)),
+      R.when(R.always(!this.isInclusiveTax), R.add(taxAmount)),
     )(this.subtotal);
   }
 
