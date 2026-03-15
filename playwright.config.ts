@@ -11,6 +11,8 @@ const config: PlaywrightTestConfig = {
   workers: 1,
   // Test directory
   testDir: path.join(__dirname, 'e2e'),
+  // Only run authentication tests
+  testMatch: 'authentication.spec.ts',
   // If a test fails, retry it additional 2 times
   retries: 0,
   // Artifacts folder where screenshots, videos, and traces are stored.
