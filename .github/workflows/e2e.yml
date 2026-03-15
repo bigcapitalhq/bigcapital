@@ -139,7 +139,7 @@ jobs:
           sleep 10
 
       - name: Install Playwright browsers
-        uses: playwright-community/install-playwright-action@v1
+        run: pnpm exec playwright install chromium
 
       - name: Run E2E tests
         run: pnpm run test:e2e
