@@ -138,8 +138,8 @@ jobs:
           cd packages/webapp && pnpm dev &
           sleep 10
 
-      - name: Install Playwright with deps
-        run: pnpm exec playwright install --with-deps
+      - name: Install Playwright browsers
+        uses: playwright-community/install-playwright-action@v1
 
       - name: Run E2E tests
         run: pnpm run test:e2e
