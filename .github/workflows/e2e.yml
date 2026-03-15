@@ -23,44 +23,116 @@ defaults:
     shell: 'bash'
 
 jobs:
-  test_setup:
-    name: Test setup
-    runs-on: ubuntu-latest
-    outputs:
-      preview_url: ${{ steps.waitForVercelPreviewDeployment.outputs.url }}
-    steps:
-      - name: Wait for Vercel preview deployment to be ready
-        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
-        id: waitForVercelPreviewDeployment
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 3000
-
   test_e2e:
     runs-on: ubuntu-latest
-    needs: test_setup
     name: Playwright tests
-    timeout-minutes: 15
-    environment: ${{ vars.ENVIRONMENT_STAGE }}
+    timeout-minutes: 20
+
+    services:
+      mysql:
+        image: mariadb:10.6
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bigcapital_system
+          MYSQL_USER: bigcapital
+          MYSQL_PASSWORD: bigcapital
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          node-version: 14 # Need for npm >=7.7
-          cache: 'npm'
+          node-version: 18.16.1
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+        id: pnpm-cache
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm build
+
+      - name: Create server .env file
+        run: |
+          cat > packages/server/.env << EOF
+          # Database
+          DB_HOST=127.0.0.1
+          DB_USER=bigcapital
+          DB_PASSWORD=bigcapital
+          DB_ROOT_PASSWORD=root
+          DB_CHARSET=utf8
+
+          # System database
+          SYSTEM_DB_NAME=bigcapital_system
+
+          # Tenant databases
+          TENANT_DB_NAME_PERFIX=bigcapital_tenant_
+
+          # Application
+          BASE_URL=http://localhost:3000
+          JWT_SECRET=test-jwt-secret-for-e2e-testing
+          APP_JWT_SECRET=test-app-jwt-secret
+
+          # Sign-up
+          SIGNUP_DISABLED=false
+
+          # API rate limit
+          API_RATE_LIMIT=120,60,600
+
+          # Redis
+          REDIS_HOST=127.0.0.1
+          REDIS_PORT=6379
+          EOF
+
+      - name: Run database migrations
+        run: pnpm system:migrate:latest
+
+      - name: Start server in background
+        run: |
+          cd packages/server && pnpm start:prod &
+          sleep 10
+        env:
+          NODE_ENV: production
+
+      - name: Start webapp in background
+        run: |
+          cd packages/webapp && pnpm dev &
+          sleep 10
 
       - name: Install Playwright with deps
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
 
-      - name: Run tests
-        run: npm run test:e2e
+      - name: Run E2E tests
+        run: pnpm run test:e2e
         env:
-          PLAYWRIGHT_TEST_BASE_URL: ${{ needs.test_setup.outputs.preview_url }}
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost:4000
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
