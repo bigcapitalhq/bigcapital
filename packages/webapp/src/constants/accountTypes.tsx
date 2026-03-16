@@ -26,7 +26,7 @@ export const ACCOUNT_TYPE = {
 export const ACCOUNT_PARENT_TYPE = {
   CURRENT_ASSET: 'current-asset',
   FIXED_ASSET: 'fixed-asset',
-  NON_CURRENT_ASSET: 'non-ACCOUNT_PARENT_TYPE.CURRENT_ASSET',
+  NON_CURRENT_ASSET: 'non-current-asset',
 
   CURRENT_LIABILITY: 'current-liability',
   LOGN_TERM_LIABILITY: 'long-term-liability',
@@ -41,7 +41,7 @@ export const ACCOUNT_ROOT_TYPE = {
   ASSET: 'asset',
   LIABILITY: 'liability',
   EQUITY: 'equity',
-  EXPENSE: 'expene',
+  EXPENSE: 'expense',
   INCOME: 'income',
 };
 

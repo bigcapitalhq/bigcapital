@@ -5,7 +5,7 @@ export const ACCOUNT_TYPE = {
   INVENTORY: 'inventory',
   OTHER_CURRENT_ASSET: 'other-current-asset',
   FIXED_ASSET: 'fixed-asset',
-  NON_CURRENT_ASSET: 'none-current-asset',
+  NON_CURRENT_ASSET: 'non-current-asset',
 
   ACCOUNTS_PAYABLE: 'accounts-payable',
   CREDIT_CARD: 'credit-card',
