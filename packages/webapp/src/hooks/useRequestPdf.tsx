@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import useApiRequest from './useRequest';
+import { normalizeApiPath } from '../utils';
 
 export const useRequestPdf = (httpProps) => {
   const apiRequest = useApiRequest();
@@ -17,7 +18,7 @@ export const useRequestPdf = (httpProps) => {
         headers: { accept: 'application/pdf' },
         responseType: 'blob',
         ...httpProps,
-        url: `/api/${httpProps?.url}`,
+        url: `/api/${normalizeApiPath(httpProps?.url)}`,
       })
       .then((response) => {
         // Create a Blob from the PDF Stream.

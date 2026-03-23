@@ -59,7 +59,11 @@ export class ChromiumlyHtmlConvert {
     const [filename, cleanupTempFile] = await this.writeTempHtmlFile(html);
     const fileDir = getPdfFilesStorageDir(filename);
 
-    const url = path.join(Chromiumly.GOTENBERG_DOCS_ENDPOINT, fileDir);
+    // Properly join URL with path segments to avoid double slashes
+    // Note: GOTENBERG_DOCS_ENDPOINT should end with '/' and fileDir should not start with '/'
+    const baseUrl = Chromiumly.GOTENBERG_DOCS_ENDPOINT.replace(/\/$/, '');
+    const filePath = fileDir.replace(/^\//, '');
+    const url = `${baseUrl}/${filePath}`;
     const urlConverter = new UrlConverter();
 
     const buffer = await urlConverter.convert({
