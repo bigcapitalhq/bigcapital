@@ -27,8 +27,11 @@ export function InvoiceSendMailForm({ children }: InvoiceSendMailFormProps) {
   const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
   const { invoiceId, invoiceMailState } = useInvoiceSendMailBoot();
 
-  const { name } = useDrawerContext();
+  const { name, payload } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
+
+  // Callback to call when mail is sent or drawer is closed
+  const onMailSent = payload?.onMailSent;
 
   const _initialValues: InvoiceSendMailFormValues = {
     ...initialValues,
@@ -47,6 +50,10 @@ export function InvoiceSendMailForm({ children }: InvoiceSendMailFormProps) {
         });
         setSubmitting(false);
         closeDrawer(name);
+        // Call the onMailSent callback if provided
+        if (onMailSent) {
+          onMailSent();
+        }
       })
       .catch((error) => {
         setSubmitting(false);
