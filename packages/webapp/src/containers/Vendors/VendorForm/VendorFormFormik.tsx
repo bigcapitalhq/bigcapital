@@ -58,12 +58,10 @@ function VendorFormFormik({
   const initialFormValues = useMemo(
     () => ({
       ...defaultInitialValues,
-      ...transformToForm(initialValues, defaultInitialValues),
       currency_code: base_currency,
-      ...transformToForm(vendor, defaultInitialValues),
-      ...transformToForm(contactDuplicate, defaultInitialValues),
+      ...transformToForm(contactDuplicate || vendor, defaultInitialValues),
     }),
-    [vendor, contactDuplicate, base_currency, initialValues],
+    [vendor, contactDuplicate, base_currency],
   );
 
   // Handles the form submit.

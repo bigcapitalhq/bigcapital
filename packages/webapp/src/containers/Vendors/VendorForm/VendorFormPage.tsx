@@ -30,6 +30,8 @@ export default function VendorFormPage() {
   const history = useHistory();
   const { id } = useParams();
 
+  const vendorId = id ? parseInt(id, 10) : null;
+
   // Handle the form submit success.
   const handleSubmitSuccess = (values, formArgs, submitPayload) => {
     if (!submitPayload.noRedirect) {
@@ -42,7 +44,7 @@ export default function VendorFormPage() {
   };
 
   return (
-    <VendorFormProvider vendorId={id}>
+    <VendorFormProvider vendorId={vendorId}>
       <VendorFormPageLoading>
         <DashboardCard page>
           <VendorFormPageFormik

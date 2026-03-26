@@ -29,7 +29,7 @@ import { useCurrentOrganization } from '@/hooks/state';
  * Vendor Finaniceal Panel Tab.
  */
 export default function VendorFinanicalPanelTab() {
-  const { currencies, branches } = useVendorFormContext();
+  const { currencies, vendorId, branches } = useVendorFormContext();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -48,6 +48,7 @@ export default function VendorFinanicalPanelTab() {
             <CurrencySelectList
               name="currency_code"
               items={currencies}
+	      disabled={vendorId}
             />
           </FFormGroup>
 
