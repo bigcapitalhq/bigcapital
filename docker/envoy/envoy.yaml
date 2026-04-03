@@ -5,6 +5,7 @@ static_resources:
         socket_address:
           address: 0.0.0.0
           port_value: 80
+      per_connection_buffer_limit_bytes: 10485760
       filter_chains:
         - filters:
             - name: envoy.filters.network.http_connection_manager
@@ -21,10 +22,12 @@ static_resources:
                             prefix: '/api'
                           route:
                             cluster: dynamic_server
+                            timeout: 60s
                         - match:
                             prefix: '/'
                           route:
                             cluster: webapp
+                            timeout: 30s
                 http_filters:
                   - name: envoy.filters.http.router
                     typed_config:
@@ -32,7 +35,7 @@ static_resources:
 
   clusters:
     - name: dynamic_server
-      connect_timeout: 0.25s
+      connect_timeout: 5s
       type: STRICT_DNS
       dns_lookup_family: V4_ONLY
       lb_policy: ROUND_ROBIN
@@ -47,7 +50,7 @@ static_resources:
                       port_value: 3000
 
     - name: webapp
-      connect_timeout: 0.25s
+      connect_timeout: 5s
       type: STRICT_DNS
       dns_lookup_family: V4_ONLY
       lb_policy: ROUND_ROBIN
