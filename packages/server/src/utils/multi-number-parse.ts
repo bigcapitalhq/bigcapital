@@ -8,7 +8,10 @@ const validGrouping = (integerPart, sep) =>
     return acc && group.length;
   }, true);
 
-export const multiNumberParse = (number: number | string, standardDecSep = '.') => {
+export const multiNumberParse = (
+  number: number | string,
+  standardDecSep = '.',
+) => {
   // if it's a number already, this is going to be easy...
   if (typeof number === 'number') {
     return number;
@@ -48,7 +51,7 @@ export const multiNumberParse = (number: number | string, standardDecSep = '.') 
         },
       };
     },
-    {}
+    {},
   );
 
   // check correctness of separators

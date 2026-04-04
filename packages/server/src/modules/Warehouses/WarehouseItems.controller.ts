@@ -1,18 +1,13 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { WarehousesApplication } from './WarehousesApplication.service';
-import {
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @Controller('items')
 @ApiTags('Warehouses')
 @ApiCommonHeaders()
 export class WarehouseItemsController {
-  constructor(private warehousesApplication: WarehousesApplication) { }
+  constructor(private warehousesApplication: WarehousesApplication) {}
 
   @Get(':id/warehouses')
   @ApiOperation({
@@ -34,4 +29,3 @@ export class WarehouseItemsController {
     return this.warehousesApplication.getItemWarehouses(Number(itemId));
   }
 }
-

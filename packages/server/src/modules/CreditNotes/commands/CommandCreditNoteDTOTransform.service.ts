@@ -34,7 +34,7 @@ export class CommandCreditNoteDTOTransform {
     private readonly warehouseDTOTransform: WarehouseTransactionDTOTransform,
     private readonly brandingTemplatesTransformer: BrandingTemplateDTOTransformer,
     private readonly creditNoteAutoIncrement: CreditNoteAutoIncrementService,
-  ) { }
+  ) {}
 
   /**
    * Transforms the credit/edit DTO to model.
@@ -71,10 +71,9 @@ export class CommandCreditNoteDTOTransform {
       autoNextNumber;
 
     const initialDTO = {
-      ...formatDateFields(
-        omit(creditNoteDTO, ['open', 'attachments']),
-        ['creditNoteDate'],
-      ),
+      ...formatDateFields(omit(creditNoteDTO, ['open', 'attachments']), [
+        'creditNoteDate',
+      ]),
       creditNoteNumber,
       amount,
       currencyCode: customerCurrencyCode,
@@ -82,8 +81,8 @@ export class CommandCreditNoteDTOTransform {
       entries,
       ...(creditNoteDTO.open &&
         !oldCreditNote?.openedAt && {
-        openedAt: moment().toMySqlDateTime(),
-      }),
+          openedAt: moment().toMySqlDateTime(),
+        }),
       refundedAmount: 0,
       invoicesAmount: 0,
     };

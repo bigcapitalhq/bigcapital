@@ -47,7 +47,7 @@ export class DeleteSaleInvoice {
 
     @Inject(ItemEntry.name)
     private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
-  ) { }
+  ) {}
 
   /**
    * Validate the sale invoice has no payment entries.

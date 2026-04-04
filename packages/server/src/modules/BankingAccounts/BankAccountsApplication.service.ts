@@ -17,7 +17,7 @@ export class BankAccountsApplication {
     private readonly refreshBankAccountService: RefreshBankAccountService,
     private readonly resumeBankAccountFeedsService: ResumeBankAccountFeedsService,
     private readonly pauseBankAccountFeedsService: PauseBankAccountFeeds,
-  ) { }
+  ) {}
 
   /**
    * Retrieves the bank accounts.

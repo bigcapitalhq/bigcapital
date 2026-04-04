@@ -17,7 +17,9 @@ export class SalesTaxLiabilitySummaryRepository {
   private readonly taxRateModel: TenantModelProxy<typeof TaxRateModel>;
 
   @Inject(AccountTransaction.name)
-  private readonly accountTransactionModel: TenantModelProxy<typeof AccountTransaction>;
+  private readonly accountTransactionModel: TenantModelProxy<
+    typeof AccountTransaction
+  >;
 
   @Inject(Account.name)
   private readonly accountModel: TenantModelProxy<typeof Account>;

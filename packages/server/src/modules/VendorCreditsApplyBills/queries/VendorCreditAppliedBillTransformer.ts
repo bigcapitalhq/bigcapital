@@ -1,5 +1,5 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
-import { VendorCreditAppliedBill } from "@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill";
+import { Transformer } from '@/modules/Transformer/Transformer';
+import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 
 export class VendorCreditAppliedBillTransformer extends Transformer {
   /**
@@ -27,9 +27,9 @@ export class VendorCreditAppliedBillTransformer extends Transformer {
   };
 
   /**
-   * 
-   * @param item 
-   * @returns 
+   *
+   * @param item
+   * @returns
    */
   protected formattedAmount = (item: VendorCreditAppliedBill) => {
     return this.formatNumber(item.amount, {

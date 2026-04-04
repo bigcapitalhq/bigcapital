@@ -1,6 +1,6 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
-export class RefundCreditNoteTransformer extends Transformer{
+export class RefundCreditNoteTransformer extends Transformer {
   /**
    * Includeded attributes.
    * @returns {string[]}

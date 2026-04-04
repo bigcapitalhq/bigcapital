@@ -1,5 +1,12 @@
 import { Response } from 'express';
-import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { APAgingSummaryApplication } from './APAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import {
@@ -29,7 +36,7 @@ import { ReportsAction } from '../../types/Report.types';
 @UseGuards(AuthorizationGuard, PermissionGuard)
 @ApiExtraModels(APAgingSummaryResponseDto, APAgingSummaryTableResponseDto)
 export class APAgingSummaryController {
-  constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) { }
+  constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) {}
 
   @Get()
   @RequirePermission(ReportsAction.READ_AP_AGING_SUMMARY, AbilitySubject.Report)

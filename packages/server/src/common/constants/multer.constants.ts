@@ -20,5 +20,3 @@ export const busboyExceptions = {
   MULTIPART_UNEXPECTED_END_OF_FORM: 'Unexpected end of form',
   MULTIPART_UNEXPECTED_END_OF_FILE: 'Unexpected end of file',
 };
-
-

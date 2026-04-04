@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ChromiumlyTenancy {
-  constructor(private htmlConvert: ChromiumlyHtmlConvert) { }
+  constructor(private htmlConvert: ChromiumlyHtmlConvert) {}
 
   /**
    * Converts the given HTML content to PDF.
@@ -16,12 +16,12 @@ export class ChromiumlyTenancy {
   public convertHtmlContent(
     content: string,
     properties?: PageProperties,
-    pdfFormat?: PdfFormat
+    pdfFormat?: PdfFormat,
   ) {
     const parsedProperties = {
       margins: { top: 0, bottom: 0, left: 0, right: 0 },
       ...properties,
-    }
+    };
     return this.htmlConvert.convert(content, parsedProperties, pdfFormat);
   }
 }

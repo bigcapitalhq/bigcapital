@@ -110,18 +110,14 @@ export class LemonSqueezyWebhooks {
           );
           // Cancel the given subscription of the organization.
         } else if (webhookEvent === 'subscription_cancelled') {
-          await this.subscriptionApp.cancelSubscription(
-            subscriptionSlug,
-          );
+          await this.subscriptionApp.cancelSubscription(subscriptionSlug);
         } else if (webhookEvent === 'subscription_plan_changed') {
           await this.subscriptionApp.markSubscriptionPlanChanged(
             plan.slug,
             subscriptionSlug,
           );
         } else if (webhookEvent === 'subscription_resumed') {
-          await this.subscriptionApp.resumeSubscription(
-            subscriptionSlug,
-          );
+          await this.subscriptionApp.resumeSubscription(subscriptionSlug);
         }
       } else if (webhookEvent.startsWith('order_')) {
         // Save orders; eventBody is a "Order"

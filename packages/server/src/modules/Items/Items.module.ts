@@ -49,4 +49,4 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
   ],
   exports: [ItemsEntriesService, ItemsExportable, ItemsImportable],
 })
-export class ItemsModule { }
+export class ItemsModule {}

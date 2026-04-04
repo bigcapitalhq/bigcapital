@@ -1,8 +1,19 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsArray, IsBoolean, IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { ToNumber } from '@/common/decorators/Validators';
-import { IFilterRole, ISortOrder } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import {
+  IFilterRole,
+  ISortOrder,
+} from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { parseBoolean } from '@/utils/parse-boolean';
 
 export class BankAccountsQueryDto {

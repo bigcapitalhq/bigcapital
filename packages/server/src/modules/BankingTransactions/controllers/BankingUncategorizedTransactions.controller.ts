@@ -34,7 +34,9 @@ export class BankingUncategorizedTransactionsController {
   @ApiResponse({
     status: 200,
     description: 'Returns autofill values for categorize transactions',
-    schema: { $ref: getSchemaPath(GetAutofillCategorizeTransactionResponseDto) },
+    schema: {
+      $ref: getSchemaPath(GetAutofillCategorizeTransactionResponseDto),
+    },
   })
   async getAutofillCategorizeTransaction(
     @Query('uncategorizedTransactionIds')

@@ -25,7 +25,7 @@
     "tenants:seed:latest": "lerna run cli:tenants:seed:latest --scope \"@bigcapital/server\"",
     "generate:sdk-types": "lerna run openapi:export --scope \"@bigcapital/server\" && lerna run generate --scope \"@bigcapital/sdk-ts\" && lerna run build --scope \"@bigcapital/sdk-ts\"",
     "format": "lerna run format",
-    "format:check": "lerna run format:check"
+    "format:check": "prettier --check 'packages/*/src/**/*.{ts,tsx,js,jsx}' 'shared/*/src/**/*.{ts,tsx,js,jsx}'"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
@@ -35,7 +35,8 @@
     "@playwright/test": "^1.32.3",
     "husky": "^8.0.3",
     "lerna": "^8.1.2",
-    "pnpm": "^9.0.5"
+    "pnpm": "^9.0.5",
+    "prettier": "^3.0.0"
   },
   "engines": {
     "node": "16.x || 17.x || 18.x"

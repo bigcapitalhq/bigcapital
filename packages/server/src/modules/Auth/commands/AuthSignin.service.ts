@@ -14,7 +14,7 @@ export class AuthSigninService {
     private readonly systemUserModel: typeof SystemUser,
     private readonly jwtService: JwtService,
     private readonly clsService: ClsService,
-  ) { }
+  ) {}
 
   /**
    * Validates the given email and password.

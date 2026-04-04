@@ -10,7 +10,13 @@ import {
 import { AcceptType } from '@/constants/accept-type';
 import { SalesByItemsApplication } from './SalesByItemsApplication';
 import { Response } from 'express';
-import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { SalesByItemsQueryDto } from './SalesByItemsQuery.dto';
 import {
   SalesByItemsResponseDto,

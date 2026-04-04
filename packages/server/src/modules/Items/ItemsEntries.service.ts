@@ -28,7 +28,7 @@ export class ItemsEntriesService {
 
     @Inject(ItemEntry.name)
     private readonly itemEntryModel: TenantModelProxy<typeof ItemEntry>,
-  ) { }
+  ) {}
 
   /**
    * Retrieve the inventory items entries of the reference id and type.
@@ -84,7 +84,9 @@ export class ItemsEntriesService {
    * @param {IItemEntryDTO[]} itemEntries - Items entries.
    * @returns {Promise<Item[]>}
    */
-  public async validateItemsIdsExistance(itemEntries: Array<{ itemId: number }>) {
+  public async validateItemsIdsExistance(
+    itemEntries: Array<{ itemId: number }>,
+  ) {
     const itemsIds = itemEntries.map((e) => e.itemId);
 
     const foundItems = await this.itemModel().query().whereIn('id', itemsIds);
@@ -130,9 +132,7 @@ export class ItemsEntriesService {
    * Validate the entries items that not purchase-able.
    * @param {IItemEntryDTO[]} itemEntries -
    */
-  public async validateNonPurchasableEntriesItems(
-    itemEntries: ItemEntryDto[],
-  ) {
+  public async validateNonPurchasableEntriesItems(itemEntries: ItemEntryDto[]) {
     const itemsIds = itemEntries.map((e: ItemEntryDto) => e.itemId);
     const purchasbleItems = await this.itemModel()
       .query()

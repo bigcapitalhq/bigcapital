@@ -40,7 +40,7 @@ import { CustomerAction } from './types/Customers.types';
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class CustomersController {
-  constructor(private customersApplication: CustomersApplication) { }
+  constructor(private customersApplication: CustomersApplication) {}
 
   @Get(':id')
   @RequirePermission(CustomerAction.View, AbilitySubject.Customer)

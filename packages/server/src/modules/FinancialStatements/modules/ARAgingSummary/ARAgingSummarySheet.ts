@@ -14,7 +14,10 @@ import { ARAgingSummaryRepository } from './ARAgingSummaryRepository';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { ARAgingSummaryQueryDto } from './ARAgingSummaryQuery.dto';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class ARAgingSummarySheet extends AgingSummaryReport {
   readonly query: ARAgingSummaryQueryDto;

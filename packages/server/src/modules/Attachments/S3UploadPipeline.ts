@@ -4,9 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AttachmentUploadPipeline {
-  constructor(
-    private readonly configService: ConfigService
-  ) {}
+  constructor(private readonly configService: ConfigService) {}
 
   /**
    * Middleware to ensure that S3 configuration is properly set before proceeding.
@@ -18,11 +16,7 @@ export class AttachmentUploadPipeline {
   public validateS3Configured(req: Request, res: Response, next: NextFunction) {
     const config = this.configService.get('s3');
 
-    if (
-      !config.region ||
-      !config.accessKeyId ||
-      !config.secretAccessKey
-    ) {
+    if (!config.region || !config.accessKeyId || !config.secretAccessKey) {
       const missingKeys = [];
       if (!config.region) missingKeys.push('region');
       if (!config.accessKeyId) missingKeys.push('accessKeyId');

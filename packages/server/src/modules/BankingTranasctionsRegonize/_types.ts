@@ -1,4 +1,4 @@
-import { TenantJobPayload } from "@/interfaces/Tenant";
+import { TenantJobPayload } from '@/interfaces/Tenant';
 
 export interface RevertRecognizedTransactionsCriteria {
   batch?: string;
@@ -15,8 +15,9 @@ export const RecognizeUncategorizedTransactionsJob =
 export const RecognizeUncategorizedTransactionsQueue =
   'recognize-uncategorized-transactions-queue';
 
-export interface RecognizeUncategorizedTransactionsJobPayload extends TenantJobPayload {
-  ruleId: number,
+export interface RecognizeUncategorizedTransactionsJobPayload
+  extends TenantJobPayload {
+  ruleId: number;
   transactionsCriteria?: RecognizeTransactionsCriteria;
   /**
    * When true, first reverts recognized transactions before recognizing again.

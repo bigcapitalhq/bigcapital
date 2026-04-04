@@ -3,7 +3,10 @@ import { IsOptional, IsString, IsNumber, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class GetMatchedTransactionsQueryDto {
-  @ApiPropertyOptional({ description: 'Filter from date', example: '2024-01-01' })
+  @ApiPropertyOptional({
+    description: 'Filter from date',
+    example: '2024-01-01',
+  })
   @IsOptional()
   @IsString()
   fromDate?: string;

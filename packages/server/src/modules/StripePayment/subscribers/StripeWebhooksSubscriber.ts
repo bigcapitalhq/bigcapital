@@ -28,7 +28,7 @@ export class StripeWebhooksSubscriber {
 
     @Inject(TenantModel.name)
     private readonly tenantModel: typeof TenantModel,
-  ) { }
+  ) {}
 
   /**
    * Handles the checkout session completed webhook event.

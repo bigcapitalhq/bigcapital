@@ -1,4 +1,4 @@
-import { Transformer } from "../../Transformer/Transformer";
+import { Transformer } from '../../Transformer/Transformer';
 
 export class InvoicePaymentTransactionTransformer extends Transformer {
   /**
@@ -22,7 +22,7 @@ export class InvoicePaymentTransactionTransformer extends Transformer {
 
   /**
    * Formatted payment date.
-   * @param entry 
+   * @param entry
    * @returns {string}
    */
   protected formattedPaymentDate = (entry): string => {

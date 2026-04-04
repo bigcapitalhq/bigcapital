@@ -1,4 +1,4 @@
-import { ACCOUNT_TYPES } from "../Accounts.constants";
+import { ACCOUNT_TYPES } from '../Accounts.constants';
 
 export const AccountMeta = {
   defaultFilterField: 'name',

@@ -22,7 +22,7 @@ export class RefundVendorCreditGLEntries {
     private readonly refundVendorCreditModel: TenantModelProxy<
       typeof RefundVendorCredit
     >,
-  ) { }
+  ) {}
 
   /**
    * Retrieves the refund vendor credit common GL entry.
@@ -65,9 +65,8 @@ export class RefundVendorCreditGLEntries {
     refundVendorCredit: RefundVendorCredit,
     APAccountId: number,
   ): ILedgerEntry => {
-    const commonEntry = this.getRefundVendorCreditCommonGLEntry(
-      refundVendorCredit,
-    );
+    const commonEntry =
+      this.getRefundVendorCreditCommonGLEntry(refundVendorCredit);
 
     return {
       ...commonEntry,
@@ -87,9 +86,8 @@ export class RefundVendorCreditGLEntries {
   private getRefundVendorCreditGLDepositEntry = (
     refundVendorCredit: RefundVendorCredit,
   ): ILedgerEntry => {
-    const commonEntry = this.getRefundVendorCreditCommonGLEntry(
-      refundVendorCredit,
-    );
+    const commonEntry =
+      this.getRefundVendorCreditCommonGLEntry(refundVendorCredit);
 
     return {
       ...commonEntry,
@@ -114,9 +112,8 @@ export class RefundVendorCreditGLEntries {
       refundVendorCredit,
       APAccountId,
     );
-    const depositEntry = this.getRefundVendorCreditGLDepositEntry(
-      refundVendorCredit,
-    );
+    const depositEntry =
+      this.getRefundVendorCreditGLDepositEntry(refundVendorCredit);
 
     return [payableEntry, depositEntry];
   }

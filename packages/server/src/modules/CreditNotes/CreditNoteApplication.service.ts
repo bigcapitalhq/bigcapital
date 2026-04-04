@@ -25,7 +25,7 @@ export class CreditNoteApplication {
     private readonly getCreditNoteService: GetCreditNoteService,
     private readonly bulkDeleteCreditNotesService: BulkDeleteCreditNotesService,
     private readonly validateBulkDeleteCreditNotesService: ValidateBulkDeleteCreditNotesService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new credit note.

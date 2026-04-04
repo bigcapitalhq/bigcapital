@@ -32,7 +32,7 @@ export class CustomerGLEntries {
    */
   private getCustomerOpeningGLCreditEntry = (
     ARAccountId: number,
-    customer: Customer
+    customer: Customer,
   ): ILedgerEntry => {
     const commonEntry = this.getCustomerOpeningGLCommonEntry(customer);
 
@@ -51,7 +51,7 @@ export class CustomerGLEntries {
    */
   private getCustomerOpeningGLDebitEntry = (
     incomeAccountId: number,
-    customer: Customer
+    customer: Customer,
   ): ILedgerEntry => {
     const commonEntry = this.getCustomerOpeningGLCommonEntry(customer);
 
@@ -72,15 +72,15 @@ export class CustomerGLEntries {
   public getCustomerOpeningGLEntries = (
     ARAccountId: number,
     incomeAccountId: number,
-    customer: Customer
+    customer: Customer,
   ) => {
     const debitEntry = this.getCustomerOpeningGLDebitEntry(
       incomeAccountId,
-      customer
+      customer,
     );
     const creditEntry = this.getCustomerOpeningGLCreditEntry(
       ARAccountId,
-      customer
+      customer,
     );
     return [debitEntry, creditEntry];
   };
@@ -91,12 +91,12 @@ export class CustomerGLEntries {
   public getCustomerOpeningLedger = (
     ARAccountId: number,
     incomeAccountId: number,
-    customer: Customer
+    customer: Customer,
   ) => {
     const entries = this.getCustomerOpeningGLEntries(
       ARAccountId,
       incomeAccountId,
-      customer
+      customer,
     );
     return new Ledger(entries);
   };

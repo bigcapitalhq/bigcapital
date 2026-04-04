@@ -89,8 +89,13 @@ const models = [RegisterTenancyModel(Warehouse)];
     WarehousesDTOValidators,
     DeleteItemWarehousesQuantity,
     InventoryTransactionsWarehouses,
-    ValidateWarehouseExistance
+    ValidateWarehouseExistance,
   ],
-  exports: [WarehousesSettings, WarehouseTransactionDTOTransform, WarehousesApplication, ...models],
+  exports: [
+    WarehousesSettings,
+    WarehouseTransactionDTOTransform,
+    WarehousesApplication,
+    ...models,
+  ],
 })
 export class WarehousesModule {}

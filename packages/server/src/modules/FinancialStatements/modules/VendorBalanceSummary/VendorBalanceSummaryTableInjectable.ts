@@ -11,7 +11,7 @@ import { I18nService } from 'nestjs-i18n';
 export class VendorBalanceSummaryTableInjectable {
   constructor(
     private readonly vendorBalanceSummarySheet: VendorBalanceSummaryService,
-    private readonly i18n: I18nService
+    private readonly i18n: I18nService,
   ) {}
 
   /**
@@ -23,9 +23,7 @@ export class VendorBalanceSummaryTableInjectable {
     query: IVendorBalanceSummaryQuery,
   ): Promise<IVendorBalanceSummaryTable> {
     const { data, meta } =
-      await this.vendorBalanceSummarySheet.vendorBalanceSummary(
-        query,
-      );
+      await this.vendorBalanceSummarySheet.vendorBalanceSummary(query);
     const table = new VendorBalanceSummaryTable(data, query, this.i18n);
 
     return {

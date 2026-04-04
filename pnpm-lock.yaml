@@ -36,6 +36,9 @@ importers:
       pnpm:
         specifier: ^9.0.5
         version: 9.1.2
+      prettier:
+        specifier: ^3.0.0
+        version: 3.3.3
 
   packages/server:
     dependencies:

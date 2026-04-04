@@ -146,7 +146,7 @@ export const CustomerMeta = {
       name: 'vendor.field.opening_balance_at',
       type: 'date',
       printable: false,
-      accessor: 'formattedOpeningBalanceAt'
+      accessor: 'formattedOpeningBalanceAt',
     },
     currencyCode: {
       name: 'vendor.field.currency',

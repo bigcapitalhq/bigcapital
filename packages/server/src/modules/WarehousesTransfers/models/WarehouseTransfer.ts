@@ -106,7 +106,7 @@ export class WarehouseTransfer extends TenantBaseModel {
       },
 
       /**
-       * 
+       *
        */
       fromWarehouse: {
         relation: Model.BelongsToOneRelation,

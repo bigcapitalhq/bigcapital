@@ -135,10 +135,14 @@ export class Contact extends BaseModel {
     const { SaleEstimate } = require('../../SaleEstimates/models/SaleEstimate');
     const { SaleReceipt } = require('../../SaleReceipts/models/SaleReceipt');
     const { SaleInvoice } = require('../../SaleInvoices/models/SaleInvoice');
-    const { PaymentReceived } = require('../../PaymentReceived/models/PaymentReceived');
+    const {
+      PaymentReceived,
+    } = require('../../PaymentReceived/models/PaymentReceived');
     const { Bill } = require('../../Bills/models/Bill');
     const { BillPayment } = require('../../BillPayments/models/BillPayment');
-    const { AccountTransaction } = require('../../Accounts/models/AccountTransaction.model');
+    const {
+      AccountTransaction,
+    } = require('../../Accounts/models/AccountTransaction.model');
 
     return {
       /**

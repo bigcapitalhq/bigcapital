@@ -25,8 +25,8 @@ const models = [RegisterTenancyModel(Currency)];
     GetCurrencyService,
     CurrenciesApplication,
     InitialCurrenciesSeedService,
-    SeedInitialCurrenciesOnSetupSubsriber
+    SeedInitialCurrenciesOnSetupSubsriber,
   ],
-  controllers: [CurrenciesController]
+  controllers: [CurrenciesController],
 })
 export class CurrenciesModule {}

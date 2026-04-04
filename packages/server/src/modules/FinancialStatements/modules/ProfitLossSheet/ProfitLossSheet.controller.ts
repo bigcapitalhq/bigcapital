@@ -1,5 +1,12 @@
 import { Response } from 'express';
-import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ProfitLossSheetApplication } from './ProfitLossSheetApplication';
 import { AcceptType } from '@/constants/accept-type';
 import {

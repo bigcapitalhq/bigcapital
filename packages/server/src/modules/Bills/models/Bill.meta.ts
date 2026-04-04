@@ -1,4 +1,4 @@
-import { Features } from "@/common/types/Features";
+import { Features } from '@/common/types/Features';
 
 export const BillMeta = {
   defaultFilterField: 'vendor',

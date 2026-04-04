@@ -29,7 +29,7 @@ export class ItemsApplicationService {
     private readonly itemTransactionsService: ItemTransactionsService,
     private readonly bulkDeleteItemsService: BulkDeleteItemsService,
     private readonly validateBulkDeleteItemsService: ValidateBulkDeleteItemsService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new item.

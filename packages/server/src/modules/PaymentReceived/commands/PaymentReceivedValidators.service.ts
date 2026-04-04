@@ -32,7 +32,7 @@ export class PaymentReceivedValidators {
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
-  ) { }
+  ) {}
 
   /**
    * Validates the payment existance.

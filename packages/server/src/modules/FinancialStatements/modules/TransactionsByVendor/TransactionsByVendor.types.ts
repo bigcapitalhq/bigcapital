@@ -1,4 +1,3 @@
-
 import { IFinancialSheetCommonMeta } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
 import {
@@ -36,7 +35,7 @@ export interface ITransactionsByVendorsStatement {
 export interface ITransactionsByVendorsService {
   transactionsByVendors(
     tenantId: number,
-    filter: ITransactionsByVendorsFilter
+    filter: ITransactionsByVendorsFilter,
   ): Promise<ITransactionsByVendorsStatement>;
 }
 

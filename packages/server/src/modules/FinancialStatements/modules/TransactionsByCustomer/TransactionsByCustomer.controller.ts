@@ -1,5 +1,11 @@
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   TransactionsByCustomerResponseDto,
   TransactionsByCustomerTableResponseDto,
@@ -14,7 +20,10 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @Controller('/reports/transactions-by-customers')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@ApiExtraModels(TransactionsByCustomerResponseDto, TransactionsByCustomerTableResponseDto)
+@ApiExtraModels(
+  TransactionsByCustomerResponseDto,
+  TransactionsByCustomerTableResponseDto,
+)
 export class TransactionsByCustomerController {
   constructor(
     private readonly transactionsByCustomersApp: TransactionsByCustomerApplication,

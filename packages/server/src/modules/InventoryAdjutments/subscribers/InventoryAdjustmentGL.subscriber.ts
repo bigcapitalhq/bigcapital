@@ -16,7 +16,7 @@ export class InventoryAdjustmentsGLSubscriber {
 
   /**
    * Handles writing increment inventory adjustment GL entries.
-   * @param {IInventoryAdjustmentEventCreatedPayload} payload - 
+   * @param {IInventoryAdjustmentEventCreatedPayload} payload -
    */
   @OnEvent(events.inventoryAdjustment.onQuickCreated)
   @OnEvent(events.inventoryAdjustment.onPublished)

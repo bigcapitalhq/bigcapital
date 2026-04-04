@@ -18,7 +18,7 @@ import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.mo
     VendorBalanceSummaryPdf,
     VendorBalanceSummaryApplication,
     VendorBalanceSummaryRepository,
-    VendorBalanceSummaryMeta
+    VendorBalanceSummaryMeta,
   ],
   controllers: [VendorBalanceSummaryController],
 })

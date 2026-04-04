@@ -1,10 +1,12 @@
-import {
-  ITransactionsByReferenceTransaction,
-} from './TransactionsByReference.types';
+import { ITransactionsByReferenceTransaction } from './TransactionsByReference.types';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { ModelObject } from 'objection';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
-import { INumberFormatQuery, IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  INumberFormatQuery,
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 import { TransactionsByReferenceQueryDto } from './TransactionsByReferenceQuery.dto';
 
 export class TransactionsByReference extends FinancialSheet {
@@ -39,7 +41,7 @@ export class TransactionsByReference extends FinancialSheet {
    * @returns {ITransactionsByReferenceTransaction}
    */
   private transactionMapper = (
-    transaction: ModelObject<AccountTransaction>
+    transaction: ModelObject<AccountTransaction>,
   ): ITransactionsByReferenceTransaction => {
     return {
       date: this.getDateMeta(transaction.date),
@@ -67,7 +69,7 @@ export class TransactionsByReference extends FinancialSheet {
    * @returns {ITransactionsByReferenceTransaction}
    */
   private transactionsMapper = (
-    transactions: ModelObject<AccountTransaction>[]
+    transactions: ModelObject<AccountTransaction>[],
   ): ITransactionsByReferenceTransaction[] => {
     return transactions.map(this.transactionMapper);
   };

@@ -1,12 +1,10 @@
 // @ts-nocheck
 import { PaymentReceived } from './models/PaymentReceived';
-import {
-  PaymentReceivedPdfTemplateAttributes,
-} from './types/PaymentReceived.types';
+import { PaymentReceivedPdfTemplateAttributes } from './types/PaymentReceived.types';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export const transformPaymentReceivedToPdfTemplate = (
-  payment: PaymentReceived
+  payment: PaymentReceived,
 ): Partial<PaymentReceivedPdfTemplateAttributes> => {
   return {
     total: payment.formattedAmount,

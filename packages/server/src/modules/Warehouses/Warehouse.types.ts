@@ -140,8 +140,7 @@ export interface IItemWarehouseQuantityChange {
   amount: number;
 }
 
-export interface IWarehousesActivatePayload {
-}
+export interface IWarehousesActivatePayload {}
 export interface IWarehousesActivatedPayload {
   primaryWarehouse: Warehouse;
 }

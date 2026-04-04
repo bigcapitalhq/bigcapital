@@ -8,7 +8,9 @@ import {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class ProfitLossSheetDataNodeDto {
-  @ApiProperty({ description: 'Node identifier (string for aggregates, number for accounts)' })
+  @ApiProperty({
+    description: 'Node identifier (string for aggregates, number for accounts)',
+  })
   id: string | number;
 
   @ApiProperty({ description: 'Account or category name' })
@@ -23,40 +25,76 @@ export class ProfitLossSheetDataNodeDto {
   @ApiPropertyOptional({ description: 'Node type alias' })
   type?: string;
 
-  @ApiProperty({ description: 'Total amount information', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Total amount information',
+    type: FinancialReportTotalDto,
+  })
   total: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Horizontal totals for date periods', type: [FinancialReportTotalDto] })
+  @ApiPropertyOptional({
+    description: 'Horizontal totals for date periods',
+    type: [FinancialReportTotalDto],
+  })
   horizontal_totals?: FinancialReportTotalDto[];
 
-  @ApiPropertyOptional({ description: 'Percentage of income', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Percentage of income',
+    type: FinancialReportPercentageDto,
+  })
   percentage_income?: FinancialReportPercentageDto;
 
-  @ApiPropertyOptional({ description: 'Percentage of expense', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Percentage of expense',
+    type: FinancialReportPercentageDto,
+  })
   percentage_expense?: FinancialReportPercentageDto;
 
-  @ApiPropertyOptional({ description: 'Percentage of row', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Percentage of row',
+    type: FinancialReportPercentageDto,
+  })
   percentage_row?: FinancialReportPercentageDto;
 
-  @ApiPropertyOptional({ description: 'Percentage of column', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Percentage of column',
+    type: FinancialReportPercentageDto,
+  })
   percentage_column?: FinancialReportPercentageDto;
 
-  @ApiPropertyOptional({ description: 'Previous period total', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Previous period total',
+    type: FinancialReportTotalDto,
+  })
   previous_period?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Previous period change', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Previous period change',
+    type: FinancialReportTotalDto,
+  })
   previous_period_change?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Previous period percentage', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Previous period percentage',
+    type: FinancialReportPercentageDto,
+  })
   previous_period_percentage?: FinancialReportPercentageDto;
 
-  @ApiPropertyOptional({ description: 'Previous year total', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Previous year total',
+    type: FinancialReportTotalDto,
+  })
   previous_year?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Previous year change', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Previous year change',
+    type: FinancialReportTotalDto,
+  })
   previous_year_change?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Previous year percentage', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Previous year percentage',
+    type: FinancialReportPercentageDto,
+  })
   previous_year_percentage?: FinancialReportPercentageDto;
 
   @ApiPropertyOptional({ description: 'Account code' })
@@ -65,7 +103,10 @@ export class ProfitLossSheetDataNodeDto {
   @ApiPropertyOptional({ description: 'Display index', type: Number })
   index?: number;
 
-  @ApiPropertyOptional({ description: 'Child nodes', type: () => [ProfitLossSheetDataNodeDto] })
+  @ApiPropertyOptional({
+    description: 'Child nodes',
+    type: () => [ProfitLossSheetDataNodeDto],
+  })
   children?: ProfitLossSheetDataNodeDto[];
 }
 
@@ -81,10 +122,16 @@ export class ProfitLossSheetMetaDto extends FinancialReportMetaDto {
 }
 
 export class ProfitLossSheetQueryResponseDto {
-  @ApiProperty({ description: 'Column display type', enum: ['total', 'date_periods'] })
+  @ApiProperty({
+    description: 'Column display type',
+    enum: ['total', 'date_periods'],
+  })
   display_columns_type: string;
 
-  @ApiProperty({ description: 'Column grouping', enum: ['day', 'month', 'year', 'quarter'] })
+  @ApiProperty({
+    description: 'Column grouping',
+    enum: ['day', 'month', 'year', 'quarter'],
+  })
   display_columns_by: string;
 
   @ApiProperty({ description: 'Start date' })
@@ -93,7 +140,10 @@ export class ProfitLossSheetQueryResponseDto {
   @ApiProperty({ description: 'End date' })
   to_date: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   number_format: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Exclude zero balance accounts' })
@@ -140,10 +190,16 @@ export class ProfitLossSheetQueryResponseDto {
 }
 
 export class ProfitLossSheetResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: ProfitLossSheetQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: ProfitLossSheetQueryResponseDto,
+  })
   query: ProfitLossSheetQueryResponseDto;
 
-  @ApiProperty({ description: 'Hierarchical profit/loss data', type: [ProfitLossSheetDataNodeDto] })
+  @ApiProperty({
+    description: 'Hierarchical profit/loss data',
+    type: [ProfitLossSheetDataNodeDto],
+  })
   data: ProfitLossSheetDataNodeDto[];
 
   @ApiProperty({ description: 'Report metadata', type: ProfitLossSheetMetaDto })
@@ -159,10 +215,16 @@ export {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class ProfitLossSheetTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => FinancialTableDataDto,
+  })
   table: FinancialTableDataDto;
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: ProfitLossSheetQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: ProfitLossSheetQueryResponseDto,
+  })
   query: ProfitLossSheetQueryResponseDto;
 
   @ApiProperty({ description: 'Report metadata', type: ProfitLossSheetMetaDto })

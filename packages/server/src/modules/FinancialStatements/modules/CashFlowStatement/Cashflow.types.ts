@@ -1,9 +1,11 @@
 import { Knex } from 'knex';
-import { IFinancialSheetCommonMeta, INumberFormatQuery } from '../../types/Report.types';
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from '../../types/Report.types';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { IFinancialTable, ITableRow } from '../../types/Table.types';
-
 
 export interface ICashFlowStatementQuery {
   fromDate: Date | string;
@@ -111,7 +113,7 @@ export interface ICashFlowStatementTable extends IFinancialTable {
 export interface ICashFlowStatementService {
   cashFlow(
     tenantId: number,
-    query: ICashFlowStatementQuery
+    query: ICashFlowStatementQuery,
   ): Promise<ICashFlowStatementDOO>;
 }
 
@@ -202,7 +204,7 @@ export interface ICashFlowStatement {
     cashLedger: Ledger,
     netIncomeLedger: Ledger,
     query: ICashFlowStatementQuery,
-    baseCurrency: string
+    baseCurrency: string,
   ): void;
 
   reportData(): ICashFlowStatementData;

@@ -1,5 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetMatchedTransactionsFilter, MatchedTransactionPOJO, MatchedTransactionsPOJO } from '../types';
+import {
+  GetMatchedTransactionsFilter,
+  MatchedTransactionPOJO,
+  MatchedTransactionsPOJO,
+} from '../types';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { GetMatchedTransactionExpensesTransformer } from './GetMatchedTransactionExpensesTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
@@ -22,7 +26,6 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
 
     @Inject('TENANT_MODELS_INIT')
     private readonly tenantModelsInit: () => Promise<boolean>,
-    
   ) {
     super();
   }

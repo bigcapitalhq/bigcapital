@@ -35,7 +35,7 @@ describe('Customers (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/customers/${customerId}`)
       .set('organization-id', orgainzationId)
-      .set('Authorization', AuthorizationHeader) 
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 

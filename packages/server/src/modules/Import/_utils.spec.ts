@@ -284,4 +284,3 @@ describe('aggregate', () => {
     });
   });
 });
-

@@ -5,6 +5,4 @@ import { SocketGateway } from './Socket.gateway';
   providers: [SocketGateway],
   exports: [SocketGateway],
 })
-export class SocketModule { }
-
-
+export class SocketModule {}

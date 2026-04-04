@@ -25,7 +25,10 @@ export class TenantsListCommand extends BaseCommand {
     return true;
   }
 
-  async run(passedParams: string[], options: TenantsListOptions): Promise<void> {
+  async run(
+    passedParams: string[],
+    options: TenantsListOptions,
+  ): Promise<void> {
     try {
       const sysKnex = this.initSystemKnex();
       const tenants = options.all
@@ -35,7 +38,7 @@ export class TenantsListCommand extends BaseCommand {
       tenants.forEach((tenant: any) => {
         const dbName = `${this.configService.get('tenantDatabase.dbNamePrefix')}${tenant.organizationId}`;
         console.log(
-          `ID: ${tenant.id} | Organization ID: ${tenant.organizationId} | DB Name: ${dbName}`
+          `ID: ${tenant.id} | Organization ID: ${tenant.organizationId} | DB Name: ${dbName}`,
         );
       });
 

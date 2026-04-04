@@ -1,4 +1,3 @@
-
 const OperationType = {
   LOGIC: 'LOGIC',
   STRING: 'STRING',
@@ -20,7 +19,7 @@ export class Lexer {
       '?': OperationType.LOGIC,
       ':': OperationType.LOGIC,
 
-      '\'': OperationType.STRING,
+      "'": OperationType.STRING,
       '"': OperationType.STRING,
 
       '!': OperationType.COMPARISON,
@@ -79,11 +78,13 @@ export class Lexer {
       // we must move the pos forward
       // so here we should throw error, for example `1 & 2`
       if (pos === this.currentIndex && tok !== undefined) {
-        const err = new Error(`unkonw token ${tok} from input string ${this.input}`);
+        const err = new Error(
+          `unkonw token ${tok} from input string ${this.input}`,
+        );
         err.name = 'UnknowToken';
         throw err;
       }
-    } while (tok !== undefined)
+    } while (tok !== undefined);
 
     return this.tokenList;
   }
@@ -103,7 +104,9 @@ export class Lexer {
    * @param index
    */
   receiveToken(index = 1) {
-    const tok = this.input.slice(this.currentIndex, this.currentIndex + index).trim();
+    const tok = this.input
+      .slice(this.currentIndex, this.currentIndex + index)
+      .trim();
     // skip empty string
     if (tok) {
       this.tokenList.push(tok);

@@ -10,9 +10,7 @@ import { Item } from './models/Item';
 @ExportableService({ name: Item.name })
 @Global()
 export class ItemsExportable extends Exportable {
-  constructor(
-    private readonly itemsApplication: ItemsApplicationService,
-  ) {
+  constructor(private readonly itemsApplication: ItemsApplicationService) {
     super();
   }
 

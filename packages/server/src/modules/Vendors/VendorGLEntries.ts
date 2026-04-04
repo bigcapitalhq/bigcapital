@@ -36,7 +36,7 @@ export class VendorGLEntries {
    */
   private getOpeningBalanceGLDebitEntry = (
     costAccountId: number,
-    vendor: Vendor
+    vendor: Vendor,
   ): ILedgerEntry => {
     const commonEntry = this.getOpeningBalanceGLCommonEntry(vendor);
 
@@ -58,7 +58,7 @@ export class VendorGLEntries {
    */
   private getOpeningBalanceGLCreditEntry = (
     APAccountId: number,
-    vendor: Vendor
+    vendor: Vendor,
   ): ILedgerEntry => {
     const commonEntry = this.getOpeningBalanceGLCommonEntry(vendor);
 
@@ -81,15 +81,15 @@ export class VendorGLEntries {
   public getOpeningBalanceGLEntries = (
     APAccountId: number,
     costAccountId: number,
-    vendor: Vendor
+    vendor: Vendor,
   ): ILedgerEntry[] => {
     const debitEntry = this.getOpeningBalanceGLDebitEntry(
       costAccountId,
-      vendor
+      vendor,
     );
     const creditEntry = this.getOpeningBalanceGLCreditEntry(
       APAccountId,
-      vendor
+      vendor,
     );
     return [debitEntry, creditEntry];
   };
@@ -104,12 +104,12 @@ export class VendorGLEntries {
   public getOpeningBalanceLedger = (
     APAccountId: number,
     costAccountId: number,
-    vendor: Vendor
+    vendor: Vendor,
   ) => {
     const entries = this.getOpeningBalanceGLEntries(
       APAccountId,
       costAccountId,
-      vendor
+      vendor,
     );
     return new Ledger(entries);
   };

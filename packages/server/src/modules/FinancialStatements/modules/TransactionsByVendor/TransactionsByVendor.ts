@@ -12,7 +12,10 @@ import { TransactionsByContact } from '../TransactionsByContact/TransactionsByCo
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { INumberFormatQuery } from '../../types/Report.types';
 import { TransactionsByVendorRepository } from './TransactionsByVendorRepository';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 const VENDOR_NORMAL = 'credit';
 
@@ -21,7 +24,7 @@ export class TransactionsByVendor extends TransactionsByContact {
   public readonly filter: ITransactionsByVendorsFilter;
   public readonly numberFormat: INumberFormatQuery;
   public readonly i18n: I18nService;
-  
+
   /**
    * Constructor method.
    * @param {TransactionsByVendorRepository} transactionsByVendorRepository - Transactions by vendor repository.

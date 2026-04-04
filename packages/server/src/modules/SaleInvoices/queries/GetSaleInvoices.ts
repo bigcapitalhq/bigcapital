@@ -24,9 +24,7 @@ export class GetSaleInvoicesService {
    * @param {GetSaleInvoicesQueryDto} filterDTO -
    * @returns {Promise<{ data: SaleInvoice[]; pagination: IPaginationMeta; filterMeta: IFilterMeta; }>}
    */
-  public async getSaleInvoices(
-    filterDTO: GetSaleInvoicesQueryDto,
-  ): Promise<{
+  public async getSaleInvoices(filterDTO: GetSaleInvoicesQueryDto): Promise<{
     salesInvoices: SaleInvoice[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;

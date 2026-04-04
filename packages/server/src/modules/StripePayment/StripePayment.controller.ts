@@ -109,11 +109,10 @@ export class StripeIntegrationController {
     description: 'Successfully created account link',
     type: CreateStripeAccountLinkResponseDto,
   })
-  public async createAccountLink(
-    @Body() body: CreateStripeAccountLinkBodyDto,
-  ) {
-    const clientSecret =
-      await this.stripePaymentApp.createAccountLink(body.stripeAccountId);
+  public async createAccountLink(@Body() body: CreateStripeAccountLinkBodyDto) {
+    const clientSecret = await this.stripePaymentApp.createAccountLink(
+      body.stripeAccountId,
+    );
 
     return { clientSecret };
   }

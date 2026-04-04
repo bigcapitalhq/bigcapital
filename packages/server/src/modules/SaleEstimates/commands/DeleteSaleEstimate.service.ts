@@ -24,7 +24,7 @@ export class DeleteSaleEstimate {
 
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
-  ) { }
+  ) {}
 
   /**
    * Deletes the given estimate id with associated entries.

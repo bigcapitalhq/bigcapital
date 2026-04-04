@@ -11,7 +11,9 @@ export class ValidateBulkDeleteItemCategoriesService {
     private readonly tenantKnex: () => Knex,
   ) {}
 
-  public async validateBulkDeleteItemCategories(itemCategoryIds: number[]): Promise<{
+  public async validateBulkDeleteItemCategories(
+    itemCategoryIds: number[],
+  ): Promise<{
     deletableCount: number;
     nonDeletableCount: number;
     deletableIds: number[];
@@ -51,4 +53,3 @@ export class ValidateBulkDeleteItemCategoriesService {
     }
   }
 }
-

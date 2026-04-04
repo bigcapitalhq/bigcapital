@@ -1,6 +1,9 @@
 import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { IImportFileCommitedEventPayload, ImportFilePreviewPOJO } from './interfaces';
+import {
+  IImportFileCommitedEventPayload,
+  ImportFilePreviewPOJO,
+} from './interfaces';
 import { ImportFileProcess } from './ImportFileProcess';
 import { ImportAls } from './ImportALS';
 import { Inject, Injectable } from '@nestjs/common';

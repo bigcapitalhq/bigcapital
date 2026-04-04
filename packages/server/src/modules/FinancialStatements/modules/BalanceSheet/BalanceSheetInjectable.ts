@@ -1,8 +1,5 @@
 // @ts-nocheck
-import {
-  IBalanceSheetDOO,
-  IBalanceSheetQuery,
-} from './BalanceSheet.types';
+import { IBalanceSheetDOO, IBalanceSheetQuery } from './BalanceSheet.types';
 import { BalanceSheetRepository } from './BalanceSheetRepository';
 import { BalanceSheetMetaInjectable } from './BalanceSheetMeta';
 import { Inject, Injectable } from '@nestjs/common';
@@ -48,7 +45,10 @@ export class BalanceSheetInjectable {
       filter,
       this.balanceSheetRepository,
       this.i18n,
-      { baseCurrency: tenantMetadata.baseCurrency, dateFormat: meta.dateFormat },
+      {
+        baseCurrency: tenantMetadata.baseCurrency,
+        dateFormat: meta.dateFormat,
+      },
     );
     // Balance sheet data.
     const data = balanceSheetInstanace.reportData();

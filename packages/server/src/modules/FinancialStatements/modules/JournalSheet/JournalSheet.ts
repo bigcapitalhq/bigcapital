@@ -11,7 +11,10 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 import { JournalSheetRepository } from './JournalSheetRepository';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class JournalSheet extends FinancialSheet {
   readonly query: IJournalReportQuery;

@@ -1,5 +1,12 @@
 import { Response } from 'express';
-import { ApiExtraModels, ApiOperation, ApiTags, ApiResponse, ApiProduces, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiTags,
+  ApiResponse,
+  ApiProduces,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
 import { InventoryItemDetailsApplication } from './InventoryItemDetailsApplication';
 import { AcceptType } from '@/constants/accept-type';
@@ -13,7 +20,10 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @Controller('reports/inventory-item-details')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@ApiExtraModels(InventoryItemDetailsResponseDto, InventoryItemDetailsTableResponseDto)
+@ApiExtraModels(
+  InventoryItemDetailsResponseDto,
+  InventoryItemDetailsTableResponseDto,
+)
 export class InventoryItemDetailsController {
   constructor(
     private readonly inventoryItemDetailsApp: InventoryItemDetailsApplication,

@@ -43,11 +43,15 @@ export abstract class BaseCommand extends CommandRunner {
         charset: 'utf8',
       },
       migrations: {
-        directory: this.configService.get('tenantDatabase.migrationsDir') || './src/database/migrations',
+        directory:
+          this.configService.get('tenantDatabase.migrationsDir') ||
+          './src/database/migrations',
         loadExtensions: ['.js'],
       },
       seeds: {
-        directory: this.configService.get('tenantDatabase.seedsDir') || './src/database/seeds/core',
+        directory:
+          this.configService.get('tenantDatabase.seedsDir') ||
+          './src/database/seeds/core',
       },
       pool: {
         min: 0,

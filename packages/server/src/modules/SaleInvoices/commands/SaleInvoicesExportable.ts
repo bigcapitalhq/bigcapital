@@ -8,7 +8,7 @@ import { SaleInvoice } from '../models/SaleInvoice';
 
 @Injectable()
 @ExportableService({ name: SaleInvoice.name })
-export class SaleInvoicesExportable extends Exportable{
+export class SaleInvoicesExportable extends Exportable {
   constructor(
     private readonly saleInvoicesApplication: SaleInvoiceApplication,
   ) {

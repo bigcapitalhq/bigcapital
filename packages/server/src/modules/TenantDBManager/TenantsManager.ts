@@ -71,7 +71,7 @@ export class TenantsManagerService {
    */
   public async migrateTenant(): Promise<void> {
     const tenant = await this.tenancyContext.getTenant();
-   
+
     // Throw error if the tenant already initialized.
     throwErrorIfTenantAlreadyInitialized(tenant);
 

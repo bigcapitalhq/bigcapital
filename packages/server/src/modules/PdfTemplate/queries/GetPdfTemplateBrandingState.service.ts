@@ -8,8 +8,7 @@ export class GetPdfTemplateBrandingState {
   ) {}
 
   async execute() {
-    const brandingAttributes =
-      await this.getOrgBrandingAttributes.execute();
+    const brandingAttributes = await this.getOrgBrandingAttributes.execute();
 
     return brandingAttributes;
   }

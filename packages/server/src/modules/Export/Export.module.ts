@@ -20,14 +20,14 @@ const models = [RegisterTenancyModel(ImportModel)];
     ResourceModule,
     TemplateInjectableModule,
     ChromiumlyTenancyModule,
-    AccountsModule
+    AccountsModule,
   ],
   providers: [
     ExportResourceService,
     ExportPdf,
     ExportAls,
     ExportApplication,
-    ExportableRegistry
+    ExportableRegistry,
   ],
   exports: [...models],
   controllers: [ExportController],

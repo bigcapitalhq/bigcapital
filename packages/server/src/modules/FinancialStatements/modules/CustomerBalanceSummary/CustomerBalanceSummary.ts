@@ -8,7 +8,11 @@ import {
 import { ContactBalanceSummaryReport } from '../ContactBalanceSummary/ContactBalanceSummary';
 import { ILedger } from '@/modules/Ledger/types/Ledger.types';
 import { ModelObject } from 'objection';
-import { INumberFormatQuery, IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  INumberFormatQuery,
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 import { Customer } from '@/modules/Customers/models/Customer';
 
 export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
@@ -47,7 +51,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @returns {ICustomerBalanceSummaryCustomer}
    */
   private customerMapper = (
-    customer: ModelObject<Customer>
+    customer: ModelObject<Customer>,
   ): ICustomerBalanceSummaryCustomer => {
     const closingBalance = this.ledger
       .whereContactId(customer.id)
@@ -66,7 +70,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @returns {ICustomerBalanceSummaryCustomer[]}
    */
   private customersMapper = (
-    customers: ModelObject<Customer>[]
+    customers: ModelObject<Customer>[],
   ): ICustomerBalanceSummaryCustomer[] => {
     return customers.map(this.customerMapper);
   };
@@ -85,16 +89,16 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @returns {ICustomerBalanceSummaryCustomer[]}
    */
   private getCustomersSection = (
-    customers: ModelObject<Customer>[]
+    customers: ModelObject<Customer>[],
   ): ICustomerBalanceSummaryCustomer[] => {
     // @ts-ignore
     return R.compose(
       R.when(this.isCustomersPostFilter, this.contactsFilter),
       R.when(
         R.always(this.filter.percentageColumn),
-        this.contactCamparsionPercentageOfColumn
+        this.contactCamparsionPercentageOfColumn,
       ),
-      this.customersMapper
+      this.customersMapper,
     )(customers);
   };
 

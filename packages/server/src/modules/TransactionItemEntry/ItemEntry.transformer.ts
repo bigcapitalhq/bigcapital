@@ -1,11 +1,14 @@
 import { Transformer } from '../Transformer/Transformer';
 import { ItemEntry } from './models/ItemEntry';
 
-interface ItemEntryTransformerContext{
+interface ItemEntryTransformerContext {
   currencyCode: string;
 }
 
-export class ItemEntryTransformer extends Transformer<{}, ItemEntryTransformerContext> {
+export class ItemEntryTransformer extends Transformer<
+  {},
+  ItemEntryTransformerContext
+> {
   /**
    * Include these attributes to item entry object.
    * @returns {Array}

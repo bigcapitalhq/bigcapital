@@ -104,8 +104,6 @@ export class SaleEstimateTransfromer extends Transformer {
     return this.formatNumber(estimate.amount, { money: false });
   };
 
-
-
   /**
    * Retrieves formatted discount amount.
    * @param {SaleEstimate} estimate
@@ -124,9 +122,7 @@ export class SaleEstimateTransfromer extends Transformer {
    * @returns {string}
    */
   protected discountPercentageFormatted = (estimate: SaleEstimate): string => {
-    return estimate.discountPercentage
-      ? `${estimate.discountPercentage}%`
-      : '';
+    return estimate.discountPercentage ? `${estimate.discountPercentage}%` : '';
   };
 
   /**
@@ -161,7 +157,6 @@ export class SaleEstimateTransfromer extends Transformer {
       currencyCode: estimate.currencyCode,
     });
   };
-
 
   /**
    * Retrieves the entries of the sale estimate.

@@ -1,32 +1,32 @@
-import { Module } from "@nestjs/common";
+import { Module } from '@nestjs/common';
 import * as multerS3 from 'multer-s3';
-import { S3_CLIENT, S3Module } from "../S3/S3.module";
-import { DeleteAttachment } from "./DeleteAttachment";
-import { GetAttachment } from "./GetAttachment";
-import { GetAttachmentPresignedUrl } from "./GetAttachmentPresignedUrl";
-import { LinkAttachment } from "./LinkAttachment";
-import { UnlinkAttachment } from "./UnlinkAttachment";
-import { ValidateAttachments } from "./ValidateAttachments";
-import { AttachmentsOnBillPayments } from "./events/AttachmentsOnPaymentsMade";
-import { AttachmentsOnBills } from "./events/AttachmentsOnBills";
-import { AttachmentsOnCreditNote } from "./events/AttachmentsOnCreditNote";
-import { AttachmentsOnExpenses } from "./events/AttachmentsOnExpenses";
-import { AttachmentsOnPaymentsReceived } from "./events/AttachmentsOnPaymentsReceived";
-import { AttachmentsOnManualJournals } from "./events/AttachmentsOnManualJournals";
-import { AttachmentsOnVendorCredits } from "./events/AttachmentsOnVendorCredits";
-import { AttachmentsOnSaleInvoiceCreated } from "./events/AttachmentsOnSaleInvoice";
-import { AttachmentsOnSaleReceipt } from "./events/AttachmentsOnSaleReceipts";
-import { AttachmentsOnSaleEstimates } from "./events/AttachmentsOnSaleEstimates";
-import { AttachmentsController } from "./Attachments.controller";
-import { RegisterTenancyModel } from "../Tenancy/TenancyModels/Tenancy.module";
-import { DocumentModel } from "./models/Document.model";
-import { DocumentLinkModel } from "./models/DocumentLink.model";
-import { AttachmentsApplication } from "./AttachmentsApplication";
-import { UploadDocument } from "./UploadDocument";
-import { AttachmentUploadPipeline } from "./S3UploadPipeline";
-import { MULTER_MODULE_OPTIONS } from "@/common/constants/files.constants";
-import { ConfigService } from "@nestjs/config";
-import { S3Client } from "@aws-sdk/client-s3";
+import { S3_CLIENT, S3Module } from '../S3/S3.module';
+import { DeleteAttachment } from './DeleteAttachment';
+import { GetAttachment } from './GetAttachment';
+import { GetAttachmentPresignedUrl } from './GetAttachmentPresignedUrl';
+import { LinkAttachment } from './LinkAttachment';
+import { UnlinkAttachment } from './UnlinkAttachment';
+import { ValidateAttachments } from './ValidateAttachments';
+import { AttachmentsOnBillPayments } from './events/AttachmentsOnPaymentsMade';
+import { AttachmentsOnBills } from './events/AttachmentsOnBills';
+import { AttachmentsOnCreditNote } from './events/AttachmentsOnCreditNote';
+import { AttachmentsOnExpenses } from './events/AttachmentsOnExpenses';
+import { AttachmentsOnPaymentsReceived } from './events/AttachmentsOnPaymentsReceived';
+import { AttachmentsOnManualJournals } from './events/AttachmentsOnManualJournals';
+import { AttachmentsOnVendorCredits } from './events/AttachmentsOnVendorCredits';
+import { AttachmentsOnSaleInvoiceCreated } from './events/AttachmentsOnSaleInvoice';
+import { AttachmentsOnSaleReceipt } from './events/AttachmentsOnSaleReceipts';
+import { AttachmentsOnSaleEstimates } from './events/AttachmentsOnSaleEstimates';
+import { AttachmentsController } from './Attachments.controller';
+import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { DocumentModel } from './models/Document.model';
+import { DocumentLinkModel } from './models/DocumentLink.model';
+import { AttachmentsApplication } from './AttachmentsApplication';
+import { UploadDocument } from './UploadDocument';
+import { AttachmentUploadPipeline } from './S3UploadPipeline';
+import { MULTER_MODULE_OPTIONS } from '@/common/constants/files.constants';
+import { ConfigService } from '@nestjs/config';
+import { S3Client } from '@aws-sdk/client-s3';
 
 const models = [
   RegisterTenancyModel(DocumentModel),
@@ -71,15 +71,15 @@ const models = [
           key: function (req, file, cb) {
             cb(null, Date.now().toString());
           },
-          acl: function(req, file, cb) {
+          acl: function (req, file, cb) {
             // Conditionally set file to public or private based on isPublic flag
             const aclValue = true ? 'public-read' : 'private';
             // Set ACL based on the isPublic flag
-            cb(null, aclValue); 
-          }
+            cb(null, aclValue);
+          },
         }),
-      })
-    }
-  ]
+      }),
+    },
+  ],
 })
 export class AttachmentsModule {}

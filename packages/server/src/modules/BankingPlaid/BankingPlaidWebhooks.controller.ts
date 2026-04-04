@@ -17,15 +17,8 @@ export class BankingPlaidWebhooksController {
   @Post('webhooks')
   @ApiOperation({ summary: 'Listen to Plaid webhooks' })
   webhooks(@Body() { itemId, webhookType, webhookCode }: PlaidWebhookDto) {
-    return this.setupPlaidItemTenantService.setupPlaidTenant(
-      itemId,
-      () => {
-        return this.plaidApplication.webhooks(
-          itemId,
-          webhookType,
-          webhookCode,
-        );
-      },
-    );
+    return this.setupPlaidItemTenantService.setupPlaidTenant(itemId, () => {
+      return this.plaidApplication.webhooks(itemId, webhookType, webhookCode);
+    });
   }
 }

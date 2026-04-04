@@ -29,12 +29,11 @@ export function FileInterceptor(
     constructor(
       @Optional()
       @Inject(MULTER_MODULE_OPTIONS)
-      options: (() => MulterModuleOptions | MulterModuleOptions) = () => ({}),
+      options: () => MulterModuleOptions | MulterModuleOptions = () => ({}),
     ) {
-      const resolvedOptions = typeof localOptions === 'function' 
-        ? localOptions(this)
-        : localOptions;
-        
+      const resolvedOptions =
+        typeof localOptions === 'function' ? localOptions(this) : localOptions;
+
       this.multer = (multer as any)({
         ...(typeof options === 'function' ? options() : options),
         ...resolvedOptions,

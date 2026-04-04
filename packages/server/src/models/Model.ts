@@ -50,13 +50,14 @@ export class PaginationQueryBuilder<
       return this.delete();
     }
 
-    // Only check HasManyRelation and ManyToManyRelation relations, as BelongsToOneRelation are just 
+    // Only check HasManyRelation and ManyToManyRelation relations, as BelongsToOneRelation are just
     // foreign key references and shouldn't prevent deletion. Only dependent records should block deletion.
     const dependentRelationNames = relationNames.filter((name) => {
       const relation = relationMappings[name];
-      return relation && (
-        relation.relation === Model.HasManyRelation ||
-        relation.relation === Model.ManyToManyRelation
+      return (
+        relation &&
+        (relation.relation === Model.HasManyRelation ||
+          relation.relation === Model.ManyToManyRelation)
       );
     });
 

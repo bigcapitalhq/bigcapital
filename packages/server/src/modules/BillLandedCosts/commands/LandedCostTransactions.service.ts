@@ -14,7 +14,7 @@ import { LandedCostTransactionsQueryDto } from '../dtos/LandedCostTransactionsQu
 
 @Injectable()
 export class LandedCostTranasctions {
-  constructor(private readonly transactionLandedCost: TransactionLandedCost) { }
+  constructor(private readonly transactionLandedCost: TransactionLandedCost) {}
 
   /**
    * Retrieve the landed costs based on the given query.

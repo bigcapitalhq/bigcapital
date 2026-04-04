@@ -19,10 +19,16 @@ export class TaxRateSummaryDto {
   @ApiProperty({ description: 'Taxable amount', type: FinancialReportTotalDto })
   taxableAmount: FinancialReportTotalDto;
 
-  @ApiProperty({ description: 'Tax amount collected', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Tax amount collected',
+    type: FinancialReportTotalDto,
+  })
   taxAmount: FinancialReportTotalDto;
 
-  @ApiProperty({ description: 'Total sales (including tax)', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Total sales (including tax)',
+    type: FinancialReportTotalDto,
+  })
   totalSales: FinancialReportTotalDto;
 }
 
@@ -44,18 +50,27 @@ export class SalesTaxLiabilitySummaryQueryResponseDto {
   @ApiProperty({ description: 'End date' })
   toDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 }
 
 export class SalesTaxLiabilitySummaryResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: SalesTaxLiabilitySummaryQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: SalesTaxLiabilitySummaryQueryResponseDto,
+  })
   query: SalesTaxLiabilitySummaryQueryResponseDto;
 
   @ApiProperty({ description: 'Tax rate summaries', type: [TaxRateSummaryDto] })
   data: TaxRateSummaryDto[];
 
-  @ApiProperty({ description: 'Report metadata', type: SalesTaxLiabilitySummaryMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: SalesTaxLiabilitySummaryMetaDto,
+  })
   meta: SalesTaxLiabilitySummaryMetaDto;
 }
 
@@ -68,12 +83,21 @@ export {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class SalesTaxLiabilitySummaryTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => FinancialTableDataDto,
+  })
   table: FinancialTableDataDto;
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: SalesTaxLiabilitySummaryQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: SalesTaxLiabilitySummaryQueryResponseDto,
+  })
   query: SalesTaxLiabilitySummaryQueryResponseDto;
 
-  @ApiProperty({ description: 'Report metadata', type: SalesTaxLiabilitySummaryMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: SalesTaxLiabilitySummaryMetaDto,
+  })
   meta: SalesTaxLiabilitySummaryMetaDto;
 }

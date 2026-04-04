@@ -123,15 +123,15 @@ export class RefundCreditNoteGLEntries {
     trx?: Knex.Transaction,
   ) => {
     // Retrieve the refund with associated credit note.
-    const refundCreditNote = await this.refundCreditNoteModel().query(trx)
+    const refundCreditNote = await this.refundCreditNoteModel()
+      .query(trx)
       .findById(refundCreditNoteId)
       .withGraphFetched('creditNote');
 
     // Receivable account A/R.
-    const receivableAccount = await this.accountModel().query().findOne(
-      'slug',
-      'accounts-receivable',
-    );
+    const receivableAccount = await this.accountModel()
+      .query()
+      .findOne('slug', 'accounts-receivable');
     // Retrieve refund credit GL entries.
     const refundGLEntries = this.getRefundCreditGLEntries(
       refundCreditNote,

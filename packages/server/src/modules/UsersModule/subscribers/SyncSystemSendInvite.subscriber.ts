@@ -1,4 +1,3 @@
-
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Inject, Injectable } from '@nestjs/common';
 import {
@@ -25,7 +24,7 @@ export class SyncSystemSendInviteSubscriber {
     @Inject(UserInvite.name)
     private readonly inviteModel: typeof UserInvite,
     private readonly eventEmitter: EventEmitter2,
-    private readonly tenancyContext: TenancyContext
+    private readonly tenancyContext: TenancyContext,
   ) {}
 
   /**
@@ -33,7 +32,11 @@ export class SyncSystemSendInviteSubscriber {
    * @param {IUserInvitedEventPayload} payload -
    */
   @OnEvent(events.inviteUser.sendInvite)
-  async syncSendInviteSystem({ inviteToken, user, invitingUser }: IUserInvitedEventPayload) {
+  async syncSendInviteSystem({
+    inviteToken,
+    user,
+    invitingUser,
+  }: IUserInvitedEventPayload) {
     const authorizedUser = await this.tenancyContext.getSystemUser();
     const tenantId = authorizedUser.tenantId;
 
@@ -95,7 +98,10 @@ export class SyncSystemSendInviteSubscriber {
    * Clear invite tokens of the given user id.
    * @param {number} userId - User id.
    */
-  private clearInviteTokensByUserId = async (tenantId: number, userId: number) => {
+  private clearInviteTokensByUserId = async (
+    tenantId: number,
+    userId: number,
+  ) => {
     await this.inviteModel
       .query()
       .where({

@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetSubscriptionsTransformer extends Transformer {
   /**
@@ -47,9 +47,7 @@ export class GetSubscriptionsTransformer extends Transformer {
    * @returns {string}
    */
   public endsAtFormatted = (subscription) => {
-    return subscription.cancelsAt
-      ? this.formatDate(subscription.endsAt)
-      : null;
+    return subscription.cancelsAt ? this.formatDate(subscription.endsAt) : null;
   };
 
   /**
@@ -119,7 +117,7 @@ export class GetSubscriptionsTransformer extends Transformer {
 
   /**
    * Retrieves the subscription plan price.
-   * @param subscription 
+   * @param subscription
    * @returns {number}
    */
   public planPrice(subscription) {
@@ -128,7 +126,7 @@ export class GetSubscriptionsTransformer extends Transformer {
 
   /**
    * Retrieves the subscription plan price currency.
-   * @param subscription 
+   * @param subscription
    * @returns {string}
    */
   public planPriceCurrency(subscription) {
@@ -137,19 +135,19 @@ export class GetSubscriptionsTransformer extends Transformer {
 
   /**
    * Retrieves the subscription plan formatted price.
-   * @param subscription 
+   * @param subscription
    * @returns {string}
    */
   public planPriceFormatted(subscription) {
     return this.formatMoney(subscription.plan?.price, {
       currencyCode: subscription.plan?.currency,
-      precision: 0
+      precision: 0,
     });
   }
 
   /**
    * Retrieves the subscription plan period.
-   * @param subscription 
+   * @param subscription
    * @returns {string}
    */
   public planPeriod(subscription) {

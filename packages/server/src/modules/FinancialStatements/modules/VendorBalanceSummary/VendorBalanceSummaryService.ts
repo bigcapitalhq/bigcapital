@@ -20,7 +20,7 @@ export class VendorBalanceSummaryService {
 
   /**
    * Retrieve the statment of customer balance summary report.
-   * @param {IVendorBalanceSummaryQuery} query - 
+   * @param {IVendorBalanceSummaryQuery} query -
    * @return {Promise<IVendorBalanceSummaryStatement>}
    */
   public async vendorBalanceSummary(
@@ -38,7 +38,10 @@ export class VendorBalanceSummaryService {
     const reportInstance = new VendorBalanceSummaryReport(
       this.vendorBalanceSummaryRepository,
       filter,
-      { baseCurrency: this.vendorBalanceSummaryRepository.baseCurrency, dateFormat: meta.dateFormat },
+      {
+        baseCurrency: this.vendorBalanceSummaryRepository.baseCurrency,
+        dateFormat: meta.dateFormat,
+      },
     );
 
     // Triggers `onVendorBalanceSummaryViewed` event.

@@ -3,9 +3,7 @@ import { Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { PaymentLinksApplication } from './PaymentLinksApplication';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
-import {
-  GetInvoicePaymentLinkResponseWrapperDto,
-} from './dtos/GetInvoicePaymentLinkResponse.dto';
+import { GetInvoicePaymentLinkResponseWrapperDto } from './dtos/GetInvoicePaymentLinkResponse.dto';
 import { CreateStripeCheckoutSessionResponseDto } from './dtos/CreateStripeCheckoutSessionResponse.dto';
 
 @Controller('payment-links')

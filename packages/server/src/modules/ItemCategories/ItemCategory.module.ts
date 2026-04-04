@@ -30,9 +30,6 @@ import { ItemCategoriesImportable } from './ItemCategoriesImportable';
     ItemCategoriesExportable,
     ItemCategoriesImportable,
   ],
-  exports: [
-    ItemCategoriesExportable,
-    ItemCategoriesImportable,
-  ],
+  exports: [ItemCategoriesExportable, ItemCategoriesImportable],
 })
 export class ItemCategoryModule {}

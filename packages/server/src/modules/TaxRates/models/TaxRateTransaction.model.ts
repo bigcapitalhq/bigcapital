@@ -10,7 +10,7 @@ export class TaxRateTransaction extends BaseModel {
   public referenceId: string;
   public rate: number;
   public taxAccountId?: number;
-  
+
   /**
    * Table name
    */

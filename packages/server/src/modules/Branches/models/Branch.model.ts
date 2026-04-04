@@ -7,7 +7,7 @@ import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/Inje
 import { BranchMeta } from './Branch.meta';
 
 @InjectModelMeta(BranchMeta)
-export class Branch extends BaseModel{
+export class Branch extends BaseModel {
   name!: string;
   code!: string;
   address!: string;

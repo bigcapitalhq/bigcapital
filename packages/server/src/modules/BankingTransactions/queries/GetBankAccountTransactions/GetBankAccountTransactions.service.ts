@@ -19,9 +19,7 @@ export class GetBankAccountTransactionsService {
    * @param {ICashflowAccountTransactionsQuery} query -
    * @return {Promise<IInvetoryItemDetailDOO>}
    */
-  public async bankAccountTransactions(
-    query: GetBankTransactionsQueryDto,
-  ) {
+  public async bankAccountTransactions(query: GetBankTransactionsQueryDto) {
     const parsedQuery = {
       ...getBankAccountTransactionsDefaultQuery(),
       ...query,

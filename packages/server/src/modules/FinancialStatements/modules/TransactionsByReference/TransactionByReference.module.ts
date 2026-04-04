@@ -13,8 +13,8 @@ import { AccountsModule } from '@/modules/Accounts/Accounts.module';
     TransactionsByReferenceRepository,
     TransactionsByReferenceApplication,
     TransactionsByReferenceService,
-    TenancyContext
+    TenancyContext,
   ],
   controllers: [TransactionsByReferenceController],
 })
-export class TransactionsByReferenceModule { }
+export class TransactionsByReferenceModule {}

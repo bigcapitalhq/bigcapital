@@ -1,4 +1,3 @@
-
 import {
   IPaymentReceivedCreatedPayload,
   IPaymentReceivedDeletedPayload,
@@ -12,7 +11,7 @@ import { events } from '@/common/events/events';
 @Injectable()
 export class PaymentReceivedSyncInvoicesSubscriber {
   /**
-   * @param {PaymentReceivedInvoiceSync} paymentSyncInvoice - 
+   * @param {PaymentReceivedInvoiceSync} paymentSyncInvoice -
    */
   constructor(
     private readonly paymentSyncInvoice: PaymentReceivedInvoiceSync,
@@ -30,7 +29,7 @@ export class PaymentReceivedSyncInvoicesSubscriber {
     await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(
       paymentReceive.entries,
       null,
-      trx
+      trx,
     );
   }
 
@@ -46,7 +45,7 @@ export class PaymentReceivedSyncInvoicesSubscriber {
     await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(
       paymentReceive.entries,
       oldPaymentReceive?.entries || null,
-      trx
+      trx,
     );
   }
 
@@ -65,7 +64,7 @@ export class PaymentReceivedSyncInvoicesSubscriber {
         paymentAmount: 0,
       })),
       oldPaymentReceive.entries,
-      trx
+      trx,
     );
-  };
+  }
 }

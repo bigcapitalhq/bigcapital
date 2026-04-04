@@ -96,7 +96,10 @@ export class CashFlowStatementService {
       netIncomeLedger,
       filter,
       this.i18n,
-      { baseCurrency: tenant.metadata.baseCurrency, dateFormat: meta.dateFormat },
+      {
+        baseCurrency: tenant.metadata.baseCurrency,
+        dateFormat: meta.dateFormat,
+      },
     );
 
     return {

@@ -129,9 +129,8 @@ export interface ICustomerOpeningBalanceEditedPayload {
   trx: Knex.Transaction;
 }
 
-
 export interface ICustomerActivatingPayload {
-  trx: Knex.Transaction,
+  trx: Knex.Transaction;
   oldCustomer: Customer;
 }
 

@@ -9,16 +9,14 @@ export class VendorBalanceSummaryPdf {
   constructor(
     private readonly vendorBalanceSummaryTable: VendorBalanceSummaryTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) { }
+  ) {}
 
   /**
    * Retrieves the sales by items sheet in pdf format.
    * @param {IVendorBalanceSummaryQuery} query - Query.
    * @returns {Promise<IBalanceSheetTable>}
    */
-  public async pdf(
-    query: IVendorBalanceSummaryQuery,
-  ): Promise<Buffer> {
+  public async pdf(query: IVendorBalanceSummaryQuery): Promise<Buffer> {
     const table = await this.vendorBalanceSummaryTable.table(query);
 
     return this.tableSheetPdf.convertToPdf(

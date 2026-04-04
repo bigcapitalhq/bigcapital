@@ -22,7 +22,9 @@ export class BulkDeleteItemsDto {
 
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value, obj }) => parseBoolean(value ?? obj?.skip_undeletable, false))
+  @Transform(({ value, obj }) =>
+    parseBoolean(value ?? obj?.skip_undeletable, false),
+  )
   @ApiPropertyOptional({
     description:
       'When true, undeletable items will be skipped and only deletable ones removed.',
@@ -59,4 +61,3 @@ export class ValidateBulkDeleteItemsResponseDto {
   })
   nonDeletableIds: number[];
 }
-

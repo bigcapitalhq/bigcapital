@@ -28,7 +28,7 @@ export class StripePaymentWebhooksController {
     private readonly stripePaymentService: StripePaymentService,
     private readonly eventEmitter: EventEmitter2,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   /**
    * Handles incoming Stripe webhook events.

@@ -1,6 +1,6 @@
-import { AttachmentTransformer } from "@/modules/Attachments/Attachment.transformer";
-import { ItemEntryTransformer } from "@/modules/TransactionItemEntry/ItemEntry.transformer";
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { AttachmentTransformer } from '@/modules/Attachments/Attachment.transformer';
+import { ItemEntryTransformer } from '@/modules/TransactionItemEntry/ItemEntry.transformer';
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class CreditNoteTransformer extends Transformer {
   /**

@@ -29,7 +29,7 @@ export class EditBillPayment {
 
     @Inject(Vendor.name)
     private readonly vendorModel: TenantModelProxy<typeof Vendor>,
-  ) { }
+  ) {}
 
   /**
    * Edits the details of the given bill payment.

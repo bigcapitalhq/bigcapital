@@ -35,7 +35,7 @@ import { AttachmentsModule } from '../Attachments/Attachment.module';
     TransformerInjectable,
     BrandingTemplateDTOTransformer,
     GetOrganizationBrandingAttributesService,
-    GetPdfTemplateBrandingState
+    GetPdfTemplateBrandingState,
   ],
 })
 export class PdfTemplatesModule {}

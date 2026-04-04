@@ -1,4 +1,3 @@
-
 function StatusFieldFilterQuery(query, role) {
   query.modify('filterByStatus', role.value);
 }

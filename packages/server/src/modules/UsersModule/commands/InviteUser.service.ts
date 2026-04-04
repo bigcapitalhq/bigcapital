@@ -78,7 +78,9 @@ export class InviteTenantUserService {
    * @param {string} email -
    * @return {Promise<{ invite: IUserInvite }>}
    */
-  public async resendInvite(userId: number): Promise<{ user: ModelObject<TenantUser> }> {
+  public async resendInvite(
+    userId: number,
+  ): Promise<{ user: ModelObject<TenantUser> }> {
     // Retrieve the user by id or throw not found service error.
     const user = await this.getUserByIdOrThrowError(userId);
 

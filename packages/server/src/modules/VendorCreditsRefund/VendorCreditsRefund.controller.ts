@@ -25,7 +25,7 @@ import { VendorCreditAction } from '../VendorCredit/types/VendorCredit.types';
 export class VendorCreditsRefundController {
   constructor(
     private readonly vendorCreditsRefundApplication: VendorCreditsRefundApplication,
-  ) { }
+  ) {}
 
   /**
    * Retrieve a single refund vendor credit transaction by id.
@@ -34,7 +34,9 @@ export class VendorCreditsRefundController {
    */
   @Get('refunds/:refundCreditId')
   @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
-  @ApiOperation({ summary: 'Retrieve a refund vendor credit transaction by id.' })
+  @ApiOperation({
+    summary: 'Retrieve a refund vendor credit transaction by id.',
+  })
   public getRefundVendorCreditTransaction(
     @Param('refundCreditId') refundCreditId: string,
   ) {

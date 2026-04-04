@@ -3,7 +3,9 @@ import { Model } from 'objection';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-export const withDateSessionMixin = <T extends Constructor<Model>>(BaseModel: T) => {
+export const withDateSessionMixin = <T extends Constructor<Model>>(
+  BaseModel: T,
+) => {
   return class DateSession extends BaseModel {
     constructor(...args: any[]) {
       super(...args);
@@ -12,7 +14,7 @@ export const withDateSessionMixin = <T extends Constructor<Model>>(BaseModel: T)
     get timestamps() {
       return [];
     }
-    
+
     $beforeUpdate(opt, context) {
       const maybePromise = super.$beforeUpdate(opt, context);
 
@@ -36,5 +38,5 @@ export const withDateSessionMixin = <T extends Constructor<Model>>(BaseModel: T)
         }
       });
     }
-  }
-}
+  };
+};

@@ -22,7 +22,7 @@ import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
     ItemsModule,
     BranchesModule,
     WarehousesModule,
-    VendorCreditsModule
+    VendorCreditsModule,
   ],
   providers: [
     ApplyVendorCreditSyncBillsService,
@@ -35,4 +35,4 @@ import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
   ],
   controllers: [VendorCreditApplyBillsController],
 })
-export class VendorCreditApplyBillsModule { }
+export class VendorCreditApplyBillsModule {}

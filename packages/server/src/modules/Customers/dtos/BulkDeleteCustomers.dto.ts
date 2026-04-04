@@ -22,7 +22,9 @@ export class BulkDeleteCustomersDto {
 
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value, obj }) => parseBoolean(value ?? obj?.skip_undeletable, false))
+  @Transform(({ value, obj }) =>
+    parseBoolean(value ?? obj?.skip_undeletable, false),
+  )
   @ApiPropertyOptional({
     description:
       'When true, undeletable customers will be skipped and only deletable ones removed.',
@@ -59,4 +61,3 @@ export class ValidateBulkDeleteCustomersResponseDto {
   })
   nonDeletableIds: number[];
 }
-

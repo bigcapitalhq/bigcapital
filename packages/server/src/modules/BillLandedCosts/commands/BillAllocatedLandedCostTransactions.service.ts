@@ -21,7 +21,7 @@ export class BillAllocatedLandedCostTransactions {
     private readonly billLandedCostModel: TenantModelProxy<
       typeof BillLandedCost
     >,
-  ) { }
+  ) {}
 
   /**
    * Retrieve the bill associated landed cost transactions.
@@ -80,8 +80,8 @@ export class BillAllocatedLandedCostTransactions {
     const allocationMethodFormattedKey = transaction.allocationMethodFormatted;
     const allocationMethodFormatted = allocationMethodFormattedKey
       ? this.i18nService.t(allocationMethodFormattedKey, {
-        defaultValue: allocationMethodFormattedKey,
-      })
+          defaultValue: allocationMethodFormattedKey,
+        })
       : '';
 
     return {

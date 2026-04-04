@@ -20,7 +20,10 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @Controller('reports/inventory-valuation')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@ApiExtraModels(InventoryValuationResponseDto, InventoryValuationTableResponseDto)
+@ApiExtraModels(
+  InventoryValuationResponseDto,
+  InventoryValuationTableResponseDto,
+)
 export class InventoryValuationController {
   constructor(
     private readonly inventoryValuationApp: InventoryValuationSheetApplication,

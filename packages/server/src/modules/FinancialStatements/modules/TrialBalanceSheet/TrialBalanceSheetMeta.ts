@@ -1,5 +1,8 @@
 import * as moment from 'moment';
-import { ITrialBalanceSheetMeta, ITrialBalanceSheetQuery } from './TrialBalanceSheet.types';
+import {
+  ITrialBalanceSheetMeta,
+  ITrialBalanceSheetQuery,
+} from './TrialBalanceSheet.types';
 import { Injectable } from '@nestjs/common';
 import { FinancialSheetMeta } from '../../common/FinancialSheetMeta';
 @Injectable()
@@ -12,11 +15,13 @@ export class TrialBalanceSheetMeta {
    * @returns {Promise<ITrialBalanceSheetMeta>}
    */
   public async meta(
-    query: ITrialBalanceSheetQuery
+    query: ITrialBalanceSheetQuery,
   ): Promise<ITrialBalanceSheetMeta> {
     const commonMeta = await this.financialSheetMeta.meta();
 
-    const formattedFromDate = moment(query.fromDate).format(commonMeta.dateFormat);
+    const formattedFromDate = moment(query.fromDate).format(
+      commonMeta.dateFormat,
+    );
     const formattedToDate = moment(query.toDate).format(commonMeta.dateFormat);
     const formattedDateRange = `From ${formattedFromDate} to ${formattedToDate}`;
 

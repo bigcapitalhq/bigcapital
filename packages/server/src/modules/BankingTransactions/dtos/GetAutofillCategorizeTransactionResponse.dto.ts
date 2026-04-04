@@ -13,7 +13,10 @@ export class GetAutofillCategorizeTransactionResponseDto {
   })
   debitAccountId?: number | null;
 
-  @ApiProperty({ description: 'Total amount of uncategorized transactions', example: -150.5 })
+  @ApiProperty({
+    description: 'Total amount of uncategorized transactions',
+    example: -150.5,
+  })
   amount: number;
 
   @ApiProperty({ description: 'Formatted amount', example: '$150.50' })
@@ -25,25 +28,43 @@ export class GetAutofillCategorizeTransactionResponseDto {
   @ApiProperty({ description: 'Formatted date', example: 'Jan 15, 2024' })
   formattedDate: string;
 
-  @ApiProperty({ description: 'Whether the transaction is recognized by a rule', example: true })
+  @ApiProperty({
+    description: 'Whether the transaction is recognized by a rule',
+    example: true,
+  })
   isRecognized: boolean;
 
-  @ApiPropertyOptional({ description: 'Bank rule ID that recognized the transaction', example: 1 })
+  @ApiPropertyOptional({
+    description: 'Bank rule ID that recognized the transaction',
+    example: 1,
+  })
   recognizedByRuleId?: number | null;
 
-  @ApiPropertyOptional({ description: 'Bank rule name that recognized the transaction', example: 'Salary Rule' })
+  @ApiPropertyOptional({
+    description: 'Bank rule name that recognized the transaction',
+    example: 'Salary Rule',
+  })
   recognizedByRuleName?: string | null;
 
   @ApiPropertyOptional({ description: 'Reference number', example: 'REF-001' })
   referenceNo?: string | null;
 
-  @ApiProperty({ description: 'Transaction type (category)', example: 'other_expense' })
+  @ApiProperty({
+    description: 'Transaction type (category)',
+    example: 'other_expense',
+  })
   transactionType: string;
 
-  @ApiProperty({ description: 'Whether this is a deposit transaction', example: false })
+  @ApiProperty({
+    description: 'Whether this is a deposit transaction',
+    example: false,
+  })
   isDepositTransaction: boolean;
 
-  @ApiProperty({ description: 'Whether this is a withdrawal transaction', example: true })
+  @ApiProperty({
+    description: 'Whether this is a withdrawal transaction',
+    example: true,
+  })
   isWithdrawalTransaction: boolean;
 
   @ApiPropertyOptional({ description: 'Assigned payee from recognition' })

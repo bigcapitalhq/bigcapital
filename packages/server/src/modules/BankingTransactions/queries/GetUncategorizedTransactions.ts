@@ -8,8 +8,8 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 @Injectable()
 export class GetUncategorizedTransactions {
   /**
-   * @param {TransformerInjectable} transformer 
-   * @param {UncategorizedBankTransaction.name} uncategorizedBankTransactionModel 
+   * @param {TransformerInjectable} transformer
+   * @param {UncategorizedBankTransaction.name} uncategorizedBankTransactionModel
    */
   constructor(
     private readonly transformer: TransformerInjectable,

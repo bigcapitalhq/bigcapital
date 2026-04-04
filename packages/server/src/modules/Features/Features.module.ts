@@ -9,7 +9,7 @@ import { FeaturesConfigure } from './FeaturesConfigure';
     FeaturesManager,
     FeaturesSettingsDriver,
     FeaturesConfigureManager,
-    FeaturesConfigure
+    FeaturesConfigure,
   ],
   exports: [FeaturesManager],
 })

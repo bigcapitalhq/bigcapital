@@ -6,7 +6,7 @@ import {
 import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export const transformReceiptToBrandingTemplateAttributes = (
-  saleReceipt: ISaleReceipt
+  saleReceipt: ISaleReceipt,
 ): Partial<ISaleReceiptBrandingTemplateAttributes> => {
   return {
     total: saleReceipt.totalFormatted,

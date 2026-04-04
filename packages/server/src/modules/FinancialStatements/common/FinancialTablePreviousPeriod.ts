@@ -26,7 +26,7 @@ export const FinancialTablePreviousPeriod = <
      * @returns {ITableColumn}
      */
     public getPreviousPeriodTotalColumn = (
-      dateRange?: IDateRange
+      dateRange?: IDateRange,
     ): ITableColumn => {
       const PPDate = dateRange
         ? dateRange.toDate
@@ -36,7 +36,7 @@ export const FinancialTablePreviousPeriod = <
       return {
         key: 'previous_period',
         label: this.i18n.t(`financial_sheet.previoud_period_date`, {
-          args: { date: PPFormatted, }
+          args: { date: PPFormatted },
         }),
       };
     };
@@ -89,13 +89,12 @@ export const FinancialTablePreviousPeriod = <
      * Retrieves previous period percentage accessor.
      * @returns {ITableColumnAccessor}
      */
-    public getPreviousPeriodPercentageAccessor =
-      (): ITableColumnAccessor => {
-        return {
-          key: 'previous_period_percentage',
-          accessor: 'previousPeriodPercentage.formattedAmount',
-        };
+    public getPreviousPeriodPercentageAccessor = (): ITableColumnAccessor => {
+      return {
+        key: 'previous_period_percentage',
+        accessor: 'previousPeriodPercentage.formattedAmount',
       };
+    };
 
     /**
      * Retrieves previous period total horizontal column accessor.
@@ -103,7 +102,7 @@ export const FinancialTablePreviousPeriod = <
      * @returns {ITableColumnAccessor}
      */
     public getPreviousPeriodTotalHorizAccessor = (
-      index: number
+      index: number,
     ): ITableColumnAccessor => {
       return {
         key: 'previous_period',
@@ -117,7 +116,7 @@ export const FinancialTablePreviousPeriod = <
      * @returns {ITableColumnAccessor}
      */
     public getPreviousPeriodChangeHorizAccessor = (
-      index: number
+      index: number,
     ): ITableColumnAccessor => {
       return {
         key: 'previous_period_change',
@@ -131,7 +130,7 @@ export const FinancialTablePreviousPeriod = <
      * @returns {ITableColumnAccessor}
      */
     public getPreviousPeriodPercentageHorizAccessor = (
-      index: number
+      index: number,
     ): ITableColumnAccessor => {
       return {
         key: 'previous_period_percentage',

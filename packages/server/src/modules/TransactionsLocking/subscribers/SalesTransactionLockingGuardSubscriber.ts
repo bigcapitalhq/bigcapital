@@ -37,7 +37,7 @@ import { ISaleReceiptEventClosingPayload } from '@/modules/SaleReceipts/types/Sa
 export class SalesTransactionLockingGuardSubscriber {
   constructor(
     public readonly salesLockingGuard: SalesTransactionLockingGuard,
-  ) { }
+  ) {}
 
   /**
    * ---------------------------------------------

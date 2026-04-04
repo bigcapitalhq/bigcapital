@@ -25,7 +25,12 @@ import { VendorGLEntriesStorage } from './VendorGLEntriesStorage';
 import { VendorsWriteGLOpeningSubscriber } from './subscribers/VendorGLEntriesSubscriber';
 
 @Module({
-  imports: [TenancyDatabaseModule, DynamicListModule, LedgerModule, AccountsModule],
+  imports: [
+    TenancyDatabaseModule,
+    DynamicListModule,
+    LedgerModule,
+    AccountsModule,
+  ],
   controllers: [VendorsController],
   providers: [
     ActivateVendorService,
@@ -49,4 +54,4 @@ import { VendorsWriteGLOpeningSubscriber } from './subscribers/VendorGLEntriesSu
     VendorsWriteGLOpeningSubscriber,
   ],
 })
-export class VendorsModule { }
+export class VendorsModule {}

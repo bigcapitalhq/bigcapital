@@ -20,8 +20,7 @@ export class SendSaleInvoiceMailProcessor extends WorkerHost {
 
   @UseCls()
   async process(job: Job<SendSaleInvoiceMailJobPayload>) {
-    const { messageOptions, saleInvoiceId, organizationId, userId } =
-      job.data;
+    const { messageOptions, saleInvoiceId, organizationId, userId } = job.data;
 
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);

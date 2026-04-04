@@ -18,12 +18,9 @@ import { SalesByItemsController } from './SalesByItems.controller';
     SalesByItemsReportService,
     SalesByItemsExport,
     SalesByItemsMeta,
-    TenancyContext
+    TenancyContext,
   ],
   controllers: [SalesByItemsController],
-  imports: [
-    FinancialSheetCommonModule,
-    InventoryCostModule
-  ],
+  imports: [FinancialSheetCommonModule, InventoryCostModule],
 })
 export class SalesByItemsModule {}

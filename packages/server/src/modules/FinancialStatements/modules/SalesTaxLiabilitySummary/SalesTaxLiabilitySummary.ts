@@ -10,7 +10,10 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 import { ModelObject } from 'objection';
 import { TaxRateModel } from '@/modules/TaxRates/models/TaxRate.model';
 import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class SalesTaxLiabilitySummary extends FinancialSheet {
   private query: SalesTaxLiabilitySummaryQuery;

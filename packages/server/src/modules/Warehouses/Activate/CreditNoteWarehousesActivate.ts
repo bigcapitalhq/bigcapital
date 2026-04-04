@@ -20,7 +20,7 @@ export class CreditNotesActivateWarehouses {
    * @returns {Promise<void>}
    */
   public updateCreditsWithWarehouse = async (
-    primaryWarehouse: Warehouse
+    primaryWarehouse: Warehouse,
   ): Promise<void> => {
     // Updates the sale estimates with primary warehouse.
     await this.creditNoteModel().query().update({

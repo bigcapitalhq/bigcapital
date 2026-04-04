@@ -58,24 +58,24 @@ export const transformPlaidAccountToCreateAccount = (
  * @returns {CreateUncategorizedTransactionDTO}
  */
 export const transformPlaidTrxsToCashflowCreate = (
-    cashflowAccountId: number,
-    plaidTranasction: PlaidTransactionBase,
-  ): CreateUncategorizedTransactionDTO => {
-    return {
-      date: plaidTranasction.date,
+  cashflowAccountId: number,
+  plaidTranasction: PlaidTransactionBase,
+): CreateUncategorizedTransactionDTO => {
+  return {
+    date: plaidTranasction.date,
 
-      // Plaid: Positive values when money moves out of the account; negative values
-      // when money moves in. For example, debit card purchases are positive;
-      // credit card payments, direct deposits, and refunds are negative.
-      amount: -1 * plaidTranasction.amount,
+    // Plaid: Positive values when money moves out of the account; negative values
+    // when money moves in. For example, debit card purchases are positive;
+    // credit card payments, direct deposits, and refunds are negative.
+    amount: -1 * plaidTranasction.amount,
 
-      description: plaidTranasction.name,
-      payee: plaidTranasction.payment_meta?.payee,
-      currencyCode: plaidTranasction.iso_currency_code,
-      accountId: cashflowAccountId,
-      referenceNo: plaidTranasction.payment_meta?.reference_number,
-      plaidTransactionId: plaidTranasction.transaction_id,
-      pending: plaidTranasction.pending,
-      pendingPlaidTransactionId: plaidTranasction.pending_transaction_id,
-    };
+    description: plaidTranasction.name,
+    payee: plaidTranasction.payment_meta?.payee,
+    currencyCode: plaidTranasction.iso_currency_code,
+    accountId: cashflowAccountId,
+    referenceNo: plaidTranasction.payment_meta?.reference_number,
+    plaidTransactionId: plaidTranasction.transaction_id,
+    pending: plaidTranasction.pending,
+    pendingPlaidTransactionId: plaidTranasction.pending_transaction_id,
   };
+};

@@ -14,7 +14,7 @@ export class TenancyContext {
 
     @Inject(TenantModel.name)
     private readonly systemTenantModel: typeof TenantModel,
-  ) { }
+  ) {}
 
   /**
    * Get the current tenant.

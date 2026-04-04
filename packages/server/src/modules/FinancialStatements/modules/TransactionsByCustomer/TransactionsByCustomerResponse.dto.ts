@@ -28,10 +28,16 @@ export class CustomerTransactionDto {
   @ApiPropertyOptional({ description: 'Transaction description' })
   description?: string;
 
-  @ApiProperty({ description: 'Transaction amount', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Transaction amount',
+    type: FinancialReportTotalDto,
+  })
   amount: FinancialReportTotalDto;
 
-  @ApiProperty({ description: 'Running balance', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Running balance',
+    type: FinancialReportTotalDto,
+  })
   runningBalance: FinancialReportTotalDto;
 }
 
@@ -42,19 +48,34 @@ export class CustomerWithTransactionsDto {
   @ApiProperty({ description: 'Customer name' })
   customerName: string;
 
-  @ApiPropertyOptional({ description: 'Opening balance', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Opening balance',
+    type: FinancialReportTotalDto,
+  })
   openingBalance?: FinancialReportTotalDto;
 
-  @ApiProperty({ description: 'Customer transactions', type: [CustomerTransactionDto] })
+  @ApiProperty({
+    description: 'Customer transactions',
+    type: [CustomerTransactionDto],
+  })
   transactions: CustomerTransactionDto[];
 
-  @ApiProperty({ description: 'Closing balance', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Closing balance',
+    type: FinancialReportTotalDto,
+  })
   closingBalance: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Total debit', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Total debit',
+    type: FinancialReportTotalDto,
+  })
   totalDebit?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Total credit', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Total credit',
+    type: FinancialReportTotalDto,
+  })
   totalCredit?: FinancialReportTotalDto;
 }
 
@@ -76,7 +97,10 @@ export class TransactionsByCustomerQueryResponseDto {
   @ApiProperty({ description: 'End date' })
   toDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Customer IDs to include', type: [Number] })
@@ -87,13 +111,22 @@ export class TransactionsByCustomerQueryResponseDto {
 }
 
 export class TransactionsByCustomerResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: TransactionsByCustomerQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: TransactionsByCustomerQueryResponseDto,
+  })
   query: TransactionsByCustomerQueryResponseDto;
 
-  @ApiProperty({ description: 'Customers with transactions', type: [CustomerWithTransactionsDto] })
+  @ApiProperty({
+    description: 'Customers with transactions',
+    type: [CustomerWithTransactionsDto],
+  })
   data: CustomerWithTransactionsDto[];
 
-  @ApiProperty({ description: 'Report metadata', type: TransactionsByCustomerMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: TransactionsByCustomerMetaDto,
+  })
   meta: TransactionsByCustomerMetaDto;
 }
 
@@ -106,12 +139,21 @@ export {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class TransactionsByCustomerTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => FinancialTableDataDto,
+  })
   table: FinancialTableDataDto;
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: TransactionsByCustomerQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: TransactionsByCustomerQueryResponseDto,
+  })
   query: TransactionsByCustomerQueryResponseDto;
 
-  @ApiProperty({ description: 'Report metadata', type: TransactionsByCustomerMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: TransactionsByCustomerMetaDto,
+  })
   meta: TransactionsByCustomerMetaDto;
 }

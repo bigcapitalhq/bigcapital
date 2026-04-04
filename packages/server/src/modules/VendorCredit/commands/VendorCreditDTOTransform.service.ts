@@ -31,7 +31,7 @@ export class VendorCreditDTOTransformService {
     private branchDTOTransform: BranchTransactionDTOTransformer,
     private warehouseDTOTransform: WarehouseTransactionDTOTransform,
     private vendorCreditAutoIncrement: VendorCreditAutoIncrementService,
-  ) { }
+  ) {}
 
   /**
    * Transforms the credit/edit vendor credit DTO to model.
@@ -71,10 +71,9 @@ export class VendorCreditDTOTransformService {
       autoNextNumber;
 
     const initialDTO = {
-      ...formatDateFields(
-        omit(vendorCreditDTO, ['open', 'attachments']),
-        ['vendorCreditDate'],
-      ),
+      ...formatDateFields(omit(vendorCreditDTO, ['open', 'attachments']), [
+        'vendorCreditDate',
+      ]),
       amount,
       currencyCode: vendorCurrencyCode,
       exchangeRate: vendorCreditDTO.exchangeRate || 1,
@@ -82,8 +81,8 @@ export class VendorCreditDTOTransformService {
       entries,
       ...(vendorCreditDTO.open &&
         !oldVendorCredit?.openedAt && {
-        openedAt: moment().toMySqlDateTime(),
-      }),
+          openedAt: moment().toMySqlDateTime(),
+        }),
     };
     return composeAsync(
       this.branchDTOTransform.transformDTO<VendorCredit>,

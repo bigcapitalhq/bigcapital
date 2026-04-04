@@ -6,7 +6,7 @@ import { DeleteAccount } from './DeleteAccount.service';
 
 @Injectable()
 export class BulkDeleteAccountsService {
-  constructor(private readonly deleteAccountService: DeleteAccount) { }
+  constructor(private readonly deleteAccountService: DeleteAccount) {}
 
   /**
    * Deletes multiple accounts.
@@ -38,4 +38,3 @@ export class BulkDeleteAccountsService {
     }
   }
 }
-

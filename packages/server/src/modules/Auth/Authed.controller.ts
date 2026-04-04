@@ -20,7 +20,7 @@ export class AuthedController {
   constructor(
     private readonly getAuthedAccountService: GetAuthenticatedAccount,
     private readonly authApp: AuthenticationApplication,
-  ) { }
+  ) {}
 
   @Post('/signup/verify/resend')
   @ApiOperation({ summary: 'Resend the signup confirmation message' })

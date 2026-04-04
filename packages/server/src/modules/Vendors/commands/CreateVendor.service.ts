@@ -35,7 +35,10 @@ export class CreateVendorService {
    * @param  {IVendorNewDTO} vendorDTO
    * @return {Promise<void>}
    */
-  public async createVendor(vendorDTO: CreateVendorDto, trx?: Knex.Transaction) {
+  public async createVendor(
+    vendorDTO: CreateVendorDto,
+    trx?: Knex.Transaction,
+  ) {
     // Transforms create DTO to customer object.
     const vendorObject = await this.transformDTO.transformCreateDTO(vendorDTO);
 

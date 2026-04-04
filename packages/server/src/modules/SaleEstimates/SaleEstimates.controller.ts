@@ -97,7 +97,7 @@ export class SaleEstimatesController {
    */
   constructor(
     private readonly saleEstimatesApplication: SaleEstimatesApplication,
-  ) { }
+  ) {}
 
   @Post()
   @RequirePermission(SaleEstimateAction.Create, AbilitySubject.SaleEstimate)
@@ -250,7 +250,10 @@ export class SaleEstimatesController {
   }
 
   @Post(':id/notify-sms')
-  @RequirePermission(SaleEstimateAction.NotifyBySms, AbilitySubject.SaleEstimate)
+  @RequirePermission(
+    SaleEstimateAction.NotifyBySms,
+    AbilitySubject.SaleEstimate,
+  )
   @ApiOperation({ summary: 'Notify the given sale estimate by SMS.' })
   @ApiParam({
     name: 'id',

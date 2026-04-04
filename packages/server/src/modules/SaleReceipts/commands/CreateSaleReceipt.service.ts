@@ -38,7 +38,7 @@ export class CreateSaleReceipt {
 
     @Inject(Customer.name)
     private readonly customerModel: TenantModelProxy<typeof Customer>,
-  ) { }
+  ) {}
 
   /**
    * Creates a new sale receipt with associated entries.

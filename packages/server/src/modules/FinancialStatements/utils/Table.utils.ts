@@ -4,7 +4,7 @@ import { IColumnMapperMeta, ITableRow } from '../types/Table.types';
 export function tableMapper(
   data: Object[],
   columns: IColumnMapperMeta[],
-  rowsMeta
+  rowsMeta,
 ): ITableRow[] {
   return data.map((object) => tableRowMapper(object, columns, rowsMeta));
 }
@@ -18,7 +18,7 @@ function getAccessor(object, accessor) {
 export function tableRowMapper(
   object: Object,
   columns: IColumnMapperMeta[],
-  rowMeta
+  rowMeta,
 ): ITableRow {
   const cells = columns.map((column) => ({
     key: column.key,

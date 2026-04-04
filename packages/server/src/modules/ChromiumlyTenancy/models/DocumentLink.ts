@@ -4,7 +4,7 @@ import { Model, mixin } from 'objection';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
 
-export class DocumentLink extends BaseModel{
+export class DocumentLink extends BaseModel {
   public modelRef: string;
   public modelId: number;
   public documentId: number;

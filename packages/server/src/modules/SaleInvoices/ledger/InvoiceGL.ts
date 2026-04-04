@@ -158,7 +158,7 @@ export class InvoiceGL {
       accountNormal: AccountNormal.CREDIT,
       index: 1,
     } as ILedgerEntry;
-  };
+  }
 
   /**
    * Retrieves the invoice adjustment GL entry.
@@ -176,15 +176,15 @@ export class InvoiceGL {
       accountNormal: AccountNormal.CREDIT,
       index: 1,
     };
-  };
+  }
 
   /**
    * Retrieves the invoice GL entries.
    * @returns {ILedgerEntry[]}
    */
   public getInvoiceGLEntries = (): ILedgerEntry[] => {
-    const creditEntries = this.saleInvoice.entries.map(
-      (entry, index) => this.getInvoiceItemEntry(entry, index),
+    const creditEntries = this.saleInvoice.entries.map((entry, index) =>
+      this.getInvoiceItemEntry(entry, index),
     );
     const taxEntries = this.saleInvoice.entries
       .filter((entry) => entry.taxAmount > 0)

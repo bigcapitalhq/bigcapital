@@ -40,7 +40,7 @@ export class SaleReceiptApplication {
     private getSaleReceiptMailStateService: GetSaleReceiptMailStateService,
     private bulkDeleteSaleReceiptsService: BulkDeleteSaleReceiptsService,
     private validateBulkDeleteSaleReceiptsService: ValidateBulkDeleteSaleReceiptsService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new sale receipt with associated entries.
@@ -182,9 +182,7 @@ export class SaleReceiptApplication {
    * Retrieves the mail state of the given sale receipt.
    * @param {number} saleReceiptId
    */
-  public getSaleReceiptMail(
-    saleReceiptId: number,
-  ): Promise<ISaleReceiptState> {
+  public getSaleReceiptMail(saleReceiptId: number): Promise<ISaleReceiptState> {
     return this.getSaleReceiptMailStateService.getMailState(saleReceiptId);
   }
 }

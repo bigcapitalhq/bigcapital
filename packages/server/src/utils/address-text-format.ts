@@ -1,4 +1,4 @@
-import { Contact } from "@/modules/Contacts/models/Contact";
+import { Contact } from '@/modules/Contacts/models/Contact';
 
 interface OrganizationAddressFormatArgs {
   organizationName?: string;
@@ -34,7 +34,7 @@ const formatText = (message: string, replacements: Record<string, string>) => {
     (msg, [key, value]) => {
       return msg.split(`{${key}}`).join(value || '');
     },
-    message
+    message,
   );
   // Removes any empty lines.
   formattedMessage = formattedMessage.replace(/^\s*[\r\n]/gm, '');
@@ -47,7 +47,7 @@ const formatText = (message: string, replacements: Record<string, string>) => {
 
 export const organizationAddressTextFormat = (
   message: string,
-  args: OrganizationAddressFormatArgs
+  args: OrganizationAddressFormatArgs,
 ) => {
   const replacements: Record<string, string> = {
     ORGANIZATION_NAME: args.organizationName || '',
@@ -84,7 +84,7 @@ export const defaultContactAddressFormat = `{CONTACT_NAME}
 
 export const contactAddressTextFormat = (
   contact: Contact,
-  message: string = defaultContactAddressFormat
+  message: string = defaultContactAddressFormat,
 ) => {
   const args = {
     displayName: contact.displayName,

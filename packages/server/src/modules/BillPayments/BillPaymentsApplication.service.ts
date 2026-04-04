@@ -4,7 +4,10 @@ import { DeleteBillPayment } from './commands/DeleteBillPayment.service';
 import { EditBillPayment } from './commands/EditBillPayment.service';
 import { GetBillPayment } from './queries/GetBillPayment.service';
 import { GetPaymentBills } from './queries/GetPaymentBills.service';
-import { CreateBillPaymentDto, EditBillPaymentDto } from './dtos/BillPayment.dto';
+import {
+  CreateBillPaymentDto,
+  EditBillPaymentDto,
+} from './dtos/BillPayment.dto';
 import { GetBillPaymentsService } from './queries/GetBillPayments.service';
 import { GetBillPaymentsFilterDto } from './dtos/GetBillPaymentsFilter.dto';
 

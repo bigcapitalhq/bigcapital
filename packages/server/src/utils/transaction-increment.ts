@@ -1,1 +1,2 @@
-export const transactionIncrement = (s) => s.replace(/([0-8]|\d?9+)?$/, (e) => ++e);
+export const transactionIncrement = (s) =>
+  s.replace(/([0-8]|\d?9+)?$/, (e) => ++e);

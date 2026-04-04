@@ -8,7 +8,7 @@ export class TransactionPaymentServiceEntry extends BaseModel {
   readonly paymentIntegrationId!: number;
   readonly enable!: boolean;
   readonly options!: Record<string, any>;
-  
+
   readonly paymentIntegration: PaymentIntegration;
 
   /**

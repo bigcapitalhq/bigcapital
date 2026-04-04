@@ -123,7 +123,6 @@ export interface IAllocatedLandedCostCreatedPayload {
 
 export interface IBillAssociatedLandedCostTransactions {}
 
-
 interface ICommonEntry {
   id?: number;
   amount: number;
@@ -142,7 +141,6 @@ interface ICommonEntryDTO {
 export interface ICommonLandedCostEntryDTO extends ICommonEntryDTO {
   landedCost?: boolean;
 }
-
 
 export type LandedCostTransactionType = 'Bill' | 'Expense';
 export type LandedCostTransactionModel = Bill | Expense;

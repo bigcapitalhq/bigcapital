@@ -97,10 +97,10 @@ export class InventoryValuationSheetRepository {
       .onBuild((q) => {
         q.where('type', 'inventory');
 
-      if (this.filter.itemsIds.length > 0) {
-        q.whereIn('id', this.filter.itemsIds);
-      }
-    });
+        if (this.filter.itemsIds.length > 0) {
+          q.whereIn('id', this.filter.itemsIds);
+        }
+      });
     this.inventoryItems = inventoryItems;
   }
 

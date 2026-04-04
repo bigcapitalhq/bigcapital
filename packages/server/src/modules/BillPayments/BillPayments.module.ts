@@ -54,4 +54,4 @@ import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
   ],
   controllers: [BillPaymentsController],
 })
-export class BillPaymentsModule { }
+export class BillPaymentsModule {}

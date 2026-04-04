@@ -107,10 +107,16 @@ export class JournalSheetQueryResponseDto {
 }
 
 export class JournalSheetResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: JournalSheetQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: JournalSheetQueryResponseDto,
+  })
   query: JournalSheetQueryResponseDto;
 
-  @ApiProperty({ description: 'Journal transactions', type: [JournalTransactionDto] })
+  @ApiProperty({
+    description: 'Journal transactions',
+    type: [JournalTransactionDto],
+  })
   data: JournalTransactionDto[];
 
   @ApiProperty({ description: 'Report metadata', type: JournalSheetMetaDto })
@@ -126,10 +132,16 @@ export {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class JournalSheetTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => FinancialTableDataDto,
+  })
   table: FinancialTableDataDto;
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: JournalSheetQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: JournalSheetQueryResponseDto,
+  })
   query: JournalSheetQueryResponseDto;
 
   @ApiProperty({ description: 'Report metadata', type: JournalSheetMetaDto })

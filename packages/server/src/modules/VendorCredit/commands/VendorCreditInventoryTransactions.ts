@@ -9,7 +9,7 @@ import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 export class VendorCreditInventoryTransactions {
   constructor(
     private readonly inventoryService: InventoryTransactionsService,
-    private readonly itemsEntriesService: ItemsEntriesService
+    private readonly itemsEntriesService: ItemsEntriesService,
   ) {}
 
   /**
@@ -19,12 +19,12 @@ export class VendorCreditInventoryTransactions {
    */
   public createInventoryTransactions = async (
     vendorCredit: VendorCredit,
-    trx: Knex.Transaction
+    trx: Knex.Transaction,
   ): Promise<void> => {
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =
       await this.itemsEntriesService.filterInventoryEntries(
-        vendorCredit.entries
+        vendorCredit.entries,
       );
 
     const transaction = {
@@ -42,7 +42,7 @@ export class VendorCreditInventoryTransactions {
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       transaction,
       false,
-      trx
+      trx,
     );
   };
 
@@ -55,14 +55,14 @@ export class VendorCreditInventoryTransactions {
   public async editInventoryTransactions(
     vendorCreditId: number,
     vendorCredit: VendorCredit,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     // Deletes inventory transactions.
     await this.deleteInventoryTransactions(vendorCreditId, trx);
 
     // Re-write inventory transactions.
     await this.createInventoryTransactions(vendorCredit, trx);
-  };
+  }
 
   /**
    * Deletes credit note associated inventory transactions.
@@ -71,13 +71,13 @@ export class VendorCreditInventoryTransactions {
    */
   public async deleteInventoryTransactions(
     vendorCreditId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     // Deletes the inventory transactions by the given reference id and type.
     await this.inventoryService.deleteInventoryTransactions(
       vendorCreditId,
       'VendorCredit',
-      trx
+      trx,
     );
-  };
+  }
 }

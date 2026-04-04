@@ -4,11 +4,10 @@ import { ReceiptActivateWarehouses } from '../../Activate/ReceiptWarehousesActiv
 import { events } from '@/common/events/events';
 import { IWarehousesActivatedPayload } from '../../Warehouse.types';
 
-
 @Injectable()
 export class ReceiptsActivateWarehousesSubscriber {
   constructor(
-    private readonly receiptsActivateWarehouses: ReceiptActivateWarehouses, 
+    private readonly receiptsActivateWarehouses: ReceiptActivateWarehouses,
   ) {}
 
   /**
@@ -21,7 +20,7 @@ export class ReceiptsActivateWarehousesSubscriber {
     primaryWarehouse,
   }: IWarehousesActivatedPayload) {
     await this.receiptsActivateWarehouses.updateReceiptsWithWarehouse(
-      primaryWarehouse
+      primaryWarehouse,
     );
-  };
+  }
 }

@@ -28,7 +28,10 @@ export class SendSaleEstimateMailProcess extends WorkerHost {
     this.clsService.set('userId', userId);
 
     try {
-      await this.sendEstimateMailService.sendMail(saleEstimateId, messageOptions);
+      await this.sendEstimateMailService.sendMail(
+        saleEstimateId,
+        messageOptions,
+      );
     } catch (error) {
       console.error('Failed to process estimate mail job:', error);
       throw error;

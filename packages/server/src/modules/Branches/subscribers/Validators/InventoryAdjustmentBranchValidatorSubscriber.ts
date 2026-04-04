@@ -8,13 +8,15 @@ import { IInventoryAdjustmentCreatingPayload } from '@/modules/InventoryAdjutmen
 export class InventoryAdjustmentBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance on inventory adjustment creating.
    * @param {IInventoryAdjustmentCreatingPayload} payload
    */
-  @OnEvent(events.inventoryAdjustment.onQuickCreating, { suppressErrors: false })
+  @OnEvent(events.inventoryAdjustment.onQuickCreating, {
+    suppressErrors: false,
+  })
   async validateBranchExistanceOnInventoryCreating({
     quickAdjustmentDTO,
   }: IInventoryAdjustmentCreatingPayload) {

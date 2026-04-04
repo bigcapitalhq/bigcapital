@@ -28,7 +28,9 @@ export class VendorCreditApplyBillsController {
 
   @Get(':vendorCreditId/bills-to-apply')
   @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
-  @ApiOperation({ summary: 'Get bills that can be applied with this vendor credit.' })
+  @ApiOperation({
+    summary: 'Get bills that can be applied with this vendor credit.',
+  })
   async getVendorCreditToApplyBills(
     @Param('vendorCreditId') vendorCreditId: number,
   ) {

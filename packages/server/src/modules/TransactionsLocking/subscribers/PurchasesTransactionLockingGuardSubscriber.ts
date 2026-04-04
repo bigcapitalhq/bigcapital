@@ -26,7 +26,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 export class PurchasesTransactionLockingGuardSubscriber {
   constructor(
     public readonly purchasesTransactionsLocking: PurchasesTransactionLockingGuard,
-  ) { }
+  ) {}
 
   /**
    * ---------------------------------------------

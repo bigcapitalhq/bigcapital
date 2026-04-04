@@ -21,7 +21,10 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @Controller('/reports/vendor-balance-summary')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@ApiExtraModels(VendorBalanceSummaryResponseDto, VendorBalanceSummaryTableResponseDto)
+@ApiExtraModels(
+  VendorBalanceSummaryResponseDto,
+  VendorBalanceSummaryTableResponseDto,
+)
 export class VendorBalanceSummaryController {
   constructor(
     private readonly vendorBalanceSummaryApp: VendorBalanceSummaryApplication,

@@ -83,7 +83,7 @@ export class SalesByItemsTable extends R.pipe(
     const totalRow = this.totalMap(this.data.total);
 
     return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow))
+      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow)),
     )([...itemsRows]) as ITableRow[];
   }
 

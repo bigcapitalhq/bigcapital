@@ -32,7 +32,7 @@ export class VendorBalanceSummaryTable {
   constructor(
     report: IVendorBalanceSummaryData,
     query: IVendorBalanceSummaryQuery,
-    i18n: I18nService
+    i18n: I18nService,
   ) {
     this.report = report;
     this.query = query;
@@ -65,8 +65,8 @@ export class VendorBalanceSummaryTable {
       R.concat(columns),
       R.when(
         R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor())
-      )
+        R.concat(this.getPercentageColumnsAccessor()),
+      ),
     )([]);
   };
 
@@ -76,7 +76,7 @@ export class VendorBalanceSummaryTable {
    * @returns {ITableRow[]}
    */
   private vendorsTransformer = (
-    vendors: IVendorBalanceSummaryVendor[]
+    vendors: IVendorBalanceSummaryVendor[],
   ): ITableRow[] => {
     const columns = this.getVendorColumnsAccessor();
 
@@ -98,8 +98,8 @@ export class VendorBalanceSummaryTable {
       R.concat(columns),
       R.when(
         R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor())
-      )
+        R.concat(this.getPercentageColumnsAccessor()),
+      ),
     )([]) as IColumnMapperMeta[];
   };
 
@@ -146,7 +146,7 @@ export class VendorBalanceSummaryTable {
         R.append({
           key: 'percentage_of_column',
           label: this.i18n.t('contact_summary_balance.percentage_column'),
-        })
+        }),
       ),
       R.concat(columns),
     )([]) as ITableColumn[];

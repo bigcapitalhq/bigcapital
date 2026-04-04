@@ -17,8 +17,8 @@ import { ModelObject } from 'objection';
 import { InviteUserDto } from '../dtos/InviteUser.dto';
 
 interface InviteAcceptResponseDto {
-  inviteToken: { email: string, token: string, createdAt: Date };
-  orgName: string 
+  inviteToken: { email: string; token: string; createdAt: Date };
+  orgName: string;
 }
 
 @Injectable()
@@ -92,9 +92,7 @@ export class AcceptInviteUserService {
    * @param {string} token - the given token string.
    * @throws {ServiceError}
    */
-  public async checkInvite(
-    token: string,
-  ): Promise<InviteAcceptResponseDto> {
+  public async checkInvite(token: string): Promise<InviteAcceptResponseDto> {
     const inviteToken = await this.getInviteTokenOrThrowError(token);
 
     // Find the tenant that associated to the given token.

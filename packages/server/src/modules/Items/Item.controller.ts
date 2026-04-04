@@ -160,7 +160,8 @@ export class ItemsController extends TenantController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Validation error. Possible error types: ITEM_NAME_EXISTS, INVENTORY_ACCOUNT_CANNOT_MODIFIED, TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS, etc.',
+    description:
+      'Validation error. Possible error types: ITEM_NAME_EXISTS, INVENTORY_ACCOUNT_CANNOT_MODIFIED, TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS, etc.',
     schema: {
       $ref: getSchemaPath(ItemApiErrorResponseDto),
     },
@@ -227,7 +228,8 @@ export class ItemsController extends TenantController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Validation error. Possible error types: ITEM_NAME_EXISTS, ITEM_CATEOGRY_NOT_FOUND, COST_ACCOUNT_NOT_COGS, SELL_ACCOUNT_NOT_INCOME, INVENTORY_ACCOUNT_NOT_INVENTORY, INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM, COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM, etc.',
+    description:
+      'Validation error. Possible error types: ITEM_NAME_EXISTS, ITEM_CATEOGRY_NOT_FOUND, COST_ACCOUNT_NOT_COGS, SELL_ACCOUNT_NOT_INCOME, INVENTORY_ACCOUNT_NOT_INVENTORY, INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM, COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM, etc.',
     schema: {
       $ref: getSchemaPath(ItemApiErrorResponseDto),
     },
@@ -250,7 +252,8 @@ export class ItemsController extends TenantController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Cannot delete item. Possible error types: ITEM_HAS_ASSOCIATED_TRANSACTINS, ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT, etc.',
+    description:
+      'Cannot delete item. Possible error types: ITEM_HAS_ASSOCIATED_TRANSACTINS, ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT, etc.',
     schema: {
       $ref: getSchemaPath(ItemApiErrorResponseDto),
     },
@@ -429,5 +432,4 @@ export class ItemsController extends TenantController {
     const itemId = parseInt(id, 10);
     return this.itemsApplication.getItemReceiptsTransactions(itemId);
   }
-
 }

@@ -10,9 +10,7 @@ import { BankingTransactionsExcludeController } from './BankingTransactionsExclu
 import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 
 @Module({
-  imports: [
-    forwardRef(() => BankingTransactionsModule),
-  ],
+  imports: [forwardRef(() => BankingTransactionsModule)],
   providers: [
     ExcludeBankTransactionsApplication,
     ExcludeBankTransactionService,
@@ -20,7 +18,7 @@ import { BankingTransactionsModule } from '../BankingTransactions/BankingTransac
     GetExcludedBankTransactionsService,
     ExcludeBankTransactionsService,
     UnexcludeBankTransactionsService,
-    DecrementUncategorizedTransactionOnExclude
+    DecrementUncategorizedTransactionOnExclude,
   ],
   controllers: [BankingTransactionsExcludeController],
 })

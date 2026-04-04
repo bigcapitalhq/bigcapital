@@ -6,7 +6,9 @@ import { Knex } from 'knex';
 @Injectable()
 export class PaymentReceiveActivateBranches {
   constructor(
-    private readonly paymentReceivedModel: TenantModelProxy<typeof PaymentReceived>,
+    private readonly paymentReceivedModel: TenantModelProxy<
+      typeof PaymentReceived
+    >,
   ) {}
 
   /**
@@ -16,9 +18,11 @@ export class PaymentReceiveActivateBranches {
    */
   public updatePaymentsWithBranch = async (
     primaryBranchId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Updates the sale invoice with primary branch.
-    await this.paymentReceivedModel().query(trx).update({ branchId: primaryBranchId });
+    await this.paymentReceivedModel()
+      .query(trx)
+      .update({ branchId: primaryBranchId });
   };
 }

@@ -1,5 +1,5 @@
-import { IModelMetaField2 } from "@/interfaces/Model";
-import { ImportModelShape } from "./models/Import";
+import { IModelMetaField2 } from '@/interfaces/Model';
+import { ImportModelShape } from './models/Import';
 
 export interface ImportMappingAttr {
   from: string;
@@ -75,7 +75,6 @@ export const ImportDateFormats = [
   'MM/dd/yy',
   'dd/MMM/yyyy',
 ];
-
 
 export interface IImportFileCommitedEventPayload {
   importId: string;

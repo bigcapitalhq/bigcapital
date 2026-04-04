@@ -9,9 +9,13 @@ export class GetCurrentOrganizationTransformer extends Transformer {
    */
   transform = (tenant: Record<string, any>) => {
     const metadataTransformer = new GetCurrentOrganizationMetadataTransformer();
-    const transformedMetadata = this.item(tenant.metadata, metadataTransformer, {
-      logoUri: this.options?.logoUri,
-    });
+    const transformedMetadata = this.item(
+      tenant.metadata,
+      metadataTransformer,
+      {
+        logoUri: this.options?.logoUri,
+      },
+    );
 
     return {
       ...tenant,

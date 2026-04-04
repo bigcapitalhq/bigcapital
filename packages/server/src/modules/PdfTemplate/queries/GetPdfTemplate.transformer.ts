@@ -1,5 +1,5 @@
 // import { getTransactionTypeLabel } from '@/utils/transactions-types';
-import { Transformer } from "../../Transformer/Transformer";
+import { Transformer } from '../../Transformer/Transformer';
 
 export class GetPdfTemplateTransformer extends Transformer {
   /**
@@ -7,7 +7,12 @@ export class GetPdfTemplateTransformer extends Transformer {
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
-    return ['createdAtFormatted', 'resourceFormatted', 'attributes', 'companyLogoUri'];
+    return [
+      'createdAtFormatted',
+      'resourceFormatted',
+      'attributes',
+      'companyLogoUri',
+    ];
   };
 
   /**
@@ -45,7 +50,7 @@ export class GetPdfTemplateTransformer extends Transformer {
   protected attributes = (template) => {
     return this.item(
       template.attributes,
-      new GetPdfTemplateAttributesTransformer()
+      new GetPdfTemplateAttributesTransformer(),
     );
   };
 }

@@ -25,7 +25,7 @@ describe('Organization (e2e)', () => {
       });
   });
 
-  it('/organization (POST)', async () => {    
+  it('/organization (POST)', async () => {
     return request(app.getHttpServer())
       .post('/organization/build')
       .set('Accept', 'application/json')
@@ -45,13 +45,13 @@ describe('Organization (e2e)', () => {
 
   it('/organization (GET)', () => {
     return request(app.getHttpServer())
-    .get('/organization/current')
-    .set('Accept', 'application/json')
-    .set('Content-Type', 'application/json')
-    .set('Authorization', `Bearer ${signinResponse.body.access_token}`)
-    .set('organization-id', signupResponse.body.organization_id)
-    .send()
-    .expect(200);
+      .get('/organization/current')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${signinResponse.body.access_token}`)
+      .set('organization-id', signupResponse.body.organization_id)
+      .send()
+      .expect(200);
   });
 
   it('/organization (PUT)', () => {

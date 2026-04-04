@@ -17,8 +17,7 @@ export const ERRORS = {
   BANK_ACCOUNT_FEEDS_ALREADY_RESUMED: 'BANK_ACCOUNT_FEEDS_ALREADY_RESUMED',
 };
 
-
-export interface ICashflowAccountsFilter extends IDynamicListFilter{
+export interface ICashflowAccountsFilter extends IDynamicListFilter {
   page: number;
   pageSize: number;
   inactiveMode: boolean;

@@ -18,7 +18,7 @@ export class GetSaleInvoice {
 
     @Inject(SaleInvoice.name)
     private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
-  ) { }
+  ) {}
 
   /**
    * Retrieve sale invoice with associated entries.

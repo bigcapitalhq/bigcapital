@@ -28,7 +28,7 @@ export class RolePermission extends TenantBaseModel {
 
     return {
       /**
-       * 
+       *
        */
       role: {
         relation: Model.BelongsToOneRelation,

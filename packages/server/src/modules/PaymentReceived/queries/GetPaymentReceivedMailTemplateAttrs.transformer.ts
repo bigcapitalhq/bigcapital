@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer {
   /**
@@ -107,7 +107,7 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
   public items() {
     return this.item(
       this.options.paymentReceived.entries,
-      new GetPaymentReceivedMailTemplateItemAttrsTransformer()
+      new GetPaymentReceivedMailTemplateItemAttrsTransformer(),
     );
   }
 }

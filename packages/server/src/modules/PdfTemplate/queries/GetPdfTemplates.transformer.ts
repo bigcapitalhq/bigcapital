@@ -1,5 +1,5 @@
 // import { getTransactionTypeLabel } from '@/utils/transactions-types';
-import { Transformer } from "../../Transformer/Transformer";
+import { Transformer } from '../../Transformer/Transformer';
 
 export class GetPdfTemplatesTransformer extends Transformer {
   /**

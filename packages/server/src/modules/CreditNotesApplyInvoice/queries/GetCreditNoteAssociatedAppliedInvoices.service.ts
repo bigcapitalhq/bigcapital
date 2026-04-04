@@ -16,7 +16,9 @@ export class GetCreditNoteAssociatedAppliedInvoices {
     private readonly transformer: TransformerInjectable,
 
     @Inject(CreditNoteAppliedInvoice.name)
-    private readonly creditNoteAppliedInvoiceModel: TenantModelProxy<typeof CreditNoteAppliedInvoice>,
+    private readonly creditNoteAppliedInvoiceModel: TenantModelProxy<
+      typeof CreditNoteAppliedInvoice
+    >,
 
     @Inject(CreditNote.name)
     private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,

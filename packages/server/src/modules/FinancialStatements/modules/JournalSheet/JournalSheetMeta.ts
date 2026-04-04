@@ -9,12 +9,10 @@ export class JournalSheetMeta {
 
   /**
    * Retrieves the journal sheet meta.
-   * @param {IJournalReportQuery} query - 
+   * @param {IJournalReportQuery} query -
    * @returns {Promise<IJournalSheetMeta>}
    */
-  public async meta(
-    query: IJournalReportQuery,
-  ): Promise<IJournalSheetMeta> {
+  public async meta(query: IJournalReportQuery): Promise<IJournalSheetMeta> {
     const common = await this.financialSheetMeta.meta();
 
     const formattedToDate = moment(query.toDate).format(common.dateFormat);

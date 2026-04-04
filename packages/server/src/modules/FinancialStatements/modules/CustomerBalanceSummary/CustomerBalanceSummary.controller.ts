@@ -20,7 +20,10 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @Controller('/reports/customer-balance-summary')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@ApiExtraModels(CustomerBalanceSummaryResponseDto, CustomerBalanceSummaryTableResponseDto)
+@ApiExtraModels(
+  CustomerBalanceSummaryResponseDto,
+  CustomerBalanceSummaryTableResponseDto,
+)
 export class CustomerBalanceSummaryController {
   constructor(
     private readonly customerBalanceSummaryApp: CustomerBalanceSummaryApplication,

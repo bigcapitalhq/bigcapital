@@ -11,7 +11,7 @@ export class GetAttachment {
     @Inject(S3_CLIENT)
     private readonly s3: S3Client,
   ) {}
-  
+
   /**
    * Retrieves data of the given document key.
    * @param {string} filekey

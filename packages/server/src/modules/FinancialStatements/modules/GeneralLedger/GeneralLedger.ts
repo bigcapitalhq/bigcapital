@@ -19,7 +19,10 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { ModelObject } from 'objection';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class GeneralLedgerSheet extends R.compose(FinancialSheetStructure)(
   FinancialSheet,

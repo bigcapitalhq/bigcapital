@@ -51,22 +51,21 @@ export class TransactionLandedCost {
    * @param {IBill|IExpense} transaction - Expense or bill transaction.
    * @returns {ILandedCostTransaction}
    */
-  public transformToLandedCost = 
-    (
-      transactionType: LandedCostTransactionType,
-      transaction: LandedCostTransactionModel,
-    ): ILandedCostTransaction => {
-      return R.compose(
-        R.when(
-          R.always(transactionType === 'Bill'),
-          this.billLandedCost.transformToLandedCost,
-        ),
-        R.when(
-          R.always(transactionType === 'Expense'),
-          this.expenseLandedCost.transformToLandedCost,
-        ),
-      )(transaction) as ILandedCostTransaction;
-    };
+  public transformToLandedCost = (
+    transactionType: LandedCostTransactionType,
+    transaction: LandedCostTransactionModel,
+  ): ILandedCostTransaction => {
+    return R.compose(
+      R.when(
+        R.always(transactionType === 'Bill'),
+        this.billLandedCost.transformToLandedCost,
+      ),
+      R.when(
+        R.always(transactionType === 'Expense'),
+        this.expenseLandedCost.transformToLandedCost,
+      ),
+    )(transaction) as ILandedCostTransaction;
+  };
 
   /**
    * Transformes the given expense or bill entry to landed cost transaction entry.

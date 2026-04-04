@@ -1,4 +1,3 @@
-
 export const transformToMap = (objects, key) => {
   const map = new Map();
 

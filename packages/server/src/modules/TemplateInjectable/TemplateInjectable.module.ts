@@ -4,6 +4,6 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Module({
   providers: [TemplateInjectable, TenancyContext],
-  exports: [TemplateInjectable]
+  exports: [TemplateInjectable],
 })
 export class TemplateInjectableModule {}

@@ -19,7 +19,7 @@ export const ProfitLossSheetBase = <T extends GConstructor<FinancialSheet>>(
     });
 
     /**
-     * 
+     *
      */
     protected isNodeTypeIn = R.curry((types: string[], node) => {
       return types.indexOf(node.nodeType) !== -1;
@@ -33,9 +33,9 @@ export const ProfitLossSheetBase = <T extends GConstructor<FinancialSheet>>(
     });
 
     /**
-     * 
-     * @param node 
-     * @returns 
+     *
+     * @param node
+     * @returns
      */
     isNodeTotal = (node) => {
       return this.isNodeTypeIn(TOTAL_NODE_TYPES, node);

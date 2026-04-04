@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetMatchedTransactionInvoicesTransformer extends Transformer {
   /**
@@ -19,7 +19,7 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
       'transsactionTypeFormatted',
       'transactionNormal',
       'referenceType',
-      'referenceId'
+      'referenceId',
     ];
   };
 
@@ -123,13 +123,13 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
   /**
    * Retrieve the transaction reference type.
    * @returns {string}
-   */  protected referenceType() {
+   */ protected referenceType() {
     return 'SaleInvoice';
   }
 
   /**
    * Retrieve the transaction reference id.
-   * @param transaction 
+   * @param transaction
    * @returns {number}
    */
   protected referenceId(transaction) {

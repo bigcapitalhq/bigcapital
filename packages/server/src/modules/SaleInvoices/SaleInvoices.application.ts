@@ -45,7 +45,7 @@ export class SaleInvoiceApplication {
     private generateShareLinkService: GenerateShareLink,
     private bulkDeleteSaleInvoicesService: BulkDeleteSaleInvoicesService,
     private validateBulkDeleteSaleInvoicesService: ValidateBulkDeleteSaleInvoicesService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new sale invoice with associated GL entries.

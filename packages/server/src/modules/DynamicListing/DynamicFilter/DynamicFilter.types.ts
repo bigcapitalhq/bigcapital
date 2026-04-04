@@ -2,7 +2,7 @@ import { BaseModel } from '@/models/Model';
 
 export enum ISortOrder {
   DESC = 'DESC',
-  ASC = 'ASC'
+  ASC = 'ASC',
 }
 
 export interface IDynamicFilter {
@@ -29,10 +29,7 @@ export interface IDynamicListFilter {
 }
 
 export interface IDynamicListService {
-  dynamicList(
-    model: any,
-    filter: IDynamicListFilter,
-  ): Promise<any>;
+  dynamicList(model: any, filter: IDynamicListFilter): Promise<any>;
   handlerErrorsToResponse(error, req, res, next): void;
 }
 

@@ -48,7 +48,7 @@ import { AccountAction } from './Accounts.types';
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class AccountsController {
-  constructor(private readonly accountsApplication: AccountsApplication) { }
+  constructor(private readonly accountsApplication: AccountsApplication) {}
 
   @Post('validate-bulk-delete')
   @HttpCode(200)

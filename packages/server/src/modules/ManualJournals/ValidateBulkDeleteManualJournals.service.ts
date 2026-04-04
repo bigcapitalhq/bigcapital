@@ -53,4 +53,3 @@ export class ValidateBulkDeleteManualJournalsService {
     }
   }
 }
-

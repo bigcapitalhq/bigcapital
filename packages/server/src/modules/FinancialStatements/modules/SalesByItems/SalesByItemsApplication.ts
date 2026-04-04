@@ -23,9 +23,7 @@ export class SalesByItemsApplication {
    * @param {ISalesByItemsReportQuery} filter - Sales by items report query.
    * @returns {Promise<ISalesByItemsSheetData>}
    */
-  public sheet(
-    filter: ISalesByItemsReportQuery,
-  ): Promise<ISalesByItemsSheet> {
+  public sheet(filter: ISalesByItemsReportQuery): Promise<ISalesByItemsSheet> {
     return this.salesByItemsSheet.salesByItems(filter);
   }
 
@@ -34,9 +32,7 @@ export class SalesByItemsApplication {
    * @param {ISalesByItemsReportQuery} filter - Sales by items report query.
    * @returns {Promise<ISalesByItemsTable>}
    */
-  public table(
-    filter: ISalesByItemsReportQuery,
-  ): Promise<ISalesByItemsTable> {
+  public table(filter: ISalesByItemsReportQuery): Promise<ISalesByItemsTable> {
     return this.salesByItemsTable.table(filter);
   }
 
@@ -45,9 +41,7 @@ export class SalesByItemsApplication {
    * @param {ISalesByItemsReportQuery} filter - Sales by items report query.
    * @returns {Promise<string>}
    */
-  public csv(
-    filter: ISalesByItemsReportQuery,
-  ): Promise<string> {
+  public csv(filter: ISalesByItemsReportQuery): Promise<string> {
     return this.salesByItemsExport.csv(filter);
   }
 
@@ -56,9 +50,7 @@ export class SalesByItemsApplication {
    * @param {ISalesByItemsReportQuery} filter - Sales by items report query.
    * @returns {Promise<Buffer>}
    */
-  public xlsx(
-    filter: ISalesByItemsReportQuery,
-  ): Promise<Buffer> {
+  public xlsx(filter: ISalesByItemsReportQuery): Promise<Buffer> {
     return this.salesByItemsExport.xlsx(filter);
   }
 
@@ -67,9 +59,7 @@ export class SalesByItemsApplication {
    * @param {ISalesByItemsReportQuery} filter - Sales by items report query.
    * @returns {Promise<Buffer>}
    */
-  public pdf(
-    query: ISalesByItemsReportQuery,
-  ): Promise<Buffer> {
+  public pdf(query: ISalesByItemsReportQuery): Promise<Buffer> {
     return this.salesByItemsPdf.pdf(query);
   }
 }

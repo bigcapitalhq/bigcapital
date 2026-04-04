@@ -17,7 +17,7 @@ export class ManualJournalsExportable extends Exportable {
 
   /**
    * Retrieves the manual journals data to exportable sheet.
-   * @param {IManualJournalsFilter} query - 
+   * @param {IManualJournalsFilter} query -
    */
   public exportable(query: IManualJournalsFilter) {
     const parsedQuery = {

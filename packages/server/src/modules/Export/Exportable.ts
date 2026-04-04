@@ -4,9 +4,7 @@ export class Exportable {
    * @param tenantId
    * @returns
    */
-  public async exportable(
-    query: Record<string, any>,
-  ): Promise<any> {
+  public async exportable(query: Record<string, any>): Promise<any> {
     return [];
   }
 

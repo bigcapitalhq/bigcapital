@@ -3,7 +3,7 @@ import { CreditNotePdfTemplateAttributes, ICreditNote } from '@/interfaces';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export const transformCreditNoteToPdfTemplate = (
-  creditNote: ICreditNote
+  creditNote: ICreditNote,
 ): Partial<CreditNotePdfTemplateAttributes> => {
   return {
     creditNoteDate: creditNote.formattedCreditNoteDate,

@@ -11,7 +11,7 @@ import { SaleReceiptInventoryTransactions } from './SaleReceiptInventoryTransact
 @Injectable()
 export class SaleReceiptInventoryTransactionsSubscriber {
   constructor(
-    private readonly saleReceiptInventory: SaleReceiptInventoryTransactions
+    private readonly saleReceiptInventory: SaleReceiptInventoryTransactions,
   ) {}
 
   /**
@@ -29,9 +29,9 @@ export class SaleReceiptInventoryTransactionsSubscriber {
     await this.saleReceiptInventory.recordInventoryTransactions(
       saleReceipt,
       false,
-      trx
+      trx,
     );
-  };
+  }
 
   /**
    * Rewriting the inventory transactions once the sale invoice be edited.
@@ -48,9 +48,9 @@ export class SaleReceiptInventoryTransactionsSubscriber {
     await this.saleReceiptInventory.recordInventoryTransactions(
       saleReceipt,
       true,
-      trx
+      trx,
     );
-  };
+  }
 
   /**
    * Handles deleting the inventory transactions once the receipt deleted.
@@ -63,7 +63,7 @@ export class SaleReceiptInventoryTransactionsSubscriber {
   }: ISaleReceiptEventDeletedPayload) {
     await this.saleReceiptInventory.revertInventoryTransactions(
       saleReceiptId,
-      trx
+      trx,
     );
-  };
+  }
 }

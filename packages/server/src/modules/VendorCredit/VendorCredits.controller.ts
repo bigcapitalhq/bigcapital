@@ -41,7 +41,7 @@ import { VendorCreditAction } from './types/VendorCredit.types';
 export class VendorCreditsController {
   constructor(
     private readonly vendorCreditsApplication: VendorCreditsApplicationService,
-  ) { }
+  ) {}
 
   @Post('validate-bulk-delete')
   @RequirePermission(VendorCreditAction.Delete, AbilitySubject.VendorCredit)

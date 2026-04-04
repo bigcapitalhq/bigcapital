@@ -21,8 +21,8 @@ export class ServiceErrorFilter implements ExceptionFilter {
           type: exception.errorType,
           message: exception.message,
           payload: exception.payload,
-        }
-      ]
+        },
+      ],
     });
   }
 }

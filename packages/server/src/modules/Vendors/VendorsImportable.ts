@@ -7,9 +7,7 @@ import { CreateVendorDto } from './dtos/CreateVendor.dto';
 
 @Injectable()
 export class VendorsImportable extends Importable {
-  constructor(
-    private readonly createVendorService: CreateVendorService,
-  ) {
+  constructor(private readonly createVendorService: CreateVendorService) {
     super();
   }
 
@@ -20,7 +18,7 @@ export class VendorsImportable extends Importable {
    */
   public async importable(
     createDTO: CreateVendorDto,
-    trx?: Knex.Transaction<any, any[]>
+    trx?: Knex.Transaction<any, any[]>,
   ): Promise<void> {
     await this.createVendorService.createVendor(createDTO, trx);
   }

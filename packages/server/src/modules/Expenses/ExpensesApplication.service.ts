@@ -22,7 +22,7 @@ export class ExpensesApplication {
     private readonly getExpensesService: GetExpensesService,
     private readonly bulkDeleteExpensesService: BulkDeleteExpensesService,
     private readonly validateBulkDeleteExpensesService: ValidateBulkDeleteExpensesService,
-  ) { }
+  ) {}
 
   /**
    * Create a new expense transaction.

@@ -366,7 +366,9 @@ export class CashFlowTable {
    */
   public tableColumns = (): ITableColumn[] => {
     return R.compose(
-      R.concat([{ key: 'name', label: this.i18n.t('cash_flow_statement.account_name') }]),
+      R.concat([
+        { key: 'name', label: this.i18n.t('cash_flow_statement.account_name') },
+      ]),
       R.when(
         R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
         R.concat(this.datePeriodsColumns()),

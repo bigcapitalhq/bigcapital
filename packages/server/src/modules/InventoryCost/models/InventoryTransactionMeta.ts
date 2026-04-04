@@ -32,9 +32,9 @@ export class InventoryTransactionMeta extends BaseModel {
         modelClass: InventoryTransaction,
         join: {
           from: 'inventory_transaction_meta.inventoryTransactionId',
-          to: 'inventory_transactions.inventoryTransactionId'
-        }
-      }
+          to: 'inventory_transactions.inventoryTransactionId',
+        },
+      },
     };
   }
 }

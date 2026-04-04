@@ -21,7 +21,7 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
     InventoryValuationSheetApplication,
     InventoryValuationSheetRepository,
     InventoryValuationSheetExportable,
-    TenancyContext
+    TenancyContext,
   ],
   controllers: [InventoryValuationController],
   exports: [InventoryValuationSheetApplication],

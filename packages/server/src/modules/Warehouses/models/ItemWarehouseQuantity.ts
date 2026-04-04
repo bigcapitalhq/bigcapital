@@ -1,7 +1,7 @@
 import { BaseModel } from '@/models/Model';
 import { Model } from 'objection';
 
-export class ItemWarehouseQuantity extends BaseModel{
+export class ItemWarehouseQuantity extends BaseModel {
   /**
    * Table name.
    */

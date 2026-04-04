@@ -83,4 +83,4 @@ import { ValidateBulkDeleteVendorCreditsService } from './ValidateBulkDeleteVend
   ],
   controllers: [VendorCreditsController],
 })
-export class VendorCreditsModule { }
+export class VendorCreditsModule {}

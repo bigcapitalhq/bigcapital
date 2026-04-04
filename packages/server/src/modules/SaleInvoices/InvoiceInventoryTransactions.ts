@@ -25,7 +25,7 @@ export class InvoiceInventoryTransactions {
     saleInvoice: ModelObject<SaleInvoice>,
     override?: boolean,
     trx?: Knex.Transaction,
-): Promise<void> {
+  ): Promise<void> {
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =
       await this.itemsEntriesService.filterInventoryEntries(

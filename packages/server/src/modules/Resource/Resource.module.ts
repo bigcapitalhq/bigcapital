@@ -10,6 +10,6 @@ import { ResourceController } from './Resource.controller';
   imports: [BranchesModule, WarehousesModule, AccountsModule],
   providers: [ResourceService],
   exports: [ResourceService],
-  controllers: [ResourceController]
+  controllers: [ResourceController],
 })
 export class ResourceModule {}

@@ -14,7 +14,10 @@ import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { APAgingSummaryRepository } from './APAgingSummaryRepository';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class APAgingSummarySheet extends AgingSummaryReport {
   readonly repository: APAgingSummaryRepository;

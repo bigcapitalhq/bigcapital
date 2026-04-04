@@ -19,7 +19,8 @@ export class DeleteCurrencyService {
    * @return {Promise<void>}
    */
   public async deleteCurrency(currencyCode: string): Promise<void> {
-    const foundCurrency = await this.currencyModel().query()
+    const foundCurrency = await this.currencyModel()
+      .query()
       .findOne('currency_code', currencyCode)
       .throwIfNotFound();
 

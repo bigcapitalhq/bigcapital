@@ -11,9 +11,7 @@ import { CustomerBalanceSummaryRepository } from './CustomerBalanceSummaryReposi
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Module({
-  imports: [
-    FinancialSheetCommonModule,
-  ],
+  imports: [FinancialSheetCommonModule],
   controllers: [CustomerBalanceSummaryController],
   providers: [
     CustomerBalanceSummaryApplication,
@@ -23,7 +21,7 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
     CustomerBalanceSummaryService,
     CustomerBalanceSummaryTableInjectable,
     CustomerBalanceSummaryRepository,
-    TenancyContext
+    TenancyContext,
   ],
 })
 export class CustomerBalanceSummaryModule {}

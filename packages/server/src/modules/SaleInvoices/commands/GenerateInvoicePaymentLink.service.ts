@@ -26,7 +26,7 @@ export class GenerateShareLink {
 
     @Inject(PaymentLink.name)
     private paymentLinkModel: typeof PaymentLink,
-  ) { }
+  ) {}
 
   /**
    * Generates private or public payment link for the given sale invoice.
@@ -79,7 +79,7 @@ export class GenerateShareLink {
         new GeneratePaymentLinkTransformer(),
         {
           baseUrl: this.configService.get('app.baseUrl'),
-        }
+        },
       );
     });
   }

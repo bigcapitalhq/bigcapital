@@ -20,4 +20,3 @@ export function InjectAttachable() {
 export function getAttachableModelsMap() {
   return attachableModelsMap;
 }
-

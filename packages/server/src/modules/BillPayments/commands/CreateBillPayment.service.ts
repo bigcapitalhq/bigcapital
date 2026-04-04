@@ -38,7 +38,7 @@ export class CreateBillPaymentService {
 
     @Inject(BillPayment.name)
     private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
-  ) { }
+  ) {}
 
   /**
    * Creates a new bill payment transcations and store it to the storage

@@ -35,7 +35,7 @@ export function extractSheetColumns(worksheet: XLSX.WorkSheet): Array<string> {
  * @returns {Array<Record<string, string>>}
  */
 export function parseSheetToJson(
-  worksheet: XLSX.WorkSheet
+  worksheet: XLSX.WorkSheet,
 ): Array<Record<string, string>> {
   return XLSX.utils.sheet_to_json(worksheet, {});
 }
@@ -45,7 +45,7 @@ export function parseSheetToJson(
  * @param {Buffer} buffer
  */
 export function parseSheetData(
-  buffer: Buffer
+  buffer: Buffer,
 ): [Array<Record<string, string>>, string[]] {
   const worksheet = parseFirstSheet(buffer);
 

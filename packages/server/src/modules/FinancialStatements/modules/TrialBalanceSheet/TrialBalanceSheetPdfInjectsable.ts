@@ -9,7 +9,7 @@ export class TrialBalanceSheetPdfInjectable {
   constructor(
     private readonly trialBalanceSheetTable: TrialBalanceSheetTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) { }
+  ) {}
 
   /**
    * Converts the given trial balance sheet table to pdf.

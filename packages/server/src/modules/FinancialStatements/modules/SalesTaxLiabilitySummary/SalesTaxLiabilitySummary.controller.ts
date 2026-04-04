@@ -20,7 +20,10 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @Controller('/reports/sales-tax-liability-summary')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@ApiExtraModels(SalesTaxLiabilitySummaryResponseDto, SalesTaxLiabilitySummaryTableResponseDto)
+@ApiExtraModels(
+  SalesTaxLiabilitySummaryResponseDto,
+  SalesTaxLiabilitySummaryTableResponseDto,
+)
 export class SalesTaxLiabilitySummaryController {
   constructor(
     private readonly salesTaxLiabilitySummaryApp: SalesTaxLiabilitySummaryApplication,
@@ -35,7 +38,9 @@ export class SalesTaxLiabilitySummaryController {
         schema: { $ref: getSchemaPath(SalesTaxLiabilitySummaryResponseDto) },
       },
       [AcceptType.ApplicationJsonTable]: {
-        schema: { $ref: getSchemaPath(SalesTaxLiabilitySummaryTableResponseDto) },
+        schema: {
+          $ref: getSchemaPath(SalesTaxLiabilitySummaryTableResponseDto),
+        },
       },
     },
   })

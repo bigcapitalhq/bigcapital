@@ -13,7 +13,7 @@ import { AccountsModule } from '@/modules/Accounts/Accounts.module';
 
 @Module({
   imports: [FinancialSheetCommonModule, AccountsModule],
-  controllers: [TransactionsByVendorController,],
+  controllers: [TransactionsByVendorController],
   providers: [
     TransactionsByVendorsInjectable,
     TransactionsByVendorRepository,
@@ -22,7 +22,7 @@ import { AccountsModule } from '@/modules/Accounts/Accounts.module';
     TransactionsByVendorExportInjectable,
     TransactionsByVendorsPdf,
     TransactionsByVendorApplication,
-    TenancyContext
+    TenancyContext,
   ],
   exports: [TransactionsByVendorApplication],
 })

@@ -50,4 +50,4 @@ const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
   controllers: [SubscriptionsController, SubscriptionsLemonWebhook],
   exports: [...models],
 })
-export class SubscriptionModule { }
+export class SubscriptionModule {}

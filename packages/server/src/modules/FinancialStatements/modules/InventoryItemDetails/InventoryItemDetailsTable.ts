@@ -93,7 +93,10 @@ export class InventoryItemDetailsTable {
   ): ITableRow => {
     const columns: Array<IColumnMapperMeta> = [
       { key: 'date', accessor: 'date.formattedDate' },
-      { key: 'closing', value: this.i18n.t('inventory_item_details.opening_balance') },
+      {
+        key: 'closing',
+        value: this.i18n.t('inventory_item_details.opening_balance'),
+      },
       { key: 'empty', value: '' },
       { key: 'quantity', accessor: 'quantity.formattedNumber' },
       { key: 'empty', value: '' },
@@ -115,7 +118,10 @@ export class InventoryItemDetailsTable {
   ): ITableRow => {
     const columns: Array<IColumnMapperMeta> = [
       { key: 'date', accessor: 'date.formattedDate' },
-      { key: 'closing', value: this.i18n.t('inventory_item_details.closing_balance') },
+      {
+        key: 'closing',
+        value: this.i18n.t('inventory_item_details.closing_balance'),
+      },
       { key: 'empty', value: '' },
       { key: 'quantity', accessor: 'quantity.formattedNumber' },
       { key: 'empty', value: '' },
@@ -194,15 +200,33 @@ export class InventoryItemDetailsTable {
   public tableColumns = (): ITableColumn[] => {
     return [
       { key: 'date', label: this.i18n.t('inventory_item_details.date') },
-      { key: 'transaction_type', label: this.i18n.t('inventory_item_details.transaction_type') },
-      { key: 'transaction_id', label: this.i18n.t('inventory_item_details.transaction_number') },
-      { key: 'quantity', label: this.i18n.t('inventory_item_details.quantity') },
+      {
+        key: 'transaction_type',
+        label: this.i18n.t('inventory_item_details.transaction_type'),
+      },
+      {
+        key: 'transaction_id',
+        label: this.i18n.t('inventory_item_details.transaction_number'),
+      },
+      {
+        key: 'quantity',
+        label: this.i18n.t('inventory_item_details.quantity'),
+      },
       { key: 'rate', label: this.i18n.t('inventory_item_details.rate') },
       { key: 'total', label: this.i18n.t('inventory_item_details.total') },
       { key: 'value', label: this.i18n.t('inventory_item_details.value') },
-      { key: 'profit_margin', label: this.i18n.t('inventory_item_details.profit_margin') },
-      { key: 'running_quantity', label: this.i18n.t('inventory_item_details.running_quantity') },
-      { key: 'running_value', label: this.i18n.t('inventory_item_details.running_value') },
+      {
+        key: 'profit_margin',
+        label: this.i18n.t('inventory_item_details.profit_margin'),
+      },
+      {
+        key: 'running_quantity',
+        label: this.i18n.t('inventory_item_details.running_quantity'),
+      },
+      {
+        key: 'running_value',
+        label: this.i18n.t('inventory_item_details.running_value'),
+      },
     ];
   };
 }

@@ -35,7 +35,11 @@ export class RefundCreditNoteResponseDto {
   @ApiProperty({ example: 'REF-001', required: false, nullable: true })
   referenceNo?: string | null;
 
-  @ApiProperty({ example: 'Refund issued to customer', required: false, nullable: true })
+  @ApiProperty({
+    example: 'Refund issued to customer',
+    required: false,
+    nullable: true,
+  })
   description?: string | null;
 
   @ApiProperty({ type: RefundCreditAccountDto })

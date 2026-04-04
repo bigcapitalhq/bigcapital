@@ -9,7 +9,7 @@ export class SubscribeFreeOnSignupCommunity {
   constructor(
     private readonly subscriptionApp: SubscriptionApplication,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new free subscription once the user signup if the app is self-hosted.

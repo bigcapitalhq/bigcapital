@@ -4,7 +4,8 @@ import { Type } from 'class-transformer';
 
 export class ExcludeBankTransactionsBulkDto {
   @ApiProperty({
-    description: 'IDs of uncategorized bank transactions to exclude or unexclude',
+    description:
+      'IDs of uncategorized bank transactions to exclude or unexclude',
     type: [Number],
     example: [1, 2, 3],
   })

@@ -29,7 +29,7 @@ export class DeleteCashflowTransactionOnUncategorizeSubscriber {
     }
     await this.deleteCashflowTransactionService.deleteCashflowTransaction(
       oldMainUncategorizedTransaction.categorizeRefId,
-      trx
+      trx,
     );
   }
 }

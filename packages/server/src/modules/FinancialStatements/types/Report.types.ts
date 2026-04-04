@@ -93,9 +93,9 @@ interface FinancialDateMeta {
 }
 
 interface IFinancialSheetTotal {
-    amount: number;
-    formattedAmount: string;
-    currencyCode: string;
+  amount: number;
+  formattedAmount: string;
+  currencyCode: string;
 }
 
 interface IFinancialSheetPercentage {

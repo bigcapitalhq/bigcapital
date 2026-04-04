@@ -21,7 +21,7 @@ import { AccountsModule } from '@/modules/Accounts/Accounts.module';
     TrialBalanceSheetMeta,
     TrialBalanceSheetRepository,
     TenancyContext,
-    TrialBalanceSheetPdfInjectable
+    TrialBalanceSheetPdfInjectable,
   ],
   controllers: [TrialBalanceSheetController],
 })

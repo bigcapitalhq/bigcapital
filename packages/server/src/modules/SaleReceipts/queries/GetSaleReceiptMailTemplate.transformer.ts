@@ -31,7 +31,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
 
       'adjustment',
       'adjustmentLabel',
-      
+
       'items',
     ];
   };

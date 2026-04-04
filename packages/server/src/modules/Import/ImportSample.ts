@@ -6,11 +6,7 @@ import { ImportableRegistry } from './ImportableRegistry';
 
 @Injectable()
 export class ImportSampleService {
-  constructor(
-    private readonly importableRegistry: ImportableRegistry,
-  ) {
-
-  }
+  constructor(private readonly importableRegistry: ImportableRegistry) {}
   /**
    * Retrieves the sample sheet of the given resource.
    * @param {string} resource
@@ -19,7 +15,7 @@ export class ImportSampleService {
    */
   public async sample(
     resource: string,
-    format: 'csv' | 'xlsx'
+    format: 'csv' | 'xlsx',
   ): Promise<Buffer | string> {
     const _resource = sanitizeResourceName(resource);
     const importable = await this.importableRegistry.getImportable(_resource);
@@ -30,7 +26,6 @@ export class ImportSampleService {
     const worksheet = XLSX.utils.json_to_sheet(data);
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
-    
     // Determine the output format
     if (format === 'csv') {
       const csvOutput = XLSX.utils.sheet_to_csv(worksheet);

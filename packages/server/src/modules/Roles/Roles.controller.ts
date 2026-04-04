@@ -28,7 +28,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiExtraModels(RoleResponseDto)
 @ApiCommonHeaders()
 export class RolesController {
-  constructor(private readonly rolesApp: RolesApplication) { }
+  constructor(private readonly rolesApp: RolesApplication) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new role' })

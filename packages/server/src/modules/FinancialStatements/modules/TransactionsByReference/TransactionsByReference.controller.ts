@@ -8,7 +8,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class TransactionsByReferenceController {
   constructor(
     private readonly transactionsByReferenceApp: TransactionsByReferenceApplication,
-  ) { }
+  ) {}
 
   @Get()
   @ApiResponse({ status: 200, description: 'Transactions by reference' })

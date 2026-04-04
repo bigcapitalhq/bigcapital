@@ -31,7 +31,7 @@ import { TaxRateAction } from './TaxRates.types';
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class TaxRatesController {
-  constructor(private readonly taxRatesApplication: TaxRatesApplication) { }
+  constructor(private readonly taxRatesApplication: TaxRatesApplication) {}
 
   @Post()
   @RequirePermission(TaxRateAction.CREATE, AbilitySubject.TaxRate)

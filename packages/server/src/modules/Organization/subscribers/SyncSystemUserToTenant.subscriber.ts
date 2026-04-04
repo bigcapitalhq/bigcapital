@@ -11,7 +11,9 @@ export class SyncSystemUserToTenantSubscriber {
   ) {}
 
   @OnEvent(events.organization.build)
-  async onOrgBuildSyncSystemUser({ systemUser }: IOrganizationBuildEventPayload) {
+  async onOrgBuildSyncSystemUser({
+    systemUser,
+  }: IOrganizationBuildEventPayload) {
     await this.syncSystemUserToTenantService.syncSystemUserToTenant(
       systemUser.id,
     );

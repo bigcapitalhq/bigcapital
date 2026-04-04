@@ -1,14 +1,14 @@
 // @ts-nocheck
 import * as R from 'ramda';
 import { map } from 'lodash';
-import { Account } from "@/modules/Accounts/models/Account.model";
+import { Account } from '@/modules/Accounts/models/Account.model';
 import { ICashFlowStatementQuery } from './Cashflow.types';
 import { FinancialSheet } from '../../common/FinancialSheet';
 
 export class CashflowStatementBase extends FinancialSheet {
   readonly accountsByRootType: Map<string, Account[]>;
   readonly query: ICashFlowStatementQuery;
-  
+
   // --------------------------------------------
   // # GENERAL UTILITIES
   // --------------------------------------------

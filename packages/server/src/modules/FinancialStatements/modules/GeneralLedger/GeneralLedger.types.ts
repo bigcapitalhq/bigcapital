@@ -1,5 +1,8 @@
-import { IFinancialSheetCommonMeta, INumberFormatQuery } from "../../types/Report.types";
-import { IFinancialTable } from "../../types/Table.types";
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from '../../types/Report.types';
+import { IFinancialTable } from '../../types/Table.types';
 
 export interface IGeneralLedgerSheetQuery {
   fromDate: Date | string;
@@ -12,8 +15,7 @@ export interface IGeneralLedgerSheetQuery {
   branchesIds?: number[];
 }
 
-export interface IGeneralLedgerNumberFormat extends INumberFormatQuery{
-}
+export interface IGeneralLedgerNumberFormat extends INumberFormatQuery {}
 
 export interface IGeneralLedgerSheetAccountTransaction {
   id: number;

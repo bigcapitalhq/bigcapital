@@ -21,7 +21,7 @@ const createRoleRequest = () => ({
 
 describe('Roles (e2e)', () => {
   it('/roles (POST)', () => {
-    console.log(createRoleRequest())
+    console.log(createRoleRequest());
     return request(app.getHttpServer())
       .post('/roles')
       .set('organization-id', orgainzationId)

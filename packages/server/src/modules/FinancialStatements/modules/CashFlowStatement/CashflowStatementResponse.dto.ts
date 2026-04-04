@@ -7,7 +7,9 @@ import {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class CashflowStatementDataNodeDto {
-  @ApiProperty({ description: 'Node identifier (string for aggregates, number for accounts)' })
+  @ApiProperty({
+    description: 'Node identifier (string for aggregates, number for accounts)',
+  })
   id: string | number;
 
   @ApiProperty({ description: 'Account or category name' })
@@ -22,10 +24,16 @@ export class CashflowStatementDataNodeDto {
   @ApiPropertyOptional({ description: 'Node type alias' })
   type?: string;
 
-  @ApiProperty({ description: 'Total amount information', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Total amount information',
+    type: FinancialReportTotalDto,
+  })
   total: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Horizontal totals for date periods', type: [FinancialReportTotalDto] })
+  @ApiPropertyOptional({
+    description: 'Horizontal totals for date periods',
+    type: [FinancialReportTotalDto],
+  })
   horizontalTotals?: FinancialReportTotalDto[];
 
   @ApiPropertyOptional({ description: 'Account code' })
@@ -34,7 +42,10 @@ export class CashflowStatementDataNodeDto {
   @ApiPropertyOptional({ description: 'Display index', type: Number })
   index?: number;
 
-  @ApiPropertyOptional({ description: 'Child nodes', type: () => [CashflowStatementDataNodeDto] })
+  @ApiPropertyOptional({
+    description: 'Child nodes',
+    type: () => [CashflowStatementDataNodeDto],
+  })
   children?: CashflowStatementDataNodeDto[];
 }
 
@@ -50,10 +61,16 @@ export class CashflowStatementMetaDto extends FinancialReportMetaDto {
 }
 
 export class CashflowStatementQueryResponseDto {
-  @ApiProperty({ description: 'Column display type', enum: ['total', 'date_periods'] })
+  @ApiProperty({
+    description: 'Column display type',
+    enum: ['total', 'date_periods'],
+  })
   displayColumnsType: string;
 
-  @ApiProperty({ description: 'Column grouping', enum: ['day', 'month', 'year', 'quarter'] })
+  @ApiProperty({
+    description: 'Column grouping',
+    enum: ['day', 'month', 'year', 'quarter'],
+  })
   displayColumnsBy: string;
 
   @ApiProperty({ description: 'Start date' })
@@ -62,7 +79,10 @@ export class CashflowStatementQueryResponseDto {
   @ApiProperty({ description: 'End date' })
   toDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Exclude zero balance accounts' })
@@ -79,13 +99,22 @@ export class CashflowStatementQueryResponseDto {
 }
 
 export class CashflowStatementResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: CashflowStatementQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: CashflowStatementQueryResponseDto,
+  })
   query: CashflowStatementQueryResponseDto;
 
-  @ApiProperty({ description: 'Hierarchical cashflow data', type: [CashflowStatementDataNodeDto] })
+  @ApiProperty({
+    description: 'Hierarchical cashflow data',
+    type: [CashflowStatementDataNodeDto],
+  })
   data: CashflowStatementDataNodeDto[];
 
-  @ApiProperty({ description: 'Report metadata', type: CashflowStatementMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: CashflowStatementMetaDto,
+  })
   meta: CashflowStatementMetaDto;
 }
 
@@ -98,12 +127,21 @@ export {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class CashflowStatementTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => FinancialTableDataDto,
+  })
   table: FinancialTableDataDto;
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: CashflowStatementQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: CashflowStatementQueryResponseDto,
+  })
   query: CashflowStatementQueryResponseDto;
 
-  @ApiProperty({ description: 'Report metadata', type: CashflowStatementMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: CashflowStatementMetaDto,
+  })
   meta: CashflowStatementMetaDto;
 }

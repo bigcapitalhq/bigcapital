@@ -1,5 +1,12 @@
 import { Response } from 'express';
-import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AcceptType } from '@/constants/accept-type';
 import { CashflowSheetApplication } from './CashflowSheetApplication';
 import {
@@ -29,7 +36,7 @@ import { ReportsAction } from '../../types/Report.types';
 @UseGuards(AuthorizationGuard, PermissionGuard)
 @ApiExtraModels(CashflowStatementResponseDto, CashflowStatementTableResponseDto)
 export class CashflowController {
-  constructor(private readonly cashflowSheetApp: CashflowSheetApplication) { }
+  constructor(private readonly cashflowSheetApp: CashflowSheetApplication) {}
 
   @Get()
   @RequirePermission(ReportsAction.READ_CASHFLOW, AbilitySubject.Report)

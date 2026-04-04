@@ -17,7 +17,7 @@ export class GetBankAccountsService {
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
-  ) { }
+  ) {}
 
   /**
    * Retrieve the cash flow accounts.
@@ -32,9 +32,10 @@ export class GetBankAccountsService {
       ...filterDTO,
     };
     // Parsees accounts list filter DTO.
-    const filter = this.dynamicListService.parseStringifiedFilter<BankAccountsQueryDto>(
-      _filterDto,
-    );
+    const filter =
+      this.dynamicListService.parseStringifiedFilter<BankAccountsQueryDto>(
+        _filterDto,
+      );
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(

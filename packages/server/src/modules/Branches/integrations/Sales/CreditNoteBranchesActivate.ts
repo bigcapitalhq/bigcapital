@@ -16,9 +16,11 @@ export class CreditNoteActivateBranches {
    */
   public updateCreditsWithBranch = async (
     primaryBranchId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Updates the sale invoice with primary branch.
-    await this.creditNoteModel().query(trx).update({ branchId: primaryBranchId });
+    await this.creditNoteModel()
+      .query(trx)
+      .update({ branchId: primaryBranchId });
   };
 }

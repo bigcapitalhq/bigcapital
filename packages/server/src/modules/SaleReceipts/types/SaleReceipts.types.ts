@@ -3,7 +3,10 @@ import { SaleReceipt } from '../models/SaleReceipt';
 import { CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
 import { CommonMailOptions } from '@/modules/MailNotification/MailNotification.types';
 import { TenantJobPayload } from '@/interfaces/Tenant';
-import { CreateSaleReceiptDto, EditSaleReceiptDto } from '../dtos/SaleReceipt.dto';
+import {
+  CreateSaleReceiptDto,
+  EditSaleReceiptDto,
+} from '../dtos/SaleReceipt.dto';
 
 export interface ISalesReceiptsFilter {
   filterQuery?: (query: any) => void;

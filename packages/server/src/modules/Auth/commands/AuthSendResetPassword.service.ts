@@ -24,16 +24,14 @@ export class AuthSendResetPasswordService {
 
     @Inject(SystemUser.name)
     private readonly systemUserModel: typeof SystemUser,
-  ) { }
+  ) {}
 
   /**
    * Sends the given email reset password email.
    * @param {string} email - Email address.
    */
   async sendResetPassword(email: string): Promise<void> {
-    const user = await this.systemUserModel
-      .query()
-      .findOne({ email });
+    const user = await this.systemUserModel.query().findOne({ email });
 
     if (!user) return;
 

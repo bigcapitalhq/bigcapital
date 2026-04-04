@@ -1,5 +1,4 @@
-import { INumberFormatQuery } from "../../types/Report.types";
-
+import { INumberFormatQuery } from '../../types/Report.types';
 
 export interface ITransactionsByContactsAmount {
   amount: number;
@@ -8,26 +7,26 @@ export interface ITransactionsByContactsAmount {
 }
 
 export interface ITransactionsByContactsTransaction {
-  date: string|Date,
+  date: string | Date;
   credit: ITransactionsByContactsAmount;
   debit: ITransactionsByContactsAmount;
-  accountName: string,
+  accountName: string;
   runningBalance: ITransactionsByContactsAmount;
   currencyCode: string;
   transactionType: string;
   transactionNumber: string;
-  createdAt: string|Date,
-};
+  createdAt: string | Date;
+}
 
 export interface ITransactionsByContactsContact {
-  openingBalance: ITransactionsByContactsAmount,
-  closingBalance: ITransactionsByContactsAmount,
-  transactions: ITransactionsByContactsTransaction[],
+  openingBalance: ITransactionsByContactsAmount;
+  closingBalance: ITransactionsByContactsAmount;
+  transactions: ITransactionsByContactsTransaction[];
 }
 
 export interface ITransactionsByContactsFilter {
-  fromDate: Date|string;
-  toDate: Date|string;
+  fromDate: Date | string;
+  toDate: Date | string;
   numberFormat: INumberFormatQuery;
   noneTransactions: boolean;
   noneZero: boolean;

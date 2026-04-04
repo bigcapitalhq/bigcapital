@@ -1,6 +1,6 @@
-import { Transformer } from "../Transformer/Transformer";
+import { Transformer } from '../Transformer/Transformer';
 
-export class AttachmentTransformer extends Transformer{
+export class AttachmentTransformer extends Transformer {
   /**
    * Exclude attributes.
    * @returns {string[]}

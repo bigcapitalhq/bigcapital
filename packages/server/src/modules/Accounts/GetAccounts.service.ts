@@ -19,7 +19,7 @@ export class GetAccountsService {
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
-  ) { }
+  ) {}
 
   /**
    * Retrieve accounts datatable list.

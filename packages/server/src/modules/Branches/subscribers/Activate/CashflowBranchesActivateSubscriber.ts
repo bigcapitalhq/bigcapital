@@ -8,7 +8,7 @@ import { events } from '@/common/events/events';
 export class CreditNoteActivateBranchesSubscriber {
   constructor(
     private readonly cashflowActivateBranches: CashflowTransactionsActivateBranches,
-  ) { }
+  ) {}
 
   /**
    * Updates accounts transactions with the primary branch once
@@ -17,13 +17,12 @@ export class CreditNoteActivateBranchesSubscriber {
    */
   @OnEvent(events.branch.onActivated)
   async updateCashflowWithBranchOnActivated({
-
     primaryBranch,
     trx,
   }: IBranchesActivatedPayload) {
     await this.cashflowActivateBranches.updateCashflowTransactionsWithBranch(
       primaryBranch.id,
-      trx
+      trx,
     );
-  };
+  }
 }

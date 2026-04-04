@@ -140,16 +140,25 @@ export class GetInvoicePaymentLinkResponseDto {
   @ApiProperty({ description: 'Terms and conditions' })
   termsConditions: string;
 
-  @ApiProperty({ type: [PaymentLinkEntryDto], description: 'Invoice line entries' })
+  @ApiProperty({
+    type: [PaymentLinkEntryDto],
+    description: 'Invoice line entries',
+  })
   entries: PaymentLinkEntryDto[];
 
   @ApiProperty({ type: [PaymentLinkTaxEntryDto], description: 'Tax entries' })
   taxes: PaymentLinkTaxEntryDto[];
 
-  @ApiProperty({ type: PaymentLinkBrandingTemplateDto, description: 'Branding template' })
+  @ApiProperty({
+    type: PaymentLinkBrandingTemplateDto,
+    description: 'Branding template',
+  })
   brandingTemplate: PaymentLinkBrandingTemplateDto;
 
-  @ApiProperty({ type: PaymentLinkOrganizationDto, description: 'Organization metadata' })
+  @ApiProperty({
+    type: PaymentLinkOrganizationDto,
+    description: 'Organization metadata',
+  })
   organization: PaymentLinkOrganizationDto;
 
   @ApiProperty({ description: 'Whether Stripe is available as payment method' })

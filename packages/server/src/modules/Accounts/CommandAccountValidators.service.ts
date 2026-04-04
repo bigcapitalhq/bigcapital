@@ -17,7 +17,7 @@ export class CommandAccountValidators {
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
     private readonly accountRepository: AccountRepository,
-  ) { }
+  ) {}
 
   /**
    * Throws error if the account was prefined.

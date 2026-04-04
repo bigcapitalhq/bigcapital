@@ -11,9 +11,7 @@ export class TableSheetPdf {
   /**
    * @param {ChromiumlyTenancy} chromiumlyTenancy - The chromiumly tenancy service.
    */
-  constructor(
-    private readonly chromiumlyTenancy: ChromiumlyTenancy,
-  ) { }
+  constructor(private readonly chromiumlyTenancy: ChromiumlyTenancy) {}
 
   /**
    * Converts the table data into a PDF format.

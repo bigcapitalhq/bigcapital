@@ -14,7 +14,7 @@ export interface IManualJournalEntryDTO {
   accountId: number;
   note: string;
   contactId?: number;
-  branchId?: number
+  branchId?: number;
   projectId?: number;
 }
 

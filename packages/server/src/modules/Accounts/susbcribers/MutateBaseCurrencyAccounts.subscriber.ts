@@ -14,11 +14,9 @@ export class MutateBaseCurrencyAccountsSubscriber {
    * of the organization is mutated.
    */
   @OnEvent(events.organization.baseCurrencyUpdated)
-  async updateAccountsCurrencyOnBaseCurrencyMutated({
-    organizationDTO,
-  }) {
+  async updateAccountsCurrencyOnBaseCurrencyMutated({ organizationDTO }) {
     await this.mutateBaseCurrencyAccounts.mutateAllAccountsCurrency(
-      organizationDTO.baseCurrency
+      organizationDTO.baseCurrency,
     );
-  };
+  }
 }

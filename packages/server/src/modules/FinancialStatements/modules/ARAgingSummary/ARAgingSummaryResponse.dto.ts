@@ -29,7 +29,10 @@ export class ARAgingCustomerDto {
   @ApiProperty({ description: 'Customer name' })
   customerName: string;
 
-  @ApiProperty({ description: 'Current balance', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Current balance',
+    type: FinancialReportTotalDto,
+  })
   current: FinancialReportTotalDto;
 
   @ApiProperty({ description: 'Aging periods', type: [ARAgingPeriodTotalDto] })
@@ -40,7 +43,10 @@ export class ARAgingCustomerDto {
 }
 
 export class ARAgingSummaryDataDto {
-  @ApiProperty({ description: 'Customers aging data', type: [ARAgingCustomerDto] })
+  @ApiProperty({
+    description: 'Customers aging data',
+    type: [ARAgingCustomerDto],
+  })
   customers: ARAgingCustomerDto[];
 
   @ApiProperty({ description: 'Current total', type: FinancialReportTotalDto })
@@ -68,7 +74,10 @@ export class ARAgingSummaryQueryResponseDto {
   @ApiProperty({ description: 'Number of aging periods', type: Number })
   agingPeriods: number;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Customer IDs to include', type: [Number] })
@@ -82,13 +91,22 @@ export class ARAgingSummaryQueryResponseDto {
 }
 
 export class ARAgingSummaryResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: ARAgingSummaryQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: ARAgingSummaryQueryResponseDto,
+  })
   query: ARAgingSummaryQueryResponseDto;
 
-  @ApiProperty({ description: 'Aging columns definitions', type: [ARAgingPeriodDto] })
+  @ApiProperty({
+    description: 'Aging columns definitions',
+    type: [ARAgingPeriodDto],
+  })
   columns: ARAgingPeriodDto[];
 
-  @ApiProperty({ description: 'Aging summary data', type: ARAgingSummaryDataDto })
+  @ApiProperty({
+    description: 'Aging summary data',
+    type: ARAgingSummaryDataDto,
+  })
   data: ARAgingSummaryDataDto;
 
   @ApiProperty({ description: 'Report metadata', type: ARAgingSummaryMetaDto })
@@ -104,10 +122,16 @@ export {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class ARAgingSummaryTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => FinancialTableDataDto,
+  })
   table: FinancialTableDataDto;
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: ARAgingSummaryQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: ARAgingSummaryQueryResponseDto,
+  })
   query: ARAgingSummaryQueryResponseDto;
 
   @ApiProperty({ description: 'Report metadata', type: ARAgingSummaryMetaDto })

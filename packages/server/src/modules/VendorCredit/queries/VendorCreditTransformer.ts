@@ -1,7 +1,7 @@
-import { AttachmentTransformer } from "@/modules/Attachments/Attachment.transformer";
-import { ItemEntryTransformer } from "@/modules/TransactionItemEntry/ItemEntry.transformer";
-import { Transformer } from "@/modules/Transformer/Transformer";
-import { VendorCredit } from "../models/VendorCredit";
+import { AttachmentTransformer } from '@/modules/Attachments/Attachment.transformer';
+import { ItemEntryTransformer } from '@/modules/TransactionItemEntry/ItemEntry.transformer';
+import { Transformer } from '@/modules/Transformer/Transformer';
+import { VendorCredit } from '../models/VendorCredit';
 
 export class VendorCreditTransformer extends Transformer {
   /**
@@ -35,7 +35,9 @@ export class VendorCreditTransformer extends Transformer {
    * @param {VendorCredit} credit
    * @returns {String}
    */
-  protected formattedVendorCreditDate = (vendorCredit: VendorCredit): string => {
+  protected formattedVendorCreditDate = (
+    vendorCredit: VendorCredit,
+  ): string => {
     return this.formatDate(vendorCredit.vendorCreditDate);
   };
 

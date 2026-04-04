@@ -3,7 +3,13 @@ import { ITransactionsByVendorsFilter } from './TransactionsByVendor.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { TransactionsByVendorApplication } from './TransactionsByVendorApplication';
-import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   TransactionsByVendorResponseDto,
   TransactionsByVendorTableResponseDto,
@@ -14,7 +20,10 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @Controller('/reports/transactions-by-vendors')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@ApiExtraModels(TransactionsByVendorResponseDto, TransactionsByVendorTableResponseDto)
+@ApiExtraModels(
+  TransactionsByVendorResponseDto,
+  TransactionsByVendorTableResponseDto,
+)
 export class TransactionsByVendorController {
   constructor(
     private readonly transactionsByVendorsApp: TransactionsByVendorApplication,

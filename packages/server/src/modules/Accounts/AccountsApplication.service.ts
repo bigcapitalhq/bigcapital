@@ -42,7 +42,7 @@ export class AccountsApplication {
     private readonly getAccountsService: GetAccountsService,
     private readonly bulkDeleteAccountsService: BulkDeleteAccountsService,
     private readonly validateBulkDeleteAccountsService: ValidateBulkDeleteAccountsService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new account.

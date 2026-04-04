@@ -1,10 +1,6 @@
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
-import {
-  app,
-  AuthorizationHeader,
-  orgainzationId,
-} from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 const makeAccountRequest = () => ({
   name: `${faker.finance.accountName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,

@@ -6,7 +6,7 @@ import { DeleteBill } from './commands/DeleteBill.service';
 
 @Injectable()
 export class BulkDeleteBillsService {
-  constructor(private readonly deleteBillService: DeleteBill) { }
+  constructor(private readonly deleteBillService: DeleteBill) {}
 
   async bulkDeleteBills(
     billIds: number | Array<number>,
@@ -33,4 +33,3 @@ export class BulkDeleteBillsService {
     }
   }
 }
-

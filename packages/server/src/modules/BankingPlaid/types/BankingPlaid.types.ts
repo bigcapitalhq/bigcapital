@@ -31,9 +31,8 @@ export interface IPlaidItemCreatedEventPayload {
 export const UpdateBankingPlaidTransitionsJob =
   'update-banking-plaid-transitions-job';
 
-  export const UpdateBankingPlaidTransitionsQueueJob =
+export const UpdateBankingPlaidTransitionsQueueJob =
   'update-banking-plaid-transitions-query';
-
 
 export interface PlaidFetchTransitonsEventPayload {
   plaidItemId: string;

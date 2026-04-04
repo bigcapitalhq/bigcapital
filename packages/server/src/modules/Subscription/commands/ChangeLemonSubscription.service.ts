@@ -1,4 +1,3 @@
-
 import { updateSubscription } from '@lemonsqueezy/lemonsqueezy.js';
 import { configureLemonSqueezy } from '../utils';
 import { IOrganizationSubscriptionChanged } from '../types';

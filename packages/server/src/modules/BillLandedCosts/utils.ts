@@ -25,7 +25,7 @@ export const ERRORS = {
  */
 export const mergeLocatedWithBillEntries = (
   locatedEntries: IBillLandedCostTransactionEntry[],
-  billEntries: ModelObject<ItemEntry>[]
+  billEntries: ModelObject<ItemEntry>[],
 ): (IBillLandedCostTransactionEntry & { entry: ModelObject<ItemEntry> })[] => {
   const billEntriesByEntryId = transformToMap(billEntries, 'id');
 
@@ -34,7 +34,6 @@ export const mergeLocatedWithBillEntries = (
     entry: billEntriesByEntryId.get(entry.entryId),
   }));
 };
-
 
 export const CONFIG = {
   COST_TYPES: {

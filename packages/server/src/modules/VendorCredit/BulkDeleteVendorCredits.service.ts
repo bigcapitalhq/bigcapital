@@ -8,7 +8,7 @@ import { DeleteVendorCreditService } from './commands/DeleteVendorCredit.service
 export class BulkDeleteVendorCreditsService {
   constructor(
     private readonly deleteVendorCreditService: DeleteVendorCreditService,
-  ) { }
+  ) {}
 
   async bulkDeleteVendorCredits(
     vendorCreditIds: number | Array<number>,
@@ -37,4 +37,3 @@ export class BulkDeleteVendorCreditsService {
     }
   }
 }
-

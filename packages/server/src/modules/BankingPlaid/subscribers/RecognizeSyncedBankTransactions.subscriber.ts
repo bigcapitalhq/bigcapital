@@ -6,7 +6,7 @@ import { runAfterTransaction } from '@/modules/Tenancy/TenancyDB/TransactionsHoo
 import { IPlaidTransactionsSyncedEventPayload } from '../types/BankingPlaid.types';
 
 @Injectable()
-export class RecognizeSyncedBankTranasctionsSubscriber  {
+export class RecognizeSyncedBankTranasctionsSubscriber {
   constructor(
     private readonly recognizeTranasctionsService: RecognizeTranasctionsService,
   ) {}
@@ -21,10 +21,9 @@ export class RecognizeSyncedBankTranasctionsSubscriber  {
     trx,
   }: IPlaidTransactionsSyncedEventPayload) {
     runAfterTransaction(trx, async () => {
-      await this.recognizeTranasctionsService.recognizeTransactions(
-        null,
-        { batch }
-      );
+      await this.recognizeTranasctionsService.recognizeTransactions(null, {
+        batch,
+      });
     });
-  };
+  }
 }

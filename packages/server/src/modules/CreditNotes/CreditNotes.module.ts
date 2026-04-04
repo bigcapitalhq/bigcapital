@@ -51,7 +51,7 @@ import { ValidateBulkDeleteCreditNotesService } from './ValidateBulkDeleteCredit
     DynamicListModule,
     InventoryCostModule,
     forwardRef(() => CreditNoteRefundsModule),
-    forwardRef(() => CreditNotesApplyInvoiceModule)
+    forwardRef(() => CreditNotesApplyInvoiceModule),
   ],
   providers: [
     CreateCreditNoteService,
@@ -95,4 +95,4 @@ import { ValidateBulkDeleteCreditNotesService } from './ValidateBulkDeleteCredit
   ],
   controllers: [CreditNotesController],
 })
-export class CreditNotesModule { }
+export class CreditNotesModule {}

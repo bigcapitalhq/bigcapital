@@ -49,7 +49,7 @@ export class CreditNotesController {
   /**
    * @param {CreditNoteApplication} creditNoteApplication - The credit note application service.
    */
-  constructor(private creditNoteApplication: CreditNoteApplication) { }
+  constructor(private creditNoteApplication: CreditNoteApplication) {}
 
   @Post()
   @RequirePermission(CreditNoteAction.Create, AbilitySubject.CreditNote)

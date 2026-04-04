@@ -12,7 +12,7 @@ export class ImportFilePreview {
     private readonly importAls: ImportAls,
 
     @Inject(TENANCY_DB_CONNECTION)
-    private readonly tenantKnex: () => Knex
+    private readonly tenantKnex: () => Knex,
   ) {}
 
   /**
@@ -32,7 +32,9 @@ export class ImportFilePreview {
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
   public async previewAlsRun(importId: string): Promise<ImportFilePreviewPOJO> {
-    const trx = await this.tenantKnex().transaction({ isolationLevel: 'read uncommitted' });
+    const trx = await this.tenantKnex().transaction({
+      isolationLevel: 'read uncommitted',
+    });
 
     const meta = await this.importFile.import(importId, trx);
 

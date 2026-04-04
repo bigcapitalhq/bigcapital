@@ -12,7 +12,7 @@ enum IROW_TYPE {
 }
 
 export const FinancialTable = <T extends GConstructor<FinancialSheet>>(
-  Base: T
+  Base: T,
 ) =>
   class extends R.pipe(FinancialSheetStructure)(Base) {
     public readonly i18n: I18nService;

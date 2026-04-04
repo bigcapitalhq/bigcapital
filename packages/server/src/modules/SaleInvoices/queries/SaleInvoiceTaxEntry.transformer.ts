@@ -1,6 +1,8 @@
-
 import { Transformer } from '@/modules/Transformer/Transformer';
-import { getExlusiveTaxAmount, getInclusiveTaxAmount } from '../../TaxRates/utils';
+import {
+  getExlusiveTaxAmount,
+  getInclusiveTaxAmount,
+} from '../../TaxRates/utils';
 
 export class SaleInvoiceTaxEntryTransformer extends Transformer {
   /**

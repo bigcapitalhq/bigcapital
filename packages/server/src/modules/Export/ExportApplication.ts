@@ -7,9 +7,7 @@ export class ExportApplication {
   /**
    * Constructor method.
    */
-  constructor(
-    private readonly exportResource: ExportResourceService,
-  ) {}
+  constructor(private readonly exportResource: ExportResourceService) {}
 
   /**
    * Exports the given resource to csv, xlsx or pdf format.

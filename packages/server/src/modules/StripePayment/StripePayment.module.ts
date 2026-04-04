@@ -36,4 +36,4 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
   exports: [StripePaymentService, GetStripeAuthorizationLinkService],
   controllers: [StripeIntegrationController, StripePaymentWebhooksController],
 })
-export class StripePaymentModule { }
+export class StripePaymentModule {}

@@ -50,7 +50,7 @@ const models = [RegisterTenancyModel(TaxRateTransaction)];
     WriteTaxTransactionsItemEntries,
     SyncItemTaxRateOnEditTaxRate,
     TaxRatesExportable,
-    TaxRatesImportable
+    TaxRatesImportable,
   ],
   exports: [ItemEntriesTaxTransactions, ...models],
 })

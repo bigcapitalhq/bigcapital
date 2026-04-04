@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetRecognizedTransactionTransformer extends Transformer {
   /**
@@ -43,12 +43,12 @@ export class GetRecognizedTransactionTransformer extends Transformer {
 
   /**
    * Get the uncategorized transaction id.
-   * @param transaction 
+   * @param transaction
    * @returns {number}
    */
   public uncategorizedTransactionId = (transaction): number => {
-    return transaction.id; 
-  }
+    return transaction.id;
+  };
 
   /**
    * Get the reference number of the transaction.
@@ -170,11 +170,11 @@ export class GetRecognizedTransactionTransformer extends Transformer {
   }
 
   /**
-   * 
+   *
    * @returns {string}
    */
   public assignedCategoryFormatted() {
-    return 'Other Income'
+    return 'Other Income';
   }
 
   /**

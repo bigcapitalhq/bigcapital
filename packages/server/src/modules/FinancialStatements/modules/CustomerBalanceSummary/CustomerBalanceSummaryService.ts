@@ -67,12 +67,10 @@ export class CustomerBalanceSummaryService {
     const meta = await this.customerBalanceSummaryMeta.meta(filter);
 
     // Report instance.
-    const report = new CustomerBalanceSummaryReport(
-      ledger,
-      customers,
-      filter,
-      { baseCurrency: tenantMetadata.baseCurrency, dateFormat: meta.dateFormat },
-    );
+    const report = new CustomerBalanceSummaryReport(ledger, customers, filter, {
+      baseCurrency: tenantMetadata.baseCurrency,
+      dateFormat: meta.dateFormat,
+    });
 
     // Triggers `onCustomerBalanceSummaryViewed` event.
     await this.eventPublisher.emitAsync(

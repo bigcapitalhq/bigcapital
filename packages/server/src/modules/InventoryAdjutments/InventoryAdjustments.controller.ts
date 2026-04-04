@@ -42,7 +42,10 @@ export class InventoryAdjustmentsController {
   ) {}
 
   @Post('quick')
-  @RequirePermission(InventoryAdjustmentAction.CREATE, AbilitySubject.InventoryAdjustment)
+  @RequirePermission(
+    InventoryAdjustmentAction.CREATE,
+    AbilitySubject.InventoryAdjustment,
+  )
   @ApiOperation({ summary: 'Create a quick inventory adjustment.' })
   @ApiResponse({
     status: 200,
@@ -57,7 +60,10 @@ export class InventoryAdjustmentsController {
   }
 
   @Delete(':id')
-  @RequirePermission(InventoryAdjustmentAction.DELETE, AbilitySubject.InventoryAdjustment)
+  @RequirePermission(
+    InventoryAdjustmentAction.DELETE,
+    AbilitySubject.InventoryAdjustment,
+  )
   @ApiOperation({ summary: 'Delete the given inventory adjustment.' })
   @ApiResponse({
     status: 200,
@@ -72,7 +78,10 @@ export class InventoryAdjustmentsController {
   }
 
   @Get()
-  @RequirePermission(InventoryAdjustmentAction.VIEW, AbilitySubject.InventoryAdjustment)
+  @RequirePermission(
+    InventoryAdjustmentAction.VIEW,
+    AbilitySubject.InventoryAdjustment,
+  )
   @ApiOperation({ summary: 'Retrieves the inventory adjustments.' })
   @ApiResponse({
     status: 200,
@@ -90,7 +99,10 @@ export class InventoryAdjustmentsController {
   }
 
   @Get(':id')
-  @RequirePermission(InventoryAdjustmentAction.VIEW, AbilitySubject.InventoryAdjustment)
+  @RequirePermission(
+    InventoryAdjustmentAction.VIEW,
+    AbilitySubject.InventoryAdjustment,
+  )
   @ApiOperation({ summary: 'Retrieves the inventory adjustment details.' })
   @ApiResponse({
     status: 200,
@@ -107,7 +119,10 @@ export class InventoryAdjustmentsController {
   }
 
   @Put(':id/publish')
-  @RequirePermission(InventoryAdjustmentAction.EDIT, AbilitySubject.InventoryAdjustment)
+  @RequirePermission(
+    InventoryAdjustmentAction.EDIT,
+    AbilitySubject.InventoryAdjustment,
+  )
   @ApiOperation({ summary: 'Publish the given inventory adjustment.' })
   @ApiResponse({
     status: 200,

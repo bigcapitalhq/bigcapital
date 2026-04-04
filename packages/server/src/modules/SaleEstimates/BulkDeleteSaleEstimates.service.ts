@@ -6,7 +6,7 @@ import { DeleteSaleEstimate } from './commands/DeleteSaleEstimate.service';
 
 @Injectable()
 export class BulkDeleteSaleEstimatesService {
-  constructor(private readonly deleteSaleEstimateService: DeleteSaleEstimate) { }
+  constructor(private readonly deleteSaleEstimateService: DeleteSaleEstimate) {}
 
   async bulkDeleteSaleEstimates(
     saleEstimateIds: number | Array<number>,
@@ -33,4 +33,3 @@ export class BulkDeleteSaleEstimatesService {
     }
   }
 }
-

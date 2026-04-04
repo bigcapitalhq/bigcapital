@@ -1,5 +1,5 @@
-import { UncategorizedBankTransaction } from "@/modules/BankingTransactions/models/UncategorizedBankTransaction";
-import { ServiceError } from "@/modules/Items/ServiceError";
+import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
+import { ServiceError } from '@/modules/Items/ServiceError';
 
 const ERRORS = {
   TRANSACTION_ALREADY_CATEGORIZED: 'TRANSACTION_ALREADY_CATEGORIZED',
@@ -8,7 +8,7 @@ const ERRORS = {
 };
 
 export const validateTransactionNotCategorized = (
-  transaction: UncategorizedBankTransaction
+  transaction: UncategorizedBankTransaction,
 ) => {
   if (transaction.categorized) {
     throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
@@ -16,7 +16,7 @@ export const validateTransactionNotCategorized = (
 };
 
 export const validateTransactionNotExcluded = (
-  transaction: UncategorizedBankTransaction
+  transaction: UncategorizedBankTransaction,
 ) => {
   if (transaction.isExcluded) {
     throw new ServiceError(ERRORS.TRANSACTION_ALREADY_EXCLUDED);
@@ -24,7 +24,7 @@ export const validateTransactionNotExcluded = (
 };
 
 export const validateTransactionShouldBeExcluded = (
-  transaction: UncategorizedBankTransaction
+  transaction: UncategorizedBankTransaction,
 ) => {
   if (!transaction.isExcluded) {
     throw new ServiceError(ERRORS.TRANSACTION_NOT_EXCLUDED);

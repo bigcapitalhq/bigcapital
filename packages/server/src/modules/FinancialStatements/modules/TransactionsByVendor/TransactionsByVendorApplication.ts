@@ -24,11 +24,9 @@ export class TransactionsByVendorApplication {
    * @returns {Promise<ITransactionsByVendorsStatement>}
    */
   public sheet(
-    query: ITransactionsByVendorsFilter
+    query: ITransactionsByVendorsFilter,
   ): Promise<ITransactionsByVendorsStatement> {
-    return this.transactionsByVendorSheet.transactionsByVendors(
-      query
-    );
+    return this.transactionsByVendorSheet.transactionsByVendors(query);
   }
 
   /**
@@ -37,7 +35,7 @@ export class TransactionsByVendorApplication {
    * @returns {Promise<ITransactionsByVendorTable>}
    */
   public table(
-    query: ITransactionsByVendorsFilter
+    query: ITransactionsByVendorsFilter,
   ): Promise<ITransactionsByVendorTable> {
     return this.transactionsByVendorTable.table(query);
   }
@@ -47,9 +45,7 @@ export class TransactionsByVendorApplication {
    * @param {ITransactionsByVendorsFilter} query
    * @returns {Promise<string>}
    */
-  public csv(
-    query: ITransactionsByVendorsFilter
-  ): Promise<string> {
+  public csv(query: ITransactionsByVendorsFilter): Promise<string> {
     return this.transactionsByVendorExport.csv(query);
   }
 
@@ -58,9 +54,7 @@ export class TransactionsByVendorApplication {
    * @param {ITransactionsByVendorsFilter} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(
-    query: ITransactionsByVendorsFilter
-  ): Promise<Buffer> {
+  public xlsx(query: ITransactionsByVendorsFilter): Promise<Buffer> {
     return this.transactionsByVendorExport.xlsx(query);
   }
 

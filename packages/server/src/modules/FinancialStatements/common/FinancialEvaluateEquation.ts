@@ -8,9 +8,11 @@ import { FinancialSheet } from './FinancialSheet';
 export const FinancialEvaluateEquation = <
   T extends GConstructor<FinancialSheet>,
 >(
-  Base: T
+  Base: T,
 ) =>
-  class FinancialEvaluateEquation extends R.pipe(FinancialSheetStructure)(Base) {
+  class FinancialEvaluateEquation extends R.pipe(FinancialSheetStructure)(
+    Base,
+  ) {
     /**
      * Evauluate equaation string with the given scope table.
      * @param {string} equation -
@@ -19,7 +21,7 @@ export const FinancialEvaluateEquation = <
      */
     public evaluateEquation = (
       equation: string,
-      scope: { [key: string | number]: number }
+      scope: { [key: string | number]: number },
     ): number => {
       return mathjs.evaluate(equation, scope);
     };
@@ -49,7 +51,7 @@ export const FinancialEvaluateEquation = <
     public mapNodesToTotal = R.curry(
       (path: string, nodesById: { [key: number]: any }) => {
         return mapValues(nodesById, (node) => get(node, path, 0));
-      }
+      },
     );
 
     /**
@@ -59,8 +61,8 @@ export const FinancialEvaluateEquation = <
       (path = 'total.amount', nodes) => {
         return R.compose(
           this.mapNodesToTotal(path),
-          this.transformNodesToMap
+          this.transformNodesToMap,
         )(nodes);
-      }
+      },
     );
   };

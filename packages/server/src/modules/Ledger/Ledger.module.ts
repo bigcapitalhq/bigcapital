@@ -15,13 +15,13 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     LedgerRevertService,
     LedgerContactsBalanceStorage,
     LedegrAccountsStorage,
-    TenancyContext
+    TenancyContext,
   ],
   exports: [
     LedgerStorageService,
     LedgerEntriesStorageService,
     LedgerRevertService,
-    LedegrAccountsStorage
+    LedegrAccountsStorage,
   ],
 })
 export class LedgerModule {}

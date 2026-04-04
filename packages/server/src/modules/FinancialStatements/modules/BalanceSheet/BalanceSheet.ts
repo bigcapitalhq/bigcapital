@@ -19,7 +19,11 @@ import { BalanceSheetFiltering } from './BalanceSheetFiltering';
 import { BalanceSheetNetIncome } from './BalanceSheetNetIncome';
 import { BalanceSheetAggregators } from './BalanceSheetAggregators';
 import { BalanceSheetAccounts } from './BalanceSheetAccounts';
-import { INumberFormatQuery, IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  INumberFormatQuery,
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 import { FinancialSheet } from '../../common/FinancialSheet';
 
 export class BalanceSheet extends R.pipe(

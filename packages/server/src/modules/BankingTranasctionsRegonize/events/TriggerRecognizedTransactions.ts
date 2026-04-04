@@ -55,7 +55,6 @@ export class TriggerRecognizedTransactionsSubscriber {
     oldBankRule,
     bankRule,
   }: IBankRuleEventEditedPayload) {
-    
     // Cannot continue if the new and old bank rule values are the same,
     // after excluding `createdAt` and `updatedAt` dates.
     if (

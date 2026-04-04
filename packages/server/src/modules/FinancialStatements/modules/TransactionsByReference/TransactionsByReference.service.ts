@@ -1,7 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import {
-  ITransactionsByReferencePojo,
-} from './TransactionsByReference.types';
+import { ITransactionsByReferencePojo } from './TransactionsByReference.types';
 import { TransactionsByReferenceRepository } from './TransactionsByReferenceRepository';
 import { TransactionsByReference } from './TransactionsByReferenceReport';
 import { getTransactionsByReferenceQuery } from './_utils';
@@ -12,8 +10,8 @@ import { TransactionsByReferenceQueryDto } from './TransactionsByReferenceQuery.
 export class TransactionsByReferenceService {
   constructor(
     private readonly repository: TransactionsByReferenceRepository,
-    private readonly tenancyContext: TenancyContext
-  ) { }
+    private readonly tenancyContext: TenancyContext,
+  ) {}
 
   /**
    * Retrieve accounts transactions by given reference id and type.
@@ -21,7 +19,7 @@ export class TransactionsByReferenceService {
    * @returns {Promise<ITransactionsByReferencePojo>}
    */
   public async getTransactionsByReference(
-    query: TransactionsByReferenceQueryDto
+    query: TransactionsByReferenceQueryDto,
   ): Promise<ITransactionsByReferencePojo> {
     const filter = {
       ...getTransactionsByReferenceQuery(),
@@ -32,14 +30,13 @@ export class TransactionsByReferenceService {
     // Retrieve the accounts transactions of the given reference.
     const transactions = await this.repository.getTransactions(
       query.referenceId,
-      filter.referenceType
+      filter.referenceType,
     );
     // Transactions by reference report.
-    const report = new TransactionsByReference(
-      transactions,
-      filter,
-      { baseCurrency: tenantMetadata.baseCurrency, dateFormat: tenantMetadata.dateFormat }
-    );
+    const report = new TransactionsByReference(transactions, filter, {
+      baseCurrency: tenantMetadata.baseCurrency,
+      dateFormat: tenantMetadata.dateFormat,
+    });
 
     return {
       transactions: report.reportData(),

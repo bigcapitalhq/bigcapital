@@ -22,7 +22,7 @@ export class ResourceService {
     private readonly warehousesSettings: WarehousesSettings,
     private readonly moduleRef: ModuleRef,
     private readonly i18nService: I18nService,
-  ) { }
+  ) {}
 
   /**
    * Retrieve resource model object.

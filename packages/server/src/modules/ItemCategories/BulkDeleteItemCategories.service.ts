@@ -8,7 +8,7 @@ import { DeleteItemCategoryService } from './commands/DeleteItemCategory.service
 export class BulkDeleteItemCategoriesService {
   constructor(
     private readonly deleteItemCategoryService: DeleteItemCategoryService,
-  ) { }
+  ) {}
 
   async bulkDeleteItemCategories(
     itemCategoryIds: number | Array<number>,
@@ -27,4 +27,3 @@ export class BulkDeleteItemCategoriesService {
     }
   }
 }
-

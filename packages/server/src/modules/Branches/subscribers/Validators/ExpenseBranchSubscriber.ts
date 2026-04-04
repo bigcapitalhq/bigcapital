@@ -10,7 +10,7 @@ import {
 export class ExpenseBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance once expense transaction creating.

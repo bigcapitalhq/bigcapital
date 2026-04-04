@@ -71,4 +71,4 @@ import { ValidateBulkDeleteBillsService } from './ValidateBulkDeleteBills.servic
   controllers: [BillsController],
   exports: [BillsExportable, BillsImportable],
 })
-export class BillsModule { }
+export class BillsModule {}

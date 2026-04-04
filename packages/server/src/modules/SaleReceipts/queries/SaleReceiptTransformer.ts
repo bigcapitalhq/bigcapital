@@ -23,7 +23,7 @@ export class SaleReceiptTransformer extends Transformer {
       'discountAmountFormatted',
       'discountPercentageFormatted',
       'adjustmentFormatted',
-      
+
       'entries',
       'attachments',
     ];

@@ -52,12 +52,7 @@ export class AttachmentsOnExpenses {
 
     const keys = expenseDTO.attachments?.map((attachment) => attachment.key);
 
-    await this.linkAttachmentService.bulkLink(
-      keys,
-      'Expense',
-      expense.id,
-      trx,
-    );
+    await this.linkAttachmentService.bulkLink(keys, 'Expense', expense.id, trx);
   }
 
   /**

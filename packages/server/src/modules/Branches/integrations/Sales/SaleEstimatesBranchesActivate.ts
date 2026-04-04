@@ -7,7 +7,9 @@ import { Inject, Injectable } from '@nestjs/common';
 export class SaleEstimateActivateBranches {
   constructor(
     @Inject(PaymentReceived.name)
-    private readonly paymentReceivedModel: TenantModelProxy<typeof PaymentReceived>,
+    private readonly paymentReceivedModel: TenantModelProxy<
+      typeof PaymentReceived
+    >,
   ) {}
 
   /**
@@ -17,9 +19,11 @@ export class SaleEstimateActivateBranches {
    */
   public updateEstimatesWithBranch = async (
     primaryBranchId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Updates the sale invoice with primary branch.
-    await this.paymentReceivedModel().query(trx).update({ branchId: primaryBranchId });
+    await this.paymentReceivedModel()
+      .query(trx)
+      .update({ branchId: primaryBranchId });
   };
 }

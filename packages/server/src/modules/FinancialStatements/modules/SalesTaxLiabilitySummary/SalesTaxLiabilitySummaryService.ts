@@ -30,7 +30,10 @@ export class SalesTaxLiabilitySummaryService {
     const taxLiabilitySummary = new SalesTaxLiabilitySummary(
       query,
       this.repository,
-      { baseCurrency: tenantMetadata.baseCurrency, dateFormat: meta.dateFormat },
+      {
+        baseCurrency: tenantMetadata.baseCurrency,
+        dateFormat: meta.dateFormat,
+      },
     );
 
     return {

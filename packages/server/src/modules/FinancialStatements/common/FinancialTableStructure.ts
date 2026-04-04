@@ -16,7 +16,7 @@ export class FinancialTableStructure {
    */
   public static flatNestedTree = (
     obj: ITableRow[],
-    options?: FlatNestTreeOpts
+    options?: FlatNestTreeOpts,
   ): ITableRow[] => {
     const parsedOptions = {
       nestedPrefix: '   ',
@@ -42,7 +42,7 @@ export class FinancialTableStructure {
           cells,
         };
       },
-      parsedOptions
+      parsedOptions,
     );
   };
 }

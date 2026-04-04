@@ -10,5 +10,3 @@ export default registerAs('throttle', () => ({
     limit: parseInt(process.env.THROTTLE_AUTH_LIMIT ?? '10', 10),
   },
 }));
-
-

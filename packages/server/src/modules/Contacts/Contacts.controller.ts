@@ -32,7 +32,11 @@ export class ContactsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get contact by ID (customer or vendor)' })
   @ApiParam({ name: 'id', type: Number, description: 'Contact ID' })
-  @ApiResponse({ status: 200, description: 'Contact details (under "customer" key for form/duplicate use)' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Contact details (under "customer" key for form/duplicate use)',
+  })
   getContact(@Param('id', ParseIntPipe) contactId: number) {
     return this.getContactService.getContact(contactId);
   }

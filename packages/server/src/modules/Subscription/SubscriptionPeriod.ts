@@ -16,7 +16,7 @@ export class SubscriptionPeriod {
   constructor(
     interval: unitOfTime.DurationConstructor = 'month',
     count: number,
-    start?: Date
+    start?: Date,
   ) {
     this.interval = interval;
     this.count = count;

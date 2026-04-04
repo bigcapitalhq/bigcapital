@@ -4,10 +4,7 @@ import { promises as fs } from 'fs';
 import { PageProperties, PdfFormat } from '@/libs/chromiumly/_types';
 import { UrlConverter } from '@/libs/chromiumly/UrlConvert';
 import { Chromiumly } from '@/libs/chromiumly/Chromiumly';
-import {
-  getPdfFilePath,
-  getPdfFilesStorageDir,
-} from './utils';
+import { getPdfFilePath, getPdfFilesStorageDir } from './utils';
 import { Document } from './models/Document';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
@@ -19,7 +16,7 @@ export class ChromiumlyHtmlConvert {
   constructor(
     @Inject(Document.name)
     private documentModel: TenantModelProxy<typeof Document>,
-  ) { }
+  ) {}
 
   /**
    * Write HTML content to temporary file.

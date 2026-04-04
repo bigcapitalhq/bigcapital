@@ -35,7 +35,7 @@ export function getLockTableName(tableName: string): string {
  */
 export function getLockTableNameWithSchema(
   tableName: string,
-  schemaName = null
+  schemaName = null,
 ): string {
   return schemaName
     ? `${schemaName} + ${getLockTableName(tableName)}`

@@ -39,7 +39,7 @@ export class CommandRolePermissionDto {
   value: boolean;
 }
 
-export class CreateRolePermissionDto extends CommandRolePermissionDto { }
+export class CreateRolePermissionDto extends CommandRolePermissionDto {}
 export class EditRolePermissionDto extends CommandRolePermissionDto {
   @IsNumber()
   @IsOptional()

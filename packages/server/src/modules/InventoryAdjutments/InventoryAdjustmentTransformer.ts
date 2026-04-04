@@ -1,5 +1,5 @@
-import { Transformer } from "../Transformer/Transformer";
-import { InventoryAdjustment } from "./models/InventoryAdjustment";
+import { Transformer } from '../Transformer/Transformer';
+import { InventoryAdjustment } from './models/InventoryAdjustment';
 
 export class InventoryAdjustmentTransformer extends Transformer {
   /**

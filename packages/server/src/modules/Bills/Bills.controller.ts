@@ -44,7 +44,7 @@ import { BillAction } from './Bills.types';
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class BillsController {
-  constructor(private billsApplication: BillsApplication) { }
+  constructor(private billsApplication: BillsApplication) {}
 
   @Post('validate-bulk-delete')
   @RequirePermission(BillAction.Delete, AbilitySubject.Bill)
@@ -74,9 +74,7 @@ export class BillsController {
     status: 200,
     description: 'Bills deleted successfully',
   })
-  bulkDeleteBills(
-    @Body() bulkDeleteDto: BulkDeleteDto,
-  ): Promise<void> {
+  bulkDeleteBills(@Body() bulkDeleteDto: BulkDeleteDto): Promise<void> {
     return this.billsApplication.bulkDeleteBills(bulkDeleteDto.ids, {
       skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
     });

@@ -21,7 +21,7 @@ export class AuthorizationGuard implements CanActivate {
 
     @Inject(TenantUser.name)
     private readonly tenantUserModel: TenantModelProxy<typeof TenantUser>,
-  ) { }
+  ) {}
 
   /**
    * Checks if the user has the required abilities to access the route

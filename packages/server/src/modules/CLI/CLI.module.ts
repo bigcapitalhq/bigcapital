@@ -34,4 +34,4 @@ import { OpenApiExportCommand } from './commands/OpenApiExport.command';
     OpenApiExportCommand,
   ],
 })
-export class CLIModule { }
+export class CLIModule {}

@@ -35,7 +35,7 @@ export class PaymentReceivesApplication {
     private paymentsReceivedPagesService: PaymentsReceivedPagesService,
     private bulkDeletePaymentReceivedService: BulkDeletePaymentReceivedService,
     private validateBulkDeletePaymentReceivedService: ValidateBulkDeletePaymentReceivedService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new payment receive.
@@ -94,8 +94,9 @@ export class PaymentReceivesApplication {
    * @param {number[]} paymentReceiveIds
    */
   public validateBulkDeletePaymentReceives(paymentReceiveIds: number[]) {
-    return this.validateBulkDeletePaymentReceivedService
-      .validateBulkDeletePaymentReceived(paymentReceiveIds);
+    return this.validateBulkDeletePaymentReceivedService.validateBulkDeletePaymentReceived(
+      paymentReceiveIds,
+    );
   }
 
   /**
@@ -104,9 +105,7 @@ export class PaymentReceivesApplication {
    * @param {GetPaymentsReceivedQueryDto} filterDTO
    * @returns
    */
-  public async getPaymentsReceived(
-    filterDTO: GetPaymentsReceivedQueryDto,
-  ) {
+  public async getPaymentsReceived(filterDTO: GetPaymentsReceivedQueryDto) {
     return this.getPaymentsReceivedService.getPaymentReceives(filterDTO);
   }
 
@@ -171,7 +170,7 @@ export class PaymentReceivesApplication {
 
   /**
    * Retrieves html content of the given payment receive.
-   * @param {number} paymentReceivedId 
+   * @param {number} paymentReceivedId
    * @returns {Promise<string>}
    */
   public getPaymentReceivedHtml(paymentReceivedId: number) {

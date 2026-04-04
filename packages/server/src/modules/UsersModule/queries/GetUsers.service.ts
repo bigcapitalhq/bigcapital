@@ -18,9 +18,6 @@ export class GetUsersService {
   public async getUsers() {
     const users = await this.tenantUserModel().query().withGraphFetched('role');
 
-    return this.transformerInjectable.transform(
-      users,
-      new UserTransformer(),
-    );
+    return this.transformerInjectable.transform(users, new UserTransformer());
   }
 }

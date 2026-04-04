@@ -1,8 +1,8 @@
 import * as O from 'objection';
-import { IModelMeta, } from '@/interfaces/Model';
+import { IModelMeta } from '@/interfaces/Model';
 
 export const SearchableModel: O.Plugin = (Model) =>
-    // @ts-ignore
+  // @ts-ignore
   class extends Model {
     additionalProperty: string;
 

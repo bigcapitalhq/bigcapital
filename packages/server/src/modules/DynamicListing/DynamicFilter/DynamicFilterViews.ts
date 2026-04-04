@@ -32,7 +32,7 @@ export class DynamicFilterViews extends DynamicFilterRoleAbstractor {
       this.buildFilterQuery(
         this.model,
         this.filterRoles,
-        this.logicExpression
+        this.logicExpression,
       )(builder);
     };
   }

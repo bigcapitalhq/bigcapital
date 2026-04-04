@@ -1,6 +1,3 @@
-
-
-
 export const getTransactionsByReferenceQuery = () => ({
   numberFormat: {
     precision: 2,
@@ -9,4 +6,4 @@ export const getTransactionsByReferenceQuery = () => ({
     formatMoney: 'total',
     negativeFormat: 'mines',
   },
-})
+});

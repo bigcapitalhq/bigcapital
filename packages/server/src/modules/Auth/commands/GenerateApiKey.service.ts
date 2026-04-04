@@ -10,7 +10,7 @@ export class GenerateApiKey {
     private readonly tenancyContext: TenancyContext,
     @Inject(ApiKeyModel.name)
     private readonly apiKeyModel: typeof ApiKeyModel,
-  ) { }
+  ) {}
 
   /**
    * Generates a new secure API key for the current tenant and system user.

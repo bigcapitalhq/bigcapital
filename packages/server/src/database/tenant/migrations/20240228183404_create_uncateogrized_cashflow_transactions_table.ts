@@ -19,7 +19,7 @@ exports.up = function (knex) {
       table.boolean('categorized').defaultTo(false);
       table.string('plaid_transaction_id');
       table.timestamps();
-    }
+    },
   );
 };
 

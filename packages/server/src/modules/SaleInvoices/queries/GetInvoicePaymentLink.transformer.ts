@@ -60,7 +60,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
   public organization(invoice) {
     return this.item(
       this.context.organization,
-      new GetPaymentLinkOrganizationMetaTransformer()
+      new GetPaymentLinkOrganizationMetaTransformer(),
     );
   }
 
@@ -72,7 +72,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
   public brandingTemplate(invoice) {
     return this.item(
       invoice.pdfTemplate,
-      new GetInvoicePaymentLinkBrandingTemplate()
+      new GetInvoicePaymentLinkBrandingTemplate(),
     );
   }
 
@@ -87,7 +87,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
       new GetInvoicePaymentLinkEntryMetaTransformer(),
       {
         currencyCode: invoice.currencyCode,
-      }
+      },
     );
   };
 
@@ -103,7 +103,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
         subtotal: invoice.subtotal,
         isInclusiveTax: invoice.isInclusiveTax,
         currencyCode: invoice.currencyCode,
-      }
+      },
     );
   };
 
@@ -113,7 +113,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
 
   protected hasStripePaymentMethod(invoice) {
     return invoice.paymentMethods.some(
-      (paymentMethod) => paymentMethod.paymentIntegration.service === 'Stripe'
+      (paymentMethod) => paymentMethod.paymentIntegration.service === 'Stripe',
     );
   }
 
@@ -133,7 +133,7 @@ export class GetInvoicePaymentLinkMetaTransformer extends SaleInvoiceTransformer
   protected formattedCustomerAddress(invoice) {
     return contactAddressTextFormat(
       invoice.customer,
-      this.customerAddressFormat
+      this.customerAddressFormat,
     );
   }
 }

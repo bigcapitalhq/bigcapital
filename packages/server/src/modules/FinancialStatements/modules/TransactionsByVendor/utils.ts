@@ -1,4 +1,3 @@
-
 import * as moment from 'moment';
 
 export const getTransactionsByVendorDefaultQuery = () => {
@@ -19,4 +18,4 @@ export const getTransactionsByVendorDefaultQuery = () => {
     noneTransactions: true,
     vendorsIds: [],
   };
-}
+};

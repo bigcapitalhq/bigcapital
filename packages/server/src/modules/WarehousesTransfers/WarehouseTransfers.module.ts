@@ -52,4 +52,4 @@ const models = [
   exports: [...models],
   controllers: [WarehouseTransfersController],
 })
-export class WarehousesTransfersModule { }
+export class WarehousesTransfersModule {}

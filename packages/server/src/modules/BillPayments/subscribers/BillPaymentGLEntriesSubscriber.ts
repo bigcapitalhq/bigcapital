@@ -10,9 +10,7 @@ import { events } from '@/common/events/events';
 
 @Injectable()
 export class BillPaymentGLEntriesSubscriber {
-  constructor(
-    private readonly billPaymentGLEntries: BillPaymentGLEntries,
-  ) {}
+  constructor(private readonly billPaymentGLEntries: BillPaymentGLEntries) {}
 
   /**
    * Handle bill payment writing journal entries once created.
@@ -24,11 +22,8 @@ export class BillPaymentGLEntriesSubscriber {
   }: IBillPaymentEventCreatedPayload) {
     // Records the journal transactions after bills payment
     // and change diff account balance.
-    await this.billPaymentGLEntries.writePaymentGLEntries(
-      billPayment.id,
-      trx
-    );
-  };
+    await this.billPaymentGLEntries.writePaymentGLEntries(billPayment.id, trx);
+  }
 
   /**
    * Handle bill payment re-writing journal entries once the payment transaction be edited.
@@ -40,9 +35,9 @@ export class BillPaymentGLEntriesSubscriber {
   }: IBillPaymentEventEditedPayload) {
     await this.billPaymentGLEntries.rewritePaymentGLEntries(
       billPayment.id,
-      trx
+      trx,
     );
-  };
+  }
 
   /**
    * Reverts journal entries once bill payment deleted.
@@ -52,9 +47,6 @@ export class BillPaymentGLEntriesSubscriber {
     billPaymentId,
     trx,
   }: IBillPaymentEventDeletedPayload) {
-    await this.billPaymentGLEntries.revertPaymentGLEntries(
-      billPaymentId,
-      trx
-    );
-  };
+    await this.billPaymentGLEntries.revertPaymentGLEntries(billPaymentId, trx);
+  }
 }

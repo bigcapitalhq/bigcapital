@@ -1,4 +1,3 @@
-
 import { IFinancialSheetCommonMeta } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
 import {
@@ -41,7 +40,7 @@ export interface ITransactionsByCustomersTable extends IFinancialTable {
 export interface ITransactionsByCustomersService {
   transactionsByCustomers(
     tenantId: number,
-    filter: ITransactionsByCustomersFilter
+    filter: ITransactionsByCustomersFilter,
   ): Promise<ITransactionsByCustomersStatement>;
 }
 export interface ITransactionsByCustomersMeta

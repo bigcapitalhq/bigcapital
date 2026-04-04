@@ -1,11 +1,7 @@
 import { ICreateBranchDTO, IEditBranchDTO } from './Branches.types';
 import { ActivateBranches } from './commands/ActivateBranchesFeature.service';
-import {
-  CreateBranchService,
-} from './commands/CreateBranch.service';
-import {
-  DeleteBranchService,
-} from './commands/DeleteBranch.service';
+import { CreateBranchService } from './commands/CreateBranch.service';
+import { DeleteBranchService } from './commands/DeleteBranch.service';
 import { EditBranchService } from './commands/EditBranch.service';
 import { GetBranchService } from './queries/GetBranch.service';
 import { GetBranchesService } from './queries/GetBranches.service';
@@ -58,9 +54,7 @@ export class BranchesApplication {
    * @param {ICreateBranchDTO} createBranchDTO
    * @returns {Promise<IBranch>}
    */
-  public createBranch = (
-    createBranchDTO: CreateBranchDto,
-  ): Promise<Branch> => {
+  public createBranch = (createBranchDTO: CreateBranchDto): Promise<Branch> => {
     return this.createBranchService.createBranch(createBranchDTO);
   };
 
@@ -100,9 +94,7 @@ export class BranchesApplication {
    * @param   {number} branchId
    * @returns {Promise<IBranch>}
    */
-  public markBranchAsPrimary = async (
-    branchId: number,
-  ): Promise<Branch> => {
+  public markBranchAsPrimary = async (branchId: number): Promise<Branch> => {
     return this.markBranchAsPrimaryService.markAsPrimary(branchId);
   };
 }

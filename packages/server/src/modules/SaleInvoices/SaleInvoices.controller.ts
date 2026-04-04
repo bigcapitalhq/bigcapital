@@ -60,7 +60,7 @@ import { SaleInvoiceAction } from './SaleInvoice.types';
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class SaleInvoicesController {
-  constructor(private saleInvoiceApplication: SaleInvoiceApplication) { }
+  constructor(private saleInvoiceApplication: SaleInvoiceApplication) {}
 
   @Post('validate-bulk-delete')
   @RequirePermission(SaleInvoiceAction.Delete, AbilitySubject.SaleInvoice)

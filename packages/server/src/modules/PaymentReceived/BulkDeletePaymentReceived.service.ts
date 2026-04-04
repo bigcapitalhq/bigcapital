@@ -8,7 +8,7 @@ import { DeletePaymentReceivedService } from './commands/DeletePaymentReceived.s
 export class BulkDeletePaymentReceivedService {
   constructor(
     private readonly deletePaymentReceivedService: DeletePaymentReceivedService,
-  ) { }
+  ) {}
 
   async bulkDeletePaymentReceived(
     paymentReceiveIds: number | Array<number>,
@@ -37,4 +37,3 @@ export class BulkDeletePaymentReceivedService {
     }
   }
 }
-

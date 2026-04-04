@@ -19,8 +19,7 @@ export class SendSaleReceiptMailProcess extends WorkerHost {
 
   @UseCls()
   async process(job: Job) {
-    const { messageOpts, saleReceiptId, organizationId, userId } =
-      job.data;
+    const { messageOpts, saleReceiptId, organizationId, userId } = job.data;
 
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);

@@ -5,7 +5,11 @@ import {
   IPurchasesByItemsSheetData,
   IPurchasesByItemsTotal,
 } from './types/PurchasesByItems.types';
-import { ITableColumn, ITableColumnAccessor, ITableRow } from '../../types/Table.types';
+import {
+  ITableColumn,
+  ITableColumnAccessor,
+  ITableRow,
+} from '../../types/Table.types';
 import { FinancialTable } from '../../common/FinancialTable';
 import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { FinancialSheet } from '../../common/FinancialSheet';
@@ -13,7 +17,7 @@ import { tableRowMapper } from '../../utils/Table.utils';
 
 export class PurchasesByItemsTable extends R.compose(
   FinancialTable,
-  FinancialSheetStructure
+  FinancialSheetStructure,
 )(FinancialSheet) {
   private data: IPurchasesByItemsSheetData;
 
@@ -105,7 +109,7 @@ export class PurchasesByItemsTable extends R.compose(
     const totalRow = this.totalNodeMap(this.data.total);
 
     return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow))
+      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow)),
     )(itemsRows) as ITableRow[];
   }
 }

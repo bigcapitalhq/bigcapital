@@ -7,7 +7,7 @@ import { BankAccountResponseDto } from './dtos/BankAccountResponse.dto';
 @Controller('banking/accounts')
 @ApiTags('Bank Accounts')
 export class BankAccountsController {
-  constructor(private bankAccountsApplication: BankAccountsApplication) { }
+  constructor(private bankAccountsApplication: BankAccountsApplication) {}
 
   @Get()
   @ApiOperation({ summary: 'Retrieve the bank accounts.' })

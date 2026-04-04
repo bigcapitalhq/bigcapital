@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { IBalanceSheetQuery } from "./BalanceSheet.types";
+import { IBalanceSheetQuery } from './BalanceSheet.types';
 
 export const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
 
@@ -98,4 +98,4 @@ export const getBalanceSheetDefaultQuery = (): IBalanceSheetQuery => {
     previousYearAmountChange: false,
     previousYearPercentageChange: false,
   };
-}
+};

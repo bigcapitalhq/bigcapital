@@ -176,7 +176,7 @@ export class BillPaymentGL {
     const exGainLossEntries = this.paymentExGainOrLossEntries;
 
     return [paymentEntry, payableEntry, ...exGainLossEntries];
-  };
+  }
 
   /**
    * Retrieves the bill payment ledger.

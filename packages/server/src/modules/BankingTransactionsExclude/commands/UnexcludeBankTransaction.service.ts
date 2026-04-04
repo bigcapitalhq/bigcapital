@@ -24,7 +24,7 @@ export class UnexcludeBankTransactionService {
     private readonly uncategorizedBankTransactionModel: TenantModelProxy<
       typeof UncategorizedBankTransaction
     >,
-  ) { }
+  ) {}
 
   /**
    * Marks the given bank transaction as excluded.

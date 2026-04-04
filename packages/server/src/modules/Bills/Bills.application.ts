@@ -28,7 +28,7 @@ export class BillsApplication {
     private getBillPaymentTransactionsService: GetBillPaymentTransactionsService,
     private bulkDeleteBillsService: BulkDeleteBillsService,
     private validateBulkDeleteBillsService: ValidateBulkDeleteBillsService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new bill with associated GL entries.

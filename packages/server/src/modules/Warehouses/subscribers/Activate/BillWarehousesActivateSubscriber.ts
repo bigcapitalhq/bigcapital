@@ -16,11 +16,11 @@ export class BillsActivateWarehousesSubscriber {
    * @param {IWarehousesActivatedPayload}
    */
   @OnEvent(events.warehouse.onActivated)
-  async  updateBillsWithWarehouseOnActivated ({
+  async updateBillsWithWarehouseOnActivated({
     primaryWarehouse,
   }: IWarehousesActivatedPayload) {
     await this.billsActivateWarehouses.updateBillsWithWarehouse(
-      primaryWarehouse
+      primaryWarehouse,
     );
-  };
+  }
 }

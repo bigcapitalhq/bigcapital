@@ -35,7 +35,6 @@ export interface ITransactionsByReferenceTransaction {
   accountId: number;
 }
 
-
 export interface ITransactionsByReferencePojo {
   transactions: ITransactionsByReferenceTransaction[];
 }

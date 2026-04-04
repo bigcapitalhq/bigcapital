@@ -25,7 +25,10 @@ export class InventoryValuationItemDto {
   @ApiPropertyOptional({ description: 'Average cost', type: Number })
   averageCost?: number;
 
-  @ApiPropertyOptional({ description: 'Total value', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Total value',
+    type: FinancialReportTotalDto,
+  })
   totalValue?: FinancialReportTotalDto;
 
   @ApiPropertyOptional({ description: 'Asset account name' })
@@ -47,7 +50,10 @@ export class InventoryValuationQueryResponseDto {
   @ApiProperty({ description: 'As-of date' })
   asDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Item IDs to include', type: [Number] })
@@ -58,13 +64,22 @@ export class InventoryValuationQueryResponseDto {
 }
 
 export class InventoryValuationResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: InventoryValuationQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: InventoryValuationQueryResponseDto,
+  })
   query: InventoryValuationQueryResponseDto;
 
-  @ApiProperty({ description: 'Inventory items valuation', type: [InventoryValuationItemDto] })
+  @ApiProperty({
+    description: 'Inventory items valuation',
+    type: [InventoryValuationItemDto],
+  })
   data: InventoryValuationItemDto[];
 
-  @ApiProperty({ description: 'Report metadata', type: InventoryValuationMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: InventoryValuationMetaDto,
+  })
   meta: InventoryValuationMetaDto;
 }
 
@@ -77,12 +92,21 @@ export {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class InventoryValuationTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => FinancialTableDataDto,
+  })
   table: FinancialTableDataDto;
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: InventoryValuationQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: InventoryValuationQueryResponseDto,
+  })
   query: InventoryValuationQueryResponseDto;
 
-  @ApiProperty({ description: 'Report metadata', type: InventoryValuationMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: InventoryValuationMetaDto,
+  })
   meta: InventoryValuationMetaDto;
 }

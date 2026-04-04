@@ -44,7 +44,7 @@ export class AuthController {
 
     @Inject(TenantModel.name)
     private readonly tenantModel: typeof TenantModel,
-  ) { }
+  ) {}
 
   @Post('/signin')
   @UseGuards(LocalAuthGuard)
@@ -52,7 +52,8 @@ export class AuthController {
   @ApiBody({ type: AuthSigninDto })
   @ApiResponse({
     status: 200,
-    description: 'Sign-in successful. Returns access token and tenant/organization IDs.',
+    description:
+      'Sign-in successful. Returns access token and tenant/organization IDs.',
     schema: { $ref: getSchemaPath(AuthSigninResponseDto) },
   })
   async signin(
@@ -73,7 +74,10 @@ export class AuthController {
   @Post('/signup')
   @ApiOperation({ summary: 'Sign up a new user' })
   @ApiBody({ type: AuthSignupDto })
-  @ApiResponse({ status: 201, description: 'Sign-up initiated. Check email for confirmation.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Sign-up initiated. Check email for confirmation.',
+  })
   signup(@Request() req: Request, @Body() signupDto: AuthSignupDto) {
     return this.authApp.signUp(signupDto);
   }
@@ -89,14 +93,20 @@ export class AuthController {
   @Post('/send_reset_password')
   @ApiOperation({ summary: 'Send reset password email' })
   @ApiBody({ type: AuthSendResetPasswordDto })
-  @ApiResponse({ status: 200, description: 'Reset password email sent if the account exists.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Reset password email sent if the account exists.',
+  })
   sendResetPassword(@Body() body: AuthSendResetPasswordDto) {
     return this.authApp.sendResetPassword(body.email);
   }
 
   @Post('/reset_password/:token')
   @ApiOperation({ summary: 'Reset password using token' })
-  @ApiParam({ name: 'token', description: 'Reset password token from email link' })
+  @ApiParam({
+    name: 'token',
+    description: 'Reset password token from email link',
+  })
   @ApiBody({ type: AuthResetPasswordDto })
   @ApiResponse({ status: 200, description: 'Password reset successfully.' })
   resetPassword(

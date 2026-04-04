@@ -103,9 +103,7 @@ export class VendorsController {
   validateBulkDeleteVendors(
     @Body() bulkDeleteDto: BulkDeleteVendorsDto,
   ): Promise<ValidateBulkDeleteVendorsResponseDto> {
-    return this.vendorsApplication.validateBulkDeleteVendors(
-      bulkDeleteDto.ids,
-    );
+    return this.vendorsApplication.validateBulkDeleteVendors(bulkDeleteDto.ids);
   }
 
   @Post('bulk-delete')

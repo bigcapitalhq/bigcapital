@@ -25,4 +25,4 @@ import { AccountsModule } from '../Accounts/Accounts.module';
   ],
   controllers: [VendorCreditsRefundController],
 })
-export class VendorCreditsRefundModule { }
+export class VendorCreditsRefundModule {}

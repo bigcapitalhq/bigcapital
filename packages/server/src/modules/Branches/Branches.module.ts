@@ -78,7 +78,7 @@ import { FeaturesModule } from '../Features/Features.module';
     BillPaymentsActivateBranches,
     BillBranchesActivateSubscriber,
     VendorCreditBranchesActivateSubscriber,
-    PaymentMadeActivateBranchesSubscriber
+    PaymentMadeActivateBranchesSubscriber,
   ],
   exports: [
     BranchesSettingsService,
@@ -86,4 +86,4 @@ import { FeaturesModule } from '../Features/Features.module';
     ManualJournalBranchesDTOTransformer,
   ],
 })
-export class BranchesModule { }
+export class BranchesModule {}

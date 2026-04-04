@@ -8,7 +8,7 @@ import { DeleteManualJournalService } from './commands/DeleteManualJournal.servi
 export class BulkDeleteManualJournalsService {
   constructor(
     private readonly deleteManualJournalService: DeleteManualJournalService,
-  ) { }
+  ) {}
 
   async bulkDeleteManualJournals(
     manualJournalIds: number | Array<number>,
@@ -37,4 +37,3 @@ export class BulkDeleteManualJournalsService {
     }
   }
 }
-

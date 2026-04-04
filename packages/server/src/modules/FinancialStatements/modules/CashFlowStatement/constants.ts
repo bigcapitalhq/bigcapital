@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { ICashFlowStatementQuery } from "./Cashflow.types";
+import { ICashFlowStatementQuery } from './Cashflow.types';
 
 export const DISPLAY_COLUMNS_BY = {
   DATE_PERIODS: 'date_periods',

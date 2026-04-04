@@ -8,7 +8,7 @@ import { DeleteCreditNoteService } from './commands/DeleteCreditNote.service';
 export class BulkDeleteCreditNotesService {
   constructor(
     private readonly deleteCreditNoteService: DeleteCreditNoteService,
-  ) { }
+  ) {}
 
   async bulkDeleteCreditNotes(
     creditNoteIds: number | Array<number>,
@@ -35,4 +35,3 @@ export class BulkDeleteCreditNotesService {
     }
   }
 }
-

@@ -7,9 +7,7 @@ import { CreateBillDto } from '../dtos/Bill.dto';
 
 @Injectable()
 export class BillsImportable extends Importable {
-  constructor(
-    private readonly createBillService: CreateBill,
-  ) {
+  constructor(private readonly createBillService: CreateBill) {
     super();
   }
 
@@ -19,14 +17,8 @@ export class BillsImportable extends Importable {
    * @param {IAccountCreateDTO} createAccountDTO
    * @returns
    */
-  public importable(
-    createBillDto: CreateBillDto,
-    trx?: Knex.Transaction
-  ) {
-    return this.createBillService.createBill(
-      createBillDto,
-      trx
-    );
+  public importable(createBillDto: CreateBillDto, trx?: Knex.Transaction) {
+    return this.createBillService.createBill(createBillDto, trx);
   }
 
   /**

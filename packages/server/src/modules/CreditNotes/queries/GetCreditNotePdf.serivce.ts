@@ -34,7 +34,7 @@ export class GetCreditNotePdf {
     private readonly pdfTemplateModel: TenantModelProxy<
       typeof PdfTemplateModel
     >,
-  ) { }
+  ) {}
 
   /**
    * Retrieves credit note html content.
