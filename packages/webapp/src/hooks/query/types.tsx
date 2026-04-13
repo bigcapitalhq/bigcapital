@@ -245,6 +245,11 @@ export const API_KEYS = {
   API_KEYS: 'API_KEYS',
 };
 
+export const NOTIFICATIONS = {
+  NOTIFICATIONS: 'NOTIFICATIONS',
+  NOTIFICATIONS_UNREAD_COUNT: 'NOTIFICATIONS_UNREAD_COUNT',
+};
+
 export default {
   ...Authentication,
   ...ACCOUNTS,
@@ -281,4 +286,5 @@ export default {
   ...TAX_RATES,
   ...EXCHANGE_RATE,
   ...API_KEYS,
+  ...NOTIFICATIONS,
 };

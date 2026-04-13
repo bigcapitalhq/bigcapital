@@ -51,6 +51,7 @@ export * from './generic-resource';
 export * from './cashflow-accounts';
 export * from './bank-rules';
 export * from './misc';
+export * from './notifications';
 export * from './reports';
 
 /**

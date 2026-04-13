@@ -16,6 +16,9 @@ import {
 import { Popover2 } from '@blueprintjs/popover2';
 
 import { FormattedMessage as T, Icon, Hint, If } from '@/components';
+import { useDrawerActions } from '@/hooks/state/dashboard';
+import { useNotificationsUnreadCount } from '@/hooks/query/notifications';
+import { DRAWERS } from '@/constants/drawers';
 
 import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
 import DashboardBreadcrumbs from '@/components/Dashboard/DashboardBreadcrumbs';
@@ -62,6 +65,8 @@ function DashboardTopbar({
   openDialog,
 }) {
   const history = useHistory();
+  const { openDrawer } = useDrawerActions();
+  const { data: unreadCount = 0 } = useNotificationsUnreadCount();
 
   const handlerClickEditView = () => {
     history.push(`/custom_views/${editViewId}/edit`);
@@ -69,6 +74,10 @@ function DashboardTopbar({
 
   const handleSidebarToggleBtn = () => {
     toggleSidebarExpand();
+  };
+
+  const handleNotificationsClick = () => {
+    openDrawer(DRAWERS.NOTIFICATIONS);
   };
 
   return (
@@ -125,10 +134,35 @@ function DashboardTopbar({
               content={<T id={'notifications'} />}
               position={Position.BOTTOM}
             >
-              <Button
-                className={Classes.MINIMAL}
-                icon={<Icon icon={'notification-24'} iconSize={20} />}
-              />
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <Button
+                  className={Classes.MINIMAL}
+                  icon={<Icon icon={'notification-24'} iconSize={20} />}
+                  onClick={handleNotificationsClick}
+                />
+                {unreadCount > 0 && (
+                  <span
+                    className="notification-badge"
+                    style={{
+                      position: 'absolute',
+                      top: 2,
+                      right: 2,
+                      minWidth: '18px',
+                      height: '18px',
+                      padding: '0 5px',
+                      fontSize: '11px',
+                      lineHeight: '18px',
+                      borderRadius: '9px',
+                      backgroundColor: '#db3737',
+                      color: 'white',
+                      textAlign: 'center',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </div>
             </Tooltip>
 
             <Popover2
