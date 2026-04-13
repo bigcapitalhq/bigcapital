@@ -103,6 +103,7 @@ import { ExchangeRatesModule } from '../ExchangeRates/ExchangeRates.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
 import { SocketModule } from '../Socket/Socket.module';
+import { NotificationsModule } from '../Notifications/Notifications.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AppThrottleModule } from './AppThrottle.module';
 
@@ -257,6 +258,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     UsersModule,
     ContactsModule,
     SocketModule,
+    NotificationsModule,
     ExchangeRatesModule,
   ],
   controllers: [AppController],

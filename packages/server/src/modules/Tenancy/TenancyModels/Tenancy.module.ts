@@ -40,6 +40,7 @@ import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceive
 import { Model } from 'objection';
 import { ClsModule } from 'nestjs-cls';
 import { TenantUser } from './models/TenantUser.model';
+import { TenantNotification } from '@/modules/Notifications/models/Notification.model';
 
 const models = [
   Item,
@@ -80,6 +81,7 @@ const models = [
   PaymentReceived,
   PaymentReceivedEntry,
   TenantUser,
+  TenantNotification,
 ];
 
 /**
