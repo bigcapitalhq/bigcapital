@@ -17,6 +17,7 @@ export class AccountTransformer extends Transformer {
       'formattedAmount',
       'flattenName',
       'parentAccountName',
+      'parentAccountCode',
       'bankBalanceFormatted',
       'lastFeedsUpdatedAtFormatted',
       'isFeedsPaused',
@@ -61,6 +62,25 @@ export class AccountTransformer extends Transformer {
         account.parentAccountId,
       );
       return node?.name || '';
+    } catch {
+      return '';
+    }
+  };
+
+  /**
+   * Retrieves the parent account code from the dependency graph.
+   * @param {IAccount} account
+   * @returns {string}
+   */
+  public parentAccountCode = (account: Account): string => {
+    if (!account.parentAccountId) {
+      return '';
+    }
+    try {
+      const node = this.options.accountsGraph.getNodeData(
+        account.parentAccountId,
+      );
+      return node?.code || '';
     } catch {
       return '';
     }
