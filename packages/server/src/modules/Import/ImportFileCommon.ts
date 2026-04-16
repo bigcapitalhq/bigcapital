@@ -97,6 +97,9 @@ export class ImportFileCommon {
     };
     await bluebird.map(parsedData, importAsync, { concurrency });
 
+    // Run post-processing (e.g. deferred parent-child relationship resolution).
+    await importable.afterImport(trx);
+
     return [success, failed];
   }
 

@@ -49,24 +49,36 @@ export function useImportFileMapping(props = {}) {
 }
 
 export function useImportFilePreview(importId: string, props = {}) {
-  const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useQuery([QueryKeys.ImportPreview, importId], () =>
-    apiRequest
-      .get(`import/${importId}/preview`)
-      .then((res) => transformToCamelCase(res.data)),
+  return useQuery(
+    [QueryKeys.ImportPreview, importId],
+    () =>
+      apiRequest
+        .get(`import/${importId}/preview`)
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+      ...props,
+    },
   );
 }
 
 export function useImportFileMeta(importId: string, props = {}) {
-  const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useQuery([QueryKeys.ImportFileMeta, importId], () =>
-    apiRequest
-      .get(`import/${importId}`)
-      .then((res) => transformToCamelCase(res.data)),
+  return useQuery(
+    [QueryKeys.ImportFileMeta, importId],
+    () =>
+      apiRequest
+        .get(`import/${importId}`)
+        .then((res) => transformToCamelCase(res.data)),
+    {
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+      ...props,
+    },
   );
 }
 
@@ -206,6 +218,12 @@ const invalidateResourcesOnImport = (
     case 'ManualJournal':
       queryClient.invalidateQueries(T.MANUAL_JOURNAL);
       queryClient.invalidateQueries(T.MANUAL_JOURNALS);
+      break;
+
+    case 'Account':
+      queryClient.invalidateQueries(T.ACCOUNTS);
+      queryClient.invalidateQueries(T.ACCOUNT);
+      queryClient.invalidateQueries(T.ACCOUNTS_TYPES);
       break;
 
     case 'UncategorizedBankTransaction':

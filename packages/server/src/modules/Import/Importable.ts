@@ -41,6 +41,13 @@ export abstract class Importable {
     return [];
   }
 
+  /**
+   * Called after all rows have been imported. Override to perform
+   * post-processing such as resolving deferred relationships.
+   * @param {Knex.Transaction} trx
+   */
+  public async afterImport(trx?: Knex.Transaction): Promise<void> {}
+
   // ------------------
   // # Params
   // ------------------
