@@ -6,10 +6,10 @@ import { isBlank } from '@/utils';
 
 const getSchema = Yup.object().shape({
   vendor_id: Yup.number().required().label(intl.get('vendor_name_')),
-  vendor_credit_date: Yup.date().required().label(intl.get('bill_date_')),
+  vendor_credit_date: Yup.date().required().label(intl.get('vendor_credit_date_')),
   vendor_credit_number: Yup.string()
     .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('bill_number_')),
+    .label(intl.get('vendor_credit_no_')),
   reference_no: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
   note: Yup.string()
     .trim()
