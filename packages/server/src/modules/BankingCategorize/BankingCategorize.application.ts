@@ -6,6 +6,8 @@ import { UncategorizedBankTransactionDto } from './dtos/CreateUncategorizedBankT
 import { CategorizeBankTransactionDto } from './dtos/CategorizeBankTransaction.dto';
 import { CategorizeTransactionAsExpense } from './commands/CategorizeTransactionAsExpense';
 import { CreateUncategorizedTransactionService } from './commands/CreateUncategorizedTransaction.service';
+import { EditCategorizeBankTransaction } from './commands/EditCategorizeBankTransaction.service';
+import { EditCategorizeBankTransactionDto } from './dtos/EditCategorizeBankTransaction.dto';
 import { ICategorizeCashflowTransactioDTO } from './types/BankingCategorize.types';
 import { Injectable } from '@nestjs/common';
 
@@ -17,6 +19,7 @@ export class BankingCategorizeApplication {
     private readonly uncategorizeBankTransactionsBulk: UncategorizeBankTransactionsBulk,
     private readonly categorizeTransactionAsExpense: CategorizeTransactionAsExpense,
     private readonly createUncategorizedTransaction: CreateUncategorizedTransactionService,
+    private readonly editCategorizeBankTransaction: EditCategorizeBankTransaction,
   ) {}
 
   /**
@@ -74,6 +77,20 @@ export class BankingCategorizeApplication {
     return this.categorizeTransactionAsExpense.categorize(
       cashflowTransactionId,
       transactionDTO,
+    );
+  }
+
+  /**
+   * Edit the categorization of a previously categorized bank transaction.
+   * Only creditAccountId and description can be changed.
+   */
+  public editCategorization(
+    uncategorizedTransactionId: number,
+    editDTO: EditCategorizeBankTransactionDto,
+  ) {
+    return this.editCategorizeBankTransaction.editCategorization(
+      uncategorizedTransactionId,
+      editDTO,
     );
   }
 

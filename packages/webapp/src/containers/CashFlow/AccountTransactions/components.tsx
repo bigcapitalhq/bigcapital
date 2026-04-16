@@ -26,11 +26,18 @@ export function AccountTransactionsLoadingBar() {
 }
 
 export function ActionsMenu({
-  payload: { onUncategorize, onUnmatch },
+  payload: { onUncategorize, onUnmatch, onEditCategorization },
   row: { original },
 }) {
   return (
     <Menu>
+      {original.status === 'categorized' && (
+        <MenuItem
+          icon={<Icon icon="pen-18" iconSize={16} />}
+          text={'Edit Category'}
+          onClick={safeCallback(onEditCategorization, original)}
+        />
+      )}
       {original.status === 'categorized' && (
         <MenuItem
           icon={<Icon icon="reader-18" />}

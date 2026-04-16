@@ -267,6 +267,30 @@ export function useCategorizeTransaction(props) {
 }
 
 /**
+ * Edit the categorization of a bank transaction.
+ */
+export function useEditCategorizeTransaction(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ({ id, ...values }: { id: number; creditAccountId?: number; description?: string }) =>
+      apiRequest.patch(`banking/categorize/${id}`, values),
+    {
+      onSuccess: () => {
+        commonInvalidateQueries(queryClient);
+        queryClient.invalidateQueries(t.CASHFLOW_UNCAATEGORIZED_TRANSACTION);
+        queryClient.invalidateQueries(
+          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+        );
+        queryClient.invalidateQueries('BANK_ACCOUNT_SUMMARY_META');
+      },
+      ...props,
+    },
+  );
+}
+
+/**
  * Uncategorize the cashflow transaction.
  */
 export function useUncategorizeTransaction(props) {

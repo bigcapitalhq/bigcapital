@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Patch, Post, Query } from '@nestjs/common';
 import { castArray, omit } from 'lodash';
 import { BankingCategorizeApplication } from './BankingCategorize.application';
 import { CategorizeBankTransactionRouteDto } from './dtos/CategorizeBankTransaction.dto';
+import { EditCategorizeBankTransactionDto } from './dtos/EditCategorizeBankTransaction.dto';
 import {
   ApiBody,
   ApiOperation,
@@ -33,6 +34,29 @@ export class BankingCategorizeController {
     return this.bankingCategorizeApplication.categorizeTransaction(
       castArray(body.uncategorizedTransactionIds),
       omit(body, 'uncategorizedTransactionIds'),
+    );
+  }
+
+  @Patch('/:id')
+  @ApiOperation({ summary: 'Edit the categorization of a bank transaction.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'Uncategorized transaction ID',
+  })
+  @ApiBody({ type: EditCategorizeBankTransactionDto })
+  @ApiResponse({
+    status: 200,
+    description: 'The categorization has been updated successfully.',
+  })
+  public editCategorization(
+    @Param('id') uncategorizedTransactionId: number,
+    @Body() body: EditCategorizeBankTransactionDto,
+  ) {
+    return this.bankingCategorizeApplication.editCategorization(
+      Number(uncategorizedTransactionId),
+      body,
     );
   }
 

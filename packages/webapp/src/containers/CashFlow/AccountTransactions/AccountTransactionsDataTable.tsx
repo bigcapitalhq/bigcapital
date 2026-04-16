@@ -90,6 +90,14 @@ function AccountTransactionsDataTable({
         });
       });
   };
+  // Handle edit categorization.
+  const handleEditCategorization = (transaction) => {
+    openAlert('edit-categorization', {
+      uncategorizedTransactionId: transaction.uncategorized_transaction_id,
+      cashflowTransactionId: transaction.referenceId,
+    });
+  };
+
   // Handle uncategorize transaction.
   const handleUncategorizeTransaction = (transaction) => {
     uncategorizeTransaction(transaction.uncategorized_transaction_id)
@@ -146,6 +154,7 @@ function AccountTransactionsDataTable({
       windowScrollerProps={{ scrollElement: scrollableRef }}
       payload={{
         onViewDetails: handleViewDetailCashflowTransaction,
+        onEditCategorization: handleEditCategorization,
         onUncategorize: handleUncategorizeTransaction,
         onUnmatch: handleUnmatchTransaction,
       }}

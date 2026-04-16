@@ -9,6 +9,7 @@ import { BankingCategorizeApplication } from './BankingCategorize.application';
 import { CategorizeBankTransaction } from './commands/CategorizeBankTransaction';
 import { UncategorizeBankTransactionService } from './commands/UncategorizeBankTransaction.service';
 import { UncategorizeBankTransactionsBulk } from './commands/UncategorizeBankTransactionsBulk.service';
+import { EditCategorizeBankTransaction } from './commands/EditCategorizeBankTransaction.service';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UncategorizeBankTransactionsBulk } from './commands/UncategorizeBankTra
     CategorizeBankTransaction,
     UncategorizeBankTransactionService,
     UncategorizeBankTransactionsBulk,
+    EditCategorizeBankTransaction,
   ],
   exports: [
     CreateUncategorizedTransactionService,

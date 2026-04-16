@@ -82,7 +82,8 @@ const models = [
     ...models,
     RemovePendingUncategorizedTransaction,
     CommandBankTransactionValidator,
-    CreateBankTransactionService
+    CreateBankTransactionService,
+    BankTransactionGLEntriesService,
   ],
 })
 export class BankingTransactionsModule { }
