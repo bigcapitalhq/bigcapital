@@ -1,0 +1,72 @@
+# Traefik dynamic configuration for Bigcapital
+# Place this file in Traefik's watched dynamic config directory
+# (e.g. /etc/traefik/dynamic/bigcapital.yml)
+
+http:
+  routers:
+    bigcapital-fork-auth:
+      rule: "Host(`staging.bc.jjocllc.com`) && PathPrefix(`/oauth2/`)"
+      entryPoints:
+        - websecure
+      service: oauth2-jjoc-svc          # defined in jjocllc.yml
+      tls:
+        certResolver: letsencrypt
+      priority: 100
+      middlewares:
+        - security-headers
+        - rate-limit
+
+    # API router — matches /api, /socket (Socket.IO), /public (static assets)
+    bigcapital-fork-api:
+      rule: "Host(`staging.bc.jjocllc.com`) && (PathPrefix(`/api`) || PathPrefix(`/socket`) || PathPrefix(`/public`))"
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      service: bigcapital-fork-api
+      priority: 10
+      middlewares:
+        - oauth2-proxy-jjocllc-com
+
+    # Webapp router — catch-all for the SPA
+    bigcapital-fork-webapp:
+      rule: "Host(`staging.bc.jjocllc.com`)"
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      service: bigcapital-fork-webapp
+      priority: 1
+      middlewares:
+        - oauth2-proxy-jjocllc-com
+
+    # HTTP → HTTPS redirect
+    bigcapital-http-redirect:
+      rule: "Host(`staging.bc.jjocllc.com`)"
+      entryPoints:
+        - web
+      middlewares:
+        - https-redirect
+      service: bigcapital-fork-webapp
+
+  services:
+    bigcapital-fork-api:
+      loadBalancer:
+        servers:
+          - url: "http://bigcapital-fork-server:3000"
+        sticky:
+          cookie:
+            name: bigcapital_api_sticky
+            secure: true
+            httpOnly: true
+
+    bigcapital-fork-webapp:
+      loadBalancer:
+        servers:
+          - url: "http://bigcapital-fork-webapp:80"
+
+  middlewares:
+    https-redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true

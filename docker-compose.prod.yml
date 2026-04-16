@@ -1,44 +1,26 @@
-# This is a production version of the Bigcapital docker-compose.yml file.
-
-version: '3.3'
+# Production docker-compose for Bigcapital
+# Traefik (external) handles TLS, OAuth, and routing.
+# This file only defines the application stack.
 
 services:
-  proxy:
-    image: envoyproxy/envoy:v1.30-latest
-    depends_on:
-      - server
-      - webapp
-    ports:
-      - '${PUBLIC_PROXY_PORT:-80}:80'
-      - '${PUBLIC_PROXY_SSL_PORT:-443}:443'
-    tty: true
-    volumes:
-      - ./docker/envoy/envoy.yaml:/etc/envoy/envoy.yaml
-    restart: on-failure
-    networks:
-      - bigcapital_network
-
   webapp:
-    container_name: bigcapital-webapp
-    image: bigcapitalhq/webapp:latest
-    restart: on-failure
+    container_name: bigcapital-fork-webapp
+    image: bigcapital-fork-webapp:uat-v1
+    restart: unless-stopped
     networks:
-      - bigcapital_network
+      - portal-net
+      - bigcapital_fork_network
 
   server:
-    container_name: bigcapital-server
-    image: bigcapitalhq/server:latest
-    expose:
-      - '3000'
-    links:
-      - mysql
-      - redis
+    container_name: bigcapital-fork-server
+    image: bigcapital-fork-server:uat-v1
+    restart: unless-stopped
     depends_on:
       - mysql
       - redis
-    restart: on-failure
     networks:
-      - bigcapital_network
+      - portal-net
+      - bigcapital_fork_network
     environment:
       # Mail
       - MAIL_HOST=${MAIL_HOST}
@@ -81,13 +63,13 @@ services:
       # Sign-up email confirmation
       - SIGNUP_EMAIL_CONFIRMATION=${SIGNUP_EMAIL_CONFIRMATION}
 
-      # Gotenberg (Pdf generator)
+      # Gotenberg (PDF generator)
       - GOTENBERG_URL=${GOTENBERG_URL}
       - GOTENBERG_DOCS_URL=${GOTENBERG_DOCS_URL}
 
       # Exchange Rate
       - EXCHANGE_RATE_SERVICE=${EXCHANGE_RATE_SERVICE}
-      - OPEN_EXCHANGE_RATE_APP_ID-${OPEN_EXCHANGE_RATE_APP_ID}
+      - OPEN_EXCHANGE_RATE_APP_ID=${OPEN_EXCHANGE_RATE_APP_ID}
 
       # Bank Sync
       - BANK_FEED_ENABLED=${BANK_FEED_ENABLED}
@@ -98,13 +80,13 @@ services:
       - PLAID_SECRET=${PLAID_SECRET}
       - PLAID_LINK_WEBHOOK=${PLAID_LINK_WEBHOOK}
 
-      # Lemon Squeez
+      # Lemon Squeezy
       - LEMONSQUEEZY_API_KEY=${LEMONSQUEEZY_API_KEY}
       - LEMONSQUEEZY_STORE_ID=${LEMONSQUEEZY_STORE_ID}
       - LEMONSQUEEZY_WEBHOOK_SECRET=${LEMONSQUEEZY_WEBHOOK_SECRET}
       - HOSTED_ON_BIGCAPITAL_CLOUD=${HOSTED_ON_BIGCAPITAL_CLOUD}
 
-      # New Relic matrics tracking.
+      # New Relic
       - NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=${NEW_RELIC_DISTRIBUTED_TRACING_ENABLED}
       - NEW_RELIC_LOG=${NEW_RELIC_LOG}
       - NEW_RELIC_AI_MONITORING_ENABLED=${NEW_RELIC_AI_MONITORING_ENABLED}
@@ -128,27 +110,33 @@ services:
       - STRIPE_PAYMENT_REDIRECT_URL=${STRIPE_PAYMENT_REDIRECT_URL}
 
   database_migration:
-    container_name: bigcapital-database-migration
-    build:
-      context: ./
-      dockerfile: docker/migration/Dockerfile
+    container_name: bigcapital-fork-database-migration
+    image: bigcapital-fork-server:uat-v1
+    working_dir: /app/packages/server
+    command: >
+      sh -c "
+        echo 'Waiting for MySQL...' &&
+        while ! nc -z mysql 3306 2>/dev/null; do sleep 2; done &&
+        echo 'MySQL is up — running migrations' &&
+        node dist/cli.js system:migrate:latest &&
+        node dist/cli.js tenants:migrate:latest &&
+        echo 'Migrations complete'
+      "
     environment:
-      # Database
       - DB_HOST=mysql
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_CHARSET=${DB_CHARSET}
       - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
-      # Tenants databases
       - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
     depends_on:
       - mysql
     networks:
-      - bigcapital_network
+      - bigcapital_fork_network
 
   mysql:
-    container_name: bigcapital-mysql
-    restart: on-failure
+    container_name: bigcapital-fork-mysql
+    restart: unless-stopped
     build:
       context: ./docker/mariadb
     environment:
@@ -161,11 +149,11 @@ services:
     expose:
       - '3306'
     networks:
-      - bigcapital_network
+      - bigcapital_fork_network
 
   redis:
-    container_name: bigcapital-redis
-    restart: on-failure
+    container_name: bigcapital-fork-redis
+    restart: unless-stopped
     build:
       context: ./docker/redis
     expose:
@@ -173,26 +161,31 @@ services:
     volumes:
       - redis:/data
     networks:
-      - bigcapital_network
+      - bigcapital_fork_network
 
   gotenberg:
     image: gotenberg/gotenberg:7
+    container_name: bigcapital-fork-gotenberg
+    restart: unless-stopped
     expose:
-      - '9000'
+      - '3000'
     networks:
-      - bigcapital_network
+      - bigcapital_fork_network
 
 # Volumes
 volumes:
   mysql:
-    name: bigcapital_prod_mysql
+    name: bigcapital_prod_fork_mysql
     driver: local
 
   redis:
-    name: bigcapital_prod_redis
+    name: bigcapital_prod_fork_redis
     driver: local
 
 # Networks
 networks:
-  bigcapital_network:
+  bigcapital_fork_network:
     driver: bridge
+
+  portal-net:
+    external: true
