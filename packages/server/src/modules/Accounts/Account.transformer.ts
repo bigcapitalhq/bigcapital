@@ -16,6 +16,7 @@ export class AccountTransformer extends Transformer {
       'accountNormalFormatted',
       'formattedAmount',
       'flattenName',
+      'parentAccountName',
       'bankBalanceFormatted',
       'lastFeedsUpdatedAtFormatted',
       'isFeedsPaused',
@@ -44,6 +45,25 @@ export class AccountTransformer extends Transformer {
       return `${node.name}: `;
     });
     return `${prefixAccounts}${account.name}`;
+  };
+
+  /**
+   * Retrieves the parent account name from the dependency graph.
+   * @param {IAccount} account
+   * @returns {string}
+   */
+  public parentAccountName = (account: Account): string => {
+    if (!account.parentAccountId) {
+      return '';
+    }
+    try {
+      const node = this.options.accountsGraph.getNodeData(
+        account.parentAccountId,
+      );
+      return node?.name || '';
+    } catch {
+      return '';
+    }
   };
 
   /**

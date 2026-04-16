@@ -122,6 +122,11 @@ export const AccountMeta = {
       type: 'text',
       exportable: true,
     },
+    parentAccount: {
+      name: 'account.field.parent_account',
+      accessor: 'parentAccountName',
+      type: 'text',
+    },
     balance: {
       name: 'account.field.balance',
       accessor: 'formattedAmount',
