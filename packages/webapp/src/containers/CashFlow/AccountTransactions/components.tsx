@@ -108,7 +108,7 @@ export function useAccountTransactionsColumns() {
       },
       {
         id: 'reference_number',
-        Header: 'Ref.#',
+        Header: 'Reference No.',
         accessor: 'reference_number',
         width: 160,
         className: 'reference_number',
