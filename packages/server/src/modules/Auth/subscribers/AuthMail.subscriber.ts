@@ -35,6 +35,11 @@ export class AuthMailSubscriber {
   async handleSignupSendVerificationMail(
     payload: IAuthSignedUpEventPayload | ISignUpConfigmResendedEventPayload,
   ) {
+    // Skip sending verification email when email confirmation is disabled
+    // (verifyToken is empty when SIGNUP_EMAIL_CONFIRMATION=false).
+    if (!payload.user.verifyToken) {
+      return;
+    }
     try {
       await this.sendSignupVerificationMailQueue.add(
         SendSignupVerificationMailJob,
