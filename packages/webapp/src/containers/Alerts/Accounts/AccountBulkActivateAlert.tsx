@@ -1,12 +1,12 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { useQueryClient } from 'react-query';
 import { FormattedMessage as T, AppToaster } from '@/components';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { useBulkActivateAccounts } from '@/hooks/query';
 
 import { compose } from '@/utils';
 
@@ -17,13 +17,8 @@ function AccountBulkActivateAlert({
 
   // #withAlertActions
   closeAlert,
-
-  // TODO: Implement bulk activate accounts hook and use it here
-  requestBulkActivateAccounts,
 }) {
-  const [isLoading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
-  const selectedRowsCount = 0;
+  const { mutateAsync, isLoading } = useBulkActivateAccounts();
 
   // Handle alert cancel.
   const handleClose = () => {
@@ -32,18 +27,15 @@ function AccountBulkActivateAlert({
 
   // Handle Bulk activate account confirm.
   const handleConfirmBulkActivate = () => {
-    setLoading(true);
-    requestBulkActivateAccounts(accountsIds)
+    mutateAsync(accountsIds)
       .then(() => {
         AppToaster.show({
           message: intl.get('the_accounts_has_been_successfully_activated'),
           intent: Intent.SUCCESS,
         });
-        queryClient.invalidateQueries('accounts-table');
       })
-      .catch((errors) => {})
+      .catch(() => {})
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
   };
@@ -51,7 +43,7 @@ function AccountBulkActivateAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${intl.get('activate')} (${selectedRowsCount})`}
+      confirmButtonText={`${intl.get('activate')} (${accountsIds.length})`}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleClose}

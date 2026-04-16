@@ -91,6 +91,7 @@ Edit `/opt/bigcapital/.env` and fill in every line marked `[CHANGE]`:
 - `DB_PASSWORD` — generate with `openssl rand -base64 24`
 - `DB_ROOT_PASSWORD` — generate with `openssl rand -base64 24`
 - `BASE_URL` — should be `https://staging.bc.jjocllc.com`
+- `API_RATE_LIMIT` — format is `points,duration,blockDuration` (e.g. `600,60,60` = 600 requests per 60s, 60s block). The default `120,60,600` is too aggressive for normal SPA usage — a single page load can trigger dozens of API calls. Recommended: `600,60,60` for production, `10000,60,10` for staging/dev.
 - SMTP credentials for outbound email
 - S3 credentials if using file attachments
 
@@ -204,3 +205,12 @@ The OAuth middleware is redirecting POST requests (e.g. `/api/auth/signin`). Ens
 
 **PDF generation fails**
 Gotenberg can't reach the server at `http://server:3000/public/`. Verify both are on `bigcapital_network`: `docker exec bigcapital-gotenberg wget -qO- http://bigcapital-server:3000/public/ || echo FAIL`. Note: the `GOTENBERG_DOCS_URL` env var uses the service name `server` — if you changed the container name, update this.
+
+**"Too many requests" modal in the webapp**
+The API rate limiter is blocking the client. The default `API_RATE_LIMIT=120,60,600` allows only 120 requests per minute with a 10-minute block — too tight for normal SPA usage. Increase it in `.env` (e.g. `600,60,60`) and restart the server: `docker compose -f docker-compose.prod.yml restart server`. If currently blocked, the restart clears the in-memory rate limit state.
+
+**MySQL "Access denied" when creating an organization**
+The MariaDB init script (`docker/mariadb/init.sql`) grants `ALL PRIVILEGES ON *.*` but only runs on first database initialization. If the MySQL volume already existed before the init script was corrected, the grants were never applied. Fix manually: `docker exec -it bigcapital-fork-mysql mysql -u root -p"${DB_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON *.* TO 'bigcapital'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"`
+
+**Migration fails with "ENOENT: no such file or directory, scandir '/app/src/database/system/migrations'"**
+The system migration directory is a relative path (`./src/database/system/migrations`) resolved from `cwd`. The migration container's `working_dir` must be `/app/packages/server` — not `/app` — so the path resolves to `/app/packages/server/src/database/system/migrations` where the Dockerfile copies the migration files.

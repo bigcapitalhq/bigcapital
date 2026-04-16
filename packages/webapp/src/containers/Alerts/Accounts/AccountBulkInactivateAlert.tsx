@@ -1,14 +1,12 @@
 // @ts-nocheck
-import React, { useState } from 'react';
-import { FormattedMessage as T } from '@/components';
+import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { useQueryClient } from 'react-query';
-import { AppToaster } from '@/components';
+import { FormattedMessage as T, AppToaster } from '@/components';
 
-// import { withAccountsActions } from '@/containers/Accounts/withAccountsTableActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { useBulkInactivateAccounts } from '@/hooks/query';
 
 import { compose } from '@/utils';
 
@@ -17,33 +15,27 @@ function AccountBulkInactivateAlert({
   isOpen,
   payload: { accountsIds },
 
-  // #withAccountsActions
-  requestBulkInactiveAccounts,
-
+  // #withAlertActions
   closeAlert,
 }) {
-  const [isLoading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
-  const selectedRowsCount = 0;
+  const { mutateAsync, isLoading } = useBulkInactivateAccounts();
 
   // Handle alert cancel.
   const handleCancel = () => {
     closeAlert(name);
   };
+
   // Handle Bulk Inactive accounts confirm.
   const handleConfirmBulkInactive = () => {
-    setLoading(true);
-    requestBulkInactiveAccounts(accountsIds)
+    mutateAsync(accountsIds)
       .then(() => {
         AppToaster.show({
           message: intl.get('the_accounts_have_been_successfully_inactivated'),
           intent: Intent.SUCCESS,
         });
-        queryClient.invalidateQueries('accounts-table');
       })
-      .catch((errors) => {})
+      .catch(() => {})
       .finally(() => {
-        setLoading(false);
         closeAlert(name);
       });
   };
@@ -51,7 +43,7 @@ function AccountBulkInactivateAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${intl.get('inactivate')} (${selectedRowsCount})`}
+      confirmButtonText={`${intl.get('inactivate')} (${accountsIds.length})`}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancel}
@@ -68,5 +60,4 @@ function AccountBulkInactivateAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  // withAccountsActions,
 )(AccountBulkInactivateAlert);

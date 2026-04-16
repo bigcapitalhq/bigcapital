@@ -20,6 +20,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { AccountsExportable } from './AccountsExportable.service';
 import { AccountsImportable } from './AccountsImportable.service';
 import { BulkDeleteAccountsService } from './BulkDeleteAccounts.service';
+import { BulkActivateAccountsService } from './BulkActivateAccounts.service';
 import { ValidateBulkDeleteAccountsService } from './ValidateBulkDeleteAccounts.service';
 import { AccountsSettingsService } from './AccountsSettings.service';
 
@@ -46,6 +47,7 @@ const models = [RegisterTenancyModel(BankAccount)];
     AccountsExportable,
     AccountsImportable,
     BulkDeleteAccountsService,
+    BulkActivateAccountsService,
     ValidateBulkDeleteAccountsService,
   ],
   exports: [

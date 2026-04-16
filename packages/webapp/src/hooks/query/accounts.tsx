@@ -152,6 +152,42 @@ export function useInactivateAccount(props) {
 }
 
 /**
+ * Activates multiple accounts in bulk.
+ */
+export function useBulkActivateAccounts(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) => apiRequest.post('accounts/bulk-activate', { ids }),
+    {
+      onSuccess: () => {
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
+ * Inactivates multiple accounts in bulk.
+ */
+export function useBulkInactivateAccounts(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (ids: number[]) => apiRequest.post('accounts/bulk-inactivate', { ids }),
+    {
+      onSuccess: () => {
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+/**
  * Deletes multiple accounts in bulk.
  */
 export function useBulkDeleteAccounts(props) {

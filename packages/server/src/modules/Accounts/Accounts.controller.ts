@@ -73,6 +73,36 @@ export class AccountsController {
     );
   }
 
+  @Post('bulk-activate')
+  @HttpCode(200)
+  @RequirePermission(AccountAction.EDIT, AbilitySubject.Account)
+  @ApiOperation({ summary: 'Activates multiple accounts in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The accounts have been successfully activated.',
+  })
+  async bulkActivateAccounts(
+    @Body() bulkActivateDto: BulkDeleteDto,
+  ): Promise<void> {
+    return this.accountsApplication.bulkActivateAccounts(bulkActivateDto.ids);
+  }
+
+  @Post('bulk-inactivate')
+  @HttpCode(200)
+  @RequirePermission(AccountAction.EDIT, AbilitySubject.Account)
+  @ApiOperation({ summary: 'Inactivates multiple accounts in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The accounts have been successfully inactivated.',
+  })
+  async bulkInactivateAccounts(
+    @Body() bulkInactivateDto: BulkDeleteDto,
+  ): Promise<void> {
+    return this.accountsApplication.bulkInactivateAccounts(
+      bulkInactivateDto.ids,
+    );
+  }
+
   @Post('bulk-delete')
   @HttpCode(200)
   @RequirePermission(AccountAction.DELETE, AbilitySubject.Account)
