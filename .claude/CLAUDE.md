@@ -75,34 +75,6 @@ UAT and prod use OAuth forward-auth at the Traefik edge. The intent is **network
 - Bigcapital's internal `AuthModule` (JWT signin/signup/password-reset) remains the source of truth for user identity. OAuth and internal auth are separate layers.
 - Users experience two logins: OAuth once per browser session, Bigcapital signin once per JWT lifetime (1 day).
 
-### Future enhancement: multi-organization support per user
+### Future enhancements and known gaps
 
-**Scenario:** One person managing books for multiple companies needs to use the same email across different organizations and switch between them.
-
-**Current limitation:** The system is 1 user = 1 tenant. Email uniqueness is enforced globally (`AuthSignup.validateEmailUniqiness` queries without tenant filter). Signin returns the first email match. JWT contains only email (`sub`), no `tenantId`. No org-switching mechanism exists.
-
-**Recommended approach (Approach A — per-tenant email uniqueness):**
-1. DB migration: composite unique constraint `(email, tenant_id)` on system `USERS` table
-2. `AuthSignup.validateEmailUniqiness` — filter by `tenantId`, not global
-3. `AuthSignin` — when email matches multiple tenants, return org list for user to pick
-4. JWT payload — add `tenantId` alongside `sub` (email)
-5. JWT verification (`AuthJwtStrategy`) — look up user by email + tenantId, not just email
-6. Webapp login flow — add org selection step when ambiguous
-
-**Key files:** `AuthSignup.service.ts`, `AuthSignin.service.ts`, `Auth.interfaces.ts` (JwtPayload), `AuthJwtStrategy.ts`, `SystemUser.ts`, system DB migrations, webapp login components.
-
-**Alternative (Approach B — junction table):** Create `user_tenants` table, single user identity across orgs, switch from a menu. More correct but far more invasive — touches every user-tenant query.
-
-### Known UAT/deploy-time gaps (deliberate follow-up work)
-
-Behavioral hardening patterns are scaffolded but not wired at their emit sites, due to a `git reset --hard` mishap. Subscribers are live; upstream `eventEmitter.emit(...)` calls still need reconstruction:
-
-- `AuthSigninService` — `events.auth.loginFailed` emit + timing-equalize with `DUMMY_HASH`
-- `GenerateApiKey` — `events.apiKey.{created,revoked}` emits + tenant-scoped revoke
-- `PlaidItem` — `$beforeInsert`/`$beforeUpdate` encryption lifecycle hooks
-- `Attachments` — `@Throttle` on upload, sanitize-filename, tenant-scope IDOR checks
-- `CommandAccountValidators` — posting-history check on account-type changes
-- `AuthMail.subscriber` — include `email=...` in failure log
-- `AuthAuditSubscriber.onLoginFailed` — strip `reason` and `userId` from audit payload
-
-UAT functional testing does NOT catch the absence of these items. Plan a dedicated session to reconstruct before production data.
+See `docs/FUTURE-ENHANCEMENTS.md` for planned work including multi-organization support per user and behavioral hardening (security/audit wiring). The hardening items must be completed before production data.
