@@ -7,6 +7,7 @@ import {
   Dialog,
   FormGroup,
   TextArea,
+  HTMLSelect,
   Spinner,
 } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
@@ -18,6 +19,15 @@ import {
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
+
+const TRANSACTION_TYPES = [
+  { value: 'OtherIncome', label: 'Other Income' },
+  { value: 'OtherExpense', label: 'Other Expense' },
+  { value: 'OwnerContribution', label: 'Owner Contribution' },
+  { value: 'OwnerDrawings', label: 'Owner Drawings' },
+  { value: 'TransferToAccount', label: 'Transfer to Account' },
+  { value: 'TransferFromAccount', label: 'Transfer from Account' },
+];
 
 function EditCategorizationAlert({
   name,
@@ -31,6 +41,7 @@ function EditCategorizationAlert({
     });
 
   const [selectedAccountId, setSelectedAccountId] = useState(null);
+  const [transactionType, setTransactionType] = useState('');
   const [desc, setDesc] = useState('');
   const [initialized, setInitialized] = useState(false);
 
@@ -38,6 +49,7 @@ function EditCategorizationAlert({
   useEffect(() => {
     if (transaction && !initialized) {
       setSelectedAccountId(transaction.credit_account_id || null);
+      setTransactionType(transaction.transaction_type || '');
       setDesc(transaction.description || '');
       setInitialized(true);
     }
@@ -61,6 +73,7 @@ function EditCategorizationAlert({
     editCategorization({
       id: uncategorizedTransactionId,
       creditAccountId: selectedAccountId,
+      transactionType,
       description: desc,
     })
       .then(() => {
@@ -90,6 +103,15 @@ function EditCategorizationAlert({
           <Spinner size={30} />
         ) : (
           <>
+            <FormGroup label="Transaction Type" labelFor="transaction-type">
+              <HTMLSelect
+                id="transaction-type"
+                fill={true}
+                value={transactionType}
+                onChange={(e) => setTransactionType(e.target.value)}
+                options={TRANSACTION_TYPES}
+              />
+            </FormGroup>
             <FormGroup label="Category Account" labelFor="credit-account">
               <AccountsSelect
                 name="creditAccountId"

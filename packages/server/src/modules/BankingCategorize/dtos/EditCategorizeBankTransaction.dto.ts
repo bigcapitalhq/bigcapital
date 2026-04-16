@@ -14,6 +14,15 @@ export class EditCategorizeBankTransactionDto {
   creditAccountId?: number;
 
   @ApiPropertyOptional({
+    description: 'Transaction type (e.g. OtherIncome, OtherExpense, TransferToAccount)',
+    type: String,
+    example: 'OtherExpense',
+  })
+  @IsString()
+  @IsOptional()
+  transactionType?: string;
+
+  @ApiPropertyOptional({
     description: 'Description of the transaction',
     type: String,
     example: 'Office supplies purchase',

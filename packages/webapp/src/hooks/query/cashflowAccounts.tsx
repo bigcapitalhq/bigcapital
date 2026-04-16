@@ -274,7 +274,7 @@ export function useEditCategorizeTransaction(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ({ id, ...values }: { id: number; creditAccountId?: number; description?: string }) =>
+    ({ id, ...values }: { id: number; creditAccountId?: number; transactionType?: string; description?: string }) =>
       apiRequest.patch(`banking/categorize/${id}`, values),
     {
       onSuccess: () => {

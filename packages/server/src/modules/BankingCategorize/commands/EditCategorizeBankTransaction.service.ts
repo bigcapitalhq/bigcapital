@@ -35,7 +35,7 @@ export class EditCategorizeBankTransaction {
 
   /**
    * Edits the categorization of a previously categorized bank transaction.
-   * Only creditAccountId and description can be changed.
+   * Only creditAccountId, transactionType, and description can be changed.
    */
   public async editCategorization(
     uncategorizedTransactionId: number,
@@ -59,7 +59,20 @@ export class EditCategorizeBankTransaction {
       .findById(uncategorizedTransaction.categorizeRefId)
       .throwIfNotFound();
 
-    // If creditAccountId is changing, validate the new account.
+    // Determine the effective transaction type for validation.
+    const effectiveTransactionType = editDTO.transactionType
+      ? transformCashflowTransactionType(editDTO.transactionType)
+      : cashflowTransaction.transactionType;
+
+    // If transactionType is changing, validate it.
+    if (editDTO.transactionType) {
+      this.commandValidators.validateCashflowTransactionType(
+        effectiveTransactionType,
+      );
+    }
+
+    // If creditAccountId is changing, validate the new account against
+    // the effective transaction type.
     if (
       editDTO.creditAccountId &&
       editDTO.creditAccountId !== cashflowTransaction.creditAccountId
@@ -69,12 +82,9 @@ export class EditCategorizeBankTransaction {
         .findById(editDTO.creditAccountId)
         .throwIfNotFound();
 
-      const transactionType = transformCashflowTransactionType(
-        cashflowTransaction.transactionType,
-      );
       this.commandValidators.validateCreditAccountWithCashflowType(
         creditAccount,
-        transactionType as CASHFLOW_TRANSACTION_TYPE,
+        effectiveTransactionType as CASHFLOW_TRANSACTION_TYPE,
       );
     }
 
@@ -82,6 +92,11 @@ export class EditCategorizeBankTransaction {
     const patch: Record<string, any> = {};
     if (editDTO.creditAccountId !== undefined) {
       patch.creditAccountId = editDTO.creditAccountId;
+    }
+    if (editDTO.transactionType !== undefined) {
+      patch.transactionType = transformCashflowTransactionType(
+        editDTO.transactionType,
+      );
     }
     if (editDTO.description !== undefined) {
       patch.description = editDTO.description;
@@ -91,6 +106,10 @@ export class EditCategorizeBankTransaction {
       return cashflowTransaction;
     }
 
+    const needsGLRewrite =
+      editDTO.creditAccountId !== undefined ||
+      editDTO.transactionType !== undefined;
+
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Patch the cashflow transaction.
       await this.bankTransactionModel()
@@ -98,8 +117,8 @@ export class EditCategorizeBankTransaction {
         .findById(cashflowTransaction.id)
         .patch(patch);
 
-      // If creditAccountId changed, rewrite the journal entries.
-      if (editDTO.creditAccountId !== undefined) {
+      // Rewrite journal entries if account or type changed.
+      if (needsGLRewrite) {
         await this.glEntries.revertJournalEntries(
           cashflowTransaction.id,
           trx,
