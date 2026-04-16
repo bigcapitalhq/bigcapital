@@ -20,7 +20,7 @@
   "field.reference_no": "Reference No.",
   "field.closed": "Closed",
   "field.entries": "Entries",
-  "field.statement": "Statement",
+  "field.statement": "Note",
   "field.receipt_message": "Receipt Message",
   "field.amount": "Amount",
   "field.status": "Status",

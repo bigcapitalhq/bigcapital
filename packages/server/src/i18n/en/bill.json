@@ -12,7 +12,7 @@
   "field.item_hint": "Matches the item name or code.",
   "field.rate": "Rate",
   "field.quantity": "Quantity",
-  "field.description": "Line Description",
+  "field.description": "Description",
   "field.amount": "Amount",
   "field.payment_amount": "Payment Amount",
   "field.status": "Status",

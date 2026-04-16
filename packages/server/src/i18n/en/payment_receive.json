@@ -5,7 +5,7 @@
   "field.reference_no": "Reference No.",
   "field.deposit_account": "Deposit Account",
   "field.payment_receive_no": "Payment No.",
-  "field.statement": "Statement",
+  "field.statement": "Note",
   "field.entries": "Entries",
   "field.exchange_rate": "Exchange Rate",
   "field.invoice": "Invoice",

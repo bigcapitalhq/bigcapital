@@ -6,7 +6,7 @@
   "field.exchange_rate": "Exchange Rate",
   "field.reference_no": "Reference No.",
   "field.description": "Description",
-  "field.line_description": "Line Description",
+  "field.line_description": "Description",
   "field.published": "Published",
   "field.categories": "Categories",
   "field.expense_account": "Expense Account",
