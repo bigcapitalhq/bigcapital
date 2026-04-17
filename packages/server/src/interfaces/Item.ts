@@ -132,6 +132,7 @@ export interface IItemEventCreatedPayload {
   // tenantId: number;
   item: Item;
   itemId: number;
+  itemDTO: any;
   trx: Knex.Transaction;
 }
 
@@ -139,6 +140,7 @@ export interface IItemEventEditedPayload {
   item: Item;
   oldItem: Item;
   itemId: number;
+  itemDTO: any;
   trx: Knex.Transaction;
 }
 

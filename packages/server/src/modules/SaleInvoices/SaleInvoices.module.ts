@@ -62,6 +62,7 @@ import { SaleInvoicesCost } from './SalesInvoicesCost';
 import { SaleInvoicesExportable } from './commands/SaleInvoicesExportable';
 import { SaleInvoicesImportable } from './commands/SaleInvoicesImportable';
 import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 import { BulkDeleteSaleInvoicesService } from './BulkDeleteSaleInvoices.service';
 import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleInvoices.service';
 
@@ -82,6 +83,7 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     forwardRef(() => InventoryCostModule),
     forwardRef(() => PaymentLinksModule),
     DynamicListModule,
+    CustomFieldsModule,
     BullModule.registerQueue({ name: SendSaleInvoiceQueue }),
     BullBoardModule.forFeature({
       name: SendSaleInvoiceQueue,

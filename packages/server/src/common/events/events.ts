@@ -705,6 +705,20 @@ export const events = {
     onDisconnected: 'onBankAccountDisconnected',
   },
 
+  /**
+   * Custom fields service.
+   */
+  customField: {
+    onCreating: 'onCustomFieldCreating',
+    onCreated: 'onCustomFieldCreated',
+
+    onEditing: 'onCustomFieldEditing',
+    onEdited: 'onCustomFieldEdited',
+
+    onDeleting: 'onCustomFieldDeleting',
+    onDeleted: 'onCustomFieldDeleted',
+  },
+
   // Import files.
   import: {
     onImportCommitted: 'onImportFileCommitted',

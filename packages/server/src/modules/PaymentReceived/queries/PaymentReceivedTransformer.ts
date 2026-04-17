@@ -19,8 +19,17 @@ export class PaymentReceiveTransfromer extends Transformer {
       'formattedExchangeRate',
       'entries',
       'attachments',
+      'customFields',
     ];
   };
+
+  /**
+   * Retrieve custom fields from options.
+   * @returns {Record<string, any>}
+   */
+  public customFields(): Record<string, any> {
+    return this.options?.customFields;
+  }
 
   /**
    * Retrieve formatted payment receive date.

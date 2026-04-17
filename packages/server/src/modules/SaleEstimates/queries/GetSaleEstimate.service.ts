@@ -6,6 +6,7 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { SaleEstimate } from '../models/SaleEstimate';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GetResourceCustomFieldsService } from '@/modules/CustomFields/queries/GetResourceCustomFields.service';
 
 @Injectable()
 export class GetSaleEstimate {
@@ -16,6 +17,7 @@ export class GetSaleEstimate {
     private readonly transformer: TransformerInjectable,
     private readonly validators: SaleEstimateValidators,
     private readonly eventPublisher: EventEmitter2,
+    private readonly getResourceCustomFieldsService: GetResourceCustomFieldsService,
   ) {}
 
   /**
@@ -35,11 +37,19 @@ export class GetSaleEstimate {
     // Validates the estimate existance.
     this.validators.validateEstimateExistance(estimate);
 
+    // Load custom field values.
+    const customFields = await this.getResourceCustomFieldsService.getResourceCustomFields(
+      'SaleEstimate',
+      estimateId,
+    );
+
     // Transformes sale estimate model to POJO.
     const transformed = await this.transformer.transform(
       estimate,
       new SaleEstimateTransfromer(),
+      { customFields },
     );
+
     const eventPayload = { saleEstimateId: estimateId };
 
     // Triggers `onSaleEstimateViewed` event.

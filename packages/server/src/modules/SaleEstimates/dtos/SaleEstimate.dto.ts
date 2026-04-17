@@ -10,11 +10,13 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsObject,
+  IsOptional,
   IsString,
   Min,
   ValidateNested,
 } from 'class-validator';
-import { IsOptional, ToNumber } from '@/common/decorators/Validators';
+import { ToNumber } from '@/common/decorators/Validators';
 
 enum DiscountType {
   Percentage = 'percentage',
@@ -176,6 +178,15 @@ export class CommandSaleEstimateDto {
     example: 1,
   })
   adjustment?: number;
+
+  @IsOptional()
+  @IsObject()
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }
 
 export class CreateSaleEstimateDto extends CommandSaleEstimateDto { }

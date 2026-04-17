@@ -19,6 +19,7 @@ export * from './expenses';
 export * from './import';
 export * from './manual-journals';
 export * from './roles';
+export * from './custom-fields';
 export * from './users';
 export * from './dashboard';
 export * from './settings';

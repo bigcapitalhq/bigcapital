@@ -45,6 +45,7 @@ import { SaleEstimateAutoIncrementSubscriber } from './subscribers/SaleEstimateA
 import { BulkDeleteSaleEstimatesService } from './BulkDeleteSaleEstimates.service';
 import { ValidateBulkDeleteSaleEstimatesService } from './ValidateBulkDeleteSaleEstimates.service';
 import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.process';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
     ChromiumlyTenancyModule,
     TemplateInjectableModule,
     PdfTemplatesModule,
+    CustomFieldsModule,
     BullModule.registerQueue({ name: SendSaleEstimateMailQueue }),
     BullBoardModule.forFeature({
       name: SendSaleEstimateMailQueue,

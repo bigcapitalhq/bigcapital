@@ -203,4 +203,11 @@ export class SaleEstimateResponseDto {
   })
   @Type(() => AttachmentLinkDto)
   attachments: AttachmentLinkDto[];
+
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }

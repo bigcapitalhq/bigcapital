@@ -243,4 +243,11 @@ export class SaleReceiptResponseDto {
     required: false,
   })
   updatedAt?: Date;
+
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }

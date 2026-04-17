@@ -32,8 +32,17 @@ export class SaleInvoiceTransformer extends Transformer {
       'taxes',
       'entries',
       'attachments',
+      'customFields',
     ];
   };
+
+  /**
+   * Retrieve custom fields from options.
+   * @returns {Record<string, any>}
+   */
+  public customFields(): Record<string, any> {
+    return this.options?.customFields;
+  }
 
   /**
    * Retrieve formatted invoice date.

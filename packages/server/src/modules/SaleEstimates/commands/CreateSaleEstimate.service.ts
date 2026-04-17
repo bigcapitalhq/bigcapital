@@ -78,6 +78,7 @@ export class CreateSaleEstimate {
         .upsertGraphAndFetch({
           ...estimateObj,
         });
+
       // Triggers `onSaleEstimateCreated` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onCreated, {
         saleEstimate,

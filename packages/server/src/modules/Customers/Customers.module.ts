@@ -20,6 +20,7 @@ import { BulkDeleteCustomersService } from './BulkDeleteCustomers.service';
 import { ValidateBulkDeleteCustomersService } from './ValidateBulkDeleteCustomers.service';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 import { CustomerGLEntries } from './CustomerGLEntries';
 import { CustomerGLEntriesStorage } from './CustomerGLEntriesStorage';
 import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerGLEntriesSubscriber';
@@ -30,6 +31,7 @@ import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerG
     DynamicListModule,
     LedgerModule,
     AccountsModule,
+    CustomFieldsModule,
   ],
   controllers: [CustomersController],
   providers: [

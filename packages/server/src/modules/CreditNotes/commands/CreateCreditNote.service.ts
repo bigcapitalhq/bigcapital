@@ -13,6 +13,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateCreditNoteDto } from '../dtos/CreditNote.dto';
+import { SaveCustomFieldValuesService } from '@/modules/CustomFields/queries/SaveCustomFieldValues.service';
 
 @Injectable()
 export class CreateCreditNoteService {
@@ -29,6 +30,7 @@ export class CreateCreditNoteService {
     private readonly itemsEntriesService: ItemsEntriesService,
     private readonly eventPublisher: EventEmitter2,
     private readonly commandCreditNoteDTOTransform: CommandCreditNoteDTOTransform,
+    private readonly saveCustomFieldValuesService: SaveCustomFieldValuesService,
 
     @Inject(CreditNote.name)
     private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
@@ -84,6 +86,17 @@ export class CreateCreditNoteService {
         .upsertGraph({
           ...creditNoteModel,
         });
+
+      // Save custom field values.
+      if (creditNoteDTO.customFields) {
+        await this.saveCustomFieldValuesService.saveValues(
+          'CreditNote',
+          creditNote.id,
+          creditNoteDTO.customFields,
+          trx,
+        );
+      }
+
       // Triggers `onCreditNoteCreated` event.
       await this.eventPublisher.emitAsync(events.creditNote.onCreated, {
         creditNoteDTO,

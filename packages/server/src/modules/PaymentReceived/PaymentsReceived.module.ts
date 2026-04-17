@@ -43,6 +43,7 @@ import { GetPaymentReceivedMailTemplate } from './queries/GetPaymentReceivedMail
 import { GetPaymentReceivedMailState } from './queries/GetPaymentReceivedMailState.service';
 import { BulkDeletePaymentReceivedService } from './BulkDeletePaymentReceived.service';
 import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePaymentReceived.service';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 
 @Module({
   controllers: [PaymentReceivesController],
@@ -95,6 +96,7 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     AccountsModule,
     MailNotificationModule,
     DynamicListModule,
+    CustomFieldsModule,
     MailModule,
     BullModule.registerQueue({ name: SEND_PAYMENT_RECEIVED_MAIL_QUEUE }),
     BullBoardModule.forFeature({

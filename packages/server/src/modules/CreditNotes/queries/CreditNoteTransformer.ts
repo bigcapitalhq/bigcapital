@@ -30,8 +30,17 @@ export class CreditNoteTransformer extends Transformer {
 
       'entries',
       'attachments',
+      'customFields',
     ];
   };
+
+  /**
+   * Retrieve custom fields from options.
+   * @returns {Record<string, any>}
+   */
+  public customFields(): Record<string, any> {
+    return this.options?.customFields;
+  }
 
   /**
    * Retrieve formatted credit note date.

@@ -115,6 +115,7 @@ export class EditSaleInvoice {
           id: saleInvoiceId,
           ...saleInvoiceObj,
         });
+
       // Edit event payload.
       const editEventPayload: ISaleInvoiceEditedPayload = {
         saleInvoiceId,

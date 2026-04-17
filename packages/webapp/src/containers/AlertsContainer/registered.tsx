@@ -31,6 +31,7 @@ import { SubscriptionAlerts } from '../Subscriptions/alerts/alerts';
 import { BankAccountAlerts } from '@/containers/CashFlow/AccountTransactions/alerts';
 import { BrandingTemplatesAlerts } from '../BrandingTemplates/alerts/BrandingTemplatesAlerts';
 import { PaymentMethodsAlerts } from '../Preferences/PaymentMethods/alerts/PaymentMethodsAlerts';
+import CustomFieldsAlerts from '@/containers/Alerts/CustomFields/CustomFieldsAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -65,4 +66,5 @@ export default [
   ...BankAccountAlerts,
   ...BrandingTemplatesAlerts,
   ...PaymentMethodsAlerts,
+  ...CustomFieldsAlerts,
 ];

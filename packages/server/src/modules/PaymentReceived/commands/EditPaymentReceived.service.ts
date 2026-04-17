@@ -15,6 +15,7 @@ import { Customer } from '@/modules/Customers/models/Customer';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditPaymentReceivedDto } from '../dtos/PaymentReceived.dto';
+import { SaveCustomFieldValuesService } from '@/modules/CustomFields/queries/SaveCustomFieldValues.service';
 
 @Injectable()
 export class EditPaymentReceivedService {
@@ -24,6 +25,7 @@ export class EditPaymentReceivedService {
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly tenancyContext: TenancyContext,
+    private readonly saveCustomFieldValuesService: SaveCustomFieldValuesService,
 
     @Inject(PaymentReceived.name)
     private readonly paymentReceiveModel: TenantModelProxy<
@@ -130,6 +132,17 @@ export class EditPaymentReceivedService {
           id: paymentReceiveId,
           ...paymentReceiveObj,
         });
+
+      // Save custom field values.
+      if (paymentReceiveDTO.customFields) {
+        await this.saveCustomFieldValuesService.saveValues(
+          'PaymentReceive',
+          paymentReceiveId,
+          paymentReceiveDTO.customFields,
+          trx,
+        );
+      }
+
       // Triggers `onPaymentReceiveEdited` event.
       await this.eventPublisher.emitAsync(events.paymentReceive.onEdited, {
         paymentReceiveId,

@@ -127,6 +127,36 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/custom-fields`,
+    component: lazy(
+      () =>
+        import(
+          '../containers/Preferences/CustomFields/CustomFieldsList/CustomFieldsList'
+        ),
+    ),
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/custom-fields/new`,
+    component: lazy(
+      () =>
+        import(
+          '../containers/Preferences/CustomFields/CustomFieldsForm/CustomFieldsFormPage'
+        ),
+    ),
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/custom-fields/:id`,
+    component: lazy(
+      () =>
+        import(
+          '../containers/Preferences/CustomFields/CustomFieldsForm/CustomFieldsFormPage'
+        ),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/`,
     component: lazy(() => import('../containers/Preferences/DefaultRoute')),
     exact: true,

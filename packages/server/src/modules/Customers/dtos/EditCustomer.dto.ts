@@ -68,4 +68,12 @@ export class EditCustomerDto extends ContactAddressDto {
   @IsOptional()
   @IsString()
   code?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Custom fields values',
+    example: { cf_priority: 'High' },
+  })
+  @IsOptional()
+  customFields?: Record<string, any>;
 }

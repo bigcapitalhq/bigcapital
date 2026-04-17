@@ -27,8 +27,17 @@ export class SaleEstimateTransfromer extends Transformer {
       'formattedCreatedAt',
       'entries',
       'attachments',
+      'customFields',
     ];
   };
+
+  /**
+   * Retrieve custom fields from options.
+   * @returns {Record<string, any>}
+   */
+  public customFields(): Record<string, any> {
+    return this.options?.customFields;
+  }
 
   /**
    * Retrieve formatted estimate date.

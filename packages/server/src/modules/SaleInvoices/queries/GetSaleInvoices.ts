@@ -8,12 +8,14 @@ import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { GetSaleInvoicesQueryDto } from '../dtos/GetSaleInvoicesQuery.dto';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GetResourceCustomFieldsService } from '@/modules/CustomFields/queries/GetResourceCustomFields.service';
 
 @Injectable()
 export class GetSaleInvoicesService {
   constructor(
     private readonly dynamicListService: DynamicListService,
     private readonly transformer: TransformerInjectable,
+    private readonly getResourceCustomFieldsService: GetResourceCustomFieldsService,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
@@ -62,6 +64,18 @@ export class GetSaleInvoicesService {
       results,
       new SaleInvoiceTransformer(),
     );
+
+    // Load custom field values for all invoices.
+    const invoiceIds = salesInvoices.map((invoice) => invoice.id);
+    if (invoiceIds.length > 0) {
+      const customFieldsMap = await this.getResourceCustomFieldsService.getResourceCustomFieldsBulk(
+        'SaleInvoice',
+        invoiceIds,
+      );
+      salesInvoices.forEach((invoice) => {
+        invoice.customFields = customFieldsMap[invoice.id] || {};
+      });
+    }
 
     return {
       salesInvoices,

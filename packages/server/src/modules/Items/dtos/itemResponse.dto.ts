@@ -240,4 +240,11 @@ export class ItemResponseDto {
     example: '2024-03-20T10:00:00Z',
   })
   updatedAt: Date;
+
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }

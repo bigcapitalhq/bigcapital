@@ -11,6 +11,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsPositive,
   IsString,
@@ -126,6 +127,15 @@ export class CommandCreditNoteDto {
   @ToNumber()
   @IsNumber()
   adjustment?: number;
+
+  @IsOptional()
+  @IsObject()
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }
 
 export class CreateCreditNoteDto extends CommandCreditNoteDto {}

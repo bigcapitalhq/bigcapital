@@ -12,6 +12,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditCustomerDto } from '../dtos/EditCustomer.dto';
+import { SaveCustomFieldValuesService } from '@/modules/CustomFields/queries/SaveCustomFieldValues.service';
 
 @Injectable()
 export class EditCustomer {
@@ -25,6 +26,7 @@ export class EditCustomer {
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
     private customerDTO: CreateEditCustomerDTO,
+    private saveCustomFieldValuesService: SaveCustomFieldValuesService,
 
     @Inject(Customer.name)
     private customerModel: TenantModelProxy<typeof Customer>,
@@ -64,6 +66,17 @@ export class EditCustomer {
         .updateAndFetchById(customerId, {
           ...customerObj,
         });
+
+      // Save custom field values.
+      if (customerDTO.customFields) {
+        await this.saveCustomFieldValuesService.saveValues(
+          'Customer',
+          customerId,
+          customerDTO.customFields,
+          trx,
+        );
+      }
+
       // Triggers `onCustomerEdited` event.
       await this.eventPublisher.emitAsync(events.customers.onEdited, {
         customerId,

@@ -11,6 +11,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsPositive,
   IsString,
@@ -175,6 +176,15 @@ export class CommandSaleReceiptDto {
     example: 1,
   })
   adjustment?: number;
+
+  @IsOptional()
+  @IsObject()
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }
 
 export class CreateSaleReceiptDto extends CommandSaleReceiptDto {}

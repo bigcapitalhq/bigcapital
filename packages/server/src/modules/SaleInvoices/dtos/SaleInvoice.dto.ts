@@ -1,4 +1,4 @@
-import { IsOptional, ToNumber } from '@/common/decorators/Validators';
+import { ToNumber } from '@/common/decorators/Validators';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -11,6 +11,8 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsObject,
+  IsOptional,
   IsString,
   Min,
   ValidateNested,
@@ -216,6 +218,15 @@ class CommandSaleInvoiceDto {
     example: [{ key: '123456' }],
   })
   attachments?: AttachmentDto[];
+
+  @IsOptional()
+  @IsObject()
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }
 
 export class CreateSaleInvoiceDto extends CommandSaleInvoiceDto {}

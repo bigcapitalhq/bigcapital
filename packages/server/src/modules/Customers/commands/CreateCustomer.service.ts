@@ -11,6 +11,7 @@ import {
 } from '../types/Customers.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateCustomerDto } from '../dtos/CreateCustomer.dto';
+import { SaveCustomFieldValuesService } from '@/modules/CustomFields/queries/SaveCustomFieldValues.service';
 
 @Injectable()
 export class CreateCustomer {
@@ -24,6 +25,7 @@ export class CreateCustomer {
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
     private readonly customerDTO: CreateEditCustomerDTO,
+    private readonly saveCustomFieldValuesService: SaveCustomFieldValuesService,
 
     @Inject(Customer.name)
     private readonly customerModel: TenantModelProxy<typeof Customer>,
@@ -55,6 +57,17 @@ export class CreateCustomer {
         .insertAndFetch({
           ...customerObj,
         });
+
+      // Save custom field values.
+      if (customerDTO.customFields) {
+        await this.saveCustomFieldValuesService.saveValues(
+          'Customer',
+          customer.id,
+          customerDTO.customFields,
+          trx,
+        );
+      }
+
       // Triggers `onCustomerCreated` event.
       await this.eventPublisher.emitAsync(events.customers.onCreated, {
         customer,

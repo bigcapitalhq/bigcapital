@@ -26,8 +26,17 @@ export class SaleReceiptTransformer extends Transformer {
       
       'entries',
       'attachments',
+      'customFields',
     ];
   };
+
+  /**
+   * Retrieve custom fields from options.
+   * @returns {Record<string, any>}
+   */
+  public customFields(): Record<string, any> {
+    return this.options?.customFields;
+  }
 
   /**
    * Retrieve formatted receipt date.

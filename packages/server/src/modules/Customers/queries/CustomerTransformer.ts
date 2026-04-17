@@ -12,8 +12,17 @@ export class CustomerTransfromer extends ContactTransfromer {
       'formattedOpeningBalanceAt',
       'customerType',
       'formattedCustomerType',
+      'customFields',
     ];
   };
+
+  /**
+   * Retrieve custom fields from options.
+   * @returns {Record<string, any>}
+   */
+  public customFields(): Record<string, any> {
+    return this.options?.customFields;
+  }
 
   /**
    * Retrieve customer type.

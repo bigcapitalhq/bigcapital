@@ -3,11 +3,13 @@ import { CustomerTransfromer } from './CustomerTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Customer } from '../models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GetResourceCustomFieldsService } from '@/modules/CustomFields/queries/GetResourceCustomFields.service';
 
 @Injectable()
 export class GetCustomerService {
   constructor(
     private transformer: TransformerInjectable,
+    private getResourceCustomFieldsService: GetResourceCustomFieldsService,
 
     @Inject(Customer.name)
     private customerModel: TenantModelProxy<typeof Customer>,
@@ -24,7 +26,19 @@ export class GetCustomerService {
       .findById(customerId)
       .throwIfNotFound();
 
+    // Load custom field values.
+    const customFields = await this.getResourceCustomFieldsService.getResourceCustomFields(
+      'Customer',
+      customerId,
+    );
+
     // Retrieves the transformered customers.
-    return this.transformer.transform(customer, new CustomerTransfromer());
+    const transformed = await this.transformer.transform(
+      customer,
+      new CustomerTransfromer(),
+      { customFields },
+    );
+
+    return transformed;
   }
 }

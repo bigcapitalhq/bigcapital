@@ -8,6 +8,7 @@ import {
   IsArray,
   IsNotEmpty,
   IsInt,
+  IsObject,
   ValidateNested,
 } from 'class-validator';
 import { ToNumber } from '@/common/decorators/Validators';
@@ -138,6 +139,15 @@ export class CommandPaymentReceivedDto {
     ],
   })
   attachments?: AttachmentLinkDto[];
+
+  @IsOptional()
+  @IsObject()
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }
 
 export class CreatePaymentReceivedDto extends CommandPaymentReceivedDto {}

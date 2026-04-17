@@ -4,6 +4,7 @@ import { SaleReceiptValidators } from '../commands/SaleReceiptValidators.service
 import { SaleReceipt } from '../models/SaleReceipt';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GetResourceCustomFieldsService } from '@/modules/CustomFields/queries/GetResourceCustomFields.service';
 
 @Injectable()
 export class GetSaleReceipt {
@@ -11,6 +12,7 @@ export class GetSaleReceipt {
     @Inject(SaleReceipt.name)
     private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
     private readonly transformer: TransformerInjectable,
+    private readonly getResourceCustomFieldsService: GetResourceCustomFieldsService,
   ) {}
 
   /**
@@ -29,9 +31,18 @@ export class GetSaleReceipt {
       .withGraphFetched('attachments')
       .throwIfNotFound();
 
-    return this.transformer.transform(
+    // Load custom field values.
+    const customFields = await this.getResourceCustomFieldsService.getResourceCustomFields(
+      'SaleReceipt',
+      saleReceiptId,
+    );
+
+    const transformed = await this.transformer.transform(
       saleReceipt,
       new SaleReceiptTransformer(),
+      { customFields },
     );
+
+    return transformed;
   }
 }

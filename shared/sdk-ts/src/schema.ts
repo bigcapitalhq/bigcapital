@@ -1353,6 +1353,77 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/custom-fields": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the custom fields. */
+        get: operations["CustomFieldsController_getCustomFields"];
+        put?: never;
+        /** Create a new custom field. */
+        post: operations["CustomFieldsController_createCustomField"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/custom-fields/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the custom field details. */
+        get: operations["CustomFieldsController_getCustomField"];
+        /** Edit the given custom field. */
+        put: operations["CustomFieldsController_editCustomField"];
+        post?: never;
+        /** Delete the given custom field. */
+        delete: operations["CustomFieldsController_deleteCustomField"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/custom-fields/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reorder custom fields. */
+        post: operations["CustomFieldsController_reorderCustomFields"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/custom-fields/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update custom field status. */
+        put: operations["CustomFieldsController_updateFieldStatus"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/import/file": {
         parameters: {
             query?: never;
@@ -5299,6 +5370,13 @@ export interface components {
              * @example 2024-03-20T10:00:00Z
              */
             updatedAt: string;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         EditItemDto: {
             /**
@@ -5397,6 +5475,13 @@ export interface components {
              *     ]
              */
             mediaIds?: number[];
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         BulkDeleteItemsDto: {
             /**
@@ -5511,6 +5596,13 @@ export interface components {
              *     ]
              */
             mediaIds?: number[];
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         InventoryAdjustmentResponseDto: {
             /**
@@ -6525,6 +6617,13 @@ export interface components {
              * @example 2023-01-02T00:00:00Z
              */
             updatedAt?: string;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         CreateSaleInvoiceDto: {
             /**
@@ -6633,6 +6732,13 @@ export interface components {
              *     ]
              */
             attachments: string[];
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         EditSaleInvoiceDto: {
             /**
@@ -6741,6 +6847,13 @@ export interface components {
              *     ]
              */
             attachments: string[];
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         UploadAttachmentDto: {
             /** Format: binary */
@@ -7086,6 +7199,13 @@ export interface components {
              *     ]
              */
             attachments?: components["schemas"]["AttachmentLinkDto"][];
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         CreatePaymentReceivedDto: {
             /**
@@ -7153,6 +7273,13 @@ export interface components {
              *     ]
              */
             attachments: string[];
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         EditPaymentReceivedDto: {
             /**
@@ -7220,6 +7347,210 @@ export interface components {
              *     ]
              */
             attachments: string[];
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
+        };
+        CustomFieldResponseDto: {
+            /**
+             * @description Custom field ID.
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Resource name.
+             * @example SaleInvoice
+             */
+            resourceName: string;
+            /**
+             * @description Field name.
+             * @example cf_priority
+             */
+            fieldName: string;
+            /**
+             * @description Display label.
+             * @example Priority
+             */
+            label: string;
+            /**
+             * @description Field type.
+             * @example dropdown
+             */
+            fieldType: string;
+            /**
+             * @description Field options.
+             * @example {
+             *       "choices": [
+             *         "Low",
+             *         "Medium",
+             *         "High"
+             *       ]
+             *     }
+             */
+            options: Record<string, never>;
+            /**
+             * @description Whether the field is required.
+             * @example false
+             */
+            required: boolean;
+            /**
+             * @description Display order.
+             * @example 1
+             */
+            order: number;
+            /**
+             * @description Whether the field is active.
+             * @example true
+             */
+            active: boolean;
+            /**
+             * @description Default value.
+             * @example Medium
+             */
+            defaultValue: string;
+            /**
+             * Format: date-time
+             * @description Created at timestamp.
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated at timestamp.
+             */
+            updatedAt: string;
+        };
+        CreateCustomFieldDto: {
+            /**
+             * @description Resource name the custom field belongs to.
+             * @example SaleInvoice
+             */
+            resourceName: string;
+            /**
+             * @description Internal field name.
+             * @example cf_priority
+             */
+            fieldName: string;
+            /**
+             * @description Display label.
+             * @example Priority
+             */
+            label: string;
+            /**
+             * @description Field type.
+             * @example dropdown
+             */
+            fieldType: string;
+            /**
+             * @description Field options (e.g., dropdown choices).
+             * @example {
+             *       "choices": [
+             *         "Low",
+             *         "Medium",
+             *         "High"
+             *       ]
+             *     }
+             */
+            options: Record<string, never>;
+            /**
+             * @description Whether the field is required.
+             * @example false
+             */
+            required: boolean;
+            /**
+             * @description Display order.
+             * @example 1
+             */
+            order: number;
+            /**
+             * @description Whether the field is active.
+             * @example true
+             */
+            active: boolean;
+            /**
+             * @description Default value.
+             * @example Medium
+             */
+            defaultValue: string;
+        };
+        EditCustomFieldDto: {
+            /**
+             * @description Resource name the custom field belongs to.
+             * @example SaleInvoice
+             */
+            resourceName: string;
+            /**
+             * @description Internal field name.
+             * @example cf_priority
+             */
+            fieldName: string;
+            /**
+             * @description Display label.
+             * @example Priority
+             */
+            label: string;
+            /**
+             * @description Field type.
+             * @example dropdown
+             */
+            fieldType: string;
+            /**
+             * @description Field options (e.g., dropdown choices).
+             * @example {
+             *       "choices": [
+             *         "Low",
+             *         "Medium",
+             *         "High"
+             *       ]
+             *     }
+             */
+            options: Record<string, never>;
+            /**
+             * @description Whether the field is required.
+             * @example false
+             */
+            required: boolean;
+            /**
+             * @description Display order.
+             * @example 1
+             */
+            order: number;
+            /**
+             * @description Whether the field is active.
+             * @example true
+             */
+            active: boolean;
+            /**
+             * @description Default value.
+             * @example Medium
+             */
+            defaultValue: string;
+        };
+        ReorderCustomFieldsDto: {
+            /**
+             * @description Resource name.
+             * @example SaleInvoice
+             */
+            resourceName: string;
+            /**
+             * @description Ordered array of custom field IDs.
+             * @example [
+             *       3,
+             *       1,
+             *       2
+             *     ]
+             */
+            fieldIds: string[];
+        };
+        UpdateFieldStatusDto: {
+            /**
+             * @description New active status.
+             * @example true
+             */
+            active: boolean;
         };
         ModelMetaDefaultSortDto: {
             /**
@@ -8225,6 +8556,13 @@ export interface components {
             localOpeningBalance: number;
             /** @example 1500 */
             closingBalance: number;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         CreateCustomerDto: {
             /** @description Billing address line 1 */
@@ -8343,6 +8681,13 @@ export interface components {
              * @example CUST-001
              */
             code?: string;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         EditCustomerDto: {
             /** @description Billing address line 1 */
@@ -8403,6 +8748,13 @@ export interface components {
             active?: boolean;
             /** @description Customer code */
             code?: string;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         CustomerOpeningBalanceEditDto: {
             /**
@@ -8842,6 +9194,13 @@ export interface components {
             entries: components["schemas"]["ItemEntryDto"][];
             /** @description Attachments of the sale estimate */
             attachments: components["schemas"]["AttachmentLinkDto"][];
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         CreateSaleEstimateDto: {
             /**
@@ -8938,6 +9297,13 @@ export interface components {
              * @example 1
              */
             adjustment: number;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         EditSaleEstimateDto: {
             /**
@@ -9034,6 +9400,13 @@ export interface components {
              * @example 1
              */
             adjustment: number;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         SaleReceiptStateResponseDto: {
             /**
@@ -9229,6 +9602,13 @@ export interface components {
              * @example 2024-01-02T00:00:00Z
              */
             updatedAt?: string;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         CreateSaleReceiptDto: {
             /**
@@ -9325,6 +9705,13 @@ export interface components {
              * @example 1
              */
             adjustment: number;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         EditSaleReceiptDto: {
             /**
@@ -9421,6 +9808,13 @@ export interface components {
              * @example 1
              */
             adjustment: number;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         BillResponseDto: {
             /**
@@ -10277,6 +10671,13 @@ export interface components {
              * @example $1,000.00
              */
             totalLocalFormatted: string;
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         CreateCreditNoteDto: {
             /**
@@ -10358,6 +10759,13 @@ export interface components {
              * @enum {string}
              */
             discountType: "percentage" | "amount";
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         CreditNoteStateResponseDto: {
             /**
@@ -10446,6 +10854,13 @@ export interface components {
              * @enum {string}
              */
             discountType: "percentage" | "amount";
+            /**
+             * @description Custom fields values
+             * @example {
+             *       "cf_priority": "High"
+             *     }
+             */
+            customFields?: Record<string, never>;
         };
         RefundCreditAccountDto: {
             /** @example 10 */
@@ -17342,6 +17757,209 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    CustomFieldsController_getCustomFields: {
+        parameters: {
+            query: {
+                resource: string;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The custom fields have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["CustomFieldResponseDto"][];
+                    };
+                };
+            };
+        };
+    };
+    CustomFieldsController_createCustomField: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCustomFieldDto"];
+            };
+        };
+        responses: {
+            /** @description The custom field has been successfully created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomFieldResponseDto"];
+                };
+            };
+        };
+    };
+    CustomFieldsController_getCustomField: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The custom field details have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomFieldResponseDto"];
+                };
+            };
+        };
+    };
+    CustomFieldsController_editCustomField: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditCustomFieldDto"];
+            };
+        };
+        responses: {
+            /** @description The custom field has been successfully updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomFieldResponseDto"];
+                };
+            };
+        };
+    };
+    CustomFieldsController_deleteCustomField: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The custom field has been successfully deleted. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomFieldResponseDto"];
+                };
+            };
+        };
+    };
+    CustomFieldsController_reorderCustomFields: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderCustomFieldsDto"];
+            };
+        };
+        responses: {
+            /** @description The custom fields have been successfully reordered. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomFieldResponseDto"][];
+                };
+            };
+        };
+    };
+    CustomFieldsController_updateFieldStatus: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateFieldStatusDto"];
+            };
+        };
+        responses: {
+            /** @description The custom field status has been successfully updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomFieldResponseDto"];
+                };
             };
         };
     };

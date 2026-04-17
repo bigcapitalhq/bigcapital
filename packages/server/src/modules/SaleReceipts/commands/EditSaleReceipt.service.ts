@@ -15,6 +15,7 @@ import { events } from '@/common/events/events';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditSaleReceiptDto } from '../dtos/SaleReceipt.dto';
+import { SaveCustomFieldValuesService } from '@/modules/CustomFields/queries/SaveCustomFieldValues.service';
 
 @Injectable()
 export class EditSaleReceipt {
@@ -24,6 +25,7 @@ export class EditSaleReceipt {
     private readonly uow: UnitOfWork,
     private readonly validators: SaleReceiptValidators,
     private readonly dtoTransformer: SaleReceiptDTOTransformer,
+    private readonly saveCustomFieldValuesService: SaveCustomFieldValuesService,
 
     @Inject(SaleReceipt.name)
     private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
@@ -96,6 +98,17 @@ export class EditSaleReceipt {
           id: saleReceiptId,
           ...saleReceiptObj,
         });
+
+      // Save custom field values.
+      if (saleReceiptDTO.customFields) {
+        await this.saveCustomFieldValuesService.saveValues(
+          'SaleReceipt',
+          saleReceiptId,
+          saleReceiptDTO.customFields,
+          trx,
+        );
+      }
+
       // Triggers `onSaleReceiptEdited` event.
       await this.eventPublisher.emitAsync(events.saleReceipt.onEdited, {
         oldSaleReceipt,

@@ -8,6 +8,7 @@ import { CommandSaleInvoiceValidators } from '../commands/CommandSaleInvoiceVali
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { SaleInvoiceResponseDto } from '../dtos/SaleInvoiceResponse.dto';
+import { GetResourceCustomFieldsService } from '@/modules/CustomFields/queries/GetResourceCustomFields.service';
 
 @Injectable()
 export class GetSaleInvoice {
@@ -15,6 +16,7 @@ export class GetSaleInvoice {
     private transformer: TransformerInjectable,
     private validators: CommandSaleInvoiceValidators,
     private eventPublisher: EventEmitter2,
+    private getResourceCustomFieldsService: GetResourceCustomFieldsService,
 
     @Inject(SaleInvoice.name)
     private saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
@@ -44,10 +46,18 @@ export class GetSaleInvoice {
     // Validates the given sale invoice existance.
     this.validators.validateInvoiceExistance(saleInvoice);
 
+    // Load custom field values.
+    const customFields = await this.getResourceCustomFieldsService.getResourceCustomFields(
+      'SaleInvoice',
+      saleInvoiceId,
+    );
+
     const transformed = await this.transformer.transform(
       saleInvoice,
       new SaleInvoiceTransformer(),
+      { customFields },
     );
+
     const eventPayload = {
       saleInvoiceId,
     };

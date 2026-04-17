@@ -9,6 +9,7 @@ import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { CreateItemDto } from './dtos/Item.dto';
+import { SaveCustomFieldValuesService } from '@/modules/CustomFields/queries/SaveCustomFieldValues.service';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CreateItemService {
@@ -23,6 +24,7 @@ export class CreateItemService {
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly validators: ItemsValidators,
+    private readonly saveCustomFieldValuesService: SaveCustomFieldValuesService,
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
@@ -110,10 +112,22 @@ export class CreateItemService {
         .insertAndFetch({
           ...itemInsert,
         });
+
+      // Save custom field values.
+      if (itemDTO.customFields) {
+        await this.saveCustomFieldValuesService.saveValues(
+          'Item',
+          item.id,
+          itemDTO.customFields,
+          trx,
+        );
+      }
+
       // Triggers `onItemCreated` event.
       await this.eventEmitter.emitAsync(events.item.onCreated, {
         item,
         itemId: item.id,
+        itemDTO,
         trx,
       } as IItemEventCreatedPayload);
 

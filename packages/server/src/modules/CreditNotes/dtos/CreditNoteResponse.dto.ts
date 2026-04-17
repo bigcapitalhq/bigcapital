@@ -263,4 +263,11 @@ export class CreditNoteResponseDto {
     example: '$1,000.00',
   })
   totalLocalFormatted: string;
+
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }

@@ -13,8 +13,17 @@ export class ItemTransformer extends Transformer {
       'sellPriceFormatted',
       'costPriceFormatted',
       'itemWarehouses',
+      'customFields',
     ];
   };
+
+  /**
+   * Retrieve custom fields from options.
+   * @returns {Record<string, any>}
+   */
+  public customFields(): Record<string, any> {
+    return this.options?.customFields;
+  }
 
   /**
    * Formatted item type.

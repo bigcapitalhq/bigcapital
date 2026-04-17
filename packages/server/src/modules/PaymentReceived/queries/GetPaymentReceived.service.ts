@@ -5,11 +5,13 @@ import { PaymentReceived } from '../models/PaymentReceived';
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { ServiceError } from '../../Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GetResourceCustomFieldsService } from '@/modules/CustomFields/queries/GetResourceCustomFields.service';
 
 @Injectable()
 export class GetPaymentReceivedService {
   constructor(
     private readonly transformer: TransformerInjectable,
+    private readonly getResourceCustomFieldsService: GetResourceCustomFieldsService,
 
     @Inject(PaymentReceived.name)
     private readonly paymentReceiveModel: TenantModelProxy<
@@ -38,9 +40,18 @@ export class GetPaymentReceivedService {
     if (!paymentReceive) {
       throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
     }
-    return this.transformer.transform(
+    // Load custom field values.
+    const customFields = await this.getResourceCustomFieldsService.getResourceCustomFields(
+      'PaymentReceive',
+      paymentReceiveId,
+    );
+
+    const transformed = await this.transformer.transform(
       paymentReceive,
       new PaymentReceiveTransfromer(),
+      { customFields },
     );
+
+    return transformed;
   }
 }

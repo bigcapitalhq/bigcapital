@@ -5,11 +5,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreditNote } from '../models/CreditNote';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GetResourceCustomFieldsService } from '@/modules/CustomFields/queries/GetResourceCustomFields.service';
 
 @Injectable()
 export class GetCreditNoteService {
   constructor(
     private readonly transformer: TransformerInjectable,
+    private readonly getResourceCustomFieldsService: GetResourceCustomFieldsService,
 
     @Inject(CreditNote.name)
     private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
@@ -32,7 +34,19 @@ export class GetCreditNoteService {
     if (!creditNote) {
       throw new ServiceError(ERRORS.CREDIT_NOTE_NOT_FOUND);
     }
+    // Load custom field values.
+    const customFields = await this.getResourceCustomFieldsService.getResourceCustomFields(
+      'CreditNote',
+      creditNoteId,
+    );
+
     // Transforms the credit note model to POJO.
-    return this.transformer.transform(creditNote, new CreditNoteTransformer());
+    const transformed = await this.transformer.transform(
+      creditNote,
+      new CreditNoteTransformer(),
+      { customFields },
+    );
+
+    return transformed;
   }
 }

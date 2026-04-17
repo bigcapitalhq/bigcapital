@@ -10,6 +10,7 @@ import { IModelMeta } from '@/interfaces/Model';
 import { IModelMetaField } from '@/interfaces/Model';
 import { Features } from '@/common/types/Features';
 import { resourceToModelName } from './_utils';
+import { GetCustomFieldsService } from '../CustomFields/queries/GetCustomFields.service';
 
 const ERRORS = {
   RESOURCE_MODEL_NOT_FOUND: 'RESOURCE_MODEL_NOT_FOUND',
@@ -22,6 +23,7 @@ export class ResourceService {
     private readonly warehousesSettings: WarehousesSettings,
     private readonly moduleRef: ModuleRef,
     private readonly i18nService: I18nService,
+    private readonly getCustomFieldsService: GetCustomFieldsService,
   ) { }
 
   /**
@@ -136,19 +138,68 @@ export class ResourceService {
   }
 
   /**
+   * Maps model name to custom field resource name.
+   * @param {string} modelName - Model name.
+   * @returns {string | null}
+   */
+  private getCustomFieldResourceName(modelName: string): string | null {
+    const resourceMap: Record<string, string> = {
+      'SaleInvoice': 'SaleInvoice',
+      'SaleEstimate': 'SaleEstimate',
+      'SaleReceipt': 'SaleReceipt',
+      'Customer': 'Customer',
+      'Item': 'Item',
+      'CreditNote': 'CreditNote',
+      'PaymentReceive': 'PaymentReceive',
+    };
+    return resourceMap[modelName] || null;
+  }
+
+  /**
    * Retrieve the resource fields with localized names and hints.
    * @param {string} modelName
    * @returns {IModelMetaField2}
    */
-  public getResourceFields2(modelName: string): {
+  public async getResourceFields2(modelName: string): Promise<{
     [key: string]: IModelMetaField2;
-  } {
+  }> {
     const meta = this.getResourceMeta(modelName);
     const filteredFields = this.filterSupportFeatures(meta.fields2);
 
-    return this.localizeFields(
+    const localizedFields = this.localizeFields(
       filteredFields as Record<string, IModelMetaField2>,
     );
+
+    // Inject custom fields from the database.
+    const customFieldResource = this.getCustomFieldResourceName(modelName);
+    if (customFieldResource) {
+      const customFields = await this.getCustomFieldsService.getCustomFields(customFieldResource);
+      for (const customField of customFields) {
+        const fieldTypeMap: Record<string, string> = {
+          'text': 'text',
+          'number': 'number',
+          'date': 'date',
+          'checkbox': 'boolean',
+          'dropdown': 'enumeration',
+          'url': 'url',
+          'textarea': 'text',
+          'autonumber': 'text',
+          'lookup': 'relation',
+          'formula': 'text',
+        };
+
+        localizedFields[customField.fieldName] = {
+          name: customField.label,
+          fieldType: fieldTypeMap[customField.fieldType] || 'text',
+          required: customField.required,
+          ...(customField.fieldType === 'dropdown' && customField.options?.choices
+            ? { options: customField.options.choices.map((choice: string) => ({ label: choice, key: choice })) }
+            : {}),
+        } as IModelMetaField2;
+      }
+    }
+
+    return localizedFields;
   }
 
   /**

@@ -9,9 +9,11 @@ import {
   MaxLength,
   Min,
   IsNotEmpty,
+  IsObject,
+  IsOptional,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, ToNumber } from '@/common/decorators/Validators';
+import { ToNumber } from '@/common/decorators/Validators';
 
 export class CommandItemDto {
   @IsString()
@@ -209,6 +211,15 @@ export class CommandItemDto {
     example: [1, 2, 3],
   })
   mediaIds?: number[];
+
+  @IsOptional()
+  @IsObject()
+  @ApiProperty({
+    description: 'Custom fields values',
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }
 
 export class CreateItemDto extends CommandItemDto {}

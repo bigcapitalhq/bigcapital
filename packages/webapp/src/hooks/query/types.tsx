@@ -245,6 +245,11 @@ export const API_KEYS = {
   API_KEYS: 'API_KEYS',
 };
 
+const CUSTOM_FIELDS = {
+  CUSTOM_FIELDS: 'CUSTOM_FIELDS',
+  CUSTOM_FIELD: 'CUSTOM_FIELD',
+};
+
 export default {
   ...Authentication,
   ...ACCOUNTS,
@@ -281,4 +286,5 @@ export default {
   ...TAX_RATES,
   ...EXCHANGE_RATE,
   ...API_KEYS,
+  ...CUSTOM_FIELDS,
 };

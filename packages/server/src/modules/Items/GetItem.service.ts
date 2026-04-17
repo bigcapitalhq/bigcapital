@@ -6,6 +6,7 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { ItemTransformer } from './Item.transformer';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { ClsService } from 'nestjs-cls';
+import { GetResourceCustomFieldsService } from '@/modules/CustomFields/queries/GetResourceCustomFields.service';
 
 @Injectable()
 export class GetItemService {
@@ -15,6 +16,7 @@ export class GetItemService {
     private readonly eventEmitter2: EventEmitter2,
     private readonly transformerInjectable: TransformerInjectable,
     private readonly clsService: ClsService,
+    private readonly getResourceCustomFieldsService: GetResourceCustomFieldsService,
   ) {}
 
   /**
@@ -35,10 +37,18 @@ export class GetItemService {
       .withGraphFetched('purchaseTaxRate')
       .throwIfNotFound();
 
+    // Load custom field values.
+    const customFields = await this.getResourceCustomFieldsService.getResourceCustomFields(
+      'Item',
+      itemId,
+    );
+
     const transformed = await this.transformerInjectable.transform(
       item,
       new ItemTransformer(),
+      { customFields },
     );
+
     const eventPayload = { itemId };
 
     // Triggers the `onItemViewed` event.

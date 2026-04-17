@@ -13,6 +13,7 @@ import { events } from '@/common/events/events';
 import { CommandCreditNoteDTOTransform } from './CommandCreditNoteDTOTransform.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditCreditNoteDto } from '../dtos/CreditNote.dto';
+import { SaveCustomFieldValuesService } from '@/modules/CustomFields/queries/SaveCustomFieldValues.service';
 
 @Injectable()
 export class EditCreditNoteService {
@@ -35,6 +36,7 @@ export class EditCreditNoteService {
     private itemsEntriesService: ItemsEntriesService,
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
+    private saveCustomFieldValuesService: SaveCustomFieldValuesService,
   ) {}
 
   /**
@@ -93,6 +95,17 @@ export class EditCreditNoteService {
           id: creditNoteId,
           ...creditNoteModel,
         });
+
+      // Save custom field values.
+      if (creditNoteEditDTO.customFields) {
+        await this.saveCustomFieldValuesService.saveValues(
+          'CreditNote',
+          creditNoteId,
+          creditNoteEditDTO.customFields,
+          trx,
+        );
+      }
+
       // Triggers `onCreditNoteEdited` event.
       await this.eventPublisher.emitAsync(events.creditNote.onEdited, {
         trx,

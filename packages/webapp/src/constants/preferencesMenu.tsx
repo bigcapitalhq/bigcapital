@@ -63,6 +63,11 @@ export const PreferencesMenu = [
     disabled: false,
     href: '/preferences/items',
   },
+  {
+    text: 'Custom Fields',
+    disabled: false,
+    href: '/preferences/custom-fields',
+  },
   // {
   //   text: 'Integrations',
   //   disabled: false,

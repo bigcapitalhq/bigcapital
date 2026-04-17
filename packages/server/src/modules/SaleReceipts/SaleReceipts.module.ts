@@ -46,6 +46,7 @@ import { SaleReceiptCostGLEntriesSubscriber } from './subscribers/SaleReceiptCos
 import { SaleReceiptCostGLEntries } from './SaleReceiptCostGLEntries';
 import { BulkDeleteSaleReceiptsService } from './BulkDeleteSaleReceipts.service';
 import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleReceipts.service';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 
 @Module({
   controllers: [SaleReceiptsController],
@@ -61,6 +62,7 @@ import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleR
     AccountsModule,
     InventoryCostModule,
     DynamicListModule,
+    CustomFieldsModule,
     MailModule,
     MailNotificationModule,
     BullModule.registerQueue({ name: SendSaleReceiptMailQueue }),

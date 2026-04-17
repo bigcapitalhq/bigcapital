@@ -15,6 +15,7 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreatePaymentReceivedDto } from '../dtos/PaymentReceived.dto';
+import { SaveCustomFieldValuesService } from '@/modules/CustomFields/queries/SaveCustomFieldValues.service';
 
 @Injectable()
 export class CreatePaymentReceivedService {
@@ -24,6 +25,7 @@ export class CreatePaymentReceivedService {
     private uow: UnitOfWork,
     private transformer: PaymentReceiveDTOTransformer,
     private tenancyContext: TenancyContext,
+    private saveCustomFieldValuesService: SaveCustomFieldValuesService,
 
     @Inject(PaymentReceived.name)
     private paymentReceived: TenantModelProxy<typeof PaymentReceived>,
@@ -92,6 +94,17 @@ export class CreatePaymentReceivedService {
         .insertGraphAndFetch({
           ...paymentReceiveObj,
         });
+
+      // Save custom field values.
+      if (paymentReceiveDTO.customFields) {
+        await this.saveCustomFieldValuesService.saveValues(
+          'PaymentReceive',
+          paymentReceive.id,
+          paymentReceiveDTO.customFields,
+          trx,
+        );
+      }
+
       // Triggers `onPaymentReceiveCreated` event.
       await this.eventPublisher.emitAsync(events.paymentReceive.onCreated, {
         paymentReceive,

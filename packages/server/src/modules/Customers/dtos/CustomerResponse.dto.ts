@@ -115,4 +115,11 @@ export class CustomerResponseDto {
 
   @ApiProperty({ example: 1500.0 })
   closingBalance: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'Custom fields values',
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, any>;
 }

@@ -8,6 +8,7 @@ import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { EditItemDto } from './dtos/Item.dto';
+import { SaveCustomFieldValuesService } from '@/modules/CustomFields/queries/SaveCustomFieldValues.service';
 
 @Injectable()
 export class EditItemService {
@@ -22,6 +23,7 @@ export class EditItemService {
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly validators: ItemsValidators,
+    private readonly saveCustomFieldValuesService: SaveCustomFieldValuesService,
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
@@ -130,11 +132,22 @@ export class EditItemService {
         .query(trx)
         .patchAndFetchById(itemId, itemModel);
 
+      // Save custom field values.
+      if (itemDTO.customFields) {
+        await this.saveCustomFieldValuesService.saveValues(
+          'Item',
+          itemId,
+          itemDTO.customFields,
+          trx,
+        );
+      }
+
       // Edit event payload.
       const eventPayload: IItemEventEditedPayload = {
         item: newItem,
         oldItem,
         itemId: newItem.id,
+        itemDTO,
         trx,
       };
       // Triggers `onItemEdited` event.
