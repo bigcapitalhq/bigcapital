@@ -105,6 +105,7 @@ import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module
 import { SocketModule } from '../Socket/Socket.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AppThrottleModule } from './AppThrottle.module';
+import { LicenseModule } from '../License/License.module';
 
 @Module({
   imports: [
@@ -243,6 +244,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     RolesModule,
     SubscriptionModule,
     OrganizationModule,
+    LicenseModule,
     TenantDBManagerModule,
     PaymentServicesModule,
     LoopsModule,

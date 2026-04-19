@@ -20,6 +20,7 @@ import cloud from './cloud';
 import redis from './redis';
 import queue from './queue';
 import bullBoard from './bull-board';
+import license from './license';
 
 export const config = [
   app,
@@ -44,4 +45,5 @@ export const config = [
   redis,
   queue,
   bullBoard,
+  license,
 ];
