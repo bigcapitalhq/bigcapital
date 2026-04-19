@@ -773,5 +773,20 @@ export const events = {
     onVendorTransactionsViewed: 'onVendorTransactionsViewed',
     onSalesByItemViewed: 'onSalesByItemViewed',
     onPurchasesByItemViewed: 'onPurchasesByItemViewed',
+    onBudgetVsActualViewed: 'onBudgetVsActualViewed',
+  },
+
+  // Budgets
+  budgets: {
+    onCreating: 'onBudgetCreating',
+    onCreated: 'onBudgetCreated',
+    onEditing: 'onBudgetEditing',
+    onEdited: 'onBudgetEdited',
+    onDeleting: 'onBudgetDeleting',
+    onDeleted: 'onBudgetDeleted',
+    onActivating: 'onBudgetActivating',
+    onActivated: 'onBudgetActivated',
+    onClosing: 'onBudgetClosing',
+    onClosed: 'onBudgetClosed',
   },
 };

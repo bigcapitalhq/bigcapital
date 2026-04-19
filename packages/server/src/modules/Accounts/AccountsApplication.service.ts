@@ -46,7 +46,6 @@ export class AccountsApplication {
 
   /**
    * Creates a new account.
-   * @param {number} tenantId
    * @param {IAccountCreateDTO} accountDTO
    * @returns {Promise<IAccount>}
    */
@@ -59,7 +58,6 @@ export class AccountsApplication {
 
   /**
    * Deletes the given account.
-   * @param {number} tenantId
    * @param {number} accountId
    * @returns {Promise<void>}
    */
