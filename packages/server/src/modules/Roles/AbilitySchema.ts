@@ -1,4 +1,5 @@
 import { ItemAction } from "@/interfaces/Item";
+import { AssetAction } from "../Assets/Assets.types";
 import { ReportsAction } from "../FinancialStatements/types/Report.types";
 import { InventoryAdjustmentAction } from "../InventoryAdjutments/types/InventoryAdjustments.types";
 import { CashflowAction } from "../BankingTransactions/types/BankingTransactions.types";
@@ -303,6 +304,16 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
         key: PreferencesAction.Mutate,
         label: 'ability.mutate_system_preferences',
       },
+    ],
+  },
+  {
+    subject: AbilitySubject.Asset,
+    subjectLabel: 'ability.assets',
+    abilities: [
+      { key: AssetAction.VIEW, label: 'ability.view', default: true },
+      { key: AssetAction.CREATE, label: 'ability.create', default: true },
+      { key: AssetAction.EDIT, label: 'ability.edit', default: true },
+      { key: AssetAction.DELETE, label: 'ability.delete', default: true },
     ],
   },
 ];

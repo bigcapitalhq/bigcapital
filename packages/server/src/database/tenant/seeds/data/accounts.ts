@@ -174,6 +174,17 @@ export const AccountsData = [
     description:
       'An account that holds valuation of products or goods that available for sale.',
   },
+  {
+    name: 'Accumulated Depreciation',
+    slug: 'accumulated-depreciation',
+    code: '10009',
+    account_type: 'fixed-asset',
+    predefined: 1,
+    parent_account_id: null,
+    index: 1,
+    active: 1,
+    description: 'Accumulated depreciation for fixed assets (contra-asset account).',
+  },
 
   // Libilities
   {

@@ -144,6 +144,33 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
+  // Assets.
+  {
+    path: `/assets/:id/edit`,
+    component: lazy(() => import('@/containers/Assets/AssetFormPage')),
+    name: 'asset-edit',
+    breadcrumb: intl.get('edit_asset'),
+    pageTitle: intl.get('edit_asset'),
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/assets/new`,
+    component: lazy(() => import('@/containers/Assets/AssetFormPage')),
+    name: 'asset-new',
+    breadcrumb: intl.get('new_asset'),
+    pageTitle: intl.get('new_asset'),
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/assets`,
+    component: lazy(() => import('@/containers/Assets/AssetsList')),
+    breadcrumb: intl.get('assets'),
+    pageTitle: intl.get('assets_list'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
   // Inventory adjustments.
   {
     path: `/inventory-adjustments`,

@@ -25,6 +25,7 @@ import {
   CashflowAction,
   PreferencesAbility,
   TaxRateAction,
+  AssetAction,
 } from '@/constants/abilityOption';
 import { DialogsName } from './dialogs';
 
@@ -414,6 +415,15 @@ export const SidebarMenu = [
                 permission: {
                   subject: AbilitySubject.TaxRate,
                   ability: TaxRateAction.View,
+                },
+              },
+              {
+                text: <T id={'sidebar.assets'} />,
+                href: '/assets',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Asset,
+                  ability: AssetAction.View,
                 },
               },
             ],

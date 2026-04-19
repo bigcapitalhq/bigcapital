@@ -756,6 +756,27 @@ export const events = {
     onAccountUpdated: 'onStripeAccountUpdated',
   },
 
+  /**
+   * Assets service.
+   */
+  assets: {
+    onCreated: 'onAssetCreated',
+    onCreating: 'onAssetCreating',
+
+    onEdited: 'onAssetEdited',
+    onEditing: 'onAssetEditing',
+
+    onDeleted: 'onAssetDeleted',
+    onDeleting: 'onAssetDeleting',
+
+    onDisposed: 'onAssetDisposed',
+    onDisposing: 'onAssetDisposing',
+
+    onDepreciationCalculated: 'onAssetDepreciationCalculated',
+    onDepreciationPost: 'onAssetDepreciationPost',
+    onDepreciationPosted: 'onAssetDepreciationPosted',
+  },
+
   // Reports
   reports: {
     onBalanceSheetViewed: 'onBalanceSheetViewed',
