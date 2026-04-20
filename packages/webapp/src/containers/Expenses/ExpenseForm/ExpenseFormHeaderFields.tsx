@@ -9,6 +9,7 @@ import { useTheme } from '@emotion/react';
 
 import {
   CustomersSelect,
+  VendorsSelect,
   FInputGroup,
   Stack,
   FormattedMessage as T,
@@ -20,7 +21,7 @@ import {
   inputIntent,
   handleDateChange,
 } from '@/utils';
-import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
+import { customersFieldShouldUpdate, accountsFieldShouldUpdate, vendorsFieldShouldUpdate } from './utils';
 import {
   FFormGroup,
   FSelect,
@@ -102,6 +103,9 @@ export default function ExpenseFormHeader() {
         />
       </FFormGroup>
 
+      {/* ----------- Vendor (Payee) ----------- */}
+      <ExpenseFormVendorSelect />
+
       <FFormGroup
         name={'currency_code'}
         label={<T id={'currency'} />}
@@ -171,5 +175,35 @@ function ExpenseFormCustomerSelect() {
         shouldUpdate={customersFieldShouldUpdate}
       />
     </FormGroup>
+  );
+}
+
+/**
+ * Vendor (payee) select field of expense form.
+ */
+function ExpenseFormVendorSelect() {
+  const { vendors } = useExpenseFormContext();
+
+  return (
+    <FFormGroup
+      name={'payee_id'}
+      label={<T id={'vendor'} />}
+      labelInfo={<Hint />}
+      inline={true}
+      fastField={true}
+      shouldUpdateDeps={{ items: vendors }}
+      shouldUpdate={vendorsFieldShouldUpdate}
+    >
+      <VendorsSelect
+        name={'payee_id'}
+        items={vendors}
+        placeholder={<T id={'select_vendor'} />}
+        allowCreate={true}
+        popoverFill={true}
+        fastField={true}
+        shouldUpdateDeps={{ items: vendors }}
+        shouldUpdate={vendorsFieldShouldUpdate}
+      />
+    </FFormGroup>
   );
 }

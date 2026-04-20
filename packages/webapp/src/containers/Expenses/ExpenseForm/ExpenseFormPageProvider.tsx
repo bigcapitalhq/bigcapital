@@ -7,6 +7,7 @@ import { useFeatureCan } from '@/hooks/state';
 import {
   useCurrencies,
   useCustomers,
+  useVendors,
   useExpense,
   useAccounts,
   useBranches,
@@ -33,6 +34,12 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
     data: { customers },
     isLoading: isCustomersLoading,
   } = useCustomers();
+
+  // Fetches vendors list.
+  const {
+    data: { vendors },
+    isLoading: isVendorsLoading,
+  } = useVendors({}, {});
 
   // Fetch the expense details.
   const { data: expense, isLoading: isExpenseLoading } = useExpense(expenseId, {
@@ -78,6 +85,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
 
     currencies,
     customers,
+    vendors,
     expense,
     accounts,
     branches,
@@ -86,6 +94,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
     isCurrenciesLoading,
     isExpenseLoading,
     isCustomersLoading,
+    isVendorsLoading,
     isAccountsLoading,
     isBranchesSuccess,
 

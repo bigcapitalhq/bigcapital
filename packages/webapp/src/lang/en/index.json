@@ -480,6 +480,7 @@
   "expiration_date": "Expiration Date",
   "customer_note": "Customer Note",
   "select_customer_account": "Select Customer Account...",
+  "select_vendor": "Select Vendor...",
   "select_product": "Select Product",
   "reference": "Reference No.",
   "clear": "Clear",

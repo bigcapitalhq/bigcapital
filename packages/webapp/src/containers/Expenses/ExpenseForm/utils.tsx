@@ -41,6 +41,7 @@ export const defaultExpenseEntry = {
 
 export const defaultExpense = {
   payment_account_id: '',
+  payee_id: '',
   beneficiary: '',
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
   description: '',
@@ -123,6 +124,16 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.items !== oldProps.items ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+/**
+ * Detarmine vendors fast-field should update.
+ */
+export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.shouldUpdateDeps?.items !== oldProps.shouldUpdateDeps?.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
