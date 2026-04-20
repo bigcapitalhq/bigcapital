@@ -21,7 +21,7 @@ This fork diverges from upstream `bigcapitalhq/bigcapital` in the following area
 - **Bulk activate/inactivate accounts** — `POST /accounts/bulk-activate` and `POST /accounts/bulk-inactivate` endpoints + webapp UI (alert dialogs with correct selected count).
 - **Edit categorization on bank transactions** — `PATCH /banking/categorize/:id` allows changing `creditAccountId`, `transactionType`, and `description` on categorized transactions without uncategorize/re-categorize. Rewrites GL entries when account or type changes. Webapp "Edit Category" context menu item opens a dialog.
 - **Parent account name + code in CSV export** — `parentAccountName` and `parentAccountCode` computed attributes in `AccountTransformer`, exposed via `Account.meta.ts` columns.
-- **Accounts import: parent-child resolution** — Two-pass import via `afterImport()` hook on the `Importable` base class. `AccountsImportable` strips `parentAccountId` during creation and resolves parent relationships after all accounts exist in the transaction.
+- **Accounts import: parent-child resolution** — Two-pass import via `afterImport()` hook on the `Importable` base class, plus a `relationImportMatchDeferred` field-meta flag that tells the parser to skip DB lookup and pass the raw name/code through. `AccountsImportable` strips `parentAccountId` during creation and resolves parent relationships (by numeric ID, name, or code) after all accounts exist in the transaction.
 - **Stripped seed accounts** — `SeedAccounts` array contains only predefined (required) accounts. Non-essential defaults removed. Drawings code changed from 30003 to 30004 to avoid duplicate with Owner's Equity.
 
 ### Bugs fixed in this fork
@@ -30,6 +30,7 @@ This fork diverges from upstream `bigcapitalhq/bigcapital` in the following area
 - **Migration path** — `working_dir: /app/packages/server` in compose so system migration directory resolves correctly.
 - **Empty email verification token** — `AuthMailSubscriber` skips sending verification email when `SIGNUP_EMAIL_CONFIRMATION=false` (token is empty).
 - **Import preview auto-refresh** — `staleTime: Infinity` and `refetchOnWindowFocus: false` on import preview/meta queries. Added missing `Account` case to `invalidateResourcesOnImport()`.
+- **Rate limit env var mismatch** — `API_RATE_LIMIT` in `.env.example` is a legacy/dead variable that the server doesn't read. Actual vars are `THROTTLE_GLOBAL_LIMIT`/`THROTTLE_GLOBAL_TTL` (default 100 req/60s) and `THROTTLE_AUTH_LIMIT`/`THROTTLE_AUTH_TTL` (default 10 req/60s). Updated deploy docs to reference the correct names.
 - **UI label inconsistencies** — Standardized "Statement"→"Note", "Reference #"→"Reference No.", date/account field capitalization, "Full Amount"→"Amount", credit note using invoice date label, vendor credit using bill date label, withdrawal account mislabeled as deposit account.
 
 ### Conventions for this fork
