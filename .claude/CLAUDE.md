@@ -48,7 +48,7 @@ See `docs/DEPLOY.md` for the full deployment guide including image build, transf
 
 - **Migration working directory** must be `/app/packages/server` — the system migration path (`./src/database/system/migrations`) is relative to `cwd`.
 - **MySQL grants**: The MariaDB init script only runs on first database initialization. If the volume pre-exists, manually grant `ALL PRIVILEGES ON *.*` to the app user.
-- **API rate limit**: Default `120,60,600` is too aggressive for SPA usage. Use `600,60,60` or higher. State is stored in Redis — restart Redis to clear lockouts.
+- **API rate limit**: NestJS throttler controlled by `THROTTLE_GLOBAL_LIMIT`/`THROTTLE_GLOBAL_TTL` (default 100/60s) and `THROTTLE_AUTH_LIMIT`/`THROTTLE_AUTH_TTL` (default 10/60s). Both defaults are too strict for SPA usage — set `THROTTLE_GLOBAL_LIMIT=600`, `THROTTLE_AUTH_LIMIT=60` with `TTL=60000`. The legacy `API_RATE_LIMIT` variable is NOT used by the app. State is in Redis — restart Redis to clear lockouts.
 - **Fonts**: NotoSans and Segoe font files must be in `packages/webapp/public/fonts/` for production builds (Vite's SCSS URL resolution doesn't hash them).
 - **GOTENBERG_DOCS_URL**: Uses container name `http://bigcapital-fork-server:3000/public/` — must match the `container_name` in compose.
 

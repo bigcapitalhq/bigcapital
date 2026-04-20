@@ -91,7 +91,7 @@ Edit `/opt/bigcapital/.env` and fill in every line marked `[CHANGE]`:
 - `DB_PASSWORD` — generate with `openssl rand -base64 24`
 - `DB_ROOT_PASSWORD` — generate with `openssl rand -base64 24`
 - `BASE_URL` — should be `https://staging.bc.jjocllc.com`
-- `API_RATE_LIMIT` — format is `points,duration,blockDuration` (e.g. `600,60,60` = 600 requests per 60s, 60s block). The default `120,60,600` is too aggressive for normal SPA usage — a single page load can trigger dozens of API calls. Recommended: `600,60,60` for production, `10000,60,10` for staging/dev.
+- **Rate limiting** — the app uses NestJS throttler with Redis storage. Set `THROTTLE_GLOBAL_LIMIT=600` (requests) and `THROTTLE_GLOBAL_TTL=60000` (ms) for normal SPA usage. Also bump `THROTTLE_AUTH_LIMIT=60` for auth endpoints (default 10 is too strict). The legacy `API_RATE_LIMIT` variable is **not used** — ignore it in any old docs.
 - SMTP credentials for outbound email
 - S3 credentials if using file attachments
 
@@ -207,7 +207,17 @@ The OAuth middleware is redirecting POST requests (e.g. `/api/auth/signin`). Ens
 Gotenberg can't reach the server at `http://server:3000/public/`. Verify both are on `bigcapital_network`: `docker exec bigcapital-gotenberg wget -qO- http://bigcapital-server:3000/public/ || echo FAIL`. Note: the `GOTENBERG_DOCS_URL` env var uses the service name `server` — if you changed the container name, update this.
 
 **"Too many requests" modal in the webapp**
-The API rate limiter is blocking the client. The default `API_RATE_LIMIT=120,60,600` allows only 120 requests per minute with a 10-minute block — too tight for normal SPA usage. Increase it in `.env` (e.g. `600,60,60`) and restart the server: `docker compose -f docker-compose.prod.yml restart server`. If currently blocked, the restart clears the in-memory rate limit state.
+The NestJS throttler is blocking the client. **Important:** `API_RATE_LIMIT` is a legacy variable and is NOT used by the app — setting it does nothing. Use these instead in `.env`:
+```
+THROTTLE_GLOBAL_LIMIT=600
+THROTTLE_GLOBAL_TTL=60000
+THROTTLE_AUTH_LIMIT=60
+THROTTLE_AUTH_TTL=60000
+```
+Defaults are 100 req/min global, 10 req/min auth — both too strict for SPA usage. State is stored in Redis — restart Redis AND the server to clear the in-memory/Redis throttle state:
+```
+docker compose -f docker-compose.prod.yml restart redis server
+```
 
 **MySQL "Access denied" when creating an organization**
 The MariaDB init script (`docker/mariadb/init.sql`) grants `ALL PRIVILEGES ON *.*` but only runs on first database initialization. If the MySQL volume already existed before the init script was corrected, the grants were never applied. Fix manually: `docker exec -it bigcapital-fork-mysql mysql -u root -p"${DB_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON *.* TO 'bigcapital'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"`
