@@ -109,7 +109,11 @@ export const handleNumberChange = (handler) => {
 };
 
 export const handleDateChange = (handler) => {
-  return (date) => handler(moment(date).format('YYYY-MM-DD'), date);
+  return (date) => {
+    if (date != null) {
+      handler(moment(date).format('YYYY-MM-DD'), date);
+    }
+  };
 };
 
 export const objectKeysTransform = (obj, transform) => {
