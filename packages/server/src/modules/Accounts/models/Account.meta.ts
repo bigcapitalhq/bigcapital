@@ -190,6 +190,9 @@ export const AccountMeta = {
       fieldType: 'relation',
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
+      // Defer resolution to AccountsImportable.afterImport() so parent accounts
+      // created in the same CSV can be resolved after all rows are inserted.
+      relationImportMatchDeferred: true,
     },
   },
 };

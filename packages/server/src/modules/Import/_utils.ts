@@ -310,21 +310,28 @@ export const valueParser =
         _value = multiNumberParse(value);
         // Parses the relation value.
       } else if (field.fieldType === 'relation') {
-        const RelationModel = modelResolver(field.relationModel);
+        // Deferred relations keep the raw value (name/code) so the importable's
+        // afterImport() hook can resolve them after all rows are created.
+        // Required for self-referential imports like accounts with parents in the same CSV.
+        if (field.relationImportMatchDeferred) {
+          _value = value;
+        } else {
+          const RelationModel = modelResolver(field.relationModel);
 
-        if (!RelationModel) {
-          throw new Error(`The relation model of ${key} field is not exist.`);
-        }
-        const relationQuery = RelationModel.query(trx);
-        const relationKeys = castArray(field?.relationImportMatch);
+          if (!RelationModel) {
+            throw new Error(`The relation model of ${key} field is not exist.`);
+          }
+          const relationQuery = RelationModel.query(trx);
+          const relationKeys = castArray(field?.relationImportMatch);
 
-        relationQuery.where(function () {
-          relationKeys.forEach((relationKey: string) => {
-            this.orWhereRaw('LOWER(??) = LOWER(?)', [relationKey, value]);
+          relationQuery.where(function () {
+            relationKeys.forEach((relationKey: string) => {
+              this.orWhereRaw('LOWER(??) = LOWER(?)', [relationKey, value]);
+            });
           });
-        });
-        const result = await relationQuery.first();
-        _value = get(result, 'id');
+          const result = await relationQuery.first();
+          _value = get(result, 'id');
+        }
       } else if (field.fieldType === 'collection') {
         const ObjectFieldKey = key.includes('.') ? key.split('.')[1] : key;
         const _valueParser = valueParser(fields, modelResolver);

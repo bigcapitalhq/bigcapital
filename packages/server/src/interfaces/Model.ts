@@ -161,6 +161,13 @@ export interface IModelMetaRelationField2 {
   fieldType: 'relation';
   relationModel: string;
   importableRelationLabel: string | string[];
+  /**
+   * When true, skips DB lookup during import parsing — the raw value
+   * (name/code) passes through unchanged so the importable's afterImport()
+   * hook can resolve it after all rows are created. Required for
+   * self-referential imports (e.g. accounts with parents in the same CSV).
+   */
+  relationImportMatchDeferred?: boolean;
 }
 
 export type IModelMetaField2 = IModelMetaFieldCommon2 &
