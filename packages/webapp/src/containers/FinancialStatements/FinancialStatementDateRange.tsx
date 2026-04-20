@@ -68,7 +68,7 @@ export default function FinancialStatementDateRange() {
           >
             <FDateInput
               name={'fromDate'}
-              {...momentFormatter('YYYY-MM-DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               popoverProps={{ minimal: true, position: Position.BOTTOM_LEFT }}
               maxDate={FINANCIAL_REPORT_MAX_DATE}
               canClearSelection={false}
@@ -88,7 +88,7 @@ export default function FinancialStatementDateRange() {
           >
             <FDateInput
               name={'toDate'}
-              {...momentFormatter('YYYY-MM-DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               popoverProps={{ minimal: true, position: Position.BOTTOM }}
               canClearSelection={false}
               fill

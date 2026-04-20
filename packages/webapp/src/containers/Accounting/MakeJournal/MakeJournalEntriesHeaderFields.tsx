@@ -7,7 +7,6 @@ import { useTheme } from '@emotion/react';
 import { css } from '@emotion/css';
 
 import { CLASSES } from '@/constants/classes';
-import {} from '@/utils';
 import {
   Hint,
   FieldRequiredHint,
@@ -22,6 +21,7 @@ import {
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { JournalExchangeRateInputField } from './components';
 import { MakeJournalTransactionNoField } from './MakeJournalTransactionNoField';
+import { momentFormatter } from '@/utils';
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -61,8 +61,7 @@ export default function MakeJournalEntriesHeader({}) {
       >
         <FDateInput
           name={'date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,

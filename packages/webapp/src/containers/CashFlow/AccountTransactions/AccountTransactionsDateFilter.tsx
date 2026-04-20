@@ -11,6 +11,7 @@ import {
   Icon,
   Stack,
 } from '@/components';
+import { momentFormatter } from '@/utils';
 
 const defaultValues = {
   period: 'all_dates',
@@ -72,8 +73,7 @@ export function AccountTransactionsDateFilterForm({
               <FDateInput
                 name={'fromDate'}
                 popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date) => date.toLocaleDateString()}
-                parseDate={(str) => new Date(str)}
+                {...momentFormatter('MM/DD/YYYY')}
                 inputProps={{
                   fill: true,
                   placeholder: 'MM/DD/YYY',
@@ -90,8 +90,7 @@ export function AccountTransactionsDateFilterForm({
               <FDateInput
                 name={'toDate'}
                 popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date) => date.toLocaleDateString()}
-                parseDate={(str) => new Date(str)}
+                {...momentFormatter('MM/DD/YYYY')}
                 inputProps={{
                   fill: true,
                   placeholder: 'MM/DD/YYY',

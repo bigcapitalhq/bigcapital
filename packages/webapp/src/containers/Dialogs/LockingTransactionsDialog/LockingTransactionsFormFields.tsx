@@ -32,7 +32,7 @@ export default function LockingTransactionsFormFields() {
       >
         <FDateInput
           name={'lock_to_date'}
-          {...momentFormatter('YYYY/MM/DD')}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{
             position: Position.BOTTOM,
             minimal: true,

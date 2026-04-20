@@ -28,6 +28,7 @@ import { useEstimateFormContext } from './EstimateFormProvider';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 import { useTheme } from '@emotion/react';
 import { Theme } from '@xstyled/emotion';
+import { momentFormatter } from '@/utils';
 
 const getEstimateFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -72,8 +73,7 @@ export default function EstimateFormHeader() {
       >
         <FDateInput
           name={'estimate_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
@@ -93,8 +93,7 @@ export default function EstimateFormHeader() {
       >
         <FDateInput
           name={'expiration_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

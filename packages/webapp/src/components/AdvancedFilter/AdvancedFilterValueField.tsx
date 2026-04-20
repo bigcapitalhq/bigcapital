@@ -105,7 +105,7 @@ export default function AdvancedFilterValueField2({
 
       <Choose.When condition={fieldType === IFieldType.DATE}>
         <DateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...momentFormatter('MM/DD/YYYY')}
           value={tansformDateValue(localValue)}
           onChange={handleDateChange}
           popoverProps={{

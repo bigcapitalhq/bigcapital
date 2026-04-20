@@ -36,7 +36,7 @@ export default function UnlockingPartialTransactionsFormFields() {
           >
             <FDateInput
               name={'unlock_from_date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,
@@ -58,7 +58,7 @@ export default function UnlockingPartialTransactionsFormFields() {
           >
             <FDateInput
               name={'unlock_to_date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,

@@ -6,6 +6,7 @@ import { Position, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
+import { momentFormatter } from '@/utils';
 
 import {
   FFormGroup,
@@ -78,8 +79,7 @@ export default function InvoiceFormHeaderFields() {
       >
         <FDateInput
           name={'invoice_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
@@ -103,8 +103,7 @@ export default function InvoiceFormHeaderFields() {
       >
         <FDateInput
           name={'due_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,

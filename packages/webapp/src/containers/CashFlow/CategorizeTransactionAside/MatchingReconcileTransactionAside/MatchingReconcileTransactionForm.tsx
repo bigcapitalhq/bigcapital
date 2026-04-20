@@ -167,7 +167,7 @@ function CreateReconcileTransactionContent() {
 
       <FFormGroup label={'Date'} name={'date'} fastField>
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...momentFormatter('MM/DD/YYYY')}
           name={'date'}
           popoverProps={{
             minimal: false,

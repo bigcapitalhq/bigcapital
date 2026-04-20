@@ -76,7 +76,7 @@ function RefundVendorCreditFormFields({
           >
             <FDateInput
               name={'refund_date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,

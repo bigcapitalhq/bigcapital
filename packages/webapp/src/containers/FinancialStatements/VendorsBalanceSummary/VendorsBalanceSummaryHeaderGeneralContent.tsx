@@ -41,7 +41,7 @@ export default function VendorsBalanceSummaryHeaderGeneralContent() {
                 intent={inputIntent({ error })}
               >
                 <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
+                  {...momentFormatter('MM/DD/YYYY')}
                   value={tansformDateValue(value)}
                   onChange={handleDateChange((selectedDate) => {
                     form.setFieldValue('asDate', selectedDate);

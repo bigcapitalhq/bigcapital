@@ -82,7 +82,7 @@ function BillFormHeader() {
       >
         <FDateInput
           name={'bill_date'}
-          {...momentFormatter('YYYY/MM/DD')}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
           fill
@@ -100,7 +100,7 @@ function BillFormHeader() {
       >
         <FDateInput
           name={'due_date'}
-          {...momentFormatter('YYYY/MM/DD')}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

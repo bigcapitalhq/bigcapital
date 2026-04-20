@@ -23,6 +23,7 @@ import {
 } from './utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import { VendorFormSectionTitle } from './VendorFormSectionTitle';
+import { momentFormatter } from '@/utils';
 
 export function VendorFormFinancialSection() {
   const { currencies, vendorId, branches } = useVendorFormContext();
@@ -95,8 +96,7 @@ function VendorOpeningBalanceAtField() {
         name={'opening_balance_at'}
         popoverProps={{ position: Position.BOTTOM, minimal: true }}
         disabled={vendorId}
-        formatDate={(date) => date.toLocaleDateString()}
-        parseDate={(str) => new Date(str)}
+        {...momentFormatter('MM/DD/YYYY')}
         inputProps={{
           leftIcon: <Icon icon={'date-range'} />,
         }}

@@ -23,6 +23,7 @@ import { useSharePaymentLink } from './SharePaymentLinkProvider';
 import { useClipboard } from '@/hooks/utils/useClipboard';
 import { useDialogActions } from '@/hooks/state';
 import { useDialogContext } from '@/components/Dialog/DialogProvider';
+import { momentFormatter } from '@/utils';
 
 export function SharePaymentLinkFormContent() {
   const { url } = useSharePaymentLink();
@@ -84,8 +85,7 @@ export function SharePaymentLinkFormContent() {
             <FDateInput
               name={'expiryDate'}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              formatDate={(date) => date.toLocaleDateString()}
-              parseDate={(str) => new Date(str)}
+              {...momentFormatter('MM/DD/YYYY')}
               inputProps={{
                 fill: true,
                 style: { minWidth: 260 },

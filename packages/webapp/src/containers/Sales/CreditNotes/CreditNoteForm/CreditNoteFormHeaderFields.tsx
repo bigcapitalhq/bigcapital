@@ -7,6 +7,7 @@ import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
+import { momentFormatter } from '@/utils';
 
 import { CLASSES } from '@/constants/classes';
 import {
@@ -67,8 +68,7 @@ export default function CreditNoteFormHeaderFields() {
       >
         <FDateInput
           name={'credit_note_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

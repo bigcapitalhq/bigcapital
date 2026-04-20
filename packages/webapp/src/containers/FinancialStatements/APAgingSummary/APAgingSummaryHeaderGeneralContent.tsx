@@ -35,7 +35,7 @@ export default function APAgingSummaryHeaderGeneralContent() {
           >
             <FDateInput
               name={'asDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
               minimal
               fill

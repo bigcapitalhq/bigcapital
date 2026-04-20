@@ -67,8 +67,7 @@ function VendorOpeningBalanceFormFields({
       >
         <FDateInput
           name={'opening_balance_at'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

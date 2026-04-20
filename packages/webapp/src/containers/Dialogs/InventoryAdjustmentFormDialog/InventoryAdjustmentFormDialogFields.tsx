@@ -119,7 +119,7 @@ export default function InventoryAdjustmentFormDialogFields() {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,

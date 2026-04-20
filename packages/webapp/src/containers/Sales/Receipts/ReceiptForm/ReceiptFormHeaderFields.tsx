@@ -6,6 +6,7 @@ import { useFormikContext } from 'formik';
 import { Position, Classes } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
+import { momentFormatter } from '@/utils';
 
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { Features } from '@/constants';
@@ -100,8 +101,7 @@ export default function ReceiptFormHeader() {
       >
         <FDateInput
           name={'receipt_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

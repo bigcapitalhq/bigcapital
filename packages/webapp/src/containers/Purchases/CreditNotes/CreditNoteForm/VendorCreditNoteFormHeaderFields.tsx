@@ -123,7 +123,7 @@ function VendorCreditNoteFormHeaderFields({
       >
         <FDateInput
           name={'vendor_credit_date'}
-          {...momentFormatter('YYYY/MM/DD')}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} />, fill: true }}
           fill

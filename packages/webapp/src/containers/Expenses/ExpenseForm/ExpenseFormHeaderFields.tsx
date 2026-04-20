@@ -71,7 +71,7 @@ export default function ExpenseFormHeader() {
             inline={true}
           >
             <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               value={tansformDateValue(value)}
               onChange={handleDateChange((formattedDate) => {
                 form.setFieldValue('payment_date', formattedDate);

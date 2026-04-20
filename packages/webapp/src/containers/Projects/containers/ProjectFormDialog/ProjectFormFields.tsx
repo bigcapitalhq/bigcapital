@@ -51,7 +51,7 @@ function ProjectFormFields() {
             className={classNames(CLASSES.FILL, 'form-group--date')}
           >
             <FDateInput
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               name="deadline"
               formatDate={(date) => date.toLocaleString()}
               popoverProps={{

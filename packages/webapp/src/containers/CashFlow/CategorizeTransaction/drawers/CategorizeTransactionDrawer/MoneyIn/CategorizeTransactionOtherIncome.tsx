@@ -10,6 +10,7 @@ import {
 } from '@/components';
 import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
 import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
+import { momentFormatter } from '@/utils';
 
 export default function CategorizeTransactionOtherIncome() {
   const { accounts } = useCategorizeTransactionBoot();
@@ -20,8 +21,7 @@ export default function CategorizeTransactionOtherIncome() {
         <FDateInput
           name={'date'}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
         />
       </FFormGroup>

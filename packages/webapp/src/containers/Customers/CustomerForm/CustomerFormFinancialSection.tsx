@@ -24,6 +24,7 @@ import {
 } from './utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import  { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
+import { momentFormatter } from '@/utils';
 
 export function CustomerFormFinancialSection() {
   const { currencies, customerId, branches } = useCustomerFormContext();
@@ -91,8 +92,7 @@ function CustomerOpeningBalanceAtField() {
         name={'opening_balance_at'}
         popoverProps={{ position: Position.BOTTOM, minimal: true }}
         disabled={customerId}
-        formatDate={(date) => date.toLocaleDateString()}
-        parseDate={(str) => new Date(str)}
+        {...momentFormatter('MM/DD/YYYY')}
         inputProps={{
           leftIcon: <Icon icon={'date-range'} />,
         }}

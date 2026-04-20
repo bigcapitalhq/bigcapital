@@ -66,7 +66,7 @@ export default function OtherExpnseFormFields() {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               popoverProps={{
                 position: Position.BOTTOM_LEFT,
                 minimal: true,

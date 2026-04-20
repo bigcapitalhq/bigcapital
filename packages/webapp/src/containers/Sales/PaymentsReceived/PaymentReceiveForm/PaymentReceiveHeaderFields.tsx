@@ -49,6 +49,7 @@ import {
 } from './utils';
 import { Features } from '@/constants';
 import { PaymentReceivePaymentNoField } from './PaymentReceivePaymentNoField';
+import { momentFormatter } from '@/utils';
 
 const getHeaderFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -122,8 +123,7 @@ export default function PaymentReceiveHeaderFields() {
       >
         <FDateInput
           name={'payment_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

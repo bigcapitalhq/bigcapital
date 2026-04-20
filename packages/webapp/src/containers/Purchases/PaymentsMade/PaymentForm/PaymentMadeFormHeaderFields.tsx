@@ -128,7 +128,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       >
         <FDateInput
           name={'payment_date'}
-          {...momentFormatter('YYYY/MM/DD')}
+          {...momentFormatter('MM/DD/YYYY')}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
           fill

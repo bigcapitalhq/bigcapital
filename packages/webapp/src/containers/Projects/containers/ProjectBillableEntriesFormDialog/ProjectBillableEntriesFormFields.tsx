@@ -43,7 +43,7 @@ export default function ProjectBillableEntriesFormFields() {
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...momentFormatter('MM/DD/YYYY')}
           name="date"
           formatDate={(date) => date.toLocaleString()}
           popoverProps={{

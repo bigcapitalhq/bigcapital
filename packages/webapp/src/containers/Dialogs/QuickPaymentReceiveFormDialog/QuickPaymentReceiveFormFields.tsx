@@ -125,7 +125,7 @@ function QuickPaymentReceiveFormFields({
           {/* ------------- Payment date ------------- */}
           <FFormGroup name={'payment_date'} label={<T id={'payment_date'} />}>
             <FDateInput
-              {...momentFormatter('YYYY/MM/DD')}
+              {...momentFormatter('MM/DD/YYYY')}
               name={'payment_date'}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{

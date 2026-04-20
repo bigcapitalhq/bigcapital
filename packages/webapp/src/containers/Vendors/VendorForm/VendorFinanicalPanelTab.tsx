@@ -24,6 +24,7 @@ import {
 } from './utils';
 import { useVendorFormContext } from './VendorFormProvider';
 import { useCurrentOrganization } from '@/hooks/state';
+import { momentFormatter } from '@/utils';
 
 /**
  * Vendor Finaniceal Panel Tab.
@@ -134,8 +135,7 @@ function VendorOpeningBalanceAtField() {
         name={'opening_balance_at'}
         popoverProps={{ position: Position.BOTTOM, minimal: true }}
         disabled={vendorId}
-        formatDate={(date) => date.toLocaleDateString()}
-        parseDate={(str) => new Date(str)}
+        {...momentFormatter('MM/DD/YYYY')}
         fill
         fastField
       />
