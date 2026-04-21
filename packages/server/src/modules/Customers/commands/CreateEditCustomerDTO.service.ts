@@ -23,6 +23,8 @@ export class CreateEditCustomerDTO {
     return {
       ...omit(customerDTO, ['customerType']),
       contactType: customerDTO.customerType,
+      // Convert empty string to null so UNIQUE constraint allows multiple customers without a code.
+      code: customerDTO.code || null,
     };
   };
 

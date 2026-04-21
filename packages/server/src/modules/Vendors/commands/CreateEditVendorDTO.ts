@@ -22,6 +22,8 @@ export class CreateEditVendorDTOService {
   private transformCommonDTO = (vendorDTO: IVendorNewDTO | IVendorEditDTO) => {
     return {
       ...vendorDTO,
+      // Convert empty string to null so UNIQUE constraint allows multiple vendors without a code.
+      code: vendorDTO.code || null,
     };
   };
 
