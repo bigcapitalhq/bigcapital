@@ -31,6 +31,7 @@ import { AttachmentUploadPipeline } from './S3UploadPipeline';
 import { FileInterceptor } from '@/common/interceptors/file.interceptor';
 import { ConfigService } from '@nestjs/config';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { PublicRoute } from '@/modules/Auth/guards/jwt.guard';
 
 @ApiTags('Attachments')
 @Controller('/attachments')
@@ -83,6 +84,7 @@ export class AttachmentsController {
    * Retrieves the given attachment key.
    */
   @Get('/:id')
+  @PublicRoute()
   @ApiOperation({ summary: 'Get attachment by ID' })
   @ApiParam({ name: 'id', description: 'Attachment ID' })
   @ApiResponse({ status: 200, description: 'Returns the attachment file' })
