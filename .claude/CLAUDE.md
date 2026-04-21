@@ -32,6 +32,9 @@ This fork diverges from upstream `bigcapitalhq/bigcapital` in the following area
 - **Import preview auto-refresh** — `staleTime: Infinity` and `refetchOnWindowFocus: false` on import preview/meta queries. Added missing `Account` case to `invalidateResourcesOnImport()`.
 - **Rate limit env var mismatch** — `API_RATE_LIMIT` in `.env.example` is a legacy/dead variable that the server doesn't read. Actual vars are `THROTTLE_GLOBAL_LIMIT`/`THROTTLE_GLOBAL_TTL` (default 100 req/60s) and `THROTTLE_AUTH_LIMIT`/`THROTTLE_AUTH_TTL` (default 10 req/60s). Updated deploy docs to reference the correct names.
 - **UI label inconsistencies** — Standardized "Statement"→"Note", "Reference #"→"Reference No.", date/account field capitalization, "Full Amount"→"Amount", credit note using invoice date label, vendor credit using bill date label, withdrawal account mislabeled as deposit account.
+- **DateInput "Invalid date" on calendar navigation** — Blueprint v4.4.37's `DatePicker.handleMonthChange` fires `onChange(null)` when the user clicks an already-selected day during month navigation. `handleDateChange` in `packages/webapp/src/utils/index.tsx` now guards against `null` before calling `moment(date).format(...)`.
+- **Date format inconsistency** — All 50 date input/edit fields across the app standardized to `MM/DD/YYYY` via `momentFormatter('MM/DD/YYYY')`. Replaced `YYYY/MM/DD`, `YYYY-MM-DD`, and locale-dependent `toLocaleDateString()` patterns.
+- **Vendor selector missing from expense form** — Added vendor/payee field (`payee_id`) to the expense form header, wired to `useVendors` via `ExpenseFormPageProvider`.
 
 ### Conventions for this fork
 
