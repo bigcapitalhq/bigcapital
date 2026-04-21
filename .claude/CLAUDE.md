@@ -35,6 +35,7 @@ This fork diverges from upstream `bigcapitalhq/bigcapital` in the following area
 - **DateInput "Invalid date" on calendar navigation** — Blueprint v4.4.37's `DatePicker.handleMonthChange` fires `onChange(null)` when the user clicks an already-selected day during month navigation. `handleDateChange` in `packages/webapp/src/utils/index.tsx` now guards against `null` before calling `moment(date).format(...)`.
 - **Date format inconsistency** — All 50 date input/edit fields across the app standardized to `MM/DD/YYYY` via `momentFormatter('MM/DD/YYYY')`. Replaced `YYYY/MM/DD`, `YYYY-MM-DD`, and locale-dependent `toLocaleDateString()` patterns.
 - **Vendor selector missing from expense form** — Added vendor/payee field (`payee_id`) to the expense form header, wired to `useVendors` via `ExpenseFormPageProvider`.
+- **Vendor/customer duplicate code constraint** — `CONTACTS_CODE_UNIQUE` rejects a second empty-string `code` (MySQL treats `''` as duplicate but `NULL` as non-duplicate). Fixed in `CreateEditVendorDTO.ts` and `CreateEditCustomerDTO.service.ts` by coercing falsy `code` to `null` before insert/update. Existing rows with `CODE = ''` must be patched manually: `UPDATE CONTACTS SET CODE = NULL WHERE CODE = '';` on each tenant DB.
 
 ### Conventions for this fork
 
