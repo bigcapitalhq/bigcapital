@@ -17,8 +17,7 @@ const services = [
           accessKeyId: config.accessKeyId,
           secretAccessKey: config.secretAccessKey,
         },
-        endpoint: config.endpoint,
-        forcePathStyle: config.forcePathStyle,
+        ...(config.endpoint ? { endpoint: config.endpoint, forcePathStyle: config.forcePathStyle } : {}),
       });
     },
   },

@@ -36,6 +36,9 @@ This fork diverges from upstream `bigcapitalhq/bigcapital` in the following area
 - **Date format inconsistency** — All 50 date input/edit fields across the app standardized to `MM/DD/YYYY` via `momentFormatter('MM/DD/YYYY')`. Replaced `YYYY/MM/DD`, `YYYY-MM-DD`, and locale-dependent `toLocaleDateString()` patterns.
 - **Vendor selector missing from expense form** — Added vendor/payee field (`payee_id`) to the expense form header, wired to `useVendors` via `ExpenseFormPageProvider`.
 - **Vendor/customer duplicate code constraint** — `CONTACTS_CODE_UNIQUE` rejects a second empty-string `code` (MySQL treats `''` as duplicate but `NULL` as non-duplicate). Fixed in `CreateEditVendorDTO.ts` and `CreateEditCustomerDTO.service.ts` by coercing falsy `code` to `null` before insert/update. Existing rows with `CODE = ''` must be patched manually: `UPDATE CONTACTS SET CODE = NULL WHERE CODE = '';` on each tenant DB. **Done on staging 2026-04-21** for both tenant DBs (`bigcapital_tenant_35i5f1mo1oztqd` and `bigcapital_tenant_35i5f1mo1phc5w`).
+- **Attachment upload S3 endpoint crash** — `S3.module.ts` now only passes `endpoint` and `forcePathStyle` to `S3Client` when `S3_ENDPOINT` is non-empty. An empty/missing `S3_ENDPOINT` previously caused `ERR_INVALID_URL` (500) on every file upload.
+- **Attachment upload ACL error** — Removed hardcoded `acl: 'public-read'` from `multerS3` config in `Attachment.module.ts`. Modern S3 buckets and MinIO have ACLs disabled by default; the setting was also dead code (`true ? 'public-read' : 'private'`). Files are served via presigned URLs so no public ACL is needed.
+- **Attachment upload path-style routing** — `S3_FORCE_PATH_STYLE` was missing from the server's environment block in `docker-compose.prod.yml`. Without it the AWS SDK constructs virtual-hosted URLs (`{bucket}.{host}`) which fail DNS on MinIO. Added `- S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE}` to the compose env block. Note: `docker compose restart` does not apply compose file changes — use `docker compose up -d server` after any compose or env update.
 
 ### Conventions for this fork
 
@@ -56,6 +59,7 @@ See `docs/DEPLOY.md` for the full deployment guide including image build, transf
 - **API rate limit**: NestJS throttler controlled by `THROTTLE_GLOBAL_LIMIT`/`THROTTLE_GLOBAL_TTL` (default 100/60s) and `THROTTLE_AUTH_LIMIT`/`THROTTLE_AUTH_TTL` (default 10/60s). Both defaults are too strict for SPA usage — set `THROTTLE_GLOBAL_LIMIT=600`, `THROTTLE_AUTH_LIMIT=60` with `TTL=60000`. The legacy `API_RATE_LIMIT` variable is NOT used by the app. State is in Redis — restart Redis to clear lockouts.
 - **Fonts**: NotoSans and Segoe font files must be in `packages/webapp/public/fonts/` for production builds (Vite's SCSS URL resolution doesn't hash them).
 - **GOTENBERG_DOCS_URL**: Uses container name `http://bigcapital-fork-server:3000/public/` — must match the `container_name` in compose.
+- **MinIO (object storage)**: Self-hosted S3-compatible store for attachments. Services `minio` and `createbuckets` are in `docker-compose.prod.yml`. Required env vars: `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION=us-east-1`, `S3_ENDPOINT=http://bigcapital-fork-minio:9000`, `S3_BUCKET=bigcapital-attachments`, `S3_FORCE_PATH_STYLE=true`. The `createbuckets` one-shot service creates the bucket idempotently on every `docker compose up`.
 
 ### Traefik configuration style
 

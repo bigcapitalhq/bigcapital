@@ -71,12 +71,6 @@ const models = [
           key: function (req, file, cb) {
             cb(null, Date.now().toString());
           },
-          acl: function(req, file, cb) {
-            // Conditionally set file to public or private based on isPublic flag
-            const aclValue = true ? 'public-read' : 'private';
-            // Set ACL based on the isPublic flag
-            cb(null, aclValue); 
-          }
         }),
       })
     }
