@@ -1,4 +1,4 @@
-import mime from 'mime-types';
+import * as mime from 'mime-types';
 import { Response, NextFunction, Request } from 'express';
 import {
   ApiBody,
