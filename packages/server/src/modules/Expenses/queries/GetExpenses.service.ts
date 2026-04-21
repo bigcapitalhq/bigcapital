@@ -33,7 +33,7 @@ export class GetExpensesService {
       sortOrder: 'desc',
       columnSortBy: 'created_at',
       page: 1,
-      pageSize: 12,
+      pageSize: 20,
       ...filterDTO,
     };
     // Parses list filter DTO.
