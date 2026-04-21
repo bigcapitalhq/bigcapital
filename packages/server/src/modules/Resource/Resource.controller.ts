@@ -33,9 +33,9 @@ export class ResourceController {
   })
   getResourceMeta(
     @Param('resourceModel') resourceModel: string,
-  ): ResourceMetaResponseDto {
+  ) {
     const resourceMeta = this.resourcesService.getResourceMeta(resourceModel);
 
-    return resourceMeta as ResourceMetaResponseDto;
+    return { resourceMeta };
   }
 }
