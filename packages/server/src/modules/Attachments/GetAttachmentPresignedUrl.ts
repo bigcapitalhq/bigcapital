@@ -20,12 +20,22 @@ export class GetAttachmentPresignedUrl {
 
   /**
    * Retrieves the presigned url of the given attachment key with the original filename.
-   * @param {string} key - 
+   * When a custom S3 endpoint is configured (e.g. MinIO), the internal endpoint
+   * hostname is not reachable from browsers, so we return a server-proxied URL instead.
+   * @param {string} key
    * @returns {string}
    */
   async getPresignedUrl(key: string) {
-    const foundDocument = await this.documentModel().query().findOne({ key });
     const config = this.configService.get('s3');
+
+    // Self-hosted storage: proxy through the server so the browser never
+    // sees the internal MinIO hostname.
+    if (config.endpoint) {
+      const baseUrl = this.configService.get<string>('app.baseUrl') || '';
+      return `${baseUrl}/api/attachments/${key}`;
+    }
+
+    const foundDocument = await this.documentModel().query().findOne({ key });
 
     let ResponseContentDisposition = 'attachment';
     if (foundDocument && foundDocument.originName) {
