@@ -109,6 +109,8 @@ export class CommandSaleInvoiceDTOTransformer {
       balance: amount,
       currencyCode: customer.currencyCode,
       exchangeRate: saleInvoiceDTO.exchangeRate || 1,
+      // Default isInclusiveTax to false if not provided
+      isInclusiveTax: saleInvoiceDTO.isInclusiveTax ?? false,
       ...(saleInvoiceDTO.delivered &&
         !oldSaleInvoice?.deliveredAt && {
           deliveredAt: moment().toMySqlDateTime(),

@@ -225,7 +225,7 @@ export class SaleInvoiceTransformer extends Transformer {
   protected taxes = (invoice: SaleInvoice) => {
     return this.item(invoice.taxes, new SaleInvoiceTaxEntryTransformer(), {
       subtotal: invoice.subtotal,
-      isInclusiveTax: invoice.isInclusiveTax,
+      isInclusiveTax: invoice.isInclusiveTax ?? false,
       currencyCode: invoice.currencyCode,
     });
   };
