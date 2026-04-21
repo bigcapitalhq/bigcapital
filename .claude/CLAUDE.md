@@ -39,6 +39,9 @@ This fork diverges from upstream `bigcapitalhq/bigcapital` in the following area
 - **Attachment upload S3 endpoint crash** — `S3.module.ts` now only passes `endpoint` and `forcePathStyle` to `S3Client` when `S3_ENDPOINT` is non-empty. An empty/missing `S3_ENDPOINT` previously caused `ERR_INVALID_URL` (500) on every file upload.
 - **Attachment upload ACL error** — Removed hardcoded `acl: 'public-read'` from `multerS3` config in `Attachment.module.ts`. Modern S3 buckets and MinIO have ACLs disabled by default; the setting was also dead code (`true ? 'public-read' : 'private'`). Files are served via presigned URLs so no public ACL is needed.
 - **Attachment upload path-style routing** — `S3_FORCE_PATH_STYLE` was missing from the server's environment block in `docker-compose.prod.yml`. Without it the AWS SDK constructs virtual-hosted URLs (`{bucket}.{host}`) which fail DNS on MinIO. Added `- S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE}` to the compose env block. Note: `docker compose restart` does not apply compose file changes — use `docker compose up -d server` after any compose or env update.
+- **Attachment view URL unreachable from browser** — `GetAttachmentPresignedUrl.ts` now returns a server-proxied URL (`BASE_URL/api/attachments/:key`) when `S3_ENDPOINT` is set, instead of a presigned URL containing the internal MinIO hostname. Real AWS S3 (no custom endpoint) continues using presigned URLs.
+- **Attachment view 401** — `GET /attachments/:id` marked `@PublicRoute()` so it is accessible without a JWT. The file key acts as the implicit auth token (same model as a real presigned URL); Traefik OAuth gates the deployment at the network level.
+- **Attachment view 500** — `mime-types` is a CJS module with no default export; changed `import mime from 'mime-types'` to `import * as mime from 'mime-types'` in `Attachments.controller.ts`.
 
 ### Conventions for this fork
 
