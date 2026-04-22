@@ -7,6 +7,12 @@ import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
 import { useFormikContext } from 'formik';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
+import CategorizeTransactionOtherIncome from './MoneyIn/CategorizeTransactionOtherIncome';
+import CategorizeTransactionOwnerContribution from './MoneyIn/CategorizeTransactionOwnerContribution';
+import CategorizeTransactionTransferFrom from './MoneyIn/CategorizeTransactionTransferFrom';
+import CategorizeTransactionOtherExpense from './MoneyOut/CategorizeTransactionOtherExpense';
+import CategorizeTransactionToAccount from './MoneyOut/CategorizeTransactionToAccount';
+import CategorizeTransactionOwnerDrawings from './MoneyOut/CategorizeTransactionOwnerDrawings';
 
 // Retrieves the add money in button options.
 const MoneyInOptions = getAddMoneyInOptions();
@@ -48,30 +54,6 @@ export function CategorizeTransactionFormContent() {
     </Box>
   );
 }
-
-const CategorizeTransactionOtherIncome = React.lazy(
-  () => import('./MoneyIn/CategorizeTransactionOtherIncome'),
-);
-
-const CategorizeTransactionOwnerContribution = React.lazy(
-  () => import('./MoneyIn/CategorizeTransactionOwnerContribution'),
-);
-
-const CategorizeTransactionTransferFrom = React.lazy(
-  () => import('./MoneyIn/CategorizeTransactionTransferFrom'),
-);
-
-const CategorizeTransactionOtherExpense = React.lazy(
-  () => import('./MoneyOut/CategorizeTransactionOtherExpense'),
-);
-
-const CategorizeTransactionToAccount = React.lazy(
-  () => import('./MoneyOut/CategorizeTransactionToAccount'),
-);
-
-const CategorizeTransactionOwnerDrawings = React.lazy(
-  () => import('./MoneyOut/CategorizeTransactionOwnerDrawings'),
-);
 
 function CategorizeTransactionFormSubContent() {
   const { values } = useFormikContext();

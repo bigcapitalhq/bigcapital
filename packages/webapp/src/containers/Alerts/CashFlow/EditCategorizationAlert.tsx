@@ -16,6 +16,7 @@ import {
   useEditCategorizeTransaction,
   useCashflowTransaction,
 } from '@/hooks/query';
+import { useAccounts } from '@/hooks/query';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
@@ -24,10 +25,19 @@ const TRANSACTION_TYPES = [
   { value: 'OtherIncome', label: 'Other Income' },
   { value: 'OtherExpense', label: 'Other Expense' },
   { value: 'OwnerContribution', label: 'Owner Contribution' },
-  { value: 'OwnerDrawings', label: 'Owner Drawings' },
+  { value: 'OwnerDrawing', label: 'Owner Drawings' },
   { value: 'TransferToAccount', label: 'Transfer to Account' },
   { value: 'TransferFromAccount', label: 'Transfer from Account' },
 ];
+
+const CATEGORY_ACCOUNT_ROOT_TYPES = {
+  OtherIncome: ['income'],
+  OtherExpense: ['expense'],
+  OwnerContribution: ['equity'],
+  OwnerDrawing: ['equity'],
+  TransferToAccount: ['asset'],
+  TransferFromAccount: ['asset'],
+};
 
 function EditCategorizationAlert({
   name,
@@ -39,6 +49,11 @@ function EditCategorizationAlert({
     useCashflowTransaction(cashflowTransactionId, {
       enabled: isOpen && !!cashflowTransactionId,
     });
+
+  const { data: accounts, isLoading: isAccountsLoading } = useAccounts(
+    {},
+    { enabled: isOpen },
+  );
 
   const [selectedAccountId, setSelectedAccountId] = useState(null);
   const [transactionType, setTransactionType] = useState('');
@@ -69,6 +84,11 @@ function EditCategorizationAlert({
     closeAlert(name);
   };
 
+  const handleTypeChange = (e) => {
+    setTransactionType(e.target.value);
+    setSelectedAccountId(null);
+  };
+
   const handleSave = () => {
     editCategorization({
       id: uncategorizedTransactionId,
@@ -91,6 +111,8 @@ function EditCategorizationAlert({
       });
   };
 
+  const accountRootTypes = CATEGORY_ACCOUNT_ROOT_TYPES[transactionType] || [];
+
   return (
     <Dialog
       title="Edit Categorization"
@@ -108,14 +130,15 @@ function EditCategorizationAlert({
                 id="transaction-type"
                 fill={true}
                 value={transactionType}
-                onChange={(e) => setTransactionType(e.target.value)}
+                onChange={handleTypeChange}
                 options={TRANSACTION_TYPES}
               />
             </FormGroup>
             <FormGroup label="Category Account" labelFor="credit-account">
               <AccountsSelect
                 name="creditAccountId"
-                items={[]}
+                items={accounts || []}
+                filterByRootTypes={accountRootTypes}
                 value={selectedAccountId}
                 onItemSelect={(account) => setSelectedAccountId(account.id)}
                 popoverProps={{ minimal: true }}
@@ -141,7 +164,7 @@ function EditCategorizationAlert({
             intent={Intent.PRIMARY}
             onClick={handleSave}
             loading={isSaving}
-            disabled={isTransactionLoading}
+            disabled={isTransactionLoading || isAccountsLoading}
           >
             Save
           </Button>
