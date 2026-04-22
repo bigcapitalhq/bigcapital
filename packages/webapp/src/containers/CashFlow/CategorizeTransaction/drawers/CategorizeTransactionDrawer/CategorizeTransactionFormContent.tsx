@@ -29,8 +29,8 @@ export function CategorizeTransactionFormContent() {
   const [{ value: transactionType }] = useField('transactionType');
 
   const transactionTypes = autofillCategorizeValues?.isDepositTransaction
-    ? MoneyInOptions
-    : MoneyOutOptions;
+    ? [...MoneyInOptions, ...MoneyOutOptions]
+    : [...MoneyOutOptions, ...MoneyInOptions];
 
   const formattedAmount = autofillCategorizeValues?.formattedAmount;
 
