@@ -44,6 +44,8 @@ This fork diverges from upstream `bigcapitalhq/bigcapital` in the following area
 - **Attachment view URL unreachable from browser** — `GetAttachmentPresignedUrl.ts` now returns a server-proxied URL (`BASE_URL/api/attachments/:key`) when `S3_ENDPOINT` is set, instead of a presigned URL containing the internal MinIO hostname. Real AWS S3 (no custom endpoint) continues using presigned URLs.
 - **Attachment view 401** — `GET /attachments/:id` marked `@PublicRoute()` so it is accessible without a JWT. The file key acts as the implicit auth token (same model as a real presigned URL); Traefik OAuth gates the deployment at the network level.
 - **Attachment view 500** — `mime-types` is a CJS module with no default export; changed `import mime from 'mime-types'` to `import * as mime from 'mime-types'` in `Attachments.controller.ts`.
+- **Categorize transaction category dropdown resets to "Other income"** — All six account sub-components in `CategorizeTransactionFormContent.tsx` were `React.lazy`-loaded. The `<Suspense>` boundary sits above `<Formik>`, so selecting any new type suspended the lazy module, unmounted the entire form, and remounted it from `initialValues` (always `other_income` from the server autofill). Fixed by converting to static imports — the sub-components are in the same lazy chunk as the drawer anyway.
+- **Edit categorization dialog: account dropdown empty and unfiltered** — `AccountsSelect` was called with `items={[]}` so no accounts ever appeared. Added `useAccounts()` and a `CATEGORY_ACCOUNT_ROOT_TYPES` map so the dropdown filters to the correct account type when the transaction type changes. Also fixed `'OwnerDrawings'` → `'OwnerDrawing'` to match the server's `CASHFLOW_TRANSACTION_TYPE` constant (mismatch would cause a server validation error on save).
 
 ### Conventions for this fork
 
@@ -59,6 +61,7 @@ See `docs/DEPLOY.md` for the full deployment guide including image build, transf
 
 ### Key deployment notes
 
+- **Colima memory for image builds** — The webapp Vite build needs ~4 GB of heap alone. Run Colima with at least 8 GB: `colima stop && colima start --cpu 2 --memory 8 --disk 20`. The webapp `Dockerfile` already sets `NODE_OPTIONS=--max-old-space-size=4096` on the build step; without sufficient Colima memory the build will OOM with `ResourceExhausted: cannot allocate memory`.
 - **Migration working directory** must be `/app/packages/server` — the system migration path (`./src/database/system/migrations`) is relative to `cwd`.
 - **MySQL grants**: The MariaDB init script only runs on first database initialization. If the volume pre-exists, manually grant `ALL PRIVILEGES ON *.*` to the app user.
 - **API rate limit**: NestJS throttler controlled by `THROTTLE_GLOBAL_LIMIT`/`THROTTLE_GLOBAL_TTL` (default 100/60s) and `THROTTLE_AUTH_LIMIT`/`THROTTLE_AUTH_TTL` (default 10/60s). Both defaults are too strict for SPA usage — set `THROTTLE_GLOBAL_LIMIT=600`, `THROTTLE_AUTH_LIMIT=60` with `TTL=60000`. The legacy `API_RATE_LIMIT` variable is NOT used by the app. State is in Redis — restart Redis to clear lockouts.
