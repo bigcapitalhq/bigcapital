@@ -58,28 +58,51 @@ function ExpenseForm({
 
   // Form initial values.
   const initialValues = useMemo(
-    () => ({
-      ...(!isEmpty(expense)
-        ? {
-          ...transformToEditForm(expense, defaultExpense),
-        }
-        : {
-          ...defaultExpense,
-          currency_code: base_currency,
-          payment_account_id: defaultTo(preferredPaymentAccount, ''),
-        }),
-    }),
+    () => {
+      if (!isEmpty(expense)) {
+        return { ...transformToEditForm(expense, defaultExpense) };
+      }
+      const preferredId = defaultTo(preferredPaymentAccount, '');
+      const payment_splits = [
+        { ...defaultExpense.payment_splits[0], payment_account_id: preferredId },
+      ];
+      return {
+        ...defaultExpense,
+        currency_code: base_currency,
+        payment_splits,
+      };
+    },
     [expense, base_currency, preferredPaymentAccount],
   );
 
   //  Handle form submit.
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     setSubmitting(true);
-    const totalAmount = sumBy(values.categories, 'amount');
+    const form = {
+      ...transformFormValuesToRequest(values),
+    };
+    const paymentsTotal = sumBy(form.payment_splits, 'amount');
+    const categoriesTotal = sumBy(form.categories, 'amount');
+    const percentRows = form.categories.filter(
+      (c) => c.amount_type === 'percent',
+    ).length;
+    // Widen tolerance by 5 mills per percent row to absorb per-row 3dp rounding
+    // (e.g. 33/33/33 % splits drift ~0.01 from total).
+    const tolerance = 0.005 + 0.005 * percentRows;
 
-    if (totalAmount <= 0) {
+    if (paymentsTotal <= 0 || categoriesTotal <= 0) {
       AppToaster.show({
         message: intl.get('amount_cannot_be_zero_or_empty'),
+        intent: Intent.DANGER,
+      });
+      setSubmitting(false);
+      return;
+    }
+    if (Math.abs(paymentsTotal - categoriesTotal) > tolerance) {
+      AppToaster.show({
+        message:
+          intl.get('expense.payment_splits_must_match_categories') ||
+          'Payments total must equal categories total.',
         intent: Intent.DANGER,
       });
       setSubmitting(false);
@@ -89,10 +112,7 @@ function ExpenseForm({
     // Get submit payload from ref for synchronous access
     const currentSubmitPayload = submitPayloadRef?.current || {};
 
-    const form = {
-      ...transformFormValuesToRequest(values),
-      publish: currentSubmitPayload.publish,
-    };
+    form.publish = currentSubmitPayload.publish;
     // Handle request success.
     const handleSuccess = (response) => {
       AppToaster.show({
@@ -100,7 +120,6 @@ function ExpenseForm({
           isNewMode
             ? 'the_expense_has_been_created_successfully'
             : 'the_expense_has_been_edited_successfully',
-          { number: values.payment_account_id },
         ),
         intent: Intent.SUCCESS,
       });

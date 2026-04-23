@@ -1,5 +1,6 @@
 import { Transformer } from '@/modules/Transformer/Transformer';
 import { ExpenseCategoryTransformer } from './ExpenseCategory.transformer';
+import { ExpensePaymentSplitTransformer } from './ExpensePaymentSplit.transformer';
 // import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
 import { Expense } from '../models/Expense.model';
 import { AttachmentTransformer } from '@/modules/Attachments/Attachment.transformer';
@@ -18,6 +19,7 @@ export class ExpenseTransfromer extends Transformer {
       'formattedCreatedAt',
       'formattedPublishedAt',
       'categories',
+      'paymentSplits',
       'attachments',
     ];
   };
@@ -82,6 +84,18 @@ export class ExpenseTransfromer extends Transformer {
     return this.item(expense.categories, new ExpenseCategoryTransformer(), {
       currencyCode: expense.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the transformed expense payment splits (multi-account payment).
+   * @param {Expense} expense - Expense.
+   */
+  protected paymentSplits = (expense: Expense) => {
+    return this.item(
+      expense.paymentSplits || [],
+      new ExpensePaymentSplitTransformer(),
+      { currencyCode: expense.currencyCode },
+    );
   };
 
   /**

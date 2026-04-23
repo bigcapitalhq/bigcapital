@@ -1,7 +1,15 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import intl from 'react-intl-universal';
-import { Button, Intent, Menu, MenuItem } from '@blueprintjs/core';
+import { sumBy } from 'lodash';
+import {
+  Button,
+  Classes,
+  FormGroup,
+  Intent,
+  Menu,
+  MenuItem,
+} from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 
@@ -10,6 +18,7 @@ import {
   Hint,
   ExchangeRateInputGroup,
   FormattedMessage as T,
+  MoneyInputGroup,
 } from '@/components';
 import {
   InputGroupCell,
@@ -22,6 +31,80 @@ import { CellType, Features, Align } from '@/constants';
 
 import { useCurrentOrganization, useFeatureCan } from '@/hooks/state';
 import { useExpensesIsForeign } from './utils';
+
+const paymentsTotalFromValues = (values) =>
+  sumBy(
+    (values?.payment_splits || []).filter(
+      (s) => s.payment_account_id && Number(s.amount) > 0,
+    ),
+    (s) => Number(s.amount) || 0,
+  );
+
+/**
+ * Percent cell used on category rows. Updating the percent switches the row
+ * into percent mode (amount_type='percent') so the downstream amount becomes
+ * computed from the payments total.
+ */
+const CategoryPercentCell = ({
+  row: { index, original },
+  column: { id },
+  cell: { value: initialValue },
+  payload: { errors, updateData },
+}) => {
+  const [value, setValue] = useState(initialValue ?? '');
+
+  useEffect(() => {
+    setValue(initialValue ?? '');
+  }, [initialValue]);
+
+  const handleBlurChange = (newValue) => {
+    const parsed =
+      newValue === '' || newValue === undefined ? '' : parseFloat(newValue);
+    updateData(index, id, parsed);
+  };
+
+  const error = errors?.[index]?.[id];
+
+  return (
+    <FormGroup intent={error ? Intent.DANGER : null} className={Classes.FILL}>
+      <MoneyInputGroup
+        prefix={'%'}
+        value={value}
+        onChange={setValue}
+        onBlurValue={handleBlurChange}
+      />
+    </FormGroup>
+  );
+};
+CategoryPercentCell.cellType = CellType.Field;
+
+/**
+ * Amount cell for category rows. Falls back to MoneyFieldCell when the row
+ * is in fixed mode. In percent mode the cell renders a read-only computed
+ * amount so the user can see the dollar value their percent resolves to.
+ */
+const CategoryAmountCell = (props) => {
+  const { values } = useFormikContext();
+  const percent = Number(props.row.original?.percent);
+  const isPercent = percent > 0;
+
+  if (!isPercent) {
+    return <MoneyFieldCell {...props} />;
+  }
+  const total = paymentsTotalFromValues(values);
+  const computed = Math.round(((total * percent) / 100) * 1000) / 1000;
+
+  return (
+    <FormGroup className={Classes.FILL}>
+      <MoneyInputGroup
+        value={computed}
+        disabled={true}
+        onChange={() => {}}
+      />
+    </FormGroup>
+  );
+};
+CategoryAmountCell.cellType = CellType.Field;
 
 /**
  * Expense category header cell.
@@ -109,9 +192,18 @@ export function useExpenseFormTableColumns({ landedCost }) {
         fieldProps: { allowCreate: true },
       },
       {
+        Header: () => intl.get('percent_of_total') || '% of Total',
+        id: 'percent',
+        accessor: 'percent',
+        Cell: CategoryPercentCell,
+        disableSortBy: true,
+        width: 30,
+        align: Align.Right,
+      },
+      {
         Header: ExpenseAmountHeaderCell,
         accessor: 'amount',
-        Cell: MoneyFieldCell,
+        Cell: CategoryAmountCell,
         disableSortBy: true,
         width: 40,
         align: Align.Right,

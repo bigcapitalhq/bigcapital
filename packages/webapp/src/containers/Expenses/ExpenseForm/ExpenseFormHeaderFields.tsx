@@ -21,17 +21,14 @@ import {
   inputIntent,
   handleDateChange,
 } from '@/utils';
-import { customersFieldShouldUpdate, accountsFieldShouldUpdate, vendorsFieldShouldUpdate } from './utils';
+import { customersFieldShouldUpdate, vendorsFieldShouldUpdate } from './utils';
 import {
   FFormGroup,
   FSelect,
-  AccountsSelect,
-  FieldRequiredHint,
   Hint,
 } from '@/components';
 import { ExpensesExchangeRateInputField } from './components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
-import { SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from './constants';
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -82,26 +79,8 @@ export default function ExpenseFormHeader() {
         )}
       </FastField>
 
-      <FFormGroup
-        name={'payment_account_id'}
-        items={accounts}
-        label={<T id={'payment_account'} />}
-        labelInfo={<FieldRequiredHint />}
-        inline={true}
-        fastField={true}
-        shouldUpdate={accountsFieldShouldUpdate}
-      >
-        <AccountsSelect
-          name={'payment_account_id'}
-          items={accounts}
-          placeholder={<T id={'select_payment_account'} />}
-          filterByTypes={SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES}
-          allowCreate={true}
-          fastField={true}
-          shouldUpdate={accountsFieldShouldUpdate}
-          fill={true}
-        />
-      </FFormGroup>
+      {/* Payment accounts moved to the "Payments" sub-table in the form body so
+          users can split a single expense across multiple payment accounts. */}
 
       {/* ----------- Vendor (Payee) ----------- */}
       <ExpenseFormVendorSelect />

@@ -6,6 +6,7 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsIn,
   IsInt,
   IsISO4217CurrencyCode,
   IsNotEmpty,
@@ -71,6 +72,54 @@ export class ExpenseCategoryDto {
     description: 'The project id of the expense category',
   })
   projectId?: number;
+
+  @IsString()
+  @IsIn(['fixed', 'percent'])
+  @IsOptional()
+  @ApiProperty({
+    example: 'fixed',
+    description:
+      'How the amount on this category was authored. "percent" means the amount is derived from `percent` × total expense.',
+  })
+  amountType?: 'fixed' | 'percent';
+
+  @ToNumber()
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({
+    example: 50,
+    description:
+      'Percent of the total expense allocated to this category. Only used when amountType is "percent".',
+  })
+  percent?: number;
+}
+
+export class ExpensePaymentSplitDto {
+  @IsInt()
+  @IsOptional()
+  @ApiProperty({
+    example: 1,
+    description: 'The index of the payment split row.',
+  })
+  index?: number;
+
+  @IsNotEmpty()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    example: 1,
+    description: 'The payment account id of the split.',
+  })
+  paymentAccountId: number;
+
+  @IsNotEmpty()
+  @ToNumber()
+  @IsNumber()
+  @ApiProperty({
+    example: 100,
+    description: 'The amount paid from this payment account.',
+  })
+  amount: number;
 }
 
 export class CommandExpenseDto {
@@ -91,14 +140,29 @@ export class CommandExpenseDto {
   })
   paymentDate: Date;
 
-  @IsNotEmpty()
+  @IsOptional()
   @ToNumber()
   @IsInt()
   @ApiProperty({
-    description: 'The payment account id of the expense',
+    description:
+      'The primary payment account id of the expense (denormalized from the first payment split). Optional when `paymentSplits` is provided.',
     example: 1,
   })
-  paymentAccountId: number;
+  paymentAccountId?: number;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ExpensePaymentSplitDto)
+  @IsOptional()
+  @ApiProperty({
+    description:
+      'Split payment across multiple accounts. When provided, the sum of splits must equal the sum of categories.',
+    example: [
+      { index: 1, paymentAccountId: 1, amount: 60 },
+      { index: 2, paymentAccountId: 2, amount: 40 },
+    ],
+  })
+  paymentSplits?: ExpensePaymentSplitDto[];
 
   @IsString()
   @MaxLength(1000)

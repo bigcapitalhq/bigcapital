@@ -1,11 +1,15 @@
-import { sumBy, difference } from 'lodash';
+import { sumBy, difference, uniq } from 'lodash';
 import { ERRORS, SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from '../constants';
 import { ACCOUNT_ROOT_TYPE } from '@/constants/accounts';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { Injectable } from '@nestjs/common';
 import { Expense } from '../models/Expense.model';
 import { ServiceError } from '@/modules/Items/ServiceError';
-import { CreateExpenseDto, EditExpenseDto } from '../dtos/Expense.dto';
+import {
+  CreateExpenseDto,
+  EditExpenseDto,
+  ExpensePaymentSplitDto,
+} from '../dtos/Expense.dto';
 
 @Injectable()
 export class CommandExpenseValidator {
@@ -64,17 +68,87 @@ export class CommandExpenseValidator {
   };
 
   /**
-   * Validates payment account type in case has invalid type throws errors.
-   * @param {Account} paymentAccount
-   * @throws {ServiceError}
+   * Resolves the effective payment splits for a DTO: either the provided
+   * `paymentSplits` array, or a synthesized single-split list from the
+   * legacy `paymentAccountId` + categories total.
    */
-  public validatePaymentAccountType = (paymentAccount: Account) => {
-    if (
-      !paymentAccount.isAccountType(SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES)
-    ) {
+  public resolvePaymentSplits = (
+    expenseDTO: CreateExpenseDto | EditExpenseDto,
+  ): ExpensePaymentSplitDto[] => {
+    const provided = (expenseDTO.paymentSplits || []).filter(
+      (s) => s && s.paymentAccountId != null,
+    );
+    if (provided.length > 0) return provided;
+
+    if (expenseDTO.paymentAccountId != null) {
+      const total = sumBy(expenseDTO.categories || [], 'amount') || 0;
+      return [
+        {
+          index: 1,
+          paymentAccountId: expenseDTO.paymentAccountId,
+          amount: total,
+        },
+      ];
+    }
+    return [];
+  };
+
+  /**
+   * Validates that each payment split references an existing payment-type
+   * account. Mirrors the single-account check for the split payment case.
+   */
+  public validatePaymentSplits = (
+    splits: ExpensePaymentSplitDto[],
+    accounts: Account[],
+  ) => {
+    if (!splits || splits.length === 0) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_HAS_INVALID_TYPE);
     }
+    const byId = new Map(accounts.map((a) => [a.id, a]));
+    for (const split of splits) {
+      const acc = byId.get(split.paymentAccountId);
+      if (!acc) {
+        throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_HAS_INVALID_TYPE);
+      }
+      if (!acc.isAccountType(SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES)) {
+        throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_HAS_INVALID_TYPE);
+      }
+      if (!(split.amount > 0)) {
+        throw new ServiceError(ERRORS.TOTAL_AMOUNT_EQUALS_ZERO);
+      }
+    }
   };
+
+  /**
+   * Validates that the sum of payment splits matches the sum of categories
+   * within a rounding tolerance. Percent-typed categories round to 3dp each,
+   * so a common 33/33/33 % split drifts by ~0.01 from the total; widen the
+   * tolerance proportionally so legitimate splits are not rejected.
+   */
+  public validatePaymentSplitsSum = (
+    expenseDTO: CreateExpenseDto | EditExpenseDto,
+    splits: ExpensePaymentSplitDto[],
+  ) => {
+    const categoriesTotal = sumBy(expenseDTO.categories || [], 'amount') || 0;
+    const splitsTotal = sumBy(splits, 'amount') || 0;
+    const percentRows = (expenseDTO.categories || []).filter(
+      (c) => c.amountType === 'percent',
+    ).length;
+    const tolerance = 0.005 + 0.005 * percentRows;
+    if (Math.abs(categoriesTotal - splitsTotal) > tolerance) {
+      throw new ServiceError(
+        ERRORS.EXPENSE_PAYMENT_SPLITS_MISMATCH,
+        'The total of payment splits must equal the total of expense categories.',
+      );
+    }
+  };
+
+  /**
+   * Collects unique payment account ids from a splits array.
+   */
+  public collectPaymentAccountIds = (
+    splits: ExpensePaymentSplitDto[],
+  ): number[] => uniq(splits.map((s) => s.paymentAccountId));
 
   /**
    * Validates the expense has not associated landed cost

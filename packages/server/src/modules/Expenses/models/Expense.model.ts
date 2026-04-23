@@ -1,6 +1,7 @@
 import { Model, raw } from 'objection';
 import * as moment from 'moment';
 import { ExpenseCategory } from './ExpenseCategory.model';
+import { ExpensePaymentSplit } from './ExpensePaymentSplit.model';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
@@ -35,6 +36,7 @@ export class Expense extends TenantBaseModel {
   createdAt!: Date;
 
   categories!: ExpenseCategory[];
+  paymentSplits!: ExpensePaymentSplit[];
   paymentAccount!: Account;
   attachments!: Document[];
 
@@ -205,6 +207,9 @@ export class Expense extends TenantBaseModel {
   static get relationMappings() {
     const { Account } = require('../../Accounts/models/Account.model');
     const { ExpenseCategory } = require('./ExpenseCategory.model');
+    const {
+      ExpensePaymentSplit,
+    } = require('./ExpensePaymentSplit.model');
     const { Document } = require('../../ChromiumlyTenancy/models/Document');
     const { Branch } = require('../../Branches/models/Branch.model');
     const {
@@ -233,6 +238,21 @@ export class Expense extends TenantBaseModel {
         join: {
           from: 'expenses_transactions.id',
           to: 'expense_transaction_categories.expenseId',
+        },
+        filter: (query) => {
+          query.orderBy('index', 'ASC');
+        },
+      },
+
+      /**
+       * Expense transaction may has many payment splits (multi-account payment).
+       */
+      paymentSplits: {
+        relation: Model.HasManyRelation,
+        modelClass: ExpensePaymentSplit,
+        join: {
+          from: 'expenses_transactions.id',
+          to: 'expense_payment_splits.expenseId',
         },
         filter: (query) => {
           query.orderBy('index', 'ASC');

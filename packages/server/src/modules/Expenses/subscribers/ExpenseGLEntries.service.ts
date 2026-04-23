@@ -30,6 +30,7 @@ export class ExpenseGLEntriesService {
       .findById(expenseId)
       .withGraphFetched('categories')
       .withGraphFetched('paymentAccount')
+      .withGraphFetched('paymentSplits.paymentAccount')
       .throwIfNotFound();
 
     return this.getExpenseLedger(expense);

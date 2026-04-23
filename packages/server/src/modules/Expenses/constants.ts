@@ -37,6 +37,7 @@ export const ERRORS = {
   EXPENSES_ACCOUNT_HAS_INVALID_TYPE: 'expenses_account_has_invalid_type',
   EXPENSE_ALREADY_PUBLISHED: 'expense_already_published',
   EXPENSE_HAS_ASSOCIATED_LANDED_COST: 'EXPENSE_HAS_ASSOCIATED_LANDED_COST',
+  EXPENSE_PAYMENT_SPLITS_MISMATCH: 'expense_payment_splits_mismatch',
 };
 
 export const ExpensesSampleData = [

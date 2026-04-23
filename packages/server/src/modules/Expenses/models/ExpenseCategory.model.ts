@@ -7,6 +7,8 @@ export class ExpenseCategory extends BaseModel {
   public expenseAccountId!: number;
   public projectId!: number;
   public description!: string;
+  public amountType!: 'fixed' | 'percent';
+  public percent!: number | null;
 
   /**
    * Table name

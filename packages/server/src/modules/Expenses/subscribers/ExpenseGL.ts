@@ -3,6 +3,7 @@ import { ILedger } from '@/modules/Ledger/types/Ledger.types';
 import { AccountNormal } from '@/modules/Accounts/Accounts.types';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { ExpenseCategory } from '../models/ExpenseCategory.model';
+import { ExpensePaymentSplit } from '../models/ExpensePaymentSplit.model';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { Expense } from '../models/Expense.model';
 
@@ -39,22 +40,26 @@ export class ExpenseGL {
   };
 
   /**
-   * Retrieves the expense GL payment entry.
-   * @returns {ILedgerEntry}
+   * Retrieves the expense GL payment entries — one credit per payment split.
+   * Callers must eager-fetch `paymentSplits.paymentAccount`; the only
+   * production caller is `ExpenseGLEntriesService.getExpenseLedgerById`.
+   * @returns {ILedgerEntry[]}
    */
-  private getExpenseGLPaymentEntry = (): ILedgerEntry => {
+  private getExpenseGLPaymentEntries = (): ILedgerEntry[] => {
     const commonEntry = this.getExpenseGLCommonEntry();
+    const exchangeRate = this.expense.exchangeRate;
+    const splits: ExpensePaymentSplit[] = this.expense.paymentSplits || [];
 
-    return {
+    return splits.map((split, index) => ({
       ...commonEntry,
-      credit: this.expense.localAmount,
-      accountId: this.expense.paymentAccountId,
+      credit: split.amount * exchangeRate,
+      accountId: split.paymentAccountId,
       accountNormal:
-        this.expense?.paymentAccount?.accountNormal === 'debit'
+        split.paymentAccount?.accountNormal === 'debit'
           ? AccountNormal.DEBIT
           : AccountNormal.CREDIT,
-      index: 1,
-    };
+      index: index + 1,
+    }));
   };
 
   /**
@@ -64,7 +69,11 @@ export class ExpenseGL {
    * @returns {ILedgerEntry}
    */
   private getExpenseGLCategoryEntry = R.curry(
-    (category: ExpenseCategory, index: number): ILedgerEntry => {
+    (
+      category: ExpenseCategory,
+      index: number,
+      indexOffset: number,
+    ): ILedgerEntry => {
       const commonEntry = this.getExpenseGLCommonEntry();
       const localAmount = category.amount * this.expense.exchangeRate;
 
@@ -74,7 +83,7 @@ export class ExpenseGL {
         accountNormal: AccountNormal.DEBIT,
         debit: localAmount,
         note: category.description,
-        index: index + 2,
+        index: index + indexOffset,
         projectId: category.projectId,
       };
     },
@@ -87,11 +96,12 @@ export class ExpenseGL {
   public getExpenseGLEntries = (): ILedgerEntry[] => {
     const getCategoryEntry = this.getExpenseGLCategoryEntry();
 
-    const paymentEntry = this.getExpenseGLPaymentEntry();
+    const paymentEntries = this.getExpenseGLPaymentEntries();
+    const indexOffset = paymentEntries.length + 1;
     const categoryEntries = this.expense.categories.map((category, index) =>
-      getCategoryEntry(category, index),
+      getCategoryEntry(category, index, indexOffset),
     );
-    return [paymentEntry, ...categoryEntries];
+    return [...paymentEntries, ...categoryEntries];
   };
 
   /**

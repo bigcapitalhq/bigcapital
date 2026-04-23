@@ -30,6 +30,7 @@ const ERROR = {
 };
 
 export const MIN_LINES_NUMBER = 1;
+export const MIN_PAYMENT_SPLIT_LINES = 1;
 
 export const defaultExpenseEntry = {
   amount: '',
@@ -37,10 +38,16 @@ export const defaultExpenseEntry = {
   description: '',
   landed_cost: 0,
   project_id: '',
+  amount_type: 'fixed',
+  percent: '',
+};
+
+export const defaultPaymentSplit = {
+  payment_account_id: '',
+  amount: '',
 };
 
 export const defaultExpense = {
-  payment_account_id: '',
   payee_id: '',
   beneficiary: '',
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
@@ -51,6 +58,7 @@ export const defaultExpense = {
   branch_id: '',
   exchange_rate: 1,
   categories: [...repeatValue(defaultExpenseEntry, MIN_LINES_NUMBER)],
+  payment_splits: [...repeatValue(defaultPaymentSplit, MIN_PAYMENT_SPLIT_LINES)],
   attachments: [],
 };
 
@@ -89,6 +97,8 @@ export const transformToEditForm = (
   const initialEntries = [
     ...expense.categories.map((category) => ({
       ...transformToForm(category, expenseEntry),
+      amount_type: category.amount_type || 'fixed',
+      percent: category.percent ?? '',
     })),
     ...repeatValue(
       expenseEntry,
@@ -99,11 +109,34 @@ export const transformToEditForm = (
     ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, expenseEntry),
   )(initialEntries);
 
+  // Hydrate payment splits from the server response. Fall back to a single
+  // split synthesized from the legacy `payment_account_id` + `total_amount`
+  // so older rows render as a one-row table.
+  const splitSource =
+    expense.payment_splits && expense.payment_splits.length > 0
+      ? expense.payment_splits
+      : expense.payment_account_id
+      ? [
+          {
+            payment_account_id: expense.payment_account_id,
+            amount: expense.total_amount,
+          },
+        ]
+      : [];
+  const paymentSplits =
+    splitSource.length > 0
+      ? splitSource.map((split) => ({
+          payment_account_id: split.payment_account_id,
+          amount: split.amount,
+        }))
+      : [...repeatValue(defaultExpense.payment_splits[0], MIN_PAYMENT_SPLIT_LINES)];
+
   const attachments = transformAttachmentsToForm(expense);
 
   return {
     ...transformToForm(expense, defaultExpense),
     categories,
+    payment_splits: paymentSplits,
     attachments,
   };
 };
@@ -142,21 +175,76 @@ export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
  * Filter expense entries that has no amount or expense account.
  */
 export const filterNonZeroEntries = (categories) => {
-  return categories.filter(
-    (category) => category.amount && category.expense_account_id,
-  );
+  return categories.filter((category) => {
+    if (!category.expense_account_id) return false;
+    const percent = Number(category.percent);
+    if (percent > 0) return true;
+    return Number(category.amount) > 0;
+  });
 };
+
+/**
+ * Resolves the total expense amount from the payment splits. Percent-typed
+ * categories compute their amount from this total.
+ */
+const getPaymentSplitsTotal = (paymentSplits = []) =>
+  sumBy(
+    paymentSplits.filter((s) => s.payment_account_id && Number(s.amount) > 0),
+    (s) => Number(s.amount) || 0,
+  );
+
+/**
+ * Normalize a category entry for submit: compute the effective amount when
+ * the row is percent-typed; ensure fixed rows carry a numeric amount.
+ */
+const normalizeCategoryForRequest = (category, total) => {
+  // Amount type is derived from the presence of a positive percent value.
+  const percent = Number(category.percent);
+  if (percent > 0) {
+    const amount = Math.round(((total * percent) / 100) * 1000) / 1000;
+    return {
+      ...category,
+      amount_type: 'percent',
+      percent,
+      amount,
+    };
+  }
+  return {
+    ...category,
+    amount_type: 'fixed',
+    percent: null,
+    amount: Number(category.amount) || 0,
+  };
+};
+
+/**
+ * Filter out empty payment splits (rows with no account or no amount).
+ */
+export const filterNonZeroPaymentSplits = (paymentSplits = []) =>
+  paymentSplits.filter(
+    (split) => split.payment_account_id && Number(split.amount) > 0,
+  );
 
 /**
  * Transformes the form values to request body.
  */
 export const transformFormValuesToRequest = (values) => {
-  const categories = filterNonZeroEntries(values.categories);
+  const paymentSplits = filterNonZeroPaymentSplits(values.payment_splits || []);
+  const total = getPaymentSplitsTotal(paymentSplits);
+  const normalizedCategories = (values.categories || []).map((c) =>
+    normalizeCategoryForRequest(c, total),
+  );
+  const categories = filterNonZeroEntries(normalizedCategories);
   const attachments = transformAttachmentsToRequest(values);
 
   return {
     ...values,
     categories: R.compose(orderingLinesIndexes)(categories),
+    payment_splits: paymentSplits.map((split, i) => ({
+      index: i + 1,
+      payment_account_id: split.payment_account_id,
+      amount: Number(split.amount) || 0,
+    })),
     attachments,
   };
 };
@@ -177,16 +265,57 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retrieves the expense subtotal.
+ * Retrieves the expense subtotal — sum of authored category amounts,
+ * including percent-typed rows computed against the payments total.
  * @returns {number}
  */
 export const useExpenseSubtotal = () => {
   const {
-    values: { categories },
+    values: { categories, payment_splits },
   } = useFormikContext();
 
-  // Calculates the expense entries amount.
-  return React.useMemo(() => sumBy(categories, 'amount'), [categories]);
+  const paymentsTotal = React.useMemo(
+    () => getPaymentSplitsTotal(payment_splits || []),
+    [payment_splits],
+  );
+
+  return React.useMemo(
+    () =>
+      sumBy(categories || [], (c) => {
+        const pct = Number(c.percent);
+        if (pct > 0) {
+          return Math.round(((paymentsTotal * pct) / 100) * 1000) / 1000;
+        }
+        return Number(c.amount) || 0;
+      }),
+    [categories, paymentsTotal],
+  );
+};
+
+/**
+ * Retrieves the expense payments total (sum of payment split amounts).
+ * @returns {number}
+ */
+export const useExpensePaymentsTotal = () => {
+  const {
+    values: { payment_splits },
+  } = useFormikContext();
+  return React.useMemo(
+    () => getPaymentSplitsTotal(payment_splits || []),
+    [payment_splits],
+  );
+};
+
+/**
+ * Amount remaining to be allocated across categories. Positive = under-allocated.
+ */
+export const useExpenseRemaining = () => {
+  const paymentsTotal = useExpensePaymentsTotal();
+  const categoriesTotal = useExpenseSubtotal();
+  return React.useMemo(
+    () => Math.round((paymentsTotal - categoriesTotal) * 1000) / 1000,
+    [paymentsTotal, categoriesTotal],
+  );
 };
 
 /**

@@ -42,11 +42,15 @@ export class CreateExpense {
    * @param {IExpenseDTO} expenseDTO
    */
   private authorize = async (expenseDTO: CreateExpenseDto) => {
-    // Validate payment account existance on the storage.
-    const paymentAccount = await this.accountModel()
+    // Resolve payment splits (new shape) or synthesize from legacy single account.
+    const paymentSplits = this.validator.resolvePaymentSplits(expenseDTO);
+    const paymentAccountIds =
+      this.validator.collectPaymentAccountIds(paymentSplits);
+
+    // Retrieves payment accounts referenced across all splits.
+    const paymentAccounts = await this.accountModel()
       .query()
-      .findById(expenseDTO.paymentAccountId)
-      .throwIfNotFound();
+      .whereIn('id', paymentAccountIds);
 
     // Retrieves the DTO expense accounts ids.
     const DTOExpenseAccountsIds = expenseDTO.categories.map(
@@ -61,14 +65,17 @@ export class CreateExpense {
       expenseAccounts,
       DTOExpenseAccountsIds,
     );
-    // Validate payment account type.
-    this.validator.validatePaymentAccountType(paymentAccount);
+    // Validate each payment split account exists and is a valid payment type.
+    this.validator.validatePaymentSplits(paymentSplits, paymentAccounts);
 
     // Validate expenses accounts type.
     this.validator.validateExpensesAccountsType(expenseAccounts);
 
     // Validate the given expense categories not equal zero.
     this.validator.validateCategoriesNotEqualZero(expenseDTO);
+
+    // Validate sum(splits) == sum(categories).
+    this.validator.validatePaymentSplitsSum(expenseDTO, paymentSplits);
   };
 
   /**
