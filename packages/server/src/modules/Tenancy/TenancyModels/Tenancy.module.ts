@@ -8,6 +8,10 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { Expense } from '@/modules/Expenses/models/Expense.model';
 import { ExpenseCategory } from '@/modules/Expenses/models/ExpenseCategory.model';
 import { ExpensePaymentSplit } from '@/modules/Expenses/models/ExpensePaymentSplit.model';
+import { SquareConnection } from '@/modules/SquareIntegration/models/SquareConnection.model';
+import { SquareEventLog } from '@/modules/SquareIntegration/models/SquareEventLog.model';
+import { SquareItemMapping } from '@/modules/SquareIntegration/models/SquareItemMapping.model';
+import { SquareCustomerMapping } from '@/modules/SquareIntegration/models/SquareCustomerMapping.model';
 import { ItemCategory } from '@/modules/ItemCategories/models/ItemCategory.model';
 import { TaxRateModel } from '@/modules/TaxRates/models/TaxRate.model';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
@@ -50,6 +54,10 @@ const models = [
   Expense,
   ExpenseCategory,
   ExpensePaymentSplit,
+  SquareConnection,
+  SquareEventLog,
+  SquareItemMapping,
+  SquareCustomerMapping,
   ItemCategory,
   TaxRateModel,
   PdfTemplateModel,

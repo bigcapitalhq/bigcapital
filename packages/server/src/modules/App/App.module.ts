@@ -73,6 +73,7 @@ import { EventTrackerModule } from '../EventsTracker/EventTracker.module';
 import { MailModule } from '../Mail/Mail.module';
 import { FinancialStatementsModule } from '../FinancialStatements/FinancialStatements.module';
 import { StripePaymentModule } from '../StripePayment/StripePayment.module';
+import { SquareIntegrationModule } from '../SquareIntegration/SquareIntegration.module';
 import { FeaturesModule } from '../Features/Features.module';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { WarehousesTransfersModule } from '../WarehousesTransfers/WarehouseTransfers.module';
@@ -238,6 +239,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     EventTrackerModule,
     FinancialStatementsModule,
     StripePaymentModule,
+    SquareIntegrationModule,
     DashboardModule,
     PaymentLinksModule,
     RolesModule,
