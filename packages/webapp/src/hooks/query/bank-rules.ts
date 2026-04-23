@@ -436,7 +436,11 @@ export function useUnexcludeUncategorizedTransactions(
 
 interface MatchUncategorizedTransactionValues {
   uncategorizedTransactions: Array<number>;
-  matchedTransactions: Array<{ reference_type: string; reference_id: number }>;
+  matchedTransactions: Array<{
+    reference_type: string;
+    reference_id: number;
+    reference_sub_id?: number | null;
+  }>;
 }
 interface MatchUncategorizedTransactionRes { }
 

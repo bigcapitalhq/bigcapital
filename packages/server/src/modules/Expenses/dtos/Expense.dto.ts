@@ -95,6 +95,17 @@ export class ExpenseCategoryDto {
 }
 
 export class ExpensePaymentSplitDto {
+  @ToNumber()
+  @IsInt()
+  @IsOptional()
+  @ApiProperty({
+    example: 123,
+    description:
+      'The id of an existing split row. Preserve on edit so upsertGraph updates in place instead of deleting and reinserting (which would orphan bank-match rows referencing the split).',
+    required: false,
+  })
+  id?: number;
+
   @IsInt()
   @IsOptional()
   @ApiProperty({

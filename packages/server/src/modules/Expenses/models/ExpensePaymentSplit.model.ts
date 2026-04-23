@@ -22,6 +22,7 @@ export class ExpensePaymentSplit extends BaseModel {
    */
   static get relationMappings() {
     const { Account } = require('../../Accounts/models/Account.model');
+    const { Expense } = require('./Expense.model');
 
     return {
       paymentAccount: {
@@ -30,6 +31,14 @@ export class ExpensePaymentSplit extends BaseModel {
         join: {
           from: 'expense_payment_splits.paymentAccountId',
           to: 'accounts.id',
+        },
+      },
+      expense: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Expense,
+        join: {
+          from: 'expense_payment_splits.expenseId',
+          to: 'expenses_transactions.id',
         },
       },
     };

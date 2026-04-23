@@ -29,6 +29,7 @@ export interface IBankTransactionUnmatchedEventPayload {
 export interface IMatchTransactionDTO {
   referenceType: string;
   referenceId: number;
+  referenceSubId?: number;
 }
 
 export interface IMatchTransactionsDTO {
@@ -42,6 +43,13 @@ export interface GetMatchedTransactionsFilter {
   minAmount: number;
   maxAmount: number;
   transactionType: string;
+  /**
+   * The cashflow (bank/cc) account the uncategorized transaction lives on.
+   * Used by type-specific queries to narrow candidates — e.g. expenses
+   * return one row per payment split matching this account, instead of
+   * one row per expense.
+   */
+  paymentAccountId?: number;
 }
 
 export interface MatchedTransactionPOJO {
@@ -53,6 +61,7 @@ export interface MatchedTransactionPOJO {
   transactionNo: string;
   transactionId: number;
   transactionType: string;
+  referenceSubId?: number | null;
 }
 
 export type MatchedTransactionsPOJO = {

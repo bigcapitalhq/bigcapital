@@ -16,6 +16,7 @@ import {
 import { useMatchUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import { MatchingTransactionFormValues } from './types';
 import {
+  matchKey,
   transformToReq,
   useGetPendingAmountMatched,
   useIsShowReconcileTransactionLink,
@@ -219,6 +220,7 @@ function PerfectMatchingTransactions() {
             date={match.dateFormatted}
             transactionId={match.referenceId}
             transactionType={match.referenceType}
+            transactionSubId={match.referenceSubId}
           />
         ))}
       </Stack>
@@ -258,6 +260,7 @@ function PossibleMatchingTransactions() {
             date={match.dateFormatted}
             transactionId={match.referenceId}
             transactionType={match.referenceType}
+            transactionSubId={match.referenceSubId}
           />
         ))}
       </Stack>
@@ -271,14 +274,20 @@ interface MatchTransactionFieldProps
   > {
   transactionId: number;
   transactionType: string;
+  transactionSubId?: number | null;
 }
 
 function MatchTransactionField({
   transactionId,
   transactionType,
+  transactionSubId,
   ...props
 }: MatchTransactionFieldProps) {
-  const name = `matched.${transactionType}-${transactionId}`;
+  const name = `matched.${matchKey({
+    referenceType: transactionType,
+    referenceId: transactionId,
+    referenceSubId: transactionSubId,
+  })}`;
 
   return (
     <FastField name={name}>

@@ -76,6 +76,7 @@ export class MatchBankTransactions {
       const foundMatchedTransaction =
         await getMatchedTransactionsService.getMatchedTransaction(
           matchedTransaction.referenceId,
+          matchedTransaction.referenceSubId,
         );
       if (!foundMatchedTransaction) {
         throw new ServiceError(ERRORS.RESOURCE_ID_MATCHING_TRANSACTION_INVALID);

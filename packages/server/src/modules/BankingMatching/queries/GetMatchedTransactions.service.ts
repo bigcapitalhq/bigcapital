@@ -66,10 +66,18 @@ export class GetMatchedTransactions {
       ? this.registered.filter((item) => item.type === filter.transactionType)
       : this.registered;
 
+    // All uncategorized transactions being matched together live on the same
+    // bank account (same ledger being reconciled). Propagate that account id
+    // so type-specific queries can narrow candidates — e.g. expense splits
+    // are filtered to splits drawn from this account.
+    const paymentAccountId =
+      filter.paymentAccountId ?? first(uncategorizedTransactions)?.accountId;
+    const scopedFilter = { ...filter, paymentAccountId };
+
     const matchedTransactions = await PromisePool.withConcurrency(2)
       .for(filtered)
       .process(async ({ type, service }) => {
-        return service.getMatchedTransactions(filter);
+        return service.getMatchedTransactions(scopedFilter);
       });
     const { perfectMatches, possibleMatches } = this.groupMatchedResults(
       uncategorizedTransactions,

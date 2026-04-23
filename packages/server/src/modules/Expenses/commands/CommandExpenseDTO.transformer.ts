@@ -89,6 +89,10 @@ export class ExpenseDTOTransformer {
     );
     if (provided.length > 0) {
       return provided.map((s, i) => ({
+        // Preserve the split id on edit so upsertGraph updates in place;
+        // losing it deletes + reinserts the row and orphans any
+        // matched_bank_transactions.reference_sub_id pointing at it.
+        ...(s.id != null ? { id: s.id } : {}),
         index: s.index ?? i + 1,
         paymentAccountId: s.paymentAccountId,
         amount: s.amount,

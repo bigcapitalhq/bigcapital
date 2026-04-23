@@ -38,6 +38,7 @@ export abstract class GetMatchedTransactionsByType {
    */
   public async getMatchedTransaction(
     transactionId: number,
+    referenceSubId?: number,
   ): Promise<MatchedTransactionPOJO> {
     throw new Error(
       'The `getMatchedTransaction` method is not defined for the transaction type.',
@@ -63,6 +64,7 @@ export abstract class GetMatchedTransactionsByType {
           uncategorizedTransactionId,
           referenceType: matchTransactionDTO.referenceType,
           referenceId: matchTransactionDTO.referenceId,
+          referenceSubId: matchTransactionDTO.referenceSubId ?? null,
         });
       });
   }

@@ -1,10 +1,13 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
+/**
+ * Transforms an expense candidate for the bank-matching UI. Input can be
+ * either an `ExpensePaymentSplit` (loaded with `.expense`) or a bare
+ * `Expense` (legacy single-lookup path). Split-input rows carry the split
+ * id as `referenceSubId` and use the split's amount; expense-input rows
+ * leave `referenceSubId` null.
+ */
 export class GetMatchedTransactionExpensesTransformer extends Transformer {
-  /**
-   * Include these attributes to sale credit note object.
-   * @returns {Array}
-   */
   public includeAttributes = (): string[] => {
     return [
       'referenceNo',
@@ -14,129 +17,90 @@ export class GetMatchedTransactionExpensesTransformer extends Transformer {
       'date',
       'dateFormatted',
       'transactionId',
-      'transactionNo',
       'transactionType',
       'transsactionTypeFormatted',
       'transactionNormal',
       'referenceType',
       'referenceId',
+      'referenceSubId',
     ];
   };
 
-  /**
-   * Exclude all attributes.
-   * @returns {Array<string>}
-   */
   public excludeAttributes = (): string[] => {
     return ['*'];
   };
 
   /**
-   * Retrieves the expense reference number.
-   * @param expense
-   * @returns {string}
+   * Returns the underlying Expense model whether we were handed a split
+   * (with `.expense` eager-loaded) or the expense itself.
    */
-  protected referenceNo(expense) {
-    return expense.referenceNo;
+  private expenseOf(input: any) {
+    return input?.expense ?? input;
   }
 
   /**
-   * Retrieves the expense amount.
-   * @param expense
-   * @returns {number}
+   * True when the input is an ExpensePaymentSplit.
    */
-  protected amount(expense) {
-    return expense.totalAmount;
+  private isSplit(input: any): boolean {
+    return !!input?.expense && input?.paymentAccountId !== undefined;
   }
 
-  /**
-   * Formats the amount of the expense.
-   * @param expense
-   * @returns {string}
-   */
-  protected amountFormatted(expense) {
-    return this.formatNumber(expense.totalAmount, {
+  protected referenceNo(input: any) {
+    return this.expenseOf(input).referenceNo;
+  }
+
+  protected amount(input: any) {
+    return this.isSplit(input)
+      ? input.amount
+      : this.expenseOf(input).totalAmount;
+  }
+
+  protected amountFormatted(input: any) {
+    const expense = this.expenseOf(input);
+    const value = this.isSplit(input) ? input.amount : expense.totalAmount;
+    return this.formatNumber(value, {
       currencyCode: expense.currencyCode,
       money: true,
     });
   }
 
-  /**
-   * Retrieves the date of the expense.
-   * @param expense
-   * @returns {Date}
-   */
-  protected date(expense) {
-    return expense.paymentDate;
+  protected date(input: any) {
+    return this.expenseOf(input).paymentDate;
   }
 
-  /**
-   * Formats the date of the expense.
-   * @param expense
-   * @returns {string}
-   */
-  protected dateFormatted(expense) {
-    return this.formatDate(expense.paymentDate);
+  protected dateFormatted(input: any) {
+    return this.formatDate(this.expenseOf(input).paymentDate);
   }
 
-  /**
-   * Retrieves the transaction ID of the expense.
-   * @param expense
-   * @returns {number}
-   */
-  protected transactionId(expense) {
-    return expense.id;
+  protected transactionId(input: any) {
+    return this.expenseOf(input).id;
   }
 
-  /**
-   * Retrieves the expense transaction number.
-   * @param expense
-   * @returns {string}
-   */
-  protected transactionNo(expense) {
-    return expense.expenseNo;
+  protected transactionNo(input: any) {
+    return this.expenseOf(input).expenseNo;
   }
 
-  /**
-   * Retrieves the expense transaction type.
-   * @param expense
-   * @returns {String}
-   */
   protected transactionType() {
     return 'Expense';
   }
 
-  /**
-   * Retrieves the formatted transaction type of the expense.
-   * @param expense
-   * @returns {string}
-   */
   protected transsactionTypeFormatted() {
     return 'Expense';
   }
 
-  /**
-   * Retrieve the expense transaction normal (credit or debit).
-   * @returns {string}
-   */
   protected transactionNormal() {
     return 'credit';
   }
 
-  /**
-   * Retrieve the transaction reference type.
-   * @returns {string}
-   */
   protected referenceType() {
     return 'Expense';
   }
 
-  /**
-   * Retrieve the transaction reference id.
-   * @param transaction
-   * @returns {number}
-   */
-  protected referenceId(transaction) {
-    return transaction.id;
+  protected referenceId(input: any) {
+    return this.expenseOf(input).id;
+  }
+
+  protected referenceSubId(input: any) {
+    return this.isSplit(input) ? input.id : null;
   }
 }

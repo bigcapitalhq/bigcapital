@@ -1,13 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetMatchedTransactionsFilter, MatchedTransactionPOJO, MatchedTransactionsPOJO } from '../types';
+import {
+  GetMatchedTransactionsFilter,
+  MatchedTransactionPOJO,
+  MatchedTransactionsPOJO,
+} from '../types';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { GetMatchedTransactionExpensesTransformer } from './GetMatchedTransactionExpensesTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Expense } from '@/modules/Expenses/models/Expense.model';
+import { ExpensePaymentSplit } from '@/modules/Expenses/models/ExpensePaymentSplit.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { Knex } from 'knex';
-import { TENANCY_DB_CONNECTION } from '@/modules/Tenancy/TenancyDB/TenancyDB.constants';
-import { initialize } from 'objection';
 
 @Injectable()
 export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByType {
@@ -17,66 +19,109 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
     @Inject(Expense.name)
     protected readonly expenseModel: TenantModelProxy<typeof Expense>,
 
-    @Inject(TENANCY_DB_CONNECTION)
-    private readonly tenantDb: () => Knex,
-
-    @Inject('TENANT_MODELS_INIT')
-    private readonly tenantModelsInit: () => Promise<boolean>,
-    
+    @Inject(ExpensePaymentSplit.name)
+    protected readonly expensePaymentSplitModel: TenantModelProxy<
+      typeof ExpensePaymentSplit
+    >,
   ) {
     super();
   }
 
   /**
-   * Retrieves the matched transactions of expenses.
-   * @param {GetMatchedTransactionsFilter} filter
-   * @returns
+   * Retrieves the matched transactions of expenses as one candidate row per
+   * unmatched payment split. Expenses that carry a single split (the
+   * backfill case) render as a single row equivalent to the legacy behavior.
    */
   async getMatchedTransactions(
     filter: GetMatchedTransactionsFilter,
   ): Promise<MatchedTransactionsPOJO> {
-    // await this.tenantModelsInit();
-    // Retrieve the expense matches.
-    const expenses = await this.expenseModel()
+    const splits = await this.expensePaymentSplitModel()
       .query()
+      .withGraphJoined('expense')
       .onBuild((query) => {
-        // Filter out the not matched to bank transactions.
-        query.withGraphJoined('matchedBankTransaction');
-        query.whereNull('matchedBankTransaction.id');
+        // Parent expense must be published (payment date non-null).
+        query.whereNotNull('expense.publishedAt');
 
-        // Filter the published onyl
-        query.modify('filterByPublished');
-
+        // Bank transactions live on a specific account; only offer splits
+        // drawn from that account as candidates.
+        if (filter.paymentAccountId) {
+          query.where(
+            'expense_payment_splits.paymentAccountId',
+            filter.paymentAccountId,
+          );
+        }
         if (filter.fromDate) {
-          query.where('paymentDate', '>=', filter.fromDate);
+          query.where('expense.paymentDate', '>=', filter.fromDate);
         }
         if (filter.toDate) {
-          query.where('paymentDate', '<=', filter.toDate);
+          query.where('expense.paymentDate', '<=', filter.toDate);
         }
         if (filter.minAmount) {
-          query.where('totalAmount', '>=', filter.minAmount);
+          query.where(
+            'expense_payment_splits.amount',
+            '>=',
+            filter.minAmount,
+          );
         }
         if (filter.maxAmount) {
-          query.where('totalAmount', '<=', filter.maxAmount);
+          query.where(
+            'expense_payment_splits.amount',
+            '<=',
+            filter.maxAmount,
+          );
         }
-        query.orderBy('paymentDate', 'DESC');
+
+        // Exclude splits that already have a match row.
+        query.whereNotExists(function () {
+          this.select('id')
+            .from('matched_bank_transactions')
+            .where('matched_bank_transactions.reference_type', 'Expense')
+            .whereRaw(
+              'matched_bank_transactions.reference_id = expense.id',
+            )
+            .whereRaw(
+              'matched_bank_transactions.reference_sub_id = expense_payment_splits.id',
+            );
+        });
+
+        query.orderBy('expense.paymentDate', 'DESC');
       });
 
     return this.transformer.transform(
-      expenses,
+      splits,
       new GetMatchedTransactionExpensesTransformer(),
     );
   }
 
   /**
-   * Retrieves the given matched expense transaction.
-   * @param {number} tenantId
-   * @param {number} transactionId
-   * @returns {GetMatchedTransactionExpensesTransformer-}
+   * Retrieves a single matched expense candidate.
+   * @param {number} transactionId - Expense id.
+   * @param {number} [referenceSubId] - Payment split id; when provided the
+   *   candidate is the split's amount, otherwise the whole expense total
+   *   (legacy callers).
    */
   public async getMatchedTransaction(
     transactionId: number,
+    referenceSubId?: number,
   ): Promise<MatchedTransactionPOJO> {
+    if (referenceSubId) {
+      const split = await this.expensePaymentSplitModel()
+        .query()
+        .findById(referenceSubId)
+        .withGraphFetched('expense')
+        .throwIfNotFound();
+      // Guard against a client pairing a split id with a different expense.
+      if (split.expenseId !== transactionId) {
+        throw new Error(
+          `Payment split ${referenceSubId} does not belong to expense ${transactionId}`,
+        );
+      }
+      return this.transformer.transform(
+        split,
+        new GetMatchedTransactionExpensesTransformer(),
+      );
+    }
+
     const expense = await this.expenseModel()
       .query()
       .findById(transactionId)

@@ -126,6 +126,10 @@ export const transformToEditForm = (
   const paymentSplits =
     splitSource.length > 0
       ? splitSource.map((split) => ({
+          // Preserve the server id so an edit updates this split in place
+          // rather than delete-and-reinsert, which would orphan matched
+          // bank transactions referencing this split id.
+          ...(split.id != null ? { id: split.id } : {}),
           payment_account_id: split.payment_account_id,
           amount: split.amount,
         }))
@@ -241,6 +245,7 @@ export const transformFormValuesToRequest = (values) => {
     ...values,
     categories: R.compose(orderingLinesIndexes)(categories),
     payment_splits: paymentSplits.map((split, i) => ({
+      ...(split.id != null ? { id: split.id } : {}),
       index: i + 1,
       payment_account_id: split.payment_account_id,
       amount: Number(split.amount) || 0,

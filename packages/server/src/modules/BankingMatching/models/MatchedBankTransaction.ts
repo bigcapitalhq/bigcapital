@@ -3,6 +3,7 @@ import { BaseModel } from '@/models/Model';
 export class MatchedBankTransaction extends BaseModel {
   public referenceId!: number;
   public referenceType!: string;
+  public referenceSubId?: number | null;
   public uncategorizedTransactionId!: number;
 
 

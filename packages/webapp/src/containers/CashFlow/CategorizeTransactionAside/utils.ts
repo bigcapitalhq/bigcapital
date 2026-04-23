@@ -4,6 +4,19 @@ import { round } from 'lodash';
 import { MatchingTransactionFormValues } from './types';
 import { useMatchingTransactionBoot } from './MatchingTransactionBoot';
 
+/**
+ * Formik key for a match candidate. Splits (expense payment splits)
+ * participate as distinct candidates via the optional subId suffix.
+ */
+export const matchKey = (match: {
+  referenceType: string;
+  referenceId: number | string;
+  referenceSubId?: number | string | null;
+}) =>
+  match.referenceSubId != null && match.referenceSubId !== ''
+    ? `${match.referenceType}-${match.referenceId}-${match.referenceSubId}`
+    : `${match.referenceType}-${match.referenceId}`;
+
 export const transformToReq = (
   values: MatchingTransactionFormValues,
   uncategorizedTransactions: Array<number>,
@@ -11,9 +24,17 @@ export const transformToReq = (
   const matchedTransactions = Object.entries(values.matched)
     .filter(([key, value]) => value)
     .map(([key]) => {
-      const [reference_type, reference_id] = key.split('-');
+      // Key format: "<refType>-<refId>[-<refSubId>]"
+      const [reference_type, reference_id, reference_sub_id] = key.split('-');
 
-      return { reference_type, reference_id: parseInt(reference_id, 10) };
+      return {
+        reference_type,
+        reference_id: parseInt(reference_id, 10),
+        reference_sub_id:
+          reference_sub_id != null && reference_sub_id !== ''
+            ? parseInt(reference_sub_id, 10)
+            : null,
+      };
     });
   return { matchedTransactions, uncategorizedTransactions };
 };
@@ -26,7 +47,7 @@ export const useGetPendingAmountMatched = () => {
   return useMemo(() => {
     const matchedItems = [...perfectMatches, ...possibleMatches].filter(
       (match) => {
-        const key = `${match.referenceType}-${match.referenceId}`;
+        const key = matchKey(match);
         return values.matched[key];
       },
     );

@@ -3,6 +3,7 @@ import {
   IsArray,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -25,6 +26,16 @@ export class MatchTransactionEntryDto {
     example: 1,
   })
   referenceId: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({
+    description:
+      'Sub-reference id within the reference record. Used for Expense to point at a specific expense_payment_splits row.',
+    example: 42,
+    required: false,
+  })
+  referenceSubId?: number;
 }
 
 export class MatchBankTransactionDto {
