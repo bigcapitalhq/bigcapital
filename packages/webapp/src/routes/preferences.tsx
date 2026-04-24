@@ -127,6 +127,46 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/integrations/square`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Preferences/SquareIntegration/SquareIntegrationPage'
+        ),
+    ),
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/integrations/square/:id/setup`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Preferences/SquareIntegration/SquareConnectionSetupPage'
+        ),
+    ),
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/integrations/square/:id/catalog`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Preferences/SquareIntegration/SquareCatalogPage'
+        ),
+    ),
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/integrations/square/:id/events`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Preferences/SquareIntegration/SquareEventLogPage'
+        ),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/`,
     component: lazy(() => import('../containers/Preferences/DefaultRoute')),
     exact: true,

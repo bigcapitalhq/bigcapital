@@ -73,6 +73,11 @@ export const PreferencesMenu = [
     disabled: false,
     href: '/preferences/api-keys',
   },
+  {
+    text: 'Square Integration',
+    disabled: false,
+    href: '/preferences/integrations/square',
+  },
   // {
   //   text: <T id={'sms_integration.label'} />,
   //   disabled: false,
