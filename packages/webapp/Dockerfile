@@ -23,8 +23,8 @@ RUN pnpm install
 # Copy source code for webapp and dependencies
 COPY --chown=node:node ./packages/webapp ./packages/webapp
 
-# Build webapp package
-RUN pnpm run build:webapp
+# Build webapp package — cap Node heap to leave room for the OS and pnpm overhead
+RUN NODE_OPTIONS="--max-old-space-size=4096" pnpm run build:webapp
 
 # Stage 2: Nginx
 FROM nginx:alpine

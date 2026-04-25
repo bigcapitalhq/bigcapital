@@ -24,7 +24,13 @@ exports.up = function (knex) {
       table.boolean('auto_created').notNullable().defaultTo(false);
       table.timestamps();
 
-      table.unique(['connection_id', 'square_catalog_object_id']);
+      // Explicit name — default auto-generated name exceeds MySQL's
+      // 64-char identifier limit once the upperCase snake-case mapper
+      // is applied.
+      table.unique(
+        ['connection_id', 'square_catalog_object_id'],
+        'uq_sq_item_map_conn_obj',
+      );
     })
     .raw('ALTER TABLE `SQUARE_ITEM_MAPPINGS` AUTO_INCREMENT = 1000');
 };

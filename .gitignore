@@ -3,7 +3,7 @@ node_modules/
 # Docker volumes data directory
 /data
 
-# Production env file 
+# Production env file
 .env
 
 test-results/
@@ -11,3 +11,10 @@ test-results/
 
 
 .pnpm-store
+
+# Built image tarballs, organized by target environment
+current-images/
+*.tar.gz
+
+# Per-environment deploy config (DEPLOY_HOST, etc.) — host secrets, never commit
+docker/*/.deploy.conf
