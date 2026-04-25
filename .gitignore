@@ -18,3 +18,12 @@ current-images/
 
 # Per-environment deploy config (DEPLOY_HOST, etc.) — host secrets, never commit
 docker/*/.deploy.conf
+
+# macOS Finder metadata
+.DS_Store
+
+# Log files
+*.log
+
+# Local scratch notes (sandbox creds, curl recipes, ad-hoc reminders)
+*-notes.txt
