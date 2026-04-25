@@ -1,11 +1,13 @@
 import * as crypto from 'crypto';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ClsService } from 'nestjs-cls';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { SquareConnection } from '../models/SquareConnection.model';
 import { SquareApiClient } from '../utils/SquareApiClient.service';
 import { TokenEncryption } from '../utils/TokenEncryption.service';
-import { RegisterSquareWebhookSubscription } from './RegisterSquareWebhookSubscription.service';
+import { EnsureSquareApplicationWebhook } from './EnsureSquareApplicationWebhook.service';
+import { UpsertSquareMerchantIndex } from './UpsertSquareMerchantIndex.service';
 
 @Injectable()
 export class HandleSquareOAuthCallback {
@@ -15,7 +17,9 @@ export class HandleSquareOAuthCallback {
     private readonly config: ConfigService,
     private readonly squareApi: SquareApiClient,
     private readonly tokenEncryption: TokenEncryption,
-    private readonly registerWebhook: RegisterSquareWebhookSubscription,
+    private readonly ensureAppWebhook: EnsureSquareApplicationWebhook,
+    private readonly merchantIndex: UpsertSquareMerchantIndex,
+    private readonly cls: ClsService,
 
     @Inject(SquareConnection.name)
     private readonly connectionModel: TenantModelProxy<typeof SquareConnection>,
@@ -24,6 +28,10 @@ export class HandleSquareOAuthCallback {
   /**
    * Exchange the OAuth code → tokens, upsert the connection row in `pending`
    * status (the wizard completes configuration before flipping to `active`).
+   * Also (a) writes a (merchantId, environment) → (organizationId, connectionId)
+   * row into the system DB merchant index so the app-level webhook receiver
+   * can route inbound events without tenant context, and (b) idempotently
+   * ensures the app-level Square subscription exists.
    */
   public async handleCallback(code: string, environment?: string) {
     const env =
@@ -46,8 +54,11 @@ export class HandleSquareOAuthCallback {
       .query()
       .findOne({ merchantId: tokens.merchantId, environment: env });
 
+    let connectionId: number;
+    let isNew: boolean;
+
     if (existing) {
-      const refreshed = await this.connectionModel()
+      await this.connectionModel()
         .query()
         .patchAndFetchById(existing.id, {
           accessTokenEncrypted,
@@ -58,61 +69,61 @@ export class HandleSquareOAuthCallback {
           connectedAt: new Date(),
           disconnectedAt: null,
         });
-      // Register the webhook subscription only if it has never been
-      // registered. Reconnects keep the existing subscription/key so we
-      // don't accumulate stale subscriptions on Square's side.
-      if (!refreshed.squareWebhookSubscriptionId) {
-        await this.tryRegisterWebhook(refreshed);
-      }
-      return { connectionId: existing.id, isNew: false };
+      connectionId = existing.id;
+      isNew = false;
+    } else {
+      const created = await this.connectionModel()
+        .query()
+        .insert({
+          merchantId: tokens.merchantId,
+          environment: env,
+          accessTokenEncrypted,
+          refreshTokenEncrypted,
+          tokenExpiresAt: tokens.expiresAt,
+          // Per-connection signature key column is no longer used for HMAC
+          // verification (the app-level subscription owns the key); we
+          // retain a placeholder so the column stays NOT NULL-friendly for
+          // any historic readers and so a future migration can drop it.
+          webhookSignatureKey: crypto.randomBytes(32).toString('hex'),
+          status: 'pending',
+          connectedAt: new Date(),
+        });
+      connectionId = created.id;
+      isNew = true;
     }
 
-    const created = await this.connectionModel()
-      .query()
-      .insert({
-        merchantId: tokens.merchantId,
-        environment: env,
-        accessTokenEncrypted,
-        refreshTokenEncrypted,
-        tokenExpiresAt: tokens.expiresAt,
-        // Placeholder; replaced with Square's signature_key once the
-        // webhook subscription is registered immediately below.
-        webhookSignatureKey: crypto.randomBytes(32).toString('hex'),
-        status: 'pending',
-        connectedAt: new Date(),
-      });
-    await this.tryRegisterWebhook(created);
-    return { connectionId: created.id, isNew: true };
-  }
-
-  /**
-   * Best-effort webhook subscription registration. Failures are persisted
-   * to `statusMessage` so the admin sees them in the wizard, but never
-   * propagate — OAuth completing successfully is more important than
-   * webhook plumbing, and the manual override field provides a recovery
-   * path.
-   */
-  private async tryRegisterWebhook(connection: SquareConnection): Promise<void> {
-    try {
-      const result = await this.registerWebhook.register(connection);
-      await this.connectionModel()
-        .query()
-        .patchAndFetchById(connection.id, {
-          squareWebhookSubscriptionId: result.subscriptionId,
-          webhookSignatureKey: result.signatureKey,
-          statusMessage: null,
+    // System-DB index lookup table for the app-level webhook receiver.
+    const organizationId = this.cls.get<string>('organizationId');
+    if (organizationId) {
+      try {
+        await this.merchantIndex.upsert({
+          merchantId: tokens.merchantId,
+          environment: env,
+          organizationId,
+          connectionId,
         });
+      } catch (err: any) {
+        this.logger.warn(
+          `Failed to upsert square_merchant_index for ${tokens.merchantId}: ${
+            err?.message ?? err
+          }`,
+        );
+      }
+    }
+
+    // Idempotently ensure the app-level Square webhook subscription
+    // exists. Best-effort — admins can call this lazily on demand if
+    // the bootstrap fails (e.g. PAT not yet configured).
+    try {
+      await this.ensureAppWebhook.ensure(env);
     } catch (err: any) {
       this.logger.warn(
-        `Square webhook auto-registration failed for connection ${connection.id}: ${err?.message ?? err}`,
+        `Failed to ensure app-level Square webhook for env=${env}: ${
+          err?.message ?? err
+        }`,
       );
-      await this.connectionModel()
-        .query()
-        .patchAndFetchById(connection.id, {
-          statusMessage: `Webhook auto-registration failed: ${
-            err?.message ?? 'unknown error'
-          }. Set the webhook signature key manually in the wizard.`,
-        });
     }
+
+    return { connectionId, isNew };
   }
 }

@@ -28,7 +28,6 @@ export interface SquareConnection {
   tipsLiabilityAccountId: number | null;
   walkInCustomerId: number | null;
   depositBankAccountId: number | null;
-  squareWebhookSubscriptionId: string | null;
   connectedAt: string | null;
   disconnectedAt: string | null;
 }
@@ -86,7 +85,6 @@ interface UpdateSettingsValues {
   walkInCustomerId?: number | null;
   depositBankAccountId?: number | null;
   status?: 'pending' | 'active' | 'disabled';
-  webhookSignatureKey?: string;
 }
 
 export function useUpdateSquareSettings(

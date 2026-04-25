@@ -50,10 +50,15 @@ export class SquareIntegrationApplication {
       env === 'sandbox'
         ? 'https://connect.squareupsandbox.com'
         : 'https://connect.squareup.com';
-    // WEBHOOK_SUBSCRIPTION_READ/WRITE are required so the OAuth-callback
-    // handler can register a per-seller webhook subscription via the
-    // /v2/webhooks/subscriptions API. Existing connections must re-OAuth
-    // after this scope is added — Square does not auto-upgrade scopes.
+    // Square's Subscriptions API authenticates with the application's
+    // Personal Access Token (PAT), not seller OAuth tokens — sandbox apps
+    // cannot grant DEVELOPER_APPLICATION_WEBHOOKS_WRITE to a seller token,
+    // and even production apps that can grant it require a different
+    // (app-level) flow than what RegisterSquareWebhookSubscription assumes.
+    // Per-seller webhook auto-registration via OAuth therefore does not
+    // work; webhook signature keys are configured via the wizard's
+    // manual-override field today, and the long-term plan is to refactor
+    // to one app-level subscription per environment using the PAT.
     const scopes = [
       'MERCHANT_PROFILE_READ',
       'PAYMENTS_READ',
@@ -61,8 +66,6 @@ export class SquareIntegrationApplication {
       'INVOICES_READ',
       'CUSTOMERS_READ',
       'ITEMS_READ',
-      'WEBHOOK_SUBSCRIPTION_READ',
-      'WEBHOOK_SUBSCRIPTION_WRITE',
     ].join('+');
     const qs = new URLSearchParams({
       client_id: appId,

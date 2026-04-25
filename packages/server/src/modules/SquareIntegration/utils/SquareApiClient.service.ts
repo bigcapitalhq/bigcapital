@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TokenEncryption } from './TokenEncryption.service';
 import { SquareConnection } from '../models/SquareConnection.model';
 
@@ -15,9 +16,13 @@ const SQUARE_API_VERSION = '2024-10-17';
  */
 @Injectable()
 export class SquareApiClient {
+  private readonly logger = new Logger(SquareApiClient.name);
+
   constructor(
     private readonly config: ConfigService,
     private readonly tokenEncryption: TokenEncryption,
+    @Inject(SquareConnection.name)
+    private readonly connectionModel: TenantModelProxy<typeof SquareConnection>,
   ) {}
 
   public baseUrl(environment: string): string {
@@ -126,8 +131,12 @@ export class SquareApiClient {
 
   /**
    * Make an authenticated API call against the connection. Returns the
-   * raw axios response. Callers can inspect status and data; 5xx and 429
-   * are surfaced as-is (no auto-retry in v1 — add later if needed).
+   * raw axios response. 5xx and 429 are surfaced as-is. 401 triggers a
+   * single transparent token-refresh-then-retry: the new tokens are
+   * encrypted, persisted to the connection row, and the in-memory
+   * `connection` object is updated so the caller sees the latest values.
+   * If the refresh itself fails (revoked/disconnected), the original 401
+   * is returned to the caller.
    */
   public async request(
     connection: SquareConnection,
@@ -138,10 +147,68 @@ export class SquareApiClient {
         'Connection has no access token; complete OAuth before calling the API.',
       );
     }
-    const accessToken = this.tokenEncryption.decrypt(
+    let accessToken = this.tokenEncryption.decrypt(
       connection.accessTokenEncrypted,
     );
-    const client = this.makeAxios(connection.environment, accessToken);
+    let client = this.makeAxios(connection.environment, accessToken);
+    let res = await client.request(config);
+
+    if (res.status === 401 && connection.refreshTokenEncrypted) {
+      try {
+        const refreshed = await this.refreshAccessToken(connection);
+        const newAccessEncrypted = this.tokenEncryption.encrypt(
+          refreshed.accessToken,
+        );
+        const newRefreshEncrypted = this.tokenEncryption.encrypt(
+          refreshed.refreshToken,
+        );
+        await this.connectionModel()
+          .query()
+          .patchAndFetchById(connection.id, {
+            accessTokenEncrypted: newAccessEncrypted,
+            refreshTokenEncrypted: newRefreshEncrypted,
+            tokenExpiresAt: refreshed.expiresAt,
+          });
+        // Update the in-memory object so callers holding it see fresh
+        // values (and downstream handlers in the same call don't re-401).
+        connection.accessTokenEncrypted = newAccessEncrypted;
+        connection.refreshTokenEncrypted = newRefreshEncrypted;
+        connection.tokenExpiresAt = refreshed.expiresAt;
+
+        client = this.makeAxios(connection.environment, refreshed.accessToken);
+        res = await client.request(config);
+      } catch (err: any) {
+        this.logger.warn(
+          `Square token refresh failed for connection ${connection.id}: ${
+            err?.message ?? err
+          }. Returning original 401.`,
+        );
+      }
+    }
+    return res;
+  }
+
+  /**
+   * Call Square's API with the application's PAT (Personal Access Token)
+   * instead of a seller's OAuth token. Required for the Subscriptions API
+   * (POST /v2/webhooks/subscriptions) and any other app-level endpoint
+   * that authenticates against the application, not a specific merchant.
+   *
+   * The PAT comes from `SQUARE_APPLICATION_ACCESS_TOKEN` in the env. Each
+   * deploy serves a single Square environment (sandbox or production), so
+   * a single env var per deploy suffices.
+   */
+  public async requestWithApplicationToken(
+    environment: string,
+    config: AxiosRequestConfig,
+  ) {
+    const pat = this.config.get<string>('SQUARE_APPLICATION_ACCESS_TOKEN');
+    if (!pat) {
+      throw new Error(
+        'SQUARE_APPLICATION_ACCESS_TOKEN is not configured; cannot call app-level Square APIs.',
+      );
+    }
+    const client = this.makeAxios(environment, pat);
     return client.request(config);
   }
 }

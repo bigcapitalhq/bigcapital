@@ -196,6 +196,17 @@ done
 echo ">> ${COMPOSE[*]} up -d --force-recreate ${TARGETS[*]}"
 "${COMPOSE[@]}" up -d --force-recreate "${TARGETS[@]}"
 
+# If we shipped a new server image, also recreate the migration sidecar
+# so any new system / tenant migrations run. The sidecar reuses the
+# server image, so its tag was already bumped by the sed pass above.
+for svc in "${TARGETS[@]}"; do
+  if [[ "$svc" == "server" ]]; then
+    echo ">> ${COMPOSE[*]} up -d --force-recreate database_migration"
+    "${COMPOSE[@]}" up -d --force-recreate database_migration
+    break
+  fi
+done
+
 # Show what's now running.
 "${COMPOSE[@]}" ps
 REMOTE_SCRIPT

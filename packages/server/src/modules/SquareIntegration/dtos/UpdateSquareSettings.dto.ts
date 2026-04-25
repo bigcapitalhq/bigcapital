@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsIn, IsInt, IsOptional, IsString, Length } from 'class-validator';
+import { IsIn, IsInt, IsOptional } from 'class-validator';
 
 const toInt = () =>
   Transform(({ value }) =>
@@ -42,15 +42,4 @@ export class UpdateSquareSettingsDto {
   @IsOptional()
   @ApiProperty({ required: false, enum: ['pending', 'active', 'disabled'] })
   status?: 'pending' | 'active' | 'disabled';
-
-  // Manual override for the per-connection webhook signature key. Normally
-  // populated automatically when we register the subscription with Square's
-  // webhook subscriptions API at OAuth time; admins can paste a different
-  // key here if auto-registration failed or the subscription was rotated
-  // out-of-band in the Square Developer Dashboard.
-  @IsString()
-  @Length(16, 128)
-  @IsOptional()
-  @ApiProperty({ required: false })
-  webhookSignatureKey?: string;
 }

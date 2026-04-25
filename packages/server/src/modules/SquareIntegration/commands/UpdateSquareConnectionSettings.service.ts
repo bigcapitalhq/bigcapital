@@ -29,7 +29,6 @@ export class UpdateSquareConnectionSettings {
       'walkInCustomerId',
       'depositBankAccountId',
       'status',
-      'webhookSignatureKey',
     ];
     for (const k of keys) {
       if (dto[k] !== undefined) patch[k] = dto[k];

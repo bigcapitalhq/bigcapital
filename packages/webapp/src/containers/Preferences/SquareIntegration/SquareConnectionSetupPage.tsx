@@ -7,9 +7,7 @@ import {
   Button,
   Callout,
   Classes,
-  Collapse,
   FormGroup,
-  InputGroup,
   Intent,
   Spinner,
   Text,
@@ -24,6 +22,7 @@ import {
   SquareConnection,
   useSquareConnection,
   useSquareLocations,
+  useStartSquareOAuth,
   useUpdateSquareSettings,
 } from '@/hooks/query/square-integration';
 
@@ -33,7 +32,6 @@ type WizardValues = {
   tipsLiabilityAccountId: number | null;
   walkInCustomerId: number | null;
   depositBankAccountId: number | null;
-  webhookSignatureKey: string;
 };
 
 /**
@@ -68,21 +66,13 @@ export default function SquareConnectionSetupPage() {
       tipsLiabilityAccountId: connection?.tipsLiabilityAccountId ?? null,
       walkInCustomerId: connection?.walkInCustomerId ?? null,
       depositBankAccountId: connection?.depositBankAccountId ?? null,
-      // Empty until the admin types one — never echoes the existing key
-      // back to the browser. A blank submission means "leave the stored
-      // key unchanged"; the server only patches when the field is non-empty.
-      webhookSignatureKey: '',
     }),
     [connection],
   );
 
   const handleSubmit = async (values: WizardValues) => {
     try {
-      const payload: any = { ...values };
-      // Don't transmit an empty override — that would be interpreted as
-      // a request to clear the stored key.
-      if (!payload.webhookSignatureKey) delete payload.webhookSignatureKey;
-      const updated = await updateSettings(payload);
+      const updated = await updateSettings(values as any);
       AppToaster.show({
         message:
           updated.status === 'active'
@@ -105,6 +95,17 @@ export default function SquareConnectionSetupPage() {
   if (loadingConn) return <Spinner />;
   if (!connection) return <Text>Connection not found.</Text>;
 
+  // Disabled connections have null tokens (cleared on disconnect), so the
+  // wizard cannot fetch locations / save settings without crashing the
+  // server. Bail out early with a clear path back to OAuth instead.
+  if (connection.status === 'disabled') {
+    return (
+      <PageRoot>
+        <DisconnectedView connection={connection} />
+      </PageRoot>
+    );
+  }
+
   return (
     <PageRoot>
       <Text className={Classes.TEXT_MUTED} style={{ marginBottom: 18 }}>
@@ -125,17 +126,6 @@ export default function SquareConnectionSetupPage() {
         </Callout>
       )}
 
-      {!connection.squareWebhookSubscriptionId && connection.statusMessage && (
-        <Callout
-          intent={Intent.DANGER}
-          icon="error"
-          title="Webhook auto-registration failed"
-          style={{ marginBottom: 16 }}
-        >
-          {connection.statusMessage}
-        </Callout>
-      )}
-
       <Formik<WizardValues>
         initialValues={initialValues}
         enableReinitialize
@@ -149,6 +139,59 @@ export default function SquareConnectionSetupPage() {
   );
 }
 
+function DisconnectedView({ connection }: { connection: SquareConnection }) {
+  const history = useHistory();
+  const startOAuth = useStartSquareOAuth();
+  const [reconnecting, setReconnecting] = useState(false);
+
+  const handleReconnect = async () => {
+    setReconnecting(true);
+    try {
+      // Browser navigates to Square's authorize URL — no need to flip
+      // the spinner back off; the page is leaving.
+      await startOAuth(connection.environment as 'sandbox' | 'production');
+    } catch {
+      setReconnecting(false);
+    }
+  };
+
+  return (
+    <Callout
+      intent={Intent.DANGER}
+      icon="disable"
+      title="This Square connection is disconnected"
+      style={{ marginBottom: 16 }}
+    >
+      <p style={{ marginTop: 4 }}>
+        Merchant <strong>{connection.merchantId}</strong> ·{' '}
+        <strong>{connection.environment}</strong> environment. Stored access
+        tokens were cleared when the connection was disconnected, so Square
+        sync is paused.
+      </p>
+      <p>
+        Re-connect to restore access. Existing wizard selections (Clearing /
+        Fees / Tips / Walk-In Customer / Deposit Bank) are preserved.
+      </p>
+      <Group spacing={8}>
+        <Button
+          intent={Intent.PRIMARY}
+          icon="link"
+          loading={reconnecting}
+          onClick={handleReconnect}
+        >
+          Reconnect to Square
+        </Button>
+        <Button
+          minimal
+          onClick={() => history.push('/preferences/integrations/square')}
+        >
+          Back to integrations
+        </Button>
+      </Group>
+    </Callout>
+  );
+}
+
 function WizardBody({
   connection,
   connectionId,
@@ -157,16 +200,11 @@ function WizardBody({
   connectionId: number;
 }) {
   const history = useHistory();
-  const { values, setFieldValue, isSubmitting } =
-    useFormikContext<WizardValues>();
+  const { values, isSubmitting } = useFormikContext<WizardValues>();
   const { data: accounts = [] } = useAccounts();
   const { data: customersResp } = useCustomers();
   const customers = customersResp?.customers ?? [];
   const { data: locations } = useSquareLocations(connectionId);
-  // Open by default if auto-registration failed — the admin needs to act.
-  const [advancedOpen, setAdvancedOpen] = useState(
-    !connection.squareWebhookSubscriptionId,
-  );
 
   const allAccountsPicked = useMemo(
     () =>
@@ -243,43 +281,6 @@ function WizardBody({
               allowCreate
             />
           </FormGroup>
-        </Card>
-
-        <Card style={{ margin: 0 }}>
-          <Group position="apart" style={{ marginBottom: 8 }}>
-            <SectionTitle style={{ marginBottom: 0 }}>
-              Advanced — Webhook Signature Key
-            </SectionTitle>
-            <Button
-              minimal
-              small
-              icon={advancedOpen ? 'chevron-up' : 'chevron-down'}
-              onClick={() => setAdvancedOpen((v) => !v)}
-            >
-              {advancedOpen ? 'Hide' : 'Show'}
-            </Button>
-          </Group>
-          <Collapse isOpen={advancedOpen}>
-            <Text className={Classes.TEXT_MUTED} style={{ fontSize: 12, marginBottom: 8 }}>
-              The signature key is registered automatically when you connect.
-              Only paste a value here if auto-registration failed (see the
-              error above) or you rotated the subscription's signing key in
-              Square's Developer Dashboard. {connection.squareWebhookSubscriptionId
-                ? `Current subscription: ${connection.squareWebhookSubscriptionId}`
-                : 'No subscription is registered yet.'}
-            </Text>
-            <FormGroup label="Webhook Signature Key">
-              <InputGroup
-                name="webhookSignatureKey"
-                value={values.webhookSignatureKey}
-                placeholder="Paste Square's signature_key here"
-                onChange={(e) =>
-                  setFieldValue('webhookSignatureKey', e.target.value)
-                }
-                fill
-              />
-            </FormGroup>
-          </Collapse>
         </Card>
 
         <Card style={{ margin: 0 }}>

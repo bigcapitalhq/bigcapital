@@ -3,9 +3,11 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { SquareConnection } from '../models/SquareConnection.model';
 
 /**
- * Public-safe shape (no tokens, no webhook signature key). Callers
- * rendering the settings page only need metadata; the raw encrypted tokens
- * and webhook signing material must never cross the API boundary.
+ * Public-safe shape (no tokens). Callers rendering the settings page only
+ * need metadata; the raw encrypted tokens never cross the API boundary.
+ * Webhook plumbing has moved to the app-level subscription (see
+ * SquareApplicationWebhook in the system DB) — no per-connection webhook
+ * fields are exposed here.
  */
 export interface SquareConnectionDto {
   id: number;
@@ -18,7 +20,6 @@ export interface SquareConnectionDto {
   tipsLiabilityAccountId: number | null;
   walkInCustomerId: number | null;
   depositBankAccountId: number | null;
-  squareWebhookSubscriptionId: string | null;
   connectedAt: Date | null;
   disconnectedAt: Date | null;
 }
@@ -42,7 +43,6 @@ export class GetSquareConnections {
       tipsLiabilityAccountId: row.tipsLiabilityAccountId,
       walkInCustomerId: row.walkInCustomerId,
       depositBankAccountId: row.depositBankAccountId,
-      squareWebhookSubscriptionId: row.squareWebhookSubscriptionId,
       connectedAt: row.connectedAt,
       disconnectedAt: row.disconnectedAt,
     };

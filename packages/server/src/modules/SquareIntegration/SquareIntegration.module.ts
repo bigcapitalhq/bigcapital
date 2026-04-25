@@ -5,7 +5,8 @@ import { SquareIntegrationController } from './SquareIntegration.controller';
 import { SquareWebhookController } from './webhook/SquareWebhook.controller';
 import { SquareIntegrationApplication } from './SquareIntegrationApplication.service';
 import { HandleSquareOAuthCallback } from './commands/HandleSquareOAuthCallback.service';
-import { RegisterSquareWebhookSubscription } from './commands/RegisterSquareWebhookSubscription.service';
+import { EnsureSquareApplicationWebhook } from './commands/EnsureSquareApplicationWebhook.service';
+import { UpsertSquareMerchantIndex } from './commands/UpsertSquareMerchantIndex.service';
 import { UpdateSquareConnectionSettings } from './commands/UpdateSquareConnectionSettings.service';
 import { DisconnectSquareConnection } from './commands/DisconnectSquareConnection.service';
 import { UpsertSquareItemMapping } from './commands/UpsertSquareItemMapping.service';
@@ -17,7 +18,15 @@ import { SquareApiClient } from './utils/SquareApiClient.service';
 import { TokenEncryption } from './utils/TokenEncryption.service';
 import { VerifySquareSignature } from './utils/VerifySquareSignature.service';
 import { SquareEventRouter } from './webhook/SquareEventRouter.service';
+import { SquareApplicationWebhook } from './models/SquareApplicationWebhook.model';
+import { SquareMerchantIndex } from './models/SquareMerchantIndex.model';
+import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
+
+const systemModels = [
+  InjectSystemModel(SquareApplicationWebhook),
+  InjectSystemModel(SquareMerchantIndex),
+];
 
 @Module({
   imports: [
@@ -38,9 +47,11 @@ import { TenancyModule } from '../Tenancy/Tenancy.module';
   ],
   controllers: [SquareIntegrationController, SquareWebhookController],
   providers: [
+    ...systemModels,
     SquareIntegrationApplication,
     HandleSquareOAuthCallback,
-    RegisterSquareWebhookSubscription,
+    EnsureSquareApplicationWebhook,
+    UpsertSquareMerchantIndex,
     UpdateSquareConnectionSettings,
     DisconnectSquareConnection,
     UpsertSquareItemMapping,
