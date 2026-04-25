@@ -7,6 +7,7 @@ import {
   UseQueryOptions,
 } from 'react-query';
 import useApiRequest from '../useRequest';
+import { transformToCamelCase } from '@/utils';
 
 const QK = {
   CONNECTIONS: ['SQUARE_CONNECTIONS'],
@@ -27,6 +28,7 @@ export interface SquareConnection {
   tipsLiabilityAccountId: number | null;
   walkInCustomerId: number | null;
   depositBankAccountId: number | null;
+  squareWebhookSubscriptionId: string | null;
   connectedAt: string | null;
   disconnectedAt: string | null;
 }
@@ -41,7 +43,7 @@ export function useSquareConnections(options?: UseQueryOptions<SquareConnection[
     () =>
       apiRequest
         .get('/integrations/square/connections')
-        .then((res) => res.data),
+        .then((res) => transformToCamelCase(res.data)),
     options,
   );
 }
@@ -56,7 +58,7 @@ export function useSquareConnection(
     () =>
       apiRequest
         .get(`/integrations/square/connections/${id}`)
-        .then((res) => res.data),
+        .then((res) => transformToCamelCase(res.data)),
     { enabled: !!id, ...(options ?? {}) },
   );
 }
@@ -84,6 +86,7 @@ interface UpdateSettingsValues {
   walkInCustomerId?: number | null;
   depositBankAccountId?: number | null;
   status?: 'pending' | 'active' | 'disabled';
+  webhookSignatureKey?: string;
 }
 
 export function useUpdateSquareSettings(
@@ -99,7 +102,7 @@ export function useUpdateSquareSettings(
           `/integrations/square/connections/${connectionId}/settings`,
           values,
         )
-        .then((res) => res.data),
+        .then((res) => transformToCamelCase(res.data)),
     {
       onSuccess: () => {
         qc.invalidateQueries(QK.CONNECTIONS);
@@ -119,7 +122,7 @@ export function useDisconnectSquare(
     (connectionId) =>
       apiRequest
         .delete(`/integrations/square/connections/${connectionId}`)
-        .then((res) => res.data),
+        .then((res) => transformToCamelCase(res.data)),
     {
       onSuccess: () => {
         qc.invalidateQueries(QK.CONNECTIONS);
@@ -153,7 +156,7 @@ export function useSquareCatalog(
           `/integrations/square/connections/${connectionId}/catalog`,
           { params: cursor ? { cursor } : {} },
         )
-        .then((res) => res.data),
+        .then((res) => transformToCamelCase(res.data)),
     options,
   );
 }
@@ -176,7 +179,7 @@ export function useSquareLocations(
     () =>
       apiRequest
         .get(`/integrations/square/connections/${connectionId}/locations`)
-        .then((res) => res.data),
+        .then((res) => transformToCamelCase(res.data)),
     options,
   );
 }
@@ -197,7 +200,7 @@ export function useUpsertSquareItemMapping(connectionId: number) {
           `/integrations/square/connections/${connectionId}/catalog/mapping`,
           values,
         )
-        .then((res) => res.data),
+        .then((res) => transformToCamelCase(res.data)),
     {
       onSuccess: () => {
         qc.invalidateQueries(['SQUARE_CATALOG', connectionId]);
@@ -229,6 +232,6 @@ export function useSquareEventLog(
         .get(`/integrations/square/connections/${connectionId}/events`, {
           params: filters,
         })
-        .then((res) => res.data),
+        .then((res) => transformToCamelCase(res.data)),
   );
 }

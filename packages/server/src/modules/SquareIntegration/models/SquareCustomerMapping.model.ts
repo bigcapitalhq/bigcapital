@@ -16,7 +16,7 @@ export class SquareCustomerMapping extends BaseModel {
   }
 
   static get relationMappings() {
-    const { Customer } = require('@/modules/Customers/models/Customer');
+    const { Customer } = require('../../Customers/models/Customer');
     const {
       SquareConnection,
     } = require('./SquareConnection.model');

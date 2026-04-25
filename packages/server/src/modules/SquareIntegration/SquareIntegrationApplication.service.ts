@@ -50,6 +50,10 @@ export class SquareIntegrationApplication {
       env === 'sandbox'
         ? 'https://connect.squareupsandbox.com'
         : 'https://connect.squareup.com';
+    // WEBHOOK_SUBSCRIPTION_READ/WRITE are required so the OAuth-callback
+    // handler can register a per-seller webhook subscription via the
+    // /v2/webhooks/subscriptions API. Existing connections must re-OAuth
+    // after this scope is added — Square does not auto-upgrade scopes.
     const scopes = [
       'MERCHANT_PROFILE_READ',
       'PAYMENTS_READ',
@@ -57,6 +61,8 @@ export class SquareIntegrationApplication {
       'INVOICES_READ',
       'CUSTOMERS_READ',
       'ITEMS_READ',
+      'WEBHOOK_SUBSCRIPTION_READ',
+      'WEBHOOK_SUBSCRIPTION_WRITE',
     ].join('+');
     const qs = new URLSearchParams({
       client_id: appId,

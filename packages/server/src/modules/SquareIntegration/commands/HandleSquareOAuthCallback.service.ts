@@ -1,17 +1,21 @@
 import * as crypto from 'crypto';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { SquareConnection } from '../models/SquareConnection.model';
 import { SquareApiClient } from '../utils/SquareApiClient.service';
 import { TokenEncryption } from '../utils/TokenEncryption.service';
+import { RegisterSquareWebhookSubscription } from './RegisterSquareWebhookSubscription.service';
 
 @Injectable()
 export class HandleSquareOAuthCallback {
+  private readonly logger = new Logger(HandleSquareOAuthCallback.name);
+
   constructor(
     private readonly config: ConfigService,
     private readonly squareApi: SquareApiClient,
     private readonly tokenEncryption: TokenEncryption,
+    private readonly registerWebhook: RegisterSquareWebhookSubscription,
 
     @Inject(SquareConnection.name)
     private readonly connectionModel: TenantModelProxy<typeof SquareConnection>,
@@ -43,7 +47,7 @@ export class HandleSquareOAuthCallback {
       .findOne({ merchantId: tokens.merchantId, environment: env });
 
     if (existing) {
-      await this.connectionModel()
+      const refreshed = await this.connectionModel()
         .query()
         .patchAndFetchById(existing.id, {
           accessTokenEncrypted,
@@ -54,6 +58,12 @@ export class HandleSquareOAuthCallback {
           connectedAt: new Date(),
           disconnectedAt: null,
         });
+      // Register the webhook subscription only if it has never been
+      // registered. Reconnects keep the existing subscription/key so we
+      // don't accumulate stale subscriptions on Square's side.
+      if (!refreshed.squareWebhookSubscriptionId) {
+        await this.tryRegisterWebhook(refreshed);
+      }
       return { connectionId: existing.id, isNew: false };
     }
 
@@ -65,12 +75,44 @@ export class HandleSquareOAuthCallback {
         accessTokenEncrypted,
         refreshTokenEncrypted,
         tokenExpiresAt: tokens.expiresAt,
-        // Signing key generated locally; registered with Square when the
-        // user finishes the wizard and we call the Webhook Subscriptions API.
+        // Placeholder; replaced with Square's signature_key once the
+        // webhook subscription is registered immediately below.
         webhookSignatureKey: crypto.randomBytes(32).toString('hex'),
         status: 'pending',
         connectedAt: new Date(),
       });
+    await this.tryRegisterWebhook(created);
     return { connectionId: created.id, isNew: true };
+  }
+
+  /**
+   * Best-effort webhook subscription registration. Failures are persisted
+   * to `statusMessage` so the admin sees them in the wizard, but never
+   * propagate — OAuth completing successfully is more important than
+   * webhook plumbing, and the manual override field provides a recovery
+   * path.
+   */
+  private async tryRegisterWebhook(connection: SquareConnection): Promise<void> {
+    try {
+      const result = await this.registerWebhook.register(connection);
+      await this.connectionModel()
+        .query()
+        .patchAndFetchById(connection.id, {
+          squareWebhookSubscriptionId: result.subscriptionId,
+          webhookSignatureKey: result.signatureKey,
+          statusMessage: null,
+        });
+    } catch (err: any) {
+      this.logger.warn(
+        `Square webhook auto-registration failed for connection ${connection.id}: ${err?.message ?? err}`,
+      );
+      await this.connectionModel()
+        .query()
+        .patchAndFetchById(connection.id, {
+          statusMessage: `Webhook auto-registration failed: ${
+            err?.message ?? 'unknown error'
+          }. Set the webhook signature key manually in the wizard.`,
+        });
+    }
   }
 }

@@ -2,11 +2,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { Formik, Form, useFormikContext } from 'formik';
 import {
   Button,
   Callout,
   Classes,
+  Collapse,
   FormGroup,
+  InputGroup,
   Intent,
   Spinner,
   Text,
@@ -24,6 +27,15 @@ import {
   useUpdateSquareSettings,
 } from '@/hooks/query/square-integration';
 
+type WizardValues = {
+  clearingAccountId: number | null;
+  feesExpenseAccountId: number | null;
+  tipsLiabilityAccountId: number | null;
+  walkInCustomerId: number | null;
+  depositBankAccountId: number | null;
+  webhookSignatureKey: string;
+};
+
 /**
  * Post-OAuth wizard: user picks the Clearing / Fees / Tips accounts, the
  * walk-in customer, and the bank account that receives Square payouts.
@@ -32,6 +44,9 @@ import {
  *
  * Tips are booked as a LIABILITY (Tips Payable) — cleared when the owner
  * pays out tips as wages — not recognized as revenue.
+ *
+ * Uses Formik so the shared AccountsSelect / CustomersSelect components
+ * (which read from useFormikContext) have a context to bind to.
  */
 export default function SquareConnectionSetupPage() {
   const { id } = useParams<{ id: string }>();
@@ -44,43 +59,30 @@ export default function SquareConnectionSetupPage() {
 
   const { data: connection, isLoading: loadingConn, refetch } =
     useSquareConnection(connectionId);
-  const { data: accounts = [] } = useAccounts();
-  const { data: customersResp } = useCustomers();
-  const customers = customersResp?.customers ?? [];
-  const { data: locations } = useSquareLocations(connectionId);
-  const { mutateAsync: updateSettings, isLoading: saving } =
-    useUpdateSquareSettings(connectionId);
+  const { mutateAsync: updateSettings } = useUpdateSquareSettings(connectionId);
 
-  const [form, setForm] = useState<Partial<SquareConnection>>({});
-
-  useEffect(() => {
-    if (connection) {
-      setForm({
-        clearingAccountId: connection.clearingAccountId,
-        feesExpenseAccountId: connection.feesExpenseAccountId,
-        tipsLiabilityAccountId: connection.tipsLiabilityAccountId,
-        walkInCustomerId: connection.walkInCustomerId,
-        depositBankAccountId: connection.depositBankAccountId,
-      });
-    }
-  }, [connection]);
-
-  const allAccountsPicked = useMemo(
-    () =>
-      !!form.clearingAccountId &&
-      !!form.feesExpenseAccountId &&
-      !!form.tipsLiabilityAccountId &&
-      !!form.walkInCustomerId &&
-      !!form.depositBankAccountId,
-    [form],
+  const initialValues = useMemo<WizardValues>(
+    () => ({
+      clearingAccountId: connection?.clearingAccountId ?? null,
+      feesExpenseAccountId: connection?.feesExpenseAccountId ?? null,
+      tipsLiabilityAccountId: connection?.tipsLiabilityAccountId ?? null,
+      walkInCustomerId: connection?.walkInCustomerId ?? null,
+      depositBankAccountId: connection?.depositBankAccountId ?? null,
+      // Empty until the admin types one — never echoes the existing key
+      // back to the browser. A blank submission means "leave the stored
+      // key unchanged"; the server only patches when the field is non-empty.
+      webhookSignatureKey: '',
+    }),
+    [connection],
   );
 
-  const setField = (key: keyof SquareConnection) => (value: any) =>
-    setForm((f) => ({ ...f, [key]: value }));
-
-  const handleSave = async () => {
+  const handleSubmit = async (values: WizardValues) => {
     try {
-      const updated = await updateSettings(form as any);
+      const payload: any = { ...values };
+      // Don't transmit an empty override — that would be interpreted as
+      // a request to clear the stored key.
+      if (!payload.webhookSignatureKey) delete payload.webhookSignatureKey;
+      const updated = await updateSettings(payload);
       AppToaster.show({
         message:
           updated.status === 'active'
@@ -123,6 +125,61 @@ export default function SquareConnectionSetupPage() {
         </Callout>
       )}
 
+      {!connection.squareWebhookSubscriptionId && connection.statusMessage && (
+        <Callout
+          intent={Intent.DANGER}
+          icon="error"
+          title="Webhook auto-registration failed"
+          style={{ marginBottom: 16 }}
+        >
+          {connection.statusMessage}
+        </Callout>
+      )}
+
+      <Formik<WizardValues>
+        initialValues={initialValues}
+        enableReinitialize
+        onSubmit={handleSubmit}
+      >
+        <Form>
+          <WizardBody connection={connection} connectionId={connectionId} />
+        </Form>
+      </Formik>
+    </PageRoot>
+  );
+}
+
+function WizardBody({
+  connection,
+  connectionId,
+}: {
+  connection: SquareConnection;
+  connectionId: number;
+}) {
+  const history = useHistory();
+  const { values, setFieldValue, isSubmitting } =
+    useFormikContext<WizardValues>();
+  const { data: accounts = [] } = useAccounts();
+  const { data: customersResp } = useCustomers();
+  const customers = customersResp?.customers ?? [];
+  const { data: locations } = useSquareLocations(connectionId);
+  // Open by default if auto-registration failed — the admin needs to act.
+  const [advancedOpen, setAdvancedOpen] = useState(
+    !connection.squareWebhookSubscriptionId,
+  );
+
+  const allAccountsPicked = useMemo(
+    () =>
+      !!values.clearingAccountId &&
+      !!values.feesExpenseAccountId &&
+      !!values.tipsLiabilityAccountId &&
+      !!values.walkInCustomerId &&
+      !!values.depositBankAccountId,
+    [values],
+  );
+
+  return (
+    <>
       <Stack spacing={12}>
         <Card style={{ margin: 0 }}>
           <SectionTitle>Accounts</SectionTitle>
@@ -131,10 +188,8 @@ export default function SquareConnectionSetupPage() {
             helperText="Other Current Asset. Holds gross Square sales between sale time and payout arrival."
           >
             <AccountsSelect
-              name="clearingAccount"
+              name="clearingAccountId"
               items={accounts}
-              selectedAccountId={form.clearingAccountId}
-              onAccountSelected={(a) => setField('clearingAccountId')(a.id)}
               filterByRootTypes={['asset']}
               fill
             />
@@ -144,10 +199,8 @@ export default function SquareConnectionSetupPage() {
             helperText="Expense account. Square's per-transaction fee auto-posts here."
           >
             <AccountsSelect
-              name="feesExpenseAccount"
+              name="feesExpenseAccountId"
               items={accounts}
-              selectedAccountId={form.feesExpenseAccountId}
-              onAccountSelected={(a) => setField('feesExpenseAccountId')(a.id)}
               filterByRootTypes={['expense']}
               fill
             />
@@ -157,12 +210,8 @@ export default function SquareConnectionSetupPage() {
             helperText="Liability account. Tip portion of each sale credits here instead of revenue; cleared when you pay tipped employees."
           >
             <AccountsSelect
-              name="tipsLiabilityAccount"
+              name="tipsLiabilityAccountId"
               items={accounts}
-              selectedAccountId={form.tipsLiabilityAccountId}
-              onAccountSelected={(a) =>
-                setField('tipsLiabilityAccountId')(a.id)
-              }
               filterByRootTypes={['liability']}
               fill
             />
@@ -172,10 +221,8 @@ export default function SquareConnectionSetupPage() {
             helperText="Where Square deposits net sales. Used to auto-match payouts against bank feed transactions (Phase 3)."
           >
             <AccountsSelect
-              name="depositBankAccount"
+              name="depositBankAccountId"
               items={accounts}
-              selectedAccountId={form.depositBankAccountId}
-              onAccountSelected={(a) => setField('depositBankAccountId')(a.id)}
               filterByTypes={['bank', 'cash']}
               fill
             />
@@ -190,14 +237,49 @@ export default function SquareConnectionSetupPage() {
           </Text>
           <FormGroup label="Customer">
             <CustomersSelect
-              name="walkInCustomer"
+              name="walkInCustomerId"
               items={customers}
-              selectedCustomerId={form.walkInCustomerId}
-              onContactSelected={(c) => setField('walkInCustomerId')(c.id)}
               popoverFill
               allowCreate
             />
           </FormGroup>
+        </Card>
+
+        <Card style={{ margin: 0 }}>
+          <Group position="apart" style={{ marginBottom: 8 }}>
+            <SectionTitle style={{ marginBottom: 0 }}>
+              Advanced — Webhook Signature Key
+            </SectionTitle>
+            <Button
+              minimal
+              small
+              icon={advancedOpen ? 'chevron-up' : 'chevron-down'}
+              onClick={() => setAdvancedOpen((v) => !v)}
+            >
+              {advancedOpen ? 'Hide' : 'Show'}
+            </Button>
+          </Group>
+          <Collapse isOpen={advancedOpen}>
+            <Text className={Classes.TEXT_MUTED} style={{ fontSize: 12, marginBottom: 8 }}>
+              The signature key is registered automatically when you connect.
+              Only paste a value here if auto-registration failed (see the
+              error above) or you rotated the subscription's signing key in
+              Square's Developer Dashboard. {connection.squareWebhookSubscriptionId
+                ? `Current subscription: ${connection.squareWebhookSubscriptionId}`
+                : 'No subscription is registered yet.'}
+            </Text>
+            <FormGroup label="Webhook Signature Key">
+              <InputGroup
+                name="webhookSignatureKey"
+                value={values.webhookSignatureKey}
+                placeholder="Paste Square's signature_key here"
+                onChange={(e) =>
+                  setFieldValue('webhookSignatureKey', e.target.value)
+                }
+                fill
+              />
+            </FormGroup>
+          </Collapse>
         </Card>
 
         <Card style={{ margin: 0 }}>
@@ -230,15 +312,15 @@ export default function SquareConnectionSetupPage() {
           Back
         </Button>
         <Button
+          type="submit"
           intent={Intent.PRIMARY}
           disabled={!allAccountsPicked}
-          loading={saving}
-          onClick={handleSave}
+          loading={isSubmitting}
         >
           {allAccountsPicked ? 'Save & Activate' : 'Fill all selections'}
         </Button>
       </Group>
-    </PageRoot>
+    </>
   );
 }
 

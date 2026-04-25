@@ -19,7 +19,7 @@ export class SquareItemMapping extends BaseModel {
   }
 
   static get relationMappings() {
-    const { Item } = require('@/modules/Items/models/Item');
+    const { Item } = require('../../Items/models/Item');
     const {
       SquareConnection,
     } = require('./SquareConnection.model');
