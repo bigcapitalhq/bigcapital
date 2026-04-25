@@ -1,0 +1,80 @@
+# Traefik dynamic config for the sandbox environment.
+# Drop this into Traefik's dynamic config directory next to the existing
+# staging config (commonly /etc/traefik/dynamic/).
+#
+# Mirrors the staging router layout: one catch-all webapp router, one
+# priority-10 API router for /api + /socket + /public, and a priority-20
+# Square-webhook router that bypasses OAuth forward-auth (signature is
+# the webhook's auth).
+#
+# Shared with staging (must exist in the Traefik installation):
+#   - Entrypoint `websecure` on :443 with ACME resolver `letsencrypt`.
+#   - Middlewares defined elsewhere (see jjocllc.yml):
+#       · oauth2-jjoc-auth     — forward-auth via oauth2-proxy at
+#                                portal.jjocllc.com; session cookie on
+#                                .jjocllc.com covers all subdomains.
+#       · security-headers     — standard browser security headers.
+#       · rate-limit           — request throttling.
+#       · portal-expose-email  — exposes the OAuth-authenticated email
+#                                to the backend as a header.
+#   - Traefik is attached to the `portal-net` network so it can reach
+#     bigcapital-sandbox-server and bigcapital-sandbox-webapp by
+#     container name.
+#
+# The Square webhook router intentionally omits every middleware above:
+# HMAC signature is the webhook's auth, and there's no OAuth session or
+# browser involved.
+
+http:
+  routers:
+    bigcapital-sandbox-api:
+      rule: "Host(`sandbox.bc.jjocllc.com`) && (PathPrefix(`/api`) || PathPrefix(`/socket`) || PathPrefix(`/public`))"
+      service: bigcapital-sandbox-api
+      entryPoints: [websecure]
+      priority: 10
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - oauth2-jjoc-auth              # defined in jjocllc.yml
+        - security-headers
+        - rate-limit
+        - portal-expose-email
+
+    bigcapital-sandbox-square-webhook:
+      # Higher priority than the api router so it matches first and
+      # routes without OAuth forward-auth. HMAC signature is the auth.
+      rule: "Host(`sandbox.bc.jjocllc.com`) && PathPrefix(`/api/integrations/square/webhooks`)"
+      service: bigcapital-sandbox-api
+      entryPoints: [websecure]
+      priority: 20
+      tls:
+        certResolver: letsencrypt
+
+    bigcapital-sandbox-webapp:
+      rule: "Host(`sandbox.bc.jjocllc.com`)"
+      service: bigcapital-sandbox-webapp
+      entryPoints: [websecure]
+      tls:
+        certResolver: letsencrypt
+      priority: 1
+      middlewares:
+        - oauth2-jjoc-auth
+        - security-headers
+        - rate-limit
+        - portal-expose-email
+
+  services:
+    bigcapital-sandbox-api:
+      loadBalancer:
+        sticky:
+          cookie:
+            name: bigcapital_sandbox_sticky
+            secure: true
+            httpOnly: true
+        servers:
+          - url: "http://bigcapital-sandbox-server:3000"
+
+    bigcapital-sandbox-webapp:
+      loadBalancer:
+        servers:
+          - url: "http://bigcapital-sandbox-webapp:80"

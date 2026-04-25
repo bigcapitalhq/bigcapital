@@ -1,0 +1,211 @@
+# Sandbox clone of staging for Square integration testing.
+# Identical image tags; everything else (container/volume/network/hostname)
+# is renamed so it runs alongside staging on the same host without collision.
+#
+# Apply from /srv/portal/clients/sandbox-bc/ after scp'ing this file + .env
+# and the Traefik dynamic config (sandbox-bc.yml) + after performing the
+# data clone described in README.md.
+
+services:
+  webapp:
+    container_name: bigcapital-sandbox-webapp
+    image: bigcapital-fork-webapp:sandbox-v1
+    restart: unless-stopped
+    networks:
+      - portal-net
+      - bigcapital_sandbox_network
+
+  server:
+    container_name: bigcapital-sandbox-server
+    image: bigcapital-fork-server:sandbox-v1
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - portal-net
+      - bigcapital_sandbox_network
+    environment:
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_SECURE=${MAIL_SECURE}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+      - DB_HOST=mysql
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CHARSET=${DB_CHARSET}
+      - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QUEUE_HOST=redis
+      - QUEUE_PORT=6379
+      - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
+      - JWT_SECRET=${JWT_SECRET}
+      - BASE_URL=${BASE_URL}
+      - WEBAPP_BASE_URL=${WEBAPP_BASE_URL}
+      - SIGNUP_DISABLED=${SIGNUP_DISABLED}
+      - SIGNUP_ALLOWED_DOMAINS=${SIGNUP_ALLOWED_DOMAINS}
+      - SIGNUP_ALLOWED_EMAILS=${SIGNUP_ALLOWED_EMAILS}
+      - SIGNUP_EMAIL_CONFIRMATION=${SIGNUP_EMAIL_CONFIRMATION}
+      - GOTENBERG_URL=${GOTENBERG_URL}
+      - GOTENBERG_DOCS_URL=${GOTENBERG_DOCS_URL}
+      - EXCHANGE_RATE_SERVICE=${EXCHANGE_RATE_SERVICE}
+      - OPEN_EXCHANGE_RATE_APP_ID=${OPEN_EXCHANGE_RATE_APP_ID}
+      - BANK_FEED_ENABLED=${BANK_FEED_ENABLED}
+      - PLAID_ENV=${PLAID_ENV}
+      - PLAID_CLIENT_ID=${PLAID_CLIENT_ID}
+      - PLAID_SECRET=${PLAID_SECRET}
+      - PLAID_LINK_WEBHOOK=${PLAID_LINK_WEBHOOK}
+      - LEMONSQUEEZY_API_KEY=${LEMONSQUEEZY_API_KEY}
+      - LEMONSQUEEZY_STORE_ID=${LEMONSQUEEZY_STORE_ID}
+      - LEMONSQUEEZY_WEBHOOK_SECRET=${LEMONSQUEEZY_WEBHOOK_SECRET}
+      - HOSTED_ON_BIGCAPITAL_CLOUD=${HOSTED_ON_BIGCAPITAL_CLOUD}
+      - THROTTLE_GLOBAL_LIMIT=${THROTTLE_GLOBAL_LIMIT}
+      - THROTTLE_GLOBAL_TTL=${THROTTLE_GLOBAL_TTL}
+      - THROTTLE_AUTH_LIMIT=${THROTTLE_AUTH_LIMIT}
+      - THROTTLE_AUTH_TTL=${THROTTLE_AUTH_TTL}
+      - S3_REGION=${S3_REGION}
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+      - S3_ENDPOINT=${S3_ENDPOINT}
+      - S3_BUCKET=${S3_BUCKET}
+      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE}
+      - STRIPE_PAYMENT_SECRET_KEY=${STRIPE_PAYMENT_SECRET_KEY}
+      - STRIPE_PAYMENT_PUBLISHABLE_KEY=${STRIPE_PAYMENT_PUBLISHABLE_KEY}
+      - STRIPE_PAYMENT_CLIENT_ID=${STRIPE_PAYMENT_CLIENT_ID}
+      - STRIPE_PAYMENT_WEBHOOKS_SECRET=${STRIPE_PAYMENT_WEBHOOKS_SECRET}
+      - STRIPE_PAYMENT_REDIRECT_URL=${STRIPE_PAYMENT_REDIRECT_URL}
+      - SQUARE_APPLICATION_ID=${SQUARE_APPLICATION_ID}
+      - SQUARE_APPLICATION_SECRET=${SQUARE_APPLICATION_SECRET}
+      - SQUARE_ENVIRONMENT=${SQUARE_ENVIRONMENT}
+      - SQUARE_OAUTH_REDIRECT_URL=${SQUARE_OAUTH_REDIRECT_URL}
+      - SQUARE_TOKEN_ENCRYPTION_KEY=${SQUARE_TOKEN_ENCRYPTION_KEY}
+
+  database_migration:
+    container_name: bigcapital-sandbox-database-migration
+    image: bigcapital-fork-server:sandbox-v1
+    working_dir: /app/packages/server
+    command: >
+      sh -c "
+        echo 'Waiting for MySQL...' &&
+        while ! nc -z mysql 3306 2>/dev/null; do sleep 2; done &&
+        echo 'MySQL is up — running migrations' &&
+        node dist/cli.js system:migrate:latest &&
+        node dist/cli.js tenants:migrate:latest &&
+        echo 'Migrations complete'
+      "
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CHARSET=${DB_CHARSET}
+      - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+      - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
+    depends_on:
+      - mysql
+    networks:
+      - bigcapital_sandbox_network
+
+  mysql:
+    container_name: bigcapital-sandbox-mysql
+    restart: unless-stopped
+    build:
+      context: ./mariadb
+    environment:
+      # Newer `mariadb:10.2` entrypoints require MARIADB_* variants when
+      # initializing an empty data dir; pass both so we're compatible with
+      # whichever entrypoint revision the base image currently ships.
+      - MYSQL_DATABASE=${SYSTEM_DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${SYSTEM_DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - mysql:/var/lib/mysql
+    expose:
+      - '3306'
+    networks:
+      - bigcapital_sandbox_network
+
+  redis:
+    container_name: bigcapital-sandbox-redis
+    restart: unless-stopped
+    build:
+      context: ./redis
+    expose:
+      - '6379'
+    volumes:
+      - redis:/data
+    networks:
+      - bigcapital_sandbox_network
+
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    container_name: bigcapital-sandbox-gotenberg
+    restart: unless-stopped
+    expose:
+      - '3000'
+    networks:
+      - bigcapital_sandbox_network
+
+  minio:
+    image: minio/minio:latest
+    container_name: bigcapital-sandbox-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=${S3_ACCESS_KEY_ID}
+      - MINIO_ROOT_PASSWORD=${S3_SECRET_ACCESS_KEY}
+    volumes:
+      - minio:/data
+    expose:
+      - '9000'
+      - '9001'
+    networks:
+      - bigcapital_sandbox_network
+
+  createbuckets:
+    image: minio/mc:latest
+    container_name: bigcapital-sandbox-createbuckets
+    depends_on:
+      - minio
+    entrypoint: >
+      sh -c "
+        echo 'Waiting for MinIO...' &&
+        until mc alias set local http://bigcapital-sandbox-minio:9000 $${S3_ACCESS_KEY_ID} $${S3_SECRET_ACCESS_KEY} 2>/dev/null; do sleep 2; done &&
+        echo 'MinIO is up — creating bucket' &&
+        mc mb --ignore-existing local/${S3_BUCKET} &&
+        echo 'Bucket ready'
+      "
+    environment:
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+      - S3_BUCKET=${S3_BUCKET}
+    networks:
+      - bigcapital_sandbox_network
+
+volumes:
+  mysql:
+    name: bigcapital_sandbox_mysql
+    driver: local
+
+  redis:
+    name: bigcapital_sandbox_redis
+    driver: local
+
+  minio:
+    name: bigcapital_sandbox_minio
+    driver: local
+
+networks:
+  bigcapital_sandbox_network:
+    driver: bridge
+
+  portal-net:
+    external: true
