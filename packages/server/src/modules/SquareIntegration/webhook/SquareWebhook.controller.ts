@@ -152,8 +152,7 @@ export class SquareWebhookController {
       payload: body,
     });
     if (logged && entryId) {
-      // Phase-1: no handler wired; just mark done for telemetry.
-      await this.eventRouter.dispatch(entryId);
+      await this.eventRouter.dispatch(entryId, connection);
       this.logger.log(
         `Webhook accepted: ${eventType} ${eventId} → entry ${entryId}`,
       );

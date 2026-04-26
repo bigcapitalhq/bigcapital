@@ -11,6 +11,7 @@ import {
   Spinner,
   Tag,
   Text,
+  Tooltip,
 } from '@blueprintjs/core';
 import { Box, Group } from '@/components';
 import { useChangePreferencesPageTitle } from '@/hooks/state';
@@ -130,12 +131,34 @@ export default function SquareEventLogPage() {
                   {ev.squareEventId}
                 </td>
                 <td>
-                  <Text
-                    className={Classes.TEXT_MUTED}
-                    style={{ fontSize: 12, maxWidth: 280 }}
-                  >
-                    {ev.errorText ?? ''}
-                  </Text>
+                  {ev.errorText ? (
+                    <Tooltip
+                      content={
+                        <span style={{ whiteSpace: 'pre-wrap', maxWidth: 480, display: 'block' }}>
+                          {ev.errorText}
+                        </span>
+                      }
+                      placement="top"
+                    >
+                      <Text
+                        className={
+                          ev.status === 'failed'
+                            ? Classes.INTENT_DANGER
+                            : Classes.TEXT_MUTED
+                        }
+                        style={{
+                          fontSize: 12,
+                          maxWidth: 320,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          cursor: 'help',
+                        }}
+                      >
+                        {ev.errorText}
+                      </Text>
+                    </Tooltip>
+                  ) : null}
                 </td>
               </tr>
             ))}

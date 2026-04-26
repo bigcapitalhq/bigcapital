@@ -32,6 +32,7 @@ type WizardValues = {
   tipsLiabilityAccountId: number | null;
   walkInCustomerId: number | null;
   depositBankAccountId: number | null;
+  defaultSalesAccountId: number | null;
 };
 
 /**
@@ -66,6 +67,7 @@ export default function SquareConnectionSetupPage() {
       tipsLiabilityAccountId: connection?.tipsLiabilityAccountId ?? null,
       walkInCustomerId: connection?.walkInCustomerId ?? null,
       depositBankAccountId: connection?.depositBankAccountId ?? null,
+      defaultSalesAccountId: connection?.defaultSalesAccountId ?? null,
     }),
     [connection],
   );
@@ -121,7 +123,7 @@ export default function SquareConnectionSetupPage() {
           icon="warning-sign"
           style={{ marginBottom: 16 }}
         >
-          This connection is not yet active. Fill in all five selections below
+          This connection is not yet active. Fill in all six selections below
           and click Save to activate.
         </Callout>
       )}
@@ -212,7 +214,8 @@ function WizardBody({
       !!values.feesExpenseAccountId &&
       !!values.tipsLiabilityAccountId &&
       !!values.walkInCustomerId &&
-      !!values.depositBankAccountId,
+      !!values.depositBankAccountId &&
+      !!values.defaultSalesAccountId,
     [values],
   );
 
@@ -251,6 +254,17 @@ function WizardBody({
               name="tipsLiabilityAccountId"
               items={accounts}
               filterByRootTypes={['liability']}
+              fill
+            />
+          </FormGroup>
+          <FormGroup
+            label="Default Sales Revenue Account"
+            helperText="Income account. Used as the sell account on the auto-created 'Square Sales' fallback item — applies to any Square line item that has not been individually mapped on the Catalog page."
+          >
+            <AccountsSelect
+              name="defaultSalesAccountId"
+              items={accounts}
+              filterByRootTypes={['income']}
               fill
             />
           </FormGroup>

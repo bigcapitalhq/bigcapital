@@ -16,6 +16,12 @@ export class SquareConnection extends BaseModel {
   public tipsLiabilityAccountId!: number | null;
   public walkInCustomerId!: number | null;
   public depositBankAccountId!: number | null;
+  // Default revenue account used as the sell account on the auto-created
+  // "Square Sales" item. The catalog page can override per Square item.
+  public defaultSalesAccountId!: number | null;
+  // Id of the auto-created "Square Sales" Bigcapital item. Set by
+  // EnsureSquareSystemItems when the wizard transitions to active.
+  public squareSalesItemId!: number | null;
   public status!: SquareConnectionStatus;
   public statusMessage!: string | null;
   public connectedAt!: Date | null;

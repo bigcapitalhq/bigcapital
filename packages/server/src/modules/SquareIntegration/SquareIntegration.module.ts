@@ -6,8 +6,11 @@ import { SquareWebhookController } from './webhook/SquareWebhook.controller';
 import { SquareIntegrationApplication } from './SquareIntegrationApplication.service';
 import { HandleSquareOAuthCallback } from './commands/HandleSquareOAuthCallback.service';
 import { EnsureSquareApplicationWebhook } from './commands/EnsureSquareApplicationWebhook.service';
+import { EnsureSquareSystemItems } from './commands/EnsureSquareSystemItems.service';
 import { UpsertSquareMerchantIndex } from './commands/UpsertSquareMerchantIndex.service';
 import { SquareDocumentLinks } from './commands/SquareDocumentLinks.service';
+import { ResolveBigcapitalCustomer } from './commands/ResolveBigcapitalCustomer.service';
+import { HandleSquarePayment } from './commands/HandleSquarePayment.service';
 import { UpdateSquareConnectionSettings } from './commands/UpdateSquareConnectionSettings.service';
 import { DisconnectSquareConnection } from './commands/DisconnectSquareConnection.service';
 import { UpsertSquareItemMapping } from './commands/UpsertSquareItemMapping.service';
@@ -23,6 +26,10 @@ import { SquareApplicationWebhook } from './models/SquareApplicationWebhook.mode
 import { SquareMerchantIndex } from './models/SquareMerchantIndex.model';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
+import { ItemsModule } from '../Items/Items.module';
+import { CustomersModule } from '../Customers/Customers.module';
+import { SaleReceiptsModule } from '../SaleReceipts/SaleReceipts.module';
+import { ManualJournalsModule } from '../ManualJournals/ManualJournals.module';
 
 const systemModels = [
   InjectSystemModel(SquareApplicationWebhook),
@@ -32,6 +39,15 @@ const systemModels = [
 @Module({
   imports: [
     TenancyModule,
+    // Phase-2 handlers reach into these modules to create real
+    // accounting documents (auto-created system Item, auto-created
+    // Customers, SaleReceipts for payments, ManualJournals for tip
+    // splits / payouts). Each of those modules now exports its
+    // create-service.
+    ItemsModule,
+    CustomersModule,
+    SaleReceiptsModule,
+    ManualJournalsModule,
     // Re-register JwtModule with the same algorithm/secret as AuthModule so
     // we can sign + verify the short-lived OAuth `state` token. AuthModule
     // does not re-export JwtModule, so we configure it locally rather than
@@ -52,8 +68,11 @@ const systemModels = [
     SquareIntegrationApplication,
     HandleSquareOAuthCallback,
     EnsureSquareApplicationWebhook,
+    EnsureSquareSystemItems,
     UpsertSquareMerchantIndex,
     SquareDocumentLinks,
+    ResolveBigcapitalCustomer,
+    HandleSquarePayment,
     UpdateSquareConnectionSettings,
     DisconnectSquareConnection,
     UpsertSquareItemMapping,

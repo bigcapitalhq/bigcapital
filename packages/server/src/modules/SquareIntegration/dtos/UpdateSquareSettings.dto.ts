@@ -38,6 +38,12 @@ export class UpdateSquareSettingsDto {
   @ApiProperty({ required: false })
   depositBankAccountId?: number;
 
+  @toInt()
+  @IsInt()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  defaultSalesAccountId?: number;
+
   @IsIn(['pending', 'active', 'disabled'])
   @IsOptional()
   @ApiProperty({ required: false, enum: ['pending', 'active', 'disabled'] })

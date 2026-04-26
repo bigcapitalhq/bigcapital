@@ -28,6 +28,8 @@ export interface SquareConnection {
   tipsLiabilityAccountId: number | null;
   walkInCustomerId: number | null;
   depositBankAccountId: number | null;
+  defaultSalesAccountId: number | null;
+  squareSalesItemId: number | null;
   connectedAt: string | null;
   disconnectedAt: string | null;
 }
@@ -84,6 +86,7 @@ interface UpdateSettingsValues {
   tipsLiabilityAccountId?: number | null;
   walkInCustomerId?: number | null;
   depositBankAccountId?: number | null;
+  defaultSalesAccountId?: number | null;
   status?: 'pending' | 'active' | 'disabled';
 }
 

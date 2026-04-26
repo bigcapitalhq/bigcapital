@@ -1,6 +1,16 @@
 import { BaseModel } from '@/models/Model';
 
-export type SquareObjectType = 'payment' | 'refund' | 'payout' | 'invoice';
+// `payment_tip` is a synthetic type for the supplemental ManualJournal
+// the payment handler posts to move tip dollars off revenue and onto
+// the tips_liability account. It shares the Square payment id but is
+// distinct from the SaleReceipt link, so they can coexist in the
+// idempotency unique key.
+export type SquareObjectType =
+  | 'payment'
+  | 'payment_tip'
+  | 'refund'
+  | 'payout'
+  | 'invoice';
 export type BigcapitalDocumentType =
   | 'sale_receipt'
   | 'credit_note'

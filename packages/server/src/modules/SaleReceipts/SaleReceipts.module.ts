@@ -100,5 +100,6 @@ import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleR
     BulkDeleteSaleReceiptsService,
     ValidateBulkDeleteSaleReceiptsService,
   ],
+  exports: [CreateSaleReceipt],
 })
 export class SaleReceiptsModule {}

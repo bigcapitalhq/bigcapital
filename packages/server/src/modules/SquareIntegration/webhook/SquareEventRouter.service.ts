@@ -1,17 +1,25 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { SquareEventLog } from '../models/SquareEventLog.model';
+import { SquareConnection } from '../models/SquareConnection.model';
+import {
+  HandleSquarePayment,
+  HandleSquarePaymentResult,
+} from '../commands/HandleSquarePayment.service';
 
 /**
- * Phase-1 router: logs + dedups inbound Square events. Business logic
- * (creating SaleReceipts, Invoices, etc.) lands in Phase 2 handlers that
- * will be registered here via a small dispatch map.
+ * Phase-2 router. Logs + dedups inbound Square events (Phase-1
+ * behaviour) and dispatches to a per-event-type handler (Phase-2). Event
+ * types we don't have a handler for yet are marked done with a "skipped"
+ * status_message so the event-log UI shows them unambiguously.
  */
 @Injectable()
 export class SquareEventRouter {
   private readonly logger = new Logger(SquareEventRouter.name);
 
   constructor(
+    private readonly handlePayment: HandleSquarePayment,
+
     @Inject(SquareEventLog.name)
     private readonly eventLogModel: TenantModelProxy<typeof SquareEventLog>,
   ) {}
@@ -63,19 +71,102 @@ export class SquareEventRouter {
   }
 
   /**
-   * Phase-2 entry point. For now logs that the event type is not yet
-   * implemented and marks the row `skipped_duplicate` so the UI shows it
-   * unambiguously as "not processed" rather than hung in `received`.
+   * Dispatch an event-log row to its handler. Marks the row done /
+   * skipped / errored. Connection is passed in by the controller (it
+   * already loaded it for HMAC verification + tenant routing) so the
+   * router does not need its own tenant model proxy.
    */
-  public async dispatch(entryId: number): Promise<void> {
-    await this.eventLogModel()
-      .query()
-      .findById(entryId)
-      .patch({
+  public async dispatch(
+    entryId: number,
+    connection: SquareConnection,
+  ): Promise<void> {
+    const entry = await this.eventLogModel().query().findById(entryId);
+    if (!entry) return;
+
+    let payload: any = {};
+    try {
+      payload =
+        typeof entry.payload === 'string'
+          ? JSON.parse(entry.payload)
+          : entry.payload ?? {};
+    } catch {
+      payload = {};
+    }
+
+    try {
+      switch (entry.eventType) {
+        case 'payment.created':
+        case 'payment.updated': {
+          const payment = payload?.data?.object?.payment;
+          const result = await this.handlePayment.handle({
+            connection,
+            payment,
+            eventLogId: entry.id,
+          });
+          await this.markResult(entry.id, result);
+          return;
+        }
+
+        // Phase-3 handlers land here:
+        // case 'refund.created': case 'refund.updated': ...
+        // case 'payout.sent':    case 'payout.paid': case 'payout.failed': ...
+        // case 'customer.created': case 'customer.updated': ...
+
+        default:
+          await this.eventLogModel()
+            .query()
+            .findById(entry.id)
+            .patch({
+              status: 'done',
+              processedAt: new Date(),
+              errorText: `No handler for event type "${entry.eventType}" yet (Phase 2+).`,
+            });
+      }
+    } catch (err: any) {
+      this.logger.error(
+        `Square handler failed for entry ${entry.id} (${entry.eventType}): ${
+          err?.message ?? err
+        }`,
+        err?.stack,
+      );
+      await this.eventLogModel()
+        .query()
+        .findById(entry.id)
+        .patch({
+          status: 'failed',
+          processedAt: new Date(),
+          errorText: this.truncate(err?.message ?? String(err), 1024),
+        });
+    }
+  }
+
+  private async markResult(
+    entryId: number,
+    result: HandleSquarePaymentResult,
+  ): Promise<void> {
+    // 'reason' in result is a TypeScript-recognized type guard that
+    // narrows the discriminated union reliably (the boolean-discriminator
+    // form of narrowing was not collapsing for inferred call sites).
+    if ('reason' in result) {
+      await this.eventLogModel().query().findById(entryId).patch({
         status: 'done',
         processedAt: new Date(),
-        errorText:
-          'Phase-1 skeleton: event logged only. Handlers implemented in Phase 2.',
+        errorText: `Skipped: ${result.reason}`,
       });
+      return;
+    }
+    const note = result.isNew
+      ? `Created SaleReceipt ${result.saleReceiptId}` +
+        (result.tipJournalId ? ` + tip ManualJournal ${result.tipJournalId}` : '')
+      : `Already linked to SaleReceipt ${result.saleReceiptId} (duplicate event)`;
+    await this.eventLogModel().query().findById(entryId).patch({
+      status: 'done',
+      processedAt: new Date(),
+      errorText: note,
+    });
+  }
+
+  private truncate(s: string, max: number): string {
+    return s.length > max ? `${s.slice(0, max - 3)}...` : s;
   }
 }

@@ -20,6 +20,8 @@ export interface SquareConnectionDto {
   tipsLiabilityAccountId: number | null;
   walkInCustomerId: number | null;
   depositBankAccountId: number | null;
+  defaultSalesAccountId: number | null;
+  squareSalesItemId: number | null;
   connectedAt: Date | null;
   disconnectedAt: Date | null;
 }
@@ -43,6 +45,8 @@ export class GetSquareConnections {
       tipsLiabilityAccountId: row.tipsLiabilityAccountId,
       walkInCustomerId: row.walkInCustomerId,
       depositBankAccountId: row.depositBankAccountId,
+      defaultSalesAccountId: row.defaultSalesAccountId,
+      squareSalesItemId: row.squareSalesItemId,
       connectedAt: row.connectedAt,
       disconnectedAt: row.disconnectedAt,
     };
