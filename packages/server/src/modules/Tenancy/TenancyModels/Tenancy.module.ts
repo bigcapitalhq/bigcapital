@@ -12,6 +12,7 @@ import { SquareConnection } from '@/modules/SquareIntegration/models/SquareConne
 import { SquareEventLog } from '@/modules/SquareIntegration/models/SquareEventLog.model';
 import { SquareItemMapping } from '@/modules/SquareIntegration/models/SquareItemMapping.model';
 import { SquareCustomerMapping } from '@/modules/SquareIntegration/models/SquareCustomerMapping.model';
+import { SquareDocumentLink } from '@/modules/SquareIntegration/models/SquareDocumentLink.model';
 import { ItemCategory } from '@/modules/ItemCategories/models/ItemCategory.model';
 import { TaxRateModel } from '@/modules/TaxRates/models/TaxRate.model';
 import { PdfTemplateModel } from '@/modules/PdfTemplate/models/PdfTemplate';
@@ -58,6 +59,7 @@ const models = [
   SquareEventLog,
   SquareItemMapping,
   SquareCustomerMapping,
+  SquareDocumentLink,
   ItemCategory,
   TaxRateModel,
   PdfTemplateModel,

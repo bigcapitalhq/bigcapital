@@ -7,6 +7,7 @@ import { SquareIntegrationApplication } from './SquareIntegrationApplication.ser
 import { HandleSquareOAuthCallback } from './commands/HandleSquareOAuthCallback.service';
 import { EnsureSquareApplicationWebhook } from './commands/EnsureSquareApplicationWebhook.service';
 import { UpsertSquareMerchantIndex } from './commands/UpsertSquareMerchantIndex.service';
+import { SquareDocumentLinks } from './commands/SquareDocumentLinks.service';
 import { UpdateSquareConnectionSettings } from './commands/UpdateSquareConnectionSettings.service';
 import { DisconnectSquareConnection } from './commands/DisconnectSquareConnection.service';
 import { UpsertSquareItemMapping } from './commands/UpsertSquareItemMapping.service';
@@ -52,6 +53,7 @@ const systemModels = [
     HandleSquareOAuthCallback,
     EnsureSquareApplicationWebhook,
     UpsertSquareMerchantIndex,
+    SquareDocumentLinks,
     UpdateSquareConnectionSettings,
     DisconnectSquareConnection,
     UpsertSquareItemMapping,
