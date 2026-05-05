@@ -8,7 +8,10 @@ import { ImportableService } from '@/modules/Import/decorators/Import.decorator'
 import { PaymentReceived } from '../models/PaymentReceived';
 
 @Injectable()
-@ImportableService({ name: PaymentReceived.name })
+// Registered under the literal string "PaymentReceive" because the webapp
+// sends that as the resource name, while the model class is PaymentReceived.
+// Same precedent as TaxRate (model: TaxRateModel, resource: TaxRate).
+@ImportableService({ name: 'PaymentReceive' })
 export class PaymentsReceivedImportable extends Importable {
   constructor(
     private readonly createPaymentReceiveService: CreatePaymentReceivedService,
