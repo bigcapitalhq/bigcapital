@@ -125,6 +125,26 @@ for (const order of orders) {
       Active: 'T',
     });
   }
+  // Step 2b: order-level service charges (gratuities, auto-fees) become
+  // synthetic items so the invoice/receipt totals match Square's totals.
+  // The catalog Sell Price is 0 — the per-line Rate overrides it anyway.
+  for (const sc of order.service_charges || []) {
+    const name = composeServiceChargeName(sc);
+    if (!name || itemNameSet.has(name)) continue;
+    itemNameSet.add(name);
+    itemRows.push({
+      'Item Type': 'service',
+      'Item Name': name,
+      'Item Code': '',
+      Sellable: 'T',
+      Purchasable: 'F',
+      'Cost Price': '',
+      'Sell Price': 0,
+      'Sell Account': SELL_ACCOUNT,
+      'Sell Description': '',
+      Active: 'T',
+    });
+  }
 }
 
 // --- invoices.csv + invoice_payments.csv -----------------------------------
@@ -178,6 +198,27 @@ for (const inv of invoices) {
       Quantity: line.quantity || 1,
       Rate: (line.base_price_money?.amount || 0) / 100,
       Description: line.note || '',
+    });
+    lineCount++;
+  }
+  for (const sc of order.service_charges || []) {
+    const scName = composeServiceChargeName(sc);
+    const scAmount = (sc.total_money?.amount || 0) / 100;
+    if (!scName || !scAmount) continue;
+    invoiceRows.push({
+      'Invoice No.': inv.invoice_number,
+      'Reference No.': '',
+      'Invoice Date': invoiceDate,
+      'Due Date': dueDate,
+      Customer: customerName,
+      'Exchange Rate': 1,
+      'Invoice Message': message,
+      'Terms & Conditions': '',
+      Delivered: delivered,
+      Item: scName,
+      Quantity: 1,
+      Rate: scAmount,
+      Description: '',
     });
     lineCount++;
   }
@@ -263,6 +304,26 @@ for (const p of payments) {
       'Line Description': line.note || '',
     });
   }
+  for (const sc of order.service_charges || []) {
+    const scName = composeServiceChargeName(sc);
+    const scAmount = (sc.total_money?.amount || 0) / 100;
+    if (!scName || !scAmount) continue;
+    receiptRows.push({
+      'Receipt Date': date,
+      Customer: customerName,
+      'Deposit Account': DEPOSIT_ACCOUNT,
+      'Exchange Rate': 1,
+      'Receipt Number': `REC-${p.id.slice(-8)}`,
+      'Reference No.': p.id,
+      Statement: '',
+      'Receipt Message': '',
+      Closed: 'T',
+      Item: scName,
+      Quantity: 1,
+      Rate: scAmount,
+      'Line Description': '',
+    });
+  }
 }
 
 // --- write everything ------------------------------------------------------
@@ -340,6 +401,15 @@ function composeItemName(item, variation) {
   const varName = (variation.item_variation_data?.name || '').trim();
   if (varName && varName !== 'Regular') return `${itemName} - ${varName}`;
   return itemName;
+}
+
+// Service charges are order-level (Gratuity, auto-fees) and aren't in
+// line_items. Build a stable name so the same gratuity rate dedupes into
+// one Bigcapital item across many invoices.
+function composeServiceChargeName(sc) {
+  const base = (sc.name || '').trim() || 'Service Charge';
+  const pct = (sc.percentage || '').toString().trim();
+  return pct ? `${base} ${pct}%` : base;
 }
 
 async function loadNdjson(file) {
