@@ -88,7 +88,7 @@ for (const [vid, { item, variation }] of variationByItemId) {
   itemNameSet.add(itemName);
   const price = (variation.item_variation_data?.price_money?.amount || 0) / 100;
   itemRows.push({
-    'Item Type': 'Service',
+    'Item Type': 'service',
     'Item Name': itemName,
     'Item Code': '',
     Sellable: 'T',
@@ -113,7 +113,7 @@ for (const order of orders) {
     itemNameSet.add(name);
     const price = (line.base_price_money?.amount || 0) / 100;
     itemRows.push({
-      'Item Type': 'Service',
+      'Item Type': 'service',
       'Item Name': name,
       'Item Code': '',
       Sellable: 'T',
