@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { CreateSaleReceipt } from './CreateSaleReceipt.service';
 import { Importable } from '@/modules/Import/Importable';
+import { ImportableService } from '@/modules/Import/decorators/Import.decorator';
 import { CreateSaleReceiptDto } from '../dtos/SaleReceipt.dto';
 import { SaleReceiptsSampleData } from '../constants';
+import { SaleReceipt } from '../models/SaleReceipt';
 
 @Injectable()
+@ImportableService({ name: SaleReceipt.name })
 export class SaleReceiptsImportable extends Importable {
   constructor(private readonly createReceiptService: CreateSaleReceipt) {
     super();

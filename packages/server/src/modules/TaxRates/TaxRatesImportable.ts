@@ -1,11 +1,12 @@
 import { Knex } from 'knex';
 import { CreateTaxRate } from './commands/CreateTaxRate.service';
 import { Importable } from '../Import/Importable';
+import { ImportableService } from '../Import/decorators/Import.decorator';
 import { TaxRatesSampleData } from './TaxRatesImportable.SampleData';
 import { CreateTaxRateDto } from './dtos/TaxRate.dto';
 import { Injectable } from '@nestjs/common';
-
 @Injectable()
+@ImportableService({ name: 'TaxRate' })
 export class TaxRatesImportable extends Importable {
   constructor(private readonly createTaxRateService: CreateTaxRate) {
     super();

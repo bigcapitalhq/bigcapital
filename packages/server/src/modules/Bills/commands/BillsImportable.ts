@@ -3,9 +3,12 @@ import { CreateBill } from './CreateBill.service';
 import { BillsSampleData } from '../Bills.constants';
 import { Injectable } from '@nestjs/common';
 import { Importable } from '@/modules/Import/Importable';
+import { ImportableService } from '@/modules/Import/decorators/Import.decorator';
 import { CreateBillDto } from '../dtos/Bill.dto';
+import { Bill } from '../models/Bill';
 
 @Injectable()
+@ImportableService({ name: Bill.name })
 export class BillsImportable extends Importable {
   constructor(
     private readonly createBillService: CreateBill,

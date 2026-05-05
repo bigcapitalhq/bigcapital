@@ -2,10 +2,13 @@ import { Knex } from 'knex';
 import { CustomersSampleData } from './_SampleData';
 import { Injectable } from '@nestjs/common';
 import { Importable } from '../Import/Importable';
+import { ImportableService } from '../Import/decorators/Import.decorator';
 import { CreateCustomer } from './commands/CreateCustomer.service';
 import { CreateCustomerDto } from './dtos/CreateCustomer.dto';
+import { Customer } from './models/Customer';
 
 @Injectable()
+@ImportableService({ name: Customer.name })
 export class CustomersImportable extends Importable {
   constructor(private readonly createCustomerService: CreateCustomer) {
     super();
