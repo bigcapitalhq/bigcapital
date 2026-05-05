@@ -30,3 +30,8 @@ docker/*/.deploy.conf
 
 # Square data pulls (real seller data, never commit)
 square-import-sample/
+square-import-sample.zip
+
+# Tenant DB snapshots (real data, large, never commit)
+*-pre-square-import-*.sql
+bigcapital_tenant_*.sql
