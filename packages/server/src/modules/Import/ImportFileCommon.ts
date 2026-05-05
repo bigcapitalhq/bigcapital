@@ -36,7 +36,7 @@ export class ImportFileCommon {
     parsedData: Record<string, any>[],
     trx?: Knex.Transaction,
   ): Promise<[ImportOperSuccess[], ImportOperError[]]> {
-    const resourceFields = this.resource.getResourceFields2(
+    const resourceFields = await this.resource.getResourceFields2(
       importFile.resource,
     );
     const importable = await this.importableRegistry.getImportable(

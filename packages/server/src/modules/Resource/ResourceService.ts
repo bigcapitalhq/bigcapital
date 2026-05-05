@@ -72,13 +72,13 @@ export class ResourceService {
    * @param {IModelMetaField2} fields
    * @returns {IModelMetaField2}
    */
-  public filterSupportFeatures = (
+  public filterSupportFeatures = async (
     fields: Record<string, IModelMetaField2 | IModelMetaColumn>,
   ) => {
     const isMultiFeaturesEnabled =
-      this.branchesSettings.isMultiBranchesActive();
+      await this.branchesSettings.isMultiBranchesActive();
     const isMultiWarehousesEnabled =
-      this.warehousesSettings.isMultiWarehousesActive();
+      await this.warehousesSettings.isMultiWarehousesActive();
 
     return pickBy(fields, (field) => {
       if (
@@ -140,11 +140,11 @@ export class ResourceService {
    * @param {string} modelName
    * @returns {IModelMetaField2}
    */
-  public getResourceFields2(modelName: string): {
+  public async getResourceFields2(modelName: string): Promise<{
     [key: string]: IModelMetaField2;
-  } {
+  }> {
     const meta = this.getResourceMeta(modelName);
-    const filteredFields = this.filterSupportFeatures(meta.fields2);
+    const filteredFields = await this.filterSupportFeatures(meta.fields2);
 
     return this.localizeFields(
       filteredFields as Record<string, IModelMetaField2>,
@@ -156,7 +156,7 @@ export class ResourceService {
    * @param {string} modelName - The model name.
    * @returns {IModelMetaColumn}
    */
-  public getResourceColumns(modelName: string) {
+  public async getResourceColumns(modelName: string) {
     const meta = this.getResourceMeta(modelName);
 
     return this.filterSupportFeatures(meta.columns);

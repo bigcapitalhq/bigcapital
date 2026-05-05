@@ -100,7 +100,7 @@ export class ImportFileUploadService {
       params: paramsStringified,
     });
     const resourceColumnsMap =
-      this.resourceService.getResourceFields2(resource);
+      await this.resourceService.getResourceFields2(resource);
     const resourceColumns = getResourceColumns(resourceColumnsMap);
 
     return {

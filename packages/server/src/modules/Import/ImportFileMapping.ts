@@ -34,7 +34,7 @@ export class ImportFileMapping {
       .throwIfNotFound();
 
     // Invalidate the from/to map attributes.
-    this.validateMapsAttrs(importFile, maps);
+    await this.validateMapsAttrs(importFile, maps);
 
     // @todo validate the required fields.
 
@@ -63,8 +63,8 @@ export class ImportFileMapping {
    * @param {ImportMappingAttr[]} maps
    * @throws {ServiceError(ERRORS.INVALID_MAP_ATTRS)}
    */
-  private validateMapsAttrs(importFile: any, maps: ImportMappingAttr[]) {
-    const fields = this.resource.getResourceFields2(importFile.resource);
+  private async validateMapsAttrs(importFile: any, maps: ImportMappingAttr[]) {
+    const fields = await this.resource.getResourceFields2(importFile.resource);
     const columnsMap = fromPairs(
       importFile.columnsParsed.map((field) => [field, '']),
     );
