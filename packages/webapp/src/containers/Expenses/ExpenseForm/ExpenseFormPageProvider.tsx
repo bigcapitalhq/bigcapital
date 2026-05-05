@@ -33,13 +33,13 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   const {
     data: { customers },
     isLoading: isCustomersLoading,
-  } = useCustomers();
+  } = useCustomers({ page_size: 10000 });
 
   // Fetches vendors list.
   const {
     data: { vendors },
     isLoading: isVendorsLoading,
-  } = useVendors({}, {});
+  } = useVendors({ page_size: 10000 });
 
   // Fetch the expense details.
   const { data: expense, isLoading: isExpenseLoading } = useExpense(expenseId, {
