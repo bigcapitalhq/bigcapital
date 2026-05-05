@@ -13,7 +13,8 @@ import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranch
 import { momentFormatter } from '@/utils';
 
 export default function CategorizeTransactionOtherIncome() {
-  const { accounts } = useCategorizeTransactionBoot();
+  const { accounts, autofillCategorizeValues } = useCategorizeTransactionBoot();
+  const isRefund = !autofillCategorizeValues?.isDepositTransaction;
 
   return (
     <>
@@ -28,7 +29,7 @@ export default function CategorizeTransactionOtherIncome() {
 
       <FFormGroup
         name={'debitAccountId'}
-        label={'To Account'}
+        label={isRefund ? 'From Account' : 'To Account'}
         fastField={true}
         inline
       >
@@ -44,7 +45,7 @@ export default function CategorizeTransactionOtherIncome() {
 
       <FFormGroup
         name={'creditAccountId'}
-        label={'Income Account'}
+        label={isRefund ? 'Refund Category' : 'Income Account'}
         fastField
         inline
       >

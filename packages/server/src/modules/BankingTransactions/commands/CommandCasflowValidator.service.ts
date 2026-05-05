@@ -95,9 +95,20 @@ export class CommandBankTransactionValidator {
     const isDepositTransaction = amount > 0;
     const isWithdrawalTransaction = amount <= 0;
 
-    const type = getCashflowTransactionType(
-      transactionType as CASHFLOW_TRANSACTION_TYPE
-    );
+    const normalized = upperFirst(
+      camelCase(transactionType)
+    ) as CASHFLOW_TRANSACTION_TYPE;
+    const type = getCashflowTransactionType(normalized);
+
+    // Income / expense categorizations are bidirectional: a deposit categorized as
+    // OtherExpense is a vendor refund (reduces the original expense); a withdrawal
+    // categorized as OtherIncome is a customer refund (reduces income).
+    if (
+      normalized === CASHFLOW_TRANSACTION_TYPE.OTHER_INCOME ||
+      normalized === CASHFLOW_TRANSACTION_TYPE.OTHER_EXPENSE
+    ) {
+      return;
+    }
     if (
       (type.direction === CASHFLOW_DIRECTION.IN && isDepositTransaction) ||
       (type.direction === CASHFLOW_DIRECTION.OUT && isWithdrawalTransaction)
