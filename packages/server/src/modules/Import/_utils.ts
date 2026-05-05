@@ -301,8 +301,11 @@ export const valueParser =
 
         // Parses the enumeration value.
       } else if (field.fieldType === 'enumeration') {
+        const valueLower = value?.toLowerCase();
         const option = get(field, 'options', []).find(
-          (option) => option.label?.toLowerCase() === value?.toLowerCase(),
+          (option) =>
+            option.key?.toLowerCase() === valueLower ||
+            option.label?.toLowerCase() === valueLower,
         );
         _value = get(option, 'key');
         // Parses the numeric value.
