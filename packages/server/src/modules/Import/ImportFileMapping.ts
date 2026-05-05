@@ -88,7 +88,7 @@ export class ImportFileMapping {
       }
     });
     if (invalid.length > 0) {
-      throw new ServiceError(ERRORS.INVALID_MAP_ATTRS);
+      throw new ServiceError(ERRORS.INVALID_MAP_ATTRS, '', { invalid });
     }
   }
 
@@ -102,18 +102,24 @@ export class ImportFileMapping {
 
     maps.forEach((map) => {
       if (fromMap[map.from]) {
-        throw new ServiceError(ERRORS.DUPLICATED_FROM_MAP_ATTR);
+        throw new ServiceError(ERRORS.DUPLICATED_FROM_MAP_ATTR, '', {
+          from: map.from,
+          tos: [fromMap[map.from], map.to],
+        });
       } else {
-        fromMap[map.from] = true;
+        fromMap[map.from] = map.to;
       }
       const toPath = !isUndefined(map?.group)
         ? `${map.group}.${map.to}`
         : map.to;
 
       if (toMap[toPath]) {
-        throw new ServiceError(ERRORS.DUPLICATED_TO_MAP_ATTR);
+        throw new ServiceError(ERRORS.DUPLICATED_TO_MAP_ATTR, '', {
+          to: toPath,
+          froms: [toMap[toPath], map.from],
+        });
       } else {
-        toMap[toPath] = true;
+        toMap[toPath] = map.from;
       }
     });
   }

@@ -31,9 +31,52 @@ export function ImportFileMappingForm({
         setStep(2);
       })
       .catch(({ response: { data } }) => {
-        if (data.errors.find((e) => e.type === 'DUPLICATED_FROM_MAP_ATTR')) {
+        const dupFrom = data.errors.find(
+          (e) => e.type === 'DUPLICATED_FROM_MAP_ATTR',
+        );
+        const dupTo = data.errors.find(
+          (e) => e.type === 'DUPLICATED_TO_MAP_ATTR',
+        );
+        const invalid = data.errors.find(
+          (e) => e.type === 'INVALID_MAP_ATTRS',
+        );
+        if (dupFrom) {
+          const col = dupFrom.payload?.from;
+          const tos = dupFrom.payload?.tos || [];
           AppToaster.show({
-            message: 'Selected the same sheet columns to multiple fields.',
+            message: col
+              ? `Sheet column "${col}" is mapped to more than one field${
+                  tos.length ? ` (${tos.join(', ')})` : ''
+                }. Each sheet column may map to only one field.`
+              : 'Selected the same sheet column to multiple fields.',
+            intent: Intent.DANGER,
+          });
+        } else if (dupTo) {
+          const field = dupTo.payload?.to;
+          const froms = dupTo.payload?.froms || [];
+          AppToaster.show({
+            message: field
+              ? `Field "${field}" has more than one sheet column assigned${
+                  froms.length ? ` (${froms.join(', ')})` : ''
+                }. Each field may receive only one sheet column.`
+              : 'Multiple sheet columns mapped to the same field.',
+            intent: Intent.DANGER,
+          });
+        } else if (invalid) {
+          const items = invalid.payload?.invalid || [];
+          const detail = items
+            .slice(0, 3)
+            .map((m) => `${m.from || '(empty)'} → ${m.to || '(empty)'}`)
+            .join('; ');
+          AppToaster.show({
+            message: `Invalid mapping${detail ? `: ${detail}` : ''}${
+              items.length > 3 ? ` … and ${items.length - 3} more` : ''
+            }.`,
+            intent: Intent.DANGER,
+          });
+        } else {
+          AppToaster.show({
+            message: 'Could not save the mapping.',
             intent: Intent.DANGER,
           });
         }
