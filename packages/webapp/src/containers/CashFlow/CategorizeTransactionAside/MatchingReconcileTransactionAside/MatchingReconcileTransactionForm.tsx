@@ -54,7 +54,37 @@ function MatchingReconcileTransactionFormRoot({
   const handleAsideClose = () => {
     closeReconcileMatchingTransaction();
   };
-  // Handle the form submitting.
+
+  return (
+    <Aside
+      title={'Create Reconcile Transactions'}
+      className={styles.asideRoot}
+      onClose={handleAsideClose}
+    >
+      <MatchingReconcileTransactionBoot>
+        <MatchingReconcileTransactionFormInner
+          accountId={accountId}
+          createCashflowTransactionMutate={createCashflowTransactionMutate}
+          closeReconcileMatchingTransaction={closeReconcileMatchingTransaction}
+          reconcileMatchingTransactionPendingAmount={
+            reconcileMatchingTransactionPendingAmount
+          }
+          onSubmitSuccess={onSubmitSuccess}
+        />
+      </MatchingReconcileTransactionBoot>
+    </Aside>
+  );
+}
+
+function MatchingReconcileTransactionFormInner({
+  accountId,
+  createCashflowTransactionMutate,
+  closeReconcileMatchingTransaction,
+  reconcileMatchingTransactionPendingAmount,
+  onSubmitSuccess,
+}: any) {
+  const { accounts } = useMatchingReconcileTransactionBoot();
+
   const handleSubmit = (
     values: MatchingReconcileTransactionValues,
     {
@@ -63,7 +93,7 @@ function MatchingReconcileTransactionFormRoot({
     }: FormikHelpers<MatchingReconcileTransactionValues>,
   ) => {
     setSubmitting(true);
-    const _values = transformToReq(values, accountId);
+    const _values = transformToReq(values, accountId, accounts);
 
     createCashflowTransactionMutate(_values)
       .then((res) => {
@@ -105,29 +135,21 @@ function MatchingReconcileTransactionFormRoot({
   };
 
   return (
-    <Aside
-      title={'Create Reconcile Transactions'}
-      className={styles.asideRoot}
-      onClose={handleAsideClose}
+    <Formik
+      onSubmit={handleSubmit}
+      initialValues={_initialValues}
+      validationSchema={MatchingReconcileFormSchema}
     >
-      <MatchingReconcileTransactionBoot>
-        <Formik
-          onSubmit={handleSubmit}
-          initialValues={_initialValues}
-          validationSchema={MatchingReconcileFormSchema}
-        >
-          <Form className={styles.form}>
-            <Aside.Body className={styles.asideContent}>
-              <CreateReconcileTransactionContent />
-            </Aside.Body>
+      <Form className={styles.form}>
+        <Aside.Body className={styles.asideContent}>
+          <CreateReconcileTransactionContent />
+        </Aside.Body>
 
-            <Aside.Footer className={styles.asideFooter}>
-              <MatchingReconcileTransactionFooter />
-            </Aside.Footer>
-          </Form>
-        </Formik>
-      </MatchingReconcileTransactionBoot>
-    </Aside>
+        <Aside.Footer className={styles.asideFooter}>
+          <MatchingReconcileTransactionFooter />
+        </Aside.Footer>
+      </Form>
+    </Formik>
   );
 }
 
@@ -255,7 +277,11 @@ function MatchingReconcileCategoryField() {
           },
           boundary: 'viewport',
         }}
-        filterByRootTypes={values.type === 'deposit' ? 'income' : 'expense'}
+        filterByRootTypes={
+          values.type === 'deposit'
+            ? ['income', 'equity']
+            : ['expense', 'equity']
+        }
         fastField
       />
     </FFormGroup>
