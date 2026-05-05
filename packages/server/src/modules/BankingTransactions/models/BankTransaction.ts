@@ -61,7 +61,6 @@ export class BankTransaction extends BaseModel {
   static get virtualAttributes() {
     return [
       'localAmount',
-      'transactionTypeFormatted',
       'isPublished',
       'typeMeta',
       'isCashCredit',
@@ -84,14 +83,6 @@ export class BankTransaction extends BaseModel {
   get isPublished() {
     return !!this.publishedAt;
   }
-
-  /**
-   * Transaction type formatted.
-   * @returns {string}
-   */
-  // get transactionTypeFormatted() {
-  //   return getCashflowTransactionFormattedType(this.transactionType);
-  // }
 
   get typeMeta() {
     return getCashflowTransactionType(

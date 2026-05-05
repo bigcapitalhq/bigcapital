@@ -1,4 +1,5 @@
 import { Transformer } from '../../Transformer/Transformer';
+import { getCashflowTransactionFormattedType } from '../utils';
 
 export class BankTransactionTransformer extends Transformer {
   /**
@@ -32,7 +33,8 @@ export class BankTransactionTransformer extends Transformer {
    * @returns {string}
    */
   protected transactionTypeFormatted = (transaction) => {
-    return this.context.i18n.t(transaction.transactionType);
+    const key = getCashflowTransactionFormattedType(transaction.transactionType);
+    return key ? this.context.i18n.t(key) : transaction.transactionType;
   };
 
   /**
