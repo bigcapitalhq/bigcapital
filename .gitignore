@@ -27,3 +27,6 @@ docker/*/.deploy.conf
 
 # Local scratch notes (sandbox creds, curl recipes, ad-hoc reminders)
 *-notes.txt
+
+# Square data pulls (real seller data, never commit)
+square-import-sample/
