@@ -72,15 +72,21 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
         }
 
         // Exclude splits that already have a match row.
+        // Use whereColumn (not whereRaw) so the snake_case+upperCase
+        // identifier mapper translates table/column names — MariaDB on Linux
+        // is case-sensitive and the actual tables are MATCHED_BANK_TRANSACTIONS
+        // / EXPENSE_PAYMENT_SPLITS, not the lowercase forms.
         query.whereNotExists(function () {
           this.select('id')
             .from('matched_bank_transactions')
             .where('matched_bank_transactions.reference_type', 'Expense')
-            .whereRaw(
-              'matched_bank_transactions.reference_id = expense.id',
+            .whereColumn(
+              'matched_bank_transactions.reference_id',
+              'expense.id',
             )
-            .whereRaw(
-              'matched_bank_transactions.reference_sub_id = expense_payment_splits.id',
+            .whereColumn(
+              'matched_bank_transactions.reference_sub_id',
+              'expense_payment_splits.id',
             );
         });
 
