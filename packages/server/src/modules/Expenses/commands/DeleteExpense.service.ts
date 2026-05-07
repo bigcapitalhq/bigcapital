@@ -5,6 +5,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Expense } from '../models/Expense.model';
 import { ExpenseCategory } from '../models/ExpenseCategory.model';
+import { ExpensePaymentSplit } from '../models/ExpensePaymentSplit.model';
 import { events } from '@/common/events/events';
 import {
   IExpenseEventDeletePayload,
@@ -31,6 +32,11 @@ export class DeleteExpense {
 
     @Inject(ExpenseCategory.name)
     private expenseCategoryModel: TenantModelProxy<typeof ExpenseCategory>,
+
+    @Inject(ExpensePaymentSplit.name)
+    private expensePaymentSplitModel: TenantModelProxy<
+      typeof ExpensePaymentSplit
+    >,
   ) {}
 
   /**
@@ -64,6 +70,12 @@ export class DeleteExpense {
 
       // Deletes expense associated entries.
       await this.expenseCategoryModel()
+        .query(trx)
+        .where('expenseId', expenseId)
+        .delete();
+
+      // Deletes expense payment splits (FK has no ON DELETE CASCADE).
+      await this.expensePaymentSplitModel()
         .query(trx)
         .where('expenseId', expenseId)
         .delete();
