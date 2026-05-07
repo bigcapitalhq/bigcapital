@@ -39,6 +39,7 @@ export default function GeneralLedgerTable({ companyName }) {
       companyName={companyName}
       sheetType={intl.get('general_ledger_sheet')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       loading={isLoading}
       fullWidth={true}
     >

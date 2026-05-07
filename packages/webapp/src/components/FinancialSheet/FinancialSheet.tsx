@@ -27,11 +27,18 @@ export function FinancialSheet({
   children,
   accountingBasis,
   basis,
+  dateFormat,
   minimal = false,
   fullWidth = false,
   currentDate = true,
   className,
 }) {
+  // Tenant-level dateFormat (from report meta); fall back to a US-friendly
+  // default. Append a time portion since the footer shows when the report
+  // was generated.
+  const footerDateFormat = dateFormat
+    ? `${dateFormat} HH:mm`
+    : 'MMM DD, YYYY HH:mm';
   const methodsLabels = useMemo(
     () => ({
       cash: intl.get('cash'),
@@ -64,12 +71,12 @@ export function FinancialSheet({
       <FinancialSheetFooter>
         {basisLabel && (
           <FinancialSheetFooterBasis>
-            <T id={'accounting_basis'} /> {basisLabel}
+            <T id={'accounting_basis'} />{' '}{basisLabel}
           </FinancialSheetFooterBasis>
         )}
         {currentDate && (
           <FinancialSheetFooterCurrentTime>
-            {moment().format('YYYY MMM DD  HH:MM')}
+            {moment().format(footerDateFormat)}
           </FinancialSheetFooterCurrentTime>
         )}
       </FinancialSheetFooter>

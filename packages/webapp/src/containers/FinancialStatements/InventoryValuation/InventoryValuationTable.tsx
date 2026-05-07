@@ -31,6 +31,7 @@ export default function InventoryValuationTable({
       companyName={companyName}
       sheetType={intl.get('inventory_valuation')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       loading={isLoading}
     >
       <InventoryValuationDataTable

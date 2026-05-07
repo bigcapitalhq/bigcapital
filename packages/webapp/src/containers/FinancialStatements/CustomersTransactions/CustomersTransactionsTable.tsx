@@ -37,6 +37,7 @@ export default function CustomersTransactionsTable({
       companyName={companyName}
       sheetType={intl.get('customers_transactions')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       fullWidth={true}
     >
       <CustomersTransactionsDataTable

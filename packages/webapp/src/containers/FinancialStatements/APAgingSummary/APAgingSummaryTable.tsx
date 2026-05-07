@@ -32,6 +32,7 @@ export default function APAgingSummaryTable({
       companyName={organizationName}
       sheetType={intl.get('payable_aging_summary')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       loading={isAPAgingLoading}
     >
       <APAgingSummaryDataTable

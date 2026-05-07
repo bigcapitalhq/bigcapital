@@ -28,6 +28,7 @@ export default function PurchasesByItemsTable({ companyName }) {
       companyName={companyName}
       sheetType={intl.get('purchases_by_items')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
     >
       <PurchasesByItemsDataTable
         columns={columns}

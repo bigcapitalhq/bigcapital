@@ -29,6 +29,7 @@ export default function CustomersBalanceSummaryTable({
       companyName={companyName}
       sheetType={intl.get('customers_balance_summary')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
     >
       <CustomerBalanceDataTable
         columns={columns}

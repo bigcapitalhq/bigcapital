@@ -28,6 +28,7 @@ export default function VendorsBalanceSummaryTable({
       companyName={organizationName}
       sheetType={intl.get('vendors_balance_summary')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
     >
       <VendorBalanceDataTable
         columns={columns}

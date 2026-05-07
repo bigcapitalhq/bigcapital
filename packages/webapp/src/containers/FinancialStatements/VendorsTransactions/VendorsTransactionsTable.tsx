@@ -40,6 +40,7 @@ export default function VendorsTransactionsTable({
       sheetType={intl.get('vendors_transactions')}
       loading={isVendorsTransactionsLoading}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       fullWidth={true}
     >
       <VendorsTransactionsDataTable

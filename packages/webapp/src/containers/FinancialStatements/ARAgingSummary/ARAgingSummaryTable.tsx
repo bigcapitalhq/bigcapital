@@ -32,6 +32,7 @@ export default function ReceivableAgingSummaryTable({
       companyName={organizationName}
       sheetType={intl.get('receivable_aging_summary')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       loading={isARAgingLoading}
     >
       <ARAgingSummaryDataTable

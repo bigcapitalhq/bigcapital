@@ -38,6 +38,7 @@ export function JournalTable({ companyName }) {
       companyName={companyName}
       sheetType={intl.get('journal_sheet')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       loading={isLoading}
       fullWidth={true}
       name="journal"

@@ -36,6 +36,7 @@ export default function ProfitLossSheetTable({
       companyName={companyName}
       sheetType={<T id={'profit_loss_sheet'} />}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       basis={query.basis}
     >
       <ProfitLossDataTable

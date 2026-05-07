@@ -33,6 +33,7 @@ export default function CashFlowStatementTable({
       companyName={companyName}
       sheetType={intl.get('statement_of_cash_flow')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       basis={query.basis}
     >
       <CashflowStatementDataTable

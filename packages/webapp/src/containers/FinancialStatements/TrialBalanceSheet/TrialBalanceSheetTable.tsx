@@ -28,6 +28,7 @@ export default function TrialBalanceSheetTable({ companyName }) {
       companyName={companyName}
       sheetType={intl.get('trial_balance_sheet')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       name="trial-balance"
       loading={isLoading}
       basis={'cash'}

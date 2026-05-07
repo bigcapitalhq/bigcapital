@@ -27,6 +27,7 @@ export default function SalesByItemsTable({ companyName }) {
       companyName={companyName}
       sheetType={intl.get('sales_by_items')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       loading={isLoading}
     >
       <SalesByItemsDataTable

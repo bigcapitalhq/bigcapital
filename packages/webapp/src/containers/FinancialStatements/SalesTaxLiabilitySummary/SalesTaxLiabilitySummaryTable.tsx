@@ -36,6 +36,7 @@ function SalesTaxLiabilitySummaryTableRoot({
       companyName={organizationName}
       sheetType={'Sales Tax Liability Summary'}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       basis={''}
     >
       <SalesTaxLiabilitySummaryDataTable

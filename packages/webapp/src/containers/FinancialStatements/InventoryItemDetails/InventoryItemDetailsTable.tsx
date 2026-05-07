@@ -36,6 +36,7 @@ export function InventoryItemDetailsTable({
       sheetType={intl.get('inventory_item_details')}
       loading={isInventoryItemDetailsLoading}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       fullWidth={true}
     >
       <InventoryItemDetailsDataTable

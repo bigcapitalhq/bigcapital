@@ -35,6 +35,7 @@ export default function BalanceSheetTable({
       companyName={companyName}
       sheetType={intl.get('balance_sheet')}
       dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateFormat={meta?.date_format}
       basis={query.basis}
     >
       <BalanceSheetDataTable
