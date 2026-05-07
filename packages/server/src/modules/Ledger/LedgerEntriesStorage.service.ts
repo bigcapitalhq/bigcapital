@@ -1,11 +1,7 @@
 import { Knex } from 'knex';
-import * as async from 'async';
 import { Inject, Injectable } from '@nestjs/common';
 import { transformLedgerEntryToTransaction } from './utils';
-import {
-  ILedgerEntry,
-  ISaveLedgerEntryQueuePayload,
-} from './types/Ledger.types';
+import { ILedgerEntry } from './types/Ledger.types';
 import { ILedger } from './types/Ledger.types';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
@@ -33,13 +29,16 @@ export class LedgerEntriesStorageService {
    * @returns {Promise<void>}
    */
   public saveEntries = async (ledger: ILedger, trx?: Knex.Transaction) => {
-    const saveEntryQueue = async.queue(this.saveEntryTask.bind(this), 10);
     const entries = ledger.filter(filterBlankEntry).getEntries();
-
-    entries.forEach((entry) => {
-      saveEntryQueue.push({ entry, trx });
-    });
-    if (entries.length > 0) await saveEntryQueue.drain();
+    // Sequential await: Knex transactions are not safe for concurrent
+    // queries on the same trx, and the prior `async.queue` (concurrency 10)
+    // silently swallowed per-entry insert failures via the queue's
+    // unhandled-error path — leaving the A/R debit + most credits in place
+    // while one or more credit legs vanished. That produced unbalanced
+    // SaleInvoice GL transactions that only surfaced via Trial Balance.
+    for (const entry of entries) {
+      await this.saveEntry(entry, trx);
+    }
   };
 
   /**
@@ -72,18 +71,5 @@ export class LedgerEntriesStorageService {
     const transaction = transformLedgerEntryToTransaction(entry);
 
     await this.accountTransactionModel().query(trx).insert(transaction);
-  };
-
-  /**
-   * Save the ledger entry to the transactions repository async task.
-   * @param {ISaveLedgerEntryQueuePayload} task - Task payload.
-   * @returns {Promise<void>}
-   */
-  private saveEntryTask = async (
-    task: ISaveLedgerEntryQueuePayload,
-  ): Promise<void> => {
-    const { entry, trx } = task;
-
-    await this.saveEntry(entry, trx);
   };
 }

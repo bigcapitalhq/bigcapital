@@ -31,12 +31,12 @@ export class UnitOfWork {
       const result = await work(_trx);
 
       if (!trx) {
-        _trx.commit();
+        await _trx.commit();
       }
       return result;
     } catch (error) {
       if (!trx) {
-        _trx.rollback();
+        await _trx.rollback();
       }
       throw error;
     }

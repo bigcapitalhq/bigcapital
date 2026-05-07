@@ -71,12 +71,6 @@ export interface ILedgerEntry {
   costable?: boolean;
 }
 
-export interface ISaveLedgerEntryQueuePayload {
-  tenantId: number;
-  entry: ILedgerEntry;
-  trx?: Knex.Transaction;
-}
-
 export interface ISaveAccountsBalanceQueuePayload {
   ledger: ILedger;
   tenantId: number;
