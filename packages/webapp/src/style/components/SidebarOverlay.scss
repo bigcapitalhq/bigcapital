@@ -4,7 +4,7 @@
   width: 225px;
   outline: 0;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-  z-index: 15;
+  z-index: 20;
 
   &__scroll-wrapper {
     height: 100%
@@ -126,5 +126,5 @@
 
 .sidebar-overlay-backdrop {
   background-color: var(--color-sidebar-overlay-backdrop);
-  z-index: 14;
+  z-index: 19;
 }
