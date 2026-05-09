@@ -12,6 +12,24 @@ nvm use 18.16.1
 
 Use `pnpm` for this project.
 
+## Commits & Hooks
+
+Husky hooks are tracked as 100755 and active on every commit.
+
+- **`.husky/pre-commit`** runs `pnpm exec lint-staged`, which formats staged JS/TS/JSON/MD/YAML/SCSS/CSS files via Prettier. Each package's local `.prettierrc` is auto-resolved by Prettier based on file path, so `packages/server` and `packages/webapp` keep their own formatting preferences.
+- **`.husky/commit-msg`** runs `pnpm exec commitlint --edit "$1"`, enforcing Conventional Commits. The `scope-enum` in `commitlint.config.js` is restricted:
+  - **Workspace packages** (auto-derived equivalents): `server`, `webapp`, `utils`, `email-components`, `pdf-templates`, `sdk-ts`.
+  - **Domain scopes**: `accounts`, `banking`, `ci`, `contacts`, `currency`, `docker`, `docs`, `expenses`, `financial-statements`, `husky`, `import`, `infra`, `inventory`, `ledger`, `models`, `organization`, `payment-received`, `reports`, `resource`, `sandbox`, `square`, `square-pull`, `ui`.
+  - To add a new scope, edit `commitlint.config.js` — don't bypass with `--no-verify`.
+
+**Never use `pnpx` / `pnpm dlx` in committed hooks or scripts.** Both fetch the _latest_ version from the registry, ignoring whatever is pinned in `node_modules`. Use `pnpm exec <bin>` so the local devDependency version runs.
+
+**Tooling deps must stay Node-18-compatible** (this project pins Node 18.16.1):
+
+- `@commitlint/cli@^17` — v19+ pulls `yargs-parser@22` (Node 20+).
+- `lint-staged@^15` — v16+ pulls `listr2@10`, which uses `node:util.styleText` (Node 20+).
+- Same trap likely lurks in future bumps of husky/prettier/eslint plugins. Run `pnpm exec <bin> --version` after any tooling install — ES-module Node-version errors fire on import.
+
 ## Fork-Specific Changes
 
 This fork diverges from upstream `bigcapitalhq/bigcapital`. Keep these in mind when reviewing upstream PRs or merging.
@@ -84,6 +102,7 @@ Production and UAT instances run in Docker via `docker-compose.prod.yml`. Traefi
 - Container names drive dynamic-file service URLs. Keep `container_name:` entries stable.
 
 **Routing split** (same host, path-prefix):
+
 - `bigcapital-fork-api` (priority 10): `Host(host) && (PathPrefix('/api') || PathPrefix('/socket') || PathPrefix('/public'))` → `bigcapital-fork-server:3000`
 - `bigcapital-fork-webapp` (priority 1): `Host(host)` (catch-all SPA) → `bigcapital-fork-webapp:80`
 
