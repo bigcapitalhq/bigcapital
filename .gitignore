@@ -3,8 +3,24 @@ node_modules/
 # Docker volumes data directory
 /data
 
-# Production env file
+# Env files (.env, .env.production, .env.bak, etc.) — secrets, never commit.
+# An example template (.env.example) would be the only tracked variant.
 .env
+.env.*
+!.env.example
+
+# Local-dev compose override (port remaps, MinIO for attachments, etc.)
+docker-compose.override.yml
+
+# Ad-hoc creds scratchpads — never commit
+*-creds.txt
+gather-square-creds.txt
+
+# Local working / archive directory (Amazon import scripts, scans, etc.)
+archive/
+
+# Throwaway ESLint config used for one-off jsx-key scans
+.eslintrc.scan.cjs
 
 test-results/
 .qodo
