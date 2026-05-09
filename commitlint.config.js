@@ -1,1 +1,42 @@
-module.exports = { extends: ['@commitlint/config-lerna-scopes'] };
+module.exports = {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'scope-enum': [
+      2,
+      'always',
+      [
+        // workspace packages
+        'server',
+        'webapp',
+        'utils',
+        'email-components',
+        'pdf-templates',
+        'sdk-ts',
+        // domain scopes
+        'accounts',
+        'banking',
+        'ci',
+        'contacts',
+        'currency',
+        'docker',
+        'docs',
+        'expenses',
+        'financial-statements',
+        'husky',
+        'import',
+        'infra',
+        'inventory',
+        'ledger',
+        'models',
+        'organization',
+        'payment-received',
+        'reports',
+        'resource',
+        'sandbox',
+        'square',
+        'square-pull',
+        'ui',
+      ],
+    ],
+  },
+};
