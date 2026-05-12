@@ -11,9 +11,9 @@
 # (bigcapital-fork-*, bigcapital_fork_network, bigcapital_prod_fork_*) so the
 # cutover is `docker compose -f <old> down && docker compose -f <new> up -d`.
 #
-# Build contexts (mariadb / redis) assume `./mariadb` and `./redis` directories
-# exist alongside this compose file on the host — adjust to match the actual
-# staging layout if it differs.
+# Build contexts (mariadb / redis) point at `./docker/mariadb` and
+# `./docker/redis` — matches the existing staging-bc layout on the host
+# (which differs from sandbox-bc's flat `./mariadb` / `./redis`).
 
 services:
   webapp:
@@ -139,7 +139,7 @@ services:
     container_name: bigcapital-fork-mysql
     restart: unless-stopped
     build:
-      context: ./mariadb
+      context: ./docker/mariadb
     environment:
       - MYSQL_DATABASE=${SYSTEM_DB_NAME}
       - MYSQL_USER=${DB_USER}
@@ -160,7 +160,7 @@ services:
     container_name: bigcapital-fork-redis
     restart: unless-stopped
     build:
-      context: ./redis
+      context: ./docker/redis
     expose:
       - "6379"
     volumes:
