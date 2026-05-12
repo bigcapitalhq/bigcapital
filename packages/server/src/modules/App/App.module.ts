@@ -96,6 +96,7 @@ import { ResourceModule } from '../Resource/Resource.module';
 import { ViewsModule } from '../Views/Views.module';
 import { CurrenciesModule } from '../Currencies/Currencies.module';
 import { MiscellaneousModule } from '../Miscellaneous/Miscellaneous.module';
+import { HealthModule } from '../Health/Health.module';
 import { UsersModule } from '../UsersModule/Users.module';
 import { ContactsModule } from '../Contacts/Contacts.module';
 import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
@@ -256,6 +257,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     ViewsModule,
     CurrenciesModule,
     MiscellaneousModule,
+    HealthModule,
     UsersModule,
     ContactsModule,
     SocketModule,

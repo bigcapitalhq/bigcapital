@@ -1,0 +1,5 @@
+# Install at /etc/cron.d/bigcapital-uat-backup (mode 0644 root:root).
+# Daily at 03:47 UTC (offset 30 min from sandbox to avoid concurrent restic locks).
+# Update the path below to match the actual UAT env directory on the host.
+
+47 3 * * * root /srv/portal/clients/uat-bc/backup.sh 2>&1 | logger -t bc-uat-backup

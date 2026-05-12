@@ -3,6 +3,9 @@ FROM node:18.16.0-alpine AS builder
 
 WORKDIR /app
 
+ARG GIT_SHA=unknown
+ENV VITE_GIT_SHA=$GIT_SHA
+
 # Install pnpm
 RUN npm install -g pnpm@9.0.5
 
@@ -28,6 +31,9 @@ RUN NODE_OPTIONS="--max-old-space-size=4096" pnpm run build:webapp
 
 # Stage 2: Nginx
 FROM nginx:alpine
+
+ARG GIT_SHA=unknown
+LABEL org.opencontainers.image.revision=$GIT_SHA
 
 # Copy nginx configuration
 COPY --chown=root:root ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf

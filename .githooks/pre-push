@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+#
+# Local pre-push gate. Activate for this clone with:
+#   git config --local core.hooksPath .githooks
+#
+# Runs typecheck across the monorepo (lerna run typecheck) and the server
+# unit suite. Webapp + e2e are intentionally excluded — they're slow and the
+# CI workflows already cover them.
+#
+# Bypass for emergencies only: `git push --no-verify`.
+
+set -euo pipefail
+
+# Skip on protected branches we never push from a workstation.
+remote="$1"
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [[ "$remote_ref" == "refs/heads/main" ]]; then
+    printf 'pre-push: refusing direct push to main (use a PR).\n' >&2
+    exit 1
+  fi
+done
+
+echo "pre-push: typecheck"
+pnpm exec lerna run typecheck --scope "@bigcapital/server" --scope "@bigcapital/webapp"
+
+# Server unit tests — fast subset.
+if [[ -f packages/server/package.json ]] && grep -q '"test"' packages/server/package.json; then
+  echo "pre-push: server tests"
+  pnpm --filter "@bigcapital/server" test --silent
+fi
+
+echo "pre-push: OK"

@@ -1,0 +1,4 @@
+# Install at /etc/cron.d/bigcapital-sandbox-backup (mode 0644 root:root).
+# Daily at 03:17 UTC; stdout+stderr go to journald with the `bc-sandbox-backup` tag.
+
+17 3 * * * root /srv/portal/clients/sandbox-bc/backup.sh 2>&1 | logger -t bc-sandbox-backup

@@ -84,6 +84,14 @@ Production and UAT instances run in Docker via `docker-compose.prod.yml`. Traefi
 
 **See `docs/DEPLOY.md` for the full guide** (image build, transfer, Traefik config, environment setup, troubleshooting).
 
+### Push-to-deploy pipeline (GHCR — sandbox + UAT)
+
+Newer alternative to the tarball flow: `git push origin develop` triggers `.github/workflows/deploy.yml`, which builds linux/arm64 images for both `server` and `webapp`, pushes to `ghcr.io/crxnit/bigcapital-{server,webapp}:sha-<short>`, runs a Trivy HIGH/CRITICAL gate, then SSHs into the VPS to run `deploy.sh` which pulls the new images, runs the tenant migration container, and brings up server+webapp with a `/api/health` smoke gate.
+
+**Operator runbook: `docs/CI-CD.md`** — covers triggers, secrets, SSH lockdown, cutover from tarball, rollback, common failures, backup/restore (nightly restic to existing JJOC S3 bucket).
+
+Sandbox is wired first (auto-deploys on push to `develop`); UAT triggers via `gh workflow run deploy.yml -f environment=uat`. Until cutover is verified, the legacy tarball compose files (`docker-compose.prod.yml`, `docker/sandbox-bc/docker-compose.yml`) remain as rollback paths.
+
 ### Always-relevant deployment notes
 
 - **Colima memory for image builds** — Webapp Vite build needs ~4 GB heap alone. Run Colima with at least 8 GB: `colima stop && colima start --cpu 2 --memory 8 --disk 20`. Without enough memory the build OOMs with `ResourceExhausted: cannot allocate memory`.

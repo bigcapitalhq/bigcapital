@@ -1,0 +1,17 @@
+# Trivy ignore allowlist for bigcapital-fork.
+#
+# Policy:
+#   1. Empty by default. The Trivy gate in .github/workflows/deploy.yml is
+#      HIGH/CRITICAL only; medium/low findings flow into the report but
+#      do not block deploys.
+#   2. Add a CVE id (one per line, comment above with the why + an expiry
+#      date) ONLY when:
+#        - the CVE is in a transitive dep we can't bump, AND
+#        - the affected code path is unreachable in our deployment, AND
+#        - upstream has acknowledged the issue with no patched version yet.
+#   3. Revisit every entry quarterly; remove the line once the dep is
+#      upgraded past the affected version.
+#
+# Do NOT add entries to silence noise without root-cause analysis. The
+# server Dockerfile already strips npm from the runtime to remove the
+# noisiest source of HIGH CVEs.

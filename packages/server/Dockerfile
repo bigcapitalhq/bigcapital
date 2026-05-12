@@ -31,6 +31,9 @@ FROM node:18.16.0-alpine AS production
 
 WORKDIR /app
 
+ARG GIT_SHA=unknown
+ENV GIT_SHA=$GIT_SHA
+
 # Install pnpm for production
 RUN npm install -g pnpm@9.0.5
 
@@ -79,15 +82,19 @@ ENV NODE_ENV=production
 ENV NEW_RELIC_NO_CONFIG_FILE=true
 ENV PORT=3000
 
+# Strip npm/npx from runtime — the app only runs `node`, and bundled npm
+# deps (cross-spawn, glob, minimatch, tar) drag periodic HIGH CVEs into Trivy.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
+
 # Switch to non-root user
 USER nodejs
 
 # Expose port
 EXPOSE 3000
 
-# Health check - uses /api/system_db ping endpoint
+# Health check — hits public /api/health (no tenancy / JWT required).
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/api/system_db', (r) => {process.exit(r.statusCode >= 200 && r.statusCode < 300 ? 0 : 1)}).on('error', () => process.exit(1))"
+  CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode >= 200 && r.statusCode < 300 ? 0 : 1)}).on('error', () => process.exit(1))"
 
 # Start the application
 CMD [ "node", "packages/server/dist/main.js" ]
