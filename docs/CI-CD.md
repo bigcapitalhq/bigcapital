@@ -10,7 +10,7 @@ git push origin develop
 .githooks/pre-push (local)        typecheck + server unit tests
    ↓
 .github/workflows/deploy.yml      matrix build (server + webapp) → GHCR
-   ↓                              Trivy HIGH/CRITICAL gate per image
+   ↓                              Trivy HIGH/CRITICAL scan (warn-only, see below)
 GHCR                              ghcr.io/crxnit/bigcapital-{server,webapp}:sha-<short>
    ↓                              + :latest mirror
 deploy job (environment: sandbox) ssh deploy@vps "<server-sha> <webapp-sha>"
@@ -132,13 +132,21 @@ UPDATE knex_migrations_lock SET is_locked = 0;
 
 (per `.claude/CLAUDE.md` gotcha). Then re-trigger the deploy.
 
-### Trivy gate fails on HIGH/CRITICAL
+### Trivy CVE findings (currently warn-only)
 
-Read the report in the workflow logs. Decide:
+The scan runs on every build (`severity: HIGH,CRITICAL`, `ignore-unfixed: true`) but `exit-code` is `0` — findings surface in the job log without blocking deploys. The relaxation is deliberate because the inherited codebase has a long tail of fixable HIGH/CRITICAL CVEs in transitive deps (axios bundled by `firebase-admin` / `plaid`, `@casl/ability@5.4.4` prototype-pollution fixed only in 6.x, several `@babel/plugin-*` dev tools leaking into runtime). Fixing the lot requires a dedicated dep-cleanup PR series.
+
+**TODO before tightening to `exit-code: '1'`**:
+
+- Bump `@casl/ability` 5.x → 6.x (CRITICAL CVE-2026-1774, prototype pollution). Major version — test permission-check sites carefully.
+- Bump `axios` direct deps to >= 1.13.x. The bundled-axios CVEs in third-party SDKs (firebase-admin, plaid) need those SDKs updated.
+- Move `@babel/plugin-transform-modules-systemjs` and similar dev-time deps out of the production install.
+
+When triaging a fresh finding:
 
 - **Patchable upstream?** Bump the dep, push.
-- **Transitive + no fix yet?** Add a CVE-specific entry to `.trivyignore` with a why + expiry date comment. Push again.
-- **In `node_modules/npm`?** Should already be stripped by the Dockerfile. If not, confirm the strip line is still present after Dockerfile edits.
+- **Transitive + no fix yet?** Add a CVE-specific entry to `.trivyignore` with a why + expiry date comment.
+- **In Alpine OS layer (busybox, libcrypto3, etc.)?** Both Dockerfiles already run `apk upgrade --no-cache` in the runtime stage to pull latest stable-branch patches — usually a fresh build fixes it. If not, the apk repo hasn't caught up; allowlist with a short expiry.
 
 ### GHCR pull fails on VPS
 

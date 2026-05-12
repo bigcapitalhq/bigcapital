@@ -38,6 +38,9 @@ FROM nginx:alpine
 ARG GIT_SHA=unknown
 LABEL org.opencontainers.image.revision=$GIT_SHA
 
+# Pull latest patches for the Alpine OS layer (nghttp2-libs, etc.).
+RUN apk upgrade --no-cache
+
 # Copy nginx configuration
 COPY --chown=root:root ./packages/webapp/nginx/sites/default.conf /etc/nginx/conf.d/default.conf
 

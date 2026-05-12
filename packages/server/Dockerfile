@@ -34,6 +34,12 @@ WORKDIR /app
 ARG GIT_SHA=unknown
 ENV GIT_SHA=$GIT_SHA
 
+# Pull latest patches for the Alpine OS layer — fixes a moving set of CVEs in
+# busybox / libcrypto3 / libssl3 / musl-utils / ssl_client without changing the
+# pinned Node version. The base image tags rarely re-roll, so this is the
+# pragmatic way to stay current with apk's stable-branch security updates.
+RUN apk upgrade --no-cache
+
 # Install pnpm for production
 RUN npm install -g pnpm@9.0.5
 
