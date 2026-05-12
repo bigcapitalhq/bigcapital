@@ -20,8 +20,11 @@ COPY --chown=node:node package.json pnpm-lock.yaml pnpm-workspace.yaml lerna.jso
 COPY --chown=node:node packages/webapp/package.json ./packages/webapp/
 COPY --chown=node:node shared ./shared
 
-# Install all dependencies (including devDependencies for build)
-RUN pnpm install
+# Install all dependencies (including devDependencies for build).
+# --frozen-lockfile pins to whatever the lockfile says; without it, "latest"
+# specifiers re-resolve at build time and silently introduce peer-dep breakage
+# (precedent: @tiptap/extension-color drifted from 2.x to 3.23.1 mid-2026).
+RUN pnpm install --frozen-lockfile
 
 # Copy source code for webapp and dependencies
 COPY --chown=node:node ./packages/webapp ./packages/webapp
