@@ -10,6 +10,7 @@ import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.mo
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ProfitLossSheetController } from './ProfitLossSheet.controller';
 import { ProfitLossSheetApplication } from './ProfitLossSheetApplication';
+import { CashBasisProjection } from '../../_shared/CashBasisProjection.service';
 
 @Module({
   imports: [FinancialSheetCommonModule, AccountsModule],
@@ -23,6 +24,7 @@ import { ProfitLossSheetApplication } from './ProfitLossSheetApplication';
     ProfitLossSheetMeta,
     ProfitLossSheetRepository,
     TenancyContext,
+    CashBasisProjection,
   ],
 })
 export class ProfitLossSheetModule {}

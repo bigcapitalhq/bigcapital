@@ -183,3 +183,32 @@ The trial balance was off by $260 in Feb and $1,312.51 in March (cumulative). Dr
 **Data backfill**: 20 INSERTs total — 19 missing CR legs (one per affected invoice) plus a $18 A/R top-up on invoice 106 (whose A/R debit was emitted as the subtotal $1593 instead of subtotal + $18 adjustment = $1611, so the $18 OtherCharges CR leg sat on top of an under-emitted A/R DR). Verification chain: per-invoice diff = 0, per-month diff = 0 across all months in the books, and the master `HAVING ABS(SUM(DEBIT)-SUM(CREDIT)) > 0.005` master query returns Empty Set.
 
 **Diagnostic recipe for future GL audits** (kept in CLAUDE.md): trial-balance imbalance → group `ACCOUNTS_TRANSACTIONS` by `(REFERENCE_TYPE, REFERENCE_ID)` and `HAVING ABS(SUM(DEBIT)-SUM(CREDIT)) > 0.005` — names the offending transactions in seconds. Then per-invoice/expense, join `ITEMS_ENTRIES` (or relevant child table) to existing GL legs by `ITEM_ID + ACCOUNT_ID` to spot which line wasn't emitted. Generate INSERTs that mirror the existing GL pattern; wrap in `START TRANSACTION` and verify before `COMMIT`.
+
+## Financial reports
+
+### Profit & Loss "Cash Basis" toggle was a no-op
+
+`GET /reports/profit-loss-sheet?basis=cash` returned identical numbers to `basis=accrual`. The flag was declared on `IProfitLossSheetQuery` (`ProfitLossSheet.types.ts:63`) and accepted on the DTO, but `ProfitLossSheetRepository.accountsTotal` / `accountsDatePeriods` never inspected it — both methods only filtered by date range and branches. Real-world impact: a catering customer's August event was invoiced in February, and the unpaid February revenue showed on both bases.
+
+The naive fix — drop `SaleInvoice` GL rows on cash basis — is wrong. `PaymentReceive`'s GL only moves cash ↔ AR; it never touches the revenue account. Dropping `SaleInvoice` rows would leave cash-basis revenue stuck at zero for every AR-driven business. The correct fix has to **synthesize** revenue/expense recognition from payment events.
+
+Implementation in `packages/server/src/modules/FinancialStatements/_shared/CashBasisProjection.{service,helpers}.ts`:
+
+1. On cash basis, the repo runs the existing accrual SQL with `whereNotIn('referenceType', ['SaleInvoice','Bill','CreditNote','VendorCredit'])` so accrual-only document rows are excluded. Direct cash transactions (`CashflowTransaction`, `ManualJournal`, expenses from the Expense form) already write GL against revenue/expense accounts at the transaction date — they survive the filter and pass through unchanged.
+2. `CashBasisProjection` loads the four payment-side document types (`PaymentReceive`, `BillPayment`, `RefundCreditNote`, `RefundVendorCredit`) in the date range, walks each link entry to the originating invoice/bill/credit-note, and projects synthetic GL rows: `accountId = line.sellAccountId` (or inventory-aware `costAccountId` for bills), `credit/debit = line.totalExcludingTax × document.exchangeRate × (paymentAmount / document.total)`, `date = payment.paymentDate`, `branchId = payment.branchId`. Refunds emit on the reversal side (DR revenue / CR expense).
+3. The repo merges direct + projected aggregates by `accountId` (and period for the `accountsDatePeriods` path), back-fills the graph-fetched `account` model for any accountId present only in the projection, and returns rows shaped identically to the accrual path so downstream `Ledger.fromTransactions` consumers don't change.
+
+Verification recipe (covers the brief's scenarios): unpaid invoice in Feb → cash $0 / accrual $1,000 in Feb; $300 payment in April → cash $300 / accrual $0 in April; full range Feb–April → cash $300 / accrual $1,000.
+
+Unit tests in `CashBasisProjection.spec.ts` cover the proration math, multi-line fan-out, FX, inventory-vs-cost account selection, refunds, and period bucketing.
+
+### Sibling reports with the same `basis`-flag gap (deferred to follow-up PRs)
+
+All four other financial reports accept a `basis` query parameter and silently ignore it — `grep -rn "basis" packages/server/src/modules/FinancialStatements --include="*.ts"` lists them; none of the four sibling repository files contain a `basis` reference. Fixes scoped out of the P&L PR:
+
+- **Balance Sheet** (`BalanceSheetRepository.ts` + `BalanceSheetRepositoryNetIncome.ts`) — accepts `basis` but ignores it. Cash-basis BS is more involved than P&L: AR / AP balances should be zero (no accruals on the books), retained earnings flows from cash-basis P&L net income, and the same projection has to feed both repos. Worth a dedicated PR.
+- **General Ledger** (`GeneralLedgerRepository.ts`) — accepts `basis` but ignores it. Conceptually, cash-basis GL excludes accrual-only document GL rows; same `whereNotIn` filter applies but the report shows individual entries, not aggregates, so the projection rows would need to be returned as ungrouped synthetic line items.
+- **Cash Flow Statement** (`CashFlowRepository.ts`) — accepts `basis` but ignores it. By construction the report models cash movement, so basis may be conceptually moot, but the flag is still misleading; the UI surfaces the toggle as if it changes numbers.
+- **Sales Tax Liability Summary** (`SalesTaxLiabilitySummaryRepository.ts`) — accepts `basis` but ignores it. Cash-basis tax liability should recognize tax only on actual cash receipts; correct fix requires the same projection plus tax-line proration. Probably the most accounting-policy-sensitive of the four.
+
+Same diagnostic recipe applies to each: grep `basis` in the report module, then look at the repository's data-fetch query for the absence of `whereNotIn` on accrual-only `referenceType`s and the absence of a projection union.

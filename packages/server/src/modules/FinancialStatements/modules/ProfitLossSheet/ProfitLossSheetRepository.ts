@@ -16,6 +16,18 @@ import { FinancialDatePeriods } from '../../common/FinancialDatePeriods';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CashBasisProjection } from '../../_shared/CashBasisProjection.service';
+
+// Document GL rows that only exist on accrual basis. PaymentReceive / BillPayment
+// already move cash↔AR/AP (not revenue/expense), so dropping these still leaves
+// the cash side of the books intact; the missing revenue/expense legs are
+// synthesized by CashBasisProjection.
+const ACCRUAL_ONLY_REFERENCE_TYPES = [
+  'SaleInvoice',
+  'Bill',
+  'CreditNote',
+  'VendorCredit',
+];
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
@@ -29,6 +41,9 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
 
   @Inject(TenancyContext)
   public tenancyContext: TenancyContext;
+
+  @Inject(CashBasisProjection)
+  public cashBasisProjection: CashBasisProjection;
 
   /**
    * Tenancy base currency.
@@ -313,6 +328,9 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     fromDate: moment.MomentInput,
     toDate: moment.MomentInput,
   ) => {
+    if (this.isCashBasis()) {
+      return this.cashBasisAccountsTotal(fromDate, toDate);
+    }
     return this.accountTransactionModel()
       .query()
       .onBuild((query) => {
@@ -339,6 +357,13 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     toDate: moment.MomentInput,
     datePeriodsType,
   ) => {
+    if (this.isCashBasis()) {
+      return this.cashBasisAccountsDatePeriods(
+        fromDate,
+        toDate,
+        datePeriodsType,
+      );
+    }
     return this.accountTransactionModel()
       .query()
       .onBuild((query) => {
@@ -353,6 +378,136 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
 
         this.commonFilterBranchesQuery(query);
       });
+  };
+
+  private isCashBasis = (): boolean => {
+    return this.query?.query?.basis === 'cash';
+  };
+
+  /**
+   * Cash-basis variant of accountsTotal. Excludes accrual-only document GL
+   * rows (SaleInvoice / Bill / CreditNote / VendorCredit), then unions with
+   * synthetic rows projected from PaymentReceive / BillPayment / refund
+   * events at the payment date.
+   */
+  private cashBasisAccountsTotal = async (
+    fromDate: moment.MomentInput,
+    toDate: moment.MomentInput,
+  ) => {
+    const directRows = await this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.groupBy('accountId');
+        query.select(['accountId']);
+
+        query.modify('filterDateRange', fromDate, toDate);
+        query.whereNotIn('referenceType', ACCRUAL_ONLY_REFERENCE_TYPES);
+        query.withGraphFetched('account');
+
+        this.commonFilterBranchesQuery(query);
+      });
+    const projectedRows = await this.cashBasisProjection.aggregateTotals(
+      fromDate,
+      toDate,
+      this.query.query.branchesIds,
+    );
+    return this.mergeAccountAggregates(directRows, projectedRows);
+  };
+
+  /**
+   * Cash-basis variant of accountsDatePeriods. Same merge strategy as
+   * cashBasisAccountsTotal, plus a period bucket so each (accountId, period)
+   * pair stays distinct.
+   */
+  private cashBasisAccountsDatePeriods = async (
+    fromDate: moment.MomentInput,
+    toDate: moment.MomentInput,
+    datePeriodsType,
+  ) => {
+    const directRows = await this.accountTransactionModel()
+      .query()
+      .onBuild((query) => {
+        query.sum('credit as credit');
+        query.sum('debit as debit');
+        query.groupBy('accountId');
+        query.select(['accountId']);
+
+        query.modify('groupByDateFormat', datePeriodsType);
+        query.modify('filterDateRange', fromDate, toDate);
+        query.whereNotIn('referenceType', ACCRUAL_ONLY_REFERENCE_TYPES);
+        query.withGraphFetched('account');
+
+        this.commonFilterBranchesQuery(query);
+      });
+    const projectedRows = await this.cashBasisProjection.aggregatePeriods(
+      fromDate,
+      toDate,
+      this.query.query.branchesIds,
+      datePeriodsType,
+    );
+    return this.mergeAccountAggregates(directRows, projectedRows, true);
+  };
+
+  /**
+   * Merges direct-query account aggregates with synthetic projected aggregates.
+   * Re-fetches Account models for accountIds present only in the projection so
+   * downstream `Ledger.mapTransaction` can still read `account.accountNormal`.
+   */
+  private mergeAccountAggregates = async (
+    directRows: any[],
+    projectedRows: any[],
+    keyByPeriod = false,
+  ) => {
+    const keyOf = (row) =>
+      keyByPeriod ? `${row.accountId}|${row.date}` : `${row.accountId}`;
+
+    const map = new Map<string, any>();
+    for (const row of directRows) {
+      map.set(keyOf(row), row);
+    }
+
+    const missingAccountIds = new Set<number>();
+    for (const row of projectedRows) {
+      if (
+        !map.has(keyOf(row)) &&
+        !directRows.some((d) => d.accountId === row.accountId)
+      ) {
+        missingAccountIds.add(row.accountId);
+      }
+    }
+    const accountsById = new Map<number, any>();
+    if (missingAccountIds.size > 0) {
+      const accounts = await this.accountModel()
+        .query()
+        .whereIn('id', Array.from(missingAccountIds));
+      for (const acc of accounts) {
+        accountsById.set(acc.id, acc);
+      }
+    }
+
+    for (const row of projectedRows) {
+      const key = keyOf(row);
+      const existing = map.get(key);
+      if (existing) {
+        existing.credit = (Number(existing.credit) || 0) + (row.credit || 0);
+        existing.debit = (Number(existing.debit) || 0) + (row.debit || 0);
+      } else {
+        const account =
+          directRows.find((d) => d.accountId === row.accountId)?.account ??
+          accountsById.get(row.accountId);
+        const merged: any = {
+          accountId: row.accountId,
+          credit: row.credit || 0,
+          debit: row.debit || 0,
+          account,
+        };
+        if (keyByPeriod) merged.date = row.date;
+        map.set(key, merged);
+      }
+    }
+    return Array.from(map.values());
   };
 
   /**

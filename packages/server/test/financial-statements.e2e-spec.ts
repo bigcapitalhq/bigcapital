@@ -25,6 +25,24 @@ describe('Financial Statements (e2e)', () => {
       .expect(200);
   });
 
+  it('/reports/profit-loss-sheet?basis=accrual (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/reports/profit-loss-sheet')
+      .query({ ...baseQuery, basis: 'accrual' })
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
+  it('/reports/profit-loss-sheet?basis=cash (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/reports/profit-loss-sheet')
+      .query({ ...baseQuery, basis: 'cash' })
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
   it('/reports/trial-balance-sheet (GET)', () => {
     return request(app.getHttpServer())
       .get('/reports/trial-balance-sheet')
