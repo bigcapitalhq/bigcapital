@@ -76,6 +76,18 @@ export const momentFormatter = (format) => {
     formatDate: (date) => moment(date).format(format),
     parseDate: (str) => moment(str, format).toDate(),
     placeholder: `${format}`,
+    // Round-trip the picker value through Formik as a tz-free YYYY-MM-DD
+    // string. The upstream @blueprintjs-formik/datetime default serializes
+    // via Date.toISOString(), which tags a local-midnight Date with `Z` and
+    // shifts the calendar day in any non-UTC client. formParseDate accepts
+    // either YYYY-MM-DD or an ISO datetime string (slices to the date part)
+    // so existing server responses round-trip without a day shift.
+    formFormatDate: (date) => moment(date).format('YYYY-MM-DD'),
+    formParseDate: (value) => {
+      if (!value) return null;
+      const dateOnly = String(value).slice(0, 10);
+      return moment(dateOnly, 'YYYY-MM-DD').toDate();
+    },
   };
 };
 
@@ -244,8 +256,12 @@ export function formattedExchangeRate(amount, currency) {
   return formatter.format(amount);
 }
 
-export const ConditionalWrapper = ({ condition, wrapper, children, ...rest }) =>
-  condition ? wrapper({ children, ...rest }) : children;
+export const ConditionalWrapper = ({
+  condition,
+  wrapper,
+  children,
+  ...rest
+}) => (condition ? wrapper({ children, ...rest }) : children);
 
 export const checkRequiredProperties = (obj, properties) => {
   return properties.some((prop) => {
