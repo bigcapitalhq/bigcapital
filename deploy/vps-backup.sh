@@ -68,17 +68,20 @@ MYSQL_SVC="mysql"
 MYSQL_EXEC=(docker compose -f "$COMPOSE_FILE" exec -T "$MYSQL_SVC")
 
 log "Enumerating databases…"
-DB_LIST="$("${MYSQL_EXEC[@]}" mariadb -u root -p"${DB_ROOT_PASSWORD}" \
-            -B -N -e "SHOW DATABASES" 2>/dev/null \
+DB_LIST="$("${MYSQL_EXEC[@]}" mysql -u root -p"${DB_ROOT_PASSWORD}" \
+            -B -N -e "SHOW DATABASES" < /dev/null 2>/dev/null \
           | grep -E "^(${SYSTEM_DB_NAME}|${TENANT_DB_NAME_PERFIX}.*)$" || true)"
 [[ -n "$DB_LIST" ]] || fail "no databases matched system='${SYSTEM_DB_NAME}' or tenant prefix='${TENANT_DB_NAME_PERFIX}'"
 
+# `< /dev/null` on mysqldump prevents `docker compose exec -T` from consuming
+# the parent loop's here-string stdin — without it, only the first DB dumps
+# and the loop terminates early.
 while read -r DB; do
   [[ -n "$DB" ]] || continue
   log "  mysqldump → $DB"
-  "${MYSQL_EXEC[@]}" mariadb-dump -u root -p"${DB_ROOT_PASSWORD}" \
+  "${MYSQL_EXEC[@]}" mysqldump -u root -p"${DB_ROOT_PASSWORD}" \
        --single-transaction --quick --routines --triggers --events \
-       "$DB" > "$STAGING/sql/${DB}.sql"
+       "$DB" < /dev/null > "$STAGING/sql/${DB}.sql"
 done <<< "$DB_LIST"
 
 # --- MinIO mirror -----------------------------------------------------------
@@ -86,16 +89,20 @@ done <<< "$DB_LIST"
 # Use a transient minio/mc container joined to the same network as MinIO so it
 # can resolve the MinIO container by name. Auth via MC_HOST_<alias> URL.
 
-# Discover the network name from compose so this works for both sandbox + UAT.
-NET="$(docker compose -f "$COMPOSE_FILE" config --format json 2>/dev/null \
-       | grep -oE '"bigcapital_[a-z_]*network"' | head -1 | tr -d '"' || true)"
-[[ -n "$NET" ]] || NET="bigcapital_sandbox_network"
+# Discover the joined docker network name from the running MinIO container.
+# Compose prefixes the logical network with its project name (e.g.
+# sandbox-bc_bigcapital_sandbox_network), so we can't just use the logical
+# name from `docker compose config`.
+MINIO_CID="$(docker compose -f "$COMPOSE_FILE" ps -q minio)"
+[[ -n "$MINIO_CID" ]] || fail "could not resolve MinIO container id"
 
-# Discover the MinIO container name.
-MINIO_CONTAINER="$(docker compose -f "$COMPOSE_FILE" ps -q minio \
-                   | xargs -r docker inspect --format '{{.Name}}' \
-                   | sed 's|^/||')"
+MINIO_CONTAINER="$(docker inspect "$MINIO_CID" --format '{{.Name}}' | sed 's|^/||')"
 [[ -n "$MINIO_CONTAINER" ]] || fail "could not resolve MinIO container name"
+
+NET="$(docker inspect "$MINIO_CID" \
+       --format '{{range $k, $v := .NetworkSettings.Networks}}{{$k}} {{end}}' \
+       | awk '{print $1}')"
+[[ -n "$NET" ]] || fail "could not resolve docker network name from MinIO container"
 
 log "Mirroring MinIO bucket '${S3_BUCKET}' from ${MINIO_CONTAINER}…"
 docker run --rm \
