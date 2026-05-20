@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ComponentType } from 'react';
-import t from '@/store/types';
+import { CLOSE_DIALOG, OPEN_DIALOG } from '@/store/types';;
 
 export interface WithDialogActionsProps {
   openDialog: (name: string, payload?: Record<string, unknown>) => void;
@@ -10,9 +10,9 @@ export interface WithDialogActionsProps {
 
 export const mapDispatchToProps = (dispatch: Dispatch): WithDialogActionsProps => ({
   openDialog: (name, payload) =>
-    dispatch({ type: t.OPEN_DIALOG, name, payload }),
+    dispatch({ type: OPEN_DIALOG, name, payload }),
   closeDialog: (name, payload) =>
-    dispatch({ type: t.CLOSE_DIALOG, name, payload }),
+    dispatch({ type: CLOSE_DIALOG, name, payload }),
 });
 
 /**

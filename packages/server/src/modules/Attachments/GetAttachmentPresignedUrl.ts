@@ -24,7 +24,10 @@ export class GetAttachmentPresignedUrl {
    * @returns {string}
    */
   async getPresignedUrl(key: string) {
-    const foundDocument = await this.documentModel().query().findOne({ key });
+    const foundDocument = await this.documentModel()
+      .query()
+      .findOne({ key })
+      .throwIfNotFound();
     const config = this.configService.get('s3');
 
     let ResponseContentDisposition = 'attachment';

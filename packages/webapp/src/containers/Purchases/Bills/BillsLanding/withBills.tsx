@@ -4,7 +4,7 @@ import {
   getBillsTableStateFactory,
   billsTableStateChangedFactory,
   getBillsSelectedRowsFactory,
-} from '@/store/Bills/bills.selectors';
+} from '@/store/bills/bills.selectors';
 
 export const withBills = (mapState) => {
   const getBillsTableState = getBillsTableStateFactory();

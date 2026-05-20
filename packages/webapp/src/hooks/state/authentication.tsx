@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { isAuthenticated } from '@/store/authentication/authentication.reducer';
 import {
-  setAuthTenantId,
   setAuthToken,
   setAuthUserId,
   setEmailConfirmed,
@@ -115,15 +114,6 @@ export const useSetAuthToken = () => {
 
   return useCallback(
     (authToken: string) => dispatch(setAuthToken(authToken)),
-    [dispatch],
-  );
-};
-
-export const useSetTenantId = () => {
-  const dispatch = useDispatch();
-
-  return useCallback(
-    (tenantId: string) => dispatch(setAuthTenantId(tenantId)),
     [dispatch],
   );
 };

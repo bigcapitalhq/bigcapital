@@ -9,6 +9,7 @@ import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/Inje
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { CreditNoteMeta } from './CreditNote.meta';
+import { sanitizeSortDirection } from '@/modules/DynamicListing/DynamicFilter/sanitizeSortDirection';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { CreditNoteDefaultViews } from '../constants';
 import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
@@ -277,8 +278,9 @@ export class CreditNote extends TenantBaseModel {
        *
        */
       sortByStatus(query, order) {
+        const dir = sanitizeSortDirection(order);
         query.orderByRaw(
-          `COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) = COALESCE(AMOUNT) ${order}`,
+          `COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) = COALESCE(AMOUNT) ${dir}`,
         );
       },
     };

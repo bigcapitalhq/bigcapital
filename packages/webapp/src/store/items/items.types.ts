@@ -1,0 +1,3 @@
+export const ITEMS_TABLE_STATE_SET = 'ITEMS/TABLE_STATE_SET' as const;
+export const ITEMS_TABLE_STATE_RESET = 'ITEMS/TABLE_STATE_RESET' as const;
+export const ITEMS_SET_SELECTED_ROWS = 'ITEMS/SET_SELECTED_ROWS' as const;

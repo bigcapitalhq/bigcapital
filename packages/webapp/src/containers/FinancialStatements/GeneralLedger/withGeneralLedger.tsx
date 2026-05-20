@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import {
   getGeneralLedgerFilterDrawer
-} from '@/store/financialStatement/financialStatements.selectors';
+} from '@/store/financial-statement/financial-statements.selectors';
 
 export const withGeneralLedger = (mapState) => {
   const mapStateToProps = (state, props) => {

@@ -4,7 +4,7 @@ import {
   setVendorCreditTableState,
   resetVendorCreditTableState,
   setVendorCreditsSelectedRows,
-} from '@/store/VendorCredit/vendorCredit.actions';
+} from '@/store/vendor-credit/vendor-credit.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setVendorsCreditNoteTableState: (queries) =>

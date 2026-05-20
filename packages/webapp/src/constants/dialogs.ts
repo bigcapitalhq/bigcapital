@@ -94,5 +94,7 @@ export enum DialogsName {
   SelectPaymentMethod = 'SelectPaymentMethodsDialog',
 
   StripeSetup = 'StripeSetup',
-  ApiKeysGenerate = 'api-keys-generate'
+  ApiKeysGenerate = 'api-keys-generate',
+  WorkspaceDelete = 'workspace-delete',
+  WorkspaceInactivate = 'workspace-inactivate',
 }

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import t from '@/store/types';
+import { CLOSE_SEARCH, OPEN_SEARCH } from '@/store/types';;
 import {
   universalSearchResetResourceType,
   universalSearchSetResourceType,
@@ -9,8 +9,8 @@ import {
 } from '@/store/search/search.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
-  openGlobalSearch: () => dispatch({ type: t.OPEN_SEARCH }),
-  closeGlobalSearch: () => dispatch({ type: t.CLOSE_SEARCH }),
+  openGlobalSearch: () => dispatch({ type: OPEN_SEARCH }),
+  closeGlobalSearch: () => dispatch({ type: CLOSE_SEARCH }),
 
   setResourceTypeUniversalSearch: (resourceType) =>
     dispatch(universalSearchSetResourceType(resourceType)),

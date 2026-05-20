@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   setCashflowAccountsTableState,
   resetCashflowAccountsTableState,
-} from '@/store/CashflowAccounts/CashflowAccounts.actions';
+} from '@/store/cashflow-accounts/cashflow-accounts.actions';
 
 const mapActionsToProps = (dispatch) => ({
   setCashflowAccountsTableState: (queries) =>

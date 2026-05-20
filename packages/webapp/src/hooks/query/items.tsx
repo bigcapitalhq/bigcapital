@@ -124,7 +124,7 @@ export function useActivateItem(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`items/${id}/activate`), {
+  return useMutation((id) => apiRequest.patch(`items/${id}/activate`), {
     onSuccess: (res, id) => {
       // Invalidate specific item.
       queryClient.invalidateQueries([t.ITEM, id]);
@@ -143,7 +143,7 @@ export function useInactivateItem(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.post(`items/${id}/inactivate`), {
+  return useMutation((id) => apiRequest.patch(`items/${id}/inactivate`), {
     onSuccess: (res, id) => {
       // Invalidate specific item.
       queryClient.invalidateQueries([t.ITEM, id]);

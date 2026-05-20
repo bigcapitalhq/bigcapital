@@ -31,6 +31,9 @@ import { AttachmentUploadPipeline } from './S3UploadPipeline';
 import { FileInterceptor } from '@/common/interceptors/file.interceptor';
 import { ConfigService } from '@nestjs/config';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { AttachmentAction } from './Attachments.types';
 
 @ApiTags('Attachments')
 @Controller('/attachments')
@@ -86,6 +89,7 @@ export class AttachmentsController {
   @ApiOperation({ summary: 'Get attachment by ID' })
   @ApiParam({ name: 'id', description: 'Attachment ID' })
   @ApiResponse({ status: 200, description: 'Returns the attachment file' })
+  @RequirePermission(AttachmentAction.View, AbilitySubject.Attachment)
   async getAttachment(
     @Res() res: Response,
     @Param('id') documentId: string,
@@ -112,6 +116,7 @@ export class AttachmentsController {
     status: 200,
     description: 'The document has been deleted successfully',
   })
+  @RequirePermission(AttachmentAction.Delete, AbilitySubject.Attachment)
   async deleteAttachment(@Param('id') documentId: string) {
     await this.attachmentsApplication.delete(documentId);
 
@@ -185,6 +190,7 @@ export class AttachmentsController {
     status: 200,
     description: 'Returns the presigned URL for the attachment',
   })
+  @RequirePermission(AttachmentAction.View, AbilitySubject.Attachment)
   async getAttachmentPresignedUrl(@Param('id') documentKey: string) {
     const presignedUrl =
       await this.attachmentsApplication.getPresignedUrl(documentKey);

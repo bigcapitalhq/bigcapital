@@ -7,7 +7,7 @@ import {
   editView,
   fetchViewResource,
   fetchResourceViews,
-} from '@/store/customViews/customViews.actions';
+} from '@/store/custom-views/custom-views.actions';
 
 
 export const mapDispatchToProps = (dispatch) => ({

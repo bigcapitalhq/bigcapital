@@ -6,15 +6,11 @@ interface StorePlaidState {
   openMatchingTransactionAside: boolean;
   uncategorizedTransactionIdForMatching: number | null;
   openReconcileMatchingTransaction: { isOpen: boolean; pending: number };
-
   uncategorizedTransactionsSelected: Array<number | string>;
   excludedTransactionsSelected: Array<number | string>;
   transactionsToCategorizeSelected: Array<number | string>;
-
   enableMultipleCategorization: boolean;
-
   categorizedTransactionsSelected: Array<number | string>;
-
   uncategorizedFilter: { fromDate?: string; toDate?: string };
 }
 

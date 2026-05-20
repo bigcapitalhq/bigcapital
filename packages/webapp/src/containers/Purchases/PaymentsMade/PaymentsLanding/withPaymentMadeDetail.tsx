@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { getPaymentMadeByIdFactory } from '@/store/PaymentMades/paymentMade.selector';
+import { getPaymentMadeByIdFactory } from '@/store/payment-mades/payment-mades.selector';
 
 export const withPaymentMadeDetail = () => {
   const getPaymentMadeById = getPaymentMadeByIdFactory();

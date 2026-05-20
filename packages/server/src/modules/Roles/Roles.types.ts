@@ -63,6 +63,11 @@ export enum AbilitySubject {
   TaxRate = 'TaxRate',
   CustomField = 'CustomField',
   TrackingTag = 'TrackingTag',
+  AuditLog = 'AuditLog',
+  Role = 'Role',
+  Warehouse = 'Warehouse',
+  Branch = 'Branch',
+  Attachment = 'Attachment',
 }
 
 export interface IRoleCreatedPayload {

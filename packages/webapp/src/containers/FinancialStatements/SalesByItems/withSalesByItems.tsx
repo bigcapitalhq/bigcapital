@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { getSalesByItemsFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
+import { getSalesByItemsFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
 
 export const withSalesByItems = (mapState) => {
   const mapStateToProps = (state, props) => {

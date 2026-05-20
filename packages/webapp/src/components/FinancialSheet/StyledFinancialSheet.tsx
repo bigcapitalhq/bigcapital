@@ -12,6 +12,7 @@ export const FinancialSheetRoot = styled.div`
   min-height: 400px;
   display: flex;
   flex-direction: column;
+  gap: 24px;
 
   ${(props) =>
     props.fullWidth &&
@@ -73,9 +74,7 @@ export const FinancialSheetFooter = styled.div`
     padding-left: 10px;
   }
 `;
-export const FinancialSheetTable = styled.div`
-  margin-top: 24px;
-`;
+export const FinancialSheetTable = styled.div``;
 export const FinancialSheetFooterBasis = styled.span``;
 export const FinancialSheetFooterCurrentTime = styled.span``;
 

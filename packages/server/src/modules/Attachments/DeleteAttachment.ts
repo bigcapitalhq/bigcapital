@@ -31,16 +31,16 @@ export class DeleteAttachment {
    * @param {string} filekey
    */
   async delete(filekey: string): Promise<void> {
+    const foundDocument = await this.documentModel()
+      .query()
+      .findOne('key', filekey)
+      .throwIfNotFound();
+
     const params = {
       Bucket: this.configService.get('s3.bucket'),
       Key: filekey,
     };
     await this.s3Client.send(new DeleteObjectCommand(params));
-
-    const foundDocument = await this.documentModel()
-      .query()
-      .findOne('key', filekey)
-      .throwIfNotFound();
 
     await this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Delete all document links

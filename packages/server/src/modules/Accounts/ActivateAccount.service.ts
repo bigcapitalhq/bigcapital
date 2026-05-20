@@ -53,6 +53,8 @@ export class ActivateAccount {
       // Triggers `onAccountActivated` event.
       this.eventEmitter.emitAsync(events.accounts.onActivated, {
         accountId,
+        activate,
+        account: oldAccount,
         trx,
       } as IAccountEventActivatedPayload);
     });

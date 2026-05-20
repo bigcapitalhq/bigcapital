@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   getProjectsTableStateFactory,
   isProjectsTableStateChangedFactory,
-} from '@/store/Project/projects.selectors';
+} from '@/store/project/projects.selectors';
 
 export const withProjects = (mapState) => {
   const getProjectsTableState = getProjectsTableStateFactory();

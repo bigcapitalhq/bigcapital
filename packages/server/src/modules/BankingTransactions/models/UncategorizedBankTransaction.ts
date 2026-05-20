@@ -20,6 +20,7 @@ export class UncategorizedBankTransaction extends TenantBaseModel {
   readonly pending: boolean;
   readonly categorizeRefId!: number;
   readonly categorizeRefType!: string;
+  readonly currencyCode!: string;
 
   /**
    * Table name.

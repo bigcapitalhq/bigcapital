@@ -4,7 +4,7 @@ import {
   setBillsTableState,
   resetBillsTableState,
   setBillsSelectedRows,
-} from '@/store/Bills/bills.actions';
+} from '@/store/bills/bills.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setBillsTableState: (queries) => dispatch(setBillsTableState(queries)),

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { setItemsCategoriesTableState } from '@/store/itemCategories/itemsCategory.actions';
+import { setItemsCategoriesTableState } from '@/store/item-categories/items-category.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   setItemsCategoriesTableState: (state) =>

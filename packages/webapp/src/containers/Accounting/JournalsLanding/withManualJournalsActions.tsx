@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   setManualJournalsTableState,
   setManualJournalsSelectedRows,
-} from '@/store/manualJournals/manualJournals.actions';
+} from '@/store/manual-journals/manual-journals.actions';
 
 const mapActionsToProps = (dispatch) => ({
   setManualJournalsTableState: (queries) =>

@@ -29,6 +29,22 @@ export function useCreateInviteUser(props) {
 }
 
 /**
+ * Bulk invite users.
+ */
+export function useBulkCreateInviteUsers(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation((values) => apiRequest.post('invite/bulk', values), {
+    onSuccess: () => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
+    },
+    ...props,
+  });
+}
+
+/**
  * Edits the given user.
  */
 export function useEditUser(props) {

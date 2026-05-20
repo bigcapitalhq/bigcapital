@@ -157,6 +157,18 @@ export interface IItemEventDeletedPayload {
   trx: Knex.Transaction;
 }
 
+export interface IItemEventActivatedPayload {
+  item: Item;
+  itemId: number;
+  trx: Knex.Transaction;
+}
+
+export interface IItemEventInactivatedPayload {
+  item: Item;
+  itemId: number;
+  trx: Knex.Transaction;
+}
+
 export enum ItemAction {
   CREATE = 'Create',
   EDIT = 'Edit',

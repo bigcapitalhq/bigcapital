@@ -1,5 +1,7 @@
 import { Module } from "@nestjs/common";
+import { randomUUID } from 'node:crypto';
 import * as multerS3 from 'multer-s3';
+import { ClsService } from 'nestjs-cls';
 import { S3_CLIENT, S3Module } from "../S3/S3.module";
 import { DeleteAttachment } from "./DeleteAttachment";
 import { GetAttachment } from "./GetAttachment";
@@ -59,8 +61,12 @@ const models = [
     AttachmentUploadPipeline,
     {
       provide: MULTER_MODULE_OPTIONS,
-      inject: [ConfigService, S3_CLIENT],
-      useFactory: (configService: ConfigService, s3: S3Client) => ({
+      inject: [ConfigService, S3_CLIENT, ClsService],
+      useFactory: (
+        configService: ConfigService,
+        s3: S3Client,
+        cls: ClsService,
+      ) => ({
         storage: multerS3({
           s3,
           bucket: configService.get('s3.bucket'),
@@ -69,7 +75,11 @@ const models = [
             cb(null, { fieldName: file.fieldname });
           },
           key: function (req, file, cb) {
-            cb(null, Date.now().toString());
+            const organizationId = cls.get<string>('organizationId');
+            if (!organizationId) {
+              return cb(new Error('Tenant context required for upload.'), undefined as any);
+            }
+            cb(null, `${organizationId}/${randomUUID()}`);
           },
           acl: function(req, file, cb) {
             // Conditionally set file to public or private based on isPublic flag

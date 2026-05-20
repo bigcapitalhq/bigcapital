@@ -26,6 +26,7 @@ import { SendInviteUserMailQueue } from './Users.constants';
 import InviteSendMainNotificationSubscribe from './subscribers/InviteSendMailNotification.subscriber';
 import { SendInviteUserMailProcessor } from './processors/SendInviteUserMail.processor';
 import { SendInviteUsersMailMessage } from './commands/SendInviteUsersMailMessage.service';
+import { SendBulkInvitesService } from './commands/SendBulkInvites.service';
 import { MailModule } from '../Mail/Mail.module';
 
 const models = [InjectSystemModel(UserInvite)];
@@ -51,6 +52,7 @@ const models = [InjectSystemModel(UserInvite)];
     GetUsersService,
     AcceptInviteUserService,
     InviteTenantUserService,
+    SendBulkInvitesService,
     PurgeUserAbilityCacheSubscriber,
     SyncTenantUserDeleteSubscriber,
     SyncTenantUserMutateSubscriber,
@@ -59,7 +61,7 @@ const models = [InjectSystemModel(UserInvite)];
     InviteSendMainNotificationSubscribe,
     SendInviteUserMailProcessor,
     SendInviteUsersMailMessage,
-    UsersApplication
+    UsersApplication,
   ],
   controllers: [UsersController, UsersInviteController, UsersInvitePublicController],
 })

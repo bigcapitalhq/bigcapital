@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { getProjectProfitabilitySummaryFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
+import { getProjectProfitabilitySummaryFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
 
 export const withProjectProfitabilitySummary = (mapState) => {
   const mapStateToProps = (state, props) => {

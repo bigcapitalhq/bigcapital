@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   setWarehouseTransferTableState,
   resetWarehouseTransferTableState,
-} from '@/store/WarehouseTransfer/warehouseTransfer.actions';
+} from '@/store/warehouse-transfer/warehouse-transfer.actions';
 
 const mapDipatchToProps = (dispatch) => ({
   setWarehouseTransferTableState: (queries) =>

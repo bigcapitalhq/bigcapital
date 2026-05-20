@@ -77,4 +77,16 @@ describe('Expenses (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
+
+  it('/expenses (GET) honors page and pageSize query params', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/expenses?page=2&pageSize=5')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(response.body.pagination).toBeDefined();
+    expect(response.body.pagination.page).toBe(2);
+    expect(response.body.pagination.page_size).toBe(5);
+  });
 });

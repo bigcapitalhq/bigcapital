@@ -29,6 +29,7 @@ import { SendSignupVerificationMailProcessor } from './processors/SendSignupVeri
 import { MailModule } from '../Mail/Mail.module';
 import { ConfigService } from '@nestjs/config';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
+import { UserTenant } from '../System/models/UserTenant.model';
 import { GetAuthMetaService } from './queries/GetAuthMeta.service';
 import { AuthedController } from './Authed.controller';
 import { GetAuthenticatedAccount } from './queries/GetAuthedAccount.service';
@@ -46,6 +47,7 @@ import { GetApiKeysService } from './queries/GetApiKeys.service';
 const models = [
   InjectSystemModel(PasswordReset),
   InjectSystemModel(ApiKeyModel),
+  InjectSystemModel(UserTenant),
 ];
 
 @Module({

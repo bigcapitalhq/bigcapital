@@ -21,10 +21,14 @@ import { DashboardSockets } from './DashboardSockets';
  */
 function DashboardPreferences() {
   return (
-    <DashboardSplitPane>
-      <Sidebar />
-      <PreferencesPage />
-    </DashboardSplitPane>
+    <div className="dashboard-layout">
+      <div className="dashboard-layout__main">
+        <DashboardSplitPane>
+          <Sidebar />
+          <PreferencesPage />
+        </DashboardSplitPane>
+      </div>
+    </div>
   );
 }
 
@@ -33,10 +37,14 @@ function DashboardPreferences() {
  */
 function DashboardAnyPage() {
   return (
-    <DashboardSplitPane>
-      <Sidebar />
-      <DashboardContent />
-    </DashboardSplitPane>
+    <div className="dashboard-layout">
+      <div className="dashboard-layout__main">
+        <DashboardSplitPane>
+          <Sidebar />
+          <DashboardContent />
+        </DashboardSplitPane>
+      </div>
+    </div>
   );
 }
 

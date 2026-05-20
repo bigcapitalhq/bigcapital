@@ -4,7 +4,7 @@ import {
   getVendorCreditTableStateFactory,
   isVendorCreditTableStateChangedFactory,
   getVendorsCreditNoteSelectedRowsFactory,
-} from '@/store/VendorCredit/vendorCredit.selector';
+} from '@/store/vendor-credit/vendor-credit.selector';
 
 export const withVendorsCreditNotes = (mapState) => {
   const getVendorsCreditNoteTableState = getVendorCreditTableStateFactory();

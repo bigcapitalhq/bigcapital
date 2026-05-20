@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   getCreditNotesTableStateFactory,
   isCreditNotesTableStateChangedFactory,
-} from '@/store/CreditNote/creditNote.selector';
+} from '@/store/credit-note/credit-note.selector';
 
 export const withCreditNotes = (mapState) => {
   const getCreditNoteTableState = getCreditNotesTableStateFactory();

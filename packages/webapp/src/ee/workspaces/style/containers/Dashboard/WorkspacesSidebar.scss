@@ -1,0 +1,155 @@
+@import '@/style/_base.scss';
+
+.workspaces-sidebar {
+  width: 48px;
+  height: 100vh;
+  background: $sidebar-background;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: $sidebar-zindex + 1;
+
+  &__scrollable {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+
+    // Custom scrollbar for dark theme
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 0 6px;
+  }
+
+  &__footer {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    padding-top: 12px;
+    margin-top: auto;
+  }
+
+  &__item {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease, border-radius 0.15s ease;
+    position: relative;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    &.is-active {
+      background: rgba(255, 255, 255, 0.9);
+      color: $sidebar-background;
+      border-radius: 12px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 24px;
+        background: #fff;
+        border-radius: 0 2px 2px 0;
+      }
+    }
+
+    &.is-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: none;
+      }
+    }
+
+    .bp4-spinner {
+      .bp4-spinner-head {
+        stroke: rgba(255, 255, 255, 0.8);
+      }
+    }
+
+    &.is-active .bp4-spinner .bp4-spinner-head {
+      stroke: $sidebar-background;
+    }
+  }
+
+  &__item-initials {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  &__item-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  &__add-btn {
+    background: transparent;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-style: solid;
+    }
+  }
+
+  &__list-btn {
+    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 8px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+
+    .bp4-spinner .bp4-spinner-head {
+      stroke: rgba(255, 255, 255, 0.8);
+    }
+  }
+}

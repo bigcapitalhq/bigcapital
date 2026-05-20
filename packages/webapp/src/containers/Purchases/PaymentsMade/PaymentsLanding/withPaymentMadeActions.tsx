@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   setPaymentMadesTableState,
   resetPaymentMadesTableState,
-} from '@/store/PaymentMades/paymentMades.actions';
+} from '@/store/payment-mades/payment-mades.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setPaymentMadesTableState: (state) =>

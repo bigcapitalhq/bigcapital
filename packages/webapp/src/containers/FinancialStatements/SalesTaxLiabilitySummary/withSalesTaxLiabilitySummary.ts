@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { getSalesTaxLiabilitySummaryFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
+import { getSalesTaxLiabilitySummaryFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
 
 export const withSalesTaxLiabilitySummary = (mapState) => {
   const mapStateToProps = (state, props) => {
