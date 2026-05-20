@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import {
   getARAgingSummaryFilterDrawer,
-} from '@/store/financialStatement/financialStatements.selectors';
+} from '@/store/financial-statement/financial-statements.selectors';
 
 export const withARAgingSummary = (mapState) => {
   const mapStateToProps = (state, props) => {

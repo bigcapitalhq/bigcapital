@@ -147,6 +147,8 @@ export interface IAccountEventDeletePayload {
 export interface IAccountEventActivatedPayload {
   tenantId: number;
   accountId: number;
+  activate: boolean;
+  account: IAccount;
   trx: Knex.Transaction;
 }
 

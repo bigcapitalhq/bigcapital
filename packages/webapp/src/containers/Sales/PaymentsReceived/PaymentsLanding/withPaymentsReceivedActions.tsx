@@ -4,7 +4,7 @@ import {
   setPaymentReceivesTableState,
   resetPaymentReceivesTableState,
   setPaymentReceivesSelectedRows,
-} from '@/store/PaymentReceives/paymentReceives.actions';
+} from '@/store/payment-receives/payment-receives.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setPaymentReceivesTableState: (state) =>

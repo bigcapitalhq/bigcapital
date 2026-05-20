@@ -5,6 +5,7 @@ import {
   INumberFormatQuery,
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
+import { ITrackingTagFilter } from '../../types/TrackingTagFilter.types';
 
 // Balance sheet schema nodes types.
 export enum BALANCE_SHEET_SCHEMA_NODE_TYPE {
@@ -63,6 +64,8 @@ export interface IBalanceSheetQuery extends IFinancialSheetBranchesQuery {
   previousYear: boolean;
   previousYearAmountChange: boolean;
   previousYearPercentageChange: boolean;
+
+  trackingTags?: ITrackingTagFilter[];
 }
 
 // Balance sheet meta.

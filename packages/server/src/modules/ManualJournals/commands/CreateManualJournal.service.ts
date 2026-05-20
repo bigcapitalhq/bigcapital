@@ -56,6 +56,18 @@ export class CreateManualJournalService {
     const authorizedUser = await this.tenancyContext.getSystemUser();
 
     const entries = R.compose(
+      // Map trackingTags to trackingTagAssociations for upsertGraph.
+      R.map((entry: any) => ({
+        ...entry,
+        ...(entry.trackingTags
+          ? {
+              trackingTagAssociations: entry.trackingTags.map((tag) => ({
+                tagId: tag.tagId,
+                optionId: tag.optionId,
+              })),
+            }
+          : {}),
+      })),
       // Associate the default index to each item entry.
       assocItemEntriesDefaultIndex,
     )(manualJournalDTO.entries);

@@ -236,7 +236,12 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
         openingDate,
         receivableAccountsIds,
         customersIds,
-      );
+      )
+      .onBuild((query) => {
+        if (!isEmpty(this.filter.trackingTags)) {
+          query.modify('filterByTrackingTags', this.filter.trackingTags);
+        }
+      });
     return openingTransactions;
   }
 
@@ -264,6 +269,10 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
 
         // Filter by accounts.
         query.whereIn('accountId', receivableAccountsIds);
+
+        if (!isEmpty(this.filter.trackingTags)) {
+          query.modify('filterByTrackingTags', this.filter.trackingTags);
+        }
       });
     return transactions;
   }

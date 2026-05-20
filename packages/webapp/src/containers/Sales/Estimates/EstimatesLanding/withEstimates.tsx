@@ -4,7 +4,7 @@ import {
   getEstimatesTableStateFactory,
   isEstimatesTableStateChangedFactory,
   getEstimatesSelectedRowsFactory,
-} from '@/store/Estimate/estimates.selectors';
+} from '@/store/estimate/estimates.selectors';
 
 export const withEstimates = (mapState) => {
   const getEstimatesTableState = getEstimatesTableStateFactory();

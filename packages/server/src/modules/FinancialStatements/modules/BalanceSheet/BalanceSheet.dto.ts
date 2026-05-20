@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import { FinancialSheetBranchesQueryDto } from '../../dtos/FinancialSheetBranchesQuery.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { TrackingTagAssignmentDto } from '@/modules/TrackingTags/dtos/AssignTrackingTags.dto';
 
 export class BalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
@@ -173,4 +174,12 @@ export class BalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @Transform(({ value }) => parseBoolean(value, false))
   @IsOptional()
   previousYearPercentageChange: boolean;
+
+  @ApiProperty({
+    description: 'Tracking tags to filter the report',
+    type: [TrackingTagAssignmentDto],
+    required: false,
+  })
+  @IsOptional()
+  trackingTags?: TrackingTagAssignmentDto[];
 }

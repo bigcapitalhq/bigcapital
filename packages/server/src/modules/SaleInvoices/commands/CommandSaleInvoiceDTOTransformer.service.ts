@@ -91,6 +91,19 @@ export class CommandSaleInvoiceDTOTransformer {
       // Remove tax code from entries.
       R.map(R.omit(['taxCode'])),
 
+      // Map trackingTags to trackingTagAssociations for upsertGraph.
+      R.map((entry: any) => ({
+        ...entry,
+        ...(entry.trackingTags
+          ? {
+              trackingTagAssociations: entry.trackingTags.map((tag) => ({
+                tagId: tag.tagId,
+                optionId: tag.optionId,
+              })),
+            }
+          : {}),
+      })),
+
       // Associate the default index for each item entry lin.
       assocItemEntriesDefaultIndex,
     )(asyncEntries);

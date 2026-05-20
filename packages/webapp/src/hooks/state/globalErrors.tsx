@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { setGlobalErrors } from '@/store/globalErrors/globalErrors.actions';
+import { setGlobalErrors } from '@/store/global-errors/global-errors.actions';
 
 export const useSetGlobalErrors = () => {
   const dispatch = useDispatch();

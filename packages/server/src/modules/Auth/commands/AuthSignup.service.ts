@@ -72,7 +72,6 @@ export class AuthSignupService {
       inviteAcceptedAt,
     });
     // Set the user in the cls service.
-    this.clsService.set('tenantId', user.tenantId);
     this.clsService.set('userId', user.id);
     this.clsService.set('organizationId', tenant.organizationId);
 

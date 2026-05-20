@@ -1,6 +1,15 @@
-// @ts-nocheck
 import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+
+/** Values for setup organization / create workspace forms (matches Yup schema fields). */
+export interface SetupOrganizationFormValues {
+  name: string;
+  location: string;
+  baseCurrency: string;
+  language: string;
+  fiscalYear: string;
+  timezone: string;
+}
 
 // Retrieve the setup organization form validation.
 export const getSetupOrganizationValidation = () =>

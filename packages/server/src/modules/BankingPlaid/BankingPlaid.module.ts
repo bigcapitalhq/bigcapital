@@ -24,6 +24,7 @@ import { BankingPlaidWebhooksController } from './BankingPlaidWebhooks.controlle
 import { SetupPlaidItemTenantService } from './command/SetupPlaidItemTenant.service';
 import { UpdateBankingPlaidTransitionsQueueJob } from './types/BankingPlaid.types';
 import { PlaidFetchTransactionsProcessor } from './jobs/PlaidFetchTransactionsJob';
+import { PlaidWebhookVerificationService } from './PlaidWebhookVerification.service';
 
 const models = [RegisterTenancyModel(PlaidItem)];
 
@@ -50,6 +51,7 @@ const models = [RegisterTenancyModel(PlaidItem)];
     PlaidLinkTokenService,
     PlaidApplication,
     SetupPlaidItemTenantService,
+    PlaidWebhookVerificationService,
     TenancyContext,
     PlaidFetchTransactionsProcessor,
     PlaidUpdateTransactionsOnItemCreatedSubscriber,

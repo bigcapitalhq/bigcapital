@@ -23,6 +23,7 @@ export const AbilitySubject = {
   Project: 'Project',
   TaxRate: 'TaxRate',
   BankRule: 'BankRule',
+  AuditLog: 'AuditLog',
 };
 
 export const ItemAction = {
@@ -201,4 +202,8 @@ export const BankRuleAction = {
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
+};
+
+export const AuditLogAction = {
+  View: 'View',
 };

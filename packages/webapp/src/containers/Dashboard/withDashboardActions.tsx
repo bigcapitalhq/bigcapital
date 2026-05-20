@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import t from '@/store/types';
+import { ALTER_DASHBOARD_PAGE_SUBTITLE, CHANGE_DASHBOARD_PAGE_HINT, CHANGE_DASHBOARD_PAGE_TITLE, CHANGE_PREFERENCES_PAGE_TITLE, SET_DASHBOARD_BACK_LINK, SET_DASHBOARD_REQUEST_COMPLETED, SET_DASHBOARD_REQUEST_LOADING, SET_TOPBAR_EDIT_VIEW } from '@/store/types';;
 import {
   toggleExpendSidebar,
 } from '@/store/dashboard/dashboard.actions';
@@ -9,36 +9,36 @@ import { splashStartLoading, splashStopLoading } from '@/store/dashboard/dashboa
 const mapActionsToProps = (dispatch) => ({
   changePageTitle: (pageTitle) =>
     dispatch({
-      type: t.CHANGE_DASHBOARD_PAGE_TITLE,
+      type: CHANGE_DASHBOARD_PAGE_TITLE,
       pageTitle,
     }),
 
   changePageSubtitle: (pageSubtitle) =>
     dispatch({
-      type: t.ALTER_DASHBOARD_PAGE_SUBTITLE,
+      type: ALTER_DASHBOARD_PAGE_SUBTITLE,
       pageSubtitle,
     }),
 
   changePageHint: (pageHint) =>
     dispatch({
-      type: t.CHANGE_DASHBOARD_PAGE_HINT,
+      type: CHANGE_DASHBOARD_PAGE_HINT,
       payload: { pageHint },
     }),
 
   setTopbarEditView: (id) =>
     dispatch({
-      type: t.SET_TOPBAR_EDIT_VIEW,
+      type: SET_TOPBAR_EDIT_VIEW,
       id,
     }),
 
   setDashboardRequestLoading: () =>
     dispatch({
-      type: t.SET_DASHBOARD_REQUEST_LOADING,
+      type: SET_DASHBOARD_REQUEST_LOADING,
     }),
 
   setDashboardRequestCompleted: () =>
     dispatch({
-      type: t.SET_DASHBOARD_REQUEST_COMPLETED,
+      type: SET_DASHBOARD_REQUEST_COMPLETED,
     }),
 
   /**
@@ -48,13 +48,13 @@ const mapActionsToProps = (dispatch) => ({
 
   changePreferencesPageTitle: (pageTitle) =>
     dispatch({
-      type: 'CHANGE_PREFERENCES_PAGE_TITLE',
+      type: CHANGE_PREFERENCES_PAGE_TITLE,
       pageTitle,
     }),
 
   setDashboardBackLink: (backLink) =>
     dispatch({
-      type: t.SET_DASHBOARD_BACK_LINK,
+      type: SET_DASHBOARD_BACK_LINK,
       payload: { backLink },
     }),
 

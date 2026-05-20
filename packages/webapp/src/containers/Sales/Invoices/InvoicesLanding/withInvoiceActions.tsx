@@ -5,7 +5,7 @@ import {
   resetInvoicesTableState,
   setInvoicesSelectedRows,
   resetInvoicesSelectedRows,
-} from '@/store/Invoice/invoices.actions';
+} from '@/store/invoice/invoices.actions';
 
 const mapDipatchToProps = (dispatch) => ({
   setInvoicesTableState: (queries) => dispatch(setInvoicesTableState(queries)),

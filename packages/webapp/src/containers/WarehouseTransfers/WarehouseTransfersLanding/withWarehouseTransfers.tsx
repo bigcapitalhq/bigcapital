@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   getWarehouseTransfersTableStateFactory,
   isWarehouseTransferTableStateChangedFactory,
-} from '@/store/WarehouseTransfer/warehouseTransfer.selector';
+} from '@/store/warehouse-transfer/warehouse-transfer.selector';
 
 export const withWarehouseTransfers = (mapState) => {
   const getWarehouseTransferTableState = getWarehouseTransfersTableStateFactory();

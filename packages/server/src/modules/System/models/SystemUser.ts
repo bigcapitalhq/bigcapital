@@ -9,6 +9,7 @@ export class SystemUser extends BaseModel {
 
   public readonly active: boolean;
   public readonly tenantId: number;
+  public readonly defaultTenantId?: number;
   public readonly verifyToken: string;
   public readonly verified: boolean;
   public readonly inviteAcceptedAt!: string;

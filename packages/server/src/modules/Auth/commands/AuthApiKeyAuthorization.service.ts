@@ -41,7 +41,6 @@ export class AuthApiKeyAuthorizeService {
 
     if (!tenant) return false;
 
-    this.clsService.set('tenantId', tenant.id);
     this.clsService.set('organizationId', tenant.organizationId);
     this.clsService.set('userId', apiKeyRecord.userId);
 

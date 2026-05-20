@@ -40,6 +40,11 @@ import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceive
 import { Model } from 'objection';
 import { ClsModule } from 'nestjs-cls';
 import { TenantUser } from './models/TenantUser.model';
+import { TrackingTag } from '@/modules/TrackingTags/models/TrackingTag';
+import { TrackingTagOption } from '@/modules/TrackingTags/models/TrackingTagOption';
+import { ItemEntryTrackingTag } from '@/modules/TrackingTags/models/ItemEntryTrackingTag';
+import { ManualJournalEntryTrackingTag } from '@/modules/TrackingTags/models/ManualJournalEntryTrackingTag';
+import { AccountTransactionTrackingTag } from '@/modules/TrackingTags/models/AccountTransactionTrackingTag';
 
 const models = [
   Item,
@@ -80,6 +85,11 @@ const models = [
   PaymentReceived,
   PaymentReceivedEntry,
   TenantUser,
+  TrackingTag,
+  TrackingTagOption,
+  ItemEntryTrackingTag,
+  ManualJournalEntryTrackingTag,
+  AccountTransactionTrackingTag,
 ];
 
 /**

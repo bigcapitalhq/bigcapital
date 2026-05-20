@@ -111,5 +111,9 @@ export class TrialBalanceSheetRepository {
       // @ts-ignore
       query.modify('filterByBranches', this.query.branchesIds);
     }
+    if (!isEmpty(this.query.trackingTags)) {
+      // @ts-ignore
+      query.modify('filterByTrackingTags', this.query.trackingTags);
+    }
   };
 }

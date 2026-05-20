@@ -401,5 +401,8 @@ export class BalanceSheetRepository extends R.compose(
     if (!isEmpty(this.query.branchesIds)) {
       query.modify('filterByBranches', this.query.branchesIds);
     }
+    if (!isEmpty(this.query.trackingTags)) {
+      query.modify('filterByTrackingTags', this.query.trackingTags);
+    }
   };
 }

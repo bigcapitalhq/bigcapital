@@ -1,5 +1,6 @@
 import { IFinancialSheetCommonMeta, INumberFormatQuery } from "../../types/Report.types";
 import { IFinancialTable } from "../../types/Table.types";
+import { ITrackingTagFilter } from "../../types/TrackingTagFilter.types";
 
 export interface ITrialBalanceSheetQuery {
   fromDate: Date | string;
@@ -11,6 +12,7 @@ export interface ITrialBalanceSheetQuery {
   onlyActive: boolean;
   accountIds: number[];
   branchesIds?: number[];
+  trackingTags?: ITrackingTagFilter[];
 }
 
 export interface ITrialBalanceTotal {

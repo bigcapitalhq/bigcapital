@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+import { UncategorizedBankTransaction } from "@/modules/BankingTransactions/models/UncategorizedBankTransaction";
 
 export interface ExcludedBankTransactionsQuery {
   page?: number;
@@ -17,14 +18,17 @@ export interface IBankTransactionUnexcludingEventPayload {
 
 export interface IBankTransactionUnexcludedEventPayload {
   uncategorizedTransactionId: number;
+  uncategorizedTransaction?: UncategorizedBankTransaction;
   trx?: Knex.Transaction
 }
 
 export interface IBankTransactionExcludingEventPayload {
   uncategorizedTransactionId: number;
+  uncategorizedTransaction?: UncategorizedBankTransaction;
   trx?: Knex.Transaction
 }
 export interface IBankTransactionExcludedEventPayload {
   uncategorizedTransactionId: number;
+  uncategorizedTransaction?: UncategorizedBankTransaction;
   trx?: Knex.Transaction
 }

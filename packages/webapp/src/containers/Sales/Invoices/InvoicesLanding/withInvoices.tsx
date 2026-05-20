@@ -4,7 +4,7 @@ import {
   getInvoicesTableStateFactory,
   isInvoicesTableStateChangedFactory,
   getInvoicesSelectedRowsFactory,
-} from '@/store/Invoice/invoices.selector';
+} from '@/store/invoice/invoices.selector';
 
 export const withInvoices = (mapState) => {
   const getInvoicesTableState = getInvoicesTableStateFactory();

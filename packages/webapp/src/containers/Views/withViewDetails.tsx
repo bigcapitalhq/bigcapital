@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {
   getViewItemFactory,
   getViewMetaFactory,
-} from '@/store/customViews/customViews.selectors';
+} from '@/store/custom-views/custom-views.selectors';
 
 export const withViewDetails = () => {
   const getViewItem = getViewItemFactory();

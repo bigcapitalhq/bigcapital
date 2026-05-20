@@ -11,6 +11,7 @@ export interface IVendorBalanceSummaryQuery {
   percentageColumn: boolean;
   noneTransactions: boolean;
   noneZero: boolean;
+  trackingTags?: Array<{ tagId: number; optionId?: number }>;
 }
 
 export interface IVendorBalanceSummaryAmount {

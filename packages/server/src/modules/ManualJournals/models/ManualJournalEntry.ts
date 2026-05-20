@@ -18,6 +18,7 @@ export class ManualJournalEntry extends BaseModel {
   contact?: Contact;
   account?: Account;
   branch?: Branch;
+  trackingTagAssociations?: any[];
 
   /**
    * Table name.
@@ -40,6 +41,7 @@ export class ManualJournalEntry extends BaseModel {
     const { Account } = require('../../Accounts/models/Account.model');
     const { Contact } = require('../../Contacts/models/Contact');
     const { Branch } = require('../../Branches/models/Branch.model');
+    const { ManualJournalEntryTrackingTag } = require('../../TrackingTags/models/ManualJournalEntryTrackingTag');
 
     return {
       account: {
@@ -64,6 +66,15 @@ export class ManualJournalEntry extends BaseModel {
         join: {
           from: 'manual_journals_entries.branchId',
           to: 'branches.id',
+        },
+      },
+
+      trackingTagAssociations: {
+        relation: Model.HasManyRelation,
+        modelClass: ManualJournalEntryTrackingTag,
+        join: {
+          from: 'manual_journals_entries.id',
+          to: 'manual_journal_entry_tracking_tags.manualJournalEntryId',
         },
       },
     };

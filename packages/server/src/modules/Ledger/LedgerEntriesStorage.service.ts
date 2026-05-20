@@ -8,6 +8,7 @@ import {
 } from './types/Ledger.types';
 import { ILedger } from './types/Ledger.types';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
+import { AccountTransactionTrackingTag } from '../TrackingTags/models/AccountTransactionTrackingTag';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 // Filter the blank entries.
@@ -23,6 +24,11 @@ export class LedgerEntriesStorageService {
     @Inject(AccountTransaction.name)
     private readonly accountTransactionModel: TenantModelProxy<
       typeof AccountTransaction
+    >,
+
+    @Inject(AccountTransactionTrackingTag.name)
+    private readonly accountTransactionTrackingTagModel: TenantModelProxy<
+      typeof AccountTransactionTrackingTag
     >,
   ) {}
 
@@ -71,7 +77,22 @@ export class LedgerEntriesStorageService {
   ): Promise<void> => {
     const transaction = transformLedgerEntryToTransaction(entry);
 
-    await this.accountTransactionModel().query(trx).insert(transaction);
+    const insertedTransaction = await this.accountTransactionModel()
+      .query(trx)
+      .insert(transaction);
+
+    // Save tracking tag associations if present.
+    if (entry.trackingTags?.length > 0) {
+      const tagAssociations = entry.trackingTags.map((tag) => ({
+        accountTransactionId: insertedTransaction.id,
+        tagId: tag.tagId,
+        optionId: tag.optionId,
+      }));
+
+      await this.accountTransactionTrackingTagModel()
+        .query(trx)
+        .insert(tagAssociations);
+    }
   };
 
   /**

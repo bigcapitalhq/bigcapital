@@ -173,5 +173,8 @@ export class CashFlowRepository {
     if (!isEmpty(query.branchesIds)) {
       knexQuery.modify('filterByBranches', query.branchesIds);
     }
+    if (!isEmpty(query.trackingTags)) {
+      knexQuery.modify('filterByTrackingTags', query.trackingTags);
+    }
   };
 }

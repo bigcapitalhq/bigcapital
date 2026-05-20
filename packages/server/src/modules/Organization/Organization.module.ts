@@ -17,6 +17,8 @@ import { SyncSystemUserToTenantSubscriber } from './subscribers/SyncSystemUserTo
 import { GetBuildOrganizationBuildJob } from './commands/GetBuildOrganizationJob.service';
 import { AttachmentsModule } from '../Attachments/Attachment.module';
 import { TransformerModule } from '../Transformer/Transformer.module';
+import { SocketModule } from '../Socket/Socket.module';
+import { OrganizationBuiltSubscriber } from './subscribers/OrganizationBuilt.subscriber';
 
 @Module({
   providers: [
@@ -30,6 +32,7 @@ import { TransformerModule } from '../Transformer/Transformer.module';
     SyncSystemUserToTenantService,
     SyncSystemUserToTenantSubscriber,
     GetBuildOrganizationBuildJob,
+    OrganizationBuiltSubscriber,
   ],
   imports: [
     BullModule.registerQueue({ name: OrganizationBuildQueue }),
@@ -40,7 +43,9 @@ import { TransformerModule } from '../Transformer/Transformer.module';
     TenantDBManagerModule,
     AttachmentsModule,
     TransformerModule,
+    SocketModule,
   ],
   controllers: [OrganizationController],
+  exports: [BuildOrganizationService],
 })
 export class OrganizationModule {}

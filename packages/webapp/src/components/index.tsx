@@ -62,5 +62,6 @@ export * from './EmptyStatus';
 export * from './Postbox';
 export * from './AppToaster';
 export * from './Layout';
+export * from '@/ee/workspaces/components/WorkspaceSwitchingOverlay';
 
 export { MODIFIER, ContextMenu, AvatarCell };

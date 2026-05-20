@@ -4,7 +4,7 @@ import {
   getManualJournalsSelectedRowsFactory,
   getManualJournalsTableStateFactory,
   manualJournalTableStateChangedFactory,
-} from '@/store/manualJournals/manualJournals.selectors';
+} from '@/store/manual-journals/manual-journals.selectors';
 
 export const withManualJournals = (mapState) => {
   const getJournalsTableQuery = getManualJournalsTableStateFactory();

@@ -20,6 +20,7 @@ export * from './import';
 export * from './manual-journals';
 export * from './roles';
 export * from './custom-fields';
+export * from './tracking-tags';
 export * from './users';
 export * from './dashboard';
 export * from './settings';
@@ -53,6 +54,7 @@ export * from './cashflow-accounts';
 export * from './bank-rules';
 export * from './misc';
 export * from './reports';
+export * from './workspaces';
 
 /**
  * Utility types for request/response types from schema paths.

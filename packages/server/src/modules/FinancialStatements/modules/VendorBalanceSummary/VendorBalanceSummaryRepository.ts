@@ -138,6 +138,9 @@ export class VendorBalanceSummaryRepository {
       .onBuild((query) => {
         query.whereIn('accountId', payableAccountsIds);
         query.modify('filterDateRange', null, asDate);
+        if (!isEmpty(this.filter.trackingTags)) {
+          query.modify('filterByTrackingTags', this.filter.trackingTags);
+        }
         query.groupBy('contactId');
         query.sum('credit as credit');
         query.sum('debit as debit');

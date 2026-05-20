@@ -115,12 +115,9 @@
         .inner-resizer {
           height: 100%;
           width: 1px;
-          border-left: 1px solid var(--color-datatable-head-border);
+          background: transparent;
+          border-left: 1px solid transparent;
           margin: 0 auto;
-        }
-
-        &.isResizing .inner-resizer {
-          background: #1183da;
         }
       }
 

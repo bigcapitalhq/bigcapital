@@ -75,7 +75,6 @@ export class AcceptInviteUserService {
       .findById(inviteToken.tenantId);
 
     // Set CLS values for tenant context before triggering sync events.
-    this.cls.set('tenantId', inviteToken.tenantId);
     this.cls.set('userId', systemUser.id);
     this.cls.set('organizationId', tenant.organizationId);
 

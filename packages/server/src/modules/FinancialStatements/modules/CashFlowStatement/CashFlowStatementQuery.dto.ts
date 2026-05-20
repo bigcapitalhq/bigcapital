@@ -11,6 +11,7 @@ import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberF
 import { Transform, Type } from 'class-transformer';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { ApiProperty } from '@nestjs/swagger';
+import { TrackingTagAssignmentDto } from '@/modules/TrackingTags/dtos/AssignTrackingTags.dto';
 
 export class CashFlowStatementQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
@@ -92,4 +93,12 @@ export class CashFlowStatementQueryDto extends FinancialSheetBranchesQueryDto {
   @IsString()
   @IsOptional()
   basis: string;
+
+  @ApiProperty({
+    description: 'Tracking tags to filter the report',
+    type: [TrackingTagAssignmentDto],
+    required: false,
+  })
+  @IsOptional()
+  trackingTags?: TrackingTagAssignmentDto[];
 }

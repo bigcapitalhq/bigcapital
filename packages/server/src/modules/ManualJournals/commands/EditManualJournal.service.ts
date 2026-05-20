@@ -68,6 +68,18 @@ export class EditManualJournal {
     const amount = sumBy(manualJournalDTO.entries, 'credit') || 0;
     const date = moment(manualJournalDTO.date).format('YYYY-MM-DD');
 
+    const entries = manualJournalDTO.entries.map((entry: any) => ({
+      ...entry,
+      ...(entry.trackingTags
+        ? {
+            trackingTagAssociations: entry.trackingTags.map((tag) => ({
+              tagId: tag.tagId,
+              optionId: tag.optionId,
+            })),
+          }
+        : {}),
+    }));
+
     return {
       id: oldManualJournal.id,
       ...omit(manualJournalDTO, ['publish', 'attachments']),
@@ -76,6 +88,7 @@ export class EditManualJournal {
         : {}),
       amount,
       date,
+      entries,
     };
   };
 

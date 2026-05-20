@@ -12,6 +12,7 @@ import {
 import { Transform, Type } from 'class-transformer';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { ApiProperty } from '@nestjs/swagger';
+import { TrackingTagAssignmentDto } from '@/modules/TrackingTags/dtos/AssignTrackingTags.dto';
 
 export class TrialBalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
@@ -92,4 +93,12 @@ export class TrialBalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @IsArray()
   @IsOptional()
   accountIds: number[];
+
+  @ApiProperty({
+    description: 'Tracking tags to filter the report',
+    type: [TrackingTagAssignmentDto],
+    required: false,
+  })
+  @IsOptional()
+  trackingTags?: TrackingTagAssignmentDto[];
 }

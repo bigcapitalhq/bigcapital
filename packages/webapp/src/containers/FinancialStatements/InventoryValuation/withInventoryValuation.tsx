@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { getInventoryValuationFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
+import { getInventoryValuationFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
 
 export const withInventoryValuation = (mapState) => {
   const mapStateToProps = (state, props) => {

@@ -2,6 +2,7 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Inject, Injectable } from '@nestjs/common';
 import { ModelObject } from 'objection';
+import { isEmpty } from 'lodash';
 
 @Injectable()
 export class TransactionsByReferenceRepository {
@@ -21,12 +22,18 @@ export class TransactionsByReferenceRepository {
   public async getTransactions(
     referenceId: number,
     referenceType: string,
+    trackingTags?: Array<{ tagId: number; optionId?: number }>,
   ): Promise<Array<ModelObject<AccountTransaction>>> {
     return this.accountTransactionModel()
       .query()
       .skipUndefined()
       .where('reference_id', referenceId)
       .where('reference_type', referenceType)
+      .onBuild((query) => {
+        if (!isEmpty(trackingTags)) {
+          query.modify('filterByTrackingTags', trackingTags);
+        }
+      })
       .withGraphFetched('account');
   }
 }

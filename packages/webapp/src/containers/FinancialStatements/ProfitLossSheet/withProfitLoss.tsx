@@ -2,7 +2,7 @@
 import {connect} from 'react-redux';
 import {
   getProfitLossFilterDrawer,
-} from '@/store/financialStatement/financialStatements.selectors';
+} from '@/store/financial-statement/financial-statements.selectors';
 
 export const withProfitLoss = (mapState) => {
   const mapStateToProps = (state, props) => {

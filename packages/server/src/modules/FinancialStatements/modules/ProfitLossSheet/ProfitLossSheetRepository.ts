@@ -363,6 +363,9 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     if (!isEmpty(this.query.query.branchesIds)) {
       query.modify('filterByBranches', this.query.query.branchesIds);
     }
+    if (!isEmpty(this.query.query.trackingTags)) {
+      query.modify('filterByTrackingTags', this.query.query.trackingTags);
+    }
   };
 
   /**

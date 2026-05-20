@@ -10,6 +10,7 @@ import {
 import { Type } from 'class-transformer';
 import { FinancialSheetBranchesQueryDto } from '../../dtos/FinancialSheetBranchesQuery.dto';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { TrackingTagAssignmentDto } from '@/modules/TrackingTags/dtos/AssignTrackingTags.dto';
 
 class JournalSheetNumberFormatQueryDto {
   @ApiPropertyOptional({
@@ -93,4 +94,11 @@ export class JournalSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @IsNumber()
   @IsOptional()
   toRange: number;
+
+  @ApiPropertyOptional({
+    description: 'Tracking tags to filter the report',
+    type: [TrackingTagAssignmentDto],
+  })
+  @IsOptional()
+  trackingTags?: TrackingTagAssignmentDto[];
 }

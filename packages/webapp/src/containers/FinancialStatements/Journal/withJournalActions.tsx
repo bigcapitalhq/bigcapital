@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { toggleJournalSheeetFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
+import { toggleJournalSheeetFilterDrawer } from '@/store/financial-statement/financial-statements.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   toggleJournalSheetFilter: (toggle) =>

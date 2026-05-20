@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { toggleARAgingSummaryFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
+import { toggleARAgingSummaryFilterDrawer } from '@/store/financial-statement/financial-statements.actions';
 
 const mapActionsToProps = (dispatch) => ({
   toggleARAgingSummaryFilterDrawer: (toggle) => 

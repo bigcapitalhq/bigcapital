@@ -10,7 +10,6 @@ import {
   useSetAuthUserId,
   useSetLocale,
   useSetOrganizationId,
-  useSetTenantId,
 } from '../state';
 
 const AuthRoute = {
@@ -30,7 +29,6 @@ export function setAuthLoginCookies(data) {
   setCookie('token', data.access_token);
   setCookie('authenticated_user_id', data.user_id);
   setCookie('organization_id', data.organization_id);
-  setCookie('tenant_id', data.tenant_id);
 
   // if (data?.tenant?.metadata?.language)
   //   setCookie('locale', data.tenant.metadata.language);
@@ -45,7 +43,6 @@ export const useAuthLogin = (props) => {
   const setAuthToken = useSetAuthToken();
   const setOrganizationId = useSetOrganizationId();
   const setUserId = useSetAuthUserId();
-  const setTenantId = useSetTenantId();
   const setLocale = useSetLocale();
 
   return useMutation((values) => apiRequest.post(AuthRoute.Signin, values), {
@@ -57,7 +54,6 @@ export const useAuthLogin = (props) => {
         // Sets the auth metadata to global state.
         setAuthToken(res.data.access_token);
         setOrganizationId(res.data.organization_id);
-        setTenantId(res.data.tenant_id);
         setUserId(res.data.user_id);
 
         // if (res.data?.tenant?.metadata?.language) {

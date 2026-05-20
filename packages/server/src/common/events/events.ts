@@ -46,6 +46,16 @@ export const events = {
   },
 
   /**
+   * Workspace service.
+   */
+  workspace: {
+    created: 'onWorkspaceCreated',
+    deleting: 'onWorkspaceDeleting',
+    deleted: 'onWorkspaceDeleted',
+    setDefault: 'onWorkspaceSetDefault',
+  },
+
+  /**
    * Organization subscription.
    */
   subscription: {
@@ -93,6 +103,14 @@ export const events = {
     onBulkActivated: 'onAccountBulkActivated',
 
     onActivated: 'onAccountActivated',
+  },
+
+  /**
+   * Contacts service.
+   */
+  contacts: {
+    onActivated: 'onContactActivated',
+    onInactivated: 'onContactInactivated',
   },
 
   /**

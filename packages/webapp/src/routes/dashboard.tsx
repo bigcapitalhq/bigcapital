@@ -497,6 +497,17 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: `/financial-reports/audit-log`,
+    component: lazy(
+      () => import('@/containers/FinancialStatements/AuditLog/AuditLogReport'),
+    ),
+    breadcrumb: intl.get('audit_log_report'),
+    pageTitle: intl.get('audit_log_report'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: '/financial-reports',
     component: lazy(
       () => import('@/containers/FinancialStatements/FinancialReports'),

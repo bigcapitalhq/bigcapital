@@ -10,7 +10,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import '@/services/yup';
 import App from '@/components/App';
 import * as serviceWorker from '@/serviceWorker';
-import { store, persistor } from '@/store/createStore';
+import { store, persistor } from '@/store/create-store';
 
 ReactDOM.render(
   <Provider store={store}>

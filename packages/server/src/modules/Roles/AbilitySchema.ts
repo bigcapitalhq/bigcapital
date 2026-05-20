@@ -16,6 +16,8 @@ import { BillAction } from "../Bills/Bills.types";
 import { AbilitySubject, ISubjectAbilitiesSchema, ISubjectAbilitySchema } from "./Roles.types";
 import { PaymentReceiveAction } from "../PaymentReceived/types/PaymentReceived.types";
 import { PreferencesAction } from "../Settings/Settings.types";
+import { AuditLogAction } from "../EE/AuditLogs/types/AuditLogs.types";
+import { AttachmentAction } from "../Attachments/Attachments.types";
 
 export const AbilitySchema: ISubjectAbilitiesSchema[] = [
   {
@@ -303,6 +305,21 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
         key: PreferencesAction.Mutate,
         label: 'ability.mutate_system_preferences',
       },
+    ],
+  },
+  {
+    subject: AbilitySubject.AuditLog,
+    subjectLabel: 'ability.audit_log',
+    abilities: [
+      { key: AuditLogAction.View, label: 'ability.view' },
+    ],
+  },
+  {
+    subject: AbilitySubject.Attachment,
+    subjectLabel: 'ability.attachments',
+    abilities: [
+      { key: AttachmentAction.View, label: 'ability.view', default: true },
+      { key: AttachmentAction.Delete, label: 'ability.delete', default: true },
     ],
   },
 ];

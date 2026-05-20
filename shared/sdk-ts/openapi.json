@@ -399,6 +399,24 @@
             }
           },
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
             "name": "customViewId",
             "required": false,
             "in": "query",
@@ -475,24 +493,6 @@
             "description": "Filter for inactive items",
             "schema": {
               "type": "boolean"
-            }
-          },
-          {
-            "name": "pageSize",
-            "required": false,
-            "in": "query",
-            "description": "Number of items per page",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page number for pagination",
-            "schema": {
-              "type": "number"
             }
           }
         ],
@@ -3000,6 +3000,24 @@
             }
           },
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
             "name": "customViewId",
             "required": false,
             "in": "query",
@@ -4849,6 +4867,24 @@
             }
           },
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
             "name": "customViewId",
             "required": false,
             "in": "query",
@@ -6344,6 +6380,24 @@
             }
           },
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
             "name": "customViewId",
             "required": false,
             "in": "query",
@@ -6734,6 +6788,24 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
             }
           },
           {
@@ -7520,6 +7592,24 @@
             }
           },
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
             "name": "customViewId",
             "required": false,
             "in": "query",
@@ -7835,6 +7925,24 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
             }
           },
           {
@@ -8404,6 +8512,24 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
             }
           },
           {
@@ -9175,6 +9301,24 @@
             }
           },
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
             "name": "customViewId",
             "required": false,
             "in": "query",
@@ -9762,6 +9906,24 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
             }
           },
           {
@@ -10494,6 +10656,24 @@
             }
           },
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
             "name": "customViewId",
             "required": false,
             "in": "query",
@@ -10866,6 +11046,24 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
             }
           },
           {
@@ -11895,6 +12093,24 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
             }
           },
           {
@@ -15342,6 +15558,26 @@
             }
           },
           {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
+              "type": "number"
+            }
+          },
+          {
             "name": "accept",
             "required": true,
             "in": "header",
@@ -15641,7 +15877,7 @@
                           },
                           "children": [
                             {
-                              "name": "Current Liabilties",
+                              "name": "Current Liabilities",
                               "id": "CURRENT_LIABILITY",
                               "node_type": "AGGREGATE",
                               "type": "AGGREGATE",
@@ -16330,7 +16566,7 @@
                                 "cells": [
                                   {
                                     "key": "name",
-                                    "value": "Current Liabilties"
+                                    "value": "Current Liabilities"
                                   },
                                   {
                                     "key": "total",
@@ -16458,7 +16694,7 @@
                                     "cells": [
                                       {
                                         "key": "name",
-                                        "value": "Total Current Liabilties"
+                                        "value": "Total Current Liabilities"
                                       },
                                       {
                                         "key": "total",
@@ -17017,6 +17253,26 @@
             }
           },
           {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
+              "type": "number"
+            }
+          },
+          {
             "name": "accept",
             "required": true,
             "in": "header",
@@ -17188,6 +17444,26 @@
               "items": {
                 "type": "number"
               }
+            }
+          },
+          {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
+              "type": "number"
             }
           },
           {
@@ -18871,6 +19147,26 @@
             }
           },
           {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
+              "type": "number"
+            }
+          },
+          {
             "name": "accept",
             "required": true,
             "in": "header",
@@ -19606,6 +19902,26 @@
             }
           },
           {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
+              "type": "number"
+            }
+          },
+          {
             "name": "accept",
             "required": true,
             "in": "header",
@@ -19742,6 +20058,26 @@
             }
           },
           {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
+              "type": "number"
+            }
+          },
+          {
             "name": "accept",
             "required": true,
             "in": "header",
@@ -19794,6 +20130,26 @@
             "description": "The ID of the reference",
             "schema": {
               "example": "1",
+              "type": "number"
+            }
+          },
+          {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
               "type": "number"
             }
           }
@@ -21100,6 +21456,26 @@
             }
           },
           {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
+              "type": "number"
+            }
+          },
+          {
             "name": "accept",
             "required": true,
             "in": "header",
@@ -21645,6 +22021,26 @@
             }
           },
           {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
+              "type": "number"
+            }
+          },
+          {
             "name": "accept",
             "required": true,
             "in": "header",
@@ -22075,6 +22471,26 @@
             "description": "Basis for the cash flow statement",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "description": "Tag ID",
+            "name": "tagId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "description": "Option ID",
+            "name": "optionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "example": 5,
+              "type": "number"
             }
           },
           {
@@ -23167,6 +23583,116 @@
         ]
       }
     },
+    "/api/workspaces": {
+      "get": {
+        "operationId": "WorkspacesController_listWorkspaces",
+        "summary": "List workspaces the authenticated user belongs to",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns the list of workspaces",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkspaceDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Workspaces"
+        ]
+      },
+      "post": {
+        "operationId": "WorkspacesController_createWorkspace",
+        "summary": "Create a new workspace",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkspaceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the created workspace details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWorkspaceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Workspaces"
+        ]
+      }
+    },
+    "/api/workspaces/{organizationId}": {
+      "delete": {
+        "operationId": "WorkspacesController_deleteWorkspace",
+        "summary": "Delete a workspace (owner only)",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workspace deleted successfully"
+          }
+        },
+        "tags": [
+          "Workspaces"
+        ]
+      }
+    },
+    "/api/workspaces/build/{buildJobId}": {
+      "get": {
+        "operationId": "WorkspacesController_buildJobStatus",
+        "summary": "Get workspace build job status",
+        "parameters": [
+          {
+            "name": "buildJobId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the workspace build job details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceBuildJobResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Workspaces"
+        ]
+      }
+    },
     "/api/payment-services": {
       "get": {
         "operationId": "PaymentServicesController_getPaymentServicesSpecificInvoice",
@@ -24124,6 +24650,219 @@
         },
         "tags": [
           "Contacts"
+        ]
+      }
+    },
+    "/api/tracking-tags": {
+      "post": {
+        "operationId": "TrackingTagsController_createTrackingTag",
+        "summary": "Create a new tracking tag.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrackingTagDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The tracking tag has been successfully created."
+          }
+        },
+        "tags": [
+          "Tracking Tags"
+        ]
+      },
+      "get": {
+        "operationId": "TrackingTagsController_getTrackingTags",
+        "summary": "Retrieves all tracking tags.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The tracking tags have been successfully retrieved."
+          }
+        },
+        "tags": [
+          "Tracking Tags"
+        ]
+      }
+    },
+    "/api/tracking-tags/{id}": {
+      "put": {
+        "operationId": "TrackingTagsController_editTrackingTag",
+        "summary": "Edit the given tracking tag.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditTrackingTagDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The tracking tag has been successfully updated."
+          }
+        },
+        "tags": [
+          "Tracking Tags"
+        ]
+      },
+      "delete": {
+        "operationId": "TrackingTagsController_deleteTrackingTag",
+        "summary": "Delete the given tracking tag.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The tracking tag has been successfully deleted."
+          }
+        },
+        "tags": [
+          "Tracking Tags"
+        ]
+      },
+      "get": {
+        "operationId": "TrackingTagsController_getTrackingTag",
+        "summary": "Retrieves the tracking tag details.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The tracking tag details have been successfully retrieved."
+          }
+        },
+        "tags": [
+          "Tracking Tags"
         ]
       }
     },
@@ -26480,6 +27219,25 @@
           "defaultTemplateId"
         ]
       },
+      "TrackingTagAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "type": "number",
+            "description": "Tag ID",
+            "example": 1
+          },
+          "optionId": {
+            "type": "number",
+            "description": "Option ID",
+            "example": 5
+          }
+        },
+        "required": [
+          "tagId",
+          "optionId"
+        ]
+      },
       "ItemEntryDto": {
         "type": "object",
         "properties": {
@@ -26562,6 +27320,13 @@
             "type": "number",
             "description": "The cost account id of the item entry",
             "example": 1021
+          },
+          "trackingTags": {
+            "description": "The tracking tags of the item entry",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackingTagAssignmentDto"
+            }
           }
         },
         "required": [
@@ -31659,6 +32424,13 @@
             "description": "The cost account id of the item entry",
             "example": 1021
           },
+          "trackingTags": {
+            "description": "The tracking tags of the item entry",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackingTagAssignmentDto"
+            }
+          },
           "landedCost": {
             "type": "boolean",
             "description": "Flag indicating whether the entry contributes to landed cost",
@@ -32131,6 +32903,13 @@
           "projectId": {
             "type": "number",
             "description": "Project ID"
+          },
+          "trackingTags": {
+            "description": "The tracking tags of the manual journal entry",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackingTagAssignmentDto"
+            }
           }
         },
         "required": [
@@ -40357,6 +41136,172 @@
           }
         }
       },
+      "WorkspaceMetadataDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "baseCurrency": {
+            "type": "string"
+          },
+          "industry": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "baseCurrency"
+        ]
+      },
+      "WorkspaceDto": {
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string"
+          },
+          "isReady": {
+            "type": "boolean"
+          },
+          "isBuildRunning": {
+            "type": "boolean"
+          },
+          "buildJobId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/WorkspaceMetadataDto"
+          }
+        },
+        "required": [
+          "organizationId",
+          "isReady",
+          "isBuildRunning",
+          "role"
+        ]
+      },
+      "CreateWorkspaceResponseDto": {
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string"
+          },
+          "jobId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "organizationId",
+          "jobId"
+        ]
+      },
+      "WorkspaceBuildJobResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "123"
+          },
+          "state": {
+            "type": "string",
+            "example": "active"
+          },
+          "progress": {
+            "type": "object",
+            "example": 50
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "example": false
+          },
+          "isRunning": {
+            "type": "boolean",
+            "example": true
+          },
+          "isWaiting": {
+            "type": "boolean",
+            "example": false
+          },
+          "isFailed": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "progress",
+          "isCompleted",
+          "isRunning",
+          "isWaiting",
+          "isFailed"
+        ]
+      },
+      "CreateWorkspaceDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Organization name",
+            "example": "Acme Inc."
+          },
+          "industry": {
+            "type": "string",
+            "description": "Industry of the organization",
+            "example": "Technology"
+          },
+          "location": {
+            "type": "string",
+            "description": "Country location in ISO 3166-1 alpha-2 format",
+            "example": "US"
+          },
+          "baseCurrency": {
+            "type": "string",
+            "description": "Base currency in ISO 4217 format",
+            "example": "USD"
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Timezone of the organization",
+            "example": "America/New_York"
+          },
+          "fiscalYear": {
+            "type": "string",
+            "description": "Starting month of fiscal year",
+            "example": "January"
+          },
+          "language": {
+            "type": "string",
+            "description": "Language/locale of the organization",
+            "example": "en-US"
+          },
+          "dateFormat": {
+            "type": "string",
+            "description": "Date format used by the organization",
+            "example": "MM/DD/YYYY"
+          }
+        },
+        "required": [
+          "name",
+          "location",
+          "baseCurrency",
+          "timezone",
+          "fiscalYear",
+          "language"
+        ]
+      },
       "EditPaymentMethodOptionsDto": {
         "type": "object",
         "properties": {}
@@ -40638,6 +41583,86 @@
           "lastName",
           "password"
         ]
+      },
+      "TrackingTagOptionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Option ID (for updates)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Option name",
+            "example": "New York"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the option is active",
+            "example": true
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateTrackingTagDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tag name",
+            "example": "Location"
+          },
+          "description": {
+            "type": "string",
+            "description": "Tag description",
+            "example": "Business location tracking"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the tag is active",
+            "example": true
+          },
+          "options": {
+            "description": "Tag options",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackingTagOptionDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "options"
+        ]
+      },
+      "EditTrackingTagDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tag name",
+            "example": "Location"
+          },
+          "description": {
+            "type": "string",
+            "description": "Tag description",
+            "example": "Business location tracking"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the tag is active",
+            "example": true
+          },
+          "options": {
+            "description": "Tag options",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackingTagOptionDto"
+            }
+          }
+        }
       },
       "ExchangeRateLatestResponseDto": {
         "type": "object",

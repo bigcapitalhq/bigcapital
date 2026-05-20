@@ -14,6 +14,7 @@ import { Transform, Type } from 'class-transformer';
 import { ToNumber } from '@/common/decorators/Validators';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
+import { TrackingTagAssignmentDto } from '@/modules/TrackingTags/dtos/AssignTrackingTags.dto';
 
 export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @IsString()
@@ -136,4 +137,11 @@ export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
     description: 'Whether to show previous year percentage change',
   })
   previousYearPercentageChange: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Tracking tags to filter the report',
+    type: [TrackingTagAssignmentDto],
+  })
+  @IsOptional()
+  trackingTags?: TrackingTagAssignmentDto[];
 }

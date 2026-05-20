@@ -2,6 +2,7 @@ import { ToNumber } from '@/common/decorators/Validators';
 import { DiscountType } from '@/common/types/Discount';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsEnum,
   IsIn,
   IsInt,
@@ -9,7 +10,10 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+import { TrackingTagAssignmentDto } from '@/modules/TrackingTags/dtos/AssignTrackingTags.dto';
 
 export class ItemEntryDto {
   @IsInt()
@@ -153,4 +157,15 @@ export class ItemEntryDto {
     example: 1021,
   })
   costAccountId?: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TrackingTagAssignmentDto)
+  @ApiProperty({
+    description: 'The tracking tags of the item entry',
+    type: [TrackingTagAssignmentDto],
+    required: false,
+  })
+  trackingTags?: TrackingTagAssignmentDto[];
 }

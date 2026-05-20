@@ -5,6 +5,7 @@ import {
   INumberFormatQuery,
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
+import { ITrackingTagFilter } from '../../types/TrackingTagFilter.types';
 
 export enum ProfitLossAggregateNodeId {
   INCOME = 'INCOME',
@@ -86,6 +87,8 @@ export interface IProfitLossSheetQuery extends IFinancialSheetBranchesQuery {
   previousYear: boolean;
   previousYearAmountChange: boolean;
   previousYearPercentageChange: boolean;
+
+  trackingTags?: ITrackingTagFilter[];
 }
 
 export interface IProfitLossSheetTotal {

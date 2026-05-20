@@ -1,0 +1,33 @@
+import { isEqual } from 'lodash';
+import { createDeepEqualSelector } from '@/utils';
+import { paginationLocationQuery } from '@/store/selectors';
+import { defaultTableQuery } from './expenses.reducer';
+import { createSelector } from 'reselect';
+import type { RootState } from '@/store/reducers';
+
+// Items table state selectors.
+const expensesTableStateSelector = (state: RootState) => state.expenses.tableState;
+
+// Retrive expenses table query.
+export const getExpensesTableStateFactory = () =>
+  createDeepEqualSelector(
+    paginationLocationQuery,
+    expensesTableStateSelector,
+    (locationQuery, tableState) => {
+      return {
+        ...locationQuery,
+        ...tableState,
+      };
+    },
+  );
+
+export const expensesTableStateChangedFactory = () =>
+  createDeepEqualSelector(expensesTableStateSelector, (tableState) => {
+    return !isEqual(tableState, defaultTableQuery);
+  });
+
+export const getExpensesSelectedRowsFactory = () =>
+  createSelector(
+    (state: RootState) => state.expenses.selectedRows,
+    (selectedRows) => selectedRows,
+  );

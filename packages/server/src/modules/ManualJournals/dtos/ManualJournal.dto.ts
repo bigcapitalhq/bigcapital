@@ -16,6 +16,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
+import { TrackingTagAssignmentDto } from '@/modules/TrackingTags/dtos/AssignTrackingTags.dto';
 
 export class ManualJournalEntryDto {
   @ApiProperty({ description: 'Entry index' })
@@ -63,6 +64,17 @@ export class ManualJournalEntryDto {
   @IsOptional()
   @IsInt()
   projectId?: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TrackingTagAssignmentDto)
+  @ApiProperty({
+    description: 'The tracking tags of the manual journal entry',
+    type: [TrackingTagAssignmentDto],
+    required: false,
+  })
+  trackingTags?: TrackingTagAssignmentDto[];
 }
 
 class AttachmentDto {

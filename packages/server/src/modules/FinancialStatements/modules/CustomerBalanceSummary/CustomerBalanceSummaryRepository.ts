@@ -56,6 +56,7 @@ export class CustomerBalanceSummaryRepository {
    */
   public async getCustomersTransactions(
     asDate: any,
+    trackingTags?: Array<{ tagId: number; optionId?: number }>,
   ): Promise<ModelObject<AccountTransaction>[]> {
     // Retrieve the receivable accounts A/R.
     const receivableAccounts = await this.getReceivableAccounts();
@@ -67,6 +68,9 @@ export class CustomerBalanceSummaryRepository {
       .onBuild((query) => {
         query.whereIn('accountId', receivableAccountsIds);
         query.modify('filterDateRange', null, asDate);
+        if (!isEmpty(trackingTags)) {
+          query.modify('filterByTrackingTags', trackingTags);
+        }
         query.groupBy('contactId');
         query.sum('credit as credit');
         query.sum('debit as debit');

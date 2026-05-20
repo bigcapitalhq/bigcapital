@@ -52,6 +52,11 @@ export class ManualJournalGL {
   public getManualJournalEntry(entry: ManualJournalEntry): ILedgerEntry {
     const commonEntry = this.manualJournalCommonEntry;
 
+    const trackingTags = entry.trackingTagAssociations?.map((assoc) => ({
+      tagId: assoc.tagId,
+      optionId: assoc.optionId,
+    }));
+
     return {
       ...commonEntry,
       debit: entry.debit,
@@ -66,6 +71,7 @@ export class ManualJournalGL {
 
       branchId: entry.branchId,
       projectId: entry.projectId,
+      trackingTags,
     };
   }
 

@@ -230,6 +230,23 @@ export class AccountTransaction extends BaseModel {
         query.where('reference_id', referenceId);
         query.where('reference_type', referenceType);
       },
+
+      filterByTrackingTags(query, trackingTags: Array<{ tagId: number; optionId?: number }>) {
+        if (isEmpty(trackingTags)) {
+          return;
+        }
+        const tagIds = trackingTags.map((t) => t.tagId);
+        query.whereExists(
+          query
+            .knex()
+            .select(1)
+            .from('account_transaction_tracking_tags')
+            .whereRaw(
+              'account_transaction_tracking_tags.account_transaction_id = accounts_transactions.id',
+            )
+            .whereIn('account_transaction_tracking_tags.tag_id', tagIds),
+        );
+      },
     };
   }
 

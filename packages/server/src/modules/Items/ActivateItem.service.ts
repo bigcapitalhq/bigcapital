@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
+import { IItemEventActivatedPayload } from '@/interfaces/Item';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 @Injectable()
@@ -39,7 +40,11 @@ export class ActivateItemService {
         .patch({ active: true });
 
       // Triggers `onItemActivated` event.
-      await this.eventEmitter.emitAsync(events.item.onActivated, {});
+      await this.eventEmitter.emitAsync(events.item.onActivated, {
+        itemId,
+        item: oldItem,
+        trx,
+      } as IItemEventActivatedPayload);
     }, trx);
   }
 }

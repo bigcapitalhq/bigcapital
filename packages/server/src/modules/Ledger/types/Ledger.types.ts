@@ -69,6 +69,8 @@ export interface ILedgerEntry {
   createdAt?: Date | string;
 
   costable?: boolean;
+
+  trackingTags?: Array<{ tagId: number; optionId: number }>;
 }
 
 export interface ISaveLedgerEntryQueuePayload {

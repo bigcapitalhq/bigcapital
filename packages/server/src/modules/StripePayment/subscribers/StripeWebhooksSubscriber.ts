@@ -57,7 +57,6 @@ export class StripeWebhooksSubscriber {
 
     this.clsService.set('organizationId', tenant.organizationId);
     this.clsService.set('userId', user.id);
-    this.clsService.set('tenantId', tenant.id);
 
     // Get the amount from the event
     const amount = event.data.object.amount_total;

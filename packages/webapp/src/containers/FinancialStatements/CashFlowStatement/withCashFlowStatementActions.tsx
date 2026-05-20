@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { toggleCashFlowStatementFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
+import { toggleCashFlowStatementFilterDrawer } from '@/store/financial-statement/financial-statements.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   toggleCashFlowStatementFilterDrawer: (toggle) =>

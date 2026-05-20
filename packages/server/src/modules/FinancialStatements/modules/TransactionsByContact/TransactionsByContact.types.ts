@@ -31,4 +31,5 @@ export interface ITransactionsByContactsFilter {
   numberFormat: INumberFormatQuery;
   noneTransactions: boolean;
   noneZero: boolean;
+  trackingTags?: Array<{ tagId: number; optionId?: number }>;
 }

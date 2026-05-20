@@ -8,7 +8,6 @@ export const withAuthentication = (mapState) => {
       isAuthorized: isAuthenticated(state),
       authenticatedUserId: state.authentication.userId,
       currentOrganizationId: state.authentication?.organizationId,
-      currentTenantId: state.authentication?.tenantId,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

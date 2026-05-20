@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { getRealizedGainOrLossFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
+import { getRealizedGainOrLossFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
 
 export const withRealizedGainOrLoss = (mapState) => {
   const mapStateToProps = (state, props) => {

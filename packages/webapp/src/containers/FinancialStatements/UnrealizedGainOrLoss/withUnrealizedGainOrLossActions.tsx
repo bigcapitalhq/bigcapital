@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { toggleUnrealizedGainOrLossFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
+import { toggleUnrealizedGainOrLossFilterDrawer } from '@/store/financial-statement/financial-statements.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   toggleUnrealizedGainOrLossFilterDrawer: (toggle) =>

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   getPaymentReceiveByIdFactory,
   getPaymentReceiveEntriesFactory,
-} from '@/store/PaymentReceives/paymentReceives.selector';
+} from '@/store/payment-receives/payment-receives.selector';
 
 export const withPaymentReceiveDetail = () => {
   const getPaymentReceiveById = getPaymentReceiveByIdFactory();

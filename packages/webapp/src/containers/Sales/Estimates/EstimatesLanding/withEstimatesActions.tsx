@@ -4,7 +4,7 @@ import {
   setEstimatesTableState,
   resetEstimatesTableState,
   setEstimatesSelectedRows,
-} from '@/store/Estimate/estimates.actions';
+} from '@/store/estimate/estimates.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setEstimatesTableState: (state) => dispatch(setEstimatesTableState(state)),

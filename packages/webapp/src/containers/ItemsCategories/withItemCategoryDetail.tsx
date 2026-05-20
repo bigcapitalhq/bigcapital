@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { getItemCategoryByIdFactory } from '@/store/itemCategories/ItemsCategories.selectors';
+import { getItemCategoryByIdFactory } from '@/store/item-categories/items-categories.selectors';
 
 export const withItemCategoryDetail = () => {
   const getCategoryId = getItemCategoryByIdFactory();

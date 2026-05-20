@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   setVendorCreditTableState,
   resetVendorCreditTableState,
-} from '@/store/VendorCredit/vendorCredit.actions';
+} from '@/store/vendor-credit/vendor-credit.actions';
 
 const mapDipatchToProps = (dispatch) => ({
   setVendorCreditsTableState: (queries) =>

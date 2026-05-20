@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import {
   toggleBalanceSheetFilterDrawer,
-} from '@/store/financialStatement/financialStatements.actions';
+} from '@/store/financial-statement/financial-statements.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   toggleBalanceSheetFilterDrawer: (toggle) =>

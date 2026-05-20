@@ -1,6 +1,25 @@
 @import '../../_base.scss';
 $dashboard-views-bar-height: 44px;
 
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+
+  &__main {
+    flex: 1;
+    display: flex;
+    min-width: 0;
+    overflow: hidden;
+
+    // Ensure react-split-pane fills the container
+    > .SplitPane {
+      position: relative !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+}
+
 .dashboard {
   display: flex;
   height: 100vh;

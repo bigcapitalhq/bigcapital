@@ -109,6 +109,11 @@ export class InvoiceGL {
       const localAmount =
         entry.totalExcludingTax * this.saleInvoice.exchangeRate;
 
+      const trackingTags = entry.trackingTagAssociations?.map((assoc) => ({
+        tagId: assoc.tagId,
+        optionId: assoc.optionId,
+      }));
+
       return {
         ...commonEntry,
         credit: localAmount,
@@ -119,6 +124,7 @@ export class InvoiceGL {
         accountNormal: AccountNormal.CREDIT,
         taxRateId: entry.taxRateId,
         taxRate: entry.taxRate,
+        trackingTags,
       };
     },
   );

@@ -6,6 +6,7 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { transformToMap } from '@/utils/transform-to-key';
 import { Inject } from '@nestjs/common';
+import { isEmpty } from 'lodash';
 import { ModelObject } from 'objection';
 
 export class JournalSheetRepository {
@@ -111,6 +112,9 @@ export class JournalSheetRepository {
         }
         if (this.filter.transactionType && this.filter.transactionId) {
           query.where('reference_id', this.filter.transactionId);
+        }
+        if (!isEmpty(this.filter.trackingTags)) {
+          query.modify('filterByTrackingTags', this.filter.trackingTags);
         }
         query.withGraphFetched('account');
       });

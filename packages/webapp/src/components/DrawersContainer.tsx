@@ -34,6 +34,8 @@ import { InvoiceSendMailDrawer } from '@/containers/Sales/Invoices/InvoiceSendMa
 import { EstimateSendMailDrawer } from '@/containers/Sales/Estimates/EstimateSendMailDrawer';
 import { ReceiptSendMailDrawer } from '@/containers/Sales/Receipts/ReceiptSendMailDrawer';
 import { PaymentReceivedSendMailDrawer } from '@/containers/Sales/PaymentsReceived/PaymentReceivedMailDrawer';
+import { CreateWorkspaceDrawer } from '@/ee/workspaces/containers/CreateWorkspaceDrawer/CreateWorkspaceDrawer';
+import { OrganizationsListDrawer } from '@/ee/workspaces/containers/OrganizationsListDrawer';
 
 /**
  * Drawers container of the dashboard.
@@ -86,6 +88,8 @@ export default function DrawersContainer() {
       <EstimateSendMailDrawer name={DRAWERS.ESTIMATE_SEND_MAIL} />
       <ReceiptSendMailDrawer name={DRAWERS.RECEIPT_SEND_MAIL} />
       <PaymentReceivedSendMailDrawer name={DRAWERS.PAYMENT_RECEIVED_SEND_MAIL} />
+      <CreateWorkspaceDrawer name={DRAWERS.CREATE_WORKSPACE} />
+      <OrganizationsListDrawer name={DRAWERS.ORGANIZATIONS_LIST} />
     </div>
   );
 }

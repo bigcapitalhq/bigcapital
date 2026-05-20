@@ -16,6 +16,7 @@ export interface ICashFlowStatementQuery {
   basis: string;
 
   branchesIds?: number[];
+  trackingTags?: Array<{ tagId: number; optionId?: number }>;
 }
 
 export interface ICashFlowStatementTotal {

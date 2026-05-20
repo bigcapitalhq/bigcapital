@@ -44,6 +44,7 @@ export function FinancialSheet({
     () => getBasisLabel(basis),
     [getBasisLabel, basis],
   );
+  const hasHead = companyName || sheetType || dateText;
 
   return (
     <FinancialSheetRoot
@@ -51,10 +52,13 @@ export function FinancialSheet({
       fullWidth={fullWidth}
       className={className}
     >
-      {companyName && <FinancialSheetTitle>{companyName}</FinancialSheetTitle>}
-      {sheetType && <FinancialSheetType>{sheetType}</FinancialSheetType>}
-
-      {dateText && <FinancialSheetDate>{dateText}</FinancialSheetDate>}
+      {hasHead && (
+        <div>
+          {companyName && <FinancialSheetTitle>{companyName}</FinancialSheetTitle>}
+          {sheetType && <FinancialSheetType>{sheetType}</FinancialSheetType>}
+          {dateText && <FinancialSheetDate>{dateText}</FinancialSheetDate>}
+        </div>
+      )}
 
       <FinancialSheetTable>{children}</FinancialSheetTable>
       <FinancialSheetAccountingBasis>

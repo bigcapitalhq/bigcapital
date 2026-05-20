@@ -4,7 +4,7 @@ import {
   setCreditNoteTableState,
   resetCreditNoteTableState,
   setCreditNotesSelectedRows,
-} from '@/store/CreditNote/creditNote.actions';
+} from '@/store/credit-note/credit-note.actions';
 
 const mapDipatchToProps = (dispatch) => ({
   setCreditNotesTableState: (queries) =>

@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 
-import { useAuthActions } from '@/hooks/state';
+import { useAuthActions, useAuthOrganizationId } from '@/hooks/state';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
@@ -30,6 +30,7 @@ function DashboardTopbarUser({
 
   // Retrieve authenticated user information.
   const { data: user } = useAuthenticatedAccount();
+  const organizationId = useAuthOrganizationId();
 
   const onClickLogout = () => {
     setLogout();
@@ -52,7 +53,7 @@ function DashboardTopbarUser({
                   {user.first_name} {user.last_name}
                 </div>
                 <div class="org">
-                  <T id="organization_id" />: {user.tenant_id}
+                  <T id="organization_id" />: {organizationId}
                 </div>
               </div>
             }

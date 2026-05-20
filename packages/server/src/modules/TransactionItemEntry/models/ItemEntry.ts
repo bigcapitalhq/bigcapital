@@ -39,6 +39,7 @@ export class ItemEntry extends BaseModel {
 
   item: Item;
   allocatedCostEntries: BillLandedCostEntry[];
+  trackingTagAssociations: any[];
 
   /**
    * Table name.
@@ -190,6 +191,7 @@ export class ItemEntry extends BaseModel {
     const { SaleReceipt } = require('../../SaleReceipts/models/SaleReceipt');
     const { SaleEstimate } = require('../../SaleEstimates/models/SaleEstimate');
     const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
+    const { ItemEntryTrackingTag } = require('../../TrackingTags/models/ItemEntryTrackingTag');
     // const { Expense } = require('../../Expenses/models/Expense.model');
     // const ProjectTask = require('models/Task');
 
@@ -295,6 +297,18 @@ export class ItemEntry extends BaseModel {
         join: {
           from: 'items_entries.taxRateId',
           to: 'tax_rates.id',
+        },
+      },
+
+      /**
+       * Tracking tag associations.
+       */
+      trackingTagAssociations: {
+        relation: Model.HasManyRelation,
+        modelClass: ItemEntryTrackingTag,
+        join: {
+          from: 'items_entries.id',
+          to: 'item_entry_tracking_tags.itemEntryId',
         },
       },
     };

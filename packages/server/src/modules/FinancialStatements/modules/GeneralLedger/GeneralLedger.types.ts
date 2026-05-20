@@ -1,5 +1,6 @@
 import { IFinancialSheetCommonMeta, INumberFormatQuery } from "../../types/Report.types";
 import { IFinancialTable } from "../../types/Table.types";
+import { ITrackingTagFilter } from "../../types/TrackingTagFilter.types";
 
 export interface IGeneralLedgerSheetQuery {
   fromDate: Date | string;
@@ -10,6 +11,19 @@ export interface IGeneralLedgerSheetQuery {
   noneTransactions: boolean;
   accountsIds: number[];
   branchesIds?: number[];
+  trackingTags?: ITrackingTagFilter[];
+}
+
+export interface IGeneralLedgerSheetQuery {
+  fromDate: Date | string;
+  toDate: Date | string;
+  basis: string;
+  numberFormat: IGeneralLedgerNumberFormat;
+  dateFormat?: string;
+  noneTransactions: boolean;
+  accountsIds: number[];
+  branchesIds?: number[];
+  trackingTags?: ITrackingTagFilter[];
 }
 
 export interface IGeneralLedgerNumberFormat extends INumberFormatQuery{

@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import {
   APAgingSummaryFilterDrawerSelector,
-} from '@/store/financialStatement/financialStatements.selectors';
+} from '@/store/financial-statement/financial-statements.selectors';
 
 export const withAPAgingSummary = (mapState) => {
   const mapStateToProps = (state, props) => {
