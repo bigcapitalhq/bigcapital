@@ -40,12 +40,19 @@ export function EstimateSendMailFields() {
 
 function EstimateSendMailFooter() {
   const { isSubmitting } = useFormikContext();
-  const { name } = useDrawerContext();
+  const { name, payload } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
   const isDarkmode = useIsDarkMode();
 
+  // Callback to call when drawer is closed without sending
+  const onMailSent = payload?.onMailSent;
+
   const handleClose = () => {
     closeDrawer(name);
+    // Call the onMailSent callback if provided (for close without sending)
+    if (onMailSent) {
+      onMailSent();
+    }
   };
 
   return (

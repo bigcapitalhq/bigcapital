@@ -28,8 +28,11 @@ export function EstimateSendMailForm({ children }: EstimateSendMailFormProps) {
   const { mutateAsync: sendEstimateMail } = useSendSaleEstimateMail();
   const { estimateId, estimateMailState } = useEstimateSendMailBoot();
 
-  const { name } = useDrawerContext();
+  const { name, payload } = useDrawerContext();
   const { closeDrawer } = useDrawerActions();
+
+  // Callback to call when mail is sent
+  const onMailSent = payload?.onMailSent;
 
   const _initialValues: EstimateSendMailFormValues = {
     ...initialValues,
@@ -48,6 +51,10 @@ export function EstimateSendMailForm({ children }: EstimateSendMailFormProps) {
         });
         setSubmitting(false);
         closeDrawer(name);
+        // Call the onMailSent callback if provided
+        if (onMailSent) {
+          onMailSent();
+        }
       })
       .catch((error) => {
         setSubmitting(false);

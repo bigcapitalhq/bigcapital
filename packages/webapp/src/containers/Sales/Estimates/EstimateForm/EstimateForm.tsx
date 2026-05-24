@@ -26,6 +26,8 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
+import { useDrawerActions } from '@/hooks/state';
+import { DRAWERS } from '@/constants/drawers';
 import { compose, transactionNumber, orderingLinesIndexes } from '@/utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import {
@@ -52,6 +54,7 @@ function EstimateForm({
   organization: { base_currency },
 }) {
   const history = useHistory();
+  const { openDrawer } = useDrawerActions();
   const {
     estimate,
     isNewMode,
@@ -111,6 +114,11 @@ function EstimateForm({
     };
     // Handle the request success.
     const onSuccess = (response) => {
+      // Get the estimate ID from the response (try multiple possible paths)
+      const estimateId = isNewMode
+        ? response?.data?.estimate?.id ?? response?.data?.id ?? response?.data?.sale_estimate?.id
+        : estimate.id;
+
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -122,7 +130,15 @@ function EstimateForm({
       });
       setSubmitting(false);
 
-      if (submitPayload.redirect) {
+      // If deliver was requested, open the send mail drawer with the estimate
+      if (submitPayload.deliver && estimateId) {
+        openDrawer(DRAWERS.ESTIMATE_SEND_MAIL, { 
+          estimateId,
+          onMailSent: () => history.push('/estimates'),
+        });
+      }
+
+      if (submitPayload.redirect && !submitPayload.deliver) {
         history.push('/estimates');
       }
       if (submitPayload.resetForm) {

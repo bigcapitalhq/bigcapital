@@ -23,6 +23,8 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster, Box } from '@/components';
+import { useDrawerActions } from '@/hooks/state';
+import { DRAWERS } from '@/constants/drawers';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { InvoiceFormActions } from './InvoiceFormActions';
@@ -54,6 +56,7 @@ function InvoiceFormRoot({
   organization: { base_currency },
 }) {
   const history = useHistory();
+  const { openDrawer } = useDrawerActions();
 
   // Invoice form context.
   const {
@@ -116,7 +119,12 @@ function InvoiceFormRoot({
       from_estimate_id: estimateId,
     };
     // Handle the request success.
-    const onSuccess = () => {
+    const onSuccess = (response) => {
+      // Get the invoice ID from the response (try multiple possible paths)
+      const invoiceId = isNewMode
+        ? response?.data?.invoice?.id ?? response?.data?.id ?? response?.data?.sale_invoice?.id
+        : invoice.id;
+
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -128,7 +136,15 @@ function InvoiceFormRoot({
       });
       setSubmitting(false);
 
-      if (submitPayload.redirect) {
+      // If deliver was requested, open the send mail drawer with the invoice
+      if (submitPayload.deliver && invoiceId) {
+        openDrawer(DRAWERS.INVOICE_SEND_MAIL, { 
+          invoiceId,
+          onMailSent: () => history.push('/invoices'),
+        });
+      }
+
+      if (submitPayload.redirect && !submitPayload.deliver) {
         history.push('/invoices');
       }
       if (submitPayload.resetForm) {
