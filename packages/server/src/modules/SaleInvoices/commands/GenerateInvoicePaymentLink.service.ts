@@ -74,13 +74,20 @@ export class GenerateShareLink {
           trx,
         },
       );
-      return this.transformer.transform(
-        paymentLink,
-        new GeneratePaymentLinkTransformer(),
-        {
-          baseUrl: this.configService.get('app.baseUrl'),
-        }
-      );
+      return await this.generatePaymentLinkFromModel(paymentLink);
     });
+  }
+
+  /**
+   * Generates a payment link (with URL) for the given payment link model.
+   */
+  generatePaymentLinkFromModel(paymentLink: PaymentLink) {
+    return this.transformer.transform(
+      paymentLink,
+      new GeneratePaymentLinkTransformer(),
+      {
+        baseUrl: this.configService.get('app.baseUrl'),
+      },
+    );
   }
 }
