@@ -7324,10 +7324,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CustomerResponseDto"
-                  }
+                  "$ref": "#/components/schemas/CustomersListResponseDto"
                 }
               }
             }
@@ -29446,6 +29443,46 @@
           "updatedAt",
           "localOpeningBalance",
           "closingBalance"
+        ]
+      },
+      "CustomersPaginationDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "example": 12
+          },
+          "total": {
+            "type": "number",
+            "example": 42
+          }
+        },
+        "required": [
+          "page",
+          "pageSize",
+          "total"
+        ]
+      },
+      "CustomersListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/CustomersPaginationDto"
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
         ]
       },
       "CreateCustomerDto": {

@@ -8375,17 +8375,6 @@ export interface components {
              */
             nonDeletableIds: number[];
         };
-        CustomersListResponseDto: {
-            data: components["schemas"]["CustomerResponseDto"][];
-            pagination: {
-                /** @example 1 */
-                page: number;
-                /** @example 12 */
-                pageSize: number;
-                /** @example 42 */
-                total: number;
-            };
-        };
         CustomerResponseDto: {
             /** @example 1500 */
             balance: number;
@@ -8470,6 +8459,18 @@ export interface components {
             localOpeningBalance: number;
             /** @example 1500 */
             closingBalance: number;
+        };
+        CustomersPaginationDto: {
+            /** @example 1 */
+            page: number;
+            /** @example 12 */
+            pageSize: number;
+            /** @example 42 */
+            total: number;
+        };
+        CustomersListResponseDto: {
+            data: components["schemas"]["CustomerResponseDto"][];
+            pagination: components["schemas"]["CustomersPaginationDto"];
         };
         CreateCustomerDto: {
             /** @description Billing address line 1 */
