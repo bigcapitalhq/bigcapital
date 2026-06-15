@@ -8,8 +8,7 @@ import { useOpenCreditNote } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Credit note opened alert.
@@ -62,7 +61,7 @@ function CreditNoteOpenedAlertInner({
     </Alert>
   );
 }
-export const CreditNoteOpenedAlert = compose(
-  withAlertStoreConnect(),
+export const CreditNoteOpenedAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(CreditNoteOpenedAlertInner);

@@ -17,6 +17,7 @@ import { Icon, T, Choose, Can } from '@/components';
 import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimate details status.
@@ -54,83 +55,85 @@ export function EstimateDetailsStatus({ estimate }) {
   );
 }
 
-export const EstimateMoreMenuItems = R.compose(withAlertActions)(({
-  // # withAlertActions,
-  openAlert,
+export const EstimateMoreMenuItems = flow(withAlertActions)(
+  ({
+    // # withAlertActions,
+    openAlert,
 
-  // # rest
-  payload: { onNotifyViaSMS },
-}) => {
-  const { estimateId, estimate } = useEstimateDetailDrawerContext();
+    // # rest
+    payload: { onNotifyViaSMS },
+  }) => {
+    const { estimateId, estimate } = useEstimateDetailDrawerContext();
 
-  // Handle cancel/confirm estimate approve.
-  const handleApproveEstimate = () => {
-    openAlert('estimate-Approve', { estimateId });
-  };
-  // Handle cancel/confirm estimate reject.
-  const handleRejectEstimate = () => {
-    openAlert('estimate-reject', { estimateId });
-  };
+    // Handle cancel/confirm estimate approve.
+    const handleApproveEstimate = () => {
+      openAlert('estimate-Approve', { estimateId });
+    };
+    // Handle cancel/confirm estimate reject.
+    const handleRejectEstimate = () => {
+      openAlert('estimate-reject', { estimateId });
+    };
 
-  return (
-    <Popover
-      minimal={true}
-      content={
-        <Menu>
-          <MenuItem
-            onClick={onNotifyViaSMS}
-            text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
-          />
-          <MenuDivider />
-          <Choose>
-            <Choose.When
-              condition={estimate.is_delivered && estimate.is_rejected}
-            >
-              <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
-                <MenuItem
-                  className={Classes.MINIMAL}
-                  text={<T id={'mark_as_approved'} />}
-                  onClick={handleApproveEstimate}
-                />
-              </Can>
-            </Choose.When>
-            <Choose.When
-              condition={estimate.is_delivered && estimate.is_approved}
-            >
-              <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
-                <MenuItem
-                  className={Classes.MINIMAL}
-                  text={<T id={'mark_as_rejected'} />}
-                  onClick={handleRejectEstimate}
-                />
-              </Can>
-            </Choose.When>
-            <Choose.When condition={estimate.is_delivered}>
-              <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
-                <MenuItem
-                  className={Classes.MINIMAL}
-                  text={<T id={'mark_as_approved'} />}
-                  onClick={handleApproveEstimate}
-                />
-              </Can>
-              <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
-                <MenuItem
-                  className={Classes.MINIMAL}
-                  text={<T id={'mark_as_rejected'} />}
-                  onClick={handleRejectEstimate}
-                />
-              </Can>
-            </Choose.When>
-          </Choose>
-        </Menu>
-      }
-      interactionKind={PopoverInteractionKind.CLICK}
-      position={Position.BOTTOM_LEFT}
-      modifiers={{
-        offset: { offset: '0, 4' },
-      }}
-    >
-      <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
-    </Popover>
-  );
-});
+    return (
+      <Popover
+        minimal={true}
+        content={
+          <Menu>
+            <MenuItem
+              onClick={onNotifyViaSMS}
+              text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
+            />
+            <MenuDivider />
+            <Choose>
+              <Choose.When
+                condition={estimate.is_delivered && estimate.is_rejected}
+              >
+                <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
+                  <MenuItem
+                    className={Classes.MINIMAL}
+                    text={<T id={'mark_as_approved'} />}
+                    onClick={handleApproveEstimate}
+                  />
+                </Can>
+              </Choose.When>
+              <Choose.When
+                condition={estimate.is_delivered && estimate.is_approved}
+              >
+                <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
+                  <MenuItem
+                    className={Classes.MINIMAL}
+                    text={<T id={'mark_as_rejected'} />}
+                    onClick={handleRejectEstimate}
+                  />
+                </Can>
+              </Choose.When>
+              <Choose.When condition={estimate.is_delivered}>
+                <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
+                  <MenuItem
+                    className={Classes.MINIMAL}
+                    text={<T id={'mark_as_approved'} />}
+                    onClick={handleApproveEstimate}
+                  />
+                </Can>
+                <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
+                  <MenuItem
+                    className={Classes.MINIMAL}
+                    text={<T id={'mark_as_rejected'} />}
+                    onClick={handleRejectEstimate}
+                  />
+                </Can>
+              </Choose.When>
+            </Choose>
+          </Menu>
+        }
+        interactionKind={PopoverInteractionKind.CLICK}
+        position={Position.BOTTOM_LEFT}
+        modifiers={{
+          offset: { offset: '0, 4' },
+        }}
+      >
+        <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
+      </Popover>
+    );
+  },
+);

@@ -4,6 +4,7 @@ import * as R from 'ramda';
 import { Drawer, DrawerHeaderContent, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 const TaxRateDetailsDrawerContent = React.lazy(() =>
   import('./TaxRateDetailsContent').then((m) => ({
@@ -34,6 +35,6 @@ function TaxRateDetailsDrawerInner({
   );
 }
 
-export const TaxRateDetailsDrawer = R.compose(withDrawers())(
+export const TaxRateDetailsDrawer = flow(withDrawers())(
   TaxRateDetailsDrawerInner,
 );

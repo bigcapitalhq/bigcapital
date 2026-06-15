@@ -77,12 +77,12 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
   // Provider payload.
   const provider = {
     paymentMadeId,
-    accounts,
+    accounts: accounts ?? [],
+    vendors: vendorsData?.data ?? [],
+    items: itemsData?.data ?? [],
+    branches: branches ?? [],
     paymentEntriesEditPage,
     paymentMadeEditPage,
-    vendors: vendorsData?.vendors,
-    items: itemsData?.items,
-    branches,
     submitPayload,
     paymentVendorId,
 

@@ -5,6 +5,7 @@ import { FSelect } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { MenuItem } from '@blueprintjs/core';
+import { flow } from 'fp-ts/function';
 
 // Create new account renderer.
 const createNewItemRenderer = (query, active, handleClick) => {
@@ -59,4 +60,6 @@ function TaxRatesSelectRoot({
   );
 }
 
-export const TaxRatesSelect = R.compose(withDialogActions)(TaxRatesSelectRoot);
+export const TaxRatesSelect = flow(withDialogActions)(
+  TaxRatesSelectRoot,
+);

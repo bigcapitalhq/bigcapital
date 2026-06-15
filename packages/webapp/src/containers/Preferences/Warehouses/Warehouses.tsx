@@ -6,7 +6,7 @@ import '@/style/pages/Preferences/warehousesList.scss';
 
 import { WarehousesGrid } from './WarehousesGrid';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouses.
@@ -26,4 +26,4 @@ function WarehousesInner({
     </React.Fragment>
   );
 }
-export const Warehouses = compose(withDashboardActions)(WarehousesInner);
+export const Warehouses = flow(withDashboardActions)(WarehousesInner);

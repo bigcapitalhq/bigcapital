@@ -10,8 +10,7 @@ import {
   useReconcileCreditTransactionsTableColumns,
   ActionsMenu,
 } from './components';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Reconcile credit transactions table.
@@ -47,6 +46,6 @@ function RefundCreditNoteTransactionsTable({
   );
 }
 
-export const ReconcileCreditNoteTransactionsTable = compose(withAlertActions)(
-  RefundCreditNoteTransactionsTable,
-);
+export const ReconcileCreditNoteTransactionsTable = flow(
+  withAlertActions,
+)(RefundCreditNoteTransactionsTable);

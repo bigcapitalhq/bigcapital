@@ -2,8 +2,7 @@
 import React from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const WarehouseFormDialogContent = React.lazy(() =>
   import('./WarehouseFormDialogContent').then((m) => ({
@@ -43,4 +42,4 @@ function WarehouseFormDialog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(WarehouseFormDialog);
+export const index = flow(withDialogRedux())(WarehouseFormDialog);

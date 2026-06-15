@@ -23,7 +23,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 
 import { AppToaster } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
-import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
+import { orderingLinesIndexes, transactionNumber } from '@/utils';
 import { WarehouseTransferObserveItemsCost } from './components';
 import {
   defaultWarehouseTransfer,
@@ -31,6 +31,7 @@ import {
   transformErrors,
   transformToEditForm,
 } from './utils';
+import { flow } from 'fp-ts/function';
 
 function WarehouseTransferFormInner({
   // #withSettings
@@ -149,11 +150,11 @@ function WarehouseTransferFormInner({
   );
 }
 
-export const WarehouseTransferForm = compose(
-  withDashboardActions,
+export const WarehouseTransferForm = flow(
   withSettings(({ warehouseTransferSettings }) => ({
     warehouseTransferNextNumber: warehouseTransferSettings?.nextNumber,
     warehouseTransferNumberPrefix: warehouseTransferSettings?.numberPrefix,
     warehouseTransferIncrementMode: warehouseTransferSettings?.autoIncrement,
   })),
+  withDashboardActions,
 )(WarehouseTransferFormInner);

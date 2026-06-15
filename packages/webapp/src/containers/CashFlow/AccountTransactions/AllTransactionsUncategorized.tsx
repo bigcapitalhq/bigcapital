@@ -11,6 +11,7 @@ import {
   withBankingActions,
 } from '../withBankingActions';
 import { useAppQueryString } from '@/hooks';
+import { flow } from 'fp-ts/function';
 
 const Box = styled.div`
   margin: 30px 15px;
@@ -81,6 +82,6 @@ function AccountTransactionsSwitcher() {
   }
 }
 
-export const AllTransactionsUncategorized = R.compose(withBankingActions)(
+export const AllTransactionsUncategorized = flow(withBankingActions)(
   AllTransactionsUncategorizedRoot,
 );

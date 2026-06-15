@@ -23,8 +23,8 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { useCustomersListContext } from './CustomersListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customers table.
@@ -173,13 +173,13 @@ function CustomersTableInner({
   );
 }
 
-export const CustomersTable = compose(
-  withAlertActions,
-  withDialogActions,
-  withCustomersActions,
-  withDrawerActions,
-  withCustomers(({ customersTableState }) => ({ customersTableState })),
+export const CustomersTable = flow(
   withSettings(({ customersSettings }) => ({
     customersTableSize: customersSettings?.tableSize,
   })),
+  withCustomers(({ customersTableState }) => ({ customersTableState })),
+  withDrawerActions,
+  withCustomersActions,
+  withDialogActions,
+  withAlertActions,
 )(CustomersTableInner);

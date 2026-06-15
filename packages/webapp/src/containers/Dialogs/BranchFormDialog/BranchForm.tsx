@@ -13,7 +13,8 @@ import { BranchFormContent } from './BranchFormContent';
 import { useBranchFormContext } from './BranchFormProvider';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   name: '',
@@ -80,4 +81,4 @@ function BranchFormInner({
     />
   );
 }
-export const BranchForm = compose(withDialogActions)(BranchFormInner);
+export const BranchForm = flow(withDialogActions)(BranchFormInner);

@@ -6,7 +6,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useUnlockingTransactionsContext } from './UnlockingTransactionsFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Unlocking transactions form floating actions.
@@ -44,6 +44,6 @@ function UnlockingTransactionsFormFloatingActionsInner({
   );
 }
 
-export const UnlockingTransactionsFormFloatingActions = compose(
+export const UnlockingTransactionsFormFloatingActions = flow(
   withDialogActions,
 )(UnlockingTransactionsFormFloatingActionsInner);

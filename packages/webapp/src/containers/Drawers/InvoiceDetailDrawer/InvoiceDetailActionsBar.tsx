@@ -30,11 +30,11 @@ import {
   AbilitySubject,
 } from '../../../constants/abilityOption';
 
-import { compose } from '@/utils';
 import { BadDebtMenuItem } from './utils';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
 import { ArrowBottomLeft } from '@/icons/ArrowBottomLeft';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoice details action bar.
@@ -188,8 +188,8 @@ function InvoiceDetailActionsBarInner({
   );
 }
 
-export const InvoiceDetailActionsBar = compose(
-  withDialogActions,
-  withDrawerActions,
+export const InvoiceDetailActionsBar = flow(
   withAlertActions,
+  withDrawerActions,
+  withDialogActions,
 )(InvoiceDetailActionsBarInner);

@@ -5,8 +5,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Alert description.
@@ -47,7 +46,7 @@ function ClearPaymentTransactionAlert({
   );
 }
 
-export const ClearTransactionAlert = compose(
-  withAlertStoreConnect(),
+export const ClearTransactionAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ClearPaymentTransactionAlert);

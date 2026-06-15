@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const NotifyEstimateViaSMSDialogContent = React.lazy(() =>
   import('./NotifyEstimateViaSMSDialogContent').then((m) => ({
@@ -35,4 +35,6 @@ function NotifyEstimateViaSMSDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(NotifyEstimateViaSMSDialog);
+export const index = flow(withDialogRedux())(
+  NotifyEstimateViaSMSDialog,
+);

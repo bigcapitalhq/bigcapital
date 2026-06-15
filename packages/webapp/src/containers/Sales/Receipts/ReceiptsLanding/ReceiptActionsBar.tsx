@@ -43,10 +43,10 @@ import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 import { useBulkDeleteReceiptsDialog } from './hooks/use-bulk-delete-receipts-dialog';
 
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { isEmpty } from 'lodash';
+import { flow } from 'fp-ts/function';
 
 /**
  * Receipts actions bar.
@@ -243,16 +243,16 @@ function ReceiptActionsBarInner({
   );
 }
 
-export const ReceiptActionsBar = compose(
-  withReceiptsActions,
-  withSettingsActions,
+export const ReceiptActionsBar = flow(
+  withDrawerActions,
+  withDialogActions,
+  withSettings(({ receiptSettings }) => ({
+    receiptsTableSize: receiptSettings?.tableSize,
+  })),
   withReceipts(({ receiptTableState, receiptSelectedRows }) => ({
     receiptsFilterConditions: receiptTableState.filterRoles,
     receiptSelectedRows,
   })),
-  withSettings(({ receiptSettings }) => ({
-    receiptsTableSize: receiptSettings?.tableSize,
-  })),
-  withDialogActions,
-  withDrawerActions,
+  withSettingsActions,
+  withReceiptsActions,
 )(ReceiptActionsBarInner);

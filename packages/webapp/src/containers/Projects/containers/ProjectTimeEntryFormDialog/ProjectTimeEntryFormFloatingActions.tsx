@@ -5,7 +5,7 @@ import { Intent, Button, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Projcet time entry form floating actions.
@@ -42,6 +42,6 @@ function ProjectTimeEntryFormFloatingActionsInner({
   );
 }
 
-export const ProjectTimeEntryFormFloatingActions = compose(withDialogActions)(
-  ProjectTimeEntryFormFloatingActionsInner,
-);
+export const ProjectTimeEntryFormFloatingActions = flow(
+  withDialogActions,
+)(ProjectTimeEntryFormFloatingActionsInner);

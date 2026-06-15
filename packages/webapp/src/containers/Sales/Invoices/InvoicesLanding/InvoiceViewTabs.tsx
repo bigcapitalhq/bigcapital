@@ -4,11 +4,12 @@ import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 import { useInvoicesListContext } from './InvoicesListProvider';
 
 import { withInvoices } from './withInvoices';
 import { withInvoiceActions } from './withInvoiceActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoices views tabs.
@@ -51,9 +52,9 @@ function InvoiceViewTabsInner({
   );
 }
 
-export const InvoiceViewTabs = compose(
-  withInvoiceActions,
+export const InvoiceViewTabs = flow(
   withInvoices(({ invoicesTableState }) => ({
     invoicesCurrentView: invoicesTableState.viewSlug,
   })),
+  withInvoiceActions,
 )(InvoiceViewTabsInner);

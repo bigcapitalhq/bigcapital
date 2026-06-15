@@ -14,8 +14,8 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimate delete alert.
@@ -93,8 +93,8 @@ function EstimateDeleteAlertInner({
   );
 }
 
-export const EstimateDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const EstimateDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(EstimateDeleteAlertInner);

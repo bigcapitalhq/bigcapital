@@ -5,7 +5,7 @@ import { Intent, Button, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { useEstimatedExpenseFormContext } from './EstimatedExpenseFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimated expense form floating actions.
@@ -45,6 +45,6 @@ function EstimatedExpenseFormFloatingActionsInner({
   );
 }
 
-export const EstimatedExpenseFormFloatingActions = compose(withDialogActions)(
-  EstimatedExpenseFormFloatingActionsInner,
-);
+export const EstimatedExpenseFormFloatingActions = flow(
+  withDialogActions,
+)(EstimatedExpenseFormFloatingActionsInner);

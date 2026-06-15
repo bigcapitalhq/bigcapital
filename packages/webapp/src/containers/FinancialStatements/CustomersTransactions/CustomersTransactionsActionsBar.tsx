@@ -24,12 +24,13 @@ import {
   WithCustomersTransactionsActionsProps,
 } from './withCustomersTransactionsActions';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface CustomersTransactionsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -153,10 +154,10 @@ function CustomersTransactionsActionsBarInner({
   );
 }
 
-export const CustomersTransactionsActionsBar = compose(
+export const CustomersTransactionsActionsBar = flow(
+  withDialogActions,
+  withCustomersTransactionsActions,
   withCustomersTransactions(({ customersTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: customersTransactionsDrawerFilter,
   })),
-  withCustomersTransactionsActions,
-  withDialogActions,
 )(CustomersTransactionsActionsBarInner);

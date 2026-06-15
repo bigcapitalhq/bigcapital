@@ -2,9 +2,9 @@
 import React from 'react';
 import { includes } from 'lodash';
 
-import { compose } from '@/utils';
 import { Redirect } from 'react-router-dom';
 import { withSubscriptions } from '@/containers/Subscriptions/withSubscriptions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Ensures the given subscription type is active or redirect to the given route.
@@ -24,7 +24,7 @@ function EnsureSubscriptionIsActive({
   );
 }
 
-export default compose(
+export default flow(
   withSubscriptions(
     ({ isSubscriptionActive }) => ({ isSubscriptionActive }),
     'main',

@@ -24,9 +24,9 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { useInvoicesTableColumns, ActionsMenu } from './components';
 import { useInvoicesListContext } from './InvoicesListProvider';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoices datatable.
@@ -183,14 +183,14 @@ function InvoicesDataTableInner({
   );
 }
 
-export const InvoicesDataTable = compose(
-  withDashboardActions,
-  withInvoiceActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
-  withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
+export const InvoicesDataTable = flow(
   withSettings(({ invoiceSettings }) => ({
     invoicesTableSize: invoiceSettings?.tableSize,
   })),
+  withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withInvoiceActions,
+  withDashboardActions,
 )(InvoicesDataTableInner);

@@ -9,7 +9,7 @@ import { useBulkDeleteExpenses } from '@/hooks/query/expenses';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withExpensesActions } from '@/containers/Expenses/ExpensesLanding/withExpensesActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ExpenseBulkDeleteDialogInner({
   dialogName,
@@ -96,8 +96,8 @@ function ExpenseBulkDeleteDialogInner({
   );
 }
 
-export const ExpenseBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const ExpenseBulkDeleteDialog = flow(
   withExpensesActions,
+  withDialogActions,
+  withDialogRedux(),
 )(ExpenseBulkDeleteDialogInner);

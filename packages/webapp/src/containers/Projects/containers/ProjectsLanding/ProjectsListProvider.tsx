@@ -21,7 +21,7 @@ function ProjectsListProvider({ query, tableStateChanged, ...props }) {
     data: projectsData,
     isFetching: isProjectsFetching,
     isLoading: isProjectsLoading,
-  } = useProjects(query, { keepPreviousData: true });
+  } = useProjects(query, { placeholderData: (previousData) => previousData });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

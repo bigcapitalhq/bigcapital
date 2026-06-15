@@ -9,6 +9,7 @@ import {
 import { CategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
 import { withBanking } from '../withBanking';
 import { useEffect } from 'react';
+import { flow } from 'fp-ts/function';
 
 interface CategorizeTransactionAsideProps extends WithBankingActionsProps {}
 
@@ -61,9 +62,9 @@ function CategorizeTransactionAsideRoot({
   );
 }
 
-export const CategorizeTransactionAside = R.compose(
-  withBankingActions,
+export const CategorizeTransactionAside = flow(
   withBanking(({ transactionsToCategorizeIdsSelected }) => ({
     selectedUncategorizedTransactionId: transactionsToCategorizeIdsSelected,
   })),
+  withBankingActions,
 )(CategorizeTransactionAsideRoot);

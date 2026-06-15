@@ -26,8 +26,7 @@ import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/banking';
 import { useUncategorizeTransaction } from '@/hooks/query';
 import { handleCashFlowTransactionType } from './utils';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Account transactions data table.
@@ -153,13 +152,13 @@ function AccountTransactionsDataTableInner({
   );
 }
 
-export const AccountTransactionsDataTable = compose(
+export const AccountTransactionsDataTable = flow(
+  withBankingActions,
+  withDrawerActions,
+  withAlertActions,
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
-  withAlertActions,
-  withDrawerActions,
-  withBankingActions,
 )(AccountTransactionsDataTableInner);
 
 const DashboardConstrantTable = styled(DataTable)`

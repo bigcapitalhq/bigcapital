@@ -23,8 +23,8 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendors Credit note data table.
@@ -162,16 +162,16 @@ function VendorsCreditNoteDataTableInner({
   );
 }
 
-export const VendorsCreditNoteDataTable = compose(
-  withDashboardActions,
-  withVendorsCreditNotesActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
-  withSettings(({ vendorsCreditNoteSetting }) => ({
-    creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
-  })),
+export const VendorsCreditNoteDataTable = flow(
   withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
     vendorsCreditNoteTableState,
   })),
+  withSettings(({ vendorsCreditNoteSetting }) => ({
+    creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
+  })),
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withVendorsCreditNotesActions,
+  withDashboardActions,
 )(VendorsCreditNoteDataTableInner);

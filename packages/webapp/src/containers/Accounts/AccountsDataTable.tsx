@@ -23,8 +23,8 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { withAccountsTableActions } from './withAccountsTableActions';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Accounts data-table.
@@ -144,12 +144,12 @@ function AccountsDataTableInner({
   );
 }
 
-export const AccountsDataTable = compose(
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
-  withAccountsTableActions,
+export const AccountsDataTable = flow(
   withSettings(({ accountsSettings }) => ({
     accountsTableSize: accountsSettings.tableSize,
   })),
+  withAccountsTableActions,
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
 )(AccountsDataTableInner);

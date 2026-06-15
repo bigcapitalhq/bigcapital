@@ -9,8 +9,8 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Refund Vendor transactions delete alert.
@@ -72,8 +72,8 @@ function RefundVendorCreditDeleteAlertInner({
   );
 }
 
-export const RefundVendorCreditDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const RefundVendorCreditDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(RefundVendorCreditDeleteAlertInner);

@@ -2,6 +2,7 @@ import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
 import { Align } from '@/constants';
 import { useSalesByItemsContext } from './SalesByItemProvider';
+import { flow } from 'fp-ts/function';
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 
@@ -69,12 +70,12 @@ const dynamicColumnMapper = R.curry(
     const _numericColumnAccessor = numericColumnAccessor(data);
     const _itemNameColumnAccessor = itemNameColumnAccessor(data);
 
-    return R.compose(
-      R.when(R.pathEq(['key'], 'itemName'), _itemNameColumnAccessor),
-      R.when(R.pathEq(['key'], 'soldQuantity'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'soldAmount'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'averagePrice'), _numericColumnAccessor),
+    return flow(
       commonColumnMapper(data),
+      R.when(R.pathEq(['key'], 'averagePrice'), _numericColumnAccessor),
+      R.when(R.pathEq(['key'], 'soldAmount'), _numericColumnAccessor),
+      R.when(R.pathEq(['key'], 'soldQuantity'), _numericColumnAccessor),
+      R.when(R.pathEq(['key'], 'itemName'), _itemNameColumnAccessor),
     )(column);
   },
 );

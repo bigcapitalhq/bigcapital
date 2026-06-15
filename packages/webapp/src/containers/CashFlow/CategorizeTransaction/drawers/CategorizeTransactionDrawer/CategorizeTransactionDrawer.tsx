@@ -2,8 +2,7 @@
 import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const CategorizeTransactionContent = lazy(
   () => import('./CategorizeTransactionContent'),
@@ -34,6 +33,6 @@ function CategorizeTransactionDrawerInner({
   );
 }
 
-export const CategorizeTransactionDrawer = compose(withDrawers())(
+export const CategorizeTransactionDrawer = flow(withDrawers())(
   CategorizeTransactionDrawerInner,
 );

@@ -2,7 +2,6 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from '@/utils';
 import { TABLES } from '@/constants/tables';
 import {
   DataTable,
@@ -24,6 +23,7 @@ import { usePaymentMadesTableColumns, ActionsMenu } from './components';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment made datatable transactions.
@@ -133,13 +133,13 @@ function PaymentMadesTableInner({
   );
 }
 
-export const PaymentMadesTable = compose(
-  withPaymentMadeActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
-  withAlertActions,
-  withDrawerActions,
-  withCurrentOrganization(),
+export const PaymentMadesTable = flow(
   withSettings(({ billPaymentSettings }) => ({
     paymentMadesTableSize: billPaymentSettings?.tableSize,
   })),
+  withCurrentOrganization(),
+  withDrawerActions,
+  withAlertActions,
+  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
+  withPaymentMadeActions,
 )(PaymentMadesTableInner);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { compose } from '@/utils';
 import {
   withAuthentication,
   WithAuthenticationProps,
@@ -10,6 +9,7 @@ import {
   withOrganization,
   WithOrganizationProps,
 } from '@/containers/Organization/withOrganization';
+import { flow } from 'fp-ts/function';
 
 interface EnsureOrganizationIsNotReadyProps
   extends Pick<WithAuthenticationProps, 'currentOrganizationId'>,
@@ -37,17 +37,17 @@ function EnsureOrganizationIsNotReady({
   );
 }
 
-export default compose(
-  withAuthentication(({ currentOrganizationId }) => ({
-    currentOrganizationId,
+export default flow(
+  withOrganization(({ isOrganizationReady, isOrganizationSetupCompleted }) => ({
+    isOrganizationReady,
+    isOrganizationSetupCompleted,
   })),
   connect<unknown, unknown, { currentOrganizationId: string | null }>(
     (_state, props) => ({
       organizationId: props.currentOrganizationId,
     }),
   ),
-  withOrganization(({ isOrganizationReady, isOrganizationSetupCompleted }) => ({
-    isOrganizationReady,
-    isOrganizationSetupCompleted,
+  withAuthentication(({ currentOrganizationId }) => ({
+    currentOrganizationId,
   })),
 )(EnsureOrganizationIsNotReady);

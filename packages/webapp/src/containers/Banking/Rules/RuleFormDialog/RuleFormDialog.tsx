@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const RuleFormContent = React.lazy(() =>
   import('./RuleFormContent').then((m) => ({ default: m.RuleFormContent })),
@@ -32,6 +32,8 @@ function RuleFormDialogRoot({
   );
 }
 
-export const RuleFormDialog = compose(withDialogRedux())(RuleFormDialogRoot);
+export const RuleFormDialog = flow(withDialogRedux())(
+  RuleFormDialogRoot,
+);
 
 RuleFormDialog.displayName = 'RuleFormDialog';

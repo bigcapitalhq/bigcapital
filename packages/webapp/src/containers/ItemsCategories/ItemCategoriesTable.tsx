@@ -9,8 +9,7 @@ import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Items categories table.
@@ -65,7 +64,7 @@ function ItemsCategoryTable({
   );
 }
 
-export const ItemCategoriesTable = compose(
-  withDialogActions,
+export const ItemCategoriesTable = flow(
   withAlertActions,
+  withDialogActions,
 )(ItemsCategoryTable);

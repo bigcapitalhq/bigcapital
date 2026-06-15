@@ -2,8 +2,7 @@
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const BillDrawerContent = React.lazy(() =>
   import('./BillDrawerContent').then((m) => ({ default: m.BillDrawerContent })),
@@ -32,4 +31,4 @@ function BillDrawer({
   );
 }
 
-export const index = compose(withDrawers())(BillDrawer);
+export const index = flow(withDrawers())(BillDrawer);

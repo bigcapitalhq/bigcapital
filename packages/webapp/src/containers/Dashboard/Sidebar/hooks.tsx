@@ -18,6 +18,7 @@ import {
   ISidebarSubscriptionAbility,
 } from './interfaces';
 import { filterValuesDeep, deepdash } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const deepDashConfig = {
   childrenPath: 'children',
@@ -52,7 +53,7 @@ function removeSidebarOverlayChildren(menu) {
  * @returns {ISidebarMenuItem[]}
  */
 export function getMainSidebarMenu() {
-  return R.compose(removeSidebarOverlayChildren)(SidebarMenu);
+  return flow(removeSidebarOverlayChildren)(SidebarMenu);
 }
 
 /**
@@ -231,18 +232,18 @@ function useBindSidebarItemClick(menu) {
     return deepdash.mapValuesDeep(
       menu,
       (item) => {
-        return R.compose(
+        return flow(
           R.when(
-            R.propSatisfies(R.equals(ISidebarMenuItemType.Link), 'type'),
-            bindLinkClickEvt,
+            R.propSatisfies(R.equals(ISidebarMenuItemType.Dialog), 'type'),
+            bindItemDialogEvt,
           ),
           R.when(
             R.propSatisfies(R.equals(ISidebarMenuItemType.Overlay), 'type'),
             bindOverlayClickEvt,
           ),
           R.when(
-            R.propSatisfies(R.equals(ISidebarMenuItemType.Dialog), 'type'),
-            bindItemDialogEvt,
+            R.propSatisfies(R.equals(ISidebarMenuItemType.Link), 'type'),
+            bindLinkClickEvt,
           ),
         )(item);
       },
@@ -276,13 +277,13 @@ const findSubmenuBySubmenuId = R.curry((submenuId, menu) => {
  * @returns {ISidebarMenuItem[]}
  */
 export function useMainSidebarMenu() {
-  return R.compose(
-    useBindSidebarItemClick,
-    useFlatSidebarMenu,
-    removeSidebarOverlayChildren,
-    useAssocSidebarItemHasChildren,
-    filterSidebarItemHasNoChildren,
+  return flow(
     useFilterSidebarMenuAbility,
+    filterSidebarItemHasNoChildren,
+    useAssocSidebarItemHasChildren,
+    removeSidebarOverlayChildren,
+    useFlatSidebarMenu,
+    useBindSidebarItemClick,
   )(SidebarMenu);
 }
 
@@ -312,12 +313,12 @@ function useAssocSidebarItemHasChildren(items) {
 export function useSubSidebarMenu(submenuId) {
   if (!submenuId) return [];
 
-  return R.compose(
-    useBindSidebarItemClick,
-    useFlatSidebarMenu,
-    filterSidebarItemHasNoChildren,
-    useFilterSidebarMenuAbility,
+  return flow(
     findSubmenuBySubmenuId(submenuId),
+    useFilterSidebarMenuAbility,
+    filterSidebarItemHasNoChildren,
+    useFlatSidebarMenu,
+    useBindSidebarItemClick,
   )(SidebarMenu);
 }
 

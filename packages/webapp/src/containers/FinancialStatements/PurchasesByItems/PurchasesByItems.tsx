@@ -7,12 +7,12 @@ import { PurchasesByItemsLoadingBar } from './components';
 import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';
 import { PurchasesByItemsBody } from './PurchasesByItemsBody';
 import { usePurchasesByItemsQuery } from './utils';
-import { compose } from '@/utils';
 import {
   withPurchasesByItemsActions,
   WithPurchasesByItemsActionsProps,
 } from './withPurchasesByItemsActions';
 import { PurchasesByItemsDialogs } from './PurchasesByItemsDialogs';
+import { flow } from 'fp-ts/function';
 
 interface PurchasesByItemsProps {
   togglePurchasesByItemsFilterDrawer: WithPurchasesByItemsActionsProps['togglePurchasesByItemsFilterDrawer'];
@@ -31,7 +31,7 @@ function PurchasesByItemsInner({
   const handleFilterSubmit = useCallback(
     (filter: Record<string, unknown>) => {
       const parsedFilter = {
-      ...filter,
+        ...filter,
         fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
       };
@@ -77,6 +77,6 @@ function PurchasesByItemsInner({
   );
 }
 
-export const PurchasesByItems = compose(withPurchasesByItemsActions)(
+export const PurchasesByItems = flow(withPurchasesByItemsActions)(
   PurchasesByItemsInner,
 );

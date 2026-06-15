@@ -6,7 +6,7 @@ import {
   type WithDashboardActionsProps,
 } from '@/containers/Dashboard/withDashboardActions';
 import { UsersDataTable } from './UsersDataTable';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function UsersListPreferences({
   changePreferencesPageTitle,
@@ -22,4 +22,6 @@ function UsersListPreferences({
   );
 }
 
-export const UsersList = compose(withDashboardActions)(UsersListPreferences);
+export const UsersList = flow(withDashboardActions)(
+  UsersListPreferences,
+);

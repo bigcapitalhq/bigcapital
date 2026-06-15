@@ -9,8 +9,7 @@ import { useApproveEstimate } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimate approve alert.
@@ -66,7 +65,7 @@ function EstimateApproveAlertInner({
   );
 }
 
-export const EstimateApproveAlert = compose(
-  withAlertStoreConnect(),
+export const EstimateApproveAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(EstimateApproveAlertInner);

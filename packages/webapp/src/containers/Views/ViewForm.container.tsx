@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { compose } from '@/utils';
 
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withResourceDetail } from '@/containers/Resources/withResourceDetails';
 import { withViewsActions } from '@/containers/Views/withViewsActions';
 import { withViewsDetails } from '@/containers/Views/withViewDetails';
+import { flow } from 'fp-ts/function';
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -17,10 +17,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const viewFormConnect = connect(mapStateToProps);
 
-export const ViewFormContainer = compose(
-  withDashboardActions,
-  withViewsActions,
-  withViewsDetails,
-  viewFormConnect,
+export const ViewFormContainer = flow(
   withResourceDetail(),
+  viewFormConnect,
+  withViewsDetails,
+  withViewsActions,
+  withDashboardActions,
 );

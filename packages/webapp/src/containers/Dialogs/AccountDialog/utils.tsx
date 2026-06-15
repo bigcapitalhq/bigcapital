@@ -3,6 +3,7 @@ import intl from 'react-intl-universal';
 import * as R from 'ramda';
 import { isUndefined } from 'lodash';
 import { defaultFastFieldShouldUpdate } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 export const AccountDialogAction = {
   Edit: 'edit',
@@ -133,11 +134,11 @@ export const parentAccountShouldUpdate = (newProps, oldProps) => {
  * Transformes the form values to the request.
  */
 export const transformFormToReq = (form) => {
-  return R.compose(
-    R.omit(['subaccount']),
+  return flow(
     R.when(
       R.propSatisfies(R.equals(R.__, false), 'subaccount'),
       R.assoc(['parent_account_id'], ''),
     ),
+    R.omit(['subaccount']),
   )(form);
 };

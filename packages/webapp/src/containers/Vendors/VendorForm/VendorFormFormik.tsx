@@ -18,8 +18,9 @@ import { VendorFormContent } from './VendorFormContent';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { useVendorFormContext } from './VendorFormProvider';
-import { compose, transformToForm, safeInvoke, parseBoolean } from '@/utils';
+import { transformToForm, safeInvoke, parseBoolean } from '@/utils';
 import { defaultInitialValues } from './utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendor form.
@@ -127,6 +128,6 @@ const VendorFormFields = styled.div`
   }
 `;
 
-export const VendorFormFormik = compose(withCurrentOrganization())(
+export const VendorFormFormik = flow(withCurrentOrganization())(
   VendorFormFormikBase,
 );

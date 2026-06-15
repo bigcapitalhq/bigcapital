@@ -3,7 +3,7 @@ import React, { lazy } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ContactDialogContent = lazy(() =>
   import('./ContactDuplicateDialogContent').then((m) => ({
@@ -33,4 +33,4 @@ function ContactDuplicateDialog({ dialogName, payload, isOpen }) {
   );
 }
 
-export const index = compose(withDialogRedux())(ContactDuplicateDialog);
+export const index = flow(withDialogRedux())(ContactDuplicateDialog);

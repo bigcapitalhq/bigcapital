@@ -5,7 +5,7 @@ import { AppToaster } from '@/components';
 
 import { withGlobalErrors } from './withGlobalErrors';
 import { withGlobalErrorsActions } from './withGlobalErrorsActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 let toastKeySessionExpired;
 let toastKeySomethingWrong;
@@ -100,7 +100,7 @@ function GlobalErrorsInner({
   return null;
 }
 
-export const GlobalErrors = compose(
-  withGlobalErrors,
+export const GlobalErrors = flow(
   withGlobalErrorsActions,
+  withGlobalErrors,
 )(GlobalErrorsInner);

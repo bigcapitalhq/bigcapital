@@ -19,7 +19,7 @@ import { BillFormTopBar } from './BillFormTopBar';
 import { AppToaster, Box } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { useBillFormContext } from './BillFormProvider';
-import { compose, safeSumBy } from '@/utils';
+import { safeSumBy } from '@/utils';
 import {
   defaultBill,
   filterNonZeroEntries,
@@ -29,6 +29,7 @@ import {
 } from './utils';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { BillFormEntriesActions } from './BillFormEntriesActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bill form.
@@ -147,4 +148,4 @@ function BillFormInner({
     </Formik>
   );
 }
-export const BillForm = compose(withCurrentOrganization())(BillFormInner);
+export const BillForm = flow(withCurrentOrganization())(BillFormInner);

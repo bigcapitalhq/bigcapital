@@ -7,8 +7,7 @@ import { useAssignPdfTemplateAsDefault } from '@/hooks/query/pdf-templates';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Mark default branding template alert.
@@ -67,7 +66,7 @@ function MarkDefaultBrandingTemplateAlertInner({
   );
 }
 
-export const MarkDefaultBrandingTemplateAlert = compose(
-  withAlertStoreConnect(),
+export const MarkDefaultBrandingTemplateAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(MarkDefaultBrandingTemplateAlertInner);

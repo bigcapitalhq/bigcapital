@@ -9,11 +9,11 @@ import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberF
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { compose } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendor credit number dialog
@@ -92,12 +92,12 @@ function VendorCreditNumberDialogContentInner({
   );
 }
 
-export const VendorCreditNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
+export const VendorCreditNumberDialogContent = flow(
   withSettings(({ vendorsCreditNoteSetting }) => ({
     autoIncrement: vendorsCreditNoteSetting?.autoIncrement,
     nextNumber: vendorsCreditNoteSetting?.nextNumber,
     numberPrefix: vendorsCreditNoteSetting?.numberPrefix,
   })),
+  withSettingsActions,
+  withDialogActions,
 )(VendorCreditNumberDialogContentInner);

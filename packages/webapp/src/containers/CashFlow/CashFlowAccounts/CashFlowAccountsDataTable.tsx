@@ -14,7 +14,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 import { useCashFlowAccountsTableColumns } from './components';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Cash flow accounts data table.
@@ -60,7 +60,7 @@ function CashFlowAccountsDataTableInner({
   );
 }
 
-export const CashFlowAccountsDataTable = compose(
+export const CashFlowAccountsDataTable = flow(
   withSettings(({ cashflowSettings }) => ({
     cashflowTableSize: cashflowSettings?.tableSize,
   })),

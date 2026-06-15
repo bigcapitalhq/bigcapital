@@ -2,6 +2,7 @@ import * as R from 'ramda';
 
 import { getColumnWidth } from '@/utils';
 import { Align } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 const itemNameOrDateColumn = R.curry(
   (data: unknown[], index: number, column: Record<string, any>) => ({
@@ -59,7 +60,7 @@ export const dynamicColumns = (
   data: unknown[],
 ) => {
   const mapper = (column: Record<string, any>, index: number) => {
-    return R.compose(
+    return flow(
       R.cond([
         [R.pathEq(['key'], 'date'), itemNameOrDateColumn(data, index)],
         [R.pathEq(['key'], 'runningQuantity'), numericColumn(data, index)],

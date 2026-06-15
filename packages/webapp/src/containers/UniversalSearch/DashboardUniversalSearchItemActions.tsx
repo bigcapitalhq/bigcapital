@@ -6,6 +6,7 @@ import { withUniversalSearch } from './withUniversalSearch';
 
 import { getUniversalSearchItemsActions } from './utils';
 import { withUniversalSearchActions } from './withUniversalSearchActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Universal search selected item action based on each resource type.
@@ -33,12 +34,12 @@ function DashboardUniversalSearchItemActionsInner({
   ));
 }
 
-export const DashboardUniversalSearchItemActions = R.compose(
+export const DashboardUniversalSearchItemActions = flow(
+  withUniversalSearchActions,
   withUniversalSearch(
     ({ searchSelectedResourceType, searchSelectedResourceId }) => ({
       searchSelectedResourceType,
       searchSelectedResourceId,
     }),
   ),
-  withUniversalSearchActions,
 )(DashboardUniversalSearchItemActionsInner);

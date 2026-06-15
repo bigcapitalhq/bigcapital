@@ -2,8 +2,7 @@
 import React from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const BranchActivateDialogContent = React.lazy(() =>
   import('./BranchActivateDialogContent').then((m) => ({
@@ -31,4 +30,4 @@ function BranchActivateDialog({ dialogName, payload: {}, isOpen }) {
   );
 }
 
-export const index = compose(withDialogRedux())(BranchActivateDialog);
+export const index = flow(withDialogRedux())(BranchActivateDialog);

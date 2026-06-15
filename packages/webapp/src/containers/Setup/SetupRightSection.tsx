@@ -8,8 +8,7 @@ import { withOrganization } from '@/containers/Organization/withOrganization';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { withSetupWizard } from '@/store/organizations/with-setup-wizard';
 import { withSubscriptions } from '../Subscriptions/withSubscriptions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Wizard setup right section.
@@ -34,10 +33,17 @@ function SetupRightSectionInner({
   );
 }
 
-export const SetupRightSection = compose(
-  withCurrentOrganization(({ organizationTenantId }) => ({
-    organizationId: organizationTenantId,
+export const SetupRightSection = flow(
+  withSetupWizard(({ setupStepId, setupStepIndex }) => ({
+    setupStepId,
+    setupStepIndex,
   })),
+  withSubscriptions(
+    ({ isSubscriptionActive }) => ({
+      isSubscriptionActive,
+    }),
+    'main',
+  ),
   withOrganization(
     ({
       organization,
@@ -53,14 +59,7 @@ export const SetupRightSection = compose(
       isOrganizationBuildRunning,
     }),
   ),
-  withSubscriptions(
-    ({ isSubscriptionActive }) => ({
-      isSubscriptionActive,
-    }),
-    'main',
-  ),
-  withSetupWizard(({ setupStepId, setupStepIndex }) => ({
-    setupStepId,
-    setupStepIndex,
+  withCurrentOrganization(({ organizationTenantId }) => ({
+    organizationId: organizationTenantId,
   })),
 )(SetupRightSectionInner);

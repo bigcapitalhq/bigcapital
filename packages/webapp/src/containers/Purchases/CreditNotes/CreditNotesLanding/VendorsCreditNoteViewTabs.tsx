@@ -7,8 +7,9 @@ import { DashboardViewsTabs } from '@/components';
 import { withVendorsCreditNotes } from './withVendorsCreditNotes';
 import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendors Credit note views tabs.
@@ -43,9 +44,9 @@ function VendorsCreditNoteViewTabsInner({
   );
 }
 
-export const VendorsCreditNoteViewTabs = compose(
-  withVendorsCreditNotesActions,
+export const VendorsCreditNoteViewTabs = flow(
   withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
     vendorCreditCurrentView: vendorsCreditNoteTableState.viewSlug,
   })),
+  withVendorsCreditNotesActions,
 )(VendorsCreditNoteViewTabsInner);

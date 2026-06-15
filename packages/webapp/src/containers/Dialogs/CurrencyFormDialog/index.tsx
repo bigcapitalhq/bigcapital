@@ -3,7 +3,7 @@ import React, { lazy } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const CurrencyFormDialogContent = lazy(() =>
   import('./CurrencyFormDialogContent').then((m) => ({
@@ -46,4 +46,4 @@ function CurrencyFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(CurrencyFormDialog);
+export const index = flow(withDialogRedux())(CurrencyFormDialog);

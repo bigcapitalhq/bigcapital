@@ -1,5 +1,6 @@
 import React from 'react';
 import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { ProfitLossSheetTable } from './ProfitLossSheetTable';
 import { FinancialSheetSkeleton } from '@/components';
 import { FinancialReportBody } from '../FinancialReportPage';
@@ -8,7 +9,6 @@ import {
   withCurrentOrganization,
   WithCurrentOrganizationProps,
 } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
 
 interface ProfitLossBodyProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -28,7 +28,7 @@ function ProfitLossBodyJSX({ organizationName }: ProfitLossBodyProps) {
   );
 }
 
-export const ProfitLossBody = compose(
+export const ProfitLossBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),

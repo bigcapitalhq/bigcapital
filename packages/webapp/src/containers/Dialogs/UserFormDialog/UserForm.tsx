@@ -13,7 +13,8 @@ import { UserFormContent } from './UserFormContent';
 import { useUserFormContext } from './UserFormProvider';
 import { transformErrors } from './utils';
 
-import { compose, objectKeysTransform, transformToForm } from '@/utils';
+import { objectKeysTransform, transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const initialValues = {
   first_name: '',
@@ -79,4 +80,4 @@ function UserFormInner({
     </Formik>
   );
 }
-export const UserForm = compose(withDialogActions)(UserFormInner);
+export const UserForm = flow(withDialogActions)(UserFormInner);

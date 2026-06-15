@@ -2,7 +2,7 @@
 import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const QuickPaymentMadeFormDialogContent = lazy(() =>
   import('./QuickPaymentMadeFormDialogContent').then((m) => ({
@@ -37,4 +37,6 @@ function QuickPaymentMadeFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(QuickPaymentMadeFormDialog);
+export const index = flow(withDialogRedux())(
+  QuickPaymentMadeFormDialog,
+);

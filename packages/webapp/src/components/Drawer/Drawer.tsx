@@ -6,7 +6,7 @@ import '@/style/components/Drawer.scss';
 
 import { DrawerProvider } from './DrawerProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Drawer component.
@@ -34,5 +34,5 @@ function DrawerComponent(props) {
   );
 }
 
-const DrawerRoot = compose(withDrawerActions)(DrawerComponent);
+const DrawerRoot = flow(withDrawerActions)(DrawerComponent);
 export { DrawerRoot as Drawer };

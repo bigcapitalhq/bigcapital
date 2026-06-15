@@ -15,8 +15,8 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendor delete alert.
@@ -85,8 +85,8 @@ function VendorDeleteAlertInner({
   );
 }
 
-export const VendorDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const VendorDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(VendorDeleteAlertInner);

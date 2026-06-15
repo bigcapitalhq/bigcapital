@@ -6,7 +6,7 @@ import { ProjectDetailTabs } from './ProjectDetailTabs';
 import { DashboardPageContent } from '@/components';
 import { ProjectDetailProvider } from './ProjectDetailProvider';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project tabs.
@@ -34,4 +34,4 @@ function ProjectTabs({
   );
 }
 
-export const index = compose(withDashboardActions)(ProjectTabs);
+export const index = flow(withDashboardActions)(ProjectTabs);

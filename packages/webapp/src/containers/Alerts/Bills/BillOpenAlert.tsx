@@ -8,7 +8,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { useOpenBill } from '@/hooks/query';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bill open alert.
@@ -62,7 +62,7 @@ function BillOpenAlertInner({
   );
 }
 
-export const BillOpenAlert = compose(
-  withAlertStoreConnect(),
+export const BillOpenAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(BillOpenAlertInner);

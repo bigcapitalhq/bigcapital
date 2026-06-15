@@ -21,7 +21,7 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
     data: expensesData,
     isLoading: isExpensesLoading,
     isFetching: isExpensesFetching,
-  } = useExpenses(query, { keepPreviousData: true });
+  } = useExpenses(query, { placeholderData: (previousData) => previousData });
 
   // Fetch the expenses resource fields.
   const {

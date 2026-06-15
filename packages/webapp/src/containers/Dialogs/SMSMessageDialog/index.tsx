@@ -3,8 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const SMSMessageDialogContent = React.lazy(() =>
   import('./SMSMessageDialogContent').then((m) => ({
@@ -39,4 +38,4 @@ function SMSMessageDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(SMSMessageDialog);
+export const index = flow(withDialogRedux())(SMSMessageDialog);

@@ -16,8 +16,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { useBadDebtContext } from './BadDebtFormProvider';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   expense_account_id: '',
@@ -79,7 +78,7 @@ function BadDebtFormInner({
   );
 }
 
-export const BadDebtForm = compose(
-  withDialogActions,
+export const BadDebtForm = flow(
   withCurrentOrganization(),
+  withDialogActions,
 )(BadDebtFormInner);

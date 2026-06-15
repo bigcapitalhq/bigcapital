@@ -6,7 +6,6 @@ import { useItem } from '@/hooks/query';
 import {
   toSafeNumber,
   saveInvoke,
-  compose,
   updateTableCell,
   updateAutoAddNewLine,
   updateMinEntriesLines,
@@ -16,6 +15,7 @@ import {
   updateRemoveLineByIndex,
 } from '@/utils';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
+import { flow } from 'fp-ts/function';
 
 export const ITEM_TYPE = {
   SELLABLE: 'SELLABLE',
@@ -160,7 +160,7 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
  */
 export const composeRowsOnEditCell = R.curry(
   (rowIndex, columnId, value, defaultEntry, rows) => {
-    return compose()(rows);
+    return rows;
   },
 );
 
@@ -172,12 +172,12 @@ export const useComposeRowsOnNewRow = () => {
 
   return React.useMemo(() => {
     return R.curry((rowIndex, newRow, rows) => {
-      return compose(
-        assignEntriesTaxAmount(isInclusiveTax),
-        assignEntriesTaxRate(taxRates),
-        orderingLinesIndexes,
-        updateItemsEntriesTotal,
+      return flow(
         updateTableRow(rowIndex, newRow),
+        updateItemsEntriesTotal,
+        orderingLinesIndexes,
+        assignEntriesTaxRate(taxRates),
+        assignEntriesTaxAmount(isInclusiveTax),
       )(rows);
     });
   }, [isInclusiveTax, taxRates]);
@@ -250,13 +250,13 @@ export const useComposeRowsOnEditTableCell = () => {
 
   return useCallback(
     (rowIndex, columnId, value) => {
-      return R.compose(
-        assignEntriesTaxAmount(isInclusiveTax),
-        assignEntriesTaxRate(taxRates),
-        orderingLinesIndexes,
-        updateAutoAddNewLine(defaultEntry, ['item_id']),
-        updateItemsEntriesTotal,
+      return flow(
         updateTableCell(rowIndex, columnId, value),
+        updateItemsEntriesTotal,
+        updateAutoAddNewLine(defaultEntry, ['item_id']),
+        orderingLinesIndexes,
+        assignEntriesTaxRate(taxRates),
+        assignEntriesTaxAmount(isInclusiveTax),
       )(localValue);
     },
     [taxRates, isInclusiveTax, localValue, defaultEntry],
@@ -273,11 +273,11 @@ export const useComposeRowsOnRemoveTableRow = () => {
 
   return useCallback(
     (rowIndex) => {
-      return compose(
-        // Ensure minimum lines count.
-        updateMinEntriesLines(minLinesNumber, defaultEntry),
+      return flow(
         // Remove the line by the given index.
         updateRemoveLineByIndex(rowIndex),
+        // Ensure minimum lines count.
+        updateMinEntriesLines(minLinesNumber, defaultEntry),
       )(localValue);
     },
     [minLinesNumber, defaultEntry, localValue],

@@ -17,8 +17,8 @@ import {
   withTrialBalanceActions,
   WithTrialBalanceActionsProps,
 } from './withTrialBalanceActions';
-import { compose } from '@/utils';
 import { TrialBalanceSheetDialogs } from './TrialBalanceSheetDialogs';
+import { flow } from 'fp-ts/function';
 
 type TrialBalanceSheetProps = Pick<
   WithTrialBalanceActionsProps,
@@ -85,6 +85,6 @@ function TrialBalanceSheetInner({
   );
 }
 
-export const TrialBalanceSheet = compose(withTrialBalanceActions)(
+export const TrialBalanceSheet = flow(withTrialBalanceActions)(
   TrialBalanceSheetInner,
 );

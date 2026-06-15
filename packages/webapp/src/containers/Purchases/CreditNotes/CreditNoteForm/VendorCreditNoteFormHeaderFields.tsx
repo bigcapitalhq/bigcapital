@@ -35,7 +35,6 @@ import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 import { VendorCreditNoteExchangeRateInputField } from './components';
 import {
   momentFormatter,
-  compose,
   tansformDateValue,
   inputIntent,
   handleDateChange,
@@ -44,6 +43,7 @@ import {
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -220,13 +220,13 @@ function VendorCreditFormVendorSelect() {
   );
 }
 
-export const VendorCreditNoteFormHeaderFields = compose(
-  withDialogActions,
+export const VendorCreditNoteFormHeaderFields = flow(
   withSettings(({ vendorsCreditNoteSetting }) => ({
     vendorcreditAutoIncrement: vendorsCreditNoteSetting?.autoIncrement,
     vendorcreditNextNumber: vendorsCreditNoteSetting?.nextNumber,
     vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
   })),
+  withDialogActions,
 )(VendorCreditNoteFormHeaderFieldsInner);
 
 const VendorButtonLink = styled(VendorDrawerLink)`

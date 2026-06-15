@@ -30,8 +30,9 @@ import {
 } from '@/constants/abilityOption';
 import { BillMenuItem } from './utils';
 
-import { safeCallback, compose } from '@/utils';
+import { safeCallback } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 function BillDetailActionsBarInner({
   // #withDialogActions
@@ -122,8 +123,8 @@ function BillDetailActionsBarInner({
   );
 }
 
-export const BillDetailActionsBar = compose(
-  withDialogActions,
-  withDrawerActions,
+export const BillDetailActionsBar = flow(
   withAlertActions,
+  withDrawerActions,
+  withDialogActions,
 )(BillDetailActionsBarInner);

@@ -12,7 +12,8 @@ import { BillsTable } from './BillsTable';
 import { withBills } from './withBills';
 import { withBillsActions } from './withBillsActions';
 
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bills list.
@@ -47,10 +48,10 @@ function BillsListInner({
   );
 }
 
-export const BillsList = compose(
+export const BillsList = flow(
+  withBillsActions,
   withBills(({ billsTableState, billsTableStateChanged }) => ({
     billsTableState,
     billsTableStateChanged,
   })),
-  withBillsActions,
 )(BillsListInner);

@@ -17,7 +17,8 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { DrawerActionsBar, Icon, FormattedMessage as T } from '@/components';
 
-import { safeCallback, compose } from '@/utils';
+import { safeCallback } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ContactDetailActionsBarInner({
   // #withAlertActions
@@ -67,7 +68,7 @@ function ContactDetailActionsBarInner({
   );
 }
 
-export const ContactDetailActionsBar = compose(
-  withDrawerActions,
+export const ContactDetailActionsBar = flow(
   withAlertActions,
+  withDrawerActions,
 )(ContactDetailActionsBarInner);

@@ -2,8 +2,8 @@
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 import { Button, Classes, Intent } from '@blueprintjs/core';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoice number dialog.
@@ -50,7 +50,7 @@ function InvoiceExchangeRateChangeDialogInner({
   );
 }
 
-export const InvoiceExchangeRateChangeDialog = compose(
-  withDialogRedux(),
+export const InvoiceExchangeRateChangeDialog = flow(
   withDialogActions,
+  withDialogRedux(),
 )(InvoiceExchangeRateChangeDialogInner);

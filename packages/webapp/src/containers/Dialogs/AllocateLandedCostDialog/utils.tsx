@@ -6,6 +6,7 @@ import * as R from 'ramda';
 
 import { defaultFastFieldShouldUpdate } from '@/utils';
 import { MoneyFieldCell } from '@/components';
+import { flow } from 'fp-ts/function';
 
 export const defaultInitialItem = {
   entry_id: '',
@@ -48,14 +49,14 @@ export function getTransactionEntryById(transaction, transactionEntryId) {
  * @returns
  */
 export function allocateCostToEntries(total, allocateType, entries) {
-  return R.compose(
-    R.when(
-      R.always(allocateType === 'value'),
-      R.curry(allocateCostByValue)(total),
-    ),
+  return flow(
     R.when(
       R.always(allocateType === 'quantity'),
       R.curry(allocateCostByQuantity)(total),
+    ),
+    R.when(
+      R.always(allocateType === 'value'),
+      R.curry(allocateCostByValue)(total),
     ),
   )(entries);
 }

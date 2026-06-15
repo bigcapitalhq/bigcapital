@@ -2,7 +2,7 @@
 import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ExportDialogContent = lazy(() =>
   import('./ExportDialogContent').then((m) => ({
@@ -32,4 +32,4 @@ function ExportDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const ExportDialog = compose(withDialogRedux())(ExportDialogRoot);
+export const ExportDialog = flow(withDialogRedux())(ExportDialogRoot);

@@ -14,8 +14,8 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteCustomer } from '@/hooks/query';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customer delete alert.
@@ -84,8 +84,8 @@ function CustomerDeleteAlertInner({
   );
 }
 
-export const CustomerDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const CustomerDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(CustomerDeleteAlertInner);

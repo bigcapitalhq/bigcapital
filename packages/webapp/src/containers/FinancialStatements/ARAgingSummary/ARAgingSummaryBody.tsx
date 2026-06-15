@@ -10,6 +10,7 @@ import {
   withCurrentOrganization,
   WithCurrentOrganizationProps,
 } from '@/containers/Organization/withCurrentOrganization';
+import { flow } from 'fp-ts/function';
 
 interface ARAgingSummaryBodyProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -29,7 +30,7 @@ function ARAgingSummaryBodyJSX({ organizationName }: ARAgingSummaryBodyProps) {
   );
 }
 
-export const ARAgingSummaryBody = R.compose(
+export const ARAgingSummaryBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization?.name,
   })),

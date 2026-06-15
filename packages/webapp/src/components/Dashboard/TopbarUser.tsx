@@ -16,7 +16,8 @@ import { useAuthActions, useAuthOrganizationId } from '@/hooks/state';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { useAuthenticatedAccount } from '@/hooks/query';
-import { firstLettersArgs, compose } from '@/utils';
+import { firstLettersArgs } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Dashboard topbar user.
@@ -80,4 +81,4 @@ function DashboardTopbarUser({
     </Popover>
   );
 }
-export default compose(withDialogActions)(DashboardTopbarUser);
+export default flow(withDialogActions)(DashboardTopbarUser);

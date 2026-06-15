@@ -8,6 +8,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { useCancelMainSubscription } from '@/hooks/query/subscription';
+import { flow } from 'fp-ts/function';
 
 /**
  * Cancel Unlocking partial transactions alerts.
@@ -75,7 +76,7 @@ function CancelMainSubscriptionAlertInner({
   );
 }
 
-export const CancelMainSubscriptionAlert = R.compose(
-  withAlertStoreConnect(),
+export const CancelMainSubscriptionAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(CancelMainSubscriptionAlertInner);

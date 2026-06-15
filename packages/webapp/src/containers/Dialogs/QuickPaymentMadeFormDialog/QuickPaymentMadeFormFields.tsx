@@ -32,7 +32,7 @@ import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Quick payment made form fields.
@@ -163,9 +163,9 @@ function QuickPaymentMadeFormFieldsInner({
   );
 }
 
-export const QuickPaymentMadeFormFields = compose(withCurrentOrganization())(
-  QuickPaymentMadeFormFieldsInner,
-);
+export const QuickPaymentMadeFormFields = flow(
+  withCurrentOrganization(),
+)(QuickPaymentMadeFormFieldsInner);
 
 export const BranchRowDivider = styled.div`
   height: 1px;

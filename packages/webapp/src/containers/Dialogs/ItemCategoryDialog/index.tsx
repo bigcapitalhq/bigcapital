@@ -3,7 +3,7 @@ import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ItemCategoryFormDialogContent = lazy(() =>
   import('./ItemCategoryFormDialogContent').then((m) => ({
@@ -45,4 +45,4 @@ function ItemCategoryFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(ItemCategoryFormDialog);
+export const index = flow(withDialogRedux())(ItemCategoryFormDialog);

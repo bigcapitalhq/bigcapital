@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import ReceiptMailDialogContent from '../../ReceiptMailDialog/ReceiptMailDialogContent';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface ReceiptFormDeliverDialogContent {
   receiptId: number;
@@ -35,6 +36,6 @@ function ReceiptFormDeliverDialogContentRoot({
   );
 }
 
-export const ReceiptFormMailDeliverDialogContent = R.compose(withDialogActions)(
-  ReceiptFormDeliverDialogContentRoot,
-);
+export const ReceiptFormMailDeliverDialogContent = flow(
+  withDialogActions,
+)(ReceiptFormDeliverDialogContentRoot);

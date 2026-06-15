@@ -15,11 +15,12 @@ import { BalanceSheetHeaderGeneralPanal } from './BalanceSheetHeaderGeneralPanal
 import { BalanceSheetHeaderComparisonPanal } from './BalanceSheetHeaderComparisonPanal';
 import { BalanceSheetHeaderDimensionsPanel } from './BalanceSheetHeaderDimensionsPanel';
 import { FinancialStatementHeader } from '../../FinancialStatements/FinancialStatementHeader';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import {
   getBalanceSheetHeaderValidationSchema,
   getDefaultBalanceSheetQuery,
 } from './utils';
+import { flow } from 'fp-ts/function';
 
 type BalanceSheetFormValues = Omit<
   ReturnType<typeof getDefaultBalanceSheetQuery>,
@@ -127,11 +128,11 @@ function BalanceSheetHeaderInner({
   );
 }
 
-export const BalanceSheetHeader = compose(
+export const BalanceSheetHeader = flow(
+  withBalanceSheetActions,
   withBalanceSheet(({ balanceSheetDrawerFilter }) => ({
     balanceSheetDrawerFilter,
   })),
-  withBalanceSheetActions,
 )(BalanceSheetHeaderInner);
 
 const BalanceSheetFinancialHeader = styled(FinancialStatementHeader)`

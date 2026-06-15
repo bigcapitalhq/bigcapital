@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import { compose } from '@/utils';
 
 import '@/style/pages/Items/List.scss';
 
@@ -12,6 +11,7 @@ import { ItemsDataTable } from './ItemsDataTable';
 
 import { withItems } from './withItems';
 import { withItemsActions } from './withItemsActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Items list.
@@ -46,10 +46,10 @@ function ItemsListInner({
   );
 }
 
-export const ItemsList = compose(
-  withItemsActions,
+export const ItemsList = flow(
   withItems(({ itemsTableState, itemsTableStateChanged }) => ({
     itemsTableState,
     itemsTableStateChanged,
   })),
+  withItemsActions,
 )(ItemsListInner);

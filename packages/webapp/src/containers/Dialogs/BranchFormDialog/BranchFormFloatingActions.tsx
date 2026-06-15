@@ -7,7 +7,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useBranchFormContext } from './BranchFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Branch form floating actions.
@@ -44,6 +44,6 @@ function BranchFormFloatingActionsInner({
     </div>
   );
 }
-export const BranchFormFloatingActions = compose(withDialogActions)(
+export const BranchFormFloatingActions = flow(withDialogActions)(
   BranchFormFloatingActionsInner,
 );

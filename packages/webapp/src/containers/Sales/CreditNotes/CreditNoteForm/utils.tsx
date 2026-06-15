@@ -26,6 +26,7 @@ import {
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
 import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import { flow } from 'fp-ts/function';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -76,9 +77,9 @@ export function transformToEditForm(creditNote) {
       Math.max(MIN_LINES_NUMBER - creditNote.entries.length, 0),
     ),
   ];
-  const entries = R.compose(
-    ensureEntriesHaveEmptyLine(defaultCreditNoteEntry),
+  const entries = flow(
     updateItemsEntriesTotal,
+    ensureEntriesHaveEmptyLine(defaultCreditNoteEntry),
   )(initialEntries);
 
   const attachment = transformAttachmentsToForm(creditNote);
@@ -94,13 +95,13 @@ export function transformToEditForm(creditNote) {
  * Transformes credit note entries to submit request.
  */
 export const transformEntriesToSubmit = (entries) => {
-  const transformCreditNoteEntry = R.compose(
-    R.omit(['amount']),
+  const transformCreditNoteEntry = flow(
     R.curry(transformToForm)(R.__, defaultCreditNoteEntry),
+    R.omit(['amount']),
   );
-  return R.compose(
-    orderingLinesIndexes,
+  return flow(
     R.map(transformCreditNoteEntry),
+    orderingLinesIndexes,
   )(entries);
 };
 
@@ -264,9 +265,9 @@ export const useCreditNoteTotal = () => {
   const discountAmount = useCreditNoteDiscountAmount();
   const adjustmentAmount = useCreditNoteAdjustmentAmount();
 
-  return R.compose(
-    R.subtract(R.__, discountAmount),
+  return flow(
     R.add(R.__, adjustmentAmount),
+    R.subtract(R.__, discountAmount),
   )(subtotal);
 };
 

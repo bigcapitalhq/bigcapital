@@ -15,7 +15,7 @@ import {
   transformBillToForm,
   transformErrors,
 } from './utils';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Quick payment made form.
@@ -77,6 +77,6 @@ function QuickPaymentMadeFormInner({
   );
 }
 
-export const QuickPaymentMadeForm = compose(withDialogActions)(
+export const QuickPaymentMadeForm = flow(withDialogActions)(
   QuickPaymentMadeFormInner,
 );

@@ -7,7 +7,7 @@ import { FormattedMessage as T } from '@/components';
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Money in floating actions.
@@ -71,6 +71,6 @@ function MoneyInFloatingActionsInner({
   );
 }
 
-export const MoneyInFloatingActions = compose(withDialogActions)(
+export const MoneyInFloatingActions = flow(withDialogActions)(
   MoneyInFloatingActionsInner,
 );

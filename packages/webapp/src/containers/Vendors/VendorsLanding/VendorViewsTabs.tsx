@@ -7,7 +7,8 @@ import { DashboardViewsTabs } from '@/components';
 import { withVendorsActions } from './withVendorsActions';
 import { withVendors } from './withVendors';
 
-import { transfromViewsToTabs, compose } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendors views tabs.
@@ -43,9 +44,9 @@ function VendorViewsTabsInner({
   );
 }
 
-export const VendorViewsTabs = compose(
-  withVendorsActions,
+export const VendorViewsTabs = flow(
   withVendors(({ vendorsTableState }) => ({
     vendorsCurrentView: vendorsTableState.viewSlug,
   })),
+  withVendorsActions,
 )(VendorViewsTabsInner);

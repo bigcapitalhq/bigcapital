@@ -3,6 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { flow } from 'fp-ts/function';
 
 const PaymentReceivedMailContent = React.lazy(() =>
   import('./PaymentReceivedMailContent').then((module) => ({
@@ -37,6 +38,6 @@ function PaymentReceivedSendMailDrawerRoot({
   );
 }
 
-export const PaymentReceivedSendMailDrawer = R.compose(withDrawers())(
+export const PaymentReceivedSendMailDrawer = flow(withDrawers())(
   PaymentReceivedSendMailDrawerRoot,
 );

@@ -11,7 +11,7 @@ import {
 
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Allocate landed cost floating actions.
@@ -61,9 +61,9 @@ function AllocateLandedCostFloatingActionsInner({
   );
 }
 
-export const AllocateLandedCostFloatingActions = compose(withDialogActions)(
-  AllocateLandedCostFloatingActionsInner,
-);
+export const AllocateLandedCostFloatingActions = flow(
+  withDialogActions,
+)(AllocateLandedCostFloatingActionsInner);
 
 const AllocateDialogFooter = styled(DialogFooter)`
   display: flex;

@@ -14,7 +14,8 @@ import { transformErrors } from './utils';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   notification_key: '',
@@ -78,4 +79,6 @@ function SMSMessageFormInner({
   );
 }
 
-export const SMSMessageForm = compose(withDialogActions)(SMSMessageFormInner);
+export const SMSMessageForm = flow(withDialogActions)(
+  SMSMessageFormInner,
+);

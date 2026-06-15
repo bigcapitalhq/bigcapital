@@ -24,6 +24,7 @@ import {
   useActivateTaxRate,
   useInactivateTaxRate,
 } from '@/hooks/query/tax-rates';
+import { flow } from 'fp-ts/function';
 
 /**
  * Tax rate details content actions bar.
@@ -141,8 +142,8 @@ function TaxRateDetailsContentActionsBarInner({
   );
 }
 
-export const TaxRateDetailsContentActionsBar = R.compose(
-  withDrawerActions,
-  withDialogActions,
+export const TaxRateDetailsContentActionsBar = flow(
   withAlertActions,
+  withDialogActions,
+  withDrawerActions,
 )(TaxRateDetailsContentActionsBarInner);

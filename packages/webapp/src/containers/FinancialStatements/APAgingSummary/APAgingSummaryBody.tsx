@@ -10,6 +10,7 @@ import {
   withCurrentOrganization,
   WithCurrentOrganizationProps,
 } from '@/containers/Organization/withCurrentOrganization';
+import { flow } from 'fp-ts/function';
 
 interface APAgingSummaryBodyProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -29,7 +30,7 @@ function APAgingSummaryBodyJSX({ organizationName }: APAgingSummaryBodyProps) {
   );
 }
 
-export const APAgingSummaryBody = R.compose(
+export const APAgingSummaryBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization?.name,
   })),

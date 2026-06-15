@@ -2,10 +2,10 @@
 import React, { useEffect, Suspense } from 'react';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose } from '@/utils';
 import { Spinner } from '@blueprintjs/core';
 
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Dashboard pages wrapper.
@@ -98,8 +98,8 @@ function DashboardPage({
   );
 }
 
-export default compose(
-  withDashboardActions,
-  // withUniversalSearch,
+export default flow(
   withUniversalSearchActions,
+  // withUniversalSearch,
+  withDashboardActions,
 )(DashboardPage);

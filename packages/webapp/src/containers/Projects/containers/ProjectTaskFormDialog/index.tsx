@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ProjectTaskFormDialogContent = React.lazy(() =>
   import('./ProjectTaskFormDialogContent').then((m) => ({
@@ -46,4 +46,4 @@ function ProjectTaskFormDialog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(ProjectTaskFormDialog);
+export const index = flow(withDialogRedux())(ProjectTaskFormDialog);

@@ -20,10 +20,10 @@ import { withItemCategoriesActions } from './withItemCategoriesActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
-import { compose } from '@/utils';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
 import { useHistory } from 'react-router-dom';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Items categories actions bar.
@@ -117,14 +117,14 @@ function ItemsCategoryActionsBarInner({
   );
 }
 
-export const ItemsCategoryActionsBar = compose(
-  withDialogActions,
+export const ItemsCategoryActionsBar = flow(
+  withItemCategoriesActions,
+  withAlertActions,
   withItemCategories(
     ({ itemCategoriesSelectedRows, itemsCategoriesTableState }) => ({
       itemCategoriesSelectedRows,
       categoriesFilterConditions: itemsCategoriesTableState.filterRoles,
     }),
   ),
-  withAlertActions,
-  withItemCategoriesActions,
+  withDialogActions,
 )(ItemsCategoryActionsBarInner);

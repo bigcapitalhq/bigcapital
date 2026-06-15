@@ -7,8 +7,7 @@ import { AppToaster } from '@/components';
 import { ProjectBillableEntriesFormSchema } from './ProjectBillableEntriesForm.schema';
 import { ProjectBillableEntriesFormContent } from './ProjectBillableEntriesFormContent';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {};
 
@@ -53,6 +52,6 @@ function ProjectBillableEntriesFormInner({
   );
 }
 
-export const ProjectBillableEntriesForm = compose(withDialogActions)(
+export const ProjectBillableEntriesForm = flow(withDialogActions)(
   ProjectBillableEntriesFormInner,
 );

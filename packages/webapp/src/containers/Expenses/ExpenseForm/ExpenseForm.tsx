@@ -31,7 +31,7 @@ import {
   transformToEditForm,
   transformFormValuesToRequest,
 } from './utils';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Expense form.
@@ -168,13 +168,13 @@ function ExpenseFormInner({
   );
 }
 
-export const ExpenseForm = compose(
-  withDashboardActions,
+export const ExpenseForm = flow(
+  withCurrentOrganization(),
   withSettings(({ expenseSettings }) => ({
     preferredPaymentAccount: parseInt(
       expenseSettings?.preferredPaymentAccount,
       10,
     ),
   })),
-  withCurrentOrganization(),
+  withDashboardActions,
 )(ExpenseFormInner);

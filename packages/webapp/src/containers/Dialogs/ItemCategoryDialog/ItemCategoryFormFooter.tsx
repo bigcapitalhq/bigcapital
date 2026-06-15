@@ -6,8 +6,7 @@ import { useFormikContext } from 'formik';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useItemCategoryContext } from './ItemCategoryProvider';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item category form footer.
@@ -41,6 +40,6 @@ function ItemCategoryFormFooterInner({
     </div>
   );
 }
-export const ItemCategoryFormFooter = compose(withDialogActions)(
+export const ItemCategoryFormFooter = flow(withDialogActions)(
   ItemCategoryFormFooterInner,
 );

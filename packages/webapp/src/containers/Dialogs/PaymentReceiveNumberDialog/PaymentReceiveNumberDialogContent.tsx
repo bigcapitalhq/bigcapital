@@ -11,11 +11,12 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment receive number dialog's content.
@@ -96,12 +97,12 @@ function PaymentNumberDialogContent({
   );
 }
 
-export const PaymentReceiveNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
+export const PaymentReceiveNumberDialogContent = flow(
   withSettings(({ paymentReceiveSettings }) => ({
     nextNumber: paymentReceiveSettings?.nextNumber,
     numberPrefix: paymentReceiveSettings?.numberPrefix,
     autoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
+  withSettingsActions,
+  withDialogActions,
 )(PaymentNumberDialogContent);

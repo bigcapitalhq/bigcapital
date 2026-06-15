@@ -20,7 +20,7 @@ import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { projectTranslations } from './common';
 import { useProjectDetailContext } from './ProjectDetailProvider';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project detail actions bar.
@@ -129,10 +129,10 @@ function ProjectDetailActionsBarInner({
     </DashboardActionsBar>
   );
 }
-export const ProjectDetailActionsBar = compose(
-  withDialogActions,
-  withSettingsActions,
+export const ProjectDetailActionsBar = flow(
   withSettings(({ timesheetsSettings }) => ({
     timesheetsTableSize: timesheetsSettings?.tableSize,
   })),
+  withSettingsActions,
+  withDialogActions,
 )(ProjectDetailActionsBarInner);

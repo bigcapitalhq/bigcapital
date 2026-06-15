@@ -30,7 +30,7 @@ function EstimatesListProvider({ query, tableStateChanged, ...props }) {
     data: estimatesData,
     isLoading: isEstimatesLoading,
     isFetching: isEstimatesFetching,
-  } = useEstimates(query, { keepPreviousData: true });
+  } = useEstimates(query, { placeholderData: (previousData) => previousData });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

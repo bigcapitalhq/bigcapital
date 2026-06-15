@@ -8,8 +8,7 @@ import { useDeliverInvoice } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Sale invoice alert.
@@ -63,7 +62,7 @@ function InvoiceDeliverAlertInner({
   );
 }
 
-export const InvoiceDeliverAlert = compose(
-  withAlertStoreConnect(),
+export const InvoiceDeliverAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(InvoiceDeliverAlertInner);

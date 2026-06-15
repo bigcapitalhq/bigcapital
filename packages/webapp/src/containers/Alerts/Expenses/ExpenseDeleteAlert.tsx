@@ -9,9 +9,9 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteExpense } from '@/hooks/query';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { handleDeleteErrors } from './_utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Expense delete alert.
@@ -78,8 +78,8 @@ function ExpenseDeleteAlertInner({
   );
 }
 
-export const ExpenseDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const ExpenseDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(ExpenseDeleteAlertInner);

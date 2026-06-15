@@ -20,7 +20,7 @@ export function useDashboardMetaBoot() {
     isLoading: isDashboardMetaLoading,
     isSuccess: isDashboardMetaSuccess,
   } = useDashboardMeta({
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   });
   const [startLoading, stopLoading] = useSplashLoading();
 

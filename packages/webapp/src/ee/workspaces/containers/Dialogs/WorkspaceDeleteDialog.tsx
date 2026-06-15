@@ -15,8 +15,8 @@ import { x } from '@xstyled/emotion';
 import { useDeleteWorkspace } from '@/ee/workspaces/hooks/query/workspaces';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 import { css } from '@emotion/css';
+import { flow } from 'fp-ts/function';
 
 function WorkspaceDeleteDialog({
   dialogName,
@@ -176,7 +176,7 @@ function WorkspaceDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
+export default flow(
   withDialogActions,
+  withDialogRedux(),
 )(WorkspaceDeleteDialog);

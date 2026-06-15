@@ -12,6 +12,7 @@ import { useCurrentOrganization } from '@/hooks/state';
 import { useEstimateIsForeignCustomer } from './utils';
 import { transactionNumber } from '@/utils';
 import { withSettings } from '@/containers/Settings/withSettings';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoice date cell.
@@ -120,31 +121,33 @@ export function PaymentReceiveProjectSelectButton({ label }) {
  * Syncs the auto-increment settings to payment receive form.
  * @returns {React.ReactNode}
  */
-export const PaymentReceiveSyncIncrementSettingsToForm = R.compose(
+export const PaymentReceiveSyncIncrementSettingsToForm = flow(
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
     paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
-)(({
-  paymentReceiveNextNumber,
-  paymentReceiveNumberPrefix,
-  paymentReceiveAutoIncrement,
-}) => {
-  const { setFieldValue } = useFormikContext();
-
-  useLayoutEffect(() => {
-    if (!paymentReceiveAutoIncrement) return;
-
-    setFieldValue(
-      'payment_receive_no',
-      transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber),
-    );
-  }, [
-    setFieldValue,
-    paymentReceiveNumberPrefix,
+)(
+  ({
     paymentReceiveNextNumber,
+    paymentReceiveNumberPrefix,
     paymentReceiveAutoIncrement,
-  ]);
-  return null;
-});
+  }) => {
+    const { setFieldValue } = useFormikContext();
+
+    useLayoutEffect(() => {
+      if (!paymentReceiveAutoIncrement) return;
+
+      setFieldValue(
+        'payment_receive_no',
+        transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber),
+      );
+    }, [
+      setFieldValue,
+      paymentReceiveNumberPrefix,
+      paymentReceiveNextNumber,
+      paymentReceiveAutoIncrement,
+    ]);
+    return null;
+  },
+);

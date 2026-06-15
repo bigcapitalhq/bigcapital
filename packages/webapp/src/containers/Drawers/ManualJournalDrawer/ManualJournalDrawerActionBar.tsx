@@ -21,8 +21,8 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Manual journal action bar.
@@ -74,7 +74,7 @@ function ManualJournalDrawerActionBarInner({
   );
 }
 
-export const ManualJournalDrawerActionBar = compose(
-  withAlertActions,
+export const ManualJournalDrawerActionBar = flow(
   withDrawerActions,
+  withAlertActions,
 )(ManualJournalDrawerActionBarInner);

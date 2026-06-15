@@ -25,6 +25,7 @@ import {
 } from './dtos/ManualJournal.dto';
 import { GetManualJournalsQueryDto } from './dtos/GetManualJournalsQuery.dto';
 import { ManualJournalResponseDto } from './dtos/ManualJournalResponse.dto';
+import { ManualJournalsListResponseDto } from './dtos/ManualJournalsListResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
   BulkDeleteDto,
@@ -39,6 +40,7 @@ import { ManualJournalAction } from './types/ManualJournals.types';
 @Controller('manual-journals')
 @ApiTags('Manual Journals')
 @ApiExtraModels(ManualJournalResponseDto)
+@ApiExtraModels(ManualJournalsListResponseDto)
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
@@ -185,15 +187,9 @@ export class ManualJournalsController {
   @ApiOperation({ summary: 'Retrieves the manual journals paginated list.' })
   @ApiResponse({
     status: 200,
-    description: 'The manual journal details have been successfully retrieved.',
-    schema: {
-      type: 'array',
-      items: {
-        $ref: getSchemaPath(ManualJournalResponseDto),
-      },
-    },
+    description: 'The manual journals paginated list have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(ManualJournalsListResponseDto) },
   })
-  @ApiResponse({ status: 404, description: 'The manual journal not found.' })
   public getManualJournals(@Query() filterDto: GetManualJournalsQueryDto) {
     return this.manualJournalsApplication.getManualJournals(filterDto);
   }

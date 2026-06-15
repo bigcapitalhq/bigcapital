@@ -3,7 +3,7 @@ import React, { lazy } from 'react';
 
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const QuickPaymentReceiveFormDialogContent = lazy(() =>
   import('./QuickPaymentReceiveFormDialogContent').then((m) => ({
@@ -38,4 +38,6 @@ function QuickPaymentReceiveFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(QuickPaymentReceiveFormDialog);
+export const index = flow(withDialogRedux())(
+  QuickPaymentReceiveFormDialog,
+);

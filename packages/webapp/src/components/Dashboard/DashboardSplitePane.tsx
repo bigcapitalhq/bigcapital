@@ -4,7 +4,7 @@ import SplitPane from 'react-split-pane';
 import { debounce } from 'lodash';
 
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function DashboardSplitPane({ sidebarExpended, children }) {
   const initialSize = 220;
@@ -37,6 +37,6 @@ function DashboardSplitPane({ sidebarExpended, children }) {
   );
 }
 
-export default compose(
+export default flow(
   withDashboard(({ sidebarExpended }) => ({ sidebarExpended })),
 )(DashboardSplitPane);

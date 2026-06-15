@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
-import { compose } from '@/utils';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { StripePreSetupDialogContent } from './StripePreSetupDialogContent';
+import { flow } from 'fp-ts/function';
 
 /**
  * Select payment methods dialogs.
@@ -26,7 +26,7 @@ function StripePreSetupDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const StripePreSetupDialog = compose(withDialogRedux())(
+export const StripePreSetupDialog = flow(withDialogRedux())(
   StripePreSetupDialogRoot,
 );
 

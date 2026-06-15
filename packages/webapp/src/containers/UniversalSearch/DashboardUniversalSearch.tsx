@@ -7,7 +7,6 @@ import { useUniversalSearch } from '@/hooks/query';
 import { UniversalSearch } from '@/components';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import { compose } from '@/utils';
 import { withUniversalSearchActions } from './withUniversalSearchActions';
 import { withUniversalSearch } from './withUniversalSearch';
 
@@ -15,6 +14,7 @@ import { useGetUniversalSearchTypeOptions } from './utils';
 import { DashboardUniversalSearchItemActions } from './DashboardUniversalSearchItemActions';
 import { DashboardUniversalSearchItem } from './components';
 import { DashboardUniversalSearchHotkeys } from './DashboardUniversalSearchHotkeys';
+import { flow } from 'fp-ts/function';
 
 /**
  * Dashboard universal search.
@@ -59,7 +59,7 @@ function DashboardUniversalSearchInner({
     isLoading: isSearchLoading,
     refetch,
   } = useUniversalSearch(searchType, searchKeyword, {
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
     enabled: false,
   });
 
@@ -127,10 +127,10 @@ function DashboardUniversalSearchInner({
   );
 }
 
-export const DashboardUniversalSearch = compose(
-  withUniversalSearchActions,
+export const DashboardUniversalSearch = flow(
   withUniversalSearch(({ globalSearchShow, defaultUniversalResourceType }) => ({
     globalSearchShow,
     defaultUniversalResourceType,
   })),
+  withUniversalSearchActions,
 )(DashboardUniversalSearchInner);

@@ -9,8 +9,8 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item delete alerts.
@@ -85,8 +85,8 @@ function TaxRateDeleteAlertInner({
   );
 }
 
-export const TaxRateDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const TaxRateDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(TaxRateDeleteAlertInner);

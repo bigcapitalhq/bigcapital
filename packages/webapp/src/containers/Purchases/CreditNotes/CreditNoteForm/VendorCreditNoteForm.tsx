@@ -24,7 +24,7 @@ import { VendorCreditNoteFormTopBar } from './VendorCreditNoteFormTopBar';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
 import { AppToaster, Box } from '@/components';
-import { compose, safeSumBy, transactionNumber } from '@/utils';
+import { safeSumBy, transactionNumber } from '@/utils';
 import {
   defaultVendorsCreditNote,
   filterNonZeroEntries,
@@ -34,6 +34,7 @@ import {
 
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendor Credit note form.
@@ -180,11 +181,11 @@ function VendorCreditNoteFormInner({
   );
 }
 
-export const VendorCreditNoteForm = compose(
+export const VendorCreditNoteForm = flow(
+  withCurrentOrganization(),
   withSettings(({ vendorsCreditNoteSetting }) => ({
     vendorcreditAutoIncrement: vendorsCreditNoteSetting?.autoIncrement,
     vendorcreditNextNumber: vendorsCreditNoteSetting?.nextNumber,
     vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
   })),
-  withCurrentOrganization(),
 )(VendorCreditNoteFormInner);

@@ -6,7 +6,7 @@ import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { usePdfPaymentReceive } from '@/hooks/query';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function PaymentReceivePdfPreviewDialogContent({
   subscriptionForm: { paymentReceiveId },
@@ -46,6 +46,6 @@ function PaymentReceivePdfPreviewDialogContent({
   );
 }
 
-export const PaymentReceivePdfPreviewContent = compose(withDialogActions)(
+export const PaymentReceivePdfPreviewContent = flow(withDialogActions)(
   PaymentReceivePdfPreviewDialogContent,
 );

@@ -12,6 +12,7 @@ import {
   useVendorBalanceSummaryCsvExport,
   useVendorBalanceSummaryXlsxExport,
 } from '@/hooks/query';
+import { flow } from 'fp-ts/function';
 
 interface ColumnDef {
   key: string;
@@ -73,13 +74,13 @@ const totalColumnAccessor = () => ({
  */
 const dynamicColumns = (columns: ColumnDef[]) => {
   return R.map(
-    R.compose(
-      R.when(R.pathEq(['key'], 'name'), vendorColumnAccessor),
-      R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
+    flow(
       R.when(
         R.pathEq(['key'], 'percentage_of_column'),
         percentageColumnAccessor,
       ),
+      R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
+      R.when(R.pathEq(['key'], 'name'), vendorColumnAccessor),
     ),
   )(columns);
 };

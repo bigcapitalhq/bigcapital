@@ -8,6 +8,7 @@ import { accountPredicate } from './_components';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePreprocessingAccounts } from './_hooks';
+import { flow } from 'fp-ts/function';
 
 // Create new account renderer.
 const createNewItemRenderer = (query, active, handleClick) => {
@@ -98,4 +99,6 @@ function AccountsSelectRoot({
   );
 }
 
-export const AccountsSelect = R.compose(withDialogActions)(AccountsSelectRoot);
+export const AccountsSelect = flow(withDialogActions)(
+  AccountsSelectRoot,
+);

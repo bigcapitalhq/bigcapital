@@ -14,8 +14,8 @@ import {
   withSalesTaxLiabilitySummaryActions,
   WithSalesTaxLiabilitySummaryActionsProps,
 } from './withSalesTaxLiabilitySummaryActions';
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface SalesTaxLiabilitySummaryProps
   extends WithSalesTaxLiabilitySummaryActionsProps {}
@@ -77,6 +77,6 @@ function SalesTaxLiabilitySummaryInner({
   );
 }
 
-export const SalesTaxLiabilitySummary = compose(
+export const SalesTaxLiabilitySummary = flow(
   withSalesTaxLiabilitySummaryActions,
 )(SalesTaxLiabilitySummaryInner);

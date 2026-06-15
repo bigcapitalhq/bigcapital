@@ -16,8 +16,8 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withItemsActions } from '@/containers/Items/withItemsActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item delete alerts.
@@ -91,9 +91,9 @@ function ItemDeleteAlertInner({
   );
 }
 
-export const ItemDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withItemsActions,
+export const ItemDeleteAlert = flow(
   withDrawerActions,
+  withItemsActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(ItemDeleteAlertInner);

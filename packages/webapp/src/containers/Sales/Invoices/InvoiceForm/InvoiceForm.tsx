@@ -23,7 +23,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster, Box } from '@/components';
-import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
+import { orderingLinesIndexes, transactionNumber } from '@/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { InvoiceFormActions } from './InvoiceFormActions';
 import {
@@ -38,6 +38,7 @@ import {
   InvoiceNoSyncSettingsToForm,
 } from './components';
 import { PageForm } from '@/components/PageForm';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoice form.
@@ -202,8 +203,8 @@ function InvoiceFormRoot({
   );
 }
 
-export const InvoiceForm = compose(
-  withDashboardActions,
+export const InvoiceForm = flow(
+  withCurrentOrganization(),
   withSettings(({ invoiceSettings }) => ({
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
@@ -211,5 +212,5 @@ export const InvoiceForm = compose(
     invoiceCustomerNotes: invoiceSettings?.customerNotes,
     invoiceTermsConditions: invoiceSettings?.termsConditions,
   })),
-  withCurrentOrganization(),
+  withDashboardActions,
 )(InvoiceFormRoot);

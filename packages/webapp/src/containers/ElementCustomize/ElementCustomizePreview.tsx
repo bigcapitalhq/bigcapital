@@ -5,6 +5,7 @@ import { ElementCustomizeHeader } from './ElementCustomizeHeader';
 import { ElementCustomizePreviewContent } from './ElementCustomizePreviewContent';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { flow } from 'fp-ts/function';
 
 function ElementCustomizePreviewRoot({ closeDrawer }) {
   const { name } = useDrawerContext();
@@ -31,6 +32,6 @@ function ElementCustomizePreviewRoot({ closeDrawer }) {
   );
 }
 
-export const ElementCustomizePreview = R.compose(withDrawerActions)(
+export const ElementCustomizePreview = flow(withDrawerActions)(
   ElementCustomizePreviewRoot,
 );

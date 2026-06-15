@@ -9,7 +9,7 @@ import { useBulkDeleteCustomers } from '@/hooks/query/customers';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withCustomersActions } from '@/containers/Customers/CustomersLanding/withCustomersActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function CustomerBulkDeleteDialogInner({
   dialogName,
@@ -96,8 +96,8 @@ function CustomerBulkDeleteDialogInner({
   );
 }
 
-export const CustomerBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const CustomerBulkDeleteDialog = flow(
   withCustomersActions,
+  withDialogActions,
+  withDialogRedux(),
 )(CustomerBulkDeleteDialogInner);

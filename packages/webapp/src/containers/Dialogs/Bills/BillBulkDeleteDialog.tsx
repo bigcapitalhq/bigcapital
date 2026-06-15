@@ -9,7 +9,7 @@ import { useBulkDeleteBills } from '@/hooks/query/bills';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withBillsActions } from '@/containers/Purchases/Bills/BillsLanding/withBillsActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function BillBulkDeleteDialogInner({
   dialogName,
@@ -92,8 +92,8 @@ function BillBulkDeleteDialogInner({
   );
 }
 
-export const BillBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const BillBulkDeleteDialog = flow(
   withBillsActions,
+  withDialogActions,
+  withDialogRedux(),
 )(BillBulkDeleteDialogInner);

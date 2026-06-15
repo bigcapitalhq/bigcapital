@@ -19,7 +19,7 @@ import { PaymentMadeDialogs } from './PaymentMadeDialogs';
 
 import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { compose, orderingLinesIndexes } from '@/utils';
+import { orderingLinesIndexes } from '@/utils';
 
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
@@ -37,6 +37,7 @@ import {
   transformFormToRequest,
   getPaymentExcessAmountFromValues,
 } from './utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment made form component.
@@ -186,12 +187,12 @@ function PaymentMadeFormInner({
   );
 }
 
-export const PaymentMadeForm = compose(
+export const PaymentMadeForm = flow(
+  withDialogActions,
+  withCurrentOrganization(),
   withSettings(({ billPaymentSettings }) => ({
     paymentNextNumber: billPaymentSettings?.next_number,
     paymentNumberPrefix: billPaymentSettings?.number_prefix,
     preferredPaymentAccount: parseInt(billPaymentSettings?.withdrawalAccount),
   })),
-  withCurrentOrganization(),
-  withDialogActions,
 )(PaymentMadeFormInner);

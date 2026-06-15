@@ -25,7 +25,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
-import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
+import { orderingLinesIndexes, transactionNumber } from '@/utils';
 import {
   transformToEditForm,
   defaultReceipt,
@@ -38,6 +38,7 @@ import {
   ReceiptSyncIncrementSettingsToForm,
 } from './components';
 import { PageForm } from '@/components/PageForm';
+import { flow } from 'fp-ts/function';
 
 /**
  * Receipt form.
@@ -189,8 +190,8 @@ function ReceiptFormRoot({
   );
 }
 
-export const ReceiptForm = compose(
-  withDashboardActions,
+export const ReceiptForm = flow(
+  withCurrentOrganization(),
   withSettings(({ receiptSettings }) => ({
     receiptNextNumber: receiptSettings?.nextNumber,
     receiptNumberPrefix: receiptSettings?.numberPrefix,
@@ -199,5 +200,5 @@ export const ReceiptForm = compose(
     receiptTermsConditions: receiptSettings?.termsConditions,
     preferredDepositAccount: receiptSettings?.preferredDepositAccount,
   })),
-  withCurrentOrganization(),
+  withDashboardActions,
 )(ReceiptFormRoot);

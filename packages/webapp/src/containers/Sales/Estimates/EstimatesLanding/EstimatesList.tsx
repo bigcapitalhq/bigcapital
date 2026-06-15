@@ -11,7 +11,8 @@ import { withEstimates } from './withEstimates';
 import { withEstimatesActions } from './withEstimatesActions';
 
 import { EstimatesListProvider } from './EstimatesListProvider';
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Sale estimates list page.
@@ -46,10 +47,10 @@ function EstimatesListInner({
   );
 }
 
-export const EstimatesList = compose(
+export const EstimatesList = flow(
+  withEstimatesActions,
   withEstimates(({ estimatesTableState, estimatesTableStateChanged }) => ({
     estimatesTableState,
     estimatesTableStateChanged,
   })),
-  withEstimatesActions,
 )(EstimatesListInner);

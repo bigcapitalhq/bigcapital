@@ -6,7 +6,7 @@ import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { usePdfCreditNote } from '@/hooks/query';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function CreditNotePdfPreviewDialogContentInner({
   subscriptionForm: { creditNoteId },
@@ -45,6 +45,6 @@ function CreditNotePdfPreviewDialogContentInner({
   );
 }
 
-export const CreditNotePdfPreviewDialogContent = compose(withDialogActions)(
-  CreditNotePdfPreviewDialogContentInner,
-);
+export const CreditNotePdfPreviewDialogContent = flow(
+  withDialogActions,
+)(CreditNotePdfPreviewDialogContentInner);

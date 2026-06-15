@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import { displayColumnsByOptions } from './constants';
 import { transfromToSnakeCase } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 export const transformDisplayColumnsType = (form: Record<string, any>) => {
   const columnType = R.find(
@@ -27,13 +28,16 @@ const setNoneZeroTransactions = (form: Record<string, any>) => {
 };
 
 export const transformAccountsFilter = (form: Record<string, any>) => {
-  return R.compose(R.omit(['filterByOption']), setNoneZeroTransactions)(form);
+  return flow(
+    setNoneZeroTransactions,
+    R.omit(['filterByOption']),
+  )(form);
 };
 
 export const transformFilterFormToQuery = (form: Record<string, unknown>) => {
-  return R.compose(
-    transfromToSnakeCase,
-    transformAccountsFilter,
+  return flow(
     transformDisplayColumnsType,
+    transformAccountsFilter,
+    transfromToSnakeCase,
   )(form);
 };

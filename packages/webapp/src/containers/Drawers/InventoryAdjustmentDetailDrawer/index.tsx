@@ -3,8 +3,7 @@ import React from 'react';
 
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const InventoryAdjustmentDrawerContent = React.lazy(() =>
   import('./InventoryAdjustmentDrawerContent').then((m) => ({
@@ -35,4 +34,6 @@ function InventoryAdjustmentDetailDrawer({
   );
 }
 
-export const index = compose(withDrawers())(InventoryAdjustmentDetailDrawer);
+export const index = flow(withDrawers())(
+  InventoryAdjustmentDetailDrawer,
+);

@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash';
 
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface ReportTableColumn {
   key: string;
@@ -225,42 +226,42 @@ const previousPeriodPercentageAccessor = R.curry((data, column) => {
  * @returns
  */
 const totalColumnsMapper = R.curry((data, column) => {
-  return R.compose(
-    R.when(R.pathEq(['key'], 'total'), totalColumn(data)),
+  return flow(
+    R.when(
+      R.pathEq(['key'], 'previousPeriodPercentage'),
+      previousPeriodPercentageAccessor(data),
+    ),
+    R.when(
+      R.pathEq(['key'], 'previousPeriodChange'),
+      previousPeriodChangeAccessor(data),
+    ),
+    // Pervious period.
+    R.when(R.pathEq(['key'], 'previousPeriod'), previousPeriodAccessor(data)),
+    R.when(
+      R.pathEq(['key'], 'previousYearPercentage'),
+      previousYearPercentageAccessor(data),
+    ),
+    R.when(
+      R.pathEq(['key'], 'previousYearChange'),
+      previousYearChangeAccessor(data),
+    ),
+    // Previous year.
+    R.when(R.pathEq(['key'], 'previousYear'), previousYearAccessor(data)),
+    R.when(
+      R.pathEq(['key'], 'percentageExpenses'),
+      percentageOfExpenseAccessor(data),
+    ),
+    R.when(
+      R.pathEq(['key'], 'percentageIncome'),
+      percentageOfIncomeAccessor(data),
+    ),
+    R.when(R.pathEq(['key'], 'percentageRow'), percentageOfRowAccessor(data)),
     // Percetage of column/row.
     R.when(
       R.pathEq(['key'], 'percentageColumn'),
       percentageOfColumnAccessor(data),
     ),
-    R.when(R.pathEq(['key'], 'percentageRow'), percentageOfRowAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'percentageIncome'),
-      percentageOfIncomeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'percentageExpenses'),
-      percentageOfExpenseAccessor(data),
-    ),
-    // Previous year.
-    R.when(R.pathEq(['key'], 'previousYear'), previousYearAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'previousYearChange'),
-      previousYearChangeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'previousYearPercentage'),
-      previousYearPercentageAccessor(data),
-    ),
-    // Pervious period.
-    R.when(R.pathEq(['key'], 'previousPeriod'), previousPeriodAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'previousPeriodChange'),
-      previousPeriodChangeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'previousPeriodPercentage'),
-      previousPeriodPercentageAccessor(data),
-    ),
+    R.when(R.pathEq(['key'], 'total'), totalColumn(data)),
   )(column);
 });
 
@@ -306,9 +307,9 @@ const totalColumn = R.curry((data, column) => {
 const totalColumnCompose = R.curry((data, column) => {
   const hasChildren = isNodeHasChildren(column);
 
-  return R.compose(
-    R.when(R.always(hasChildren), assocColumnsToTotalColumn(data, column)),
+  return flow(
     totalColumn(data),
+    R.when(R.always(hasChildren), assocColumnsToTotalColumn(data, column)),
   )(column);
 });
 
@@ -359,14 +360,14 @@ const dateRangeColumn = R.curry((data, column) => {
     align: isDateColumnHasColumns ? Align.Center : Align.Right,
     money: true,
   };
-  return R.compose(
-    R.when(
-      R.always(isDateColumnHasColumns),
-      assocColumnsToTotalColumn(data, column),
-    ),
+  return flow(
     R.when(
       R.always(!isDateColumnHasColumns),
       R.mergeLeft(dateRangeSoloColumnAttrs(data, column)),
+    ),
+    R.when(
+      R.always(isDateColumnHasColumns),
+      assocColumnsToTotalColumn(data, column),
     ),
   )(columnAccessor);
 });
@@ -386,10 +387,10 @@ const dynamicColumnMapper = R.curry((data, column) => {
   const indexAccountNameColumn = accountNameColumn(data);
   const indexDatePeriodMapper = dateRangeColumn(data);
 
-  return R.compose(
-    R.when(R.pathSatisfies(isMatchesDateRange, ['key']), indexDatePeriodMapper),
-    R.when(R.pathEq(['key'], 'name'), indexAccountNameColumn),
+  return flow(
     R.when(R.pathEq(['key'], 'total'), indexTotalColumn),
+    R.when(R.pathEq(['key'], 'name'), indexAccountNameColumn),
+    R.when(R.pathSatisfies(isMatchesDateRange, ['key']), indexDatePeriodMapper),
   )(column);
 });
 

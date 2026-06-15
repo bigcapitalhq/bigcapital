@@ -9,7 +9,7 @@ import { useBulkDeleteVendorCredits } from '@/hooks/query/vendor-credit';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withVendorsCreditNotesActions } from '@/containers/Purchases/CreditNotes/CreditNotesLanding/withVendorsCreditNotesActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function VendorCreditBulkDeleteDialogInner({
   dialogName,
@@ -96,8 +96,8 @@ function VendorCreditBulkDeleteDialogInner({
   );
 }
 
-export const VendorCreditBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const VendorCreditBulkDeleteDialog = flow(
   withVendorsCreditNotesActions,
+  withDialogActions,
+  withDialogRedux(),
 )(VendorCreditBulkDeleteDialogInner);

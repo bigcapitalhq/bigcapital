@@ -2,7 +2,8 @@
 import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const EstimateNumberDialogContent = lazy(() =>
   import('./EstimateNumberDialogContent').then((m) => ({
@@ -42,4 +43,4 @@ function EstimateNumberDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(EstimateNumberDialog);
+export const index = flow(withDialogRedux())(EstimateNumberDialog);

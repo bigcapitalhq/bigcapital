@@ -13,7 +13,7 @@ import {
 import { useARAgingSummaryQuery } from './common';
 import { ARAgingSummaryPdfDialog } from './dialogs/ARAgingSummaryPdfDialog';
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 type ReceivableAgingSummarySheetProps = Pick<
   WithARAgingSummaryActionsProps,
@@ -70,6 +70,6 @@ function ARAgingSummaryInner({
   );
 }
 
-export const ARAgingSummary = compose(withARAgingSummaryActions)(
+export const ARAgingSummary = flow(withARAgingSummaryActions)(
   ARAgingSummaryInner,
 );

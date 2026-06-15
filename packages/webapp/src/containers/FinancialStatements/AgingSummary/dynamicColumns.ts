@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import { getColumnWidth } from '@/utils';
 import { Align } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 interface AgingSummaryColumn {
   key: string;
@@ -74,12 +75,12 @@ const dynamicColumnMapper = R.curry(
     const customerNameAccessorColumn = contactNameAccessor(data);
     const agingPeriodAccessorColumn = agingPeriodAccessor(data);
 
-    return R.compose(
-      R.when(R.pathEq(['key'], 'total'), totalAccessorColumn),
-      R.when(R.pathEq(['key'], 'current'), currentAccessorColumn),
-      R.when(R.pathEq(['key'], 'customerName'), customerNameAccessorColumn),
-      R.when(R.pathEq(['key'], 'vendorName'), customerNameAccessorColumn),
+    return flow(
       R.when(R.pathEq(['key'], 'agingPeriod'), agingPeriodAccessorColumn),
+      R.when(R.pathEq(['key'], 'vendorName'), customerNameAccessorColumn),
+      R.when(R.pathEq(['key'], 'customerName'), customerNameAccessorColumn),
+      R.when(R.pathEq(['key'], 'current'), currentAccessorColumn),
+      R.when(R.pathEq(['key'], 'total'), totalAccessorColumn),
     )(column);
   },
 );

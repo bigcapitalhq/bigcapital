@@ -15,6 +15,7 @@ import { OrganizationsListDrawerHeader } from './OrganizationsListDrawerHeader';
 import intl from 'react-intl-universal';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
+import { flow } from 'fp-ts/function';
 
 import '@/ee/workspaces/style/containers/Workspaces/OrganizationsListDrawer.scss';
 
@@ -186,6 +187,6 @@ function OrganizationsListDrawerContentRoot({ closeDrawer, openDrawer }) {
   );
 }
 
-export const OrganizationsListDrawerContent = R.compose(withDrawerActions)(
+export const OrganizationsListDrawerContent = flow(withDrawerActions)(
   OrganizationsListDrawerContentRoot,
 );

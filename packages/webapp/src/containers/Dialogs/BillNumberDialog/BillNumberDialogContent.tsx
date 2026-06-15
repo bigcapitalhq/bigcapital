@@ -10,7 +10,8 @@ import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withBillsActions } from '@/containers/Purchases/Bills/BillsLanding/withBillsActions';
 
-import { compose, optionsMapToArray } from '@/utils';
+import { optionsMapToArray } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * bill number dialog's content.
@@ -73,12 +74,12 @@ function BillNumberDialogContentInner({
   );
 }
 
-export const BillNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
+export const BillNumberDialogContent = flow(
+  withBillsActions,
   withSettings(({ billsettings }) => ({
     nextNumber: billsettings?.next_number,
     numberPrefix: billsettings?.number_prefix,
   })),
-  withBillsActions,
+  withSettingsActions,
+  withDialogActions,
 )(BillNumberDialogContentInner);

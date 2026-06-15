@@ -12,11 +12,11 @@ import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 import {
-  compose,
   optionsMapToArray,
   transformGeneralSettings,
   transformToForm,
 } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 import '@/style/pages/Preferences/Accounting.scss';
 
@@ -80,7 +80,7 @@ function ItemPreferencesFormPageInner({
   );
 }
 
-export const ItemPreferencesFormPage = compose(
-  withSettings(({ itemsSettings }) => ({ itemsSettings })),
+export const ItemPreferencesFormPage = flow(
   withDashboardActions,
+  withSettings(({ itemsSettings }) => ({ itemsSettings })),
 )(ItemPreferencesFormPageInner);

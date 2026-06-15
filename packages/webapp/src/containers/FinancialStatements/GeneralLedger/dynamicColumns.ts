@@ -3,6 +3,7 @@ import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { Align, CLASSES } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 interface CellProps {
   cell: { value: React.ReactNode };
@@ -114,16 +115,16 @@ const descriptionColumnAccessor = (column: ColumnDef) => {
 const dynamiColumnMapper = R.curry((data: unknown[], column: ColumnDef) => {
   const _numericColumnAccessor = numericColumnAccessor(data);
 
-  return R.compose(
-    R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
-    R.when(R.pathEq(['key'], 'referenceType'), transactionTypeColumnAccessor),
-    R.when(R.pathEq(['key'], 'referenceNumber'), transactionIdColumnAccessor),
-    R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
-    R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'amount'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'runningBalance'), _numericColumnAccessor),
+  return flow(
     commonColumnMapper(data),
+    R.when(R.pathEq(['key'], 'runningBalance'), _numericColumnAccessor),
+    R.when(R.pathEq(['key'], 'amount'), _numericColumnAccessor),
+    R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
+    R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
+    R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
+    R.when(R.pathEq(['key'], 'referenceNumber'), transactionIdColumnAccessor),
+    R.when(R.pathEq(['key'], 'referenceType'), transactionTypeColumnAccessor),
+    R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
   )(column);
 });
 

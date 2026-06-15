@@ -5,7 +5,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Features } from '@/constants';
 import { FeatureCan, FormattedMessage as T, Icon } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse actions.
@@ -33,6 +33,6 @@ function WarehousesActionsInner({
   );
 }
 
-export const WarehousesActions = compose(withDialogActions)(
+export const WarehousesActions = flow(withDialogActions)(
   WarehousesActionsInner,
 );

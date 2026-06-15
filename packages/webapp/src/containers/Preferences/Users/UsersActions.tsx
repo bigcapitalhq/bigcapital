@@ -6,7 +6,7 @@ import {
   withDialogActions,
   type WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function UsersActionsInner({ openDialog }: WithDialogActionsProps) {
   const history = useHistory();
@@ -37,4 +37,4 @@ function UsersActionsInner({ openDialog }: WithDialogActionsProps) {
   );
 }
 
-export const UsersActions = compose(withDialogActions)(UsersActionsInner);
+export const UsersActions = flow(withDialogActions)(UsersActionsInner);

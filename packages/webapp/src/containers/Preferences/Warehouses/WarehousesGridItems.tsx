@@ -10,7 +10,7 @@ import { useMarkWarehouseAsPrimary } from '@/hooks/query';
 
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  *  warehouse grid item.
@@ -69,9 +69,9 @@ function WarehouseGridItem({
   );
 }
 
-const WarehousesGridItem = compose(
-  withAlertActions,
+const WarehousesGridItem = flow(
   withDialogActions,
+  withAlertActions,
 )(WarehouseGridItem);
 
 /**

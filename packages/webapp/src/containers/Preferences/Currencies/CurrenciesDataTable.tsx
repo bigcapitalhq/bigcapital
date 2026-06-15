@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React, { useCallback } from 'react';
-import { compose } from '@/utils';
 
 import { DataTable, TableSkeletonRows } from '@/components';
 
@@ -11,6 +10,7 @@ import { ActionMenuList, useCurrenciesTableColumns } from './components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import styled from 'styled-components';
+import { flow } from 'fp-ts/function';
 
 /**
  * Currencies table.
@@ -65,9 +65,9 @@ function CurrenciesDataTableInner({
   );
 }
 
-export const CurrenciesDataTable = compose(
-  withDialogActions,
+export const CurrenciesDataTable = flow(
   withAlertActions,
+  withDialogActions,
 )(CurrenciesDataTableInner);
 
 const CurrencieDataTable = styled(DataTable)`

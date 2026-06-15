@@ -9,8 +9,7 @@ import { AppToaster } from '@/components';
 import { withItemCategoriesActions } from '@/containers/ItemsCategories/withItemCategoriesActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item category bulk delete alerts.
@@ -77,8 +76,8 @@ function ItemCategoryBulkDeleteAlertInner({
   );
 }
 
-export const ItemCategoryBulkDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const ItemCategoryBulkDeleteAlert = flow(
   withItemCategoriesActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(ItemCategoryBulkDeleteAlertInner);

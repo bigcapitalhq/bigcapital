@@ -10,6 +10,7 @@ import { withSubscriptionPlanMapper } from '../../component/withSubscriptionPlan
 import { withPlans } from '../../withPlans';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 export function ChangeSubscriptionPlans() {
   const subscriptionPlans = useSubscriptionPlans();
@@ -23,48 +24,50 @@ export function ChangeSubscriptionPlans() {
   );
 }
 
-export const SubscriptionPlanMapped = R.compose(
-  withSubscriptionPlanMapper,
-  withDrawerActions,
+export const SubscriptionPlanMapped = flow(
   withPlans(({ plansPeriod }) => ({ plansPeriod })),
-)(({
-  openDrawer,
-  closeDrawer,
-  monthlyVariantId,
-  annuallyVariantId,
-  plansPeriod,
-  ...props
-}) => {
-  const { mutateAsync: changeSubscriptionPlan, isLoading } =
-    useChangeSubscriptionPlan();
+  withDrawerActions,
+  withSubscriptionPlanMapper,
+)(
+  ({
+    openDrawer,
+    closeDrawer,
+    monthlyVariantId,
+    annuallyVariantId,
+    plansPeriod,
+    ...props
+  }) => {
+    const { mutateAsync: changeSubscriptionPlan, isLoading } =
+      useChangeSubscriptionPlan();
 
-  // Handles the subscribe button click.
-  const handleSubscribe = () => {
-    const variantId =
-      plansPeriod === SubscriptionPlansPeriod.Monthly
-        ? monthlyVariantId
-        : annuallyVariantId;
+    // Handles the subscribe button click.
+    const handleSubscribe = () => {
+      const variantId =
+        plansPeriod === SubscriptionPlansPeriod.Monthly
+          ? monthlyVariantId
+          : annuallyVariantId;
 
-    changeSubscriptionPlan({ variant_id: variantId })
-      .then(() => {
-        closeDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
-        AppToaster.show({
-          message: 'The subscription plan has been changed.',
-          intent: Intent.SUCCESS,
+      changeSubscriptionPlan({ variant_id: variantId })
+        .then(() => {
+          closeDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
+          AppToaster.show({
+            message: 'The subscription plan has been changed.',
+            intent: Intent.SUCCESS,
+          });
+        })
+        .catch((error) => {
+          AppToaster.show({
+            message: 'Something went wrong.',
+            intent: Intent.DANGER,
+          });
         });
-      })
-      .catch((error) => {
-        AppToaster.show({
-          message: 'Something went wrong.',
-          intent: Intent.DANGER,
-        });
-      });
-  };
-  return (
-    <SubscriptionPlan
-      {...props}
-      onSubscribe={handleSubscribe}
-      subscribeButtonProps={{ loading: isLoading }}
-    />
-  );
-});
+    };
+    return (
+      <SubscriptionPlan
+        {...props}
+        onSubscribe={handleSubscribe}
+        subscribeButtonProps={{ loading: isLoading }}
+      />
+    );
+  },
+);

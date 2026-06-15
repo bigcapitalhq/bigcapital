@@ -7,6 +7,7 @@ import { BillingPageContent } from './BillingPageContent';
 import { useDashboardMeta } from '@/hooks/query';
 import { withAlertActions } from '../Alert/withAlertActions';
 import { withDashboardActions } from '../Dashboard/withDashboardActions';
+import { flow } from 'fp-ts/function';
 
 function BillingPageRoot({
   openAlert,
@@ -15,7 +16,7 @@ function BillingPageRoot({
   changePreferencesPageTitle,
 }) {
   const { data: dashboardMeta } = useDashboardMeta({
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   });
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function BillingPageRoot({
   );
 }
 
-export const BillingPage = R.compose(
-  withAlertActions,
+export const BillingPage = flow(
   withDashboardActions,
+  withAlertActions,
 )(BillingPageRoot);

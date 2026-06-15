@@ -11,7 +11,8 @@ import { withCreditNotes } from './withCreditNotes';
 import { withCreditNotesActions } from './withCreditNotesActions';
 
 import { CreditNotesListProvider } from './CreditNotesListProvider';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function CreditNotesListInner({
   // #withCreditNotes
@@ -43,10 +44,10 @@ function CreditNotesListInner({
   );
 }
 
-export const CreditNotesList = compose(
-  withCreditNotesActions,
+export const CreditNotesList = flow(
   withCreditNotes(({ creditNoteTableState, creditNoteTableStateChanged }) => ({
     creditNoteTableState,
     creditNoteTableStateChanged,
   })),
+  withCreditNotesActions,
 )(CreditNotesListInner);

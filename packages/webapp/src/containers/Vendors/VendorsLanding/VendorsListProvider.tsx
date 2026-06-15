@@ -18,7 +18,9 @@ function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
     data: vendorsData,
     isLoading: isVendorsLoading,
     isFetching: isVendorsFetching,
-  } = useVendors(tableQuery, { keepPreviousData: true });
+  } = useVendors(tableQuery, {
+    placeholderData: (previousData) => previousData,
+  });
 
   // Fetch vendors resource views and fields.
   const { data: vendorsViews, isLoading: isVendorsViewsLoading } =

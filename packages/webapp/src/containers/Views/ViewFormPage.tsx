@@ -14,11 +14,10 @@ import {
 
 import { ViewForm } from '@/containers/Views/ViewForm';
 
-import { compose } from '@/utils';
-
 import { withResourcesActions } from '@/containers/Resources/withResourcesActions';
 import { withViewsActions } from '@/containers/Views/withViewsActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { flow } from 'fp-ts/function';
 
 // @flow
 function ViewFormPageInner({
@@ -123,8 +122,8 @@ function ViewFormPageInner({
   );
 }
 
-export const ViewFormPage = compose(
-  withDashboardActions,
-  withViewsActions,
+export const ViewFormPage = flow(
   withResourcesActions,
+  withViewsActions,
+  withDashboardActions,
 )(ViewFormPageInner);

@@ -3,6 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { flow } from 'fp-ts/function';
 
 const InvoiceCustomize = React.lazy(() =>
   import('./InvoiceCustomize').then((m) => ({ default: m.InvoiceCustomize })),
@@ -32,6 +33,6 @@ function InvoiceCustomizeDrawerRoot({
   );
 }
 
-export const InvoiceCustomizeDrawer = R.compose(withDrawers())(
+export const InvoiceCustomizeDrawer = flow(withDrawers())(
   InvoiceCustomizeDrawerRoot,
 );

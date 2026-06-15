@@ -6,7 +6,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function QuickPaymentMadeFloatingActionsInner({
   // #withDialogActions
@@ -41,6 +41,6 @@ function QuickPaymentMadeFloatingActionsInner({
   );
 }
 
-export const QuickPaymentMadeFloatingActions = compose(withDialogActions)(
+export const QuickPaymentMadeFloatingActions = flow(withDialogActions)(
   QuickPaymentMadeFloatingActionsInner,
 );

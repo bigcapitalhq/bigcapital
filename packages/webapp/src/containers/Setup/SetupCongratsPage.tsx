@@ -9,7 +9,7 @@ import { WorkflowIcon } from './WorkflowIcon';
 import { FormattedMessage as T } from '@/components';
 
 import { withOrganizationActions } from '@/containers/Organization/withOrganizationActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Setup congrats page.
@@ -71,6 +71,6 @@ function SetupCongratsPageInner({ setOrganizationSetupCompleted }) {
   );
 }
 
-export const SetupCongratsPage = compose(withOrganizationActions)(
+export const SetupCongratsPage = flow(withOrganizationActions)(
   SetupCongratsPageInner,
 );

@@ -21,9 +21,10 @@ import {
 } from './withCashFlowStatementActions';
 
 import { getDefaultCashFlowSheetQuery } from './utils';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 type CashFlowSheetFormValues = ReturnType<typeof getDefaultCashFlowSheetQuery>;
 
@@ -122,9 +123,9 @@ function CashFlowStatementHeaderInner({
   );
 }
 
-export const CashFlowStatementHeader = compose(
+export const CashFlowStatementHeader = flow(
+  withCashFlowStatementActions,
   withCashFlowStatement(({ cashFlowStatementDrawerFilter }) => ({
     cashFlowStatementDrawerFilter,
   })),
-  withCashFlowStatementActions,
 )(CashFlowStatementHeaderInner);

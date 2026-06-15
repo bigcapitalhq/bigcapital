@@ -29,7 +29,9 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
     data: customersData,
     isLoading: isCustomersLoading,
     isFetching: isCustomersFetching,
-  } = useCustomers(tableQuery, { keepPreviousData: true });
+  } = useCustomers(tableQuery, {
+    placeholderData: (previousData) => previousData,
+  });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

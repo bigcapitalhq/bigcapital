@@ -5,6 +5,7 @@ import * as R from 'ramda';
 
 import { ButtonLink } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { flow } from 'fp-ts/function';
 
 function ProjectBillableEntriesLinkComponent({
   // #ownProps
@@ -27,7 +28,7 @@ function ProjectBillableEntriesLinkComponent({
   );
 }
 
-export const ProjectBillableEntriesLink = R.compose(withDialogActions)(
+export const ProjectBillableEntriesLink = flow(withDialogActions)(
   ProjectBillableEntriesLinkComponent,
 );
 

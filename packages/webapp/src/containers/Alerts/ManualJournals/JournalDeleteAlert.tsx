@@ -9,9 +9,9 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { handleDeleteErrors } from './_utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Journal delete alert.
@@ -79,8 +79,8 @@ function JournalDeleteAlertInner({
   );
 }
 
-export const JournalDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const JournalDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(JournalDeleteAlertInner);

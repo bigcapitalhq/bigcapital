@@ -12,6 +12,7 @@ import { useSplashLoading } from '@/hooks/state';
 
 import { useWatchImmediate } from '../hooks';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { flow } from 'fp-ts/function';
 
 const SUPPORTED_LOCALES = [
   { name: 'English', value: 'en' },
@@ -158,4 +159,4 @@ function AppIntlLoader({ children }) {
   );
 }
 
-export default R.compose(withDashboardActions)(AppIntlLoader);
+export default flow(withDashboardActions)(AppIntlLoader);

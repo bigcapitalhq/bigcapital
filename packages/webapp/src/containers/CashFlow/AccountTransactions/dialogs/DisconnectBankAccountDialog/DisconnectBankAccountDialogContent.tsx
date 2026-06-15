@@ -7,6 +7,7 @@ import { AppToaster, FFormGroup, FInputGroup } from '@/components';
 import { useDisconnectBankAccount } from '@/hooks/query/banking';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface DisconnectFormValues {
   label: string;
@@ -100,6 +101,6 @@ function DisconnectBankAccountDialogContentInner({
   );
 }
 
-export const DisconnectBankAccountDialogContent = R.compose(withDialogActions)(
-  DisconnectBankAccountDialogContentInner,
-);
+export const DisconnectBankAccountDialogContent = flow(
+  withDialogActions,
+)(DisconnectBankAccountDialogContentInner);

@@ -8,7 +8,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { usePublishExpense } from '@/hooks/query';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Expense publish alert.
@@ -59,7 +59,7 @@ function ExpensePublishAlertInner({
   );
 }
 
-export const ExpensePublishAlert = compose(
-  withAlertStoreConnect(),
+export const ExpensePublishAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ExpensePublishAlertInner);

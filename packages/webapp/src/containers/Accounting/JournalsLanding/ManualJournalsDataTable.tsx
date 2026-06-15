@@ -24,8 +24,8 @@ import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useManualJournalsColumns } from './utils';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Manual journals data-table.
@@ -151,14 +151,14 @@ function ManualJournalsDataTableInner({
   );
 }
 
-export const ManualJournalsDataTable = compose(
-  withManualJournalsActions,
-  withManualJournals(({ manualJournalsTableState }) => ({
-    manualJournalsTableState,
-  })),
-  withAlertActions,
-  withDrawerActions,
+export const ManualJournalsDataTable = flow(
   withSettings(({ manualJournalsSettings }) => ({
     manualJournalsTableSize: manualJournalsSettings?.tableSize,
   })),
+  withDrawerActions,
+  withAlertActions,
+  withManualJournals(({ manualJournalsTableState }) => ({
+    manualJournalsTableState,
+  })),
+  withManualJournalsActions,
 )(ManualJournalsDataTableInner);

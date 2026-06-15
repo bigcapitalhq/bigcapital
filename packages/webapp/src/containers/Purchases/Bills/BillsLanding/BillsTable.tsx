@@ -23,8 +23,8 @@ import { useBillsTableColumns, ActionsMenu } from './components';
 import { useBillsListContext } from './BillsListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bills transactions datatable.
@@ -161,13 +161,13 @@ function BillsDataTable({
   );
 }
 
-export const BillsTable = compose(
-  withBills(({ billsTableState }) => ({ billsTableState })),
-  withBillsActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const BillsTable = flow(
   withSettings(({ billsettings }) => ({
     billsTableSize: billsettings?.tableSize,
   })),
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withBillsActions,
+  withBills(({ billsTableState }) => ({ billsTableState })),
 )(BillsDataTable);

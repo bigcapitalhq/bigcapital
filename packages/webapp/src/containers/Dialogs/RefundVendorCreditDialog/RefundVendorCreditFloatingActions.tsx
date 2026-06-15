@@ -6,7 +6,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Refund vendor flaoting actions.
@@ -44,6 +44,6 @@ function RefundVendorCreditFloatingActionsInner({
   );
 }
 
-export const RefundVendorCreditFloatingActions = compose(withDialogActions)(
-  RefundVendorCreditFloatingActionsInner,
-);
+export const RefundVendorCreditFloatingActions = flow(
+  withDialogActions,
+)(RefundVendorCreditFloatingActionsInner);

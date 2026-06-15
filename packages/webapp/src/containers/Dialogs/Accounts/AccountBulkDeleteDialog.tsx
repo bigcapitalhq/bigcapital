@@ -9,8 +9,8 @@ import { useBulkDeleteAccounts } from '@/hooks/query/accounts';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAccountsTableActions } from '@/containers/Accounts/withAccountsTableActions';
-import { compose } from '@/utils';
 import { handleDeleteErrors } from '@/containers/Accounts/utils';
+import { flow } from 'fp-ts/function';
 
 function AccountBulkDeleteDialogInner({
   dialogName,
@@ -94,8 +94,8 @@ function AccountBulkDeleteDialogInner({
   );
 }
 
-export const AccountBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const AccountBulkDeleteDialog = flow(
   withAccountsTableActions,
+  withDialogActions,
+  withDialogRedux(),
 )(AccountBulkDeleteDialogInner);

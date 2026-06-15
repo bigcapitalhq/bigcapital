@@ -7,6 +7,7 @@ import { DRAWERS } from '@/constants/drawers';
 import { BrandingTemplatesTable } from './BrandingTemplatesTable';
 import { BrandingTemplateActionsBar } from './BrandingTemplatesActionsBar';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { flow } from 'fp-ts/function';
 
 export function BrandingTemplateContent() {
   return (
@@ -28,19 +29,19 @@ export function BrandingTemplateContent() {
   );
 }
 
-const BrandingTemplateHeader = R.compose(withDrawerActions)(({
-  openDrawer,
-}) => {
-  const handleCreateBtnClick = () => {
-    openDrawer(DRAWERS.INVOICE_CUSTOMIZE);
-  };
-  return (
-    <Group>
-      <Button intent={Intent.PRIMARY} onClick={handleCreateBtnClick}>
-        Create Invoice Branding
-      </Button>
-    </Group>
-  );
-});
+const BrandingTemplateHeader = flow(withDrawerActions)(
+  ({ openDrawer }) => {
+    const handleCreateBtnClick = () => {
+      openDrawer(DRAWERS.INVOICE_CUSTOMIZE);
+    };
+    return (
+      <Group>
+        <Button intent={Intent.PRIMARY} onClick={handleCreateBtnClick}>
+          Create Invoice Branding
+        </Button>
+      </Group>
+    );
+  },
+);
 
 BrandingTemplateHeader.displayName = 'BrandingTemplateHeader';

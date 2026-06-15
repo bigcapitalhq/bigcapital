@@ -8,8 +8,7 @@ import { useMarkBranchAsPrimary } from '@/hooks/query';
 
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * branch mark primary alert.
@@ -64,7 +63,7 @@ function BranchMarkPrimaryAlertInner({
   );
 }
 
-export const BranchMarkPrimaryAlert = compose(
-  withAlertStoreConnect(),
+export const BranchMarkPrimaryAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(BranchMarkPrimaryAlertInner);

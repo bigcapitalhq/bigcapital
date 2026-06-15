@@ -13,8 +13,8 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { handleDeleteErrors } from '@/containers/Purchases/CreditNotes/CreditNotesLanding/utils';
 import { useDeleteVendorCredit } from '@/hooks/query';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendor Credit delete alert.
@@ -82,8 +82,8 @@ function VendorCreditDeleteAlertInner({
   );
 }
 
-export const VendorCreditDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const VendorCreditDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(VendorCreditDeleteAlertInner);

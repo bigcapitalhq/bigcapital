@@ -23,8 +23,8 @@ import {
 } from '@/components';
 import { ItemDetailActionsMoreBtn } from './ItemDetailActionsMoreBtn';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item action-bar of readonly details drawer.
@@ -79,7 +79,7 @@ function ItemDetailActionsBarInner({
   );
 }
 
-export const ItemDetailActionsBar = compose(
-  withDrawerActions,
+export const ItemDetailActionsBar = flow(
   withAlertActions,
+  withDrawerActions,
 )(ItemDetailActionsBarInner);

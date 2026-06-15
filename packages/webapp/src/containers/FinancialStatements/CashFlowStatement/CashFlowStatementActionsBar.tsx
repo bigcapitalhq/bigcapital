@@ -23,13 +23,14 @@ import {
   WithCashFlowStatementActionsProps,
 } from './withCashFlowStatementActions';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { CashflowSheetExportMenu } from './components';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface CashFlowStatementActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -138,10 +139,10 @@ function CashFlowStatementActionsBarInner({
   );
 }
 
-export const CashFlowStatementActionsBar = compose(
+export const CashFlowStatementActionsBar = flow(
+  withDialogActions,
+  withCashFlowStatementActions,
   withCashFlowStatement(({ cashFlowStatementDrawerFilter }) => ({
     isFilterDrawerOpen: cashFlowStatementDrawerFilter,
   })),
-  withCashFlowStatementActions,
-  withDialogActions,
 )(CashFlowStatementActionsBarInner);

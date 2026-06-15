@@ -17,7 +17,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { DRAWERS } from '@/constants/drawers';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse transfer detail actions bar.
@@ -66,8 +66,8 @@ function WarehouseTransferDetailActionsBarInner({
   );
 }
 
-export const WarehouseTransferDetailActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
+export const WarehouseTransferDetailActionsBar = flow(
   withDrawerActions,
+  withAlertActions,
+  withDialogActions,
 )(WarehouseTransferDetailActionsBarInner);

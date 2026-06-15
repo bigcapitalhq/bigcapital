@@ -5,6 +5,7 @@ import * as R from 'ramda';
 import { ButtonLink } from '../Button';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 function CustomerDrawerLinkComponent({
   // #ownProps
@@ -28,6 +29,6 @@ function CustomerDrawerLinkComponent({
   );
 }
 
-export const CustomerDrawerLink = R.compose(withDrawerActions)(
+export const CustomerDrawerLink = flow(withDrawerActions)(
   CustomerDrawerLinkComponent,
 );

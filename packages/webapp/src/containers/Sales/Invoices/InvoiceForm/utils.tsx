@@ -7,7 +7,6 @@ import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
 import { omit, first, sumBy } from 'lodash';
 import {
-  compose,
   transformToForm,
   repeatValue,
   defaultFastFieldShouldUpdate,
@@ -33,6 +32,7 @@ import {
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
 import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import { flow } from 'fp-ts/function';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -101,9 +101,9 @@ export function transformToEditForm(invoice) {
       Math.max(MIN_LINES_NUMBER - invoice.entries.length, 0),
     ),
   ];
-  const entries = compose(
-    ensureEntriesHaveEmptyLine(defaultInvoiceEntry),
+  const entries = flow(
     updateItemsEntriesTotal,
+    ensureEntriesHaveEmptyLine(defaultInvoiceEntry),
   )(initialEntries);
 
   return {
@@ -198,9 +198,11 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
  * Transformes bill entries to submit request.
  */
 const transformEntriesToRequest = (entries) => {
-  return R.compose(
-    R.map(R.compose(R.curry(transformToForm)(R.__, defaultReqInvoiceEntry))),
+  return flow(
     filterNonZeroEntries,
+    R.map(
+      flow(R.curry(transformToForm)(R.__, defaultReqInvoiceEntry)),
+    ),
   )(entries);
 };
 
@@ -406,7 +408,7 @@ export const composeEntriesOnEditInclusiveTax = (
   inclusiveExclusiveTax: string,
   entries,
 ) => {
-  return R.compose(
+  return flow(
     assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
   )(entries);
 };
@@ -453,10 +455,10 @@ export const useInvoiceTotal = () => {
   const discountAmount = useInvoiceDiscountAmount();
   const adjustmentAmount = useInvoiceAdjustmentAmount();
 
-  return R.compose(
-    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
-    R.subtract(R.__, discountAmount),
+  return flow(
     R.add(adjustmentAmount),
+    R.subtract(R.__, discountAmount),
+    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
   )(subtotal);
 };
 

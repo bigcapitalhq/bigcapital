@@ -10,8 +10,7 @@ import {
 } from '@/components';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * SMS Message Form floating actions.
@@ -50,6 +49,6 @@ function SMSMessageFormFloatingActionsInner({
   );
 }
 
-export const SMSMessageFormFloatingActions = compose(withDialogActions)(
+export const SMSMessageFormFloatingActions = flow(withDialogActions)(
   SMSMessageFormFloatingActionsInner,
 );

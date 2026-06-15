@@ -10,7 +10,7 @@ import {
   getDefaultGeneralLedgerQuery,
   getGeneralLedgerQuerySchema,
 } from './common';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
 import { GLHeaderGeneralPane as GeneralLedgerHeaderGeneralPane } from './GeneralLedgerHeaderGeneralPane';
@@ -22,6 +22,7 @@ import { withGeneralLedgerActions } from './withGeneralLedgerActions';
 import type { WithGeneralLedgerActionsProps } from './withGeneralLedgerActions';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 type GeneralLedgerFormValues = Omit<
   ReturnType<typeof getDefaultGeneralLedgerQuery>,
@@ -134,11 +135,11 @@ function GeneralLedgerHeaderInner({
   );
 }
 
-export const GeneralLedgerHeader = compose(
+export const GeneralLedgerHeader = flow(
+  withGeneralLedgerActions,
   withGeneralLedger(({ generalLedgerFilterDrawer }) => ({
     generalLedgerFilterDrawer,
   })),
-  withGeneralLedgerActions,
 )(GeneralLedgerHeaderInner);
 
 const GeneralLedgerDrawerHeader = styled(FinancialStatementHeader)`

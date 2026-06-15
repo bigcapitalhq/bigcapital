@@ -28,8 +28,8 @@ import {
   If,
 } from '@/components';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimate read-only details actions bar of the drawer.
@@ -144,8 +144,8 @@ function EstimateDetailActionsBarInner({
   );
 }
 
-export const EstimateDetailActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
+export const EstimateDetailActionsBar = flow(
   withDrawerActions,
+  withAlertActions,
+  withDialogActions,
 )(EstimateDetailActionsBarInner);

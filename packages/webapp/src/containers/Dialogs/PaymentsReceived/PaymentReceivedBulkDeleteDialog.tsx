@@ -9,7 +9,7 @@ import { useBulkDeletePaymentReceives } from '@/hooks/query/payment-receives';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withPaymentsReceivedActions } from '@/containers/Sales/PaymentsReceived/PaymentsLanding/withPaymentsReceivedActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function PaymentReceivedBulkDeleteDialogInner({
   dialogName,
@@ -100,8 +100,8 @@ function PaymentReceivedBulkDeleteDialogInner({
   );
 }
 
-export const PaymentReceivedBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const PaymentReceivedBulkDeleteDialog = flow(
   withPaymentsReceivedActions,
+  withDialogActions,
+  withDialogRedux(),
 )(PaymentReceivedBulkDeleteDialogInner);

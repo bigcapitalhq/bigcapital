@@ -15,8 +15,8 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { handleDeleteErrors } from './_utils';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment receive delete alert.
@@ -88,8 +88,8 @@ function PaymentReceivedDeleteAlertInner({
   );
 }
 
-export const PaymentReceivedDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const PaymentReceivedDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(PaymentReceivedDeleteAlertInner);

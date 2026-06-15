@@ -5,7 +5,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Features } from '@/constants';
 import { FeatureCan, FormattedMessage as T, Icon } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function BranchesActionsInner({
   //#ownProps
@@ -30,4 +30,6 @@ function BranchesActionsInner({
   );
 }
 
-export const BranchesActions = compose(withDialogActions)(BranchesActionsInner);
+export const BranchesActions = flow(withDialogActions)(
+  BranchesActionsInner,
+);

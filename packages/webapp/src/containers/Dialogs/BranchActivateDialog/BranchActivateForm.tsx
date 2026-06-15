@@ -10,8 +10,7 @@ import { useBranchActivateContext } from './BranchActivateFormProvider';
 import { BranchActivateFormContent } from './BranchActivateFormContent';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Branch activate form.
@@ -62,6 +61,6 @@ function BranchActivateFormInner({
   );
 }
 
-export const BranchActivateForm = compose(withDialogActions)(
+export const BranchActivateForm = flow(withDialogActions)(
   BranchActivateFormInner,
 );

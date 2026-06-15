@@ -6,8 +6,7 @@ import { CurrenciesProvider } from './CurrenciesProvider';
 import { CurrenciesDataTable } from './CurrenciesDataTable';
 
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function CurrenciesListInner({
   // #withDashboardActions
@@ -24,5 +23,6 @@ function CurrenciesListInner({
   );
 }
 
-export const CurrenciesList =
-  compose(withDashboardActions)(CurrenciesListInner);
+export const CurrenciesList = flow(withDashboardActions)(
+  CurrenciesListInner,
+);

@@ -15,8 +15,8 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteAccount } from '@/hooks/query';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Account delete alerts.
@@ -83,8 +83,8 @@ function AccountDeleteAlertInner({
   );
 }
 
-export const AccountDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const AccountDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(AccountDeleteAlertInner);

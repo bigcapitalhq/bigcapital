@@ -11,7 +11,6 @@ import { useWatch } from '@/hooks/utils';
 import { AppToaster } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import {
-  compose,
   transformToForm,
   repeatValue,
   transactionNumber,
@@ -27,6 +26,7 @@ import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from '@/containers/Entries/utils';
+import { flow } from 'fp-ts/function';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -69,9 +69,9 @@ export function transformToEditForm(warehouse) {
       Math.max(MIN_LINES_NUMBER - warehouse.entries.length, 0),
     ),
   ];
-  const entries = compose(
-    ensureEntriesHaveEmptyLine(defaultWarehouseTransferEntry),
+  const entries = flow(
     updateItemsEntriesTotal,
+    ensureEntriesHaveEmptyLine(defaultWarehouseTransferEntry),
   )(initialEntries);
 
   return {
@@ -153,11 +153,11 @@ export const transformErrors = (errors, { setErrors }) => {
  */
 export const mutateTableCell = R.curry(
   (rowIndex, columnId, defaultEntry, value, entries) => {
-    return compose(
-      // Update auto-adding new line.
-      updateAutoAddNewLine(defaultEntry, ['item_id']),
+    return flow(
       // Update the row value of the given row index and column id.
       updateTableCell(rowIndex, columnId, value),
+      // Update auto-adding new line.
+      updateAutoAddNewLine(defaultEntry, ['item_id']),
     )(entries);
   },
 );
@@ -166,18 +166,21 @@ export const mutateTableCell = R.curry(
  * Compose table rows when insert a new row to table rows.
  */
 export const mutateTableRow = R.curry((rowIndex, newRow, rows) => {
-  return compose(orderingLinesIndexes, updateTableRow(rowIndex, newRow))(rows);
+  return flow(
+    updateTableRow(rowIndex, newRow),
+    orderingLinesIndexes,
+  )(rows);
 });
 
 /**
  * Deletes the table row from the given rows.
  */
 export const deleteTableRow = R.curry((rowIndex, defaultEntry, rows) => {
-  return compose(
-    // Ensure minimum lines count.
-    updateMinEntriesLines(MIN_LINES_NUMBER, defaultEntry),
+  return flow(
     // Remove the line by the given index.
     updateRemoveLineByIndex(rowIndex),
+    // Ensure minimum lines count.
+    updateMinEntriesLines(MIN_LINES_NUMBER, defaultEntry),
   )(rows);
 });
 

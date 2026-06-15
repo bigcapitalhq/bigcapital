@@ -23,8 +23,8 @@ import { useAutofocus } from '@/hooks';
 import { useAccountDialogContext } from './AccountDialogProvider';
 
 import { parentAccountShouldUpdate } from './utils';
-import { compose } from '@/utils';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 /**
  * Account form dialogs fields.
@@ -184,7 +184,7 @@ function AccountFormDialogFields({
   );
 }
 
-export const AccountDialogFormContent = compose(
+export const AccountDialogFormContent = flow(
   withAccounts(({ accountsTypes, accountsList }) => ({
     accountsTypes,
     accounts: accountsList,

@@ -7,6 +7,7 @@ import { withDashboardSidebarActions } from '@/containers/Dashboard/Sidebar/with
 import { withDashboardSidebar } from '@/containers/Dashboard/Sidebar/withDashboardSidebar';
 
 import { useSubSidebarMenu } from '../Sidebar/hooks';
+import { flow } from 'fp-ts/function';
 
 /**
  * Dashboard sidebar menu.
@@ -45,10 +46,10 @@ function SidebarOverlayBindedRouter({ sidebarSubmenuId, ...rest }) {
 /**
  * Sidebar overlay binded with redux.
  */
-export const SidebarOverlayBinded = R.compose(
+export const SidebarOverlayBinded = flow(
+  withDashboardSidebarActions,
   withDashboardSidebar(({ sidebarSubmenuOpen, sidebarSubmenuId }) => ({
     sidebarSubmenuOpen,
     sidebarSubmenuId,
   })),
-  withDashboardSidebarActions,
 )(SidebarOverlayBindedRoot);

@@ -10,10 +10,11 @@ import { PreferencesInvoiceFormSchema } from './PreferencesInvoiceForm.schema';
 import { PreferencesInvoicesForm } from './PreferencesInvoicesForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
 import { useSaveSettings } from '@/hooks/query';
+import { flow } from 'fp-ts/function';
 
 const defaultValues = {
   termsConditions: '',
@@ -44,9 +45,9 @@ function PreferencesInvoiceFormPageInner({
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
+    const options = flow(
       transfromToSnakeCase,
+      transferObjectOptionsToArray,
     )({ salesInvoices: { ...values } });
 
     // Handle request success.
@@ -74,9 +75,9 @@ function PreferencesInvoiceFormPageInner({
   );
 }
 
-export const PreferencesInvoiceFormPage = compose(
-  withDashboardActions,
+export const PreferencesInvoiceFormPage = flow(
   withSettings(({ invoiceSettings }) => ({
     invoiceSettings: invoiceSettings,
   })),
+  withDashboardActions,
 )(PreferencesInvoiceFormPageInner);

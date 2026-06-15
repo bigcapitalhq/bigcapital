@@ -16,8 +16,7 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * account drawer table.
@@ -69,7 +68,7 @@ function AccountDrawerDataTable() {
   );
 }
 
-export const AccountDrawerTable = compose(withDrawerActions)(
+export const AccountDrawerTable = flow(withDrawerActions)(
   AccountDrawerTableInner,
 );
 

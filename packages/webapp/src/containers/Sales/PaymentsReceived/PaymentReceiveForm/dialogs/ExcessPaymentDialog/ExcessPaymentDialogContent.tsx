@@ -7,6 +7,7 @@ import { FormatNumber } from '@/components';
 import { usePaymentReceiveFormContext } from '../../PaymentReceiveFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePaymentReceivedTotalExceededAmount } from '../../utils';
+import { flow } from 'fp-ts/function';
 
 interface ExcessPaymentValues {}
 
@@ -48,7 +49,7 @@ export function ExcessPaymentDialogContentRoot({ dialogName, closeDialog }) {
   );
 }
 
-export const ExcessPaymentDialogContent = R.compose(withDialogActions)(
+export const ExcessPaymentDialogContent = flow(withDialogActions)(
   ExcessPaymentDialogContentRoot,
 );
 

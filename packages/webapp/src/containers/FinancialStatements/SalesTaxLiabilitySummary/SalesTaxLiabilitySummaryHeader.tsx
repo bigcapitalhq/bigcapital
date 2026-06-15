@@ -8,7 +8,7 @@ import { FormattedMessage as T } from '@/components';
 import { useFeatureCan } from '@/hooks/state';
 import { FinancialStatementHeader } from '../../FinancialStatements/FinancialStatementHeader';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import {
   getDefaultSalesTaxLiablitySummaryQuery,
   getSalesTaxLiabilitySummaryQueryValidation,
@@ -22,6 +22,7 @@ import {
   WithSalesTaxLiabilitySummaryActionsProps,
 } from './withSalesTaxLiabilitySummaryActions';
 import { SalesTaxLiabilitySummaryHeaderGeneral } from './SalesTaxLiabilitySummaryHeaderGeneralPanel';
+import { flow } from 'fp-ts/function';
 
 interface SalesTaxLiabilitySummaryFormValues {
   fromDate: Date;
@@ -130,11 +131,11 @@ function SalesTaxLiabilitySummaryHeaderInner({
   );
 }
 
-export const SalesTaxLiabilitySummaryHeader = compose(
+export const SalesTaxLiabilitySummaryHeader = flow(
+  withSalesTaxLiabilitySummaryActions,
   withSalesTaxLiabilitySummary(({ salesTaxLiabilitySummaryFilter }) => ({
     salesTaxLiabilitySummaryFilter,
   })),
-  withSalesTaxLiabilitySummaryActions,
 )(SalesTaxLiabilitySummaryHeaderInner);
 
 const SalesTaxSummaryFinancialHeader = styled(FinancialStatementHeader)`

@@ -7,7 +7,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { useUncategorizeTransactionsBulkAction } from '@/hooks/query/banking';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Uncategorize bank account transactions in build alert.
@@ -68,7 +68,7 @@ function UncategorizeBankTransactionsBulkAlertInner({
   );
 }
 
-export const UncategorizeBankTransactionsBulkAlert = compose(
-  withAlertStoreConnect(),
+export const UncategorizeBankTransactionsBulkAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(UncategorizeBankTransactionsBulkAlertInner);

@@ -11,7 +11,7 @@ import { useSMSIntegrationContext } from './SMSIntegrationProvider';
 import { useSettingEditSMSNotification } from '@/hooks/query';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * SMS Message data table.
@@ -87,7 +87,7 @@ function SMSMessagesDataTableInner({
   );
 }
 
-export const SMSMessagesDataTable = compose(withDialogActions)(
+export const SMSMessagesDataTable = flow(withDialogActions)(
   SMSMessagesDataTableInner,
 );
 

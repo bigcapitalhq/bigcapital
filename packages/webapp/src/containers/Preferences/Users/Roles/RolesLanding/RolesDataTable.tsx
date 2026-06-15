@@ -10,7 +10,7 @@ import {
   type WithAlertActionsProps,
 } from '@/containers/Alert/withAlertActions';
 import { useRolesContext } from './RolesListProvider';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Roles data table.
@@ -81,4 +81,6 @@ const RolesTable = styled(DataTable)`
   }
 `;
 
-export const RolesDataTable = compose(withAlertActions)(RolesDataTableInner);
+export const RolesDataTable = flow(withAlertActions)(
+  RolesDataTableInner,
+);

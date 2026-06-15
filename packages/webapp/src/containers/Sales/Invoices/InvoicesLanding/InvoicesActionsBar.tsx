@@ -35,12 +35,12 @@ import { withInvoices } from './withInvoices';
 import { withInvoiceActions } from './withInvoiceActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { compose } from '@/utils';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { isEmpty } from 'lodash';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoices table actions bar.
@@ -226,16 +226,16 @@ function InvoiceActionsBar({
   );
 }
 
-export const InvoicesActionsBar = compose(
-  withInvoiceActions,
-  withSettingsActions,
+export const InvoicesActionsBar = flow(
+  withDrawerActions,
+  withDialogActions,
+  withSettings(({ invoiceSettings }) => ({
+    invoicesTableSize: invoiceSettings?.tableSize,
+  })),
   withInvoices(({ invoicesTableState, invoicesSelectedRows }) => ({
     invoicesFilterRoles: invoicesTableState.filterRoles,
     invoicesSelectedRows,
   })),
-  withSettings(({ invoiceSettings }) => ({
-    invoicesTableSize: invoiceSettings?.tableSize,
-  })),
-  withDialogActions,
-  withDrawerActions,
+  withSettingsActions,
+  withInvoiceActions,
 )(InvoiceActionsBar);

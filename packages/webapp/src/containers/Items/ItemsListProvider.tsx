@@ -67,7 +67,7 @@ function ItemsListProvider({
     {
       ...(transformTableQueryToParams(tableQuery) as Record<string, unknown>),
     },
-    { keepPreviousData: true } as any,
+    { placeholderData: (previousData) => previousData },
   );
 
   // Detarmines the datatable empty status.

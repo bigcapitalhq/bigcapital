@@ -9,8 +9,6 @@ import { RealizedGainOrLossProvider } from './RealizedGainOrLossProvider';
 
 import { WithRealizedGainOrLossActionsProps } from './withRealizedGainOrLossActions';
 
-import { compose } from '@/utils';
-
 type RealizedGainOrLossProps = {
   organizationName: string;
 } & Pick<

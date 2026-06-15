@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React, { useCallback } from 'react';
 
-import { compose } from '@/utils';
 import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { useResendInvitation } from '@/hooks/query';
 
@@ -11,6 +10,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { ActionsMenu, useUsersListColumns } from './components';
 import { useUsersListContext } from './UsersProvider';
 import { Intent } from '@blueprintjs/core';
+import { flow } from 'fp-ts/function';
 
 /**
  * Users datatable.
@@ -104,7 +104,7 @@ function UsersDataTableInner({
   );
 }
 
-export const UsersDataTable = compose(
-  withDialogActions,
+export const UsersDataTable = flow(
   withAlertActions,
+  withDialogActions,
 )(UsersDataTableInner);

@@ -16,6 +16,7 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useAddAutofillRef } from '@/hooks/state/autofill';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Drawer vendor form loading wrapper.
@@ -70,7 +71,7 @@ function QuickVendorFormDrawerInner({
   );
 }
 
-export const QuickVendorFormDrawer = R.compose(
-  withDrawerActions,
+export const QuickVendorFormDrawer = flow(
   withDashboardActions,
+  withDrawerActions,
 )(QuickVendorFormDrawerInner);

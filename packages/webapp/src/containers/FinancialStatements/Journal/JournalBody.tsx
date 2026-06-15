@@ -6,6 +6,7 @@ import { JournalTable } from './JournalTable';
 import { useJournalSheetContext } from './JournalProvider';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import type { WithCurrentOrganizationProps } from '@/containers/Organization/withCurrentOrganization';
+import { flow } from 'fp-ts/function';
 
 interface JournalBodyJSXProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -32,7 +33,7 @@ function JournalBodyJSX({
   );
 }
 
-export const JournalBody = R.compose(
+export const JournalBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),

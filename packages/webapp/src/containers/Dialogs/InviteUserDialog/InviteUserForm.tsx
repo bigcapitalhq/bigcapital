@@ -14,7 +14,8 @@ import { useInviteUserFormContext } from './InviteUserFormProvider';
 
 import { transformApiErrors } from './utils';
 
-import { compose, objectKeysTransform } from '@/utils';
+import { objectKeysTransform } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const initialValues = {
   email: '',
@@ -79,4 +80,6 @@ function InviteUserFormInner({
     </Formik>
   );
 }
-export const InviteUserForm = compose(withDialogActions)(InviteUserFormInner);
+export const InviteUserForm = flow(withDialogActions)(
+  InviteUserFormInner,
+);

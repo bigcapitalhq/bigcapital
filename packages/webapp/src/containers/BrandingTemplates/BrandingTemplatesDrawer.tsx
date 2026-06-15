@@ -3,6 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { flow } from 'fp-ts/function';
 
 const BrandingTemplatesContent = React.lazy(() =>
   import('./BrandingTemplatesContent').then((m) => ({
@@ -29,6 +30,6 @@ function BrandingTemplatesDrawerRoot({
   );
 }
 
-export const BrandingTemplatesDrawer = R.compose(withDrawers())(
+export const BrandingTemplatesDrawer = flow(withDrawers())(
   BrandingTemplatesDrawerRoot,
 );

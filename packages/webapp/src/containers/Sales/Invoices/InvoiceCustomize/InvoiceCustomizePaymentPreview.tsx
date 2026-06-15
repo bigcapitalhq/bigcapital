@@ -8,6 +8,7 @@ import {
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { InvoiceCustomizeFormValues } from './types';
 import { Box } from '@/components';
+import { flow } from 'fp-ts/function';
 
 const withInvoicePaymentPreviewPageProps = <P extends Object>(
   Component: React.ComponentType<P>,
@@ -47,6 +48,6 @@ const withInvoicePaymentPreviewPageProps = <P extends Object>(
   };
 };
 
-export const InvoiceCustomizePaymentPreview = R.compose(
+export const InvoiceCustomizePaymentPreview = flow(
   withInvoicePaymentPreviewPageProps,
 )(InvoicePaymentPagePreview);

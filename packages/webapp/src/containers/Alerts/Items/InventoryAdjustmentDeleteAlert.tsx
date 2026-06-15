@@ -13,8 +13,8 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteInventoryAdjustment } from '@/hooks/query';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Inventory Adjustment delete alerts.
@@ -80,8 +80,8 @@ function InventoryAdjustmentDeleteAlertInner({
   );
 }
 
-export const InventoryAdjustmentDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const InventoryAdjustmentDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(InventoryAdjustmentDeleteAlertInner);

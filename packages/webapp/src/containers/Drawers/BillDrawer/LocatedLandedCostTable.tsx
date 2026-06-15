@@ -15,8 +15,8 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { TableStyle } from '@/constants';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Located landed cost table.
@@ -76,7 +76,7 @@ function LocatedLandedCostTableInner({
   );
 }
 
-export const LocatedLandedCostTable = compose(
-  withAlertActions,
+export const LocatedLandedCostTable = flow(
   withDrawerActions,
+  withAlertActions,
 )(LocatedLandedCostTableInner);

@@ -12,8 +12,8 @@ import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
 import { useHistory } from 'react-router-dom';
+import { flow } from 'fp-ts/function';
 
 /**
  * Tax rates actions bar.
@@ -67,5 +67,6 @@ function TaxRatesActionsBar({
   );
 }
 
-export const TaxRatesLandingActionsBar =
-  compose(withDialogActions)(TaxRatesActionsBar);
+export const TaxRatesLandingActionsBar = flow(withDialogActions)(
+  TaxRatesActionsBar,
+);

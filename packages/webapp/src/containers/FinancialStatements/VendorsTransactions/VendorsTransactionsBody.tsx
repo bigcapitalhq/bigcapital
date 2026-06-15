@@ -8,6 +8,7 @@ import {
   withCurrentOrganization,
   WithCurrentOrganizationProps,
 } from '@/containers/Organization/withCurrentOrganization';
+import { flow } from 'fp-ts/function';
 
 interface VendorsTransactionsBodyJSXProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -34,7 +35,7 @@ function VendorsTransactionsBodyJSX({
   );
 }
 
-export const VendorsTransactionsBody = R.compose(
+export const VendorsTransactionsBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),

@@ -35,9 +35,9 @@ import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 
-import { compose } from '@/utils';
 import { isEmpty } from 'lodash';
 import { useBulkDeleteExpensesDialog } from './hooks/use-bulk-delete-expenses-dialog';
+import { flow } from 'fp-ts/function';
 
 /**
  * Expenses actions bar.
@@ -206,15 +206,15 @@ function ExpensesActionsBar({
   );
 }
 
-export const ExpenseActionsBar = compose(
-  withDialogActions,
-  withExpensesActions,
-  withSettingsActions,
+export const ExpenseActionsBar = flow(
+  withSettings(({ expenseSettings }) => ({
+    expensesTableSize: expenseSettings?.tableSize,
+  })),
   withExpenses(({ expensesTableState, expensesSelectedRows }) => ({
     expensesFilterConditions: expensesTableState.filterRoles,
     expensesSelectedRows,
   })),
-  withSettings(({ expenseSettings }) => ({
-    expensesTableSize: expenseSettings?.tableSize,
-  })),
+  withSettingsActions,
+  withExpensesActions,
+  withDialogActions,
 )(ExpensesActionsBar);

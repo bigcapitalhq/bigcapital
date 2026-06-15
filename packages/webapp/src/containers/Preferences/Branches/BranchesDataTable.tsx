@@ -13,8 +13,7 @@ import { useMarkBranchAsPrimary } from '@/hooks/query';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Branches data table.
@@ -73,9 +72,9 @@ function BranchesDataTableInner({
   );
 }
 
-export const BranchesDataTable = compose(
-  withDialogActions,
+export const BranchesDataTable = flow(
   withAlertActions,
+  withDialogActions,
 )(BranchesDataTableInner);
 
 const BranchesTableCard = styled(Card)`

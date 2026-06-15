@@ -24,6 +24,7 @@ import {
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
 import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import { flow } from 'fp-ts/function';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -84,9 +85,9 @@ export const transformToEditForm = (estimate) => {
       Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0),
     ),
   ];
-  const entries = R.compose(
-    ensureEntriesHaveEmptyLine(defaultEstimateEntry),
+  const entries = flow(
     updateItemsEntriesTotal,
+    ensureEntriesHaveEmptyLine(defaultEstimateEntry),
   )(initialEntries);
 
   const attachments = transformAttachmentsToForm(estimate);
@@ -300,9 +301,9 @@ export const useEstimateTotal = () => {
   const discount = useEstimateDiscount();
   const adjustment = useEstimateAdjustment();
 
-  return R.compose(
-    R.subtract(R.__, discount),
+  return flow(
     R.add(R.__, adjustment),
+    R.subtract(R.__, discount),
   )(subtotal);
 };
 

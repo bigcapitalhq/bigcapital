@@ -10,7 +10,7 @@ import {
   withAPAgingSummaryActions,
   WithAPAgingSummaryActionsProps,
 } from './withAPAgingSummaryActions';
-import { transformToForm, compose } from '@/utils';
+import { transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 import {
@@ -18,6 +18,7 @@ import {
   getDefaultAPAgingSummaryQuery,
 } from './common';
 import type { FormikHelpers } from 'formik';
+import { flow } from 'fp-ts/function';
 
 type APAgingSummaryFormValues = ReturnType<
   typeof getDefaultAPAgingSummaryQuery
@@ -102,11 +103,11 @@ function APAgingSummaryHeaderInner({
   );
 }
 
-export const APAgingSummaryHeader = compose(
-  withAPAgingSummaryActions,
+export const APAgingSummaryHeader = flow(
   withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
+  withAPAgingSummaryActions,
 )(APAgingSummaryHeaderInner);
 
 const APAgingDrawerHeader = styled(FinancialStatementHeader)`

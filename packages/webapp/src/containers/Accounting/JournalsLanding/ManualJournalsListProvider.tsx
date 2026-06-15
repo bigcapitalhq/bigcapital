@@ -18,7 +18,7 @@ function ManualJournalsListProvider({ query, tableStateChanged, ...props }) {
     data: manualJournalsData,
     isLoading: isManualJournalsLoading,
     isFetching: isManualJournalsFetching,
-  } = useJournals(query, { keepPreviousData: true });
+  } = useJournals(query, { placeholderData: (previousData) => previousData });
 
   // Fetch the accounts resource fields.
   const {

@@ -13,8 +13,7 @@ import { handleDeleteErrors } from '@/containers/Preferences/Warehouses/utils';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse delete alert
@@ -79,7 +78,7 @@ function WarehouseDeleteAlertInner({
   );
 }
 
-export const WarehouseDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const WarehouseDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(WarehouseDeleteAlertInner);

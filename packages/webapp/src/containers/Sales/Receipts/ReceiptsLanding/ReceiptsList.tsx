@@ -11,7 +11,8 @@ import { withReceipts } from './withReceipts';
 import { withReceiptsActions } from './withReceiptsActions';
 
 import { ReceiptsListProvider } from './ReceiptsListProvider';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Receipts list page.
@@ -48,10 +49,10 @@ function ReceiptsListInner({
   );
 }
 
-export const ReceiptsList = compose(
+export const ReceiptsList = flow(
+  withReceiptsActions,
   withReceipts(({ receiptTableState, receiptsTableStateChanged }) => ({
     receiptTableState,
     receiptsTableStateChanged,
   })),
-  withReceiptsActions,
 )(ReceiptsListInner);

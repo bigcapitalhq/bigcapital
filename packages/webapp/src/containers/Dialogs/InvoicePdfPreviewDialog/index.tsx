@@ -7,7 +7,7 @@ import { T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 // Lazy loading the content.
 const PdfPreviewDialogContent = lazy(() =>
@@ -40,4 +40,4 @@ function InvoicePdfPreviewDialog({ dialogName, payload, isOpen }) {
   );
 }
 
-export const index = compose(withDialogRedux())(InvoicePdfPreviewDialog);
+export const index = flow(withDialogRedux())(InvoicePdfPreviewDialog);

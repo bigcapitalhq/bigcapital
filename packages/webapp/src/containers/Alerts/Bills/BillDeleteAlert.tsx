@@ -10,8 +10,8 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { handleDeleteErrors } from '@/containers/Purchases/Bills/BillForm/utils';
 import { useDeleteBill } from '@/hooks/query';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bill delete alert.
@@ -78,8 +78,8 @@ function BillDeleteAlertInner({
   );
 }
 
-export const BillDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const BillDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(BillDeleteAlertInner);

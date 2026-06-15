@@ -5,6 +5,7 @@ import React from 'react';
 
 import { universalSearchBinds } from './DashboardUniversalSearchBinds';
 import { useAbilitiesFilter } from '@/hooks/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  *
@@ -34,7 +35,10 @@ export const useGetUniversalSearchTypeOptions = () => {
   const abilityFilter = useAbilitiesFilter();
 
   const momerizedBinds = React.useMemo(() => {
-    const filteredBinds = R.compose(abilityFilter, getUniversalSearchBinds)();
+    const filteredBinds = flow(
+      getUniversalSearchBinds,
+      abilityFilter,
+    )();
 
     return filteredBinds.map((bind) => ({
       key: bind.resourceType,

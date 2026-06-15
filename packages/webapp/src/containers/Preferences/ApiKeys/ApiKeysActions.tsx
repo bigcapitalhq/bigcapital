@@ -5,7 +5,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Icon, FormattedMessage as T } from '@/components';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ApiKeysActionsInner({ openDialog, closeDialog }) {
   const onClickGenerateApiKey = () => {
@@ -25,4 +25,6 @@ function ApiKeysActionsInner({ openDialog, closeDialog }) {
   );
 }
 
-export const ApiKeysActions = compose(withDialogActions)(ApiKeysActionsInner);
+export const ApiKeysActions = flow(withDialogActions)(
+  ApiKeysActionsInner,
+);

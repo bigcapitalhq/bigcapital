@@ -5,6 +5,7 @@ import { Position } from '@blueprintjs/core';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { PaymentInvoicePreviewContent } from './PaymentInvoicePreviewContent';
+import { flow } from 'fp-ts/function';
 
 /**
  *
@@ -32,6 +33,6 @@ function PaymentInvoicePreviewDrawerRoot({
   );
 }
 
-export const PaymentInvoicePreviewDrawer = R.compose(withDrawers())(
+export const PaymentInvoicePreviewDrawer = flow(withDrawers())(
   PaymentInvoicePreviewDrawerRoot,
 );

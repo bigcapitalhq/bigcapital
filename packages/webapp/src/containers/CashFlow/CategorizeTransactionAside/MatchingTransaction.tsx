@@ -29,6 +29,7 @@ import { withBanking } from '../withBanking';
 import { MatchingReconcileTransactionForm } from './MatchingReconcileTransactionAside/MatchingReconcileTransactionForm';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 import styles from './CategorizeTransactionAside.module.scss';
+import { flow } from 'fp-ts/function';
 
 const initialValues = {
   matched: {},
@@ -104,81 +105,83 @@ function MatchingBankTransactionRoot({
   );
 }
 
-export const MatchingBankTransaction = R.compose(
-  withBankingActions,
+export const MatchingBankTransaction = flow(
   withBanking(({ transactionsToCategorizeIdsSelected }) => ({
     transactionsToCategorizeIdsSelected,
   })),
+  withBankingActions,
 )(MatchingBankTransactionRoot);
 
 /**
  * Matching bank transaction form content.
  * @returns {React.ReactNode}
  */
-const MatchingBankTransactionFormContent = R.compose(
-  withBankingActions,
+const MatchingBankTransactionFormContent = flow(
   withBanking(({ openReconcileMatchingTransaction }) => ({
     openReconcileMatchingTransaction,
   })),
-)(({
-  // #withBanking
-  openReconcileMatchingTransaction,
-}) => {
-  const {
-    isMatchingTransactionsFetching,
-    isMatchingTransactionsSuccess,
-    matches,
-  } = useMatchingTransactionBoot();
-  const [pending, setPending] = useState<null | {
-    refId: number;
-    refType: string;
-  }>(null);
+  withBankingActions,
+)(
+  ({
+    // #withBanking
+    openReconcileMatchingTransaction,
+  }) => {
+    const {
+      isMatchingTransactionsFetching,
+      isMatchingTransactionsSuccess,
+      matches,
+    } = useMatchingTransactionBoot();
+    const [pending, setPending] = useState<null | {
+      refId: number;
+      refType: string;
+    }>(null);
 
-  const { setFieldValue } = useFormikContext();
+    const { setFieldValue } = useFormikContext();
 
-  // This effect is responsible for automatically marking a transaction as matched
-  // when the matching process is successful and not currently fetching.
-  useEffect(() => {
-    if (
-      pending &&
-      isMatchingTransactionsSuccess &&
-      !isMatchingTransactionsFetching
-    ) {
-      const foundMatch = matches?.find(
-        (m) =>
-          m.referenceType === pending?.refType &&
-          m.referenceId === pending?.refId,
-      );
-      if (foundMatch) {
-        setFieldValue(`matched.${pending.refType}-${pending.refId}`, true);
+    // This effect is responsible for automatically marking a transaction as matched
+    // when the matching process is successful and not currently fetching.
+    useEffect(() => {
+      if (
+        pending &&
+        isMatchingTransactionsSuccess &&
+        !isMatchingTransactionsFetching
+      ) {
+        const foundMatch = matches?.find(
+          (m) =>
+            m.referenceType === pending?.refType &&
+            m.referenceId === pending?.refId,
+        );
+        if (foundMatch) {
+          setFieldValue(`matched.${pending.refType}-${pending.refId}`, true);
+        }
+        setPending(null);
       }
-      setPending(null);
-    }
-  }, [
-    isMatchingTransactionsFetching,
-    isMatchingTransactionsSuccess,
-    matches,
-    pending,
-    setFieldValue,
-  ]);
+    }, [
+      isMatchingTransactionsFetching,
+      isMatchingTransactionsSuccess,
+      matches,
+      pending,
+      setFieldValue,
+    ]);
 
-  const handleReconcileFormSubmitSuccess = (payload) => {
-    setPending({ refId: payload.id, refType: payload.type });
-  };
+    const handleReconcileFormSubmitSuccess = (payload) => {
+      setPending({ refId: payload.id, refType: payload.type });
+    };
 
-  return (
-    <>
-      <MatchingBankTransactionContent />
+    return (
+      <>
+        <MatchingBankTransactionContent />
 
-      {openReconcileMatchingTransaction && (
-        <MatchingReconcileTransactionForm
-          onSubmitSuccess={handleReconcileFormSubmitSuccess}
-        />
-      )}
-      {!openReconcileMatchingTransaction && <MatchTransactionFooter />}
-    </>
-  );
-});
+        {openReconcileMatchingTransaction && (
+          <MatchingReconcileTransactionForm
+            onSubmitSuccess={handleReconcileFormSubmitSuccess}
+          />
+        )}
+        {!openReconcileMatchingTransaction && <MatchTransactionFooter />}
+      </>
+    );
+  },
+);
 
 function MatchingBankTransactionContent() {
   return (
@@ -301,70 +304,72 @@ interface MatchTransctionFooterProps extends WithBankingActionsProps {}
  * Renders the match transactions footer.
  * @returns {React.ReactNode}
  */
-const MatchTransactionFooter = R.compose(withBankingActions)(({
-  closeMatchingTransactionAside,
-  openReconcileMatchingTransaction,
-}: MatchTransctionFooterProps) => {
-  const { submitForm, isSubmitting } = useFormikContext();
-  const totalPending = useGetPendingAmountMatched();
-  const showReconcileLink = useIsShowReconcileTransactionLink();
-  const submitDisabled = totalPending !== 0;
-  const isDarkMode = useIsDarkMode();
+const MatchTransactionFooter = flow(withBankingActions)(
+  ({
+    closeMatchingTransactionAside,
+    openReconcileMatchingTransaction,
+  }: MatchTransctionFooterProps) => {
+    const { submitForm, isSubmitting } = useFormikContext();
+    const totalPending = useGetPendingAmountMatched();
+    const showReconcileLink = useIsShowReconcileTransactionLink();
+    const submitDisabled = totalPending !== 0;
+    const isDarkMode = useIsDarkMode();
 
-  const handleCancelBtnClick = () => {
-    closeMatchingTransactionAside();
-  };
-  const handleSubmitBtnClick = () => {
-    submitForm();
-  };
-  const handleReconcileTransaction = () => {
-    openReconcileMatchingTransaction(totalPending);
-  };
+    const handleCancelBtnClick = () => {
+      closeMatchingTransactionAside();
+    };
+    const handleSubmitBtnClick = () => {
+      submitForm();
+    };
+    const handleReconcileTransaction = () => {
+      openReconcileMatchingTransaction(totalPending);
+    };
 
-  return (
-    <Box className={styles.footer}>
-      <Box className={styles.footerTotal}>
-        <Group position={'apart'}>
-          {showReconcileLink && (
-            <AnchorButton
-              small
-              minimal
-              intent={Intent.PRIMARY}
-              onClick={handleReconcileTransaction}
+    return (
+      <Box className={styles.footer}>
+        <Box className={styles.footerTotal}>
+          <Group position={'apart'}>
+            {showReconcileLink && (
+              <AnchorButton
+                small
+                minimal
+                intent={Intent.PRIMARY}
+                onClick={handleReconcileTransaction}
+              >
+                Add Reconcile Transaction +
+              </AnchorButton>
+            )}
+            <Text
+              style={{
+                fontSize: 14,
+                marginLeft: 'auto',
+                color: isDarkMode ? 'var(--color-light-gray1)' : '#404854',
+              }}
+              tagName="span"
             >
-              Add Reconcile Transaction +
-            </AnchorButton>
-          )}
-          <Text
-            style={{
-              fontSize: 14,
-              marginLeft: 'auto',
-              color: isDarkMode ? 'var(--color-light-gray1)' : '#404854',
-            }}
-            tagName="span"
-          >
-            Pending <FormatNumber value={totalPending} currency={'USD'} />
-          </Text>
-        </Group>
-      </Box>
+              Pending <FormatNumber value={totalPending} currency={'USD'} />
+            </Text>
+          </Group>
+        </Box>
 
-      <Box className={styles.footerActions}>
-        <Group spacing={10}>
-          <Button
-            intent={Intent.PRIMARY}
-            style={{ minWidth: 85 }}
-            onClick={handleSubmitBtnClick}
-            loading={isSubmitting}
-            disabled={submitDisabled}
-          >
-            Match
-          </Button>
+        <Box className={styles.footerActions}>
+          <Group spacing={10}>
+            <Button
+              intent={Intent.PRIMARY}
+              style={{ minWidth: 85 }}
+              onClick={handleSubmitBtnClick}
+              loading={isSubmitting}
+              disabled={submitDisabled}
+            >
+              Match
+            </Button>
 
-          <Button onClick={handleCancelBtnClick}>Cancel</Button>
-        </Group>
+            <Button onClick={handleCancelBtnClick}>Cancel</Button>
+          </Group>
+        </Box>
       </Box>
-    </Box>
-  );
-});
+    );
+  },
+);
 
 MatchTransactionFooter.displayName = 'MatchTransactionFooter';

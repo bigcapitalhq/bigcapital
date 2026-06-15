@@ -16,7 +16,8 @@ import {
   withRealizedGainOrLossActions,
   WithRealizedGainOrLossActionsProps,
 } from './withRealizedGainOrLossActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface RealizedGainOrLossActionsBarOwnProps {
   numberFormat?: Record<string, unknown>;
@@ -109,9 +110,9 @@ function RealizedGainOrLossActionsBarInner({
   );
 }
 
-export const RealizedGainOrLossActionsBar = compose(
+export const RealizedGainOrLossActionsBar = flow(
+  withRealizedGainOrLossActions,
   withRealizedGainOrLoss(({ realizedGainOrLossDrawerFilter }) => ({
     isFilterDrawerOpen: realizedGainOrLossDrawerFilter,
   })),
-  withRealizedGainOrLossActions,
 )(RealizedGainOrLossActionsBarInner);

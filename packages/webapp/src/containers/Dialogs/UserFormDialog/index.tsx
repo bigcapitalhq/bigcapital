@@ -2,7 +2,7 @@
 import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const UserFormDialogContent = lazy(() =>
   import('./UserFormDialogContent').then((m) => ({
@@ -35,4 +35,4 @@ function UserFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(UserFormDialog);
+export const index = flow(withDialogRedux())(UserFormDialog);

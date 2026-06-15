@@ -10,6 +10,7 @@ import { ItemsCategoriesProvider } from './ItemsCategoriesProvider';
 import { ItemCategoriesTable } from './ItemCategoriesTable';
 import { ItemsCategoryActionsBar } from './ItemsCategoryActionsBar';
 import { withItemCategories } from './withItemCategories';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item categories list.
@@ -31,7 +32,7 @@ function ItemCategoryList({
   );
 }
 
-export const ItemCategoriesList = R.compose(
+export const ItemCategoriesList = flow(
   withItemCategories(({ itemsCategoriesTableState }) => ({
     itemsCategoriesTableState,
   })),

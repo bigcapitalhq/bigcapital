@@ -16,6 +16,7 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Quick create/edit item drawer form.
@@ -72,9 +73,9 @@ function DrawerItemFormLoading({ children }) {
   return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;
 }
 
-export const QuickCreateItemDrawerForm = R.compose(
-  withDrawerActions,
+export const QuickCreateItemDrawerForm = flow(
   withDashboardActions,
+  withDrawerActions,
 )(QuickCreateItemDrawerFormInner);
 
 const ItemFormCard = styled(Card)`

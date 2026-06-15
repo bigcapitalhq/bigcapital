@@ -10,8 +10,9 @@ import { CreateReconcileCreditNoteFormSchema } from './ReconcileCreditNoteForm.s
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import { ReconcileCreditNoteFormContent } from './ReconcileCreditNoteFormContent';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import { transformErrors } from './utils';
+import { flow } from 'fp-ts/function';
 
 // Default form initial values.
 const defaultInitialValues = {
@@ -95,6 +96,6 @@ function ReconcileCreditNoteFormInner({
   );
 }
 
-export const ReconcileCreditNoteForm = compose(withDialogActions)(
+export const ReconcileCreditNoteForm = flow(withDialogActions)(
   ReconcileCreditNoteFormInner,
 );

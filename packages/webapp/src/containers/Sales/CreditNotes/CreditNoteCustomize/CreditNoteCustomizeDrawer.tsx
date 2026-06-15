@@ -3,6 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { flow } from 'fp-ts/function';
 
 const CreditNoteCustomizeDrawerBody = React.lazy(() =>
   import('./CreditNoteCustomizeDrawerBody').then((m) => ({
@@ -34,6 +35,6 @@ function CreditNoteCustomizeDrawerRoot({
   );
 }
 
-export const CreditNoteCustomizeDrawer = R.compose(withDrawers())(
+export const CreditNoteCustomizeDrawer = flow(withDrawers())(
   CreditNoteCustomizeDrawerRoot,
 );

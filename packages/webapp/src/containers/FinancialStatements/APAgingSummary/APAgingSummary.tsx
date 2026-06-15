@@ -11,9 +11,9 @@ import {
   withAPAgingSummaryActions,
   WithAPAgingSummaryActionsProps,
 } from './withAPAgingSummaryActions';
-import { compose } from '@/utils';
 import { APAgingSummaryPdfDialog } from './dialogs/APAgingSummaryPdfDialog';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 type APAgingSummaryProps = Pick<
   WithAPAgingSummaryActionsProps,
@@ -71,6 +71,6 @@ function APAgingSummaryInner({
   );
 }
 
-export const APAgingSummary = compose(withAPAgingSummaryActions)(
+export const APAgingSummary = flow(withAPAgingSummaryActions)(
   APAgingSummaryInner,
 );

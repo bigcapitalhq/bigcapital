@@ -23,8 +23,8 @@ import {
   DrawerActionsBar,
 } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment made - Details panel - actions bar.
@@ -78,8 +78,8 @@ function PaymentMadeDetailActionsBarInner({
   );
 }
 
-export const PaymentMadeDetailActionsBar = compose(
-  withDialogActions,
-  withDrawerActions,
+export const PaymentMadeDetailActionsBar = flow(
   withAlertActions,
+  withDrawerActions,
+  withDialogActions,
 )(PaymentMadeDetailActionsBarInner);

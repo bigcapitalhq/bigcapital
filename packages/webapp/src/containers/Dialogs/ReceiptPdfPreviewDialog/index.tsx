@@ -4,8 +4,7 @@ import { T, Dialog, DialogSuspense } from '@/components';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import withDialogRedux from '@/components/DialogReduxConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 // Lazy loading the content.
 const PdfPreviewDialogContent = React.lazy(() =>
@@ -41,4 +40,4 @@ function ReceiptPdfPreviewDialog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(ReceiptPdfPreviewDialog);
+export const index = flow(withDialogRedux())(ReceiptPdfPreviewDialog);

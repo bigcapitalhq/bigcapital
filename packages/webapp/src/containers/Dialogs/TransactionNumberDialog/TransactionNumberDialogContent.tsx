@@ -13,7 +13,7 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Transaction number dialog content.
@@ -93,12 +93,12 @@ function TransactionNumberDialogContentInner({
   );
 }
 
-export const TransactionNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
+export const TransactionNumberDialogContent = flow(
   withSettings(({ cashflowSetting }) => ({
     nextNumber: cashflowSetting?.nextNumber,
     numberPrefix: cashflowSetting?.numberPrefix,
     autoIncrement: cashflowSetting?.autoIncrement,
   })),
+  withSettingsActions,
+  withDialogActions,
 )(TransactionNumberDialogContentInner);

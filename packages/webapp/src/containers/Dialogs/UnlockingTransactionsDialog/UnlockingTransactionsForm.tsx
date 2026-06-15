@@ -13,7 +13,7 @@ import { useUnlockingTransactionsContext } from './UnlockingTransactionsFormProv
 import { UnlockingTransactionsFormContent } from './UnlockingTransactionsFormContent';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   module: '',
@@ -74,6 +74,6 @@ function UnlockingTransactionsFormInner({
     />
   );
 }
-export const UnlockingTransactionsForm = compose(withDialogActions)(
+export const UnlockingTransactionsForm = flow(withDialogActions)(
   UnlockingTransactionsFormInner,
 );

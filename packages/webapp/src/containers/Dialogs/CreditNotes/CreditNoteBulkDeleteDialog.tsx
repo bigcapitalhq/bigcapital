@@ -9,7 +9,7 @@ import { useBulkDeleteCreditNotes } from '@/hooks/query/credit-note';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withCreditNotesActions } from '@/containers/Sales/CreditNotes/CreditNotesLanding/withCreditNotesActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function CreditNoteBulkDeleteDialogInner({
   dialogName,
@@ -96,8 +96,8 @@ function CreditNoteBulkDeleteDialogInner({
   );
 }
 
-export const CreditNoteBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const CreditNoteBulkDeleteDialog = flow(
   withCreditNotesActions,
+  withDialogActions,
+  withDialogRedux(),
 )(CreditNoteBulkDeleteDialogInner);

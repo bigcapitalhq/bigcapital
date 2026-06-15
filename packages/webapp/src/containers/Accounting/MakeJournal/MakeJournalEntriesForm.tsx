@@ -27,7 +27,7 @@ import { withCurrentOrganization } from '@/containers/Organization/withCurrentOr
 
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
-import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
+import { orderingLinesIndexes, transactionNumber } from '@/utils';
 import {
   transformErrors,
   transformToEditForm,
@@ -35,6 +35,7 @@ import {
 } from './utils';
 import { JournalSyncIncrementSettingsToForm } from './components';
 import { transformAttachmentsToRequest } from '@/containers/Attachments/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Journal entries form.
@@ -122,7 +123,7 @@ function MakeJournalEntriesFormInner({
       ...(values.journal_number_manually && {
         journal_number: values.journal_number,
       }),
-      entries: R.compose(orderingLinesIndexes)(entries),
+      entries: flow(orderingLinesIndexes)(entries),
       publish: submitPayload.publish,
       attachments,
     };
@@ -209,11 +210,11 @@ function MakeJournalEntriesFormInner({
   );
 }
 
-export const MakeJournalEntriesForm = compose(
+export const MakeJournalEntriesForm = flow(
+  withCurrentOrganization(),
   withSettings(({ manualJournalsSettings }) => ({
     journalNextNumber: manualJournalsSettings?.nextNumber,
     journalNumberPrefix: manualJournalsSettings?.numberPrefix,
     journalAutoIncrement: manualJournalsSettings?.autoIncrement,
   })),
-  withCurrentOrganization(),
 )(MakeJournalEntriesFormInner);

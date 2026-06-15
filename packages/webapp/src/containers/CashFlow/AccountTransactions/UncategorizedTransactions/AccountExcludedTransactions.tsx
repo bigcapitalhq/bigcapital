@@ -8,6 +8,7 @@ import {
 import { ExcludedTransactionsTable } from '../ExcludedTransactions/ExcludedTransactionsTable';
 import { ExcludedBankTransactionsTableBoot } from '../ExcludedTransactions/ExcludedTransactionsTableBoot';
 import { AccountTransactionsCard } from './AccountTransactionsCard';
+import { flow } from 'fp-ts/function';
 
 interface AccountExcludedTransactionsProps extends WithBankingActionsProps {}
 
@@ -31,6 +32,6 @@ function AccountExcludedTransactionsRoot({
   );
 }
 
-export const AccountExcludedTransactions = R.compose(withBankingActions)(
+export const AccountExcludedTransactions = flow(withBankingActions)(
   AccountExcludedTransactionsRoot,
 );

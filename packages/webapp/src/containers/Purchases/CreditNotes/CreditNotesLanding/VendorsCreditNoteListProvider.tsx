@@ -37,7 +37,9 @@ function VendorsCreditNoteListProvider({ query, tableStateChanged, ...props }) {
     data: vendorCreditsData,
     isLoading: isVendorCreditsLoading,
     isFetching: isVendorCreditsFetching,
-  } = useVendorCredits(query, { keepPreviousData: true });
+  } = useVendorCredits(query, {
+    placeholderData: (previousData) => previousData,
+  });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

@@ -7,12 +7,12 @@ import { BalanceSheetActionsBar } from './BalanceSheetActionsBar';
 import { BalanceSheetProvider } from './BalanceSheetProvider';
 import { BalanceSheetBody } from './BalanceSheetBody';
 import { useBalanceSheetQuery } from './utils';
-import { compose } from '@/utils';
 import {
   withBalanceSheetActions,
   WithBalanceSheetActionsProps,
 } from './withBalanceSheetActions';
 import { BalanceSheetDialogs } from './BalanceSheetDialogs';
+import { flow } from 'fp-ts/function';
 
 interface BalanceSheetFilterValues {
   fromDate: Date | string;
@@ -79,4 +79,6 @@ function BalanceSheetInner({
   );
 }
 
-export const BalanceSheet = compose(withBalanceSheetActions)(BalanceSheetInner);
+export const BalanceSheet = flow(withBalanceSheetActions)(
+  BalanceSheetInner,
+);

@@ -6,6 +6,7 @@ import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 function TaxRatesLandingEmptyStateRoot({
   // #withDialogAction
@@ -42,6 +43,6 @@ function TaxRatesLandingEmptyStateRoot({
   );
 }
 
-export const TaxRatesLandingEmptyState = R.compose(withDialogActions)(
+export const TaxRatesLandingEmptyState = flow(withDialogActions)(
   TaxRatesLandingEmptyStateRoot,
 );

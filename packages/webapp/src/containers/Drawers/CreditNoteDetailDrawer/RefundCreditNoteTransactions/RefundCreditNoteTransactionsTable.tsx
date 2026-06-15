@@ -10,8 +10,7 @@ import {
   useRefundCreditTransactionsTableColumns,
   ActionsMenu,
 } from './components';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Refund credit note transactions table.
@@ -45,6 +44,6 @@ function RefundCreditNoteTransactionsTableInner({
   );
 }
 
-export const RefundCreditNoteTransactionsTable = compose(withAlertActions)(
-  RefundCreditNoteTransactionsTableInner,
-);
+export const RefundCreditNoteTransactionsTable = flow(
+  withAlertActions,
+)(RefundCreditNoteTransactionsTableInner);

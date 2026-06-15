@@ -13,8 +13,7 @@ import { handleDeleteErrors } from '@/containers/Preferences/Users/Roles/utils';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Role delete alert.
@@ -81,7 +80,7 @@ function RoleDeleteAlertInner({
   );
 }
 
-export const RoleDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const RoleDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(RoleDeleteAlertInner);

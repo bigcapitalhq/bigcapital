@@ -5,6 +5,7 @@ import { useFormikContext } from 'formik';
 import styled from 'styled-components';
 import { Group } from '@/components';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
+import { flow } from 'fp-ts/function';
 
 function CategorizeTransactionFormFooterRoot({
   // #withBankingActions
@@ -40,9 +41,9 @@ function CategorizeTransactionFormFooterRoot({
   );
 }
 
-export const CategorizeTransactionFormFooter = R.compose(withBankingActions)(
-  CategorizeTransactionFormFooterRoot,
-);
+export const CategorizeTransactionFormFooter = flow(
+  withBankingActions,
+)(CategorizeTransactionFormFooterRoot);
 
 const Root = styled.div`
   border-top: 1px solid var(--color-aside-divider);

@@ -8,6 +8,7 @@ import {
 } from '@/containers/Subscriptions/withSubscriptionPlansActions';
 import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
 import styles from './SetupSubscription.module.scss';
+import { flow } from 'fp-ts/function';
 
 interface SubscriptionPlansPeriodsSwitchCombinedProps
   extends WithSubscriptionPlansActionsProps {}
@@ -42,6 +43,6 @@ function SubscriptionPlansPeriodSwitcherRoot({
   );
 }
 
-export const SubscriptionPlansPeriodSwitcher = R.compose(
+export const SubscriptionPlansPeriodSwitcher = flow(
   withSubscriptionPlansActions,
 )(SubscriptionPlansPeriodSwitcherRoot);

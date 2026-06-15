@@ -22,10 +22,11 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { TrialBalanceSheetExportMenu } from './components';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface TrialBalanceActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -141,10 +142,10 @@ function TrialBalanceActionsBarInner({
   );
 }
 
-export const TrialBalanceActionsBar = compose(
+export const TrialBalanceActionsBar = flow(
+  withDialogActions,
+  withTrialBalanceActions,
   withTrialBalance(({ trialBalanceDrawerFilter }) => ({
     trialBalanceDrawerFilter,
   })),
-  withTrialBalanceActions,
-  withDialogActions,
 )(TrialBalanceActionsBarInner);

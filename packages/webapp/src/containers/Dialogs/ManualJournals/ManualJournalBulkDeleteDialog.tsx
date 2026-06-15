@@ -9,7 +9,7 @@ import { useBulkDeleteManualJournals } from '@/hooks/query/manual-journals';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withManualJournalsActions } from '@/containers/Accounting/JournalsLanding/withManualJournalsActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ManualJournalBulkDeleteDialogInner({
   dialogName,
@@ -98,8 +98,8 @@ function ManualJournalBulkDeleteDialogInner({
   );
 }
 
-export const ManualJournalBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const ManualJournalBulkDeleteDialog = flow(
   withManualJournalsActions,
+  withDialogActions,
+  withDialogRedux(),
 )(ManualJournalBulkDeleteDialogInner);

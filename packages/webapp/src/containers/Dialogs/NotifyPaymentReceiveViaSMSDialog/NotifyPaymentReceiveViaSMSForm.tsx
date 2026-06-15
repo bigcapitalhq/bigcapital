@@ -10,7 +10,7 @@ import { useNotifyPaymentReceiveViaSMSContext } from './NotifyPaymentReceiveViaF
 import { transformErrors } from '@/containers/NotifyViaSMS/utils';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const notificationType = {
   key: 'payment-receive-details',
@@ -85,6 +85,6 @@ function NotifyPaymentReceiveViaSMSFormInner({
     />
   );
 }
-export const NotifyPaymentReceiveViaSMSForm = compose(withDialogActions)(
+export const NotifyPaymentReceiveViaSMSForm = flow(withDialogActions)(
   NotifyPaymentReceiveViaSMSFormInner,
 );

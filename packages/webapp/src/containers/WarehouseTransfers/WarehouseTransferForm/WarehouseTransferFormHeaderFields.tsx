@@ -9,7 +9,7 @@ import {
   FDateInput,
   FInputGroup,
 } from '@/components';
-import { momentFormatter, compose } from '@/utils';
+import { momentFormatter } from '@/utils';
 import classNames from 'classnames';
 
 import { CLASSES } from '@/constants/classes';
@@ -19,6 +19,7 @@ import { useObserveTransferNoSettings } from './utils';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse transfer form header fields.
@@ -156,11 +157,11 @@ function WarehouseTransferFormHeaderFieldsInner({
   );
 }
 
-export const WarehouseTransferFormHeaderFields = compose(
-  withDialogActions,
+export const WarehouseTransferFormHeaderFields = flow(
   withSettings(({ warehouseTransferSettings }) => ({
     warehouseTransferAutoIncrement: warehouseTransferSettings?.autoIncrement,
     warehouseTransferNextNumber: warehouseTransferSettings?.nextNumber,
     warehouseTransferNumberPrefix: warehouseTransferSettings?.numberPrefix,
   })),
+  withDialogActions,
 )(WarehouseTransferFormHeaderFieldsInner);

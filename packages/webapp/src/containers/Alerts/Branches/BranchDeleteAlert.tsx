@@ -13,8 +13,7 @@ import { handleDeleteErrors } from '@/containers/Preferences/Branches/utils';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Branch delete alert.
@@ -77,7 +76,7 @@ function BranchDeleteAlertInner({
   );
 }
 
-export const BranchDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const BranchDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(BranchDeleteAlertInner);

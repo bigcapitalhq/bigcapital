@@ -62,10 +62,21 @@ const BillFormContext = createContext<BillFormContextValue | undefined>(
 
 // Filter all purchasable items only.
 const stringifiedFilterRoles = JSON.stringify([
-  { index: 1, fieldKey: 'purchasable', value: true, condition: '&&', comparator: 'equals' },
-  { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
+  {
+    index: 1,
+    fieldKey: 'purchasable',
+    value: true,
+    condition: '&&',
+    comparator: 'equals',
+  },
+  {
+    index: 2,
+    fieldKey: 'active',
+    value: true,
+    condition: '&&',
+    comparator: 'equals',
+  },
 ]);
-
 
 type BillFormProviderProps = {
   billId?: number;

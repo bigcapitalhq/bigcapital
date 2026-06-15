@@ -22,8 +22,8 @@ import { withItems } from './withItems';
 import { useItemsListContext } from './ItemsListProvider';
 import { useItemsTableColumns, ItemsActionMenuList } from './components';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Items datatable.
@@ -183,13 +183,13 @@ function ItemsDataTableInner({
   );
 }
 
-export const ItemsDataTable = compose(
-  withItemsActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const ItemsDataTable = flow(
+  withItems(({ itemsTableState }) => ({ itemsTableState })),
   withSettings(({ itemsSettings }) => ({
     itemsTableSize: itemsSettings.tableSize,
   })),
-  withItems(({ itemsTableState }) => ({ itemsTableState })),
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withItemsActions,
 )(ItemsDataTableInner);

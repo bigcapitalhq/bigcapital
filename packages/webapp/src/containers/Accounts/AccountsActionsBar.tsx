@@ -42,8 +42,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Accounts actions bar.
@@ -239,17 +238,17 @@ function AccountsActionsBarInner({
   );
 }
 
-export const AccountsActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
-  withSettingsActions,
+export const AccountsActionsBar = flow(
+  withAccountsTableActions,
+  withSettings(({ accountsSettings }) => ({
+    accountsTableSize: accountsSettings.tableSize,
+  })),
   withAccounts(({ accountsSelectedRows, accountsTableState }) => ({
     accountsSelectedRows,
     accountsInactiveMode: accountsTableState.inactiveMode,
     accountsFilterConditions: accountsTableState.filterRoles,
   })),
-  withSettings(({ accountsSettings }) => ({
-    accountsTableSize: accountsSettings.tableSize,
-  })),
-  withAccountsTableActions,
+  withSettingsActions,
+  withAlertActions,
+  withDialogActions,
 )(AccountsActionsBarInner);

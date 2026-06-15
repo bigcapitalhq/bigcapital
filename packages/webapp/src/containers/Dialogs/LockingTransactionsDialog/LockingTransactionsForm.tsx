@@ -14,7 +14,8 @@ import { useLockingTransactionsContext } from './LockingTransactionsFormProvider
 import { LockingTransactionsFormContent } from './LockingTransactionsFormContent';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   module: '',
@@ -87,6 +88,6 @@ function LockingTransactionsFormInner({
     />
   );
 }
-export const LockingTransactionsForm = compose(withDialogActions)(
+export const LockingTransactionsForm = flow(withDialogActions)(
   LockingTransactionsFormInner,
 );

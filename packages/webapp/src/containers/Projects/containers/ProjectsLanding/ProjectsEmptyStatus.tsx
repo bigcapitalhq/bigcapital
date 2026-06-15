@@ -4,8 +4,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ProjectsEmptyStatusInner({
   // #withDialogActions
@@ -44,6 +43,6 @@ function ProjectsEmptyStatusInner({
   );
 }
 
-export const ProjectsEmptyStatus = compose(withDialogActions)(
+export const ProjectsEmptyStatus = flow(withDialogActions)(
   ProjectsEmptyStatusInner,
 );

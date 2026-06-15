@@ -21,7 +21,9 @@ export function TaxRateDetailsContentBoot({
     data: taxRate,
     isFetching: isTaxRateFetching,
     isLoading: isTaxRateLoading,
-  } = useTaxRate(taxRateId, { keepPreviousData: true });
+  } = useTaxRate(taxRateId, {
+    placeholderData: (previousData) => previousData,
+  });
 
   const provider = {
     isTaxRateLoading,

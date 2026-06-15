@@ -7,8 +7,7 @@ import { usePublishInventoryAdjustment } from '@/hooks/query';
 
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Inventory Adjustment publish alert.
@@ -64,7 +63,7 @@ function InventoryAdjustmentPublishAlertInner({
   );
 }
 
-export const InventoryAdjustmentPublishAlert = compose(
-  withAlertStoreConnect(),
+export const InventoryAdjustmentPublishAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(InventoryAdjustmentPublishAlertInner);

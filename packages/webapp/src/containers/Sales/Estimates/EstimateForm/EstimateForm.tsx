@@ -26,7 +26,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
-import { compose, transactionNumber, orderingLinesIndexes } from '@/utils';
+import { transactionNumber, orderingLinesIndexes } from '@/utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import {
   transformToEditForm,
@@ -36,6 +36,7 @@ import {
   resetFormState,
 } from './utils';
 import { PageForm } from '@/components/PageForm';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimate form.
@@ -187,7 +188,8 @@ function EstimateFormInner({
   );
 }
 
-export const EstimateForm = compose(
+export const EstimateForm = flow(
+  withCurrentOrganization(),
   withSettings(({ estimatesSettings }) => ({
     estimateNextNumber: estimatesSettings?.nextNumber,
     estimateNumberPrefix: estimatesSettings?.numberPrefix,
@@ -195,5 +197,4 @@ export const EstimateForm = compose(
     estimateCustomerNotes: estimatesSettings?.customerNotes,
     estimateTermsConditions: estimatesSettings?.termsConditions,
   })),
-  withCurrentOrganization(),
 )(EstimateFormInner);

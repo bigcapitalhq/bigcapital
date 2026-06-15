@@ -11,8 +11,9 @@ import { AllocateLandedCostFormSchema } from './AllocateLandedCostForm.schema';
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
 import { AllocateLandedCostFormContent } from './AllocateLandedCostFormContent';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import { defaultInitialValues } from './utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Allocate landed cost form.
@@ -101,6 +102,6 @@ function AllocateLandedCostFormInner({
   );
 }
 
-export const AllocateLandedCostForm = compose(withDialogActions)(
+export const AllocateLandedCostForm = flow(withDialogActions)(
   AllocateLandedCostFormInner,
 );

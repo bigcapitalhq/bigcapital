@@ -6,6 +6,7 @@ import { AbilitySubject, BankRuleAction } from '@/constants/abilityOption';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import styles from './BankRulesLandingEmptyState.module.scss';
+import { flow } from 'fp-ts/function';
 
 function BankRulesLandingEmptyStateRoot({
   // #withDialogAction
@@ -46,6 +47,6 @@ function BankRulesLandingEmptyStateRoot({
   );
 }
 
-export const BankRulesLandingEmptyState = R.compose(withDialogActions)(
+export const BankRulesLandingEmptyState = flow(withDialogActions)(
   BankRulesLandingEmptyStateRoot,
 );

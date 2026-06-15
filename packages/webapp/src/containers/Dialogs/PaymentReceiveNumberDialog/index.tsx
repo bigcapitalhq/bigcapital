@@ -2,7 +2,8 @@
 import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const PaymentReceiveNumbereDialogContent = lazy(() =>
   import('./PaymentReceiveNumberDialogContent').then((m) => ({
@@ -37,4 +38,6 @@ function PaymentReceiveNumberDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(PaymentReceiveNumberDialog);
+export const index = flow(withDialogRedux())(
+  PaymentReceiveNumberDialog,
+);

@@ -5,6 +5,7 @@ import { useFormikContext } from 'formik';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { flow } from 'fp-ts/function';
 
 function TaxRateFormDialogFormFooterRoot({ closeDialog }) {
   const { isSubmitting } = useFormikContext();
@@ -37,6 +38,6 @@ function TaxRateFormDialogFormFooterRoot({ closeDialog }) {
   );
 }
 
-export const TaxRateFormDialogFormFooter = R.compose(withDialogActions)(
+export const TaxRateFormDialogFormFooter = flow(withDialogActions)(
   TaxRateFormDialogFormFooterRoot,
 );

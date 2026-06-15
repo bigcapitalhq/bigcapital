@@ -40,7 +40,6 @@ import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-
 import { useBulkDeleteEstimatesDialog } from './hooks/use-bulk-delete-estimates-dialog';
 
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
@@ -49,6 +48,7 @@ import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimates list actions bar.
@@ -234,16 +234,16 @@ function EstimateActionsBar({
   );
 }
 
-export const EstimatesActionsBar = compose(
-  withEstimatesActions,
-  withSettingsActions,
+export const EstimatesActionsBar = flow(
+  withDrawerActions,
+  withDialogActions,
+  withSettings(({ estimatesSettings }) => ({
+    estimatesTableSize: estimatesSettings?.tableSize,
+  })),
   withEstimates(({ estimatesTableState, estimatesSelectedRows }) => ({
     estimatesFilterRoles: estimatesTableState.filterRoles,
     estimatesSelectedRows: estimatesSelectedRows || [],
   })),
-  withSettings(({ estimatesSettings }) => ({
-    estimatesTableSize: estimatesSettings?.tableSize,
-  })),
-  withDialogActions,
-  withDrawerActions,
+  withSettingsActions,
+  withEstimatesActions,
 )(EstimateActionsBar);

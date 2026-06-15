@@ -38,9 +38,9 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { useBulkDeleteCreditNotesDialog } from './hooks/use-bulk-delete-credit-notes-dialog';
+import { flow } from 'fp-ts/function';
 
 /**
  * Credit note table actions bar.
@@ -220,16 +220,16 @@ function CreditNotesActionsBarInner({
   );
 }
 
-export const CreditNotesActionsBar = compose(
-  withCreditNotesActions,
-  withSettingsActions,
+export const CreditNotesActionsBar = flow(
+  withDrawerActions,
+  withDialogActions,
+  withSettings(({ creditNoteSettings }) => ({
+    creditNoteTableSize: creditNoteSettings?.tableSize,
+  })),
   withCreditNotes(({ creditNoteTableState, creditNotesSelectedRows }) => ({
     creditNoteFilterRoles: creditNoteTableState.filterRoles,
     creditNotesSelectedRows,
   })),
-  withSettings(({ creditNoteSettings }) => ({
-    creditNoteTableSize: creditNoteSettings?.tableSize,
-  })),
-  withDialogActions,
-  withDrawerActions,
+  withSettingsActions,
+  withCreditNotesActions,
 )(CreditNotesActionsBarInner);

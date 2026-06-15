@@ -14,7 +14,8 @@ import {
   getVendorTransactionsQuerySchema,
   getVendorsTransactionsDefaultQuery,
 } from './_utils';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface VendorsTransactionsHeaderOwnProps {
   onSubmitFilter: (values: Record<string, unknown>) => void;
@@ -108,9 +109,9 @@ function VendorsTransactionsHeaderInner({
     </FinancialStatementHeader>
   );
 }
-export const VendorsTransactionsHeader = compose(
-  withVendorsTransactionsActions,
+export const VendorsTransactionsHeader = flow(
   withVendorsTransaction(({ vendorsTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: vendorsTransactionsDrawerFilter,
   })),
+  withVendorsTransactionsActions,
 )(VendorsTransactionsHeaderInner);

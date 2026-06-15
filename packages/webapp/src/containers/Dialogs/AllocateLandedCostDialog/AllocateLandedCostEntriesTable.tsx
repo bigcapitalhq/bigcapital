@@ -4,8 +4,9 @@ import styled from 'styled-components';
 
 import { DataTableEditable } from '@/components';
 
-import { compose, updateTableCell } from '@/utils';
+import { updateTableCell } from '@/utils';
 import { useAllocateLandedCostEntriesTableColumns } from './utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Allocate landed cost entries table.
@@ -17,7 +18,7 @@ export function AllocateLandedCostEntriesTable({ onUpdateData, entries }) {
   // Handle update data.
   const handleUpdateData = React.useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+      const newRows = flow(updateTableCell(rowIndex, columnId, value))(
         entries,
       );
       onUpdateData(newRows);

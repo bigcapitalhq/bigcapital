@@ -10,6 +10,7 @@ import {
 } from '@/containers/Organization/withCurrentOrganization';
 import { useSalesTaxLiabilitySummaryColumns } from './utils';
 import { compose } from 'ramda';
+import { flow } from 'fp-ts/function';
 
 interface SalesTaxLiabilitySummaryTableRootProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -96,7 +97,7 @@ const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
   }
 `;
 
-export const SalesTaxLiabilitySummaryTable = compose(
+export const SalesTaxLiabilitySummaryTable = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),

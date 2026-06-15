@@ -7,6 +7,7 @@ import { FSelect } from '../Forms';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useCreateAutofillListener } from '@/hooks/state/autofill';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customer select field.
@@ -55,4 +56,6 @@ function CustomerSelectRoot({
   );
 }
 
-export const CustomersSelect = R.compose(withDrawerActions)(CustomerSelectRoot);
+export const CustomersSelect = flow(withDrawerActions)(
+  CustomerSelectRoot,
+);

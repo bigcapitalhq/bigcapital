@@ -3,11 +3,12 @@ import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
 
 import { withCreditNotes } from './withCreditNotes';
 import { withCreditNotesActions } from './withCreditNotesActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Credit Note views tabs.
@@ -43,9 +44,9 @@ function CreditNotesViewTabsInner({
   );
 }
 
-export const CreditNotesViewTabs = compose(
-  withCreditNotesActions,
+export const CreditNotesViewTabs = flow(
   withCreditNotes(({ creditNoteTableState }) => ({
     creditNoteCurrentView: creditNoteTableState.viewSlug,
   })),
+  withCreditNotesActions,
 )(CreditNotesViewTabsInner);

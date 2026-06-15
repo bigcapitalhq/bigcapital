@@ -10,6 +10,7 @@ import { withDrawerActions } from '../Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { useBillingPageBoot } from './BillingPageBoot';
 import { getSubscriptionStatusText } from './_utils';
+import { flow } from 'fp-ts/function';
 
 function SubscriptionRoot({ openAlert, openDrawer }) {
   const { mainSubscription } = useBillingPageBoot();
@@ -142,9 +143,9 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
   );
 }
 
-export const Subscription = R.compose(
-  withAlertActions,
+export const Subscription = flow(
   withDrawerActions,
+  withAlertActions,
 )(SubscriptionRoot);
 
 function SubscriptionStatusText({ subscription }) {

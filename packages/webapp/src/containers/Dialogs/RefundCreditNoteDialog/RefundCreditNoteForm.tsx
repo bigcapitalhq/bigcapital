@@ -12,7 +12,7 @@ import { CreateRefundCreditNoteFormSchema } from './RefundCreditNoteForm.schema'
 import { RefundCreditNoteFormContent } from './RefundCreditNoteFormContent';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   from_account_id: '',
@@ -75,6 +75,6 @@ function RefundCreditNoteFormInner({
     />
   );
 }
-export const RefundCreditNoteForm = compose(withDialogActions)(
+export const RefundCreditNoteForm = flow(withDialogActions)(
   RefundCreditNoteFormInner,
 );

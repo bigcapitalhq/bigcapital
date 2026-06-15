@@ -25,12 +25,13 @@ import {
   WithAPAgingSummaryActionsProps,
 } from './withAPAgingSummaryActions';
 
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
+import { flow } from 'fp-ts/function';
 
 interface APAgingSummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -136,10 +137,10 @@ function APAgingSummaryActionsBarInner({
   );
 }
 
-export const APAgingSummaryActionsBar = compose(
-  withAPAgingSummaryActions,
+export const APAgingSummaryActionsBar = flow(
+  withDialogActions,
   withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
-  withDialogActions,
+  withAPAgingSummaryActions,
 )(APAgingSummaryActionsBarInner);

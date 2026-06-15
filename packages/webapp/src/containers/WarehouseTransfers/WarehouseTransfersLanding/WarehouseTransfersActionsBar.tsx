@@ -23,8 +23,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withWarehouseTransfers } from './withWarehouseTransfers';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse Transfers actions bar.
@@ -135,13 +134,13 @@ function WarehouseTransfersActionsBarInner({
   );
 }
 
-export const WarehouseTransfersActionsBar = compose(
-  withSettingsActions,
-  withWarehouseTransfersActions,
-  withWarehouseTransfers(({ warehouseTransferTableState }) => ({
-    warehouseTransferFilterRoles: warehouseTransferTableState.filterRoles,
-  })),
+export const WarehouseTransfersActionsBar = flow(
   withSettings(({ warehouseTransferSettings }) => ({
     warehouseTransferTableSize: warehouseTransferSettings?.tableSize,
   })),
+  withWarehouseTransfers(({ warehouseTransferTableState }) => ({
+    warehouseTransferFilterRoles: warehouseTransferTableState.filterRoles,
+  })),
+  withWarehouseTransfersActions,
+  withSettingsActions,
 )(WarehouseTransfersActionsBarInner);

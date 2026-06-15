@@ -3,6 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { flow } from 'fp-ts/function';
 
 const ReceiptCustomizeDrawerBody = React.lazy(() =>
   import('./ReceiptCustomizeDrawerBody').then((m) => ({
@@ -34,6 +35,6 @@ function ReceiptCustomizeDrawerRoot({
   );
 }
 
-export const ReceiptCustomizeDrawer = R.compose(withDrawers())(
+export const ReceiptCustomizeDrawer = flow(withDrawers())(
   ReceiptCustomizeDrawerRoot,
 );

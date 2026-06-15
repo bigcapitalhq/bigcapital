@@ -10,7 +10,7 @@ import {
   useReconcileVendorCreditTransactionsTableColumns,
   ActionsMenu,
 } from './components';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Reconcile vendor credit transactions table.
@@ -43,6 +43,6 @@ function ReconcileVendorCreditTransactionsTableInner({
   );
 }
 
-export const ReconcileVendorCreditTransactionsTable = compose(withAlertActions)(
-  ReconcileVendorCreditTransactionsTableInner,
-);
+export const ReconcileVendorCreditTransactionsTable = flow(
+  withAlertActions,
+)(ReconcileVendorCreditTransactionsTableInner);

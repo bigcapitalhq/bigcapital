@@ -10,7 +10,8 @@ import { CreateProjectFormSchema } from './ProjectForm.schema';
 import { useProjectFormContext } from './ProjectFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   contact_id: '',
@@ -89,4 +90,4 @@ function ProjectFormInner({
   );
 }
 
-export const ProjectForm = compose(withDialogActions)(ProjectFormInner);
+export const ProjectForm = flow(withDialogActions)(ProjectFormInner);

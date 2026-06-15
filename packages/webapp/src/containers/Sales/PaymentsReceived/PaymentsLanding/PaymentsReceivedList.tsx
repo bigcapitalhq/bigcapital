@@ -11,7 +11,8 @@ import { PaymentsReceivedActionsBar } from './PaymentsReceivedActionsBar';
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function PaymentsReceivedListInner({
   // #withPaymentsReceived
@@ -43,12 +44,12 @@ function PaymentsReceivedListInner({
   );
 }
 
-export const PaymentsReceivedList = compose(
+export const PaymentsReceivedList = flow(
+  withPaymentsReceivedActions,
   withPaymentsReceived(
     ({ paymentReceivesTableState, paymentsTableStateChanged }) => ({
       paymentReceivesTableState,
       paymentsTableStateChanged,
     }),
   ),
-  withPaymentsReceivedActions,
 )(PaymentsReceivedListInner);

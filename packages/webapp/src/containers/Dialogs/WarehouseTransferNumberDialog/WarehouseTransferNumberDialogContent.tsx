@@ -9,11 +9,11 @@ import { WarehouseTransferNumberDialogProvider } from './WarehouseTransferNumber
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse transfer no dialog content.
@@ -93,12 +93,12 @@ function WarehouseTransferNumberDialogContentInner({
     </WarehouseTransferNumberDialogProvider>
   );
 }
-export const WarehouseTransferNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
+export const WarehouseTransferNumberDialogContent = flow(
   withSettings(({ warehouseTransferSettings }) => ({
     autoIncrement: warehouseTransferSettings?.autoIncrement,
     nextNumber: warehouseTransferSettings?.nextNumber,
     numberPrefix: warehouseTransferSettings?.numberPrefix,
   })),
+  withSettingsActions,
+  withDialogActions,
 )(WarehouseTransferNumberDialogContentInner);

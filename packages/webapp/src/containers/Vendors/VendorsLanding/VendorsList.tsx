@@ -11,8 +11,7 @@ import { VendorsTable } from './VendorsTable';
 
 import { withVendors } from './withVendors';
 import { withVendorsActions } from './withVendorsActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendors list page.
@@ -49,10 +48,10 @@ function VendorsListInner({
   );
 }
 
-export const VendorsList = compose(
+export const VendorsList = flow(
+  withVendorsActions,
   withVendors(({ vendorsTableState, vendorsTableStateChanged }) => ({
     vendorsTableState,
     vendorsTableStateChanged,
   })),
-  withVendorsActions,
 )(VendorsListInner);

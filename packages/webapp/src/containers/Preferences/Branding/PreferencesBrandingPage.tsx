@@ -9,6 +9,7 @@ import {
   PreferencesBrandingFormFooter,
 } from './PreferencesBrandingFormContent';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { flow } from 'fp-ts/function';
 
 function PreferencesBrandingPageRoot({ changePreferencesPageTitle }) {
   useEffect(() => {
@@ -29,6 +30,6 @@ function PreferencesBrandingPageRoot({ changePreferencesPageTitle }) {
   );
 }
 
-export const PreferencesBrandingPage = R.compose(withDashboardActions)(
+export const PreferencesBrandingPage = flow(withDashboardActions)(
   PreferencesBrandingPageRoot,
 );

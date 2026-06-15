@@ -8,11 +8,12 @@ import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberF
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withSettings } from '@/containers/Settings/withSettings';
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { flow } from 'fp-ts/function';
 
 import '@/style/pages/ManualJournal/JournalNumberDialog.scss';
 
@@ -93,11 +94,11 @@ function JournalNumberDialogContentInner({
   );
 }
 
-export const JournalNumberDialogContent = compose(
-  withDialogActions,
+export const JournalNumberDialogContent = flow(
   withSettings(({ manualJournalsSettings }) => ({
     nextNumber: manualJournalsSettings?.nextNumber,
     numberPrefix: manualJournalsSettings?.numberPrefix,
     autoIncrement: manualJournalsSettings?.autoIncrement,
   })),
+  withDialogActions,
 )(JournalNumberDialogContentInner);

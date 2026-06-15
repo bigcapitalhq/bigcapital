@@ -15,8 +15,8 @@ import { TableStyle } from '@/constants';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoice payment transactions.
@@ -74,7 +74,7 @@ function InvoicePaymentTransactions({
   );
 }
 
-export const index = compose(
-  withAlertActions,
+export const index = flow(
   withDrawerActions,
+  withAlertActions,
 )(InvoicePaymentTransactions);

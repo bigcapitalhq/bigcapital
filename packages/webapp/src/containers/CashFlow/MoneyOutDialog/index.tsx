@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from 'redux';
+import { flow } from 'fp-ts/function';
 
 const MoneyOutDialogContent = React.lazy(() =>
   import('./MoneyOutDialogContent').then((m) => ({
@@ -42,4 +43,4 @@ function MoneyOutDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(MoneyOutDialog);
+export const index = flow(withDialogRedux())(MoneyOutDialog);

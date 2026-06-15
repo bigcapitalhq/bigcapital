@@ -12,8 +12,7 @@ import { useDeleteCurrency } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Currency delete alerts.
@@ -79,7 +78,7 @@ function CurrencyDeleteAlertInner({
   );
 }
 
-export const CurrencyDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const CurrencyDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(CurrencyDeleteAlertInner);

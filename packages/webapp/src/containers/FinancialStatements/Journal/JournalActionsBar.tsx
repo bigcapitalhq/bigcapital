@@ -11,13 +11,13 @@ import classNames from 'classnames';
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { withJournalActions } from './withJournalActions';
 import { withJournal } from './withJournal';
-import { compose } from '@/utils';
 import { useJournalSheetContext } from './JournalProvider';
 import { JournalSheetExportMenu } from './components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithJournalActionsProps } from './withJournalActions';
+import { flow } from 'fp-ts/function';
 
 type JournalActionsBarProps = {
   isFilterDrawerOpen: boolean;
@@ -103,10 +103,10 @@ function JournalActionsBarInner({
   );
 }
 
-export const JournalActionsBar = compose(
+export const JournalActionsBar = flow(
+  withDialogActions,
+  withJournalActions,
   withJournal(({ journalSheetDrawerFilter }) => ({
     isFilterDrawerOpen: journalSheetDrawerFilter,
   })),
-  withJournalActions,
-  withDialogActions,
 )(JournalActionsBarInner);

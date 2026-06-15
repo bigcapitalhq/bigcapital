@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const UnlockingTransactionsDialogContent = React.lazy(() =>
   import('./UnlockingTransactionsDialogContent').then((m) => ({
@@ -37,4 +37,6 @@ function UnlockingTransactionsDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(UnlockingTransactionsDialog);
+export const index = flow(withDialogRedux())(
+  UnlockingTransactionsDialog,
+);

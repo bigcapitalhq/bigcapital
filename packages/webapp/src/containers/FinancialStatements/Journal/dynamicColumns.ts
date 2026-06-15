@@ -3,6 +3,7 @@ import { Align, CLASSES } from '@/constants';
 import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
 import { useJournalSheetContext } from './JournalProvider';
+import { flow } from 'fp-ts/function';
 
 interface DescriptionCellProps {
   cell: { value: string };
@@ -132,21 +133,21 @@ const dynamicColumnMapper = R.curry(
     const _commonAccessor = commonAccessor(data);
     const _numericColumnAccessor = numericColumnAccessor(data);
 
-    return R.compose(
-      R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
-      R.when(
-        R.pathEq(['key'], 'transaction_type'),
-        transactionTypeColumnAccessor,
-      ),
+    return flow(
+      _commonAccessor,
+      R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
+      R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
+      R.when(R.pathEq(['key'], 'account_code'), accountCodeColumnAccessor),
+      R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
       R.when(
         R.pathEq(['key'], 'transaction_number'),
         transactionNumberColumnAccessor,
       ),
-      R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
-      R.when(R.pathEq(['key'], 'account_code'), accountCodeColumnAccessor),
-      R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
-      _commonAccessor,
+      R.when(
+        R.pathEq(['key'], 'transaction_type'),
+        transactionTypeColumnAccessor,
+      ),
+      R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
     )(column);
   },
 );

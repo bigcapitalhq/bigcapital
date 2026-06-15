@@ -7,6 +7,7 @@ import { IntersectionObserver } from '@/components';
 import { useAccountUncategorizedTransactionsInfinity } from '@/hooks/query';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { withBanking } from '../withBanking';
+import { flow } from 'fp-ts/function';
 
 const AccountUncategorizedTransactionsContext = React.createContext();
 
@@ -79,7 +80,7 @@ function AccountUncategorizedTransactionsBootRoot({
   );
 }
 
-const AccountUncategorizedTransactionsBoot = R.compose(
+const AccountUncategorizedTransactionsBoot = flow(
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),

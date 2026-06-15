@@ -7,8 +7,8 @@ import {
   getButtonLabelFromResource,
   getCustomizeDrawerNameFromResource,
 } from './_utils';
-import { compose } from '@/utils';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { flow } from 'fp-ts/function';
 
 /**
  * Account drawer action bar.
@@ -40,6 +40,6 @@ function BrandingTemplateActionsBarRoot({ openDrawer }) {
     </DrawerActionsBar>
   );
 }
-export const BrandingTemplateActionsBar = compose(withDrawerActions)(
+export const BrandingTemplateActionsBar = flow(withDrawerActions)(
   BrandingTemplateActionsBarRoot,
 );

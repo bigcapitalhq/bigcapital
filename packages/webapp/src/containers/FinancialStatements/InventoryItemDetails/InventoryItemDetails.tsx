@@ -19,7 +19,7 @@ import {
 import { InventoryItemDetailsBody } from './InventoryItemDetailsBody';
 import { InventoryItemDetailsDialogs } from './InventoryItemDetailsDialogs';
 import { useInventoryValuationQuery } from './utils2';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface InventoryItemDetailsProps {
   toggleInventoryItemDetailsFilterDrawer: WithInventoryItemDetailsActionsProps['toggleInventoryItemDetailsFilterDrawer'];
@@ -77,6 +77,6 @@ function InventoryItemDetailsInner({
   );
 }
 
-export const InventoryItemDetails = compose(withInventoryItemDetailsActions)(
-  InventoryItemDetailsInner,
-);
+export const InventoryItemDetails = flow(
+  withInventoryItemDetailsActions,
+)(InventoryItemDetailsInner);

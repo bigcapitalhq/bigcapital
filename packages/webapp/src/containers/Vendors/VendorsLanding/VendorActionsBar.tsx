@@ -36,8 +36,8 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendors actions bar.
@@ -204,16 +204,16 @@ function VendorActionsBarInner({
   );
 }
 
-export const VendorActionsBar = compose(
-  withVendorsActions,
-  withSettingsActions,
+export const VendorActionsBar = flow(
+  withDialogActions,
+  withSettings(({ vendorsSettings }) => ({
+    vendorsTableSize: vendorsSettings?.tableSize,
+  })),
   withVendors(({ vendorsTableState, vendorsSelectedRows }) => ({
     vendorsSelectedRows,
     vendorsInactiveMode: vendorsTableState.inactiveMode,
     vendorsFilterConditions: vendorsTableState.filterRoles,
   })),
-  withSettings(({ vendorsSettings }) => ({
-    vendorsTableSize: vendorsSettings?.tableSize,
-  })),
-  withDialogActions,
+  withSettingsActions,
+  withVendorsActions,
 )(VendorActionsBarInner);

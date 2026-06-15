@@ -23,13 +23,14 @@ import {
   WithVendorsTransactionsActionsProps,
 } from './withVendorsTransactionsActions';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { VendorTransactionsExportMenu } from './components';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface VendorsTransactionsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -152,10 +153,10 @@ function VendorsTransactionsActionsBarInner({
     </DashboardActionsBar>
   );
 }
-export const VendorsTransactionsActionsBar = compose(
+export const VendorsTransactionsActionsBar = flow(
+  withDialogActions,
+  withVendorsTransactionsActions,
   withVendorsTransaction(({ vendorsTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: vendorsTransactionsDrawerFilter,
   })),
-  withVendorsTransactionsActions,
-  withDialogActions,
 )(VendorsTransactionsActionsBarInner);

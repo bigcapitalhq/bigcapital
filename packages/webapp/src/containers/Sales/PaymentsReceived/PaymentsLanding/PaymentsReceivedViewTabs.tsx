@@ -8,8 +8,7 @@ import { pick } from 'lodash';
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment receive view tabs.
@@ -55,9 +54,9 @@ function PaymentsReceivedViewTabsInner({
   );
 }
 
-export const PaymentsReceivedViewTabs = compose(
-  withPaymentsReceivedActions,
+export const PaymentsReceivedViewTabs = flow(
   withPaymentsReceived(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
   })),
+  withPaymentsReceivedActions,
 )(PaymentsReceivedViewTabsInner);

@@ -6,7 +6,7 @@ import { Formik } from 'formik';
 
 import { AppToaster } from '@/components';
 import { useItemCategoryContext } from './ItemCategoryProvider';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import {
   CreateItemCategoryFormSchema,
   EditItemCategoryFormSchema,
@@ -14,6 +14,7 @@ import {
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { ItemCategoryForm as ItemCategoryFormContent } from './ItemCategoryFormContent';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   name: '',
@@ -111,6 +112,6 @@ function ItemCategoryFormInner({
   );
 }
 
-export const ItemCategoryForm = compose(withDialogActions)(
+export const ItemCategoryForm = flow(withDialogActions)(
   ItemCategoryFormInner,
 );

@@ -12,8 +12,7 @@ import { useDeleteItemCategory } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item Category delete alerts.
@@ -71,7 +70,7 @@ function ItemCategoryDeleteAlertInner({
   );
 }
 
-export const ItemCategoryDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const ItemCategoryDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ItemCategoryDeleteAlertInner);

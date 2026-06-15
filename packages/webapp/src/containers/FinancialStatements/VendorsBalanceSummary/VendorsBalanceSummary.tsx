@@ -12,7 +12,7 @@ import {
 } from './withVendorsBalanceSummaryActions';
 import { useVendorsBalanceSummaryQuery } from './utils';
 import { VendorBalanceDialogs } from './VendorBalanceDialogs';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface VendorsBalanceSummaryProps {
   toggleVendorSummaryFilterDrawer: WithVendorsBalanceSummaryActionsProps['toggleVendorSummaryFilterDrawer'];
@@ -72,6 +72,6 @@ function VendorsBalanceSummaryInner({
   );
 }
 
-export const VendorsBalanceSummary = compose(withVendorsBalanceSummaryActions)(
-  VendorsBalanceSummaryInner,
-);
+export const VendorsBalanceSummary = flow(
+  withVendorsBalanceSummaryActions,
+)(VendorsBalanceSummaryInner);

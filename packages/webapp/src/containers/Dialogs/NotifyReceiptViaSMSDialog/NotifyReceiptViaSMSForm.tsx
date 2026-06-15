@@ -10,7 +10,7 @@ import { useNotifyReceiptViaSMSContext } from './NotifyReceiptViaSMSFormProvider
 import { transformErrors } from '@/containers/NotifyViaSMS/utils';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const notificationType = {
   key: 'sale-receipt-details',
@@ -83,6 +83,6 @@ function NotifyReceiptViaSMSFormInner({
   );
 }
 
-export const NotifyReceiptViaSMSForm = compose(withDialogActions)(
+export const NotifyReceiptViaSMSForm = flow(withDialogActions)(
   NotifyReceiptViaSMSFormInner,
 );

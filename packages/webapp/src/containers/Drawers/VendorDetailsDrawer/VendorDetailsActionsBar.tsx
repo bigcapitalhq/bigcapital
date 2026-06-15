@@ -34,8 +34,9 @@ import {
   PaymentMadeAction,
   VendorAction,
 } from '../../../constants/abilityOption';
-import { safeCallback, compose } from '@/utils';
+import { safeCallback } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendor details actions bar.
@@ -139,8 +140,8 @@ function VendorDetailsActionsBarInner({
   );
 }
 
-export const VendorDetailsActionsBar = compose(
-  withDrawerActions,
-  withAlertActions,
+export const VendorDetailsActionsBar = flow(
   withDialogActions,
+  withAlertActions,
+  withDrawerActions,
 )(VendorDetailsActionsBarInner);

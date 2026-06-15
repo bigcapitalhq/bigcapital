@@ -14,11 +14,12 @@ import {
   WithPurchasesByItemsActionsProps,
 } from './withPurchasesByItemsActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import {
   getDefaultPurchasesByItemsQuery,
   getPurchasesByItemsQuerySchema,
 } from './utils';
+import { flow } from 'fp-ts/function';
 
 interface PurchasesByItemsFormValues {
   fromDate: Date;
@@ -117,11 +118,11 @@ function PurchasesByItemsHeaderInner({
   );
 }
 
-export const PurchasesByItemsHeader = compose(
+export const PurchasesByItemsHeader = flow(
+  withPurchasesByItemsActions,
   withPurchasesByItems(({ purchasesByItemsDrawerFilter }) => ({
     purchasesByItemsDrawerFilter,
   })),
-  withPurchasesByItemsActions,
 )(PurchasesByItemsHeaderInner);
 
 const PurchasesByItemsDrawerHeader = styled(FinancialStatementHeader)`

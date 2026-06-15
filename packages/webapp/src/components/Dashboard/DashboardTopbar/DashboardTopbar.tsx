@@ -37,8 +37,7 @@ import {
   COMMUNITY_BIGCAPITAL_LINK,
   DOCS_BIGCAPITAL_LINK,
 } from '@/constants/routes';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Dashboard topbar.
@@ -171,14 +170,14 @@ function DashboardTopbar({
   );
 }
 
-export default compose(
-  withUniversalSearchActions,
+export default flow(
+  withDialogActions,
+  withDashboardActions,
   withDashboard(({ pageTitle, pageHint, editViewId, sidebarExpended }) => ({
     pageTitle,
     editViewId,
     sidebarExpended,
     pageHint,
   })),
-  withDashboardActions,
-  withDialogActions,
+  withUniversalSearchActions,
 )(DashboardTopbar);

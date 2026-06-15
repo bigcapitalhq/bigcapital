@@ -9,7 +9,7 @@ import { useBulkDeleteEstimates } from '@/hooks/query/estimates';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withEstimatesActions } from '@/containers/Sales/Estimates/EstimatesLanding/withEstimatesActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function EstimateBulkDeleteDialogInner({
   dialogName,
@@ -96,8 +96,8 @@ function EstimateBulkDeleteDialogInner({
   );
 }
 
-export const EstimateBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const EstimateBulkDeleteDialog = flow(
   withEstimatesActions,
+  withDialogActions,
+  withDialogRedux(),
 )(EstimateBulkDeleteDialogInner);

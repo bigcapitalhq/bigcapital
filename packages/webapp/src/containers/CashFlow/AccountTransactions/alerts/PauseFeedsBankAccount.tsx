@@ -7,7 +7,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { usePauseFeedsBankAccount } from '@/hooks/query/banking';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Pause feeds of the bank account alert.
@@ -62,7 +62,7 @@ function PauseFeedsBankAccountAlert({
   );
 }
 
-export const PauseFeedsBankAccount = compose(
-  withAlertStoreConnect(),
+export const PauseFeedsBankAccount = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(PauseFeedsBankAccountAlert);

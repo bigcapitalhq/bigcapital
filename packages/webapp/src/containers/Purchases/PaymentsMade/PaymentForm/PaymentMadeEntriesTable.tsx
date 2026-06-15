@@ -10,8 +10,9 @@ import {
 import { CLASSES } from '@/constants/classes';
 import { usePaymentMadeEntriesTableColumns } from './components';
 import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
-import { compose, updateTableCell } from '@/utils';
+import { updateTableCell } from '@/utils';
 import { useFormikContext } from 'formik';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment made items table.
@@ -36,7 +37,7 @@ export function PaymentMadeEntriesTable({
   // Handle update data.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+      const newRows = flow(updateTableCell(rowIndex, columnId, value))(
         entries,
       );
       onUpdateData(newRows);

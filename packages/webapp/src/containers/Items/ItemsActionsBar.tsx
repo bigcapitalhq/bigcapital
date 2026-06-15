@@ -36,9 +36,9 @@ import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withDialogActions } from '../Dialog/withDialogActions';
 
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
 import { isEmpty } from 'lodash';
 import { useBulkDeleteItemsDialog } from './hooks/use-bulk-delete-items-dialog';
+import { flow } from 'fp-ts/function';
 
 /**
  * Items actions bar.
@@ -214,16 +214,16 @@ function ItemsActionsBarInner({
   );
 }
 
-export const ItemsActionsBar = compose(
-  withSettingsActions,
+export const ItemsActionsBar = flow(
+  withDialogActions,
+  withItemsActions,
+  withSettings(({ itemsSettings }) => ({
+    itemsTableSize: itemsSettings.tableSize,
+  })),
   withItems(({ itemsSelectedRows, itemsTableState }) => ({
     itemsSelectedRows,
     itemsInactiveMode: itemsTableState.inactiveMode,
     itemsFilterRoles: itemsTableState.filterRoles,
   })),
-  withSettings(({ itemsSettings }) => ({
-    itemsTableSize: itemsSettings.tableSize,
-  })),
-  withItemsActions,
-  withDialogActions,
+  withSettingsActions,
 )(ItemsActionsBarInner);
