@@ -8,8 +8,7 @@ import { useDeleteProjectTask } from '../../hooks';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project tasks delete alert.
@@ -74,7 +73,7 @@ function ProjectTaskDeleteAlertInner({
   );
 }
 
-export const ProjectTaskDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const ProjectTaskDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ProjectTaskDeleteAlertInner);

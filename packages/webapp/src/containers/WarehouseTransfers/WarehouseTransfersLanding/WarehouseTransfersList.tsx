@@ -8,7 +8,8 @@ import { withWarehouseTransfers } from './withWarehouseTransfers';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
 
 import { WarehouseTransfersListProvider } from './WarehouseTransfersListProvider';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function WarehouseTransfersListInner({
   // #withWarehouseTransfers
@@ -40,12 +41,12 @@ function WarehouseTransfersListInner({
   );
 }
 
-export const WarehouseTransfersList = compose(
-  withWarehouseTransfersActions,
+export const WarehouseTransfersList = flow(
   withWarehouseTransfers(
     ({ warehouseTransferTableState, warehouseTransferTableStateChanged }) => ({
       warehouseTransferTableState,
       warehouseTransferTableStateChanged,
     }),
   ),
+  withWarehouseTransfersActions,
 )(WarehouseTransfersListInner);

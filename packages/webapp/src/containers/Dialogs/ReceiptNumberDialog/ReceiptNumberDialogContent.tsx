@@ -10,11 +10,12 @@ import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberF
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Receipt number dialog's content.
@@ -93,11 +94,11 @@ function ReceiptNumberDialogContentInner({
   );
 }
 
-export const ReceiptNumberDialogContent = compose(
-  withDialogActions,
+export const ReceiptNumberDialogContent = flow(
   withSettings(({ receiptSettings }) => ({
     nextNumber: receiptSettings?.nextNumber,
     numberPrefix: receiptSettings?.numberPrefix,
     autoIncrement: receiptSettings?.autoIncrement,
   })),
+  withDialogActions,
 )(ReceiptNumberDialogContentInner);

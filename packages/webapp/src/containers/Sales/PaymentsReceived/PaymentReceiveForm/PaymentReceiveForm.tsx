@@ -25,7 +25,7 @@ import {
   CreatePaymentReceiveFormSchema,
 } from './PaymentReceiveForm.schema';
 import { AppToaster } from '@/components';
-import { transactionNumber, compose } from '@/utils';
+import { transactionNumber } from '@/utils';
 
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {
@@ -38,6 +38,7 @@ import {
 } from './utils';
 import { PaymentReceiveSyncIncrementSettingsToForm } from './components';
 import { PageForm } from '@/components/PageForm';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment Receive form.
@@ -202,7 +203,9 @@ function PaymentReceiveFormRoot({
   );
 }
 
-export const PaymentReceivedForm = compose(
+export const PaymentReceivedForm = flow(
+  withDialogActions,
+  withCurrentOrganization(),
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveSettings,
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
@@ -210,6 +213,4 @@ export const PaymentReceivedForm = compose(
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
     preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
   })),
-  withCurrentOrganization(),
-  withDialogActions,
 )(PaymentReceiveFormRoot);

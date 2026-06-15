@@ -9,7 +9,7 @@ import { useBulkDeleteReceipts } from '@/hooks/query/receipts';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withReceiptsActions } from '@/containers/Sales/Receipts/ReceiptsLanding/withReceiptsActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ReceiptBulkDeleteDialogInner({
   dialogName,
@@ -96,8 +96,8 @@ function ReceiptBulkDeleteDialogInner({
   );
 }
 
-export const ReceiptBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const ReceiptBulkDeleteDialog = flow(
   withReceiptsActions,
+  withDialogActions,
+  withDialogRedux(),
 )(ReceiptBulkDeleteDialogInner);

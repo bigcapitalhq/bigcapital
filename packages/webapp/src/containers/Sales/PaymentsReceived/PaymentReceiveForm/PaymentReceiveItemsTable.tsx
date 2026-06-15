@@ -9,7 +9,8 @@ import { CLASSES } from '@/constants/classes';
 import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';
 import { DataTableEditable } from '@/components';
 import { usePaymentReceiveEntriesColumns } from './components';
-import { compose, updateTableCell } from '@/utils';
+import { updateTableCell } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment receive items table.
@@ -41,7 +42,7 @@ export function PaymentReceiveItemsTable({
   // Handle update data.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+      const newRows = flow(updateTableCell(rowIndex, columnId, value))(
         entries,
       );
 

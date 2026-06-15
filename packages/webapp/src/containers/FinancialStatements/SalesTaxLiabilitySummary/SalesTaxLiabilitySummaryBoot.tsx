@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useMemo, ReactNode } from 'react';
-import { SalesTaxLiabilityPdfQuery, SalesTaxLiabilityTableQuery } from '@bigcapital/sdk-ts';
+import {
+  SalesTaxLiabilityPdfQuery,
+  SalesTaxLiabilityTableQuery,
+} from '@bigcapital/sdk-ts';
 import { FinancialReportPage } from '../FinancialReportPage';
 import { transformFilterFormToQuery } from '../common';
 import { useSalesTaxLiabilitySummary } from '@/hooks/query';

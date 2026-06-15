@@ -1,5 +1,10 @@
-// @ts-nocheck
 import React, { useState } from 'react';
+import type {
+  AccountsList,
+  BranchesListResponse,
+  BankingAccountsListResponse,
+  CreateCashflowTransactionBody,
+} from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
@@ -11,7 +16,36 @@ import {
   useSettingCashFlow,
 } from '@/hooks/query';
 
-const MoneyInDialogContent = React.createContext();
+type MoneyInSubmitPayload = Record<string, unknown>;
+
+type MoneyInDialogContextValue = {
+  accountId: number | null;
+  setAccountId: React.Dispatch<React.SetStateAction<number | null>>;
+  defaultAccountId: number | undefined;
+  accountType: string | undefined;
+  dialogName: string | undefined;
+  accounts: AccountsList | undefined;
+  branches: BranchesListResponse | undefined;
+  cashflowAccounts: BankingAccountsListResponse | undefined;
+  isAccountsLoading: boolean;
+  isBranchesSuccess: boolean;
+  submitPayload: MoneyInSubmitPayload;
+  setSubmitPayload: React.Dispatch<React.SetStateAction<MoneyInSubmitPayload>>;
+  createCashflowTransactionMutate: (
+    values: CreateCashflowTransactionBody,
+  ) => Promise<void>;
+};
+
+type MoneyInDialogProviderProps = {
+  accountId?: number;
+  accountType?: string;
+  dialogName?: string;
+  children?: React.ReactNode;
+};
+
+const MoneyInDialogContent = React.createContext<
+  MoneyInDialogContextValue | undefined
+>(undefined);
 
 /**
  * Money in dialog provider.
@@ -21,9 +55,11 @@ function MoneyInDialogProvider({
   accountType,
   dialogName,
   ...props
-}) {
+}: MoneyInDialogProviderProps) {
   // Holds the selected account id of the dialog.
-  const [accountId, setAccountId] = useState<number | null>(defaultAccountId);
+  const [accountId, setAccountId] = useState<number | null>(
+    defaultAccountId ?? null,
+  );
 
   // Detarmines whether the feature is enabled.
   const { featureCan } = useFeatureCan();
@@ -40,8 +76,14 @@ function MoneyInDialogProvider({
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Fetch cash flow list.
-  const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =
-    useCashflowAccounts({}, { keepPreviousData: true });
+  const { data: cashflowAccountsData, isLoading: isCashFlowAccountsLoading } =
+    useCashflowAccounts(
+      {},
+      { placeholderData: (previousData) => previousData },
+    );
+  const cashflowAccounts = cashflowAccountsData as
+    | BankingAccountsListResponse
+    | undefined;
 
   // Mutation create cashflow transaction.
   const { mutateAsync: createCashflowTransactionMutate } =
@@ -51,10 +93,11 @@ function MoneyInDialogProvider({
   const { isLoading: isSettingsLoading } = useSettingCashFlow();
 
   // Submit payload.
-  const [submitPayload, setSubmitPayload] = React.useState({});
+  const [submitPayload, setSubmitPayload] =
+    React.useState<MoneyInSubmitPayload>({});
 
   // Provider data.
-  const provider = {
+  const provider: MoneyInDialogContextValue = {
     accounts,
     branches,
 
@@ -63,8 +106,8 @@ function MoneyInDialogProvider({
     setAccountId,
 
     accountType,
-    isAccountsLoading,
-    isBranchesSuccess,
+    isAccountsLoading: isAccountsLoading ?? false,
+    isBranchesSuccess: isBranchesSuccess ?? false,
 
     cashflowAccounts,
 
@@ -88,6 +131,14 @@ function MoneyInDialogProvider({
   );
 }
 
-const useMoneyInDailogContext = () => React.useContext(MoneyInDialogContent);
+const useMoneyInDailogContext = (): MoneyInDialogContextValue => {
+  const ctx = React.useContext(MoneyInDialogContent);
+  if (!ctx) {
+    throw new Error(
+      'useMoneyInDailogContext must be used within MoneyInDialogProvider',
+    );
+  }
+  return ctx;
+};
 
 export { MoneyInDialogProvider, useMoneyInDailogContext };

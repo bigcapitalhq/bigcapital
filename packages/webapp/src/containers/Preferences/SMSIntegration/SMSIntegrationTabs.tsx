@@ -12,8 +12,7 @@ import { Card } from '@/components';
 import '@/style/pages/Preferences/SMSIntegration.scss';
 
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * SMS Integration Tabs.
@@ -46,7 +45,7 @@ function SMSIntegrationTabsInner({
   );
 }
 
-export const SMSIntegrationTabs = compose(withDashboardActions)(
+export const SMSIntegrationTabs = flow(withDashboardActions)(
   SMSIntegrationTabsInner,
 );
 

@@ -7,8 +7,7 @@ import { FormattedMessage as T, AppToaster } from '@/components';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function AccountBulkActivateAlertInner({
   name,
@@ -65,7 +64,7 @@ function AccountBulkActivateAlertInner({
   );
 }
 
-export const AccountBulkActivateAlert = compose(
-  withAlertStoreConnect(),
+export const AccountBulkActivateAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(AccountBulkActivateAlertInner);

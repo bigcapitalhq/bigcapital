@@ -7,13 +7,14 @@ import { defaultTo } from 'lodash';
 import { useDeepCompareEffect } from '@/hooks/utils';
 
 import { DataTableEditable } from '@/components';
-import { compose, updateTableCell } from '@/utils';
+import { updateTableCell } from '@/utils';
 import {
   useReconcileVendorCreditTableColumns,
   maxAmountCreditFromRemaining,
 } from './utils';
 import { maxCreditNoteAmountEntries } from '@/containers/Dialogs/ReconcileCreditNoteDialog/utils';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
+import { flow } from 'fp-ts/function';
 
 /**
  * Reconcile vendor credit entries table.
@@ -34,7 +35,7 @@ export function ReconcileVendorCreditEntriesTable({
   // Handle update data.
   const handleUpdateData = React.useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+      const newRows = flow(updateTableCell(rowIndex, columnId, value))(
         entries,
       );
       onUpdateData(newRows);
@@ -44,9 +45,9 @@ export function ReconcileVendorCreditEntriesTable({
 
   // Watches deeply entries to compose a new entries.
   useDeepCompareEffect(() => {
-    const newEntries = R.compose(
-      maxCreditNoteAmountEntries(defaultTo(credits_remaining, 0)),
+    const newEntries = flow(
       maxAmountCreditFromRemaining,
+      maxCreditNoteAmountEntries(defaultTo(credits_remaining, 0)),
     )(entries);
 
     onUpdateData(newEntries);

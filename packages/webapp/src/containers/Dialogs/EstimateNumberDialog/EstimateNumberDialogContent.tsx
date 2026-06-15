@@ -9,11 +9,12 @@ import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberF
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimate number dialog's content.
@@ -94,11 +95,11 @@ function EstimateNumberDialogContentInner({
   );
 }
 
-export const EstimateNumberDialogContent = compose(
-  withDialogActions,
+export const EstimateNumberDialogContent = flow(
   withSettings(({ estimatesSettings }) => ({
     nextNumber: estimatesSettings?.nextNumber,
     numberPrefix: estimatesSettings?.numberPrefix,
     autoIncrement: estimatesSettings?.autoIncrement,
   })),
+  withDialogActions,
 )(EstimateNumberDialogContentInner);

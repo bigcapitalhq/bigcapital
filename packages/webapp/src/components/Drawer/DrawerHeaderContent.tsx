@@ -6,8 +6,8 @@ import { Classes, Icon, H4, Button } from '@blueprintjs/core';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useDrawerContext } from './DrawerProvider';
 
-import { compose } from '@/utils';
 import styled from 'styled-components';
+import { flow } from 'fp-ts/function';
 
 /**
  * Drawer header content.
@@ -47,7 +47,7 @@ function DrawerHeaderContentRoot(props) {
   );
 }
 
-export const DrawerHeaderContent = compose(withDrawerActions)(
+export const DrawerHeaderContent = flow(withDrawerActions)(
   DrawerHeaderContentRoot,
 );
 

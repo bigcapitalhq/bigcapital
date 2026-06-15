@@ -3,6 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { flow } from 'fp-ts/function';
 
 const EstimateSendMailContent = React.lazy(() =>
   import('./EstimateSendMailContent').then((module) => ({
@@ -37,6 +38,6 @@ function EstimateSendMailDrawerRoot({
   );
 }
 
-export const EstimateSendMailDrawer = R.compose(withDrawers())(
+export const EstimateSendMailDrawer = flow(withDrawers())(
   EstimateSendMailDrawerRoot,
 );

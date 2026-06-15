@@ -6,7 +6,7 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 // Lazy loading the content.
 const GeneralLedgerPdfDialogContent = lazy(() =>
@@ -47,6 +47,6 @@ function GeneralLedgerPdfDialogRoot({
   );
 }
 
-export const GeneralLedgerPdfDialog = compose(withDialogRedux())(
+export const GeneralLedgerPdfDialog = flow(withDialogRedux())(
   GeneralLedgerPdfDialogRoot,
 );

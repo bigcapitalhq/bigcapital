@@ -2,6 +2,7 @@ import * as R from 'ramda';
 
 import { getColumnWidth } from '@/utils';
 import { Align } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 
@@ -36,12 +37,12 @@ const dynamicColumnMapper = R.curry(
     const taxNameAccessorColumn = taxNameAccessor(data);
     const taxableAmountColumn = taxableAmountAccessor(data);
 
-    return R.compose(
-      R.when(R.pathEq(['key'], 'taxName'), taxNameAccessorColumn),
-      R.when(R.pathEq(['key'], 'taxableAmount'), taxableAmountColumn),
-      R.when(R.pathEq(['key'], 'taxRate'), taxableAmountColumn),
-      R.when(R.pathEq(['key'], 'taxPercentage'), taxableAmountColumn),
+    return flow(
       R.when(R.pathEq(['key'], 'collectedTax'), taxableAmountColumn),
+      R.when(R.pathEq(['key'], 'taxPercentage'), taxableAmountColumn),
+      R.when(R.pathEq(['key'], 'taxRate'), taxableAmountColumn),
+      R.when(R.pathEq(['key'], 'taxableAmount'), taxableAmountColumn),
+      R.when(R.pathEq(['key'], 'taxName'), taxNameAccessorColumn),
     )(column);
   },
 );

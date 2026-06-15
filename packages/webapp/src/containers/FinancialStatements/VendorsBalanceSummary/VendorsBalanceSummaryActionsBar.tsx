@@ -20,13 +20,14 @@ import {
 } from './withVendorsBalanceSummaryActions';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { VendorSummarySheetExportMenu } from './components';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface VendorsBalanceSummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -148,10 +149,10 @@ function VendorsBalanceSummaryActionsBarInner({
     </DashboardActionsBar>
   );
 }
-export const VendorsBalanceSummaryActionsBar = compose(
-  withVendorsBalanceSummaryActions,
+export const VendorsBalanceSummaryActionsBar = flow(
+  withDialogActions,
   withVendorsBalanceSummary(({ VendorsSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: VendorsSummaryFilterDrawer,
   })),
-  withDialogActions,
+  withVendorsBalanceSummaryActions,
 )(VendorsBalanceSummaryActionsBarInner);

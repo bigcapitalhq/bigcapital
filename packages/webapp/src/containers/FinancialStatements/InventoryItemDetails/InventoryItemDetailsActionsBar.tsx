@@ -24,12 +24,13 @@ import {
   WithInventoryItemDetailsActionsProps,
 } from './withInventoryItemDetailsActions';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
+import { flow } from 'fp-ts/function';
 
 interface InventoryItemDetailsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -149,10 +150,10 @@ function InventoryItemDetailsActionsBarInner({
   );
 }
 
-export const InventoryItemDetailsActionsBar = compose(
+export const InventoryItemDetailsActionsBar = flow(
+  withDialogActions,
+  withInventoryItemDetailsActions,
   withInventoryItemDetails(({ inventoryItemDetailDrawerFilter }) => ({
     isFilterDrawerOpen: inventoryItemDetailDrawerFilter,
   })),
-  withInventoryItemDetailsActions,
-  withDialogActions,
 )(InventoryItemDetailsActionsBarInner);

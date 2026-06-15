@@ -3,8 +3,7 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, EmptyStatus } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function BranchesEmptyStatusInner({
   // #withDialogActions
@@ -37,6 +36,6 @@ function BranchesEmptyStatusInner({
     />
   );
 }
-export const BranchesEmptyStatus = compose(withDialogActions)(
+export const BranchesEmptyStatus = flow(withDialogActions)(
   BranchesEmptyStatusInner,
 );

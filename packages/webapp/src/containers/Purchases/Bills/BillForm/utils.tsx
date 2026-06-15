@@ -32,6 +32,7 @@ import {
   transformAttachmentsToForm,
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
+import { flow } from 'fp-ts/function';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -96,9 +97,9 @@ export const transformToEditForm = (bill) => {
       Math.max(MIN_LINES_NUMBER - bill.entries.length, 0),
     ),
   ];
-  const entries = R.compose(
-    ensureEntriesHaveEmptyLine(defaultBillEntry),
+  const entries = flow(
     updateItemsEntriesTotal,
+    ensureEntriesHaveEmptyLine(defaultBillEntry),
   )(initialEntries);
 
   const attachments = transformAttachmentsToForm(bill);
@@ -117,11 +118,14 @@ export const transformToEditForm = (bill) => {
  * Transformes bill entries to submit request.
  */
 export const transformEntriesToSubmit = (entries) => {
-  const transformBillEntry = R.compose(
-    R.omit(['amount']),
+  const transformBillEntry = flow(
     R.curry(transformToForm)(R.__, defaultBillEntry),
+    R.omit(['amount']),
   );
-  return R.compose(orderingLinesIndexes, R.map(transformBillEntry))(entries);
+  return flow(
+    R.map(transformBillEntry),
+    orderingLinesIndexes,
+  )(entries);
 };
 
 /**
@@ -283,7 +287,7 @@ export const composeEntriesOnEditInclusiveTax = (
   inclusiveExclusiveTax: string,
   entries,
 ) => {
-  return R.compose(
+  return flow(
     assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
   )(entries);
 };
@@ -412,10 +416,10 @@ export const useBillTotal = () => {
   const discountAmount = useBillDiscountAmount();
   const adjustmentAmount = useBillAdjustmentAmount();
 
-  return R.compose(
-    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
-    R.subtract(R.__, discountAmount),
+  return flow(
     R.add(R.__, adjustmentAmount),
+    R.subtract(R.__, discountAmount),
+    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
   )(subtotal);
 };
 

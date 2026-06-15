@@ -2,7 +2,8 @@
 import React from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const WarehouseTransferNumberDialogContent = React.lazy(() =>
   import('./WarehouseTransferNumberDialogContent').then((m) => ({
@@ -39,4 +40,6 @@ function WarehouseTransferNumberDilaog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(WarehouseTransferNumberDilaog);
+export const index = flow(withDialogRedux())(
+  WarehouseTransferNumberDilaog,
+);

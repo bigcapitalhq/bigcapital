@@ -2,6 +2,7 @@
 import * as R from 'ramda';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { withUniversalSearchActions } from './withUniversalSearchActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Universal search hotkey.
@@ -14,6 +15,6 @@ function DashboardUniversalSearchHotkey({ openGlobalSearch }) {
   return null;
 }
 
-export const DashboardUniversalSearchHotkeys = R.compose(
+export const DashboardUniversalSearchHotkeys = flow(
   withUniversalSearchActions,
 )(DashboardUniversalSearchHotkey);

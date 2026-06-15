@@ -18,11 +18,11 @@ import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { useSetDefaultWorkspace } from '@/ee/workspaces/hooks/query/workspaces';
 import { useAuthOrganizationId } from '@/hooks/state';
 import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
-import { compose } from '@/utils';
 import { OrganizationsListWorkspaceCell } from './OrganizationsListWorkspaceCell';
 import { WorkspaceSwitchingOverlay } from '@/ee/workspaces/components/WorkspaceSwitchingOverlay';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Organizations list table component.
@@ -261,4 +261,4 @@ function OrganizationsListTable({
   );
 }
 
-export default compose(withDialogActions)(OrganizationsListTable);
+export default flow(withDialogActions)(OrganizationsListTable);

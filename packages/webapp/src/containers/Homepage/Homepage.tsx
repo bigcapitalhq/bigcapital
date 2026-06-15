@@ -6,8 +6,7 @@ import { HomepageContent } from './HomepageContent';
 
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Dashboard homepage.
@@ -30,7 +29,7 @@ function DashboardHomepage({
   );
 }
 
-export const Homepage = compose(
-  withDashboardActions,
+export const Homepage = flow(
   withCurrentOrganization(({ organization }) => ({ organization })),
+  withDashboardActions,
 )(DashboardHomepage);

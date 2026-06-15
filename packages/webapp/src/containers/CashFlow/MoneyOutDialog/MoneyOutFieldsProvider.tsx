@@ -1,10 +1,16 @@
-// @ts-nocheck
 import React from 'react';
+import type { Account } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { useAccount } from '@/hooks/query';
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 
-const MoneyOutFieldsContext = React.createContext();
+type MoneyOutFieldsContextValue = {
+  account: Account | undefined;
+};
+
+const MoneyOutFieldsContext = React.createContext<
+  MoneyOutFieldsContextValue | undefined
+>(undefined);
 
 /**
  * Money out fields dialog provider.
@@ -17,7 +23,7 @@ function MoneyOutFieldsProvider({ ...props }) {
     enabled: !!accountId,
   });
   // Provider data.
-  const provider = {
+  const provider: MoneyOutFieldsContextValue = {
     account,
   };
   const isLoading = isAccountLoading;
@@ -29,6 +35,14 @@ function MoneyOutFieldsProvider({ ...props }) {
   );
 }
 
-const useMoneyOutFieldsContext = () => React.useContext(MoneyOutFieldsContext);
+const useMoneyOutFieldsContext = (): MoneyOutFieldsContextValue => {
+  const ctx = React.useContext(MoneyOutFieldsContext);
+  if (!ctx) {
+    throw new Error(
+      'useMoneyOutFieldsContext must be used within MoneyOutFieldsProvider',
+    );
+  }
+  return ctx;
+};
 
 export { MoneyOutFieldsProvider, useMoneyOutFieldsContext };

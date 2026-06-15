@@ -24,8 +24,8 @@ import {
   Can,
 } from '@/components';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendor credit detail actions bar.
@@ -109,8 +109,8 @@ function VendorCreditDetailActionsBarInner({
   );
 }
 
-export const VendorCreditDetailActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
+export const VendorCreditDetailActionsBar = flow(
   withDrawerActions,
+  withAlertActions,
+  withDialogActions,
 )(VendorCreditDetailActionsBarInner);

@@ -12,6 +12,7 @@ import DashboardErrorBoundary from '@/components/Dashboard/DashboardErrorBoundar
 import PreferencesSidebar from '@/components/Preferences/PreferencesSidebar';
 
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { flow } from 'fp-ts/function';
 
 import '@/style/pages/Preferences/Page.scss';
 
@@ -46,4 +47,4 @@ function PreferencesPage({ toggleSidebarExpand }) {
   );
 }
 
-export default R.compose(withDashboardActions)(PreferencesPage);
+export default flow(withDashboardActions)(PreferencesPage);

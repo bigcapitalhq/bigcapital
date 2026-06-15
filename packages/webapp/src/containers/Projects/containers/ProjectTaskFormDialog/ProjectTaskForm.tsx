@@ -6,9 +6,10 @@ import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 import { CreateProjectTaskFormSchema } from './ProjectTaskForm.schema';
 import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import { TaskFormContent as ProjectTaskFormContent } from './ProjectTaskFormContent';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   name: '',
@@ -84,4 +85,6 @@ function ProjectTaskFormInner({
   );
 }
 
-export const ProjectTaskForm = compose(withDialogActions)(ProjectTaskFormInner);
+export const ProjectTaskForm = flow(withDialogActions)(
+  ProjectTaskFormInner,
+);

@@ -19,7 +19,8 @@ import {
   transformToObject,
 } from './utils';
 import { handleDeleteErrors } from '../utils';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultValues = {
   role_name: '',
@@ -106,4 +107,4 @@ function RolesFormInner({
   );
 }
 
-export const RolesForm = compose(withDashboardActions)(RolesFormInner);
+export const RolesForm = flow(withDashboardActions)(RolesFormInner);

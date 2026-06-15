@@ -12,7 +12,8 @@ import { PreferencesGeneralSchema } from './General.schema';
 import { useGeneralFormContext } from './GeneralFormProvider';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultValues = {
   name: '',
@@ -79,5 +80,6 @@ function GeneralFormPageInner({
   );
 }
 
-export const GeneralFormPage =
-  compose(withDashboardActions)(GeneralFormPageInner);
+export const GeneralFormPage = flow(withDashboardActions)(
+  GeneralFormPageInner,
+);

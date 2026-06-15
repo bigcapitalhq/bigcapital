@@ -16,8 +16,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withProjectsActions } from './withProjectsActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Projects list datatable.
@@ -119,13 +118,13 @@ function ProjectsDataTableInner({
   );
 }
 
-export const ProjectsDataTable = compose(
-  withDialogActions,
-  withAlertActions,
-  withProjectsActions,
+export const ProjectsDataTable = flow(
   withSettings(({ projectSettings }) => ({
     projectsTableSize: projectSettings?.tableSize,
   })),
+  withProjectsActions,
+  withAlertActions,
+  withDialogActions,
 )(ProjectsDataTableInner);
 
 const ProjectsTable = styled(DataTable)`

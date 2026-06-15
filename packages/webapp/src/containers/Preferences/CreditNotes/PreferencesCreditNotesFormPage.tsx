@@ -10,10 +10,11 @@ import { PreferencesCreditNotesFormSchema } from './PreferencesCreditNotesForm.s
 import { PreferencesCreditNotesForm } from './PreferencesCreditNotesForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
 import { useSaveSettings } from '@/hooks/query';
+import { flow } from 'fp-ts/function';
 
 const defaultValues = {
   termsConditions: '',
@@ -44,9 +45,9 @@ function PreferencesCreditNotesFormPageRoot({
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
+    const options = flow(
       transfromToSnakeCase,
+      transferObjectOptionsToArray,
     )({ creditNote: { ...values } });
 
     // Handle request success.
@@ -74,9 +75,9 @@ function PreferencesCreditNotesFormPageRoot({
   );
 }
 
-export const PreferencesCreditNotesFormPage = compose(
-  withDashboardActions,
+export const PreferencesCreditNotesFormPage = flow(
   withSettings(({ creditNoteSettings }) => ({
     creditNoteSettings: creditNoteSettings,
   })),
+  withDashboardActions,
 )(PreferencesCreditNotesFormPageRoot);

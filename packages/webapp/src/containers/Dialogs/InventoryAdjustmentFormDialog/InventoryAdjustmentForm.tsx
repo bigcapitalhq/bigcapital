@@ -15,7 +15,7 @@ import { InventoryAdjustmentFormContent } from './InventoryAdjustmentFormContent
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
@@ -83,6 +83,6 @@ function InventoryAdjustmentFormInner({
   );
 }
 
-export const InventoryAdjustmentForm = compose(withDialogActions)(
+export const InventoryAdjustmentForm = flow(withDialogActions)(
   InventoryAdjustmentFormInner,
 );

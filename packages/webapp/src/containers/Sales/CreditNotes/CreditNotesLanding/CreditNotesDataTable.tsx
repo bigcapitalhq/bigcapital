@@ -24,8 +24,8 @@ import { withCreditNotes } from './withCreditNotes';
 import { useCreditNoteTableColumns, ActionsMenu } from './components';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Credit note data table.
@@ -167,14 +167,14 @@ function CreditNotesDataTableInner({
   );
 }
 
-export const CreditNotesDataTable = compose(
-  withDashboardActions,
-  withCreditNotesActions,
-  withDrawerActions,
-  withAlertActions,
-  withDialogActions,
+export const CreditNotesDataTable = flow(
+  withCreditNotes(({ creditNoteTableState }) => ({ creditNoteTableState })),
   withSettings(({ creditNoteSettings }) => ({
     creditNoteTableSize: creditNoteSettings?.tableSize,
   })),
-  withCreditNotes(({ creditNoteTableState }) => ({ creditNoteTableState })),
+  withDialogActions,
+  withAlertActions,
+  withDrawerActions,
+  withCreditNotesActions,
+  withDashboardActions,
 )(CreditNotesDataTableInner);

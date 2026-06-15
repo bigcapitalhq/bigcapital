@@ -19,7 +19,8 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 
-import { compose, transactionNumber } from '@/utils';
+import { transactionNumber } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
@@ -101,12 +102,12 @@ function MoneyOutFormInner({
   );
 }
 
-export const MoneyOutForm = compose(
-  withDialogActions,
-  withCurrentOrganization(),
+export const MoneyOutForm = flow(
   withSettings(({ cashflowSetting }) => ({
     transactionNextNumber: cashflowSetting?.nextNumber,
     transactionNumberPrefix: cashflowSetting?.numberPrefix,
     transactionIncrementMode: cashflowSetting?.autoIncrement,
   })),
+  withCurrentOrganization(),
+  withDialogActions,
 )(MoneyOutFormInner);

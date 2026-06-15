@@ -10,11 +10,11 @@ import {
   FInputGroup,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 import { useInviteUserFormContext } from './InviteUserFormProvider';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 function InviteUserFormContentInner({
   // #withDialogActions
@@ -78,6 +78,6 @@ function InviteUserFormContentInner({
   );
 }
 
-export const InviteUserFormContent = compose(withDialogActions)(
+export const InviteUserFormContent = flow(withDialogActions)(
   InviteUserFormContentInner,
 );

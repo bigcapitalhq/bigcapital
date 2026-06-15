@@ -11,6 +11,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
+import { flow } from 'fp-ts/function';
 
 /**
  * Transactions locking body.
@@ -68,7 +69,7 @@ function TransactionsLockingBodyJsx({
   );
 }
 
-export const TransactionsLockingBody = R.compose(
-  withAlertActions,
+export const TransactionsLockingBody = flow(
   withDialogActions,
+  withAlertActions,
 )(TransactionsLockingBodyJsx);

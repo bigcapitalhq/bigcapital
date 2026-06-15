@@ -9,6 +9,7 @@ import { TableStyle } from '@/constants';
 
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { useGLEntriesTableColumns } from './utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Journal entries table.
@@ -42,7 +43,7 @@ export function AmountDisplayedBaseCurrencyMessageJSX({
   );
 }
 
-export const AmountDisplayedBaseCurrencyMessage = R.compose(
+export const AmountDisplayedBaseCurrencyMessage = flow(
   withCurrentOrganization(),
 )(AmountDisplayedBaseCurrencyMessageJSX);
 

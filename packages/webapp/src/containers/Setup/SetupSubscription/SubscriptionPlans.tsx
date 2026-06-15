@@ -8,6 +8,7 @@ import { useGetLemonSqueezyCheckout } from '@/hooks/query';
 import { useSubscriptionPlans } from './hooks';
 import { withPlans } from '@/containers/Subscriptions/withPlans';
 import { withSubscriptionPlanMapper } from '@/containers/Subscriptions/component/withSubscriptionPlanMapper';
+import { flow } from 'fp-ts/function';
 
 interface SubscriptionPlansProps {
   wrapProps?: GroupProps;
@@ -29,9 +30,9 @@ export function SubscriptionPlans({
   );
 }
 
-const SubscriptionPlanMapped = R.compose(
-  withSubscriptionPlanMapper,
+const SubscriptionPlanMapped = flow(
   withPlans(({ plansPeriod }) => ({ plansPeriod })),
+  withSubscriptionPlanMapper,
 )(({ plansPeriod, monthlyVariantId, annuallyVariantId, ...props }) => {
   const { mutateAsync: getLemonCheckout, isLoading } =
     useGetLemonSqueezyCheckout();

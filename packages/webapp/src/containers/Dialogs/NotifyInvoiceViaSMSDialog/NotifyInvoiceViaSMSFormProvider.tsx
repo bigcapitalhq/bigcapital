@@ -23,7 +23,7 @@ function NotifyInvoiceViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
       },
       {
         enabled: !!invoiceId,
-        keepPreviousData: true,
+        placeholderData: (previousData) => previousData,
       },
     );
   // Create notfiy invoice by sms mutations.

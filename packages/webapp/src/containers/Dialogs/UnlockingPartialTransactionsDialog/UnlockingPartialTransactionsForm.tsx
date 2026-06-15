@@ -14,7 +14,7 @@ import { useUnlockingPartialTransactionsContext } from './UnlockingPartialTransa
 import { PartialUnlockingTransactionsFormContent as UnlockingPartialTransactionsFormContent } from './UnlockingPartialTransactionsFormContent';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   module: '',
@@ -77,6 +77,6 @@ function UnlockingPartialTransactionsFormInner({
   );
 }
 
-export const UnlockingPartialTransactionsForm = compose(withDialogActions)(
-  UnlockingPartialTransactionsFormInner,
-);
+export const UnlockingPartialTransactionsForm = flow(
+  withDialogActions,
+)(UnlockingPartialTransactionsFormInner);

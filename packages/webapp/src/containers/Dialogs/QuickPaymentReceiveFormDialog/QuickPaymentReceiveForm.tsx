@@ -17,7 +17,8 @@ import {
   transformErrors,
   transformInvoiceToForm,
 } from './utils';
-import { compose, transactionNumber } from '@/utils';
+import { transactionNumber } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Quick payment receive form.
@@ -99,12 +100,12 @@ function QuickPaymentReceiveFormInner({
   );
 }
 
-export const QuickPaymentReceiveForm = compose(
-  withDialogActions,
+export const QuickPaymentReceiveForm = flow(
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
     paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
     preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
   })),
+  withDialogActions,
 )(QuickPaymentReceiveFormInner);

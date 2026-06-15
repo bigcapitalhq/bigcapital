@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const APAgingSummaryPdfDialogContent = lazy(() =>
   import('./APAgingSummaryPdfDialogContent').then((m) => ({
@@ -39,6 +39,6 @@ function APAgingSummaryPdfDialogRoot({
   );
 }
 
-export const APAgingSummaryPdfDialog = compose(withDialogRedux())(
+export const APAgingSummaryPdfDialog = flow(withDialogRedux())(
   APAgingSummaryPdfDialogRoot,
 );

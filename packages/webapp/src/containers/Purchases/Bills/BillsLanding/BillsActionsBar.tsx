@@ -35,9 +35,9 @@ import { useRefreshBills } from '@/hooks/query/bills';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useBulkDeleteBillsDialog } from './hooks/use-bulk-delete-bills-dialog';
 
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import { isEmpty } from 'lodash';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bills actions bar.
@@ -204,15 +204,15 @@ function BillActionsBar({
   );
 }
 
-export const BillsActionsBar = compose(
-  withBillsActions,
-  withSettingsActions,
+export const BillsActionsBar = flow(
+  withDialogActions,
+  withSettings(({ billsettings }) => ({
+    billsTableSize: billsettings?.tableSize,
+  })),
   withBills(({ billsTableState, billsSelectedRows }) => ({
     billsConditionsRoles: billsTableState.filterRoles,
     billsSelectedRows,
   })),
-  withSettings(({ billsettings }) => ({
-    billsTableSize: billsettings?.tableSize,
-  })),
-  withDialogActions,
+  withSettingsActions,
+  withBillsActions,
 )(BillActionsBar);

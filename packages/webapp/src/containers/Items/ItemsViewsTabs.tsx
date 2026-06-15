@@ -8,7 +8,8 @@ import { withItems } from './withItems';
 import { withItemsActions } from './withItemsActions';
 
 import { useItemsListContext } from './ItemsListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Items views tabs.
@@ -44,10 +45,10 @@ function ItemsViewsTabsInner({
   );
 }
 
-export const ItemsViewsTabs = compose(
-  withRouter,
+export const ItemsViewsTabs = flow(
+  withItemsActions,
   withItems(({ itemsTableState }) => ({
     itemsCurrentView: itemsTableState?.viewSlug,
   })),
-  withItemsActions,
+  withRouter,
 )(ItemsViewsTabsInner);

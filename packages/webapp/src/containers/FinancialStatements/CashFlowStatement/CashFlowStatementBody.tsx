@@ -10,6 +10,7 @@ import {
   withCurrentOrganization,
   WithCurrentOrganizationProps,
 } from '@/containers/Organization/withCurrentOrganization';
+import { flow } from 'fp-ts/function';
 
 interface CashFlowStatementBodyProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -31,7 +32,7 @@ function CashFlowStatementBodyJSX({
   );
 }
 
-export const CashFlowStatementBody = R.compose(
+export const CashFlowStatementBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),

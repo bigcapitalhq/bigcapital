@@ -8,8 +8,7 @@ import { useActivateItem } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  *  Item activate alert.
@@ -63,7 +62,7 @@ function ItemActivateAlertInner({
   );
 }
 
-export const ItemActivateAlert = compose(
-  withAlertStoreConnect(),
+export const ItemActivateAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ItemActivateAlertInner);

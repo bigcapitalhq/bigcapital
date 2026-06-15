@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 // Lazy loading the content.
 const InventoryItemDetailsPdfDialogContent = lazy(() =>
@@ -44,6 +44,6 @@ function InventoryItemDetailsPdfDialogRoot({
   );
 }
 
-export const InventoryItemDetailsPdfDialog = compose(withDialogRedux())(
+export const InventoryItemDetailsPdfDialog = flow(withDialogRedux())(
   InventoryItemDetailsPdfDialogRoot,
 );

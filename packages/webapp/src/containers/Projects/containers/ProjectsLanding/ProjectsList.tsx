@@ -10,7 +10,8 @@ import { withProjects } from './withProjects';
 import { withProjectsActions } from './withProjectsActions';
 
 import { ProjectsListProvider } from './ProjectsListProvider';
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Projects list.
@@ -49,10 +50,10 @@ function ProjectsListInner({
   );
 }
 
-export const ProjectsList = compose(
+export const ProjectsList = flow(
+  withProjectsActions,
   withProjects(({ projectsTableState, projectsTableStateChanged }) => ({
     projectsTableState,
     projectsTableStateChanged,
   })),
-  withProjectsActions,
 )(ProjectsListInner);

@@ -7,8 +7,7 @@ import { BranchesEmptyStatus } from './BranchesEmptyStatus';
 
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useBranchesContext } from './BranchesProvider';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function BranchesInner({
   // #withDashboardActions
@@ -26,4 +25,4 @@ function BranchesInner({
     </React.Fragment>
   );
 }
-export const Branches = compose(withDashboardActions)(BranchesInner);
+export const Branches = flow(withDashboardActions)(BranchesInner);

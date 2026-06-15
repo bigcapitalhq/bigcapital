@@ -4,12 +4,13 @@ import React from 'react';
 import '@/style/pages/ManualJournal/List.scss';
 
 import { DashboardPageContent } from '@/components';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 import { ManualJournalsListProvider } from './ManualJournalsListProvider';
 import { ManualJournalsDataTable } from './ManualJournalsDataTable';
 import { ManualJournalActionsBar as ManualJournalsActionsBar } from './ManualJournalActionsBar';
 import { withManualJournals } from './withManualJournals';
+import { flow } from 'fp-ts/function';
 
 /**
  * Manual journals table.
@@ -33,7 +34,7 @@ function ManualJournalsTable({
   );
 }
 
-export const ManualJournalsList = compose(
+export const ManualJournalsList = flow(
   withManualJournals(
     ({ manualJournalsTableState, manualJournalTableStateChanged }) => ({
       journalsTableState: manualJournalsTableState,

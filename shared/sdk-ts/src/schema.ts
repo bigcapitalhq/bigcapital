@@ -8748,6 +8748,113 @@ export interface components {
              */
             skipUndeletable: boolean;
         };
+        VendorResponseDto: {
+            /** @example 1 */
+            id: number;
+            /** @example 1500 */
+            balance: number;
+            /** @example USD */
+            currencyCode: string;
+            /** @example 1000 */
+            openingBalance: number;
+            /**
+             * Format: date-time
+             * @example 2024-01-01T00:00:00Z
+             */
+            openingBalanceAt: string;
+            /** @example 1 */
+            openingBalanceExchangeRate: number;
+            /** @example 1 */
+            openingBalanceBranchId?: number;
+            /** @example Mr. */
+            salutation?: string;
+            /** @example John */
+            firstName?: string;
+            /** @example Doe */
+            lastName?: string;
+            /** @example Acme Corporation */
+            companyName?: string;
+            /** @example John Doe - Acme Corporation */
+            displayName: string;
+            /** @example vendor@acme.com */
+            email?: string;
+            /** @example +1 (555) 123-4567 */
+            workPhone?: string;
+            /** @example +1 (555) 987-6543 */
+            personalPhone?: string;
+            /** @example https://www.acme.com */
+            website?: string;
+            /** @example 123 Business Ave */
+            billingAddress1?: string;
+            /** @example Suite 100 */
+            billingAddress2?: string;
+            /** @example New York */
+            billingAddressCity?: string;
+            /** @example United States */
+            billingAddressCountry?: string;
+            /** @example billing@acme.com */
+            billingAddressEmail?: string;
+            /** @example 10001 */
+            billingAddressPostcode?: string;
+            /** @example +1 (555) 111-2222 */
+            billingAddressPhone?: string;
+            /** @example NY */
+            billingAddressState?: string;
+            /** @example 456 Shipping St */
+            shippingAddress1?: string;
+            /** @example Unit 200 */
+            shippingAddress2?: string;
+            /** @example Los Angeles */
+            shippingAddressCity?: string;
+            /** @example United States */
+            shippingAddressCountry?: string;
+            /** @example shipping@acme.com */
+            shippingAddressEmail?: string;
+            /** @example 90001 */
+            shippingAddressPostcode?: string;
+            /** @example +1 (555) 333-4444 */
+            shippingAddressPhone?: string;
+            /** @example CA */
+            shippingAddressState?: string;
+            /** @example Preferred supplier */
+            note: string;
+            /** @example true */
+            active: boolean;
+            /** @example V-0001 */
+            code?: string;
+            /**
+             * Format: date-time
+             * @example 2024-01-01T00:00:00Z
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @example 2024-01-01T00:00:00Z
+             */
+            updatedAt: string;
+            /** @example 1000 */
+            localOpeningBalance: number;
+            /** @example 1500 */
+            closingBalance: number;
+            /** @example $1,500.00 */
+            formattedBalance?: string;
+            /** @example $1,000.00 */
+            formattedOpeningBalance?: string;
+            /** @example 2024-01-01 */
+            formattedOpeningBalanceAt?: string;
+        };
+        VendorsPaginationDto: {
+            /** @example 1 */
+            page: number;
+            /** @example 12 */
+            pageSize: number;
+            /** @example 42 */
+            total: number;
+        };
+        VendorsListResponseDto: {
+            data: components["schemas"]["VendorResponseDto"][];
+            pagination: components["schemas"]["VendorsPaginationDto"];
+        };
         ValidateBulkDeleteVendorsResponseDto: {
             /**
              * @description Number of vendors that can be deleted
@@ -10423,6 +10530,18 @@ export interface components {
             entries: components["schemas"]["ManualJournalEntryResponseDto"][];
             /** @description Attachments */
             attachments?: string[];
+        };
+        ManualJournalsPaginationDto: {
+            /** @example 1 */
+            page: number;
+            /** @example 12 */
+            pageSize: number;
+            /** @example 42 */
+            total: number;
+        };
+        ManualJournalsListResponseDto: {
+            data: components["schemas"]["ManualJournalResponseDto"][];
+            pagination: components["schemas"]["ManualJournalsPaginationDto"];
         };
         ManualJournalEntryDto: {
             /** @description Entry index */
@@ -19352,11 +19471,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description The vendors have been successfully retrieved. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["VendorsListResponseDto"];
+                };
             };
         };
     };
@@ -19378,11 +19500,14 @@ export interface operations {
             };
         };
         responses: {
+            /** @description The vendor has been successfully created. */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["VendorResponseDto"];
+                };
             };
         };
     };
@@ -19402,11 +19527,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description The vendor details have been successfully retrieved. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["VendorResponseDto"];
+                };
             };
         };
     };
@@ -19430,11 +19558,14 @@ export interface operations {
             };
         };
         responses: {
+            /** @description The vendor has been successfully updated. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["VendorResponseDto"];
+                };
             };
         };
     };
@@ -19454,6 +19585,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description The vendor has been successfully deleted. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -19482,11 +19614,14 @@ export interface operations {
             };
         };
         responses: {
+            /** @description The vendor opening balance has been successfully updated. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["VendorResponseDto"];
+                };
             };
         };
     };
@@ -20705,21 +20840,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The manual journal details have been successfully retrieved. */
+            /** @description The manual journals paginated list have been successfully retrieved. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ManualJournalResponseDto"][];
+                    "application/json": components["schemas"]["ManualJournalsListResponseDto"];
                 };
-            };
-            /** @description The manual journal not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };

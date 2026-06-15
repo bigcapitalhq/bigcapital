@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const NotifyReceiptViaSMSDialogContent = React.lazy(() =>
   import('./NotifyReceiptViaSMSDialogContent').then((m) => ({
@@ -35,4 +35,6 @@ function NotifyReceiptViaSMSDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(NotifyReceiptViaSMSDialog);
+export const index = flow(withDialogRedux())(
+  NotifyReceiptViaSMSDialog,
+);

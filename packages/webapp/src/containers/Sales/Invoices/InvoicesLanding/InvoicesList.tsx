@@ -13,7 +13,8 @@ import { withInvoices } from './withInvoices';
 import { withInvoiceActions } from './withInvoiceActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Sale invoices list.
@@ -48,11 +49,11 @@ function InvoicesListInner({
   );
 }
 
-export const InvoicesList = compose(
+export const InvoicesList = flow(
+  withAlertActions,
+  withInvoiceActions,
   withInvoices(({ invoicesTableState, invoicesTableStateChanged }) => ({
     invoicesTableState,
     invoicesTableStateChanged,
   })),
-  withInvoiceActions,
-  withAlertActions,
 )(InvoicesListInner);

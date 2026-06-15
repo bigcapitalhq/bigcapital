@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ACCOUNT_NAME_COLUMN_WIDTH = 320;
 const AMOUNT_COLUMNS_MIN_WIDTH = 120;
@@ -43,11 +44,11 @@ const dynamicColumnMapper = R.curry((data: any, column: any) => {
   const debitColumn = amountAccessor(data);
   const totalColumn = amountAccessor(data);
 
-  return R.compose(
-    R.when(R.pathEq(['key'], 'account'), accountNameColumn),
-    R.when(R.pathEq(['key'], 'credit'), creditColumn),
-    R.when(R.pathEq(['key'], 'debit'), debitColumn),
+  return flow(
     R.when(R.pathEq(['key'], 'total'), totalColumn),
+    R.when(R.pathEq(['key'], 'debit'), debitColumn),
+    R.when(R.pathEq(['key'], 'credit'), creditColumn),
+    R.when(R.pathEq(['key'], 'account'), accountNameColumn),
   )(column);
 });
 

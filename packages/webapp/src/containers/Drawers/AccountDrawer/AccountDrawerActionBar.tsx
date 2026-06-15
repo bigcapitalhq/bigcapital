@@ -27,8 +27,9 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
-import { compose, safeCallback } from '@/utils';
+import { safeCallback } from '@/utils';
 import { CLASSES } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 /**
  * Account drawer action bar.
@@ -140,7 +141,7 @@ function AccountDrawerActionBarInner({
     </DrawerActionsBar>
   );
 }
-export const AccountDrawerActionBar = compose(
-  withDialogActions,
+export const AccountDrawerActionBar = flow(
   withAlertActions,
+  withDialogActions,
 )(AccountDrawerActionBarInner);

@@ -7,8 +7,7 @@ import { useCancelBadDebt } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Cancel bad debt alert.
@@ -62,7 +61,7 @@ function CancelBadDebtAlertInner({
   );
 }
 
-export const CancelBadDebtAlert = compose(
-  withAlertStoreConnect(),
+export const CancelBadDebtAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(CancelBadDebtAlertInner);

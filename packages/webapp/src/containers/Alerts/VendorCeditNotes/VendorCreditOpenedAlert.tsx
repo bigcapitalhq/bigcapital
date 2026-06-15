@@ -8,8 +8,7 @@ import { useOpenVendorCredit } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  *  Vendor credit opened alert.
@@ -63,7 +62,7 @@ function VendorCreditOpenedAlertInner({
     </Alert>
   );
 }
-export const VendorCreditOpenedAlert = compose(
-  withAlertStoreConnect(),
+export const VendorCreditOpenedAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(VendorCreditOpenedAlertInner);

@@ -2,7 +2,6 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from '@/utils';
 import { useExpensesListContext } from './ExpensesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import {
@@ -24,6 +23,7 @@ import { withExpenses } from './withExpenses';
 
 import { ActionsMenu, useExpensesTableColumns } from './components';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Expenses datatable.
@@ -152,13 +152,13 @@ function ExpensesDataTable({
   );
 }
 
-export const ExpenseDataTable = compose(
-  withDashboardActions,
-  withAlertActions,
-  withDrawerActions,
-  withExpensesActions,
+export const ExpenseDataTable = flow(
+  withExpenses(({ expensesTableState }) => ({ expensesTableState })),
   withSettings(({ expenseSettings }) => ({
     expensesTableSize: expenseSettings?.tableSize,
   })),
-  withExpenses(({ expensesTableState }) => ({ expensesTableState })),
+  withExpensesActions,
+  withDrawerActions,
+  withAlertActions,
+  withDashboardActions,
 )(ExpensesDataTable);

@@ -12,8 +12,8 @@ import { useEstimateTransactionsColumns, ActionsMenu } from './components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Esimtate payment transactions.
@@ -72,7 +72,7 @@ function EstimatePaymentTransactions({
     />
   );
 }
-export const index = compose(
-  withAlertActions,
+export const index = flow(
   withDrawerActions,
+  withAlertActions,
 )(EstimatePaymentTransactions);

@@ -4,6 +4,7 @@ import { useFormikContext } from 'formik';
 import { round } from 'lodash';
 import * as R from 'ramda';
 import { updateItemsEntriesTotal } from './utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Convert the given rate to the local currency.
@@ -77,11 +78,11 @@ export const useUpdateEntriesOnExchangeRateChange = () => {
 
   return React.useMemo(() => {
     return R.curry((oldExchangeRate: number, newExchangeRate: number) => {
-      return R.compose(
-        // Updates entries total.
-        updateItemsEntriesTotal,
+      return flow(
         // Assign a new rate of the given new exchange rate from the old exchange rate.
         assignRateRevertAndCovertExchangeRate(oldExchangeRate, newExchangeRate),
+        // Updates entries total.
+        updateItemsEntriesTotal,
       )(entries);
     });
   }, [entries]);

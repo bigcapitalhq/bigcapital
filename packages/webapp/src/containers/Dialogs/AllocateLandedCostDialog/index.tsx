@@ -2,7 +2,7 @@
 import React, { lazy } from 'react';
 import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const AllocateLandedCostDialogContent = lazy(() =>
   import('./AllocateLandedCostDialogContent').then((m) => ({
@@ -36,4 +36,4 @@ function AllocateLandedCostDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(AllocateLandedCostDialog);
+export const index = flow(withDialogRedux())(AllocateLandedCostDialog);

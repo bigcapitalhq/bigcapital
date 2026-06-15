@@ -23,10 +23,7 @@ import {
   useJournalSheetCsvExport,
   useJournalSheetXlsxExport,
 } from '@/hooks/query';
-import type {
-  JournalXlsxQuery,
-  JournalCsvQuery,
-} from '@bigcapital/sdk-ts';
+import type { JournalXlsxQuery, JournalCsvQuery } from '@bigcapital/sdk-ts';
 
 /**
  * Journal sheet loading bar.

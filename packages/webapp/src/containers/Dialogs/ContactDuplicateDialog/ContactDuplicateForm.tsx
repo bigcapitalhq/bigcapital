@@ -12,7 +12,7 @@ import { useContactDuplicateFromContext } from './ContactDuplicateProvider';
 import { ContactsOptions } from '@/constants/contactsOptions';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ContactDuplicateFormInner({
   // #withDialogActions
@@ -95,6 +95,6 @@ function ContactDuplicateFormInner({
   );
 }
 
-export const ContactDuplicateForm = compose(withDialogActions)(
+export const ContactDuplicateForm = flow(withDialogActions)(
   ContactDuplicateFormInner,
 );

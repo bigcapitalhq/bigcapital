@@ -4,9 +4,9 @@ import { Button, Intent, Radio } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
 import { x } from '@xstyled/emotion';
 import { ExportResources } from './constants';
-import { compose } from '@/utils';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 function ExportDialogFormContentRoot({
   // #withDialogActions
@@ -58,6 +58,6 @@ function ExportDialogFormContentRoot({
   );
 }
 
-export const ExportDialogFormContent = compose(withDialogActions)(
+export const ExportDialogFormContent = flow(withDialogActions)(
   ExportDialogFormContentRoot,
 );

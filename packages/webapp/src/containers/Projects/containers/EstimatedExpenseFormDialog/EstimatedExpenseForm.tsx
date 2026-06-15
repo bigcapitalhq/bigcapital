@@ -5,7 +5,7 @@ import { AppToaster } from '@/components';
 import { CreateEstimatedExpenseFormSchema } from './EstimatedExpense.schema';
 import { EstimatedExpenseFormConent } from './EstimatedExpenseFormConent';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   estimatedExpense: '',
@@ -54,6 +54,6 @@ function EstimatedExpenseFormInner({
   );
 }
 
-export const EstimatedExpenseForm = compose(withDialogActions)(
+export const EstimatedExpenseForm = flow(withDialogActions)(
   EstimatedExpenseFormInner,
 );

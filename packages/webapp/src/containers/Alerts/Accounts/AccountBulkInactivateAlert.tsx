@@ -9,8 +9,7 @@ import { AppToaster } from '@/components';
 // import { withAccountsActions } from '@/containers/Accounts/withAccountsTableActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function AccountBulkInactivateAlertInner({
   name,
@@ -65,8 +64,8 @@ function AccountBulkInactivateAlertInner({
   );
 }
 
-export const AccountBulkInactivateAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const AccountBulkInactivateAlert = flow(
   // withAccountsActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(AccountBulkInactivateAlertInner);

@@ -24,17 +24,15 @@ import {
 import { useRefreshJournals } from '@/hooks/query/manual-journals';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
-
 import { withManualJournals } from './withManualJournals';
 import { withManualJournalsActions } from './withManualJournalsActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import { useBulkDeleteManualJournalsDialog } from './hooks/use-bulk-delete-manual-journals-dialog';
+import { flow } from 'fp-ts/function';
 
 /**
  * Manual journal actions bar.
@@ -204,17 +202,17 @@ function ManualJournalActionsBarInner({
   );
 }
 
-export const ManualJournalActionsBar = compose(
-  withDialogActions,
-  withManualJournalsActions,
-  withSettingsActions,
+export const ManualJournalActionsBar = flow(
+  withSettings(({ manualJournalsSettings }) => ({
+    manualJournalsTableSize: manualJournalsSettings?.tableSize,
+  })),
   withManualJournals(
     ({ manualJournalsTableState, manualJournalsSelectedRows }) => ({
       manualJournalsFilterConditions: manualJournalsTableState.filterRoles,
       manualJournalsSelectedRows,
     }),
   ),
-  withSettings(({ manualJournalsSettings }) => ({
-    manualJournalsTableSize: manualJournalsSettings?.tableSize,
-  })),
+  withSettingsActions,
+  withManualJournalsActions,
+  withDialogActions,
 )(ManualJournalActionsBarInner);

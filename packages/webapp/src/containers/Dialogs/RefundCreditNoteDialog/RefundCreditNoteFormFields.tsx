@@ -38,7 +38,6 @@ import {
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose,
 } from '@/utils';
 import { useAutofocus } from '@/hooks';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
@@ -46,6 +45,7 @@ import { useSetPrimaryBranchToForm } from './utils';
 import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
 
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { flow } from 'fp-ts/function';
 
 /**
  * Refund credit note form fields.
@@ -178,9 +178,9 @@ function RefundCreditNoteFormFieldsInner({
   );
 }
 
-export const RefundCreditNoteFormFields = compose(withCurrentOrganization())(
-  RefundCreditNoteFormFieldsInner,
-);
+export const RefundCreditNoteFormFields = flow(
+  withCurrentOrganization(),
+)(RefundCreditNoteFormFieldsInner);
 
 export const BranchRowDivider = styled.div`
   --x-divider-color: #ebf1f6;

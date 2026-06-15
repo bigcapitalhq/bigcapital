@@ -17,13 +17,13 @@ import { useTaxRatesTableColumns } from './_utils';
 import { useTaxRatesLandingContext } from './TaxRatesLandingProvider';
 import { TaxRatesLandingEmptyState } from './TaxRatesLandingEmptyState';
 import { TaxRatesTableActionsMenu } from './_components';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
 import {
   useActivateTaxRate,
   useInactivateTaxRate,
 } from '@/hooks/query/tax-rates';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoices datatable.
@@ -134,12 +134,12 @@ function TaxRatesDataTable({
   );
 }
 
-export const TaxRatesLandingTable = compose(
-  withDashboardActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const TaxRatesLandingTable = flow(
   withSettings(({ invoiceSettings }) => ({
     invoicesTableSize: invoiceSettings?.tableSize,
   })),
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withDashboardActions,
 )(TaxRatesDataTable);

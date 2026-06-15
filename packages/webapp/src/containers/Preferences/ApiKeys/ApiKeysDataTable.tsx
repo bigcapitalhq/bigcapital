@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React, { useCallback } from 'react';
-import { compose } from '@/utils';
 import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { useApiKeys, useRevokeApiKey } from '@/hooks/query';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
@@ -8,6 +7,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { ActionsMenu, useApiKeysTableColumns } from './components';
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 /**
  * API Keys datatable.
@@ -64,7 +64,7 @@ function ApiKeysDataTableInner({
   );
 }
 
-export const ApiKeysDataTable = compose(
-  withDialogActions,
+export const ApiKeysDataTable = flow(
   withAlertActions,
+  withDialogActions,
 )(ApiKeysDataTableInner);

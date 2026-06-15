@@ -6,6 +6,7 @@ import { IntersectionObserver } from '@/components';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 import { useExcludedBankTransactionsInfinity } from '@/hooks/query/banking';
 import { withBanking } from '../../withBanking';
+import { flow } from 'fp-ts/function';
 
 interface ExcludedBankTransactionsContextValue {
   isExcludedTransactionsLoading: boolean;
@@ -92,7 +93,7 @@ function ExcludedBankTransactionsTableBootRoot({
   );
 }
 
-const ExcludedBankTransactionsTableBoot = R.compose(
+const ExcludedBankTransactionsTableBoot = flow(
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),

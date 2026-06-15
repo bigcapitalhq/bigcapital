@@ -8,8 +8,7 @@ import { transformErrors } from '@/containers/Customers/utils';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customer bulk delete alert.
@@ -68,7 +67,7 @@ function CustomerBulkDeleteAlertInner({
   );
 }
 
-export const CustomerBulkDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const CustomerBulkDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(CustomerBulkDeleteAlertInner);

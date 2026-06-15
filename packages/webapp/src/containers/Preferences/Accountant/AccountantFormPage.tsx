@@ -17,7 +17,8 @@ import { AccountantForm } from './AccountantForm';
 import { AccountantSchema } from './Accountant.schema';
 import { useAccountantFormContext } from './AccountantFormProvider';
 import { transferObjectOptionsToArray } from './utils';
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 import '@/style/pages/Preferences/Accounting.scss';
 
@@ -78,9 +79,9 @@ function AccountantFormPageInner({
     values: AccountantFormValues,
     { setSubmitting }: FormikHelpers<AccountantFormValues>,
   ) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
+    const options = flow(
       transfromToSnakeCase,
+      transferObjectOptionsToArray,
     )(values);
     setSubmitting(true);
 
@@ -107,9 +108,9 @@ function AccountantFormPageInner({
   );
 }
 
-export const AccountantFormPage = compose(
+export const AccountantFormPage = flow(
+  withDashboardActions,
   withSettings(({ allSettings }) => ({
     allSettings,
   })),
-  withDashboardActions,
 )(AccountantFormPageInner);

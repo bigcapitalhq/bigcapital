@@ -68,8 +68,20 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   const stringifiedFilterRoles = React.useMemo(
     () =>
       JSON.stringify([
-        { index: 1, fieldKey: 'sellable', value: true, condition: '&&', comparator: 'equals' },
-        { index: 2, fieldKey: 'active', value: true, condition: '&&', comparator: 'equals' },
+        {
+          index: 1,
+          fieldKey: 'sellable',
+          value: true,
+          condition: '&&',
+          comparator: 'equals',
+        },
+        {
+          index: 2,
+          fieldKey: 'active',
+          value: true,
+          condition: '&&',
+          comparator: 'equals',
+        },
       ]),
     [],
   );

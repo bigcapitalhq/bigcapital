@@ -12,7 +12,7 @@ import {
   withARAgingSummaryActions,
   WithARAgingSummaryActionsProps,
 } from './withARAgingSummaryActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 import {
@@ -20,6 +20,7 @@ import {
   getDefaultARAgingSummaryQuery,
 } from './common';
 import type { FormikHelpers } from 'formik';
+import { flow } from 'fp-ts/function';
 
 type ARAgingSummaryFormValues = ReturnType<
   typeof getDefaultARAgingSummaryQuery
@@ -112,11 +113,11 @@ function ARAgingSummaryHeaderInner({
   );
 }
 
-export const ARAgingSummaryHeader = compose(
-  withARAgingSummaryActions,
+export const ARAgingSummaryHeader = flow(
   withARAgingSummary(({ ARAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
   })),
+  withARAgingSummaryActions,
 )(ARAgingSummaryHeaderInner);
 
 const ARAgingDrawerHeader = styled(FinancialStatementHeader)`

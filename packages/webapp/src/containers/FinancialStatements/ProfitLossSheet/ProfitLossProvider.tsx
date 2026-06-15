@@ -41,9 +41,7 @@ function ProfitLossSheetProvider({
     isFetching,
     isLoading,
     refetch,
-  } = useProfitLossSheet(httpQuery as ProfitLossTableQuery, {
-    placeholderData: (previousData) => previousData,
-  });
+  } = useProfitLossSheet(httpQuery as ProfitLossTableQuery);
 
   const provider: ProfitLossSheetContextValue = {
     profitLossSheet,

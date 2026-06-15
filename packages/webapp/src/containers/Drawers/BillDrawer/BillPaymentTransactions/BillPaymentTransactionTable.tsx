@@ -11,8 +11,8 @@ import { useBillPaymentTransactions } from '@/hooks/query';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bill payment transactions datatable.
@@ -72,7 +72,7 @@ function BillPaymentTransactionTableInner({
   );
 }
 
-export const BillPaymentTransactionTable = compose(
-  withAlertActions,
+export const BillPaymentTransactionTable = flow(
   withDrawerActions,
+  withAlertActions,
 )(BillPaymentTransactionTableInner);

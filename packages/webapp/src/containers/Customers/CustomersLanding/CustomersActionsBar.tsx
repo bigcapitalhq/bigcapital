@@ -33,10 +33,10 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import { isEmpty } from 'lodash';
 import { useBulkDeleteCustomersDialog } from './hooks/use-bulk-delete-customers-dialog';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customers actions bar.
@@ -213,16 +213,16 @@ function CustomerActionsBar({
   );
 }
 
-export const CustomersActionsBar = compose(
-  withCustomersActions,
-  withSettingsActions,
+export const CustomersActionsBar = flow(
+  withDialogActions,
+  withSettings(({ customersSettings }) => ({
+    customersTableSize: customersSettings?.tableSize,
+  })),
   withCustomers(({ customersSelectedRows, customersTableState }) => ({
     customersSelectedRows,
     accountsInactiveMode: customersTableState.inactiveMode,
     customersFilterConditions: customersTableState.filterRoles,
   })),
-  withSettings(({ customersSettings }) => ({
-    customersTableSize: customersSettings?.tableSize,
-  })),
-  withDialogActions,
+  withSettingsActions,
+  withCustomersActions,
 )(CustomerActionsBar);

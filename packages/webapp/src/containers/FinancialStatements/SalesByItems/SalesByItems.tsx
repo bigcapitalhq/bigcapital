@@ -14,8 +14,8 @@ import {
 } from './withSalesByItemsActions';
 
 import { useSalesByItemsQuery } from './utils';
-import { compose } from '@/utils';
 import { SalesByItemsDialogs } from './SalesByitemsDialogs';
+import { flow } from 'fp-ts/function';
 
 interface SalesByItemsProps {
   toggleSalesByItemsFilterDrawer: WithSalesByItemsActionsProps['toggleSalesByItemsFilterDrawer'];
@@ -79,4 +79,6 @@ function SalesByItemsInner({
   );
 }
 
-export const SalesByItems = compose(withSalesByItemsActions)(SalesByItemsInner);
+export const SalesByItems = flow(withSalesByItemsActions)(
+  SalesByItemsInner,
+);

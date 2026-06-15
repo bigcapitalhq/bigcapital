@@ -23,7 +23,7 @@ import { TaxRateFormDialogFormErrors } from './TaxRateFormDialogFormErrors';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DRAWERS } from '@/constants/drawers';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Tax rate form dialog content.
@@ -121,7 +121,7 @@ function TaxRateFormDialogFormInner({
   );
 }
 
-export const TaxRateFormDialogForm = compose(
-  withDialogActions,
+export const TaxRateFormDialogForm = flow(
   withDrawerActions,
+  withDialogActions,
 )(TaxRateFormDialogFormInner);

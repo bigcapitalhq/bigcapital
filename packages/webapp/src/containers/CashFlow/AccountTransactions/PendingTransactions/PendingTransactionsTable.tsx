@@ -14,7 +14,7 @@ import { usePendingTransactionsContext } from './PendingTransactionsTableBoot';
 import { usePendingTransactionsTableColumns } from './_hooks';
 
 import { BankAccountDataTable } from '../components/BankAccountDataTable';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Account transactions data table.
@@ -56,9 +56,9 @@ function PendingTransactionsDataTableRoot({
   );
 }
 
-export const PendingTransactionsDataTable = compose(
+export const PendingTransactionsDataTable = flow(
+  withBankingActions,
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
-  withBankingActions,
 )(PendingTransactionsDataTableRoot);

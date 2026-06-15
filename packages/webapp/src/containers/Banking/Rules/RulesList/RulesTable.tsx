@@ -15,6 +15,7 @@ import { BankRulesTableActionsMenu } from './_components';
 import { BankRulesLandingEmptyState } from './BankRulesLandingEmptyState';
 import { useRulesListBoot } from './RulesListBoot';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Retrieves the rules table.
@@ -76,7 +77,7 @@ function RulesTable({
   );
 }
 
-export const BankRulesTable = R.compose(
-  withAlertActions,
+export const BankRulesTable = flow(
   withDialogActions,
+  withAlertActions,
 )(RulesTable);

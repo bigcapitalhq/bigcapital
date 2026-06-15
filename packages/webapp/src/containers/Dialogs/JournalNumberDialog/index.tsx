@@ -3,7 +3,8 @@ import React, { lazy } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const JournalNumberDialogContent = lazy(() =>
   import('./JournalNumberDialogContent').then((m) => ({
@@ -40,4 +41,4 @@ function JournalNumberDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(JournalNumberDialog);
+export const index = flow(withDialogRedux())(JournalNumberDialog);

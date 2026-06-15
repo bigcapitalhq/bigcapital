@@ -6,6 +6,7 @@ import { IntersectionObserver, NumericInputCell } from '@/components';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 import { useRecognizedBankTransactionsInfinity } from '@/hooks/query/banking';
 import { withBanking } from '../../withBanking';
+import { flow } from 'fp-ts/function';
 
 interface RecognizedTransactionsContextValue {
   isRecongizedTransactionsLoading: boolean;
@@ -91,7 +92,7 @@ function RecognizedTransactionsTableBootRoot({
   );
 }
 
-const RecognizedTransactionsTableBoot = R.compose(
+const RecognizedTransactionsTableBoot = flow(
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),

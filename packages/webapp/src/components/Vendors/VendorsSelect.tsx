@@ -7,6 +7,7 @@ import { createNewItemFromQuery, createNewItemRenderer } from './utils';
 import { FSelect } from '../Forms';
 import { useCreateAutofillListener } from '@/hooks/state/autofill';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendor select.
@@ -59,4 +60,6 @@ function VendorsSelectRoot({
   );
 }
 
-export const VendorsSelect = R.compose(withDrawerActions)(VendorsSelectRoot);
+export const VendorsSelect = flow(withDrawerActions)(
+  VendorsSelectRoot,
+);

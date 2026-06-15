@@ -4,11 +4,12 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
 import { useCustomersListContext } from './CustomersListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 import { withCustomers } from './withCustomers';
 import { withCustomersActions } from './withCustomersActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customers views tabs.
@@ -45,10 +46,10 @@ function CustomersViewsTabsInner({
   );
 }
 
-export const CustomersViewsTabs = compose(
-  withDashboardActions,
-  withCustomersActions,
+export const CustomersViewsTabs = flow(
   withCustomers(({ customersTableState }) => ({
     customersCurrentView: customersTableState.viewSlug,
   })),
+  withCustomersActions,
+  withDashboardActions,
 )(CustomersViewsTabsInner);

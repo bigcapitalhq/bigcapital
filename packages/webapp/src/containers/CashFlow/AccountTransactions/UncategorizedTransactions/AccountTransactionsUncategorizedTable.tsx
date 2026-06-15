@@ -23,8 +23,8 @@ import { useExcludeUncategorizedTransaction } from '@/hooks/query/banking';
 import { useAccountUncategorizedTransactionsColumns } from './hooks';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 
-import { compose } from '@/utils';
 import styles from './AccountTransactionsUncategorizedTable.module.scss';
+import { flow } from 'fp-ts/function';
 
 /**
  * Account transactions data table.
@@ -136,15 +136,15 @@ function AccountTransactionsDataTable({
   );
 }
 
-export const AccountTransactionsUncategorizedTable = compose(
-  withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
-  })),
-  withBankingActions,
+export const AccountTransactionsUncategorizedTable = flow(
   withBanking(
     ({ openMatchingTransactionAside, enableMultipleCategorization }) => ({
       openMatchingTransactionAside,
       enableMultipleCategorization,
     }),
   ),
+  withBankingActions,
+  withSettings(({ cashflowTransactionsSettings }) => ({
+    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
+  })),
 )(AccountTransactionsDataTable);

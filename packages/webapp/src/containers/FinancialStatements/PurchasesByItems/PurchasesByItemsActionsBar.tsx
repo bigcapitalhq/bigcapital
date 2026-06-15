@@ -22,10 +22,11 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import { PurchasesByItemsExportMenu } from './components';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface PurchasesByItemsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -143,10 +144,10 @@ function PurchasesByItemsActionsBarInner({
   );
 }
 
-export const PurchasesByItemsActionsBar = compose(
+export const PurchasesByItemsActionsBar = flow(
+  withDialogActions,
+  withPurchasesByItemsActions,
   withPurchasesByItems(({ purchasesByItemsDrawerFilter }) => ({
     purchasesByItemsDrawerFilter,
   })),
-  withPurchasesByItemsActions,
-  withDialogActions,
 )(PurchasesByItemsActionsBarInner);

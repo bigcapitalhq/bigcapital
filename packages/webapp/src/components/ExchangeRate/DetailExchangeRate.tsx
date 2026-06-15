@@ -6,6 +6,7 @@ import { DetailItem } from '@/components';
 import { isEqual } from 'lodash';
 
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { flow } from 'fp-ts/function';
 
 /**
  * Detail exchange rate item.
@@ -30,6 +31,6 @@ function DetailExchangeRate({
   );
 }
 
-export const ExchangeRateDetailItem = R.compose(withCurrentOrganization())(
+export const ExchangeRateDetailItem = flow(withCurrentOrganization())(
   DetailExchangeRate,
 );

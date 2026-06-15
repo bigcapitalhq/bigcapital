@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { compose } from '@/utils';
 import { Icon, FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { flow } from 'fp-ts/function';
 
 function CurrenciesActionsInner({ openDialog }) {
   const handleClickNewCurrency = useCallback(() => {
@@ -23,6 +23,6 @@ function CurrenciesActionsInner({ openDialog }) {
   );
 }
 
-export const CurrenciesActions = compose(withDialogActions)(
+export const CurrenciesActions = flow(withDialogActions)(
   CurrenciesActionsInner,
 );

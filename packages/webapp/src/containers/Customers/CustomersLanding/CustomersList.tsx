@@ -11,8 +11,7 @@ import { CustomersListProvider } from './CustomersListProvider';
 
 import { withCustomers } from './withCustomers';
 import { withCustomersActions } from './withCustomersActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customers list.
@@ -49,10 +48,10 @@ function CustomersListInner({
   );
 }
 
-export const CustomersList = compose(
+export const CustomersList = flow(
+  withCustomersActions,
   withCustomers(({ customersTableState, customersTableStateChanged }) => ({
     customersTableState,
     customersTableStateChanged,
   })),
-  withCustomersActions,
 )(CustomersListInner);

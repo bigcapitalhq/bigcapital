@@ -10,9 +10,9 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useDeletePaymentMade } from '@/hooks/query';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { handleDeleteErrors } from './_utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment made delete alert.
@@ -80,8 +80,8 @@ function PaymentMadeDeleteAlertInner({
   );
 }
 
-export const PaymentMadeDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const PaymentMadeDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(PaymentMadeDeleteAlertInner);

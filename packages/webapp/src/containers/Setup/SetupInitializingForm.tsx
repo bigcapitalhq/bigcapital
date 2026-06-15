@@ -12,6 +12,7 @@ import { FormattedMessage as T } from '@/components';
 import { withOrganizationActions } from '@/containers/Organization/withOrganizationActions';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { withOrganization } from '../Organization/withOrganization';
+import { flow } from 'fp-ts/function';
 
 /**
  * Setup initializing step form.
@@ -62,12 +63,12 @@ function SetupInitializingFormInner({
   );
 }
 
-export const SetupInitializingForm = R.compose(
-  withOrganizationActions,
+export const SetupInitializingForm = flow(
+  withOrganization(({ organization }) => ({ organization })),
   withCurrentOrganization(({ organizationTenantId }) => ({
     organizationId: organizationTenantId,
   })),
-  withOrganization(({ organization }) => ({ organization })),
+  withOrganizationActions,
 )(SetupInitializingFormInner);
 
 /**

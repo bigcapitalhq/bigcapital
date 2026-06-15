@@ -29,6 +29,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { safeCallback } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 const CASHFLOW_SKELETON_N = 4;
 
@@ -135,10 +136,10 @@ function CashflowBankAccount({
   );
 }
 
-const CashflowBankAccountEnhanced = compose(
-  withAlertActions,
-  withDrawerActions,
+const CashflowBankAccountEnhanced = flow(
   withDialogActions,
+  withDrawerActions,
+  withAlertActions,
 )(CashflowBankAccount);
 
 function getUpdatedBeforeText(createdAt) {

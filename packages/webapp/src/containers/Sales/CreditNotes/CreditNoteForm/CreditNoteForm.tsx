@@ -29,12 +29,7 @@ import {
   defaultCreditNote,
 } from './utils';
 
-import {
-  compose,
-  orderingLinesIndexes,
-  transactionNumber,
-  safeSumBy,
-} from '@/utils';
+import { orderingLinesIndexes, transactionNumber, safeSumBy } from '@/utils';
 
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
@@ -43,6 +38,7 @@ import {
   CreditNoteSyncIncrementSettingsToForm,
 } from './components';
 import { PageForm } from '@/components/PageForm';
+import { flow } from 'fp-ts/function';
 
 /**
  * Credit note form.
@@ -187,7 +183,8 @@ function CreditNoteFormInner({
     </Formik>
   );
 }
-export const CreditNoteForm = compose(
+export const CreditNoteForm = flow(
+  withCurrentOrganization(),
   withSettings(({ creditNoteSettings }) => ({
     creditAutoIncrement: creditNoteSettings?.autoIncrement,
     creditNextNumber: creditNoteSettings?.nextNumber,
@@ -195,5 +192,4 @@ export const CreditNoteForm = compose(
     creditCustomerNotes: creditNoteSettings?.customerNotes,
     creditTermsConditions: creditNoteSettings?.termsConditions,
   })),
-  withCurrentOrganization(),
 )(CreditNoteFormInner);

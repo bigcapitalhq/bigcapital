@@ -3,7 +3,6 @@ import moment from 'moment';
 import { ProfitLossSheetHeader } from './ProfitLossSheetHeader';
 import { ProfitLossActionsBar } from './ProfitLossActionsBar';
 import { DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import {
   withProfitLossActions,
@@ -14,6 +13,7 @@ import { ProfitLossSheetProvider } from './ProfitLossProvider';
 import { ProfitLossSheetAlerts, ProfitLossSheetLoadingBar } from './components';
 import { ProfitLossBody } from './ProfitLossBody';
 import { ProfitLossSheetDialogs } from './ProfitLossSheetDialogs';
+import { flow } from 'fp-ts/function';
 
 type ProfitLossSheetProps = Pick<
   WithProfitLossActionsProps,
@@ -70,7 +70,7 @@ function ProfitLossSheetInner({
   );
 }
 
-export const ProfitLossSheet = compose(
-  withDashboardActions,
+export const ProfitLossSheet = flow(
   withProfitLossActions,
+  withDashboardActions,
 )(ProfitLossSheetInner);

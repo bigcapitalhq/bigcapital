@@ -8,8 +8,7 @@ import { useDeliverEstimate } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimate delivered alert.
@@ -64,7 +63,7 @@ function EstimateDeliveredAlertInner({
   );
 }
 
-export const EstimateDeliveredAlert = compose(
-  withAlertStoreConnect(),
+export const EstimateDeliveredAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(EstimateDeliveredAlertInner);

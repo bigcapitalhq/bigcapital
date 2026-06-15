@@ -18,8 +18,8 @@ import {
 } from './components';
 
 import { useCashflowStatementQuery } from './utils';
-import { compose } from '@/utils';
 import { CashflowSheetDialogs } from './CashflowSheetDialogs';
+import { flow } from 'fp-ts/function';
 
 type CashFlowStatementProps = Pick<
   WithCashFlowStatementActionsProps,
@@ -78,6 +78,6 @@ function CashFlowStatementInner({
   );
 }
 
-export const CashFlowStatement = compose(withCashFlowStatementActions)(
+export const CashFlowStatement = flow(withCashFlowStatementActions)(
   CashFlowStatementInner,
 );

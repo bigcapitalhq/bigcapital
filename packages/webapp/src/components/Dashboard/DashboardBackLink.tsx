@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { If, Icon } from '@/components';
 import { FormattedMessage as T } from '@/components';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function DashboardBackLink({ dashboardBackLink, breadcrumbs }) {
   const history = useHistory();
@@ -32,9 +32,9 @@ function DashboardBackLink({ dashboardBackLink, breadcrumbs }) {
   );
 }
 
-export default compose(
-  withBreadcrumbs([]),
+export default flow(
   withDashboard(({ dashboardBackLink }) => ({
     dashboardBackLink,
   })),
+  withBreadcrumbs([]),
 )(DashboardBackLink);

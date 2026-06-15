@@ -26,11 +26,12 @@ import {
   FDateInput,
   FMoneyInputGroup,
 } from '@/components';
-import { momentFormatter, compose } from '@/utils';
+import { momentFormatter } from '@/utils';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { withSettings } from '@/containers/Settings/withSettings';
+import { flow } from 'fp-ts/function';
 
 /**
  * Quick payment receive form fields.
@@ -173,11 +174,11 @@ function QuickPaymentReceiveFormFieldsInner({
   );
 }
 
-export const QuickPaymentReceiveFormFields = compose(
+export const QuickPaymentReceiveFormFields = flow(
+  withCurrentOrganization(),
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
   })),
-  withCurrentOrganization(),
 )(QuickPaymentReceiveFormFieldsInner);
 
 export const BranchRowDivider = styled.div`

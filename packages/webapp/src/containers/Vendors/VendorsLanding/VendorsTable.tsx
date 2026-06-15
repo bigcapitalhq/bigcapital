@@ -22,8 +22,8 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendors table.
@@ -173,14 +173,13 @@ function VendorsTableInner({
   );
 }
 
-export const VendorsTable = compose(
-  withVendorsActions,
-  withAlertActions,
-  withDialogActions,
-  withDrawerActions,
-
-  withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
+export const VendorsTable = flow(
   withSettings(({ vendorsSettings }) => ({
     vendorsTableSize: vendorsSettings?.tableSize,
   })),
+  withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
+  withDrawerActions,
+  withDialogActions,
+  withAlertActions,
+  withVendorsActions,
 )(VendorsTableInner);

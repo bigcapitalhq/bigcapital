@@ -22,6 +22,7 @@ import {
   transformAttachmentsToForm,
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
+import { flow } from 'fp-ts/function';
 
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
@@ -94,7 +95,7 @@ export const transformToEditForm = (
       Math.max(linesNumber - expense.categories.length, 0),
     ),
   ];
-  const categories = R.compose(
+  const categories = flow(
     ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, expenseEntry),
   )(initialEntries);
 
@@ -145,7 +146,7 @@ export const transformFormValuesToRequest = (values) => {
 
   return {
     ...values,
-    categories: R.compose(orderingLinesIndexes)(categories),
+    categories: flow(orderingLinesIndexes)(categories),
     attachments,
   };
 };

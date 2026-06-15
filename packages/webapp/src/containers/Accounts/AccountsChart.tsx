@@ -12,7 +12,7 @@ import { withAccounts } from '@/containers/Accounts/withAccounts';
 import { withAccountsTableActions } from './withAccountsTableActions';
 
 import { transformAccountsStateToQuery } from './utils';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Accounts chart list.
@@ -49,10 +49,10 @@ function AccountsChartInner({
   );
 }
 
-export const AccountsChart = compose(
+export const AccountsChart = flow(
+  withAccountsTableActions,
   withAccounts(({ accountsTableState, accountsTableStateChanged }) => ({
     accountsTableState,
     accountsTableStateChanged,
   })),
-  withAccountsTableActions,
 )(AccountsChartInner);

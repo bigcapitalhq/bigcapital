@@ -21,9 +21,9 @@ import {
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimates datatable.
@@ -183,13 +183,13 @@ function EstimatesDataTableInner({
   );
 }
 
-export const EstimatesDataTable = compose(
-  withEstimatesActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const EstimatesDataTable = flow(
+  withEstimates(({ estimatesTableState }) => ({ estimatesTableState })),
   withSettings(({ estimatesSettings }) => ({
     estimatesTableSize: estimatesSettings?.tableSize,
   })),
-  withEstimates(({ estimatesTableState }) => ({ estimatesTableState })),
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withEstimatesActions,
 )(EstimatesDataTableInner);

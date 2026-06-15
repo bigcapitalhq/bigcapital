@@ -9,8 +9,8 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useUncategorizeTransaction } from '@/hooks/query';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project delete alert.
@@ -76,8 +76,8 @@ function UncategorizeTransactionAlertInner({
   );
 }
 
-export const UncategorizeTransactionAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const UncategorizeTransactionAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(UncategorizeTransactionAlertInner);

@@ -10,7 +10,8 @@ import { InventoryAdjustmentTable } from './InventoryAdjustmentTable';
 
 import { withInventoryAdjustments } from './withInventoryAdjustments';
 
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Inventory Adjustment List.
@@ -32,7 +33,7 @@ function InventoryAdjustmentListInner({
   );
 }
 
-export const InventoryAdjustmentList = compose(
+export const InventoryAdjustmentList = flow(
   withInventoryAdjustments(({ inventoryAdjustmentTableState }) => ({
     inventoryAdjustmentTableState,
   })),

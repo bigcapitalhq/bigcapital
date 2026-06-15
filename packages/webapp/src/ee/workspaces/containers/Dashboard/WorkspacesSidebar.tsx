@@ -10,6 +10,7 @@ import { DRAWERS } from '@/constants/drawers';
 import { firstLettersArgs } from '@/utils';
 import { WorkspaceSwitchingOverlay } from '@/ee/workspaces/components/WorkspaceSwitchingOverlay';
 import classNames from 'classnames';
+import { flow } from 'fp-ts/function';
 
 import '@/ee/workspaces/style/containers/Dashboard/WorkspacesSidebar.scss';
 
@@ -154,6 +155,6 @@ function WorkspacesSidebarRoot({ openDrawer }) {
   );
 }
 
-export const WorkspacesSidebar = R.compose(withDrawerActions)(
+export const WorkspacesSidebar = flow(withDrawerActions)(
   WorkspacesSidebarRoot,
 );

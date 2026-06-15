@@ -3,6 +3,7 @@ import { useFormikContext } from 'formik';
 import * as R from 'ramda';
 import { omit } from 'lodash';
 import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 // Default initial form values.
 export const defaultInitialValues = {
@@ -64,7 +65,7 @@ const convertFormAttrsToBoolean = (form) => {
 };
 
 export const transformTaxRateToForm = (taxRate) => {
-  return R.compose(convertFormAttrsToBoolean)({
+  return flow(convertFormAttrsToBoolean)({
     ...defaultInitialValues,
     /**
      * We only care about the fields in the form. Previously unfilled optional

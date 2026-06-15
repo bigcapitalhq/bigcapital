@@ -6,7 +6,8 @@ import { FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Alert description.
@@ -51,7 +52,7 @@ function ExpenseDeleteEntriesAlertInner({
   );
 }
 
-export const ExpenseDeleteEntriesAlert = compose(
-  withAlertStoreConnect(),
+export const ExpenseDeleteEntriesAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ExpenseDeleteEntriesAlertInner);

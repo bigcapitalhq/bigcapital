@@ -27,9 +27,10 @@ import {
   purchaseDescFieldShouldUpdate,
   taxRateFieldShouldUpdate,
 } from './utils';
-import { compose, inputIntent } from '@/utils';
+import { inputIntent } from '@/utils';
 import { TaxRatesSelect } from '@/components/TaxRates/TaxRatesSelect';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item form body.
@@ -244,6 +245,6 @@ function ItemFormBodyInner({ organization: { base_currency } }) {
   );
 }
 
-export const ItemFormBody = compose(withCurrentOrganization())(
+export const ItemFormBody = flow(withCurrentOrganization())(
   ItemFormBodyInner,
 );

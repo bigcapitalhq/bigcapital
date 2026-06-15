@@ -11,8 +11,7 @@ import { WarehousesActions } from '@/containers/Preferences/Warehouses/Warehouse
 import { BranchesActions } from '@/containers/Preferences/Branches/BranchesActions';
 import { ApiKeysActions } from '@/containers/Preferences/ApiKeys/ApiKeysActions';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 import '@/style/pages/Preferences/Topbar.scss';
 
@@ -65,6 +64,6 @@ function PreferencesTopbar({ preferencesPageTitle }) {
   );
 }
 
-export default compose(
+export default flow(
   withDashboard(({ preferencesPageTitle }) => ({ preferencesPageTitle })),
 )(PreferencesTopbar);

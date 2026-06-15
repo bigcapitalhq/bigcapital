@@ -29,7 +29,9 @@ function WarehouseTransfersListProvider({
     data: warehousesTransfersData,
     isFetching: isWarehouseTransfersFetching,
     isLoading: isWarehouseTransfersLoading,
-  } = useWarehousesTransfers(query, { keepPreviousData: true });
+  } = useWarehousesTransfers(query, {
+    placeholderData: (previousData) => previousData,
+  });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

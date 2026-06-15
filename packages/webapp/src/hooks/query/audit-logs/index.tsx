@@ -1,8 +1,4 @@
-import {
-  useQuery,
-  useInfiniteQuery,
-  keepPreviousData,
-} from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { fetchAuditLogs, fetchAuditLogFilterOptions } from '@bigcapital/sdk-ts';
 import { AUDIT_LOGS, AUDIT_LOG_FILTER_OPTIONS } from './query-keys';
@@ -37,7 +33,6 @@ export function useAuditLogsQuery(
     queryKey: [AUDIT_LOGS, filters],
     queryFn: () =>
       fetchAuditLogs(fetcher, buildAuditLogsQuery(filters.page ?? 1, filters)),
-    placeholderData: keepPreviousData,
     ...props,
   });
 }
@@ -52,7 +47,6 @@ export function useAuditLogFilterOptionsQuery(props?: Record<string, any>) {
         subjects: data?.subjects ?? [],
         actions: data?.actions ?? [],
       })),
-    placeholderData: { subjects: [], actions: [] },
     staleTime: 5 * 60 * 1000,
     ...props,
   });

@@ -14,9 +14,9 @@ import { CLASSES } from '@/constants/classes';
 import { FieldRequiredHint } from '@/components';
 import { useUserFormContext } from './UserFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 import { UserFormCalloutAlerts } from './components';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 /**
  * User form content.
@@ -104,4 +104,6 @@ function UserFormContentInner({
     </Form>
   );
 }
-export const UserFormContent = compose(withDialogActions)(UserFormContentInner);
+export const UserFormContent = flow(withDialogActions)(
+  UserFormContentInner,
+);

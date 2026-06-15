@@ -6,8 +6,7 @@ import { PaymentMadeViewTabs } from './PaymentMadeViewTabs';
 
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment mades view page.
@@ -32,7 +31,7 @@ function PaymentMadesViewPage({
   );
 }
 
-export const PaymentMadesView = compose(
-  withAlertActions,
+export const PaymentMadesView = flow(
   withDialogActions,
+  withAlertActions,
 )(PaymentMadesViewPage);

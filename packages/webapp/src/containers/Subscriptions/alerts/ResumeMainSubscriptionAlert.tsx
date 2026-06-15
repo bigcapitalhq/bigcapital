@@ -7,6 +7,7 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useResumeMainSubscription } from '@/hooks/query/subscription';
+import { flow } from 'fp-ts/function';
 
 /**
  * Resume Unlocking partial transactions alerts.
@@ -73,7 +74,7 @@ function ResumeMainSubscriptionAlertInner({
   );
 }
 
-export const ResumeMainSubscriptionAlert = R.compose(
-  withAlertStoreConnect(),
+export const ResumeMainSubscriptionAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ResumeMainSubscriptionAlertInner);

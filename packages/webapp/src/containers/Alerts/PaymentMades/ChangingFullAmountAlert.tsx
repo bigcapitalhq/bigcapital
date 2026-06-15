@@ -5,7 +5,8 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Changing full-amount alert in payment made form.
@@ -49,7 +50,7 @@ function ChangingFullAmountAlertInner({
   );
 }
 
-export const ChangingFullAmountAlert = compose(
-  withAlertStoreConnect(),
+export const ChangingFullAmountAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ChangingFullAmountAlertInner);

@@ -3,7 +3,7 @@ import React from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const RefundVendorCreditDialogContent = React.lazy(() =>
   import('./RefundVendorCreditDialogContent').then((m) => ({
@@ -38,4 +38,4 @@ function RefundVendorCreditDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(RefundVendorCreditDialog);
+export const index = flow(withDialogRedux())(RefundVendorCreditDialog);

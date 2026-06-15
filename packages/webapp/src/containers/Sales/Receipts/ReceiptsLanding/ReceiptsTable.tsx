@@ -2,7 +2,6 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from '@/utils';
 import {
   DataTable,
   DashboardContentTable,
@@ -25,6 +24,7 @@ import { useReceiptsTableColumns, ActionsMenu } from './components';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Sale receipts datatable.
@@ -162,13 +162,13 @@ function ReceiptsDataTable({
   );
 }
 
-export const ReceiptsTable = compose(
-  withAlertActions,
-  withReceiptsActions,
-  withDrawerActions,
-  withDialogActions,
-  withReceipts(({ receiptTableState }) => ({ receiptTableState })),
+export const ReceiptsTable = flow(
   withSettings(({ receiptSettings }) => ({
     receiptsTableSize: receiptSettings?.tableSize,
   })),
+  withReceipts(({ receiptTableState }) => ({ receiptTableState })),
+  withDialogActions,
+  withDrawerActions,
+  withReceiptsActions,
+  withAlertActions,
 )(ReceiptsDataTable);

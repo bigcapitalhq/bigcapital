@@ -4,12 +4,13 @@ import { Formik, Form, FormikHelpers } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { CreateCustomerForm, EditCustomerForm } from './CustomerForm.schema';
-import { compose, transformToForm, saveInvoke, parseBoolean } from '@/utils';
+import { transformToForm, saveInvoke, parseBoolean } from '@/utils';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { defaultInitialValues } from './utils';
 import { AppToaster } from '@/components';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { CustomerFormContent } from './CustomerFormContent';
+import { flow } from 'fp-ts/function';
 
 type CustomerFormValues = {
   customer_type: string;
@@ -181,6 +182,6 @@ const CustomerFormFields = styled.div`
   }
 `;
 
-export const CustomerFormFormik = compose(withCurrentOrganization(undefined))(
-  CustomerFormFormikRoot,
-);
+export const CustomerFormFormik = flow(
+  withCurrentOrganization(undefined),
+)(CustomerFormFormikRoot);

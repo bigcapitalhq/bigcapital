@@ -120,14 +120,6 @@ export const objectKeysTransform = (obj, transform) => {
   }, {});
 };
 
-export const compose = (...funcs) =>
-  funcs.reduce(
-    (a, b) =>
-      (...args) =>
-        a(b(...args)),
-    (arg) => arg,
-  );
-
 export const getObjectDiff = (a, b) => {
   return _.reduce(
     a,

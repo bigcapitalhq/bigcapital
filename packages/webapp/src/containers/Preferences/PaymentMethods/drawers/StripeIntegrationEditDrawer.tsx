@@ -3,6 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { flow } from 'fp-ts/function';
 
 const StripeIntegrationEditContent = React.lazy(() =>
   import('./StripeIntegrationEditContent').then((module) => ({
@@ -30,6 +31,6 @@ function StripeIntegrationEditDrawerRoot({
   );
 }
 
-export const StripeIntegrationEditDrawer = R.compose(withDrawers())(
+export const StripeIntegrationEditDrawer = flow(withDrawers())(
   StripeIntegrationEditDrawerRoot,
 );

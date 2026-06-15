@@ -50,7 +50,7 @@ import {
 } from '@/hooks/query/banking';
 
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function AccountTransactionsActionsBarInner({
   // #withDialogActions
@@ -444,13 +444,8 @@ function AccountTransactionsActionsBarInner({
   );
 }
 
-export const AccountTransactionsActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
-  withSettingsActions,
-  withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
-  })),
+export const AccountTransactionsActionsBar = flow(
+  withBankingActions,
   withBanking(
     ({
       uncategorizedTransationsIdsSelected,
@@ -464,5 +459,10 @@ export const AccountTransactionsActionsBar = compose(
       categorizedTransactionsSelected,
     }),
   ),
-  withBankingActions,
+  withSettings(({ cashflowTransactionsSettings }) => ({
+    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
+  })),
+  withSettingsActions,
+  withAlertActions,
+  withDialogActions,
 )(AccountTransactionsActionsBarInner);

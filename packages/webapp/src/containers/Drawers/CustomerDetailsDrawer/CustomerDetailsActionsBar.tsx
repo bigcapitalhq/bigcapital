@@ -37,8 +37,8 @@ import {
   PaymentReceiveAction,
   CustomerAction,
 } from '@/constants/abilityOption';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customer details actions bar.
@@ -167,8 +167,8 @@ function CustomerDetailsActionsBarInner({
   );
 }
 
-export const CustomerDetailsActionsBar = compose(
-  withDrawerActions,
-  withAlertActions,
+export const CustomerDetailsActionsBar = flow(
   withDialogActions,
+  withAlertActions,
+  withDrawerActions,
 )(CustomerDetailsActionsBarInner);

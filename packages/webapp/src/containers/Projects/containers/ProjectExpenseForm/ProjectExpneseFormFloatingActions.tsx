@@ -5,7 +5,7 @@ import { Intent, Button, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { useProjectExpenseFormContext } from './ProjectExpenseFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ProjectExpneseFormFloatingActionsInner({
   // #withDialogActions
@@ -41,6 +41,6 @@ function ProjectExpneseFormFloatingActionsInner({
   );
 }
 
-export const ProjectExpneseFormFloatingActions = compose(withDialogActions)(
-  ProjectExpneseFormFloatingActionsInner,
-);
+export const ProjectExpneseFormFloatingActions = flow(
+  withDialogActions,
+)(ProjectExpneseFormFloatingActionsInner);

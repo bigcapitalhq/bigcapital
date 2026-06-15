@@ -4,6 +4,7 @@ import * as R from 'ramda';
 import { FMultiSelect } from '../Forms';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Contacts multi-select component.
@@ -69,10 +70,10 @@ function VendorsMultiSelectRoot({
   );
 }
 
-export const CustomersMultiSelect = R.compose(withDrawerActions)(
+export const CustomersMultiSelect = flow(withDrawerActions)(
   CustomersMultiSelectRoot,
 );
 
-export const VendorsMultiSelect = R.compose(withDrawerActions)(
+export const VendorsMultiSelect = flow(withDrawerActions)(
   VendorsMultiSelectRoot,
 );

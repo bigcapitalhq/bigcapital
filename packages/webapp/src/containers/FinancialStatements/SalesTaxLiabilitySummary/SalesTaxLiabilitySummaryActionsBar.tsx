@@ -13,7 +13,7 @@ import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
 import {
   withSalesTaxLiabilitySummary,
@@ -29,6 +29,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
+import { flow } from 'fp-ts/function';
 
 interface SalesTaxLiabilitySummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -153,10 +154,10 @@ function SalesTaxLiabilitySummaryActionsBarInner({
   );
 }
 
-export const SalesTaxLiabilitySummaryActionsBar = compose(
+export const SalesTaxLiabilitySummaryActionsBar = flow(
+  withDialogActions,
+  withSalesTaxLiabilitySummaryActions,
   withSalesTaxLiabilitySummary(({ salesTaxLiabilitySummaryFilter }) => ({
     salesTaxLiabilitySummaryFilter,
   })),
-  withSalesTaxLiabilitySummaryActions,
-  withDialogActions,
 )(SalesTaxLiabilitySummaryActionsBarInner);

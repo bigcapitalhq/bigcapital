@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const SelectPaymentMethodsDialogContent = React.lazy(() =>
   import('./SelectPaymentMethodsContent').then((module) => ({
@@ -31,7 +31,7 @@ function SelectPaymentMethodsDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const SelectPaymentMethodsDialog = compose(withDialogRedux())(
+export const SelectPaymentMethodsDialog = flow(withDialogRedux())(
   SelectPaymentMethodsDialogRoot,
 );
 

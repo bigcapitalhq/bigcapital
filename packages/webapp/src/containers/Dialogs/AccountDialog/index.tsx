@@ -4,7 +4,7 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux, {
   DialogBaseProps,
 } from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const AccountDialogContent = lazy(() =>
   import('./AccountDialogContent').then((m) => ({
@@ -44,4 +44,4 @@ function AccountFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(AccountFormDialog);
+export const index = flow(withDialogRedux())(AccountFormDialog);

@@ -5,6 +5,7 @@ import { Drawer, DrawerHeaderContent, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { Position } from '@blueprintjs/core';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 const ChangeSubscriptionPlanContent = lazy(() =>
   import('./ChangeSubscriptionPlanContent').then((m) => ({
@@ -38,6 +39,6 @@ function ChangeSubscriptionPlanDrawerInner({
   );
 }
 
-export const ChangeSubscriptionPlanDrawer = R.compose(withDrawers())(
+export const ChangeSubscriptionPlanDrawer = flow(withDrawers())(
   ChangeSubscriptionPlanDrawerInner,
 );

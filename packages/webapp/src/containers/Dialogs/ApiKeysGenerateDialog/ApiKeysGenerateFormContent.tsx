@@ -8,7 +8,7 @@ import intl from 'react-intl-universal';
 import { inputIntent } from '@/utils';
 import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * API Keys Generate form content.
@@ -57,6 +57,6 @@ function ApiKeysGenerateFormContentInner({
   );
 }
 
-export const ApiKeysGenerateFormContent = compose(withDialogActions)(
+export const ApiKeysGenerateFormContent = flow(withDialogActions)(
   ApiKeysGenerateFormContentInner,
 );

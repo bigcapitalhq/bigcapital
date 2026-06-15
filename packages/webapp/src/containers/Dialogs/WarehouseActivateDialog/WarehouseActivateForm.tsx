@@ -10,8 +10,7 @@ import { useWarehouseActivateContext } from './WarehouseActivateFormProvider';
 import { WarehouseActivateFormContent } from './WarehouseActivateFormContent';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * warehouse activate form.
@@ -61,6 +60,6 @@ function WarehouseActivateFormInner({
     />
   );
 }
-export const WarehouseActivateForm = compose(withDialogActions)(
+export const WarehouseActivateForm = flow(withDialogActions)(
   WarehouseActivateFormInner,
 );

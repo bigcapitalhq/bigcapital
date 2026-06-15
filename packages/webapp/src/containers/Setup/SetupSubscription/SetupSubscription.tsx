@@ -6,6 +6,7 @@ import { Box } from '@/components';
 import { SubscriptionPlansSection } from './SubscriptionPlansSection';
 import { withSubscriptionPlansActions } from '../../Subscriptions/withSubscriptionPlansActions';
 import styles from './SetupSubscription.module.scss';
+import { flow } from 'fp-ts/function';
 
 /**
  * Subscription step of wizard setup.
@@ -35,6 +36,6 @@ function SetupSubscriptionInner({
   );
 }
 
-export const SetupSubscription = R.compose(withSubscriptionPlansActions)(
+export const SetupSubscription = flow(withSubscriptionPlansActions)(
   SetupSubscriptionInner,
 );

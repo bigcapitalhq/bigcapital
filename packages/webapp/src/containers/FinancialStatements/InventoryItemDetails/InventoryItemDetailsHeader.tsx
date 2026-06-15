@@ -25,9 +25,10 @@ import {
   getInventoryItemDetailsDefaultQuery,
   getInventoryItemDetailsQuerySchema,
 } from './utils2';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 type InventoryItemDetailsFormValues = Omit<
   ReturnType<typeof getInventoryItemDetailsDefaultQuery>,
@@ -140,11 +141,11 @@ function InventoryItemDetailsHeaderInner({
   );
 }
 
-export const InventoryItemDetailsHeader = compose(
+export const InventoryItemDetailsHeader = flow(
+  withInventoryItemDetailsActions,
   withInventoryItemDetails(({ inventoryItemDetailDrawerFilter }) => ({
     isFilterDrawerOpen: inventoryItemDetailDrawerFilter,
   })),
-  withInventoryItemDetailsActions,
 )(InventoryItemDetailsHeaderInner);
 
 const InventoryItemDetailsDrawerHeader = styled(FinancialStatementHeader)`

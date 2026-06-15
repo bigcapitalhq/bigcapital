@@ -7,6 +7,7 @@ import {
   WithBankingActionsProps,
   withBankingActions,
 } from '../../withBankingActions';
+import { flow } from 'fp-ts/function';
 
 interface AccountUncategorizedTransactionsAllRootProps
   extends WithBankingActionsProps {}
@@ -30,6 +31,6 @@ function AccountUncategorizedTransactionsAllRoot({
   );
 }
 
-export const AccountUncategorizedTransactionsAll = R.compose(
+export const AccountUncategorizedTransactionsAll = flow(
   withBankingActions,
 )(AccountUncategorizedTransactionsAllRoot);

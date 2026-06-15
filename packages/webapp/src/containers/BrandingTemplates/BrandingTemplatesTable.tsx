@@ -9,6 +9,7 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { getCustomizeDrawerNameFromResource } from './_utils';
 import { useBrandingTemplatesColumns } from './_hooks';
 import styles from './BrandTemplates.module.scss';
+import { flow } from 'fp-ts/function';
 
 interface BrandingTemplatesTableProps {}
 
@@ -67,7 +68,7 @@ function BrandingTemplateTableRoot({
   );
 }
 
-export const BrandingTemplatesTable = R.compose(
-  withAlertActions,
+export const BrandingTemplatesTable = flow(
   withDrawerActions,
+  withAlertActions,
 )(BrandingTemplateTableRoot);

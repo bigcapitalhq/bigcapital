@@ -6,7 +6,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ReconcileVendorCreditFloatingActionsInner({
   // #withDialogActions
@@ -40,6 +40,6 @@ function ReconcileVendorCreditFloatingActionsInner({
     </div>
   );
 }
-export const ReconcileVendorCreditFloatingActions = compose(withDialogActions)(
-  ReconcileVendorCreditFloatingActionsInner,
-);
+export const ReconcileVendorCreditFloatingActions = flow(
+  withDialogActions,
+)(ReconcileVendorCreditFloatingActionsInner);

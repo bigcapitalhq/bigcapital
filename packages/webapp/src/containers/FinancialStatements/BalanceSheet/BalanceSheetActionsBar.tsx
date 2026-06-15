@@ -21,8 +21,9 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface BalanceSheetActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -141,10 +142,10 @@ function BalanceSheetActionsBarInner({
   );
 }
 
-export const BalanceSheetActionsBar = compose(
+export const BalanceSheetActionsBar = flow(
+  withDialogActions,
+  withBalanceSheetActions,
   withBalanceSheet(({ balanceSheetDrawerFilter }) => ({
     balanceSheetDrawerFilter,
   })),
-  withBalanceSheetActions,
-  withDialogActions,
 )(BalanceSheetActionsBarInner);

@@ -26,10 +26,11 @@ import {
 } from './components';
 import { ProjectsSelect } from '@/containers/Projects/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { momentFormatter, compose } from '@/utils';
+import { momentFormatter } from '@/utils';
 import { Features } from '@/constants';
 import { useTheme } from '@emotion/react';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 const getBillFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -190,7 +191,9 @@ function BillFormVendorField() {
   );
 }
 
-export const BillFormHeaderFields = compose(withDialogActions)(BillFormHeader);
+export const BillFormHeaderFields = flow(withDialogActions)(
+  BillFormHeader,
+);
 
 const VendorButtonLink = styled(VendorDrawerLink)`
   font-size: 11px;

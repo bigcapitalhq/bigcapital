@@ -32,7 +32,9 @@ function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
     data: paymentMadesData,
     isLoading: isPaymentsLoading,
     isFetching: isPaymentsFetching,
-  } = usePaymentMades(query, { keepPreviousData: true });
+  } = usePaymentMades(query, {
+    placeholderData: (previousData) => previousData,
+  });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

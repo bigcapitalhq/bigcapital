@@ -8,8 +8,7 @@ import { useInactivateItem } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item inactivate alert.
@@ -63,7 +62,7 @@ function ItemInactivateAlertInner({
   );
 }
 
-export const ItemInactivateAlert = compose(
-  withAlertStoreConnect(),
+export const ItemInactivateAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ItemInactivateAlertInner);

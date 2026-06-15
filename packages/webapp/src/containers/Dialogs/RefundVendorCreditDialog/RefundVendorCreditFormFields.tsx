@@ -24,12 +24,13 @@ import {
   FInputGroup,
   FTextArea,
 } from '@/components';
-import { momentFormatter, compose } from '@/utils';
+import { momentFormatter } from '@/utils';
 import { useAutofocus } from '@/hooks';
 import { Features, ACCOUNT_TYPE } from '@/constants';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { flow } from 'fp-ts/function';
 
 /**
  * Refund Vendor credit form fields.
@@ -163,9 +164,9 @@ function RefundVendorCreditFormFieldsInner({
   );
 }
 
-export const RefundVendorCreditFormFields = compose(withCurrentOrganization())(
-  RefundVendorCreditFormFieldsInner,
-);
+export const RefundVendorCreditFormFields = flow(
+  withCurrentOrganization(),
+)(RefundVendorCreditFormFieldsInner);
 
 export const BranchRowDivider = styled.div`
   --x-divider-color: #ebf1f6;

@@ -7,6 +7,7 @@ import { CustomersTransactionsTable } from './CustomersTransactionsTable';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
+import { flow } from 'fp-ts/function';
 
 interface CustomersTransactionsBodyProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -32,7 +33,7 @@ function CustomersTransactionsBodyJSX({
   );
 }
 
-export const CustomersTransactionsBody = R.compose(
+export const CustomersTransactionsBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),

@@ -10,6 +10,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { AppToaster } from '@/components';
+import { flow } from 'fp-ts/function';
 
 function AlertLazyFallbackMessage({ amount }) {
   return (
@@ -91,9 +92,9 @@ function AlertLazyInside({ isOpen, name, Component }) {
   );
 }
 
-export const AlertLazy = R.compose(
-  withAlertStoreConnect(),
+export const AlertLazy = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(AlertLazyInside);
 
 const ToastText = styled.div`

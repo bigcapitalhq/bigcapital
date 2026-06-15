@@ -11,7 +11,8 @@ import { CreateProjectTimeEntryFormSchema } from './ProjectTimeEntryForm.schema'
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
@@ -94,6 +95,6 @@ function ProjectTimeEntryFormInner({
   );
 }
 
-export const ProjectTimeEntryForm = compose(withDialogActions)(
+export const ProjectTimeEntryForm = flow(withDialogActions)(
   ProjectTimeEntryFormInner,
 );

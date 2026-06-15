@@ -6,7 +6,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useUnlockingPartialTransactionsContext } from './UnlockingPartialTransactionsFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Partial Unlocking transactions floating actions
@@ -44,6 +44,6 @@ function UnlockingPartialTransactionsFormFloatingActionsInner({
   );
 }
 
-export const UnlockingPartialTransactionsFormFloatingActions = compose(
+export const UnlockingPartialTransactionsFormFloatingActions = flow(
   withDialogActions,
 )(UnlockingPartialTransactionsFormFloatingActionsInner);

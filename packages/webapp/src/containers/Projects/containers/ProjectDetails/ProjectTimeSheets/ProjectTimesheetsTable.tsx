@@ -15,8 +15,8 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Timesheet DataTable.
@@ -69,12 +69,12 @@ function ProjectTimesheetsTableRoot({
     />
   );
 }
-export const ProjectTimesheetsTable = compose(
-  withAlertActions,
-  withDialogActions,
+export const ProjectTimesheetsTable = flow(
   withSettings(({ timesheetsSettings }) => ({
     timesheetsTableSize: timesheetsSettings?.tableSize,
   })),
+  withDialogActions,
+  withAlertActions,
 )(ProjectTimesheetsTableRoot);
 
 const ProjectTimesheetDataTable = styled(DataTable)`

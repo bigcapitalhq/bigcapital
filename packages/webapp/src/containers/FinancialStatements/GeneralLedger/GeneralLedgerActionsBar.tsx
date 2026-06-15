@@ -12,7 +12,6 @@ import classNames from 'classnames';
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { GeneralLedgerSheetExportMenu } from './components';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
-import { compose } from '@/utils';
 
 import { withGeneralLedger } from './withGeneralLedger';
 import type { WithGeneralLedgerProps } from './withGeneralLedger';
@@ -21,6 +20,7 @@ import type { WithGeneralLedgerActionsProps } from './withGeneralLedgerActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 type GeneralLedgerActionsBarProps = {
   isFilterDrawerOpen: boolean;
@@ -106,10 +106,10 @@ function GeneralLedgerActionsBarInner({
   );
 }
 
-export const GeneralLedgerActionsBar = compose(
+export const GeneralLedgerActionsBar = flow(
+  withDialogActions,
+  withGeneralLedgerActions,
   withGeneralLedger(({ generalLedgerFilterDrawer }) => ({
     isFilterDrawerOpen: generalLedgerFilterDrawer,
   })),
-  withGeneralLedgerActions,
-  withDialogActions,
 )(GeneralLedgerActionsBarInner);

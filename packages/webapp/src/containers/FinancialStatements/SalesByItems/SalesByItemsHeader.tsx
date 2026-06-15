@@ -14,11 +14,12 @@ import {
   WithSalesByItemsActionsProps,
 } from './withSalesByItemsActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import {
   getDefaultSalesByItemsQuery,
   getSalesByItemsQueryShema,
 } from './utils';
+import { flow } from 'fp-ts/function';
 
 interface SalesByItemsFormValues {
   fromDate: Date;
@@ -120,11 +121,11 @@ function SalesByItemsHeaderInner({
   );
 }
 
-export const SalesByItemsHeader = compose(
+export const SalesByItemsHeader = flow(
+  withSalesByItemsActions,
   withSalesByItems(({ salesByItemsDrawerFilter }) => ({
     salesByItemsDrawerFilter,
   })),
-  withSalesByItemsActions,
 )(SalesByItemsHeaderInner);
 
 const SalesByItemsDrawerHeader = styled(FinancialStatementHeader)`

@@ -14,9 +14,10 @@ import {
   withTrialBalanceActions,
   WithTrialBalanceActionsProps,
 } from './withTrialBalanceActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 interface TrialBalanceFormValues {
   fromDate: Date;
@@ -138,11 +139,11 @@ function TrialBalanceSheetHeaderInner({
   );
 }
 
-export const TrialBalanceSheetHeader = compose(
+export const TrialBalanceSheetHeader = flow(
+  withTrialBalanceActions,
   withTrialBalance(({ trialBalanceDrawerFilter }) => ({
     trialBalanceDrawerFilter,
   })),
-  withTrialBalanceActions,
 )(TrialBalanceSheetHeaderInner);
 
 const TrialBalanceSheetDrawerHeader = styled(FinancialStatementHeader)`

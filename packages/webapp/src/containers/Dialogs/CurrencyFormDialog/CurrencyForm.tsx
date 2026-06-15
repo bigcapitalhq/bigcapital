@@ -13,7 +13,8 @@ import {
 } from './CurrencyForm.schema';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   currency_name: '',
@@ -102,4 +103,4 @@ function CurrencyFormInner({
   );
 }
 
-export const CurrencyForm = compose(withDialogActions)(CurrencyFormInner);
+export const CurrencyForm = flow(withDialogActions)(CurrencyFormInner);

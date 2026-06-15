@@ -14,8 +14,8 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteCreditNote } from '@/hooks/query';
 import { handleDeleteErrors } from '@/containers/Sales/CreditNotes/CreditNotesLanding/utils';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Credit note delete alert.
@@ -81,8 +81,8 @@ function CreditNoteDeleteAlertInner({
   );
 }
 
-export const CreditNoteDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const CreditNoteDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(CreditNoteDeleteAlertInner);

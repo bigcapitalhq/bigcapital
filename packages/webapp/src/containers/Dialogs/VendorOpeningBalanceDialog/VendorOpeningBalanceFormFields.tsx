@@ -22,8 +22,8 @@ import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvid
 import { useSetPrimaryBranchToForm } from './utils';
 
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendor Opening balance form fields.
@@ -109,6 +109,6 @@ function VendorOpeningBalanceFormFieldsInner({
   );
 }
 
-export const VendorOpeningBalanceFormFields = compose(
+export const VendorOpeningBalanceFormFields = flow(
   withCurrentOrganization(),
 )(VendorOpeningBalanceFormFieldsInner);

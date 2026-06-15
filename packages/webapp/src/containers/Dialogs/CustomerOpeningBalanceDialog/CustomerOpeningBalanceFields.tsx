@@ -22,8 +22,8 @@ import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormPr
 import { useSetPrimaryBranchToForm } from './utils';
 
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customer Opening balance fields.
@@ -110,6 +110,6 @@ function CustomerOpeningBalanceFieldsInner({
     </div>
   );
 }
-export const CustomerOpeningBalanceFields = compose(withCurrentOrganization())(
-  CustomerOpeningBalanceFieldsInner,
-);
+export const CustomerOpeningBalanceFields = flow(
+  withCurrentOrganization(),
+)(CustomerOpeningBalanceFieldsInner);

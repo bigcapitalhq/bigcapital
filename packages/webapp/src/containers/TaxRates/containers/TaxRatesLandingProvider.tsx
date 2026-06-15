@@ -15,7 +15,7 @@ function TaxRatesLandingProvider({ tableState, ...props }) {
     data: taxRates,
     isFetching: isTaxRatesFetching,
     isLoading: isTaxRatesLoading,
-  } = useTaxRates({}, { keepPreviousData: true });
+  } = useTaxRates({}, { placeholderData: (previousData) => previousData });
 
   // Detarmines whether the table should show empty state.
   const isEmptyStatus = isEmpty(taxRates) && !isTaxRatesLoading;

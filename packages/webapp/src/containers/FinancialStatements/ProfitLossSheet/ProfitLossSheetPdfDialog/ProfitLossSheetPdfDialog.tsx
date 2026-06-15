@@ -6,7 +6,7 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ProfitLossSheetPdfDialogContent = lazy(() =>
   import('./ProfitLossSheetPdfDialogContent').then((mod) => ({
@@ -42,6 +42,6 @@ function ProfitLossSheetPdfDialogRoot({
   );
 }
 
-export const ProfitLossSheetPdfDialog = compose(withDialogRedux())(
+export const ProfitLossSheetPdfDialog = flow(withDialogRedux())(
   ProfitLossSheetPdfDialogRoot,
 );

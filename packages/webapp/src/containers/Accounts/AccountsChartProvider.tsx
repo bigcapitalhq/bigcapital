@@ -55,7 +55,7 @@ function AccountsChartProvider({
     data: accounts,
     isFetching: isAccountsFetching,
     isLoading: isAccountsLoading,
-  } = useAccounts(query, { keepPreviousData: true } as any);
+  } = useAccounts(query, { placeholderData: (previousData) => previousData });
 
   // Provider payload.
   const provider: AccountsChartContextValue = {

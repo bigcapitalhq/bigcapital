@@ -45,13 +45,13 @@ import {
   tansformDateValue,
   handleDateChange,
   inputIntent,
-  compose,
   safeSumBy,
   fullAmountPaymentEntries,
   amountPaymentEntries,
 } from '@/utils';
 import { accountsFieldShouldUpdate, vendorsFieldShouldUpdate } from './utils';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -262,9 +262,9 @@ function PaymentFormVendorSelect() {
   );
 }
 
-export const PaymentMadeFormHeaderFields = compose(withCurrentOrganization())(
-  PaymentMadeFormHeaderFieldsInner,
-);
+export const PaymentMadeFormHeaderFields = flow(
+  withCurrentOrganization(),
+)(PaymentMadeFormHeaderFieldsInner);
 
 const VendorButtonLink = styled(VendorDrawerLink)`
   font-size: 11px;

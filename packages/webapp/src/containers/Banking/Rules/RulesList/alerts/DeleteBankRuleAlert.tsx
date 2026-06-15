@@ -9,7 +9,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteBankRule } from '@/hooks/query/banking';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project delete alert.
@@ -73,8 +73,8 @@ function BankRuleDeleteAlert({
   );
 }
 
-export const DeleteBankRuleAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const DeleteBankRuleAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(BankRuleDeleteAlert);

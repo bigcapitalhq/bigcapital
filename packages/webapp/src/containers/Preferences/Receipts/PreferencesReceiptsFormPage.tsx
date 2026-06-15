@@ -10,10 +10,11 @@ import { PreferencesReceiptsFormSchema } from './PreferencesReceiptsForm.schema'
 import { PreferencesReceiptsForm } from './PreferencesReceiptsForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { useSaveSettings } from '@/hooks/query';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultValues = {
   termsConditions: '',
@@ -44,9 +45,9 @@ function PreferencesReceiptsFormPageRoot({
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
+    const options = flow(
       transfromToSnakeCase,
+      transferObjectOptionsToArray,
     )({ salesReceipts: { ...values } });
 
     // Handle request success.
@@ -74,9 +75,9 @@ function PreferencesReceiptsFormPageRoot({
   );
 }
 
-export const PreferencesReceiptsFormPage = compose(
-  withDashboardActions,
+export const PreferencesReceiptsFormPage = flow(
   withSettings(({ receiptSettings }) => ({
     receiptSettings: receiptSettings,
   })),
+  withDashboardActions,
 )(PreferencesReceiptsFormPageRoot);

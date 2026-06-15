@@ -28,6 +28,7 @@ import { useJournalIsForeign } from './utils';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { transactionNumber } from '@/utils';
 import { useUpdateEffect } from '@/hooks';
+import { flow } from 'fp-ts/function';
 
 /**
  * Contact header cell.
@@ -209,7 +210,7 @@ export function JournalExchangeRateInputField({ ...props }) {
  * Syncs journal auto-increment settings to form.
  * @return {React.ReactNode}
  */
-export const JournalSyncIncrementSettingsToForm = R.compose(
+export const JournalSyncIncrementSettingsToForm = flow(
   withSettings(({ manualJournalsSettings }) => ({
     journalAutoIncrement: manualJournalsSettings?.autoIncrement,
     journalNextNumber: manualJournalsSettings?.nextNumber,

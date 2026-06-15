@@ -1,10 +1,16 @@
-// @ts-nocheck
 import React from 'react';
+import type { Account } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { useAccount } from '@/hooks/query';
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 
-const MoneyInFieldsContext = React.createContext();
+type MoneyInFieldsContextValue = {
+  account: Account | undefined;
+};
+
+const MoneyInFieldsContext = React.createContext<
+  MoneyInFieldsContextValue | undefined
+>(undefined);
 
 /**
  * Money in dialog provider.
@@ -17,7 +23,7 @@ function MoneyInFieldsProvider({ ...props }) {
     enabled: !!accountId,
   });
   // Provider data.
-  const provider = {
+  const provider: MoneyInFieldsContextValue = {
     account,
   };
   const isLoading = isAccountLoading;
@@ -29,6 +35,14 @@ function MoneyInFieldsProvider({ ...props }) {
   );
 }
 
-const useMoneyInFieldsContext = () => React.useContext(MoneyInFieldsContext);
+const useMoneyInFieldsContext = (): MoneyInFieldsContextValue => {
+  const ctx = React.useContext(MoneyInFieldsContext);
+  if (!ctx) {
+    throw new Error(
+      'useMoneyInFieldsContext must be used within MoneyInFieldsProvider',
+    );
+  }
+  return ctx;
+};
 
 export { MoneyInFieldsProvider, useMoneyInFieldsContext };

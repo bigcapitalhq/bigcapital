@@ -8,7 +8,8 @@ import { withEstimatesActions } from './withEstimatesActions';
 import { withEstimates } from './withEstimates';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Estimates views tabs.
@@ -45,9 +46,9 @@ function EstimateViewTabs({
   );
 }
 
-export const EstimatesViewTabs = compose(
-  withEstimatesActions,
+export const EstimatesViewTabs = flow(
   withEstimates(({ estimatesTableState }) => ({
     estimatesCurrentView: estimatesTableState.viewSlug,
   })),
+  withEstimatesActions,
 )(EstimateViewTabs);

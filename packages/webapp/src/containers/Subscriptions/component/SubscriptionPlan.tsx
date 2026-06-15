@@ -7,6 +7,7 @@ import {
   withPlans,
 } from '@/containers/Subscriptions/withPlans';
 import { ButtonProps } from '@blueprintjs/core';
+import { flow } from 'fp-ts/function';
 
 interface SubscriptionPricingFeature {
   text: string;
@@ -83,6 +84,6 @@ function SubscriptionPlanRoot({
   );
 }
 
-export const SubscriptionPlan = R.compose(
+export const SubscriptionPlan = flow(
   withPlans(({ plansPeriod }) => ({ plansPeriod })),
 )(SubscriptionPlanRoot);

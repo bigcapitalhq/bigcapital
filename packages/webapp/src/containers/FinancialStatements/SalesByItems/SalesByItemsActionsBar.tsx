@@ -16,7 +16,7 @@ import {
   withSalesByItemsActions,
   WithSalesByItemsActionsProps,
 } from './withSalesByItemsActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import { SalesByItemsSheetExportMenu } from './components';
 import {
@@ -24,6 +24,7 @@ import {
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface SalesByItemsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -138,10 +139,10 @@ function SalesByItemsActionsBarInner({
   );
 }
 
-export const SalesByItemsActionsBar = compose(
+export const SalesByItemsActionsBar = flow(
+  withDialogActions,
+  withSalesByItemsActions,
   withSalesByItems(({ salesByItemsDrawerFilter }) => ({
     salesByItemsDrawerFilter,
   })),
-  withSalesByItemsActions,
-  withDialogActions,
 )(SalesByItemsActionsBarInner);

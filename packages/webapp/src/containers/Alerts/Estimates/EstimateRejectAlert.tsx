@@ -8,8 +8,7 @@ import { useRejectEstimate } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  *  Estimate reject delete alerts.
@@ -63,7 +62,7 @@ function EstimateRejectAlertInner({
   );
 }
 
-export const EstimateRejectAlert = compose(
-  withAlertStoreConnect(),
+export const EstimateRejectAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(EstimateRejectAlertInner);

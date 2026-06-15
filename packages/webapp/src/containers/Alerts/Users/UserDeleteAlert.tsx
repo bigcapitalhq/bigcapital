@@ -8,8 +8,7 @@ import { useDeleteUser } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * User delete alert.
@@ -75,7 +74,7 @@ function UserDeleteAlertInner({
   );
 }
 
-export const UserDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const UserDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(UserDeleteAlertInner);

@@ -8,8 +8,7 @@ import { CreateProjectExpenseFormSchema } from './ProjectExpenseForm.schema';
 import { ProjectExpenseFormContent } from './ProjectExpenseFormContent';
 import { useProjectExpenseFormContext } from './ProjectExpenseFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   expenseName: '',
@@ -62,6 +61,6 @@ function ProjectExpenseFormInner({
   );
 }
 
-export const ProjectExpenseForm = compose(withDialogActions)(
+export const ProjectExpenseForm = flow(withDialogActions)(
   ProjectExpenseFormInner,
 );

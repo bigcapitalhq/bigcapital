@@ -22,8 +22,9 @@ import {
 import { ReceiptMoreMenuItems } from './components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
-import { safeCallback, compose } from '@/utils';
+import { safeCallback } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Receipt details actions bar.
@@ -114,8 +115,8 @@ function ReceiptDetailActionBarInner({
   );
 }
 
-export const ReceiptDetailActionBar = compose(
-  withDialogActions,
-  withDrawerActions,
+export const ReceiptDetailActionBar = flow(
   withAlertActions,
+  withDrawerActions,
+  withDialogActions,
 )(ReceiptDetailActionBarInner);

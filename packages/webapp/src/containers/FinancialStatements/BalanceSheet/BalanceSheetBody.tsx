@@ -7,7 +7,7 @@ import {
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { FinancialSheetSkeleton } from '@/components';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface BalanceSheetBodyProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -27,7 +27,7 @@ function BalanceSheetBodyJSX({ organizationName }: BalanceSheetBodyProps) {
   );
 }
 
-export const BalanceSheetBody = compose(
+export const BalanceSheetBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),

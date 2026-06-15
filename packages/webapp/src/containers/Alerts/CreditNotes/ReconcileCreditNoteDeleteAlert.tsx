@@ -13,7 +13,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteReconcileCredit } from '@/hooks/query';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Reconcile credit note delete alert.
@@ -83,8 +83,8 @@ function ReconcileCreditNoteDeleteAlertInner({
   );
 }
 
-export const ReconcileCreditNoteDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const ReconcileCreditNoteDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(ReconcileCreditNoteDeleteAlertInner);

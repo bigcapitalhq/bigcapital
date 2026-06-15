@@ -10,8 +10,7 @@ import { withInvoiceActions } from '@/containers/Sales/Invoices/InvoicesLanding/
 import { useBulkDeleteInvoices } from '@/hooks/query/invoices';
 import { AppToaster } from '@/components';
 import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Invoice bulk delete dialog.
@@ -101,8 +100,8 @@ function InvoiceBulkDeleteDialogInner({
   );
 }
 
-export const InvoiceBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const InvoiceBulkDeleteDialog = flow(
   withInvoiceActions,
+  withDialogActions,
+  withDialogRedux(),
 )(InvoiceBulkDeleteDialogInner);

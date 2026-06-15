@@ -6,7 +6,7 @@ import { Formik, Form, FormikHelpers } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
 import { FormattedMessage as T } from '@/components';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
 import { VendorsBalanceSummaryHeaderGeneral } from './VendorsBalanceSummaryHeaderGeneral';
@@ -19,6 +19,7 @@ import {
   WithVendorsBalanceSummaryActionsProps,
 } from './withVendorsBalanceSummaryActions';
 import { getVendorsBalanceQuerySchema } from './utils';
+import { flow } from 'fp-ts/function';
 
 interface VendorsBalanceSummaryHeaderOwnProps {
   pageFilter: Record<string, unknown>;
@@ -116,11 +117,11 @@ function VendorsBalanceSummaryHeaderInner({
   );
 }
 
-export const VendorsBalanceSummaryHeader = compose(
+export const VendorsBalanceSummaryHeader = flow(
+  withVendorsBalanceSummaryActions,
   withVendorsBalanceSummary(({ VendorsSummaryFilterDrawer }) => ({
     VendorsSummaryFilterDrawer,
   })),
-  withVendorsBalanceSummaryActions,
 )(VendorsBalanceSummaryHeaderInner);
 
 const VendorBalanceDrawerHeader = styled(FinancialStatementHeader)`

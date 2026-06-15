@@ -17,7 +17,7 @@ import {
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Cashflow transaction drawer action bar.
@@ -67,6 +67,6 @@ function CashflowTransactionDrawerActionBarInner({
   );
 }
 
-export const CashflowTransactionDrawerActionBar = compose(withAlertActions)(
-  CashflowTransactionDrawerActionBarInner,
-);
+export const CashflowTransactionDrawerActionBar = flow(
+  withAlertActions,
+)(CashflowTransactionDrawerActionBarInner);

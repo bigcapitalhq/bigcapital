@@ -14,8 +14,7 @@ import { useProjectTaskContext } from './ProjectTaskProvider';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function ProjectTaskTableRoot({
   // #withSettings
@@ -69,12 +68,12 @@ function ProjectTaskTableRoot({
   );
 }
 
-export const ProjectTasksTable = compose(
-  withAlertActions,
-  withDialogActions,
+export const ProjectTasksTable = flow(
   withSettings(({ projectTasksSettings }) => ({
     projectTasksTableSize: projectTasksSettings?.tableSize,
   })),
+  withDialogActions,
+  withAlertActions,
 )(ProjectTaskTableRoot);
 
 const ProjectTaksDataTable = styled(DataTable)`

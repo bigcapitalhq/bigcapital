@@ -32,6 +32,7 @@ import { MatchingReconcileFormSchema } from './MatchingReconcileTransactionForm.
 import { initialValues, transformToReq } from './_utils';
 import { withBanking } from '../../withBanking';
 import { Features } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 interface MatchingReconcileTransactionFormProps {
   onSubmitSuccess?: (values: any) => void;
@@ -131,11 +132,11 @@ function MatchingReconcileTransactionFormRoot({
   );
 }
 
-export const MatchingReconcileTransactionForm = R.compose(
-  withBankingActions,
+export const MatchingReconcileTransactionForm = flow(
   withBanking(({ reconcileMatchingTransactionPendingAmount }) => ({
     reconcileMatchingTransactionPendingAmount,
   })),
+  withBankingActions,
 )(MatchingReconcileTransactionFormRoot);
 
 function ReconcileMatchingType() {

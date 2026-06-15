@@ -19,6 +19,7 @@ import { useFormikContext } from 'formik';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { useCurrentOrganization } from '@/hooks/state';
 import { transformAttachmentsToForm } from '@/containers/Attachments/utils';
+import { flow } from 'fp-ts/function';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -74,7 +75,7 @@ export function transformToEditForm(manualJournal) {
     ),
   ];
 
-  const entries = R.compose(
+  const entries = flow(
     ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, defaultEntry),
   )(initialEntries);
 

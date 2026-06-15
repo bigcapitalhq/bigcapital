@@ -26,8 +26,8 @@ import {
   AbilitySubject,
 } from '@/constants/abilityOption';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment receive actions bar.
@@ -128,8 +128,8 @@ function PaymentsReceivedActionsBar({
   );
 }
 
-export const PaymentReceiveActionsBar = compose(
-  withDialogActions,
-  withDrawerActions,
+export const PaymentReceiveActionsBar = flow(
   withAlertActions,
+  withDrawerActions,
+  withDialogActions,
 )(PaymentsReceivedActionsBar);

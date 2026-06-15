@@ -21,9 +21,10 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, safeInvoke } from '@/utils';
+import { safeInvoke } from '@/utils';
 import { ARAgingSummaryExportMenu } from './components';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface ARAgingSummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -128,10 +129,10 @@ function ARAgingSummaryActionsBarInner({
   );
 }
 
-export const ARAgingSummaryActionsBar = compose(
-  withARAgingSummaryActions,
+export const ARAgingSummaryActionsBar = flow(
+  withDialogActions,
   withARAgingSummary(({ ARAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
   })),
-  withDialogActions,
+  withARAgingSummaryActions,
 )(ARAgingSummaryActionsBarInner);

@@ -11,7 +11,8 @@ import { CreateReconcileVendorCreditFormSchema } from './ReconcileVendorCreditFo
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
 import { ReconcileVendorCreditFormContent } from './ReconcileVendorCreditFormContent';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 // Default form initial values.
 const defaultInitialValues = {
@@ -95,6 +96,6 @@ function ReconcileVendorCreditFormInner({
     />
   );
 }
-export const ReconcileVendorCreditForm = compose(withDialogActions)(
+export const ReconcileVendorCreditForm = flow(withDialogActions)(
   ReconcileVendorCreditFormInner,
 );

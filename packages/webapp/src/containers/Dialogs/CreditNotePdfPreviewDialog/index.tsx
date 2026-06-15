@@ -7,7 +7,7 @@ import { T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const PdfPreviewDialogContent = React.lazy(() =>
   import('./CreditNotePdfPreviewDialogContent').then((m) => ({
@@ -42,4 +42,6 @@ function CreditNotePdfPreviewDialog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(CreditNotePdfPreviewDialog);
+export const index = flow(withDialogRedux())(
+  CreditNotePdfPreviewDialog,
+);

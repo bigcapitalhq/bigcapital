@@ -9,12 +9,12 @@ import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberF
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { compose } from '@/utils';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * invoice number dialog's content.
@@ -93,12 +93,12 @@ function InvoiceNumberDialogContentInner({
   );
 }
 
-export const InvoiceNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
+export const InvoiceNumberDialogContent = flow(
   withSettings(({ invoiceSettings }) => ({
     nextNumber: invoiceSettings?.nextNumber,
     numberPrefix: invoiceSettings?.numberPrefix,
     autoIncrement: invoiceSettings?.autoIncrement,
   })),
+  withSettingsActions,
+  withDialogActions,
 )(InvoiceNumberDialogContentInner);

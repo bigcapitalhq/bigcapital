@@ -19,7 +19,6 @@ import { useUncategorizedTransactionsColumns } from './_utils';
 import { useRecognizedTransactionsBoot } from './RecognizedTransactionsTableBoot';
 
 import { ActionsMenu } from './_components';
-import { compose } from '@/utils';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/banking';
 import {
@@ -28,6 +27,7 @@ import {
 } from '../../withBankingActions';
 import styles from './RecognizedTransactionsTable.module.scss';
 import { BankAccountDataTable } from '../components/BankAccountDataTable';
+import { flow } from 'fp-ts/function';
 
 interface RecognizedTransactionsTableProps extends WithBankingActionsProps {}
 
@@ -115,7 +115,7 @@ function RecognizedTransactionsTableRoot({
   );
 }
 
-export const RecognizedTransactionsTable = compose(withBankingActions)(
+export const RecognizedTransactionsTable = flow(withBankingActions)(
   RecognizedTransactionsTableRoot,
 );
 

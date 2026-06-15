@@ -91,11 +91,11 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   // Provider payload.
   const provider = {
-    items: itemsData?.items,
-    vendors: vendorsData?.vendors,
+    items: itemsData?.data ?? [],
+    vendors: vendorsData?.data ?? [],
     vendorCredit,
-    warehouses,
-    branches,
+    warehouses: warehouses ?? [],
+    branches: branches ?? [],
     submitPayload,
     isNewMode,
     newVendorCredit,

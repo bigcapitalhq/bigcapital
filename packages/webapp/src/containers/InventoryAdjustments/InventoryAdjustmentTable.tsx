@@ -13,8 +13,8 @@ import { withInventoryAdjustmentActions } from './withInventoryAdjustmentActions
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Inventory adjustments datatable.
@@ -111,11 +111,11 @@ function InventoryAdjustmentDataTable({
   );
 }
 
-export const InventoryAdjustmentTable = compose(
-  withAlertActions,
-  withInventoryAdjustmentActions,
-  withDrawerActions,
+export const InventoryAdjustmentTable = flow(
   withInventoryAdjustments(({ inventoryAdjustmentTableState }) => ({
     inventoryAdjustmentTableState,
   })),
+  withDrawerActions,
+  withInventoryAdjustmentActions,
+  withAlertActions,
 )(InventoryAdjustmentDataTable);

@@ -8,7 +8,7 @@ import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { ApiKeysDataTable } from './ApiKeysDataTable';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * API Keys preferences page.
@@ -39,4 +39,4 @@ const ApiKeysPreferencesCard = styled(Card)`
   padding: 0;
 `;
 
-export const ApiKeys = compose(withDashboardActions)(ApiKeysPreferences);
+export const ApiKeys = flow(withDashboardActions)(ApiKeysPreferences);

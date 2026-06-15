@@ -2,6 +2,7 @@ import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
+import { flow } from 'fp-ts/function';
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 
@@ -74,12 +75,12 @@ const dynamicColumnMapper = R.curry(
     const _numericColumnAccessor = numericColumnAccessor(data);
     const _itemNameColumnAccessor = itemNameColumnAccessor(data);
 
-    return R.compose(
-      R.when(R.pathEq(['key'], 'itemName'), _itemNameColumnAccessor),
-      R.when(R.pathEq(['key'], 'quantity'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'valuation'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'average'), _numericColumnAccessor),
+    return flow(
       _commonAccessor,
+      R.when(R.pathEq(['key'], 'average'), _numericColumnAccessor),
+      R.when(R.pathEq(['key'], 'valuation'), _numericColumnAccessor),
+      R.when(R.pathEq(['key'], 'quantity'), _numericColumnAccessor),
+      R.when(R.pathEq(['key'], 'itemName'), _itemNameColumnAccessor),
     )(column);
   },
 );

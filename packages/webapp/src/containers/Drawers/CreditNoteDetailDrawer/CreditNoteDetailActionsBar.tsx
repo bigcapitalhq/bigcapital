@@ -24,9 +24,9 @@ import {
 } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 
-import { compose } from '@/utils';
 import { CreditNoteMenuItem } from './utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Credit note detail actions bar.
@@ -124,8 +124,8 @@ function CreditNoteDetailActionsBarInner({
   );
 }
 
-export const CreditNoteDetailActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
+export const CreditNoteDetailActionsBar = flow(
   withDrawerActions,
+  withAlertActions,
+  withDialogActions,
 )(CreditNoteDetailActionsBarInner);

@@ -12,8 +12,9 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withSettings } from '@/containers/Settings/withSettings';
 
 import { transferObjectOptionsToArray } from '../Accountant/utils';
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
 import { useSaveSettings } from '@/hooks/query';
+import { flow } from 'fp-ts/function';
 
 const defaultValues = {
   termsConditions: '',
@@ -44,9 +45,9 @@ function PreferencesEstimatesFormPageRoot({
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
+    const options = flow(
       transfromToSnakeCase,
+      transferObjectOptionsToArray,
     )({ salesEstimates: { ...values } });
 
     // Handle request success.
@@ -74,9 +75,9 @@ function PreferencesEstimatesFormPageRoot({
   );
 }
 
-export const PreferencesEstimatesFormPage = compose(
-  withDashboardActions,
+export const PreferencesEstimatesFormPage = flow(
   withSettings(({ estimatesSettings }) => ({
     estimatesSettings: estimatesSettings,
   })),
+  withDashboardActions,
 )(PreferencesEstimatesFormPageRoot);

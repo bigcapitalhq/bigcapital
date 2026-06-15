@@ -18,6 +18,7 @@ import { AppContentShell } from '@/components/AppShell';
 import { AccountTransactionsAside } from './AccountTransactionsAside';
 import { AccountTransactionsLoadingBar } from './components';
 import { withBanking } from '../withBanking';
+import { flow } from 'fp-ts/function';
 
 /**
  * Account transactions list.
@@ -56,7 +57,7 @@ function AccountTransactionsMain() {
   );
 }
 
-export const AccountTransactionsList = R.compose(
+export const AccountTransactionsList = flow(
   withBanking(
     ({ selectedUncategorizedTransactionId, openMatchingTransactionAside }) => ({
       selectedUncategorizedTransactionId,

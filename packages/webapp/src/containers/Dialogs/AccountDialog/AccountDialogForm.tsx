@@ -10,7 +10,7 @@ import {
   EditAccountFormSchema,
   CreateAccountFormSchema,
 } from './AccountForm.schema';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import {
   transformApiErrors,
   transformAccountToForm,
@@ -18,6 +18,7 @@ import {
 } from './utils';
 import '@/style/pages/Accounts/AccountFormDialog.scss';
 import { useAccountDialogContext } from './AccountDialogProvider';
+import { flow } from 'fp-ts/function';
 
 // Default initial form values.
 const defaultInitialValues = {
@@ -132,6 +133,6 @@ function AccountFormDialogContent({
   );
 }
 
-export const AccountDialogForm = compose(withDialogActions)(
+export const AccountDialogForm = flow(withDialogActions)(
   AccountFormDialogContent,
 );

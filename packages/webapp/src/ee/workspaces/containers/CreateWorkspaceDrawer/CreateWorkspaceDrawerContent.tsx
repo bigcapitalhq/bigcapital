@@ -6,6 +6,7 @@ import { DrawerHeaderContent, FormattedMessage as T } from '@/components';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { CreateWorkspaceStepper } from './CreateWorkspaceStepper';
+import { flow } from 'fp-ts/function';
 
 /**
  * Create workspace drawer content.
@@ -32,6 +33,6 @@ function CreateWorkspaceDrawerContentRoot({ closeDrawer }) {
   );
 }
 
-export const CreateWorkspaceDrawerContent = R.compose(withDrawerActions)(
+export const CreateWorkspaceDrawerContent = flow(withDrawerActions)(
   CreateWorkspaceDrawerContentRoot,
 );

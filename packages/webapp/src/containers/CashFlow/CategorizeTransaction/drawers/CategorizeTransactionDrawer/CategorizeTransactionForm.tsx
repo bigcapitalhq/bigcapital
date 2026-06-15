@@ -13,7 +13,7 @@ import {
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
 import { AppToaster } from '@/components';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Categorize cashflow transaction form dialog content.
@@ -76,7 +76,7 @@ function CategorizeTransactionFormRoot({
   );
 }
 
-export const CategorizeTransactionForm = compose(withBankingActions)(
+export const CategorizeTransactionForm = flow(withBankingActions)(
   CategorizeTransactionFormRoot,
 );
 

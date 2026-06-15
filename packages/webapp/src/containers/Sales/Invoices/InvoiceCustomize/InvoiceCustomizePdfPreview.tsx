@@ -7,6 +7,7 @@ import {
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { InvoiceCustomizeFormValues } from './types';
 import { Box } from '@/components';
+import { flow } from 'fp-ts/function';
 
 /**
  * Injects the `InvoicePaperTemplate` component props from the form and branding states.
@@ -32,6 +33,6 @@ const withInvoicePreviewTemplateProps = <P extends object>(
   };
 };
 
-export const InvoiceCustomizePdfPreview = R.compose(
+export const InvoiceCustomizePdfPreview = flow(
   withInvoicePreviewTemplateProps,
 )(InvoicePaperTemplate);

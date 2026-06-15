@@ -12,8 +12,8 @@ import { withCurrentOrganization } from '@/containers/Organization/withCurrentOr
 import { accountsFieldShouldUpdate } from './utils';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useItemFormContext } from './ItemFormProvider';
-import { compose } from '@/utils';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 /**
  * Item form inventory sections.
@@ -53,6 +53,6 @@ function ItemFormInventorySectionInner({ organization: { base_currency } }) {
   );
 }
 
-export const ItemFormInventorySection = compose(withCurrentOrganization())(
-  ItemFormInventorySectionInner,
-);
+export const ItemFormInventorySection = flow(
+  withCurrentOrganization(),
+)(ItemFormInventorySectionInner);

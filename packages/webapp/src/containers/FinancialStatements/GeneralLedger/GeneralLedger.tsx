@@ -11,10 +11,10 @@ import {
   GeneralLedgerSheetLoadingBar,
 } from './components';
 import { withGeneralLedgerActions } from './withGeneralLedgerActions';
-import { compose } from '@/utils';
 import { GeneralLedgerPdfDialog } from './dialogs/GeneralLedgerPdfDialog';
 import { DialogsName } from '@/constants/dialogs';
 import type { WithGeneralLedgerActionsProps } from './withGeneralLedgerActions';
+import { flow } from 'fp-ts/function';
 
 interface GeneralLedgerFilterValues {
   fromDate: Date | string;
@@ -74,6 +74,6 @@ function GeneralLedgerInner({
   );
 }
 
-export const GeneralLedger = compose(withGeneralLedgerActions)(
+export const GeneralLedger = flow(withGeneralLedgerActions)(
   GeneralLedgerInner,
 );

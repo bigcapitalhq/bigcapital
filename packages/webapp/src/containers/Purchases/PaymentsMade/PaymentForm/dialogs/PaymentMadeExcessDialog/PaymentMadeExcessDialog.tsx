@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ExcessPaymentDialogContent = React.lazy(() =>
   import('./PaymentMadeExcessDialogContent').then((module) => ({
@@ -30,7 +30,7 @@ function ExcessPaymentDialogRoot({ dialogName, isOpen }) {
   );
 }
 
-export const ExcessPaymentDialog = compose(withDialogRedux())(
+export const ExcessPaymentDialog = flow(withDialogRedux())(
   ExcessPaymentDialogRoot,
 );
 

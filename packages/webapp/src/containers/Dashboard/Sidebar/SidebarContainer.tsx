@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
 
 import { useObserveSidebarExpendedBodyclass } from './hooks';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Sidebar container/
@@ -63,7 +63,7 @@ function SidebarContainerJSX({
   );
 }
 
-export const SidebarContainer = compose(
+export const SidebarContainer = flow(
   withDashboard(({ sidebarExpended }) => ({
     sidebarExpended,
   })),

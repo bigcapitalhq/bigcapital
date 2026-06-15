@@ -35,6 +35,7 @@ import {
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
+import { flow } from 'fp-ts/function';
 
 // Retrieves the add money in button options.
 const MoneyInOptions = getAddMoneyInOptions();
@@ -158,7 +159,7 @@ function RuleFormContentFormRoot({
   );
 }
 
-export const RuleFormContentForm = R.compose(withDialogActions)(
+export const RuleFormContentForm = flow(withDialogActions)(
   RuleFormContentFormRoot,
 );
 
@@ -284,7 +285,7 @@ function RuleFormActionsRoot({
   );
 }
 
-const RuleFormActions = R.compose(withDialogActions)(RuleFormActionsRoot);
+const RuleFormActions = flow(withDialogActions)(RuleFormActionsRoot);
 
 function RuleApplyIfTransactionTypeField() {
   const { setFieldValue } = useFormikContext<RuleFormValues>();

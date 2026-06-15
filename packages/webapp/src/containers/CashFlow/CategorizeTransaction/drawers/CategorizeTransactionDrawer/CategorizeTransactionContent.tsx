@@ -6,6 +6,7 @@ import { Spinner } from '@blueprintjs/core';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { CategorizeTransactionForm } from './CategorizeTransactionForm';
 import { withBanking } from '@/containers/CashFlow/withBanking';
+import { flow } from 'fp-ts/function';
 
 function CategorizeTransactionContentRoot({
   transactionsToCategorizeIdsSelected,
@@ -23,7 +24,7 @@ function CategorizeTransactionContentRoot({
   );
 }
 
-export const CategorizeTransactionContent = R.compose(
+export const CategorizeTransactionContent = flow(
   withBanking(({ transactionsToCategorizeIdsSelected }) => ({
     transactionsToCategorizeIdsSelected,
   })),

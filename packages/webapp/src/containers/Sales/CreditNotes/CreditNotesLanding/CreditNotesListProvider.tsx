@@ -37,7 +37,9 @@ function CreditNotesListProvider({ query, tableStateChanged, ...props }) {
     data: creditNotesData,
     isFetching: isCreditNotesFetching,
     isLoading: isCreditNotesLoading,
-  } = useCreditNotes(query, { keepPreviousData: true });
+  } = useCreditNotes(query, {
+    placeholderData: (previousData) => previousData,
+  });
 
   // Detarmines the datatable empty status.S
   const isEmptyStatus =

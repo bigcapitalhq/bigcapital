@@ -10,8 +10,7 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { ActionMenu } from './components';
 import { useProjectSalesColumns } from './hooks';
 import { withSettings } from '@/containers/Settings/withSettings';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Porject sales datatable.
@@ -51,7 +50,7 @@ function ProjectSalesTableRoot({
     />
   );
 }
-export const ProjectSalesTable = compose(
+export const ProjectSalesTable = flow(
   withSettings(({ salesSettings }) => ({
     salesTableSize: salesSettings?.tableSize,
   })),

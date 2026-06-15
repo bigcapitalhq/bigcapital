@@ -23,6 +23,7 @@ import type {
   CustomerBalanceXlsxQuery,
   CustomerBalanceCsvQuery,
 } from '@bigcapital/sdk-ts';
+import { flow } from 'fp-ts/function';
 
 /**
  * Retrieve customers balance summary columns.
@@ -71,13 +72,13 @@ const percentageColumnAccessor = () => ({
 
 const dynamicColumns = (columns) => {
   return R.map(
-    R.compose(
-      R.when(R.pathEq(['key'], 'name'), accountNameColumnAccessor),
-      R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
+    flow(
       R.when(
         R.pathEq(['key'], 'percentage_of_column'),
         percentageColumnAccessor,
       ),
+      R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
+      R.when(R.pathEq(['key'], 'name'), accountNameColumnAccessor),
     ),
   )(columns);
 };

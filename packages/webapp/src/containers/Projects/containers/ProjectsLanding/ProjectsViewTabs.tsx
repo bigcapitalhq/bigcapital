@@ -8,7 +8,8 @@ import { withProjects } from './withProjects';
 import { withProjectsActions } from './withProjectsActions';
 import { useProjectsListContext } from './ProjectsListProvider';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Projects views tabs.
@@ -46,9 +47,9 @@ function ProjectsViewTabsInner({
   );
 }
 
-export const ProjectsViewTabs = compose(
+export const ProjectsViewTabs = flow(
+  withProjectsActions,
   withProjects(({ projectsTableState }) => ({
     projectsCurrentView: projectsTableState?.viewSlug,
   })),
-  withProjectsActions,
 )(ProjectsViewTabsInner);

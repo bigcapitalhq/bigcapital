@@ -16,7 +16,8 @@ import {
   WithRealizedGainOrLossActionsProps,
 } from './withRealizedGainOrLossActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface RealizedGainOrLossHeaderOwnProps {
   onSubmitFilter: (values: Record<string, unknown>) => void;
@@ -106,9 +107,9 @@ function RealizedGainOrLossHeaderInner({
   );
 }
 
-export const RealizedGainOrLossHeader = compose(
+export const RealizedGainOrLossHeader = flow(
+  withRealizedGainOrLossActions,
   withRealizedGainOrLoss(({ realizedGainOrLossDrawerFilter }) => ({
     isFilterDrawerOpen: realizedGainOrLossDrawerFilter,
   })),
-  withRealizedGainOrLossActions,
 )(RealizedGainOrLossHeaderInner);

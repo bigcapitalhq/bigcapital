@@ -14,9 +14,9 @@ import { CustomersTransactionsLoadingBar } from './components';
 import { CustomersTransactionsBody } from './CustomersTransactionsBody';
 import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
 
-import { compose } from '@/utils';
 import { useCustomersTransactionsQuery } from './_utils';
 import { CustomersTransactionsDialogs } from './CustomersTransactionsDialogs';
+import { flow } from 'fp-ts/function';
 
 interface CustomersTransactionsProps
   extends WithCustomersTransactionsActionsProps {}
@@ -76,6 +76,6 @@ function CustomersTransactionsInner({
     </CustomersTransactionsProvider>
   );
 }
-export const CustomersTransactions = compose(withCustomersTransactionsActions)(
-  CustomersTransactionsInner,
-);
+export const CustomersTransactions = flow(
+  withCustomersTransactionsActions,
+)(CustomersTransactionsInner);

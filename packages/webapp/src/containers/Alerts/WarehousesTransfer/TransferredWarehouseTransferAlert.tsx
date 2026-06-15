@@ -8,8 +8,7 @@ import { useTransferredWarehouseTransfer } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * warehouse transfer transferred alert.
@@ -65,7 +64,7 @@ function TransferredWarehouseTransferAlertInner({
   );
 }
 
-export const TransferredWarehouseTransferAlert = compose(
-  withAlertStoreConnect(),
+export const TransferredWarehouseTransferAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(TransferredWarehouseTransferAlertInner);

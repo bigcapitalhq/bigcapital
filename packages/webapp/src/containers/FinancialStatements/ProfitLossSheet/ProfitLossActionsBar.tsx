@@ -19,7 +19,7 @@ import {
 } from './withProfitLossActions';
 import { withProfitLoss, WithProfitLossProps } from './withProfitLoss';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 import { ProfitLossSheetExportMenu } from './components';
 import {
@@ -27,6 +27,7 @@ import {
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface ProfitLossActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -134,8 +135,8 @@ function ProfitLossActionsBarInner({
   );
 }
 
-export const ProfitLossActionsBar = compose(
-  withProfitLoss(({ profitLossDrawerFilter }) => ({ profitLossDrawerFilter })),
-  withProfitLossActions,
+export const ProfitLossActionsBar = flow(
   withDialogActions,
+  withProfitLossActions,
+  withProfitLoss(({ profitLossDrawerFilter }) => ({ profitLossDrawerFilter })),
 )(ProfitLossActionsBarInner);

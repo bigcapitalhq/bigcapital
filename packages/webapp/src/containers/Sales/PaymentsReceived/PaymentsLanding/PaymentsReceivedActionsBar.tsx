@@ -41,11 +41,11 @@ import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 import { useRefreshPaymentReceive } from '@/hooks/query/payment-receives';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { useBulkDeletePaymentReceivesDialog } from './hooks/use-bulk-delete-payment-receives-dialog';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment receives actions bar.
@@ -224,9 +224,12 @@ function PaymentsReceivedActionsBarInner({
   );
 }
 
-export const PaymentsReceivedActionsBar = compose(
-  withPaymentsReceivedActions,
-  withSettingsActions,
+export const PaymentsReceivedActionsBar = flow(
+  withDrawerActions,
+  withDialogActions,
+  withSettings(({ paymentReceiveSettings }) => ({
+    paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
+  })),
   withPaymentsReceived(
     ({ paymentReceivesTableState, paymentReceivesSelectedRows }) => ({
       paymentReceivesTableState,
@@ -234,9 +237,6 @@ export const PaymentsReceivedActionsBar = compose(
       paymentReceivesSelectedRows,
     }),
   ),
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
-  })),
-  withDialogActions,
-  withDrawerActions,
+  withSettingsActions,
+  withPaymentsReceivedActions,
 )(PaymentsReceivedActionsBarInner);

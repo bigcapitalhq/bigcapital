@@ -8,8 +8,7 @@ import { useProjectStatus } from '../../hooks';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project status alert.
@@ -70,7 +69,7 @@ function ProjectStatusAlertInner({
   );
 }
 
-export const ProjectStatusAlert = compose(
-  withAlertStoreConnect(),
+export const ProjectStatusAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ProjectStatusAlertInner);

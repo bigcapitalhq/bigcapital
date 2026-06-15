@@ -9,7 +9,8 @@ import { useAccountsChartContext } from './AccountsChartProvider';
 import { withAccounts } from './withAccounts';
 import { withAccountsTableActions } from './withAccountsTableActions';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Accounts views tabs.
@@ -52,9 +53,9 @@ function AccountsViewsTabsInner({
   );
 }
 
-export const AccountsViewsTabs = compose(
-  withAccountsTableActions,
+export const AccountsViewsTabs = flow(
   withAccounts(({ accountsTableState }) => ({
     accountsCurrentView: accountsTableState.viewSlug,
   })),
+  withAccountsTableActions,
 )(AccountsViewsTabsInner);

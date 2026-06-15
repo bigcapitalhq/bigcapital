@@ -7671,7 +7671,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The vendors have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorsListResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -7714,7 +7721,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "The vendor has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -7757,7 +7771,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The vendor details have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -7808,7 +7829,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "The vendor has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -7849,7 +7877,7 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The vendor has been successfully deleted."
           }
         },
         "tags": [
@@ -7902,7 +7930,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "The vendor opening balance has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -10137,20 +10172,14 @@
         ],
         "responses": {
           "200": {
-            "description": "The manual journal details have been successfully retrieved.",
+            "description": "The manual journals paginated list have been successfully retrieved.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ManualJournalResponseDto"
-                  }
+                  "$ref": "#/components/schemas/ManualJournalsListResponseDto"
                 }
               }
             }
-          },
-          "404": {
-            "description": "The manual journal not found."
           }
         },
         "tags": [
@@ -30042,6 +30071,237 @@
           "ids"
         ]
       },
+      "VendorResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "balance": {
+            "type": "number",
+            "example": 1500
+          },
+          "currencyCode": {
+            "type": "string",
+            "example": "USD"
+          },
+          "openingBalance": {
+            "type": "number",
+            "example": 1000
+          },
+          "openingBalanceAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "openingBalanceExchangeRate": {
+            "type": "number",
+            "example": 1
+          },
+          "openingBalanceBranchId": {
+            "type": "number",
+            "example": 1
+          },
+          "salutation": {
+            "type": "string",
+            "example": "Mr."
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "companyName": {
+            "type": "string",
+            "example": "Acme Corporation"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "John Doe - Acme Corporation"
+          },
+          "email": {
+            "type": "string",
+            "example": "vendor@acme.com"
+          },
+          "workPhone": {
+            "type": "string",
+            "example": "+1 (555) 123-4567"
+          },
+          "personalPhone": {
+            "type": "string",
+            "example": "+1 (555) 987-6543"
+          },
+          "website": {
+            "type": "string",
+            "example": "https://www.acme.com"
+          },
+          "billingAddress1": {
+            "type": "string",
+            "example": "123 Business Ave"
+          },
+          "billingAddress2": {
+            "type": "string",
+            "example": "Suite 100"
+          },
+          "billingAddressCity": {
+            "type": "string",
+            "example": "New York"
+          },
+          "billingAddressCountry": {
+            "type": "string",
+            "example": "United States"
+          },
+          "billingAddressEmail": {
+            "type": "string",
+            "example": "billing@acme.com"
+          },
+          "billingAddressPostcode": {
+            "type": "string",
+            "example": "10001"
+          },
+          "billingAddressPhone": {
+            "type": "string",
+            "example": "+1 (555) 111-2222"
+          },
+          "billingAddressState": {
+            "type": "string",
+            "example": "NY"
+          },
+          "shippingAddress1": {
+            "type": "string",
+            "example": "456 Shipping St"
+          },
+          "shippingAddress2": {
+            "type": "string",
+            "example": "Unit 200"
+          },
+          "shippingAddressCity": {
+            "type": "string",
+            "example": "Los Angeles"
+          },
+          "shippingAddressCountry": {
+            "type": "string",
+            "example": "United States"
+          },
+          "shippingAddressEmail": {
+            "type": "string",
+            "example": "shipping@acme.com"
+          },
+          "shippingAddressPostcode": {
+            "type": "string",
+            "example": "90001"
+          },
+          "shippingAddressPhone": {
+            "type": "string",
+            "example": "+1 (555) 333-4444"
+          },
+          "shippingAddressState": {
+            "type": "string",
+            "example": "CA"
+          },
+          "note": {
+            "type": "string",
+            "example": "Preferred supplier"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "code": {
+            "type": "string",
+            "example": "V-0001"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "localOpeningBalance": {
+            "type": "number",
+            "example": 1000
+          },
+          "closingBalance": {
+            "type": "number",
+            "example": 1500
+          },
+          "formattedBalance": {
+            "type": "string",
+            "example": "$1,500.00"
+          },
+          "formattedOpeningBalance": {
+            "type": "string",
+            "example": "$1,000.00"
+          },
+          "formattedOpeningBalanceAt": {
+            "type": "string",
+            "example": "2024-01-01"
+          }
+        },
+        "required": [
+          "id",
+          "balance",
+          "currencyCode",
+          "openingBalance",
+          "openingBalanceAt",
+          "openingBalanceExchangeRate",
+          "displayName",
+          "note",
+          "active",
+          "createdAt",
+          "updatedAt",
+          "localOpeningBalance",
+          "closingBalance"
+        ]
+      },
+      "VendorsPaginationDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "example": 12
+          },
+          "total": {
+            "type": "number",
+            "example": 42
+          }
+        },
+        "required": [
+          "page",
+          "pageSize",
+          "total"
+        ]
+      },
+      "VendorsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VendorResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/VendorsPaginationDto"
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
       "ValidateBulkDeleteVendorsResponseDto": {
         "type": "object",
         "properties": {
@@ -32438,6 +32698,46 @@
           "formattedDate",
           "formattedCreatedAt",
           "entries"
+        ]
+      },
+      "ManualJournalsPaginationDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "example": 12
+          },
+          "total": {
+            "type": "number",
+            "example": 42
+          }
+        },
+        "required": [
+          "page",
+          "pageSize",
+          "total"
+        ]
+      },
+      "ManualJournalsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManualJournalResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/ManualJournalsPaginationDto"
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
         ]
       },
       "ManualJournalEntryDto": {

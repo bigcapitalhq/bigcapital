@@ -1,6 +1,10 @@
 import React, { createContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { CurrenciesListResponse, BranchesListResponse, Customer } from '@bigcapital/sdk-ts'
+import {
+  CurrenciesListResponse,
+  BranchesListResponse,
+  Customer,
+} from '@bigcapital/sdk-ts';
 import {
   useCustomer,
   useCurrencies,

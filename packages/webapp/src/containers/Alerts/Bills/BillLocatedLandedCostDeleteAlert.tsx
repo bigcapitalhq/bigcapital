@@ -9,8 +9,7 @@ import { AppToaster } from '@/components';
 
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  *  Bill transaction delete alert.
@@ -64,7 +63,7 @@ function BillTransactionDeleteAlert({
   );
 }
 
-export const BillLocatedLandedCostDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const BillLocatedLandedCostDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(BillTransactionDeleteAlert);

@@ -8,7 +8,8 @@ import { useExpensesListContext } from './ExpensesListProvider';
 import { withExpenses } from './withExpenses';
 import { withExpensesActions } from './withExpensesActions';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Expesne views tabs.
@@ -50,9 +51,9 @@ function ExpenseViewTabsInner({
   );
 }
 
-export const ExpenseViewTabs = compose(
-  withExpensesActions,
+export const ExpenseViewTabs = flow(
   withExpenses(({ expensesTableState }) => ({
     expensesCurrentView: expensesTableState.viewSlug,
   })),
+  withExpensesActions,
 )(ExpenseViewTabsInner);

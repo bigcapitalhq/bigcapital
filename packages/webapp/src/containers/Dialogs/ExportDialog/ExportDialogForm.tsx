@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Formik } from 'formik';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 import { ExportDialogFormSchema } from './ExportDialogForm.schema';
 import { ExportDialogFormContent } from './ExportDialogFormContent';
@@ -11,6 +11,7 @@ import { AppToaster } from '@/components';
 import { Intent } from '@blueprintjs/core';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 // Default initial form values.
 const defaultInitialValues = {
@@ -74,5 +75,6 @@ function ExportDialogFormRoot({
   );
 }
 
-export const ExportDialogForm =
-  compose(withDialogActions)(ExportDialogFormRoot);
+export const ExportDialogForm = flow(withDialogActions)(
+  ExportDialogFormRoot,
+);

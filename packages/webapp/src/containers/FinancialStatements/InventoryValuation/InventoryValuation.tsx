@@ -7,7 +7,6 @@ import { InventoryValuationProvider } from './InventoryValuationProvider';
 import { InventoryValuationBody } from './InventoryValuationBody';
 import { InventoryValuationLoadingBar } from './components';
 import { useInventoryValuationQuery } from './utils';
-import { compose } from '@/utils';
 import {
   withInventoryValuationActions,
   WithInventoryValuationActionsProps,
@@ -17,6 +16,7 @@ import {
   WithCurrentOrganizationProps,
 } from '@/containers/Organization/withCurrentOrganization';
 import { InventoryValuationDialogs } from './InventoryValuationDialogs';
+import { flow } from 'fp-ts/function';
 
 interface InventoryValuationProps {
   toggleInventoryValuationFilterDrawer: WithInventoryValuationActionsProps['toggleInventoryValuationFilterDrawer'];
@@ -79,9 +79,9 @@ function InventoryValuationInner({
   );
 }
 
-export const InventoryValuation = compose(
-  withInventoryValuationActions,
+export const InventoryValuation = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),
+  withInventoryValuationActions,
 )(InventoryValuationInner);

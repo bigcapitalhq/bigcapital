@@ -5,7 +5,7 @@ import { Intent, Button, Classes } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { useProjectFormContext } from './ProjectFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project form floating actions.
@@ -34,6 +34,6 @@ function ProjectFormFloatingActionsInner({
   );
 }
 
-export const ProjectFormFloatingActions = compose(withDialogActions)(
+export const ProjectFormFloatingActions = flow(withDialogActions)(
   ProjectFormFloatingActionsInner,
 );

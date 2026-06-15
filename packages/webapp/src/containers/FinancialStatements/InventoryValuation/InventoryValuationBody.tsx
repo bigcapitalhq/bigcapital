@@ -7,7 +7,7 @@ import {
   withCurrentOrganization,
   WithCurrentOrganizationProps,
 } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface InventoryValuationBodyProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -33,7 +33,7 @@ function InventoryValuationBodyJSX({
   );
 }
 
-export const InventoryValuationBody = compose(
+export const InventoryValuationBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),

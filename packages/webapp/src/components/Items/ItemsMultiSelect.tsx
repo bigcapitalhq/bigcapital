@@ -3,6 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { FMultiSelect } from '@/components/Forms';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Items multi-select.
@@ -44,5 +45,6 @@ function ItemsMultiSelectRoot({
   );
 }
 
-export const ItemsMultiSelect =
-  R.compose(withDialogActions)(ItemsMultiSelectRoot);
+export const ItemsMultiSelect = flow(withDialogActions)(
+  ItemsMultiSelectRoot,
+);

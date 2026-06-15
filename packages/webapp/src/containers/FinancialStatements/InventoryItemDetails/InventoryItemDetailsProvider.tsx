@@ -43,9 +43,7 @@ function InventoryItemDetailsProvider({
     isFetching: isInventoryItemDetailsFetching,
     isLoading: isInventoryItemDetailsLoading,
     refetch: inventoryItemDetailsRefetch,
-  } = useInventoryItemDetailsReport(requestQuery, {
-    placeholderData: (previousData) => previousData,
-  });
+  } = useInventoryItemDetailsReport(requestQuery);
 
   const provider: InventoryItemDetailsContextValue = {
     inventoryItemDetails,

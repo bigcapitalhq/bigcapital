@@ -11,7 +11,8 @@ import { PaymentMadesTable } from './PaymentMadesTable';
 import { withPaymentMade } from './withPaymentMade';
 import { withPaymentMadeActions } from './withPaymentMadeActions';
 
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment mades list.
@@ -46,10 +47,10 @@ function PaymentMadeListInner({
   );
 }
 
-export const PaymentMadeList = compose(
+export const PaymentMadeList = flow(
+  withPaymentMadeActions,
   withPaymentMade(({ paymentMadesTableState, paymentsTableStateChanged }) => ({
     paymentMadesTableState,
     paymentsTableStateChanged,
   })),
-  withPaymentMadeActions,
 )(PaymentMadeListInner);

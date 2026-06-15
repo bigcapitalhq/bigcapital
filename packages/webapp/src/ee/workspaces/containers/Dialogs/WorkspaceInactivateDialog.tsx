@@ -10,7 +10,7 @@ import {
 } from '@/ee/workspaces/hooks/query/workspaces';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function WorkspaceInactivateDialog({
   dialogName,
@@ -157,7 +157,7 @@ function WorkspaceInactivateDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
+export default flow(
   withDialogActions,
+  withDialogRedux(),
 )(WorkspaceInactivateDialog);

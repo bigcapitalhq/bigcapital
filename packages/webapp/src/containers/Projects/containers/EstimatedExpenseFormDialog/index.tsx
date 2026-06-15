@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const EstimatedExpenseFormDialogContent = React.lazy(() =>
   import('./EstimatedExpenseFormDialogContent').then((m) => ({
@@ -39,7 +39,9 @@ function EstimatedExpenseFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(EstimatedExpenseFormDialog);
+export const index = flow(withDialogRedux())(
+  EstimatedExpenseFormDialog,
+);
 
 const EstimateExpenseFormDialogRoot = styled(Dialog)`
   .bp4-dialog-body {

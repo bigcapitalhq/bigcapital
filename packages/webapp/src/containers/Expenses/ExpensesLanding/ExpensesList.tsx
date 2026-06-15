@@ -11,8 +11,9 @@ import { ExpenseDataTable } from './ExpenseDataTable';
 import { withExpenses } from './withExpenses';
 import { withExpensesActions } from './withExpensesActions';
 
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 import { ExpensesListProvider } from './ExpensesListProvider';
+import { flow } from 'fp-ts/function';
 
 /**
  * Expenses list.
@@ -47,10 +48,10 @@ function ExpensesListInner({
   );
 }
 
-export const ExpensesList = compose(
+export const ExpensesList = flow(
+  withExpensesActions,
   withExpenses(({ expensesTableState, expensesTableStateChanged }) => ({
     expensesTableState,
     expensesTableStateChanged,
   })),
-  withExpensesActions,
 )(ExpensesListInner);

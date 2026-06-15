@@ -14,8 +14,7 @@ import { withJournal } from './withJournal';
 import type { WithJournalProps } from './withJournal';
 import { withJournalActions } from './withJournalActions';
 import type { WithJournalActionsProps } from './withJournalActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface JournalHeaderFormValues {
   fromDate: Date;
@@ -109,11 +108,11 @@ function JournalHeaderInner({
   );
 }
 
-export const JournalHeader = compose(
+export const JournalHeader = flow(
+  withJournalActions,
   withJournal(({ journalSheetDrawerFilter }) => ({
     journalSheetDrawerFilter,
   })),
-  withJournalActions,
 )(JournalHeaderInner);
 
 const JournalDrawerHeader = styled(FinancialStatementHeader)`

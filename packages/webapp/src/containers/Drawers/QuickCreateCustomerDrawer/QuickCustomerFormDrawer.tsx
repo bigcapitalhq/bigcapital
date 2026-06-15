@@ -13,6 +13,7 @@ import { CustomerFormFormik } from '@/containers/Customers/CustomerForm/Customer
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { useAddAutofillRef } from '@/hooks/state/autofill';
+import { flow } from 'fp-ts/function';
 
 /**
  * Drawer customer form loading wrapper.
@@ -63,6 +64,6 @@ function QuickCustomerFormDrawerInner({
   );
 }
 
-export const QuickCustomerFormDrawer = R.compose(withDrawerActions)(
+export const QuickCustomerFormDrawer = flow(withDrawerActions)(
   QuickCustomerFormDrawerInner,
 );

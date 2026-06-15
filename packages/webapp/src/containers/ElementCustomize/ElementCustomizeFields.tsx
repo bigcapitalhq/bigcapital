@@ -11,6 +11,7 @@ import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useElementCustomizeContext } from './ElementCustomizeProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import styles from './ElementCustomize.module.scss';
+import { flow } from 'fp-ts/function';
 
 export function ElementCustomizeFields() {
   return (
@@ -74,6 +75,6 @@ function ElementCustomizeFooterActionsRoot({ closeDrawer }) {
   );
 }
 
-const ElementCustomizeFooterActions = R.compose(withDrawerActions)(
+const ElementCustomizeFooterActions = flow(withDrawerActions)(
   ElementCustomizeFooterActionsRoot,
 );

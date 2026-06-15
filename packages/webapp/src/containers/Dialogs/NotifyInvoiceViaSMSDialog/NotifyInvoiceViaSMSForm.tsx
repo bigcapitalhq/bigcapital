@@ -10,7 +10,7 @@ import { useNotifyInvoiceViaSMSContext } from './NotifyInvoiceViaSMSFormProvider
 import { transformErrors } from '@/containers/NotifyViaSMS/utils';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const transformFormValuesToRequest = (values) => {
   return pick(values, ['notification_key']);
@@ -106,6 +106,6 @@ function NotifyInvoiceViaSMSFormInner({
   );
 }
 
-export const NotifyInvoiceViaSMSForm = compose(withDialogActions)(
+export const NotifyInvoiceViaSMSForm = flow(withDialogActions)(
   NotifyInvoiceViaSMSFormInner,
 );

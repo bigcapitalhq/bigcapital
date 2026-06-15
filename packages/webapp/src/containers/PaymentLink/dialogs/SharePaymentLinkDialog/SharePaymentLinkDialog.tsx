@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const SharePaymentLinkContent = React.lazy(() =>
   import('./SharePaymentLinkContent').then((module) => ({
@@ -31,7 +31,7 @@ function SharePaymentLinkDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const SharePaymentLinkDialog = compose(withDialogRedux())(
+export const SharePaymentLinkDialog = flow(withDialogRedux())(
   SharePaymentLinkDialogRoot,
 );
 

@@ -20,8 +20,8 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse transfers datatable.
@@ -144,13 +144,13 @@ function WarehouseTransfersDataTableInner({
     </DashboardContentTable>
   );
 }
-export const WarehouseTransfersDataTable = compose(
-  withDashboardActions,
-  withWarehouseTransfersActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const WarehouseTransfersDataTable = flow(
   withSettings(({ warehouseTransferSettings }) => ({
     warehouseTransferTableSize: warehouseTransferSettings?.tableSize,
   })),
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withWarehouseTransfersActions,
+  withDashboardActions,
 )(WarehouseTransfersDataTableInner);

@@ -12,6 +12,7 @@ import { FormattedMessage as T } from '@/components';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 // Creates a new item from query.
 const createNewItemFromQuery = (name) => {
@@ -152,6 +153,6 @@ function ItemsSuggestFieldRoot({
   );
 }
 
-export const ItemsSuggestField = R.compose(withDrawerActions)(
+export const ItemsSuggestField = flow(withDrawerActions)(
   ItemsSuggestFieldRoot,
 );

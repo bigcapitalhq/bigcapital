@@ -6,7 +6,8 @@ import { FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Make journal delete entries alert.
@@ -52,7 +53,7 @@ function JournalDeleteEntriesAlertInner({
   );
 }
 
-export const JournalDeleteEntriesAlert = compose(
-  withAlertStoreConnect(),
+export const JournalDeleteEntriesAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(JournalDeleteEntriesAlertInner);

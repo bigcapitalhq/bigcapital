@@ -26,7 +26,7 @@ function PaymentReceiveInnerProvider({ ...props }) {
     isFetching: isDueInvoicesFetching,
   } = useDueInvoices(customerId, {
     enabled: !!customerId && isNewMode,
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   });
 
   useEffect(() => {

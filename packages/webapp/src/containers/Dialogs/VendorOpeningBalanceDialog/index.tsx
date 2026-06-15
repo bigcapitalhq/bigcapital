@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const VendorOpeningBalanceDialogContent = React.lazy(() =>
   import('./VendorOpeningBalanceDialogContent').then((m) => ({
@@ -38,4 +38,6 @@ function VendorOpeningBalanceDialog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(VendorOpeningBalanceDialog);
+export const index = flow(withDialogRedux())(
+  VendorOpeningBalanceDialog,
+);

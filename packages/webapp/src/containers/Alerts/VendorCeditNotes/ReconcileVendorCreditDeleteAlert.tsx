@@ -13,7 +13,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 import { useDeleteReconcileVendorCredit } from '@/hooks/query';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Reconcile vendor credit delete alert.
@@ -82,8 +82,8 @@ function ReconcileVendorCreditDeleteAlertInner({
   );
 }
 
-export const ReconcileVendorCreditDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const ReconcileVendorCreditDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(ReconcileVendorCreditDeleteAlertInner);

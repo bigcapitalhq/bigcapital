@@ -4,8 +4,8 @@ import { CurrencyFormProvider } from './CurrencyFormProvider';
 
 import { CurrencyForm } from './CurrencyForm';
 import { withCurrencyDetail } from '@/containers/Currencies/withCurrencyDetail';
+import { flow } from 'fp-ts/function';
 
-import { compose } from '@/utils';
 import '@/style/pages/Currency/CurrencyFormDialog.scss';
 
 function CurrencyFormDialogContentInner({
@@ -25,6 +25,6 @@ function CurrencyFormDialogContentInner({
   );
 }
 
-export const CurrencyFormDialogContent = compose(withCurrencyDetail)(
+export const CurrencyFormDialogContent = flow(withCurrencyDetail)(
   CurrencyFormDialogContentInner,
 );

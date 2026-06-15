@@ -8,8 +8,7 @@ import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { withManualJournals } from './withManualJournals';
 import { withManualJournalsActions } from './withManualJournalsActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Manual journal views tabs.
@@ -52,10 +51,10 @@ function ManualJournalsViewTabsInner({
   );
 }
 
-export const ManualJournalsViewTabs = compose(
-  withManualJournalsActions,
-  withDashboardActions,
+export const ManualJournalsViewTabs = flow(
   withManualJournals(({ manualJournalsTableState }) => ({
     journalsTableState: manualJournalsTableState,
   })),
+  withDashboardActions,
+  withManualJournalsActions,
 )(ManualJournalsViewTabsInner);

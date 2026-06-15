@@ -2,8 +2,7 @@
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ReceiptDetailDrawerContent = React.lazy(() =>
   import('./ReceiptDetailDrawerContent').then((m) => ({
@@ -34,4 +33,4 @@ function ReceiptDetailDrawer({
   );
 }
 
-export const index = compose(withDrawers())(ReceiptDetailDrawer);
+export const index = flow(withDrawers())(ReceiptDetailDrawer);

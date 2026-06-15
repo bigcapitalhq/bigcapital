@@ -12,7 +12,7 @@ import { CreateVendorRefundCreditFormSchema } from './RefundVendorCreditForm.sch
 import { RefundVendorCreditFormContent } from './RefundVendorCreditFormContent';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   deposit_account_id: '',
@@ -77,6 +77,6 @@ function RefundVendorCreditFormInner({
   );
 }
 
-export const RefundVendorCreditForm = compose(withDialogActions)(
+export const RefundVendorCreditForm = flow(withDialogActions)(
   RefundVendorCreditFormInner,
 );

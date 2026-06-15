@@ -28,7 +28,7 @@ function InvoicesListProvider({ query, tableStateChanged, ...props }) {
     data: invoicesData,
     isFetching: isInvoicesFetching,
     isLoading: isInvoicesLoading,
-  } = useInvoices(query, { keepPreviousData: true });
+  } = useInvoices(query, { placeholderData: (previousData) => previousData });
 
   // Detarmines whether the table should show empty state.
   const isEmptyStatus =

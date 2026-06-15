@@ -16,8 +16,7 @@ import {
   InventoryAdjustmentAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Inventory adjustment detail actions bar.
@@ -53,6 +52,6 @@ function InventoryAdjustmentDetailActionsBarInner({
   );
 }
 
-export const InventoryAdjustmentDetailActionsBar = compose(withAlertActions)(
-  InventoryAdjustmentDetailActionsBarInner,
-);
+export const InventoryAdjustmentDetailActionsBar = flow(
+  withAlertActions,
+)(InventoryAdjustmentDetailActionsBarInner);

@@ -11,8 +11,8 @@ import {
 } from '@/components';
 import { EstimateAmount } from './utils';
 import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
 import intl from 'react-intl-universal';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project task form fields.
@@ -67,6 +67,6 @@ function ProjectTaskFormFieldsInner({
   );
 }
 
-export const ProjectTaskFormFields = compose(withCurrentOrganization())(
+export const ProjectTaskFormFields = flow(withCurrentOrganization())(
   ProjectTaskFormFieldsInner,
 );

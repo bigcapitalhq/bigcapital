@@ -10,13 +10,8 @@ import {
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
-
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
-import {
-  withInventoryValuation,
-  WithInventoryValuationProps,
-} from './withInventoryValuation';
+import { withInventoryValuation } from './withInventoryValuation';
 import {
   withInventoryValuationActions,
   WithInventoryValuationActionsProps,
@@ -26,10 +21,10 @@ import {
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
-
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { InventoryValuationExportMenu } from './components';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface InventoryValuationActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -148,10 +143,10 @@ function InventoryValuationActionsBarInner({
   );
 }
 
-export const InventoryValuationActionsBar = compose(
+export const InventoryValuationActionsBar = flow(
+  withDialogActions,
+  withInventoryValuationActions,
   withInventoryValuation(({ inventoryValuationDrawerFilter }) => ({
     isFilterDrawerOpen: inventoryValuationDrawerFilter,
   })),
-  withInventoryValuationActions,
-  withDialogActions,
 )(InventoryValuationActionsBarInner);

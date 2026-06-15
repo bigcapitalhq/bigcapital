@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ProjectDialogContent = React.lazy(() =>
   import('./ProjectFormDialogContent').then((m) => ({
@@ -42,7 +42,7 @@ function ProjectFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(ProjectFormDialog);
+export const index = flow(withDialogRedux())(ProjectFormDialog);
 
 const ProjectFormDialogRoot = styled(Dialog)`
   .bp4-dialog-body {

@@ -8,7 +8,8 @@ import { useBillsListContext } from './BillsListProvider';
 import { withBills } from './withBills';
 import { withBillsActions } from './withBillsActions';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bills view tabs.
@@ -46,9 +47,9 @@ function BillViewTabs({
   );
 }
 
-export const BillsViewsTabs = compose(
-  withBillsActions,
+export const BillsViewsTabs = flow(
   withBills(({ billsTableState }) => ({
     billsCurrentView: billsTableState.viewSlug,
   })),
+  withBillsActions,
 )(BillViewTabs);

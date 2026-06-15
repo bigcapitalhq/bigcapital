@@ -7,8 +7,7 @@ import { useDeletePdfTemplate } from '@/hooks/query/pdf-templates';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Delete branding template alert.
@@ -79,7 +78,7 @@ function DeleteBrandingTemplateAlertInner({
   );
 }
 
-export const DeleteBrandingTemplateAlert = compose(
-  withAlertStoreConnect(),
+export const DeleteBrandingTemplateAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(DeleteBrandingTemplateAlertInner);

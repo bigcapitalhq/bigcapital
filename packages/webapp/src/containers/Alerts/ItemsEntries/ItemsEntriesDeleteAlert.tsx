@@ -6,7 +6,8 @@ import { FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Items entries table clear all lines alert.
@@ -51,7 +52,7 @@ function ItemsEntriesDeleteAlertInner({
   );
 }
 
-export const ItemsEntriesDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const ItemsEntriesDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ItemsEntriesDeleteAlertInner);

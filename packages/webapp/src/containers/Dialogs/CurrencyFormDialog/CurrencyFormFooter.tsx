@@ -7,7 +7,7 @@ import { Button, Classes, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Currency dialog form footer action.
@@ -38,6 +38,6 @@ function CurrencyFormFooterInner({
   );
 }
 
-export const CurrencyFormFooter = compose(withDialogActions)(
+export const CurrencyFormFooter = flow(withDialogActions)(
   CurrencyFormFooterInner,
 );

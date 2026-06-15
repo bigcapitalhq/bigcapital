@@ -14,6 +14,7 @@ import { CashflowAccountsLoadingBar } from './CashFlowAccountsLoadingBar';
 
 import { withCashflowAccounts } from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
 import { withCashflowAccountsTableActions } from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Cashflow accounts list.
@@ -47,9 +48,9 @@ function CashFlowAccountsListInner({
   );
 }
 
-export const CashFlowAccountsList = compose(
+export const CashFlowAccountsList = flow(
+  withCashflowAccountsTableActions,
   withCashflowAccounts(({ cashflowAccountsTableState }) => ({
     cashflowAccountsTableState,
   })),
-  withCashflowAccountsTableActions,
 )(CashFlowAccountsListInner);

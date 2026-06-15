@@ -12,7 +12,8 @@ import { WarehouseFormContent } from './WarehouseFormContent';
 import { transformErrors } from './utils';
 
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const defaultInitialValues = {
   name: '',
@@ -90,4 +91,6 @@ function WarehouseFormInner({
   );
 }
 
-export const WarehouseForm = compose(withDialogActions)(WarehouseFormInner);
+export const WarehouseForm = flow(withDialogActions)(
+  WarehouseFormInner,
+);

@@ -8,8 +8,7 @@ import { useCancelUnlockingPartialTransactions } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Cancel Unlocking partial transactions alerts.
@@ -75,7 +74,7 @@ function CancelUnlockingPartialTarnsactions({
   );
 }
 
-export const cancelUnlockingPartialAlert = compose(
-  withAlertStoreConnect(),
+export const cancelUnlockingPartialAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(CancelUnlockingPartialTarnsactions);

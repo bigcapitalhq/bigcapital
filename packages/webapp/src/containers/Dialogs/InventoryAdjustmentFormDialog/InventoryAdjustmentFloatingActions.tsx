@@ -6,7 +6,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Inventory adjustment floating actions.
@@ -71,6 +71,6 @@ function InventoryAdjustmentFloatingActionsInner({
   );
 }
 
-export const InventoryAdjustmentFloatingActions = compose(withDialogActions)(
-  InventoryAdjustmentFloatingActionsInner,
-);
+export const InventoryAdjustmentFloatingActions = flow(
+  withDialogActions,
+)(InventoryAdjustmentFloatingActionsInner);

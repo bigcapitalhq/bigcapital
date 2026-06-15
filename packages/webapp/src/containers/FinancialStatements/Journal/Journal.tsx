@@ -15,8 +15,8 @@ import { withJournalActions } from './withJournalActions';
 import type { WithJournalActionsProps } from './withJournalActions';
 
 import { useJournalQuery } from './utils';
-import { compose } from '@/utils';
 import { JournalDialogs } from './JournalDialogs';
+import { flow } from 'fp-ts/function';
 
 type JournalProps = WithJournalActionsProps;
 
@@ -70,7 +70,7 @@ function JournalInner({
   );
 }
 
-export const Journal = compose(
-  withDashboardActions,
+export const Journal = flow(
   withJournalActions,
+  withDashboardActions,
 )(JournalInner);

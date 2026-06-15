@@ -2,7 +2,7 @@
 import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const InventoryAdjustmentFormDialogContent = lazy(() =>
   import('./InventoryAdjustmentFormDialogContent').then((m) => ({
@@ -37,4 +37,6 @@ function InventoryAdjustmentFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(InventoryAdjustmentFormDialog);
+export const index = flow(withDialogRedux())(
+  InventoryAdjustmentFormDialog,
+);

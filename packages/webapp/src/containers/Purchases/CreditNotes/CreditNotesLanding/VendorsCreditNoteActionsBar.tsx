@@ -37,11 +37,11 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withVendorActions } from './withVendorActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withVendorsCreditNotes } from './withVendorsCreditNotes';
 import { useBulkDeleteVendorCreditsDialog } from './hooks/use-bulk-delete-vendor-credits-dialog';
+import { flow } from 'fp-ts/function';
 
 /**
  * Vendors Credit note  table actions bar.
@@ -222,19 +222,19 @@ function VendorsCreditNoteActionsBarInner({
   );
 }
 
-export const VendorsCreditNoteActionsBar = compose(
-  withVendorsCreditNotesActions,
-  withVendorActions,
-  withSettingsActions,
+export const VendorsCreditNoteActionsBar = flow(
+  withDrawerActions,
+  withDialogActions,
+  withSettings(({ vendorsCreditNoteSetting }) => ({
+    creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
+  })),
   withVendorsCreditNotes(
     ({ vendorsCreditNoteTableState, vendorsCreditNoteSelectedRows }) => ({
       vendorCreditFilterRoles: vendorsCreditNoteTableState.filterRoles,
       vendorsCreditNoteSelectedRows,
     }),
   ),
-  withSettings(({ vendorsCreditNoteSetting }) => ({
-    creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
-  })),
-  withDialogActions,
-  withDrawerActions,
+  withSettingsActions,
+  withVendorActions,
+  withVendorsCreditNotesActions,
 )(VendorsCreditNoteActionsBarInner);

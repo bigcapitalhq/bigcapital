@@ -4,12 +4,12 @@ import { useHistory } from 'react-router';
 import { DashboardViewsTabs, FormattedMessage as T } from '@/components';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
-import { compose } from '@/utils';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { transformPaymentViewsToTabs } from './utils';
 
 import { withPaymentMade } from './withPaymentMade';
 import { withPaymentMadeActions } from './withPaymentMadeActions';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment made views tabs.
@@ -55,7 +55,7 @@ function PaymentMadeViewTabsInner({
   );
 }
 
-export const PaymentMadeViewTabs = compose(
-  withPaymentMadeActions,
+export const PaymentMadeViewTabs = flow(
   withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
+  withPaymentMadeActions,
 )(PaymentMadeViewTabsInner);

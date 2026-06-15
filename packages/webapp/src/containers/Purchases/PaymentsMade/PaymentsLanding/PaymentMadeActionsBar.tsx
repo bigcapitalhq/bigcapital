@@ -34,7 +34,7 @@ import { useRefreshPaymentMades } from '@/hooks/query/payment-mades';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment made actions bar.
@@ -173,14 +173,14 @@ function PaymentMadeActionsBarInner({
   );
 }
 
-export const PaymentMadeActionsBar = compose(
-  withPaymentMadeActions,
-  withSettingsActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({
-    paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
-  })),
+export const PaymentMadeActionsBar = flow(
+  withDialogActions,
   withSettings(({ billPaymentSettings }) => ({
     paymentMadesTableSize: billPaymentSettings?.tableSize,
   })),
-  withDialogActions,
+  withPaymentMade(({ paymentMadesTableState }) => ({
+    paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
+  })),
+  withSettingsActions,
+  withPaymentMadeActions,
 )(PaymentMadeActionsBarInner);

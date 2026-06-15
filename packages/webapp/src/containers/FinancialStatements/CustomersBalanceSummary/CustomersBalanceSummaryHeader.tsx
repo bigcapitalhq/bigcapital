@@ -18,11 +18,12 @@ import {
 } from './withCustomersBalanceSummaryActions';
 import { CustomersBalanceSummaryGeneralPanel } from './CustomersBalanceSummaryGeneralPanel';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import {
   getCustomersBalanceQuerySchema,
   getDefaultCustomersBalanceQuery,
 } from './utils';
+import { flow } from 'fp-ts/function';
 
 type CustomerBalanceFormValues = ReturnType<
   typeof getDefaultCustomersBalanceQuery
@@ -110,11 +111,11 @@ function CustomersBalanceSummaryHeaderInner({
   );
 }
 
-export const CustomersBalanceSummaryHeader = compose(
+export const CustomersBalanceSummaryHeader = flow(
+  withCustomersBalanceSummaryActions,
   withCustomersBalanceSummary(({ customersBalanceDrawerFilter }) => ({
     customersBalanceDrawerFilter,
   })),
-  withCustomersBalanceSummaryActions,
 )(CustomersBalanceSummaryHeaderInner);
 
 const CustomerBalanceDrawerHeader = styled(FinancialStatementHeader)`

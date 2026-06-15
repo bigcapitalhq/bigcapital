@@ -43,9 +43,7 @@ function InventoryValuationProvider({
     isFetching,
     isLoading,
     refetch,
-  } = useInventoryValuationTable(httpQuery, {
-    placeholderData: (previousData) => previousData,
-  });
+  } = useInventoryValuationTable(httpQuery);
 
   // Provider data.
   const provider: InventoryValuationContextValue = {

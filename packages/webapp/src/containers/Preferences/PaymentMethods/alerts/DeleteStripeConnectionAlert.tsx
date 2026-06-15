@@ -6,7 +6,7 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useDeletePaymentMethod } from '@/hooks/query/payment-services';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Delete Stripe connection alert.
@@ -62,7 +62,7 @@ function DeleteStripeAccountAlert({
   );
 }
 
-export const DeleteStripeConnectionAlert = compose(
-  withAlertStoreConnect(),
+export const DeleteStripeConnectionAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(DeleteStripeAccountAlert);

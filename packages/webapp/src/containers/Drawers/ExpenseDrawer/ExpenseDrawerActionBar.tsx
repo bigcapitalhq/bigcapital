@@ -20,8 +20,8 @@ import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Expense drawer action bar.
@@ -75,7 +75,7 @@ function ExpenseDrawerActionBarInner({
   );
 }
 
-export const ExpenseDrawerActionBar = compose(
-  withAlertActions,
+export const ExpenseDrawerActionBar = flow(
   withDrawerActions,
+  withAlertActions,
 )(ExpenseDrawerActionBarInner);

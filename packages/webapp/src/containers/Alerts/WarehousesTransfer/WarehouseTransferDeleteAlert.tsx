@@ -13,8 +13,8 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse transfer delete alert
@@ -83,8 +83,8 @@ function WarehouseTransferDeleteAlertInner({
   );
 }
 
-export const WarehouseTransferDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const WarehouseTransferDeleteAlert = flow(
   withDrawerActions,
+  withAlertActions,
+  withAlertStoreConnect(),
 )(WarehouseTransferDeleteAlertInner);

@@ -2,7 +2,6 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { compose } from '@/utils';
 import { TABLES } from '@/constants/tables';
 import {
   DataTable,
@@ -25,6 +24,7 @@ import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Payment receives datatable.
@@ -155,15 +155,15 @@ function PaymentsReceivedDataTable({
   );
 }
 
-export const PaymentsReceivedTable = compose(
-  withPaymentsReceivedActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
-  withPaymentsReceived(({ paymentReceivesTableState }) => ({
-    paymentReceivesTableState,
-  })),
+export const PaymentsReceivedTable = flow(
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
   })),
+  withPaymentsReceived(({ paymentReceivesTableState }) => ({
+    paymentReceivesTableState,
+  })),
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withPaymentsReceivedActions,
 )(PaymentsReceivedDataTable);

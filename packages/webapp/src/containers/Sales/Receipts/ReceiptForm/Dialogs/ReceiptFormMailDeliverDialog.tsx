@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 const ReceiptFormMailDeliverDialogContent = React.lazy(() =>
   import('./ReceiptFormMailDeliverDialogContent').then((m) => ({
@@ -38,6 +38,6 @@ function ReceiptFormMailDeliverDialogInner({
   );
 }
 
-export const ReceiptFormMailDeliverDialog = compose(withDialogRedux())(
+export const ReceiptFormMailDeliverDialog = flow(withDialogRedux())(
   ReceiptFormMailDeliverDialogInner,
 );

@@ -19,13 +19,14 @@ import {
   WithInventoryValuationActionsProps,
 } from './withInventoryValuationActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 import {
   getInventoryValuationQuery,
   getInventoryValuationQuerySchema,
 } from './utils';
+import { flow } from 'fp-ts/function';
 
 type InventoryValuationFormValues = Omit<
   ReturnType<typeof getInventoryValuationQuery>,
@@ -137,11 +138,11 @@ function InventoryValuationHeaderInner({
   );
 }
 
-export const InventoryValuationHeader = compose(
+export const InventoryValuationHeader = flow(
+  withInventoryValuationActions,
   withInventoryValuation(({ inventoryValuationDrawerFilter }) => ({
     inventoryValuationDrawerFilter,
   })),
-  withInventoryValuationActions,
 )(InventoryValuationHeaderInner);
 
 const InventoryValuationDrawerHeader = styled(FinancialStatementHeader)`

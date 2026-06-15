@@ -6,12 +6,12 @@ import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { useExpenseFormTableColumns } from './components';
 import {
   saveInvoke,
-  compose,
   updateTableCell,
   updateMinEntriesLines,
   updateAutoAddNewLine,
   updateRemoveLineByIndex,
 } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Expenses form entries.
@@ -35,11 +35,11 @@ export function ExpenseFormEntriesTable({
   // Handles update datatable data.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(
-        // Update auto-adding new line.
-        updateAutoAddNewLine(defaultEntry, ['expense_account_id']),
+      const newRows = flow(
         // Update the row value of the given row index and column id.
         updateTableCell(rowIndex, columnId, value),
+        // Update auto-adding new line.
+        updateAutoAddNewLine(defaultEntry, ['expense_account_id']),
       )(entries);
 
       saveInvoke(onChange, newRows);
@@ -50,11 +50,11 @@ export function ExpenseFormEntriesTable({
   // Handles click remove datatable row.
   const handleRemoveRow = useCallback(
     (rowIndex) => {
-      const newRows = compose(
-        // Ensure minimum lines count.
-        updateMinEntriesLines(minLines, defaultEntry),
+      const newRows = flow(
         // Remove the line by the given index.
         updateRemoveLineByIndex(rowIndex),
+        // Ensure minimum lines count.
+        updateMinEntriesLines(minLines, defaultEntry),
       )(entries);
 
       saveInvoke(onChange, newRows);

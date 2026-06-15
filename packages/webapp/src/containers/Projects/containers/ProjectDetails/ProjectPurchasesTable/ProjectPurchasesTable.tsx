@@ -11,8 +11,7 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { ActionMenu } from './components';
 import { useProjectPurchasesColumns } from './hooks';
 import { withSettings } from '@/containers/Settings/withSettings';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project Purchases DataTable.
@@ -52,7 +51,7 @@ function ProjectPurchasesTableRoot({
     />
   );
 }
-export const ProjectPurchasesTable = compose(
+export const ProjectPurchasesTable = flow(
   withSettings(({ purchasesSettings }) => ({
     purchasesTableSize: purchasesSettings?.tableSize,
   })),

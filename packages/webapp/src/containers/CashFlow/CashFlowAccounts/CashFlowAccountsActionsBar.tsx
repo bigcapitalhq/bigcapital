@@ -26,8 +26,7 @@ import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { ACCOUNT_TYPE, Features } from '@/constants';
 import { DialogsName } from '@/constants/dialogs';
 import { CreditCard2Icon } from '@/icons/CreditCard2';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Cash Flow accounts actions bar.
@@ -120,7 +119,7 @@ function CashFlowAccountsActionsBarInner({
     </DashboardActionsBar>
   );
 }
-export const CashFlowAccountsActionsBar = compose(
-  withDialogActions,
+export const CashFlowAccountsActionsBar = flow(
   withCashflowAccountsTableActions,
+  withDialogActions,
 )(CashFlowAccountsActionsBarInner);

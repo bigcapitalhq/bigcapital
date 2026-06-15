@@ -5,6 +5,7 @@ import { InvoiceCustomizeFormValues } from './types';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { InvoiceMailReceiptPreview } from './InvoiceMailReceiptPreview';
 import { Box } from '@/components';
+import { flow } from 'fp-ts/function';
 
 const withInvoiceMailReceiptPreviewConnected = <P extends Object>(
   Component: React.ComponentType<P>,
@@ -30,6 +31,6 @@ const withInvoiceMailReceiptPreviewConnected = <P extends Object>(
   };
 };
 
-export const InvoiceCustomizeMailReceiptPreview = R.compose(
+export const InvoiceCustomizeMailReceiptPreview = flow(
   withInvoiceMailReceiptPreviewConnected,
 )(InvoiceMailReceiptPreview);

@@ -23,8 +23,8 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Projects actions bar.
@@ -118,14 +118,14 @@ function ProjectsActionsBarInner({
   );
 }
 
-export const ProjectsActionsBar = compose(
-  withDialogActions,
-  withProjectsActions,
-  withSettingsActions,
-  withProjects(({ projectsTableState }) => ({
-    projectsFilterRoles: projectsTableState?.filterRoles,
-  })),
+export const ProjectsActionsBar = flow(
   withSettings(({ projectSettings }) => ({
     projectsTableSize: projectSettings?.tableSize,
   })),
+  withProjects(({ projectsTableState }) => ({
+    projectsFilterRoles: projectsTableState?.filterRoles,
+  })),
+  withSettingsActions,
+  withProjectsActions,
+  withDialogActions,
 )(ProjectsActionsBarInner);

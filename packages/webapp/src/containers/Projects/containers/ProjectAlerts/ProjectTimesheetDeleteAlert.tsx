@@ -8,8 +8,7 @@ import { useDeleteProjectTimeEntry } from '../../hooks';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project timesheet delete alert.
@@ -73,7 +72,7 @@ function ProjectTimesheetDeleteAlertInner({
     </Alert>
   );
 }
-export const ProjectTimesheetDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const ProjectTimesheetDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ProjectTimesheetDeleteAlertInner);

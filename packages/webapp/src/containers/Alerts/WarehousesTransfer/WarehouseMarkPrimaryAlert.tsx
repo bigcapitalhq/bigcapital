@@ -8,8 +8,7 @@ import { useMarkWarehouseAsPrimary } from '@/hooks/query';
 
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * warehouse mark primary alert.
@@ -64,7 +63,7 @@ function WarehouseMarkPrimaryAlertInner({
   );
 }
 
-export const WarehouseMarkPrimaryAlert = compose(
-  withAlertStoreConnect(),
+export const WarehouseMarkPrimaryAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(WarehouseMarkPrimaryAlertInner);

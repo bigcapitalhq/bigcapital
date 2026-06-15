@@ -14,6 +14,7 @@ import {
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 /**
  * Credit note exchange rate input field.
@@ -40,16 +41,16 @@ function CreditNoteExchangeRateInputFieldRoot({ ...props }) {
   );
 }
 
-export const CreditNoteExchangeRateInputField = R.compose(
-  withExchangeRateFetchingLoading,
+export const CreditNoteExchangeRateInputField = flow(
   withExchangeRateItemEntriesPriceRecalc,
+  withExchangeRateFetchingLoading,
 )(CreditNoteExchangeRateInputFieldRoot);
 
 /**
  * Syncs credit note auto-increment settings to form.
  * @return {React.ReactNode}
  */
-export const CreditNoteSyncIncrementSettingsToForm = R.compose(
+export const CreditNoteSyncIncrementSettingsToForm = flow(
   withSettings(({ creditNoteSettings }) => ({
     creditAutoIncrement: creditNoteSettings?.autoIncrement,
     creditNextNumber: creditNoteSettings?.nextNumber,
@@ -76,22 +77,22 @@ export const CreditNoteSyncIncrementSettingsToForm = R.compose(
  * as an indication the entries rates have been re-calculated.
  * @returns {React.ReactNode}
  */
-export const CreditNoteExchangeRateSync = R.compose(withDialogActions)(({
-  openDialog,
-}) => {
-  const subtotal = useCreditNoteSubtotal();
-  const timeout = useRef();
+export const CreditNoteExchangeRateSync = flow(withDialogActions)(
+  ({ openDialog }) => {
+    const subtotal = useCreditNoteSubtotal();
+    const timeout = useRef();
 
-  useSyncExRateToForm({
-    onSynced: () => {
-      // If the total bigger then zero show alert to the user after adjusting entries.
-      if (subtotal > 0) {
-        clearTimeout(timeout.current);
-        timeout.current = setTimeout(() => {
-          openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
-        }, 500);
-      }
-    },
-  });
-  return null;
-});
+    useSyncExRateToForm({
+      onSynced: () => {
+        // If the total bigger then zero show alert to the user after adjusting entries.
+        if (subtotal > 0) {
+          clearTimeout(timeout.current);
+          timeout.current = setTimeout(() => {
+            openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
+          }, 500);
+        }
+      },
+    });
+    return null;
+  },
+);

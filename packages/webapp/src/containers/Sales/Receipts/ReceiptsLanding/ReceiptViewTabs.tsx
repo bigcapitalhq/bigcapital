@@ -6,8 +6,9 @@ import { DashboardViewsTabs } from '@/components';
 import { withReceiptActions } from './withReceiptsActions';
 import { withReceipts } from './withReceipts';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 import { useReceiptsListContext } from './ReceiptsListProvider';
+import { flow } from 'fp-ts/function';
 
 /**
  * Receipts views tabs.
@@ -45,9 +46,9 @@ function ReceiptViewTabsInner({
   );
 }
 
-export const ReceiptViewTabs = compose(
-  withReceiptActions,
+export const ReceiptViewTabs = flow(
   withReceipts(({ receiptTableState }) => ({
     receiptsCurrentView: receiptTableState.viewSlug,
   })),
+  withReceiptActions,
 )(ReceiptViewTabsInner);

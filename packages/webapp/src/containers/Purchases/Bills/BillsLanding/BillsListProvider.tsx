@@ -29,7 +29,7 @@ function BillsListProvider({ query, tableStateChanged, ...props }) {
     data: billsData,
     isLoading: isBillsLoading,
     isFetching: isBillsFetching,
-  } = useBills(query, { keepPreviousData: true });
+  } = useBills(query, { placeholderData: (previousData) => previousData });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =

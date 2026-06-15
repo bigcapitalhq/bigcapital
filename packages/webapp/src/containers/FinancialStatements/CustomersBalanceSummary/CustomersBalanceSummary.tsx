@@ -14,6 +14,7 @@ import {
 } from './withCustomersBalanceSummaryActions';
 import { CustomerBalanceSummaryPdfDialog } from './CustomerBalancePdfDialog';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 type CustomersBalanceSummaryProps = Pick<
   WithCustomersBalanceSummaryActionsProps,
@@ -70,6 +71,6 @@ function CustomersBalanceSummaryInner({
   );
 }
 
-export const CustomersBalanceSummary = R.compose(
+export const CustomersBalanceSummary = flow(
   withCustomersBalanceSummaryActions,
 )(CustomersBalanceSummaryInner);

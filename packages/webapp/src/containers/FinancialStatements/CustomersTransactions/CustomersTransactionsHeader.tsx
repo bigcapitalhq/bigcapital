@@ -11,11 +11,12 @@ import {
   withCustomersTransactionsActions,
   WithCustomersTransactionsActionsProps,
 } from './withCustomersTransactionsActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import {
   getCustomersTransactionsDefaultQuery,
   getCustomersTransactionsQuerySchema,
 } from './_utils';
+import { flow } from 'fp-ts/function';
 
 interface CustomersTransactionsHeaderFormValues {
   fromDate: Date;
@@ -116,11 +117,11 @@ function CustomersTransactionsHeaderInner({
   );
 }
 
-export const CustomersTransactionsHeader = compose(
+export const CustomersTransactionsHeader = flow(
+  withCustomersTransactionsActions,
   withCustomersTransactions(({ customersTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: customersTransactionsDrawerFilter,
   })),
-  withCustomersTransactionsActions,
 )(CustomersTransactionsHeaderInner);
 
 const CustomerTransactionsDrawerHeader = styled(FinancialStatementHeader)`

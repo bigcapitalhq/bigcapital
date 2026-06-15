@@ -5,7 +5,8 @@ import { DashboardViewsTabs } from '@/components';
 import { withWarehouseTransfers } from './withWarehouseTransfers';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse transfer view tabs.
@@ -44,9 +45,9 @@ function WarehouseTransfersViewTabsInner({
   );
 }
 
-export const WarehouseTransfersViewTabs = compose(
-  withWarehouseTransfersActions,
+export const WarehouseTransfersViewTabs = flow(
   withWarehouseTransfers(({ warehouseTransferTableState }) => ({
     warehouseTransferCurrentView: warehouseTransferTableState?.viewSlug,
   })),
+  withWarehouseTransfersActions,
 )(WarehouseTransfersViewTabsInner);

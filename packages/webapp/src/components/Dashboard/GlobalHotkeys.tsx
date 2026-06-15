@@ -6,8 +6,7 @@ import { getDashboardRoutes } from '@/routes/dashboard';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 // Toggle dark/light mode by toggling 'bp4-dark' class on body
 const handleToggleDarkMode = () => {
@@ -73,8 +72,8 @@ function GlobalHotkeys({
   return <div></div>;
 }
 
-export default compose(
-  withDashboardActions,
-  withDialogActions,
+export default flow(
   withUniversalSearchActions,
+  withDialogActions,
+  withDashboardActions,
 )(GlobalHotkeys);

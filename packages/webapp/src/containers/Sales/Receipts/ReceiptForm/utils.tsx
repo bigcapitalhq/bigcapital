@@ -24,6 +24,7 @@ import {
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
 import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import { flow } from 'fp-ts/function';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -87,9 +88,9 @@ export const transformToEditForm = (receipt) => {
       Math.max(MIN_LINES_NUMBER - receipt.entries.length, 0),
     ),
   ];
-  const entries = R.compose(
-    ensureEntriesHaveEmptyLine(defaultReceiptEntry),
+  const entries = flow(
     updateItemsEntriesTotal,
+    ensureEntriesHaveEmptyLine(defaultReceiptEntry),
   )(initialEntries);
 
   const attachments = transformAttachmentsToForm(receipt);
@@ -285,9 +286,9 @@ export const useReceiptTotal = () => {
   const adjustmentAmount = useReceiptAdjustmentAmount();
   const discountAmount = useReceiptDiscountAmount();
 
-  return R.compose(
-    R.add(R.__, adjustmentAmount),
+  return flow(
     R.subtract(R.__, discountAmount),
+    R.add(R.__, adjustmentAmount),
   )(subtotal);
 };
 

@@ -10,7 +10,8 @@ import { useOrganizationSetup } from '@/hooks/query';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
-import { setCookie, compose, transfromToSnakeCase } from '@/utils';
+import { setCookie, transfromToSnakeCase } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 // Initial values.
 const defaultValues = {
@@ -70,6 +71,6 @@ function SetupOrganizationPageInner({ wizard }) {
   );
 }
 
-export const SetupOrganizationPage = compose(withSettingsActions)(
+export const SetupOrganizationPage = flow(withSettingsActions)(
   SetupOrganizationPageInner,
 );

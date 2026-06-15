@@ -41,9 +41,7 @@ function GeneralLedgerProvider({
     isFetching,
     isLoading,
     refetch,
-  } = useGeneralLedgerSheet(httpQuery as GeneralLedgerTableQuery, {
-    placeholderData: (previousData) => previousData,
-  });
+  } = useGeneralLedgerSheet(httpQuery as GeneralLedgerTableQuery);
 
   const provider: GeneralLedgerContextValue = {
     generalLedger,

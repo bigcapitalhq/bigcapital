@@ -6,7 +6,7 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 // Lazy loading the content.
 const CustomerBalanceSummaryPdfDialogContent = lazy(() =>
@@ -42,6 +42,6 @@ function CashflowSheetPdfDialogRoot({
   );
 }
 
-export const CustomerBalanceSummaryPdfDialog = compose(withDialogRedux())(
+export const CustomerBalanceSummaryPdfDialog = flow(withDialogRedux())(
   CashflowSheetPdfDialogRoot,
 );

@@ -7,7 +7,7 @@ import {
   withCurrentOrganization,
   WithCurrentOrganizationProps,
 } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 interface GeneralLedgerBodyProps {
   organizationName: WithCurrentOrganizationProps['organization']['name'];
@@ -33,7 +33,7 @@ function GeneralLedgerBodyJSX({
   );
 }
 
-export const GeneralLedgerBody = compose(
+export const GeneralLedgerBody = flow(
   withCurrentOrganization(({ organization }) => ({
     organizationName: organization.name,
   })),

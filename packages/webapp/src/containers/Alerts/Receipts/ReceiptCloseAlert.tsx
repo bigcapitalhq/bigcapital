@@ -8,8 +8,7 @@ import { useCloseReceipt } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Receipt close alert.
@@ -63,7 +62,7 @@ function ReceiptCloseAlertInner({
   );
 }
 
-export const ReceiptCloseAlert = compose(
-  withAlertStoreConnect(),
+export const ReceiptCloseAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ReceiptCloseAlertInner);

@@ -6,6 +6,7 @@ import styled from '@xstyled/emotion';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { CreateWorkspaceDrawerContent } from './CreateWorkspaceDrawerContent';
+import { flow } from 'fp-ts/function';
 
 const CreateWorkspaceDrawerContainer = styled(Drawer)`
   &.bp4-drawer.bp4-dark,
@@ -38,6 +39,6 @@ function CreateWorkspaceDrawerRoot({
   );
 }
 
-export const CreateWorkspaceDrawer = R.compose(withDrawers())(
+export const CreateWorkspaceDrawer = flow(withDrawers())(
   CreateWorkspaceDrawerRoot,
 );

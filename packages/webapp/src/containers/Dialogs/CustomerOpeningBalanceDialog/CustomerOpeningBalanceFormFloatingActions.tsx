@@ -6,7 +6,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Customer Opening balance floating actions.
@@ -45,6 +45,6 @@ function CustomerOpeningBalanceFormFloatingActionsInner({
     </div>
   );
 }
-export const CustomerOpeningBalanceFormFloatingActions = compose(
+export const CustomerOpeningBalanceFormFloatingActions = flow(
   withDialogActions,
 )(CustomerOpeningBalanceFormFloatingActionsInner);

@@ -8,8 +8,7 @@ import { useActivateContact } from '@/hooks/query';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  *  Contact activate alert.
@@ -61,7 +60,7 @@ function ContactActivateAlertInner({
   );
 }
 
-export const ContactActivateAlert = compose(
-  withAlertStoreConnect(),
+export const ContactActivateAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ContactActivateAlertInner);

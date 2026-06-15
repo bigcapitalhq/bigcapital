@@ -6,7 +6,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useBadDebtContext } from './BadDebtFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bad bebt form floating actions.
@@ -45,6 +45,6 @@ function BadDebtFormFloatingActionsInner({
   );
 }
 
-export const BadDebtFormFloatingActions = compose(withDialogActions)(
+export const BadDebtFormFloatingActions = flow(withDialogActions)(
   BadDebtFormFloatingActionsInner,
 );

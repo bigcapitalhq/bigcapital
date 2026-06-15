@@ -3,8 +3,7 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, EmptyStatus } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 function WarehousesEmptyStatusInner({
   // #withDialogActions
@@ -38,6 +37,6 @@ function WarehousesEmptyStatusInner({
   );
 }
 
-export const WarehousesEmptyStatus = compose(withDialogActions)(
+export const WarehousesEmptyStatus = flow(withDialogActions)(
   WarehousesEmptyStatusInner,
 );

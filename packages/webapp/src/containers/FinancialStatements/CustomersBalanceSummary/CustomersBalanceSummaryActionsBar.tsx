@@ -18,13 +18,14 @@ import {
   WithCustomersBalanceSummaryActionsProps,
 } from './withCustomersBalanceSummaryActions';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 import { CustomerBalanceSummaryExportMenu } from './components';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { flow } from 'fp-ts/function';
 
 interface CustomersBalanceSummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -134,10 +135,10 @@ function CustomersBalanceSummaryActionsBarInner({
   );
 }
 
-export const CustomersBalanceSummaryActionsBar = compose(
+export const CustomersBalanceSummaryActionsBar = flow(
+  withDialogActions,
+  withCustomersBalanceSummaryActions,
   withCustomersBalanceSummary(({ customersBalanceDrawerFilter }) => ({
     isFilterDrawerOpen: customersBalanceDrawerFilter,
   })),
-  withCustomersBalanceSummaryActions,
-  withDialogActions,
 )(CustomersBalanceSummaryActionsBarInner);

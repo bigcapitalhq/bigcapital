@@ -7,8 +7,8 @@ import { Intent, Alert } from '@blueprintjs/core';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
-import { compose } from '@/utils';
 import { useInactivateAccount } from '@/hooks/query';
+import { flow } from 'fp-ts/function';
 
 /**
  * Account inactivate alert.
@@ -60,7 +60,7 @@ function AccountInactivateAlertInner({
   );
 }
 
-export const AccountInactivateAlert = compose(
-  withAlertStoreConnect(),
+export const AccountInactivateAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(AccountInactivateAlertInner);

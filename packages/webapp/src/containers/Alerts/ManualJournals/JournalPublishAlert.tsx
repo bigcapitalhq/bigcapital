@@ -7,8 +7,7 @@ import { usePublishJournal } from '@/hooks/query';
 
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Journal publish alert.
@@ -62,7 +61,7 @@ function JournalPublishAlertInner({
   );
 }
 
-export const JournalPublishAlert = compose(
-  withAlertStoreConnect(),
+export const JournalPublishAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(JournalPublishAlertInner);

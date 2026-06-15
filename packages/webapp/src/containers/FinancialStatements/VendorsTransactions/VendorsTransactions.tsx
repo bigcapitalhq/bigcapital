@@ -14,9 +14,9 @@ import {
   WithVendorsTransactionsActionsProps,
 } from './withVendorsTransactionsActions';
 
-import { compose } from '@/utils';
 import { useVendorsTransactionsQuery } from './_utils';
 import { VendorTransactionsDialogs } from './VendorTransactionsDialogs';
+import { flow } from 'fp-ts/function';
 
 interface VendorsTransactionsProps {
   toggleVendorsTransactionsFilterDrawer: WithVendorsTransactionsActionsProps['toggleVendorsTransactionsFilterDrawer'];
@@ -77,6 +77,6 @@ function VendorsTransactionsInner({
     </VendorsTransactionsProvider>
   );
 }
-export const VendorsTransactions = compose(withVendorsTransactionsActions)(
-  VendorsTransactionsInner,
-);
+export const VendorsTransactions = flow(
+  withVendorsTransactionsActions,
+)(VendorsTransactionsInner);

@@ -7,7 +7,7 @@ import { FormattedMessage as T } from '@/components';
 
 import { useWarehouseFormContext } from './WarehouseFormProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Warehouse form floating actions.
@@ -46,6 +46,6 @@ function WarehouseFormFloatingActionsInner({
   );
 }
 
-export const WarehouseFormFloatingActions = compose(withDialogActions)(
+export const WarehouseFormFloatingActions = flow(withDialogActions)(
   WarehouseFormFloatingActionsInner,
 );

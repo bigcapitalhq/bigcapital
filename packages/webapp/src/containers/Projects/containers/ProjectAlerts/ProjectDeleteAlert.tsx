@@ -8,8 +8,7 @@ import { useDeleteProject } from '../../hooks';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Project delete alert.
@@ -73,7 +72,7 @@ function ProjectDeleteAlertInner({
   );
 }
 
-export const ProjectDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const ProjectDeleteAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ProjectDeleteAlertInner);

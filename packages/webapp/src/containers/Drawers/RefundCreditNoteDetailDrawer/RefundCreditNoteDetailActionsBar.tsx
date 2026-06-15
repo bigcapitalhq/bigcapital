@@ -12,8 +12,7 @@ import {
   Can,
 } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
-
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Refund credit note actions bar.
@@ -46,6 +45,6 @@ function RefundCreditNoteDetailActionsBarInner({
   );
 }
 
-export const RefundCreditNoteDetailActionsBar = compose(withAlertActions)(
+export const RefundCreditNoteDetailActionsBar = flow(withAlertActions)(
   RefundCreditNoteDetailActionsBarInner,
 );

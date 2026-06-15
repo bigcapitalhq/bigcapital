@@ -7,7 +7,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { useResumeFeedsBankAccount } from '@/hooks/query/banking';
-import { compose } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Resume bank account feeds alert.
@@ -63,7 +63,7 @@ function ResumeFeedsBankAccountAlert({
   );
 }
 
-export const ResumeFeedsBankAccount = compose(
-  withAlertStoreConnect(),
+export const ResumeFeedsBankAccount = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ResumeFeedsBankAccountAlert);

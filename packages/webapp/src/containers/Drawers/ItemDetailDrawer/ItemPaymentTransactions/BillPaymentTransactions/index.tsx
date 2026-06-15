@@ -11,8 +11,8 @@ import { useBillTransactionsColumns, ActionsMenu } from './components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { flow } from 'fp-ts/function';
 
 /**
  * Bill payment transactions data table.
@@ -69,7 +69,7 @@ function BillPaymentTransactions({
     />
   );
 }
-export const index = compose(
-  withAlertActions,
+export const index = flow(
   withDrawerActions,
+  withAlertActions,
 )(BillPaymentTransactions);

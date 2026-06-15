@@ -6,7 +6,8 @@ import { FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
+import { flow } from 'fp-ts/function';
 
 /**
  * Clearning all lines alert.
@@ -49,7 +50,7 @@ function ClearningAllLinesAlert({
   );
 }
 
-export const ClearingAllLinesAlert = compose(
-  withAlertStoreConnect(),
+export const ClearingAllLinesAlert = flow(
   withAlertActions,
+  withAlertStoreConnect(),
 )(ClearningAllLinesAlert);
