@@ -2,6 +2,10 @@ import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { defaultPageConfig } from './_utils';
 
+// This spec exercises the onboarding UI itself with its own freshly
+// registered user, so it must not reuse the shared onboarded session.
+test.use({ storageState: undefined });
+
 let authPage: Page;
 let businessLegalName: string = faker.company.name();
 

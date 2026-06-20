@@ -2,6 +2,10 @@ import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { clearLocalStorage, defaultPageConfig } from './_utils';
 
+// This spec exercises the login/register UI itself, so it must start each
+// test without the shared onboarded session.
+test.use({ storageState: undefined });
+
 let authPage: Page;
 
 test.describe('authentication', () => {
