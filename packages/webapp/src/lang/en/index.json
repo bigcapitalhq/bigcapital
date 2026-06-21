@@ -541,6 +541,7 @@
   "should_total_of_credit_and_debit_be_equal": "Should total of credit and debit be equal.",
   "no_accounts": "No Accounts",
   "the_accounts_have_been_successfully_inactivated": "The accounts have been successfully inactivated.",
+  "the_accounts_have_been_successfully_activated": "The accounts have been successfully activated.",
   "account_code_is_required": "Account code is required.",
   "account_code_is_not_unique": "Account code is not unique.",
   "are_sure_to_publish_this_expense": "Are you sure you want to publish this expense?",

@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage as T, AppToaster } from '@/components';
 
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 
 import { compose } from '@/utils';
+import { useActivateAccount } from '@/hooks/query';
 
 function AccountBulkActivateAlertInner({
   name,
@@ -17,13 +17,9 @@ function AccountBulkActivateAlertInner({
 
   // #withAlertActions
   closeAlert,
-
-  // TODO: Implement bulk activate accounts hook and use it here
-  requestBulkActivateAccounts,
 }) {
   const [isLoading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
-  const selectedRowsCount = 0;
+  const { mutateAsync: activateAccount } = useActivateAccount();
 
   // Handle alert cancel.
   const handleClose = () => {
@@ -31,27 +27,37 @@ function AccountBulkActivateAlertInner({
   };
 
   // Handle Bulk activate account confirm.
-  const handleConfirmBulkActivate = () => {
+  const handleConfirmBulkActivate = async () => {
     setLoading(true);
-    requestBulkActivateAccounts(accountsIds)
-      .then(() => {
+    try {
+      const results = await Promise.allSettled(
+        accountsIds.map((accountId) => activateAccount(accountId)),
+      );
+      const failed = results.filter(
+        (result) => result.status === 'rejected',
+      ).length;
+
+      if (failed === 0) {
         AppToaster.show({
-          message: intl.get('the_accounts_has_been_successfully_activated'),
+          message: intl.get('the_accounts_have_been_successfully_activated'),
           intent: Intent.SUCCESS,
         });
-        queryClient.invalidateQueries({ queryKey: ['accounts-table'] });
-      })
-      .catch((errors) => {})
-      .finally(() => {
-        setLoading(false);
-        closeAlert(name);
-      });
+      } else {
+        AppToaster.show({
+          message: intl.get('something_went_wrong'),
+          intent: Intent.DANGER,
+        });
+      }
+    } finally {
+      setLoading(false);
+      closeAlert(name);
+    }
   };
 
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${intl.get('activate')} (${selectedRowsCount})`}
+      confirmButtonText={`${intl.get('activate')} (${accountsIds.length})`}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleClose}
