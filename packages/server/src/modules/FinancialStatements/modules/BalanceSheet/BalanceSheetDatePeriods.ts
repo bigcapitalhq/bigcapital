@@ -93,13 +93,19 @@ export const BalanceSheetDatePeriods = <T extends GConstructor<FinancialSheet>>(
       accountId: number,
       toDate: Date,
     ): number => {
+      const accountIds = R.uniq(
+        R.append(
+          accountId,
+          this.repository.accountsGraph.dependenciesOf(accountId),
+        ),
+      );
       const periodTotalBetween = this.repository.periodsAccountsLedger
-        .whereAccountId(accountId)
+        .whereAccountsIds(accountIds)
         .whereToDate(toDate)
         .getClosingBalance();
 
       const periodOpening = this.repository.periodsOpeningAccountLedger
-        .whereAccountId(accountId)
+        .whereAccountsIds(accountIds)
         .getClosingBalance();
 
       return periodOpening + periodTotalBetween;
