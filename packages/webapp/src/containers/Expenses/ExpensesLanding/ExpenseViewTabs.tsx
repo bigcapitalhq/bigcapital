@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
@@ -10,21 +9,26 @@ import { withExpensesActions } from './withExpensesActions';
 
 import { compose, transfromViewsToTabs } from '@/utils';
 
+import type { WithExpensesProps } from './withExpenses';
+import type { WithExpensesActionsProps } from './withExpensesActions';
+
+interface ExpenseViewTabsInnerProps
+  extends Pick<WithExpensesActionsProps, 'setExpensesTableState'> {
+  expensesCurrentView: WithExpensesProps['expensesTableState']['viewSlug'];
+}
+
 /**
  * Expesne views tabs.
  */
 function ExpenseViewTabsInner({
-  // #withExpensesActions
   setExpensesTableState,
-
-  // #withExpenses
   expensesCurrentView,
-}) {
+}: ExpenseViewTabsInnerProps) {
   // Expenses list context.
   const { expensesViews } = useExpensesListContext();
 
   // Handle the tabs change.
-  const handleTabChange = (viewSlug) => {
+  const handleTabChange = (viewSlug: string | null | undefined) => {
     setExpensesTableState({
       viewSlug: viewSlug || null,
     });

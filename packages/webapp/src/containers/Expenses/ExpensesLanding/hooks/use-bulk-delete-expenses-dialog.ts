@@ -1,9 +1,14 @@
-// @ts-nocheck
 import { DialogsName } from '@/constants/dialogs';
 import { useValidateBulkDeleteExpenses } from '@/hooks/query/expenses';
 import { useBulkDeleteDialog } from '@/hooks/dialogs/useBulkDeleteDialog';
 
-export const useBulkDeleteExpensesDialog = () => {
+type UseBulkDeleteExpensesDialogReturn = {
+  openBulkDeleteDialog: (ids: number[]) => Promise<void> | void;
+  closeBulkDeleteDialog: () => void;
+  isValidatingBulkDeleteExpenses: boolean;
+};
+
+export const useBulkDeleteExpensesDialog = (): UseBulkDeleteExpensesDialogReturn => {
   const validateBulkDeleteMutation = useValidateBulkDeleteExpenses();
   const {
     openBulkDeleteDialog,

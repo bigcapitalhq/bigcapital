@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import {
@@ -20,12 +19,39 @@ import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
 import { FormattedMessage as T, Icon, If, Can } from '@/components';
 import { safeCallback } from '@/utils';
 
+type ExpenseActionsPayload = {
+  onPublish?: (expense: ExpenseRow) => void;
+  onEdit?: (expense: ExpenseRow) => void;
+  onDelete?: (expense: ExpenseRow) => void;
+  onViewDetails?: (expense: ExpenseRow) => void;
+};
+
+type ExpenseRow = {
+  id: number;
+  description?: string;
+  is_published?: boolean;
+  categories?: Array<{
+    expense_account?: { name?: string };
+  }>;
+};
+
+type ExpenseAccessorRow = {
+  description?: string;
+  is_published?: boolean;
+  categories?: Array<{ expense_account?: { name?: string } }>;
+};
+
+type ActionsMenuProps = {
+  row: { original: ExpenseRow };
+  payload: ExpenseActionsPayload;
+};
+
 /**
  * Description accessor.
  */
-export function DescriptionAccessor(row) {
+export function DescriptionAccessor(row: ExpenseAccessorRow) {
   return (
-    <If condition={row.description}>
+    <If condition={!!row.description}>
       <Tooltip
         className={Classes.TOOLTIP_INDICATOR}
         content={row.description}
@@ -44,7 +70,7 @@ export function DescriptionAccessor(row) {
 export function ActionsMenu({
   row: { original },
   payload: { onPublish, onEdit, onDelete, onViewDetails },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -56,7 +82,13 @@ export function ActionsMenu({
         <MenuDivider />
         <If condition={!original.is_published}>
           <MenuItem
-            icon={<Icon icon={'arrow-to-top'} size={16} />}
+            icon={
+              <Icon
+                icon={'arrow-to-top'}
+                // @ts-expect-error pre-existing: Icon only accepts iconSize, but original JS passed size
+                size={16}
+              />
+            }
             text={intl.get('publish_expense')}
             onClick={safeCallback(onPublish, original)}
           />
@@ -85,7 +117,7 @@ export function ActionsMenu({
 /**
  * Actions cell.
  */
-export function ActionsCell(props) {
+export function ActionsCell(props: ActionsMenuProps) {
   return (
     <Popover
       content={<ActionsMenu {...props} />}
@@ -99,7 +131,7 @@ export function ActionsCell(props) {
 /**
  * Publish accessor.
  */
-export function PublishAccessor(row) {
+export function PublishAccessor(row: ExpenseAccessorRow) {
   return row.is_published ? (
     <Tag intent={Intent.SUCCESS} round minimal>
       <T id={'published'} />
@@ -114,10 +146,10 @@ export function PublishAccessor(row) {
 /**
  * Expense account accessor.
  */
-export function ExpenseAccountAccessor(expense) {
-  if (expense.categories.length === 1) {
-    return expense.categories[0].expense_account.name;
-  } else if (expense.categories.length > 1) {
+export function ExpenseAccountAccessor(expense: ExpenseAccessorRow) {
+  if (expense.categories?.length === 1) {
+    return expense.categories[0].expense_account?.name;
+  } else if ((expense.categories?.length ?? 0) > 1) {
     return <T id={'expense.column.multi_categories'} />;
   }
 }

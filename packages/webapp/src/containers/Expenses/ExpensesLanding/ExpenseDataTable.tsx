@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -25,6 +24,24 @@ import { withExpenses } from './withExpenses';
 import { ActionsMenu, useExpensesTableColumns } from './components';
 import { DRAWERS } from '@/constants/drawers';
 
+import type { WithExpensesProps } from './withExpenses';
+import type { WithExpensesActionsProps } from './withExpensesActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+
+interface ExpensesDataTableInnerProps
+  extends Pick<
+      WithExpensesActionsProps,
+      'setExpensesTableState' | 'setExpensesSelectedRows'
+    >,
+    Pick<WithExpensesProps, 'expensesTableState'>,
+    Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDrawerActionsProps, 'openDrawer'> {
+  expensesTableSize: unknown;
+}
+
+type ExpenseRow = { id: number };
+
 /**
  * Expenses datatable.
  */
@@ -44,7 +61,7 @@ function ExpensesDataTable({
 
   // #withExpenses
   expensesTableState,
-}) {
+}: ExpensesDataTableInnerProps) {
   // Expenses list context.
   const {
     expenses,
@@ -66,7 +83,15 @@ function ExpensesDataTable({
 
   // Handle fetch data of manual jouranls datatable.
   const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
+    ({
+      pageIndex,
+      pageSize,
+      sortBy,
+    }: {
+      pageIndex: number;
+      pageSize: number;
+      sortBy?: Array<{ id: string; desc: boolean }>;
+    }) => {
       setExpensesTableState({
         pageIndex,
         pageSize,
@@ -77,34 +102,36 @@ function ExpensesDataTable({
   );
 
   // Handle the expense publish action.
-  const handlePublishExpense = (expense) => {
+  const handlePublishExpense = (expense: ExpenseRow) => {
     openAlert('expense-publish', { expenseId: expense.id });
   };
 
   // Handle the expense edit action.
-  const handleEditExpense = ({ id }) => {
+  const handleEditExpense = ({ id }: ExpenseRow) => {
     history.push(`/expenses/${id}/edit`);
   };
 
   // Handle the expense delete action.
-  const handleDeleteExpense = (expense) => {
+  const handleDeleteExpense = (expense: ExpenseRow) => {
     openAlert('expense-delete', { expenseId: expense.id });
   };
 
   // Handle view detail expense.
-  const handleViewDetailExpense = ({ id }) => {
+  const handleViewDetailExpense = ({ id }: ExpenseRow) => {
     openDrawer(DRAWERS.EXPENSE_DETAILS, {
       expenseId: id,
     });
   };
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (cell: { row: { original: ExpenseRow } }) => {
     openDrawer(DRAWERS.EXPENSE_DETAILS, { expenseId: cell.row.original.id });
   };
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = (selectedFlatRows) => {
+  const handleSelectedRowsChange = (
+    selectedFlatRows?: Array<{ original: ExpenseRow }>,
+  ) => {
     const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
     setExpensesSelectedRows(selectedIds);
   };
