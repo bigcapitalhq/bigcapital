@@ -4,6 +4,8 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  Max,
+  Min,
   ValidateIf,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -167,4 +169,17 @@ export class CreateCustomerDto extends ContactAddressDto {
   @IsOptional()
   @IsString()
   code?: string;
+
+  @ApiProperty({
+    required: false,
+    description:
+      'Withholding tax rate (0-100) the payer deducts from the tax-exclusive amount, e.g. NZ schedular payments',
+    example: 20,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  withholdingTaxRate?: number;
+
 }

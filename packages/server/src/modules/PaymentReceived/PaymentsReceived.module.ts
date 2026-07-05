@@ -43,6 +43,8 @@ import { GetPaymentReceivedMailTemplate } from './queries/GetPaymentReceivedMail
 import { GetPaymentReceivedMailState } from './queries/GetPaymentReceivedMailState.service';
 import { BulkDeletePaymentReceivedService } from './BulkDeletePaymentReceived.service';
 import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePaymentReceived.service';
+import { PaymentReceivedWithholdingTax } from './commands/PaymentReceivedWithholdingTax.service';
+import { PaymentReceivedWithholdingTaxSubscriber } from './subscribers/PaymentReceivedWithholdingTaxSubscriber';
 
 @Module({
   controllers: [PaymentReceivesController],
@@ -74,6 +76,8 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     GetPaymentReceivedMailState,
     BulkDeletePaymentReceivedService,
     ValidateBulkDeletePaymentReceivedService,
+    PaymentReceivedWithholdingTax,
+    PaymentReceivedWithholdingTaxSubscriber,
   ],
   exports: [
     PaymentReceivesApplication,

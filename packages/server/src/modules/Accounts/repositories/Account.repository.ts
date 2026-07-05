@@ -14,6 +14,7 @@ import {
   StripeClearingAccount,
   TaxPayableAccount,
   UnearnedRevenueAccount,
+  WithholdingTaxReceivableAccount,
 } from '../Accounts.constants';
 
 @Injectable({ scope: Scope.REQUEST })
@@ -171,6 +172,29 @@ export class AccountRepository extends TenantRepository {
     if (!result) {
       result = await this.model.query(trx).insertAndFetch({
         ...TaxPayableAccount,
+        ...extraAttrs,
+      });
+    }
+    return result;
+  }
+
+  /**
+   * Finds or creates the withholding tax receivable account.
+   * @param {Record<string, string>} extraAttrs
+   * @param {Knex.Transaction} trx
+   * @returns
+   */
+  async findOrCreateWithholdingTaxReceivable(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction,
+  ) {
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: WithholdingTaxReceivableAccount.slug, ...extraAttrs });
+
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...WithholdingTaxReceivableAccount,
         ...extraAttrs,
       });
     }
