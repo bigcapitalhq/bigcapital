@@ -209,12 +209,15 @@ export class SaleInvoice extends TenantBaseModel {
    * @returns {number}
    */
   get total() {
-    const adjustmentAmount = defaultTo(this.adjustment, 0);
+    // Ramda's defaultTo(default, value) - the default comes first.
+    const adjustmentAmount = defaultTo(0, this.adjustment);
 
+    // Subtotal already includes tax when inclusive tax is enabled, so the
+    // withheld tax amount should be added only when the tax is exclusive.
     return R.compose(
       R.add(adjustmentAmount),
       R.subtract(R.__, this.discountAmount),
-      R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld)),
+      R.unless(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld)),
     )(this.subtotal);
   }
 
@@ -332,7 +335,8 @@ export class SaleInvoice extends TenantBaseModel {
       dueInvoices(query) {
         query.where(
           raw(`
-            COALESCE(BALANCE, 0) -
+            COALESCE(BALANCE, 0) +
+            IF(IS_INCLUSIVE_TAX, 0, COALESCE(TAX_AMOUNT_WITHHELD, 0)) -
             COALESCE(PAYMENT_AMOUNT, 0) -
             COALESCE(WRITTENOFF_AMOUNT, 0) -
             COALESCE(CREDITED_AMOUNT, 0) > 0
@@ -400,13 +404,21 @@ export class SaleInvoice extends TenantBaseModel {
        */
       partiallyPaid(query) {
         query.whereNot('payment_amount', 0);
-        query.whereNot(raw('`PAYMENT_AMOUNT` = `BALANCE`'));
+        query.whereNot(
+          raw(
+            'PAYMENT_AMOUNT = BALANCE + IF(IS_INCLUSIVE_TAX, 0, COALESCE(TAX_AMOUNT_WITHHELD, 0))',
+          ),
+        );
       },
       /**
        * Filters the paid invoices.
        */
       paid(query) {
-        query.where(raw('PAYMENT_AMOUNT = BALANCE'));
+        query.where(
+          raw(
+            'PAYMENT_AMOUNT = BALANCE + IF(IS_INCLUSIVE_TAX, 0, COALESCE(TAX_AMOUNT_WITHHELD, 0))',
+          ),
+        );
       },
       /**
        * Filters the sale invoices from the given date.
@@ -419,7 +431,9 @@ export class SaleInvoice extends TenantBaseModel {
        */
       sortByStatus(query, order) {
         const dir = sanitizeSortDirection(order);
-        query.orderByRaw(`PAYMENT_AMOUNT = BALANCE ${dir}`);
+        query.orderByRaw(
+          `PAYMENT_AMOUNT = BALANCE + IF(IS_INCLUSIVE_TAX, 0, COALESCE(TAX_AMOUNT_WITHHELD, 0)) ${dir}`,
+        );
       },
 
       /**
@@ -427,7 +441,9 @@ export class SaleInvoice extends TenantBaseModel {
        */
       sortByDueAmount(query, order) {
         const dir = sanitizeSortDirection(order);
-        query.orderByRaw(`BALANCE - PAYMENT_AMOUNT ${dir}`);
+        query.orderByRaw(
+          `BALANCE + IF(IS_INCLUSIVE_TAX, 0, COALESCE(TAX_AMOUNT_WITHHELD, 0)) - PAYMENT_AMOUNT ${dir}`,
+        );
       },
 
       /**
