@@ -185,10 +185,12 @@ export class Bill extends TenantBaseModel {
   get total(): number {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
+    // Subtotal already includes tax when inclusive tax is enabled, so the
+    // withheld tax amount should be added only when the tax is exclusive.
     return R.compose(
       R.add(adjustmentAmount),
       R.subtract(R.__, this.discountAmount),
-      R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld)),
+      R.unless(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld)),
     )(this.subtotal);
   }
 
@@ -369,7 +371,8 @@ export class Bill extends TenantBaseModel {
        */
       dueBills(query) {
         query.where(
-          raw(`COALESCE(AMOUNT, 0) -
+          raw(`COALESCE(AMOUNT, 0) +
+            IF(IS_INCLUSIVE_TAX, 0, COALESCE(TAX_AMOUNT_WITHHELD, 0)) -
             COALESCE(PAYMENT_AMOUNT, 0) -
             COALESCE(CREDITED_AMOUNT, 0) > 0
           `),
@@ -392,13 +395,21 @@ export class Bill extends TenantBaseModel {
        */
       partiallyPaid(query) {
         query.whereNot('payment_amount', 0);
-        query.whereNot(raw('`PAYMENT_AMOUNT` = `AMOUNT`'));
+        query.whereNot(
+          raw(
+            'PAYMENT_AMOUNT = AMOUNT + IF(IS_INCLUSIVE_TAX, 0, COALESCE(TAX_AMOUNT_WITHHELD, 0))',
+          ),
+        );
       },
       /**
        * Filters the paid bills.
        */
       paid(query) {
-        query.where(raw('`PAYMENT_AMOUNT` = `AMOUNT`'));
+        query.where(
+          raw(
+            'PAYMENT_AMOUNT = AMOUNT + IF(IS_INCLUSIVE_TAX, 0, COALESCE(TAX_AMOUNT_WITHHELD, 0))',
+          ),
+        );
       },
       /**
        * Filters the bills from the given date.
@@ -412,7 +423,9 @@ export class Bill extends TenantBaseModel {
        */
       sortByStatus(query, order) {
         const dir = sanitizeSortDirection(order);
-        query.orderByRaw(`PAYMENT_AMOUNT = AMOUNT ${dir}`);
+        query.orderByRaw(
+          `PAYMENT_AMOUNT = AMOUNT + IF(IS_INCLUSIVE_TAX, 0, COALESCE(TAX_AMOUNT_WITHHELD, 0)) ${dir}`,
+        );
       },
 
       /**

@@ -1,0 +1,5 @@
+# Override: run the locally-built patched server image (branch fix/invoice-tax-gl-balance).
+# Usage: docker compose -f docker-compose.prod.yml -f docker-compose.taxfix.yml up -d server
+services:
+  server:
+    image: bigcapital-server:taxfix
