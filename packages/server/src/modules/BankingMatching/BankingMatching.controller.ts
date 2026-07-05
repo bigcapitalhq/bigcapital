@@ -15,6 +15,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { castArray } from 'lodash';
 import { BankingMatchingApplication } from './BankingMatchingApplication';
 import { MatchBankTransactionDto } from './dtos/MatchBankTransaction.dto';
 import { GetMatchedTransactionsQueryDto } from './dtos/GetMatchedTransactionsQuery.dto';
@@ -45,11 +46,15 @@ export class BankingMatchingController {
     schema: { $ref: getSchemaPath(GetMatchedTransactionsResponseDto) },
   })
   async getMatchedTransactions(
-    @Query('uncategorizedTransactionIds') uncategorizedTransactionIds: number[],
+    @Query('uncategorizedTransactionIds')
+    uncategorizedTransactionIds: number[] | number,
     @Query() filter: GetMatchedTransactionsQueryDto,
   ) {
+    // A single query param arrives as a scalar - normalize to numbers.
+    const ids = castArray(uncategorizedTransactionIds ?? []).map(Number);
+
     return this.bankingMatchingApplication.getMatchedTransactions(
-      uncategorizedTransactionIds ?? [],
+      ids,
       filter as any,
     );
   }
