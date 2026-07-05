@@ -1,5 +1,5 @@
 import { isEqual, omit } from 'lodash';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import {
@@ -15,6 +15,9 @@ import {
   RecognizeUncategorizedTransactionsQueue,
 } from '../_types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { IImportFileCommitedEventPayload } from '@/modules/Import/interfaces';
+import { ImportModel } from '@/modules/Import/models/Import';
+import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 
 @Injectable()
 export class TriggerRecognizedTransactionsSubscriber {
@@ -23,6 +26,9 @@ export class TriggerRecognizedTransactionsSubscriber {
 
     @InjectQueue(RecognizeUncategorizedTransactionsQueue)
     private readonly recognizeTransactionsQueue: Queue,
+
+    @Inject(ImportModel.name)
+    private readonly importModel: typeof ImportModel,
   ) {}
 
   /**
@@ -109,14 +115,24 @@ export class TriggerRecognizedTransactionsSubscriber {
   @OnEvent(events.import.onImportCommitted)
   async triggerRecognizeTransactionsOnImportCommitted({
     importId,
-
-    // @ts-ignore
   }: IImportFileCommitedEventPayload) {
-    // const importFile = await Import.query().findOne({ importId });
-    // const batch = importFile.paramsParsed.batch;
-    // const payload = { transactionsCriteria: { batch } };
-    // // Cannot continue if the imported resource is not bank account transactions.
-    // if (importFile.resource !== 'UncategorizedCashflowTransaction') return;
-    // await this.agenda.now('recognize-uncategorized-transactions-job', payload);
+    const importFile = await this.importModel.query().findOne({ importId });
+
+    // Cannot continue if the imported resource is not bank transactions.
+    if (importFile?.resource !== UncategorizedBankTransaction.name) return;
+
+    const batch = importFile.paramsParsed?.batch;
+    if (!batch) return;
+
+    const tenantPayload = await this.tenancyContect.getTenantJobPayload();
+    const payload = {
+      transactionsCriteria: { batch },
+      ...tenantPayload,
+    } as RecognizeUncategorizedTransactionsJobPayload;
+
+    await this.recognizeTransactionsQueue.add(
+      RecognizeUncategorizedTransactionsJob,
+      payload,
+    );
   }
 }

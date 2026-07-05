@@ -12,11 +12,15 @@ import {
   getMapToPath,
 } from './_utils';
 import { ResourceService } from '../Resource/ResourceService';
+import { ImportableRegistry } from './ImportableRegistry';
 import { CurrencyParsingDTOs } from './_constants';
 
 @Injectable()
 export class ImportFileDataTransformer {
-  constructor(private readonly resource: ResourceService) {}
+  constructor(
+    private readonly resource: ResourceService,
+    private readonly importableRegistry: ImportableRegistry,
+  ) {}
 
   /**
    * Parses the given sheet data before passing to the service layer.
@@ -30,8 +34,15 @@ export class ImportFileDataTransformer {
     data: Record<string, unknown>[],
     trx?: Knex.Transaction,
   ): Promise<Record<string, any>[]> {
+    // Let the importable service pre-transform the raw rows (all columns)
+    // before mapping, e.g. to normalize bank-specific export formats.
+    const importable = await this.importableRegistry.getImportable(
+      importFile.resource,
+    );
+    const preParsedData = importable.preParseSheet(data, importFile);
+
     // Sanitize the sheet data.
-    const sanitizedData = sanitizeSheetData(data);
+    const sanitizedData = sanitizeSheetData(preParsedData);
 
     // Map the sheet columns key with the given map.
     const mappedDTOs = this.mapSheetColumns(

@@ -1,5 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
+import { ImportModel } from '../Import/models/Import';
 import { RecognizedBankTransaction } from './models/RecognizedBankTransaction';
 import { RevertRecognizedTransactionsService } from './commands/RevertRecognizedTransactions.service';
 import { RecognizeTranasctionsService } from './commands/RecognizeTranasctions.service';
@@ -18,6 +20,7 @@ import { RegonizeTransactionsPrcessor } from './jobs/RecognizeTransactionsJob';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 
 const models = [RegisterTenancyModel(RecognizedBankTransaction)];
+const systemModels = [InjectSystemModel(ImportModel)];
 
 @Module({
   imports: [
@@ -34,6 +37,7 @@ const models = [RegisterTenancyModel(RecognizedBankTransaction)];
     ...models,
   ],
   providers: [
+    ...systemModels,
     RecognizedTransactionsApplication,
     GetRecognizedTransactionsService,
     RevertRecognizedTransactionsService,

@@ -26,6 +26,23 @@ export abstract class Importable {
   }
 
   /**
+   * Pre-transforms the raw parsed sheet rows before column mapping and
+   * validation. Receives ALL sheet columns (not only the mapped ones), so
+   * importable services can normalize bank/provider-specific export formats.
+   * Implementations may annotate `importFile.params` (in-memory) to signal
+   * the downstream `transform()` hook.
+   * @param {Record<string, unknown>[]} sheetData - Raw parsed sheet rows.
+   * @param {any} importFile - The import file model.
+   * @returns {Record<string, unknown>[]}
+   */
+  public preParseSheet(
+    sheetData: Record<string, unknown>[],
+    importFile?: any,
+  ): Record<string, unknown>[] {
+    return sheetData;
+  }
+
+  /**
    * Concurrency controlling of the importing process.
    * @returns {number}
    */
