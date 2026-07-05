@@ -11,6 +11,7 @@ import {
   BranchSelect,
   FeatureCan,
   FMoneyInputGroup,
+  FInputGroup,
   ExchangeRateInputGroup,
   FDateInput,
   Icon,
@@ -55,6 +56,7 @@ export function CustomerFormFinancialSection() {
       <CustomerOpeningBalanceField />
       <CustomerOpeningBalanceExchangeRateField />
       <CustomerOpeningBalanceAtField />
+      <CustomerWithholdingTaxRateField />
 
       <FeatureCan feature={Features.Branches}>
         <FFormGroup
@@ -71,6 +73,34 @@ export function CustomerFormFinancialSection() {
         </FFormGroup>
       </FeatureCan>
     </Box>
+  );
+}
+
+/**
+ * Percentage the payer withholds from the tax-exclusive amount (e.g. NZ
+ * schedular payments). When set, net-of-withholding payments book the
+ * withheld portion automatically.
+ */
+function CustomerWithholdingTaxRateField() {
+  return (
+    <FFormGroup
+      name={'withholding_tax_rate'}
+      label={intl.get('customer.label.withholding_tax_rate')}
+      inline
+      fill
+      helperText={<ErrorMessage name="withholding_tax_rate" />}
+    >
+      <ControlGroup>
+        <FInputGroup
+          name={'withholding_tax_rate'}
+          type="number"
+          min={0}
+          max={100}
+          fill={true}
+        />
+        <InputPrependText text={'%'} />
+      </ControlGroup>
+    </FFormGroup>
   );
 }
 

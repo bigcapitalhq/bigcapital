@@ -38,6 +38,11 @@ const Schema = Yup.object().shape({
   shipping_address_phone: Yup.string().nullable(),
 
   opening_balance: Yup.number().nullable(),
+  withholding_tax_rate: Yup.number()
+    .min(0)
+    .max(100)
+    .nullable()
+    .label(intl.get('customer.label.withholding_tax_rate')),
   currency_code: Yup.string(),
   opening_balance_at: Yup.date(),
   opening_balance_branch_id: Yup.string(),

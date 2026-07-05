@@ -42,6 +42,7 @@ export const defaultInitialValues = {
   currency_code: '',
 
   opening_balance: '',
+  withholding_tax_rate: '',
   opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
   opening_balance_exchange_rate: '',
   opening_balance_branch_id: '',

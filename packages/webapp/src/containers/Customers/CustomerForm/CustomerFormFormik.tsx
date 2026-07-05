@@ -118,6 +118,11 @@ function CustomerFormFormikRoot({
     const formValues = {
       ...values,
       active: parseBoolean(values.active, true),
+      // Empty input means no withholding - the API expects null, not ''.
+      withholding_tax_rate:
+        values.withholding_tax_rate === '' || values.withholding_tax_rate == null
+          ? null
+          : Number(values.withholding_tax_rate),
     };
 
     const onSuccess = (res: { data?: unknown }) => {
