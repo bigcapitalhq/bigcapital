@@ -14,6 +14,7 @@ import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { IPaymentReceivedCreateDTO } from '@/modules/PaymentReceived/types/PaymentReceived.types';
+import { computeNetOfWithholding } from '@/modules/PaymentReceived/withholding.utils';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
@@ -49,6 +50,8 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
         q.whereNull('matchedBankTransaction.id');
         q.modify('unpaid');
         q.modify('published');
+        // The customer withholding tax rate nets the matchable amount.
+        q.withGraphFetched('customer');
 
         if (filter.fromDate) {
           q.where('invoiceDate', '>=', filter.fromDate);
@@ -76,7 +79,8 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
   ): Promise<MatchedTransactionPOJO> {
     const invoice = await this.saleInvoiceModel()
       .query()
-      .findById(transactionId);
+      .findById(transactionId)
+      .withGraphFetched('customer');
 
     return this.transformer.transform(
       invoice,
@@ -107,20 +111,29 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
         .findById(uncategorizedTransactionId)
         .throwIfNotFound();
 
-    const invoice = await SaleInvoice.query(trx)
+    const invoice = await this.saleInvoiceModel()
+      .query(trx)
       .findById(matchTransactionDTO.referenceId)
+      .withGraphFetched('customer')
       .throwIfNotFound();
 
+    // The bank deposit arrives net of the customer's withholding tax; the
+    // withheld remainder is booked automatically on payment creation.
+    const paymentAmount = computeNetOfWithholding(
+      invoice.dueAmount,
+      invoice.subtotalExludingTax,
+      Number(invoice.customer?.withholdingTaxRate) || 0,
+    );
     const createPaymentReceivedDTO: IPaymentReceivedCreateDTO = {
       customerId: invoice.customerId,
       paymentDate: uncategorizedTransaction.date,
-      amount: invoice.dueAmount,
+      amount: paymentAmount,
       depositAccountId: uncategorizedTransaction.accountId,
       entries: [
         {
           index: 1,
           invoiceId: invoice.id,
-          paymentAmount: invoice.dueAmount,
+          paymentAmount,
         },
       ],
       branchId: invoice.branchId,

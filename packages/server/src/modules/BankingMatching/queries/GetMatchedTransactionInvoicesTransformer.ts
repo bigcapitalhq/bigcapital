@@ -1,4 +1,5 @@
 import { Transformer } from '@/modules/Transformer/Transformer';
+import { computeNetOfWithholding } from '@/modules/PaymentReceived/withholding.utils';
 
 export class GetMatchedTransactionInvoicesTransformer extends Transformer {
   /**
@@ -41,11 +42,18 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
 
   /**
    * Retrieve the invoice amount.
+   *
+   * When the customer has a withholding tax rate the bank deposit arrives
+   * net of the withheld amount, so surface the net amount for matching.
    * @param invoice
    * @returns {number}
    */
   protected amount(invoice) {
-    return invoice.dueAmount;
+    return computeNetOfWithholding(
+      invoice.dueAmount,
+      invoice.subtotalExludingTax,
+      Number(invoice.customer?.withholdingTaxRate) || 0,
+    );
   }
   /**
    * Format the amount of the invoice.
@@ -53,7 +61,7 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @returns {string}
    */
   protected amountFormatted(invoice) {
-    return this.formatNumber(invoice.dueAmount, {
+    return this.formatNumber(this.amount(invoice), {
       currencyCode: invoice.currencyCode,
       money: true,
     });

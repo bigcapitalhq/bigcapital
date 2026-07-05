@@ -1,4 +1,12 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ContactAddressDto } from './ContactAddress.dto';
 import { IsOptional } from '@/common/decorators/Validators';
@@ -68,4 +76,17 @@ export class EditCustomerDto extends ContactAddressDto {
   @IsOptional()
   @IsString()
   code?: string;
+
+  @ApiProperty({
+    required: false,
+    description:
+      'Withholding tax rate (0-100) the payer deducts from the tax-exclusive amount, e.g. NZ schedular payments',
+    example: 20,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  withholdingTaxRate?: number;
+
 }

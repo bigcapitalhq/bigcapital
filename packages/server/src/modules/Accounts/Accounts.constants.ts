@@ -20,6 +20,17 @@ export const TaxPayableAccount = {
   predefined: true,
 };
 
+export const WithholdingTaxReceivableAccount = {
+  name: 'Withholding Tax Receivable',
+  slug: 'withholding-tax-receivable',
+  accountType: 'other-current-asset',
+  code: '100011',
+  description: 'Income tax withheld by payers, claimable against tax owed.',
+  active: true,
+  index: 1,
+  predefined: true,
+};
+
 export const UnearnedRevenueAccount = {
   name: 'Unearned Revenue',
   slug: 'unearned-revenue',

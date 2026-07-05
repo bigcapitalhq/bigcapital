@@ -17,6 +17,8 @@ import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttacha
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { SaleInvoiceMeta } from './SaleInvoice.meta';
+// Type-only: the runtime relation uses a lazy require to avoid module cycles.
+import type { Customer } from '../../Customers/models/Customer';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { SaleInvoiceDefaultViews } from '../constants';
 
@@ -64,6 +66,7 @@ export class SaleInvoice extends TenantBaseModel {
   public attachments!: Document[];
   public writtenoffExpenseAccount!: Account;
   public paymentMethods!: TransactionPaymentServiceEntry[];
+  public customer!: Customer;
   /**
    * Table name
    */

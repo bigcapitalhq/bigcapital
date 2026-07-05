@@ -73,6 +73,12 @@ export class Customer extends TenantBaseModel {
   code?: string;
 
   /**
+   * Percentage (0-100) the payer withholds from the tax-exclusive amount
+   * (e.g. NZ schedular payments). Null means no withholding.
+   */
+  withholdingTaxRate?: number;
+
+  /**
    * Query builder.
    */
   static QueryBuilder = CustomerQueryBuilder;
