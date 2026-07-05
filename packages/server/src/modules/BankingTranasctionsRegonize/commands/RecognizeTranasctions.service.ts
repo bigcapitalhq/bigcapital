@@ -111,9 +111,14 @@ export class RecognizeTranasctionsService {
       const accountBankRules = bankRulesByAccountId.get(
         `${transaction.accountId}`,
       );
+      // Account-scoped rules take priority, then the all-accounts rules.
+      const applicableBankRules = [
+        ...(accountBankRules || []),
+        ...(allAccountsBankRules || []),
+      ];
       const recognizedBankRule = bankRulesMatchTransaction(
         transaction,
-        accountBankRules,
+        applicableBankRules,
       );
       if (recognizedBankRule) {
         await this.markBankRuleAsRecognized(

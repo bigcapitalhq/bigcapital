@@ -78,7 +78,7 @@ export class UncategorizedTransactionsImportable extends Importable {
 
     const isAnz =
       params.bankFormat === ANZ_BANK_FORMAT ||
-      isAnzBankStatementSheet(sheetData);
+      isAnzBankStatementSheet(sheetData, importFile?.columnsParsed);
 
     if (!isAnz) return sheetData;
 

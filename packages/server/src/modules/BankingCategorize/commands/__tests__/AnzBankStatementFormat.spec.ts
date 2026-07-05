@@ -57,6 +57,24 @@ describe('isAnzBankStatementSheet', () => {
     expect(isAnzBankStatementSheet(anzRows())).toBe(true);
   });
 
+
+  it('detects via explicit sheet columns when rows omit empty cells', () => {
+    const sparseRow = {
+      Type: 'Visa Purchase',
+      Details: '4037-****-****-4028  Df',
+      Code: 'Dd *Doordash',
+      Amount: '-95.78',
+      Date: '03/07/2026',
+    };
+    const columns = [
+      'Type','Details','Particulars','Code','Reference','Amount','Date',
+      'ForeignCurrencyAmount','ConversionCharge',
+    ];
+    expect(isAnzBankStatementSheet([sparseRow], columns)).toBe(true);
+    // union-of-keys fallback fails for a single sparse row (by design).
+    expect(isAnzBankStatementSheet([sparseRow])).toBe(false);
+  });
+
   it('rejects a generic bank sheet', () => {
     expect(
       isAnzBankStatementSheet([

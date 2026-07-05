@@ -39,14 +39,23 @@ const str = (value: unknown): string =>
 
 /**
  * Detects whether the parsed sheet is an ANZ (NZ) statement export.
+ *
+ * Prefers the explicit sheet columns (from the upload step) since the
+ * sheet parser omits empty cells, so individual rows may miss columns.
+ * @param {Record<string, unknown>[]} rows - Parsed sheet rows.
+ * @param {string[]} sheetColumns - Sheet header columns, when known.
  */
 export const isAnzBankStatementSheet = (
   rows: Record<string, unknown>[],
+  sheetColumns?: string[],
 ): boolean => {
-  const first = rows?.[0];
-  if (!first) return false;
+  if (!rows?.length && !sheetColumns?.length) return false;
 
-  const columns = Object.keys(first);
+  const columns = sheetColumns?.length
+    ? sheetColumns
+    : Array.from(
+        new Set(rows.slice(0, 25).flatMap((row) => Object.keys(row))),
+      );
   return ANZ_SIGNATURE_COLUMNS.every((column) => columns.includes(column));
 };
 
