@@ -23,14 +23,17 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY --chown=node:node ./packages/server ./packages/server
 
-# The repo tracks both src/modules/ee and src/modules/EE; on case-insensitive
-# filesystems (macOS checkouts) they collapse into a single directory, which
-# breaks the case-sensitive build here. Mirror whichever casing exists so both
-# import spellings resolve. No-op on case-sensitive checkouts.
-RUN if [ -d packages/server/src/modules/EE ] && [ ! -d packages/server/src/modules/ee ]; then \
-      cp -r packages/server/src/modules/EE packages/server/src/modules/ee; \
-    elif [ -d packages/server/src/modules/ee ] && [ ! -d packages/server/src/modules/EE ]; then \
-      cp -r packages/server/src/modules/ee packages/server/src/modules/EE; \
+# The repo tracks both src/modules/ee and src/modules/EE; case-insensitive
+# filesystems (macOS checkouts) collapse them into a single "EE" directory,
+# which breaks this case-sensitive build stage (lowercase imports no longer
+# resolve). When only one casing survived the checkout, rewrite the lowercase
+# import specifiers to the surviving casing. No-op on case-sensitive checkouts
+# where both directories exist.
+RUN set -e; MODS=packages/server/src/modules; \
+    if [ -d "$MODS/EE" ] && [ ! -d "$MODS/ee" ]; then \
+      find packages/server/src -name "*.ts" -exec grep -l "/ee/" {} + | xargs -r sed -i "s|/ee/|/EE/|g"; \
+    elif [ -d "$MODS/ee" ] && [ ! -d "$MODS/EE" ]; then \
+      find packages/server/src -name "*.ts" -exec grep -l "/EE/" {} + | xargs -r sed -i "s|/EE/|/ee/|g"; \
     fi
 
 # Build NestJS application
