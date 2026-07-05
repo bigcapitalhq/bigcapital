@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import { first } from 'lodash';
+import { first, keyBy, uniq } from 'lodash';
 import { GetMatchedTransactionInvoicesTransformer } from './GetMatchedTransactionInvoicesTransformer';
 import {
   GetMatchedTransactionsFilter,
@@ -10,6 +10,7 @@ import {
 } from '../types';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { CreatePaymentReceivedService } from '@/modules/PaymentReceived/commands/CreatePaymentReceived.serivce';
+import { Customer } from '@/modules/Customers/models/Customer';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
@@ -25,6 +26,9 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
+
+    @Inject(Customer.name)
+    private readonly customerModel: TenantModelProxy<typeof Customer>,
 
     @Inject(UncategorizedBankTransaction.name)
     private readonly uncategorizedBankTransactionModel: TenantModelProxy<
@@ -50,8 +54,6 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
         q.whereNull('matchedBankTransaction.id');
         q.modify('unpaid');
         q.modify('published');
-        // The customer withholding tax rate nets the matchable amount.
-        q.withGraphFetched('customer');
 
         if (filter.fromDate) {
           q.where('invoiceDate', '>=', filter.fromDate);
@@ -61,7 +63,17 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
         }
         q.orderBy('invoiceDate', 'DESC');
       });
+    // Attach customers separately (the withholding tax rate nets the
+    // matchable amount) - graph algorithms cannot be mixed on the query.
+    const customerIds = uniq(invoices.map((invoice) => invoice.customerId));
+    const customers = await this.customerModel()
+      .query()
+      .whereIn('id', customerIds);
+    const customersById = keyBy(customers, 'id');
 
+    invoices.forEach((invoice) => {
+      invoice.customer = customersById[invoice.customerId];
+    });
     return this.transformer.transform(
       invoices,
       new GetMatchedTransactionInvoicesTransformer(),
