@@ -24,6 +24,7 @@ import { IPlaidTransactionsSyncedEventPayload } from '../types/BankingPlaid.type
 import { UncategorizedBankTransaction } from '../../BankingTransactions/models/UncategorizedBankTransaction';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUncategorizedTransactionService } from '@/modules/BankingCategorize/commands/CreateUncategorizedTransaction.service';
+import { UncategorizedBankTransactionDto } from '@/modules/BankingCategorize/dtos/CreateUncategorizedBankTransaction.dto';
 import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 
 const CONCURRENCY_ASYNC = 10;
@@ -111,11 +112,18 @@ export class PlaidSyncDb {
       .throwIfNotFound();
 
     // Transformes the Plaid transactions to cashflow create DTOs.
-    const transformTransaction = R.curry(transformPlaidTrxsToCashflowCreate)(
-      cashflowAccount.id,
-    );
-    const uncategorizedTransDTOs =
-      R.map(transformTransaction)(plaidTranasctions);
+    // NOTE: plaid's `Transaction` narrows `transaction_type` differently than
+    // `TransactionBase`; the transform only reads shared fields, so the cast
+    // is safe (previously hidden by ramda's curried-map type erasure).
+    const uncategorizedTransDTOs: UncategorizedBankTransactionDto[] =
+      plaidTranasctions.map((plaidTransaction) =>
+        transformPlaidTrxsToCashflowCreate(
+          cashflowAccount.id,
+          plaidTransaction as unknown as Parameters<
+            typeof transformPlaidTrxsToCashflowCreate
+          >[1],
+        ),
+      );
 
     // Creating account transaction queue.
     await bluebird.map(

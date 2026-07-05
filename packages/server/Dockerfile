@@ -23,6 +23,16 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY --chown=node:node ./packages/server ./packages/server
 
+# The repo tracks both src/modules/ee and src/modules/EE; on case-insensitive
+# filesystems (macOS checkouts) they collapse into a single directory, which
+# breaks the case-sensitive build here. Mirror whichever casing exists so both
+# import spellings resolve. No-op on case-sensitive checkouts.
+RUN if [ -d packages/server/src/modules/EE ] && [ ! -d packages/server/src/modules/ee ]; then \
+      cp -r packages/server/src/modules/EE packages/server/src/modules/ee; \
+    elif [ -d packages/server/src/modules/ee ] && [ ! -d packages/server/src/modules/EE ]; then \
+      cp -r packages/server/src/modules/ee packages/server/src/modules/EE; \
+    fi
+
 # Build NestJS application
 RUN pnpm run build:server --skip-nx-cache
 
