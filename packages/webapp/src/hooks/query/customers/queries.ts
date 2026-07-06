@@ -141,7 +141,10 @@ export function useCustomer(
     ...props,
     queryKey: customersKeys.detail(id),
     queryFn: () => fetchCustomer(fetcher, id!),
-    enabled: id != null,
+    // NaN guards against routes without an id (e.g. /customers/new) and
+    // the caller's `enabled` must not be silently discarded.
+    enabled:
+      id != null && !Number.isNaN(id as number) && (props?.enabled ?? true),
   });
 }
 
