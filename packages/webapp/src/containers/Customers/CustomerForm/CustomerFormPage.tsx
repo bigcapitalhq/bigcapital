@@ -15,7 +15,7 @@ import {
  */
 export function CustomerFormPage() {
   const { id } = useParams();
-  const customerId = parseInt(id, 10);
+  const customerId = id ? parseInt(id, 10) : undefined;
 
   return (
     <CustomerFormProvider customerId={customerId}>

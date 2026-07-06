@@ -38,7 +38,10 @@ export function AccountTransactionsFilterTabs() {
           title={
             <>
               <span style={{ color: 'var(--color-danger)' }}>
-                {currentAccount.uncategorized_transactions}
+                {/* The account query may still be resolving when the meta
+                    summary (which gates this tab) has already loaded. */}
+                {currentAccount?.uncategorized_transactions ??
+                  bankAccountMetaSummary?.totalUncategorizedTransactions}
               </span>{' '}
               Uncategorized Transactions
             </>

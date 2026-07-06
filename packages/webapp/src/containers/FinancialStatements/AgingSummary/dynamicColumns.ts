@@ -67,6 +67,24 @@ const agingPeriodAccessor = R.curry(
   },
 );
 
+/** Matches the column key against both server (snake_case) and legacy
+ * (camelCase) spellings. */
+const keyIn = (keys: string[]) => (column: AgingSummaryColumn) =>
+  keys.includes(column.key);
+
+/**
+ * Fallback for unmapped dynamic columns: react-table requires an id or a
+ * string accessor - without one the whole report crashes to the error
+ * boundary. Renders the cell by index like the aging-period columns.
+ */
+const unmappedColumnFallback = R.curry(
+  (data: unknown[], column: AgingSummaryColumn | Record<string, unknown>) => {
+    if ((column as any).accessor || (column as any).id) return column;
+
+    return agingPeriodAccessor(data, column as AgingSummaryColumn);
+  },
+);
+
 const dynamicColumnMapper = R.curry(
   (data: unknown[], column: AgingSummaryColumn) => {
     const totalAccessorColumn = totalAccessor(data);
@@ -75,11 +93,14 @@ const dynamicColumnMapper = R.curry(
     const agingPeriodAccessorColumn = agingPeriodAccessor(data);
 
     return R.compose(
-      R.when(R.pathEq(['key'], 'total'), totalAccessorColumn),
-      R.when(R.pathEq(['key'], 'current'), currentAccessorColumn),
-      R.when(R.pathEq(['key'], 'customerName'), customerNameAccessorColumn),
-      R.when(R.pathEq(['key'], 'vendorName'), customerNameAccessorColumn),
-      R.when(R.pathEq(['key'], 'agingPeriod'), agingPeriodAccessorColumn),
+      unmappedColumnFallback(data),
+      R.when(keyIn(['total']), totalAccessorColumn),
+      R.when(keyIn(['current']), currentAccessorColumn),
+      R.when(
+        keyIn(['customer_name', 'customerName', 'vendor_name', 'vendorName']),
+        customerNameAccessorColumn,
+      ),
+      R.when(keyIn(['aging_period', 'agingPeriod']), agingPeriodAccessorColumn),
     )(column);
   },
 );
