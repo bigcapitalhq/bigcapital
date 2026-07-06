@@ -3,3 +3,5 @@
 services:
   server:
     image: bigcapital-server:taxfix
+  webapp:
+    image: bigcapital-webapp:whtui
