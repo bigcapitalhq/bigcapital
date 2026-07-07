@@ -112,7 +112,11 @@ export function ItemFormFormik({
 
   return (
     <div
-      className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ITEM, className)}
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_ITEM,
+        className,
+      )}
     >
       <Formik<ItemFormValues>
         enableReinitialize={true}

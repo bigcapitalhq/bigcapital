@@ -36,7 +36,12 @@ export function ItemFormPurchasingSection() {
       <ItemFormSectionTitle>Purchasing details</ItemFormSectionTitle>
 
       {/*------------- Purchasable checkbox ------------- */}
-      <FFormGroup name={'purchasable'} inline={true} className={'form-group--purchasable'} fastField>
+      <FFormGroup
+        name={'purchasable'}
+        inline={true}
+        className={'form-group--purchasable'}
+        fastField
+      >
         <FCheckbox
           name={'purchasable'}
           inline={true}
@@ -69,9 +74,7 @@ export function ItemFormPurchasingSection() {
       <FFormGroup
         name={'cost_account_id'}
         label={<T id={'account'} />}
-        labelInfo={
-          <Hint content={intl.get('item.field.cost_account.hint')} />
-        }
+        labelInfo={<Hint content={intl.get('item.field.cost_account.hint')} />}
         inline={true}
       >
         <AccountsSelect
