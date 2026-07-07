@@ -272,9 +272,9 @@ export function transformItemsTableState(
 /**
  * Transform API errors.
  */
-export const transformSubmitRequestErrors = (
-  error: { data: { errors: ItemError[] } },
-): Record<string, string> => {
+export const transformSubmitRequestErrors = (error: {
+  data: { errors: ItemError[] };
+}): Record<string, string> => {
   const {
     data: { errors },
   } = error;

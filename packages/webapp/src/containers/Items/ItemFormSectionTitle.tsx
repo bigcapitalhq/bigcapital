@@ -9,6 +9,10 @@ const itemFormSectionTitleClass = css`
   margin-top: 10px;
 `;
 
-export function ItemFormSectionTitle({ children }: { children: React.ReactNode | string }) {
+export function ItemFormSectionTitle({
+  children,
+}: {
+  children: React.ReactNode | string;
+}) {
   return <h4 className={itemFormSectionTitleClass}>{children}</h4>;
 }
