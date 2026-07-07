@@ -78,6 +78,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.33",
+    "openapi-typescript-fetch": "^2.2.1",
     "path-browserify": "^1.0.1",
     "plaid": "^9.3.0",
     "plaid-threads": "^11.4.3",
