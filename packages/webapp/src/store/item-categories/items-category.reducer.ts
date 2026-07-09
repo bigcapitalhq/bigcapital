@@ -3,16 +3,20 @@ import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { createTableStateReducers } from '@/store/table-state.reducer';
 import { RESET } from '@/store/types';
+import type { TableQuery } from '@/store/store.types';
 
 interface ItemCategoriesState {
-  tableState: { filterRoles: Array<unknown> };
+  tableState: TableQuery;
 }
 
-// Initial state.
+export const defaultTableQuery: TableQuery = {
+  pageSize: 20,
+  pageIndex: 0,
+  filterRoles: [],
+};
+
 const initialState: ItemCategoriesState = {
-  tableState: {
-    filterRoles: [],
-  },
+  tableState: defaultTableQuery,
 };
 
 const STORAGE_KEY = 'bigcapital:itemCategories';
@@ -24,7 +28,7 @@ const CONFIG = {
 };
 
 const reducerInstance = createReducer(initialState, {
-  ...createTableStateReducers('ITEMS_CATEGORIES'),
+  ...createTableStateReducers('ITEMS_CATEGORIES', defaultTableQuery),
 
   [RESET]: () => {
     purgeStoredState(CONFIG);
