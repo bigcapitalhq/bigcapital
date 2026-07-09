@@ -1,13 +1,8 @@
-// @ts-nocheck
 import React from 'react';
 import { Warehouses } from './Warehouses';
 import { WarehousesProvider } from './WarehousesProvider';
 
-/**
- * Warehouses Preferences.
- * @returns
- */
-export function WarehousesPerences() {
+export function WarehousesPerences(): React.ReactElement {
   return (
     <WarehousesProvider>
       <Warehouses />

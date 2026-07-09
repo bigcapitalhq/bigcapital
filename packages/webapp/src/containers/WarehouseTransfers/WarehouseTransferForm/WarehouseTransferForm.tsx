@@ -1,11 +1,14 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { Formik, Form } from 'formik';
+import { Formik, Form, type FormikHelpers } from 'formik';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
+import type {
+  CreateWarehouseTransferBody,
+  EditWarehouseTransferBody,
+} from '@bigcapital/sdk-ts';
 import { WarehouseTransferObserveItemsCost } from './components';
 import {
   defaultWarehouseTransfer,
@@ -23,18 +26,30 @@ import { WarehouseTransferFormDialog } from './WarehouseTransferFormDialog';
 import { WarehouseTransferFormFooter } from './WarehouseTransferFormFooter';
 import { WarehouseTransferFormHeader } from './WarehouseTransferFormHeader';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import type { WarehouseTransferFormValues } from './types';
 import { AppToaster } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withSettings } from '@/containers/Settings/withSettings';
+import type { WithSettingsProps } from '@/containers/Settings/withSettings';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
+
+interface WarehouseTransferFormInnerProps {
+  warehouseTransferNextNumber?: unknown;
+  warehouseTransferNumberPrefix?: unknown;
+  warehouseTransferIncrementMode?: unknown;
+}
+
+interface ApiError {
+  data?: { errors?: { type: string }[] };
+}
 
 function WarehouseTransferFormInner({
   // #withSettings
   warehouseTransferNextNumber,
   warehouseTransferNumberPrefix,
   warehouseTransferIncrementMode,
-}) {
+}: WarehouseTransferFormInnerProps) {
   const history = useHistory();
 
   const {
@@ -47,34 +62,40 @@ function WarehouseTransferFormInner({
 
   // WarehouseTransfer number.
   const warehouseTransferNumber = transactionNumber(
-    warehouseTransferNumberPrefix,
-    warehouseTransferNextNumber,
+    warehouseTransferNumberPrefix as string,
+    warehouseTransferNextNumber as number,
   );
 
   // Form initial values.
-  const initialValues = React.useMemo(
-    () => ({
-      ...(!isEmpty(warehouseTransfer)
-        ? { ...transformToEditForm(warehouseTransfer) }
-        : {
-            ...defaultWarehouseTransfer,
-            ...(warehouseTransferIncrementMode && {
-              transaction_number: warehouseTransferNumber,
-            }),
-            entries: orderingLinesIndexes(defaultWarehouseTransfer.entries),
-          }),
-    }),
-    [],
-  );
+  const initialValues = React.useMemo<WarehouseTransferFormValues>(() => {
+    if (!isEmpty(warehouseTransfer)) {
+      return transformToEditForm(
+        warehouseTransfer as unknown as Record<string, unknown> & {
+          entries?: unknown[];
+        },
+      );
+    }
+    return {
+      ...defaultWarehouseTransfer,
+      ...(warehouseTransferIncrementMode
+        ? { transactionNumber: warehouseTransferNumber }
+        : {}),
+      entries: orderingLinesIndexes(defaultWarehouseTransfer.entries),
+    } as WarehouseTransferFormValues;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Handles form submit.
-  const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+  const handleSubmit = (
+    values: WarehouseTransferFormValues,
+    { setSubmitting, setErrors, resetForm }: FormikHelpers<WarehouseTransferFormValues>,
+  ) => {
     setSubmitting(true);
     // Transformes the values of the form to request.
     const form = {
       ...transformValueToRequest(values),
-      transfer_initiated: submitPayload.initiate,
-      transfer_delivered: submitPayload.deliver,
+      transferInitiated: submitPayload?.initiate,
+      transferDelivered: submitPayload?.deliver,
     };
 
     // Handle the request success.
@@ -89,26 +110,33 @@ function WarehouseTransferFormInner({
       });
       setSubmitting(false);
 
-      if (submitPayload.redirect) {
+      if (submitPayload?.redirect) {
         history.push('/warehouses-transfers');
       }
-      if (submitPayload.resetForm) {
+      if (submitPayload?.resetForm) {
         resetForm();
       }
     };
 
     // Handle the request error.
-    const onError = ({ data: { errors } }) => {
-      if (errors) {
-        transformErrors(errors, { setErrors });
+    const onError = ({ data }: ApiError) => {
+      if (data?.errors) {
+        transformErrors(data.errors, {
+          setErrors: setErrors as (errors: unknown) => void,
+        });
       }
       setSubmitting(false);
     };
 
     if (isNewMode) {
-      createWarehouseTransferMutate(form).then(onSuccess).catch(onError);
+      createWarehouseTransferMutate(
+        form as unknown as CreateWarehouseTransferBody,
+      ).then(onSuccess).catch(onError);
     } else {
-      editWarehouseTransferMutate([warehouseTransfer.id, form])
+      editWarehouseTransferMutate([
+        warehouseTransfer!.id,
+        form as unknown as EditWarehouseTransferBody,
+      ])
         .then(onSuccess)
         .catch(onError);
     }
@@ -144,7 +172,7 @@ function WarehouseTransferFormInner({
 
 export const WarehouseTransferForm = compose(
   withDashboardActions,
-  withSettings(({ warehouseTransferSettings }) => ({
+  withSettings(({ warehouseTransferSettings }: WithSettingsProps) => ({
     warehouseTransferNextNumber: warehouseTransferSettings?.nextNumber,
     warehouseTransferNumberPrefix: warehouseTransferSettings?.numberPrefix,
     warehouseTransferIncrementMode: warehouseTransferSettings?.autoIncrement,

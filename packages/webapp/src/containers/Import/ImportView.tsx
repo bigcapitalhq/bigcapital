@@ -7,7 +7,7 @@ import { Box } from '@/components';
 interface ImportViewProps {
   resource: string;
   description?: string;
-  params: Record<string, any>;
+  params?: Record<string, any>;
   onImportSuccess?: () => void;
   onImportFailed?: () => void;
   onCancelClick?: () => void;

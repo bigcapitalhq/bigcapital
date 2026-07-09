@@ -46,7 +46,7 @@ export function ItemFormSellingSection() {
 
       {/*------------- Selling price ------------- */}
       <FFormGroup
-        name={'sell_price'}
+        name={'sellPrice'}
         label={<T id={'selling_price'} />}
         inline={true}
         fastField
@@ -54,7 +54,7 @@ export function ItemFormSellingSection() {
         <ControlGroup fill>
           <InputPrependText text={baseCurrency} />
           <FMoneyInputGroup
-            name={'sell_price'}
+            name={'sellPrice'}
             shouldUpdate={sellPriceFieldShouldUpdate}
             sellable={values.sellable}
             inputGroupProps={{ fill: true }}
@@ -67,14 +67,14 @@ export function ItemFormSellingSection() {
       {/*------------- Selling account ------------- */}
       <FFormGroup
         label={<T id={'account'} />}
-        name={'sell_account_id'}
+        name={'sellAccountId'}
         labelInfo={
           <Hint content={intl.get('item.field.sell_account.hint')} />
         }
         inline={true}
       >
         <AccountsSelect
-          name={'sell_account_id'}
+          name={'sellAccountId'}
           items={accounts}
           placeholder={intl.get('select_account')}
           disabled={!values.sellable}
@@ -89,25 +89,25 @@ export function ItemFormSellingSection() {
 
       {/*------------- Sell Tax Rate ------------- */}
       <FFormGroup
-        name={'sell_tax_rate_id'}
+        name={'sellTaxRateId'}
         label={'Tax Rate'}
         inline={true}
       >
         <TaxRatesSelect
-          name={'sell_tax_rate_id'}
+          name={'sellTaxRateId'}
           items={taxRates}
           allowCreate
         />
       </FFormGroup>
 
       <FFormGroup
-        name={'sell_description'}
+        name={'sellDescription'}
         label={<T id={'description'} />}
         inline={true}
         fastField
       >
         <FTextArea
-          name={'sell_description'}
+          name={'sellDescription'}
           growVertically={true}
           disabled={!values.sellable}
           fill

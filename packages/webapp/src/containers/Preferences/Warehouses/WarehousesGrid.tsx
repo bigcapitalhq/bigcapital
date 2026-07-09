@@ -1,15 +1,10 @@
-// @ts-nocheck
 import React from 'react';
 import { WarehousesList, WarehousesSkeleton } from './components';
 import { WarehousesEmptyStatus } from './WarehousesEmptyStatus';
 import { WarehousesGridItems } from './WarehousesGridItems';
 import { useWarehousesContext } from './WarehousesProvider';
 
-/**
- * Warehouses grid.
- */
-export function WarehousesGrid() {
-  // Retrieve list context.
+export function WarehousesGrid(): React.ReactElement {
   const { warehouses, isWarehouesLoading, isEmptyStatus } =
     useWarehousesContext();
 

@@ -1,24 +1,25 @@
-// @ts-nocheck
-import React from 'react';
+import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { compose } from '@/utils';
 
-const WarehouseTransferDetailDrawerContent = React.lazy(() =>
+const WarehouseTransferDetailDrawerContent = lazy(() =>
   import('./WarehouseTransferDetailDrawerContent').then((m) => ({
     default: m.WarehouseTransferDetailDrawerContent,
   })),
 );
 
-/**
- * Warehouse transfer detail drawer.
- */
+interface WarehouseTransferDetailDrawerProps {
+  name: string;
+  isOpen: boolean;
+  payload: { warehouseTransferId?: number | null } & Record<string, unknown>;
+}
+
 function WarehouseTransferDetailDrawer({
   name,
-  // #withDrawer
   isOpen,
   payload: { warehouseTransferId },
-}) {
+}: WarehouseTransferDetailDrawerProps): React.ReactElement {
   return (
     <Drawer
       isOpen={isOpen}

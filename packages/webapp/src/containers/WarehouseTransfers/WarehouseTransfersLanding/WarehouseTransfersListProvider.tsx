@@ -1,5 +1,5 @@
-// @ts-nocheck
 import { isEmpty } from 'lodash';
+import type { ReactNode } from 'react';
 import React from 'react';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
@@ -10,7 +10,34 @@ import {
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
-const WarehouseTransfersListContext = React.createContext();
+interface WarehouseTransfersListProviderProps {
+  query: Record<string, unknown> | null;
+  tableStateChanged: boolean;
+  children?: ReactNode;
+}
+
+interface WarehouseTransfersListContextValue {
+  warehousesTransfers: unknown[] | undefined;
+  pagination: { total?: number } | undefined;
+
+  WarehouseTransferView: unknown;
+  refresh: () => void;
+
+  resourceMeta: unknown;
+  fields: unknown[];
+  isResourceLoading: boolean;
+  isResourceFetching: boolean;
+
+  isWarehouseTransfersLoading: boolean;
+  isWarehouseTransfersFetching: boolean;
+  isViewsLoading: boolean;
+  isEmptyStatus: boolean;
+}
+
+const WarehouseTransfersListContext =
+  React.createContext<WarehouseTransfersListContextValue | undefined>(
+    undefined,
+  );
 
 /**
  * WarehouseTransfer data provider
@@ -19,7 +46,7 @@ function WarehouseTransfersListProvider({
   query,
   tableStateChanged,
   ...props
-}) {
+}: WarehouseTransfersListProviderProps) {
   // warehouse transfers refresh action.
   const { refresh } = useRefreshWarehouseTransfers();
 
@@ -28,7 +55,9 @@ function WarehouseTransfersListProvider({
     data: warehousesTransfersData,
     isFetching: isWarehouseTransfersFetching,
     isLoading: isWarehouseTransfersLoading,
-  } = useWarehousesTransfers(query, { keepPreviousData: true });
+  } = useWarehousesTransfers(
+    query as Record<string, string | number | boolean | undefined> | null,
+  );
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
@@ -48,7 +77,7 @@ function WarehouseTransfersListProvider({
   } = useResourceMeta('warehouse_transfer');
 
   // Provider payload.
-  const provider = {
+  const provider: WarehouseTransfersListContextValue = {
     warehousesTransfers: warehousesTransfersData?.data,
     pagination: warehousesTransfersData?.pagination,
 
@@ -58,7 +87,7 @@ function WarehouseTransfersListProvider({
     resourceMeta,
     fields: resourceMeta?.fields
       ? getFieldsFromResourceMeta(resourceMeta.fields)
-      : [],
+      : ([] as unknown[]),
     isResourceLoading,
     isResourceFetching,
 
@@ -79,6 +108,6 @@ function WarehouseTransfersListProvider({
 }
 
 const useWarehouseTranfersListContext = () =>
-  React.useContext(WarehouseTransfersListContext);
+  React.useContext(WarehouseTransfersListContext) as WarehouseTransfersListContextValue;
 
 export { WarehouseTransfersListProvider, useWarehouseTranfersListContext };

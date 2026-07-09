@@ -1,7 +1,11 @@
-// @ts-nocheck
 import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import { ITEMS_FILTER_ROLES_QUERY } from './utils';
+import type {
+  WarehouseTransferFormContextValue,
+  WarehouseTransferItemCostQuery,
+  WarehouseTransferSubmitPayload,
+} from './types';
 import { DashboardInsider } from '@/components';
 import { Features } from '@/constants';
 import {
@@ -14,12 +18,21 @@ import {
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 
-const WarehouseFormContext = createContext();
+const WarehouseFormContext =
+  createContext<WarehouseTransferFormContextValue | undefined>(undefined);
+
+interface WarehouseTransferFormProviderProps {
+  warehouseTransferId?: number;
+  children: React.ReactNode;
+}
 
 /**
  * Warehouse transfer form provider.
  */
-function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
+function WarehouseTransferFormProvider({
+  warehouseTransferId,
+  children,
+}: WarehouseTransferFormProviderProps) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
@@ -47,7 +60,8 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
   // Inventory items cost query.
-  const [itemCostQuery, setItemCostQuery] = React.useState(null);
+  const [itemCostQuery, setItemCostQuery] =
+    React.useState<WarehouseTransferItemCostQuery | null>(null);
 
   // Detarmines whether the inventory items cost query is enabled.
   const isItemsCostQueryEnabled =
@@ -61,8 +75,8 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     isSuccess: isItemsCostSuccess,
   } = useItemInventoryCost(
     {
-      date: itemCostQuery?.date,
-      items_ids: itemCostQuery?.itemsIds,
+      date: itemCostQuery?.date ?? '',
+      itemsIds: (itemCostQuery?.itemsIds ?? []).map(String),
     },
     {
       enabled: isItemsCostQueryEnabled,
@@ -78,11 +92,13 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   const isNewMode = !warehouseTransferId;
 
   // Form submit payload.
-  const [submitPayload, setSubmitPayload] = React.useState();
+  const [submitPayload, setSubmitPayload] = React.useState<
+    WarehouseTransferSubmitPayload | undefined
+  >();
 
   // Provider payload.
-  const provider = {
-    items: itemsData?.items,
+  const provider: WarehouseTransferFormContextValue = {
+    items: itemsData?.data ?? [],
     warehouses,
     warehouseTransfer,
 
@@ -110,11 +126,11 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
       }
       name={'warehouse-transfer-form'}
     >
-      <WarehouseFormContext.Provider value={provider} {...props} />
+      <WarehouseFormContext.Provider value={provider} children={children} />
     </DashboardInsider>
   );
 }
 const useWarehouseTransferFormContext = () =>
-  React.useContext(WarehouseFormContext);
+  React.useContext(WarehouseFormContext) as WarehouseTransferFormContextValue;
 
 export { WarehouseTransferFormProvider, useWarehouseTransferFormContext };

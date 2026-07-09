@@ -1,4 +1,3 @@
-// @ts-nocheck
 import classNames from 'classnames';
 import { FastField } from 'formik';
 import React from 'react';
@@ -9,7 +8,20 @@ import {
 } from './utils';
 import { WarehouseTransferFormEntriesTable } from './WarehouseTransferFormEntriesTable';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import type {
+  WarehouseTransferEntry,
+  WarehouseTransferFormValues,
+} from './types';
 import { CLASSES } from '@/constants/classes';
+
+interface EntriesFieldRenderProps {
+  form: {
+    values: WarehouseTransferFormValues;
+    setFieldValue: (field: string, value: unknown) => void;
+  };
+  field: { value: WarehouseTransferEntry[] };
+  meta: { error?: unknown; touched?: boolean };
+}
 
 /**
  * Warehouse transafer editor field.
@@ -30,8 +42,8 @@ export function WarehouseTransferEditorField() {
         {({
           form: { values, setFieldValue },
           field: { value },
-          meta: { error, touched },
-        }) => (
+          meta: { error },
+        }: EntriesFieldRenderProps) => (
           <WarehouseTransferFormEntriesTable
             entries={value}
             onUpdateData={(entries) => {
@@ -40,8 +52,8 @@ export function WarehouseTransferEditorField() {
             items={items}
             defaultEntry={defaultWarehouseTransferEntry}
             errors={error}
-            sourceWarehouseId={values.from_warehouse_id}
-            destinationWarehouseId={values.to_warehouse_id}
+            sourceWarehouseId={values.fromWarehouseId}
+            destinationWarehouseId={values.toWarehouseId}
           />
         )}
       </FastField>

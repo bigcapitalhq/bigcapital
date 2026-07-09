@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Intent,
   Button,
@@ -14,6 +13,7 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import type { WarehouseTransferSubmitPayload } from './types';
 import { If, Icon, FormattedMessage as T, Group } from '@/components';
 import { CLASSES } from '@/constants/classes';
 
@@ -32,45 +32,45 @@ export function WarehouseTransferFloatingActions() {
     useWarehouseTransferFormContext();
 
   // Handle submit initiate button click.
-  const handleSubmitInitiateBtnClick = (event) => {
+  const handleSubmitInitiateBtnClick = () => {
     setSubmitPayload({ redirect: true, initiate: true, deliver: false });
   };
 
   // Handle submit transferred button click.
-  const handleSubmitTransferredBtnClick = (event) => {
+  const handleSubmitTransferredBtnClick = () => {
     setSubmitPayload({ redirect: true, initiate: true, deliver: true });
     submitForm();
   };
 
   // Handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = () => {
     setSubmitPayload({ redirect: true, initiate: false, deliver: false });
     submitForm();
   };
   // Handle submit as draft & new button click.
-  const handleSubmitDraftAndNewBtnClick = (event) => {
+  const handleSubmitDraftAndNewBtnClick = () => {
     setSubmitPayload({
       redirect: false,
       initiate: false,
       deliver: false,
       resetForm: true,
-    });
+    } satisfies WarehouseTransferSubmitPayload);
     submitForm();
   };
 
   // Handle submit as draft & continue editing button click.
-  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+  const handleSubmitDraftContinueEditingBtnClick = () => {
     setSubmitPayload({ redirect: false, deliver: false, initiate: false });
     submitForm();
   };
 
   // Handle clear button click.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = () => {
     resetForm();
   };
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = () => {
     history.goBack();
   };
 
@@ -79,7 +79,9 @@ export function WarehouseTransferFloatingActions() {
       <Group spacing={10}>
         {/* ----------- Save Intitate & transferred ----------- */}
         <If
-          condition={!warehouseTransfer || !warehouseTransfer?.is_transferred}
+          condition={
+            !warehouseTransfer || !warehouseTransfer?.isTransferred
+          }
         >
           <ButtonGroup>
             <Button
@@ -146,7 +148,7 @@ export function WarehouseTransferFloatingActions() {
             </Popover>
           </ButtonGroup>
         </If>
-        <If condition={warehouseTransfer && warehouseTransfer?.is_transferred}>
+        <If condition={Boolean(warehouseTransfer && warehouseTransfer?.isTransferred)}>
           <Button
             disabled={isSubmitting}
             loading={isSubmitting}

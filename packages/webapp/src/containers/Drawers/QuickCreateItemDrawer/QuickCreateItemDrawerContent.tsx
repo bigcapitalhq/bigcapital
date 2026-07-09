@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { QuickCreateItemDrawerForm } from './QuickCreateItemDrawerForm';
 import {
@@ -8,10 +7,13 @@ import {
 } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 
-/**
- * Quick create/edit item drawer content.
- */
-export function QuickCreateItemDrawerContent({ itemName }) {
+interface QuickCreateItemDrawerContentProps {
+  itemName?: string;
+}
+
+export function QuickCreateItemDrawerContent({
+  itemName,
+}: QuickCreateItemDrawerContentProps): React.ReactElement {
   return (
     <React.Fragment>
       <DrawerHeaderContent

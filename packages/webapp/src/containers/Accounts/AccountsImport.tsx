@@ -14,9 +14,6 @@ export function AccountsImport() {
 
   return (
     <DashboardInsider name={'import-accounts'}>
-      {/* `ImportView` types `params` as required but the @ts-nocheck original
-          never passed it — preserved latent bug. */}
-      {/* @ts-expect-error see comment above */}
       <ImportView
         resource={'accounts'}
         onCancelClick={handleCancelBtnClick}

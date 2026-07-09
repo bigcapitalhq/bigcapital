@@ -71,7 +71,7 @@ function ItemFormBodyInner() {
 
           {/*------------- Selling price ------------- */}
           <FFormGroup
-            name={'sell_price'}
+            name={'sellPrice'}
             label={intl.get('selling_price')}
             inline={true}
             fastField
@@ -79,7 +79,7 @@ function ItemFormBodyInner() {
             <ControlGroup>
               <InputPrependText text={baseCurrency} />
               <FMoneyInputGroup
-                name={'sell_price'}
+                name={'sellPrice'}
                 shouldUpdate={sellPriceFieldShouldUpdate}
                 inputGroupProps={{ fill: true }}
                 disabled={!values.sellable}
@@ -91,14 +91,14 @@ function ItemFormBodyInner() {
           {/*------------- Selling account ------------- */}
           <FFormGroup
             label={intl.get('account')}
-            name={'sell_account_id'}
+            name={'sellAccountId'}
             labelInfo={
               <Hint content={intl.get('item.field.sell_account.hint')} />
             }
             inline={true}
           >
             <AccountsSelect
-              name={'sell_account_id'}
+              name={'sellAccountId'}
               items={accounts}
               placeholder={intl.get('select_account')}
               disabled={!values.sellable}
@@ -113,25 +113,25 @@ function ItemFormBodyInner() {
 
           {/*------------- Sell Tax Rate ------------- */}
           <FFormGroup
-            name={'sell_tax_rate_id'}
+            name={'sellTaxRateId'}
             label={'Tax Rate'}
             inline={true}
           >
             <TaxRatesSelect
-              name={'sell_tax_rate_id'}
+              name={'sellTaxRateId'}
               items={taxRates}
               allowCreate
             />
           </FFormGroup>
 
           <FFormGroup
-            name={'sell_description'}
+            name={'sellDescription'}
             label={intl.get('description')}
             inline={true}
             fastField
           >
             <FTextArea
-              name={'sell_description'}
+              name={'sellDescription'}
               growVertically={true}
               disabled={!values.sellable}
               fill
@@ -165,7 +165,7 @@ function ItemFormBodyInner() {
 
           {/*------------- Cost price ------------- */}
           <FFormGroup
-            name={'cost_price'}
+            name={'costPrice'}
             label={intl.get('cost_price')}
             inline={true}
             fastField
@@ -174,7 +174,7 @@ function ItemFormBodyInner() {
               <InputPrependText text={baseCurrency} />
 
               <FMoneyInputGroup
-                name={'cost_price'}
+                name={'costPrice'}
                 shouldUpdate={costPriceFieldShouldUpdate}
                 inputGroupProps={{ medium: true }}
                 disabled={!values.purchasable}
@@ -185,7 +185,7 @@ function ItemFormBodyInner() {
 
           {/*------------- Cost account ------------- */}
           <FFormGroup
-            name={'cost_account_id'}
+            name={'costAccountId'}
             label={intl.get('account')}
             labelInfo={
               <Hint content={intl.get('item.field.cost_account.hint')} />
@@ -193,7 +193,7 @@ function ItemFormBodyInner() {
             inline={true}
           >
             <AccountsSelect
-              name={'cost_account_id'}
+              name={'costAccountId'}
               items={accounts}
               placeholder={intl.get('select_account')}
               filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
@@ -208,12 +208,12 @@ function ItemFormBodyInner() {
 
           {/*------------- Purchase Tax Rate ------------- */}
           <FFormGroup
-            name={'purchase_tax_rate_id'}
+            name={'purchaseTaxRateId'}
             label={'Tax Rate'}
             inline={true}
           >
             <TaxRatesSelect
-              name={'purchase_tax_rate_id'}
+              name={'purchaseTaxRateId'}
               items={taxRates}
               allowCreate={true}
               fastField={true}
@@ -223,14 +223,14 @@ function ItemFormBodyInner() {
           </FFormGroup>
 
           <FFormGroup
-            name={'purchase_description'}
+            name={'purchaseDescription'}
             label={intl.get('description')}
             className={'form-group--purchase-description'}
             helperText={<ErrorMessage name={'description'} />}
             inline={true}
           >
             <FTextArea
-              name={'purchase_description'}
+              name={'purchaseDescription'}
               growVertically={true}
               disabled={!values.purchasable}
               fill

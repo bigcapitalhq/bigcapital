@@ -1,35 +1,32 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useMarkWarehouseAsPrimary } from '@/hooks/query';
 import { compose } from '@/utils';
 
-/**
- * warehouse mark primary alert.
- */
+interface WarehouseMarkPrimaryAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { warehouseId: number };
+}
+
 function WarehouseMarkPrimaryAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { warehouseId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  // const { mutateAsync: markPrimaryWarehouseMutate, isLoading } =
-  // useMarkWarehouseAsPrimary();
+}: WarehouseMarkPrimaryAlertProps): React.ReactElement {
+  const { mutateAsync: markPrimaryWarehouseMutate, isPending } =
+    useMarkWarehouseAsPrimary();
 
-  // Handle cancel mark primary alert.
   const handleCancelMarkPrimaryAlert = () => {
     closeAlert(name);
   };
 
-  // andle cancel mark primary confirm.
   const handleConfirmMarkPrimaryWarehouse = () => {
     markPrimaryWarehouseMutate(warehouseId)
       .then(() => {
@@ -39,20 +36,20 @@ function WarehouseMarkPrimaryAlertInner({
         });
         closeAlert(name);
       })
-      .catch((error) => {
+      .catch(() => {
         closeAlert(name);
       });
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'make_primary'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('make_primary')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelMarkPrimaryAlert}
       onConfirm={handleConfirmMarkPrimaryWarehouse}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
         <T id={'warehouse.alert.are_you_sure_you_want_to_make'} />

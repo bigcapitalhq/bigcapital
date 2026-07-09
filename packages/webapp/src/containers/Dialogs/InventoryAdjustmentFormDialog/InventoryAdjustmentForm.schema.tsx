@@ -1,4 +1,3 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
@@ -18,7 +17,7 @@ const Schema = Yup.object().shape({
   quantityOnHand: Yup.number().required().label(intl.get('qty')),
   quantity: Yup.number().integer().min(1).required(),
   cost: Yup.number().when(['type'], {
-    is: (type) => type === 'increment',
+    is: (type: string) => type === 'increment',
     then: Yup.number().required(),
   }),
   referenceNo: Yup.string(),

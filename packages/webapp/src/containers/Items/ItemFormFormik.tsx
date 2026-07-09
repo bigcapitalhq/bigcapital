@@ -11,7 +11,11 @@ import {
   transformSubmitRequestErrors,
   useItemFormInitialValues,
 } from './utils';
-import type { ItemFormValues, ItemFormSubmitPayload } from './types';
+import type {
+  ItemFormValues,
+  ItemFormSubmitPayload,
+} from './types';
+import type { CreateItemBody, EditItemBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { safeInvoke } from '@/utils';
@@ -100,11 +104,11 @@ export function ItemFormFormik({
       safeInvoke(onSubmitError, errors, values, form, submitPayload);
     };
     if (isNewMode) {
-      createItemMutate(formValues as never)
+      createItemMutate(formValues as unknown as CreateItemBody)
         .then(onSuccess)
         .catch(onError);
     } else {
-      editItemMutate([itemId!, formValues] as never)
+      editItemMutate([itemId!, formValues as unknown as EditItemBody])
         .then(onSuccess)
         .catch(onError);
     }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { css } from '@emotion/css';
 
@@ -9,6 +8,6 @@ const itemFormSectionTitleClass = css`
   margin-top: 10px;
 `;
 
-export function ItemFormSectionTitle({ children }: { children: React.ReactNode | string }) {
+export function ItemFormSectionTitle({ children }: { children: React.ReactNode }) {
   return <h4 className={itemFormSectionTitleClass}>{children}</h4>;
 }

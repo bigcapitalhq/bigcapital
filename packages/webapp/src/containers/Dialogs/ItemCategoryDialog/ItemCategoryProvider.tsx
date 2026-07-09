@@ -1,5 +1,5 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
+import type { ItemCategoryContextValue } from './types';
 import { DialogContent } from '@/components';
 import {
   useItemCategory,
@@ -7,26 +7,32 @@ import {
   useCreateItemCategory,
 } from '@/hooks/query';
 
-const ItemCategoryContext = createContext();
+const ItemCategoryContext = createContext<ItemCategoryContextValue>(
+  {} as ItemCategoryContextValue,
+);
 
-/**
- * Accounts chart data provider.
- */
-function ItemCategoryProvider({ itemCategoryId, dialogName, ...props }) {
+interface ItemCategoryProviderProps {
+  itemCategoryId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
+
+function ItemCategoryProvider({
+  itemCategoryId,
+  dialogName,
+  ...props
+}: ItemCategoryProviderProps) {
   const { data: itemCategory, isFetching: isItemCategoryLoading } =
-    useItemCategory(itemCategoryId, {
+    useItemCategory(itemCategoryId ?? undefined, {
       enabled: !!itemCategoryId,
     });
-  // Create and edit item category mutations.
   const { mutateAsync: createItemCategoryMutate } = useCreateItemCategory();
   const { mutateAsync: editItemCategoryMutate } = useEditItemCategory();
 
-  // Detarmines whether the new mode form.
   const isNewMode = !itemCategoryId;
   const isEditMode = !isNewMode;
 
-  // Provider state.
-  const provider = {
+  const provider: ItemCategoryContextValue = {
     itemCategoryId,
     dialogName,
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const WarehouseTransferDeleteAlert = React.lazy(() =>
@@ -17,10 +16,15 @@ const TransferredWarehouseTransferAlert = React.lazy(() =>
   ).then((m) => ({ default: m.TransferredWarehouseTransferAlert })),
 );
 
+interface AlertRegistration {
+  name: string;
+  component: React.LazyExoticComponent<React.ComponentType<unknown>>;
+}
+
 /**
  * Warehouses alerts.
  */
-export const WarehousesTransfersAlerts = [
+export const WarehousesTransfersAlerts: AlertRegistration[] = [
   {
     name: 'warehouse-transfer-delete',
     component: WarehouseTransferDeleteAlert,

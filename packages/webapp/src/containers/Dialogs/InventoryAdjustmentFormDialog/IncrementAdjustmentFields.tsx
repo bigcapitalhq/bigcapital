@@ -1,8 +1,8 @@
-// @ts-nocheck
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { decrementQuantity, incrementQuantity } from './utils';
+import type { InventoryAdjustmentFormValues } from './types';
 import {
   Row,
   Col,
@@ -13,47 +13,37 @@ import {
 import { useAutofocus } from '@/hooks';
 import { toSafeNumber } from '@/utils';
 
-export function IncrementAdjustmentFields() {
-  const incrementFieldRef = useAutofocus();
-  const { values, setFieldValue } = useFormikContext();
+export function IncrementAdjustmentFields(): React.ReactElement {
+  const incrementFieldRef = useAutofocus<HTMLInputElement>();
+  const { values, setFieldValue } =
+    useFormikContext<InventoryAdjustmentFormValues>();
 
   return (
     <Row>
-      {/*------------ Quantity on hand  -----------*/}
       <Col className={'col--quantity-on-hand'}>
         <FFormGroup
           name={'quantityOnHand'}
           label={intl.get('qty_on_hand')}
           fastField
         >
-          <FInputGroup
-            name={'quantityOnHand'}
-            disabled={true}
-            medium={'true'}
-            fastField
-          />
+          <FInputGroup name={'quantityOnHand'} disabled={true} fastField />
         </FFormGroup>
       </Col>
 
-      {/*------------ Sign -----------*/}
       <Col className={'col--sign'}>
         <span>+</span>
       </Col>
 
-      {/*------------ Increment -----------*/}
       <Col className={'col--quantity'}>
-        <FFormGroup
-          name={'quantity'}
-          label={intl.get('increment')}
-          fill
-          fastField
-        >
+        <FFormGroup name={'quantity'} label={intl.get('increment')} fastField>
           <FMoneyInputGroup
             name={'quantity'}
             allowDecimals={false}
             allowNegativeValue={true}
-            inputRef={(ref) => (incrementFieldRef.current = ref)}
-            onBlurValue={(value) => {
+            inputRef={(ref: HTMLInputElement | null) => {
+              incrementFieldRef.current = ref;
+            }}
+            onBlurValue={(value: string) => {
               setFieldValue(
                 'newQuantity',
                 incrementQuantity(
@@ -67,19 +57,16 @@ export function IncrementAdjustmentFields() {
         </FFormGroup>
       </Col>
 
-      {/*------------ Cost -----------*/}
       <Col className={'col--cost'}>
         <FFormGroup name={'cost'} label={intl.get('cost')} fastField>
           <FMoneyInputGroup name={'cost'} fastField />
         </FFormGroup>
       </Col>
 
-      {/*------------ Sign -----------*/}
       <Col className={'col--sign'}>
         <span>=</span>
       </Col>
 
-      {/*------------ New quantity -----------*/}
       <Col className={'col--quantity-on-hand'}>
         <FFormGroup
           name={'newQuantity'}
@@ -90,7 +77,7 @@ export function IncrementAdjustmentFields() {
             name={'newQuantity'}
             allowDecimals={false}
             allowNegativeValue={true}
-            onBlurValue={(value) => {
+            onBlurValue={(value: string) => {
               setFieldValue(
                 'quantity',
                 decrementQuantity(

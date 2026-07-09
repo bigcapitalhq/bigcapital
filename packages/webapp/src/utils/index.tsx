@@ -42,7 +42,10 @@ export function removeEmptyFromObject(obj) {
   return obj;
 }
 
-export const optionsMapToArray = (optionsMap, service = '') => {
+export const optionsMapToArray = (
+  optionsMap: Record<string, unknown>,
+  service = '',
+): Array<{ key: string; value: unknown }> => {
   return Object.keys(optionsMap).map((optionKey) => {
     const optionValue = optionsMap[optionKey];
 
@@ -708,8 +711,10 @@ export const updateTableRow = (rowIndex, value) => (old) => {
     return row;
   });
 };
-export const transformGeneralSettings = (data) => {
-  return _.mapKeys(data, (value, key) => _.snakeCase(key));
+export const transformGeneralSettings = (
+  data: Record<string, unknown> | undefined,
+): Record<string, unknown> => {
+  return _.mapKeys(data ?? {}, (value, key) => _.snakeCase(key));
 };
 
 export const calculateStatus = (paymentAmount, balanceAmount) => {

@@ -95,12 +95,12 @@ export function ItemFormBasicSection() {
 
       {/*----------- Item category ----------*/}
       <FFormGroup
-        name={'category_id'}
+        name={'categoryId'}
         label={<T id={'category'} />}
         inline={true}
       >
         <FSelect
-          name={'category_id'}
+          name={'categoryId'}
           items={itemsCategories}
           valueAccessor={'id'}
           textAccessor={'name'}

@@ -47,7 +47,7 @@ export function ItemFormPurchasingSection() {
 
       {/*------------- Cost price ------------- */}
       <FFormGroup
-        name={'cost_price'}
+        name={'costPrice'}
         label={<T id={'cost_price'} />}
         inline={true}
         fastField
@@ -55,7 +55,7 @@ export function ItemFormPurchasingSection() {
         <ControlGroup fill>
           <InputPrependText text={baseCurrency} />
           <FMoneyInputGroup
-            name={'cost_price'}
+            name={'costPrice'}
             shouldUpdate={costPriceFieldShouldUpdate}
             purchasable={values.purchasable}
             inputGroupProps={{ medium: true }}
@@ -67,7 +67,7 @@ export function ItemFormPurchasingSection() {
 
       {/*------------- Cost account ------------- */}
       <FFormGroup
-        name={'cost_account_id'}
+        name={'costAccountId'}
         label={<T id={'account'} />}
         labelInfo={
           <Hint content={intl.get('item.field.cost_account.hint')} />
@@ -75,7 +75,7 @@ export function ItemFormPurchasingSection() {
         inline={true}
       >
         <AccountsSelect
-          name={'cost_account_id'}
+          name={'costAccountId'}
           items={accounts}
           placeholder={intl.get('select_account')}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
@@ -90,12 +90,12 @@ export function ItemFormPurchasingSection() {
 
       {/*------------- Purchase Tax Rate ------------- */}
       <FFormGroup
-        name={'purchase_tax_rate_id'}
+        name={'purchaseTaxRateId'}
         label={'Tax Rate'}
         inline={true}
       >
         <TaxRatesSelect
-          name={'purchase_tax_rate_id'}
+          name={'purchaseTaxRateId'}
           items={taxRates}
           allowCreate={true}
           fastField={true}
@@ -105,14 +105,14 @@ export function ItemFormPurchasingSection() {
       </FFormGroup>
 
       <FFormGroup
-        name={'purchase_description'}
+        name={'purchaseDescription'}
         label={<T id={'description'} />}
         className={'form-group--purchase-description'}
         helperText={<ErrorMessage name={'description'} />}
         inline={true}
       >
         <FTextArea
-          name={'purchase_description'}
+          name={'purchaseDescription'}
           growVertically={true}
           disabled={!values.purchasable}
           fill

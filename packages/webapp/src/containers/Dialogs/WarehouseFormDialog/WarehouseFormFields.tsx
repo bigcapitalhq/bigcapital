@@ -1,18 +1,12 @@
-// @ts-nocheck
 import { Classes, ControlGroup } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FieldRequiredHint, FFormGroup, FInputGroup } from '@/components';
 
-/**
- * Warehouse form fields.
- * @returns
- */
-export function WarehouseFormFields() {
+export function WarehouseFormFields(): React.ReactElement {
   return (
     <div className={Classes.DIALOG_BODY}>
-      {/*------------ Warehouse Name -----------*/}
       <FFormGroup
         name={'name'}
         label={intl.get('warehouse.dialog.label.warehouse_name')}
@@ -23,7 +17,6 @@ export function WarehouseFormFields() {
         <FInputGroup name={'name'} />
       </FFormGroup>
 
-      {/*------------ Warehouse Code -----------*/}
       <FFormGroup
         name={'code'}
         label={intl.get('warehouse.dialog.label.code')}
@@ -33,7 +26,6 @@ export function WarehouseFormFields() {
         <FInputGroup name={'code'} />
       </FFormGroup>
 
-      {/*------------ Warehouse Address -----------*/}
       <FFormGroup
         name={'address'}
         label={intl.get('warehouse.dialog.label.warehouse_address')}
@@ -46,7 +38,6 @@ export function WarehouseFormFields() {
         />
       </FFormGroup>
       <WarehouseAddressWrap>
-        {/*------------ Warehouse Address City & Country-----------*/}
         <FFormGroup
           name={'city'}
           inline={true}
@@ -65,17 +56,15 @@ export function WarehouseFormFields() {
         </FFormGroup>
       </WarehouseAddressWrap>
 
-      {/*------------ Phone Number -----------*/}
       <FFormGroup
-        name={'phone_number'}
+        name={'phoneNumber'}
         label={intl.get('warehouse.dialog.label.phone_number')}
         inline={true}
         className={'form-group--phone_number'}
       >
-        <FInputGroup name={'phone_number'} />
+        <FInputGroup name={'phoneNumber'} />
       </FFormGroup>
 
-      {/*------------ Email -----------*/}
       <FFormGroup
         name={'email'}
         label={intl.get('warehouse.dialog.label.email')}
@@ -85,7 +74,6 @@ export function WarehouseFormFields() {
         <FInputGroup name={'email'} />
       </FFormGroup>
 
-      {/*------------ Website -----------*/}
       <FFormGroup
         name={'website'}
         label={intl.get('warehouse.dialog.label.website')}
