@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
@@ -6,6 +5,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useObserveTransferNoSettings } from './utils';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import type { WarehouseTransferFormValues } from './types';
 import {
   FFormGroup,
   FormattedMessage as T,
@@ -16,8 +16,41 @@ import {
 import { FieldRequiredHint, Icon, InputPrependButton } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withSettings } from '@/containers/Settings/withSettings';
+import type { WithSettingsProps } from '@/containers/Settings/withSettings';
 import { momentFormatter, compose } from '@/utils';
+
+/** Blueprint FormGroup/InputGroup support `fastField`/`asyncControl`; package typings omit them. */
+interface FFormGroupFieldProps {
+  name: string;
+  label?: React.ReactNode;
+  labelInfo?: React.ReactNode;
+  inline?: boolean;
+  fill?: boolean;
+  fastField?: boolean;
+  items?: unknown;
+  children: React.ReactElement;
+}
+const FFormGroupField = FFormGroup as unknown as React.FC<FFormGroupFieldProps>;
+
+interface FInputGroupFieldProps {
+  name: string;
+  minimal?: boolean;
+  asyncControl?: boolean;
+  fastField?: boolean;
+  fill?: boolean;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+}
+const FInputGroupField =
+  FInputGroup as unknown as React.FC<FInputGroupFieldProps>;
+
+interface WarehouseTransferFormHeaderFieldsProps {
+  openDialog: WithDialogActionsProps['openDialog'];
+  warehouseTransferAutoIncrement?: unknown;
+  warehouseTransferNextNumber?: unknown;
+  warehouseTransferNumberPrefix?: unknown;
+}
 
 /**
  * Warehouse transfer form header fields.
@@ -30,9 +63,9 @@ function WarehouseTransferFormHeaderFieldsInner({
   warehouseTransferAutoIncrement,
   warehouseTransferNextNumber,
   warehouseTransferNumberPrefix,
-}) {
+}: WarehouseTransferFormHeaderFieldsProps) {
   const { warehouses } = useWarehouseTransferFormContext();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<WarehouseTransferFormValues>();
 
   // Handle warehouse transfer number changing.
   const handleTransferNumberChange = () => {
@@ -40,11 +73,11 @@ function WarehouseTransferFormHeaderFieldsInner({
   };
 
   // Handle transfer no. field blur.
-  const handleTransferNoBlur = (event) => {
+  const handleTransferNoBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
 
     if (
-      values.transaction_number !== newValue &&
+      values.transactionNumber !== newValue &&
       warehouseTransferAutoIncrement
     ) {
       openDialog('warehouse-transfer-no-form', {
@@ -58,14 +91,14 @@ function WarehouseTransferFormHeaderFieldsInner({
 
   // Syncs transfer number settings with form.
   useObserveTransferNoSettings(
-    warehouseTransferNumberPrefix,
-    warehouseTransferNextNumber,
+    String(warehouseTransferNumberPrefix ?? ''),
+    Number(warehouseTransferNextNumber ?? 0),
   );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Date ----------- */}
-      <FFormGroup
+      <FFormGroupField
         name={'date'}
         label={intl.get('date')}
         inline
@@ -83,18 +116,18 @@ function WarehouseTransferFormHeaderFieldsInner({
           fill
           fastField
         />
-      </FFormGroup>
+      </FFormGroupField>
 
       {/* ----------- Transfer number ----------- */}
-      <FFormGroup
-        name={'transaction_number'}
+      <FFormGroupField
+        name={'transactionNumber'}
         label={intl.get('warehouse_transfer.label.transfer_no')}
         inline
         fill
       >
         <ControlGroup fill={true}>
-          <FInputGroup
-            name={'transaction_number'}
+          <FInputGroupField
+            name={'transactionNumber'}
             minimal={true}
             asyncControl={true}
             onBlur={handleTransferNoBlur}
@@ -117,47 +150,47 @@ function WarehouseTransferFormHeaderFieldsInner({
             }}
           />
         </ControlGroup>
-      </FFormGroup>
+      </FFormGroupField>
 
       {/* ----------- Form Warehouse ----------- */}
-      <FFormGroup
-        name={'from_warehouse_id'}
+      <FFormGroupField
+        name={'fromWarehouseId'}
         items={warehouses}
         label={intl.get('warehouse_transfer.label.from_warehouse')}
         inline={true}
         labelInfo={<FieldRequiredHint />}
       >
         <WarehouseSelect
-          name={'from_warehouse_id'}
-          warehouses={warehouses}
+          name={'fromWarehouseId'}
+          warehouses={warehouses ?? []}
           placeholder={<T id={'select_warehouse_transfer'} />}
           allowCreate={true}
           fill={true}
         />
-      </FFormGroup>
+      </FFormGroupField>
 
       {/* ----------- To Warehouse ----------- */}
-      <FFormGroup
-        name={'to_warehouse_id'}
+      <FFormGroupField
+        name={'toWarehouseId'}
         label={intl.get('warehouse_transfer.label.to_warehouse')}
         inline={true}
         labelInfo={<FieldRequiredHint />}
       >
         <WarehouseSelect
-          name={'to_warehouse_id'}
-          warehouses={warehouses}
+          name={'toWarehouseId'}
+          warehouses={warehouses ?? []}
           placeholder={<T id={'select_warehouse_transfer'} />}
           fill={true}
           allowCreate={true}
         />
-      </FFormGroup>
+      </FFormGroupField>
     </div>
   );
 }
 
 export const WarehouseTransferFormHeaderFields = compose(
   withDialogActions,
-  withSettings(({ warehouseTransferSettings }) => ({
+  withSettings(({ warehouseTransferSettings }: WithSettingsProps) => ({
     warehouseTransferAutoIncrement: warehouseTransferSettings?.autoIncrement,
     warehouseTransferNextNumber: warehouseTransferSettings?.nextNumber,
     warehouseTransferNumberPrefix: warehouseTransferSettings?.numberPrefix,

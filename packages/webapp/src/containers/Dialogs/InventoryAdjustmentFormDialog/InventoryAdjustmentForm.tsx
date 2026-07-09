@@ -1,21 +1,20 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
-import { omit, get } from 'lodash';
+import { Formik, type FormikHelpers } from 'formik';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-
 import '@/style/pages/Items/ItemAdjustmentDialog.scss';
-
 import { CreateInventoryAdjustmentFormSchema } from './InventoryAdjustmentForm.schema';
 import { InventoryAdjustmentFormContent } from './InventoryAdjustmentFormContent';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
+import { transformFormToRequest } from './utils';
+import type { InventoryAdjustmentFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-const defaultInitialValues = {
+const defaultInitialValues: InventoryAdjustmentFormValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
   type: 'decrement',
   adjustmentAccountId: '',
@@ -25,36 +24,38 @@ const defaultInitialValues = {
   quantity: '',
   referenceNo: '',
   quantityOnHand: '',
-  publish: '',
+  publish: false,
   branchId: '',
   warehouseId: '',
 };
 
-/**
- * Inventory adjustment form.
- */
+interface InventoryAdjustmentFormProps extends WithDialogActionsProps {}
+
 function InventoryAdjustmentFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: InventoryAdjustmentFormProps): React.ReactElement {
   const { dialogName, item, itemId, submitPayload, createInventoryAdjMutate } =
     useInventoryAdjContext();
 
-  // Initial form values.
-  const initialValues = {
+  const initialValues: InventoryAdjustmentFormValues = {
     ...defaultInitialValues,
-    itemId: itemId,
-    quantityOnHand: get(item, 'quantity_on_hand', 0),
+    itemId: itemId ?? '',
+    quantityOnHand:
+      (item as { quantity_on_hand?: string | number } | undefined)
+        ?.quantity_on_hand ?? 0,
   };
 
-  // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = {
-      ...omit(values, ['quantityOnHand', 'newQuantity', 'action']),
-      publish: submitPayload.publish,
-    };
+  const handleFormSubmit = (
+    values: InventoryAdjustmentFormValues,
+    { setSubmitting }: FormikHelpers<InventoryAdjustmentFormValues>,
+  ) => {
     setSubmitting(true);
-    createInventoryAdjMutate(form)
+    createInventoryAdjMutate(
+      transformFormToRequest({
+        ...values,
+        publish: submitPayload.publish ?? false,
+      }),
+    )
       .then(() => {
         closeDialog(dialogName);
 

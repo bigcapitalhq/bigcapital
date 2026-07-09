@@ -1,36 +1,32 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useInitiateWarehouseTransfer } from '@/hooks/query';
 import { compose } from '@/utils';
 
-/**
- * warehouse transfer initiate alert.
- * @returns
- */
+interface WarehouseTransferInitiateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { warehouseTransferId: number };
+}
+
 function WarehouseTransferInitiateAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { warehouseTransferId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: initialWarehouseTransferMutate, isLoading } =
+}: WarehouseTransferInitiateAlertProps): React.ReactElement {
+  const { mutateAsync: initialWarehouseTransferMutate, isPending } =
     useInitiateWarehouseTransfer();
 
-  // handle cancel alert.
   const handleCancelAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm alert.
   const handleConfirmInitiated = () => {
     initialWarehouseTransferMutate(warehouseTransferId)
       .then(() => {
@@ -39,7 +35,7 @@ function WarehouseTransferInitiateAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -47,13 +43,13 @@ function WarehouseTransferInitiateAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'warehouse_transfer.label.initiate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('warehouse_transfer.label.initiate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelAlert}
       onConfirm={handleConfirmInitiated}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
         <T id={'warehouse_transfer.alert.are_you_sure_you_want_to_initate'} />

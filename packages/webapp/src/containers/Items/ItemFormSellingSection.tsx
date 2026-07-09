@@ -35,7 +35,12 @@ export function ItemFormSellingSection() {
       <ItemFormSectionTitle>Selling details</ItemFormSectionTitle>
 
       {/*------------- Sellable checkbox ------------- */}
-      <FFormGroup name={'sellable'} inline={true} className={'form-group--sellable'} fastField>
+      <FFormGroup
+        name={'sellable'}
+        inline={true}
+        className={'form-group--sellable'}
+        fastField
+      >
         <FCheckbox
           name={'sellable'}
           inline={true}
@@ -46,7 +51,7 @@ export function ItemFormSellingSection() {
 
       {/*------------- Selling price ------------- */}
       <FFormGroup
-        name={'sell_price'}
+        name={'sellPrice'}
         label={<T id={'selling_price'} />}
         inline={true}
         fastField
@@ -54,7 +59,7 @@ export function ItemFormSellingSection() {
         <ControlGroup fill>
           <InputPrependText text={baseCurrency} />
           <FMoneyInputGroup
-            name={'sell_price'}
+            name={'sellPrice'}
             shouldUpdate={sellPriceFieldShouldUpdate}
             sellable={values.sellable}
             inputGroupProps={{ fill: true }}
@@ -67,14 +72,12 @@ export function ItemFormSellingSection() {
       {/*------------- Selling account ------------- */}
       <FFormGroup
         label={<T id={'account'} />}
-        name={'sell_account_id'}
-        labelInfo={
-          <Hint content={intl.get('item.field.sell_account.hint')} />
-        }
+        name={'sellAccountId'}
+        labelInfo={<Hint content={intl.get('item.field.sell_account.hint')} />}
         inline={true}
       >
         <AccountsSelect
-          name={'sell_account_id'}
+          name={'sellAccountId'}
           items={accounts}
           placeholder={intl.get('select_account')}
           disabled={!values.sellable}
@@ -88,26 +91,18 @@ export function ItemFormSellingSection() {
       </FFormGroup>
 
       {/*------------- Sell Tax Rate ------------- */}
-      <FFormGroup
-        name={'sell_tax_rate_id'}
-        label={'Tax Rate'}
-        inline={true}
-      >
-        <TaxRatesSelect
-          name={'sell_tax_rate_id'}
-          items={taxRates}
-          allowCreate
-        />
+      <FFormGroup name={'sellTaxRateId'} label={'Tax Rate'} inline={true}>
+        <TaxRatesSelect name={'sellTaxRateId'} items={taxRates} allowCreate />
       </FFormGroup>
 
       <FFormGroup
-        name={'sell_description'}
+        name={'sellDescription'}
         label={<T id={'description'} />}
         inline={true}
         fastField
       >
         <FTextArea
-          name={'sell_description'}
+          name={'sellDescription'}
           growVertically={true}
           disabled={!values.sellable}
           fill

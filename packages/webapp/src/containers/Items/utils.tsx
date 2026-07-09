@@ -36,18 +36,18 @@ const defaultInitialValues: ItemFormValues = {
   name: '',
   type: 'service',
   code: '',
-  cost_price: '',
-  sell_price: '',
-  cost_account_id: '',
-  sell_account_id: '',
-  sell_tax_rate_id: '',
-  inventory_account_id: '',
-  category_id: '',
+  costPrice: '',
+  sellPrice: '',
+  costAccountId: '',
+  sellAccountId: '',
+  sellTaxRateId: '',
+  inventoryAccountId: '',
+  categoryId: '',
   sellable: true,
   purchasable: true,
-  sell_description: '',
-  purchase_description: '',
-  purchase_tax_rate_id: '',
+  sellDescription: '',
+  purchaseDescription: '',
+  purchaseTaxRateId: '',
 };
 
 type ItemsSettings = {
@@ -70,9 +70,9 @@ export const useItemFormInitialValues = (
   return useMemo(
     () => ({
       ...defaultInitialValues,
-      cost_account_id: defaultTo(itemsSettings?.preferredCostAccount, ''),
-      sell_account_id: defaultTo(itemsSettings?.preferredSellAccount, ''),
-      inventory_account_id: defaultTo(
+      costAccountId: defaultTo(itemsSettings?.preferredCostAccount, ''),
+      sellAccountId: defaultTo(itemsSettings?.preferredSellAccount, ''),
+      inventoryAccountId: defaultTo(
         itemsSettings?.preferredInventoryAccount,
         '',
       ),
@@ -272,9 +272,9 @@ export function transformItemsTableState(
 /**
  * Transform API errors.
  */
-export const transformSubmitRequestErrors = (
-  error: { data: { errors: ItemError[] } },
-): Record<string, string> => {
+export const transformSubmitRequestErrors = (error: {
+  data: { errors: ItemError[] };
+}): Record<string, string> => {
   const {
     data: { errors },
   } = error;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { find, get } from 'lodash';
@@ -12,13 +11,35 @@ import {
 } from '@/components';
 import { Align, CellType } from '@/constants';
 
+interface WarehouseTransferEntryRow {
+  itemId?: number | string;
+  warehouses?: Array<{
+    warehouseId: number;
+    quantityOnHandFormatted?: string;
+  }>;
+}
+
+interface RemoveRowPayload {
+  removeRow: (rowIndex: number) => void;
+}
+
+interface WarehousePayload {
+  sourceWarehouseId: number | string;
+  destinationWarehouseId: number | string;
+}
+
+interface CellProps<TPayload> {
+  row: { index: number; original: WarehouseTransferEntryRow };
+  payload: TPayload;
+}
+
 /**
  * Actions cell renderer component.
  */
 export function ActionsCellRenderer({
   row: { index },
   payload: { removeRow },
-}) {
+}: CellProps<RemoveRowPayload>) {
   const onRemoveRole = () => {
     removeRow(index);
   };
@@ -36,7 +57,6 @@ export function ActionsCellRenderer({
     <Popover2 content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
-        iconSize={14}
         className="m12"
         minimal={true}
       />
@@ -45,9 +65,12 @@ export function ActionsCellRenderer({
 }
 ActionsCellRenderer.cellType = CellType.Button;
 
-function SourceWarehouseAccessorCell({ row: { original }, payload }) {
+function SourceWarehouseAccessorCell({
+  row: { original },
+  payload,
+}: CellProps<WarehousePayload>) {
   // Ignore display zero if the item not selected yet.
-  if (!original.item_id) return '';
+  if (!original.itemId) return '';
 
   const warehouse = find(
     original.warehouses,
@@ -56,9 +79,12 @@ function SourceWarehouseAccessorCell({ row: { original }, payload }) {
   return get(warehouse, 'quantityOnHandFormatted', '0');
 }
 
-function DistentionWarehouseAccessorCell({ row: { original }, payload }) {
+function DistentionWarehouseAccessorCell({
+  row: { original },
+  payload,
+}: CellProps<WarehousePayload>) {
   // Ignore display zero if the item not selected yet.
-  if (!original.item_id) return '';
+  if (!original.itemId) return '';
 
   const warehouse = find(
     original.warehouses,
@@ -75,9 +101,9 @@ export const useWarehouseTransferTableColumns = () => {
   return React.useMemo(
     () => [
       {
-        id: 'item_id',
+        id: 'itemId',
         Header: intl.get('warehouse_transfer.column.item_name'),
-        accessor: 'item_id',
+        accessor: 'itemId',
         Cell: ItemsListCell,
         disableSortBy: true,
         width: 130,
@@ -93,18 +119,18 @@ export const useWarehouseTransferTableColumns = () => {
         width: 120,
       },
       {
-        id: 'source_warehouse',
+        id: 'sourceWarehouse',
         Header: intl.get('warehouse_transfer.column.source_warehouse'),
-        accessor: 'source_warehouse',
+        accessor: 'sourceWarehouse',
         disableSortBy: true,
         Cell: SourceWarehouseAccessorCell,
         align: Align.Right,
         width: 100,
       },
       {
-        id: 'destination_warehouse',
+        id: 'destinationWarehouse',
         Header: intl.get('warehouse_transfer.column.destination_warehouse'),
-        accessor: 'destination_warehouse',
+        accessor: 'destinationWarehouse',
         Cell: DistentionWarehouseAccessorCell,
         disableSortBy: true,
         align: Align.Right,

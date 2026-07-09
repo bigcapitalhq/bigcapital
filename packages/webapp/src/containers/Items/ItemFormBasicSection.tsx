@@ -28,10 +28,22 @@ export function ItemFormBasicSection() {
   const itemTypeHintContent = (
     <>
       <div className="mb1">
-        <span dangerouslySetInnerHTML={{ __html: intl.formatHTMLMessage({ id: 'services_that_you_provide_to_customers' }) }} />
+        <span
+          dangerouslySetInnerHTML={{
+            __html: intl.formatHTMLMessage({
+              id: 'services_that_you_provide_to_customers',
+            }),
+          }}
+        />
       </div>
       <div className="mb1">
-        <span dangerouslySetInnerHTML={{ __html: intl.formatHTMLMessage({ id: 'products_you_buy_and_or_sell' }) }} />
+        <span
+          dangerouslySetInnerHTML={{
+            __html: intl.formatHTMLMessage({
+              id: 'products_you_buy_and_or_sell',
+            }),
+          }}
+        />
       </div>
     </>
   );
@@ -47,7 +59,10 @@ export function ItemFormBasicSection() {
         labelInfo={
           <span>
             <FieldRequiredHint />
-            <Tooltip content={itemTypeHintContent} position={Position.BOTTOM_LEFT} />
+            <Tooltip
+              content={itemTypeHintContent}
+              position={Position.BOTTOM_LEFT}
+            />
           </span>
         }
         className={classNames('form-group--item-type')}
@@ -95,12 +110,12 @@ export function ItemFormBasicSection() {
 
       {/*----------- Item category ----------*/}
       <FFormGroup
-        name={'category_id'}
+        name={'categoryId'}
         label={<T id={'category'} />}
         inline={true}
       >
         <FSelect
-          name={'category_id'}
+          name={'categoryId'}
           items={itemsCategories}
           valueAccessor={'id'}
           textAccessor={'name'}
@@ -111,7 +126,12 @@ export function ItemFormBasicSection() {
       </FFormGroup>
 
       {/*----------- Active ----------*/}
-      <FFormGroup name={'active'} inline={true} className={classNames('form-group--active')} fastField>
+      <FFormGroup
+        name={'active'}
+        inline={true}
+        className={classNames('form-group--active')}
+        fastField
+      >
         <FCheckbox
           name={'active'}
           inline={true}

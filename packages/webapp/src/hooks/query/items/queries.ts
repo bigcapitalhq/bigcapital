@@ -194,7 +194,7 @@ export function useItem(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<Item>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: itemsKeys.detail(id),

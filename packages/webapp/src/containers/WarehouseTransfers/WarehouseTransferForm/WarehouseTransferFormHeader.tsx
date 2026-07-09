@@ -1,4 +1,3 @@
-// @ts-nocheck
 import classNames from 'classnames';
 import React from 'react';
 import { WarehouseTransferFormHeaderFields } from './WarehouseTransferFormHeaderFields';

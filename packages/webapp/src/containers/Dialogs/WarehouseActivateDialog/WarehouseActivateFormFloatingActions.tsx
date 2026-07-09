@@ -1,26 +1,21 @@
-// @ts-nocheck
-import { Intent, Button, Classes } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { useWarehouseActivateContext } from './WarehouseActivateFormProvider';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-/**
- * warehouse activate form floating actions.
- */
+interface WarehouseActivateFormFloatingActionsProps
+  extends WithDialogActionsProps {}
+
 function WarehouseActivateFormFloatingActionsInner({
-  // #withDialogActions
   closeDialog,
-}) {
-  // warehouse activate dialog context.
+}: WarehouseActivateFormFloatingActionsProps): React.ReactElement {
   const { dialogName } = useWarehouseActivateContext();
+  const { isSubmitting } = useFormikContext<Record<string, never>>();
 
-  // Formik context.
-  const { isSubmitting } = useFormikContext();
-
-  // Handle close button click.
   const handleCancelBtnClick = () => {
     closeDialog(dialogName);
   };
@@ -37,7 +32,7 @@ function WarehouseActivateFormFloatingActionsInner({
           style={{ minWidth: '95px' }}
           type="submit"
         >
-          {<T id={'warehouses.activate_button'} />}
+          <T id={'warehouses.activate_button'} />
         </Button>
       </div>
     </div>

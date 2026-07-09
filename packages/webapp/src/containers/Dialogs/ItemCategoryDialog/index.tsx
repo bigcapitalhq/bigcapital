@@ -1,5 +1,6 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
+import type { ItemCategoryDialogPayload } from './types';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
@@ -10,14 +11,16 @@ const ItemCategoryFormDialogContent = lazy(() =>
   })),
 );
 
-/**
- * Item Category form dialog.
- */
+interface ItemCategoryFormDialogProps extends DialogBaseProps {
+  dialogName: string;
+  payload: ItemCategoryDialogPayload;
+}
+
 function ItemCategoryFormDialog({
   dialogName,
   payload = { action: '', id: null },
   isOpen,
-}) {
+}: ItemCategoryFormDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}

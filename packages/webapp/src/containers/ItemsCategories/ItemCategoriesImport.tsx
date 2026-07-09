@@ -13,9 +13,6 @@ export function ItemCategoriesImport() {
   };
   return (
     <DashboardInsider name={'import-item-categories'}>
-      {/* `ImportView` types `params` as required but the @ts-nocheck original
-          never passed it — preserved latent bug. */}
-      {/* @ts-expect-error see comment above */}
       <ImportView
         resource={'item_category'}
         onImportSuccess={handleImportSuccess}

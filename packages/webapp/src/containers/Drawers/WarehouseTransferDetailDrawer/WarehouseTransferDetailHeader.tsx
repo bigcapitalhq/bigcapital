@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -6,19 +5,16 @@ import styled from 'styled-components';
 import { WarehouseTransferDetailsStatus } from './utils';
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
 import {
-  FormatDate,
-  Row,
-  Col,
-  DetailsMenu,
-  DetailItem,
   CommercialDocHeader,
   CommercialDocTopHeader,
+  Col,
+  DetailItem,
+  DetailsMenu,
+  FormatDate,
+  Row,
 } from '@/components';
 
-/**
- * Warehouse transfer details drawer header.
- */
-export function WarehouseTransferDetailHeader() {
+export function WarehouseTransferDetailHeader(): React.ReactElement {
   const { warehouseTransfer } = useWarehouseDetailDrawerContext();
 
   return (
@@ -36,23 +32,26 @@ export function WarehouseTransferDetailHeader() {
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem label={intl.get('date')}>
-              <FormatDate value={warehouseTransfer.formatted_date} />
+              <FormatDate value={warehouseTransfer?.formattedDate} />
             </DetailItem>
 
             <DetailItem
               label={intl.get(
                 'warehouse_transfer.drawer.label.transfer_number',
               )}
-              children={defaultTo(warehouseTransfer.transaction_number, '-')}
-            />
+            >
+              {defaultTo(warehouseTransfer?.transactionNumber, '-')}
+            </DetailItem>
             <DetailItem
               label={intl.get('warehouse_transfer.drawer.label.from_warehouse')}
-              children={warehouseTransfer.from_warehouse.name}
-            />
+            >
+              {warehouseTransfer?.fromWarehouse?.name}
+            </DetailItem>
             <DetailItem
               label={intl.get('warehouse_transfer.drawer.label.to_warehouse')}
-              children={warehouseTransfer.to_warehouse.name}
-            />
+            >
+              {warehouseTransfer?.toWarehouse?.name}
+            </DetailItem>
           </DetailsMenu>
         </Col>
       </Row>

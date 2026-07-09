@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
+import { Formik, type FormikHelpers } from 'formik';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import {
@@ -9,25 +8,55 @@ import {
 } from './itemCategoryForm.schema';
 import { ItemCategoryForm as ItemCategoryFormContent } from './ItemCategoryFormContent';
 import { useItemCategoryContext } from './ItemCategoryProvider';
+import type { ItemCategoryFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type {
+  CreateItemCategoryBody,
+  EditItemCategoryBody,
+} from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
 
-const defaultInitialValues = {
+const defaultInitialValues: ItemCategoryFormValues = {
   name: '',
   description: '',
-  cost_account_id: '',
-  sell_account_id: '',
-  inventory_account_id: '',
+  costAccountId: '',
+  sellAccountId: '',
+  inventoryAccountId: '',
+  costMethod: '',
 };
 
-/**
- * Item category form.
- */
+// Coerce form-friendly string|number fields to the strict SDK body shape.
+// Empty strings become 0 — preserves the original broken runtime behavior
+// (server would have rejected empty values either way).
+const toAccountId = (v: string | number): number =>
+  typeof v === 'number' ? v : Number(v) || 0;
+
+const transformFormToCreateBody = (
+  values: ItemCategoryFormValues,
+): CreateItemCategoryBody => ({
+  name: values.name,
+  description: values.description,
+  costAccountId: toAccountId(values.costAccountId),
+  sellAccountId: toAccountId(values.sellAccountId),
+  inventoryAccountId: toAccountId(values.inventoryAccountId),
+  costMethod: values.costMethod,
+});
+
+const transformFormToEditBody = (
+  values: ItemCategoryFormValues,
+): EditItemCategoryBody => transformFormToCreateBody(values);
+
+interface ResponseError {
+  type: string;
+}
+
+interface ItemCategoryFormProps extends WithDialogActionsProps {}
+
 function ItemCategoryFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: ItemCategoryFormProps): React.ReactElement {
   const {
     isNewMode,
     itemCategory,
@@ -37,8 +66,7 @@ function ItemCategoryFormInner({
     editItemCategoryMutate,
   } = useItemCategoryContext();
 
-  // Initial values.
-  const initialValues = useMemo(
+  const initialValues = useMemo<ItemCategoryFormValues>(
     () => ({
       ...defaultInitialValues,
       ...transformToForm(itemCategory, defaultInitialValues),
@@ -46,8 +74,16 @@ function ItemCategoryFormInner({
     [itemCategory],
   );
 
-  // Transformes response errors.
-  const transformErrors = (errors, { setErrors }) => {
+  const transformErrors = (
+    errors: ResponseError[],
+    {
+      setErrors,
+    }: {
+      setErrors: (
+        errors: Partial<Record<keyof ItemCategoryFormValues, string>>,
+      ) => void;
+    },
+  ) => {
     if (errors.find((error) => error.type === 'CATEGORY_NAME_EXISTS')) {
       setErrors({
         name: intl.get('category_name_exists'),
@@ -55,17 +91,17 @@ function ItemCategoryFormInner({
     }
   };
 
-  // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: ItemCategoryFormValues,
+    { setSubmitting, setErrors }: FormikHelpers<ItemCategoryFormValues>,
+  ) => {
     setSubmitting(true);
     const form = { ...values };
 
-    // Handle close the dialog after success response.
     const afterSubmit = () => {
       closeDialog(dialogName);
     };
-    // Handle the response success.
-    const onSuccess = ({ response }) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -74,10 +110,9 @@ function ItemCategoryFormInner({
         ),
         intent: Intent.SUCCESS,
       });
-      afterSubmit(response);
+      afterSubmit();
     };
-    // Handle the response error.
-    const onError = (error) => {
+    const onError = (error: { data: { errors: ResponseError[] } }) => {
       const {
         data: { errors },
       } = error;
@@ -86,9 +121,14 @@ function ItemCategoryFormInner({
       setSubmitting(false);
     };
     if (isNewMode) {
-      createItemCategoryMutate(form).then(onSuccess).catch(onError);
+      createItemCategoryMutate(transformFormToCreateBody(form))
+        .then(onSuccess)
+        .catch(onError);
     } else {
-      editItemCategoryMutate([itemCategoryId, form])
+      editItemCategoryMutate([
+        itemCategoryId as number,
+        transformFormToEditBody(form),
+      ])
         .then(onSuccess)
         .catch(onError);
     }

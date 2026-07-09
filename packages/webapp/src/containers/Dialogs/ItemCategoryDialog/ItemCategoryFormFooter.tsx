@@ -1,26 +1,21 @@
-// @ts-nocheck
-import { Classes, Button, Intent } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { useItemCategoryContext } from './ItemCategoryProvider';
+import type { ItemCategoryFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-/**
- * Item category form footer.
- */
+interface ItemCategoryFormFooterProps extends WithDialogActionsProps {}
+
 function ItemCategoryFormFooterInner({
-  // #withDialogActions
   closeDialog,
-}) {
-  // Item category context.
+}: ItemCategoryFormFooterProps): React.ReactElement {
   const { isNewMode, dialogName } = useItemCategoryContext();
+  const { isSubmitting } = useFormikContext<ItemCategoryFormValues>();
 
-  // Formik context.
-  const { isSubmitting } = useFormikContext();
-
-  // Handle close button click.
   const handleCloseBtnClick = () => {
     closeDialog(dialogName);
   };

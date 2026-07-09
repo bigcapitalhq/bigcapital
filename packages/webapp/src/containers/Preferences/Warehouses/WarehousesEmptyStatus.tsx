@@ -1,15 +1,15 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import React from 'react';
-import { FormattedMessage as T, EmptyStatus } from '@/components';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { EmptyStatus, FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
+interface WarehousesEmptyStatusProps extends WithDialogActionsProps {}
+
 function WarehousesEmptyStatusInner({
-  // #withDialogActions
   openDialog,
-}) {
-  // Handle activate action warehouse.
+}: WarehousesEmptyStatusProps): React.ReactElement {
   const handleActivateWarehouse = () => {
     openDialog('warehouse-activate', {});
   };

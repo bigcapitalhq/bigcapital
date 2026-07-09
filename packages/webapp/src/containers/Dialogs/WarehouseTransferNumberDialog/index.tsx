@@ -1,25 +1,28 @@
-// @ts-nocheck
-import React from 'react';
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
 
-const WarehouseTransferNumberDialogContent = React.lazy(() =>
+const WarehouseTransferNumberDialogContent = lazy(() =>
   import('./WarehouseTransferNumberDialogContent').then((m) => ({
     default: m.WarehouseTransferNumberDialogContent,
   })),
 );
 
-/**
- * Warehouse transfer number dialog.
- */
+interface WarehouseTransferNumberDialogProps {
+  dialogName: string;
+  payload: { initialFormValues?: Record<string, unknown> };
+  isOpen: boolean | undefined;
+  onConfirm?: (values: Record<string, unknown>) => void;
+}
+
 function WarehouseTransferNumberDilaog({
   dialogName,
-  payload: { initialFormValues },
+  payload: { initialFormValues } = {},
   isOpen,
   onConfirm,
-}) {
-  const handleConfirm = (values) => {
+}: WarehouseTransferNumberDialogProps): React.ReactElement {
+  const handleConfirm = (values: Record<string, unknown>) => {
     saveInvoke(onConfirm, values);
   };
   return (
@@ -32,6 +35,7 @@ function WarehouseTransferNumberDilaog({
     >
       <DialogSuspense>
         <WarehouseTransferNumberDialogContent
+          // @ts-expect-error — HOC-composed component loses generic props via compose; runtime passes through.
           initialValues={{ ...initialFormValues }}
           onConfirm={handleConfirm}
         />

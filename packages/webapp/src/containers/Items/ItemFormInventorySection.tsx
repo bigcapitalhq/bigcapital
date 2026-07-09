@@ -24,12 +24,12 @@ export function ItemFormInventorySection() {
           {/*------------- Inventory Account ------------- */}
           <FFormGroup
             label={intl.get('inventory_account')}
-            name={'inventory_account_id'}
+            name={'inventoryAccountId'}
             fastField={true}
             inline={true}
           >
             <AccountsSelect
-              name={'inventory_account_id'}
+              name={'inventoryAccountId'}
               items={accounts}
               placeholder={<T id={'select_account'} />}
               filterByTypes={[ACCOUNT_TYPE.INVENTORY]}

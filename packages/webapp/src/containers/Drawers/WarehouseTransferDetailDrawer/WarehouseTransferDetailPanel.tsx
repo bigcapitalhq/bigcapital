@@ -1,13 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import { WarehouseTransferDetailHeader } from './WarehouseTransferDetailHeader';
 import { WarehouseTransferDetailTable } from './WarehouseTransferDetailTable';
 import { CommercialDocBox } from '@/components';
 
-/**
- * Warehouse transfer details panel.
- */
-export function WarehouseTransferDetailPanel() {
+export function WarehouseTransferDetailPanel(): React.ReactElement {
   return (
     <CommercialDocBox>
       <WarehouseTransferDetailHeader />

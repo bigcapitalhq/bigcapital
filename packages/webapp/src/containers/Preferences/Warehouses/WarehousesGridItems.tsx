@@ -1,39 +1,40 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import { ContextMenu2 } from '@blueprintjs/popover2';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { WarehouseContextMenu, WarehousesGridItemBox } from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { Warehouse } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useMarkWarehouseAsPrimary } from '@/hooks/query';
 import { compose } from '@/utils';
 
-/**
- *  warehouse grid item.
- */
+interface WarehouseGridItemProps
+  extends WithAlertActionsProps,
+    WithDialogActionsProps {
+  warehouse: Warehouse;
+}
+
 function WarehouseGridItem({
-  // #withAlertActions
   openAlert,
-
-  // #withDialogActions
   openDialog,
-
   warehouse,
-}) {
+}: WarehouseGridItemProps): React.ReactElement {
   const { mutateAsync: markWarehouseAsPrimaryMutate } =
     useMarkWarehouseAsPrimary();
 
-  // Handle edit warehouse.
   const handleEditWarehouse = () => {
-    openDialog('warehouse-form', { warehouseId: warehouse.id, action: 'edit' });
+    openDialog('warehouse-form', {
+      warehouseId: warehouse.id,
+      action: 'edit',
+    });
   };
-  // Handle delete warehouse.
   const handleDeleteWarehouse = () => {
     openAlert('warehouse-delete', { warehouseId: warehouse.id });
   };
-  // Handle mark primary warehouse.
   const handleMarkWarehouseAsPrimary = () => {
     markWarehouseAsPrimaryMutate(warehouse.id).then(() => {
       AppToaster.show({
@@ -59,8 +60,6 @@ function WarehouseGridItem({
         code={warehouse.code}
         city={warehouse.city}
         country={warehouse.country}
-        email={warehouse.email}
-        phoneNumber={warehouse.phone_number}
         primary={warehouse.primary}
       />
     </ContextMenu2>
@@ -72,11 +71,18 @@ const WarehousesGridItem = compose(
   withDialogActions,
 )(WarehouseGridItem);
 
-/**
- * warehouses grid items,
- */
-export function WarehousesGridItems({ warehouses }) {
-  return warehouses.map((warehouse) => (
-    <WarehousesGridItem warehouse={warehouse} />
-  ));
+interface WarehousesGridItemsProps {
+  warehouses: Warehouse[];
+}
+
+export function WarehousesGridItems({
+  warehouses,
+}: WarehousesGridItemsProps): React.ReactElement {
+  return (
+    <>
+      {warehouses.map((warehouse) => (
+        <WarehousesGridItem key={warehouse.id} warehouse={warehouse} />
+      ))}
+    </>
+  );
 }
