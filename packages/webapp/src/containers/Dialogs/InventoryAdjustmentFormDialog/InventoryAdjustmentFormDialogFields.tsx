@@ -150,7 +150,11 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
         />
       </FFormGroup>
 
-      <FFormGroup name={'referenceNo'} label={intl.get('reference_no')} fastField>
+      <FFormGroup
+        name={'referenceNo'}
+        label={intl.get('reference_no')}
+        fastField
+      >
         <FInputGroup name={'referenceNo'} fastField />
       </FFormGroup>
 

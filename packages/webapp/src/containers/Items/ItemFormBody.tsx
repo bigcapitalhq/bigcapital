@@ -112,11 +112,7 @@ function ItemFormBodyInner() {
           </FFormGroup>
 
           {/*------------- Sell Tax Rate ------------- */}
-          <FFormGroup
-            name={'sellTaxRateId'}
-            label={'Tax Rate'}
-            inline={true}
-          >
+          <FFormGroup name={'sellTaxRateId'} label={'Tax Rate'} inline={true}>
             <TaxRatesSelect
               name={'sellTaxRateId'}
               items={taxRates}

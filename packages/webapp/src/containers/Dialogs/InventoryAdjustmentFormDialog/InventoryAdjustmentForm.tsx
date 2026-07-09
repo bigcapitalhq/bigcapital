@@ -51,7 +51,10 @@ function InventoryAdjustmentFormInner({
   ) => {
     setSubmitting(true);
     createInventoryAdjMutate(
-      transformFormToRequest({ ...values, publish: submitPayload.publish ?? false }),
+      transformFormToRequest({
+        ...values,
+        publish: submitPayload.publish ?? false,
+      }),
     )
       .then(() => {
         closeDialog(dialogName);

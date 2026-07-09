@@ -35,7 +35,12 @@ export function ItemFormSellingSection() {
       <ItemFormSectionTitle>Selling details</ItemFormSectionTitle>
 
       {/*------------- Sellable checkbox ------------- */}
-      <FFormGroup name={'sellable'} inline={true} className={'form-group--sellable'} fastField>
+      <FFormGroup
+        name={'sellable'}
+        inline={true}
+        className={'form-group--sellable'}
+        fastField
+      >
         <FCheckbox
           name={'sellable'}
           inline={true}
@@ -68,9 +73,7 @@ export function ItemFormSellingSection() {
       <FFormGroup
         label={<T id={'account'} />}
         name={'sellAccountId'}
-        labelInfo={
-          <Hint content={intl.get('item.field.sell_account.hint')} />
-        }
+        labelInfo={<Hint content={intl.get('item.field.sell_account.hint')} />}
         inline={true}
       >
         <AccountsSelect
@@ -88,16 +91,8 @@ export function ItemFormSellingSection() {
       </FFormGroup>
 
       {/*------------- Sell Tax Rate ------------- */}
-      <FFormGroup
-        name={'sellTaxRateId'}
-        label={'Tax Rate'}
-        inline={true}
-      >
-        <TaxRatesSelect
-          name={'sellTaxRateId'}
-          items={taxRates}
-          allowCreate
-        />
+      <FFormGroup name={'sellTaxRateId'} label={'Tax Rate'} inline={true}>
+        <TaxRatesSelect name={'sellTaxRateId'} items={taxRates} allowCreate />
       </FFormGroup>
 
       <FFormGroup

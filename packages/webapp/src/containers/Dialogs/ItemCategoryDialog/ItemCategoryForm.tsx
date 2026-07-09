@@ -76,7 +76,13 @@ function ItemCategoryFormInner({
 
   const transformErrors = (
     errors: ResponseError[],
-    { setErrors }: { setErrors: (errors: Partial<Record<keyof ItemCategoryFormValues, string>>) => void },
+    {
+      setErrors,
+    }: {
+      setErrors: (
+        errors: Partial<Record<keyof ItemCategoryFormValues, string>>,
+      ) => void;
+    },
   ) => {
     if (errors.find((error) => error.type === 'CATEGORY_NAME_EXISTS')) {
       setErrors({
@@ -106,9 +112,7 @@ function ItemCategoryFormInner({
       });
       afterSubmit();
     };
-    const onError = (error: {
-      data: { errors: ResponseError[] };
-    }) => {
+    const onError = (error: { data: { errors: ResponseError[] } }) => {
       const {
         data: { errors },
       } = error;

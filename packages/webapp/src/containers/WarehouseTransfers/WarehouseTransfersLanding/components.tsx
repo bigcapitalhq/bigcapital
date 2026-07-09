@@ -47,14 +47,18 @@ export function ActionsMenu({
         onClick={safeCallback(onEdit, original)}
       />
 
-      <If condition={Boolean(!original.is_transferred && !original.is_initiated)}>
+      <If
+        condition={Boolean(!original.is_transferred && !original.is_initiated)}
+      >
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
           text={intl.get('warehouse_transfer.action.initiate_transfer')}
           onClick={safeCallback(onInitate, original)}
         />
       </If>
-      <If condition={Boolean(original.is_initiated && !original.is_transferred)}>
+      <If
+        condition={Boolean(original.is_initiated && !original.is_transferred)}
+      >
         <MenuItem
           icon={<Icon icon="send" iconSize={16} />}
           text={intl.get('warehouse_transfer.action.mark_as_transferred')}

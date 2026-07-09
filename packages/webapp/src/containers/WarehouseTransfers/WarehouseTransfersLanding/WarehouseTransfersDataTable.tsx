@@ -36,7 +36,10 @@ interface DataTableFetchParams {
 }
 
 interface WarehouseTransfersDataTableInnerProps
-  extends Pick<WithWarehouseTransfersActionsProps, 'setWarehouseTransferTableState'>,
+  extends Pick<
+      WithWarehouseTransfersActionsProps,
+      'setWarehouseTransferTableState'
+    >,
     Pick<WithAlertActionsProps, 'openAlert'>,
     Pick<WithDrawerActionsProps, 'openDrawer'>,
     Pick<WithDialogActionsProps, 'openDialog'> {
@@ -118,7 +121,9 @@ function WarehouseTransfersDataTableInner({
   };
 
   // Handle cell click.
-  const handleCellClick = (cell: { row: { original: WarehouseTransferRow } }) => {
+  const handleCellClick = (cell: {
+    row: { original: WarehouseTransferRow };
+  }) => {
     openDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS, {
       warehouseTransferId: cell.row.original.id,
     });

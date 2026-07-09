@@ -34,10 +34,9 @@ interface WarehouseTransfersListContextValue {
   isEmptyStatus: boolean;
 }
 
-const WarehouseTransfersListContext =
-  React.createContext<WarehouseTransfersListContextValue | undefined>(
-    undefined,
-  );
+const WarehouseTransfersListContext = React.createContext<
+  WarehouseTransfersListContextValue | undefined
+>(undefined);
 
 /**
  * WarehouseTransfer data provider
@@ -108,6 +107,8 @@ function WarehouseTransfersListProvider({
 }
 
 const useWarehouseTranfersListContext = () =>
-  React.useContext(WarehouseTransfersListContext) as WarehouseTransfersListContextValue;
+  React.useContext(
+    WarehouseTransfersListContext,
+  ) as WarehouseTransfersListContextValue;
 
 export { WarehouseTransfersListProvider, useWarehouseTranfersListContext };

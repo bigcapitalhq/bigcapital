@@ -8,8 +8,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { usePublishInventoryAdjustment } from '@/hooks/query';
 import { compose } from '@/utils';
 
-interface InventoryAdjustmentPublishAlertProps
-  extends WithAlertActionsProps {
+interface InventoryAdjustmentPublishAlertProps extends WithAlertActionsProps {
   name: string;
   isOpen: boolean;
   payload: { inventoryId: number };

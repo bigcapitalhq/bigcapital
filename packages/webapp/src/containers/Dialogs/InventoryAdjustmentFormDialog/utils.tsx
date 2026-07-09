@@ -52,8 +52,7 @@ export const useSetPrimaryBranchToForm = () => {
 
   React.useEffect(() => {
     if (isBranchesSuccess) {
-      const primaryBranch =
-        branches.find((b) => b.primary) || first(branches);
+      const primaryBranch = branches.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
         setFieldValue('branchId', primaryBranch.id);

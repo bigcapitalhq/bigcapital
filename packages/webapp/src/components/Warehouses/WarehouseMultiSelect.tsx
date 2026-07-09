@@ -15,8 +15,7 @@ export interface WarehouseSelectModel
 
 type FMultiSelectProps = React.ComponentProps<typeof FMultiSelect>;
 
-interface WarehouseMultiSelectProps
-  extends Omit<FMultiSelectProps, 'items'> {
+interface WarehouseMultiSelectProps extends Omit<FMultiSelectProps, 'items'> {
   warehouses?: WarehouseSelectModel[];
 }
 
@@ -32,9 +31,7 @@ const warehouseItemPredicate: ItemPredicate<WarehouseSelectModel> = (
   if (exactMatch) {
     return normalizedTitle === normalizedQuery;
   }
-  return (
-    `${warehouse.code}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-  );
+  return `${warehouse.code}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
 };
 
 const warehouseItemRenderer: FormikItemRenderer<WarehouseSelectModel> = (

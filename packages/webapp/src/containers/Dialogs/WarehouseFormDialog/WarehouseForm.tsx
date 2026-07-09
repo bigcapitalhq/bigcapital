@@ -56,7 +56,11 @@ function WarehouseFormInner({
       closeDialog(dialogName);
     };
 
-    const onError = ({ data: { errors } }: { data: { errors: Array<{ type: string }> } }) => {
+    const onError = ({
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
+    }) => {
       if (errors) {
         // no-op (preserved from @ts-nocheck original).
       }
@@ -65,13 +69,9 @@ function WarehouseFormInner({
     };
 
     if (warehouseId) {
-      editWarehouseMutate([warehouseId, form])
-        .then(onSuccess)
-        .catch(onError);
+      editWarehouseMutate([warehouseId, form]).then(onSuccess).catch(onError);
     } else {
-      createWarehouseMutate(form)
-        .then(onSuccess)
-        .catch(onError);
+      createWarehouseMutate(form).then(onSuccess).catch(onError);
     }
   };
 

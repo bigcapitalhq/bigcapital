@@ -25,7 +25,8 @@ function WarehouseDeleteAlertInner({
   payload: { warehouseId },
   closeAlert,
 }: WarehouseDeleteAlertProps): React.ReactElement {
-  const { mutateAsync: deleteWarehouseMutate, isPending } = useDeleteWarehouse();
+  const { mutateAsync: deleteWarehouseMutate, isPending } =
+    useDeleteWarehouse();
 
   const handleCancelDeleteAlert = () => {
     closeAlert(name);

@@ -159,7 +159,8 @@ export const WarehouseTransfersActionsBar = compose(
   withSettingsActions,
   withWarehouseTransfersActions,
   withWarehouseTransfers(({ warehouseTransferTableState }) => ({
-    warehouseTransferFilterRoles: warehouseTransferTableState?.filterRoles ?? [],
+    warehouseTransferFilterRoles:
+      warehouseTransferTableState?.filterRoles ?? [],
   })),
   withSettings(({ warehouseTransferSettings }: WithSettingsProps) => ({
     warehouseTransferTableSize: warehouseTransferSettings?.tableSize,

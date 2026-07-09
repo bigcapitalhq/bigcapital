@@ -132,12 +132,8 @@ export const entriesFieldShouldUpdate = (
 /**
  * Transformes the form values to request body values.
  */
-export function transformValueToRequest(
-  values: WarehouseTransferFormValues,
-) {
-  const entries = values.entries.filter(
-    (item) => item.itemId && item.quantity,
-  );
+export function transformValueToRequest(values: WarehouseTransferFormValues) {
+  const entries = values.entries.filter((item) => item.itemId && item.quantity);
   return {
     ...values,
     entries: entries.map((entry) => ({
@@ -199,9 +195,10 @@ export const mutateTableRow = R.curry(
     newRow: WarehouseTransferEntry,
     rows: WarehouseTransferEntry[],
   ): WarehouseTransferEntry[] => {
-    return compose(orderingLinesIndexes, updateTableRow(rowIndex, newRow))(
-      rows,
-    );
+    return compose(
+      orderingLinesIndexes,
+      updateTableRow(rowIndex, newRow),
+    )(rows);
   },
 );
 

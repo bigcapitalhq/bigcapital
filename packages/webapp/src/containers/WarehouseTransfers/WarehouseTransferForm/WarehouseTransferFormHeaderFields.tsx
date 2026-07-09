@@ -42,7 +42,8 @@ interface FInputGroupFieldProps {
   fill?: boolean;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
 }
-const FInputGroupField = FInputGroup as unknown as React.FC<FInputGroupFieldProps>;
+const FInputGroupField =
+  FInputGroup as unknown as React.FC<FInputGroupFieldProps>;
 
 interface WarehouseTransferFormHeaderFieldsProps {
   openDialog: WithDialogActionsProps['openDialog'];
@@ -72,9 +73,7 @@ function WarehouseTransferFormHeaderFieldsInner({
   };
 
   // Handle transfer no. field blur.
-  const handleTransferNoBlur = (
-    event: React.FocusEvent<HTMLInputElement>,
-  ) => {
+  const handleTransferNoBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
 
     if (

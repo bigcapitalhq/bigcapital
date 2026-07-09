@@ -11,7 +11,9 @@ import { useAccounts, useSaveSettings, useSettingsItems } from '@/hooks/query';
 
 interface ItemPreferencesFormContextValue {
   accounts: Account[];
-  saveSettingMutate: (vars: { options: SaveSettingsBody['options'] }) => Promise<unknown>;
+  saveSettingMutate: (vars: {
+    options: SaveSettingsBody['options'];
+  }) => Promise<unknown>;
 }
 
 const ItemFormContext = createContext<ItemPreferencesFormContextValue>(

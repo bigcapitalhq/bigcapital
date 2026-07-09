@@ -1,9 +1,4 @@
-import type {
-  Account,
-  Branch,
-  Item,
-  Warehouse,
-} from '@bigcapital/sdk-ts';
+import type { Account, Branch, Item, Warehouse } from '@bigcapital/sdk-ts';
 import type { CreateQuickInventoryAdjustmentBody } from '@bigcapital/sdk-ts';
 
 export interface InventoryAdjustmentFormValues {

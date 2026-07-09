@@ -12,5 +12,8 @@ interface WarehouseAlertEntry {
 }
 
 export const WarehousesAlerts: WarehouseAlertEntry[] = [
-  { name: 'warehouse-delete', component: WarehouseDeleteAlert as ComponentType<unknown> },
+  {
+    name: 'warehouse-delete',
+    component: WarehouseDeleteAlert as ComponentType<unknown>,
+  },
 ];

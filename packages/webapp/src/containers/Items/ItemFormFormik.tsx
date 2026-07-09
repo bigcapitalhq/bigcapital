@@ -11,10 +11,7 @@ import {
   transformSubmitRequestErrors,
   useItemFormInitialValues,
 } from './utils';
-import type {
-  ItemFormValues,
-  ItemFormSubmitPayload,
-} from './types';
+import type { ItemFormValues, ItemFormSubmitPayload } from './types';
 import type { CreateItemBody, EditItemBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { CLASSES } from '@/constants/classes';
@@ -116,7 +113,11 @@ export function ItemFormFormik({
 
   return (
     <div
-      className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ITEM, className)}
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_ITEM,
+        className,
+      )}
     >
       <Formik<ItemFormValues>
         enableReinitialize={true}

@@ -22,10 +22,7 @@ interface WarehousesProviderProps {
   children?: React.ReactNode;
 }
 
-function WarehousesProvider({
-  query,
-  ...props
-}: WarehousesProviderProps) {
+function WarehousesProvider({ query, ...props }: WarehousesProviderProps) {
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 

@@ -11,9 +11,10 @@ import {
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 
-const InventoryAdjustmentContext = createContext<InventoryAdjustmentContextValue>(
-  {} as InventoryAdjustmentContextValue,
-);
+const InventoryAdjustmentContext =
+  createContext<InventoryAdjustmentContextValue>(
+    {} as InventoryAdjustmentContextValue,
+  );
 
 interface InventoryAdjustmentFormProviderProps {
   itemId?: number | null;
@@ -32,7 +33,9 @@ function InventoryAdjustmentFormProvider({
 
   const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
 
-  const { isFetching: isItemLoading, data: item } = useItem(itemId ?? undefined);
+  const { isFetching: isItemLoading, data: item } = useItem(
+    itemId ?? undefined,
+  );
 
   const {
     data: warehouses,

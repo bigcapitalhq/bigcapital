@@ -22,7 +22,9 @@ export function WarehouseTransferDetailHeader(): React.ReactElement {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <StatusDetailItem>
-            <WarehouseTransferDetailsStatus warehouseTransfer={warehouseTransfer} />
+            <WarehouseTransferDetailsStatus
+              warehouseTransfer={warehouseTransfer}
+            />
           </StatusDetailItem>
         </DetailsMenu>
       </CommercialDocTopHeader>

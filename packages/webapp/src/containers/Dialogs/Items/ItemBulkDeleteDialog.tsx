@@ -11,7 +11,9 @@ import { withItemsActions } from '@/containers/Items/withItemsActions';
 import { useBulkDeleteItems } from '@/hooks/query/items';
 import { compose } from '@/utils';
 
-interface ItemBulkDeleteDialogProps extends WithDialogActionsProps, WithItemsActionsProps {
+interface ItemBulkDeleteDialogProps
+  extends WithDialogActionsProps,
+    WithItemsActionsProps {
   dialogName: string;
   isOpen: boolean;
   payload: {

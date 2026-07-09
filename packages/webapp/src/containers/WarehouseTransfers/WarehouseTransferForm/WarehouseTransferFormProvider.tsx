@@ -18,8 +18,9 @@ import {
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 
-const WarehouseFormContext =
-  createContext<WarehouseTransferFormContextValue | undefined>(undefined);
+const WarehouseFormContext = createContext<
+  WarehouseTransferFormContextValue | undefined
+>(undefined);
 
 interface WarehouseTransferFormProviderProps {
   warehouseTransferId?: number;

@@ -88,7 +88,11 @@ function WarehouseTransferFormInner({
   // Handles form submit.
   const handleSubmit = (
     values: WarehouseTransferFormValues,
-    { setSubmitting, setErrors, resetForm }: FormikHelpers<WarehouseTransferFormValues>,
+    {
+      setSubmitting,
+      setErrors,
+      resetForm,
+    }: FormikHelpers<WarehouseTransferFormValues>,
   ) => {
     setSubmitting(true);
     // Transformes the values of the form to request.
@@ -131,7 +135,9 @@ function WarehouseTransferFormInner({
     if (isNewMode) {
       createWarehouseTransferMutate(
         form as unknown as CreateWarehouseTransferBody,
-      ).then(onSuccess).catch(onError);
+      )
+        .then(onSuccess)
+        .catch(onError);
     } else {
       editWarehouseTransferMutate([
         warehouseTransfer!.id,

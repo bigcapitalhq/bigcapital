@@ -8,8 +8,7 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { useTransferredWarehouseTransfer } from '@/hooks/query';
 import { compose } from '@/utils';
 
-interface TransferredWarehouseTransferAlertProps
-  extends WithAlertActionsProps {
+interface TransferredWarehouseTransferAlertProps extends WithAlertActionsProps {
   name: string;
   isOpen: boolean;
   payload: { warehouseTransferId: number };
