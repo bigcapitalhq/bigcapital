@@ -1,27 +1,34 @@
-// @ts-nocheck
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
+import type { IPopoverProps } from '@blueprintjs/core';
 import React from 'react';
 import { AdvancedFilterDropdown } from './AdvancedFilterDropdown';
+import type { IAdvancedFilterDropdown } from './interfaces';
+
+interface AdvancedFilterPopoverProps {
+  popoverProps?: IPopoverProps;
+  advancedFilterProps: IAdvancedFilterDropdown;
+  children?: React.ReactNode;
+}
 
 /**
  * Advanced filter popover.
+ *
+ * `advancedFilterProps` is intentionally permissive to accept the
+ * loosely-typed field/condition arrays (`Record<string, any>[]`, `unknown[]`)
+ * that the codebase's ListProviders currently produce. It is narrowed to
+ * `IAdvancedFilterDropdown` at the boundary below.
  */
 export function AdvancedFilterPopover({
   popoverProps = {},
   advancedFilterProps,
   children,
-}: {
-  popoverProps?: Record<string, any>;
-  advancedFilterProps: Record<string, any>;
-  children?: React.ReactNode;
-}) {
+}: AdvancedFilterPopoverProps) {
   return (
     <Popover
       minimal={true}
       content={<AdvancedFilterDropdown {...advancedFilterProps} />}
       interactionKind={PopoverInteractionKind.CLICK}
       position={Position.BOTTOM_LEFT}
-      canOutsideClickClose={true}
       modifiers={{
         offset: { offset: '0, 4' },
       }}

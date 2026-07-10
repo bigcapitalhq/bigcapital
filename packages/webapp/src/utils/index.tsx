@@ -11,6 +11,7 @@ import moment from 'moment';
 import * as R from 'ramda';
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 import { deepMapKeys } from './map-key-deep';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 export * from './deep';
 export * from './flatten-infinity-pages';
 
@@ -291,7 +292,7 @@ export const firstLettersArgs = (...args) => {
   return letters.join('').toUpperCase();
 };
 
-export const uniqueMultiProps = (items, props) => {
+export const uniqueMultiProps = <T,>(items: T[], props: string[]): T[] => {
   return _.uniqBy(items, (item) => {
     return JSON.stringify(_.pick(item, props));
   });
@@ -806,7 +807,9 @@ export function nestedArrayToflatten(
   }, []);
 }
 
-export function getFieldsFromResourceMeta(resourceFields) {
+export function getFieldsFromResourceMeta(
+  resourceFields: Record<string, unknown>,
+): IResourceField[] {
   const fields = Object.keys(resourceFields)
     .map((fieldKey) => {
       const field = resourceFields[fieldKey];

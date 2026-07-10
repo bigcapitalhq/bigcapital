@@ -35,6 +35,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshJournals } from '@/hooks/query/manual-journals';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface WithSettingsProps {
@@ -47,7 +48,7 @@ interface ManualJournalActionsBarInnerProps
     WithSettingsActionsProps,
     WithDialogActionsProps,
     WithSettingsProps {
-  manualJournalsFilterConditions: unknown[];
+  manualJournalsFilterConditions: IFilterRole[];
 }
 
 /**
@@ -161,7 +162,7 @@ function ManualJournalActionsBarInner({
             conditions: manualJournalsFilterConditions,
             defaultFieldKey: 'journal_number',
             fields,
-            onFilterChange: (filterConditions: unknown[]) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setManualJournalsTableState({
                 filterRoles: filterConditions,
               });

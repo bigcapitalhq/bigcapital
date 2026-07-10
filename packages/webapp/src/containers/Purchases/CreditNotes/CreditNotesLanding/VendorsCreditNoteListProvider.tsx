@@ -9,6 +9,7 @@ import {
   useRefreshVendorCredits,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 interface VendorsCreditNoteListProviderProps {
   query?: any;
@@ -22,7 +23,7 @@ export interface VendorsCreditNoteListContextValue {
   VendorCreditsViews: any;
   refresh: () => void;
   resourceMeta: any;
-  fields: Record<string, any>[];
+  fields: IResourceField[];
   isResourceLoading: boolean;
   isResourceFetching: boolean;
   isVendorCreditsFetching: boolean;

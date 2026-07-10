@@ -9,6 +9,7 @@ import {
   useRefreshCreditNotes,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 interface CreditNotesListProviderProps {
   query?: any;
@@ -22,7 +23,7 @@ export interface CreditNotesListContextValue {
   CreditNotesView: any;
   refresh: () => void;
   resourceMeta: any;
-  fields: Record<string, any>[];
+  fields: IResourceField[];
   isResourceLoading: boolean;
   isResourceFetching: boolean;
   isCreditNotesFetching: boolean;

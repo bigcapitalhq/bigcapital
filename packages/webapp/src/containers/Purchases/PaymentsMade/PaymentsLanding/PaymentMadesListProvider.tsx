@@ -8,6 +8,7 @@ import {
   useResourceMeta,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 interface PaymentMadesListProviderProps {
   query?: any;
@@ -20,7 +21,7 @@ export interface PaymentMadesListContextValue {
   pagination: { total?: number; [key: string]: any } | undefined;
   filterMeta: any;
   paymentMadesViews: any;
-  fields: Record<string, any>[];
+  fields: IResourceField[];
   resourceMeta: any;
   isResourceMetaLoading: boolean;
   isResourceMetaFetching: boolean;

@@ -4,6 +4,7 @@ import type { InvoiceTableRow } from './components';
 import { DashboardInsider } from '@/components/Dashboard';
 import { useResourceViews, useResourceMeta, useInvoices } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 interface InvoicesListProviderProps {
   query?: any;
@@ -14,7 +15,7 @@ interface InvoicesListProviderProps {
 export interface InvoicesListContextValue {
   invoices: InvoiceTableRow[] | undefined;
   pagination: { total?: number; [key: string]: any } | undefined;
-  invoicesFields: Record<string, any>[];
+  invoicesFields: IResourceField[];
   invoicesViews: any;
   isInvoicesLoading: boolean;
   isInvoicesFetching: boolean;

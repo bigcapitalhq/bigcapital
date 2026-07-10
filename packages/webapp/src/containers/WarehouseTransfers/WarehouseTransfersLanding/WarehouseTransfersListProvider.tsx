@@ -9,6 +9,7 @@ import {
   useRefreshWarehouseTransfers,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 interface WarehouseTransfersListProviderProps {
   query: Record<string, unknown> | null;
@@ -24,7 +25,7 @@ interface WarehouseTransfersListContextValue {
   refresh: () => void;
 
   resourceMeta: unknown;
-  fields: unknown[];
+  fields: IResourceField[];
   isResourceLoading: boolean;
   isResourceFetching: boolean;
 
@@ -85,8 +86,10 @@ function WarehouseTransfersListProvider({
 
     resourceMeta,
     fields: resourceMeta?.fields
-      ? getFieldsFromResourceMeta(resourceMeta.fields)
-      : ([] as unknown[]),
+      ? getFieldsFromResourceMeta(
+          resourceMeta.fields as Record<string, unknown>,
+        )
+      : [],
     isResourceLoading,
     isResourceFetching,
 

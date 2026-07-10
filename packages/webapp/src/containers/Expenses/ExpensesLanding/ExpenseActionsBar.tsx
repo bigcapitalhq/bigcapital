@@ -35,6 +35,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useRefreshExpenses } from '@/hooks/query/expenses';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface ExpensesActionsBarInnerProps
@@ -42,7 +43,7 @@ interface ExpensesActionsBarInnerProps
     Pick<WithSettingsActionsProps, 'addSetting'>,
     Pick<WithDialogActionsProps, 'openDialog'>,
     Pick<WithExpensesProps, 'expensesSelectedRows'> {
-  expensesFilterConditions: unknown[];
+  expensesFilterConditions: IFilterRole[];
   expensesTableSize: unknown;
 }
 
@@ -159,7 +160,7 @@ function ExpensesActionsBar({
             conditions: expensesFilterConditions,
             defaultFieldKey: 'reference_no',
             fields: fields,
-            onFilterChange: (filterConditions: unknown[]) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setExpensesTableState({ filterRoles: filterConditions });
             },
           }}
