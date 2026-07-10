@@ -1,13 +1,19 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 import {
   defaultFastFieldShouldUpdate,
   uniqueMultiProps,
   checkRequiredProperties,
 } from '@/utils';
+import type {
+  IResourceFieldType,
+  IResourceField,
+  IFilterRole,
+  IConditionTypeOption,
+  IConditionOption,
+} from './interfaces';
 
 // Conditions options.
-export const getConditionalsOptions = () => [
+export const getConditionalsOptions = (): IConditionOption[] => [
   {
     value: 'and',
     label: intl.get('and'),
@@ -20,12 +26,12 @@ export const getConditionalsOptions = () => [
   },
 ];
 
-export const getBooleanCompatators = () => [
+export const getBooleanCompatators = (): IConditionTypeOption[] => [
   { value: 'is', label: intl.get('is') },
   { value: 'is_not', label: intl.get('is_not') },
 ];
 
-export const getTextCompatators = () => [
+export const getTextCompatators = (): IConditionTypeOption[] => [
   { value: 'contain', label: intl.get('contain') },
   { value: 'not_contain', label: intl.get('not_contain') },
   { value: 'equal', label: intl.get('equals') },
@@ -34,18 +40,18 @@ export const getTextCompatators = () => [
   { value: 'ends_with', label: intl.get('ends_with') },
 ];
 
-export const getDateCompatators = () => [
+export const getDateCompatators = (): IConditionTypeOption[] => [
   { value: 'in', label: intl.get('in') },
   { value: 'after', label: intl.get('after') },
   { value: 'before', label: intl.get('before') },
 ];
 
-export const getOptionsCompatators = () => [
+export const getOptionsCompatators = (): IConditionTypeOption[] => [
   { value: 'is', label: intl.get('is') },
   { value: 'is_not', label: intl.get('is_not') },
 ];
 
-export const getNumberCampatators = () => [
+export const getNumberCampatators = (): IConditionTypeOption[] => [
   { value: 'equal', label: intl.get('equals') },
   { value: 'not_equal', label: intl.get('not_equal') },
   { value: 'bigger_than', label: intl.get('bigger_than') },
@@ -54,7 +60,9 @@ export const getNumberCampatators = () => [
   { value: 'smaller_or_equal', label: intl.get('smaller_or_equals') },
 ];
 
-export const getConditionTypeCompatators = (dataType) => {
+export const getConditionTypeCompatators = (
+  dataType: IResourceFieldType,
+): IConditionTypeOption[] => {
   return [
     ...(dataType === 'enumeration'
       ? [...getOptionsCompatators()]
@@ -68,12 +76,16 @@ export const getConditionTypeCompatators = (dataType) => {
   ];
 };
 
-export const getConditionDefaultCompatator = (dataType) => {
+export const getConditionDefaultCompatator = (
+  dataType: IResourceFieldType,
+): IConditionTypeOption => {
   const compatators = getConditionTypeCompatators(dataType);
   return compatators[0];
 };
 
-export const transformFieldsToOptions = (fields) =>
+export const transformFieldsToOptions = (
+  fields: IResourceField[],
+): IConditionOption[] =>
   fields.map((field) => ({
     value: field.key,
     label: field.name,
@@ -82,10 +94,10 @@ export const transformFieldsToOptions = (fields) =>
 /**
  * Filtered conditions that don't contain atleast on required fields or
  * fileds keys that not exists.
- * @param {IFilterRole[]} conditions
- * @returns
  */
-export const filterConditionRoles = (conditions) => {
+export const filterConditionRoles = (
+  conditions: IFilterRole[],
+): IFilterRole[] => {
   const requiredProps = ['fieldKey', 'condition', 'comparator', 'value'];
 
   const filteredConditions = conditions.filter(
@@ -96,9 +108,11 @@ export const filterConditionRoles = (conditions) => {
 
 /**
  * Detarmines the value field when should update.
- * @returns {boolean}
  */
-export const shouldFilterValueFieldUpdate = (newProps, oldProps) => {
+export const shouldFilterValueFieldUpdate = (
+  newProps: { fieldKey?: IResourceFieldType },
+  oldProps: { fieldKey?: IResourceFieldType },
+): boolean => {
   return (
     newProps.fieldKey !== oldProps.fieldKey ||
     defaultFastFieldShouldUpdate(newProps, oldProps)

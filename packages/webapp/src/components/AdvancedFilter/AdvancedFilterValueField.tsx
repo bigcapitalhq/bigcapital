@@ -1,32 +1,37 @@
-// @ts-nocheck
 import { Position, Checkbox, InputGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { isUndefined } from 'lodash';
 import moment from 'moment';
-import React, { useMemo } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
-import { T, Choose } from '@/components';
+import { Choose } from '@/components';
 import { Select } from '@/components/Forms';
 import { useAutofocus } from '@/hooks';
 import { momentFormatter } from '@/utils';
+import {
+  IFieldType,
+  type IFilterOption,
+  type IAdvancedFilterValueField,
+} from './interfaces';
 
-function AdvancedFilterEnumerationField({ options, value, ...rest }) {
-  const selectedItem = useMemo(
-    () => options.find((opt) => opt.key === value) || null,
-    [options, value],
-  );
-
+function AdvancedFilterEnumerationField({
+  options,
+  value,
+  ...rest
+}: {
+  options: IFilterOption[];
+  value?: string | boolean;
+  onItemSelect?: (option: IFilterOption) => void;
+}) {
   return (
     <Select
       items={options}
-      selectedItem={selectedItem}
       popoverProps={{
         fill: true,
-        inline: true,
         minimal: true,
         captureDismiss: true,
       }}
-      placeholder={<T id={'filter.select_option'} />}
+      placeholder={intl.get('filter.select_option')}
       textAccessor={'label'}
       valueAccessor={'key'}
       {...rest}
@@ -34,26 +39,22 @@ function AdvancedFilterEnumerationField({ options, value, ...rest }) {
   );
 }
 
-const IFieldType = {
-  ENUMERATION: 'enumeration',
-  BOOLEAN: 'boolean',
-  NUMBER: 'number',
-  DATE: 'date',
-};
-
-function tansformDateValue(date, defaultValue = null) {
-  return date ? moment(date).toDate() : defaultValue;
+function tansformDateValue(
+  date: string | boolean | undefined,
+  defaultValue = null,
+) {
+  return date ? moment(date as string).toDate() : defaultValue;
 }
 /**
  * Advanced filter value field detarminer.
  */
-export default function AdvancedFilterValueField2({
+export default function AdvancedFilterValueField({
   value,
   fieldType,
   options,
   onChange,
   isFocus,
-}) {
+}: IAdvancedFilterValueField) {
   const [localValue, setLocalValue] = React.useState(value);
 
   React.useEffect(() => {
@@ -63,29 +64,35 @@ export default function AdvancedFilterValueField2({
   }, [localValue, value]);
 
   // Input field reference.
-  const valueRef = useAutofocus(isFocus);
+  const valueRef = useAutofocus(isFocus ?? false);
 
-  const triggerOnChange = (value) => onChange && onChange(value);
+  const triggerOnChange = (next: string | boolean) =>
+    onChange && onChange(next);
 
   // Handle input change.
-  const handleInputChange = (e) => {
-    if (e.currentTarget.type === 'checkbox') {
-      setLocalValue(e.currentTarget.checked);
-      triggerOnChange(e.currentTarget.checked);
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement> | React.FormEvent<HTMLInputElement>,
+  ) => {
+    const target = e.currentTarget;
+    if (target.type === 'checkbox') {
+      const checked = (target as HTMLInputElement).checked;
+      setLocalValue(checked);
+      triggerOnChange(checked);
     } else {
-      setLocalValue(e.currentTarget.value);
-      triggerOnChange(e.currentTarget.value);
+      setLocalValue(target.value);
+      triggerOnChange(target.value);
     }
   };
 
   // Handle enumeration field type change.
-  const handleEnumerationChange = (option) => {
+  const handleEnumerationChange = (option: IFilterOption) => {
     setLocalValue(option.key);
     triggerOnChange(option.key);
   };
 
   // Handle date field change.
-  const handleDateChange = (date) => {
+  const handleDateChange = (date: Date | null) => {
+    if (!date) return;
     const formattedDate = moment(date).format('YYYY/MM/DD');
 
     setLocalValue(formattedDate);
@@ -96,7 +103,7 @@ export default function AdvancedFilterValueField2({
     <Choose>
       <Choose.When condition={fieldType === IFieldType.ENUMERATION}>
         <AdvancedFilterEnumerationField
-          options={options}
+          options={options ?? []}
           value={localValue}
           onItemSelect={handleEnumerationChange}
         />
@@ -121,14 +128,21 @@ export default function AdvancedFilterValueField2({
       </Choose.When>
 
       <Choose.When condition={fieldType === IFieldType.BOOLEAN}>
-        <Checkbox value={localValue} onChange={handleInputChange} />
+        <Checkbox
+          value={
+            typeof localValue === 'string'
+              ? localValue
+              : String(localValue ?? '')
+          }
+          onChange={handleInputChange}
+        />
       </Choose.When>
 
       <Choose.Otherwise>
         <InputGroup
           placeholder={intl.get('filter.value')}
           onChange={handleInputChange}
-          value={localValue}
+          value={typeof localValue === 'string' ? localValue : ''}
           inputRef={valueRef}
         />
       </Choose.Otherwise>

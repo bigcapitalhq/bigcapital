@@ -8,6 +8,7 @@ import {
   usePaymentReceives,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 interface PaymentsReceivedListProviderProps {
   query?: any;
@@ -19,7 +20,7 @@ export interface PaymentsReceivedListContextValue {
   paymentReceives: PaymentReceiveTableRow[] | undefined;
   pagination: { total?: number; [key: string]: any } | undefined;
   resourceMeta: any;
-  fields: Record<string, any>[];
+  fields: IResourceField[];
   paymentReceivesViews: any;
   isPaymentReceivesLoading: boolean;
   isPaymentReceivesFetching: boolean;

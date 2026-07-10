@@ -38,6 +38,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshItems } from '@/hooks/query/items';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface WithSettingsProps {
@@ -50,7 +51,7 @@ interface ItemsActionsBarInnerProps
     WithSettingsProps,
     WithSettingsActionsProps,
     WithDialogActionsProps {
-  itemsFilterRoles: unknown[];
+  itemsFilterRoles: IFilterRole[];
   itemsInactiveMode: boolean | undefined;
 }
 
@@ -183,7 +184,7 @@ function ItemsActionsBarInner({
             conditions: itemsFilterRoles,
             defaultFieldKey: 'name',
             fields: fields,
-            onFilterChange: (filterConditions: unknown[]) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setItemsTableState({ filterRoles: filterConditions });
             },
           }}

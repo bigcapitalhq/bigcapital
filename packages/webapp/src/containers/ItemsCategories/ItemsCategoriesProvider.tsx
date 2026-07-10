@@ -3,6 +3,7 @@ import type { ItemCategoryTableRow } from './components';
 import { DashboardInsider } from '@/components';
 import { useItemsCategories, useResourceMeta } from '@/hooks/query';
 import { transformTableStateToQuery, getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 interface ItemsCategoriesProviderProps {
   // The store-injected `itemsCategoriesTableState` is a complex selector return;
@@ -14,7 +15,7 @@ interface ItemsCategoriesProviderProps {
 export interface ItemsCategoriesContextValue {
   isCategoriesFetching: boolean;
   isCategoriesLoading: boolean;
-  fields: unknown[];
+  fields: IResourceField[];
   // `resourceMeta` is a complex SDK union; surface as `any` (matches Invoices
   // pattern).
   resourceMeta: any;
@@ -24,7 +25,7 @@ export interface ItemsCategoriesContextValue {
   // type but the original code reads `.itemsCategories`/`.pagination`. Preserved
   // from @ts-nocheck original; both are `undefined` at runtime.
   itemsCategories: ItemCategoryTableRow[] | undefined;
-  pagination: { total?: number; [key: string]: unknown } | undefined;
+  pagination?: { total?: number; [key: string]: unknown };
   query: ReturnType<typeof transformTableStateToQuery>;
 }
 

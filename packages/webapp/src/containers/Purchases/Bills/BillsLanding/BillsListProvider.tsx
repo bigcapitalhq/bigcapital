@@ -4,6 +4,7 @@ import type { BillTableRow } from './components';
 import { DashboardInsider } from '@/components/Dashboard';
 import { useResourceViews, useResourceMeta, useBills } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 interface BillsListProviderProps {
   query?: any;
@@ -16,7 +17,7 @@ export interface BillsListContextValue {
   pagination: { total?: number; [key: string]: any } | undefined;
   billsViews: any;
   resourceMeta: any;
-  fields: Record<string, any>[];
+  fields: IResourceField[];
   isResourceLoading: boolean;
   isResourceFetching: boolean;
   isBillsLoading: boolean;

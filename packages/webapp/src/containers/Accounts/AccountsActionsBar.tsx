@@ -37,6 +37,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface AccountsActionsBarInnerProps {
@@ -46,7 +47,7 @@ interface AccountsActionsBarInnerProps {
   setAccountsTableState: WithAccountsTableActionsProps['setAccountsTableState'];
   accountsSelectedRows: WithAccountsProps['accountsSelectedRows'];
   accountsInactiveMode: boolean | undefined;
-  accountsFilterConditions: unknown[];
+  accountsFilterConditions: IFilterRole[];
   accountsTableSize: unknown;
 }
 
@@ -180,7 +181,7 @@ function AccountsActionsBarInner({
             conditions: accountsFilterConditions,
             defaultFieldKey: 'name',
             fields: fields,
-            onFilterChange: (filterConditions: unknown[]) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setAccountsTableState({ filterRoles: filterConditions });
             },
           }}

@@ -24,6 +24,7 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import type { WithSettingsProps } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface WarehouseTransfersActionsBarInnerProps
@@ -31,13 +32,9 @@ interface WarehouseTransfersActionsBarInnerProps
     WithWarehouseTransfersActionsProps,
     'setWarehouseTransferTableState'
   > {
-  warehouseTransferFilterRoles: unknown[];
+  warehouseTransferFilterRoles: IFilterRole[];
   warehouseTransferTableSize?: unknown;
   addSetting: WithSettingsActionsProps['addSetting'];
-}
-
-interface FilterCondition {
-  fieldKey: string;
 }
 
 interface ViewOption {
@@ -107,12 +104,12 @@ function WarehouseTransfersActionsBarInner({
 
         <AdvancedFilterPopover
           advancedFilterProps={{
-            conditions: warehouseTransferFilterRoles as FilterCondition[],
+            conditions: warehouseTransferFilterRoles,
             defaultFieldKey: 'created_at',
             fields: fields,
-            onFilterChange: (filterConditions: unknown) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setWarehouseTransferTableState({
-                filterRoles: filterConditions as never,
+                filterRoles: filterConditions,
               });
             },
           }}

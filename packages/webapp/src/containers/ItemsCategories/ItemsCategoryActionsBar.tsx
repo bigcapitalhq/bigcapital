@@ -24,6 +24,7 @@ import {
 import { DialogsName } from '@/constants/dialogs';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface ItemsCategoryActionsBarInnerProps
@@ -35,7 +36,7 @@ interface ItemsCategoryActionsBarInnerProps
   // it — preserved latent bug; the value is `undefined` at runtime, which means
   // the bulk-delete button never renders.
   itemCategoriesSelectedRows: unknown[];
-  categoriesFilterConditions: unknown[];
+  categoriesFilterConditions: IFilterRole[];
 }
 
 /**
@@ -94,7 +95,7 @@ function ItemsCategoryActionsBarInner({
             conditions: categoriesFilterConditions,
             defaultFieldKey: 'name',
             fields: fields,
-            onFilterChange: (filterConditions: unknown[]) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setItemsCategoriesTableState({ filterRoles: filterConditions });
             },
           }}

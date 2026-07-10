@@ -5,6 +5,7 @@ import type { ManualJournalsListQuery } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import { useResourceViews, useResourceMeta, useJournals } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 // FIXME: SDK schema declares the manual-journals list endpoint as returning
 // `ManualJournalResponseDto[]`, but the server actually returns a paginated
@@ -28,7 +29,7 @@ export interface ManualJournalsContextValue {
   // on it, so we surface it as `any` (matches InvoicesListProvider pattern).
   journalsViews: any;
   resourceMeta: any;
-  fields: unknown[];
+  fields: IResourceField[];
   isManualJournalsLoading: boolean;
   isManualJournalsFetching: boolean;
   isViewsLoading: boolean;

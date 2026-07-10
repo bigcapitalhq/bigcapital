@@ -4,6 +4,7 @@ import type { EstimateTableRow } from './components';
 import { DashboardInsider } from '@/components/Dashboard';
 import { useResourceViews, useResourceMeta, useEstimates } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 interface EstimatesListProviderProps {
   query?: any;
@@ -14,7 +15,7 @@ interface EstimatesListProviderProps {
 export interface EstimatesListContextValue {
   estimates: EstimateTableRow[] | undefined;
   pagination: { total?: number; [key: string]: any } | undefined;
-  fields: Record<string, any>[];
+  fields: IResourceField[];
   estimatesViews: any;
   isResourceLoading: boolean;
   isResourceFetching: boolean;
