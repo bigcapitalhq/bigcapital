@@ -1,12 +1,20 @@
-// @ts-nocheck
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import React from 'react';
 import { useCustomersListContext } from './CustomersListProvider';
 import { withCustomers } from './withCustomers';
+import type { WithCustomersProps } from './withCustomers';
 import { withCustomersActions } from './withCustomersActions';
+import type { WithCustomersActionsProps } from './withCustomersActions';
 import { DashboardViewsTabs } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { compose, transfromViewsToTabs } from '@/utils';
+
+interface CustomersViewsTabsInnerProps
+  extends Pick<WithCustomersProps, 'customersTableState'>,
+    WithCustomersActionsProps,
+    WithDashboardActionsProps {
+  customersCurrentView: string | null | undefined;
+}
 
 /**
  * Customers views tabs.
@@ -17,7 +25,7 @@ function CustomersViewsTabsInner({
 
   // #withCustomers
   customersCurrentView,
-}) {
+}: CustomersViewsTabsInnerProps) {
   // Customers list context.
   const { customersViews } = useCustomersListContext();
 
@@ -25,7 +33,7 @@ function CustomersViewsTabsInner({
   const tabs = transfromViewsToTabs(customersViews);
 
   // Handle tabs change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string) => {
     setCustomersTableState({ viewSlug: viewSlug || null });
   };
 

@@ -1,12 +1,22 @@
-// @ts-nocheck
 import { Intent, Alert } from '@blueprintjs/core';
-import React from 'react';
 import intl from 'react-intl-universal';
-import { AppToaster, FormattedMessage as T } from '@/components';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
 import { useActivateContact } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface VendorActivateAlertPayload {
+  vendorId?: number;
+}
+
+interface VendorActivateAlertProps
+  extends WithAlertActionsProps,
+    WithAlertStoreConnectProps {
+  name: string;
+}
 
 /**
  * Vendor activate alert.
@@ -16,12 +26,14 @@ function VendorActivateAlertInner({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { vendorId },
+  payload,
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: activateContact, isLoading } = useActivateContact();
+}: VendorActivateAlertProps) {
+  const { vendorId } = (payload as VendorActivateAlertPayload) ?? {};
+  const { mutateAsync: activateContact, isPending: isLoading } =
+    useActivateContact();
 
   // Handle activate vendor alert cancel.
   const handleCancelActivateVendor = () => {
@@ -30,14 +42,16 @@ function VendorActivateAlertInner({
 
   // Handle confirm vendor activated.
   const handleConfirmVendorActivate = () => {
-    activateContact(vendorId)
+    activateContact(vendorId!)
       .then(() => {
         AppToaster.show({
           message: intl.get('vendor.alert.activated_message'),
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {
+        // Errors are surfaced via the alert UI; nothing to do here.
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -45,8 +59,8 @@ function VendorActivateAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'activate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('activate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelActivateVendor}

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Popover,
@@ -11,11 +10,26 @@ import {
   Classes,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
-import React from 'react';
+import { useMemo } from 'react';
 import intl from 'react-intl-universal';
+import type { Vendor } from '@bigcapital/sdk-ts';
 import { Can, Icon, Money, If, AvatarCell } from '@/components';
 import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, firstLettersArgs } from '@/utils';
+
+type VendorRow = Pick<
+  Vendor,
+  'id' | 'active' | 'displayName' | 'workPhone' | 'closingBalance' | 'currencyCode' | 'note'
+>;
+
+type ActionsMenuPayload = {
+  onEdit?: (row: VendorRow) => void;
+  onDelete?: (row: VendorRow) => void;
+  onDuplicate?: (row: VendorRow) => void;
+  onInactivate?: (row: VendorRow) => void;
+  onActivate?: (row: VendorRow) => void;
+  onViewDetails?: (row: VendorRow) => void;
+};
 
 /**
  * Actions menu.
@@ -30,6 +44,9 @@ export function ActionsMenu({
     onActivate,
     onViewDetails,
   },
+}: {
+  row: { original: VendorRow };
+  payload: ActionsMenuPayload;
 }) {
   return (
     <Menu>
@@ -85,7 +102,10 @@ export function ActionsMenu({
 /**
  * Actions cell.
  */
-export function ActionsCell(props) {
+export function ActionsCell(props: {
+  row: { original: VendorRow };
+  payload: ActionsMenuPayload;
+}) {
   return (
     <Popover
       content={<ActionsMenu {...props} />}
@@ -99,30 +119,30 @@ export function ActionsCell(props) {
 /**
  * Avatar table accessor.
  */
-export function AvatarAccessor(row) {
-  return <span className="avatar">{firstLettersArgs(row.display_name)}</span>;
+export function AvatarAccessor(row: VendorRow) {
+  return <span className="avatar">{firstLettersArgs(row.displayName)}</span>;
 }
 
 /**
  * Phone number accessor.
  */
-export function PhoneNumberAccessor(row) {
-  return <div className={'work_phone'}>{row.work_phone}</div>;
+export function PhoneNumberAccessor(row: VendorRow) {
+  return <div className={'work_phone'}>{row.workPhone}</div>;
 }
 
 /**
  * Balance accessor.
  */
-export function BalanceAccessor({ closing_balance, currency_code }) {
-  return <Money amount={closing_balance} currency={currency_code} />;
+export function BalanceAccessor(row: VendorRow) {
+  return <Money amount={row.closingBalance} currency={row.currencyCode} />;
 }
 
 /**
  * Note column accessor.
  */
-export function NoteAccessor(row) {
+export function NoteAccessor(row: VendorRow) {
   return (
-    <If condition={row.note}>
+    <If condition={Boolean(row.note)}>
       <Tooltip
         className={Classes.TOOLTIP_INDICATOR}
         content={row.note}
@@ -139,7 +159,7 @@ export function NoteAccessor(row) {
  * Retrieve the vendors table columns.
  */
 export function useVendorsTableColumns() {
-  return React.useMemo(
+  return useMemo(
     () => [
       {
         id: 'avatar',
@@ -154,7 +174,7 @@ export function useVendorsTableColumns() {
       {
         id: 'display_name',
         Header: intl.get('display_name'),
-        accessor: 'display_name',
+        accessor: 'displayName',
         className: 'display_name',
         width: 150,
         clickable: true,
@@ -162,7 +182,7 @@ export function useVendorsTableColumns() {
       {
         id: 'company_name',
         Header: intl.get('company_name'),
-        accessor: 'company_name',
+        accessor: 'companyName',
         className: clsx(Classes.TEXT_MUTED),
         width: 150,
         clickable: true,

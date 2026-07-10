@@ -1,32 +1,50 @@
-// @ts-nocheck
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import React from 'react';
 import intl from 'react-intl-universal';
 import { FormattedMessage as T, AppToaster } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withVendorsActions } from '@/containers/Vendors/VendorsLanding/withVendorsActions';
+import type { WithVendorsActionsProps } from '@/containers/Vendors/VendorsLanding/withVendorsActions';
 import { useBulkDeleteVendors } from '@/hooks/query/vendors';
 import { compose } from '@/utils';
+
+interface VendorBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface VendorBulkDeleteDialogProps
+  extends WithVendorsActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
 
 function VendorBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
-    ids = [],
-    deletableCount = 0,
-    undeletableCount = 0,
-    totalSelected = ids.length,
-  } = {},
+  payload,
 
   // #withVendorsActions
   setVendorsSelectedRows,
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteVendors, isLoading } = useBulkDeleteVendors();
+}: VendorBulkDeleteDialogProps) {
+  const {
+    ids = [],
+    deletableCount = 0,
+    undeletableCount = 0,
+    totalSelected = ids.length,
+  }: VendorBulkDeleteDialogPayload = payload;
+
+  const { mutateAsync: bulkDeleteVendors, isPending: isLoading } =
+    useBulkDeleteVendors();
 
   const handleCancel = () => {
     closeDialog(dialogName);

@@ -1,16 +1,18 @@
-// @ts-nocheck
 import React from 'react';
-import { CustomerDetails as VendorDetails } from './VendorDetails';
+import { VendorDetails } from './VendorDetails';
 import { VendorDetailsDrawerProvider } from './VendorDetailsDrawerProvider';
 import { DrawerBody } from '@/components';
+
+interface VendorDetailsDrawerContentProps {
+  vendorId: number | undefined;
+}
 
 /**
  * Contact detail drawer content.
  */
 export function VendorDetailsDrawerContent({
-  // #ownProp
   vendorId,
-}) {
+}: VendorDetailsDrawerContentProps) {
   return (
     <VendorDetailsDrawerProvider vendorId={vendorId}>
       <DrawerBody>

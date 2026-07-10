@@ -1,11 +1,17 @@
-// @ts-nocheck
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import React from 'react';
 import { useVendorsListContext } from './VendorsListProvider';
 import { withVendors } from './withVendors';
+import type { WithVendorsProps } from './withVendors';
 import { withVendorsActions } from './withVendorsActions';
+import type { WithVendorsActionsProps } from './withVendorsActions';
 import { DashboardViewsTabs } from '@/components';
 import { transfromViewsToTabs, compose } from '@/utils';
+
+interface VendorViewsTabsInnerProps
+  extends Pick<WithVendorsProps, 'vendorsTableState'>,
+    WithVendorsActionsProps {
+  vendorsCurrentView: string | null | undefined;
+}
 
 /**
  * Vendors views tabs.
@@ -16,14 +22,14 @@ function VendorViewsTabsInner({
 
   // #withVendors
   vendorsCurrentView,
-}) {
+}: VendorViewsTabsInnerProps) {
   const { vendorsViews } = useVendorsListContext();
 
   // Transformes the resource views to tabs.
   const tabs = transfromViewsToTabs(vendorsViews);
 
   // Handle dashboard tabs change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string) => {
     setVendorsTableState({ viewSlug });
   };
 

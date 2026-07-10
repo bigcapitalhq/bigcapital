@@ -1,12 +1,9 @@
-// @ts-nocheck
-import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
-import classNames from 'classnames';
-import { FastField, useFormikContext } from 'formik';
+import { Classes, Position, ControlGroup } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import { isEqual } from 'lodash';
-import React from 'react';
 import intl from 'react-intl-universal';
 import { useSetPrimaryBranchToForm } from './utils';
+import type { VendorOpeningBalanceFormValues } from './utils';
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
 import {
   If,
@@ -19,17 +16,15 @@ import {
 import { FMoneyInputGroup, FFormGroup, FDateInput } from '@/components/Forms';
 import { Features } from '@/constants';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 
 /**
  * Vendor Opening balance form fields.
- * @returns
  */
 function VendorOpeningBalanceFormFieldsInner() {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   // Formik context.
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<VendorOpeningBalanceFormValues>();
 
   const { branches, vendor } = useVendorOpeningBalanceContext();
 
@@ -40,13 +35,13 @@ function VendorOpeningBalanceFormFieldsInner() {
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Opening balance -----------*/}
       <FFormGroup
-        name={'opening_balance'}
+        name={'openingBalance'}
         label={intl.get('vendor_opening_balance.label.opening_balance')}
       >
         <ControlGroup>
-          <InputPrependText text={vendor.currency_code} />
+          <InputPrependText text={vendor.currencyCode} />
           <FMoneyInputGroup
-            name={'opening_balance'}
+            name={'openingBalance'}
             allowDecimals={true}
             allowNegativeValue={true}
           />
@@ -55,13 +50,12 @@ function VendorOpeningBalanceFormFieldsInner() {
 
       {/*------------ Opening balance at -----------*/}
       <FFormGroup
-        name={'opening_balance_at'}
+        name={'openingBalanceAt'}
         label={intl.get('vendor_opening_balance.label.opening_balance_at')}
-        fill
         fastField
       >
         <FDateInput
-          name={'opening_balance_at'}
+          name={'openingBalanceAt'}
           formatDate={(date) => date.toLocaleDateString()}
           parseDate={(str) => new Date(str)}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
@@ -73,15 +67,15 @@ function VendorOpeningBalanceFormFieldsInner() {
         />
       </FFormGroup>
 
-      <If condition={!isEqual(baseCurrency, vendor.currency_code)}>
+      <If condition={!isEqual(baseCurrency, vendor.currencyCode)}>
         {/*------------ Opening balance exchange rate -----------*/}
         <ExchangeRateMutedField
-          name={'opening_balance_exchange_rate'}
+          name={'openingBalanceExchangeRate'}
           fromCurrency={baseCurrency}
-          toCurrency={vendor.currency_code}
+          toCurrency={vendor.currencyCode}
           formGroupProps={{ label: '', inline: false }}
-          date={values.opening_balance_at}
-          exchangeRate={values.opening_balance_exchange_rate}
+          date={values.openingBalanceAt}
+          exchangeRate={values.openingBalanceExchangeRate}
         />
       </If>
 
@@ -89,12 +83,11 @@ function VendorOpeningBalanceFormFieldsInner() {
       <FeatureCan feature={Features.Branches}>
         <FFormGroup
           label={intl.get('branch')}
-          name={'opening_balance_branch_id'}
-          fill
+          name={'openingBalanceBranchId'}
           fastField
         >
           <BranchSelect
-            name={'opening_balance_branch_id'}
+            name={'openingBalanceBranchId'}
             branches={branches}
             popoverProps={{ minimal: true }}
           />

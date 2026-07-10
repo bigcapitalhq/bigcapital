@@ -1,14 +1,47 @@
-// @ts-nocheck
 import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import { transformCustomersStateToQuery } from './utils';
 import { DashboardInsider } from '@/components';
 import { useResourceMeta, useResourceViews, useCustomers } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { TableQuery } from '@/store/store.types';
 
-const CustomersListContext = createContext();
+type UseCustomersResult = ReturnType<typeof useCustomers>;
+type UseResourceViewsResult = ReturnType<typeof useResourceViews>;
+type UseResourceMetaResult = ReturnType<typeof useResourceMeta>;
 
-function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
+type CustomersListContextValue = {
+  customersViews: UseResourceViewsResult['data'];
+  customers: NonNullable<UseCustomersResult['data']>['data'] | undefined;
+  pagination: NonNullable<UseCustomersResult['data']>['pagination'] | undefined;
+
+  fields: ReturnType<typeof getFieldsFromResourceMeta> | [];
+  resourceMeta: UseResourceMetaResult['data'];
+
+  isViewsLoading: boolean;
+  isCustomersLoading: boolean;
+  isCustomersFetching: boolean;
+  isResourceMetaLoading: boolean;
+  isResourceMetaFetching: boolean;
+
+  isEmptyStatus: boolean;
+};
+
+type CustomersListProviderProps = {
+  tableState: Partial<TableQuery> & { inactiveMode?: boolean };
+  tableStateChanged: boolean;
+  children?: React.ReactNode;
+};
+
+const CustomersListContext = createContext<
+  CustomersListContextValue | undefined
+>(undefined);
+
+function CustomersListProvider({
+  tableState,
+  tableStateChanged,
+  children,
+}: CustomersListProviderProps) {
   // Transformes the table state to fetch query.
   const tableQuery = transformCustomersStateToQuery(tableState);
 
@@ -28,13 +61,15 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
     data: customersData,
     isLoading: isCustomersLoading,
     isFetching: isCustomersFetching,
-  } = useCustomers(tableQuery, { keepPreviousData: true });
+  } = useCustomers(tableQuery);
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(customersData?.data) && !isCustomersLoading && !tableStateChanged;
+    isEmpty(customersData?.data) &&
+    !isCustomersLoading &&
+    !tableStateChanged;
 
-  const state = {
+  const state: CustomersListContextValue = {
     customersViews,
     customers: customersData?.data,
     pagination: customersData?.pagination,
@@ -58,11 +93,21 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
       loading={isViewsLoading || isResourceMetaLoading}
       name={'customers-list'}
     >
-      <CustomersListContext.Provider value={state} {...props} />
+      <CustomersListContext.Provider value={state}>
+        {children}
+      </CustomersListContext.Provider>
     </DashboardInsider>
   );
 }
 
-const useCustomersListContext = () => React.useContext(CustomersListContext);
+const useCustomersListContext = (): CustomersListContextValue => {
+  const ctx = React.useContext(CustomersListContext);
+  if (!ctx) {
+    throw new Error(
+      'useCustomersListContext must be used within a CustomersListProvider',
+    );
+  }
+  return ctx;
+};
 
 export { CustomersListProvider, useCustomersListContext };

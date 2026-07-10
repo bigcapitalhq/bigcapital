@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { QuickVendorFormDrawer } from './QuickVendorFormDrawer';
 import {
@@ -8,10 +7,18 @@ import {
 } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 
+interface QuickWriteVendorDrawerContentProps {
+  displayName?: string;
+  autofillRef?: number;
+}
+
 /**
  * Quick create/edit vendor drawer.
  */
-export function QuickWriteVendorDrawerContent({ displayName, autofillRef }) {
+export function QuickWriteVendorDrawerContent({
+  displayName,
+  autofillRef,
+}: QuickWriteVendorDrawerContentProps) {
   return (
     <React.Fragment>
       <DrawerHeaderContent

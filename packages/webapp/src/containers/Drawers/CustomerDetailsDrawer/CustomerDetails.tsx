@@ -1,6 +1,4 @@
-// @ts-nocheck
 import clsx from 'classnames';
-import React from 'react';
 import { CustomerDetailsActionsBar } from './CustomerDetailsActionsBar';
 import Style from './CustomerDetailsDrawer.module.scss';
 import { CustomerDetailsHeader } from './CustomerDetailsHeader';

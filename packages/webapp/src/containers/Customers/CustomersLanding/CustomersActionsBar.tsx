@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   NavbarGroup,
   NavbarDivider,
@@ -9,12 +8,13 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCustomersListContext } from './CustomersListProvider';
 import { useBulkDeleteCustomersDialog } from './hooks/use-bulk-delete-customers-dialog';
 import { withCustomers } from './withCustomers';
+import type { WithCustomersProps } from './withCustomers';
 import { withCustomersActions } from './withCustomersActions';
+import type { WithCustomersActionsProps } from './withCustomersActions';
 import {
   Icon,
   Can,
@@ -25,14 +25,32 @@ import {
   DashboardRowsHeightButton,
   DashboardActionsBar,
 } from '@/components';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withSettings } from '@/containers/Settings/withSettings';
 import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
 import { useRefreshCustomers } from '@/hooks/query/customers';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { compose } from '@/utils';
+
+interface WithSettingsProps {
+  customersTableSize?: string | null;
+}
+
+interface CustomerActionsBarInnerProps
+  extends Pick<WithCustomersProps, 'customersTableState'>,
+    WithCustomersActionsProps,
+    WithSettingsProps,
+    WithSettingsActionsProps,
+    WithDialogActionsProps {
+  customersSelectedRows: unknown[];
+  customersFilterConditions: IFilterRole[];
+  customersInactiveMode: boolean | undefined;
+}
 
 /**
  * Customers actions bar.
@@ -44,7 +62,7 @@ function CustomerActionsBar({
 
   // #withCustomersActions
   setCustomersTableState,
-  accountsInactiveMode,
+  customersInactiveMode,
 
   // #withSettings
   customersTableSize,
@@ -54,9 +72,14 @@ function CustomerActionsBar({
 
   // #withDialogActions
   openDialog,
-}) {
-  const { openBulkDeleteDialog, isValidatingBulkDeleteCustomers } =
-    useBulkDeleteCustomersDialog();
+}: CustomerActionsBarInnerProps) {
+  const bulkDelete = useBulkDeleteCustomersDialog();
+  const { openBulkDeleteDialog } = bulkDelete;
+  // `isValidatingBulkDeleteCustomers` is not on the hook's return type — preserved
+  // latent bug (the value would be undefined at runtime anyway).
+  const isValidatingBulkDeleteCustomers = (
+    bulkDelete as { isValidatingBulkDeleteCustomers?: boolean }
+  ).isValidatingBulkDeleteCustomers;
 
   // History context.
   const history = useHistory();
@@ -76,16 +99,18 @@ function CustomerActionsBar({
 
   // Handle Customers bulk delete button click.,
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(customersSelectedRows);
+    openBulkDeleteDialog(customersSelectedRows as number[]);
   };
 
-  const handleTabChange = (view) => {
+  const handleTabChange = (view?: { slug?: string }) => {
     setCustomersTableState({
       viewSlug: view ? view.slug : null,
     });
   };
   // Handle inactive switch changing.
-  const handleInactiveSwitchChange = (event) => {
+  const handleInactiveSwitchChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const checked = event.target.checked;
     setCustomersTableState({ inactiveMode: checked });
   };
@@ -96,7 +121,7 @@ function CustomerActionsBar({
   };
 
   // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
+  const handleTableRowSizeChange = (size: string) => {
     addSetting('customers', 'tableSize', size);
   };
 
@@ -156,7 +181,7 @@ function CustomerActionsBar({
             conditions: customersFilterConditions,
             defaultFieldKey: 'display_name',
             fields: fields,
-            onFilterChange: (filterConditions) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setCustomersTableState({ filterRoles: filterConditions });
             },
           }}
@@ -193,7 +218,7 @@ function CustomerActionsBar({
         <Can I={CustomerAction.Edit} a={AbilitySubject.Customer}>
           <Switch
             labelElement={<T id={'inactive'} />}
-            defaultChecked={accountsInactiveMode}
+            defaultChecked={customersInactiveMode}
             onChange={handleInactiveSwitchChange}
           />
         </Can>
@@ -212,11 +237,13 @@ function CustomerActionsBar({
 export const CustomersActionsBar = compose(
   withCustomersActions,
   withSettingsActions,
-  withCustomers(({ customersSelectedRows, customersTableState }) => ({
-    customersSelectedRows,
-    accountsInactiveMode: customersTableState.inactiveMode,
-    customersFilterConditions: customersTableState.filterRoles,
-  })),
+  withCustomers(
+    ({ customersSelectedRows, customersTableState }) => ({
+      customersSelectedRows,
+      customersInactiveMode: customersTableState.inactiveMode,
+      customersFilterConditions: customersTableState.filterRoles,
+    }),
+  ),
   withSettings(({ customersSettings }) => ({
     customersTableSize: customersSettings?.tableSize,
   })),

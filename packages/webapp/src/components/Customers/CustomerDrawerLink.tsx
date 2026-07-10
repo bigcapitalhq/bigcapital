@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { ButtonLink } from '../Button';
 import { DRAWERS } from '@/constants/drawers';

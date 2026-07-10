@@ -1,12 +1,24 @@
-// @ts-nocheck
 import { Intent, Alert } from '@blueprintjs/core';
-import React from 'react';
 import intl from 'react-intl-universal';
-import { AppToaster, FormattedMessage as T } from '@/components';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
 import { useActivateContact } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface CustomerActivateAlertPayload {
+  customerId?: number;
+  /** @deprecated legacy payload field, no longer used. Kept for backwards-compat with callers. */
+  service?: unknown;
+}
+
+interface CustomerActivateAlertProps
+  extends WithAlertActionsProps,
+    WithAlertStoreConnectProps {
+  name: string;
+}
 
 /**
  * Customer activate alert.
@@ -16,12 +28,14 @@ function CustomerActivateAlertInner({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { customerId, service },
+  payload,
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: activateContact, isLoading } = useActivateContact();
+}: CustomerActivateAlertProps) {
+  const { customerId } = (payload as CustomerActivateAlertPayload) ?? {};
+  const { mutateAsync: activateContact, isPending: isLoading } =
+    useActivateContact();
 
   // Handle activate constomer alert cancel.
   const handleCancelActivateCustomer = () => {
@@ -30,14 +44,16 @@ function CustomerActivateAlertInner({
 
   // Handle confirm customer activated.
   const handleConfirmCustomerActivate = () => {
-    activateContact(customerId)
+    activateContact(customerId!)
       .then(() => {
         AppToaster.show({
           message: intl.get('customer.alert.activated_message'),
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {
+        // Errors are surfaced via the alert UI; nothing to do here.
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -45,8 +61,8 @@ function CustomerActivateAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'activate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('activate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelActivateCustomer}

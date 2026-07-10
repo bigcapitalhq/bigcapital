@@ -1,10 +1,10 @@
-// @ts-nocheck
 import { Position, ControlGroup } from '@blueprintjs/core';
 import { ErrorMessage, useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
+import type { CustomerFormValues } from './utils';
 import {
   openingBalanceFieldShouldUpdate,
   useIsCustomerForeignCurrency,
@@ -39,16 +39,15 @@ export function CustomerFormFinancialSection() {
       </CustomerFormSectionTitle>
 
       <FFormGroup
-        name={'currency_code'}
+        name={'currencyCode'}
         label={intl.get('currency')}
         fastField
         inline
-        fill
       >
         <CurrencySelectList
-          name="currency_code"
+          name="currencyCode"
           items={currencies}
-          disabled={customerId}
+          disabled={Boolean(customerId)}
         />
       </FFormGroup>
 
@@ -59,11 +58,11 @@ export function CustomerFormFinancialSection() {
       <FeatureCan feature={Features.Branches}>
         <FFormGroup
           label={intl.get('customer.label.opening_branch')}
-          name={'opening_balance_branch_id'}
+          name={'openingBalanceBranchId'}
           inline
         >
           <BranchSelect
-            name={'opening_balance_branch_id'}
+            name={'openingBalanceBranchId'}
             branches={branches}
             popoverProps={{ minimal: true }}
             fastField
@@ -82,18 +81,17 @@ function CustomerOpeningBalanceAtField() {
 
   return (
     <FFormGroup
-      name={'opening_balance_at'}
+      name={'openingBalanceAt'}
       label={intl.get('opening_balance_at')}
       inline
-      fill
-      helperText={<ErrorMessage name="opening_balance_at" />}
+      helperText={<ErrorMessage name="openingBalanceAt" />}
     >
       <FDateInput
-        name={'opening_balance_at'}
+        name={'openingBalanceAt'}
         popoverProps={{ position: Position.BOTTOM, minimal: true }}
-        disabled={customerId}
-        formatDate={(date) => date.toLocaleDateString()}
-        parseDate={(str) => new Date(str)}
+        disabled={Boolean(customerId)}
+        formatDate={(date: Date) => date.toLocaleDateString()}
+        parseDate={(str: string) => new Date(str)}
         inputProps={{
           leftIcon: <Icon icon={'date-range'} />,
         }}
@@ -105,7 +103,7 @@ function CustomerOpeningBalanceAtField() {
 
 function CustomerOpeningBalanceField() {
   const { customerId } = useCustomerFormContext();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<CustomerFormValues>();
 
   // Cannot continue if the customer id is defined.
   if (customerId) return null;
@@ -113,17 +111,17 @@ function CustomerOpeningBalanceField() {
   return (
     <FFormGroup
       label={intl.get('opening_balance')}
-      name={'opening_balance'}
+      name={'openingBalance'}
       inline
+      // @ts-expect-error shouldUpdate is forwarded to FastField at runtime; FormGroupProps type doesn't expose it
       shouldUpdate={openingBalanceFieldShouldUpdate}
-      shouldUpdateDeps={{ currencyCode: values.currency_code }}
+      shouldUpdateDeps={{ currencyCode: values.currencyCode }}
       fastField={true}
-      fill
     >
       <ControlGroup>
-        <InputPrependText text={values.currency_code as string} />
+        <InputPrependText text={values.currencyCode} />
         <FMoneyInputGroup
-          name={'opening_balance'}
+          name={'openingBalance'}
           fastField
           inputGroupProps={{ fill: true }}
         />
@@ -133,21 +131,21 @@ function CustomerOpeningBalanceField() {
 }
 
 function CustomerOpeningBalanceExchangeRateField() {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<CustomerFormValues>();
   const { customerId } = useCustomerFormContext();
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
-  const isForeignJouranl = useIsCustomerForeignCurrency();
+  const isForeignJournal = useIsCustomerForeignCurrency();
 
   // Can't continue if the customer is not foreign.
-  if (!isForeignJouranl || customerId) {
+  if (!isForeignJournal || customerId) {
     return null;
   }
   return (
     <ExchangeRateInputGroup
-      fromCurrency={values.currency_code}
-      toCurrency={baseCurrency}
-      name={'opening_balance_exchange_rate'}
+      fromCurrency={values.currencyCode}
+      toCurrency={baseCurrency ?? ''}
+      name={'openingBalanceExchangeRate'}
       onRecalcConfirm={() => {}}
       onCancel={() => {}}
       formGroupProps={{ label: ' ' }}

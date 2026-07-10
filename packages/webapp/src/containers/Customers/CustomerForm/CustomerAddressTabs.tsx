@@ -1,7 +1,5 @@
-// @ts-nocheck
-import React from 'react';
-import CustomerBillingAddress from './CustomerBillingAddress';
-import CustomerShippingAddress from './CustomerShippingAddress';
+import { CustomerBillingAddress } from './CustomerBillingAddress';
+import { CustomerShippingAddress } from './CustomerShippingAddress';
 import { Row } from '@/components';
 
 export function CustomerAddressTabs() {

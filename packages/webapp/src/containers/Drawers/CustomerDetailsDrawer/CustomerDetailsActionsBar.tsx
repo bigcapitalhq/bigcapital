@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   NavbarGroup,
@@ -12,7 +11,6 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
-import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
@@ -33,9 +31,17 @@ import {
 } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { compose } from '@/utils';
+
+interface CustomerDetailsActionsBarProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Customer details actions bar.
@@ -49,8 +55,8 @@ function CustomerDetailsActionsBarInner({
 
   // #withDrawerActions
   closeDrawer,
-}) {
-  const { contact, customerId } = useCustomerDetailsDrawerContext();
+}: CustomerDetailsActionsBarProps) {
+  const { customerId } = useCustomerDetailsDrawerContext();
   const history = useHistory();
 
   // Handle new invoice button click.
