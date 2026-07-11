@@ -8,6 +8,7 @@ import {
   Param,
   Query,
   Inject,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiExtraModels,
@@ -25,11 +26,17 @@ import { GetWarehouseTransfersQueryDto } from '../Warehouses/dtos/GetWarehouseTr
 import { WarehouseTransferResponseDto } from './dtos/WarehouseTransferResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { WarehouseTransferAction } from '../Warehouses/Warehouse.types';
 
 @Controller('warehouse-transfers')
 @ApiTags('Warehouse Transfers')
 @ApiExtraModels(WarehouseTransferResponseDto, PaginatedResponseDto)
 @ApiCommonHeaders()
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class WarehouseTransfersController {
   /**
    * @param {WarehouseTransferApplication} warehouseTransferApplication - Warehouse transfer application.
@@ -43,6 +50,10 @@ export class WarehouseTransfersController {
    * Creates a new warehouse transfer transaction.
    */
   @Post()
+  @RequirePermission(
+    WarehouseTransferAction.CREATE,
+    AbilitySubject.Warehouse,
+  )
   @ApiOperation({ summary: 'Create a new warehouse transfer transaction.' })
   @ApiResponse({
     status: 200,
@@ -68,6 +79,7 @@ export class WarehouseTransfersController {
    * Edits warehouse transfer transaction.
    */
   @Post(':id')
+  @RequirePermission(WarehouseTransferAction.EDIT, AbilitySubject.Warehouse)
   @ApiOperation({ summary: 'Edit the given warehouse transfer transaction.' })
   @ApiResponse({
     status: 200,
@@ -94,6 +106,7 @@ export class WarehouseTransfersController {
    * Initiates the warehouse transfer.
    */
   @Put(':id/initiate')
+  @RequirePermission(WarehouseTransferAction.EDIT, AbilitySubject.Warehouse)
   @ApiOperation({ summary: 'Initiate the given warehouse transfer.' })
   @ApiResponse({
     status: 200,
@@ -112,6 +125,7 @@ export class WarehouseTransfersController {
    * Marks the given warehouse transfer as transferred.
    */
   @Put(':id/transferred')
+  @RequirePermission(WarehouseTransferAction.EDIT, AbilitySubject.Warehouse)
   @ApiOperation({
     summary: 'Mark the given warehouse transfer as transferred.',
   })
@@ -133,6 +147,7 @@ export class WarehouseTransfersController {
    * Retrieves warehouse transfer transactions with pagination.
    */
   @Get()
+  @RequirePermission(WarehouseTransferAction.VIEW, AbilitySubject.Warehouse)
   @ApiOperation({
     summary: 'Retrieve warehouse transfer transactions with pagination.',
   })
@@ -169,6 +184,7 @@ export class WarehouseTransfersController {
    * Retrieves warehouse transfer transaction details.
    */
   @Get(':id')
+  @RequirePermission(WarehouseTransferAction.VIEW, AbilitySubject.Warehouse)
   @ApiOperation({ summary: 'Retrieve warehouse transfer transaction details.' })
   @ApiResponse({
     status: 200,
@@ -189,6 +205,10 @@ export class WarehouseTransfersController {
    * Deletes the given warehouse transfer transaction.
    */
   @Delete(':id')
+  @RequirePermission(
+    WarehouseTransferAction.DELETE,
+    AbilitySubject.Warehouse,
+  )
   @ApiOperation({ summary: 'Delete the given warehouse transfer transaction.' })
   @ApiResponse({
     status: 200,

@@ -25,6 +25,7 @@ import { PaymentReceiveAction } from '../PaymentReceived/types/PaymentReceived.t
 import { PreferencesAction } from '../Settings/Settings.types';
 import { AuditLogAction } from '../EE/AuditLogs/types/AuditLogs.types';
 import { AttachmentAction } from '../Attachments/Attachments.types';
+import { WarehouseTransferAction } from '../Warehouses/Warehouse.types';
 
 export const AbilitySchema: ISubjectAbilitiesSchema[] = [
   {
@@ -325,6 +326,32 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
     abilities: [
       { key: AttachmentAction.View, label: 'ability.view', default: true },
       { key: AttachmentAction.Delete, label: 'ability.delete', default: true },
+    ],
+  },
+  {
+    subject: AbilitySubject.Warehouse,
+    subjectLabel: 'ability.warehouse_transfers',
+    abilities: [
+      {
+        key: WarehouseTransferAction.VIEW,
+        label: 'ability.view',
+        default: true,
+      },
+      {
+        key: WarehouseTransferAction.CREATE,
+        label: 'ability.create',
+        default: true,
+      },
+      {
+        key: WarehouseTransferAction.EDIT,
+        label: 'ability.edit',
+        default: true,
+      },
+      {
+        key: WarehouseTransferAction.DELETE,
+        label: 'ability.delete',
+        default: true,
+      },
     ],
   },
 ];
