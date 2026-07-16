@@ -181,11 +181,13 @@ export class Bill extends TenantBaseModel {
   get total(): number {
     const adjustmentAmount = defaultTo(this.adjustment, 0);
 
-    // Compute tax from loaded entries when available (more reliable than stored taxAmountWithheld)
-    // for cases where taxAmountWithheld may be stale or zero for older invoices.
-    const taxAmount = (this.entries?.length > 0)
+    // Prefer entry-based tax (accurate when entries have taxRate stored). Fall back to
+    // the stored taxAmountWithheld when entries are present but have no taxRate data
+    // (older bills or cases where the per-entry rate was not persisted).
+    const entryTaxAmount = (this.entries?.length > 0)
       ? sumBy(this.entries, (entry: ItemEntry) => entry.taxAmount || 0)
-      : (this.taxAmountWithheld || 0);
+      : 0;
+    const taxAmount = entryTaxAmount || (this.taxAmountWithheld || 0);
 
     return R.compose(
       R.add(adjustmentAmount),
