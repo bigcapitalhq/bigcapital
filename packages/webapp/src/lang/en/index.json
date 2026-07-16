@@ -506,7 +506,7 @@
   "once_delete_these_estimates_you_will_not_able_restore_them": "Once you delete these estimates, you won't be able to retrieve them later. Are you sure you want to delete them?",
   "cannot_be_zero_or_empty": "cannot be zero or empty.",
   "invoices": "Invoices",
-  "invoices_list": "Invoices List asdfasdfasdf",
+  "invoices_list": "Invoices List",
   "invoice_date_": "Invoice date",
   "invoice_no": "Invoice #",
   "invoice_no__": "Invoice No",
