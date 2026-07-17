@@ -7,6 +7,7 @@ import gotenberg from './gotenberg';
 import plaid from './plaid';
 import lemonsqueezy from './lemonsqueezy';
 import s3 from './s3';
+import storage from './storage';
 import openExchange from './open-exchange';
 import posthog from './posthog';
 import stripePayment from './stripe-payment';
@@ -33,6 +34,7 @@ export const config = [
   plaid,
   lemonsqueezy,
   s3,
+  storage,
   openExchange,
   posthog,
   stripePayment,

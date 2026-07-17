@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
-import * as multerS3 from 'multer-s3';
 import { ClsService } from 'nestjs-cls';
-import { S3_CLIENT, S3Module } from '../S3/S3.module';
+import {
+  StorageModule,
+  STORAGE_PROVIDER,
+} from '../Storage/Storage.module';
+import { StorageProvider } from '../Storage/StorageProvider';
 import { DeleteAttachment } from './DeleteAttachment';
 import { GetAttachment } from './GetAttachment';
 import { GetAttachmentPresignedUrl } from './GetAttachmentPresignedUrl';
@@ -25,10 +27,8 @@ import { DocumentModel } from './models/Document.model';
 import { DocumentLinkModel } from './models/DocumentLink.model';
 import { AttachmentsApplication } from './AttachmentsApplication';
 import { UploadDocument } from './UploadDocument';
-import { AttachmentUploadPipeline } from './S3UploadPipeline';
+import { StorageUploadPipeline } from './StorageUploadPipeline';
 import { MULTER_MODULE_OPTIONS } from '@/common/constants/files.constants';
-import { ConfigService } from '@nestjs/config';
-import { S3Client } from '@aws-sdk/client-s3';
 
 const models = [
   RegisterTenancyModel(DocumentModel),
@@ -36,7 +36,7 @@ const models = [
 ];
 
 @Module({
-  imports: [S3Module, ...models],
+  imports: [StorageModule.register(), ...models],
   exports: [...models, GetAttachmentPresignedUrl],
   controllers: [AttachmentsController],
   providers: [
@@ -58,39 +58,14 @@ const models = [
     AttachmentsOnSaleEstimates,
     AttachmentsApplication,
     UploadDocument,
-    AttachmentUploadPipeline,
+    StorageUploadPipeline,
     {
       provide: MULTER_MODULE_OPTIONS,
-      inject: [ConfigService, S3_CLIENT, ClsService],
-      useFactory: (
-        configService: ConfigService,
-        s3: S3Client,
-        cls: ClsService,
-      ) => ({
-        storage: multerS3({
-          s3,
-          bucket: configService.get('s3.bucket'),
-          contentType: multerS3.AUTO_CONTENT_TYPE,
-          metadata: function (req, file, cb) {
-            cb(null, { fieldName: file.fieldname });
-          },
-          key: function (req, file, cb) {
-            const organizationId = cls.get<string>('organizationId');
-            if (!organizationId) {
-              return cb(
-                new Error('Tenant context required for upload.'),
-                undefined as any,
-              );
-            }
-            cb(null, `${organizationId}/${randomUUID()}`);
-          },
-          acl: function (req, file, cb) {
-            // Conditionally set file to public or private based on isPublic flag
-            const aclValue = true ? 'public-read' : 'private';
-            // Set ACL based on the isPublic flag
-            cb(null, aclValue);
-          },
-        }),
+      inject: [STORAGE_PROVIDER, ClsService],
+      useFactory: (storage: StorageProvider, cls: ClsService) => ({
+        storage: storage.createMulterStorage(() =>
+          cls.get<string>('organizationId'),
+        ),
       }),
     },
   ],

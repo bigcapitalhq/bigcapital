@@ -1,38 +1,40 @@
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { S3_CLIENT } from '../S3/S3.module';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { DocumentModel } from './models/Document.model';
+import { StorageProvider } from '../Storage/StorageProvider';
+import { STORAGE_PROVIDER } from '../Storage/Storage.module';
+
+export interface AttachmentData {
+  body: Buffer;
+  contentType: string;
+}
 
 @Injectable()
 export class GetAttachment {
   constructor(
-    private readonly configService: ConfigService,
-
-    @Inject(S3_CLIENT)
-    private readonly s3: S3Client,
+    @Inject(STORAGE_PROVIDER)
+    private readonly storageProvider: StorageProvider,
 
     @Inject(DocumentModel.name)
     private readonly documentModel: TenantModelProxy<typeof DocumentModel>,
   ) {}
 
   /**
-   * Retrieves data of the given document key.
+   * Retrieves the file content for the given document key.
    * @param {string} filekey
+   * @returns {Promise<AttachmentData>}
    */
-  async getAttachment(filekey: string) {
-    await this.documentModel()
+  async getAttachment(filekey: string): Promise<AttachmentData> {
+    const document = await this.documentModel()
       .query()
       .findOne('key', filekey)
       .throwIfNotFound();
 
-    const params = {
-      Bucket: this.configService.get('s3.bucket'),
-      Key: filekey,
-    };
-    const data = await this.s3.send(new GetObjectCommand(params));
+    const { body } = await this.storageProvider.getObject(filekey);
 
-    return data;
+    return {
+      body,
+      contentType: document.mimeType || 'application/octet-stream',
+    };
   }
 }
