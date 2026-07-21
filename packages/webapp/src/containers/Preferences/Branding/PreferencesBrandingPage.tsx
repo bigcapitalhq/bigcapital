@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as R from 'ramda';
 import { useEffect } from 'react';
 import { PreferencesBrandingBoot } from './PreferencesBrandingBoot';
@@ -9,8 +8,16 @@ import {
 } from './PreferencesBrandingFormContent';
 import { Stack } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 
-function PreferencesBrandingPageRoot({ changePreferencesPageTitle }) {
+type PreferencesBrandingPageRootProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
+
+function PreferencesBrandingPageRoot({
+  changePreferencesPageTitle,
+}: PreferencesBrandingPageRootProps) {
   useEffect(() => {
     changePreferencesPageTitle('Branding');
   }, [changePreferencesPageTitle]);

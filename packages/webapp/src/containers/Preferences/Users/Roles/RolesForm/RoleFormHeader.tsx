@@ -13,10 +13,9 @@ import { useAutofocus } from '@/hooks';
 
 /**
  * Role form header.
- * @returns {React.JSX}
  */
 export function RoleFormHeader() {
-  const roleNameFieldRef = useAutofocus();
+  const roleNameFieldRef = useAutofocus<HTMLInputElement>();
 
   return (
     <Card>
@@ -35,7 +34,9 @@ export function RoleFormHeader() {
         <FInputGroup
           name={'role_name'}
           medium={true}
-          inputRef={(ref) => (roleNameFieldRef.current = ref)}
+          inputRef={(ref: HTMLInputElement | null) => {
+            roleNameFieldRef.current = ref;
+          }}
           fill
           fastField
         />

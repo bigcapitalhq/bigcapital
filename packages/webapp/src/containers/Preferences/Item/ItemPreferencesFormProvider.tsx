@@ -4,13 +4,14 @@ import { useContext } from 'react';
 import styled from 'styled-components';
 import { PreferencesPageLoader } from '../PreferencesPageLoader';
 import type { Account } from '@bigcapital/sdk-ts';
-import type { SaveSettingsBody } from '@bigcapital/sdk-ts';
+import type { SaveSettingsBody, SettingsResponse } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useAccounts, useSaveSettings, useSettingsItems } from '@/hooks/query';
 
 interface ItemPreferencesFormContextValue {
   accounts: Account[];
+  itemsSettings?: SettingsResponse;
   saveSettingMutate: (vars: {
     options: SaveSettingsBody['options'];
   }) => Promise<unknown>;
@@ -30,6 +31,7 @@ function ItemPreferencesFormProvider({
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
 
   const {
+    data: itemsSettings,
     isLoading: isItemsSettingsLoading,
     isFetching: isItemsSettingsFetching,
   } = useSettingsItems();
@@ -38,6 +40,7 @@ function ItemPreferencesFormProvider({
 
   const provider: ItemPreferencesFormContextValue = {
     accounts: accounts ?? [],
+    itemsSettings,
     saveSettingMutate,
   };
 

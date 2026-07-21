@@ -10,6 +10,7 @@ import { useFeatureCan } from '@/hooks/state';
 interface BranchesContextValue {
   branches: BranchesListResponse | undefined;
   isBranchesLoading: boolean;
+  isBranchesFetching: boolean;
   isEmptyStatus: boolean;
 }
 
@@ -28,7 +29,11 @@ function BranchesProvider({ query, ...props }: BranchesProviderProps) {
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches the branches list.
-  const { isLoading: isBranchesLoading, data: branches } = useBranches(query, {
+  const {
+    isLoading: isBranchesLoading,
+    isFetching: isBranchesFetching,
+    data: branches,
+  } = useBranches(query, {
     enabled: isBranchFeatureCan,
   });
 
@@ -40,6 +45,7 @@ function BranchesProvider({ query, ...props }: BranchesProviderProps) {
   const provider: BranchesContextValue = {
     branches,
     isBranchesLoading,
+    isBranchesFetching,
     isEmptyStatus,
   };
 

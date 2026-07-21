@@ -31,7 +31,6 @@ export function useSaveSettings(
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
-
   return useMutation({
     ...props,
     mutationFn: (values: SaveSettingsBody) => editSettings(fetcher, values),
@@ -44,7 +43,7 @@ export function useSaveSettings(
 export function useSettings(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -56,7 +55,7 @@ export function useSettings(
 export function useSettingsInvoices(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -68,7 +67,7 @@ export function useSettingsInvoices(
 export function useSettingsEstimates(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -80,7 +79,7 @@ export function useSettingsEstimates(
 export function useSettingsPaymentReceives(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -92,7 +91,7 @@ export function useSettingsPaymentReceives(
 export function useSettingsReceipts(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -104,7 +103,7 @@ export function useSettingsReceipts(
 export function useSettingsManualJournals(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -115,7 +114,7 @@ export function useSettingsManualJournals(
 export function useSettingsItems(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -127,7 +126,7 @@ export function useSettingsItems(
 export function useSettingCashFlow(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -139,7 +138,7 @@ export function useSettingCashFlow(
 export function useSettingsCreditNotes(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -151,7 +150,7 @@ export function useSettingsCreditNotes(
 export function useSettingsVendorCredits(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -163,7 +162,7 @@ export function useSettingsVendorCredits(
 export function useSettingsWarehouseTransfers(
   props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -175,7 +174,7 @@ export function useSettingsWarehouseTransfers(
 export function useSettingSMSNotifications(
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -188,7 +187,7 @@ export function useSettingSMSNotification(
   key: string,
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,

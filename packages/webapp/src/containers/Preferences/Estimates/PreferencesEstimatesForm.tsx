@@ -6,10 +6,16 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { FormattedMessage as T, FFormGroup, FTextArea } from '@/components';
 
+export interface PreferencesEstimatesFormProps {
+  isSubmitting: boolean;
+}
+
 /**
  * Preferences estimates form.
  */
-export function PreferencesEstimatesForm({ isSubmitting }) {
+export function PreferencesEstimatesForm({
+  isSubmitting,
+}: PreferencesEstimatesFormProps) {
   const history = useHistory();
 
   // Handle close click.
@@ -26,7 +32,7 @@ export function PreferencesEstimatesForm({ isSubmitting }) {
         fastField={true}
       >
         <FTextArea
-          medium={'true'}
+          medium={true}
           name={'customerNotes'}
           fastField={true}
           fill={true}
@@ -40,7 +46,7 @@ export function PreferencesEstimatesForm({ isSubmitting }) {
         fastField={true}
       >
         <FTextArea
-          medium={'true'}
+          medium={true}
           name={'termsConditions'}
           fastField={true}
           fill={true}

@@ -1,8 +1,8 @@
-// @ts-nocheck
 import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
+import type { Theme } from '@xstyled/emotion';
 import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
 import React from 'react';
@@ -54,25 +54,25 @@ const getFieldsStyle = (theme: Theme) => css`
  */
 export function ExpenseFormHeader() {
   const { currencies, accounts, customers } = useExpenseFormContext();
-  const theme = useTheme();
+  const theme = useTheme() as unknown as Theme;
   const fieldsClassName = getFieldsStyle(theme);
 
   return (
     <Stack spacing={18} flex={1} className={fieldsClassName}>
       <FastField name={'paymentDate'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
+        {({ form, field: { value }, meta: { error, touched } }: any) => (
           <FormGroup
             label={intl.get('payment_date')}
             labelInfo={<Hint />}
             className={classNames('form-group--select-list', Classes.FILL)}
-            intent={inputIntent({ error, touched })}
+            intent={inputIntent({ error, touched }) as any}
             helperText={<ErrorMessage name="paymentDate" />}
             inline={true}
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
               value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
+              onChange={handleDateChange((formattedDate: string) => {
                 form.setFieldValue('paymentDate', formattedDate);
               })}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
@@ -83,6 +83,7 @@ export function ExpenseFormHeader() {
 
       <FFormGroup
         name={'paymentAccountId'}
+        // @ts-expect-error FFormGroup does not declare `items` / `shouldUpdate` / `fastField`
         items={accounts}
         label={intl.get('payment_account')}
         labelInfo={<FieldRequiredHint />}
@@ -134,27 +135,31 @@ export function ExpenseFormHeader() {
         inline={true}
         fastField
       >
+        {/* @ts-expect-error FInputGroup does not declare `minimal` / `fastField` */}
         <FInputGroup minimal={true} name={'referenceNo'} fastField />
       </FFormGroup>
 
       {/* ----------- Customer ----------- */}
-      <ExpenseFormCustomerSelect />
+      <ExpenseFormCustomerSelect customers={customers} />
     </Stack>
   );
 }
+
+type ExpenseFormCustomerSelectProps = {
+  customers: Record<string, any>[];
+};
 
 /**
  * Customer select field of expense form.
  * @returns {React.ReactNode}
  */
-function ExpenseFormCustomerSelect() {
-  const { customers } = useExpenseFormContext();
-
+function ExpenseFormCustomerSelect({ customers }: ExpenseFormCustomerSelectProps) {
   return (
     <FormGroup
       label={intl.get('customer')}
       labelInfo={<Hint />}
       inline={true}
+      // @ts-expect-error FormGroup does not declare `name` / `fastField` / `shouldUpdateDeps` / `shouldUpdate`
       name={'customerId'}
       fastField={true}
       shouldUpdateDeps={{ items: customers }}

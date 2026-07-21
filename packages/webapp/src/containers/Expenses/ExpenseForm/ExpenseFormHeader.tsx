@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { ExpenseFormHeader as ExpenseFormHeaderFields } from './ExpenseFormHeaderFields';
@@ -14,7 +13,7 @@ export function ExpenseFormHeader() {
       <ExpenseFormHeaderFields />
       <PageFormBigNumber
         label={intl.get('expense_amount')}
-        amount={totalFormatted}
+        amount={totalFormatted as unknown as number}
       />
     </PageForm.Header>
   );

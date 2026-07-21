@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Callout, Classes, Intent } from '@blueprintjs/core';
 import { ImportAlert } from './_types';
 import { AlertsManager, useAlertsManager } from './AlertsManager';

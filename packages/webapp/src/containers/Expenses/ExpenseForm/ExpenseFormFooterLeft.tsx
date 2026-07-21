@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -8,13 +7,10 @@ export function ExpenseFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Description --------- */}
-      <DescriptionFormGroup
-        label={intl.get('description')}
-        name={'description'}
-      >
+      <DescriptionFormGroup label={intl.get('description')} name={'description'}>
         <FEditableText
           name={'description'}
-          placeholder={<T id={'expenses.decscrption.placeholder'} />}
+          placeholder={<T id={'expenses.decscrption.placeholder'} /> as any}
           multiline
           fastField
         />

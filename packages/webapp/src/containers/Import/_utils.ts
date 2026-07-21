@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   chain,
   isEmpty,
@@ -10,7 +9,8 @@ import {
   assign,
 } from 'lodash';
 import { useMemo } from 'react';
-import { ImportFileMappingFormValues } from './_types';
+import type { ImportMappingBody } from '@bigcapital/sdk-ts';
+import type { ImportFileMetaMap, ImportFileMappingFormValues } from './_types';
 import { useImportFileMapBootContext } from './ImportFileMappingBoot';
 import {
   EntityColumn,
@@ -19,27 +19,23 @@ import {
 } from './ImportFileProvider';
 import { deepdash, transformToForm } from '@/utils';
 
-export const getFieldKey = (key: string, group = '') => {
+export const getFieldKey = (key: string, group = ''): string => {
   return group ? `${group}.${key}` : key;
 };
 
-type ImportFileMappingRes = { from: string; to: string; group: string }[];
-
 /**
- * Transformes the mapping form values to request.
- * @param {ImportFileMappingFormValues} value
- * @returns {ImportFileMappingRes[]}
+ * Transforms the mapping form values to request body.
  */
 export const transformValueToReq = (
   value: ImportFileMappingFormValues,
-): { mapping: ImportFileMappingRes[] } => {
+): ImportMappingBody => {
   const mapping = chain(value)
     .thru(deepdash.index)
     .pickBy((_value, key) => !isEmpty(get(value, key)))
     .map((from, key) => ({
-      from,
-      to: key.includes('.') ? last(key.split('.')) : key,
-      group: key.includes('.') ? head(key.split('.')) : '',
+      from: String(from),
+      to: key.includes('.') ? (last(key.split('.')) ?? key) : key,
+      group: key.includes('.') ? (head(key.split('.')) ?? '') : '',
     }))
     .value();
 
@@ -47,14 +43,12 @@ export const transformValueToReq = (
 };
 
 /**
- * Transformes the mapping response to form values.
- * @param {{ from: string; to: string, group: string }[]} value
- * @returns {Record<string, object | string>}
+ * Transforms the mapping response to form values.
  */
 export const transformResToFormValues = (
-  value: { from: string; to: string; group: string }[],
-): Record<string, object | string> => {
-  return value?.reduce((acc, map) => {
+  value: ImportFileMetaMap[] = [],
+): Record<string, string> => {
+  return value.reduce((acc, map) => {
     const path = map?.group ? `${map.group}.${map.to}` : map.to;
     set(acc, path, map.from);
     return acc;
@@ -62,14 +56,13 @@ export const transformResToFormValues = (
 };
 
 /**
- * Retrieves the initial values of mapping form.
- * @param {EntityColumn[]} entityColumns
- * @param {SheetColumn[]} sheetColumns
+ * Computes the initial mapping form values by matching entity field names
+ * against sheet column headers (case-insensitive).
  */
 const getInitialDefaultValues = (
   entityColumns: EntityColumn[],
   sheetColumns: SheetColumn[],
-) => {
+): Record<string, string> => {
   return entityColumns.reduce((acc, { fields, groupKey }) => {
     fields.forEach(({ key, name }) => {
       const _name = lowerCase(name);
@@ -86,10 +79,9 @@ const getInitialDefaultValues = (
 };
 
 /**
- * Retrieves the initial values of mapping form.
- * @returns {Record<string, any>}
+ * Retrieves the initial values of the mapping form.
  */
-export const useImportFileMappingInitialValues = () => {
+export const useImportFileMappingInitialValues = (): ImportFileMappingFormValues => {
   const { importFile } = useImportFileMapBootContext();
   const { entityColumns, sheetColumns } = useImportFileContext();
 
@@ -97,13 +89,12 @@ export const useImportFileMappingInitialValues = () => {
     () => transformResToFormValues(importFile?.map || []),
     [importFile?.map],
   );
-  // Retrieves the initial default values.
   const initialDefaultValues = useMemo(
     () => getInitialDefaultValues(entityColumns, sheetColumns),
     [entityColumns, sheetColumns],
   );
 
-  return useMemo<Record<string, any>>(
+  return useMemo(
     () =>
       assign(
         initialDefaultValues,

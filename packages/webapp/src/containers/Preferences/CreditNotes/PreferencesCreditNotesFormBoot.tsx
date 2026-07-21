@@ -1,20 +1,38 @@
-// @ts-nocheck
 import classNames from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
 import { PreferencesPageLoader } from '../PreferencesPageLoader';
+import type { SettingsResponse } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { useSettings } from '@/hooks/query';
+import { useSettingsCreditNotes } from '@/hooks/query';
 
-const PreferencesCreditNotesFormContext = React.createContext();
+export interface PreferencesCreditNotesBootContextValue {
+  creditNoteSettings?: SettingsResponse;
+  isSettingsLoading: boolean;
+}
 
-function PreferencesCreditNotesBoot({ ...props }) {
+const PreferencesCreditNotesFormContext =
+  React.createContext<PreferencesCreditNotesBootContextValue>(
+    {} as PreferencesCreditNotesBootContextValue,
+  );
+
+export interface PreferencesCreditNotesBootProps {
+  children?: React.ReactNode;
+}
+
+function PreferencesCreditNotesBoot({
+  children,
+}: PreferencesCreditNotesBootProps) {
   // Fetches organization settings.
-  const { isLoading: isSettingsLoading } = useSettings();
+  const {
+    data: creditNoteSettings,
+    isLoading: isSettingsLoading,
+  } = useSettingsCreditNotes();
 
   // Provider state.
-  const provider = {
+  const provider: PreferencesCreditNotesBootContextValue = {
+    creditNoteSettings,
     isSettingsLoading,
   };
   // Detarmines whether if any query is loading.
@@ -31,10 +49,9 @@ function PreferencesCreditNotesBoot({ ...props }) {
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <PreferencesCreditNotesFormContext.Provider
-            value={provider}
-            {...props}
-          />
+          <PreferencesCreditNotesFormContext.Provider value={provider}>
+            {children}
+          </PreferencesCreditNotesFormContext.Provider>
         )}
       </PreferencesCreditNotesCard>
     </div>
@@ -52,4 +69,7 @@ const PreferencesCreditNotesCard = styled(Card)`
 const usePreferencesCreditNotesFormContext = () =>
   React.useContext(PreferencesCreditNotesFormContext);
 
-export { PreferencesCreditNotesBoot, usePreferencesCreditNotesFormContext };
+export {
+  PreferencesCreditNotesBoot,
+  usePreferencesCreditNotesFormContext,
+};

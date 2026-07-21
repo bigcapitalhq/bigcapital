@@ -1,24 +1,36 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { ActionsMenu, useApiKeysTableColumns } from './components';
+import type { ApiKey } from './components';
 import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { useApiKeys, useRevokeApiKey } from '@/hooks/query';
 import { compose } from '@/utils';
+
+type ApiKeysDataTableInnerProps = Pick<
+  WithDialogActionsProps,
+  'openDialog'
+> &
+  Pick<WithAlertActionsProps, 'openAlert'>;
+
+interface RevokeApiKeyError {
+  response?: { data?: { message?: string } };
+}
 
 /**
  * API Keys datatable.
  */
 function ApiKeysDataTableInner({
   // #withDialogActions
-  openDialog,
+  openDialog: _openDialog,
 
   // #withAlertActions
-  openAlert,
-}) {
+  openAlert: _openAlert,
+}: ApiKeysDataTableInnerProps) {
   const { data: apiKeys, isLoading, isFetching } = useApiKeys();
   const { mutateAsync: revokeApiKey } = useRevokeApiKey();
 
@@ -27,7 +39,7 @@ function ApiKeysDataTableInner({
 
   // Handle revoke API key action.
   const handleRevokeApiKey = useCallback(
-    (apiKey) => {
+    (apiKey: ApiKey) => {
       revokeApiKey(apiKey.id)
         .then(() => {
           AppToaster.show({
@@ -35,7 +47,7 @@ function ApiKeysDataTableInner({
             intent: Intent.SUCCESS,
           });
         })
-        .catch((error) => {
+        .catch((error: RevokeApiKeyError) => {
           AppToaster.show({
             message:
               error?.response?.data?.message ||

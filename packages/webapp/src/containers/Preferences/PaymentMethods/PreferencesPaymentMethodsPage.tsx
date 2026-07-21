@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Classes, Text } from '@blueprintjs/core';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
@@ -13,7 +12,6 @@ import { useChangePreferencesPageTitle } from '@/hooks/state';
 
 /**
  * Payment methods page.
- * @returns {JSX.Element}
  */
 export function PreferencesPaymentMethodsPage() {
   const changePageTitle = useChangePreferencesPageTitle();

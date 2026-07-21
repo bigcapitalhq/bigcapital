@@ -6,6 +6,7 @@ import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAccountantFormContext } from './AccountantFormProvider';
+import type { AccountantFormValues } from './types';
 import {
   FormattedMessage as T,
   AccountsSelect,
@@ -17,13 +18,18 @@ import {
 } from '@/components';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/constants/accountTypes';
 
+// AccountsSelect expects a typed array; the SDK AccountsList is a wider list
+// response — bridge with a loose cast at the boundary.
+const accountsForSelect = (accounts: unknown) =>
+  accounts as never;
+
 /**
  * Accountant form.
  */
 export function AccountantForm() {
   const history = useHistory();
   const { accounts } = useAccountantFormContext();
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<AccountantFormValues>();
 
   const handleCloseClick = () => {
     history.go(-1);
@@ -105,7 +111,7 @@ export function AccountantForm() {
       >
         <AccountsSelect
           name={'paymentReceives.preferredDepositAccount'}
-          items={accounts}
+          items={accountsForSelect(accounts)}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[
             ACCOUNT_TYPE.CASH,
@@ -136,7 +142,7 @@ export function AccountantForm() {
       >
         <AccountsSelect
           name={'billPayments.withdrawalAccount'}
-          items={accounts}
+          items={accountsForSelect(accounts)}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[
             ACCOUNT_TYPE.CASH,
@@ -167,7 +173,7 @@ export function AccountantForm() {
       >
         <AccountsSelect
           name={'paymentReceives.preferredAdvanceDeposit'}
-          items={accounts}
+          items={accountsForSelect(accounts)}
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
           fastField={true}

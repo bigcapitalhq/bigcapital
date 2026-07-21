@@ -1,22 +1,28 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import * as R from 'ramda';
 import { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
 import { PreferencesCreditNotesForm } from './PreferencesCreditNotesForm';
 import { PreferencesCreditNotesFormSchema } from './PreferencesCreditNotesForm.schema';
+import { usePreferencesCreditNotesFormContext } from './PreferencesCreditNotesFormBoot';
+import type { CreditNotesPreferencesFormValues } from './types';
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { useSaveSettings } from '@/hooks/query';
 import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
 
-const defaultValues = {
+const defaultValues: CreditNotesPreferencesFormValues = {
   termsConditions: '',
   customerNotes: '',
 };
+
+type PreferencesCreditNotesFormPageRootProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
 
 /**
  * Preferences - Credit Notes.
@@ -24,10 +30,8 @@ const defaultValues = {
 function PreferencesCreditNotesFormPageRoot({
   // #withDashboardActions
   changePreferencesPageTitle,
-
-  // #withSettings
-  creditNoteSettings,
-}) {
+}: PreferencesCreditNotesFormPageRootProps) {
+  const { creditNoteSettings } = usePreferencesCreditNotesFormContext();
   // Save settings.
   const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
@@ -36,12 +40,15 @@ function PreferencesCreditNotesFormPageRoot({
   }, [changePreferencesPageTitle]);
 
   // Initial values.
-  const initialValues = {
+  const initialValues: CreditNotesPreferencesFormValues = {
     ...defaultValues,
     ...transformToForm(creditNoteSettings, defaultValues),
   };
   // Handle the form submit.
-  const handleFormSubmit = (values, { setSubmitting }) => {
+  const handleFormSubmit = (
+    values: CreditNotesPreferencesFormValues,
+    { setSubmitting }: FormikHelpers<CreditNotesPreferencesFormValues>,
+  ) => {
     const options = R.compose(
       transferObjectOptionsToArray,
       transfromToSnakeCase,
@@ -63,7 +70,7 @@ function PreferencesCreditNotesFormPageRoot({
   };
 
   return (
-    <Formik
+    <Formik<CreditNotesPreferencesFormValues>
       initialValues={initialValues}
       validationSchema={PreferencesCreditNotesFormSchema}
       onSubmit={handleFormSubmit}
@@ -74,7 +81,4 @@ function PreferencesCreditNotesFormPageRoot({
 
 export const PreferencesCreditNotesFormPage = compose(
   withDashboardActions,
-  withSettings(({ creditNoteSettings }) => ({
-    creditNoteSettings: creditNoteSettings,
-  })),
 )(PreferencesCreditNotesFormPageRoot);

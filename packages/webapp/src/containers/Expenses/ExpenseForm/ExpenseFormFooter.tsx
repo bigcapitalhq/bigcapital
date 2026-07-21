@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { x } from '@xstyled/emotion';
 import React from 'react';
 import { ExpenseFormFooterLeft } from './ExpenseFormFooterLeft';

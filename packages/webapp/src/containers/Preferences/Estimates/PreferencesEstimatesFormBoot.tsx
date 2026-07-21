@@ -1,20 +1,38 @@
-// @ts-nocheck
 import classNames from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
 import { PreferencesPageLoader } from '../PreferencesPageLoader';
+import type { SettingsResponse } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { useSettings } from '@/hooks/query';
+import { useSettingsEstimates } from '@/hooks/query';
 
-const PreferencesEstimatesFormContext = React.createContext();
+export interface PreferencesEstimatesBootContextValue {
+  estimatesSettings?: SettingsResponse;
+  isSettingsLoading: boolean;
+}
 
-function PreferencesEstimatesBoot({ ...props }) {
+const PreferencesEstimatesFormContext =
+  React.createContext<PreferencesEstimatesBootContextValue>(
+    {} as PreferencesEstimatesBootContextValue,
+  );
+
+export interface PreferencesEstimatesBootProps {
+  children?: React.ReactNode;
+}
+
+function PreferencesEstimatesBoot({
+  children,
+}: PreferencesEstimatesBootProps) {
   // Fetches organization settings.
-  const { isLoading: isSettingsLoading } = useSettings();
+  const {
+    data: estimatesSettings,
+    isLoading: isSettingsLoading,
+  } = useSettingsEstimates();
 
   // Provider state.
-  const provider = {
+  const provider: PreferencesEstimatesBootContextValue = {
+    estimatesSettings,
     isSettingsLoading,
   };
   // Detarmines whether if any query is loading.
@@ -31,10 +49,9 @@ function PreferencesEstimatesBoot({ ...props }) {
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <PreferencesEstimatesFormContext.Provider
-            value={provider}
-            {...props}
-          />
+          <PreferencesEstimatesFormContext.Provider value={provider}>
+            {children}
+          </PreferencesEstimatesFormContext.Provider>
         )}
       </PreferencesEstimatesCard>
     </div>

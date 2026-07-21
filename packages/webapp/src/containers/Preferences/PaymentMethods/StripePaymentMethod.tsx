@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Classes,
@@ -97,7 +96,11 @@ export function StripePaymentMethod() {
             </Button>
           )}
           {!isAccountCreated && (
-            <Button intent={Intent.PRIMARY} small onClick={handleSetUpBtnClick}>
+            <Button
+              intent={Intent.PRIMARY}
+              small
+              onClick={handleSetUpBtnClick}
+            >
               Set it Up
             </Button>
           )}

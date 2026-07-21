@@ -1,11 +1,11 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { defaultTo, sumBy, isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
+import type { CreateExpenseBody, EditExpenseBody } from '@bigcapital/sdk-ts';
 import { ExpenseFloatingFooter } from './ExpenseFloatingActions';
 import {
   CreateExpenseFormSchema,
@@ -16,6 +16,7 @@ import { ExpenseFormFooter } from './ExpenseFormFooter';
 import { ExpenseFormHeader } from './ExpenseFormHeader';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { ExpenseFormTopBar } from './ExpenseFormTopBar';
+import type { ExpenseErrorResponse, ExpenseFormValues } from './types';
 import {
   transformErrors,
   defaultExpense,
@@ -29,16 +30,20 @@ import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose } from '@/utils';
 
+type WithSettingsProps = {
+  preferredPaymentAccount?: number | string;
+};
+
+type ExpenseFormInnerProps = WithSettingsProps;
+
 /**
  * Expense form.
  */
 function ExpenseFormInner({
-  // #withSettings
   preferredPaymentAccount,
-}) {
+}: ExpenseFormInnerProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
-  // Expense form context.
   const {
     editExpenseMutate,
     createExpenseMutate,
@@ -49,27 +54,27 @@ function ExpenseFormInner({
 
   const isNewMode = !expenseId;
 
-  // History context.
   const history = useHistory();
 
-  // Form initial values.
-  const initialValues = useMemo(
+  const initialValues = useMemo<ExpenseFormValues>(
     () => ({
       ...(!isEmpty(expense)
         ? {
-            ...transformToEditForm(expense, defaultExpense),
+            ...transformToEditForm(expense!, defaultExpense),
           }
         : {
             ...defaultExpense,
-            currencyCode: baseCurrency,
+            currencyCode: baseCurrency ?? '',
             paymentAccountId: defaultTo(preferredPaymentAccount, ''),
           }),
     }),
     [expense, baseCurrency, preferredPaymentAccount],
   );
 
-  //  Handle form submit.
-  const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+  const handleSubmit = (
+    values: ExpenseFormValues,
+    { setSubmitting, setErrors, resetForm }: FormikHelpers<ExpenseFormValues>,
+  ) => {
     setSubmitting(true);
     const totalAmount = sumBy(values.categories, 'amount');
 
@@ -82,15 +87,13 @@ function ExpenseFormInner({
       return;
     }
 
-    // Get submit payload from ref for synchronous access
     const currentSubmitPayload = submitPayloadRef?.current || {};
 
     const form = {
       ...transformFormValuesToRequest(values),
       publish: currentSubmitPayload.publish,
     };
-    // Handle request success.
-    const handleSuccess = (response) => {
+    const handleSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -110,25 +113,29 @@ function ExpenseFormInner({
       }
     };
 
-    // Handle the request error.
-    const handleError = ({ data: { errors } }) => {
+    const handleError = ({
+      data: { errors },
+    }: {
+      data: { errors: ExpenseErrorResponse[] };
+    }) => {
       transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
     if (isNewMode) {
-      createExpenseMutate(form).then(handleSuccess).catch(handleError);
-    } else {
-      editExpenseMutate([expense.id, form])
+      createExpenseMutate(form as unknown as CreateExpenseBody)
         .then(handleSuccess)
         .catch(handleError);
+    } else {
+      editExpenseMutate([
+        expense!.id,
+        form as unknown as EditExpenseBody,
+      ]).then(handleSuccess).catch(handleError);
     }
   };
 
   return (
     <Formik
-      validationSchema={
-        isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema
-      }
+      validationSchema={isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema}
       initialValues={initialValues}
       onSubmit={handleSubmit}
     >
@@ -162,7 +169,7 @@ function ExpenseFormInner({
 
 export const ExpenseForm = compose(
   withDashboardActions,
-  withSettings(({ expenseSettings }) => ({
+  withSettings(({ expenseSettings }: Record<string, any>) => ({
     preferredPaymentAccount: parseInt(
       expenseSettings?.preferredPaymentAccount,
       10,

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { first, sumBy } from 'lodash';
@@ -6,7 +5,13 @@ import moment from 'moment';
 import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { Expense } from '@bigcapital/sdk-ts';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
+import type {
+  ExpenseEntry,
+  ExpenseErrorResponse,
+  ExpenseFormValues,
+} from './types';
 import { AppToaster } from '@/components';
 import {
   transformAttachmentsToForm,
@@ -30,7 +35,7 @@ const ERROR = {
 
 export const MIN_LINES_NUMBER = 1;
 
-export const defaultExpenseEntry = {
+export const defaultExpenseEntry: ExpenseEntry = {
   amount: '',
   expenseAccountId: '',
   description: '',
@@ -38,7 +43,7 @@ export const defaultExpenseEntry = {
   projectId: '',
 };
 
-export const defaultExpense = {
+export const defaultExpense: ExpenseFormValues = {
   paymentAccountId: '',
   beneficiary: '',
   paymentDate: moment(new Date()).format('YYYY-MM-DD'),
@@ -55,8 +60,12 @@ export const defaultExpense = {
 /**
  * Transform API errors in toasts messages.
  */
-export const transformErrors = (errors, { setErrors }) => {
-  const hasError = (errorType) => errors.some((e) => e.type === errorType);
+export const transformErrors = (
+  errors: ExpenseErrorResponse[],
+  { setErrors }: { setErrors: (errors: any) => void },
+) => {
+  const hasError = (errorType: string) =>
+    errors.some((e) => e.type === errorType);
 
   if (hasError(ERROR.EXPENSE_ALREADY_PUBLISHED)) {
     setErrors(
@@ -79,11 +88,11 @@ export const transformErrors = (errors, { setErrors }) => {
  * Transformes the expense to form initial values in edit mode.
  */
 export const transformToEditForm = (
-  expense,
-  defaultExpense,
+  expense: Expense,
+  defaultValues: ExpenseFormValues,
   linesNumber = 4,
-) => {
-  const expenseEntry = defaultExpense.categories[0];
+): ExpenseFormValues => {
+  const expenseEntry = defaultValues.categories[0];
   const initialEntries = [
     ...expense.categories.map((category) => ({
       ...transformToForm(category, expenseEntry),
@@ -95,21 +104,21 @@ export const transformToEditForm = (
   ];
   const categories = R.compose(
     ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, expenseEntry),
-  )(initialEntries);
+  )(initialEntries) as unknown as ExpenseEntry[];
 
   const attachments = transformAttachmentsToForm(expense);
 
   return {
-    ...transformToForm(expense, defaultExpense),
+    ...transformToForm(expense, defaultValues),
     categories,
     attachments,
-  };
+  } as ExpenseFormValues;
 };
 
 /**
  * Detarmine cusotmers fast-field should update.
  */
-export const customersFieldShouldUpdate = (newProps, oldProps) => {
+export const customersFieldShouldUpdate = (newProps: any, oldProps: any) => {
   return (
     newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -119,7 +128,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Detarmine accounts fast-field should update.
  */
-export const accountsFieldShouldUpdate = (newProps, oldProps) => {
+export const accountsFieldShouldUpdate = (newProps: any, oldProps: any) => {
   return (
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -129,7 +138,7 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Filter expense entries that has no amount or expense account.
  */
-export const filterNonZeroEntries = (categories) => {
+export const filterNonZeroEntries = (categories: ExpenseEntry[]) => {
   return categories.filter(
     (category) => category.amount && category.expenseAccountId,
   );
@@ -138,7 +147,7 @@ export const filterNonZeroEntries = (categories) => {
 /**
  * Transformes the form values to request body.
  */
-export const transformFormValuesToRequest = (values) => {
+export const transformFormValuesToRequest = (values: ExpenseFormValues) => {
   const categories = filterNonZeroEntries(values.categories);
   const attachments = transformAttachmentsToRequest(values);
 
@@ -150,7 +159,7 @@ export const transformFormValuesToRequest = (values) => {
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<ExpenseFormValues>();
   const { branches, isBranchesSuccess, isNewMode } = useExpenseFormContext();
 
   React.useEffect(() => {
@@ -171,9 +180,8 @@ export const useSetPrimaryBranchToForm = () => {
 export const useExpenseSubtotal = () => {
   const {
     values: { categories },
-  } = useFormikContext();
+  } = useFormikContext<ExpenseFormValues>();
 
-  // Calculates the expense entries amount.
   return React.useMemo(() => sumBy(categories, 'amount'), [categories]);
 };
 
@@ -185,7 +193,7 @@ export const useExpenseSubtotalFormatted = () => {
   const subtotal = useExpenseSubtotal();
   const {
     values: { currencyCode },
-  } = useFormikContext();
+  } = useFormikContext<ExpenseFormValues>();
 
   return formattedAmount(subtotal, currencyCode);
 };
@@ -208,7 +216,7 @@ export const useExpenseTotalFormatted = () => {
   const total = useExpenseTotal();
   const {
     values: { currencyCode },
-  } = useFormikContext();
+  } = useFormikContext<ExpenseFormValues>();
 
   return formattedAmount(total, currencyCode);
 };
@@ -218,7 +226,7 @@ export const useExpenseTotalFormatted = () => {
  * @returns {boolean}
  */
 export const useExpensesIsForeign = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<ExpenseFormValues>();
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const isForeignExpenses = React.useMemo(

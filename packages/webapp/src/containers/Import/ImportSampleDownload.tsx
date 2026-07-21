@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Intent,
@@ -7,6 +6,7 @@ import {
   Popover,
   PopoverInteractionKind,
 } from '@blueprintjs/core';
+import type { ImportFileFormat } from './_types';
 import { useImportFileContext } from './ImportFileProvider';
 import styles from './ImportSampleDownload.module.scss';
 import { AppToaster, Box, Group } from '@/components';
@@ -17,8 +17,7 @@ export function ImportSampleDownload() {
     useImportFileContext();
   const { mutateAsync: downloadSample } = useSampleSheetImport();
 
-  // Handle download button click.
-  const handleDownloadBtnClick = (format) => () => {
+  const handleDownloadBtnClick = (format: ImportFileFormat) => () => {
     downloadSample({
       filename: sampleFileName || `sample-${resource}`,
       resource,
@@ -30,7 +29,7 @@ export function ImportSampleDownload() {
           message: 'The sample sheet has been downloaded successfully.',
         });
       })
-      .catch((error) => {});
+      .catch(() => {});
   };
 
   return (

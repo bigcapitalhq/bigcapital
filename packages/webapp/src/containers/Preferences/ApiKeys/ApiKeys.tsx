@@ -1,4 +1,3 @@
-// @ts-nocheck
 import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
@@ -7,7 +6,13 @@ import { ApiKeysDataTable } from './ApiKeysDataTable';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { compose } from '@/utils';
+
+type ApiKeysPreferencesProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
 
 /**
  * API Keys preferences page.
@@ -15,7 +20,7 @@ import { compose } from '@/utils';
 function ApiKeysPreferences({
   // #withDashboardActions
   changePreferencesPageTitle,
-}) {
+}: ApiKeysPreferencesProps) {
   useEffect(() => {
     changePreferencesPageTitle(intl.get('api_key.title'));
   }, [changePreferencesPageTitle]);

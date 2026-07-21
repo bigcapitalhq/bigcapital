@@ -1,34 +1,31 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
+import type { ReactNode } from 'react';
+import type { ImportFileUploadValues } from './_types';
 import { ImportAlert, ImportStepperStep } from './_types';
 import { useAlertsManager } from './AlertsManager';
-import { useImportFileContext } from './ImportFileProvider';
+import { EntityColumn, useImportFileContext } from './ImportFileProvider';
 import { AppToaster } from '@/components';
 import { useImportFileUpload } from '@/hooks/query/import';
 
-const initialValues = {
+const initialValues: ImportFileUploadValues = {
   file: null,
-} as ImportFileUploadValues;
-
-interface ImportFileUploadFormProps {
-  children: React.ReactNode;
-}
+};
 
 const validationSchema = Yup.object().shape({
   file: Yup.mixed().required('File is required'),
 });
 
-interface ImportFileUploadValues {
-  file: File | null;
+interface ImportErrorResponse {
+  errors: Array<{ type: string }>;
 }
 
-export function ImportFileUploadForm({
-  children,
-  formikProps,
-  formProps,
-}: ImportFileUploadFormProps) {
+interface ImportFileUploadFormProps {
+  children: ReactNode;
+}
+
+export function ImportFileUploadForm({ children }: ImportFileUploadFormProps) {
   const { showAlert, hideAlerts } = useAlertsManager();
   const { mutateAsync: uploadImportFile } = useImportFileUpload();
   const {
@@ -57,11 +54,15 @@ export function ImportFileUploadForm({
       .then((response) => {
         setImportId(response.import.importId);
         setSheetColumns(response.sheetColumns);
-        setEntityColumns(response.resourceColumns);
+        // SDK ships a flat `resourceColumns` shape; the runtime response is
+        // already grouped (groupKey/groupLabel/fields). Cast at the boundary.
+        setEntityColumns(
+          response.resourceColumns as unknown as EntityColumn[],
+        );
         setStep(ImportStepperStep.Mapping);
         setSubmitting(false);
       })
-      .catch(({ data }) => {
+      .catch(({ data }: { data: ImportErrorResponse }) => {
         if (
           data.errors.find(
             (er) => er.type === 'IMPORTED_FILE_EXTENSION_INVALID',
@@ -84,9 +85,8 @@ export function ImportFileUploadForm({
       initialValues={initialValues}
       onSubmit={handleSubmit}
       validationSchema={validationSchema}
-      {...formikProps}
     >
-      <Form {...formProps}>{children}</Form>
+      <Form>{children}</Form>
     </Formik>
   );
 }

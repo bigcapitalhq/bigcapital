@@ -3,14 +3,14 @@ import { getAllCountries } from '@bigcapital/utils';
 import { Button, FormGroup, Intent } from '@blueprintjs/core';
 import { TimezonePicker, getTimezoneMetadata } from '@blueprintjs/timezone';
 import classNames from 'classnames';
-import { Form, useFormikContext } from 'formik';
-import { ErrorMessage } from 'formik';
+import { ErrorMessage, Form, useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useGeneralFormContext } from './GeneralFormProvider';
 import { shouldBaseCurrencyUpdate } from './utils';
+import type { GeneralFormValues } from './types';
 import {
   FieldRequiredHint,
   FormattedMessage as T,
@@ -28,19 +28,26 @@ import { getLanguages } from '@/constants/languagesOptions';
 import { inputIntent } from '@/utils';
 
 const Countries = getAllCountries();
+
+export interface PreferencesGeneralFormProps {
+  isSubmitting: boolean;
+}
+
 /**
  * Preferences general form.
  */
-export function PreferencesGeneralForm({ isSubmitting }) {
+export function PreferencesGeneralForm({
+  isSubmitting,
+}: PreferencesGeneralFormProps) {
   const history = useHistory();
 
   const FiscalYear = getFiscalYear();
   const Languages = getLanguages();
   const Currencies = getAllCurrenciesOptions();
 
-  const { dateFormats, baseCurrencyMutateAbility } = useGeneralFormContext();
+  const { dateFormats, baseCurrencyMutateAbility } = useGeneralFormContext()!;
 
-  const baseCurrencyDisabled = baseCurrencyMutateAbility.length > 0;
+  const baseCurrencyDisabled = (baseCurrencyMutateAbility ?? []).length > 0;
 
   // Handle close click.
   const handleCloseClick = () => {
@@ -58,7 +65,7 @@ export function PreferencesGeneralForm({ isSubmitting }) {
         helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
         fastField={true}
       >
-        <FInputGroup medium={'true'} name={'name'} fastField={true} />
+        <FInputGroup medium={true} name={'name'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Organization Tax Number ----------  */}
@@ -69,7 +76,7 @@ export function PreferencesGeneralForm({ isSubmitting }) {
         helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
         fastField={true}
       >
-        <FInputGroup medium={'true'} name={'tax_number'} fastField={true} />
+        <FInputGroup medium={true} name={'tax_number'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Industry ----------  */}
@@ -79,7 +86,7 @@ export function PreferencesGeneralForm({ isSubmitting }) {
         inline={true}
         fastField={true}
       >
-        <FInputGroup name={'industry'} medium={'true'} fastField={true} />
+        <FInputGroup name={'industry'} medium={true} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Location ---------- */}
@@ -225,7 +232,7 @@ export function PreferencesGeneralForm({ isSubmitting }) {
       >
         <FSelect
           name={'date_format'}
-          items={dateFormats}
+          items={dateFormats ?? []}
           valueAccessor={'key'}
           textAccessor={'label'}
           placeholder={<T id={'select_date_format'} />}
@@ -264,7 +271,8 @@ const CardFooterActions = styled.div`
 `;
 
 function TimezoneField() {
-  const { values, setFieldValue, touched, errors } = useFormikContext();
+  const { values, setFieldValue, touched, errors } =
+    useFormikContext<GeneralFormValues>();
   const value = values?.timezone;
   const error = errors?.timezone;
   const isTouched = touched?.timezone;
@@ -294,7 +302,7 @@ function TimezoneField() {
     >
       <TimezonePicker
         value={value}
-        onChange={(timezone) => setFieldValue('timezone', timezone)}
+        onChange={(timezone: string) => setFieldValue('timezone', timezone)}
         popoverProps={{ minimal: true, fill: true }}
         fill
       >
