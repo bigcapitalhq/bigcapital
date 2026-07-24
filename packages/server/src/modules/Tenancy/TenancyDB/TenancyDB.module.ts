@@ -26,6 +26,7 @@ export const TenancyDatabaseProxyProvider = ClsModule.forFeatureAsync({
       client: configService.get('tenantDatabase.client'),
       connection: {
         host: configService.get('tenantDatabase.host'),
+        port: configService.get('tenantDatabase.port'),
         user: configService.get('tenantDatabase.user'),
         password: configService.get('tenantDatabase.password'),
         database,

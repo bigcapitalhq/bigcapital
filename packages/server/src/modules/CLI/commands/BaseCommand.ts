@@ -15,6 +15,7 @@ export abstract class BaseCommand extends CommandRunner {
       client: this.configService.get('systemDatabase.client'),
       connection: {
         host: this.configService.get('systemDatabase.host'),
+        port: this.configService.get('systemDatabase.port'),
         user: this.configService.get('systemDatabase.user'),
         password: this.configService.get('systemDatabase.password'),
         database: this.configService.get('systemDatabase.databaseName'),
@@ -37,6 +38,7 @@ export abstract class BaseCommand extends CommandRunner {
       client: this.configService.get('tenantDatabase.client'),
       connection: {
         host: this.configService.get('tenantDatabase.host'),
+        port: this.configService.get('tenantDatabase.port'),
         user: this.configService.get('tenantDatabase.user'),
         password: this.configService.get('tenantDatabase.password'),
         database: `${this.configService.get('tenantDatabase.dbNamePrefix')}${organizationId}`,
