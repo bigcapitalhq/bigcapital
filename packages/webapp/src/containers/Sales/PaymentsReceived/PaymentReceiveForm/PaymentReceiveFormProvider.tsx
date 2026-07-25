@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
-import type { PaymentReceiveEditPageResponse, SettingsGroup } from '@bigcapital/sdk-ts';
+import type {
+  PaymentReceiveEditPageResponse,
+  SettingsGroup,
+} from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
 import { useProjects } from '@/containers/Projects/hooks';
 import {
