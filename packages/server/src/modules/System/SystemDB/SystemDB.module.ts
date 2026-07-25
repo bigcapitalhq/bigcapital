@@ -16,6 +16,7 @@ const providers = [
       client: configService.get('systemDatabase.client'),
       connection: {
         host: configService.get('systemDatabase.host'),
+        port: configService.get('systemDatabase.port'),
         user: configService.get('systemDatabase.user'),
         password: configService.get('systemDatabase.password'),
         database: configService.get('systemDatabase.databaseName'),
