@@ -1,21 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Knex } from 'knex';
-import { ConfigService } from '@nestjs/config';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
-import { S3_CLIENT } from '../S3/S3.module';
 import { DocumentModel } from './models/Document.model';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { DocumentLinkModel } from './models/DocumentLink.model';
+import { StorageProvider } from '../Storage/StorageProvider';
+import { STORAGE_PROVIDER } from '../Storage/Storage.module';
 
 @Injectable()
 export class DeleteAttachment {
   constructor(
     private readonly uow: UnitOfWork,
-    private readonly configService: ConfigService,
 
-    @Inject(S3_CLIENT)
-    private readonly s3Client: S3Client,
+    @Inject(STORAGE_PROVIDER)
+    private readonly storageProvider: StorageProvider,
 
     @Inject(DocumentModel.name)
     private readonly documentModel: TenantModelProxy<typeof DocumentModel>,
@@ -27,7 +25,7 @@ export class DeleteAttachment {
   ) {}
 
   /**
-   * Deletes the give file attachment file key.
+   * Deletes the given file attachment file key from storage and database.
    * @param {string} filekey
    */
   async delete(filekey: string): Promise<void> {
@@ -36,11 +34,7 @@ export class DeleteAttachment {
       .findOne('key', filekey)
       .throwIfNotFound();
 
-    const params = {
-      Bucket: this.configService.get('s3.bucket'),
-      Key: filekey,
-    };
-    await this.s3Client.send(new DeleteObjectCommand(params));
+    await this.storageProvider.deleteObject(filekey);
 
     await this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Delete all document links
@@ -49,7 +43,7 @@ export class DeleteAttachment {
         .where('documentId', foundDocument.id)
         .delete();
 
-      // Delete thedocument.
+      // Delete the document.
       await this.documentModel().query(trx).findById(foundDocument.id).delete();
     });
   }

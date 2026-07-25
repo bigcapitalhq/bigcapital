@@ -27,9 +27,8 @@ import {
   UploadAttachmentDto,
 } from './dtos/Attachment.dto';
 import { AttachmentsApplication } from './AttachmentsApplication';
-import { AttachmentUploadPipeline } from './S3UploadPipeline';
+import { StorageUploadPipeline } from './StorageUploadPipeline';
 import { FileInterceptor } from '@/common/interceptors/file.interceptor';
-import { ConfigService } from '@nestjs/config';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
@@ -45,18 +44,17 @@ export class AttachmentsController {
    */
   constructor(
     private readonly attachmentsApplication: AttachmentsApplication,
-    private readonly uploadPipelineService: AttachmentUploadPipeline,
-    private readonly configService: ConfigService,
+    private readonly uploadPipelineService: StorageUploadPipeline,
   ) {}
 
   /**
-   * Uploads the attachments to S3 and store the file metadata to DB.
+   * Uploads the attachments to storage and store the file metadata to DB.
    */
   @Post()
   @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
-  @ApiOperation({ summary: 'Upload attachment to S3' })
+  @ApiOperation({ summary: 'Upload attachment' })
   @ApiBody({ description: 'Upload attachment', type: UploadAttachmentDto })
   @ApiResponse({
     status: 200,
@@ -94,16 +92,13 @@ export class AttachmentsController {
     @Res() res: Response,
     @Param('id') documentId: string,
   ): Promise<Response | void> {
-    const data = await this.attachmentsApplication.get(documentId);
-
-    const byte = await data.Body.transformToByteArray();
-    const contentType = data.ContentType || 'application/octet-stream';
+    const { body, contentType } =
+      await this.attachmentsApplication.get(documentId);
     const extension = mime.extension(contentType) || 'bin';
-    const buffer = Buffer.from(byte);
 
     res.set('Content-Disposition', `filename="${documentId}.${extension}"`);
     res.set('Content-Type', contentType);
-    res.send(buffer);
+    res.send(body);
   }
 
   /**

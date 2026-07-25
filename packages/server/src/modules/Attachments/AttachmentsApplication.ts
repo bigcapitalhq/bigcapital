@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UploadDocument } from './UploadDocument';
 import { DeleteAttachment } from './DeleteAttachment';
-import { GetAttachment } from './GetAttachment';
+import { GetAttachment, AttachmentData } from './GetAttachment';
 import { LinkAttachment } from './LinkAttachment';
 import { UnlinkAttachment } from './UnlinkAttachment';
 import { GetAttachmentPresignedUrl } from './GetAttachmentPresignedUrl';
@@ -18,7 +18,7 @@ export class AttachmentsApplication {
   ) {}
 
   /**
-   * Saves the metadata of uploaded document to S3 on database.
+   * Saves the metadata of uploaded document on database.
    * @param {} file
    * @returns {Promise<Document>}
    */
@@ -38,8 +38,9 @@ export class AttachmentsApplication {
   /**
    * Retrieves the document data.
    * @param {string} documentKey
+   * @returns {Promise<AttachmentData>}
    */
-  public get(documentKey: string) {
+  public get(documentKey: string): Promise<AttachmentData> {
     return this.getDocumentService.getAttachment(documentKey);
   }
 

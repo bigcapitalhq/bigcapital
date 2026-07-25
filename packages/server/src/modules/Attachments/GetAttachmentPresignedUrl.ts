@@ -1,48 +1,36 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { ConfigService } from '@nestjs/config';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { DocumentModel } from './models/Document.model';
-import { S3_CLIENT } from '../S3/S3.module';
+import { StorageProvider } from '../Storage/StorageProvider';
+import { STORAGE_PROVIDER } from '../Storage/Storage.module';
 
 @Injectable()
 export class GetAttachmentPresignedUrl {
   constructor(
-    private readonly configService: ConfigService,
+    @Inject(STORAGE_PROVIDER)
+    private readonly storageProvider: StorageProvider,
 
     @Inject(DocumentModel.name)
     private readonly documentModel: TenantModelProxy<typeof DocumentModel>,
-
-    @Inject(S3_CLIENT)
-    private readonly s3Client: S3Client,
   ) {}
 
   /**
-   * Retrieves the presigned url of the given attachment key with the original filename.
-   * @param {string} key -
-   * @returns {string}
+   * Retrieves the presigned url of the given attachment key with the
+   * original filename.
+   * For S3 this returns a time-limited presigned URL; for local storage
+   * this returns the authenticated API endpoint path.
+   * @param {string} key
+   * @returns {Promise<string>}
    */
-  async getPresignedUrl(key: string) {
+  async getPresignedUrl(key: string): Promise<string> {
     const foundDocument = await this.documentModel()
       .query()
       .findOne({ key })
       .throwIfNotFound();
-    const config = this.configService.get('s3');
 
-    let ResponseContentDisposition = 'attachment';
-    if (foundDocument && foundDocument.originName) {
-      ResponseContentDisposition += `; filename="${foundDocument.originName}"`;
-    }
-    const command = new GetObjectCommand({
-      Bucket: config.bucket,
-      Key: key,
-      ResponseContentDisposition,
-    });
-    const signedUrl = await getSignedUrl(this.s3Client, command, {
+    return this.storageProvider.getPresignedUrl(key, {
+      originalName: foundDocument.originName,
       expiresIn: 300,
     });
-
-    return signedUrl;
   }
 }
